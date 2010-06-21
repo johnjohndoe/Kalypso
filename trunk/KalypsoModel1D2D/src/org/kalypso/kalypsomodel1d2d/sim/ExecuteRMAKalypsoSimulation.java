@@ -89,11 +89,11 @@ public class ExecuteRMAKalypsoSimulation
    * @throws URISyntaxException
    *           if any of the inputs is not a valid URI
    */
-  public ExecuteRMAKalypsoSimulation( final String serviceEndpoint, final IWPSObserver wpsObserver, final String rmaVersion, final URI modelFile, final URI controlFile, final URI buildingFile, final URI bcwqFile )
+  public ExecuteRMAKalypsoSimulation( final String serviceEndpoint, final IWPSObserver wpsObserver, final String rmaVersion, final URI modelFile, final URI controlFile, final URI buildingFile, final URI bcwqFile, final URI windFile, final URI windCoordFile )
   {
     m_serviceEndpoint = serviceEndpoint;
     m_wpsObserver = wpsObserver;
-    m_inputs = createInputs( rmaVersion, modelFile, controlFile, buildingFile, bcwqFile );
+    m_inputs = createInputs( rmaVersion, modelFile, controlFile, buildingFile, bcwqFile, windFile, windCoordFile );
   }
 
   public IStatus run( final IProgressMonitor monitor )
@@ -151,7 +151,7 @@ public class ExecuteRMAKalypsoSimulation
     return m_resultsDir;
   }
 
-  private Map<String, Object> createInputs( final String rmaVersion, final URI modelFile, final URI controlFile, final URI buildingFile, final URI bcwqFile )
+  private Map<String, Object> createInputs( final String rmaVersion, final URI modelFile, final URI controlFile, final URI buildingFile, final URI bcwqFile, final URI windFile, final URI windCoordFile )
   {
     final Map<String, Object> inputs = new HashMap<String, Object>();
     inputs.put( RMAKalypsoSimulation.INPUT_RMA_VERSION, rmaVersion );
@@ -159,6 +159,14 @@ public class ExecuteRMAKalypsoSimulation
     inputs.put( RMAKalypsoSimulation.INPUT_CONTROL, controlFile );
     inputs.put( RMAKalypsoSimulation.INPUT_BUILDINGS, buildingFile );
     inputs.put( RMAKalypsoSimulation.INPUT_BC_WQ, bcwqFile );
+    inputs.put( RMAKalypsoSimulation.INPUT_WIND, windFile );
+    inputs.put( RMAKalypsoSimulation.INPUT_WIND_COORD, windCoordFile );
     return inputs;
   }
+
+  public final IWPSProcess getWpsRequest( )
+  {
+    return m_wpsRequest;
+  }
+
 }

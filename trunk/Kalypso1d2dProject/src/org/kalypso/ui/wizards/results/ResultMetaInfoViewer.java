@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -54,12 +56,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormText;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizards.i18n.Messages;
 
 /**
@@ -134,7 +138,7 @@ public class ResultMetaInfoViewer extends Viewer
     m_textPanel = new FormText( m_panel, SWT.WRAP | SWT.READ_ONLY );
     m_textPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_panel.setText( Messages.getString("org.kalypso.ui.wizards.results.ResultMetaInfoViewer.0") ); //$NON-NLS-1$
+    m_panel.setText( Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.0" ) ); //$NON-NLS-1$
     m_textPanel.setFont( "header", fTextHeader ); //$NON-NLS-1$
     m_textPanel.setFont( "text", fTextNormal ); //$NON-NLS-1$
 
@@ -160,7 +164,7 @@ public class ResultMetaInfoViewer extends Viewer
   public static String getInformationText( final IResultMeta result )
   {
     if( result == null )
-      return Messages.getString("org.kalypso.ui.wizards.results.ResultMetaInfoViewer.5"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.5" ); //$NON-NLS-1$
 
     final StringBuffer buf = new StringBuffer();
 
@@ -197,7 +201,8 @@ public class ResultMetaInfoViewer extends Viewer
     }
 
     final DateFormat dateFormat = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.LONG );
-    dateFormat.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+    // dateFormat.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+    dateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
     final ICalcUnitResultMeta calcUnitResult = getCalcUnitResultMeta( result );
     if( calcUnitResult != null )
@@ -230,15 +235,15 @@ public class ResultMetaInfoViewer extends Viewer
       docName = docResult.getName();
       docDescription = docResult.getDescription();
       docType = docResult.getDocumentType().toString();
-      if( docResult.getMinValue() != null )
-      {
-        docMin = docResult.getMinValue().toString();
-      }
-
-      if( docResult.getMaxValue() != null )
-      {
-        docMax = docResult.getMaxValue().toString();
-      }
+      // if( docResult.getMinValue() != null )
+      // {
+      // docMin = docResult.getMinValue().toString();
+      // }
+      //
+      // if( docResult.getMaxValue() != null )
+      // {
+      // docMax = docResult.getMaxValue().toString();
+      // }
     }
 
     /* make string buffer */
@@ -294,14 +299,67 @@ public class ResultMetaInfoViewer extends Viewer
       buf.append( "</p>" ); //$NON-NLS-1$
 
       buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"" + docType + "\"></li>" ); //$NON-NLS-1$ //$NON-NLS-2$
+      boolean bDone = false;
+     
+      for( final String resultType : NodeResultHelper.NodeStyleTypes )
+      {
+        BigDecimal minValueForType = null;
+        BigDecimal maxValueForType = null;
+        if( resultType.equals( NodeResultHelper.WAVE_DIRECTION_TYPE ) )
+          continue;
+        try
+        {
+          minValueForType = docResult.getMinValueForType( resultType );
+          docMin = minValueForType.toString();
+          maxValueForType = docResult.getMaxValueForType( resultType );
+          docMax = maxValueForType.toString();
+        }
+        catch( Exception e )
+        {
+          continue;
+        }
+        if( docMax != null )
+        {
+          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"maximaler " + resultType + " Wert:\">" + docMax + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        if( docMin != null )
+        {
+          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"minimaler " + resultType + " Wert:\">" + docMin + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        bDone = true;
+        /*
+         * set actual min/max settings also in the helper map
+         * */
+        String sourceFile = docResult.getFullPath().toOSString();
+        int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
+        String stepNameStr = sourceFile.substring( beginIndex, beginIndex + 16 );
+        Map<String, Object> m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepNameStr );
+        m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MIN_PREFIX + resultType.toLowerCase(), minValueForType.doubleValue() );
+        m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MAX_PREFIX + resultType.toLowerCase(), maxValueForType.doubleValue() );
 
-      if( docMax != null )
-      {
-        buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"maximaler Wert:\">" + docMax + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-      if( docMin != null )
+      if( !bDone )
       {
-        buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"minimaler Wert:\">" + docMin + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
+        docMin = null;
+        docMax = null;
+        try
+        {
+          docMin = docResult.getMinValue().toString();
+          docMax = docResult.getMaxValue().toString();
+        }
+        catch( Exception e )
+        {
+
+        }
+        if( docMax != null )
+        {
+          buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"maximaler Wert:\">" + docMax + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        if( docMin != null )
+        {
+          buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"minimaler Wert:\">" + docMin + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
       }
 
     }

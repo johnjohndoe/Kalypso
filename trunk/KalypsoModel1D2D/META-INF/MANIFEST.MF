@@ -29,6 +29,8 @@ Require-Bundle: org.junit4;resolution:=optional,
  de.openali.odysseus.chart.ui,
  de.openali.odysseus.chart.ext.base,
  org.kalypso.service.wps;bundle-version="1.0.0"
+Bundle-ClassPath: .,
+  lib/jmatio.jar
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.conv,
@@ -72,6 +74,7 @@ Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.ui.map.util,
  org.kalypso.kalypsomodel1d2d.ui.viewer,
  org.kalypso.kalypsomodel1d2d.ui.wizard,
- org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport
+ org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport,
+ org.kalypso.kalypsomodel1d2d.ui.wizard.windmodel
 Bundle-Activator: org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin
 Bundle-Vendor: kalypso.sourceforge.net

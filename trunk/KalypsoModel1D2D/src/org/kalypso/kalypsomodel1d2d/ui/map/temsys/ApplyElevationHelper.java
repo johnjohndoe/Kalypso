@@ -49,18 +49,26 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class ApplyElevationHelper
 {
   @SuppressWarnings("unchecked")
   public static void assignElevationToSelectedNodes( final ApplyElevationWidgetDataModel dataModel, final List<IFE1D2DNode> nodeList ) throws Exception
   {
+    final IFeatureWrapperCollection<ITerrainElevationModel> elevationModels = dataModel.getTerrainElevationModels();
+    if( elevationModels == null )
+    {
+      return;
+    }
+
     final IMapPanel mapPanel = dataModel.getMapPanel();
     if( mapPanel == null )
       return;
@@ -70,39 +78,59 @@ public class ApplyElevationHelper
     if( model1d2d == null )
       return;
 
-    IElevationProvider elevationProvider = dataModel.getElevationModel();
-    if( elevationProvider == null )
-    {
-      elevationProvider = dataModel.getElevationModelSystem();
-      if( elevationProvider == null )
-        return;
-    }
+    IElevationProvider elevationProvider = null;
+    // dataModel.getElevationModel();
+    // if( elevationProvider == null )
+    // {
+    // elevationProvider = dataModel.getElevationModelSystem();
+    // if( elevationProvider == null )
+    // return;
+    // }
 
     final CommandableWorkspace workspace = dataModel.getDiscretisationModelWorkspace();
     if( workspace == null )
       return;
 
-    final ChangeTerrainElevationSystemCommand compositeCommand = new ChangeTerrainElevationSystemCommand( workspace, model1d2d, dataModel.getElevationModelSystem() );
-    ChangeNodePositionCommand changePosCmd;
-
-    for( final IFE1D2DNode node : nodeList )
+    List<IFE1D2DNode> lListNodesToAssign = new ArrayList<IFE1D2DNode>();
+    lListNodesToAssign.addAll( nodeList );
+    // to provide real assign of elevations according to selected order in elevations model view
+    for( int i = 0; i < elevationModels.size() && lListNodesToAssign.size() > 0; ++i )
     {
-      if( node != null )
+      elevationProvider = elevationModels.get( i );
+      if( elevationProvider == null )
+        continue;
+      final ChangeTerrainElevationSystemCommand compositeCommand = new ChangeTerrainElevationSystemCommand( workspace, model1d2d, dataModel.getElevationModelSystem() );
+      ChangeNodePositionCommand changePosCmd;
+
+      for( int j = lListNodesToAssign.size() - 1; j >= 0; --j )
+      // for( final IFE1D2DNode node : nodeList )
       {
-        final double elevation = elevationProvider.getElevation( node.getPoint() );
-
-        changePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation, false );
-        changePosCmd.process(); 
-        compositeCommand.addCommand( changePosCmd, null );
+        IFE1D2DNode node = lListNodesToAssign.get( j );
+        if( node != null )
+        {
+          try
+          {
+            final double elevation = elevationProvider.getElevation( node.getPoint() );
+            changePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation, false );
+            changePosCmd.process();
+            compositeCommand.addCommand( changePosCmd, null );
+            if( !Double.isNaN( elevation  ) ){
+              lListNodesToAssign.remove( node );
+            }
+          }
+          catch( Exception e )
+          {
+          }
+        }
       }
-    }
-    try
-    {
-      workspace.postCommand( compositeCommand );
-    }
-    catch( final Throwable th )
-    {
-      th.printStackTrace();
+      try
+      {
+        workspace.postCommand( compositeCommand );
+      }
+      catch( final Throwable th )
+      {
+        th.printStackTrace();
+      }
     }
   }
 

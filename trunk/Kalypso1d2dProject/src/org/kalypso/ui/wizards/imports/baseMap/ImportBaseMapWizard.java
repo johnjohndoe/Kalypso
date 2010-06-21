@@ -337,7 +337,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     final IPath relativeDstPath = ResourceUtilities.makeRelativ( mapFile, dstFileImage );
 
     //    final String imgHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + sourceLocation.lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    final String imgHref = String.format( "%s#%s", relativeDstPath.toString(), coordinateSystem ); //$NON-NLS-1$
+    final String imgHref = String.format( "%s#%s", relativeDstPath.toString(), coordinateSystem );
     final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, type, null, imgHref );
     mapView.postCommand( command, null );
 

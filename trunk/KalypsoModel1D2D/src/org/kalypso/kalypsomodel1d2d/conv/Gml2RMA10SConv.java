@@ -527,7 +527,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
                 }
                 else
                 {
-                  System.out.println();
+//                  System.out.println();
                 }
               }
               else

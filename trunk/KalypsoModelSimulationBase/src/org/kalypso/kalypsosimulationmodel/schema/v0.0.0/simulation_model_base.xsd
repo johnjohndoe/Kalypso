@@ -19,10 +19,12 @@
 
 	<!--
 		**************************INCLUDES**********************************
+		**** added wind schema ***
 	-->
 	<xs:include schemaLocation="simulation_model_finite_elements_discretisation.xsd" />
 	<xs:include schemaLocation="simulation_model_flow_relationship.xsd" />
 	<xs:include schemaLocation="simulation_model_terrain.xsd" />
+	<xs:include schemaLocation="simulation_model_wind.xsd" />
 
 	<xs:element name="_Model" type="simBase:AbstractModelType"
 		substitutionGroup="gml:_Feature" />

@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.awt.Color;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.kalypso.kalypsomodel1d2d.conv.TeschkeRelationConverter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
@@ -75,6 +78,54 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class NodeResultHelper
 {
+  public static final String AMOUNT_OF_CLASSES_PREFIX = "defaultamountclasses"; //$NON-NLS-1$ 
+
+  public static final String VALUE_MAX_PREFIX = "defaultvaluemax"; //$NON-NLS-1$ 
+
+  public static final String VALUE_MIN_PREFIX = "defaultvaluemin"; //$NON-NLS-1$ 
+
+  public static final String COLOR_MAX_PREFIX = "defaultcolormax"; //$NON-NLS-1$ 
+
+  public static final String COLOR_MIN_PREFIX = "defaultcolormin"; //$NON-NLS-1$ 
+
+  public static final String COLOR_MAP_PREFIX = "stepcolormap"; //$NON-NLS-1$ 
+
+  public static final String WAVE_PERIOD_TYPE = "WavePeriod"; //$NON-NLS-1$
+
+  public static final String WAVE_HSIG_TYPE = "WaveHsig"; //$NON-NLS-1$
+
+  public static final String DEPTH_TYPE = "Depth"; //$NON-NLS-1$
+
+  public static final String WATERLEVEL_TYPE = "Waterlevel"; //$NON-NLS-1$
+
+  public static final String WAVE_DIRECTION_TYPE = "WaveDirection"; //$NON-NLS-1$
+
+  public static final String VELO_TYPE = "Velo"; //$NON-NLS-1$
+
+  public static final String POLYGON_TYPE = "Polygon"; //$NON-NLS-1$
+
+  public static final String LINE_TYPE = "Line"; //$NON-NLS-1$
+
+  public static final String NODE_TYPE = "Node"; //$NON-NLS-1$
+
+  private static Map<String, Map<String, Map<String, Object>>> m_styleSettings = new HashMap<String, Map<String, Map<String, Object>>>();
+  private static Map<String, Map<String, Object>> m_stepStyleSettings = new HashMap<String, Map<String, Object>>();
+
+  public static final String[] NodeStyleTypes = new String[] { VELO_TYPE, WATERLEVEL_TYPE, DEPTH_TYPE, WAVE_HSIG_TYPE, WAVE_PERIOD_TYPE, WAVE_DIRECTION_TYPE };
+
+  public static final Color DEFAULT_COLOR_MIN = new Color( Integer.parseInt( "ff0000", 16 ) ); //$NON-NLS-1$
+
+  public static final Color DEFAULT_COLOR_MAX = new Color( Integer.parseInt( "0000ff", 16 ) ); //$NON-NLS-1$
+
+  public static final Double DEFAULT_AMOUNT_CLASSES = 100.;
+
+  public static final String NODESTYLE_TEMPLATE = "NODESTYLE_TEMPLATE"; //$NON-NLS-1$ 
+
+  public static final String VECTORFACTOR = "VECTORFACTOR"; //$NON-NLS-1$ 
+
+  public static final String SIZE_NORM_NODE_FUNC = "SIZE_NORM"; //$NON-NLS-1$
+
+  public static final String VELOCITY = "velocity"; //$NON-NLS-1$
 
   /**
    * sets the mid-side node's water level and depth by interpolation between the corner nodes.
@@ -324,6 +375,102 @@ public class NodeResultHelper
       points[i++] = node.getPoint();
     }
     return points;
+  }
+
+  public static Map<String, Object> getSldSettingsMapForStyleStep( final String styleType, final String stepDate )
+  {
+    Map<String, Map<String, Object>> mapStep = m_styleSettings.get( stepDate.toLowerCase() );
+    if( mapStep != null )
+    {
+      Map<String, Object> mapStyle = mapStep.get( styleType.toLowerCase() );
+      if( mapStyle == null ){
+        mapStyle = createMapStyle();
+        mapStep.put( styleType.toLowerCase(), mapStyle );
+      }
+      return mapStyle;
+    }
+    else
+    {
+      mapStep = createMapStep( styleType );
+      m_styleSettings.put( stepDate.toLowerCase(), mapStep );
+      return mapStep.get( styleType.toLowerCase() );
+    }
+  }
+
+  public static Map<String, Object> getSldSettingsMapForStep( final String stepDate )
+  {
+    Map<String, Object> mapStep = m_stepStyleSettings.get( stepDate.toLowerCase() );
+    if( mapStep == null )
+    {
+        mapStep = createMapStyle();
+        m_stepStyleSettings.put( stepDate.toLowerCase(), mapStep );
+    }
+    return mapStep;
+  }
+
+  public static void setSldValueForStep( final String stepDate, final String key, final Object value )
+  {
+    Map<String, Object> mapStep = m_stepStyleSettings.get( stepDate.toLowerCase() );
+    if( mapStep != null )
+    {
+      mapStep.put( key.toLowerCase(), value );
+    }
+    else
+    {
+      mapStep = createMapStyle();
+      mapStep.put( key.toLowerCase(), value );
+      m_stepStyleSettings.put( stepDate.toLowerCase(), mapStep );
+    }
+  }
+  
+  private static Map<String, Map<String, Object>> createMapStep( final String styleType )
+  {
+    final Map<String, Map<String, Object>> mapStep = new HashMap<String, Map<String, Object>>();
+    final Map<String, Object> mapStyle = createMapStyle();
+    mapStep.put( styleType.toLowerCase(), mapStyle );
+    return mapStep;
+  }
+
+  private static Map<String, Object> createMapStyle( )
+  {
+    final Map<String, Object> mapStyle = new HashMap<String, Object>();
+    fillMapStyleWithDefaults( mapStyle );
+    return mapStyle;
+  }
+  
+  private static void fillMapStyleWithDefaults( final Map<String, Object> mapStyle )
+  {
+    for( int i = 0; i < NodeStyleTypes.length; i++ )
+    {
+      String key = NodeStyleTypes[i];
+      mapStyle.put( COLOR_MIN_PREFIX + key.toLowerCase(), DEFAULT_COLOR_MIN );
+      mapStyle.put( COLOR_MAX_PREFIX + key.toLowerCase(), DEFAULT_COLOR_MAX );
+      mapStyle.put( VALUE_MIN_PREFIX + key.toLowerCase(), 0. );
+      mapStyle.put( VALUE_MAX_PREFIX + key.toLowerCase(), 100. );
+      mapStyle.put( AMOUNT_OF_CLASSES_PREFIX + key.toLowerCase(), DEFAULT_AMOUNT_CLASSES );
+    }
+  }
+
+  public static void setSldValueForStyleStep( final String styleType, final String stepDate, final String key, final Object value )
+  {
+    Map<String, Map<String, Object>> mapStep = m_styleSettings.get( stepDate.toLowerCase() );
+    if( mapStep != null )
+    {
+      Map<String, Object> mapStyle = mapStep.get( styleType.toLowerCase() );
+      if( mapStyle == null )
+      {
+        mapStyle = createMapStyle();
+        mapStep.put( styleType.toLowerCase(), mapStyle );
+      }
+      mapStyle.put( key.toLowerCase(), value );
+    }
+    else
+    {
+      mapStep = createMapStep( styleType );
+      Map<String, Object> mapStyle = mapStep.get( styleType.toLowerCase() );
+      mapStyle.put( key.toLowerCase(), value );
+      m_styleSettings.put( stepDate.toLowerCase(), mapStep );
+    }
   }
 
 }

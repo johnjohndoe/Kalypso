@@ -68,75 +68,116 @@ public class NodeResultMinMaxCatcher
 
   private double m_maxTerrain = Double.NEGATIVE_INFINITY;
 
+  double m_minWaveHsig = Double.POSITIVE_INFINITY;
+
+  double m_maxWaveHsig = Double.NEGATIVE_INFINITY;
+
+  double m_minWavePer = Double.POSITIVE_INFINITY;
+
+  double m_maxWavePer = Double.NEGATIVE_INFINITY;
+
   public void addNodeResult( final INodeResult nodeResult )
   {
-    final double velocity = nodeResult.getAbsoluteVelocity();
-    final double depth = nodeResult.getDepth();
-    final double waterlevel = nodeResult.getWaterlevel();
-    final double Terrain = nodeResult.getPoint().getZ();
+    try
+    {
+      final double velocity = nodeResult.getAbsoluteVelocity();
+      final double depth = nodeResult.getDepth();
+      final double waterlevel = nodeResult.getWaterlevel();
+      final double Terrain = nodeResult.getPoint().getZ();
+      final double waveHsig = nodeResult.getWaveHsig();
+      final double wavePer = nodeResult.getWavePeriod();
 
-    // TODO: implement the shear stress
-    final double shearstress = 0;
+      // TODO: implement the shear stress
+      final double shearstress = 0;
 
-    if( velocity < m_minVelocityAbs )
-      m_minVelocityAbs = velocity;
-    if( velocity > m_maxVelocityAbs )
-      m_maxVelocityAbs = velocity;
+      if( velocity < m_minVelocityAbs )
+        m_minVelocityAbs = velocity;
+      if( velocity > m_maxVelocityAbs )
+        m_maxVelocityAbs = velocity;
 
-    if( depth < m_minDepth )
-      m_minDepth = depth;
-    if( depth > m_maxDepth )
-      m_maxDepth = depth;
+      if( depth < m_minDepth )
+        m_minDepth = depth;
+      if( depth > m_maxDepth )
+        m_maxDepth = depth;
 
-    if( waterlevel < m_minWaterlevel )
-      m_minWaterlevel = waterlevel;
-    if( waterlevel > m_maxWaterlevel )
-      m_maxWaterlevel = waterlevel;
+      if( waterlevel < m_minWaterlevel )
+        m_minWaterlevel = waterlevel;
+      if( waterlevel > m_maxWaterlevel )
+        m_maxWaterlevel = waterlevel;
 
-    if( shearstress < m_minShearStress )
-      m_minShearStress = shearstress;
-    if( shearstress > m_maxShearStress )
-      m_maxShearStress = shearstress;
+      if( shearstress < m_minShearStress )
+        m_minShearStress = shearstress;
+      if( shearstress > m_maxShearStress )
+        m_maxShearStress = shearstress;
 
-    if( Terrain < m_minTerrain )
-      m_minTerrain = Terrain;
-    if( Terrain > m_maxTerrain )
-      m_maxTerrain = Terrain;
+      if( Terrain < m_minTerrain )
+        m_minTerrain = Terrain;
+      if( Terrain > m_maxTerrain )
+        m_maxTerrain = Terrain;
+
+      if( waveHsig > m_maxWaveHsig )
+        m_maxWaveHsig = waveHsig;
+      if( waveHsig < m_minWaveHsig )
+        m_minWaveHsig = waveHsig;
+
+      if( wavePer > m_maxWavePer )
+        m_maxWavePer = wavePer;
+      if( wavePer < m_minWavePer )
+        m_minWavePer = wavePer;
+    }
+    catch( Exception e )
+    {
+    }
 
   }
 
   public void addNodeResultMinMaxCatcher( NodeResultMinMaxCatcher minMaxCatcher )
   {
-    if( minMaxCatcher.getMaxDepth() > m_maxDepth )
-      m_maxDepth = minMaxCatcher.getMaxDepth();
-    if( minMaxCatcher.getMinDepth() < m_minDepth )
-      m_minDepth = minMaxCatcher.getMinDepth();
+    try
+    {
+      if( minMaxCatcher.getMaxDepth() > m_maxDepth )
+        m_maxDepth = minMaxCatcher.getMaxDepth();
+      if( minMaxCatcher.getMinDepth() < m_minDepth )
+        m_minDepth = minMaxCatcher.getMinDepth();
 
-    if( minMaxCatcher.getMaxWaterlevel() > m_maxWaterlevel )
-      m_maxWaterlevel = minMaxCatcher.getMaxWaterlevel();
-    if( minMaxCatcher.getMinWaterlevel() < m_minWaterlevel )
-      m_minWaterlevel = minMaxCatcher.getMinWaterlevel();
+      if( minMaxCatcher.getMaxWaterlevel() > m_maxWaterlevel )
+        m_maxWaterlevel = minMaxCatcher.getMaxWaterlevel();
+      if( minMaxCatcher.getMinWaterlevel() < m_minWaterlevel )
+        m_minWaterlevel = minMaxCatcher.getMinWaterlevel();
 
-    if( minMaxCatcher.getMaxVelocityAbs() > m_maxVelocityAbs )
-      m_maxVelocityAbs = minMaxCatcher.getMaxVelocityAbs();
-    if( minMaxCatcher.getMinVelocityAbs() < m_minVelocityAbs )
-      m_minVelocityAbs = minMaxCatcher.getMinVelocityAbs();
+      if( minMaxCatcher.getMaxVelocityAbs() > m_maxVelocityAbs )
+        m_maxVelocityAbs = minMaxCatcher.getMaxVelocityAbs();
+      if( minMaxCatcher.getMinVelocityAbs() < m_minVelocityAbs )
+        m_minVelocityAbs = minMaxCatcher.getMinVelocityAbs();
 
-    if( minMaxCatcher.getMaxVelocityAbs() > m_maxVelocityAbs )
-      m_maxVelocityAbs = minMaxCatcher.getMaxVelocityAbs();
-    if( minMaxCatcher.getMinVelocityAbs() < m_minVelocityAbs )
-      m_minVelocityAbs = minMaxCatcher.getMinVelocityAbs();
+      if( minMaxCatcher.getMaxVelocityAbs() > m_maxVelocityAbs )
+        m_maxVelocityAbs = minMaxCatcher.getMaxVelocityAbs();
+      if( minMaxCatcher.getMinVelocityAbs() < m_minVelocityAbs )
+        m_minVelocityAbs = minMaxCatcher.getMinVelocityAbs();
 
-    if( minMaxCatcher.getMaxShearStress() > m_maxShearStress )
-      m_maxShearStress = minMaxCatcher.getMaxShearStress();
-    if( minMaxCatcher.getMinShearStress() < m_minShearStress )
-      m_minShearStress = minMaxCatcher.getMinShearStress();
+      if( minMaxCatcher.getMaxShearStress() > m_maxShearStress )
+        m_maxShearStress = minMaxCatcher.getMaxShearStress();
+      if( minMaxCatcher.getMinShearStress() < m_minShearStress )
+        m_minShearStress = minMaxCatcher.getMinShearStress();
 
-    if( minMaxCatcher.getMaxTerrain() > m_maxTerrain )
-      m_maxTerrain = minMaxCatcher.getMaxTerrain();
-    if( minMaxCatcher.getMinTerrain() > m_minTerrain )
-      m_minTerrain = minMaxCatcher.getMinTerrain();
+      if( minMaxCatcher.getMaxTerrain() > m_maxTerrain )
+        m_maxTerrain = minMaxCatcher.getMaxTerrain();
+      if( minMaxCatcher.getMinTerrain() > m_minTerrain )
+        m_minTerrain = minMaxCatcher.getMinTerrain();
 
+      if( minMaxCatcher.getMaxWaveHsig() > m_maxWaveHsig )
+        m_maxWaveHsig = minMaxCatcher.getMaxWaveHsig();
+      if( minMaxCatcher.getMinWaveHsig() < m_minWaveHsig )
+        m_minWaveHsig = minMaxCatcher.getMinWaveHsig();
+
+      if( minMaxCatcher.getMaxWavePer() > m_maxWavePer )
+        m_maxWavePer = minMaxCatcher.getMaxWavePer();
+      if( minMaxCatcher.getMinWavePer() < m_minWavePer )
+        m_minWavePer = minMaxCatcher.getMinWavePer();
+    }
+    catch( Exception e )
+    {
+    }
   }
 
   public double getMinTerrain( )
@@ -187,6 +228,26 @@ public class NodeResultMinMaxCatcher
   public double getMaxShearStress( )
   {
     return m_maxShearStress;
+  }
+
+  public final double getMinWaveHsig( )
+  {
+    return m_minWaveHsig;
+  }
+
+  public final double getMinWavePer( )
+  {
+    return m_minWavePer;
+  }
+
+  public final double getMaxWaveHsig( )
+  {
+    return m_maxWaveHsig;
+  }
+
+  public final double getMaxWavePer( )
+  {
+    return m_maxWavePer;
   }
 
 }

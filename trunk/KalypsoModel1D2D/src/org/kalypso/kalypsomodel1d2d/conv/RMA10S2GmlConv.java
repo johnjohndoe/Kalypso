@@ -45,10 +45,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -57,8 +55,8 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Provides algorithm to convert from a bce2d model to a 1d2d discretisation model
@@ -235,7 +233,6 @@ public class RMA10S2GmlConv
     // m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
   }
 
-  @SuppressWarnings("deprecation")
   private void interpreteTimeLine( final String line )
   {
     // TODO implement Pattern-like parsing, instead of getting line parts via string index
@@ -243,24 +240,25 @@ public class RMA10S2GmlConv
     {
       try
       {
-        final String yearString = line.substring( 6, 13 ).trim();
-        final String hourString = line.substring( 18, 32 ).trim();
+//        final String yearString = line.substring( 6, 13 ).trim();
+//        final String hourString = line.substring( 18, 32 ).trim();
+//
+//        final int year = Integer.parseInt( yearString );
+//        final BigDecimal hours = new BigDecimal( hourString );
+//
+//        // REMARK: we read the calculation core time with the time zone, as defined in Kalypso Preferences
+//        final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+//        calendar.clear();
+//        calendar.set( year, 0, 1 );
+//
+//        final BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
+//        final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) ); //$NON-NLS-1$
+//
+//        calendar.add( Calendar.HOUR, wholeHours.intValue() );
+//        calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
 
-        final int year = Integer.parseInt( yearString );
-        final BigDecimal hours = new BigDecimal( hourString );
-
-        // REMARK: we read the calculation core time with the time zone, as defined in Kalypso Preferences
-        final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-        calendar.clear();
-        calendar.set( year, 0, 1 );
-
-        final BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
-        final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) ); //$NON-NLS-1$
-
-        calendar.add( Calendar.HOUR, wholeHours.intValue() );
-        calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
-
-        m_handler.handleTime( line, calendar.getTime() );
+//        m_handler.handleTime( line, calendar.getTime() );
+        m_handler.handleTime( line, ResultMeta1d2dHelper.interpreteRMA10TimeLine( line ) );
       }
       catch( final NumberFormatException e )
       {

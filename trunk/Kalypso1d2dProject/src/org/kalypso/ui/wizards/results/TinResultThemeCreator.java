@@ -263,7 +263,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
     if( styleFile.exists() == false )
     {
-      ResultSldHelper.processStyle( styleFile, type, m_minValue, m_maxValue );
+      ResultSldHelper.processStyle( styleFile, sldFolder, type, m_minValue, m_maxValue );
     }
 
     return styleLocation;

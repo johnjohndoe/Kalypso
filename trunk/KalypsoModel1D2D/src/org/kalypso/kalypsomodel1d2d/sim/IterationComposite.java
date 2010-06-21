@@ -66,6 +66,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
@@ -107,14 +108,14 @@ public class IterationComposite extends Composite
 
   private final ICalculationUnit m_subUnit;
 
-  public IterationComposite( final Composite composite, final RMAKalypsoSimulationRunner calculation, final ICalculationUnit subUnit, final int style )
+  public IterationComposite( final Composite composite, final IKalypsoSimulationRunnerComposite calculation, final ICalculationUnit subUnit, final int style )
   {
     super( composite, style );
 
     m_subUnit = subUnit;
 
     final Label unitLable = new Label( this, SWT.CENTER );
-    unitLable.setText( m_subUnit.getName() );
+    unitLable.setText( m_subUnit.getName() + " - " + calculation.getCalculationTypeName() ); //$NON-NLS-1$
     unitLable.setFont( JFaceResources.getBannerFont() );
 
     m_tableViewer = new DefaultTableViewer( this, SWT.BORDER | SWT.FULL_SELECTION );
@@ -278,9 +279,10 @@ public class IterationComposite extends Composite
     layout();
   }
 
-  protected void updateControl( final RMAKalypsoSimulationRunner calculation )
+  @SuppressWarnings("unchecked")
+  protected void updateControl( final IKalypsoSimulationRunnerComposite calculation )
   {
-    final IterationInfo iterationInfo = calculation.getIterationInfo();
+    final IIterationInfo iterationInfo = calculation.getIterationInfo();
     if( iterationInfo == null )
     {
       /* Calculation was not yet started */
@@ -333,8 +335,34 @@ public class IterationComposite extends Composite
 
     m_tableViewer.setInput( tr );
 
-    // resize id column
+    try
+    {
+      // set explicit the property of widget, in case of to few columns, setting of only first visible column is not
+      // enough for right layout
+      m_tableViewer.getTable().getColumn( 1 ).setData( "columnWidthPercent", 6 ); //$NON-NLS-1$
+      m_tableViewer.getTable().getColumn( 1 ).setData( "columnWidth", 24 ); //$NON-NLS-1$
+    }
+    catch( Exception e )
+    {
+    }
     m_tableViewer.getTable().getColumn( 1 ).setWidth( 24 );
+
+    TableColumn[] columns = m_tableViewer.getTable().getColumns();
+    int lColumnsCount = columns.length;
+    for( int i = 2; i < lColumnsCount; ++i )
+    {
+      final TableColumn lColumnIter = columns[i];
+      if( lColumnIter != null )
+      {
+        try
+        {
+          lColumnIter.setData( "columnWidthPercent", 90 / lColumnsCount - 2 ); //$NON-NLS-1$
+        }
+        catch( Exception e )
+        {
+        }
+      }
+    }
 
     /* Always reveal the last element */
     final Object[] records = tr.toArray(); // use to array, the tuple result may be changing

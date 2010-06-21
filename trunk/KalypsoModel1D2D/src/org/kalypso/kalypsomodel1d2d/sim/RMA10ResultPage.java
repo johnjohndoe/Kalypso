@@ -79,7 +79,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.internal.WorkbenchMessages;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.command.EmptyCommand;
@@ -126,10 +125,14 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   private final RMA10CalculationWizard m_parentWizard;
 
-  protected RMA10ResultPage( final String pageName, final FileObject fileObject, final IGeoLog geoLog, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard ) throws CoreException
+  protected boolean m_evaluateFullResults;
+
+  protected RMA10ResultPage( final String pageName, final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IGeoLog geoLog, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard ) throws CoreException
   {
     super( pageName );
-    m_resultManager = new ResultManager( fileObject, caseDataProvider, geoLog );
+    final ResultManager resultManager = new ResultManager( fileObjectRMA, fileObjectSWAN, caseDataProvider, geoLog );
+
+    m_resultManager = resultManager;
     m_unitFolder = unitFolder;
     m_caseDataProvider = caseDataProvider;
     m_parentWizard = parentWizard;
@@ -187,6 +190,21 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     } );
     // If non-restart, always all results must be deleted.
     deleteAllCheck.setEnabled( !controlModel.getRestart() );
+
+    final Button evaluateFullCheck = new Button( tweakGroup, SWT.CHECK );
+    evaluateFullCheck.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.18" ) ); //$NON-NLS-1$
+    evaluateFullCheck.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.19" ) ); //$NON-NLS-1$
+    evaluateFullCheck.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        m_evaluateFullResults = evaluateFullCheck.getSelection();
+      }
+    } );
 
     /* checklist with calculated steps to choose from */
 
@@ -287,8 +305,8 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     addSpinner( m_resultProcessViewer, composite );
 
-    final String SELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_selectLabel;
-    final String DESELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_deselectLabel;
+    final String SELECT_ALL_TITLE = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.16" );// WorkbenchMessages.SelectionDialog_selectLabel;
+    final String DESELECT_ALL_TITLE = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.17" );// WorkbenchMessages.SelectionDialog_deselectLabel;
 
     final Button selectButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL_TITLE, false );
 
@@ -476,6 +494,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     // Remark: if not restart, always delete everything, in that
     // case do not ask the user either
     // TODO: make ui for the bean
+    bean.evaluateFullResults = m_evaluateFullResults;
     bean.deleteAll = m_deleteAllResults;
     bean.deleteFollowers = true;
 
@@ -493,7 +512,6 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     }
 
     /* Result processing */
-
     final ResultProcessingOperation processingOperation = new ResultProcessingOperation( m_resultManager, bean );
 
     m_isProcessing = true;
@@ -515,7 +533,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
       try
       {
         // set the dirty flag of the results model
-        ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) ); //$NON-NLS-1$
+        ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
       }
       catch( InvocationTargetException e )
       {

@@ -33,7 +33,14 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
+import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModel;
+import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem;
+import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
+import org.kalypso.kalypsosimulationmodel.core.wind.NativeWindDataModelWrapper;
+import org.kalypso.kalypsosimulationmodel.core.wind.WindDataModelSystem;
+import org.kalypso.kalypsosimulationmodel.core.wind.WindModel;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -42,6 +49,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Patrice Congo
  * 
  */
+@SuppressWarnings("unchecked")
 public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 {
   interface AdapterConstructor
@@ -54,11 +62,10 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
      * @param cls
      * @return
      * @throws IllegalArgumentException
-     *           if
-     *           <ul>
-     *           <li/>feature or cls is null
-     *           <li/>feature cannot be converted
-     *           </ul>
+     *             if
+     *             <ul>
+     *             <li/>feature or cls is null <li/>feature cannot be converted
+     *             </ul>
      */
     public Object constructAdapter( Feature feature, Class< ? > cls ) throws IllegalArgumentException;
   }
@@ -78,7 +85,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
   {
     if( !(adaptableObject instanceof Feature) )
     {
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.3" ) + Messages.getString( "org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.4" ) + adaptableObject ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.3") + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.4") + adaptableObject ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     final AdapterConstructor ctor = constructors.get( adapterType );
@@ -113,6 +120,17 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( ITerrainModel.class, cTor );
+
+    // wind model
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        
+        return new WindModel( feature );
+      }
+    };
+    cMap.put( IWindModel.class, cTor );
 
     // IRoughnessCls
     cTor = new AdapterConstructor()
@@ -260,6 +278,79 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( ITerrainModel.class, cTor );
+    
+    // IWindModel
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER ) )
+        {
+          try
+          {
+            return new NativeWindDataModelWrapper( feature );
+          }
+          catch( Throwable th )
+          {
+            throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.6") + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.7") + feature + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.10") + cls, th ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          }
+          
+        }
+//        else if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS ) )
+//        {
+//          try
+//          {
+//            return new WindDataModelSystem( feature );
+//          }
+//          catch( Throwable th )
+//          {
+//            throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.11") + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.12") + feature + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.13") + cls, th ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//          }
+//          
+//        }
+        else
+        {
+          System.out.println( "Could not adapt=" + feature + " to" + cls ); //$NON-NLS-1$ //$NON-NLS-2$
+          return null;
+        }
+      }
+    };
+    cMap.put( IWindDataModel.class, cTor );
+    
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS ) )
+        {
+          try
+          {
+            return new WindDataModelSystem( feature );
+          }
+          catch( Throwable th )
+          {
+            throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.11") + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.12") + feature + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.13") + cls, th ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          }
+          
+        }
+        else
+        {
+          System.out.println( "Could not adapt=" + feature + " to" + cls ); //$NON-NLS-1$ //$NON-NLS-2$
+          return null;
+        }
+      }
+    };
+    cMap.put( IWindDataModelSystem.class, cTor );
+    
+    // IWindModel
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        return new WindModel( feature );
+      }
+    };
+    cMap.put( IWindModel.class, cTor );
 
     // IFlowRelationshipModel
     cTor = new AdapterConstructor()

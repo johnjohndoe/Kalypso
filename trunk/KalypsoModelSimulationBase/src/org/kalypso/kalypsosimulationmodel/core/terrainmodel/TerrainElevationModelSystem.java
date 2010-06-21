@@ -124,10 +124,17 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
   {
     for( final ITerrainElevationModel terrainElevationModel : terrainElevationModels )
     {
-      final double elevation = terrainElevationModel.getElevation( location );
-      if( elevation != Double.NaN )
+      try
       {
-        return elevation;
+        final double elevation = terrainElevationModel.getElevation( location );
+        if( elevation != Double.NaN )
+        {
+          return elevation;
+        }
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
       }
     }
     return Double.NaN;

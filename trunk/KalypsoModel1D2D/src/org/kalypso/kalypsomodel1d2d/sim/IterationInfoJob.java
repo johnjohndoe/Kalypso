@@ -59,13 +59,13 @@ import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
  */
 public class IterationInfoJob extends Job
 {
-  private IterationInfo m_iterationInfo = null;
+  private IIterationInfo m_iterationInfo = null;
 
   private final IProgressMonitor m_monitor;
 
   private final int m_numberOfSteps;
 
-  public IterationInfoJob( final IterationInfo info, final int numberOfSteps, final IProgressMonitor monitor )
+  public IterationInfoJob( final IIterationInfo info, final int numberOfSteps, final IProgressMonitor monitor )
   {
     super( "IterationInfoJob" ); //$NON-NLS-1$
     m_numberOfSteps = numberOfSteps;

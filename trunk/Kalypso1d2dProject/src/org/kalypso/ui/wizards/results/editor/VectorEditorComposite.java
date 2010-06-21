@@ -154,7 +154,12 @@ public class VectorEditorComposite extends Composite
       if( object instanceof Mark )
       {
         m_mark = (Mark) object;
-        m_fill = m_mark.getFill();
+        try{
+          m_fill = m_mark.getFill();
+        }
+        catch (Exception e) {
+          // TODO: handle exception
+        }
         m_stroke = m_mark.getStroke();
       }
 

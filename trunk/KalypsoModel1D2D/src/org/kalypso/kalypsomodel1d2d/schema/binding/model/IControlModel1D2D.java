@@ -160,4 +160,29 @@ public interface IControlModel1D2D extends IControlModel
   public Integer getMFW( );
 
   public Integer getBUFFSIZ( );
+  
+  //SWAN
+  public void setCalculateSWAN( final boolean doCalculateSWAN );
+
+  public boolean calculateSWAN();
+
+  public String getVersionSWAN();
+  
+  public boolean isRestartAfterSWAN();
+  
+  public Integer getINITialValuesSWAN();
+  
+  public String getINITialValuesParSWAN();
+  
+  public Integer getAlgBoundarySWAN();
+  
+  public boolean isConstantWindSWAN();
+
+  public String getConstantWindParSWAN();
+
+  public String getAdditionalResultsParSWAN();
+  
+  public boolean isInCartCoordSWAN();
+  
+  public boolean isWindGEN3SWAN();
 }

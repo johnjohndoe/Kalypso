@@ -53,5 +53,7 @@ public class ProcessResultsBean
 
   public boolean deleteFollowers;
 
+  public boolean evaluateFullResults;
+
   public Date[] userCalculatedSteps;
 }

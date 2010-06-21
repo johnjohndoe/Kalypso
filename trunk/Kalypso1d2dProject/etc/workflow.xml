@@ -27,6 +27,10 @@
 				<Help>%Kalypso1D2D_Preprocessing_DataLoad_ElevLoad_help</Help>
 				<Name>%Kalypso1D2D_Preprocessing_DataLoad_ElevLoad</Name>
 			</Task>
+			<Task context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__WindDataLoad">
+				<Help>%Kalypso1D2D_Preprocessing_DataLoad_WindLoad_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_DataLoad_WindLoad</Name>
+			</Task>
 			<!--
 				<Task context="BaseMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RivNetLoad">
 				<Help>Einladen von Gewässernetzwerkdaten mit Kilometrierung (SHP)</Help>
@@ -119,6 +123,14 @@
 					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_EditParams2D_help</Help>
 					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_EditParams2D</Name>
 				</Task>
+				<!-- 
+				<Task type="ASYNCHRONOUS"
+					context="WindData"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__EditWindData2D">
+					<Help>TODO: Label edit wind data 2d Help</Help>
+					<Name>TODO: Label edit wind data 2d Name</Name>
+				</Task>
+				-->
 				<Task type="ASYNCHRONOUS" context="FenetMap"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
 					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_Chan2DGen_help</Help>
@@ -134,6 +146,11 @@
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
 					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_AssignElevs_help</Help>
 					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_AssignElevs</Name>
+				</Task>
+				<Task type="ASYNCHRONOUS" context="FenetMap"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_showWinds">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_ShowWindData_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_ShowWindData</Name>
 				</Task>
 			</TaskGroup>
 			<TaskGroup

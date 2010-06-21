@@ -101,7 +101,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
     final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
 
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.2"), null, resultFilter, resultComparator, themeConstructionFactory ); //$NON-NLS-1$
+    SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.2"), null, resultFilter, resultComparator, themeConstructionFactory, null );//$NON-NLS-1$ 
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
@@ -145,7 +145,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
       m_scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
 
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = modelProvider.getModel( IScenarioResultMeta.class );
+      m_resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
     }
     catch( final CoreException e )
     {

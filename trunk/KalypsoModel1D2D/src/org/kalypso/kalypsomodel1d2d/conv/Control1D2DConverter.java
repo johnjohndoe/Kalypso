@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -65,6 +66,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit.TYPE;
@@ -91,7 +93,6 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.observation.util.TupleResultIndex;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -129,6 +130,8 @@ public class Control1D2DConverter
   private boolean m_isBCTupleResultIndexCached = false;
 
   private final IGeoLog m_log;
+  
+  private List< Date > m_listDateSteps = null;
 
   private final ICalculationUnit m_calculationUnit;
 
@@ -156,6 +159,7 @@ public class Control1D2DConverter
           m_unitBoundaryConditions.add( boundaryCondition );
       }
     }
+    m_listDateSteps = new ArrayList< Date >();
   }
 
   public void writeR10File( final OutputStream outputStream ) throws CoreException, IOException
@@ -210,6 +214,13 @@ public class Control1D2DConverter
     formatter.format( "STFLFIL %s%n", ISimulation1D2DConstants.BC_WQ_File ); //$NON-NLS-1$
     /* We always write a building file, even if it is empty. */
     formatter.format( "INCSTR  %s%n", ISimulation1D2DConstants.BUILDING_File ); //$NON-NLS-1$
+
+    /* We always write a wind file, even if it is empty. */
+    formatter.format( "AWINDIN2%s%n", ISimulation1D2DConstants.WIND_RMA10_File ); //$NON-NLS-1$
+    formatter.format( "INSRCORD%s%n", ISimulation1D2DConstants.WIND_RMA10_COORDS_File ); //$NON-NLS-1$
+
+    /* We always write a building file, even if it is empty. */
+//    formatter.format( "INSSTR  %s%n", ISimulation1D2DConstants.SURFACE_TRACTTION_File ); //$NON-NLS-1$
 
     formatter.format( "ENDFIL%n" ); //$NON-NLS-1$
 
@@ -295,7 +306,8 @@ public class Control1D2DConverter
       final int roughnessAsciiID = m_nativeIDProvider.getConversionID( rClass );
 
       final int iedsw = m_controlModel.getIEDSW();
-      final Double[] eddy = rClass.getViscosities( iedsw );
+      Double[] eddy = rClass.getViscosities( iedsw ); // for empty tbmin* 1000 for all eddies 
+      eddy = checkViscosities( eddy );
       final Double ks = rClass.getKs();
       final Double axAy = rClass.getAxAy();
       final Double dp = rClass.getDp();
@@ -315,6 +327,24 @@ public class Control1D2DConverter
     final Map<Integer, IFlowRelationship> buildingMap = m_buildingProvider.getBuildingData();
     for( final Integer buildingID : buildingMap.keySet() )
       writeEDBlock( formatter, buildingID, 0.0, 0.0, 0.0, 0.0 );
+  }
+
+  private Double[] checkViscosities( Double[] eddy )
+  {
+    Double[] eddyRes = new Double[ eddy.length ]; 
+    Double lDoubleDefaultViscosity = m_controlModel.getTBMIN();
+
+    for( int i = 0; i < eddy.length; i++ )
+    {
+      Double double1 = eddy[i];
+      if( double1.equals( 0.0 ) ){
+        eddyRes[ i ] = lDoubleDefaultViscosity * 1000;
+      }
+      else{
+        eddyRes[ i ] = double1;
+      }
+    }
+    return eddyRes;
   }
 
   private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final Double[] eddy, final Double ks, final Double axayCorrected, final Double dpCorrected ) throws IOException
@@ -471,6 +501,7 @@ public class Control1D2DConverter
 
         final XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( indexTime );
         Calendar lastStepCal = cal.toGregorianCalendar();
+        m_listDateSteps.add( DateUtilities.toDate( cal ) );   
         // lastStepCal.setTimeZone( DEFAULT_TIMEZONE );
         int stepCount = 1;
         for( ; iterator.hasNext(); stepCount++ )
@@ -479,7 +510,9 @@ public class Control1D2DConverter
 
           // final float uRVal = ((BigDecimal) record.getValue( indexRelaxationsFaktor )).floatValue();
           final String uRVal = ((String) record.getValue( indexRelaxationsFaktor ));
-          final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( indexTime )).toGregorianCalendar();
+          final XMLGregorianCalendar stepXMLGrCal = (XMLGregorianCalendar) record.getValue( indexTime );
+          final Calendar stepCal = stepXMLGrCal.toGregorianCalendar();
+          m_listDateSteps.add( DateUtilities.toDate( stepXMLGrCal ) );   
           // stepCal.setTimeZone( DEFAULT_TIMEZONE );
           final String unsteadyMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.36", stepCount ); //$NON-NLS-1$
           writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );
@@ -514,7 +547,9 @@ public class Control1D2DConverter
     final int dayOfYear;
     final double ihre;
 
-    Calendar kalypsoCalendarStep = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+//    TimeZone displayTimeZone = KalypsoGisPlugin.getDefault().getDisplayTimeZone();
+    TimeZone displayTimeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    Calendar kalypsoCalendarStep = Calendar.getInstance( displayTimeZone );
 
     // unsteady
     if( calculationStep != null )
@@ -525,7 +560,7 @@ public class Control1D2DConverter
       year = kalypsoCalendarStep.get( Calendar.YEAR );
 
       // REMARK: we write the date in the kalypso-preferences time zone!
-      final Calendar kalypsoCallendarPreviousStep = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+      final Calendar kalypsoCallendarPreviousStep = Calendar.getInstance( displayTimeZone );
       kalypsoCallendarPreviousStep.setTime( lastStepCal.getTime() );
 
       timeStepInterval = kalypsoCalendarStep.getTimeInMillis() - kalypsoCallendarPreviousStep.getTimeInMillis();
@@ -639,7 +674,7 @@ public class Control1D2DConverter
       if( boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_ELEMENT1D2D ) || boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
       {
         final int ordinal = m_nativeIDProvider.getConversionID( boundaryCondition.getParentElementID() );
-        final double stepValue;
+        double stepValue;
         final IObservation<TupleResult> obs = boundaryCondition.getObservation();
         final TupleResult obsResult = obs.getResult();
         final IComponent abscissaComponent = TupleResultUtilities.findComponentById( obsResult, bcAbscissaComponentType );
@@ -664,8 +699,14 @@ public class Control1D2DConverter
             final Number result = (Number) tupleResultIndex.getValue( ordinateComponent, stepCal.getTime() );
             stepValue = (result == null || Double.isNaN( result.doubleValue() )) ? 0.0 : result.doubleValue();
           }
-          else
-            stepValue = boundaryCondition.getStationaryCondition();
+          else{
+            try{
+              stepValue = Double.parseDouble( boundaryCondition.getStationaryCondition() );
+            }
+            catch (Exception e) {
+              stepValue = Double.NaN;
+            }
+          }
 
           if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE )
               && (boundaryCondition.isAbsolute() == null) )
@@ -826,6 +867,42 @@ public class Control1D2DConverter
 
     return false;
   }
+  
+//  /**
+//   * checks if the given string value contains string of form "0.1 to 0.5" and if it is, parses it and expands it into according to 
+//   * amount of steps values and put them into pListFactors as floats
+//   *    
+//   * direct implementation of parsing the relaxation factor
+//   */
+//  private boolean isLoopFomatedFactor( String pStrValue, List<Float> pListFactors, int pIntNumberIterations ) throws CoreException
+//  {
+//    final String lStrRegex = "[ \\t]*[0-9][.,][0-9][ \\t]*[tT][oO][ \\t]*[0-9][.,][0-9][ \\t]*"; //$NON-NLS-1$
+//    String lStrToCheck = pStrValue.trim().toLowerCase();
+//    if( Pattern.matches( lStrRegex, lStrToCheck ) ){
+//      int lIntIndexSep = lStrToCheck.indexOf( "to" ); //$NON-NLS-1$
+//      float lFloatStart = getFloatFromSimpleFloatString( lStrToCheck.substring( 0, lIntIndexSep ).trim() );
+//      float lFloatEnd = getFloatFromSimpleFloatString( lStrToCheck.substring( lIntIndexSep + 2 ).trim() );
+//      if( lFloatStart < 0.0 || lFloatStart > 1.0 || lFloatEnd < 0.0 || lFloatEnd > 1.0 ){
+//        final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
+//        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+//      }
+//      int lIntAllInc = Math.abs( ( int )( lFloatEnd * 10 ) - ( int )( lFloatStart * 10 ) );
+//      int lIntPer = ( pIntNumberIterations / ( lIntAllInc ) );
+//      int lIntIncDone = 0;
+//      float lFloatSignum = Math.signum( lFloatEnd - lFloatStart );
+//      for( int i = 1; i <= pIntNumberIterations; ++i ){
+//        float lFloatRes = (float) ( lFloatStart + 0.1 * lIntIncDone * lFloatSignum ); 
+//        pListFactors.add( lFloatRes ) ;
+//        if( (i) % lIntPer == 0 && lIntIncDone < lIntAllInc ){
+//          lIntAllInc++; 
+//          lIntIncDone++;
+//        }
+//      }
+//      return true;
+//    }
+//
+//    return false;
+//  }
 
   /**
    * checks if the given string value contains semicolon separated list of values and if it is parses it into
@@ -886,8 +963,10 @@ public class Control1D2DConverter
    */
   private Date getFirstTimeStep( ) throws CoreException
   {
-    if( m_controlModel.isUnsteadySelected() == false )
-      return new Date();
+    if( m_controlModel.isUnsteadySelected() == false ){
+      m_listDateSteps.add( new Date() );
+      return m_listDateSteps.get( 0 );
+    }
 
     m_controlModel.isUnsteadySelected();
     final IObservation<TupleResult> tupleSet = m_controlModel.getTimeSteps();
@@ -906,11 +985,18 @@ public class Control1D2DConverter
 
     final TupleResult owner = firstRecord.getOwner();
     final int indexTime = owner.indexOfComponent( compTime );
-    return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( indexTime ) );
+    return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( indexTime ) );  
   }
 
   public LinkedHashMap<Integer, IBoundaryCondition> getBoundaryConditionsIDProvider( )
   {
     return m_WQboundaryConditionsIDProvider;
   }
+
+  public final Date[] getListDateSteps( )
+  {
+    return m_listDateSteps.toArray( new Date[ m_listDateSteps.size() ] );
+  }
+  
+  
 }

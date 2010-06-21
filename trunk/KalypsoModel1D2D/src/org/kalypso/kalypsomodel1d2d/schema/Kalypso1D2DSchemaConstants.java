@@ -42,4 +42,8 @@ public class Kalypso1D2DSchemaConstants
   public static final QName TIN_RESULT_PROP_PARAMETER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ); //$NON-NLS-1$
 
   public static final QName TIN_RESULT_PROP_UNIT = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ); //$NON-NLS-1$
+
+  public static final QName NODE_RESULT = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" ); //$NON-NLS-1$
+
+  public static final QName NODE_RESULT_PROP_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ); //$NON-NLS-1$
 }

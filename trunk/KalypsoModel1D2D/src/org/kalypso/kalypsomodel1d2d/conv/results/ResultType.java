@@ -57,6 +57,9 @@ public class ResultType
     VELOCITY_X,
     VELOCITY_Y,
     DIFFERENCE,
-    TERRAIN;
+    TERRAIN,
+    WAVEHSIG,
+    WAVEDIR,
+    WAVEPER;
   }
 }

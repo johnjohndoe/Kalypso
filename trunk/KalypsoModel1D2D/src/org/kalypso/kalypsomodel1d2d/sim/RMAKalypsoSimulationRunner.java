@@ -64,9 +64,11 @@ import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
+import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.refactoring.DefaultWpsObserver;
 import org.kalypso.service.wps.refactoring.IWPSObserver;
+import org.kalypso.service.wps.refactoring.IWPSProcess;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
@@ -75,7 +77,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * Represents a calculation with a rma10s.exe. Helps generation of the ASCII input files and to start the process.
  */
-public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements ISimulation1D2DConstants, IWPSObserver
+public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements ISimulation1D2DConstants, IWPSObserver, IKalypsoSimulationRunnerComposite
 {
   private final IControlModel1D2D m_controlModel;
 
@@ -83,15 +85,19 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
 
   private IStatus m_simulationStatus;
 
-  private IterationInfo m_iterationInfo;
+  private IIterationInfo m_iterationInfo;
 
   private IterationInfoJob m_iterationJob;
 
-  private FileObject m_resultsDir = null;
+  private FileObject m_resultsDirRMA = null;
 
   private final String m_serviceEndpoint;
 
   private ExecuteRMAKalypsoSimulation m_executeRMAKalypsoSimulation;
+
+  private WPSRequest m_wpsRequest = null;
+
+  private IWPSProcess m_wpsProcess = null;
 
   public RMAKalypsoSimulationRunner( final IGeoLog geoLog, final IControlModel1D2D controlModel, final String serviceEndpoint )
   {
@@ -111,7 +117,6 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
    * <li>write rma10s ASCII files to temporary directory according to provided gml-models</li>
    * <li>write .exe to temporary directory</li>
    * <li>execute the .exe</li>
-   * <li>read .2d files and process them to the output directory</li>
    * </ul>
    */
   public IStatus runCalculation( final IProgressMonitor monitor )
@@ -143,6 +148,7 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
 
       // generate input files
       final ExecutePreRMAKalypso executePreRMAKalypso = new ExecutePreRMAKalypso( m_serviceEndpoint, restartInfos );
+      m_wpsRequest = executePreRMAKalypso.getWpsRequest();
       final IStatus preStatus = executePreRMAKalypso.run( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
 
       // abort on error
@@ -155,12 +161,15 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
       final URI controlFile = new URI( executePreRMAKalypso.getControlFileUrl() );
       final URI buildingFile = new URI( executePreRMAKalypso.getBuildingFileUrl() );
       final URI bcwqFile = new URI( executePreRMAKalypso.getBcwqFileUrl() );
+      final URI windFile = new URI( executePreRMAKalypso.getWindUrl() );
+      final URI windCoordFile = new URI( executePreRMAKalypso.getWindCoordUrl() );
 
-      m_executeRMAKalypsoSimulation = new ExecuteRMAKalypsoSimulation( m_serviceEndpoint, this, rmaVersion, modelFile, controlFile, buildingFile, bcwqFile );
+      m_executeRMAKalypsoSimulation = new ExecuteRMAKalypsoSimulation( m_serviceEndpoint, this, rmaVersion, modelFile, controlFile, buildingFile, bcwqFile, windFile, windCoordFile );
       final IStatus simulationStatus = m_executeRMAKalypsoSimulation.run( progress.newChild( 900, SubMonitor.SUPPRESS_NONE ) );
-      
+      m_wpsProcess = m_executeRMAKalypsoSimulation.getWpsRequest();
+
       // at least once update
-      handleStarted(progress, null);
+      handleStarted( progress, null );
       return simulationStatus;
     }
     catch( final Throwable e )
@@ -210,7 +219,7 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
     // null );
   }
 
-  public IterationInfo getIterationInfo( )
+  public IIterationInfo getIterationInfo( )
   {
     return m_iterationInfo;
   }
@@ -222,7 +231,7 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
 
   public FileObject getTempDir( )
   {
-    return m_resultsDir;
+    return m_resultsDirRMA;
   }
 
   /**
@@ -239,14 +248,14 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
 
     try
     {
-      m_resultsDir = m_executeRMAKalypsoSimulation.getResultsDir();
-      if( m_resultsDir == null )
+      m_resultsDirRMA = m_executeRMAKalypsoSimulation.getResultsDir();
+      if( m_resultsDirRMA == null )
         return;
 
       // The iteration job (and its info) monitor the content of the "Output.itr" file
       // and inform the user about the current progress of the process.
       // watch iteration observation directly in temp dir (only possible for local simulation)
-      final FileObject iterObsFile = m_resultsDir.resolveFile( OUTPUT_ITR );
+      final FileObject iterObsFile = m_resultsDirRMA.resolveFile( OUTPUT_ITR_RMA );
       // and put processed iterations GML into folder "iterObs" in result temp dir
       //      final File iterObsDir = new File( m_resultTmpDir, "iterObs" ); //$NON-NLS-1$
       final File iterObsDir = FileUtilities.TMP_DIR;
@@ -312,5 +321,27 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
     }
 
     return m_log.log( severity, CODE_RMA10S, message, location, null );
+  }
+
+  public IStatus cancelJob( )
+  {
+    if( m_wpsRequest != null )
+    {
+      return m_wpsRequest.cancelJob();
+    }
+    if( m_wpsProcess != null )
+    {
+      return m_wpsProcess.cancelJob();
+    }
+    return StatusUtilities.createStatus( IStatus.OK, CODE_NONE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1" ), null ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.sim.IKalypsoSimulationRunnerComposite#getCalculationTypeName()
+   */
+  @Override
+  public String getCalculationTypeName( )
+  {
+    return "RMA Simulation";
   }
 }

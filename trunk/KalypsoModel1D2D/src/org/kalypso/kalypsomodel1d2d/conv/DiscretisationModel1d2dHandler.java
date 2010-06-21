@@ -78,6 +78,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  * @author Patrice Congo
  * 
  */
+@SuppressWarnings("unchecked")
 public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandler
 {
   /**
@@ -168,7 +169,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     m_model.getElements().removeAllAtOnce( Arrays.asList( elementsToRemove ) );
   }
   
-  @SuppressWarnings("unchecked")
   private Feature[] getElementsWithoutGeometry( )
   {
     Set< Feature > lSetToRemove = new HashSet< Feature >();

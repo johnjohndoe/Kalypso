@@ -58,6 +58,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.i18n.Messages;
 
@@ -85,15 +88,32 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
 
   private final ViewerComparator m_comparator;
 
-  public SelectResultWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final ViewerComparator comparator, final IThemeConstructionFactory factory )
+  protected IGeoLog m_geoLog;
+
+  public SelectResultWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final ViewerComparator comparator, final IThemeConstructionFactory factory, final IGeoLog geoLog )
   {
     super( pageName, title, titleImage );
     m_comparator = comparator;
 
     m_factory = factory;
     m_filter = filter;
+    if( geoLog == null )
+    {
+      try
+      {
+        m_geoLog = new GeoLog( KalypsoModel1D2DPlugin.getDefault().getLog() );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+    else
+    {
+      m_geoLog = geoLog;
+    }
 
-    setDescription( Messages.getString("org.kalypso.ui.wizards.results.SelectResultWizardPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.results.SelectResultWizardPage.0" ) ); //$NON-NLS-1$
   }
 
   public void setResultMeta( final IResultMeta resultRoot )

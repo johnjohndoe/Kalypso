@@ -41,7 +41,10 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IStaticModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 
 /**
  * Interface for classes representing a wb1d2d:StaticModel1D2D
@@ -52,9 +55,31 @@ import org.kalypso.kalypsosimulationmodel.core.modeling.IStaticModel;
 public interface IStaticModel1D2D extends IStaticModel
 {
   /**
-   * To get the discretisation sunb-model of this static model
+   * To get the discretisation sub-model of this static model
    * 
    * @return the discretisation of this static model
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel( );
+
+  /**
+   * To get the flow relationship sub-model of this static model
+   * 
+   * @return the flow relationship sub-model of this static model
+   */
+  public IFlowRelationshipModel getFlowRelationshipModel( );
+
+  /**
+   * To get the terrain sub-model of this static model
+   * 
+   * @return the terrain model of this static model
+   */
+  public ITerrainModel getTerrainModel( );
+
+  /**
+   * To get the wind sub-model of this static model
+   * 
+   * @return the wind model of this static model
+   */
+  public IWindModel getWindModel( );
+
 }

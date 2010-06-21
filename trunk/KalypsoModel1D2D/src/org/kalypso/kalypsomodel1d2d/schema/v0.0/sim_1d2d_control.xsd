@@ -129,6 +129,175 @@
 						</xs:simpleType>
 					</xs:element>
 					<!-- ControlDataBlock-->
+					<xs:element name="SWANCalculation" type="xs:boolean" default="false">
+						<xs:annotation>
+							<xs:documentation>
+								Calculation with SWAN
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SWANVersion">
+						<xs:annotation>
+							<xs:documentation>
+								Version des Rechenkerns SWAN·Kalypso
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="SWANConstantBoundary" type="xs:boolean" default="false">
+						<xs:annotation>
+							<xs:documentation>
+								Set boundary conditions constant
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SWANBoundaryAlg" default="0">
+						<xs:annotation>
+							<xs:documentation>
+								General algorithm for handling the boundary conditions 
+								of actual simulation.
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:enumeration value="0">
+									<xs:annotation>
+										<xs:documentation>
+											<![CDATA[Default JONSWAp]]>
+											<![CDATA[Default: JONswap; PEAK DSPR POWER)]]>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="1">
+									<xs:annotation>
+										<xs:documentation>
+											PM
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="2">
+									<xs:annotation>
+										<xs:documentation>
+											GAUS
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="3">
+									<xs:annotation>
+										<xs:documentation>
+											BIN
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="SWANINITialValues" default="0">
+						<xs:annotation>
+							<xs:documentation>
+								<![CDATA[Initial Start Values ]]>
+								<![CDATA[Initial Start Values ]]>
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:enumeration value="0">
+									<xs:annotation>
+										<xs:documentation>
+											<![CDATA[00 Default(SWAN) ]]>
+										</xs:documentation>
+										<xs:documentation>
+											<![CDATA[00 Default(SWAN)]]>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="1">
+									<xs:annotation>
+										<xs:documentation>
+											<![CDATA[01 Zero(RMA)]]>
+										</xs:documentation>
+										<xs:documentation>
+											<![CDATA[01 Zero(RMA))]]>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="2">
+									<xs:annotation>
+										<xs:documentation>
+											<![CDATA[02 PAR  hs per dir dd]]>
+										</xs:documentation>
+										<xs:documentation>
+											<![CDATA[02 PAR  hs per dir dd]]>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="3">
+									<xs:annotation>
+										<xs:documentation>
+											<![CDATA[03 HOTSTART 'fname']]>
+										</xs:documentation>
+										<xs:documentation>
+											<![CDATA[03 HOTSTART 'fname']]>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="SWANINITialValuesPar" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>
+								Manual definition of parameters for selected PAR mode in INIT values
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SWANConstantWind" type="xs:boolean" default="false">
+						<xs:annotation>
+							<xs:documentation>
+								Calculate with constant wind
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SWANCoordCart" type="xs:boolean" default="false">
+						<xs:annotation>
+							<xs:documentation>
+								Use Cartesian coordinates system
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SWANGEN3" type="xs:boolean" default="false">
+						<xs:annotation>
+							<xs:documentation>
+								Use Cartesian coordinates system
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SWANConstantWindPar" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>
+								Manual definition of wind mode input
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SWANAdditionalResultsPar" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>
+								Manual definition of additional output fields 
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SWANInputCoordFile" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>
+								File with specific coordinates for additional output of SWAN in text format
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="VEGETA" type="xs:boolean" default="true">
 						<xs:annotation>
 							<xs:documentation>

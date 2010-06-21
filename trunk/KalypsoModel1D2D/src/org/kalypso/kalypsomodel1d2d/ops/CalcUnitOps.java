@@ -57,6 +57,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
@@ -353,16 +354,20 @@ public class CalcUnitOps
    *             if condition or unit is null or grabDistance is less than 0
    * 
    */
-  public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit unit )
+  public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit unit, final IBoundaryCondition.BOUNDARY_TYPE typeToCount )
   {
     int count = 0;
     for( final IBoundaryCondition condition : conditions )
     {
-      if( isBoundaryConditionOf( unit, condition ) )
+      if( isBoundaryConditionOf( unit, condition ) && typeToCount.equals( condition.getBoundaryType() ) )
         count++;
     }
 
     return count;
+  }
+  
+  public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit unit  ){
+    return countAssignedBoundaryConditions( conditions, unit, IBoundaryCondition.BOUNDARY_TYPE.HydroBoundary );
   }
 
   public static ICalculationUnit findSubUnit( final ICalculationUnit calcUnit, IFE1D2DElement element )

@@ -78,6 +78,18 @@ public interface INodeResult extends IFeatureWrapper2
   public double getVirtualDepth( );
 
   public double getWaterlevel( );
+  
+  public abstract void setWaveHsig( final double hsig );
+  
+  public abstract void setWavePeriod( final double period );
+  
+  public abstract void setWaveDirection( final double direction );
+  
+  public double getWaveHsig( );
+  
+  public double getWavePeriod( );
+  
+  public double getWaveDirection( );
 
   public boolean isWet( );
 

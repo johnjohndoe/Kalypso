@@ -29,6 +29,9 @@
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.wind.IWindModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection"/>
       
@@ -49,6 +52,13 @@
             name="Native-Terrain-Elevation-Shape-Builder"/>
    </extension>
    <extension
+         point="org.kalypso.deegree.functionProperty">
+      <function
+            class="org.kalypso.kalypsosimulationmodel.core.wind.geom.WindDataShapeGeometry"
+            id="org.kalypso.kalypsosimulationmodel.core.wind.geom.WindDataShapeGeometry"
+            name="Native-Wind-Data-Shape-Builder"/>
+   </extension>
+   <extension
          point="org.kalypso.afgui.scenarioData">
       <dataSet
             id="org.kalypso.kalypso1d2d">
@@ -67,13 +77,12 @@
                classKey="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel"
                modelPath="models/terrain.gml">
          </scenarioDatum>
+         <scenarioDatum
+               bundle="org.kalypso.ModelSimulationBase"
+               classKey="org.kalypso.kalypsosimulationmodel.core.wind.IWindModel"
+               modelPath="models/wind.gml"> 
+         </scenarioDatum>
       </dataSet>
    </extension>
-	<extension point="org.kalypso.ui.featureViewExtensionControl">
-        <extensionControl
-              class="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory"
-              id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
-        </extensionControl>
-	</extension>
 
 </plugin>

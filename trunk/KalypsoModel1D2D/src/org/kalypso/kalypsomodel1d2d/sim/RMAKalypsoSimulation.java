@@ -56,11 +56,9 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.apache.commons.vfs.FileUtil;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.io.VFSUtilities;
@@ -70,7 +68,6 @@ import org.kalypso.commons.process.ProcessTimeoutException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.contribs.java.lang.ProgressCancelable;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
@@ -104,7 +101,13 @@ public class RMAKalypsoSimulation implements ISimulation
 
   public static final String OUTPUT_RESULTS = "results"; //$NON-NLS-1$
 
+  public static final String INPUT_WIND = PreRMAKalypso.OUTPUT_WIND;
+
+  public static final String INPUT_WIND_COORD = PreRMAKalypso.OUTPUT_WIND_COORD;
+
   private IGeoLog m_log;
+
+  private FileObject workingDir;
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
@@ -121,7 +124,6 @@ public class RMAKalypsoSimulation implements ISimulation
    * <li>write rma10s ASCII files to temporary directory according to provided gml-models</li>
    * <li>write .exe to temporary directory</li>
    * <li>execute the .exe</li>
-   * <li>read .2d files and process them to the output directory</li>
    * </ul>
    * 
    * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
@@ -130,15 +132,14 @@ public class RMAKalypsoSimulation implements ISimulation
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final SimulationMonitorAdaptor adapter = new SimulationMonitorAdaptor( monitor );
-    final IProgressMonitor progressMonitor = SubMonitor.convert( adapter );
+    final SimulationMonitorAdaptor progressMonitor = new SimulationMonitorAdaptor( monitor );
     final ICancelable progressCancelable = new ProgressCancelable( progressMonitor );
 
     try
     {
       m_log = new GeoLog( KalypsoModel1D2DPlugin.getDefault().getLog() );
     }
-    catch( final GMLSchemaException e )
+    catch( final Exception e )
     {
       throw new SimulationException( "Could not initialize GeoLog", e ); //$NON-NLS-1$
     }
@@ -154,12 +155,16 @@ public class RMAKalypsoSimulation implements ISimulation
       final URL controlFileUrl = (URL) inputProvider.getInputForID( INPUT_CONTROL );
       final URL buildingFileUrl = (URL) inputProvider.getInputForID( INPUT_BUILDINGS );
       final URL bcwqFileUrl = (URL) inputProvider.getInputForID( INPUT_BC_WQ );
+      final URL windFileUrl = (URL) inputProvider.getInputForID( INPUT_WIND );
+      final URL windCoordFileUrl = (URL) inputProvider.getInputForID( INPUT_WIND_COORD );
 
       manager = VFSUtilities.getNewManager();
       final FileObject modelFile = manager.resolveFile( modelFileUrl.toString() );
       final FileObject controlFile = manager.resolveFile( controlFileUrl.toString() );
       final FileObject buildingFile = manager.resolveFile( buildingFileUrl.toString() );
       final FileObject bcwqFile = manager.resolveFile( bcwqFileUrl.toString() );
+      final FileObject windFile = manager.resolveFile( windFileUrl.toString() );
+      final FileObject windCoordFile = manager.resolveFile( windCoordFileUrl.toString() );
 
       // find executable for version
       final File exeFile = findRma10skExe( version );
@@ -198,18 +203,21 @@ public class RMAKalypsoSimulation implements ISimulation
       }
 
       // check if user cancelled
-      if( progressCancelable.isCanceled() )
+      if( progressMonitor.isCanceled() )
       {
         throw new OperationCanceledException();
       }
 
       // copy executable and write input files
-      final FileObject workingDir = manager.resolveFile( sandboxDirectory );
+      // final FileObject
+      workingDir = manager.resolveFile( sandboxDirectory );
       VFSUtilities.copyFileTo( executableFile, workingDir );
       VFSUtilities.copyFileTo( modelFile, workingDir );
       VFSUtilities.copyFileTo( controlFile, workingDir );
       VFSUtilities.copyFileTo( buildingFile, workingDir );
       VFSUtilities.copyFileTo( bcwqFile, workingDir );
+      VFSUtilities.copyFileTo( windFile, workingDir );
+      VFSUtilities.copyFileTo( windCoordFile, workingDir );
 
       final File stdoutFile = new File( tmpdir, "exe.log" ); //$NON-NLS-1$
       final File stderrFile = new File( tmpdir, "exe.err" ); //$NON-NLS-1$
@@ -218,11 +226,11 @@ public class RMAKalypsoSimulation implements ISimulation
       errorOS = new BufferedOutputStream( new FileOutputStream( stderrFile ) );
 
       // check if user cancelled
-      if( progressCancelable.isCanceled() )
+      if( monitor.isCanceled() )
       {
         throw new OperationCanceledException();
       }
-
+      System.gc();
       // Run the Calculation
       m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.0" ) + ": " + executableName ); //$NON-NLS-1$ //$NON-NLS-2$
       process.startProcess( logOS, errorOS, null, progressCancelable );
@@ -232,8 +240,7 @@ public class RMAKalypsoSimulation implements ISimulation
       if( errorFile == null || !errorFile.exists() || errorFile.getContent().getSize() == 0 )
       {
         /* Successfully finished simulation */
-        monitor.setFinishInfo( IStatus.OK, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.20" ) ); //$NON-NLS-1$ 
-        progressMonitor.done();
+        progressMonitor.done( StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.20" ) ) ); //$NON-NLS-1$
       }
       else
       {
@@ -241,10 +248,9 @@ public class RMAKalypsoSimulation implements ISimulation
         final byte[] content = FileUtil.getContent( errorFile );
         final String charset = Charset.defaultCharset().name();
         final String errorMessage = new String( content, charset );
-        monitor.setFinishInfo( IStatus.ERROR, errorMessage );
-        progressMonitor.done();
+        final IStatus status = StatusUtilities.createErrorStatus( errorMessage );
+        progressMonitor.done( status );
       }
-
     }
     catch( final ProcessTimeoutException e )
     {
@@ -257,13 +263,13 @@ public class RMAKalypsoSimulation implements ISimulation
       monitor.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.1" ) );//$NON-NLS-1$
       return;
     }
+    catch( final CoreException e )
+    {
+      throw new SimulationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.2" ), e ); //$NON-NLS-1$
+    }
     catch( final IOException e )
     {
       throw new SimulationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.3" ), e ); //$NON-NLS-1$
-    }
-    catch( final Exception e )
-    {
-      throw new SimulationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.2" ), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -282,7 +288,7 @@ public class RMAKalypsoSimulation implements ISimulation
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.23" ) ) ); //$NON-NLS-1$
 
     // REMARK: This is OS dependent; we use should use a pattern according to OS
-    final String exeName = ISimulation1D2DConstants.SIM_EXE_FILE_PREFIX + version + ".exe"; //$NON-NLS-1$
+    final String exeName = ISimulation1D2DConstants.SIM_RMA10_EXE_FILE_PREFIX + version + ".exe"; //$NON-NLS-1$
 
     final Location installLocation = Platform.getInstallLocation();
     final File installDir = FileUtils.toFile( installLocation.getURL() );
@@ -291,7 +297,13 @@ public class RMAKalypsoSimulation implements ISimulation
     if( exeFile.exists() )
       return exeFile;
 
-    final String exeMissingMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.26", exeFile.getAbsolutePath() ); //$NON-NLS-1$
+    final String exeMissingMsg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.26" ), exeFile.getAbsolutePath() ); //$NON-NLS-1$
     throw new CoreException( StatusUtilities.createErrorStatus( exeMissingMsg ) );
   }
+
+  public final FileObject getWorkingDir( )
+  {
+    return workingDir;
+  }
+
 }

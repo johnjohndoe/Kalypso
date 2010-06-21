@@ -59,9 +59,9 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * Provide the implementaion of {@link ITerrainElevationModel} for simBase:NativeTerrainElevationModelWrapper model.
- * This class colaboratewith ...
- * 
+ * Provide the implementation of {@link ITerrainElevationModel} for simBase:NativeTerrainElevationModelWrapper model.
+ * This class collaborates with ...
+ *
  * @author Madanagopal
  * @author Patrice Congo
  * 

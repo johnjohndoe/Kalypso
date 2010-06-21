@@ -65,6 +65,8 @@ public class NodalBCSelectionWizardPage extends WizardPage
   private final NodalBCDescriptorPage m_descriptorPage;
 
   private Text m_bcValue;
+  
+  private String m_strBCValueTmp = null;
 
   protected NodalBCSelectionWizardPage( final String pageName, final IBoundaryConditionDescriptor[] descriptors, final NodalBCDescriptorPage descriptorPage )
   {
@@ -142,12 +144,42 @@ public class NodalBCSelectionWizardPage extends WizardPage
         public void widgetSelected( final SelectionEvent e )
         {
           setDescriptor( selectedDescriptor );
+          if( selectedDescriptor instanceof WaveStepDescriptor ){
+            saveDefaultBCValue();
+            setWaveDefaultValue();
+          }
+          else{
+            restoreDefaultBCValue();
+          }
         }
       } );
     }
     // m_radioBtnGroup[0].setSelection( true );
     // m_descriptorPage.setDescriptor( m_descriptors[0] );
     // m_selectionPage.setDescriptor( m_descriptors[0] );
+  }
+
+  protected void restoreDefaultBCValue( )
+  {
+    if( m_strBCValueTmp != null ){
+      String lStrBCValueTmp = m_bcValue.getText();
+      m_bcValue.setText( m_strBCValueTmp );
+      m_strBCValueTmp = lStrBCValueTmp;
+    }
+    else{
+      m_bcValue.setText( "20.0" ); //$NON-NLS-1$
+    }
+  }
+
+  protected void setWaveDefaultValue( )
+  {
+    m_bcValue.setText( WaveStepDescriptor.DEFAULT_VALUE );
+  }
+
+  protected void saveDefaultBCValue( )
+  {
+    if( m_strBCValueTmp == null )
+      m_strBCValueTmp = m_bcValue.getText();
   }
 
   /**
@@ -178,8 +210,9 @@ public class NodalBCSelectionWizardPage extends WizardPage
     getContainer().updateButtons();
   }
 
-  protected double getSteadyValue( )
+  protected String getSteadyValue( )
   {
-    return Double.parseDouble( m_bcValue.getText() );
+    return m_bcValue.getText();
+//    return Double.parseDouble( m_bcValue.getText() );
   }
 }

@@ -156,6 +156,30 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public final static QName WB1D2DCONTROL_F_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModel" ); //$NON-NLS-1$
 
+  public final static QName WB1D2DCONTROL_F_MODEL_SWAN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANCalculation" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_VERSION_SWAN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANVersion" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_SWAN_SWAN_BOUNDARY_CONST = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANConstantBoundary" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_SWAN_SWAN_BOUNDARY_ALG = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANBoundaryAlg" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_SWAN_INITialValues = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANINITialValues" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_SWAN_INITialValuesPar = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANINITialValuesPar" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_SWAN_ConstantWind = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANConstantWind" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_SWAN_ConstantWindPar = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANConstantWindPar" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_SWAN_AdditionalResultsPar = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANAdditionalResultsPar" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_SWAN_COORD_CART = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANCoordCart" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_SWAN_GEN3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANGEN3" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_SWAN_INPUT_COORD_FILE = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANInputCoordFile" ); //$NON-NLS-1$
+
   public ControlModel1D2D( final Feature featureToBind )
   {
     this( featureToBind, ControlModel1D2D.WB1D2DCONTROL_F_MODEL );
@@ -575,5 +599,133 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   public IRestartInfo addRestartInfo( )
   {
     return m_restartInfos.addNew( IRestartInfo.QNAME, IRestartInfo.class );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#calculateSWAN()
+   */
+  @Override
+  public boolean calculateSWAN( )
+  {
+    try
+    {
+      return ((Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN )).booleanValue();
+    }
+    catch( Exception e )
+    {
+      return false;
+    }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getVersionSWAN()
+   */
+  public String getVersionSWAN( )
+  {
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION_SWAN );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#isRestartAfterSWAN()
+   */
+  @Override
+  public boolean isRestartAfterSWAN( )
+  {
+    //TODO: implement coupled restart, if somebody will really need it... :)
+//    try
+//    {
+//      return ((Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_F_RESTART_MODEL_SWAN ));
+//    }
+//    catch( Exception e )
+//    {
+//      return false;
+//    }
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#setCalculateSWAN(boolean)
+   */
+  @Override
+  public void setCalculateSWAN( boolean doCalculateSWAN )
+  {
+    getFeature().setProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN, doCalculateSWAN );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getINITialValues()
+   */
+  @Override
+  public Integer getINITialValuesSWAN( )
+  {
+    final Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INITialValues );
+    return property != null ? property : 0;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getINITialValuesPar()
+   */
+  @Override
+  public String getINITialValuesParSWAN( )
+  {
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INITialValuesPar );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getSWAN_BOUNDARY_ALG()
+   */
+  @Override
+  public Integer getAlgBoundarySWAN( )
+  {
+    final Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_SWAN_BOUNDARY_ALG );
+    return property != null ? property : 0;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#isCOORD_CART()
+   */
+  @Override
+  public boolean isInCartCoordSWAN( )
+  {
+    final Boolean propertyValue = (Boolean) getFeature().getProperty( WB1D2DCONTROL_PROP_SWAN_COORD_CART );
+    return propertyValue != null ? propertyValue : false;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#isConstantWind()
+   */
+  @Override
+  public boolean isConstantWindSWAN( )
+  {
+    final Boolean propertyValue = (Boolean) getFeature().getProperty( WB1D2DCONTROL_PROP_SWAN_ConstantWind );
+    return propertyValue != null ? propertyValue : false;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#isGEN3()
+   */
+  @Override
+  public boolean isWindGEN3SWAN( )
+  {
+    final Boolean propertyValue = (Boolean) getFeature().getProperty( WB1D2DCONTROL_PROP_SWAN_GEN3 );
+    return propertyValue != null ? propertyValue : false;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getConstantWindPar()
+   */
+  @Override
+  public String getConstantWindParSWAN( )
+  {
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_ConstantWindPar );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getSWANAdditionalResultsPar()
+   */
+  @Override
+  public String getAdditionalResultsParSWAN( )
+  {
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_AdditionalResultsPar );
   }
 }

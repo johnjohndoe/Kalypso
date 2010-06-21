@@ -397,7 +397,7 @@ public class ElevationModelSystemEditorComponent
         deleteFiles.add( compositeCommand.deleteFiles() );
       }
       catch (Exception e) {
-        deleteFiles.add( new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.4"), null ) ); //$NON-NLS-1$
+        deleteFiles.add( new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.4"), null ) );
       }
     }
 

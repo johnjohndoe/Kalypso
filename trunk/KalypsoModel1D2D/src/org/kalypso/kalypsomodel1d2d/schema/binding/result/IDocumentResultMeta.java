@@ -46,6 +46,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
@@ -64,7 +65,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.0"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.0" ); //$NON-NLS-1$
       }
     },
     tinTerrain
@@ -75,7 +76,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.1"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.1" ); //$NON-NLS-1$
       }
     },
     tinWsp
@@ -86,7 +87,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.2"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.2" ); //$NON-NLS-1$
       }
     },
     tinVelo
@@ -97,7 +98,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.3"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.3" ); //$NON-NLS-1$
       }
     },
     tinDepth
@@ -108,7 +109,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.4"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.4" ); //$NON-NLS-1$
       }
     },
     tinShearStress
@@ -119,7 +120,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.5"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.5" ); //$NON-NLS-1$
       }
     },
     hydrograph
@@ -130,7 +131,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.6"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.6" ); //$NON-NLS-1$
       }
     },
     lengthSection
@@ -141,7 +142,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.7"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.7" ); //$NON-NLS-1$
       }
     },
     tinDifference
@@ -152,7 +153,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.8"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.8" ); //$NON-NLS-1$
       }
     },
     log
@@ -163,7 +164,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.9"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.9" ); //$NON-NLS-1$
       }
     },
     coreDataZip
@@ -174,7 +175,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.10"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.10" ); //$NON-NLS-1$
       }
     }
   }
@@ -186,6 +187,26 @@ public interface IDocumentResultMeta extends IResultMeta
   public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValue" ); //$NON-NLS-1$
 
   public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValue" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE_VELO = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueVelo" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE_VELO = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueVelo" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueDepth" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueDepth" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueWaterlevel" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueWaterlevel" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_HSIG = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueWaveHsig" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_HSIG = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueWaveHsig" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_PER = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValueWavePeriod" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_PER = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValueWavePeriod" ); //$NON-NLS-1$
 
   public DOCUMENTTYPE getDocumentType( );
 
@@ -199,4 +220,39 @@ public interface IDocumentResultMeta extends IResultMeta
 
   public void setMaxValue( BigDecimal maxValue );
 
+  public void setMinMaxValues( final NodeResultMinMaxCatcher minMaxCatcher );
+
+  public BigDecimal getMinValueVelo( );
+
+  public BigDecimal getMinValueDepth( );
+
+  public BigDecimal getMinValueWaterlevel( );
+
+  public BigDecimal getMinValueWaveHsig( );
+
+  public BigDecimal getMinValueWavePer( );
+
+  public BigDecimal getMaxValueVelo( );
+
+  public BigDecimal getMaxValueDepth( );
+
+  public BigDecimal getMaxValueWaterlevel( );
+
+  public BigDecimal getMaxValueWaveHsig( );
+
+  public BigDecimal getMaxValueWavePer( );
+
+  /**
+   * returns the {@link BigDecimal} max value from this result document for given type of result, the type string should be
+   * one of the node result types provided by {@link org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper}
+   * on error returns null
+   */
+  public BigDecimal getMaxValueForType( String type );
+
+  /**
+   * returns the {@link BigDecimal} min value from this result document for given type of result, the type string should be
+   * one of the node result types provided by {@link org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper}
+   * on error returns null
+   */
+  public BigDecimal getMinValueForType( String type );
 }
