@@ -220,7 +220,7 @@ public class CreateChannelData
         final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = fTheme.getFeatureType();
 
-        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, IProfileFeature.QNAME_PROFILE ) )
+        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, IProfileFeature.QN_TYPE ) )
           goodThemes.add( fTheme );
       }
     }
@@ -746,7 +746,7 @@ public class CreateChannelData
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.9" ), profileFeatures.length ); //$NON-NLS-1$
 
     final Feature firstFeature = profileFeatures[0];
-    final IPropertyType stationProperty = firstFeature.getFeatureType().getProperty( IProfileFeature.QNAME_STATION );
+    final IPropertyType stationProperty = firstFeature.getFeatureType().getProperty( IProfileFeature.QN_PROPERTY_STATION );
     Arrays.sort( profileFeatures, new FeatureComparator( firstFeature.getParent(), stationProperty ) );
 
     // loop over all profiles

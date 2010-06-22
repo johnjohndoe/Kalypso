@@ -234,8 +234,8 @@ public class ExtendProfileJob extends UIJob implements ICreateProfileStrategy
   {
 
     final IFeatureType targetFeatureType = m_profileFeatures.getParentFeatureTypeProperty().getTargetFeatureType();
-    if( GMLSchemaUtilities.substitutes( targetFeatureType, IProfileFeature.QNAME_PROFILE ) )
-      return (IProfileFeature) GeometryUtilities.findNearestFeature( pos, snapRadius, m_profileFeatures, IProfileFeature.QNAME_LINE );
+    if( GMLSchemaUtilities.substitutes( targetFeatureType, IProfileFeature.QN_TYPE ) )
+      return (IProfileFeature) GeometryUtilities.findNearestFeature( pos, snapRadius, m_profileFeatures, IProfileFeature.QN_PROPERTY_LINE );
     else
     {
       final TuhhReachProfileSegment nearest = (TuhhReachProfileSegment) GeometryUtilities.findNearestFeature( pos, snapRadius, m_profileFeatures, TuhhReachProfileSegment.PROPERTY_PROFILE_LOCATION );

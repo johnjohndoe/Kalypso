@@ -91,7 +91,7 @@ public class WspmResultInterpolationProfile
   {
     try
     {
-      return (IProfileFeature) FeatureFactory.createFeature( id, IProfileFeature.QNAME_PROFILE );
+      return (IProfileFeature) FeatureFactory.createFeature( id, IProfileFeature.QN_TYPE );
     }
     catch( final GMLSchemaException e )
     {

@@ -153,7 +153,7 @@ public class QIntervallResult extends AbstractFeatureBinder
     final IGMLSchema schema = feature.getWorkspace().getGMLSchema();
     final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
 
-    final IFeatureType ftProfile = schema.getFeatureType( IProfileFeature.QNAME_PROFILE );
+    final IFeatureType ftProfile = schema.getFeatureType( IProfileFeature.QN_TYPE );
     final IRelationType profileRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_profileMember );
 
     final String href = "project:/modell.gml#" + profile.getId(); //$NON-NLS-1$
