@@ -142,7 +142,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   {
     final GM_Point location = widthPoint.getLocation();
 
-    final GM_Curve profileLine = WspmGeometryUtilities.createProfileSegment( profile, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
+    final GM_Curve profileLine = WspmGeometryUtilities.createProfileSegment( profile, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     if( profileLine != null )
     {
       final double width = location.distance( profileLine );
