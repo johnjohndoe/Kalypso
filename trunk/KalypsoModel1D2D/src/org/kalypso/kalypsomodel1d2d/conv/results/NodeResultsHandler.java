@@ -675,7 +675,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       feedTriangleEaterWith1dResults( nodes, curves, curveDistance, crs, element );
   }
 
-  @SuppressWarnings("unchecked")
+  /**
+   * triangulate the junction using kalypso internal triangulation. TODO: test the functionality in this case!
+   */
   private void createJunctionTriangles2( final INodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance ) throws GM_Exception
   {
     final String crs = nodeCurve1d.getCoordinateSystem();
@@ -691,7 +693,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  //use createJunctionTriangles2 to remove the dependency to triangle.exe
+  // use createJunctionTriangles2 to remove the dependency to triangle.exe
   @Deprecated
   private void createJunctionTriangles( final INodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance ) throws FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
   {
@@ -1542,20 +1544,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         }
         catch( Exception e )
         {
-//          IFE1D2DNode< ? > lNode = getResultNodeFromPoint( result.getPoint() );
-//          try
-//          {
-//            lPositionKey = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lNode.getPoint().getX(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lNode.getPoint().getY(), SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
-//            result.setWaveDirection( m_mapWAVEDir.get( lPositionKey ) );
-//            result.setWaveHsig( m_mapWAVEHsig.get( lPositionKey ) );
-//            result.setWavePeriod( m_mapWAVEPeriod.get( lPositionKey ) );
-//          }
-//          catch( Exception e1 )
-//          {
-//            iCo++;
-//          //middle nodes that cannot be found in output of swan, will be ignored here  
-//          }
-//          e.printStackTrace();
+          // //middle nodes that cannot be found in output of swan, will be ignored here
+          // e.printStackTrace();
         }
       }
       /* check min/max values */
@@ -1675,7 +1665,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         break;
       case LINE_VA:
-        System.out.println("normally the handleResult function can be called without water stage information! The 2D-file may be 'broken'");
+        System.out.println( "normally the handleResult function can be called without water stage information! The 2D-file may be 'broken'" );
         break;
 
       // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
