@@ -375,6 +375,8 @@ public class Control1D2DConverterSWAN
       }
       else
       {
+        if( m_gridDescriptor == null )
+          return;
         String lStrCRS = m_gridDescriptor.getCoordinateSystem();
         String lStrStartTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( 0 ) );
         String lStrEndTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( m_listWritenDatesWind.size() - 1 ) );
