@@ -270,7 +270,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
   }
 
   @Override
-  public void writeMesh( final File file ) throws CoreException, IOException
+  public void writeMesh( final File file ) throws IOException
   {
     OutputStream outputStream = null;
     try
@@ -288,7 +288,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     }
   }
   
-  public void writeRMA10sModel( final OutputStream outputStream) throws CoreException, IOException
+  public void writeRMA10sModel( final OutputStream outputStream) throws IOException
   {
     Formatter formatter = null;
     try
@@ -298,6 +298,10 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       formatter = new Formatter( outputStream, Charset.defaultCharset().name(), Locale.US );
       writeRMA10sModel( formatter );
       FormatterUtils.checkIoException( formatter );
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new IOException();
     }
     finally
     {
@@ -1218,6 +1222,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
       else if( velTotal != null )
       {
+//        System.out.print( "velTotal: " + velTotal );
         if( velTotal.get( 0 ) == null )
         {
           velXComp = 0.0;
