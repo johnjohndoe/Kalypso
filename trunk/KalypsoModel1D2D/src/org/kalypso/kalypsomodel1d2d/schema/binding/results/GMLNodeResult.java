@@ -436,6 +436,10 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
       veloList.add( 0.0 );
       veloList.add( 0.0 );
     }
+    else if( veloList.size() == 0 ){
+      while( veloList.size() < 2 )
+        veloList.add( 0.0 );
+    }
 
     return veloList;
   }
@@ -459,6 +463,10 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
       veloList = new ArrayList<Double>();
       veloList.add( 0.0 );
       veloList.add( 0.0 );
+    }
+    else if( veloList.size() == 0 ){
+      while( veloList.size() < 2 )
+        veloList.add( 0.0 );
     }
 
     return veloList;
@@ -484,6 +492,10 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
       veloList = new ArrayList<Double>();
       veloList.add( 0.0 );
       veloList.add( 0.0 );
+    }
+    else if( veloList.size() == 0 ){
+      while( veloList.size() < 2 )
+        veloList.add( 0.0 );
     }
     
     return veloList;
