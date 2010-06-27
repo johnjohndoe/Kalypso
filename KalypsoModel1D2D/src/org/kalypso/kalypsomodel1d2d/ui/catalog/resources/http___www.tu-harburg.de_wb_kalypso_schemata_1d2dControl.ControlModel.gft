@@ -1106,7 +1106,7 @@
 						</gft:enabledOperation>
 						<gft:gridData horizontalAlignment="GridData.BEGINNING" />
 					</gft:validatorlabel>
-					
+
 					<gft:label visible="true" style="SWT.NONE" property="c1d2d:SWANInputCoordFile">
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
 					</gft:label>
@@ -1115,11 +1115,39 @@
 					</gft:text>
 					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:SWANInputCoordFile" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory">
 						<gft:param name="dir" value="." />
-						<gft:param name="exePattern" value="extCoord(.*).txt" />
+						<gft:param name="exePattern" value="*.txt" />
 					</gft:extensioncontrol>
 					<gft:validatorlabel property="c1d2d:SWANInputCoordFile" visible="true" style="SWT.NONE">
 						<gft:gridData horizontalAlignment="GridData.BEGINNING" />
 					</gft:validatorlabel>
+				</gft:group>
+				<gft:group text="Additional Simulation Settings" style="SWT.NONE">
+					<gft:enabledOperation>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</gft:enabledOperation>
+					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.BEGINNING|GridData.FILL" />
+					<gft:gridLayout numColumns="3" numRows="1" />
+					<gft:label visible="true" style="SWT.NONE" property="c1d2d:SWANInputAdditionalCmds">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:SWANInputAdditionalCmds" style="SWT.BORDER|SWT.MULTI|SWT.WRAP|SWT.V_SCROLL">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+						<gft:gridLayout numRows="4" />
+						<!-- 
+						-->
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:SWANInputAdditionalCmds" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" />
+					</gft:validatorlabel>				
 				</gft:group>
 			</gft:composite>
 		</gft:tabItem>

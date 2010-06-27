@@ -43,6 +43,9 @@ package org.kalypso.kalypsomodel1d2d.conv;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
+
 /**
  * @author ilya
  *
@@ -84,4 +87,22 @@ public class SWANDataConverterHelper
   {
     return getTimeStringFormatedForSWANWithDelim( pObjTime, "_" );
   }
+  
+  public static Date getDateForStepFromString( String strActDateSWAN )
+  {
+    try
+    {
+      String lStrTimeFormat = "yyyyMMdd.HHmmss"; //$NON-NLS-1$
+      SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
+      Date lDateRes = lSimpleDateFormat.parse( strActDateSWAN );
+      return lDateRes;
+    }
+    catch( Exception e )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+    return null;
+
+  }
+
 }

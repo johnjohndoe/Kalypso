@@ -76,8 +76,12 @@ public class ChooseExeControlFactory implements IExtensionsFeatureControlFactory
     final File installDir = FileUtils.toFile( installUrl );
 
     final File exeDir = new File( installDir, dir );
-
-    return new ChooseExeControl( feature, pt, exeDir, exePattern );
+    if( dir.toLowerCase().equals( "." ) ){
+      return new ChooseAdditionalFileControl( feature, pt, exeDir, exePattern );
+    }
+    else{
+      return new ChooseExeControl( feature, pt, exeDir, exePattern );
+    }
   }
 
 }

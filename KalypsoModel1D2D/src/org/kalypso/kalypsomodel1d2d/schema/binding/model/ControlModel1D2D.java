@@ -179,6 +179,8 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   public final static QName WB1D2DCONTROL_PROP_SWAN_GEN3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANGEN3" ); //$NON-NLS-1$
 
   public final static QName WB1D2DCONTROL_PROP_SWAN_INPUT_COORD_FILE = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANInputCoordFile" ); //$NON-NLS-1$
+  
+  public final static QName WB1D2DCONTROL_PROP_SWAN_INPUT_ADDITIONAL_COMMANDS = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANInputAdditionalCmds" ); //$NON-NLS-1$
 
   public ControlModel1D2D( final Feature featureToBind )
   {
@@ -727,5 +729,14 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   public String getAdditionalResultsParSWAN( )
   {
     return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_AdditionalResultsPar );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getAdditionalSimParSWAN()
+   */
+  @Override
+  public String getAdditionalSimParSWAN( )
+  {
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_ADDITIONAL_COMMANDS );
   }
 }
