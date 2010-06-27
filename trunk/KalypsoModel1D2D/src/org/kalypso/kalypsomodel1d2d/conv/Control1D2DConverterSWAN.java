@@ -485,15 +485,24 @@ public class Control1D2DConverterSWAN
    */
   private void formateSimulationOperationsSpec( final Formatter formatter )
   {
+    String lOperationSpec = m_controlModel.getAdditionalSimParSWAN();
     // TODO: what calculations do we exactly need, what can be default?
     // setup the operations
+    if( lOperationSpec != null ){
+      formatter.format( "$\n" + //$NON-NLS-1$
+          "%s\n", //$NON-NLS-1$
+           lOperationSpec ); //$NON-NLS-1$
+      
+    }
+    //constant
+    else{
     formatter.format( "$\n" + //$NON-NLS-1$
         "GEN3 KOMEN\n" + //$NON-NLS-1$
         "BREAKING\n" + //$NON-NLS-1$
         "FRICTION\n" + //$NON-NLS-1$
         "TRIAD\n" + //$NON-NLS-1$
         "$\n" ); //$NON-NLS-1$
-
+    }
   }
 
   /**

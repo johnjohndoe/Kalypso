@@ -298,6 +298,13 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="SWANInputAdditionalCmds" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>
+								Additional configuration commands for SWAN in text format
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="VEGETA" type="xs:boolean" default="true">
 						<xs:annotation>
 							<xs:documentation>

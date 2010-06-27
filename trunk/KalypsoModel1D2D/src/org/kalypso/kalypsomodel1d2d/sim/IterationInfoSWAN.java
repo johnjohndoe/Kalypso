@@ -48,7 +48,6 @@ import java.io.StringReader;
 import java.math.BigInteger;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -63,6 +62,7 @@ import org.apache.commons.vfs.FileUtil;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.conv.SWANDataConverterHelper;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.observation.IObservation;
@@ -221,6 +221,7 @@ public class IterationInfoSWAN implements IIterationInfo
       {
         m_stepNrSwan++;
         m_strActDate = lStrDate;
+        System.out.println(m_strActDate);
       }
      
       m_boolInResBlock = true;
@@ -289,33 +290,16 @@ public class IterationInfoSWAN implements IIterationInfo
     if( stepNrObj instanceof String )
     {
       String strActDateSWAN = (String) stepNrObj;
-      return getDateForStepFromString( strActDateSWAN.trim() );
+      return SWANDataConverterHelper.getDateForStepFromString( strActDateSWAN.trim() );
     }
     else if( stepNrObj == null )
     {
-      return getDateForStepFromString( m_strActDate.trim() );
+      return SWANDataConverterHelper.getDateForStepFromString( m_strActDate.trim() );
     }
     else
     {
       return null;
     }
-  }
-
-  private Date getDateForStepFromString( String strActDateSWAN )
-  {
-    try
-    {
-      String lStrTimeFormat = "yyyyMMdd.HHmmss"; //$NON-NLS-1$
-      SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
-      Date lDateRes = lSimpleDateFormat.parse( strActDateSWAN );
-      return lDateRes;
-    }
-    catch( Exception e )
-    {
-      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-    return null;
-
   }
 
   /**
@@ -349,11 +333,12 @@ public class IterationInfoSWAN implements IIterationInfo
 
     final Date stepDate = getDateForStep( m_strActDate );
 
+    System.out.println( "m_act_date: " + m_strActDate );
     final String fileName;
     // REMARK: convert to calendar with correct time zone, so formatting works correct
     final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     calendar.setTime( stepDate );
-    obsName = String.format( "%1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ-%1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", m_calendarFirst, calendar ); //$NON-NLS-1$
+    obsName = String.format( "%1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", m_calendarFirst ) + String.format( "-%1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", calendar ); //$NON-NLS-1$ //$NON-NLS-2$
     obsDesc = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.15", m_calendarFirst ) + "-" + Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.15", calendar ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     fileName = String.format( "Iteration_SWAN%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ-%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ.gml", m_calendarFirst, calendar ); //$NON-NLS-1$
 
