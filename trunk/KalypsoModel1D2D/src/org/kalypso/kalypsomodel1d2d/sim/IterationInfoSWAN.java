@@ -331,7 +331,6 @@ public class IterationInfoSWAN implements IIterationInfo
 
     final Date stepDate = getDateForStep( m_strActDate );
 
-    System.out.println( "m_act_date: " + m_strActDate );
     final String fileName;
     // REMARK: convert to calendar with correct time zone, so formatting works correct
     final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
