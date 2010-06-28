@@ -99,7 +99,7 @@ public class ProfileLineDataProvider implements IShapeData
     try
     {
       final GMLSchema wspmSchema = schemaCatalog.getSchema( IWspmConstants.NS_WSPMPROF, (String) null );
-      final IFeatureType profileType = wspmSchema.getFeatureType( IProfileFeature.QN_TYPE );
+      final IFeatureType profileType = wspmSchema.getFeatureType( IProfileFeature.QN_PROFILE );
 
       final DBFField nameField = new DBFField( "NAME", FieldType.C, (short) 50, (short) 0 );
       fields.add( new FeatureNameValue( profileType, nameField ) );
