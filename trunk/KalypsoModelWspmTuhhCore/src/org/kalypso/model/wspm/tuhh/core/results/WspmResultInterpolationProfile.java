@@ -49,6 +49,8 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.util.ProfileInterpolation;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -74,24 +76,23 @@ public class WspmResultInterpolationProfile
     final IProfileFeature nextProfile = reach.findProfile( m_nextStation );
     final IProfileFeature previousProfile = reach.findProfile( m_previousStation );
 
-    final String id = reach.getId() + m_interpolatedStation;
-
     final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile.getProfil(), nextProfile.getProfil(), true );
     final IProfil newProfile = interpolation.interpolate( m_interpolatedStation, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
     final String name = String.format( "Interpolation %s - %s", m_previousStation, m_nextStation );
     newProfile.setName( name );
 
-    final IProfileFeature profileFeature = createProfileFeature( id );
+    final IProfileFeature profileFeature = createProfileFeature();
     ProfileFeatureFactory.toFeature( newProfile, profileFeature );
 
     return profileFeature;
   }
 
-  private IProfileFeature createProfileFeature( final String id )
+  private IProfileFeature createProfileFeature( )
   {
     try
     {
-      return (IProfileFeature) FeatureFactory.createFeature( id, IProfileFeature.QN_TYPE );
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IProfileFeature.QN_PROFILE, null, GmlSerializer.DEFAULT_FACTORY );
+      return (IProfileFeature) workspace.getRootFeature();
     }
     catch( final GMLSchemaException e )
     {
