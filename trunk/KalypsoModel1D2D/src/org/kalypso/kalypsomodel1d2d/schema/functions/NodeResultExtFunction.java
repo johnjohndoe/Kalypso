@@ -138,6 +138,10 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
         }
         return Double.NaN;
       }
+      else if( resultValue == 0.0 ){
+        //filter evaluation of size awaits some value bigger then 0.0 :) also for direction
+          return 0.000001;
+      }
       else
       {
         if( m_resultTypeProperty.getLocalPart().toLowerCase().contains( WAVEDIR_TYPE ) && resultValue.equals( Double.NaN ) )
