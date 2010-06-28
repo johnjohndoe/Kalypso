@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Cp1252" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <gml:Dictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
      http://www.opengis.net/om http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd
@@ -10,7 +10,7 @@
 	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe"
 	gml:id="components">
 
-	<gml:description>Ein Dictionary für die Modellierung von Zeitreihendaten</gml:description>
+	<gml:description>Ein Dictionary fÃ¼r die Modellierung von Zeitreihendaten</gml:description>
 	<gml:name>Zeitreihenkomponente</gml:name>
 
 	<!--  Item Definitions -->
@@ -110,8 +110,8 @@
 	
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaveHsig">
-			<gml:description>Signifikante Wellenhöhe [m]</gml:description>
-			<gml:name>Signifikante Wellenhöhe [m]</gml:name>
+			<gml:description>Signifikante WellenhÃ¶he [m]</gml:description>
+			<gml:name>Signifikante WellenhÃ¶he [m]</gml:name>
 			<swe:property xlink:href="#phenomenonWaveHsig" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -206,8 +206,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Discharge">
-			<gml:description>Abfluss [m³/s]</gml:description>
-			<gml:name>Abfluss [m³/s]</gml:name>
+			<gml:description>Abfluss [mÂ³/s]</gml:description>
+			<gml:name>Abfluss [mÂ³/s]</gml:name>
 			<swe:property xlink:href="#phenomenonDischarge" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -238,8 +238,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Depth">
-			<gml:description>Fließtiefe [m]</gml:description>
-			<gml:name>Fließtiefe [m]</gml:name>
+			<gml:description>FlieÃŸtiefe [m]</gml:description>
+			<gml:name>FlieÃŸtiefe [m]</gml:name>
 			<swe:property xlink:href="#phenomenonDepth" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -254,8 +254,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge1D">
-			<gml:description>spezifischer Abfluss [m³/s/m²]</gml:description>
-			<gml:name>Abfluss [m³/s/m²]</gml:name>
+			<gml:description>spezifischer Abfluss [mÂ³/s/mÂ²]</gml:description>
+			<gml:name>Abfluss [mÂ³/s/mÂ²]</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge1D" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -270,8 +270,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge2D">
-			<gml:description>spezifischer Abfluss [m³/s/m]</gml:description>
-			<gml:name>Abfluss [m³/s/m]</gml:name>
+			<gml:description>spezifischer Abfluss [mÂ³/s/m]</gml:description>
+			<gml:name>Abfluss [mÂ³/s/m]</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge2D" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -334,7 +334,7 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxDepth">
-			<gml:description>Maximale Fließtiefendifferenz [m]</gml:description>
+			<gml:description>Maximale FlieÃŸtiefendifferenz [m]</gml:description>
 			<gml:name>Max Depth</gml:name>
 			<swe:property xlink:href="#phenomenonDepth" />
 			<swe:representation>
@@ -351,7 +351,7 @@
 	<!-- TODO: do we really want to use node numbers?  maybe better use the geo-position instead? -->
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="MaxDepthNode">
-			<gml:description>Knoten der maximalen Fließtiefendifferenz [-]</gml:description>
+			<gml:description>Knoten der maximalen FlieÃŸtiefendifferenz [-]</gml:description>
 			<gml:name>Max Depth - Node</gml:name>
 			<swe:property xlink:href="#phenomenonOrdinalNumber" />
 			<swe:representation>
@@ -397,7 +397,7 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="AverageDepth">
-			<gml:description>Mittlere Fließtiefendifferenz [m]</gml:description>
+			<gml:description>Mittlere FlieÃŸtiefendifferenz [m]</gml:description>
 			<gml:name>Average Depth</gml:name>
 			<swe:property xlink:href="#phenomenonDepth" />
 			<swe:representation>
@@ -444,8 +444,8 @@
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonDischarge">
-			<gml:description>Abfluss [m³/s]</gml:description>
-			<gml:name>Abfluss [m³/s]</gml:name>
+			<gml:description>Abfluss [mÂ³/s]</gml:description>
+			<gml:name>Abfluss [mÂ³/s]</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
@@ -458,22 +458,22 @@
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonDepth">
-			<gml:description>Fließtiefe [m]</gml:description>
-			<gml:name>Fließtiefe [m]</gml:name>
+			<gml:description>FlieÃŸtiefe [m]</gml:description>
+			<gml:name>FlieÃŸtiefe [m]</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonSpecificDischarge1D">
-			<gml:description>spezifischer Abfluss [m³/s/m²]</gml:description>
-			<gml:name>spezifischer Abfluss [m³/s/m²]</gml:name>
+			<gml:description>spezifischer Abfluss [mÂ³/s/mÂ²]</gml:description>
+			<gml:name>spezifischer Abfluss [mÂ³/s/mÂ²]</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonSpecificDischarge2D">
-			<gml:description>spezifischer Abfluss [m³/s/m]</gml:description>
-			<gml:name>spezifischer Abfluss [m³/s/m]</gml:name>
+			<gml:description>spezifischer Abfluss [mÂ³/s/m]</gml:description>
+			<gml:name>spezifischer Abfluss [mÂ³/s/m]</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 	

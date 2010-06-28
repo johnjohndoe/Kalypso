@@ -176,9 +176,21 @@ public class PreRMAKalypso implements ISimulation
       final GMLWorkspace roughnessWorkspace = GmlSerializer.createGMLWorkspace( roughnessURL, null );
       final IRoughnessClsCollection roughnessModel = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
 
-      final URL windURL = (URL) inputProvider.getInputForID( INPUT_WIND_RELATIONSHIPS );
-      final GMLWorkspace windWorkspace = GmlSerializer.createGMLWorkspace( windURL, null );
-      final IWindModel windModel = (IWindModel) windWorkspace.getRootFeature().getAdapter( IWindModel.class );
+      IWindModel windModel = null;
+      try
+      {
+        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        windModel = caseDataProvider.getModel( IWindModel.class.getName(), IWindModel.class );
+      }
+      catch( Exception e )
+      {
+      }
+      if( windModel == null )
+      {
+        final URL windURL = (URL) inputProvider.getInputForID( INPUT_WIND_RELATIONSHIPS );
+        final GMLWorkspace windWorkspace = GmlSerializer.createGMLWorkspace( windURL, null );
+        windModel = (IWindModel) windWorkspace.getRootFeature().getAdapter( IWindModel.class );
+      }
 
       final RestartNodes restartNodes;
       if( controlModel.getRestart() )

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Cp1252" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <gml:Dictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
      http://www.opengis.net/om http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd
@@ -9,7 +9,7 @@
 	xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
 	xmlns:swe="http://www.opengis.net/swe" gml:id="components">
 
-	<gml:description>Ein Dictionary für die Modellierung von Zeitreihendaten</gml:description>
+	<gml:description>Ein Dictionary fÃ¼r die Modellierung von Zeitreihendaten</gml:description>
 	<gml:name>Zeitreihenkomponente</gml:name>
 
 	<!--  Phenomenons -->

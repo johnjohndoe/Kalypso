@@ -179,11 +179,22 @@ public class PreSWANKalypso implements ISimulation
         final GMLWorkspace resultMetaWorkspace = GmlSerializer.createGMLWorkspace( resultMetaURL, null );
         m_scenarioMetaData = (IScenarioResultMeta) resultMetaWorkspace.getRootFeature().getAdapter( IScenarioResultMeta.class );
       }
-
-      final URL windURL = (URL) inputProvider.getInputForID( PreRMAKalypso.INPUT_WIND_RELATIONSHIPS );
-      final GMLWorkspace windWorkspace = GmlSerializer.createGMLWorkspace( windURL, null );
-      m_windRelationshipModel = (IWindModel) windWorkspace.getRootFeature().getAdapter( IWindModel.class );
-
+      
+      try
+      {
+        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        m_windRelationshipModel = caseDataProvider.getModel( IWindModel.class.getName(), IWindModel.class );
+      }
+      catch( Exception e )
+      {
+      }
+      if( m_windRelationshipModel == null )
+      {
+        final URL windURL = (URL) inputProvider.getInputForID( PreRMAKalypso.INPUT_WIND_RELATIONSHIPS );
+        final GMLWorkspace windWorkspace = GmlSerializer.createGMLWorkspace( windURL, null );
+        m_windRelationshipModel = (IWindModel) windWorkspace.getRootFeature().getAdapter( IWindModel.class );
+      }
+      
       final FileObject lFileObjWorkingDir = manager.toFileObject( tmpdir );
 
       writeSWANFiles( lFileObjWorkingDir, lFileObjPreResultsDir, progressMonitor );
