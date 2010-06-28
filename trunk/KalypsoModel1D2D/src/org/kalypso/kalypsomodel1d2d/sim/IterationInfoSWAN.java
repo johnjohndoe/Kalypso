@@ -151,7 +151,6 @@ public class IterationInfoSWAN implements IIterationInfo
     catch( final Exception e )
     {
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-//      e.printStackTrace();
     }
     final Feature obsFeature = m_workspace.getRootFeature();
     m_obs = ObservationFeatureFactory.toObservation( obsFeature );
@@ -221,9 +220,8 @@ public class IterationInfoSWAN implements IIterationInfo
       {
         m_stepNrSwan++;
         m_strActDate = lStrDate;
-        System.out.println(m_strActDate);
       }
-     
+
       m_boolInResBlock = true;
     }
     else
