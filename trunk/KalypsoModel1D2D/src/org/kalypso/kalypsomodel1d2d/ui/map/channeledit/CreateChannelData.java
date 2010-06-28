@@ -220,7 +220,7 @@ public class CreateChannelData
         final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = fTheme.getFeatureType();
 
-        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, IProfileFeature.QN_TYPE ) )
+        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, IProfileFeature.QN_PROFILE ) )
           goodThemes.add( fTheme );
       }
     }
