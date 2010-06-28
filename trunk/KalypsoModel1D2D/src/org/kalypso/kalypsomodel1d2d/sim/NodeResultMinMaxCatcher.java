@@ -115,14 +115,14 @@ public class NodeResultMinMaxCatcher
       if( Terrain > m_maxTerrain )
         m_maxTerrain = Terrain;
 
-      if( waveHsig > m_maxWaveHsig )
+      if( waveHsig != Double.NaN && waveHsig > m_maxWaveHsig )
         m_maxWaveHsig = waveHsig;
-      if( waveHsig < m_minWaveHsig )
+      if( waveHsig != Double.NaN && waveHsig < m_minWaveHsig )
         m_minWaveHsig = waveHsig;
 
-      if( wavePer > m_maxWavePer )
+      if( wavePer != Double.NaN && wavePer > m_maxWavePer )
         m_maxWavePer = wavePer;
-      if( wavePer < m_minWavePer )
+      if( wavePer != Double.NaN && wavePer < m_minWavePer )
         m_minWavePer = wavePer;
     }
     catch( Exception e )
