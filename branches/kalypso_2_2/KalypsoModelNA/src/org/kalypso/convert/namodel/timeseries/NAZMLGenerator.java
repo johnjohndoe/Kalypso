@@ -95,11 +95,11 @@ public class NAZMLGenerator
    * generate copy of custom timeseriesfile to zml-format, and returns timeserieslink
    * 
    * @param copySource
-   *            url to the data to copy
+   *          url to the data to copy
    * @param targetBaseDir
-   *            basedir for targetfile
+   *          basedir for targetfile
    * @param targetRelativePath
-   *            relative path from basedir to store target zml file
+   *          relative path from basedir to store target zml file
    */
   public static TimeseriesLinkType copyToTimeseriesLink( URL copySource, String axis1Type, String axis2Type, File targetBaseDir, String targetRelativePath, boolean relative, boolean simulateCopy ) throws Exception
   {
@@ -127,7 +127,7 @@ public class NAZMLGenerator
 
   /**
    * @param location
-   *            location of zml data
+   *          location of zml data
    */
   public static TimeseriesLinkType generateobsLink( String location ) throws Exception
   {
@@ -166,8 +166,8 @@ public class NAZMLGenerator
     buffer.append( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" ); //$NON-NLS-1$
     buffer.append( "    <observation xmlns=\"zml.kalypso.org\" " ); //$NON-NLS-1$
     buffer.append( " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"zml.kalypso.org./observation.xsd\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" ); //$NON-NLS-1$
-    buffer.append( Messages.getString("org.kalypso.convert.namodel.timeseries.NAZMLGenerator.2") ); //$NON-NLS-1$
-    buffer.append( Messages.getString("org.kalypso.convert.namodel.timeseries.NAZMLGenerator.3") ); //$NON-NLS-1$
+    buffer.append( Messages.getString( "org.kalypso.convert.namodel.timeseries.NAZMLGenerator.2" ) ); //$NON-NLS-1$
+    buffer.append( Messages.getString( "org.kalypso.convert.namodel.timeseries.NAZMLGenerator.3" ) ); //$NON-NLS-1$
     buffer.append( "      <metadataList>" ); //$NON-NLS-1$
     // buffer.append( " <metadata name=\"Pegelnullpunkt\" value=\"10\"/>" );
     // buffer.append( " <metadata name=\"Rechtswert\" value=\"445566\"/>" );
@@ -178,7 +178,7 @@ public class NAZMLGenerator
 
     // axis1
     buffer.append( "<axis name=\"" + TimeserieUtils.getName( axis1Type ) + "\" " //$NON-NLS-1$ //$NON-NLS-2$
-    // +"key=\"true\""
+        // +"key=\"true\""
         + " type=\"" + axis1Type + "\" unit=\"" + TimeserieUtils.getUnit( axis1Type ) + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // buffer.append( " datatype=\"TYPE=xs:date#FORMAT=dd MM yyyy HH mm ss\"");
@@ -189,7 +189,7 @@ public class NAZMLGenerator
     buffer.append( "</axis>" ); //$NON-NLS-1$
     // axis2
     buffer.append( "<axis name=\"" + TimeserieUtils.getName( axis2Type ) + "\" " //$NON-NLS-1$ //$NON-NLS-2$
-    // +"key=\"true\""
+        // +"key=\"true\""
         + " type=\"" + axis2Type + "\" unit=\"" + TimeserieUtils.getUnit( axis2Type ) + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     buffer.append( "<valueLink separator=\",\" column=\"2\" line=\"4\" " ); //$NON-NLS-1$
@@ -225,25 +225,21 @@ public class NAZMLGenerator
     for( int i = 0; i < values.getCount(); i++ )
     {
       final Date date = (Date) values.getElement( i, dateAxis );
-      final Double value = (Double) values.getElement( i, valueAxis );
+      final double value = (Double) values.getElement( i, valueAxis );
 
       if( i == 0 )
-      {
-        writer.write( "\n" ); //$NON-NLS-1$
-        writer.write( "       " + dateFormat.format( date ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-        writer.write( "grap\n" ); //$NON-NLS-1$
+        writer.write( String.format( "\n       %s\ngrap\n", dateFormat.format( date ) ) ); //$NON-NLS-1$
 
-      }
       // sometimes values < 0 are used to indicate measure-failures,
       // unfortunately
       // the simulation kernel will hang in an endless loop and write a endless
       // error file if this occurs, so we better prevent this in any case
       // TODO: JH Do we need a user information on this???
 
-      if( value.doubleValue() < 0 )
-        writer.write( m_grapDateFormat.format( date ) + " 0.0\n" ); //$NON-NLS-1$
+      if( value < 0.0 )
+        writer.write( String.format( "%s 0.0\n", m_grapDateFormat.format( date ) ) ); //$NON-NLS-1$
       else
-        writer.write( m_grapDateFormat.format( date ) + " " + value.toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+        writer.write( String.format( "%s %.3f\n", m_grapDateFormat.format( date ), value ) ); //$NON-NLS-1$
     }
   }
 
