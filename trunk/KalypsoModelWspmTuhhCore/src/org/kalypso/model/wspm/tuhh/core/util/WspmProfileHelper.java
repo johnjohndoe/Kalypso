@@ -65,10 +65,17 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
     return findSohlpunkt( wrapper );
   }
 
+  public static double findSohlpunkt( final ProfileWrapper wrapper )
+  {
+    return findSohlpunkt( wrapper, FUZZINESS );
+  }
+
   /**
+   * @param fuziness
+   *          = height delta -> points inherit (interval!) this delta are equal!
    * @return breite of sohlpunkt
    */
-  public static double findSohlpunkt( final ProfileWrapper wrapper )
+  public static double findSohlpunkt( final ProfileWrapper wrapper, final double fuziness )
   {
     final ProfilePointMarkerWrapper[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( dbs.length != 2 )
@@ -83,7 +90,7 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
     {
       final Double h = point.getHoehe();
 
-      if( h < (sohlpunkt - FUZZINESS) )
+      if( h < (sohlpunkt - fuziness) )
       {
         sohle.clear();
 
@@ -92,7 +99,7 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
 
         lastIterationAdd = true;
       }
-      else if( (h - sohlpunkt) < FUZZINESS && lastIterationAdd == true )
+      else if( (h - sohlpunkt) < fuziness && lastIterationAdd == true )
       {
         sohle.add( point );
       }
