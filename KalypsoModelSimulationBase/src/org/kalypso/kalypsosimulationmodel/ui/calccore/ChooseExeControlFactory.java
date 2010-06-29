@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.ui.calccore;
 
+import java.io.File;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.Assert;
@@ -61,20 +62,30 @@ public class ChooseExeControlFactory implements IExtensionsFeatureControlFactory
   @Override
   public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-    final String exePattern = arguments.getProperty( "exePattern", null ); //$NON-NLS-1$
+    final String filePattern = arguments.getProperty( "exePattern", null ); //$NON-NLS-1$
     final String label = arguments.getProperty( "label", null ); //$NON-NLS-1$
     final String alignment = arguments.getProperty( "alignment", null ); //$NON-NLS-1$
     final String displayFormat = arguments.getProperty( "displayFormat", null ); //$NON-NLS-1$
+    final String dir = arguments.getProperty( "dir", null ); //$NON-NLS-1$
+    
 
-    Assert.isNotNull( exePattern, "'exePattern' parameter must be specified for ChooseExeControl" ); //$NON-NLS-1$
+    Assert.isNotNull( filePattern, "'exePattern' parameter must be specified for ChooseExeControl" ); //$NON-NLS-1$
     Assert.isNotNull( label, "'label' parameter must be specified for ChooseExeControl" ); //$NON-NLS-1$
 
-    final ChooseExeControl control = new ChooseExeControl( feature, pt, exePattern, label );
-    if( alignment != null )
-      control.setButtonAlignment( SWTUtilities.createStyleFromString( alignment ) );
-    if( displayFormat != null )
-      control.setDisplayFormat( displayFormat );
+    if( !dir.toLowerCase().equals( "." ) )
+    {
+      final ChooseExeControl control = new ChooseExeControl( feature, pt, filePattern, label );
+      if( alignment != null )
+        control.setButtonAlignment( SWTUtilities.createStyleFromString( alignment ) );
+      if( displayFormat != null )
+        control.setDisplayFormat( displayFormat );
 
-    return control;
+      return control;
+    }
+    else
+    {
+      final File fileDir = new File( dir );
+      return new ChooseAdditionalFileControl( feature, pt, fileDir, filePattern );
+    }
   }
 }
