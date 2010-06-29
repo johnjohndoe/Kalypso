@@ -131,17 +131,17 @@ public class ChooseAdditionalFileControl extends AbstractFeatureControl implemen
   /**
    * Open a file browser dialog to locate a source file
    */
-  protected void browseForSourceFile( final SelectionEvent e )
+  protected boolean browseForSourceFile( final SelectionEvent e )
   {
     final Shell shell = e.display.getActiveShell();
     IPath path = browse( shell, getSourceLocation() );
     if( path == null )
-      return;
+      return false;
     final IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
     if( rootLoc.isPrefixOf( path ) )
       path = path.setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
     m_file = new File( path.toString() );
-
+    return true;
   }
 
   private IPath browse( final Shell shell, final IPath path )
@@ -164,7 +164,10 @@ public class ChooseAdditionalFileControl extends AbstractFeatureControl implemen
   
   protected void handleButtonPressed( final SelectionEvent e )
   {
-    browseForSourceFile( e );
+    boolean selectDone = browseForSourceFile( e );
+    if( !selectDone ){
+      return;
+    }
     String newFile = null;
     try
     {
