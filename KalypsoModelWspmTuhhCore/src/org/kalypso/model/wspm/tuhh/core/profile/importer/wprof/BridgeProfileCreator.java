@@ -164,20 +164,18 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   {
     final int heightComponent = profile.indexOfProperty( POINT_PROPERTY_HOEHE );
 
-    // FIXME Steiermark
-    final int bridgeComponent = profile.indexOfProperty( POINT_PROPERTY_UNTERKANTEBRUECKE );
-// final int bridgeComponent = profile.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
-
-    final int okComponent = profile.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
+    final int ukComponent = profile.indexOfProperty( POINT_PROPERTY_UNTERKANTEBRUECKE );
+// final int okComponent = profile.indexOfProperty( POINT_PROPERTY_OBERKANTEBRUECKE );
 
     ProfilUtil.interpolateProperty( profile, heightComponent );
-    ProfilUtil.interpolateProperty( profile, bridgeComponent );
-    ProfilUtil.interpolateProperty( profile, okComponent );
+    // TODO: maybe optional?
+    // Actually, interpolation is not necessary for kalypso-1d.exe
+// ProfilUtil.interpolateProperty( profile, ukComponent );
+// ProfilUtil.interpolateProperty( profile, okComponent );
 
-    // FIXME: Steiermark
     cleanupHeights( profile );
 
-    final IRecord[] trennflaechenPoints = findFirstLast( profile, heightComponent, bridgeComponent );
+    final IRecord[] trennflaechenPoints = findFirstLast( profile, heightComponent, ukComponent );
     createMarkers( profile, trennflaechenPoints, MARKER_TYP_TRENNFLAECHE );
   }
 
@@ -306,7 +304,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
       adjustedPoints[i] = new BridgePoint( bridgePoints[i] );
 
     final boolean adjust = true;
-    // FIXME
+    // TODO: optional?
     if( !adjust )
       return adjustedPoints;
 
@@ -358,6 +356,9 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   protected IWProfPoint[] getOkPoints( )
   {
     final IWProfPoint[] points = getPoints( m_okPointsID );
+    if( points == null )
+      return null;
+
     return swapBackJumps( points );
   }
 
