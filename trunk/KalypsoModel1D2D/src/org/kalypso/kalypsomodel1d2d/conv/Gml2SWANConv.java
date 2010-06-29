@@ -275,7 +275,7 @@ public class Gml2SWANConv implements INativeIDProvider
           }
           catch( Exception e )
           {
-            m_log.log( StatusUtilities.statusFromThrowable( e ) );
+//            m_log.log( StatusUtilities.statusFromThrowable( e ) );
           }
           if( lIntConditionTmp != -1 )
           {
