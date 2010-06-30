@@ -120,8 +120,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final int importantDigits = 4; // IGeoGrid bug on high scales!
-//    final int importantDigits = KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION;
+    final int importantDigits = KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION;
     try
     {
       final IProgressMonitor simulationMonitorAdaptor = new SimulationMonitorAdaptor( monitor );

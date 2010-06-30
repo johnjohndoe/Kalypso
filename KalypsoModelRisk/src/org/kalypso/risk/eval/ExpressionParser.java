@@ -72,9 +72,7 @@ public class ExpressionParser
     m_evalFunctionMembers.add( new EvalFunctionMember_Sub() );
     m_evalFunctionMembers.add( new EvalFunctionMember_Mul() );
     m_evalFunctionMembers.add( new EvalFunctionMember_Div() );
-    convertToPostfix( expression );
-//    final String postfixExpression = getPostfixExpression();
-//    System.out.println(postfixExpression);
+    convertToPostfix( expression.replaceAll( "\\s", "" ) );
   }
 
   private final void convertToPostfix( final String expression )

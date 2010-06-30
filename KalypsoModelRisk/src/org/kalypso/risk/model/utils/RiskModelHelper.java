@@ -121,7 +121,6 @@ public class RiskModelHelper
         {
           put( FIELD.STYLE_URN, "urn:style:sld:risk:damage:specific" ); //$NON-NLS-1$
           put( FIELD.THEMEINFO_CLASS, "org.kalypso.risk.plugin.DamagePotentialThemeInfo" ); //$NON-NLS-1$
-          put( FIELD.I18N_THEMEINFO_LABEL, "SpecificDamagePotentialMap.gismapview.themeInfoLabel" ); //$NON-NLS-1$
           put( FIELD.I18N_LAYER_NAME, "SpecificDamagePotentialMap.gismapview.layer" ); //$NON-NLS-1$
         }
       } );
@@ -308,7 +307,7 @@ public class RiskModelHelper
     final String layerName = String.format( localizedLayerName, coverageCollection.getReturnPeriod() );
     final String featurePath = String.format( "#fid#%s/coverageMember", coverageCollection.getFeature().getId() ); //$NON-NLS-1$
     final String themeInfoClass = propertyMap.get( FIELD.THEMEINFO_CLASS );
-    final String localizedThemeInfoLabel = Messages.getString( propertyMap.get( FIELD.I18N_THEMEINFO_LABEL ) );
+    final String localizedThemeInfoLabel = propertyMap.containsKey( FIELD.I18N_THEMEINFO_LABEL ) ? Messages.getString( propertyMap.get( FIELD.I18N_THEMEINFO_LABEL ) ) : null;
     final String styleURN = propertyMap.get( FIELD.STYLE_URN );
 
     final StyledLayerType layer = new StyledLayerType();

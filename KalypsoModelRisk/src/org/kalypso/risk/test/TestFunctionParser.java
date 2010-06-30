@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.test;
 
-import org.cheffo.jeplite.JEP;
-import org.kalypso.risk.model.tools.functionParser.ParseFunction;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.risk.eval.ExpressionParser;
 
 /**
  * @author antanas
@@ -52,37 +54,52 @@ public final class TestFunctionParser
 
   public static void main( String[] args ) throws Exception
   {
-    long millis1 = System.currentTimeMillis();
-    final ParseFunction function1 = new ParseFunction();
-    
-    function1.setString( "2*x*x*x - 8*x*x + 13*x" );
-    function1.parse();
-    System.out.println( function1.getResult( 1.0 ) );
-    long millis2 = System.currentTimeMillis();
-    System.out.println( millis2 - millis1 );
 
-    function1.setString( "(2*x*x*x) - (8*x*x) + (13*x)" );
-    function1.parse();
-    System.out.println( function1.getResult( 1.0 ) );
-    millis1 = System.currentTimeMillis();
-    System.out.println( millis1 - millis2 );
+    final List<String> functionsList = new ArrayList<String>();
+    functionsList.add( "2*x^3 - 8*x^2 + 13*x" );
+    functionsList.add( "2*x*x*x-8*x*x+13*x" );
+    functionsList.add( "(2*x*x*x) - (8*x*x) + (13*x)" );
+    functionsList.add( "2*x^3 - (8*x*x - 13*x)" );
 
-    final JEP jep = new JEP();
-    jep.addStandardConstants();
-    jep.addStandardFunctions();
+    int cnt = 1;
+    System.out.println( "\n\n*** SYNTAX TEST ***" );
+    for( final String entry : functionsList )
+    {
+      final long tStart = System.currentTimeMillis();
+      final ExpressionParser ep = new ExpressionParser( entry );
+      final double value1 = ep.evaluate( 1.0 );
+      final double value2 = ep.evaluate( 2.0 );
+      final double value3 = ep.evaluate( 3.0 );
+      final long tEnd = System.currentTimeMillis();
+      System.out.println( "\n--- Test Nr. " + cnt++ + " -----------" );
+      System.out.println( "Function: " + entry );
+      System.out.println( "Postfix notation: " + ep.getPostfixExpression() );
+      System.out.println( "Result for x=1.0: " + value1 );
+      System.out.println( "Result for x=2.0: " + value2 );
+      System.out.println( "Result for x=3.0: " + value3 );
+      System.out.println( "Elapsed time [ms]: " + (tEnd - tStart) );
+    }
     
-    jep.addVariable( "x", 1.0 );
-    jep.parseExpression( "2*x*x*x - 8*x*x + 13*x" );
-    System.out.println( jep.getValue() );
-    millis2 = System.currentTimeMillis();
-    System.out.println( millis2 - millis1 );
-    
-    jep.addVariable( "x", 1.0 );
-    jep.parseExpression( "(2*x*x*x) - (8*x*x) + (13*x)" );
-    System.out.println( jep.getValue() );
-    millis1 = System.currentTimeMillis();
-    System.out.println( millis1 - millis2 );
-    
+    cnt = 1;
+    System.out.println( "\n\n*** PERFORMANCE TEST ***" );
+    final int NUMBER_OF_CALCULATIONS = 1000000;
+    final double[] randoms = new double[NUMBER_OF_CALCULATIONS];
+    for( int i = 0; i < NUMBER_OF_CALCULATIONS; i++ )
+      randoms[i] = (-0.5 + Math.random()) * 5.0; // Values between -2.5 and 2.5
+
+    for( final String entry : functionsList )
+    {
+      final ExpressionParser ep = new ExpressionParser( entry );
+      System.out.println( "\n--- Test Nr. " + cnt++ + " -----------" );
+      System.out.println( "Function: " + entry );
+      System.out.println( String.format( "Number of calculations: %d", NUMBER_OF_CALCULATIONS ));
+      final long tStart = System.currentTimeMillis();
+      for( int i = 0; i < NUMBER_OF_CALCULATIONS; i++ )
+        ep.evaluate( randoms[i] );
+      final long tEnd = System.currentTimeMillis();
+      System.out.println( "Elapsed time [ms]: " + (tEnd - tStart) );
+    }
+    System.out.println( "\n\n*** FINISHED ***\n" );
   }
 
 }
