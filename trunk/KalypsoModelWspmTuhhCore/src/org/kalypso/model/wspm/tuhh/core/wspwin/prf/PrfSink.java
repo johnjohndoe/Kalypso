@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -65,7 +65,7 @@ public class PrfSink implements IProfilSink
 
     final IProfil profil = profiles[0];
 
-    final PrfWriter prfWriter = new PrfWriter( profil );
+    final PrfWriter prfWriter = new PrfWriter( profil, new IWaterlevel[0] );
     prfWriter.write( writer );
 
     return true;

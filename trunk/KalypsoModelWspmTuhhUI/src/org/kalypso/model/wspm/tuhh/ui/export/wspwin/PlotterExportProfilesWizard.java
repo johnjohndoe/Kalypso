@@ -48,13 +48,19 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
+import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 public class PlotterExportProfilesWizard extends ExportProfilesWizard
 {
   private final PlotterExportPage m_profileFileChooserPage;
+
+  private final ProfileResultExportPage m_resultPage;
 
   public PlotterExportProfilesWizard( final ProfileSelection selection )
   {
@@ -67,8 +73,12 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
     m_profileFileChooserPage.setTitle( "Temporäres Ablageverzeichnis wählen" );
     m_profileFileChooserPage.setDescription( "Bitte wählen Sie das Verzeichnis für die temporär exportierten .prf Dateien aus." );
     m_profileFileChooserPage.setFileGroupText( "Temporäres Ablageverzeichnis" );
-
     addPage( m_profileFileChooserPage );
+
+    final IWspmResultNode results = WspmResultFactory.createResultNode( null, selection.getContainer() );
+    m_resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
+    m_resultPage.setShowComponentChooser( false );
+    addPage( m_resultPage );
   }
 
   /**
@@ -82,7 +92,9 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
     final String filenamePattern = m_profileFileChooserPage.getFilenamePattern();
     final boolean doPrint = m_profileFileChooserPage.getDoPrint();
 
-    final IPrfExporterCallback callback = new PlotterExportWizardCallback( tempDir, filenamePattern, doPrint );
+    final WspmResultLengthSection[] results = m_resultPage.getSelectedLengthSections();
+
+    final IPrfExporterCallback callback = new PlotterExportWizardCallback( tempDir, filenamePattern, doPrint, results );
 
     final PrfExporter prfExporter = new PrfExporter( callback );
     final IStatus export = prfExporter.export( profiles, monitor );

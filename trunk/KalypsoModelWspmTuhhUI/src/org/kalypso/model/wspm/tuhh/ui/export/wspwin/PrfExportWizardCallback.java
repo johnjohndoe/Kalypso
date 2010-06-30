@@ -41,13 +41,20 @@
 package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
+import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel;
+import org.kalypso.model.wspm.tuhh.core.wspwin.prf.Waterlevel;
 
-public class PrfExportWizardCallback implements IPrfExporterCallback
+public abstract class PrfExportWizardCallback implements IPrfExporterCallback
 {
   private final Set<String> m_filenames = new HashSet<String>();
 
@@ -55,10 +62,13 @@ public class PrfExportWizardCallback implements IPrfExporterCallback
 
   private final String m_filenamePattern;
 
-  public PrfExportWizardCallback( final File exportDir, final String filenamePattern )
+  private final WspmResultLengthSection[] m_results;
+
+  public PrfExportWizardCallback( final File exportDir, final String filenamePattern, final WspmResultLengthSection[] results )
   {
     m_exportDirectory = exportDir;
     m_filenamePattern = filenamePattern;
+    m_results = results;
   }
 
   /**
@@ -95,12 +105,27 @@ public class PrfExportWizardCallback implements IPrfExporterCallback
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.IPrfExporterCallback#profileWritten(java.io.File)
+   * @see org.kalypso.model.wspm.tuhh.ui.export.wspwin.IPrfExporterCallback#getWaterlevels(org.kalypso.model.wspm.core.profil.IProfil)
    */
-  @SuppressWarnings("unused")
   @Override
-  public void profileWritten( final File file ) throws CoreException
+  public IWaterlevel[] getWaterlevels( final IProfil profil )
   {
+    final double station = profil.getStation();
+    final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
+
+    final Collection<IWaterlevel> waterlevels = new ArrayList<IWaterlevel>( m_results.length );
+
+    for( final WspmResultLengthSection result : m_results )
+    {
+      final Object waterlevel = result.getValue( bigStation, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL );
+      final Object discharge = result.getValue( bigStation, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_RUNOFF );
+      final String label = result.getLabel();
+
+      if( waterlevel instanceof Number && discharge instanceof Number )
+        waterlevels.add( new Waterlevel( ((Number) waterlevel).doubleValue(), ((Number) discharge).doubleValue(), label ) );
+    }
+
+    return waterlevels.toArray( new IWaterlevel[waterlevels.size()] );
   }
 
 }

@@ -69,6 +69,8 @@ public class ProfileResultExportPage extends ValidatingWizardPage
 
   private ProfileExportComponentChooser m_componentChooser;
 
+  private boolean m_showComponentChooser = true;
+
   public ProfileResultExportPage( final String pageName, final IWspmResultNode results )
   {
     super( pageName );
@@ -101,16 +103,6 @@ public class ProfileResultExportPage extends ValidatingWizardPage
 
   private Composite createResultGroup( final Composite parent )
   {
-    m_componentChooser = new ProfileExportComponentChooser( getDialogSettings() );
-    m_componentChooser.addCheckStateListener( new ICheckStateListener()
-    {
-      @Override
-      public void checkStateChanged( final CheckStateChangedEvent event )
-      {
-        updateMessage();
-      }
-    } );
-
     final Group group = new Group( parent, SWT.NONE );
     final GridLayout layout = new GridLayout( 1, false );
     group.setLayout( layout );
@@ -119,16 +111,44 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     final SashForm sashForm = new SashForm( group, SWT.HORIZONTAL );
     sashForm.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_resultChooser.createControl( sashForm );
-    m_componentChooser.createControl( sashForm );
+    m_componentChooser = createComponentChooser();
 
-    sashForm.setWeights( new int[] { 50, 50 } );
+    m_resultChooser.createControl( sashForm );
+
+    if( m_componentChooser != null )
+    {
+      m_componentChooser.createControl( sashForm );
+      sashForm.setWeights( new int[] { 50, 50 } );
+    }
+    else
+      sashForm.setWeights( new int[] { 100 } );
 
     return group;
   }
 
+  private ProfileExportComponentChooser createComponentChooser( )
+  {
+    if( !m_showComponentChooser )
+      return null;
+
+    final ProfileExportComponentChooser componentChooser = new ProfileExportComponentChooser( getDialogSettings() );
+    componentChooser.addCheckStateListener( new ICheckStateListener()
+    {
+      @Override
+      public void checkStateChanged( final CheckStateChangedEvent event )
+      {
+        updateMessage();
+      }
+    } );
+
+    return componentChooser;
+  }
+
   public WspmResultLengthSectionColumn[] getSelectedColumns( )
   {
+    if( m_componentChooser == null )
+      return null;
+
     final Collection<WspmResultLengthSectionColumn> columns = new ArrayList<WspmResultLengthSectionColumn>();
 
     final IComponent[] components = m_componentChooser.getSelectedComponents();
@@ -183,5 +203,10 @@ public class ProfileResultExportPage extends ValidatingWizardPage
       return new MessageProvider( "No results have been selected.", INFORMATION );
 
     return null;
+  }
+
+  public void setShowComponentChooser( final boolean showComponentChooser )
+  {
+    m_showComponentChooser = showComponentChooser;
   }
 }

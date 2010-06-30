@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IPrfConstants;
+import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfWriter;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
@@ -93,7 +94,8 @@ public class PrfExporter
 
       try
       {
-        final PrfWriter prfWriter = new PrfWriter( profil );
+        final IWaterlevel[] waterlevels = m_callback.getWaterlevels( profil );
+        final PrfWriter prfWriter = new PrfWriter( profil, waterlevels );
 
         configurePrfWriterWithMetadata( water, profil, prfWriter );
 

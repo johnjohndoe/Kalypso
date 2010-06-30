@@ -38,25 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
-
-import java.io.File;
-
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel;
+package org.kalypso.wspwin.core.prf.datablock;
 
 /**
- * Callback interface that allows the prf-exporter to be more flexible.
+ * Datablock names used by WSPWIN.
  * 
  * @author Gernot Belger
  */
-public interface IPrfExporterCallback
+public interface IDataBlockNames
 {
-  File getExportFile( IProfil profil );
+  String WSP_HOEHE = "WSP-HOEHE NN+m"; //$NON-NLS-1$
 
-  /** Called, after the profile has been written */
-  void profileWritten( File file ) throws CoreException;
-
-  IWaterlevel[] getWaterlevels( IProfil profil );
 }

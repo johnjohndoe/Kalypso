@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
@@ -51,20 +50,20 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
-import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
+import org.kalypso.wspwin.core.prf.datablock.IDataBlockNames;
 
 /**
- * Experimental (for Steiermark): converts a watrerlevel component into a plotter readable datablock.
+ * Special case for profiles containing (2d-)waterlevels: converts a waterlevel component into a plotter readable
+ * datablock.
  * 
  * @author Gernot Belger
  */
-public class PlotterWaterlevelWriter
+public class ProfileWaterlevelWriter
 {
   private final IProfil m_profile;
 
-  public PlotterWaterlevelWriter( final IProfil profile )
+  public ProfileWaterlevelWriter( final IProfil profile )
   {
     m_profile = profile;
   }
@@ -92,18 +91,16 @@ public class PlotterWaterlevelWriter
     if( !IWspmConstants.PHENOMENON_WATERLEVEL_2D.equals( phenomenonId ) )
       return null;
 
-    final DataBlockHeader dbh = new DataBlockHeader();
-    dbh.setFirstLine( "WSP-HOEHE NN+m" ); //$NON-NLS-1$
-
     final String componentName = property.getName();
     final String strandName = "unknown";
     final String secondLine = String.format( "%100s%s@%s", " ", componentName, strandName ); //$NON-NLS-1$ //$NON-NLS-2$
-    dbh.setSecondLine( secondLine );
 
-    return writeCoords( m_profile, property, dbh );
+    final CoordDataBlockCreator creator = new CoordDataBlockCreator( IDataBlockNames.WSP_HOEHE, secondLine );
+
+    return writeCoords( m_profile, property, creator );
   }
 
-  private IDataBlock writeCoords( final IProfil profil, final IComponent waterlevelProperty, final DataBlockHeader dbh )
+  private IDataBlock writeCoords( final IProfil profil, final IComponent waterlevelProperty, final CoordDataBlockCreator creator )
   {
     final IRecord[] points = profil.getPoints();
     if( points.length < 2 )
@@ -115,23 +112,18 @@ public class PlotterWaterlevelWriter
 
     try
     {
-      return writeWaterlevel( dbh, points, iBreite, iHoehe, iWaterlevel );
+      writeWaterlevel( creator, points, iBreite, iHoehe, iWaterlevel );
+      return creator.createDataBlock();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       return null;
     }
-
   }
 
-  private IDataBlock writeWaterlevel( final DataBlockHeader dbh, final IRecord[] points, final int iBreite, final int iHoehe, final int iWaterlevel )
+  private void writeWaterlevel( final CoordDataBlockCreator creator, final IRecord[] points, final int iBreite, final int iHoehe, final int iWaterlevel )
   {
-    final CoordDataBlock db = new CoordDataBlock( dbh );
-
-    final List<Double> xs = new ArrayList<Double>( points.length );
-    final List<Double> ys = new ArrayList<Double>( points.length );
-
     final Double[] extrapolatedWaterlevel = extrapolateWaterlevel( points, iWaterlevel, iBreite, iHoehe );
     for( int i = 1; i < points.length; i++ )
     {
@@ -149,18 +141,13 @@ public class PlotterWaterlevelWriter
         final Double waterlevelFirst = extrapolatedWaterlevel[i - 1];
         final Double waterlevelSecond = extrapolatedWaterlevel[i];
 
-        writeWaterlevelSegment( xs, ys, breiteFirst, breiteSecond, hoeheFirst, hoeheSecond, waterlevelFirst, waterlevelSecond );
+        writeWaterlevelSegment( creator, breiteFirst, breiteSecond, hoeheFirst, hoeheSecond, waterlevelFirst, waterlevelSecond );
       }
       catch( final SameXValuesException e )
       {
         e.printStackTrace();
       }
     }
-
-    final Double[] xArray = xs.toArray( new Double[xs.size()] );
-    final Double[] yArray = ys.toArray( new Double[ys.size()] );
-    db.setCoords( xArray, yArray );
-    return db;
   }
 
   private Double[] extrapolateWaterlevel( final IRecord[] points, final int iWaterlevel, final int iBreite, final int iHoehe )
@@ -285,7 +272,7 @@ public class PlotterWaterlevelWriter
     return null;
   }
 
-  private void writeWaterlevelSegment( final List<Double> xs, final List<Double> ys, final Object breiteFirst, final Object breiteSecond, final Object hoeheFirst, final Object hoeheSecond, final Double waterlevelFirst, final Double waterlevelSecond ) throws SameXValuesException
+  private void writeWaterlevelSegment( final CoordDataBlockCreator creator, final Object breiteFirst, final Object breiteSecond, final Object hoeheFirst, final Object hoeheSecond, final Double waterlevelFirst, final Double waterlevelSecond ) throws SameXValuesException
   {
     if( breiteFirst instanceof Number && breiteSecond instanceof Number && hoeheFirst instanceof Number && hoeheSecond instanceof Number )
     {
@@ -298,13 +285,13 @@ public class PlotterWaterlevelWriter
       {
         final double w1 = ((Number) waterlevelFirst).doubleValue();
         final double w2 = ((Number) waterlevelSecond).doubleValue();
-        addWaterlevelSegment( xs, ys, b1, w1, b2, w2, h1, h2 );
+        addWaterlevelSegment( creator, b1, w1, b2, w2, h1, h2 );
       }
     }
   }
 
   // Plotter needs always pairs of two values as a waterlevel segment
-  private void addWaterlevelSegment( final List<Double> xs, final List<Double> ys, final double b1, final double w1, final double b2, final double w2, final double h1, final double h2 ) throws SameXValuesException
+  private void addWaterlevelSegment( final CoordDataBlockCreator creator, final double b1, final double w1, final double b2, final double w2, final double h1, final double h2 ) throws SameXValuesException
   {
     if( w1 < h1 && w2 > h2 )
     {
@@ -315,11 +302,8 @@ public class PlotterWaterlevelWriter
       final double b0 = le0.computeX( 0.0 );
       final double w0 = leW.computeY( b0 );
 
-      xs.add( b0 );
-      ys.add( w0 );
-
-      xs.add( b2 );
-      ys.add( w2 );
+      creator.add( b0, w0 );
+      creator.add( b2, w2 );
     }
     else if( w1 > h1 && w2 < h2 )
     {
@@ -330,11 +314,8 @@ public class PlotterWaterlevelWriter
       final double b0 = le0.computeX( 0.0 );
       final double w0 = leW.computeY( b0 );
 
-      xs.add( b1 );
-      ys.add( w1 );
-
-      xs.add( b0 );
-      ys.add( w0 );
+      creator.add( b1, w1 );
+      creator.add( b0, w0 );
     }
     else if( w1 < h1 && w2 < h2 )
     {
@@ -343,11 +324,8 @@ public class PlotterWaterlevelWriter
     else
     {
       /* Waterlevel completely above soil: just add */
-      xs.add( b1 );
-      ys.add( w1 );
-
-      xs.add( b2 );
-      ys.add( w2 );
+      creator.add( b1, w1 );
+      creator.add( b2, w2 );
     }
   }
 }

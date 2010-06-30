@@ -48,7 +48,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
+import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
@@ -58,6 +62,8 @@ import org.kalypso.model.wspm.ui.action.ProfileSelection;
 public class PrfExportProfilesWizard extends ExportProfilesWizard
 {
   private final ExportPrfFileChooserPage m_profileFileChooserPage;
+
+  private final ProfileResultExportPage m_resultPage;
 
   public PrfExportProfilesWizard( final ProfileSelection selection )
   {
@@ -70,17 +76,12 @@ public class PrfExportProfilesWizard extends ExportProfilesWizard
     m_profileFileChooserPage.setTitle( "Ablageverzeichnis wählen" );
     m_profileFileChooserPage.setDescription( "Bitte wählen Sie das Ablageverzeichnis aus." );
     m_profileFileChooserPage.setFileGroupText( "Ablageverzeichnis" );
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
-  @Override
-  public void addPages( )
-  {
-    super.addPages();
-
     addPage( m_profileFileChooserPage );
+
+    final IWspmResultNode results = WspmResultFactory.createResultNode( null, selection.getContainer() );
+    m_resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
+    m_resultPage.setShowComponentChooser( false );
+    addPage( m_resultPage );
   }
 
   @Override
@@ -89,7 +90,9 @@ public class PrfExportProfilesWizard extends ExportProfilesWizard
     final File exportDir = m_profileFileChooserPage.getFile();
     final String filenamePattern = m_profileFileChooserPage.getFilenamePattern();
 
-    final IPrfExporterCallback callback = new PrfExportWizardCallback( exportDir, filenamePattern );
+    final WspmResultLengthSection[] results = m_resultPage.getSelectedLengthSections();
+
+    final IPrfExporterCallback callback = new DefaultPrfExportWizardCallback( exportDir, filenamePattern, results );
     final PrfExporter prfExporter = new PrfExporter( callback );
     final IStatus export = prfExporter.export( profiles, monitor );
     if( !export.isOK() )
