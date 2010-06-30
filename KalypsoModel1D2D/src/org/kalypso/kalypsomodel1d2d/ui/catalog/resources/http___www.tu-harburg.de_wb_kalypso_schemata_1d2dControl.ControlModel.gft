@@ -45,8 +45,9 @@
 					<gft:text style="SWT.BORDER | SWT.RIGHT" property="c1d2d:Version" enabled="false">
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 					</gft:text>
-					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:Version" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory">
+					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:Version" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
 						<gft:param name="dir" value="bin" />
+						<gft:param name="label" value="RMA-Kalypso Version" />
 						<gft:param name="exePattern" value="rma-kalypso_(.*).exe" />
 					</gft:extensioncontrol>
 					<gft:validatorlabel property="c1d2d:Version" visible="true" style="SWT.NONE">
@@ -112,8 +113,9 @@
 					<gft:text style="SWT.BORDER | SWT.RIGHT" property="c1d2d:SWANVersion" enabled="false">
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 					</gft:text>
-					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:SWANVersion" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory">
+					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:SWANVersion" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
 						<gft:param name="dir" value="bin" />
+						<gft:param name="label" value="SWAN-Software Version" />
 						<gft:param name="exePattern" value="swan(.*).exe" />
 					</gft:extensioncontrol>
 					<gft:validatorlabel property="c1d2d:SWANVersion" visible="true" style="SWT.NONE">
@@ -1113,8 +1115,10 @@
 					<gft:text style="SWT.BORDER | SWT.RIGHT" property="c1d2d:SWANInputCoordFile" enabled="false">
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 					</gft:text>
-					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:SWANInputCoordFile" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory">
+					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:SWANInputCoordFile" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
 						<gft:param name="dir" value="." />
+						<gft:param name="label" value="Additional Coordinates File" />
+						<!-- simple file name pattern for setting it in to file open dialog -->
 						<gft:param name="exePattern" value="*.txt" />
 					</gft:extensioncontrol>
 					<gft:validatorlabel property="c1d2d:SWANInputCoordFile" visible="true" style="SWT.NONE">
@@ -1129,7 +1133,7 @@
 						</ogc:PropertyIsLike>
 					</gft:enabledOperation>
 					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.BEGINNING|GridData.FILL" />
-					<gft:gridLayout numColumns="3" numRows="1" />
+					<gft:gridLayout numColumns="3" numRows="1" /> 
 					<gft:label visible="true" style="SWT.NONE" property="c1d2d:SWANInputAdditionalCmds">
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
 					</gft:label>
