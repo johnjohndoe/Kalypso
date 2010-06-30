@@ -319,7 +319,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           final String outputCoverageFileName = String.format( "specificDamage_HQ%d_%02d.bin", srcAnnualCoverages.getReturnPeriod(), i ); //$NON-NLS-1$
           final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
           final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-          final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, 2, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
+          final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, 4, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
           for( final ILanduseClass landuseClass : landuseClassesList )
           {
