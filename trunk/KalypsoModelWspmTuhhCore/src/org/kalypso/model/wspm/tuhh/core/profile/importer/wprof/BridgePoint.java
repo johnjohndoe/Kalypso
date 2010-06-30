@@ -110,7 +110,7 @@ public class BridgePoint implements IWProfPoint
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getNumber()
    */
   @Override
-  public int getNumber( )
+  public Number getNumber( )
   {
     return m_wprofPoint.getNumber();
   }

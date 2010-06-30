@@ -123,8 +123,8 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
     if( value instanceof String )
     {
-      if( type == Integer.class )
-        return type.cast( new Integer( (String) value ) );
+      if( Number.class.isAssignableFrom( type ) )
+        return type.cast( new BigDecimal( (String) value ) );
     }
 
     /* Will throw an ClassCastException, that is intended */
@@ -339,11 +339,11 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   }
 
   @Override
-  public int getNumber( )
+  public Number getNumber( )
   {
     checkPropertyExists( SPEC_NUMMER ); //$NON-NLS-1$
 
-    return getProperty( SPEC_NUMMER, Integer.class, -1 ); //$NON-NLS-1$
+    return getProperty( SPEC_NUMMER, Number.class, -1 ); //$NON-NLS-1$
   }
 
   @Override

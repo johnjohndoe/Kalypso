@@ -80,7 +80,7 @@ public interface IWProfPoint
   /**
    * The point number within one part of a profile ('ord')
    */
-  int getNumber( );
+  Number getNumber( );
 
   int getPartNumber( );
 

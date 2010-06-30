@@ -47,12 +47,14 @@ import java.util.TreeMap;
 
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 
+import de.openali.odysseus.chart.framework.model.mapper.registry.impl.NumberComparator;
+
 /**
  * @author Gernot Belger
  */
 class ProfilePolygon
 {
-  private final SortedMap<Integer, IWProfPoint> m_points = new TreeMap<Integer, IWProfPoint>();
+  private final SortedMap<Number, IWProfPoint> m_points = new TreeMap<Number, IWProfPoint>( new NumberComparator() );
 
   private final String m_objectType;
 
@@ -71,7 +73,7 @@ class ProfilePolygon
 
   public void add( final IWProfPoint wprofPoint )
   {
-    final int ord = wprofPoint.getNumber();
+    final Number ord = wprofPoint.getNumber();
     m_points.put( ord, wprofPoint );
   }
 
