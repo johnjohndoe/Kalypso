@@ -120,7 +120,7 @@ public class RiskModelHelper
       {
         {
           put( FIELD.STYLE_URN, "urn:style:sld:risk:damage:specific" ); //$NON-NLS-1$
-          put( FIELD.THEMEINFO_CLASS, "org.kalypso.gml.ui.map.CoverageThemeInfo" ); //$NON-NLS-1$
+          put( FIELD.THEMEINFO_CLASS, "org.kalypso.risk.plugin.DamagePotentialThemeInfo" ); //$NON-NLS-1$
           put( FIELD.I18N_THEMEINFO_LABEL, "SpecificDamagePotentialMap.gismapview.themeInfoLabel" ); //$NON-NLS-1$
           put( FIELD.I18N_LAYER_NAME, "SpecificDamagePotentialMap.gismapview.layer" ); //$NON-NLS-1$
         }

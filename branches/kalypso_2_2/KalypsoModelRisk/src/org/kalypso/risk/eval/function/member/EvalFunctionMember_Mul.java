@@ -38,35 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.risk.model.utils;
+package org.kalypso.risk.eval.function.member;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Stack;
 
-import org.kalypso.risk.eval.ExpressionParser;
+import org.kalypso.risk.eval.function.EOperatorPriority;
 
 /**
- * Helper class in order to avoid parsing the function expression for each raster cell.
+ * @author Dejan Antanaskovic
  * 
- * @author Gernot Belger
  */
-public class FunctionParserCache
+public class EvalFunctionMember_Mul extends AbstractEvalFunctionMember
 {
-  private static Map<String, ExpressionParser> m_parsers = new HashMap<String, ExpressionParser>();
 
-  public synchronized static double getValue( final String expression, final double value )
+  /**
+   * @see org.kalypso.risk.eval.function.IEvalFunctionMember#getPattern()
+   */
+  @Override
+  public String getOperator( )
   {
-    final ExpressionParser parser = getParser( expression );
-    return parser.evaluate( value );
+    return "*";
   }
 
-  private static ExpressionParser getParser( final String expression )
+  /**
+   * @see org.kalypso.risk.eval.function.IEvalFunctionMember#getPriority()
+   */
+  @Override
+  public EOperatorPriority getPriority( )
   {
-    final ExpressionParser existing = m_parsers.get( expression );
-    if( existing != null )
-      return existing;
-    final ExpressionParser parser = new ExpressionParser( expression );
-    m_parsers.put( expression, parser );
-    return parser;
+    return EOperatorPriority.MUL_DIV;
   }
+
+  /**
+   * @see org.kalypso.risk.eval.function.IEvalFunctionMember#calculate(java.util.Stack)
+   */
+  @Override
+  public double calculate( final Stack<Double> stack )
+  {
+    double d2 = stack.pop().doubleValue();
+    double d1 = stack.pop().doubleValue();
+    return d1 * d2;
+  }
+  
 }

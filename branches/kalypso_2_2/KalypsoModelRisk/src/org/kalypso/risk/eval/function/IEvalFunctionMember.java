@@ -38,35 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.risk.model.utils;
+package org.kalypso.risk.eval.function;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Stack;
 
-import org.kalypso.risk.eval.ExpressionParser;
 
 /**
- * Helper class in order to avoid parsing the function expression for each raster cell.
+ * @author Dejan Antanaskovic
  * 
- * @author Gernot Belger
  */
-public class FunctionParserCache
+public interface IEvalFunctionMember extends Comparable<IEvalFunctionMember>
 {
-  private static Map<String, ExpressionParser> m_parsers = new HashMap<String, ExpressionParser>();
+  public String getOperator( );
 
-  public synchronized static double getValue( final String expression, final double value )
-  {
-    final ExpressionParser parser = getParser( expression );
-    return parser.evaluate( value );
-  }
+  public EOperatorPriority getPriority( );
 
-  private static ExpressionParser getParser( final String expression )
-  {
-    final ExpressionParser existing = m_parsers.get( expression );
-    if( existing != null )
-      return existing;
-    final ExpressionParser parser = new ExpressionParser( expression );
-    m_parsers.put( expression, parser );
-    return parser;
-  }
+  public double calculate( final Stack<Double> stack );
 }

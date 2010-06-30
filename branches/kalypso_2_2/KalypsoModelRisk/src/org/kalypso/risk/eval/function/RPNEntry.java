@@ -38,35 +38,66 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.risk.model.utils;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.kalypso.risk.eval.ExpressionParser;
+package org.kalypso.risk.eval.function;
 
 /**
- * Helper class in order to avoid parsing the function expression for each raster cell.
+ * @author Dejan Antanaskovic
  * 
- * @author Gernot Belger
  */
-public class FunctionParserCache
+public class RPNEntry
 {
-  private static Map<String, ExpressionParser> m_parsers = new HashMap<String, ExpressionParser>();
-
-  public synchronized static double getValue( final String expression, final double value )
+  public static enum EEntryType
   {
-    final ExpressionParser parser = getParser( expression );
-    return parser.evaluate( value );
+    CONSTANT,
+    OPERATOR,
+    OPEN_BRACKET,
+    PARAMETER
   }
 
-  private static ExpressionParser getParser( final String expression )
+  private final EEntryType m_entryType;
+
+  private IEvalFunctionMember m_evalFunctionMember = null;
+
+  private double m_value = Double.NaN;
+
+  public RPNEntry( final EEntryType entryType )
   {
-    final ExpressionParser existing = m_parsers.get( expression );
-    if( existing != null )
-      return existing;
-    final ExpressionParser parser = new ExpressionParser( expression );
-    m_parsers.put( expression, parser );
-    return parser;
+    switch( entryType )
+    {
+      case OPEN_BRACKET:
+      case PARAMETER:
+        m_entryType = entryType;
+        break;
+      default:
+        throw new IllegalArgumentException();
+    }
   }
+
+  public RPNEntry( final double value )
+  {
+    m_entryType = EEntryType.CONSTANT;
+    m_value = value;
+  }
+
+  public RPNEntry( final IEvalFunctionMember functionMember )
+  {
+    m_entryType = EEntryType.OPERATOR;
+    m_evalFunctionMember = functionMember;
+  }
+
+  public EEntryType getEntryType( )
+  {
+    return m_entryType;
+  }
+
+  public IEvalFunctionMember getEvalFunctionMember( )
+  {
+    return m_evalFunctionMember;
+  }
+
+  public double getValue( )
+  {
+    return m_value;
+  }
+
 }
