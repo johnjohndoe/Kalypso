@@ -260,8 +260,10 @@ public class ProfileInterpolation
     if( !XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
       return;
 
-    final int prevComponentIndex = prevProfil.indexOfProperty( component.getId() );
-    final int nextComponentIndex = nextProfil.indexOfProperty( component.getId() );
+    final String componentId = component.getId();
+
+    final int prevComponentIndex = prevProfil.indexOfProperty( componentId );
+    final int nextComponentIndex = nextProfil.indexOfProperty( componentId );
     // we only interpolate components that exist in both profiles
     if( prevComponentIndex == -1 || nextComponentIndex == -1 )
       return;
@@ -298,8 +300,11 @@ public class ProfileInterpolation
       final Double prevValue = WspmProfileHelper.interpolateValue( prevProfil, prevWidth, prevComponentIndex );
       final Double nextValue = WspmProfileHelper.interpolateValue( nextProfil, nextWidth, nextComponentIndex );
 
-      final double interpolatedValue = new LinearEquation( prevStation, prevValue, nextStation, nextValue ).computeY( station );
-      record.setValue( componentIndex, interpolatedValue );
+      if( prevValue != null && nextValue != null )
+      {
+        final double interpolatedValue = new LinearEquation( prevStation, prevValue, nextStation, nextValue ).computeY( station );
+        record.setValue( componentIndex, interpolatedValue );
+      }
     }
   }
 }

@@ -616,7 +616,6 @@ public class PrfWriter implements IPrfConstants
 
   private String getDoubleStr( final Object o )
   {
-
     try
     {
       return Double.valueOf( o.toString() ).isNaN() ? "       0.0000" : String.format( Locale.US, " %12.4f", o ); //$NON-NLS-1$ //$NON-NLS-2$
