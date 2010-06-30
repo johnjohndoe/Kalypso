@@ -168,17 +168,24 @@ public class ResultManager implements ISimulation1D2DConstants
       {
         if( !m_resultDirSWAN.getName().getBaseName().endsWith( "zip" ) ) //$NON-NLS-1$
         {
-          FileObject swanResFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
-          FileObject swanResShiftFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
-          File zipOutput = new File( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip"  ); //$NON-NLS-1$
-          List< File > lListFilesToZip = new ArrayList<File>();
-          lListFilesToZip.add( new File( swanResFile.getURL().toURI() ) ); 
-          lListFilesToZip.add( new File( swanResShiftFile.getURL().toURI() ) );
-          if( m_controlModel.getINITialValuesSWAN() == 3 ){
-            FileObject swanResHotFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_HOT_FILE );
-            lListFilesToZip.add( new File( swanResHotFile.getURL().toURI() ) );
+          try{
+            FileObject swanResFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
+            FileObject swanResShiftFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
+            FileObject swanResOutTabFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "_out.tab" ); //$NON-NLS-1$
+            File zipOutput = new File( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip"  ); //$NON-NLS-1$
+            List< File > lListFilesToZip = new ArrayList<File>();
+            lListFilesToZip.add( new File( swanResFile.getURL().toURI() ) ); 
+            lListFilesToZip.add( new File( swanResShiftFile.getURL().toURI() ) );
+            lListFilesToZip.add( new File( swanResOutTabFile.getURL().toURI() ) );
+            if( m_controlModel.getINITialValuesSWAN() == 3 ){
+              FileObject swanResHotFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_HOT_FILE );
+              lListFilesToZip.add( new File( swanResHotFile.getURL().toURI() ) );
+            }
+            ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[ lListFilesToZip.size() ] ), new File( m_resultDirSWAN.getURL().toURI() ) );
           }
-          ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[ lListFilesToZip.size() ] ), new File( m_resultDirSWAN.getURL().toURI() ) );
+          catch (Exception e) {
+            // TODO: handle exception
+          }
         }
         else
         {
