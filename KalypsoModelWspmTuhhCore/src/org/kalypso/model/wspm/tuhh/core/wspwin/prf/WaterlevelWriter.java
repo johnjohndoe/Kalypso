@@ -80,10 +80,14 @@ public class WaterlevelWriter
 
   private IDataBlock createDataBlock( final IWaterlevel waterlevel )
   {
-    final String text1 = "XXXX";
     final String calcName = waterlevel.getLabel();
+    final String riverName = "Unknown";
+    final double discharge = waterlevel.getDischarge();
+    // TODO: enforce 3 significant digits
+// final BigDecimal bigDischarge = new BigDecimal( discharge, new MathContext( 3 ) );
+    final String dischargeText = String.format( "%.3f m³/s", discharge );
 
-    final String secondLine = String.format( "%100s%s@%s", " ", text1, calcName ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String secondLine = String.format( "%-100s%s@%s", dischargeText, calcName, riverName ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final CoordDataBlockCreator creator = new CoordDataBlockCreator( IDataBlockNames.WSP_HOEHE, secondLine );
 
