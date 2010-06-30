@@ -112,7 +112,8 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final int importantDigits = KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION;
+    final int importantDigits = 4; // IGeoGrid bug on high scales!
+//    final int importantDigits = KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION;
     try
     {
       final IProgressMonitor simulationMonitorAdaptor = new SimulationMonitorAdaptor( monitor );
@@ -319,7 +320,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           final String outputCoverageFileName = String.format( "specificDamage_HQ%d_%02d.bin", srcAnnualCoverages.getReturnPeriod(), i ); //$NON-NLS-1$
           final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
           final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-          final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, 4, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
+          final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
           for( final ILanduseClass landuseClass : landuseClassesList )
           {
