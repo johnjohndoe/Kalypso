@@ -187,4 +187,6 @@ public interface IControlModel1D2D extends IControlModel
   public boolean isWindGEN3SWAN();
   
   public String getAdditionalSimParSWAN();
+
+  public String getInputFileAdditionalCoordSWAN();
 }

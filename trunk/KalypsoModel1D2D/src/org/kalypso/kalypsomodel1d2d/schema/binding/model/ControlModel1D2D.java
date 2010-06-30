@@ -739,4 +739,13 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   {
     return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_ADDITIONAL_COMMANDS );
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getInputFileAdditionalCoordSWAN()
+   */
+  @Override
+  public String getInputFileAdditionalCoordSWAN( )
+  {
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_COORD_FILE );
+  }
 }
