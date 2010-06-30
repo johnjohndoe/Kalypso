@@ -38,25 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
+package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel;
+import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
+import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
+import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 
 /**
- * Callback interface that allows the prf-exporter to be more flexible.
+ * Helper class that creates an coordinate data block.
  * 
  * @author Gernot Belger
  */
-public interface IPrfExporterCallback
+public class CoordDataBlockCreator
 {
-  File getExportFile( IProfil profil );
+  private final DataBlockHeader m_header;
 
-  /** Called, after the profile has been written */
-  void profileWritten( File file ) throws CoreException;
+  private final List<Double> m_xs = new ArrayList<Double>();
 
-  IWaterlevel[] getWaterlevels( IProfil profil );
+  private final List<Double> m_ys = new ArrayList<Double>();
+
+  public CoordDataBlockCreator( final String firstLine, final String secondLine )
+  {
+    m_header = new DataBlockHeader();
+    m_header.setFirstLine( firstLine );
+    m_header.setSecondLine( secondLine );
+
+  }
+
+  public IDataBlock createDataBlock( )
+  {
+    final CoordDataBlock db = new CoordDataBlock( m_header );
+    final Double[] xArray = m_xs.toArray( new Double[m_xs.size()] );
+    final Double[] yArray = m_ys.toArray( new Double[m_ys.size()] );
+    db.setCoords( xArray, yArray );
+    return db;
+  }
+
+  public void add( final double x, final double y )
+  {
+    m_xs.add( x );
+    m_ys.add( y );
+  }
+
 }

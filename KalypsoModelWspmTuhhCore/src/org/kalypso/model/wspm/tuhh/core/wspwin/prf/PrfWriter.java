@@ -88,9 +88,12 @@ public class PrfWriter implements IPrfConstants
 
   private final IProfil m_profil;
 
-  public PrfWriter( final IProfil profil )
+  private final IWaterlevel[] m_waterlevels;
+
+  public PrfWriter( final IProfil profil, final IWaterlevel[] waterlevels )
   {
     m_profil = profil;
+    m_waterlevels = waterlevels;
     fillDefaultPrfMetadata();
   }
 
@@ -196,14 +199,18 @@ public class PrfWriter implements IPrfConstants
       writeComment();
   }
 
-  /**
-   * Experimental: only used for steiermark project....
-   */
   private void writeWaterlevel( )
   {
-    final PlotterWaterlevelWriter plotterExporter = new PlotterWaterlevelWriter( m_profil );
-    final IDataBlock[] dbs = plotterExporter.createDataBlocks();
-    for( final IDataBlock dataBlock : dbs )
+    /* Case 1: waterlevels contained inside the profile (this is rarely the case, used actually only for 2d-waterlevels) */
+    final ProfileWaterlevelWriter plotterExporter = new ProfileWaterlevelWriter( m_profil );
+    final IDataBlock[] dbs1 = plotterExporter.createDataBlocks();
+    for( final IDataBlock dataBlock : dbs1 )
+      m_dbWriter.addDataBlock( dataBlock );
+
+    /* Case 2: waterlevels obtained from results */
+    final WaterlevelWriter waterlevelWriter = new WaterlevelWriter( m_profil, m_waterlevels );
+    final IDataBlock[] dbs2 = waterlevelWriter.createDataBlocks();
+    for( final IDataBlock dataBlock : dbs2 )
       m_dbWriter.addDataBlock( dataBlock );
   }
 

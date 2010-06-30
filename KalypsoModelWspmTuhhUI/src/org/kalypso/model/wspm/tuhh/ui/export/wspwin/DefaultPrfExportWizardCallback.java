@@ -41,46 +41,25 @@
 package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.wspwin.core.Plotter;
 
-public final class PlotterExportWizardCallback extends PrfExportWizardCallback
+/**
+ * @author belger
+ */
+public class DefaultPrfExportWizardCallback extends PrfExportWizardCallback
 {
-  private final boolean m_doPrint;
-
-  public PlotterExportWizardCallback( final File exportDir, final String filenamePattern, final boolean doPrint, final WspmResultLengthSection[] waterlevel )
+  public DefaultPrfExportWizardCallback( final File exportDir, final String filenamePattern, final WspmResultLengthSection[] results )
   {
-    super( exportDir, filenamePattern, waterlevel );
-    m_doPrint = doPrint;
+    super( exportDir, filenamePattern, results );
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.PrfExportWizardCallback#profileWritten(java.io.File)
+   * @see org.kalypso.model.wspm.tuhh.ui.export.wspwin.IPrfExporterCallback#profileWritten(java.io.File)
    */
   @Override
-  public void profileWritten( final File file ) throws CoreException
+  public void profileWritten( final File file )
   {
-    try
-    {
-      Plotter.openPrf( file, m_doPrint );
-
-      Thread.sleep( 500 );
-    }
-    catch( final IOException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to start plotter.exe", e );
-      throw new CoreException( status );
-    }
-    catch( final InterruptedException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to start plotter.exe", e );
-      throw new CoreException( status );
-    }
+    // nothing to do
   }
 }

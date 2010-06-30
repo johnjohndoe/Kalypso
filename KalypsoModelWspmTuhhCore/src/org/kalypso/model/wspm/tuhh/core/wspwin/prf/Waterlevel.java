@@ -38,49 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
+package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.wspwin.core.Plotter;
-
-public final class PlotterExportWizardCallback extends PrfExportWizardCallback
+/**
+ * @author Gernot Belger
+ */
+public class Waterlevel implements IWaterlevel
 {
-  private final boolean m_doPrint;
+  private final double m_waterlevel;
 
-  public PlotterExportWizardCallback( final File exportDir, final String filenamePattern, final boolean doPrint, final WspmResultLengthSection[] waterlevel )
+  private final double m_discharge;
+
+  private final String m_label;
+
+  public Waterlevel( final double waterlevel, final double discharge, final String label )
   {
-    super( exportDir, filenamePattern, waterlevel );
-    m_doPrint = doPrint;
+    m_waterlevel = waterlevel;
+    m_discharge = discharge;
+    m_label = label;
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.PrfExportWizardCallback#profileWritten(java.io.File)
+   * @see org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel#getWaterlevel()
    */
   @Override
-  public void profileWritten( final File file ) throws CoreException
+  public double getWaterlevel( )
   {
-    try
-    {
-      Plotter.openPrf( file, m_doPrint );
+    return m_waterlevel;
+  }
 
-      Thread.sleep( 500 );
-    }
-    catch( final IOException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to start plotter.exe", e );
-      throw new CoreException( status );
-    }
-    catch( final InterruptedException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to start plotter.exe", e );
-      throw new CoreException( status );
-    }
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel#getDischarge()
+   */
+  @Override
+  public double getDischarge( )
+  {
+    return m_discharge;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel#getLabel()
+   */
+  @Override
+  public String getLabel( )
+  {
+    return m_label;
   }
 }
