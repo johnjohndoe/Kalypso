@@ -76,6 +76,8 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
 
   private final ProfileResultExportPage m_resultsPage;
 
+  private final ExportProfileLineInterpolationPage m_interpolationPage;
+
   public ExportProfileLineWizard( final ProfileSelection selection, final String fileName )
   {
     super( selection );
@@ -89,6 +91,9 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
 
     m_exportShapePage = new ExportShapePage( "exportShapePage", fileName ); //$NON-NLS-1$
     addPage( m_exportShapePage );
+
+    m_interpolationPage = new ExportProfileLineInterpolationPage( "interpolationPage" );
+    addPage( m_interpolationPage );
 
     setNeedsProgressMonitor( true );
   }
@@ -106,8 +111,8 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     final boolean doWritePrj = m_exportShapePage.isWritePrj();
 
     final IWspmResult[] results = m_resultsPage.getSelectedResults();
-    final IProfileFeature[] interpolatedProfiles = interpolateProfiles( profiles, results );
 
+    final IProfileFeature[] interpolatedProfiles = interpolateProfiles( profiles, results );
     final WspmResultLengthSectionColumn[] lsColumns = m_resultsPage.getSelectedColumns();
 
     final IShapeDataFactory shapeDataFactory = new ProfileLineDataFactory( interpolatedProfiles, shapeCharset, coordinateSystem, lsColumns );
@@ -146,6 +151,11 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
 
   private IProfileFeature[] createInterpolatedProfiles( final IWspmResult result )
   {
+    final boolean interpolateForland = m_interpolationPage.shouldInterpolateForland();
+    final boolean addInterpolatedProfiles = m_interpolationPage.shouldAddInterpolatedProfiles();
+    if( !addInterpolatedProfiles )
+      return new IProfileFeature[0];
+
     final Collection<IProfileFeature> interpolatedProfiles = new ArrayList<IProfileFeature>();
 
     final TuhhCalculation calculation = result.getCalculation();
@@ -155,7 +165,7 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     final WspmResultInterpolationProfile[] interpolationProfiles = lengthSection.findInterpolationStations();
     for( final WspmResultInterpolationProfile interpolationProfile : interpolationProfiles )
     {
-      final IProfileFeature interpolatedProfile = interpolationProfile.createInterpolatedProfile( reach );
+      final IProfileFeature interpolatedProfile = interpolationProfile.createInterpolatedProfile( reach, !interpolateForland );
       interpolatedProfiles.add( interpolatedProfile );
     }
 

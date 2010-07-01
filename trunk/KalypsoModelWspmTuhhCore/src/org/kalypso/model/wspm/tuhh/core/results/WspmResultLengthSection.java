@@ -132,6 +132,9 @@ public class WspmResultLengthSection
   {
     final int component = m_observation.getResult().indexOfComponent( componentIdentifier );
     final IRecord record = m_stationIndex.getRecord( station );
+    if( record == null )
+      return null;
+
     return record.getValue( component );
   }
 
