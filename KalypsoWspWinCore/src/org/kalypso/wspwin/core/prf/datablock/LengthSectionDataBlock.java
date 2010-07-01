@@ -44,6 +44,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -61,11 +62,11 @@ public class LengthSectionDataBlock extends AbstractDataBlock
     DF.setMinimumFractionDigits( 4 );
   }
 
-  private Double[] m_xs = new Double[0];
+  private Double[] m_xs = null;
 
-  private Object[] m_ys = new Object[0];
+  private Double[] m_ys = null;
 
-  public LengthSectionDataBlock( DataBlockHeader dbh )
+  public LengthSectionDataBlock( final DataBlockHeader dbh )
   {
     super( dbh );
   }
@@ -122,13 +123,12 @@ public class LengthSectionDataBlock extends AbstractDataBlock
    * @param pw
    *          -
    */
-  private void writeDoubleBlock( final Object[] dbls, final PrintWriter pw )
-
+  private void writeDoubleBlock( final Double[] dbls, final PrintWriter pw )
   {
     for( int i = 0; i < dbls.length; i++ )
     {
-      if( dbls[i] instanceof Double )
-        pw.write( formatDouble( (Double) dbls[i] ) );
+      if( dbls[i] != null )
+        pw.write( formatDouble( dbls[i] ) );
       else
         pw.write( dbls[i].toString() );
 
@@ -140,7 +140,6 @@ public class LengthSectionDataBlock extends AbstractDataBlock
   }
 
   private void writeTextBlock( final PrintWriter pw )
-
   {
     for( int i = 0; i < m_xs.length; i++ )
     {
@@ -160,14 +159,13 @@ public class LengthSectionDataBlock extends AbstractDataBlock
     return m_xs.length;
   }
 
-  public final void setCoords( final Double[] xs, final Object[] ys )
+  public final void setCoords( final Double[] xs, final Double[] ys )
   {
-
     if( xs == null | ys == null | xs.length != ys.length )
       throw new IllegalArgumentException();
 
-    final ArrayList<Object> target = new ArrayList<Object>();
-    final ArrayList<Double> basis = new ArrayList<Double>();
+    final List<Double> target = new ArrayList<Double>();
+    final List<Double> basis = new ArrayList<Double>();
     for( int i = 0; i < xs.length; i++ )
     {
       if( ys[i] != null && "".equalsIgnoreCase( ys[i].toString() ) == false )
@@ -176,8 +174,9 @@ public class LengthSectionDataBlock extends AbstractDataBlock
         basis.add( m_dataBlockHeader.getSpecification( 8 ) == 12 ? new Double( i ) : xs[i] );
       }
     }
-    m_xs = basis.toArray( new Double[] {} );
-    m_ys = target.toArray();
+
+    m_xs = basis.toArray( new Double[basis.size()] );
+    m_ys = target.toArray( new Double[target.size()] );
   }
 
   /**
