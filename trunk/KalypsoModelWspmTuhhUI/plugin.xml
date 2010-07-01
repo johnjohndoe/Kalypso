@@ -506,8 +506,8 @@
     <command
           categoryId="org.kalypso.ogc.gml.map.category"
           id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
-          name="%command.name"
-          description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM">
+          name="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description.name"
+          description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description">
     </command>
     <command
           description="%command.description"
