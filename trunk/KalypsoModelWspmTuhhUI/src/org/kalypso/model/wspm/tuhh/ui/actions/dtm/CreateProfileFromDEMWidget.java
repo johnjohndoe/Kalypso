@@ -238,7 +238,8 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     {
       final Rectangle bounds = mapPanel.getScreenBounds();
 
-      m_standardTooltip.setTooltip( STR_DEFAULT_TOOLTIP + m_strategy.getLabel() );
+      if( m_strategy != null )
+        m_standardTooltip.setTooltip( STR_DEFAULT_TOOLTIP + m_strategy.getLabel() );
 
       m_tooltip.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
