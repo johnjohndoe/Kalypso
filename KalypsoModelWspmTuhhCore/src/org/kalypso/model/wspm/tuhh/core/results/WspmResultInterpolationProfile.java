@@ -71,12 +71,12 @@ public class WspmResultInterpolationProfile
     m_interpolatedStation = interpolatedStation;
   }
 
-  public IProfileFeature createInterpolatedProfile( final TuhhReach reach )
+  public IProfileFeature createInterpolatedProfile( final TuhhReach reach, final boolean onlyRiverChannel )
   {
     final IProfileFeature nextProfile = reach.findProfile( m_nextStation );
     final IProfileFeature previousProfile = reach.findProfile( m_previousStation );
 
-    final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile.getProfil(), nextProfile.getProfil(), true );
+    final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile.getProfil(), nextProfile.getProfil(), onlyRiverChannel );
     final IProfil newProfile = interpolation.interpolate( m_interpolatedStation, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
     final String name = String.format( "Interpolation %s - %s", m_previousStation, m_nextStation );
     newProfile.setName( name );

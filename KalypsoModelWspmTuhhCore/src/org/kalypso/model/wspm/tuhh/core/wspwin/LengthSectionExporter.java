@@ -47,6 +47,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.observation.IObservation;
@@ -98,24 +99,22 @@ public class LengthSectionExporter
     return dbh;
   }
 
-  @SuppressWarnings("unchecked")
   private DataBlockWriter extractDataBlocks( final IObservation<TupleResult> obs )
   {
     final DataBlockWriter prfwriter = new DataBlockWriter();
 
     // Get TableData
-    final Object[] table = new Object[obs.getResult().getComponents().length];
+    final List<Double>[] table = new ArrayList[obs.getResult().getComponents().length];
     for( int i = 0; i < obs.getResult().getComponents().length; i++ )
-    {
-      table[i] = new ArrayList<Object>();
-    }
+      table[i] = new ArrayList<Double>();
+
     for( final IRecord values : obs.getResult() )
     {
       for( int i = 0; i < obs.getResult().getComponents().length; i++ )
       {
         final Object oVal = values.getValue( i );
-        ((ArrayList<Object>) table[i]).add( oVal instanceof BigDecimal ? ((BigDecimal) oVal).doubleValue() : oVal );
-
+        final Double value = oVal instanceof BigDecimal ? ((BigDecimal) oVal).doubleValue() : null;
+        table[i].add( value );
       }
     }
 
@@ -129,8 +128,12 @@ public class LengthSectionExporter
         if( dbh == null )
           continue;
         final LengthSectionDataBlock block = new LengthSectionDataBlock( dbh );
-        final Object object = table[obs.getResult().indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION )];
-        block.setCoords( ((ArrayList< ? >) object).toArray( new Double[] {} ), ((ArrayList< ? >) table[i]).toArray() );
+        final List<Double> stations = table[obs.getResult().indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION )];
+
+        final Double[] xs = stations.toArray( new Double[] {} );
+        final Double[] ys = table[i].toArray( new Double[] {} );
+        block.setCoords( xs, ys );
+
         if( i == posGround )
           prfwriter.addDataBlock( 0, block );// due restrictions of wspwin-plotter
         else if( block.getCoordCount() > 0 )
