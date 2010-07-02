@@ -79,8 +79,7 @@ public final class CalcCoreUtils
   {
     final Location installLocation = Platform.getInstallLocation();
     final File installDir = FileUtils.toFile( installLocation.getURL() );
-    final File exeDir = new File( installDir, BIN_DIR );
-    return exeDir;
+    return new File( installDir, BIN_DIR );
   }
 
   public static File findExecutable( final String version, final String pattern, final String searchPattern ) throws CoreException
