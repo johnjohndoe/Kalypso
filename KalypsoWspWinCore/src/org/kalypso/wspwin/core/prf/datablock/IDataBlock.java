@@ -83,5 +83,5 @@ public interface IDataBlock
    * Schreibt Datenblock in einen Writer
    */
   public void printToPrinter( final PrintWriter pw ) throws IOException;
-  
+
 }

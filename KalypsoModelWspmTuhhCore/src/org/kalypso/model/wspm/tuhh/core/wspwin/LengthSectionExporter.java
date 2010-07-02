@@ -43,104 +43,112 @@ package org.kalypso.model.wspm.tuhh.core.wspwin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.tuhh.core.wspwin.prf.LengthSectionMapping;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
+import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.LengthSectionDataBlock;
+import org.kalypso.wspwin.core.prf.datablock.LengthSectionTextBlock;
 
 /**
  * @author kimwerner
  */
 public class LengthSectionExporter
 {
-  private final HashMap<String, String[]> m_PropertyMap = new HashMap<String, String[]>();
-
-  private final String blanc200;
-
-  public LengthSectionExporter( )
-  {
-    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, new String[] { "STATION" } ); //$NON-NLS-1$
-    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, new String[] { "SOHLHOEHE" } ); //$NON-NLS-1$
-    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI, new String[] { "BOESCHUNG-LI" } ); //$NON-NLS-1$
-    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE, new String[] { "BOESCHUNG-RE" } ); //$NON-NLS-1$
-    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, new String[] { "OK-WEHRS" } ); //$NON-NLS-1$
-    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, new String[] { "DECKENOBERK" } ); //$NON-NLS-1$
-    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, new String[] { "DECKENUNTERK" } ); //$NON-NLS-1$
-    // m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, "BRIDGE_WIDTH" );
-    // m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, "ROHR_DN" );
-    m_PropertyMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    m_PropertyMap.put( "TEXT", new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, new String[] { "Wasserspiegel NN+m" } );//$NON-NLS-1$
-
-    final char[] space = new char[200];
-    Arrays.fill( space, ' ' );//$NON-NLS-1$
-    blanc200 = new String( space );
-  }
-
-  final DataBlockHeader createHeader( final String id )
-  {
-    final DataBlockHeader dbh = new DataBlockHeader();
-    final String[] fl = m_PropertyMap.get( id );
-    if( fl == null )
-      return null;
-
-    dbh.setFirstLine( fl.length > 0 ? fl[0] : id );
-    dbh.setSecondLine( fl.length > 1 ? blanc200 + fl[1] + "@" : "" );//$NON-NLS-1$ //$NON-NLS-2$
-    dbh.setThirdLine( fl.length > 2 ? fl[2] : " 0  0  0  0  0  0  0  0  0" );//$NON-NLS-1$
-    return dbh;
-  }
-
   private DataBlockWriter extractDataBlocks( final IObservation<TupleResult> obs )
   {
     final DataBlockWriter prfwriter = new DataBlockWriter();
 
     // Get TableData
-    final List<Double>[] table = new ArrayList[obs.getResult().getComponents().length];
-    for( int i = 0; i < obs.getResult().getComponents().length; i++ )
-      table[i] = new ArrayList<Double>();
+    final TupleResult result = obs.getResult();
 
-    for( final IRecord values : obs.getResult() )
+    final int posGround = result.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND );
+    final int stationIndex = result.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
+
+    for( int i = 0; i < result.getComponents().length; i++ )
     {
-      for( int i = 0; i < obs.getResult().getComponents().length; i++ )
-      {
-        final Object oVal = values.getValue( i );
-        final Double value = oVal instanceof BigDecimal ? ((BigDecimal) oVal).doubleValue() : null;
-        table[i].add( value );
-      }
-    }
+      if( i == stationIndex )
+        continue;
 
-    final int posGround = obs.getResult().indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND );
-    // Add DataBlocks
-    for( int i = 0; i < obs.getResult().getComponents().length; i++ )
-    {
-      if( i != obs.getResult().indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) )
-      {
-        final DataBlockHeader dbh = createHeader( obs.getResult().getComponent( i ).getId() );
-        if( dbh == null )
-          continue;
-        final LengthSectionDataBlock block = new LengthSectionDataBlock( dbh );
-        final List<Double> stations = table[obs.getResult().indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION )];
+      final DataBlockHeader dbh = LengthSectionMapping.createHeader( result.getComponent( i ).getId() );
+      if( dbh == null )
+        continue;
 
-        final Double[] xs = stations.toArray( new Double[] {} );
-        final Double[] ys = table[i].toArray( new Double[] {} );
-        block.setCoords( xs, ys );
+      final IDataBlock block = createDataBLock( dbh, result, stationIndex, i );
 
-        if( i == posGround )
-          prfwriter.addDataBlock( 0, block );// due restrictions of wspwin-plotter
-        else if( block.getCoordCount() > 0 )
-          prfwriter.addDataBlock( block );
-      }
+      if( i == posGround )
+        prfwriter.addDataBlock( 0, block );// due restrictions of wspwin-plotter
+      else if( block.getCoordCount() > 0 )
+        prfwriter.addDataBlock( block );
     }
     return prfwriter;
+  }
+
+  private IDataBlock createDataBLock( final DataBlockHeader dbh, final TupleResult result, final int stationIndex, final int i )
+  {
+    final boolean isText = LengthSectionMapping.isText( dbh );
+    if( isText )
+    {
+      final LengthSectionTextBlock block = new LengthSectionTextBlock( dbh );
+      final String[] lines = componentToString( result, i );
+      block.setCoords( lines );
+      return block;
+    }
+    else
+    {
+      final LengthSectionDataBlock block = new LengthSectionDataBlock( dbh );
+      final Double[][] coords = componentToCoords( result, stationIndex, i );
+      block.setCoords( coords[0], coords[1] );
+      return block;
+    }
+  }
+
+  // FIXME: move to helper
+  protected Double[][] componentToCoords( final TupleResult result, final int stationIndex, final int componentIndex )
+  {
+    final Double[][] coords = new Double[2][];
+
+    final List<Double> stations = new ArrayList<Double>();
+    final List<Double> doubles = new ArrayList<Double>();
+
+    for( final IRecord values : result )
+    {
+      final Object oStation = values.getValue( stationIndex );
+      final Object oVal = values.getValue( componentIndex );
+
+      if( oStation instanceof Number && oVal instanceof Number )
+      {
+        stations.add( ((Number) oStation).doubleValue() );
+        doubles.add( ((Number) oVal).doubleValue() );
+      }
+    }
+
+    coords[0] = stations.toArray( new Double[stations.size()] );
+    coords[1] = doubles.toArray( new Double[doubles.size()] );
+
+    return coords;
+  }
+
+  // FIXME: move to helper
+  protected String[] componentToString( final TupleResult result, final int componentIndex )
+  {
+    final List<String> lines = new ArrayList<String>();
+
+    for( final IRecord values : result )
+    {
+      final Object oVal = values.getValue( componentIndex );
+      lines.add( ObjectUtils.toString( oVal ) );
+    }
+
+    return lines.toArray( new String[lines.size()] );
   }
 
   public final boolean write( final IObservation<TupleResult> obs, final Writer writer ) throws IOException

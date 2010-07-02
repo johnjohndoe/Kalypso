@@ -53,7 +53,7 @@ public class TextDataBlock extends AbstractDataBlock implements IDataBlock
 {
   private final Collection<String> m_lines = new ArrayList<String>();
 
-  public TextDataBlock( DataBlockHeader dbh )
+  public TextDataBlock( final DataBlockHeader dbh )
   {
     super( dbh );
   }
@@ -62,10 +62,10 @@ public class TextDataBlock extends AbstractDataBlock implements IDataBlock
    * @see org.bce.wspm.core.prf.datablock.AbstractDataBlock#printToPrinterInternal(java.io.PrintWriter)
    */
   @Override
-  public void printToPrinter( PrintWriter pw )
+  public void printToPrinter( final PrintWriter pw )
   {
-    m_dataBlockHeader.printToPrinter(pw);
-    for( String s : m_lines )
+    getDataBlockHeader().printToPrinter( pw );
+    for( final String s : m_lines )
       pw.println( s );
   }
 
@@ -73,7 +73,7 @@ public class TextDataBlock extends AbstractDataBlock implements IDataBlock
    * @see org.bce.wspm.core.prf.datablock.AbstractDataBlock#readFromReaderInternal(int, java.io.BufferedReader)
    */
   @Override
-  public void readFromReader( int count, BufferedReader reader ) throws IOException
+  public void readFromReader( final int count, final BufferedReader reader ) throws IOException
   {
     m_lines.add( reader.readLine() );
     for( int i = 1; i < count; i++ )
@@ -120,9 +120,10 @@ public class TextDataBlock extends AbstractDataBlock implements IDataBlock
   {
     return m_lines.toArray(new String[0]);
   }
-  public void addLine(final String line)
+  
+  public void addLine( final String line )
   {
-    m_lines.add(line);
+    m_lines.add( line );
   }
 
 }

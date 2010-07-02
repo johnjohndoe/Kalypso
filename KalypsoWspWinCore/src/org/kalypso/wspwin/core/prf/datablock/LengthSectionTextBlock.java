@@ -42,11 +42,11 @@ package org.kalypso.wspwin.core.prf.datablock;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -54,37 +54,27 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gernot Belger
  */
-public class LengthSectionDataBlock extends AbstractDataBlock
+public class LengthSectionTextBlock extends AbstractDataBlock
 {
-  private static NumberFormat DF = NumberFormat.getNumberInstance( Locale.US );
-
-  static
-  {
-    DF.setMaximumIntegerDigits( 8 );
-    DF.setMinimumIntegerDigits( 8 );
-    DF.setMaximumFractionDigits( 4 );
-    DF.setMinimumFractionDigits( 4 );
-  }
-
   private Double[] m_xs = null;
 
-  private Double[] m_ys = null;
+  private String[] m_texts = null;
 
-  public LengthSectionDataBlock( final DataBlockHeader dbh )
+  public LengthSectionTextBlock( final DataBlockHeader dbh )
   {
     super( dbh );
 
-    Assert.isTrue( dbh.getSpecification( 8 ) != 12 );
+    Assert.isTrue( dbh.getSpecification( 8 ) == 12 );
   }
 
   @Override
   public final void readFromReader( final int count, final BufferedReader reader )
   {
-    // nothing
+    throw new NotImplementedException();
   }
 
   /**
-   * @see org.kalypso.model.wspm.profileeditor.serializer.datablock.ICoordDataBlock#getX()
+   * @see org.kalypso.wspwin.core.prf.datablock.IDataBlock#getX()
    */
   @Override
   public Double[] getX( )
@@ -98,7 +88,7 @@ public class LengthSectionDataBlock extends AbstractDataBlock
   @Override
   public Double[] getY( )
   {
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -108,32 +98,21 @@ public class LengthSectionDataBlock extends AbstractDataBlock
   public void printToPrinter( final PrintWriter pw )
   {
     getDataBlockHeader().printToPrinter( pw );
-    writeDoubleBlock( m_xs, pw );
-    writeDoubleBlock( m_ys, pw );
+
+    pw.write( "1 " + getCoordCount() + " 0.0000" );
+    pw.println();
+    writeTextBlock( pw );
   }
 
-  /**
-   * Schreibt einen Koordinatenblock raus
-   * 
-   * @param dbls
-   *          -
-   * @param pw
-   *          -
-   */
-  private void writeDoubleBlock( final Double[] dbls, final PrintWriter pw )
+  private void writeTextBlock( final PrintWriter pw )
   {
-    for( int i = 0; i < dbls.length; i++ )
+    for( int i = 0; i < m_xs.length; i++ )
     {
-      if( dbls[i] != null )
-        pw.write( formatDouble( dbls[i] ) );
-      else
-        pw.write( dbls[i].toString() );
-
-      if( (i + 1) % 8 == 0 & i != dbls.length - 1 )
-        pw.println();
+      pw.write( String.format( "1 0 2 2 %.0f 2", m_xs[i] ) );
+      pw.println();
+      pw.print( m_texts[i].toString() );
+      pw.println();
     }
-
-    pw.println();
   }
 
   /**
@@ -145,32 +124,31 @@ public class LengthSectionDataBlock extends AbstractDataBlock
     return m_xs.length;
   }
 
-  public final void setCoords( final Double[] xs, final Double[] ys )
+  public final void setCoords( final String[] ys )
   {
-    if( xs == null || ys == null || xs.length != ys.length )
-      throw new IllegalArgumentException();
+    Assert.isNotNull( ys );
 
-    final List<Double> target = new ArrayList<Double>();
     final List<Double> basis = new ArrayList<Double>();
-    for( int i = 0; i < xs.length; i++ )
+    final List<String> target = new ArrayList<String>();
+    for( int i = 0; i < ys.length; i++ )
     {
-      if( xs[i] != null && ys[i] != null )
+      if( !StringUtils.isEmpty( ys[i] ) )
       {
         target.add( ys[i] );
-        basis.add( xs[i] );
+        basis.add( new Double( i ) );
       }
     }
 
     m_xs = basis.toArray( new Double[basis.size()] );
-    m_ys = target.toArray( new Double[target.size()] );
+    m_texts = target.toArray( new String[target.size()] );
   }
 
   /**
-   * @see org.bce.wspm.core.prf.datablock.IDataBlock#getText()
+   * @see org.kalypso.wspwin.core.prf.datablock.IDataBlock#getText()
    */
   @Override
   public String[] getText( )
   {
-    return new String[] { m_xs.toString(), m_ys.toString() };
+    throw new NotImplementedException();
   }
 }
