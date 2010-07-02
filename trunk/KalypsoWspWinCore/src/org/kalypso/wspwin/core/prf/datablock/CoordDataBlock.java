@@ -110,7 +110,6 @@ public class CoordDataBlock extends AbstractDataBlock
   }
 
   private static Double[] readDoubleBlock( final int count, final BufferedReader reader )
-
   {
     final Double[] coords = new Double[count];
 
@@ -175,7 +174,7 @@ public class CoordDataBlock extends AbstractDataBlock
   @Override
   public void printToPrinter( final PrintWriter pw )
   {
-    m_dataBlockHeader.printToPrinter( pw );
+    getDataBlockHeader().printToPrinter( pw );
     writeDoubleBlock( m_xs, pw );
     writeDoubleBlock( m_ys, pw );
   }
@@ -218,6 +217,7 @@ public class CoordDataBlock extends AbstractDataBlock
     m_xs = xs;
     m_ys = ys;
   }
+  
 
   /**
    * @see org.bce.wspm.core.prf.datablock.IDataBlock#getText()

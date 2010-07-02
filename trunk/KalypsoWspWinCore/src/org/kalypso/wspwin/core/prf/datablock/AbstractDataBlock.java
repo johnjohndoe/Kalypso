@@ -50,7 +50,7 @@ import java.util.Locale;
  */
 public abstract class AbstractDataBlock implements IDataBlock
 {
-  protected final DataBlockHeader m_dataBlockHeader;
+  private final DataBlockHeader m_dataBlockHeader;
 
   public AbstractDataBlock( final DataBlockHeader dbh )
   {
@@ -105,7 +105,7 @@ public abstract class AbstractDataBlock implements IDataBlock
    * @see org.bce.wspm.core.prf.datablock.IDataBlock#setSecondLine(java.lang.String)
    */
   @Override
-  public void setSecondLine( String text )
+  public void setSecondLine( final String text )
   {
     m_dataBlockHeader.setSecondLine( text );
 
@@ -115,7 +115,7 @@ public abstract class AbstractDataBlock implements IDataBlock
    * @see org.bce.wspm.core.prf.datablock.IDataBlock#setThirdLine(java.lang.String)
    */
   @Override
-  public void setThirdLine( String text )
+  public void setThirdLine( final String text )
   {
     m_dataBlockHeader.setThirdLine( text );
   }
@@ -124,7 +124,7 @@ public abstract class AbstractDataBlock implements IDataBlock
    * @see org.bce.wspm.core.prf.datablock.IDataBlock#setFirstLine(java.lang.String)
    */
   @Override
-  public void setFirstLine( String text )
+  public void setFirstLine( final String text )
   {
     m_dataBlockHeader.setFirstLine( text );
 
