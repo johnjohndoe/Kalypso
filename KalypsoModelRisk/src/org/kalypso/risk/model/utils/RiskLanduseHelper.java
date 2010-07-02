@@ -58,6 +58,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
@@ -73,7 +74,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
@@ -330,7 +330,7 @@ public class RiskLanduseHelper
     for( int i = 0; i < shapeFeatureList.size(); i++ )
     {
       final Feature shpFeature = (Feature) shapeFeatureList.get( i );
-      final QName shpGeomQName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), ShapeFile.GEOM );
+      final QName shpGeomQName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), ShapeSerializer.PROPERTY_GEOM );
       final QName shpPropQName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), landuseProperty );
       final String shpPropertyValue = shpFeature.getProperty( shpPropQName ).toString();
 
