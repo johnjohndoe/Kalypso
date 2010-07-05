@@ -65,6 +65,11 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
     return findSohlpunkt( wrapper );
   }
 
+  public static double findSohlpunkt( final IProfil profile, final double fuzziness )
+  {
+    return findSohlpunkt( new ProfileWrapper( profile ), fuzziness );
+  }
+
   public static double findSohlpunkt( final ProfileWrapper wrapper )
   {
     return findSohlpunkt( wrapper, FUZZINESS );
@@ -119,4 +124,5 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
 
     return p1.getBreite() + distance / 2.0;
   }
+
 }
