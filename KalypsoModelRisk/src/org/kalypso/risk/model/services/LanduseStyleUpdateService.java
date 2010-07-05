@@ -87,8 +87,6 @@ public class LanduseStyleUpdateService extends Job
 
   private final IFile m_landuseVectorSymbolizerSldFile;
 
-  private final IFile m_landuseRasterSymbolizerSldFile;
-
   private final IFile m_riskZonesSymbolizerSldFile;
 
   // private final IFile m_riskValuesSymbolizerSldFile;
@@ -102,7 +100,6 @@ public class LanduseStyleUpdateService extends Job
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     m_dbFile = file;
     m_landuseVectorSymbolizerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" ); //$NON-NLS-1$
-    m_landuseRasterSymbolizerSldFile = scenarioFolder.getFile( "/styles/LanduseCoverage.sld" ); //$NON-NLS-1$
     m_riskZonesSymbolizerSldFile = scenarioFolder.getFile( "/styles/RiskZonesCoverage.sld" ); //$NON-NLS-1$
     //    m_riskValuesSymbolizerSldFile = scenarioFolder.getFile( "/styles/RiskValuesCoverage.sld" ); //$NON-NLS-1$
   }
@@ -131,7 +128,6 @@ public class LanduseStyleUpdateService extends Job
         layers.add( SLDHelper.polygonStyleLayer( null, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, monitor ) );
 
         SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolizerSldFile, layers.toArray( new Layer[0] ), monitor );
-        SLDHelper.exportRasterSymbolyzerSLD( m_landuseRasterSymbolizerSldFile, model.getLanduseClassesList(), null, null, monitor );
         final HashMap<Double, String> values = new HashMap<Double, String>();
         for( final ILanduseClass landuseClass : landuseClassesList )
           values.put( new Double( landuseClass.getOrdinalNumber() ), landuseClass.getName() );
@@ -196,8 +192,4 @@ public class LanduseStyleUpdateService extends Job
     return m_landuseVectorSymbolizerSldFile;
   }
 
-  public IFile getRasterSymbolzerSldFile( )
-  {
-    return m_landuseRasterSymbolizerSldFile;
-  }
 }
