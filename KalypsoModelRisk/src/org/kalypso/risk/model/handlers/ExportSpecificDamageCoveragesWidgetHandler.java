@@ -17,6 +17,7 @@ import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.risk.i18n.Messages;
+import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.ui.views.map.MapView;
 
 public class ExportSpecificDamageCoveragesWidgetHandler extends AbstractHandler implements IHandler
@@ -54,7 +55,7 @@ public class ExportSpecificDamageCoveragesWidgetHandler extends AbstractHandler 
       final IKalypsoTheme[] themes = mapModell.getAllThemes();
       for( final IKalypsoTheme element : themes )
       {
-        if( element.getName().getKey().equals( "%SpecificDamagePotentialMap.gismapview.Schadenspotentiale" ) ) //$NON-NLS-1$
+        if( element.getName().getKey().equals( RiskModelHelper.THEME_NAME__DAMAGE_POTENTIAL ) )
         {
           mapModell.activateTheme( element );
           break;

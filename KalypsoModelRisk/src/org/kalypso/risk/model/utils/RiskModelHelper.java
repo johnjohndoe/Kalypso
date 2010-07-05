@@ -85,10 +85,14 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RiskModelHelper
 {
-  private static final String WSP_THEMES_TITLE_i18 = "%WaterlevelMap.mapv.gismapview.HQi"; //$NON-NLS-1$
-
   /** themeId of the map-layer containing the events */
-  private static final String THEME_PROPERTY_DEPTH = "depthGridThemes"; //$NON-NLS-1$
+  public static final String THEME_ID__WATERDEPTH = "depthGridThemes"; //$NON-NLS-1$
+
+  public static final String THEME_ID__DAMAGE_POTENTIAL = "damagePotentialThemes"; //$NON-NLS-1$
+
+  public static final String THEME_NAME__WATERDEPTH = "%WaterlevelMap.mapv.gismapview.HQi"; //$NON-NLS-1$
+
+  public static final String THEME_NAME__DAMAGE_POTENTIAL = "%SpecificDamagePotentialMap.gismapview.Schadenspotentiale"; //$NON-NLS-1$
 
   public static enum LAYER_TYPE
   {
@@ -530,9 +534,8 @@ public class RiskModelHelper
   public static void updateDamageLayers( final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final String damageThemeProperty = "damagePotentialThemes"; //$NON-NLS-1$
 
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.12" ), damageThemeProperty ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, THEME_NAME__DAMAGE_POTENTIAL, THEME_ID__DAMAGE_POTENTIAL ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     deleteExistingMapLayers( parentKalypsoTheme );
@@ -559,7 +562,7 @@ public class RiskModelHelper
   public static void updateWaterdepthLayers( final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.13" ), THEME_PROPERTY_DEPTH ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, THEME_NAME__WATERDEPTH, THEME_ID__WATERDEPTH ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     // TODO: manage that only the newly imported gets deleted.
@@ -845,11 +848,11 @@ public class RiskModelHelper
   public static IKalypsoCascadingTheme getHQiTheme( final IMapModell mapModell )
   {
     // activate cascading theme that contains the events
-    final AbstractCascadingLayerTheme byThemeId = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, RiskModelHelper.THEME_PROPERTY_DEPTH );
+    final AbstractCascadingLayerTheme byThemeId = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, THEME_ID__WATERDEPTH );
     if( byThemeId != null )
       return byThemeId;
 
-    return CascadingThemeHelper.getNamedCascadingTheme( mapModell, WSP_THEMES_TITLE_i18 );
+    return CascadingThemeHelper.getNamedCascadingTheme( mapModell, THEME_NAME__WATERDEPTH, THEME_ID__WATERDEPTH );
   }
 
   /**
