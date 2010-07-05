@@ -4,17 +4,18 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
@@ -47,27 +48,22 @@ public class RiskZonesCalculationHandler extends AbstractHandler
       final IEvaluationContext context = handlerService.getCurrentState();
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-      final Job job = new Job( Messages.getString("org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.10") )  //$NON-NLS-1$
+      final IRunnableWithProgress operation = new IRunnableWithProgress()
       {
-        @Override
-        protected IStatus run( final IProgressMonitor monitor )
+        public void run( final IProgressMonitor monitor )
         {
-          final IStatus status;
           try
           {
-            status = ModelNature.runCalculation( scenarioFolder, monitor, SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.RISK_ZONES_CALCULATION ) );
+            ModelNature.runCalculation( scenarioFolder, monitor, SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.RISK_ZONES_CALCULATION ) );
           }
-          catch( final Exception e )
+          catch( final CoreException e )
           {
             ErrorDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.5" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
-            return Status.CANCEL_STATUS;
           }
-          return status;
         }
       };
-      job.setUser( true );
-      job.setPriority( Job.LONG );
-      job.schedule( 100 );
+      final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+      service.run( true, false, operation );
     }
     catch( final Exception e )
     {
