@@ -44,9 +44,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartView;
 
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 
@@ -59,14 +59,14 @@ public class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
    * @see org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh#createLayers(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
   @Override
-  public IProfilChartLayer[] createLayers( final IProfilChartView chartView )
+  public IProfilChartLayer[] createLayers( final IProfil profil, Object result )
   {
     final List<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
 
-    final IProfilChartLayer[] superLayers = super.createLayers( chartView );
+    final IProfilChartLayer[] superLayers = super.createLayers( profil, result );
     layers.addAll( Arrays.asList( superLayers ) );
 
-    final ProfilOverlayLayer overlay = new ProfilOverlayLayer( chartView, m_lsp );
+    final ProfilOverlayLayer overlay = new ProfilOverlayLayer( profil, m_lsp );
     overlay.setCoordinateMapper( new CoordinateMapper( m_domainAxis, m_targetAxisLeft ) );
     layers.add( overlay );
 

@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -81,6 +80,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
   CreateMainChannelWidget m_widget = null;
 
+  public static String LAYER_ID = "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay";
+
   private CreateChannelData m_data;
 
   final private RGB COLOR_ALLOW = new RGB( 0, 255, 0 );
@@ -95,9 +96,9 @@ public class ProfilOverlayLayer extends PointsLineLayer
    * manages the displaying of the intersected profile layer in the profile chart view and handles the user
    * interactivity.
    */
-  public ProfilOverlayLayer( final IProfilChartView chartView, final ILayerStyleProvider styleProvider )
+  public ProfilOverlayLayer( final IProfil profil, final ILayerStyleProvider styleProvider )
   {
-    super( chartView.getProfil(), IWspmConstants.POINT_PROPERTY_HOEHE, styleProvider );
+    super( LAYER_ID, profil, IWspmConstants.POINT_PROPERTY_HOEHE, styleProvider );
 
     final RGB rgb = new RGB( 0, 153, 255 );
     getLineStyle().setColor( rgb );
