@@ -260,6 +260,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
               // if anything happened during the processing, restore the original results db from disk
               if( resultStatus.isOK() != true )
               {
+                lLog.log( resultStatus );
                 try
                 {
                   // set the dirty flag of the results model
@@ -290,8 +291,10 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                   FileObject unzippedSwanFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "."
                       + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT );
                   FileObject unzippedShiftFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
+                  FileObject unzippedTabFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE  + "_out.tab" );
                   unzippedSwanFile.delete();
                   unzippedShiftFile.delete();
+                  unzippedTabFile.delete();
                 }
                 catch( FileSystemException e )
                 {

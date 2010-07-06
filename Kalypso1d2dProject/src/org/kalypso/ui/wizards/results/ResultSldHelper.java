@@ -46,8 +46,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
@@ -376,7 +374,7 @@ public class ResultSldHelper
       // we assume, that the mean distance of mesh nodes is about 30 m, so that the vectors are expanded by an factor
       // which delivers vector lengths of 30 m as maximum.
       BigDecimal factorValue;
-      if( maxValue.doubleValue() > 0 )
+      if( maxValue != null && maxValue.doubleValue() > 0 )
         factorValue = new BigDecimal( 30 / maxValue.doubleValue() ).setScale( 0, BigDecimal.ROUND_CEILING );
       else
         factorValue = new BigDecimal( 100 ).setScale( 0, BigDecimal.ROUND_CEILING );
