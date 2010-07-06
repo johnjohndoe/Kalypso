@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
+import org.kalypso.wspwin.core.Plotter;
 
 public class LngExportFileChooserPage extends ExportFileChooserPage
 {
@@ -110,6 +111,11 @@ public class LngExportFileChooserPage extends ExportFileChooserPage
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
       dialogSettings.put( SETTINGS_DO_OPEN_PLOTTER, selection );
+
+    // Check if plotter has been configured and ask user to do so. We should
+    // do something if that fails.
+    if( m_doOpenPlotter )
+      Plotter.checkPlotterExe( getShell() );
   }
 
   public boolean doOpenPlotter( )

@@ -42,8 +42,10 @@ package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.wspwin.core.Plotter;
 
 /**
  * Action which exports the selected profile as .prf files.
@@ -52,6 +54,16 @@ import org.kalypso.model.wspm.ui.action.ProfileSelection;
  */
 public class PlotterExportHandler extends AbstractExportProfilesHandler
 {
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler#checkPrerequisites(org.eclipse.swt.widgets.Shell,
+   *      org.eclipse.core.commands.ExecutionEvent)
+   */
+  @Override
+  protected boolean checkPrerequisites( final Shell shell, final ExecutionEvent event )
+  {
+    return Plotter.checkPlotterExe( shell );
+  }
+
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler#createWizard(org.eclipse.core.commands.ExecutionEvent,
    *      org.kalypso.model.wspm.ui.action.ProfileSelection)
