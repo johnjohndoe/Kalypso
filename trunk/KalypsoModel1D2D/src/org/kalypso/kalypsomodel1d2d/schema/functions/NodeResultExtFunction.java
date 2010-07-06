@@ -61,6 +61,8 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
 {
   private static final String LAST_VALID_COLOR = "lastValidColor";
 
+  private static final String LAST_VALID_VALUE = "lastValidValue";
+
   private static final String WAVEDIR_TYPE = "wavedir"; //$NON-NLS-1$
 
   private static final String DEFAULT_COLOR = "#ffffff"; //$NON-NLS-1$
@@ -119,11 +121,10 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
   @SuppressWarnings("unchecked")
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    m_typeName = pt.getQName().getLocalPart().toLowerCase().replace( m_kind, "" );
+    m_typeName = pt.getQName().getLocalPart().toLowerCase().replace( m_kind, "" ); //$NON-NLS-1$
     String context = feature.getWorkspace().getContext().toExternalForm();
     int beginIndex = context.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
     String stepName = context.substring( beginIndex, beginIndex + 16 );
-//    m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStyleStep( m_typeName, stepName );
     m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepName );
     final Double resultValue = (Double) feature.getProperty( m_resultTypeProperty );
 
@@ -132,28 +133,39 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
     {
       if( resultValue == null )
       {
+        Object lLastValidResValue = m_mapSldSettingsIntern.get( LAST_VALID_VALUE );
+        if( lLastValidResValue != null ){
+          return lLastValidResValue;
+        }
         if( m_resultTypeProperty.getLocalPart().toLowerCase().contains( WAVEDIR_TYPE ) )
         {
+          m_mapSldSettingsIntern.put( LAST_VALID_VALUE, null );
           return null;
         }
         return Double.NaN;
       }
       else if( resultValue == 0.0 ){
         //filter evaluation of size awaits some value bigger then 0.0 :) also for direction
-          return 0.000001;
+          double lPseudoZeroValue = 0.000001;
+          m_mapSldSettingsIntern.put( LAST_VALID_VALUE, lPseudoZeroValue );
+          return lPseudoZeroValue;
       }
       else
       {
         if( m_resultTypeProperty.getLocalPart().toLowerCase().contains( WAVEDIR_TYPE ) && resultValue.equals( Double.NaN ) )
         {
+          m_mapSldSettingsIntern.put( LAST_VALID_VALUE, null );
           return null;
         }
         if( m_resultTypeProperty.getLocalPart().toLowerCase().contains( DEPTH_TYPE ) )
         {
-          return resultValue.doubleValue() - point.getZ();
+          double depth = resultValue.doubleValue() - point.getZ();
+          m_mapSldSettingsIntern.put( LAST_VALID_VALUE, depth );
+          return depth;
         }
         else
         {
+          m_mapSldSettingsIntern.put( LAST_VALID_VALUE, resultValue.doubleValue() );
           return resultValue.doubleValue();
         }
       }
@@ -162,6 +174,7 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
     {
       if( resultValue == null )
       {
+        //we set the last value for valid color based on the assumption that we are painting on the screen in sequential way: e.g. from left to right 
         String lNullRes = (String) m_mapSldSettingsIntern.get( LAST_VALID_COLOR );
         if( lNullRes == null )
         {
@@ -192,7 +205,8 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
         double localValue = 0;
         if( m_typeName.contains( DEPTH_TYPE ) )
         {
-          localValue = (resultValue.doubleValue() - point.getZ());
+          double depth = resultValue.doubleValue() - point.getZ();
+          localValue = depth;
         }
         else
         {
