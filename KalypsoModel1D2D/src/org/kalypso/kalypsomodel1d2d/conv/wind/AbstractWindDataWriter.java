@@ -133,6 +133,7 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
         {
           writeWindFile( lWindData );
           m_listWrittenDates.add( lWindData.getDateStep() );
+          lWindData.getDataAsGrid().dispose();
         }
       }
       //the writing of all overlapping wind systems is not implemented yet, so we write at the moment only the first one out 
