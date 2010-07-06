@@ -66,6 +66,9 @@ public abstract class AbstractExportProfilesHandler extends AbstractHandler
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
     final ProfileSelection profileSelection = ProfileHandlerUtils.getProfileSelectionOrShowMessage( event );
 
+    if( !checkPrerequisites( shell, event ) )
+      return null;
+
     final IWizard exportProfileWizard = createWizard( event, profileSelection );
 
     /* show wizard */
@@ -74,6 +77,18 @@ public abstract class AbstractExportProfilesHandler extends AbstractHandler
     dialog.open();
 
     return null;
+  }
+
+  /**
+   * Allow the implementor to check any prerequisites before the wizard is created and opened. <br/>
+   * Intended to be overwritten by implementors.
+   * 
+   * @return <code>true</code>
+   */
+  @SuppressWarnings("unused")
+  protected boolean checkPrerequisites( final Shell shell, final ExecutionEvent event )
+  {
+    return true;
   }
 
   protected abstract IWizard createWizard( ExecutionEvent event, final ProfileSelection selection ) throws ExecutionException;
