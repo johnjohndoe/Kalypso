@@ -72,11 +72,18 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     createWeirSytles();
     createVegetationStyle();
     createWasserspiegel2dStyle();
+    createWasserspiegelStyle();
   }
 
   private void createWasserspiegel2dStyle( )
   {
     final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_WASSERSPIEGEL2D + LINE, LineStyle.class ); //$NON-NLS-1$
+    ls.setColor( new RGB( 0, 0, 255 ) );
+  }
+
+  private void createWasserspiegelStyle( )
+  {
+    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_WASSERSPIEGEL + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( new RGB( 0, 0, 255 ) );
   }
 

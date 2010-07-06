@@ -45,6 +45,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -63,11 +64,10 @@ import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
  */
 public class RoughnessLayer extends AbstractProfilLayer
 {
- 
 
   public RoughnessLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
-    super( profil, targetRangeProperty, styleProvider );
+    super( IWspmTuhhConstants.LAYER_RAUHEIT, profil, targetRangeProperty, styleProvider );
   }
 
   /**
@@ -120,6 +120,7 @@ public class RoughnessLayer extends AbstractProfilLayer
       fr.paint( gc );
     }
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
    */
@@ -128,9 +129,9 @@ public class RoughnessLayer extends AbstractProfilLayer
   {
     final IProfil profil = getProfil();
 
-    final ProfilOperation operation = new ProfilOperation(Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.RoughnessLayer.0"), getProfil(), true );  //$NON-NLS-1$
-    operation.addChange( new PointPropertyRemove( profil, getTargetComponent()  ) );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.RoughnessLayer.0" ), getProfil(), true ); //$NON-NLS-1$
+    operation.addChange( new PointPropertyRemove( profil, getTargetComponent() ) );
     new ProfilOperationJob( operation ).schedule();
-    
+
   }
 }

@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
@@ -96,7 +97,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
 
   public PointMarkerLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
   {
-    super( profil, targetRangeProperty, styleProvider );
+    super( IWspmTuhhConstants.LAYER_DEVIDER + targetRangeProperty, profil, targetRangeProperty, styleProvider );
 
     m_offset = offset;
 

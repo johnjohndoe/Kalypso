@@ -71,7 +71,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class AbstractProfilMarkerResolution implements IProfilMarkerResolution
 {
-  
 
   private final String m_label;
 
@@ -173,7 +172,8 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
     Feature feature;
     try
     {
-      feature = ws == null ? null : ws.getFeature( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).toString() );
+      String profileFeatureId = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).toString();
+      feature = ws == null ? null : ws.getFeature( profileFeatureId );
 
       if( feature != null )
       {
@@ -183,8 +183,9 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
           if( resolve( profil ) )
           {
             marker.delete();// delete marker because ProblemView is no Listener on GMLWorkspace
-          //  final ICommand command = new ChangeFeaturesCommand( ws, ProfileFeatureFactory.toFeatureAsChanges( profil, feature ) );
-          //  ws.postCommand( command );
+            // final ICommand command = new ChangeFeaturesCommand( ws, ProfileFeatureFactory.toFeatureAsChanges( profil,
+// feature ) );
+            // ws.postCommand( command );
           }
         }
       }
@@ -219,11 +220,12 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   {
     getParameter( parameterStream );
   }
+
   /**
    * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#getUIresult(org.eclipse.swt.widgets.Shell)
    */
   @Override
-  public String getUIresult(final Shell shell ,final IProfil profil)
+  public String getUIresult( final Shell shell, final IProfil profil )
   {
     return null;
   }
@@ -236,12 +238,12 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   {
     return false;
   }
-  
+
   /**
    * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#hasUI()
    */
   @Override
-  public void setUIresult(final String result)
+  public void setUIresult( final String result )
   {
     // override
   }
