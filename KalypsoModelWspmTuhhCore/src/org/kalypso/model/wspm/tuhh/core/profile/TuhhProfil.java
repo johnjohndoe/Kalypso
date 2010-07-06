@@ -83,12 +83,13 @@ public class TuhhProfil extends AbstractProfil
   @Override
   public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
-    if( profileObjects != null && profileObjects.length > 1 )
+    if( profileObjects.length > 1 )
       throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.1" ) ); //$NON-NLS-1$
-
-    if( profileObjects != null && profileObjects.length > 0 )
+    final IProfileObject[] buildings = super.getProfileObjects();
+    if( buildings.length > 0 )
+      super.removeProfileObject( buildings[0] );
+    if( profileObjects.length > 0 )
       return super.addProfileObjects( profileObjects );
-
     return profileObjects;
   }
 
@@ -104,27 +105,27 @@ public class TuhhProfil extends AbstractProfil
   {
     if( profileObjects == null || profileObjects.length > 1 )
       throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.1" ) ); //$NON-NLS-1$
-    final IProfileObject profileObject = createProfileObjectInternal( profileObjects[0] );
-    addProfileObjects( new IProfileObject[] { profileObject } );
+    final IProfileObject[] profileObject = createProfileObjectInternal( profileObjects[0] );
+    addProfileObjects( profileObject );
   }
 
-  private IProfileObject createProfileObjectInternal( final IObservation<TupleResult> observation )
+  private IProfileObject[] createProfileObjectInternal( final IObservation<TupleResult> observation )
   {
     final String id = observation.getName();
 
     if( BuildingBruecke.ID.equals( id ) )
-      return new BuildingBruecke( this, observation );
+      return new IProfileObject[] { new BuildingBruecke( this, observation ) };
     else if( BuildingWehr.ID.equals( id ) )
-      return new BuildingWehr( this, observation );
+      return new IProfileObject[] { new BuildingWehr( this, observation ) };
     else if( BuildingEi.ID.equals( id ) )
-      return new BuildingEi( this, observation );
+      return new IProfileObject[] { new BuildingEi( this, observation ) };
     else if( BuildingKreis.ID.equals( id ) )
-      return new BuildingKreis( this, observation );
+      return new IProfileObject[] { new BuildingKreis( this, observation ) };
     else if( BuildingMaul.ID.equals( id ) )
-      return new BuildingMaul( this, observation );
+      return new IProfileObject[] { new BuildingMaul( this, observation ) };
     else if( BuildingTrapez.ID.equals( id ) )
-      return new BuildingTrapez( this, observation );
-    return null;
+      return new IProfileObject[] { new BuildingTrapez( this, observation ) };
+    return new IProfileObject[] {};
   }
 
   @Override

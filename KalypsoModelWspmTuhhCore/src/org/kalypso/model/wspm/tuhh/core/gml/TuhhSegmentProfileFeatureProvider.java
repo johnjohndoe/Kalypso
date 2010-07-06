@@ -42,12 +42,12 @@ package org.kalypso.model.wspm.tuhh.core.gml;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-
 public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvider
 {
   /**
@@ -71,6 +71,19 @@ public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvide
     }
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getResult(org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public Object getResult( Feature feature )
+  {
+    if( feature == null )
+      return null;
+
+    final Feature parent = feature.getParent();
+    return WspmResultFactory.createResultNode( null, parent );
   }
 
 }

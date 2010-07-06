@@ -162,11 +162,11 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static String LAYER_BEWUCHS = PROFILE_LAYER + "BEWUCHS"; //$NON-NLS-1$
 
-  public static String LAYER_GEOKOORDINATEN = PROFILE_LAYER + "GEOKOORDINATEN"; //$NON-NLS-1$
+  // public static String LAYER_GEOKOORDINATEN = PROFILE_LAYER + "GEOKOORDINATEN"; //$NON-NLS-1$
 
-  public static String LAYER_GELAENDE = PROFILE_LAYER + "GELAENDE"; //$NON-NLS-1$
+  // public static String LAYER_GELAENDE = PROFILE_LAYER + "GELAENDE"; //$NON-NLS-1$
 
-  public static String LAYER_WASSERSPIEGEL = PROFILE_LAYER + "WASSERSPIEGEL"; //$NON-NLS-1$
+  // public static String LAYER_WASSERSPIEGEL = PROFILE_LAYER + "WASSERSPIEGEL"; //$NON-NLS-1$
 
   public static String LAYER_RAUHEIT = PROFILE_LAYER + "RAUHEIT"; //$NON-NLS-1$
 
@@ -190,7 +190,7 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static String LAYER_TUBES = PROFILE_LAYER + "TUBES"; //$NON-NLS-1$
 
-  public static String LAYER_WASSERSPIEGEL2D = PROFILE_LAYER + "WASSERPIEGEL2D"; //$NON-NLS-1$
+//  public static String LAYER_WASSERSPIEGEL2D = PROFILE_LAYER + "WASSERPIEGEL2D"; //$NON-NLS-1$
 
   public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 

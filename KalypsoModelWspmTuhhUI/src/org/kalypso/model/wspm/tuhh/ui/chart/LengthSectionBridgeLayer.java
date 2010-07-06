@@ -81,6 +81,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     return getScreenRect( index );
   }
 
+  @SuppressWarnings("rawtypes")
   private final Rectangle getScreenRect( final int i )
   {
     final TupleResult result = m_data.getObservation().getResult();
