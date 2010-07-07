@@ -58,10 +58,12 @@ import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
@@ -100,6 +102,8 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
   private WPSRequest m_wpsRequest = null;
 
   private IWPSProcess m_wpsProcess = null;
+  
+  private boolean m_boolFirstDone = false;
 
   private URI m_uriRMACalcPath;
 
@@ -165,11 +169,13 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
 
       m_wpsRequest = executePreSWANKalypso.getWpsRequest();
       final IStatus preStatus = executePreSWANKalypso.run( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
-
+ 
       // abort on error
       if( !preStatus.isOK() )
         return preStatus;
-
+      
+      m_boolFirstDone = true;
+      
       // gather inputs for simulation
       final String lSWANVersion = m_controlModel.getVersionSWAN();
       final URI lSWANModelPath = new URI( executePreSWANKalypso.getSWANModelPath() );
@@ -200,7 +206,7 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
           // gobble
         }
       }
-    }
+    } 
   }
 
   private IStatus evaluateSimulationResult( final IStatus simulationStatus )
@@ -333,15 +339,18 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
 
   public IStatus cancelJob( )
   {
-    if( m_wpsRequest != null )
+    MultiStatus lResStatus = StatusUtilities.createMultiStatusFromMessage( IStatus.OK, KalypsoModel1D2DPlugin.getDefault().toString(), CODE_NONE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1" ), " ", null ); //$NON-NLS-1$; //$NON-NLS-2$;
+    if( m_wpsRequest != null && !m_boolFirstDone )
     {
-      return m_wpsRequest.cancelJob();
+      lResStatus.add( m_wpsRequest.cancelJob() );
+      m_wpsRequest = null;
     }
     if( m_wpsProcess != null )
     {
-      return m_wpsProcess.cancelJob();
+      lResStatus.add( m_wpsProcess.cancelJob() );
+      m_wpsProcess = null;
     }
-    return StatusUtilities.createStatus( IStatus.OK, CODE_NONE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1" ), null ); //$NON-NLS-1$
+    return lResStatus;
   }
 
   public void setRMACalculationOutputPath( final URI rmaCalcPath )

@@ -423,7 +423,8 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
        */
       if( container instanceof WizardDialog2 )
       {
-        if( !m_calculationRMARunner.cancelJob().matches( IStatus.OK ) )
+        IStatus cancelDone = m_calculationRMARunner.cancelJob();
+        if( m_simulationStatusRMA.matches( IStatus.ERROR ) && !cancelDone.matches( IStatus.CANCEL ) )
         {
           setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.18" ), ERROR ); //$NON-NLS-1$
         }
@@ -454,7 +455,8 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
        */
       if( container instanceof WizardDialog2 )
       {
-        if( !m_calculationSWANRunner.cancelJob().matches( IStatus.OK ) )
+        IStatus cancelDone = m_calculationSWANRunner.cancelJob();
+        if( m_simulationStatusSWAN.matches( IStatus.ERROR ) && !cancelDone.matches( IStatus.CANCEL ) )
         {
           setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.18" ), ERROR ); //$NON-NLS-1$
         }
