@@ -111,7 +111,8 @@ public class ExecuteSWANKalypsoSimulation
       m_wpsRequest = new DefaultWPSProcess( SWANKalypsoSimulation.ID, m_serviceEndpoint, m_manager );
       m_wpsRequest.startProcess( m_inputs, outputs, progress );
 
-      final AsynchronousWPSWatchdog swanWatchdog = new AsynchronousWPSWatchdog( m_wpsRequest, m_wpsObserver, 60 * 60 * 1000 );
+//      final AsynchronousWPSWatchdog swanWatchdog = new AsynchronousWPSWatchdog( m_wpsRequest, m_wpsObserver, 60 * 60 * 1000 );
+      final AsynchronousWPSWatchdog swanWatchdog = new AsynchronousWPSWatchdog( m_wpsRequest, m_wpsObserver, 0 );
       final IStatus executeStatus = swanWatchdog.waitForProcess( progress );
 
       return executeStatus;
