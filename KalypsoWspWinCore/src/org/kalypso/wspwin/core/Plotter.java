@@ -49,6 +49,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.process.StreamStreamer;
 
 /**
  * Helper code to access WspWin-Plotter
@@ -120,8 +121,7 @@ public class Plotter
 
   private static IPreferenceStore getPlotterPreferences( )
   {
-    final IPreferenceStore preferences = KalypsoWspWinCorePlugin.getDefault().getPreferenceStore();
-    return preferences;
+    return KalypsoWspWinCorePlugin.getDefault().getPreferenceStore();
   }
 
   private static String getPlotterDialogMessage( final boolean firstTime )
@@ -151,7 +151,9 @@ public class Plotter
     commands.add( file.getName() );
 
     final String[] cmdArray = commands.toArray( new String[commands.size()] );
-    runtime.exec( cmdArray, null, file.getParentFile() );
+    final Process p = runtime.exec( cmdArray, null, file.getParentFile() );
+    new StreamStreamer( p.getInputStream(), System.out );
+    new StreamStreamer( p.getErrorStream(), System.err );
   }
 
 }
