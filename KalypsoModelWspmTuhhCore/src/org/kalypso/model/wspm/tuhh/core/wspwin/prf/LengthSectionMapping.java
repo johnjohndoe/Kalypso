@@ -45,6 +45,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.wspwin.core.prf.datablock.DataBlockDescription;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 
 /**
@@ -58,23 +59,21 @@ public final class LengthSectionMapping
 
   public final static String blanc200 = StringUtils.repeat( " ", 200 );
 
-  private final Map<String, String[]> m_propertyMap = new HashMap<String, String[]>();
+  private final Map<String, DataBlockDescription> m_propertyMap = new HashMap<String, DataBlockDescription>();
 
   private LengthSectionMapping( )
   {
-    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, new String[] { "STATION" } ); //$NON-NLS-1$
-    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, new String[] { "SOHLHOEHE" } ); //$NON-NLS-1$
-    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI, new String[] { "BOESCHUNG-LI" } ); //$NON-NLS-1$
-    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE, new String[] { "BOESCHUNG-RE" } ); //$NON-NLS-1$
-    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, new String[] { "OK-WEHRS" } ); //$NON-NLS-1$
-    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, new String[] { "DECKENOBERK" } ); //$NON-NLS-1$
-    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, new String[] { "DECKENUNTERK" } ); //$NON-NLS-1$
-    // m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, "BRIDGE_WIDTH" );
-    // m_PropertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, "ROHR_DN" );
-    m_propertyMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT, new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    m_propertyMap.put( "TEXT", new String[] { "TEXT", "", " 0  0  0  0  0  0  0  0 12" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, new String[] { "Wasserspiegel NN+m" } );//$NON-NLS-1$
+    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, DataBlockDescription.STATION );
+    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, DataBlockDescription.SOHLHOEHE );
+    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI, DataBlockDescription.BOESCHUNG_LI );
+    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE, DataBlockDescription.BOESCHUNG_RE );
+    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, DataBlockDescription.OK_WEHRS );
+    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, DataBlockDescription.DECKENOBERK );
+    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, DataBlockDescription.DECKENUNTERK );
+    m_propertyMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, DataBlockDescription.TEXT );
+    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT, DataBlockDescription.TEXT );
+    m_propertyMap.put( "TEXT", DataBlockDescription.TEXT );
+    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, DataBlockDescription.WASSERSPIEGEL );
   }
 
   public synchronized static DataBlockHeader createHeader( final String id )
@@ -87,15 +86,11 @@ public final class LengthSectionMapping
 
   private DataBlockHeader createH( final String id )
   {
-    final DataBlockHeader dbh = new DataBlockHeader();
-    final String[] fl = m_propertyMap.get( id );
+    final DataBlockDescription fl = m_propertyMap.get( id );
     if( fl == null )
       return null;
 
-    dbh.setFirstLine( fl.length > 0 ? fl[0] : id );
-    dbh.setSecondLine( fl.length > 1 ? blanc200 + fl[1] + "@" : "" );//$NON-NLS-1$ //$NON-NLS-2$
-    dbh.setThirdLine( fl.length > 2 ? fl[2] : " 0  0  0  0  0  0  0  0  0" );//$NON-NLS-1$
-    return dbh;
+    return new DataBlockHeader( fl.getName(), fl.getSpecialDataBlockId() );
   }
 
   /**
