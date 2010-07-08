@@ -52,7 +52,7 @@ import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 
 public class DataBlockWriter
 {
-  private final ArrayList<IDataBlock> m_dbs = new ArrayList<IDataBlock>();
+  private final List<IDataBlock> m_dbs = new ArrayList<IDataBlock>();
 
   private final Map<Integer, String[]> m_metaMap = new HashMap<Integer, String[]>();
 
@@ -74,10 +74,11 @@ public class DataBlockWriter
   public void store( final PrintWriter pw ) throws IOException
   {
     writeMetadata( pw );
-    writeZeile14( m_dbs, pw );
+    writeZeile14( pw );
     pw.println( "0.0000  0.0000  0.0000  0.0000  0.0000  0.0000   0 0 0" );// Plotvorgaben //$NON-NLS-1$
 
     for( final IDataBlock db : m_dbs )
+    {
       try
       {
         db.printToPrinter( pw );
@@ -86,17 +87,17 @@ public class DataBlockWriter
       {
         e.printStackTrace();
         throw new IOException( "error while writing: " + db.getFirstLine(), e );
-
       }
+    }
   }
 
   /**
    * Schreibt die Anzahlen der Datenblöcke als Zeile 14 raus
    */
-  private void writeZeile14( final List< ? extends IDataBlock> dbs, final PrintWriter pw )
+  private void writeZeile14( final PrintWriter pw )
   {
-    pw.print( dbs.size() );
-    for( final IDataBlock dataBlock : dbs )
+    pw.print( m_dbs.size() );
+    for( final IDataBlock dataBlock : m_dbs )
     {
       pw.print( ' ' );
       final int i = dataBlock.getCoordCount();

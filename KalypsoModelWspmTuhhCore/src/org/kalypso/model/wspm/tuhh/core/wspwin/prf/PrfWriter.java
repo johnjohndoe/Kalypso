@@ -299,98 +299,67 @@ public class PrfWriter implements IPrfConstants
 
   private final DataBlockHeader createHeader( final String key )
   {
-    final DataBlockHeader dbh = new DataBlockHeader();
-
     if( key.startsWith( "GEL" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "GELAENDE-" ); //$NON-NLS-1$
-      dbh.setSecondLine( "HOEHE" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "TRENNF" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "TRENNFLAECHEN" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "DUR" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "DURCHSTROEMTE" ); //$NON-NLS-1$
-      dbh.setSecondLine( "BEREICHE" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "KST" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "RAUHEIT" ); //$NON-NLS-1$
-      dbh.setSecondLine( "kst   m" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "KS" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "RAUHEIT" ); //$NON-NLS-1$
-      dbh.setSecondLine( "k-s   m" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "REC" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "RECHTSWERT" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "HOC" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "HOCHWERT" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "UK-B" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "UK-BRUECKE" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "OK-B" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "OK-BRUECKE" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "KOM" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "KOMMENTAR:" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "BOR" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "BORDVOLL" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "AX" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "AX   m" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "AY" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "AY   m" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "DP" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "DP   m" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "EI" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "EI" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "KRE" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "KREIS" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "TRA" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "TRAPEZ" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "MAU" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "MAULPROFIL" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "OK-W" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "OK-WEHR" ); //$NON-NLS-1$
-    }
-    else if( key.startsWith( "TRENNL" ) ) //$NON-NLS-1$
-    {
-      dbh.setFirstLine( "TRENNLINIE" ); //$NON-NLS-1$
-      dbh.setSecondLine( "WEHR" ); //$NON-NLS-1$
-    }
-    else
-    {
-      dbh.setFirstLine( key );
-    }
-    return dbh;
+      return new DataBlockHeader( "GELAENDE-", "HOEHE" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    if( key.startsWith( "TRENNF" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "TRENNFLAECHEN" ); //$NON-NLS-1$
+
+    if( key.startsWith( "DUR" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "DURCHSTROEMTE", "BEREICHE" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    if( key.startsWith( "KST" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "RAUHEIT", "kst   m" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    if( key.startsWith( "KS" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "RAUHEIT", "k-s   m" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    if( key.startsWith( "REC" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "RECHTSWERT" ); //$NON-NLS-1$
+
+    if( key.startsWith( "HOC" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "HOCHWERT" ); //$NON-NLS-1$
+
+    if( key.startsWith( "UK-B" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "UK-BRUECKE" ); //$NON-NLS-1$
+
+    if( key.startsWith( "OK-B" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "OK-BRUECKE" ); //$NON-NLS-1$
+
+    if( key.startsWith( "KOM" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "KOMMENTAR:" ); //$NON-NLS-1$
+
+    if( key.startsWith( "BOR" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "BORDVOLL" ); //$NON-NLS-1$
+
+    if( key.startsWith( "AX" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "AX   m" ); //$NON-NLS-1$
+
+    if( key.startsWith( "AY" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "AY   m" ); //$NON-NLS-1$
+
+    if( key.startsWith( "DP" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "DP   m" ); //$NON-NLS-1$
+
+    if( key.startsWith( "EI" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "EI" ); //$NON-NLS-1$
+
+    if( key.startsWith( "KRE" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "KREIS" ); //$NON-NLS-1$
+
+    if( key.startsWith( "TRA" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "TRAPEZ" ); //$NON-NLS-1$
+
+    if( key.startsWith( "MAU" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "MAULPROFIL" ); //$NON-NLS-1$
+
+    if( key.startsWith( "OK-W" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "OK-WEHR" ); //$NON-NLS-1$
+
+    if( key.startsWith( "TRENNL" ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "TRENNLINIE", "WEHR" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    return new DataBlockHeader( key );
   }
 
   private void writeCoords( final IComponent prop, final CoordDataBlock db, final Double nullValue )

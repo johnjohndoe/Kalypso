@@ -38,48 +38,64 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
-import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
-import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
+package org.kalypso.wspwin.core.prf.datablock;
 
 /**
- * Helper class that creates an coordinate data block.
- * 
  * @author Gernot Belger
  */
-public class CoordDataBlockCreator
+public enum DataBlockDescription
 {
-  private final DataBlockHeader m_header;
+  STATION,
+  SOHLHOEHE,
+  BOESCHUNG_LI("BOESCHUNG-LI"), //$NON-NLS-1$
+  BOESCHUNG_RE("BOESCHUNG-RE"), //$NON-NLS-1$
+  OK_WEHRS("OK-WEHRS"), //$NON-NLS-1$
+  DECKENOBERK,
+  DECKENUNTERK,
+  // BRIDGE_WIDTH,
+  // ROHR_DN,
+  TEXT(12),
+  WASSERSPIEGEL("Wasserspiegel NN+m"); //$NON-NLS-1$
 
-  private final List<Double> m_xs = new ArrayList<Double>();
+  private final int m_specialDataBlockId;
 
-  private final List<Double> m_ys = new ArrayList<Double>();
+  private final String m_name;
 
-  public CoordDataBlockCreator( final String firstLine, final String secondLine )
+  private DataBlockDescription( )
   {
-    m_header = new DataBlockHeader( firstLine );
-    m_header.setSecondLine( secondLine );
-
+    this( null, 0 );
   }
 
-  public IDataBlock createDataBlock( )
+  private DataBlockDescription( final String name )
   {
-    final CoordDataBlock db = new CoordDataBlock( m_header );
-    final Double[] xArray = m_xs.toArray( new Double[m_xs.size()] );
-    final Double[] yArray = m_ys.toArray( new Double[m_ys.size()] );
-    db.setCoords( xArray, yArray );
-    return db;
+    this( name, 0 );
   }
 
-  public void add( final double x, final double y )
+  private DataBlockDescription( final int sepcialDataBlockId )
   {
-    m_xs.add( x );
-    m_ys.add( y );
+    this( null, sepcialDataBlockId );
+  }
+
+  private DataBlockDescription( final String name, final int sepcialDataBlockId )
+  {
+    m_name = name;
+    m_specialDataBlockId = sepcialDataBlockId;
+  }
+
+  /**
+   * The name (i.e. type) of the data block. Used as first line of the db in .prf.
+   */
+  public String getName( )
+  {
+    if( m_name == null )
+      return name();
+
+    return m_name;
+  }
+
+  public int getSpecialDataBlockId( )
+  {
+    return m_specialDataBlockId;
   }
 
 }
