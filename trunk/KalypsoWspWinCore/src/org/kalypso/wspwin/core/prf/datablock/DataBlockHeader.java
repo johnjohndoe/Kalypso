@@ -75,24 +75,35 @@ public class DataBlockHeader
     setThirdLine( br.readLine() );
   }
 
-  public DataBlockHeader( )
-  {
-    m_secondLine = "[-]"; //$NON-NLS-1$
-    m_thirdLine = "0  0  0  0  0  0  0  0  0"; //$NON-NLS-1$
-  }
-
   public DataBlockHeader( final String firstLine )
   {
-    m_firstLine = firstLine;
-    m_secondLine = "[-]"; //$NON-NLS-1$
-    m_thirdLine = "0  0  0  0  0  0  0  0  0"; //$NON-NLS-1$
+    this( firstLine, "" ); //$NON-NLS-1$
   }
 
   public DataBlockHeader( final String firstLine, final String secondLine )
   {
+    this( firstLine, secondLine, 0 );
+  }
+
+  /**
+   * Same as {@link #DataBlockHeader(String, "", int)}
+   */
+  public DataBlockHeader( final String firstLine, final int specialId )
+  {
+    this( firstLine, "", specialId );
+  }
+
+  /**
+   * @param specialId
+   *          The special data block id (last number in second line).
+   */
+  public DataBlockHeader( final String firstLine, final String secondLine, final int specialId )
+  {
     m_firstLine = firstLine;
     m_secondLine = secondLine;
-    m_thirdLine = "0  0  0  0  0  0  0  0  0"; //$NON-NLS-1$
+    m_thirdLine = "0  0  0  0  0  0  0  0  " + specialId; //$NON-NLS-1$
+
+    parseThirdLine();
   }
 
   public String getFirstLine( )
