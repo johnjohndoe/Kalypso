@@ -264,13 +264,21 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   private String[] searchImages( final File photoDir )
   {
     final String pNam = getPNam();
-    final FilenameFilter photoFilter = new PrefixSuffixFilter( pNam, "" ); //$NON-NLS-1$
-    return photoDir.list( photoFilter );
+
+    final FilenameFilter jpgFilter = new PrefixSuffixFilter( pNam, ".jpg" ); //$NON-NLS-1$
+//    final FilenameFilter gifFilter = new PrefixSuffixFilter( pNam, ".gif" ); //$NON-NLS-1$
+//    final FilenameFilter pngFilter = new PrefixSuffixFilter( pNam, ".png" ); //$NON-NLS-1$
+
+    // TODO: support other formats as well
+
+    return photoDir.list( jpgFilter );
   }
 
   private File getContextDir( final String context )
   {
     final String result = WProfContextPatternReplacer.getInstance().replaceTokens( context, this );
+    if( result == null )
+      return null;
 
     return new File( result );
   }
