@@ -95,7 +95,7 @@ public final class CalcCoreUtils
       if( latestExecutable == null )
       {
         // Version des Rechenkerns nicht angegeben. Die Version muss in den Steuerparametern gesetzt werden.
-        final String msg = Messages.getString( "CalcCoreUtils_0" ); //$NON-NLS-1$
+        final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.1" ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
         throw new CoreException( status );
       }
@@ -126,7 +126,7 @@ public final class CalcCoreUtils
     final File exeFile = new File( getExecutablesDirectory(), exeName );
     if( !exeFile.isFile() )
     {
-      final String msg = Messages.getString( "CalcCoreUtils_1", exeFile.getAbsolutePath() ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.2", exeFile.getAbsolutePath() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
       throw new CoreException( status );
     }
