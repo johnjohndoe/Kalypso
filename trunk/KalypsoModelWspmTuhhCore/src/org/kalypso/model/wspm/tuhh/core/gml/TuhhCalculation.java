@@ -53,10 +53,8 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -392,18 +390,9 @@ public abstract class TuhhCalculation extends Feature_Impl implements IWspmConst
     return (TuhhReach) reachFeature;
   }
 
-  public Feature getRunOffEventFeature( )
+  public IRunOffEvent getRunOffEvent( )
   {
-    return FeatureHelper.resolveLink( this, QN_PROPERTY_RUN_OFF_EVENT_MEMBER );
-  }
-
-  public IObservation<TupleResult> getRunOffEvent( )
-  {
-    final Feature runOffEvent = FeatureHelper.resolveLink( this, QN_PROPERTY_RUN_OFF_EVENT_MEMBER );
-    if( runOffEvent == null )
-      return null;
-
-    return ObservationFeatureFactory.toObservation( runOffEvent );
+    return (IRunOffEvent) FeatureHelper.resolveLink( this, QN_PROPERTY_RUN_OFF_EVENT_MEMBER );
   }
 
   public MODE getCalcMode( )

@@ -49,12 +49,11 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.SortedMap;
 
 import javax.xml.namespace.QName;
 
@@ -73,7 +72,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
-import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
+import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -83,10 +82,6 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.WspWinHelper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -205,7 +200,7 @@ public class WspWinExporter
     write1DTuhhZustand( calculation, isDirectionUpstreams, zustFile, psiFile );
     if( calculation.getCalcMode() == MODE.WATERLEVEL )
     {
-      final IObservation<TupleResult> runOffEvent = calculation.getRunOffEvent();
+      final IRunOffEvent runOffEvent = calculation.getRunOffEvent();
       if( runOffEvent == null )
         throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.12" ) ); //$NON-NLS-1$
 
@@ -213,32 +208,9 @@ public class WspWinExporter
     }
   }
 
-  private static void write1DTuhhRunOff( final IObservation<TupleResult> runOffEvent, final boolean isDirectionUpstreams, final File qwtFile ) throws IOException
+  private static void write1DTuhhRunOff( final IRunOffEvent runOffEvent, final boolean isDirectionUpstreams, final File qwtFile ) throws IOException
   {
-    final TupleResult result = runOffEvent.getResult();
-
-    final int stationComp = TupleResultUtilities.indexOfComponentByPhenomenon( result, IWspmDictionaryConstants.PH_STATION );
-    final int abflussComp = TupleResultUtilities.indexOfComponentByPhenomenon( result, IWspmDictionaryConstants.PH_RUNOFF );
-
-    final Comparator<BigDecimal> comp = new Comparator<BigDecimal>()
-    {
-      @Override
-      public int compare( final BigDecimal o1, final BigDecimal o2 )
-      {
-        if( isDirectionUpstreams )
-          return o1.compareTo( o2 );
-        else
-          return o2.compareTo( o1 );
-      }
-    };
-
-    final Map<BigDecimal, BigDecimal> values = new TreeMap<BigDecimal, BigDecimal>( comp );
-    for( final IRecord record : result )
-    {
-      final BigDecimal station = (BigDecimal) record.getValue( stationComp );
-      final BigDecimal runOff = (BigDecimal) record.getValue( abflussComp );
-      values.put( station, runOff );
-    }
+    final SortedMap<BigDecimal, BigDecimal> values = runOffEvent.getDischargeTable();
 
     PrintWriter pw = null;
     try
@@ -251,7 +223,7 @@ public class WspWinExporter
       final String cleanRunoffName = cleanupRunoffName( runoffName );
       pw.print( cleanRunoffName );
       pw.print( " " ); //$NON-NLS-1$
-      pw.println( result.size() );
+      pw.println( values.size() );
 
       // write it sorted into the file
       for( final Map.Entry<BigDecimal, BigDecimal> entry : values.entrySet() )
