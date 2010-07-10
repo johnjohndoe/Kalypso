@@ -106,7 +106,6 @@ public class KalypsoModelApplication implements IApplication
   public Object start( final IApplicationContext context ) throws Exception
   {
     final Display display = PlatformUI.createDisplay();
-
     final Shell shell = new Shell( display, SWT.ON_TOP );
 
     try

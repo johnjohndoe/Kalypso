@@ -115,7 +115,7 @@ public class TestRiskModel extends TestCase
     final IProject project = workspace.getRoot().getProject( "RiskTest" ); //$NON-NLS-1$
     project.create( new NullProgressMonitor() );
 
-    final Display display = Display.getDefault();
+    final Display display = Display.getCurrent() != null ? Display.getCurrent() : Display.getDefault();
     final Shell shell = new Shell( display );
 
     final URL zipLocation = getClass().getResource( "resources/testProject.zip" ); //$NON-NLS-1$
