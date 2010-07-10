@@ -176,10 +176,9 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
    * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
    */
   @Override
-  public Cursor getCursor( final MouseEvent e  )
+  public Cursor getCursor( final MouseEvent e )
   {
-    // TODO: do not use default display; may be null or whatever
-    return Display.getDefault().getSystemCursor( SWT.CURSOR_HAND );
+    return e.display.getSystemCursor( SWT.CURSOR_HAND );
   }
 
 }

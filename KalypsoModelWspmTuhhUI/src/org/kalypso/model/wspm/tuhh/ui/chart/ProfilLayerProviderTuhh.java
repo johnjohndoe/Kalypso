@@ -111,7 +111,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
   public ProfilLayerProviderTuhh( )
   {
-
+    m_lsp.createStyles();
   }
 
   /**
@@ -238,8 +238,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     }
     else if( layerID.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
     {
-      final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { new PointsLineLayer( layerID, profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_lsp ),
-          new PointsLineLayer( layerID, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, m_lsp ) };
+      final IProfilChartLayer[] subLayers = new IProfilChartLayer[] {
+          new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_lsp ),
+          new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, m_lsp ) };
       return new BuildingBridgeTheme( profil, subLayers, cmLeft );
     }
     else if( layerID.equals( IWspmTuhhConstants.LAYER_WEHR ) )
@@ -472,9 +473,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
     else if( pointPropertyID.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) || pointPropertyID.equals( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) )
       return new LayerDescriptor( BuildingBridgeTheme.TITLE, LAYER_BRUECKE );
-    else if( pointPropertyID.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) )
+    else if( pointPropertyID.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) || pointPropertyID.equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
       return new LayerDescriptor( BuildingWeirTheme.TITLE, IWspmTuhhConstants.LAYER_WEHR );
-    else
-      return null;
+    else if( pointPropertyID.startsWith( IWspmTuhhConstants.MARKER_TYP ) )
+      return new LayerDescriptor( DeviderTheme.TITLE, IWspmTuhhConstants.LAYER_DEVIDER );
+    return null;
   }
 }

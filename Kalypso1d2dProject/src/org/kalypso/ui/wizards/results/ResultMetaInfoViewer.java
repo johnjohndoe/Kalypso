@@ -76,9 +76,9 @@ public class ResultMetaInfoViewer extends Viewer
   /*
    * fonts
    */
-  private final Font fTextHeader = new Font( Display.getDefault(), "Tahoma", 10, SWT.BOLD ); //$NON-NLS-1$
+  private final Font fTextHeader;
 
-  private final Font fTextNormal = new Font( Display.getDefault(), "Tahoma", 8, SWT.NONE ); //$NON-NLS-1$
+  private final Font fTextNormal;
 
   private final Group m_panel;
 
@@ -92,6 +92,9 @@ public class ResultMetaInfoViewer extends Viewer
   {
     m_panel = new Group( parent, style );
     m_panel.setLayout( new GridLayout() );
+    fTextHeader = new Font( parent.getDisplay(), "Tahoma", 10, SWT.BOLD ); //$NON-NLS-1$
+    fTextNormal = new Font( parent.getDisplay(), "Tahoma", 8, SWT.NONE ); //$NON-NLS-1$
+    parent.getDisplay();
 
     m_factory = factory;
 
@@ -300,7 +303,7 @@ public class ResultMetaInfoViewer extends Viewer
 
       buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"" + docType + "\"></li>" ); //$NON-NLS-1$ //$NON-NLS-2$
       boolean bDone = false;
-     
+
       for( final String resultType : NodeResultHelper.NodeStyleTypes )
       {
         BigDecimal minValueForType = null;
@@ -329,7 +332,7 @@ public class ResultMetaInfoViewer extends Viewer
         bDone = true;
         /*
          * set actual min/max settings also in the helper map
-         * */
+         */
         String sourceFile = docResult.getFullPath().toOSString();
         int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
         String stepNameStr = sourceFile.substring( beginIndex, beginIndex + 16 );
