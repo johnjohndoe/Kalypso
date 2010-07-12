@@ -239,7 +239,7 @@ public class NAZMLGenerator
       if( value < 0.0 )
         writer.write( String.format( "%s 0.0\n", m_grapDateFormat.format( date ) ) ); //$NON-NLS-1$
       else
-        writer.write( String.format( "%s %.3f\n", m_grapDateFormat.format( date ), value ) ); //$NON-NLS-1$
+        writer.write( String.format( Locale.US, "%s %.3f\n", m_grapDateFormat.format( date ), value ) ); //$NON-NLS-1$
     }
   }
 
