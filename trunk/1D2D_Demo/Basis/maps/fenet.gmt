@@ -64,12 +64,14 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="%roughness.mapv.gismapview.Rauheitszonen" id="ID_12" linktype="gmt" xlink:actuate="onRequest" xlink:href="roughness.gmt" xlink:type="simple">
+        <mapv:layer visible="true" name="Windmodelle" featurePath="#fid#root/windDataModelSystem" id="ID_12" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/wind.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
+        </mapv:layer> 
+        <mapv:layer visible="false" name="%fenet.mapv.layer.Rauheitszonen" id="ID_13" linktype="gmt" xlink:type="simple" xlink:href="roughness.gmt" xlink:actuate="onRequest">
+            <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="%base.mapv.gismapview.Grundlagen" id="ID_13" linktype="gmt" xlink:actuate="onRequest" xlink:href="base.gmt" xlink:type="simple">
-            <templ:showChildren>true</templ:showChildren>
+        <mapv:layer visible="false" name="%fenet.mapv.layer.Grundlagen" id="ID_15" linktype="gmt" xlink:type="simple" xlink:href="base.gmt" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
     </mapv:layers>
