@@ -53,7 +53,8 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author Kim Werner, Dirk Kuch
+ * @author Kim Werner
+ * @author Dirk Kuch
  */
 public abstract class AbstractObservationBuilding implements IProfileObject
 {
@@ -106,7 +107,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
     if( index < 0 )
       throw new IllegalArgumentException( component == null ? m_observation.getDescription() : component.getDescription() );
     if( result.size() > 1 )
-      throw new IllegalStateException( Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.0") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.0" ) ); //$NON-NLS-1$
     else if( result.size() == 0 )
       result.add( result.createRecord() );
 
@@ -131,7 +132,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   {
     final TupleResult result = m_observation.getResult();
     if( result.size() > 1 )
-      throw new IllegalStateException( Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.1") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.1" ) ); //$NON-NLS-1$
     final int index = result.indexOf( component );
     if( index < 0 )
       throw new IllegalArgumentException( component.getName() );

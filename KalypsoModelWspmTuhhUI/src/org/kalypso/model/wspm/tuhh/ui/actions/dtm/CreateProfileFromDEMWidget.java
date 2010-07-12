@@ -173,7 +173,11 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   private ICoverageCollection getCoverageTheme( final IKalypsoFeatureTheme coverageTheme )
   {
     final FeatureList featureList = coverageTheme.getFeatureList();
-    final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
+    if( featureList == null )
+      return null;
+
+    final Feature coveragesFeature = featureList.getParentFeature();
+
     return (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class );
   }
 

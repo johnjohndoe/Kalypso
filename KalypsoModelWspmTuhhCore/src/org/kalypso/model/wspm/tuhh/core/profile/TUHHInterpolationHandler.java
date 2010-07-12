@@ -93,37 +93,36 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
       }
       return true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new ArithmeticException( e.getLocalizedMessage() );
     }
   }
 
-  private Object interpolateValues( Object v1, Object v2, final double distance )
+  private Object interpolateValues( final Object v1, final Object v2, final double distance )
   {
     if( !(v1 instanceof Number) || !(v2 instanceof Number) )
       return null;
 
-    Number n1 = (Number) v1;
-    Number n2 = (Number) v2;
+    final Number n1 = (Number) v1;
+    final Number n2 = (Number) v2;
 
-    double d1 = n1.doubleValue();
-    double d2 = n2.doubleValue();
+    final double d1 = n1.doubleValue();
+    final double d2 = n2.doubleValue();
 
     final double result = d1 + (d2 - d1) * distance;
     return createValue( v1, result );
   }
 
-  private Object createValue( Object template, double value )
+  private Object createValue( final Object template, final double value )
   {
     if( template.getClass() == Double.class )
-      return new Double( value );
-
+      return Double.valueOf( value );
     if( template.getClass() == BigDecimal.class )
-      return new BigDecimal( value ).setScale( ((BigDecimal) template).scale(), BigDecimal.ROUND_HALF_UP );
+      return BigDecimal.valueOf( value ).setScale( ((BigDecimal) template).scale(), BigDecimal.ROUND_HALF_UP );
     if( template.getClass() == Integer.class )
-      return new Integer((int) Math.round( value));
+      return Integer.valueOf( (int) Math.round( value ) );
     return template;
   }
 }

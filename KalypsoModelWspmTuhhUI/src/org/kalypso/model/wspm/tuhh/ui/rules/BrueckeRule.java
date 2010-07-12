@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -51,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution;
@@ -96,17 +98,20 @@ public class BrueckeRule extends AbstractValidatorRule
   {
     if( profil == null )
       return;
-    
-    final ProfileAltitudeValidator pav = new ProfileAltitudeValidator( profil, collector );
-    final IProfileObject[] profileObjects = profil.getProfileObjects();
-    final IProfileObject building = profileObjects.length > 0 ? profileObjects[0] : null;
-    final int pointsCount = profil.getPoints().length;
 
-    if( building == null || !IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( building.getId() ) )
+    final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
+    if( ArrayUtils.isEmpty( objects ) )
+      return;
+
+    final IProfileObject building = objects[0];
+
+    if( !IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( building.getId() ) )
       return;
 
     try
     {
+      final ProfileAltitudeValidator pav = new ProfileAltitudeValidator( profil, collector );
+      final int pointsCount = profil.getPoints().length;
 
       // validierung ohne Brückengeometrie möglich
       if( !validateParams( building, pav ) || !validateBankfullPoints( pav, profil ) )
@@ -120,7 +125,7 @@ public class BrueckeRule extends AbstractValidatorRule
       // Trennflächen vorhanden
       if( markerLeft == -1 || markerRight == -1 )
       {
-        pav.createMarker( Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.1"), 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ); //$NON-NLS-1$
+        pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.1" ), 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ); //$NON-NLS-1$
         return;
       }
       // ersten BrückenOberkantenpunkt von Links
@@ -139,7 +144,7 @@ public class BrueckeRule extends AbstractValidatorRule
       final int innerRight = iR < 0 ? pRUK : iR;
       if( innerLeft == -1 || innerRight == -1 )
       {
-        pav.createMarker( Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.2"), 0, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ); //$NON-NLS-1$
+        pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.2" ), 0, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ); //$NON-NLS-1$
         return;
       }
 

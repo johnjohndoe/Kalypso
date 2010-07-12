@@ -83,14 +83,16 @@ public class TuhhProfil extends AbstractProfil
   @Override
   public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
-    if( profileObjects.length > 1 )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.1" ) ); //$NON-NLS-1$
-    final IProfileObject[] buildings = super.getProfileObjects();
-    if( buildings.length > 0 )
-      super.removeProfileObject( buildings[0] );
-    if( profileObjects.length > 0 )
-      return super.addProfileObjects( profileObjects );
-    return profileObjects;
+    for( final IProfileObject object : profileObjects )
+    {
+      final IProfileObject[] objects = getProfileObjects( object.getClass() );
+      for( final IProfileObject o : objects )
+      {
+        removeProfileObject( o );
+      }
+    }
+
+    return super.addProfileObjects( profileObjects );
   }
 
   /**

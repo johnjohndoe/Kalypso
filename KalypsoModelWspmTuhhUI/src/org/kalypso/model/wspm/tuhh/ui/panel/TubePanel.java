@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.panel;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -70,6 +71,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
@@ -142,10 +144,13 @@ public class TubePanel extends AbstractProfilView
           if( !Double.isNaN( value ) )
           {
             final IProfil profil = getProfil();
-            final IProfileObject[] objects = profil == null ? null : profil.getProfileObjects();
-            final IProfileObject building = objects == null || objects.length < 1 ? null : objects[0];
-            if( building == null )
+
+            final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
+            if( ArrayUtils.isEmpty( objects ) )
               return;
+
+            final IProfileObject building = objects[0];
+
             final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
             if( val == value )
               return;
@@ -165,11 +170,12 @@ public class TubePanel extends AbstractProfilView
       if( m_text == null || m_text.isDisposed() )
         return;
 
-      final IProfil profil = getProfil();
-      final IProfileObject[] objects = profil == null ? null : profil.getProfileObjects();
-      final IProfileObject building = objects == null || objects.length < 1 ? null : objects[0];
-      if( building == null )
+      final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+      if( ArrayUtils.isEmpty( objects ) )
         return;
+
+      final IProfileObject building = objects[0];
+
       final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
       m_text.setText( val.toString() );
       if( m_text.isFocusControl() )
@@ -193,13 +199,15 @@ public class TubePanel extends AbstractProfilView
 // TUHH Hack for tube cross section TRAPEZ,EI,MAUL,KREIS
       if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
       {
-        if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( getProfil().getProfileObjects()[0].getId() ) )
+        final String buildingId = getProfil().getProfileObjects( AbstractObservationBuilding.class )[0].getId();
+
+        if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( buildingId ) )
           label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.1" ); //$NON-NLS-1$
-        else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( getProfil().getProfileObjects()[0].getId() ) )
+        else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( buildingId ) )
           label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.2" ); //$NON-NLS-1$
-        else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( getProfil().getProfileObjects()[0].getId() ) )
+        else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( buildingId ) )
           label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.3" ); //$NON-NLS-1$
-        else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( getProfil().getProfileObjects()[0].getId() ) )
+        else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( buildingId ) )
           label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.4" ); //$NON-NLS-1$
       }
     }
@@ -247,7 +255,7 @@ public class TubePanel extends AbstractProfilView
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
         final IProfileObject tube = (IProfileObject) selection.getFirstElement();
-        final IProfileObject old = getProfil().getProfileObjects()[0];
+        final IProfileObject old = getProfil().getProfileObjects( AbstractObservationBuilding.class )[0];
 
         if( tube != null && !tube.getId().equals( old.getId() ) )
         {
@@ -280,33 +288,42 @@ public class TubePanel extends AbstractProfilView
     {
       line.dispose();
     }
+
     m_lines = new ArrayList<PropertyLine>( 8 );
-    final IProfil profil = getProfil();
-    final IProfileObject[] objects = profil == null ? null : profil.getProfileObjects();
-    final IProfileObject building = objects == null || objects.length < 1 ? null : objects[0];
-    if( building == null )
+
+    final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+    if( ArrayUtils.isEmpty( objects ) )
       return;
+
+    final IProfileObject building = objects[0];
     for( final IComponent property : building.getObjectProperties() )
     {
       m_lines.add( new PropertyLine( m_toolkit, m_propPanel, property ) );
     }
+
     m_propPanel.layout();
   }
 
   protected void updateControls( )
   {
 
-    final IProfileObject[] obj = getProfil().getProfileObjects();
-    if( obj == null || obj.length < 1 )
-    {
+    final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+    if( ArrayUtils.isEmpty( objects ) )
       return;
-    }
-    final String t_id = obj[0].getId();
+
+    final IProfileObject building = objects[0];
+
     for( final IProfileObject tube : m_tubes )
-      if( t_id.equals( tube.getId() ) )
+    {
+      if( building.getId().equals( tube.getId() ) )
         m_cmb.setSelection( new StructuredSelection( tube ) );
+    }
+
     for( final PropertyLine line : m_lines )
+    {
       line.updateValue();
+    }
+
     // m_propPanel.layout();
   }
 

@@ -176,10 +176,9 @@ public class CreateLengthSectionWizard extends Wizard
       final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
       IDE.openEditor( page, kodFile, true );
     }
-    catch( final Exception e )
+    catch( final Throwable t )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      t.printStackTrace();
     }
     return true;
   }

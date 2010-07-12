@@ -49,14 +49,14 @@ import org.osgi.framework.BundleContext;
 public class KalypsoModelWspmTuhhCorePlugin extends Plugin
 {
   // The shared instance.
-  private static KalypsoModelWspmTuhhCorePlugin plugin;
+  private static KalypsoModelWspmTuhhCorePlugin PLUGIN;
 
   /**
    * The constructor.
    */
   public KalypsoModelWspmTuhhCorePlugin( )
   {
-    plugin = this;
+    PLUGIN = this;
   }
 
   /**
@@ -75,7 +75,7 @@ public class KalypsoModelWspmTuhhCorePlugin extends Plugin
   public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
-    plugin = null;
+    PLUGIN = null;
   }
 
   /**
@@ -83,7 +83,7 @@ public class KalypsoModelWspmTuhhCorePlugin extends Plugin
    */
   public static KalypsoModelWspmTuhhCorePlugin getDefault( )
   {
-    return plugin;
+    return PLUGIN;
   }
 
   public static String getID( )

@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution;
@@ -84,18 +85,20 @@ public class TrennerRule extends AbstractValidatorRule
 
     if( db.length == 0 )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.0"),String.format("km %.4f" , profil.getStation() ), 0, null, pluginId, new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.0" ), String.format( "km %.4f", profil.getStation() ), 0, null, pluginId, new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    final IProfileObject[] profileObjects = profil.getProfileObjects();
-    IProfileObject building = null;
-    if( profileObjects.length > 0 )
-      building = profileObjects[0];
+    final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
+    if( ArrayUtils.isEmpty( objects ) )
+      return;
+
+    final IProfileObject building = objects[0];
+
     // Regel für fehlende Trennflächen bei Durchlässen erlauben
     // TUHH-Hack
     if( tf.length == 0 && !isDurchlass( building ) )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.2"), String.format("km %.4f" , profil.getStation() ), 0, null, pluginId, new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.2" ), String.format( "km %.4f", profil.getStation() ), 0, null, pluginId, new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );
@@ -117,17 +120,17 @@ public class TrennerRule extends AbstractValidatorRule
     final Double right = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, rightP );
     final Double xleft = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, toValidate[0].getPoint() );
     final Double xright = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, toValidate[toValidate.length - 1].getPoint() );
-    if (xright.isNaN()||xleft.isNaN()||left.isNaN()||right.isNaN())
+    if( xright.isNaN() || xleft.isNaN() || left.isNaN() || right.isNaN() )
       return;
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
     final String type = toValidate[0].getId().getId();
     if( xleft < left || xleft > right )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR,  Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.4",toValidate[0].getId().getName()),String.format("km %.4f" , profil.getStation() ), profil.indexOfPoint( toValidate[0].getPoint() ), null, pluginId, new MoveDeviderResolution( 0, type, ArrayUtils.indexOf( profil.getPoints(), leftP ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.4", toValidate[0].getId().getName() ), String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( toValidate[0].getPoint() ), null, pluginId, new MoveDeviderResolution( 0, type, ArrayUtils.indexOf( profil.getPoints(), leftP ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( xright < left || xright > right )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.6",toValidate[0].getId().getName()),String.format("km %.4f" , profil.getStation() ), profil.indexOfPoint( toValidate[toValidate.length - 1].getPoint() ), null, pluginId, new MoveDeviderResolution( toValidate.length - 1, type, ArrayUtils.indexOf( profil.getPoints(), rightP ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.6", toValidate[0].getId().getName() ), String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( toValidate[toValidate.length - 1].getPoint() ), null, pluginId, new MoveDeviderResolution( toValidate.length - 1, type, ArrayUtils.indexOf( profil.getPoints(), rightP ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }
