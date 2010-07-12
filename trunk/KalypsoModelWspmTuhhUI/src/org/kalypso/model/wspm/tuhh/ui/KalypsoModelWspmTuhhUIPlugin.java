@@ -51,7 +51,7 @@ import org.osgi.framework.BundleContext;
 public class KalypsoModelWspmTuhhUIPlugin extends AbstractUIPlugin
 {
   // The shared instance.
-  private static KalypsoModelWspmTuhhUIPlugin plugin;
+  private static KalypsoModelWspmTuhhUIPlugin PLUGIN;
 
   private PluginImageProvider m_imgProvider = null;
 
@@ -61,7 +61,7 @@ public class KalypsoModelWspmTuhhUIPlugin extends AbstractUIPlugin
   public KalypsoModelWspmTuhhUIPlugin( )
   {
     super();
-    plugin = this;
+    PLUGIN = this;
   }
 
   public static String getID( )
@@ -92,7 +92,7 @@ public class KalypsoModelWspmTuhhUIPlugin extends AbstractUIPlugin
 
     super.stop( context );
 
-    plugin = null;
+    PLUGIN = null;
   }
 
   /**
@@ -100,7 +100,7 @@ public class KalypsoModelWspmTuhhUIPlugin extends AbstractUIPlugin
    */
   public static KalypsoModelWspmTuhhUIPlugin getDefault( )
   {
-    return plugin;
+    return PLUGIN;
   }
 
   public static PluginImageProvider getImageProvider( )

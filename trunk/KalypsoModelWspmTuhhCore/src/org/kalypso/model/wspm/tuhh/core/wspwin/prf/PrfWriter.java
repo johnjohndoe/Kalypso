@@ -56,6 +56,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
@@ -66,6 +67,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
@@ -189,7 +191,7 @@ public class PrfWriter implements IPrfConstants
     // FIXME: spezial Zeugs für Steiermark, aber wohin?
     writeWaterlevel();
 
-    if( m_profil.getProfileObjects() != null )
+    if( !ArrayUtils.isEmpty( m_profil.getProfileObjects( AbstractObservationBuilding.class ) ) )
       writeBuilding();
     if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) != null )
       writeHochRechts();
@@ -285,7 +287,7 @@ public class PrfWriter implements IPrfConstants
       dbr.setCoords( new Double[size], new Double[size] );
     }
 
-    final IProfileObject[] buildings = m_profil.getProfileObjects();
+    final IProfileObject[] buildings = m_profil.getProfileObjects( AbstractObservationBuilding.class );
     if( istDurchlass( buildings ) )
     {
       final Double roughness = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, buildings[0] );
@@ -294,6 +296,7 @@ public class PrfWriter implements IPrfConstants
         dbr.getY()[i] = roughness;
       }
     }
+
     m_dbWriter.addDataBlock( dbr );
   }
 
@@ -467,14 +470,14 @@ public class PrfWriter implements IPrfConstants
 
   private void writeBuilding( )
   {
-    final IProfileObject[] buildings = m_profil.getProfileObjects();
+    final IProfileObject[] objects = m_profil.getProfileObjects( AbstractObservationBuilding.class );
+    if( ArrayUtils.isEmpty( objects ) )
+      return;
 
-    IProfileObject building = null;
-    if( buildings.length > 0 )
-      building = buildings[0];
+    final IProfileObject building = objects[0];
+    final String buildingType = building.getId();
 
-    final String buildingTyp = building == null ? "" : building.getId(); //$NON-NLS-1$
-    if( buildingTyp.equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) )
+    if( buildingType.equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) )
     {
       final DataBlockHeader dbho = createHeader( "OK-B" ); //$NON-NLS-1$
       final CoordDataBlock dbo = new CoordDataBlock( dbho );
@@ -498,7 +501,7 @@ public class PrfWriter implements IPrfConstants
       m_dbWriter.addDataBlock( dbu );
     }
 
-    else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_WEHR ) == 0 )
+    else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_WEHR ) == 0 )
     {
       final DataBlockHeader dbhw = createHeader( "OK-W" ); //$NON-NLS-1$
       final CoordDataBlock dbw = new CoordDataBlock( dbhw );
@@ -520,7 +523,7 @@ public class PrfWriter implements IPrfConstants
       }
       m_dbWriter.addDataBlock( dbw );
     }
-    else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_EI ) == 0 )
+    else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_EI ) == 0 )
     {
       final DataBlockHeader dbhe = createHeader( "EI" ); //$NON-NLS-1$
       final TextDataBlock dbe = new TextDataBlock( dbhe );
@@ -537,7 +540,7 @@ public class PrfWriter implements IPrfConstants
       }
       m_dbWriter.addDataBlock( dbe );
     }
-    else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_MAUL ) == 0 )
+    else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_MAUL ) == 0 )
     {
       final DataBlockHeader dbhm = createHeader( "MAU" ); //$NON-NLS-1$
       final TextDataBlock dbm = new TextDataBlock( dbhm );
@@ -554,7 +557,7 @@ public class PrfWriter implements IPrfConstants
       }
       m_dbWriter.addDataBlock( dbm );
     }
-    else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_KREIS ) == 0 )
+    else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_KREIS ) == 0 )
     {
       final DataBlockHeader dbhk = createHeader( "KRE" ); //$NON-NLS-1$
       final TextDataBlock dbk = new TextDataBlock( dbhk );
@@ -571,7 +574,7 @@ public class PrfWriter implements IPrfConstants
       m_dbWriter.addDataBlock( dbk );
     }
 
-    else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) == 0 )
+    else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) == 0 )
     {
       final DataBlockHeader dbht = createHeader( "TRA" ); //$NON-NLS-1$
       final TextDataBlock dbt = new TextDataBlock( dbht );

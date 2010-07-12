@@ -307,8 +307,11 @@ public class PrfSource implements IProfilSource
 
   private final boolean writeBuildingProperty( final IProfileObject building, final StringTokenizer sT, final String propertyID )
   {
+    if( building == null )
+      return false;
+
     final IComponent component = building.getObjectProperty( propertyID );
-    if( sT.hasMoreTokens() && building != null )
+    if( sT.hasMoreTokens() )
       try
       {
         building.setValue( component, Double.parseDouble( sT.nextToken() ) );
@@ -321,6 +324,7 @@ public class PrfSource implements IProfilSource
       }
     else
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.16" ) + component.getName(), null ) ); //$NON-NLS-1$
+
     return false;
   }
 

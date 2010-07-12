@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.panel;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -62,6 +63,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -127,10 +129,13 @@ public class BridgePanel extends AbstractProfilView
           if( !Double.isNaN( value ) )
           {
             final IProfil profil = getProfil();
-            final IProfileObject[] objects = profil == null ? null : profil.getProfileObjects();
-            final IProfileObject building = objects == null || objects.length < 1 ? null : objects[0];
-            if( building == null )
+
+            final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
+            if( ArrayUtils.isEmpty( objects ) )
               return;
+
+            final IProfileObject building = objects[0];
+
             final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
             if( val == value )
               return;
@@ -159,11 +164,12 @@ public class BridgePanel extends AbstractProfilView
       m_label.setText( labelText );
       m_label.setToolTipText( description );
 
-      final IProfil profil = getProfil();
-      final IProfileObject[] objects = profil == null ? null : profil.getProfileObjects();
-      final IProfileObject building = objects == null || objects.length < 1 ? null : objects[0];
-      if( building == null )
+      final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+      if( ArrayUtils.isEmpty( objects ) )
         return;
+
+      final IProfileObject building = objects[0];
+
       final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
       final String textText = String.format( "%.3f", val ); //$NON-NLS-1$
       m_text.setText( textText );
@@ -201,27 +207,33 @@ public class BridgePanel extends AbstractProfilView
     {
       line.dispose();
     }
+
     m_lines = new ArrayList<PropertyLine>( 8 );
-    final IProfil profil = getProfil();
-    final IProfileObject[] objects = profil == null ? null : profil.getProfileObjects();
-    final IProfileObject building = objects == null || objects.length < 1 ? null : objects[0];
-    if( building == null )
+
+    final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+    if( ArrayUtils.isEmpty( objects ) )
       return;
+
+    final IProfileObject building = objects[0];
     for( final IComponent property : building.getObjectProperties() )
     {
       m_lines.add( new PropertyLine( m_toolkit, m_propPanel, property ) );
     }
+
     m_propPanel.layout();
   }
 
   protected void updateControls( )
   {
-    final IProfileObject[] obj = getProfil().getProfileObjects();
-    if( obj == null || obj.length < 1 )
+    final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+    if( ArrayUtils.isEmpty( objects ) )
       return;
 
     for( final PropertyLine line : m_lines )
+    {
       line.updateValue();
+    }
+
   }
 
   @Override

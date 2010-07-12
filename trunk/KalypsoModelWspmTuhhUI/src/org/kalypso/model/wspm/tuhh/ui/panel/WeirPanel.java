@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.panel;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -69,6 +70,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -80,6 +82,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
@@ -225,8 +228,14 @@ public class WeirPanel extends AbstractProfilView
             if( trenner != null )
             {
               final Object objVal = marker.getValue();
-              final IProfileObject[] buildings = getProfil().getProfileObjects();
-              final Object dblVal = (objVal instanceof Double) ? objVal : ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, buildings[0] );
+
+              final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
+              if( ArrayUtils.isEmpty( objects ) )
+                return;
+
+              final IProfileObject building = objects[0];
+
+              final Object dblVal = (objVal instanceof Double) ? objVal : ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, building );
               operation.addChange( new PointMarkerEdit( trenner, dblVal ) );
               operation.addChange( new ActiveObjectEdit( getProfil(), point, null ) );
               new ProfilOperationJob( operation ).schedule();
@@ -271,11 +280,11 @@ public class WeirPanel extends AbstractProfilView
 
             if( m_position < 0 )
             {
-              final IProfileObject[] profileObjects = getProfil().getProfileObjects();
-              IProfileObject building = null;
-              if( profileObjects.length > 0 )
-                building = profileObjects[0];
-              // FIXME: if building is null, does the rest makes sense?
+              final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+              if( ArrayUtils.isEmpty( objects ) )
+                return;
+
+              final IProfileObject building = objects[0];
 
               final IProfilChange change = new ProfileObjectEdit( building, building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), value );
               final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.11" ), getProfil(), change, true ); //$NON-NLS-1$
@@ -325,10 +334,10 @@ public class WeirPanel extends AbstractProfilView
     {
       if( m_position < 0 )
       {
-        final IProfileObject[] profileObjects = getProfil().getProfileObjects();
-        if( profileObjects.length > 0 )
+        final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+        if( !ArrayUtils.isEmpty( objects ) )
         {
-          final IProfileObject building = profileObjects[0];
+          final IProfileObject building = objects[0];
           final IComponent beiwert = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
           // TODO: very strange code... check this! What is the type of these components??
           final String objValue = building.getValue( beiwert ).toString();
@@ -349,7 +358,7 @@ public class WeirPanel extends AbstractProfilView
     protected String getMarkerText( )
     {
       final IProfilPointMarker marker = getMarker();
-      return String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, marker.getPoint() ) ); //$NON-NLS-1$
+      return String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, marker.getPoint() ) ); //$NON-NLS-1$
     }
   }
 
@@ -434,9 +443,10 @@ public class WeirPanel extends AbstractProfilView
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IProfileObject[] profileObjects = getProfil().getProfileObjects();
-        if( profileObjects.length < 1 || !(profileObjects[0] instanceof BuildingWehr) )
+        final IProfileObject[] profileObjects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+        if( ArrayUtils.isEmpty( profileObjects ) || !(profileObjects[0] instanceof BuildingWehr) )
           return;
+
         final BuildingWehr building = (BuildingWehr) profileObjects[0];
         final IStructuredSelection selection = (IStructuredSelection) m_Wehrart.getSelection();
         if( selection.isEmpty() )
@@ -488,9 +498,8 @@ public class WeirPanel extends AbstractProfilView
     if( m_Wehrart.getCombo().isDisposed() )
       return;
 
-    // TODO IProfileObjects now returned as list from IProfile
-    final IProfileObject[] profileObjects = getProfil().getProfileObjects();
-    if( profileObjects.length < 1 || !(profileObjects[0] instanceof BuildingWehr) )
+    final IProfileObject[] profileObjects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+    if( ArrayUtils.isEmpty( profileObjects ) || !(profileObjects[0] instanceof BuildingWehr) )
       return;
 
     final BuildingWehr building = (BuildingWehr) profileObjects[0];
@@ -504,26 +513,27 @@ public class WeirPanel extends AbstractProfilView
     // m_WehrfeldVisible.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     m_wehrStart.refresh();
     m_wehrEnd.refresh();
-    final IComponent cmpWehrTrenner = getProfil().hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
 
+    final IComponent cmpWehrTrenner = getProfil().hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( cmpWehrTrenner );
 
     while( m_deviderLines.size() < deviders.length )
     {
       m_deviderLines.add( new DeviderLine( m_deviderGroup, m_deviderLines.size() ) );
     }
+
     while( m_deviderLines.size() > deviders.length )
     {
       m_deviderLines.getLast().dispose();
       m_deviderLines.removeLast();
     }
+
     for( final DeviderLine devl : m_deviderLines )
     {
       devl.refresh();
     }
 
     m_deviderGroup.getParent().layout();
-
   }
 
   @Override

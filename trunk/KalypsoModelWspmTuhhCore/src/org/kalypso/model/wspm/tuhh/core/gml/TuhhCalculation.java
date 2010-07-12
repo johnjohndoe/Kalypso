@@ -281,9 +281,9 @@ public abstract class TuhhCalculation extends Feature_Impl implements IWspmConst
     parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "reibungsverlust" ), reibType.name() ); //$NON-NLS-1$
 
     final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QNAME_PROP_SPECIAL_OPTIONS_MEMBER );
-    specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBridges" ), new Boolean( doCalcBridges ) ); //$NON-NLS-1$
-    specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBarrages" ), new Boolean( doCalcBarrages ) ); //$NON-NLS-1$
-    specialFeature.setProperty( QNAME_PROP_SPECIAL_PROP_USE_EXTREME_ROUGHNESS, new Boolean( useExtremeRoughness ) );
+    specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBridges" ), Boolean.valueOf( doCalcBridges ) ); //$NON-NLS-1$
+    specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBarrages" ), Boolean.valueOf( doCalcBarrages ) ); //$NON-NLS-1$
+    specialFeature.setProperty( QNAME_PROP_SPECIAL_PROP_USE_EXTREME_ROUGHNESS, Boolean.valueOf( useExtremeRoughness ) );
   }
 
   public WSP_ITERATION_TYPE getIterationType( )

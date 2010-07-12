@@ -134,13 +134,13 @@ public class ProfileInterpolation
     {
       if( m_previousProfile == null )
       {
-        profile.setDescription( String.format( "Interpolation not possible: downstream profile %s not found.", m_previousProfile.getStation() ) );
+        profile.setDescription( String.format( "Interpolation not possible: downstream profile %s not found.", profile.getStation() ) );
         return null;
       }
 
       if( m_nextProfile == null )
       {
-        profile.setDescription( String.format( "Interpolation not possible: upstream profile %s not found.", m_nextProfile.getStation() ) );
+        profile.setDescription( String.format( "Interpolation not possible: upstream profile %s not found.", profile.getStation() ) );
         return null;
       }
 

@@ -310,15 +310,16 @@ public class WspWinImporter
 
     final File prfFile = new File( profDir, fileName );
 
-    final String profiletype;
-    if( isNotTuhhProject )
-    {
-      // TODO: Gernot: at the moment, we read everything as pasche-profiles, because knauf is not
-      // yet supported
-      profiletype = IWspmTuhhConstants.PROFIL_TYPE_PASCHE;
-    }
-    else
-      profiletype = IWspmTuhhConstants.PROFIL_TYPE_PASCHE;
+    final String profiletype = IWspmTuhhConstants.PROFIL_TYPE_PASCHE;
+
+// if( isNotTuhhProject )
+// {
+// // TODO: Gernot: at the moment, we read everything as pasche-profiles, because knauf is not
+// // yet supported
+// profiletype = IWspmTuhhConstants.PROFIL_TYPE_PASCHE;
+// }
+// else
+// profiletype = IWspmTuhhConstants.PROFIL_TYPE_PASCHE;
 
     final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
     final IProfil[] profile = ProfilSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
