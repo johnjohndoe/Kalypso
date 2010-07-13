@@ -56,6 +56,11 @@ public class BuildingKreis extends AbstractObservationBuilding
 
   public BuildingKreis( final IProfil profil )
   {
+    this( profil, buildObservation() );
+  }
+
+  private static IObservation<TupleResult> buildObservation( )
+  {
     final TupleResult result = new TupleResult();
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
@@ -65,12 +70,12 @@ public class BuildingKreis extends AbstractObservationBuilding
 
     final Observation<TupleResult> observation = new Observation<TupleResult>( ID, "Kreis", result ); //$NON-NLS-1$
 
-    init( profil, observation );
+    return observation;
   }
 
   public BuildingKreis( final IProfil profil, final IObservation<TupleResult> observation )
   {
-    init( profil, observation );
+    super( profil, observation );
   }
 
   /**

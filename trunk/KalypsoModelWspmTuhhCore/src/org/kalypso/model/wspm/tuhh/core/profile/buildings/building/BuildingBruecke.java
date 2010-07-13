@@ -59,8 +59,11 @@ final public class BuildingBruecke extends AbstractObservationBuilding
 
   public BuildingBruecke( final IProfil profil )
   {
-    m_profil = profil;
+    this( profil, buildTupleResult() );
+  }
 
+  private static IObservation<TupleResult> buildTupleResult( )
+  {
     final TupleResult result = new TupleResult();
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) );
@@ -70,15 +73,13 @@ final public class BuildingBruecke extends AbstractObservationBuilding
     result.add( emptyRecord );
     final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result );
 
-    m_observation = observation;
-    addPointProperties( profil );
-
+    return observation;
   }
 
   public BuildingBruecke( final IProfil profil, final IObservation<TupleResult> observation )
   {
-    m_profil = profil;
-    m_observation = observation;
+    super( profil, observation );
+
     addPointProperties( profil );
   }
 

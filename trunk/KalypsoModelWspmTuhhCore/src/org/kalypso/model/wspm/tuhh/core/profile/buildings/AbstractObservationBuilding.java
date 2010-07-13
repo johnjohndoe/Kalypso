@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 
 import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -54,16 +56,21 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractObservationBuilding extends AbstractProfileObject implements IProfileBuilding
 {
+  protected AbstractObservationBuilding( final IProfil profile, final IObservation<TupleResult> observation )
+  {
+    super( profile, observation );
+  }
+
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValue(org.kalypso.observation.result.IComponent)
    */
   @Override
   public Object getValue( final IComponent component )
   {
-    final TupleResult result = m_observation.getResult();
+    final TupleResult result = getObservation().getResult();
     final int index = result.indexOfComponent( component );
     if( index < 0 )
-      throw new IllegalArgumentException( component == null ? m_observation.getDescription() : component.getDescription() );
+      throw new IllegalArgumentException( component == null ? getObservation().getDescription() : component.getDescription() );
     if( result.size() > 1 )
       throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.0" ) ); //$NON-NLS-1$
     else if( result.size() == 0 )
@@ -88,7 +95,7 @@ public abstract class AbstractObservationBuilding extends AbstractProfileObject 
   @Override
   public void setValue( final IComponent component, final Object value )
   {
-    final TupleResult result = m_observation.getResult();
+    final TupleResult result = getObservation().getResult();
     if( result.size() > 1 )
       throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.1" ) ); //$NON-NLS-1$
     final int index = result.indexOf( component );

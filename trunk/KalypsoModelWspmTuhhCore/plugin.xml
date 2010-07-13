@@ -97,4 +97,31 @@
             qname="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState">
       </feature>
    </extension>
+   <extension
+         point="org.kalypso.model.wspm.core.profileObjectProvider">
+      <objectProvider
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#BRUECKE"
+            provider="org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBrueckeProvider">
+      </objectProvider>
+      <objectProvider
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#EI"
+            provider="org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEiProvider">
+      </objectProvider>
+      <objectProvider
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#KREIS"
+            provider="org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreisProvider">
+      </objectProvider>
+      <objectProvider
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#MAUL"
+            provider="org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaulProvider">
+      </objectProvider>
+      <objectProvider
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#TRAPEZ"
+            provider="org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapezProvider">
+      </objectProvider>
+       <objectProvider
+            id="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR"
+            provider="org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehrProvider">
+      </objectProvider>
+   </extension> 
 </plugin>
