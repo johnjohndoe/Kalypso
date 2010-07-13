@@ -75,8 +75,6 @@ public final class BuildingTrapez extends AbstractObservationBuilding
     init( profil, observation );
   }
 
-
-
   /**
    * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getProfileProperties()
    */
