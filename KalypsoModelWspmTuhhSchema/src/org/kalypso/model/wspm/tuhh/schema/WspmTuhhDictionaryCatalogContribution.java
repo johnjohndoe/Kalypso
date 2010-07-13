@@ -48,7 +48,6 @@ import org.kalypso.core.catalog.ICatalogContribution;
 
 /**
  * @author kimwerner
- *
  */
 public class WspmTuhhDictionaryCatalogContribution implements ICatalogContribution
 {
