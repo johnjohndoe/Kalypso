@@ -71,6 +71,7 @@ public class WehrRule extends AbstractValidatorRule
   {
     if( profil == null )
       return;
+
     final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
     if( ArrayUtils.isEmpty( objects ) )
       return;
