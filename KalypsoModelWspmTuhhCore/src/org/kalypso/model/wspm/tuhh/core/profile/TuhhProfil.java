@@ -50,13 +50,6 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
-import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -93,41 +86,6 @@ public class TuhhProfil extends AbstractProfil
     }
 
     return super.addProfileObjects( profileObjects );
-  }
-
-  /**
-   * @see 
-   *      org.kalypso.model.wspm.core.profil.IProfil#createProfileObjects(org.kalypso.observation.IObservation<org.kalypso
-   *      .observation.result.TupleResult>[])
-   * @note for tuhh-profiles only ONE ProfileObject is allowed at same time
-   * @throws IllegalStateException
-   */
-  @Override
-  public void createProfileObjects( final IObservation<TupleResult>[] profileObjects )
-  {
-    if( profileObjects == null || profileObjects.length > 1 )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.1" ) ); //$NON-NLS-1$
-    final IProfileObject[] profileObject = createProfileObjectInternal( profileObjects[0] );
-    addProfileObjects( profileObject );
-  }
-
-  private IProfileObject[] createProfileObjectInternal( final IObservation<TupleResult> observation )
-  {
-    final String id = observation.getName();
-
-    if( BuildingBruecke.ID.equals( id ) )
-      return new IProfileObject[] { new BuildingBruecke( this, observation ) };
-    else if( BuildingWehr.ID.equals( id ) )
-      return new IProfileObject[] { new BuildingWehr( this, observation ) };
-    else if( BuildingEi.ID.equals( id ) )
-      return new IProfileObject[] { new BuildingEi( this, observation ) };
-    else if( BuildingKreis.ID.equals( id ) )
-      return new IProfileObject[] { new BuildingKreis( this, observation ) };
-    else if( BuildingMaul.ID.equals( id ) )
-      return new IProfileObject[] { new BuildingMaul( this, observation ) };
-    else if( BuildingTrapez.ID.equals( id ) )
-      return new IProfileObject[] { new BuildingTrapez( this, observation ) };
-    return new IProfileObject[] {};
   }
 
   @Override
