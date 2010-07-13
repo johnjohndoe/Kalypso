@@ -85,7 +85,7 @@ public class WaterlevelWriter
     final double discharge = waterlevel.getDischarge();
     // TODO: enforce 3 significant digits
 // final BigDecimal bigDischarge = new BigDecimal( discharge, new MathContext( 3 ) );
-    final String dischargeText = String.format( "%.3f m³/s", discharge );
+    final String dischargeText = String.format( "%.3f m3/s", discharge );
 
     final String secondLine = String.format( "%-100s%s@%s", dischargeText, calcName, riverName ); //$NON-NLS-1$ //$NON-NLS-2$
 
