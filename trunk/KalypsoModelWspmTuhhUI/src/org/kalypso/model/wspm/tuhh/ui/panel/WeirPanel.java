@@ -83,6 +83,8 @@ import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
@@ -229,13 +231,13 @@ public class WeirPanel extends AbstractProfilView
             {
               final Object objVal = marker.getValue();
 
-              final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
+              final IProfileBuilding[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
               if( ArrayUtils.isEmpty( objects ) )
                 return;
 
-              final IProfileObject building = objects[0];
+              final IProfileBuilding building = objects[0];
 
-              final Object dblVal = (objVal instanceof Double) ? objVal : ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, building );
+              final Object dblVal = (objVal instanceof Double) ? objVal : BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, building );
               operation.addChange( new PointMarkerEdit( trenner, dblVal ) );
               operation.addChange( new ActiveObjectEdit( getProfil(), point, null ) );
               new ProfilOperationJob( operation ).schedule();
@@ -334,10 +336,10 @@ public class WeirPanel extends AbstractProfilView
     {
       if( m_position < 0 )
       {
-        final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+        final IProfileBuilding[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
         if( !ArrayUtils.isEmpty( objects ) )
         {
-          final IProfileObject building = objects[0];
+          final IProfileBuilding building = objects[0];
           final IComponent beiwert = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
           // TODO: very strange code... check this! What is the type of these components??
           final String objValue = building.getValue( beiwert ).toString();

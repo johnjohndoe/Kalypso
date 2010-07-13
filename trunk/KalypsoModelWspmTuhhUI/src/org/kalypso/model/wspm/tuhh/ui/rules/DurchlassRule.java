@@ -48,11 +48,11 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution;
@@ -66,11 +66,11 @@ public class DurchlassRule extends AbstractValidatorRule
   @Override
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
+    final IProfileBuilding[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
     if( ArrayUtils.isEmpty( objects ) )
       return;
 
-    final IProfileObject building = objects[0];
+    final IProfileBuilding building = objects[0];
 
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
     if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( building.getId() ) )

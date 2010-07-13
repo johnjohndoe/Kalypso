@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
@@ -143,11 +144,11 @@ public class WehrRule extends AbstractValidatorRule
 
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
 
-    final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
+    final IProfileBuilding[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
     if( ArrayUtils.isEmpty( objects ) )
       return;
 
-    final IProfileObject building = objects[0];
+    final IProfileBuilding building = objects[0];
 
     final IComponent cmp = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
     if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( building.getValue( cmp ) ) )

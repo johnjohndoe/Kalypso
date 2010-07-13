@@ -54,11 +54,11 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
@@ -163,10 +163,10 @@ public class WspmTuhhProfileHelper
       }
 
       // Profile Objects
-      final IProfileObject[] profilObject = profil.getProfileObjects( AbstractObservationBuilding.class );
+      final IProfileBuilding[] profilObject = profil.getProfileObjects( AbstractObservationBuilding.class );
       if( !ArrayUtils.isEmpty( profilObject ) )
       {
-        final IProfileObject building = profilObject[0];
+        final IProfileBuilding building = profilObject[0];
 
         if( mtf.length < 2 )
         {

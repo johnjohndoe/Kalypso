@@ -62,8 +62,9 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -130,13 +131,13 @@ public class BridgePanel extends AbstractProfilView
           {
             final IProfil profil = getProfil();
 
-            final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
+            final IProfileBuilding[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
             if( ArrayUtils.isEmpty( objects ) )
               return;
 
-            final IProfileObject building = objects[0];
+            final IProfileBuilding building = objects[0];
 
-            final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
+            final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
             if( val == value )
               return;
 
@@ -164,13 +165,13 @@ public class BridgePanel extends AbstractProfilView
       m_label.setText( labelText );
       m_label.setToolTipText( description );
 
-      final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+      final IProfileBuilding[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
       if( ArrayUtils.isEmpty( objects ) )
         return;
 
-      final IProfileObject building = objects[0];
+      final IProfileBuilding building = objects[0];
 
-      final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
+      final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
       final String textText = String.format( "%.3f", val ); //$NON-NLS-1$
       m_text.setText( textText );
       m_text.setToolTipText( description );
