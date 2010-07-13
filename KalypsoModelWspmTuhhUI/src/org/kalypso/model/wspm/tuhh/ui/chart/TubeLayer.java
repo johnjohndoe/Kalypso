@@ -45,10 +45,10 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
@@ -78,9 +78,9 @@ public class TubeLayer extends AbstractProfilLayer
     return getTube() == null ? Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.TubeLayer.0" ) : getTube().getObservation().getName(); //$NON-NLS-1$
   }
 
-  private IProfileObject getTube( )
+  private IProfileBuilding getTube( )
   {
-    final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+    final IProfileBuilding[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
     if( ArrayUtils.isEmpty( objects ) )
       return null;
 
@@ -102,15 +102,15 @@ public class TubeLayer extends AbstractProfilLayer
   @Override
   public void paint( final GC gc )
   {
-    final IProfileObject tube = getTube();
+    final IProfileBuilding tube = getTube();
     if( tube == null )
       return;
 
-    final Double x = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, tube );
-    final Double y = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, tube );
-    final Double b = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, tube );
-    final Double h = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, tube );
-    final Double m = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, tube );
+    final Double x = BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, tube );
+    final Double y = BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, tube );
+    final Double b = BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, tube );
+    final Double h = BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, tube );
+    final Double m = BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, tube );
 
     final IAxis targetAx = getTargetAxis();
     final IAxis domAx = getDomainAxis();

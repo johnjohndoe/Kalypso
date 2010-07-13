@@ -69,9 +69,10 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
@@ -145,13 +146,13 @@ public class TubePanel extends AbstractProfilView
           {
             final IProfil profil = getProfil();
 
-            final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
+            final IProfileBuilding[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
             if( ArrayUtils.isEmpty( objects ) )
               return;
 
-            final IProfileObject building = objects[0];
+            final IProfileBuilding building = objects[0];
 
-            final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
+            final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
             if( val == value )
               return;
 
@@ -170,13 +171,13 @@ public class TubePanel extends AbstractProfilView
       if( m_text == null || m_text.isDisposed() )
         return;
 
-      final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+      final IProfileBuilding[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
       if( ArrayUtils.isEmpty( objects ) )
         return;
 
-      final IProfileObject building = objects[0];
+      final IProfileBuilding building = objects[0];
 
-      final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
+      final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
       m_text.setText( val.toString() );
       if( m_text.isFocusControl() )
         m_text.selectAll();
@@ -254,8 +255,8 @@ public class TubePanel extends AbstractProfilView
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
-        final IProfileObject tube = (IProfileObject) selection.getFirstElement();
-        final IProfileObject old = getProfil().getProfileObjects( AbstractObservationBuilding.class )[0];
+        final IProfileBuilding tube = (IProfileBuilding) selection.getFirstElement();
+        final IProfileBuilding old = getProfil().getProfileObjects( AbstractObservationBuilding.class )[0];
 
         if( tube != null && !tube.getId().equals( old.getId() ) )
         {

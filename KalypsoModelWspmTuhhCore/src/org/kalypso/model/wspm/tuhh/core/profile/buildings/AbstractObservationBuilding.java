@@ -41,6 +41,10 @@
 package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 
 import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Kim Werner
@@ -48,7 +52,60 @@ import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
  * <br>
  *         "marker" class for tuhh buildings.
  */
-public abstract class AbstractObservationBuilding extends AbstractProfileObject
+public abstract class AbstractObservationBuilding extends AbstractProfileObject implements IProfileBuilding
 {
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValue(org.kalypso.observation.result.IComponent)
+   */
+  @Override
+  public Object getValue( final IComponent component )
+  {
+    final TupleResult result = m_observation.getResult();
+    final int index = result.indexOfComponent( component );
+    if( index < 0 )
+      throw new IllegalArgumentException( component == null ? m_observation.getDescription() : component.getDescription() );
+    if( result.size() > 1 )
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.0" ) ); //$NON-NLS-1$
+    else if( result.size() == 0 )
+      result.add( result.createRecord() );
+
+    return result.get( 0 ).getValue( index );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValueFor(String)
+   */
+  @Override
+  public Object getValueFor( final String componentID )
+  {
+    return getValue( getObjectProperty( componentID ) );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#setValue(org.kalypso.observation.result.IComponent,
+   *      java.lang.Object)
+   */
+  @Override
+  public void setValue( final IComponent component, final Object value )
+  {
+    final TupleResult result = m_observation.getResult();
+    if( result.size() > 1 )
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.1" ) ); //$NON-NLS-1$
+    final int index = result.indexOf( component );
+    if( index < 0 )
+      throw new IllegalArgumentException( component.getName() );
+
+    final IRecord record = result.size() == 0 ? result.createRecord() : result.get( 0 );
+    record.setValue( index, value );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#setValueFor(String, java.lang.Object)
+   */
+  @Override
+  public void setValueFor( final String componentID, final Object value )
+  {
+    setValue( getObjectProperty( componentID ), value );
+  }
 
 }

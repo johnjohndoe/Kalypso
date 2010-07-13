@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
@@ -229,7 +230,7 @@ public class PrfSource implements IProfilSource
       {
         case 6:// Trapez
         {
-          final IProfileObject building = new BuildingTrapez( p );
+          final IProfileBuilding building = new BuildingTrapez( p );
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;
@@ -249,7 +250,7 @@ public class PrfSource implements IProfilSource
         }
         case 7:// Kreis
         {
-          final IProfileObject building = new BuildingKreis( p );
+          final IProfileBuilding building = new BuildingKreis( p );
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;
@@ -265,7 +266,7 @@ public class PrfSource implements IProfilSource
         }
         case 8:// Ei
         {
-          final IProfileObject building = new BuildingEi( p );
+          final IProfileBuilding building = new BuildingEi( p );
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;
@@ -283,7 +284,7 @@ public class PrfSource implements IProfilSource
         }
         case 9:// Maulprofil
         {
-          final IProfileObject building = new BuildingMaul( p );
+          final IProfileBuilding building = new BuildingMaul( p );
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;
@@ -305,7 +306,7 @@ public class PrfSource implements IProfilSource
     }
   }
 
-  private final boolean writeBuildingProperty( final IProfileObject building, final StringTokenizer sT, final String propertyID )
+  private final boolean writeBuildingProperty( final IProfileBuilding building, final StringTokenizer sT, final String propertyID )
   {
     if( building == null )
       return false;
@@ -335,7 +336,7 @@ public class PrfSource implements IProfilSource
     if( dbo == null || dbu == null )
       return false;
 
-    final IProfileObject bridge = new BuildingBruecke( p );
+    final IProfileBuilding bridge = new BuildingBruecke( p );
     final StringTokenizer sT = new StringTokenizer( dbu.getSecondLine(), " " ); //$NON-NLS-1$
     if( sT.countTokens() > 4 )
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.20" ), null ) ); //$NON-NLS-1$
@@ -534,7 +535,7 @@ public class PrfSource implements IProfilSource
     if( dbw == null )
       return false;
 
-    final IProfileObject wehr = new BuildingWehr( p );
+    final IProfileBuilding wehr = new BuildingWehr( p );
     final String secLine = dbw.getSecondLine();
     final String wehrart = getWehrart( secLine );
     final double[] wt = getWehrParameter( secLine );

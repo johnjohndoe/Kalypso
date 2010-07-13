@@ -46,13 +46,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution;
@@ -67,7 +67,7 @@ import org.kalypso.observation.result.IComponent;
 public class BrueckeRule extends AbstractValidatorRule
 {
 
-  private boolean validateParams( final IProfileObject building, final ProfileAltitudeValidator pav ) throws CoreException
+  private boolean validateParams( final IProfileBuilding building, final ProfileAltitudeValidator pav ) throws CoreException
   {
     for( final IComponent property : building.getObjectProperties() )
     {
@@ -99,11 +99,11 @@ public class BrueckeRule extends AbstractValidatorRule
     if( profil == null )
       return;
 
-    final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
+    final IProfileBuilding[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
     if( ArrayUtils.isEmpty( objects ) )
       return;
 
-    final IProfileObject building = objects[0];
+    final IProfileBuilding building = objects[0];
 
     if( !IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( building.getId() ) )
       return;

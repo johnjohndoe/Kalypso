@@ -64,10 +64,11 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
@@ -287,10 +288,10 @@ public class PrfWriter implements IPrfConstants
       dbr.setCoords( new Double[size], new Double[size] );
     }
 
-    final IProfileObject[] buildings = m_profil.getProfileObjects( AbstractObservationBuilding.class );
+    final IProfileBuilding[] buildings = m_profil.getProfileObjects( AbstractObservationBuilding.class );
     if( istDurchlass( buildings ) )
     {
-      final Double roughness = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, buildings[0] );
+      final Double roughness = BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, buildings[0] );
       for( int i = 0; i < dbr.getY().length; i++ )
       {
         dbr.getY()[i] = roughness;
@@ -470,11 +471,11 @@ public class PrfWriter implements IPrfConstants
 
   private void writeBuilding( )
   {
-    final IProfileObject[] objects = m_profil.getProfileObjects( AbstractObservationBuilding.class );
+    final IProfileBuilding[] objects = m_profil.getProfileObjects( AbstractObservationBuilding.class );
     if( ArrayUtils.isEmpty( objects ) )
       return;
 
-    final IProfileObject building = objects[0];
+    final IProfileBuilding building = objects[0];
     final String buildingType = building.getId();
 
     if( buildingType.equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) )
