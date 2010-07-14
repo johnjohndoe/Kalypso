@@ -57,4 +57,12 @@ public interface ISinuositaetProfileObject extends IProfileObject
 
   public static final String PROPERTY_LF = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#LF"; //$NON-NLS-1$
 
+  SINUOSITAET_KENNUNG getKennung( );
+
+  Double getSinuositaet( );
+
+  SINUOSITAET_GERINNE_ART getGerinneArt( );
+
+  Double getLf( );
+
 }

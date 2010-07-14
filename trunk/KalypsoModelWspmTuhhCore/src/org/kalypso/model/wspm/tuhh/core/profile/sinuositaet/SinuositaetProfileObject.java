@@ -44,6 +44,7 @@ import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -90,5 +91,78 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
   protected String[] getProfileProperties( )
   {
     return new String[] {};
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject#getKennung()
+   */
+  @Override
+  public SINUOSITAET_KENNUNG getKennung( )
+  {
+    final IObservation<TupleResult> observation = getObservation();
+    final TupleResult result = observation.getResult();
+    if( result.isEmpty() )
+      return null;
+
+    final int index = result.indexOf( PROPERTY_KENNUNG );
+
+    final IRecord record = result.get( 0 );
+    final String name = (String) record.getValue( index );
+
+    return SINUOSITAET_KENNUNG.valueOf( name );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject#getSinuositaet()
+   */
+  @Override
+  public Double getSinuositaet( )
+  {
+    final IObservation<TupleResult> observation = getObservation();
+    final TupleResult result = observation.getResult();
+    if( result.isEmpty() )
+      return null;
+
+    final int index = result.indexOf( PROPERTY_SN );
+
+    final IRecord record = result.get( 0 );
+    return (Double) record.getValue( index );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject#getGerinneArt()
+   */
+  @Override
+  public SINUOSITAET_GERINNE_ART getGerinneArt( )
+  {
+    final IObservation<TupleResult> observation = getObservation();
+    final TupleResult result = observation.getResult();
+    if( result.isEmpty() )
+      return null;
+
+    final int index = result.indexOf( PROPERTY_GERINNE_ART );
+
+    final IRecord record = result.get( 0 );
+    final String name = (String) record.getValue( index );
+
+    return SINUOSITAET_GERINNE_ART.valueOf( name );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject#getLf()
+   */
+  @Override
+  public Double getLf( )
+  {
+    final IObservation<TupleResult> observation = getObservation();
+    final TupleResult result = observation.getResult();
+    if( result.isEmpty() )
+      return null;
+
+    final int index = result.indexOf( PROPERTY_LF );
+
+    final IRecord record = result.get( 0 );
+    return (Double) record.getValue( index );
+
   }
 }

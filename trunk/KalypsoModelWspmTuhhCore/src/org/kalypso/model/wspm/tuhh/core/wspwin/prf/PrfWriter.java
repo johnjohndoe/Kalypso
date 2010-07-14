@@ -61,6 +61,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -69,12 +70,16 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
+import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_GERINNE_ART;
+import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_KENNUNG;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
+import org.kalypso.wspwin.core.prf.datablock.SinuositaetDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
 
 /**
@@ -192,8 +197,8 @@ public class PrfWriter implements IPrfConstants
     // FIXME: spezial Zeugs für Steiermark, aber wohin?
     writeWaterlevel();
 
-    if( !ArrayUtils.isEmpty( m_profil.getProfileObjects( AbstractObservationBuilding.class ) ) )
-      writeBuilding();
+    if( !ArrayUtils.isEmpty( m_profil.getProfileObjects( AbstractProfileObject.class ) ) )
+      writeProfileObjects();
     if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) != null )
       writeHochRechts();
     if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) != null )
@@ -469,15 +474,34 @@ public class PrfWriter implements IPrfConstants
     return (Double) devider.getPoint().getValue( iHoehe );
   }
 
-  private void writeBuilding( )
+  private void writeProfileObjects( )
   {
-    final IProfileBuilding[] objects = m_profil.getProfileObjects( AbstractObservationBuilding.class );
-    if( ArrayUtils.isEmpty( objects ) )
-      return;
+    final List<IProfileBuilding> buildings = new ArrayList<IProfileBuilding>();
 
-    final IProfileBuilding building = objects[0];
+    final AbstractProfileObject[] profileObjects = m_profil.getProfileObjects( AbstractProfileObject.class );
+    for( final AbstractProfileObject profileObject : profileObjects )
+    {
+      if( profileObject instanceof IProfileBuilding )
+      {
+        buildings.add( (IProfileBuilding) profileObject );
+      }
+      else
+      {
+        writeProfileObject( profileObject );
+      }
+    }
+
+    /**
+     * tuhh profile restriction - only one profile building allowed!
+     */
+    if( !buildings.isEmpty() )
+      writeBuilding( buildings.get( 0 ) );
+
+  }
+
+  private void writeBuilding( final IProfileBuilding building )
+  {
     final String buildingType = building.getId();
-
     if( buildingType.equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) )
     {
       final DataBlockHeader dbho = createHeader( "OK-B" ); //$NON-NLS-1$
@@ -501,7 +525,6 @@ public class PrfWriter implements IPrfConstants
       }
       m_dbWriter.addDataBlock( dbu );
     }
-
     else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_WEHR ) == 0 )
     {
       final DataBlockHeader dbhw = createHeader( "OK-W" ); //$NON-NLS-1$
@@ -592,6 +615,29 @@ public class PrfWriter implements IPrfConstants
       }
       m_dbWriter.addDataBlock( dbt );
     }
+
+  }
+
+  private void writeProfileObject( final IProfileObject profileObject )
+  {
+    if( profileObject instanceof ISinuositaetProfileObject )
+    {
+      final ISinuositaetProfileObject sinuosity = (ISinuositaetProfileObject) profileObject;
+
+      final DataBlockHeader header = createHeader( "SINUOSITAET" ); //$NON-NLS-1$
+      final SinuositaetDataBlock dataBlock = new SinuositaetDataBlock( header );
+
+      final SINUOSITAET_KENNUNG kennung = sinuosity.getKennung();
+      final double sinus = sinuosity.getSinuositaet();
+      final SINUOSITAET_GERINNE_ART gerinne = sinuosity.getGerinneArt();
+      final double lf = sinuosity.getLf();
+
+      final String data = String.format( "%d %.3f %d %.3f", kennung.toInteger(), sinus, gerinne.toInteger(), lf );
+      dataBlock.setFirstLine( data );
+
+      m_dbWriter.addDataBlock( dataBlock );
+    }
+
   }
 
   private String getDoubleStr( final Object o )
