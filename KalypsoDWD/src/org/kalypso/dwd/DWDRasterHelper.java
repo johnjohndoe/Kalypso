@@ -47,6 +47,7 @@ import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
@@ -58,10 +59,10 @@ import java.util.TimeZone;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
+import org.kalypso.contribs.java.io.IOUtilities;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
@@ -338,18 +339,13 @@ public class DWDRasterHelper
     final double offset = getOffsetForDwdKey( dwdKey );
     final String unit = getUnitForDwdKey( dwdKey );
 
-    LineNumberReader reader = null;
+    LineNumberReader lineNumberReader = null;
     try
     {
       /* Create the reader. */
-      if( url.getFile().endsWith( ".gz" ) )
-      {
-        final GZIPInputStream gzipInputStream = new GZIPInputStream( url.openStream() );
-        final InputStreamReader inputStream = new InputStreamReader( gzipInputStream );
-        reader = new LineNumberReader( inputStream );
-      }
-      else
-        reader = new LineNumberReader( new InputStreamReader( url.openStream() ) );
+      InputStream inputStream = IOUtilities.getInputStream( url );
+      InputStreamReader inputStreamReader = new InputStreamReader( inputStream );
+      lineNumberReader = new LineNumberReader( inputStreamReader );
 
       int lmVersion = 0;
       String line = null;
@@ -357,7 +353,7 @@ public class DWDRasterHelper
       long blockDate = -1;
       int cellpos = 0;
       boolean rightBlock = false; // Is only used by the dynamic header (lmVersion = 1)
-      while( (line = reader.readLine()) != null )
+      while( (line = lineNumberReader.readLine()) != null )
       {
         final Matcher dynamicHeaderMatcher = HEADER_DYNAMIC.matcher( line );
         if( dynamicHeaderMatcher.matches() ) // lm1
@@ -448,7 +444,7 @@ public class DWDRasterHelper
     }
     finally
     {
-      IOUtils.closeQuietly( reader );
+      IOUtils.closeQuietly( lineNumberReader );
     }
   }
 
