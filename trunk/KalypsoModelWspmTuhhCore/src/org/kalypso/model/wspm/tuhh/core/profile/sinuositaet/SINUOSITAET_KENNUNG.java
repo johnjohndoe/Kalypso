@@ -40,55 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
 
-import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.TupleResult;
-
 /**
  * @author Dirk Kuch
  */
-public class SinuositaetProfileObject extends AbstractProfileObject implements ISinuositaetProfileObject
+public enum SINUOSITAET_KENNUNG
 {
+  eKeineBeruecksichtigun(1),
+  eNurCmFaktor(2),
+  eNurFliesswegVerlaengerung(3),
+  eBeides(4);
 
-  public SinuositaetProfileObject( final IProfil profile )
+  private final int m_value;
+
+  SINUOSITAET_KENNUNG( final int value )
   {
-    this( profile, buildObservation() );
+    m_value = value;
   }
 
-  private static IObservation<TupleResult> buildObservation( )
+  public int toInteger( )
   {
-    final TupleResult result = new TupleResult();
-    result.addComponent( createObjectProperty( PROPERTY_KENNUNG ) );
-    result.addComponent( createObjectProperty( PROPERTY_SN ) );
-    result.addComponent( createObjectProperty( PROPERTY_GERINNE_ART ) );
-    result.addComponent( createObjectProperty( PROPERTY_LF ) );
-
-    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, "Sinuosität", result ); //$NON-NLS-1$
-    return observation;
-  }
-
-  public SinuositaetProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
-  {
-    super( profile, observation );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
-   */
-  @Override
-  public String getId( )
-  {
-    return ID;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.AbstractProfileObject#getProfileProperties()
-   */
-  @Override
-  protected String[] getProfileProperties( )
-  {
-    return new String[] {};
+    return m_value;
   }
 }
