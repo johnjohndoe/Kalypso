@@ -38,24 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.buildings;
+package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.observation.result.IComponent;
+import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 
 /**
- * restriction: tuhh profile buildings only consists of tuple results with one record set-> so we have special members
- * like getValue() and setValue()
- * 
  * @author Dirk Kuch
  */
-public interface IProfileBuilding extends IProfileObject
+public class SinuositaetProfileObjectProvider implements IProfileObjectProvider
 {
-  public Object getValue( IComponent component );
 
-  public Object getValueFor( String componentID );
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#buildProfileObject(org.kalypso.model.wspm.core.profil.IProfil,
+   *      org.kalypso.observation.IObservation)
+   */
+  @Override
+  public IProfileObject buildProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
+  {
+    return new SinuositaetProfileObject( profile, observation );
+  }
 
-  public void setValue( IComponent component, Object value );
-
-  public void setValueFor( String componentID, Object value );
 }

@@ -38,24 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.buildings;
+package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
 
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.observation.result.IComponent;
 
 /**
- * restriction: tuhh profile buildings only consists of tuple results with one record set-> so we have special members
- * like getValue() and setValue()
- * 
  * @author Dirk Kuch
  */
-public interface IProfileBuilding extends IProfileObject
+public interface ISinuositaetProfileObject extends IProfileObject
 {
-  public Object getValue( IComponent component );
+  public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUSITAET"; //$NON-NLS-1$
 
-  public Object getValueFor( String componentID );
+  public static final String PROPERTY_KENNUNG = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#KENNUNG"; //$NON-NLS-1$
 
-  public void setValue( IComponent component, Object value );
+  public static final String PROPERTY_SN = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#SN"; //$NON-NLS-1$
 
-  public void setValueFor( String componentID, Object value );
+  public static final String PROPERTY_GERINNE_ART = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#GERINNE_ART"; //$NON-NLS-1$
+
+  public static final String PROPERTY_LF = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#LF"; //$NON-NLS-1$
+
 }
