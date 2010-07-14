@@ -38,24 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.buildings;
+package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
 
-import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.observation.result.IComponent;
+import java.net.URL;
+
+import org.kalypso.core.catalog.CatalogManager;
+import org.kalypso.core.catalog.ICatalog;
+import org.kalypso.core.catalog.ICatalogContribution;
 
 /**
- * restriction: tuhh profile buildings only consists of tuple results with one record set-> so we have special members
- * like getValue() and setValue()
- * 
  * @author Dirk Kuch
  */
-public interface IProfileBuilding extends IProfileObject
+public class SinuositaetDictionary implements ICatalogContribution
 {
-  public Object getValue( IComponent component );
+  /**
+   * @see org.kalypso.core.catalog.ICatalogContribution#contributeTo(org.kalypso.core.catalog.CatalogManager)
+   */
+  @Override
+  public void contributeTo( final CatalogManager catalogManager )
+  {
+    final URL catalogURL = getClass().getResource( "catalog.xml" ); //$NON-NLS-1$
+    final ICatalog baseCatalog = catalogManager.getBaseCatalog();
+    baseCatalog.addNextCatalog( catalogURL );
+  }
 
-  public Object getValueFor( String componentID );
-
-  public void setValue( IComponent component, Object value );
-
-  public void setValueFor( String componentID, Object value );
 }
