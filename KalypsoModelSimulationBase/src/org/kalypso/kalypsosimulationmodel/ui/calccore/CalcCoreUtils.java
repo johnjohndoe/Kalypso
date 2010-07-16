@@ -133,7 +133,7 @@ public final class CalcCoreUtils
 
     if( !exeFile.canExecute() )
     {
-      final String msg = Messages.getString( "CalcCoreUtils_2", exeFile.getAbsolutePath() ); //$NON-NLS-1$
+      final String msg = Messages.getString( "The selected executeable is not a file.", exeFile.getAbsolutePath() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
       throw new CoreException( status );
     }
@@ -162,7 +162,7 @@ public final class CalcCoreUtils
     if( ArrayUtils.isEmpty( executables ) )
     {
       final File exeDir = getExecutablesDirectory();
-      final String msg = String.format( Messages.getString( "CalcCoreUtils.3" ), exeDir.getAbsolutePath() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils.0" ), exeDir.getAbsolutePath() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoModelSimulationBase.ID, msg );
       throw new CoreException( status );
     }
