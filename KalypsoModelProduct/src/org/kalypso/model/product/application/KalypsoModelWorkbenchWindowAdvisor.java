@@ -57,7 +57,6 @@ import org.kalypso.model.product.i18n.Messages;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
 public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 {
   /**
@@ -146,6 +145,7 @@ public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
    * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#openIntro()
    */
   @Override
+  @SuppressWarnings("restriction")
   public void openIntro( )
   {
     /* Open the welcome page not in stand by mode. */

@@ -40,11 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.product.application;
 
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.Util;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
@@ -290,11 +292,20 @@ public class RestrictedActionBarAdvisor extends ActionBarAdvisor
     /* The help menu. */
     menuBar.add( helpMenu );
     helpMenu.add( new GroupMarker( IWorkbenchActionConstants.HELP_START ) );
-    helpMenu.add( m_introAction );
-    helpMenu.add( new Separator() );
+    helpMenu.add( m_introAction ); //
+    helpMenu.add(new Separator("group.main.ext")); //$NON-NLS-1$
     helpMenu.add( m_helpContentsAction );
-    helpMenu.add( new Separator() );
-    helpMenu.add( m_aboutAction );
+    helpMenu.add(new GroupMarker("group.tutorials")); //$NON-NLS-1$
+    helpMenu.add(new GroupMarker("group.tools")); //$NON-NLS-1$
+    helpMenu.add(new Separator("group.updates")); //$NON-NLS-1$
     helpMenu.add( new GroupMarker( IWorkbenchActionConstants.HELP_END ) );
+    helpMenu.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS));
+    // about should always be at the bottom
+    helpMenu.add(new Separator("group.about")); //$NON-NLS-1$
+
+    ActionContributionItem aboutItem = new ActionContributionItem(m_aboutAction);
+    aboutItem.setVisible(!Util.isMac());
+    helpMenu.add( m_aboutAction );
+    helpMenu.add(new GroupMarker("group.about.ext")); //$NON-NLS-1$
   }
 }
