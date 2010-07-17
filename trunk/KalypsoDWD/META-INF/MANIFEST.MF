@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoDWD
 Bundle-SymbolicName: org.kalypso.dwd; singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 2.3.0.qualifier
 Bundle-ClassPath: lib/servlet-api.jar,
  .
 Bundle-Vendor: kalypso.sourceforge.net

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCalculationConnectors Plug-in
 Bundle-SymbolicName: org.kalypso.calculation.connectors;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 2.3.0.qualifier
 Bundle-Activator: org.kalypso.calculation.connector.PluginActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -25,3 +25,4 @@ Export-Package: org.kalypso.calculation.connector,
  org.kalypso.calculation.connector.na_wspm,
  org.kalypso.calculation.connector.wspm_fm
 Bundle-ClassPath: .
+Bundle-Vendor: kalypso.sourceforge.net
