@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: 2DDemo Plug-in
 Bundle-SymbolicName: org.kalypso.model.1d2d.project.2d_demo;singleton:=true
-Bundle-Version: 0.0.1
+Bundle-Version: 2.3.0.qualifier
 Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.contribs.eclipseplatform
 Bundle-Localization: plugin
