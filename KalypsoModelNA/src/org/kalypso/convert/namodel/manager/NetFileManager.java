@@ -81,6 +81,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -324,7 +325,7 @@ public class NetFileManager extends AbstractManager
    *          the synth precipitation workspace
    * @return a HashMap containing Channel-FeatureID (key) and NetElements (value)
    */
-  public HashMap<String, NetElement> generateNetElements( final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws Exception
+  public HashMap<String, NetElement> generateNetElements( final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws SimulationException
   {
     final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final IFeatureType kontEntnahmeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ENTNAHME );
@@ -377,9 +378,23 @@ public class NetFileManager extends AbstractManager
 
           final IRelationType rt3 = (IRelationType) nodeFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
           final Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, rt3 );
+
+          if( upStreamChannelFE == null )
+          {
+            final String message = String.format( "Inconsistent net: Node '%s' with branch has no upstream channel.", upStreamNodeFE.getName() );
+            throw new SimulationException( message );
+          }
+
+          if( downStreamChannelFE == null )
+          {
+            final String message = String.format( "Inconsistent net: Node '%s' with branch has no downstream channel.", upStreamNodeFE.getName() );
+            throw new SimulationException( message );
+          }
+
           if( upStreamChannelFE == downStreamChannelFE )
           {
             System.out.println( "impossible net at #" + upStreamChannelFE.getId() + "\n Node-Node relation to it self" ); //$NON-NLS-1$ //$NON-NLS-2$
+            // FIXME: shouldn't we throw an exception here?
             continue;
           }
           // set dependency

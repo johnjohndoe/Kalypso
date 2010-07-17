@@ -4,17 +4,19 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.risk.i18n.Messages;
@@ -60,44 +62,25 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
           return null;
         }
 
-        final Job job = new Job( Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.6" ) ) //$NON-NLS-1$
+        final IRunnableWithProgress operation = new IRunnableWithProgress()
         {
           @Override
-          protected IStatus run( final IProgressMonitor monitor )
+          public void run( final IProgressMonitor monitor )
           {
-            final IStatus status;
             try
             {
               final Modeldata modeldata = SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.SPECIFIC_DAMAGE_CALCULATION );
-              status = ModelNature.runCalculation( scenarioFolder, monitor, modeldata );
-//              if( status.isOK() )
-//              {
-//                final IMapPanel mapPanel = mapView.getMapPanel();
-//                /* wait for map to load */
-//                while( !mapPanel.getMapModell().isLoaded() )
-//                  Thread.sleep( 300 );
-//                final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
-//                final IFile rasterModelFile = scenarioFolder.getFile( "/models/RasterDataModel.gml" ); //$NON-NLS-1$
-//                final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( rasterModelFile );
-//                final IRasterDataModel rasterDataModel = new RasterDataModel( workspace.getRootFeature() );
-//                final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterDataModel.getSpecificDamageCoverageCollection();
-//                final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
-//                RiskModelHelper.updateDamageStyle( sldFile, specificDamageCoverageCollection );
-//                RiskModelHelper.updateDamageLayers( specificDamageCoverageCollection, mapModell );
-//                if( mapView != null )
-//                  mapPanel.invalidateMap();
-//              }
+              ModelNature.runCalculation( scenarioFolder, monitor, modeldata );
             }
-            catch( final Exception e )
+            catch( final CoreException e )
             {
               ErrorDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.0" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
-              return Status.CANCEL_STATUS;
             }
-            return status;
           }
         };
-        job.setUser( true );
-        job.schedule( 100 );
+
+        final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+        service.run( true, false, operation );
       }
       catch( final Exception e )
       {

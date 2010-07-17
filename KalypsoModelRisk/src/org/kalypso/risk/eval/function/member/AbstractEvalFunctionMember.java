@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  DenickestraÃŸe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,35 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.risk.model.utils;
+package org.kalypso.risk.eval.function.member;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.kalypso.risk.eval.ExpressionParser;
+import org.kalypso.risk.eval.function.IEvalFunctionMember;
 
 /**
- * Helper class in order to avoid parsing the function expression for each raster cell.
+ * @author Dejan Antanaskovic
  * 
- * @author Gernot Belger
  */
-public class FunctionParserCache
+public abstract class AbstractEvalFunctionMember implements IEvalFunctionMember
 {
-  private static Map<String, ExpressionParser> m_parsers = new HashMap<String, ExpressionParser>();
 
-  public synchronized static double getValue( final String expression, final double value )
+  /**
+   * @see java.lang.Comparable#compareTo(java.lang.Object)
+   */
+  @Override
+  public int compareTo( final IEvalFunctionMember function )
   {
-    final ExpressionParser parser = getParser( expression );
-    return parser.evaluate( value );
+    return getPriority().compareTo( function.getPriority() );
   }
 
-  private static ExpressionParser getParser( final String expression )
-  {
-    final ExpressionParser existing = m_parsers.get( expression );
-    if( existing != null )
-      return existing;
-    final ExpressionParser parser = new ExpressionParser( expression );
-    m_parsers.put( expression, parser );
-    return parser;
-  }
 }
