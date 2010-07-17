@@ -71,7 +71,11 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
 
   public static final int MIN_RISKTHEMEINFO_PRECISION = 1;
 
-  public static final int MAX_RISKTHEMEINFO_PRECISION = 12;
+  /*
+   * NOTE: MAX_RISKTHEMEINFO_PRECISION is also used as a Scale parameter for IGeoGrids created by Risk, which is actually the precision of the data written into the grid cell; 
+   * TOO HIGH SCALE leads to wrong values written into the grid cell!!!
+   */
+  public static final int MAX_RISKTHEMEINFO_PRECISION = 4;
 
   public static final String KEY_RISKTHEMEINFO_PRECISION = "eclipse.preferences.kalypso.risk.themeinfo.precision"; //$NON-NLS-1$
 

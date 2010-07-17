@@ -49,6 +49,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -148,7 +149,8 @@ public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
     }
     catch( final IOException e )
     {
-      throw new SimulationException( e.getLocalizedMessage() );
+      monitor.setFinishInfo( IStatus.ERROR, e.getLocalizedMessage() );
+//      throw new SimulationException( e.getLocalizedMessage() );
     }
     resultEater.addResult( OUTPUT_FOLDER, tmpdir );
   }
