@@ -100,12 +100,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.kalypso.model.product.demos"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.kalypso.model.wspm.tuhh.core"
          download-size="0"
          install-size="0"
@@ -274,5 +268,17 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.kalypso.model.risk.project.1d2d_demo"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.model.risk.project.template"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

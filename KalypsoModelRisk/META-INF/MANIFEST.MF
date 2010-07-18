@@ -12,9 +12,11 @@ Require-Bundle: org.kalypso.ui.addlayer,
  org.kalypso.contribs.ogc31,
  org.kalypso.gml.ui,
  org.junit;resolution:=optional,
- org.kalypso.simulation.core;bundle-version="1.0.0",
- org.kalypso.simulation.ui;bundle-version="0.0.1",
- org.kalypso.project.database.client;bundle-version="1.0.0"
+ org.kalypso.simulation.core,
+ org.kalypso.simulation.ui,
+ org.kalypso.project.database.client,
+ org.kalypso.model.risk.project.template,
+ org.kalypso.model.risk.project.1d2d_demo;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.risk.extension,
  org.kalypso.risk.model.actions.dataImport.waterdepth,
