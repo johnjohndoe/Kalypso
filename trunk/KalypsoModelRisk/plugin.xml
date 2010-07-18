@@ -206,16 +206,6 @@
           id="org.kalypso.risk.plugin.DamagePotentialThemeInfo">
     </themeInfo>
  </extension>
- <extension
-       point="org.kalypso.contribs.eclipseplatform.projectTemplate">
-    <project
-          category="org.kalypso.risk.projectTemplate"
-          data="etc/RiskProjectTemplate.zip"
-          description="%org.kalypso.contribs.eclipseplatform.projectTemplate.description"
-          label="%org.kalypso.contribs.eclipseplatform.projectTemplate.label"
-          projectName=" ">
-    </project>
- </extension>
    <extension
                 point="org.kalypso.deegree.functionProperty">
                 <function

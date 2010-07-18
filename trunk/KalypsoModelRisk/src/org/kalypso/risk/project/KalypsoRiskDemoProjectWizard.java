@@ -41,7 +41,6 @@
 package org.kalypso.risk.project;
 
 import org.kalypso.afgui.wizards.NewProjectWizard;
-import org.kalypso.risk.i18n.Messages;
 
 /**
  * @author schrage
@@ -50,6 +49,6 @@ public class KalypsoRiskDemoProjectWizard extends NewProjectWizard
 {
   public KalypsoRiskDemoProjectWizard( )
   {
-    super( Messages.getString( "org.kalypso.model.risk.demoProject" ), true ); //$NON-NLS-1$
+    super( "org.kalypso.model.risk.demoProject", true ); //$NON-NLS-1$
   }
 }
