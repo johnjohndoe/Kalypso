@@ -314,7 +314,7 @@ public class BinaryWindDataModel implements IWindDataProvider, IPlainGridVisitab
       row = 0;
     double lDoubleActScale = Math.min( envToVisit.getHeight(), envToVisit.getWidth() ) / Math.min( m_cellSizeX, m_cellSizeY );
 
-    m_intScale = (int) (m_intScale + lDoubleActScale / INT_CONST_SCALE_VECTOR_LEN_PRESENTATION);
+    m_intScale = (int) (1 + lDoubleActScale / INT_CONST_SCALE_VECTOR_LEN_PRESENTATION);
 
     if( m_intScale < MIN_VECTOR_SCALE )
     {
