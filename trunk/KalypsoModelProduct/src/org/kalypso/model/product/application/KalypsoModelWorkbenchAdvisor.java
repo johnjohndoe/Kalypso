@@ -42,24 +42,19 @@ package org.kalypso.model.product.application;
 
 import java.net.URL;
 
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.kalypso.afgui.perspective.Perspective;
-import org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener;
 import org.osgi.framework.Bundle;
 
 /**
@@ -74,11 +69,6 @@ public class KalypsoModelWorkbenchAdvisor extends WorkbenchAdvisor
   private final boolean m_restrictedAccess;
 
   /**
-   * This is an execute listener.
-   */
-  private final IExecutionListener m_executeListener;
-
-  /**
    * @param restrictedAccess
    *          See
    *          {@link KalypsoModelWorkbenchWindowAdvisor#KalypsoModelWorkbenchWindowAdvisor(KalypsoModelWorkbenchAdvisor, IWorkbenchWindowConfigurer, boolean)}
@@ -86,7 +76,6 @@ public class KalypsoModelWorkbenchAdvisor extends WorkbenchAdvisor
   public KalypsoModelWorkbenchAdvisor( final boolean restrictedAccess )
   {
     m_restrictedAccess = restrictedAccess;
-    m_executeListener = new MapScreenshotExecuteListener();
   }
 
   /**
@@ -123,11 +112,6 @@ public class KalypsoModelWorkbenchAdvisor extends WorkbenchAdvisor
   public void postStartup( )
   {
     super.postStartup();
-
-    /* Add a command listener for the screenshot command of the map. */
-    final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
-    final Command command = service.getCommand( "org.kalypso.ogc.gml.map.Screenshot" ); //$NON-NLS-1$
-    command.addExecutionListener( m_executeListener );
   }
 
   /**
@@ -136,11 +120,6 @@ public class KalypsoModelWorkbenchAdvisor extends WorkbenchAdvisor
   @Override
   public boolean preShutdown( )
   {
-    /* Remove the execute listener for the srcreenshot command. */
-    final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
-    final Command command = service.getCommand( "org.kalypso.ogc.gml.map.Screenshot" ); //$NON-NLS-1$
-    command.removeExecutionListener( m_executeListener );
-
     return super.preShutdown();
   }
 
