@@ -108,7 +108,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
 
   protected static final DateFormat DATEFORMAT = new SimpleDateFormat( "dd.MM.yyyy 00:00" ); //$NON-NLS-1$
 
-  private static final String MSG_PAGE = Messages.getString( "TODO: msg" );//"org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.0"); //$NON-NLS-1$
+  private static final String MSG_PAGE = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.0" ); //$NON-NLS-1$
 
   private static final String DEFAULTSTEP = "10"; //$NON-NLS-1$
   
@@ -345,7 +345,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
   protected void updatePageState( final IStatus status )
   {
     final IStatus pageStatus = status.isOK() ? checkPageComplete() : status;
-    if( pageStatus.isOK() )
+    if( pageStatus.isOK() ) 
       m_page.setMessage( MSG_PAGE, DialogPage.NONE );
     else
       m_page.setMessage( pageStatus.getMessage(), DialogPageUtilitites.severityToMessagecode( pageStatus ) );
@@ -356,15 +356,15 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
   private IStatus checkPageComplete( )
   {
     if( m_arrayDoubleHSig[0] == null )
-      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.9") ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.9") ); //$NON-NLS-1$
     if( m_arrayDoubleHSig[1] == null )
-      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.10") ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.10") ); //$NON-NLS-1$
     if( m_arrayDoubleDir[0] == null )
-      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.11") ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.11") ); //$NON-NLS-1$
     if( m_arrayDoubleDir[1] == null )
-      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.12") ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.12") ); //$NON-NLS-1$
     if( m_step == null )
-      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.13") ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.13") ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
@@ -380,7 +380,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
    */
   public void activate( )
   {
-    m_page.setTitle( Messages.getString( "Descripttion Wave Parameters" ) );
+    m_page.setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.15" ) );
     m_page.setDescription( MSG_PAGE );
 
     updatePageState( Status.OK_STATUS );
@@ -489,7 +489,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.18") ); //$NON-NLS-1$
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.18") ); //$NON-NLS-1$
       m_step = null;
     }
 
@@ -505,7 +505,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, Messages.getString( "TODO::Error msg for bad input format on wave boundary" ) );//"org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.19") ); //$NON-NLS-1$
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.18" ) );//"org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.19") ); //$NON-NLS-1$
 
       pArrayDoubleTarget[ index ] = null;//-9999.0;
     }

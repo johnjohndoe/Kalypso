@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.kalypsomodel1d2d.conv.wind.WindDataConverterFactory.EWindFileTypes;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -44,7 +45,7 @@ public class WindDataWizardMainPage extends WizardPage
 
   public Text m_tileTitle;
 
-  public Text m_hight;
+  public Text m_height;
 
   public Text m_tileDescription;
 
@@ -144,9 +145,9 @@ public class WindDataWizardMainPage extends WizardPage
 
     final Label label_hight = new Label( container, SWT.NONE );
     label_hight.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
-    label_hight.setText( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.7" ) ); //$NON-NLS-1$
-    m_hight = new Text( container, SWT.BORDER );
-    m_hight.addModifyListener( new ModifyListener()
+    label_hight.setText( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.8" ) ); //$NON-NLS-1$
+    m_height = new Text( container, SWT.BORDER );
+    m_height.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
       {
@@ -155,11 +156,11 @@ public class WindDataWizardMainPage extends WizardPage
     } );
     final GridData gridData_hight = new GridData( GridData.FILL_HORIZONTAL );
     gridData_hight.horizontalSpan = 2;
-    m_hight.setLayoutData( gridData_hight );
+    m_height.setLayoutData( gridData_hight );
 
     final Label label_4 = new Label( container, SWT.NONE );
     label_4.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING ) );
-    label_4.setText( "" ); //$NON-NLS-1$
+    label_4.setText( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.9" ) ); //$NON-NLS-1$
     m_tileDescription = new Text( container, SWT.BORDER | SWT.MULTI );
     final GridData gridData_4 = new GridData( GridData.FILL_HORIZONTAL );
     gridData_4.horizontalSpan = 2;
@@ -245,6 +246,17 @@ public class WindDataWizardMainPage extends WizardPage
     {
       setMessage( null );
       setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.3" ) ); //$NON-NLS-1$
+      return;
+    }
+    if( m_height.getText().trim().length() != 0 )
+    {
+      try{
+        Double.parseDouble( m_height.getText().trim() );
+      }
+      catch (Exception e) {
+        setMessage( null );
+        setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.5" ) ); //$NON-NLS-1$
+      }
       return;
     }
     setPageComplete( true );
