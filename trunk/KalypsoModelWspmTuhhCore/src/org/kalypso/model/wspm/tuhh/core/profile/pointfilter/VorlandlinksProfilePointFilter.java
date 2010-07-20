@@ -58,13 +58,15 @@ public class VorlandlinksProfilePointFilter extends AbstractProfilePointFilter
   @Override
   public boolean accept( final IProfil profil, final IRecord point )
   {
-    IProfilPointMarker[] tfMarker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
-    if( tfMarker == null || tfMarker.length == 0 )
-      tfMarker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    if( tfMarker.length != 2 )
-      return false;
+    final IProfilPointMarker[] bvMarker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    if( bvMarker.length == 2 )
+      return isBetweenMarkers( profil, point, null, bvMarker[0] );
 
-    return isBetweenMarkers( profil, point, null, tfMarker[0] );
+    final IProfilPointMarker[] tfMarker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    if( tfMarker.length == 2 )
+      return isBetweenMarkers( profil, point, null, bvMarker[0] );
+
+    return false;
   }
 
 }
