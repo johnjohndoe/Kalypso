@@ -14,6 +14,7 @@ public class BvRechtsProfilePointFilter extends AbstractProfilePointFilter
     final IProfilPointMarker[] tfMarkers = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( tfMarkers.length != 2 )
       return false;
+
     final IProfilPointMarker[] bvMarkers = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
     if( bvMarkers.length != 2 )
       return false;
