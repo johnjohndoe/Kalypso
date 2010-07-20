@@ -64,7 +64,7 @@ public class VorlandlinksProfilePointFilter extends AbstractProfilePointFilter
 
     final IProfilPointMarker[] tfMarker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( tfMarker.length == 2 )
-      return isBetweenMarkers( profil, point, null, bvMarker[0] );
+      return isBetweenMarkers( profil, point, null, tfMarker[0] );
 
     return false;
   }

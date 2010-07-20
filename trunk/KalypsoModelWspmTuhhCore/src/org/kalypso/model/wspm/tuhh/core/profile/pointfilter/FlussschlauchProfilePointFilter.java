@@ -59,10 +59,10 @@ public class FlussschlauchProfilePointFilter extends AbstractProfilePointFilter
   public boolean accept( final IProfil profil, final IRecord point )
   {
     final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    if( devider.length != 2 )
-      return false;
+    if( devider.length == 2 )
+      return isBetweenMarkers( profil, point, devider[0], devider[1] );
 
-    return isBetweenMarkers( profil, point, devider[0], devider[1] );
+    return false;
   }
 
 }
