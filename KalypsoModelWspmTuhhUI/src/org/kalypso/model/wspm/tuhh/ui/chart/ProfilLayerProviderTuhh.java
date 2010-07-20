@@ -100,8 +100,6 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  */
 public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhConstants
 {
-  // private final List<String> m_layers = new ArrayList<String>();
-
   protected final LayerStyleProviderTuhh m_lsp = new LayerStyleProviderTuhh();
 
   protected final IAxis m_domainAxis = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_DOMAIN", POSITION.BOTTOM, Number.class );//$NON-NLS-1$
@@ -217,21 +215,21 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       return new VegetationTheme( profil, new IProfilChartLayer[] { new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ),
           new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) }, cmLeft, m_lsp );
     }
-    else if( layerID.equals( IWspmConstants.LAYER_GEOKOORDINATEN ) )
+
+    if( layerID.equals( IWspmConstants.LAYER_GEOKOORDINATEN ) )
     {
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ),
           new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) };
       return new GeoCoordinateTheme( profil, subLayers, null );
-
     }
-    else if( layerID.equals( IWspmConstants.LAYER_GELAENDE ) )
-    {
 
+    if( layerID.equals( IWspmConstants.LAYER_GELAENDE ) )
+    {
       return new CrossSectionTheme( profil, new IProfilChartLayer[] { new StationLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE ),
           new PointsLineLayer( layerID, profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ) }, cmLeft );
-
     }
-    else if( layerID.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
+
+    if( layerID.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
     {
       final CoordinateMapper cmRight = new CoordinateMapper( m_domainAxis, m_targetAxisRight );
 
@@ -239,33 +237,34 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
           new RoughnessLayer( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, m_lsp ) };
       return new RoughnessTheme( profil, subLayers, cmRight );
     }
-    else if( layerID.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
+
+    if( layerID.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
     {
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] {
           new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_lsp ),
           new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, m_lsp ) };
       return new BuildingBridgeTheme( profil, subLayers, cmLeft );
     }
-    else if( layerID.equals( IWspmTuhhConstants.LAYER_WEHR ) )
+
+    if( layerID.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { new PointsLineLayer( layerID, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, m_lsp ),
           new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_WEHR, m_lsp, 30, false ) };
       return new BuildingWeirTheme( profil, subLayers, cmLeft );
-
     }
-    else if( layerID.equals( IWspmTuhhConstants.LAYER_TUBES ) )
-    {
+
+    if( layerID.equals( IWspmTuhhConstants.LAYER_TUBES ) )
       return new BuildingTubesTheme( profil, new IProfilChartLayer[] { new TubeLayer( profil, m_lsp ) }, cmLeft );
 
-    }
     if( layerID.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
     {
       final PointMarkerLayer dbLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_lsp, 5, true );
-      final PointMarkerLayer bvLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_lsp, 25, false );
       final RiverChannelLayer tfLayer = new RiverChannelLayer( profil, m_lsp, 15, false );
-      final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { dbLayer, bvLayer, tfLayer };
+      final PointMarkerLayer bvLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_lsp, 25, false );
+      final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { dbLayer, tfLayer, bvLayer };
       return new DeviderTheme( profil, subLayers, cmLeft );
     }
+
     return null;
   }
 
