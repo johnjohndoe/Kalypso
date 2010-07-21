@@ -51,16 +51,6 @@
    </extension>
 
 	<extension point="org.eclipse.ui.handlers">
-		<handler commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider" class="org.kalypso.model.wspm.ui.action.CreateDeviderHandler">
-			<activeWhen>
-				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.oneProfileThemeSelected"/>
-			</activeWhen>
-		</handler>
-		<handler commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" class="org.kalypso.model.wspm.ui.action.IntersectRoughnessHandler">
-			<activeWhen>
-				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.oneProfileThemeSelected"/>
-			</activeWhen>
-		</handler>
           <handler
                 class="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesHandler"
                 commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv">
