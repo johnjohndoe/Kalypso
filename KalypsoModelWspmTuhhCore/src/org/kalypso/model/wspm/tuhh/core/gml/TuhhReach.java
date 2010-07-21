@@ -44,6 +44,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
@@ -57,6 +59,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileSelectionProvider;
+import org.kalypso.model.wspm.core.gml.WspmProfileComparator;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -219,7 +222,8 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   public IProfileFeature[] getSelectedProfiles( final IRelationType selectionHint )
   {
     final FeatureList reachSegmentList = getReachSegmentList();
-    final List<IProfileFeature> profile = new ArrayList<IProfileFeature>();
+    final SortedSet<IProfileFeature> profile = new TreeSet<IProfileFeature>( new WspmProfileComparator( isDirectionUpstreams() ) );
+
     for( final Object object : reachSegmentList )
     {
       final Feature segmentFeature = (Feature) object;
@@ -272,5 +276,10 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     }
 
     return null;
+  }
+
+  public boolean isDirectionUpstreams( )
+  {
+    return getWaterBody().isDirectionUpstreams();
   }
 }
