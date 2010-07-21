@@ -52,9 +52,8 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 /**
  * @author Dirk Kuch
  */
-public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProfileHelper
+public class WspmProfileHelper
 {
-
   /**
    * @return breite of sohlpunkt
    */
@@ -72,7 +71,7 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
 
   public static double findSohlpunkt( final ProfileWrapper wrapper )
   {
-    return findSohlpunkt( wrapper, FUZZINESS );
+    return findSohlpunkt( wrapper, org.kalypso.model.wspm.core.util.WspmProfileHelper.FUZZINESS );
   }
 
   /**
@@ -86,11 +85,11 @@ public class WspmProfileHelper extends org.kalypso.model.wspm.core.util.WspmProf
     if( dbs.length != 2 )
       throw new IllegalStateException();
 
-    double sohlpunkt = Double.MAX_VALUE;
+    final ProfilePointWrapper[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite(), true );
+
     final List<ProfilePointWrapper> sohle = new ArrayList<ProfilePointWrapper>();
     boolean lastIterationAdd = false;
-
-    final ProfilePointWrapper[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite(), true );
+    double sohlpunkt = Double.MAX_VALUE;
     for( final ProfilePointWrapper point : points )
     {
       final Double h = point.getHoehe();
