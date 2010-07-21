@@ -194,7 +194,7 @@ public class WspWinExporter
     if( reach == null )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.11" ) ); //$NON-NLS-1$
 
-    final boolean isDirectionUpstreams = reach.getWaterBody().isDirectionUpstreams();
+    final boolean isDirectionUpstreams = reach.isDirectionUpstreams();
 
     write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile );
     write1DTuhhZustand( calculation, isDirectionUpstreams, zustFile, psiFile );
