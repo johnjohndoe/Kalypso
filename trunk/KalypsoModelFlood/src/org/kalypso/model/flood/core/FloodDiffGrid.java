@@ -61,7 +61,8 @@ import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IFloodVolumePolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -195,7 +196,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
       for( final ITinReference tinReference : m_tins )
       {
         final String tinCRS = tinReference.getTin().getCoordinateSystem();
-        final GeoTransformer transformer = new GeoTransformer( tinCRS );
+        final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( tinCRS );
         final GM_Point transformedPoint = (GM_Point) transformer.transform( point );
         final GM_Position transPos = transformedPoint.getPosition();
 

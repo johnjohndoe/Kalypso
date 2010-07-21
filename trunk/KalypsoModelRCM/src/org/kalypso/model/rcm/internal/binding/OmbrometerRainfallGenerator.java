@@ -69,7 +69,8 @@ import org.kalypso.model.rcm.util.OmbrometerUtils;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypso.utils.log.LogUtilities;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -192,7 +193,7 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
 
       // Convert to JTS-Geometries
       final Polygon[] ombrometerPolygons = new Polygon[ombrometerAreas.length];
-      final GeoTransformer transformer = new GeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       for( int i = 0; i < ombrometerAreas.length; i++ )
       {
         if( ombrometerAreas[i] != null )

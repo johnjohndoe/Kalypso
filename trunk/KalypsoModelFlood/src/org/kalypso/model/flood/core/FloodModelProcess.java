@@ -73,7 +73,8 @@ import org.kalypso.model.flood.binding.IFloodVolumePolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.i18n.Messages;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -173,7 +174,7 @@ public class FloodModelProcess
       final IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
 
       final String sourceCRS = geoGrid.getSourceCRS();
-      final GeoTransformer transformer = new GeoTransformer( sourceCRS );
+      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( sourceCRS );
       final Geometry volumeGeometry = JTSAdapter.export( transformer.transform( volumeGmObject ) );
 
       final double cellSize = GeoGridUtilities.calcCellArea( geoGrid.getOffsetX(), geoGrid.getOffsetY() );
@@ -236,7 +237,7 @@ public class FloodModelProcess
       final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
       final String sourceCRS = grid.getSourceCRS();
-      final GeoTransformer transformer = new GeoTransformer( sourceCRS );
+      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( sourceCRS );
       final Geometry volumeGeometry = JTSAdapter.export( transformer.transform( volumeGmObject ) );
 
       grid.getWalkingStrategy().walk( grid, volumeWalker, new PolygonGeoGridArea( grid, volumeGeometry ), new NullProgressMonitor() );

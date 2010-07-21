@@ -169,7 +169,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private void availableCoordinateSystems( final Combo checkCRS )
   {
-    checkCRS.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
+    checkCRS.setItems( CRSHelper.getAllNames() );
   }
 
   void validate( )

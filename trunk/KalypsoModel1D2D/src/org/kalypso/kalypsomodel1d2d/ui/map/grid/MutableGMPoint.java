@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Boundary;
@@ -52,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Wrapped a {@link GM_Point} and mimes the possibility to changes it
- *
+ * 
  * @author Patrice Congo
  */
 class MutableGMPoint implements GM_Point
@@ -315,12 +314,11 @@ class MutableGMPoint implements GM_Point
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
-   *      java.lang.String)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
+  public GM_Object transform( String targetCRS ) throws Exception
   {
-    return new MutableGMPoint( (GM_Point) this.point.transform( trans, targetOGCCS ) );
+    return new MutableGMPoint( (GM_Point) this.point.transform( targetCRS ) );
   }
 }
