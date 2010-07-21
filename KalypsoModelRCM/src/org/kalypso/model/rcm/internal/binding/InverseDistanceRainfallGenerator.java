@@ -65,7 +65,8 @@ import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypso.utils.log.LogUtilities;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -198,7 +199,7 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
 
       /* Convert to JTS geometries. */
       Point[] ombrometerPoints = new Point[ombrometerStations.length];
-      GeoTransformer transformer = new GeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       for( int i = 0; i < ombrometerStations.length; i++ )
       {
         GM_Point ombrometerPoint = ombrometerStations[i];

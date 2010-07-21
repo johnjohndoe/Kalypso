@@ -53,7 +53,8 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -67,7 +68,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
 
   private final TuhhWspmProject m_project;
 
-  private final GeoTransformer m_transformer;
+  private final IGeoTransformer m_transformer;
 
   private final CommandableWorkspace m_workspace;
 
@@ -80,7 +81,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
     m_workspace = workspace;
     m_project = project;
     m_wprofPath = wprofPath;
-    m_transformer = new GeoTransformer( targetSrs );
+    m_transformer = GeoTransformerFactory.getGeoTransformer( targetSrs );
   }
 
   public void addMarkerMapping( final String markerID, final int pointAttribute )

@@ -46,7 +46,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypso.grid.BinaryGeoGrid;
 import org.kalypso.grid.GeoGridException;
@@ -56,8 +55,8 @@ import org.kalypso.grid.SequentialBinaryGeoGridWriter;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.utils.RiskModelHelper;
-import org.kalypso.transformation.CachedTransformationFactory;
-import org.kalypso.transformation.TransformUtilities;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -184,7 +183,19 @@ public class ParallelDamageCalculationManager
         m_bean = m_manager.getNextDataset();
         if( m_bean == null )
           break;
-        operate();
+
+        try
+        {
+          operate();
+        }
+        catch( GeoGridException e )
+        {
+          e.printStackTrace();
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
       }
 
       // exit
@@ -197,7 +208,7 @@ public class ParallelDamageCalculationManager
       return GeometryFactory.createGM_Position( cx, cy );
     }
 
-    private final double getValue( final int x, final int y, final int k )
+    private final double getValue( final int x, final int y, final int k ) throws GeoGridException, Exception
     {
       // convert 4 bytes to integer
       final int z = (((m_bean.m_blockData[k - 3] & 0xff) << 24) | ((m_bean.m_blockData[k - 2] & 0xff) << 16) | ((m_bean.m_blockData[k - 1] & 0xff) << 8) | ((m_bean.m_blockData[k - 0] & 0xff)));
@@ -216,10 +227,9 @@ public class ParallelDamageCalculationManager
         return Double.NaN;
 
       final GM_Position positionAt = getPosition( x, y );
-      final GM_Position position = TransformUtilities.transform( positionAt, m_transformation );
+      final GM_Position position = m_geoTransformer.transform( positionAt, m_reader.getDelegate().getSourceCRS() );
 
       /* This list has some unknown cs. */
-
       final List<ILandusePolygon> list = m_polygonCollection.query( position );
       if( list == null || list.size() == 0 )
         return Double.NaN;
@@ -252,7 +262,7 @@ public class ParallelDamageCalculationManager
       return Double.NaN;
     }
 
-    private final void operate( )
+    private final void operate( ) throws GeoGridException, Exception
     {
       int x = 0;
       int y = m_bean.m_linePos;
@@ -327,7 +337,7 @@ public class ParallelDamageCalculationManager
 
   static long m_lineLen = 0;
 
-  CRSTransformation m_transformation;
+  protected IGeoTransformer m_geoTransformer;
 
   public ParallelDamageCalculationManager( final SequentialBinaryGeoGridReader inputGridReader, final SequentialBinaryGeoGridWriter outputGridWriter, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final List<ILanduseClass> landuseClasses, final int returnPeriod, final double cellSize )
   {
@@ -346,8 +356,7 @@ public class ParallelDamageCalculationManager
     // calculate fitting block size
     try
     {
-      // calculate the coordinate transformation
-      m_transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( m_reader.getDelegate().getSourceCRS(), coordinateSystem );
+      m_geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
 
       m_linesTotal = inputGridReader.getSizeY();
       final long linesPerThread = m_linesTotal / THREADS_AMOUNT;

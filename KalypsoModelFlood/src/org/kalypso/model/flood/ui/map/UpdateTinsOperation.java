@@ -74,7 +74,8 @@ import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -207,7 +208,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         crs = getCoordinateSytem( properties.getProperty( "srs" ) ); //$NON-NLS-1$
         eater = new TriangulatedSurfaceTriangleEater( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), new TinResultWriter.QNameAndString[] {} );
 
-        final GeoTransformer transformer = new GeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+        final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
         final URL hmoLocation = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() ); //$NON-NLS-1$
 

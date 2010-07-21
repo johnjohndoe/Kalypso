@@ -44,7 +44,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
-import org.kalypso.transformation.GeoTransformer;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 
 /**
  * Gathers all wprof data for one profile.
@@ -56,7 +56,7 @@ class ProfileData
   /** ObjectType -> all WProf Points of this type */
   private final ProfilePolygones m_profilePolygones = new ProfilePolygones();
 
-  private final GeoTransformer m_transformer;
+  private final IGeoTransformer m_transformer;
 
   private final ProfileMarkers m_markers;
 
@@ -66,7 +66,7 @@ class ProfileData
 
   private final String m_wprofPath;
 
-  public ProfileData( final GeoTransformer transformer, final PunktattributMapping punktattribute, final String wprofPath )
+  public ProfileData( final IGeoTransformer transformer, final PunktattributMapping punktattribute, final String wprofPath )
   {
     m_transformer = transformer;
     m_wprofPath = wprofPath;
@@ -92,7 +92,7 @@ class ProfileData
     return m_profilePolygones;
   }
 
-  public GeoTransformer getTransformer( )
+  public IGeoTransformer getTransformer( )
   {
     return m_transformer;
   }

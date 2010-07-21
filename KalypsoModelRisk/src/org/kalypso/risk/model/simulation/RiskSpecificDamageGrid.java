@@ -47,7 +47,6 @@ import java.net.URL;
 import java.util.List;
 
 import org.deegree.crs.exceptions.TransformationException;
-import org.deegree.crs.transformations.CRSTransformation;
 import org.deegree.model.crs.UnknownCRSException;
 import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypso.grid.GeoGridException;
@@ -57,8 +56,8 @@ import org.kalypso.grid.SequentialBinaryGeoGridReader;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.utils.RiskModelHelper;
-import org.kalypso.transformation.CachedTransformationFactory;
-import org.kalypso.transformation.TransformUtilities;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -85,11 +84,11 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
 
   private int m_returnPeriod;
 
-  private CRSTransformation m_transformation;
-
   private int m_sizeX;
 
   private int m_sizeY;
+
+  private IGeoTransformer m_geoTransformer;
 
   public RiskSpecificDamageGrid( IGeoGrid inputGrid, URL pUrl, IFeatureWrapperCollection<ILandusePolygon> polygonCollection, List<ILanduseClass> landuseClasses, double cellSize, int returnPeriod ) throws IOException, GeoGridException, UnknownCRSException, TransformationException
   {
@@ -109,11 +108,11 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
     final ILandusePolygon landusePolygon = m_polygonCollection.get( 0 );
     final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
 
-    m_transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( getSourceCRS(), coordinateSystem );
+    m_geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
   }
 
   @Override
-  public final double getValue( final int k, final ParallelBinaryGridProcessorBean bean )
+  public final double getValue( final int k, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException, Exception
   {
     // convert 4 bytes to integer
     final int z = ByteUtils.readBEInt( bean.m_blockData, k * 4 );
@@ -140,7 +139,7 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
     final double cx = m_origin.x + x * m_offsetX.x + y * m_offsetY.x;
     final double cy = m_origin.y + x * m_offsetX.y + y * m_offsetY.y;
 
-    final GM_Position position = TransformUtilities.transform( GeometryFactory.createGM_Position( cx, cy ), m_transformation );
+    final GM_Position position = m_geoTransformer.transform( GeometryFactory.createGM_Position( cx, cy ), getSourceCRS() );
 
     /* This list has some unknown cs. */
     final List<ILandusePolygon> list = m_polygonCollection.query( position );

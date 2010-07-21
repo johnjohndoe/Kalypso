@@ -15,7 +15,6 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -66,8 +65,8 @@ import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
-import org.kalypso.transformation.CachedTransformationFactory;
-import org.kalypso.transformation.TransformUtilities;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -228,8 +227,8 @@ public class RiskModelHelper
               final GM_Position positionAt = JTSAdapter.wrap( coordinate );
 
               /* Transform query position into the cs of the polygons. */
-              final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( inputGrid.getSourceCRS(), coordinateSystem );
-              final GM_Position position = TransformUtilities.transform( positionAt, transformation );
+              IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
+              final GM_Position position = geoTransformer.transform( positionAt, inputGrid.getSourceCRS() );
 
               /* This list has some unknown cs. */
 
@@ -457,8 +456,8 @@ public class RiskModelHelper
                 final GM_Position positionAt = JTSAdapter.wrap( coordinate );
 
                 /* Transform query position into the cs of the polygons. */
-                final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( inputGrid.getSourceCRS(), coordinateSystem );
-                final GM_Position position = TransformUtilities.transform( positionAt, transformation );
+                IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
+                final GM_Position position = geoTransformer.transform( positionAt, inputGrid.getSourceCRS() );
 
                 /* This list has some unknown cs. */
                 final List<ILandusePolygon> list = polygonCollection.query( position );
