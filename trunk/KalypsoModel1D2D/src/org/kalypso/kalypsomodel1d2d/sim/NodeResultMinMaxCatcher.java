@@ -84,35 +84,42 @@ public class NodeResultMinMaxCatcher
       final double depth = nodeResult.getDepth();
       final double waterlevel = nodeResult.getWaterlevel();
       final double Terrain = nodeResult.getPoint().getZ();
-      final double waveHsig = nodeResult.getWaveHsig();
-      final double wavePer = nodeResult.getWavePeriod();
+      double waveHsig = Double.NaN;
+      double wavePer = Double.NaN; 
+      try{
+        waveHsig = nodeResult.getWaveHsig();
+        wavePer = nodeResult.getWavePeriod();
+      }
+      catch (Exception e) {
+        //wave simulation results are not found
+      }
 
       // TODO: implement the shear stress
       final double shearstress = 0;
 
-      if( velocity < m_minVelocityAbs )
+      if( velocity != Double.NaN && velocity < m_minVelocityAbs )
         m_minVelocityAbs = velocity;
-      if( velocity > m_maxVelocityAbs )
+      if( velocity != Double.NaN && velocity > m_maxVelocityAbs )
         m_maxVelocityAbs = velocity;
 
-      if( depth < m_minDepth )
+      if( depth != Double.NaN && depth < m_minDepth )
         m_minDepth = depth;
-      if( depth > m_maxDepth )
+      if( depth != Double.NaN && depth > m_maxDepth )
         m_maxDepth = depth;
 
-      if( waterlevel < m_minWaterlevel )
+      if( waterlevel != Double.NaN && waterlevel < m_minWaterlevel )
         m_minWaterlevel = waterlevel;
-      if( waterlevel > m_maxWaterlevel )
+      if( waterlevel != Double.NaN && waterlevel > m_maxWaterlevel )
         m_maxWaterlevel = waterlevel;
 
-      if( shearstress < m_minShearStress )
+      if( shearstress != Double.NaN && shearstress < m_minShearStress )
         m_minShearStress = shearstress;
-      if( shearstress > m_maxShearStress )
+      if( shearstress != Double.NaN && shearstress > m_maxShearStress )
         m_maxShearStress = shearstress;
 
-      if( Terrain < m_minTerrain )
+      if( Terrain != Double.NaN && Terrain < m_minTerrain )
         m_minTerrain = Terrain;
-      if( Terrain > m_maxTerrain )
+      if( Terrain != Double.NaN && Terrain > m_maxTerrain )
         m_maxTerrain = Terrain;
 
       if( waveHsig != Double.NaN && waveHsig > m_maxWaveHsig )
