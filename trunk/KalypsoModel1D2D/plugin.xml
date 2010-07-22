@@ -98,10 +98,6 @@
       id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControlFactory"
     >
     </extensionControl>
-    <extensionControl class="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory"
-      id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory"
-    >
-    </extensionControl>
   </extension>
 
   <extension point="org.eclipse.ui.handlers">
