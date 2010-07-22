@@ -84,5 +84,10 @@
          </scenarioDatum>
       </dataSet>
    </extension>
+   <extension point="org.kalypso.ui.featureViewExtensionControl">
+    <extensionControl class="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory"
+      					id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
+    </extensionControl>
+   </extension>
 
 </plugin>
