@@ -6,7 +6,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -21,6 +23,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -34,6 +37,8 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 public class CreateProfileFromDEMWidget extends AbstractWidget
 {
   private static final String STR_DEFAULT_TOOLTIP = "CLICK-LEFT: add a new point\n" + "DOUBLE-CLICK: finish\n" + "BACKSPACE: remove last point\nSPACE: switch mode\nCurrent mode: ";
+
+  private static final String SETTINGS_MODE = "mode";
 
   private final ToolTipRenderer m_standardTooltip = ToolTipRenderer.createStandardTooltip();
 
@@ -100,6 +105,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       return;
     }
 
+    readSettings();
     m_strategy = initStrategy( model, coverages, mapPanel );
     if( m_strategy == null )
     {
@@ -270,9 +276,27 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
       case KeyEvent.VK_SPACE:
         m_strategyExtendProfile = !m_strategyExtendProfile;
+        final IDialogSettings settings = getSettings();
+        if( settings != null )
+          settings.put( SETTINGS_MODE, m_strategyExtendProfile );
         activate( getCommandTarget(), getMapPanel() );
         repaintMap();
         break;
     }
   }
+
+  private void readSettings( )
+  {
+    final IDialogSettings settings = getSettings();
+    if( settings == null )
+      return;
+
+    m_strategyExtendProfile = settings.getBoolean( SETTINGS_MODE );
+  }
+
+  private IDialogSettings getSettings( )
+  {
+    return PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
+  }
+
 }
