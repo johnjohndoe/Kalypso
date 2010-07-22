@@ -180,8 +180,8 @@ public class ResultMeta1d2dHelper
         }
         catch( final CoreException e )
         {
-          e.printStackTrace();
-          //          return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.0" ) ); //$NON-NLS-1$
+//          e.printStackTrace();
+           return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.0" ) ); //$NON-NLS-1$
         }
       }
     }
@@ -213,7 +213,8 @@ public class ResultMeta1d2dHelper
               }
               else
               {
-                resourceChild.delete( true, new NullProgressMonitor() );
+                if( resourceChild != null )
+                  resourceChild.delete( true, new NullProgressMonitor() );
                 children[ i ].delete();
               }
             }
