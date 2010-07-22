@@ -130,10 +130,6 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
       BigDecimal maxVelo = new BigDecimal( minMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       BigDecimal maxWaterlevel = new BigDecimal( minMaxCatcher.getMaxWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       BigDecimal maxDepth = new BigDecimal( minMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      BigDecimal maxWavePer = new BigDecimal( minMaxCatcher.getMaxWavePer() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      BigDecimal maxWaveHsig = new BigDecimal( minMaxCatcher.getMaxWaveHsig() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      BigDecimal minWaveHsig = new BigDecimal( minMaxCatcher.getMinWaveHsig() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      BigDecimal minWavePer = new BigDecimal( minMaxCatcher.getMinWavePer() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       BigDecimal minDepth = new BigDecimal( minMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       BigDecimal minWaterlevel = new BigDecimal( minMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       BigDecimal minVelo = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
@@ -141,13 +137,24 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
       getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_DEPTH, minDepth );
       getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_VELO, minVelo );
       getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WATERLEVEL, minWaterlevel );
-      getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_HSIG, minWaveHsig );
-      getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_PER, minWavePer );
       getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_DEPTH, maxDepth );
       getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_VELO, maxVelo );
       getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WATERLEVEL, maxWaterlevel );
+    }
+    catch( Exception e )
+    {
+      //in case of NaN do not evaluate min/max
+    }
+    try{
+      BigDecimal maxWavePer = new BigDecimal( minMaxCatcher.getMaxWavePer() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+      BigDecimal maxWaveHsig = new BigDecimal( minMaxCatcher.getMaxWaveHsig() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+      BigDecimal minWaveHsig = new BigDecimal( minMaxCatcher.getMinWaveHsig() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+      BigDecimal minWavePer = new BigDecimal( minMaxCatcher.getMinWavePer() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_HSIG, minWaveHsig );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_PER, minWavePer );
       getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_HSIG, maxWaveHsig );
       getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_PER, maxWavePer );
+      
     }
     catch( Exception e )
     {
@@ -158,6 +165,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMinValueForType()
    */
+  @Override
   public BigDecimal getMinValueForType( final String type )
   {
     try
@@ -191,6 +199,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMinValueVelo()
    */
+  @Override
   public BigDecimal getMinValueVelo( )
   {
     return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_VELO );
