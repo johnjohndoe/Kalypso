@@ -67,12 +67,11 @@ public class ChooseExeControlFactory implements IExtensionsFeatureControlFactory
     final String alignment = arguments.getProperty( "alignment", null ); //$NON-NLS-1$
     final String displayFormat = arguments.getProperty( "displayFormat", null ); //$NON-NLS-1$
     final String dir = arguments.getProperty( "dir", null ); //$NON-NLS-1$
-    
 
     Assert.isNotNull( filePattern, "'exePattern' parameter must be specified for ChooseExeControl" ); //$NON-NLS-1$
     Assert.isNotNull( label, "'label' parameter must be specified for ChooseExeControl" ); //$NON-NLS-1$
 
-    if( dir == null || !dir.toLowerCase().equals( "." ) )
+    if( dir == null || !".".equals( dir.toLowerCase() ) )
     {
       final ChooseExeControl control = new ChooseExeControl( feature, pt, filePattern, label );
       if( alignment != null )
