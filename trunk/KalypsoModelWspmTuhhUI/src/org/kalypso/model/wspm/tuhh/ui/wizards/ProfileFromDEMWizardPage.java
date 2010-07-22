@@ -51,7 +51,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.dialog.compare.ProfileChart;
 
 /**
  * @author barbarins
@@ -62,9 +64,13 @@ public class ProfileFromDEMWizardPage extends WizardPage
 
   private double m_station;
 
-  public ProfileFromDEMWizardPage( )
+  private final IProfil m_profile;
+
+  public ProfileFromDEMWizardPage( final IProfil profile )
   {
     super( "profilefromdemwizardpage" ); //$NON-NLS-1$
+
+    m_profile = profile;
 
     m_name = ""; //$NON-NLS-1$
     m_station = Double.NaN;
@@ -144,6 +150,9 @@ public class ProfileFromDEMWizardPage extends WizardPage
         setStation( tStation.getText() );
       }
     } );
+
+    final ProfileChart profileChart = new ProfileChart( container, SWT.BORDER, m_profile );
+    profileChart.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
   }
 
   protected void setStation( final String text )
