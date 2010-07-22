@@ -27,8 +27,8 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
-import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 

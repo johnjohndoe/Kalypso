@@ -69,8 +69,8 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedLis
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.gml.ui.jface.ShapeCharsetUI;
 import org.kalypso.model.wspm.tuhh.core.wprof.WProfContextPatternReplacer;
-import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 
 /**
  * @author Gernot Belger
