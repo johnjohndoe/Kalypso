@@ -59,7 +59,7 @@ public class WizardAddProfileFromDEM extends Wizard
 
     setWindowTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ) ); //$NON-NLS-1$
 
-    m_page = new ProfileFromDEMWizardPage();
+    m_page = new ProfileFromDEMWizardPage( m_profile );
     addPage( m_page );
   }
 
