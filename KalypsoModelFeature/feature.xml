@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.kalypso.model.feature"
-      label="KalypsoModelFeature"
-      version="2.3.0.qualifier">
+      id="org.kalypso.model.product"
+      label="%Feature.featureName"
+      version="2.3.0.qualifier"
+      provider-name="%Feature.providerName">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="http://kalypso.bjoernsen.de">
+      %Feature.description
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright>
+      %Feature.copyright
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="%Feature.licenseURL">
+      %Feature.license
    </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://dev.bjoernsen.de/updatesites/kalypso_2.3"/>
+   </url>
 
    <includes
          id="org.kalypso.base.feature"
@@ -87,13 +92,6 @@
 
    <plugin
          id="org.kalypso.model.flood"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.model.product"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -270,15 +268,17 @@
          unpack="false"/>
 
    <plugin
-         id="org.kalypso.model.risk.project.1d2d_demo"
+         id="org.kalypso.model.product"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
-         id="org.kalypso.model.risk.project.template"
+         id="org.kalypso.model.rcm"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
