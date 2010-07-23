@@ -1,0 +1,3 @@
+instructions.configure=\
+  addRepository(type:0,name:Kalypso Björnsen,location:http${#58}//dev.bjoernsen.de/updatesites/kalypso_2.3);\
+  addRepository(type:1,,name:Kalypso Björnsen,location:http${#58}//dev.bjoernsen.de/updatesites/kalypso_2.3);
