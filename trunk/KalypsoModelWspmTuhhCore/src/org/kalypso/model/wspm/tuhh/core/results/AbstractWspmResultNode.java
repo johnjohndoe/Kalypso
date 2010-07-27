@@ -40,74 +40,73 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypsodeegree.model.feature.Feature;
-
 /**
  * @author Gernot Belger
  */
-public class WspmResultFixationNode extends AbstractWspmResultNode implements IWspmResult
+public abstract class AbstractWspmResultNode implements IWspmResultNode
 {
-  private final Feature m_fixation;
+  private final IWspmResultNode m_parentNode;
 
-  public WspmResultFixationNode( final IWspmResultNode parent, final Feature fixation )
+  public AbstractWspmResultNode( final IWspmResultNode parentNode )
   {
-    super( parent );
-
-    m_fixation = fixation;
+    m_parentNode = parentNode;
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getChildResults()
+   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getParent()
    */
   @Override
-  public IWspmResultNode[] getChildResults( )
+  public final IWspmResultNode getParent( )
   {
-    return new IWspmResultNode[0];
+    return m_parentNode;
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getLabel()
+   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getName()
    */
   @Override
-  public String getLabel( )
+  public final String getName( )
   {
-    return m_fixation.getName();
+    final IWspmResultNode parent = getParent();
+    final String id = getInternalName();
+
+    if( parent == null )
+      return id;
+
+    return String.format( "%s/%s", parent.getName(), id );
   }
 
+  protected abstract String getInternalName( );
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
-  protected String getInternalName( )
+  public boolean equals( final Object other )
   {
-    // id of feature would be nicer
-    return m_fixation.getName();
+    if( !(other instanceof AbstractWspmResultNode) )
+      return false;
+
+    final IWspmResultNode otherNode = (IWspmResultNode) other;
+    return getName().equals( otherNode.getName() );
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResult#getLengthSection()
+   * @see java.lang.Object#hashCode()
    */
   @Override
-  public WspmResultLengthSection getLengthSection( )
+  public int hashCode( )
   {
-    return WspmResultLengthSection.create( m_fixation );
+    return getName().hashCode();
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getObject()
+   * @see java.lang.Object#toString()
    */
   @Override
-  public Object getObject( )
+  public String toString( )
   {
-    return m_fixation;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResult#getCalculation()
-   */
-  @Override
-  public TuhhCalculation getCalculation( )
-  {
-    throw new NotImplementedException();
+    return getName();
   }
 
 }

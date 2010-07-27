@@ -61,15 +61,14 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Gernot Belger
  */
-public class WspmResultCalculationNode implements IWspmResultNode
+public class WspmResultCalculationNode extends AbstractWspmResultNode
 {
   private final TuhhCalculation m_calculation;
 
-  private final IWspmResultNode m_parent;
-
   public WspmResultCalculationNode( final IWspmResultNode parent, final TuhhCalculation calculation )
   {
-    m_parent = parent;
+    super( parent );
+
     m_calculation = calculation;
   }
 
@@ -129,22 +128,10 @@ public class WspmResultCalculationNode implements IWspmResultNode
     return m_calculation.getName();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getName()
-   */
   @Override
-  public String getName( )
+  protected String getInternalName( )
   {
     return m_calculation.getId();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getParent()
-   */
-  @Override
-  public IWspmResultNode getParent( )
-  {
-    return m_parent;
   }
 
   /**

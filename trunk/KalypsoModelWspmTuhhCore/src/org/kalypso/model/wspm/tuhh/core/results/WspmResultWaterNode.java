@@ -52,15 +52,13 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class WspmResultWaterNode implements IWspmResultNode
+public class WspmResultWaterNode extends AbstractWspmResultNode
 {
   private final WspmWaterBody m_water;
 
-  private final IWspmResultNode m_parent;
-
   public WspmResultWaterNode( final IWspmResultNode parent, final WspmWaterBody water )
   {
-    m_parent = parent;
+    super( parent );
     m_water = water;
   }
 
@@ -92,22 +90,10 @@ public class WspmResultWaterNode implements IWspmResultNode
     return m_water.getName();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getName()
-   */
   @Override
-  public String getName( )
+  protected String getInternalName( )
   {
     return m_water.getId();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getParent()
-   */
-  @Override
-  public IWspmResultNode getParent( )
-  {
-    return m_parent;
   }
 
   /**

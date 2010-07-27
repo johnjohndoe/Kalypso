@@ -50,12 +50,14 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 /**
  * @author Gernot Belger
  */
-public class WspmResultProjectNode implements IWspmResultNode
+public class WspmResultProjectNode extends AbstractWspmResultNode
 {
   private final TuhhWspmProject m_project;
 
   public WspmResultProjectNode( final TuhhWspmProject project )
   {
+    super( null );
+
     m_project = project;
   }
 
@@ -87,22 +89,10 @@ public class WspmResultProjectNode implements IWspmResultNode
     return m_project.getName();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getName()
-   */
   @Override
-  public String getName( )
+  protected String getInternalName( )
   {
     return m_project.getId();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getParent()
-   */
-  @Override
-  public IWspmResultNode getParent( )
-  {
-    return null;
   }
 
   /**
