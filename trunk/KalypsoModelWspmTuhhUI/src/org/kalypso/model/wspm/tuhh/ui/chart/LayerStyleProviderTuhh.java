@@ -66,10 +66,10 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
   {
     // TODO: read styles from *.kod file
     createPointMarkerStyles();
-    createCrossSectionSytles();
-    createRoughnessSytles();
-    createBridgeSytles();
-    createWeirSytles();
+    createCrossSectionStyles();
+    createRoughnessStyles();
+    createBridgeStyles();
+    createWeirStyles();
     createVegetationStyle();
     createWasserspiegel2dStyle();
     createWasserspiegelStyle();
@@ -78,13 +78,13 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
   private void createWasserspiegel2dStyle( )
   {
     final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_WASSERSPIEGEL2D + LINE, LineStyle.class ); //$NON-NLS-1$
-    ls.setColor( new RGB( 0, 0, 255 ) );
+    ls.setColor( new RGB( 153, 217, 234 ) );
   }
 
   private void createWasserspiegelStyle( )
   {
     final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_WASSERSPIEGEL + LINE, LineStyle.class ); //$NON-NLS-1$
-    ls.setColor( new RGB( 0, 0, 255 ) );
+    ls.setColor( new RGB( 153, 217, 234 ) );
   }
 
   private void createPointMarkerStyles( )
@@ -104,17 +104,17 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     addStyle( IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_BORDVOLL + LINE, lsB ); //$NON-NLS-1$
   }
 
-  private void createWeirSytles( )
+  private void createWeirStyles( )
   {
     final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
     final RGB col = markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
 
     final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_WEHR + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( col );
-   // addStyle( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + LINE, ls.copy() );
+    // addStyle( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + LINE, ls.copy() );
   }
 
-  private void createCrossSectionSytles( )
+  private void createCrossSectionStyles( )
   {
     final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_GELAENDE + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( new RGB( 255, 150, 0 ) );
@@ -125,7 +125,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + LINE, LineStyle.class ).setColor( new RGB( 0, 255, 0 ) ); //$NON-NLS-1$
   }
 
-  private void createBridgeSytles( )
+  private void createBridgeStyles( )
   {
     final ILineStyle lsO = getStyleFor( IWspmTuhhConstants.LAYER_BRUECKE + "_" +IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + LINE, LineStyle.class ); //$NON-NLS-1$
     lsO.setColor( new RGB( 0, 128, 0 ) );
@@ -135,7 +135,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     addStyle(IWspmTuhhConstants.LAYER_BRUECKE + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + LINE, lsU ); //$NON-NLS-1$
   }
 
-  private void createRoughnessSytles( )
+  private void createRoughnessStyles( )
   {
     final IPointStyle psKS = getStyleFor( IWspmTuhhConstants.LAYER_RAUHEIT + POINT, PointStyle.class ); //$NON-NLS-1$
     psKS.getStroke().setColor( new RGB( 0, 0, 0 ) );

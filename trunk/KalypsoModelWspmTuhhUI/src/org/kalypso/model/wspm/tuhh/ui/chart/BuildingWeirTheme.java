@@ -42,11 +42,12 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -90,8 +91,13 @@ public class BuildingWeirTheme extends AbstractProfilTheme
   public void removeYourself( )
   {
     final IProfil profil = getProfil();
+
+    final BuildingWehr building = WspmProfileHelper.getBuilding( profil, BuildingWehr.class );
+    if( building == null )
+      return;
+
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingWeirTheme.1" ), getProfil(), true ); //$NON-NLS-1$
-    operation.addChange( new ProfileObjectSet( profil, new IProfileObject[] {} ) );
+    operation.addChange( new ProfileObjectRemove( profil, building ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
     new ProfilOperationJob( operation ).schedule();
   }

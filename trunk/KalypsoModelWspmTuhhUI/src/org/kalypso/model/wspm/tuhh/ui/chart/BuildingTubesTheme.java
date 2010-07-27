@@ -43,8 +43,10 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.TubePanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -97,8 +99,13 @@ public class BuildingTubesTheme extends AbstractProfilTheme
   public void removeYourself( )
   {
     final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.1" ), getProfil(), true ); //$NON-NLS-1$
-    operation.addChange( new ProfileObjectSet( profil, null ) );
+
+    final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
+    if( building == null )
+      return;
+
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.1" ), profil, true ); //$NON-NLS-1$
+    operation.addChange( new ProfileObjectRemove( profil, building ) );
     new ProfilOperationJob( operation ).schedule();
   }
 

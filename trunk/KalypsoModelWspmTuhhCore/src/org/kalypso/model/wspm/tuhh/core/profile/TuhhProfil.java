@@ -78,6 +78,7 @@ public class TuhhProfil extends AbstractProfil
   {
     for( final IProfileObject object : profileObjects )
     {
+      // TODO: this restriction only exists for buildings! Other objects may occur several times...
       final IProfileObject[] objects = getProfileObjects( object.getClass() );
       for( final IProfileObject o : objects )
       {

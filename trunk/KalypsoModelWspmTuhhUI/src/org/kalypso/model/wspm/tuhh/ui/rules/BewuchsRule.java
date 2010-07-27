@@ -135,6 +135,9 @@ public class BewuchsRule extends AbstractValidatorRule
         }
         final int lastIndex = leftIndex > 0 ? leftIndex - 1 : leftIndex;
 
+        // FIXME: use WspmProfileHelper#getBuilding( getProfil(), IProfileBuilding.class ) in order to retreive
+        // buildings! Same for all other validators
+
         if( ArrayUtils.isEmpty( profil.getProfileObjects( AbstractObservationBuilding.class ) ) )
         {
           final Double ax1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, points[lastIndex] );
