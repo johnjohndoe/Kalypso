@@ -184,7 +184,7 @@ public class ResultManager implements ISimulation1D2DConstants
             ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[ lListFilesToZip.size() ] ), new File( m_resultDirSWAN.getURL().toURI() ) );
           }
           catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
           }
         }
         else
