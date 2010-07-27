@@ -49,15 +49,14 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 /**
  * @author Gernot Belger
  */
-public class WspmResultReachNode implements IWspmResultNode
+public class WspmResultReachNode extends AbstractWspmResultNode
 {
-  private final IWspmResultNode m_parent;
-
   private final TuhhReach m_reach;
 
   public WspmResultReachNode( final IWspmResultNode parent, final TuhhReach reach )
   {
-    m_parent = parent;
+    super( parent );
+
     m_reach = reach;
   }
 
@@ -85,22 +84,10 @@ public class WspmResultReachNode implements IWspmResultNode
     return m_reach.getName();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getName()
-   */
   @Override
-  public String getName( )
+  protected String getInternalName( )
   {
     return m_reach.getId();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getParent()
-   */
-  @Override
-  public IWspmResultNode getParent( )
-  {
-    return m_parent;
   }
 
   /**

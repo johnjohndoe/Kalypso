@@ -51,15 +51,15 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 /**
  * @author Gernot Belger
  */
-public class WspmResultContainer implements IWspmResult
+public class WspmResultContainer extends AbstractWspmResultNode implements IWspmResult
 {
-  private final WspmResultCalculationNode m_parent;
-
   private final IContainer m_resultFolder;
+
+  private WspmResultLengthSection m_lengthSection;
 
   public WspmResultContainer( final WspmResultCalculationNode parent, final IContainer resultFolder )
   {
-    m_parent = parent;
+    super( parent );
     m_resultFolder = resultFolder;
   }
 
@@ -81,22 +81,10 @@ public class WspmResultContainer implements IWspmResult
     return m_resultFolder.getName();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getName()
-   */
   @Override
-  public String getName( )
+  protected String getInternalName( )
   {
     return m_resultFolder.getName();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getParent()
-   */
-  @Override
-  public IWspmResultNode getParent( )
-  {
-    return m_parent;
   }
 
   /**
@@ -105,8 +93,19 @@ public class WspmResultContainer implements IWspmResult
   @Override
   public WspmResultLengthSection getLengthSection( )
   {
-    final IFile lsFile = m_resultFolder.getFile( new Path( IWspmTuhhConstants.FOLDER_RESULT_DATA ).append( IWspmTuhhConstants.FILE_RESULT_LENGTH_SECTION_GML ) );
-    return WspmResultLengthSection.create( lsFile, new GMLXPath( IObservation.QNAME_OBSERVATION ) );
+    checkLengthSection();
+
+    return m_lengthSection;
+  }
+
+  private void checkLengthSection( )
+  {
+    // Maybe we should check, if the file was modified since...
+    if( m_lengthSection == null )
+    {
+      final IFile lsFile = m_resultFolder.getFile( new Path( IWspmTuhhConstants.FOLDER_RESULT_DATA ).append( IWspmTuhhConstants.FILE_RESULT_LENGTH_SECTION_GML ) );
+      m_lengthSection = WspmResultLengthSection.create( lsFile, new GMLXPath( IObservation.QNAME_OBSERVATION ) );
+    }
   }
 
   /**
@@ -124,9 +123,10 @@ public class WspmResultContainer implements IWspmResult
   @Override
   public TuhhCalculation getCalculation( )
   {
-    if( m_parent == null )
+    final IWspmResultNode parent = getParent();
+    if( !(parent instanceof WspmResultCalculationNode) )
       return null;
 
-    return m_parent.getCalculation();
+    return ((WspmResultCalculationNode) parent).getCalculation();
   }
 }

@@ -38,76 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.results;
+package org.kalypso.model.wspm.tuhh.ui.chart;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
 
 /**
  * @author Gernot Belger
  */
-public class WspmResultFixationNode extends AbstractWspmResultNode implements IWspmResult
+public class TuhhResultDataElementLabelProvider extends LabelProvider
 {
-  private final Feature m_fixation;
+  private final WspmResultLabelProvider m_delegate = new WspmResultLabelProvider( null );
 
-  public WspmResultFixationNode( final IWspmResultNode parent, final Feature fixation )
+  /**
+   * @see org.eclipse.jface.viewers.BaseLabelProvider#dispose()
+   */
+  @Override
+  public void dispose( )
   {
-    super( parent );
+    m_delegate.dispose();
 
-    m_fixation = fixation;
+    super.dispose();
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getChildResults()
+   * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public IWspmResultNode[] getChildResults( )
+  public String getText( final Object element )
   {
-    return new IWspmResultNode[0];
+    final IWspmResultNode node = TuhhResultDataElementContentProvider.asResultNode( element );
+    if( node == null )
+      return "No results available...";
+
+    return m_delegate.getText( node );
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getLabel()
+   * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
    */
   @Override
-  public String getLabel( )
+  public Image getImage( final Object element )
   {
-    return m_fixation.getName();
-  }
-
-  @Override
-  protected String getInternalName( )
-  {
-    // id of feature would be nicer
-    return m_fixation.getName();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResult#getLengthSection()
-   */
-  @Override
-  public WspmResultLengthSection getLengthSection( )
-  {
-    return WspmResultLengthSection.create( m_fixation );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getObject()
-   */
-  @Override
-  public Object getObject( )
-  {
-    return m_fixation;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResult#getCalculation()
-   */
-  @Override
-  public TuhhCalculation getCalculation( )
-  {
-    throw new NotImplementedException();
+    final IWspmResultNode node = TuhhResultDataElementContentProvider.asResultNode( element );
+    return m_delegate.getImage( node );
   }
 
 }

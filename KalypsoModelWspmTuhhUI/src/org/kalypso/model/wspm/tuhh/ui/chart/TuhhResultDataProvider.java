@@ -1,78 +1,161 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.kalypso.contribs.java.util.Arrays;
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.ui.view.chart.layer.IWspLayerData;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author kimwerner
  */
 public final class TuhhResultDataProvider implements IWspLayerData
 {
-  private final IProfil m_profil;
+  private static final String SETTINGS_ACTIVE = "activeIds"; //$NON-NLS-1$ 
 
   private final IWspmResultNode m_results;
 
-  private final Set<IWspmResult> m_activeNames = new LinkedHashSet<IWspmResult>();
+  private final Set<TuhhResultDataElement> m_activeElements = new LinkedHashSet<TuhhResultDataElement>();
 
-  public TuhhResultDataProvider( final IProfil profil, IWspmResultNode results )
+  private final IDialogSettings m_settings;
+
+  public TuhhResultDataProvider( final IWspmResultNode results )
   {
-    m_profil = profil;
     m_results = results;
+    m_settings = PluginUtilities.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
+    initResults( m_results );
   }
 
   @Override
-  public double searchValue( Object name, BigDecimal station ) throws Exception
+  public double searchValue( final Object element, final BigDecimal station ) throws Exception
   {
-    final IProfilPointMarker[] marker = m_profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    return Math.max( ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, marker[0].getPoint() ), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, marker[1].getPoint() ) );
+    if( element instanceof TuhhResultDataElement )
+    {
+      final TuhhResultDataElement wspElement = (TuhhResultDataElement) element;
+      return wspElement.getValue( station );
+    }
+
+    return Double.NaN;
   }
 
   @Override
-  public IWspmResult[] getNames( ) throws Exception
+  public Object getInput( ) throws Exception
   {
-    return findResults( m_results );
+    return m_results;
   }
 
-  private static IWspmResult[] findResults( IWspmResultNode node )
+  private IWspmResult[] initResults( final IWspmResultNode node )
   {
     final Collection<IWspmResult> results = new ArrayList<IWspmResult>();
 
     if( node instanceof IWspmResult )
-      results.add( (IWspmResult) node );
+    {
+      final IWspmResult resultNode = (IWspmResult) node;
+      initActive( resultNode );
+      results.add( resultNode );
+    }
 
     final IWspmResultNode[] childNodes = node.getChildResults();
     for( final IWspmResultNode child : childNodes )
     {
-      final IWspmResult[] childResults = findResults( child );
-      results.addAll( java.util.Arrays.asList( childResults ) );
+      final IWspmResult[] childResults = initResults( child );
+      for( final IWspmResult resultNode : childResults )
+      {
+        results.add( resultNode );
+        initActive( resultNode );
+      }
     }
 
     return results.toArray( new IWspmResult[results.size()] );
   }
 
-  @Override
-  public String[] getActiveNames( ) throws Exception
+  private void initActive( final IWspmResult resultNode )
   {
-    return m_activeNames.toArray( new String[m_activeNames.size()] );
+    final String id = resultNode.getName();
+    final String settingsName = getSettingsName();
+    final IDialogSettings section = PluginUtilities.getSection( m_settings, settingsName );
+    final boolean isActive = section.getBoolean( id );
+    if( isActive )
+      m_activeElements.add( new TuhhResultDataElement( resultNode ) );
   }
 
   @Override
-  public void activateNames( Object[] names ) throws Exception
+  public TuhhResultDataElement[] getActiveElements( ) throws Exception
   {
-    IWspmResult[] results = Arrays.castArray( names, new IWspmResult[names.length] );
-    m_activeNames.addAll( java.util.Arrays.asList( results ) );
+    return m_activeElements.toArray( new TuhhResultDataElement[m_activeElements.size()] );
+  }
+
+  @Override
+  public void activateElements( final Object[] elements ) throws Exception
+  {
+    m_activeElements.clear();
+
+    for( final Object element : elements )
+    {
+      if( element instanceof IWspmResultNode )
+        m_activeElements.add( new TuhhResultDataElement( (IWspmResultNode) element ) );
+      else if( element instanceof TuhhResultDataElement )
+        m_activeElements.add( (TuhhResultDataElement) element );
+    }
+
+    if( m_settings == null )
+      return;
+
+    /* Recreate the sub-section */
+    final String settingsBase = getSettingsName();
+    final IDialogSettings section = m_settings.addNewSection( settingsBase );
+    for( final TuhhResultDataElement resultNode : m_activeElements )
+      section.put( resultNode.getId(), true );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.layer.IWspLayerData#createLabelProvider()
+   */
+  @Override
+  public ILabelProvider createLabelProvider( )
+  {
+    return new TuhhResultDataElementLabelProvider();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.layer.IWspLayerData#createContentProvider()
+   */
+  @Override
+  public ITreeContentProvider createContentProvider( )
+  {
+    return new TuhhResultDataElementContentProvider();
+  }
+
+  /**
+   * We use the gml context as base name for the settings. That means, we remember the settings per wspm-model.
+   */
+  private String getSettingsName( )
+  {
+    final Object object = m_results.getObject();
+    if( object instanceof Feature )
+    {
+      final Feature feature = (Feature) object;
+      final GMLWorkspace workspace = feature.getWorkspace();
+      if( workspace != null )
+      {
+        final URL context = workspace.getContext();
+        if( context != null )
+          return SETTINGS_ACTIVE + context.toExternalForm();
+      }
+    }
+
+    return SETTINGS_ACTIVE;
   }
 }
