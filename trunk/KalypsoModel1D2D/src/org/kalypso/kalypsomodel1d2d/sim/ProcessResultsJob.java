@@ -68,6 +68,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
@@ -294,12 +295,14 @@ public class ProcessResultsJob extends Job
         {
           lResFile = m_inputResFileSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
         }
-
+        KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( "Reading SWAN Result file: " + lResFile ) );
         // only read the *.mat files
         if( lResFile.getName().getFriendlyURI().endsWith( ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ) )
         {
           lSWANResultsReader = new SWANResultsReader( lResFile );
-          m_mapResults = lSWANResultsReader.readMatResultsFile( SWANDataConverterHelper.getTimeStringFormatedForSWANOutput( m_stepDate ) );
+          String timeStringFormatedForSWANOutput = SWANDataConverterHelper.getTimeStringFormatedForSWANOutput( m_stepDate );
+          m_mapResults = lSWANResultsReader.readMatResultsFile( timeStringFormatedForSWANOutput );
+          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( "read data for: " + timeStringFormatedForSWANOutput ) );
         }
       }
       catch( final Throwable e )
@@ -322,14 +325,14 @@ public class ProcessResultsJob extends Job
 
     try
     {
-      /* GMLWorkspace f�r Ergebnisse anlegen */
+      /* GMLWorkspace für Ergebnisse anlegen */
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, gmlZipResultFile.toURI().toURL(), null );
       final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" ); //$NON-NLS-1$
 
       final String componentID = IWspmDictionaryConstants.LS_COMPONENT_STATION;
       final LengthSectionHandler1d lsHandler = new LengthSectionHandler1d( componentID, lsObsUrl );
 
-      /* .2d Datei lesen und GML f�llen */
+      /* .2d Datei lesen und GML füllen */
       final RMA10S2GmlConv conv = new RMA10S2GmlConv();
 
       final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
