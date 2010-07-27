@@ -415,7 +415,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     else
       RunnableContextHelper.execute( container, true, true, calculationOperation );
 
-    if( m_simulationStatusRMA.matches( IStatus.CANCEL ) )
+    if( m_simulationStatusRMA == null || m_simulationStatusRMA.matches( IStatus.CANCEL ) )
     {
       /**
        * fixes the bug #242, in actual situation works only with local jobs and was tested only on windows machine.
@@ -447,7 +447,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
       setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.17" ) ); //$NON-NLS-1$
 
     // status messages of SWAN
-    if( m_simulationStatusSWAN.matches( IStatus.CANCEL ) )
+    if( m_simulationStatusSWAN == null || m_simulationStatusSWAN.matches( IStatus.CANCEL ) )
     {
       /**
        * fixes the bug #242, in actual situation works only with local jobs and was tested only on windows machine.
