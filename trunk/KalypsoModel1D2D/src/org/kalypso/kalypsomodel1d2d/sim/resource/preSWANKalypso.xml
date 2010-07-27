@@ -6,6 +6,8 @@
 	<input id="scenarioResultMeta" type="xs:anyURI" description="Scenario Result Meta gml-file" />
 	<input id="simulationPathRMA" type="xs:string" description="Path to output of RMA" optional="true" />
 	<input id="wind" type="xs:anyURI" description="wind relationships gml-file" optional="true" />
+	<input id="additionalData" type="xs:anyURI" description="additional coordinates specified as simple txt-file" optional="true" />
+	<input id="windBinaries" type="xs:anyURI" description="wind binaries as zip-file" optional="true" />
 	<input id="calculationUnitID" type="xs:string" description="ID of the (sub)-calculation unit to export" optional="true" />
 	<input id="hotFile" type="xs:anyURI" description="hot start results file" optional="true" />
 	
