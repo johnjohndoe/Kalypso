@@ -54,7 +54,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectAdd;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
@@ -180,7 +180,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
     {
       final IProfilChange[] changes = new IProfilChange[1];
-      changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { new BuildingBruecke( profil ) } );
+      changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { new BuildingBruecke( profil ) } );
 
       final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.4" ), profil, changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
@@ -188,7 +188,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
       final IProfilChange[] changes = new IProfilChange[1];
-      changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { new BuildingWehr( profil ) } );
+      changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { new BuildingWehr( profil ) } );
 
       final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.5" ), profil, changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
@@ -197,7 +197,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     {
       final IProfileObject building = new BuildingKreis( profil );
       final IProfilChange[] changes = new IProfilChange[1];
-      changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
+      changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { building } );
       final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.6" ), profil, changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
     }
@@ -275,16 +275,11 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   public IProfilChartLayer[] createLayers( final IProfil profil, final Object result )
   {
     final List<IProfilChartLayer> layerToAdd = new ArrayList<IProfilChartLayer>();
-    layerToAdd.add( createWspLayer( profil, (IWspmResultNode) result ) );
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) != null || profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
-    {
       layerToAdd.add( createLayer( profil, IWspmTuhhConstants.LAYER_RAUHEIT ) );
-    }
 
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) != null )
-    {
       layerToAdd.add( createLayer( profil, IWspmTuhhConstants.LAYER_BEWUCHS ) );
-    }
 
     // TODO IProfileObjects now returned as list from IProfile, but we can only handle one IProfileObject (WSPM can't
     // handle more!)
@@ -311,15 +306,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     }
 
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) != null )
-    {
-
       layerToAdd.add( createLayer( profil, IWspmConstants.LAYER_GEOKOORDINATEN ) );
-    }
 
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) != null )
-    {
       layerToAdd.add( createLayer( profil, IWspmConstants.LAYER_GELAENDE ) );
-    }
 
     final IComponent[] pointProperties = profil.getPointProperties();
     for( final IComponent property : pointProperties )
@@ -343,15 +333,16 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     /* Prune 'null's returned from createLayer-subroutines */
     layerToAdd.removeAll( Collections.singleton( null ) );
 
+    layerToAdd.add( createWspLayer( profil, (IWspmResultNode) result ) );
+
     return layerToAdd.toArray( new IProfilChartLayer[layerToAdd.size()] );
   }
 
   private IProfilChartLayer createWspLayer( final IProfil profil, final IWspmResultNode result )
   {
-    final IWspLayerData wspLayerData = new TuhhResultDataProvider( profil, result );
-    final IProfilChartLayer wsp = new WspLayer( profil, IWspmConstants.LAYER_WASSERSPIEGEL, m_lsp, wspLayerData, true );
-    wsp.setCoordinateMapper( new CoordinateMapper( m_domainAxis, m_targetAxisLeft ) );
-    return wsp;
+    final CoordinateMapper cm = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
+    final IWspLayerData wspLayerData = new TuhhResultDataProvider( result );
+    return new WspLayer( profil, IWspmTuhhConstants.LAYER_WASSERSPIEGEL, m_lsp, wspLayerData, false, cm );
   }
 
   final void setAxisLabel( final IProfil profil )
