@@ -326,16 +326,15 @@ public class Gml2SWANConv implements INativeIDProvider
       e.printStackTrace();
       return false;
     }
-    if( lContiLineAct != null && lContiLineAct instanceof IContinuityLine2D && m_calculationUnit.contains( lContiLineAct ) )
+    if( lContiLineAct != null && lContiLineAct instanceof IContinuityLine2D && m_calculationUnit.contains( lContiLineAct ) && isSWANBoundaryCondOnContiLine( lContiLineAct ) )
     {
-
       int lIntCondition;
       if( m_mapContiLineToConditions.get( lContiLineAct ) == null )
       {
         lIntCondition = pIntContiLineId;
         m_intGlobalContiId = pIntContiLineId + 1;
         m_mapContiLineToConditions.put( lContiLineAct, lIntCondition );
-        if( isSWANBoundaryCondOnContiLine( lContiLineAct ) )
+//        if( isSWANBoundaryCondOnContiLine( lContiLineAct ) )
         {
           m_mapContiLineWithSWANBoundaryToCondition.put( lContiLineAct, lIntCondition );
         }
