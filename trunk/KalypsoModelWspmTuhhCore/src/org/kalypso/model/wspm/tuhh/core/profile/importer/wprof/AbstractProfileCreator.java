@@ -137,7 +137,8 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
 
   private IProfileFeature createNewProfile( final TuhhWspmProject project ) throws CoreException
   {
-    final IWProfPoint anyPoint = m_data.getProfilePolygones().getAnyPoint();
+    final ProfilePolygones profilePolygones = m_data.getProfilePolygones();
+    final IWProfPoint anyPoint = profilePolygones.getAnyPoint();
     if( anyPoint == null )
       return null;
 
@@ -147,7 +148,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     {
       final String riverId = anyPoint.getRiverId();
       final String riverName = anyPoint.getRiverName();
-      final URL[] photoUrls = anyPoint.getPhotos();
+      final URL[] photoUrls = profilePolygones.getPhotoUrls();
 
       final IProfileFeature profileFeature = project.createNewProfile( riverName, true );
       profileFeature.getWater().setRefNr( riverId );
