@@ -43,11 +43,13 @@ package org.kalypso.model.wspm.tuhh.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointMarkerWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 
 /**
  * @author Dirk Kuch
@@ -122,6 +124,19 @@ public class WspmProfileHelper
     final double distance = Math.abs( p1.getBreite() - p2.getBreite() );
 
     return p1.getBreite() + distance / 2.0;
+  }
+
+  public static <T extends IProfileBuilding> T getBuilding( final IProfil profile, final Class<T> buildingType )
+  {
+    final IProfileBuilding[] profileObjects = profile.getProfileObjects( IProfileBuilding.class );
+    if( ArrayUtils.isEmpty( profileObjects ) )
+      return null;
+
+    final IProfileBuilding building = profileObjects[0];
+    if( buildingType.isInstance( building ) )
+      return buildingType.cast( building );
+
+    return null;
   }
 
 }
