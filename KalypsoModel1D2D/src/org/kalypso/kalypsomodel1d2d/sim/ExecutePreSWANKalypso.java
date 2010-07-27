@@ -40,10 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,19 +56,26 @@ import java.util.Map;
 import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
+import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem;
+import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider;
+import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
 import org.kalypso.simulation.core.simspec.Modeldata;
@@ -71,6 +83,7 @@ import org.kalypso.simulation.core.util.SimulationUtilitites;
 
 /**
  * @author kurzbach
+ * @author ig
  * 
  */
 public class ExecutePreSWANKalypso
@@ -89,10 +102,16 @@ public class ExecutePreSWANKalypso
 
   private boolean m_boolDoHotStart = false;
 
+  private URL m_urlAdditionalCoordFile;
+
+  private IContainer m_scenarioFolder;
+
+  private IWindModel m_windRelationshipModel;
+
   /**
    * Create execute request to PreSWANKalypso WPS with no restart infos and default calcUnit defined in control model
    */
-  public ExecutePreSWANKalypso( final String serviceEndpoint )
+  public ExecutePreSWANKalypso( final String serviceEndpoint ) throws CoreException
   {
     this( serviceEndpoint, null );
   }
@@ -100,7 +119,7 @@ public class ExecutePreSWANKalypso
   /**
    * Create execute request to PreRMAKalypso WPS with given restart infos and default calcUnit defined in control model
    */
-  public ExecutePreSWANKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos )
+  public ExecutePreSWANKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos ) throws CoreException
   {
     this( serviceEndpoint, restartInfos, null );
   }
@@ -108,7 +127,7 @@ public class ExecutePreSWANKalypso
   /**
    * Create execute request to PreSWANKalypso WPS with no restart infos and default calcUnit defined in control model
    */
-  public ExecutePreSWANKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos, final String calcUnitID )
+  public ExecutePreSWANKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos, final String calcUnitID ) throws CoreException
   {
     this( serviceEndpoint, restartInfos, calcUnitID, null );
   }
@@ -116,8 +135,24 @@ public class ExecutePreSWANKalypso
   /**
    * Create execute request to PreRMAKalypso WPS with given restart infos and calcUnit
    */
-  public ExecutePreSWANKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos, final String calcUnitID, final URI rmaCalcPath )
+  public ExecutePreSWANKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos, final String calcUnitID, final URI rmaCalcPath ) throws CoreException
   {
+    final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+    m_scenarioFolder = caseDataProvider.getScenarioFolder();
+    final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class.getName(), IControlModelGroup.class );
+    final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
+    
+    m_boolDoHotStart = controlModel.getINITialValuesSWAN() == 3;
+    try{
+      m_urlAdditionalCoordFile = new URL( controlModel.getInputFileAdditionalCoordSWAN() );
+    }
+    catch (Exception e) {
+      m_urlAdditionalCoordFile = null;
+    }
+    
+    m_windRelationshipModel = caseDataProvider.getModel( IWindModel.class.getName(), IWindModel.class );
+    
+//    m_boolCopyWindBinaries = !controlModel.isConstantWindSWAN() &&  
     m_serviceEndpoint = serviceEndpoint;
     m_rmaOutputPath = rmaCalcPath;
     m_calcUnitID = calcUnitID;
@@ -135,13 +170,7 @@ public class ExecutePreSWANKalypso
     try
     {
       // for getting WPS input list relative to scenario
-      final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
-      final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class.getName(), IControlModelGroup.class );
-      final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
-
-      m_boolDoHotStart = controlModel.getINITialValuesSWAN() == 3;
-      final SimulationDelegate delegate = new SimulationDelegate( SWANKalypsoSimulation.ID, scenarioFolder, m_modelInput );
+      final SimulationDelegate delegate = new SimulationDelegate( SWANKalypsoSimulation.ID, m_scenarioFolder, m_modelInput );
       delegate.init();
 
       final ProcessDescriptionType processDescription = m_wpsRequest.getProcessDescription( progress.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) );
@@ -200,7 +229,52 @@ public class ExecutePreSWANKalypso
     {
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+    
+    if( m_serviceEndpoint.equals( WPSRequest.SERVICE_LOCAL ) ){
+      if( m_urlAdditionalCoordFile != null ){
+        inputs.put( PreSWANKalypso.ADDITIONAL_DATA_FILE, m_urlAdditionalCoordFile.toExternalForm() );
+      }
+    }
+    else
+    {
+      List<File> lListFilesToZip = new ArrayList<File>();
+      String additionalDataFileName = "models/native_tem/" + PreSWANKalypso.ADDITIONAL_DATA_FILE + ".zip"; //$NON-NLS-1$ //$NON-NLS-2$
+      File zipOutput = new File( additionalDataFileName );
+      if( zipOutput.exists() )
+      {
+        zipOutput.delete();
+      }
+      if( m_urlAdditionalCoordFile != null )
+      {
+        try
+        {
+          lListFilesToZip.add( new File( m_urlAdditionalCoordFile.toURI() ) );
+          inputs.put( PreSWANKalypso.ADDITIONAL_DATA_FILE, additionalDataFileName );
+        }
+        catch( Exception e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
 
+      getWindBinaryFilesAsList( lListFilesToZip, m_windRelationshipModel );
+
+      if( lListFilesToZip != null && lListFilesToZip.size() > 0 )
+      {
+        try
+        {
+          ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[lListFilesToZip.size()] ), new File( "models/native_tem/" ) );
+        }
+        catch( IOException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
+    
+    
     // TODO: implement selection if it will be needed for restart files... write now it is just taken from last run of
     // this calc unit
     if( m_boolDoHotStart )
@@ -224,6 +298,27 @@ public class ExecutePreSWANKalypso
     // here the outputs are ignored, we will only use the Modeldata for inputs
     final Map<String, String> outputs = Collections.emptyMap();
     return SimulationUtilitites.createModelData( PreSWANKalypso.ID, inputs, true, outputs, true );
+  }
+
+  private void getWindBinaryFilesAsList( final List<File> listFilesToPutIn, final IWindModel windRelationshipModel )
+  {
+    List<IWindDataModelSystem> lListSystems = windRelationshipModel.getWindDataModelSystems();
+    
+    for( final IWindDataModelSystem lWindSystem : lListSystems )
+    {
+      for( final Object lWindDataObject : lWindSystem.getWindDataModels() )
+      {
+        IWindDataProvider lWindData = (IWindDataProvider) lWindDataObject;
+        try
+        {
+          listFilesToPutIn.add( new File( lWindData.getDataFileURL().toURI() ) );
+        }
+        catch( URISyntaxException e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 
   private IStatus checkResults( final Map<String, ComplexValueReference> references )

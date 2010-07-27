@@ -2,14 +2,18 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
@@ -22,8 +26,10 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverterSWAN;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2SWANConv;
@@ -52,6 +58,7 @@ import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Convert from GML to SWAN-Kalypso format
@@ -74,6 +81,8 @@ public class PreSWANKalypso implements ISimulation
 
   public static final String HOT_START_FILE = "hotFile"; //$NON-NLS-1$
 
+  public static final String ADDITIONAL_DATA_FILE = "additionalData"; //$NON-NLS-1$
+
   private IGeoLog m_log;
 
   private IControlModel1D2D m_controlModel;
@@ -95,6 +104,8 @@ public class PreSWANKalypso implements ISimulation
   private Map<GM_Position, Integer> m_mapGMPositions;
 
   private IScenarioResultMeta m_scenarioMetaData;
+
+  private URL m_additionalDataURL = null;
 
   @Override
   public URL getSpezifikation( )
@@ -179,7 +190,7 @@ public class PreSWANKalypso implements ISimulation
         final GMLWorkspace resultMetaWorkspace = GmlSerializer.createGMLWorkspace( resultMetaURL, null );
         m_scenarioMetaData = (IScenarioResultMeta) resultMetaWorkspace.getRootFeature().getAdapter( IScenarioResultMeta.class );
       }
-      
+
       try
       {
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
@@ -194,7 +205,9 @@ public class PreSWANKalypso implements ISimulation
         final GMLWorkspace windWorkspace = GmlSerializer.createGMLWorkspace( windURL, null );
         m_windRelationshipModel = (IWindModel) windWorkspace.getRootFeature().getAdapter( IWindModel.class );
       }
-      
+
+      m_additionalDataURL = (URL) inputProvider.getInputForID( ADDITIONAL_DATA_FILE );
+
       final FileObject lFileObjWorkingDir = manager.toFileObject( tmpdir );
 
       writeSWANFiles( lFileObjWorkingDir, lFileObjPreResultsDir, progressMonitor );
@@ -296,6 +309,56 @@ public class PreSWANKalypso implements ISimulation
     /* .2d Mesh */
     final Gml2SWANConv converter2D = new Gml2SWANConv( m_discretisationModel, m_flowRelationshipModel, m_controlModel.getCalculationUnit(), m_log );
 
+    URL lUrlFileAdditionalCoord = m_additionalDataURL;
+    if( lUrlFileAdditionalCoord == null )
+    {
+      try
+      {
+        lUrlFileAdditionalCoord = new URL( m_controlModel.getInputFileAdditionalCoordSWAN() );
+      }
+      catch( MalformedURLException e )
+      {
+        // cannot interpret given URL or file
+      }
+    }
+    FileObject lAdditionalCoordFile = null;
+    List<GM_Position> lListAdditionalCoord = null;
+    if( lUrlFileAdditionalCoord != null && !"".equals( lUrlFileAdditionalCoord ) )
+    {
+      if( lUrlFileAdditionalCoord.getFile().endsWith( ".zip" ) )
+      {
+        try
+        {
+          lListAdditionalCoord = readAdditionalCoordinates( ZipUtilities.getInputStreamForSingleFile( lUrlFileAdditionalCoord, lUrlFileAdditionalCoord.getQuery() ) );
+        }
+        catch( Exception e )
+        {
+        }
+      }
+      else
+      {
+        try
+        {
+          if( lAdditionalCoordFile == null )
+          {
+            lListAdditionalCoord = readAdditionalCoordinates( lUrlFileAdditionalCoord.openStream() );
+          }
+          else
+          {
+            lListAdditionalCoord = readAdditionalCoordinates( lAdditionalCoordFile.getContent().getInputStream() );
+          }
+          converter2D.setListAdditionalOuputCoord( lListAdditionalCoord );
+        }
+        catch( IOException e )
+        {
+          // cannot interpret given URL or file
+          // e.printStackTrace();
+        }
+        catch( Exception e )
+        {
+        }
+      }
+    }
     m_mapGMPositions = converter2D.writeSWANModel( lModelNodesFile.getContent().getOutputStream(), lModelElementsFile.getContent().getOutputStream(), lModelBotFile.getContent().getOutputStream(), lModelPosFile.getContent().getOutputStream() );
     m_doubleShiftX = converter2D.getDoubleGlobalMinX();
     m_doubleShiftY = converter2D.getDoubleGlobalMinY();
@@ -305,6 +368,34 @@ public class PreSWANKalypso implements ISimulation
     lModelElementsFile.close();
     lModelBotFile.close();
     lModelPosFile.close();
+  }
+
+  private List<GM_Position> readAdditionalCoordinates( final InputStream lAdditionalCoordInputStream )
+  {
+    List<GM_Position> lListPositions = new ArrayList<GM_Position>();
+    try
+    {
+      Scanner scannerFile = new Scanner( lAdditionalCoordInputStream );
+      while( scannerFile.hasNextLine() )
+      {
+        String lStrNextLine = scannerFile.nextLine();
+        Scanner scannerLine = new Scanner( lStrNextLine );
+        scannerLine.useDelimiter( " " ); //$NON-NLS-1$
+        String lStrX = scannerLine.next();
+        String lStrY = scannerLine.next();
+        double doubleX = NumberUtils.parseQuietDouble( lStrX );
+        double doubleY = NumberUtils.parseQuietDouble( lStrY );
+        scannerLine.close();
+        GM_Position lPosition = GeometryFactory.createGM_Position( doubleX, doubleY );
+        lListPositions.add( lPosition );
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+    return lListPositions;
   }
 
   private void writeSWANFiles( final FileObject pFileObjWorkingDir, final FileObject pFileObjPreResultsDir, final IProgressMonitor monitor ) throws CoreException
