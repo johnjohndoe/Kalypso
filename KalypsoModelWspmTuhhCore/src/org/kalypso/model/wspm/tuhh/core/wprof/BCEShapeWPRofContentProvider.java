@@ -252,6 +252,16 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     }
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#hasPhotos()
+   */
+  @Override
+  public boolean hasPhotos( )
+  {
+    final String[] imageNames = getImageNames();
+    return imageNames.length > 0;
+  }
+
   private String[] getPhotoNames( final File photoDir )
   {
     final String[] imageNames = getImageNames();
