@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.panel;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -70,13 +69,13 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -144,13 +143,9 @@ public class TubePanel extends AbstractProfilView
           final double value = NumberUtils.parseQuietDouble( m_text.getText() );
           if( !Double.isNaN( value ) )
           {
-            final IProfil profil = getProfil();
-
-            final IProfileBuilding[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
-            if( ArrayUtils.isEmpty( objects ) )
+            final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
+            if( building == null )
               return;
-
-            final IProfileBuilding building = objects[0];
 
             final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
             if( val == value )
@@ -171,11 +166,9 @@ public class TubePanel extends AbstractProfilView
       if( m_text == null || m_text.isDisposed() )
         return;
 
-      final IProfileBuilding[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
-      if( ArrayUtils.isEmpty( objects ) )
+      final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
+      if( building == null )
         return;
-
-      final IProfileBuilding building = objects[0];
 
       final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
       m_text.setText( val.toString() );
@@ -190,7 +183,6 @@ public class TubePanel extends AbstractProfilView
     }
   }
 
-  @SuppressWarnings("finally")
   protected String getLabel( final IComponent property )
   {
     String label = property.getName();
@@ -200,22 +192,27 @@ public class TubePanel extends AbstractProfilView
 // TUHH Hack for tube cross section TRAPEZ,EI,MAUL,KREIS
       if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
       {
-        final String buildingId = getProfil().getProfileObjects( AbstractObservationBuilding.class )[0].getId();
+        final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
+        if( building != null )
+        {
+          final String buildingId = building.getId();
 
-        if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( buildingId ) )
-          label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.1" ); //$NON-NLS-1$
-        else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( buildingId ) )
-          label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.2" ); //$NON-NLS-1$
-        else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( buildingId ) )
-          label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.3" ); //$NON-NLS-1$
-        else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( buildingId ) )
-          label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.4" ); //$NON-NLS-1$
+          if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( buildingId ) )
+            label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.1" ); //$NON-NLS-1$
+          else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( buildingId ) )
+            label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.2" ); //$NON-NLS-1$
+          else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( buildingId ) )
+            label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.3" ); //$NON-NLS-1$
+          else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( buildingId ) )
+            label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.4" ); //$NON-NLS-1$
+        }
       }
     }
     finally
     {
-      return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.5", label, ComponentUtilities.getComponentUnitLabel( property ) ); //$NON-NLS-1$
     }
+
+    return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.5", label, ComponentUtilities.getComponentUnitLabel( property ) ); //$NON-NLS-1$
   }
 
   /**
@@ -256,8 +253,8 @@ public class TubePanel extends AbstractProfilView
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
         final IProfileBuilding tube = (IProfileBuilding) selection.getFirstElement();
-        final IProfileBuilding old = getProfil().getProfileObjects( AbstractObservationBuilding.class )[0];
 
+        final IProfileBuilding old = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
         if( tube != null && !tube.getId().equals( old.getId() ) )
         {
           final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.8" ), getProfil(), true ); //$NON-NLS-1$
@@ -269,7 +266,6 @@ public class TubePanel extends AbstractProfilView
               operation.addChange( new ProfileObjectEdit( tube, cmp, old.getValue( oldCmp ) ) );
           }
           new ProfilOperationJob( operation ).schedule();
-
         }
       }
     } );
@@ -292,27 +288,21 @@ public class TubePanel extends AbstractProfilView
 
     m_lines = new ArrayList<PropertyLine>( 8 );
 
-    final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
-    if( ArrayUtils.isEmpty( objects ) )
+    final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
+    if( building == null )
       return;
 
-    final IProfileObject building = objects[0];
     for( final IComponent property : building.getObjectProperties() )
-    {
       m_lines.add( new PropertyLine( m_toolkit, m_propPanel, property ) );
-    }
 
     m_propPanel.layout();
   }
 
   protected void updateControls( )
   {
-
-    final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
-    if( ArrayUtils.isEmpty( objects ) )
+    final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
+    if( building == null )
       return;
-
-    final IProfileObject building = objects[0];
 
     for( final IProfileObject tube : m_tubes )
     {
@@ -321,11 +311,7 @@ public class TubePanel extends AbstractProfilView
     }
 
     for( final PropertyLine line : m_lines )
-    {
       line.updateValue();
-    }
-
-    // m_propPanel.layout();
   }
 
   @Override
