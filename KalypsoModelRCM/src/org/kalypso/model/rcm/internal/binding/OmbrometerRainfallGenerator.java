@@ -92,7 +92,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * Implementation that generates rainfall from ombrometer stations.
+ * Implementation that generates rainfall from ombrometer stations with Thiessen.
  * 
  * @author Gernot Belger
  */
