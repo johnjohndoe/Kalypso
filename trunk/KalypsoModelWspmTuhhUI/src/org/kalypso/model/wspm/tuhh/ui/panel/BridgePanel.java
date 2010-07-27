@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.panel;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -59,12 +58,11 @@ import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -129,13 +127,9 @@ public class BridgePanel extends AbstractProfilView
           final double value = NumberUtils.parseQuietDouble( m_text.getText() );
           if( !Double.isNaN( value ) )
           {
-            final IProfil profil = getProfil();
-
-            final IProfileBuilding[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
-            if( ArrayUtils.isEmpty( objects ) )
+            final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
+            if( building == null )
               return;
-
-            final IProfileBuilding building = objects[0];
 
             final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
             if( val == value )
@@ -158,18 +152,14 @@ public class BridgePanel extends AbstractProfilView
       final String labelText = ComponentUtilities.getComponentLabel( m_property );
 
       final IPhenomenon phenomenon = m_property.getPhenomenon();
-// final String label = phenomenon.getName();
-//      final String labelText = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3", label, unit ); //$NON-NLS-1$
       final String description = phenomenon.getDescription();
 
       m_label.setText( labelText );
       m_label.setToolTipText( description );
 
-      final IProfileBuilding[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
-      if( ArrayUtils.isEmpty( objects ) )
+      final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
+      if( building == null )
         return;
-
-      final IProfileBuilding building = objects[0];
 
       final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
       final String textText = String.format( "%.3f", val ); //$NON-NLS-1$
@@ -211,30 +201,25 @@ public class BridgePanel extends AbstractProfilView
 
     m_lines = new ArrayList<PropertyLine>( 8 );
 
-    final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
-    if( ArrayUtils.isEmpty( objects ) )
+    final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
+    if( building == null )
       return;
 
-    final IProfileObject building = objects[0];
     for( final IComponent property : building.getObjectProperties() )
-    {
       m_lines.add( new PropertyLine( m_toolkit, m_propPanel, property ) );
-    }
 
     m_propPanel.layout();
   }
 
   protected void updateControls( )
   {
-    final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
-    if( ArrayUtils.isEmpty( objects ) )
+    // TODO: why this check?
+    final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
+    if( building == null )
       return;
 
     for( final PropertyLine line : m_lines )
-    {
       line.updateValue();
-    }
-
   }
 
   @Override

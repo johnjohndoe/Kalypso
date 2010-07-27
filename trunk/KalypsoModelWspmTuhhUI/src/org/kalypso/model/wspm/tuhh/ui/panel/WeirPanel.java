@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.tuhh.ui.panel;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -74,7 +74,6 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
@@ -82,10 +81,9 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -99,6 +97,7 @@ import org.kalypso.observation.result.IRecord;
  */
 public class WeirPanel extends AbstractProfilView
 {
+  // FIXME: move theses huge inner classes in their own files!
   private class Wehrart
   {
     public final String m_id;
@@ -231,11 +230,9 @@ public class WeirPanel extends AbstractProfilView
             {
               final Object objVal = marker.getValue();
 
-              final IProfileBuilding[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
-              if( ArrayUtils.isEmpty( objects ) )
+              final BuildingWehr building = WspmProfileHelper.getBuilding( profil, BuildingWehr.class );
+              if( building == null )
                 return;
-
-              final IProfileBuilding building = objects[0];
 
               final Object dblVal = (objVal instanceof Double) ? objVal : BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, building );
               operation.addChange( new PointMarkerEdit( trenner, dblVal ) );
@@ -282,11 +279,9 @@ public class WeirPanel extends AbstractProfilView
 
             if( m_position < 0 )
             {
-              final IProfileObject[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
-              if( ArrayUtils.isEmpty( objects ) )
+              final BuildingWehr building = WspmProfileHelper.getBuilding( getProfil(), BuildingWehr.class );
+              if( building == null )
                 return;
-
-              final IProfileObject building = objects[0];
 
               final IProfilChange change = new ProfileObjectEdit( building, building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), value );
               final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.11" ), getProfil(), change, true ); //$NON-NLS-1$
@@ -336,10 +331,9 @@ public class WeirPanel extends AbstractProfilView
     {
       if( m_position < 0 )
       {
-        final IProfileBuilding[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
-        if( !ArrayUtils.isEmpty( objects ) )
+        final BuildingWehr building = WspmProfileHelper.getBuilding( getProfil(), BuildingWehr.class );
+        if( building != null )
         {
-          final IProfileBuilding building = objects[0];
           final IComponent beiwert = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
           // TODO: very strange code... check this! What is the type of these components??
           final String objValue = building.getValue( beiwert ).toString();
@@ -364,7 +358,7 @@ public class WeirPanel extends AbstractProfilView
     }
   }
 
-  protected ComboViewer m_Wehrart;
+  protected ComboViewer m_wehrart;
 
   protected Composite m_deviderGroup;
 
@@ -382,7 +376,7 @@ public class WeirPanel extends AbstractProfilView
 
   protected FormToolkit m_toolkit;
 
-  private final HashMap<String, Wehrart> m_wehrarten;
+  private final Map<String, Wehrart> m_wehrarten;
 
   public WeirPanel( final IProfil profile )
   {
@@ -424,10 +418,10 @@ public class WeirPanel extends AbstractProfilView
     label.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label.setToolTipText( tooltip );
 
-    m_Wehrart = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER );
-    m_Wehrart.getCombo().setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
-    m_Wehrart.setContentProvider( new ArrayContentProvider() );
-    m_Wehrart.setLabelProvider( new LabelProvider()
+    m_wehrart = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER );
+    m_wehrart.getCombo().setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
+    m_wehrart.setContentProvider( new ArrayContentProvider() );
+    m_wehrart.setLabelProvider( new LabelProvider()
     {
       /**
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
@@ -438,19 +432,18 @@ public class WeirPanel extends AbstractProfilView
         return ((Wehrart) element).m_label;
       }
     } );
-    m_Wehrart.setInput( m_wehrarten.values() );
-    m_Wehrart.addSelectionChangedListener( new ISelectionChangedListener()
+    m_wehrart.setInput( m_wehrarten.values() );
+    m_wehrart.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IProfileObject[] profileObjects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
-        if( ArrayUtils.isEmpty( profileObjects ) || !(profileObjects[0] instanceof BuildingWehr) )
+        final BuildingWehr building = WspmProfileHelper.getBuilding( getProfil(), BuildingWehr.class );
+        if( building == null )
           return;
 
-        final BuildingWehr building = (BuildingWehr) profileObjects[0];
-        final IStructuredSelection selection = (IStructuredSelection) m_Wehrart.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection) m_wehrart.getSelection();
         if( selection.isEmpty() )
           return;
 
@@ -465,7 +458,7 @@ public class WeirPanel extends AbstractProfilView
         new ProfilOperationJob( operation ).schedule();
       }
     } );
-    toolkit.adapt( m_Wehrart.getCombo() );
+    toolkit.adapt( m_wehrart.getCombo() );
     m_parameterLabel = toolkit.createLabel( panel, "", SWT.NONE ); //$NON-NLS-1$
     final GridData plGridData = new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL );
     plGridData.horizontalSpan = 2;
@@ -497,18 +490,17 @@ public class WeirPanel extends AbstractProfilView
 
   protected void updateControls( )
   {
-    if( m_Wehrart.getCombo().isDisposed() )
+    if( m_wehrart.getCombo().isDisposed() )
       return;
 
-    final IProfileObject[] profileObjects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
-    if( ArrayUtils.isEmpty( profileObjects ) || !(profileObjects[0] instanceof BuildingWehr) )
+    final BuildingWehr building = WspmProfileHelper.getBuilding( getProfil(), BuildingWehr.class );
+    if( building == null )
       return;
 
-    final BuildingWehr building = (BuildingWehr) profileObjects[0];
     final IComponent objProp = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
     final String wehrart = (String) building.getValue( objProp );
     if( wehrart != null )
-      m_Wehrart.setSelection( new StructuredSelection( m_wehrarten.get( wehrart ) ) );
+      m_wehrart.setSelection( new StructuredSelection( m_wehrarten.get( wehrart ) ) );
 
     m_parameterLabel.setText( m_wehrarten.get( wehrart ).m_text );
 
