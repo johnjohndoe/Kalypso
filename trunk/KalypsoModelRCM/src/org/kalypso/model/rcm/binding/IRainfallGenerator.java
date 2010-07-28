@@ -63,5 +63,8 @@ public interface IRainfallGenerator extends Feature
    */
   public void setLog( final ILog log );
 
-  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final IProgressMonitor monitor ) throws CoreException;
+  /**
+   * @param sourceFilter Enforces source timeseries to have equal properties (length, interval, ...). May be null.
+   */
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final String sourceFilter, final IProgressMonitor monitor ) throws CoreException;
 }

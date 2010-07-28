@@ -119,7 +119,7 @@ public class RainfallGeneratorUtilities
     return areas;
   }
 
-  public static IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final Date from, final Date to, final URL context ) throws MalformedURLException, SensorException
+  public static IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final Date from, final Date to, final String sourceFilter, final URL context ) throws MalformedURLException, SensorException
   {
     final IRequest request = new ObservationRequest( from, to );
 
@@ -132,7 +132,9 @@ public class RainfallGeneratorUtilities
         final String href = link.getHref();
         if( href != null )
         {
-          final String hrefRequest = ZmlURL.insertRequest( href, request );
+          final String hrefFilter = ZmlURL.insertQueryPart( href, sourceFilter );
+          
+          final String hrefRequest = ZmlURL.insertRequest( hrefFilter, request );
           final URL zmlLocation = link == null ? null : UrlResolverSingleton.resolveUrl( context, hrefRequest );
           if( zmlLocation != null )
             readObservations[i] = ZmlFactory.parseXML( zmlLocation, href );
@@ -172,14 +174,14 @@ public class RainfallGeneratorUtilities
     for( final IObservation observation : observations )
       observationValues.add( observation.getValues( null ) );
     final ITuppleModel[] tuppleModels = observationValues.toArray( new ITuppleModel[observationValues.size()] );
-
+    
     final ITuppleModel firstTuppleModel = firstObservation.getValues( null );
     final IAxis[] firstAxisList = firstTuppleModel.getAxisList();
 
     final IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
     final IAxis firstValueAxis = ObservationUtilities.findAxisByClass( firstAxisList, Double.class );
 
-    IAxis firstStatusAxis = KalypsoStatusUtils.findStatusAxisFor( firstAxisList, firstValueAxis );
+    IAxis firstStatusAxis = KalypsoStatusUtils.findStatusAxisForNoEx( firstAxisList, firstValueAxis );
     if( firstStatusAxis == null )
       firstStatusAxis = KalypsoStatusUtils.createStatusAxisFor( firstValueAxis, true );
 

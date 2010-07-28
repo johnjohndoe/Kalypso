@@ -104,6 +104,8 @@ public class RainfallGenerationTask extends Task
 
   private final List<Generator> m_generators = new ArrayList<Generator>();
 
+  private String m_sourceFilter = null;
+
   private URL m_rcmUrl;
 
   private URL m_catchmentUrl;
@@ -123,6 +125,11 @@ public class RainfallGenerationTask extends Task
   public void addConfiguredGenerator( final Generator generator )
   {
     m_generators.add( generator );
+  }
+
+  public void setSourceFilter( String sourceFilter )
+  {
+    m_sourceFilter = sourceFilter;
   }
 
   public void setRcmUrl( final URL rcmUrl )
@@ -188,6 +195,7 @@ public class RainfallGenerationTask extends Task
         /**
          * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
          */
+        @Override
         public void log( final Level level, final int msgCode, final String logMessage )
         {
           final String outString = LoggerUtilities.formatLogStylish( level, msgCode, logMessage );
@@ -218,6 +226,7 @@ public class RainfallGenerationTask extends Task
         log = new GeoStatusLog( m_logFile );
 
       final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, null, m_targetFilter, m_targetFrom, m_targetTo, log );
+      operation.setSourceFilter( m_sourceFilter );
       for( final Generator generator : m_generators )
       {
         final String id = generator.getRcmId();
