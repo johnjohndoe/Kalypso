@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,13 +49,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.vfs.FileObject;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
+import org.kalypso.kalypsomodel1d2d.conv.SWANDataConverterHelper;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -152,7 +150,9 @@ public class SWANResultsReader
     {
       try
       {
-        readCoordinateShiftValues( m_resultsFile );
+        GM_Position lShiftPosition = SWANDataConverterHelper.readCoordinateShiftValues( m_resultsFile );
+        m_doubleShiftX = lShiftPosition.getX();
+        m_doubleShiftY = lShiftPosition.getY();
         Map<String, MLArray> lMapData = lMatFileReader.getContent();
         // printDebugParsedSWANRawData( lMatFileReader, null );
         lRes = getValuesFormatedNameDatePosition( lMapData );
@@ -217,60 +217,6 @@ public class SWANResultsReader
     }
     // out.write( lValues.contentToString() );
     out.close();
-  }
-
-  private void readCoordinateShiftValues( final FileObject pFile )
-  {
-    Scanner scannerFile = null;
-    Scanner scannerLine = null;
-    try
-    {
-
-      FileObject swanShiftCoordFileObject = pFile.getParent().getChild( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
-      if( swanShiftCoordFileObject == null )
-      {
-        return;
-      }
-      File lFile = new File( swanShiftCoordFileObject.getURL().toURI() );
-
-      scannerFile = new Scanner( lFile );
-      while( scannerFile.hasNextLine() )
-      {
-        String lStrNextLine = scannerFile.nextLine();
-        if( lStrNextLine.contains( "=" ) ) { //$NON-NLS-1$
-          scannerLine = new Scanner( lStrNextLine );
-          scannerLine.useDelimiter( "=" ); //$NON-NLS-1$
-          String lStrValueName = scannerLine.next();
-          String lStrValue = scannerLine.next();
-          if( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_X.equalsIgnoreCase( lStrValueName ) )
-          {
-            m_doubleShiftX = Double.parseDouble( lStrValue );
-          }
-          else if( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_Y.equalsIgnoreCase( lStrValueName ) )
-          {
-            m_doubleShiftY = Double.parseDouble( lStrValue );
-          }
-          scannerLine.close();
-        }
-        else
-        {
-          // System.out.println("Empty or invalid line. Unable to process. Processing the results without shift!");
-        }
-      }
-
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      if( scannerFile != null )
-        scannerFile.close();
-      if( scannerLine != null )
-        scannerLine.close();
-    }
-
   }
 
   /**
