@@ -274,13 +274,41 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   @Override
   public IProfilChartLayer[] createLayers( final IProfil profil, final Object result )
   {
+    // Achtung: diese Reihenfolge ist die natürliche Ordnung im Layermanager
+    
+    
     final List<IProfilChartLayer> layerToAdd = new ArrayList<IProfilChartLayer>();
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) != null || profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
       layerToAdd.add( createLayer( profil, IWspmTuhhConstants.LAYER_RAUHEIT ) );
 
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) != null )
       layerToAdd.add( createLayer( profil, IWspmTuhhConstants.LAYER_BEWUCHS ) );
+    final IComponent[] pointProperties = profil.getPointProperties();
+    for( final IComponent property : pointProperties )
+    {
+      final IPhenomenon phenomenon = property.getPhenomenon();
 
+      if( IWspmPhenomenonConstants.PHENOMENON_WATERLEVEL_2D.equals( phenomenon.getID() ) )
+      {
+        final PointsLineLayer layer = new PointsLineLayer( LAYER_WASSERSPIEGEL2D, profil, property.getId(), m_lsp );
+        layer.setTitle( property.getName() );
+
+        layer.setCoordinateMapper( new CoordinateMapper( m_domainAxis, m_targetAxisLeft ) );
+        layerToAdd.add( layer );
+      }
+    }
+   
+
+    if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) != null )
+      layerToAdd.add( createLayer( profil, IWspmConstants.LAYER_GEOKOORDINATEN ) );
+
+    if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) != null )
+      layerToAdd.add( createLayer( profil, IWspmConstants.LAYER_GELAENDE ) );
+
+    
+
+    layerToAdd.add( createLayer( profil, IWspmTuhhConstants.LAYER_DEVIDER ) );
+    
     // TODO IProfileObjects now returned as list from IProfile, but we can only handle one IProfileObject (WSPM can't
     // handle more!)
     final IProfileObject[] buildings = profil.getProfileObjects();
@@ -304,29 +332,6 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
         }
       }
     }
-
-    if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) != null )
-      layerToAdd.add( createLayer( profil, IWspmConstants.LAYER_GEOKOORDINATEN ) );
-
-    if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) != null )
-      layerToAdd.add( createLayer( profil, IWspmConstants.LAYER_GELAENDE ) );
-
-    final IComponent[] pointProperties = profil.getPointProperties();
-    for( final IComponent property : pointProperties )
-    {
-      final IPhenomenon phenomenon = property.getPhenomenon();
-
-      if( IWspmPhenomenonConstants.PHENOMENON_WATERLEVEL_2D.equals( phenomenon.getID() ) )
-      {
-        final PointsLineLayer layer = new PointsLineLayer( LAYER_WASSERSPIEGEL2D, profil, property.getId(), m_lsp );
-        layer.setTitle( property.getName() );
-
-        layer.setCoordinateMapper( new CoordinateMapper( m_domainAxis, m_targetAxisLeft ) );
-        layerToAdd.add( layer );
-      }
-    }
-
-    layerToAdd.add( createLayer( profil, IWspmTuhhConstants.LAYER_DEVIDER ) );
 
     setAxisLabel( profil );
 

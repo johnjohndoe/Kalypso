@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.viewer;
 
-import org.kalypso.model.wspm.ui.view.chart.ChartView;
 
 /**
  * @author jung
+ * @deprecated
  */
-public class ChartViewChannelEdit extends ChartView
+public class ChartViewChannelEdit //extends ChartView
 {
 //  private static List<ChartAction> m_chartActions = createChartActions();
 //
