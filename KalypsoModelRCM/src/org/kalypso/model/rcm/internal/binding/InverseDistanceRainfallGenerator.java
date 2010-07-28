@@ -143,11 +143,10 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
   }
 
   /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.feature.Feature[],
-   *      java.util.Date, java.util.Date, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.feature.Feature[], java.util.Date, java.util.Date, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IObservation[] createRainfall( Feature[] catchmentFeatures, Date from, Date to, IProgressMonitor monitor ) throws CoreException
+  public IObservation[] createRainfall( Feature[] catchmentFeatures, Date from, Date to, String sourceFilter, IProgressMonitor monitor ) throws CoreException
   {
     /* Update the log. */
     LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde gestartet.", null ) );
@@ -192,7 +191,7 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
       /* Convert to zml observations . */
       TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkXPath, new TimeseriesLinkType[ombrometerFeatures.length] );
       URL sourceContext = ombrometerList.getParentFeature().getWorkspace().getContext();
-      IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, from, to, sourceContext );
+      IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, from, to, sourceFilter, sourceContext );
 
       /* Get the station locations. */
       GM_Point[] ombrometerStations = FeatureHelper.getProperties( ombrometerFeatures, stationLocationXPath, new GM_Point[ombrometerFeatures.length] );

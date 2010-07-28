@@ -147,10 +147,10 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
 
   /**
    * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.feature.Feature[],
-   *      java.util.Date, java.util.Date, org.eclipse.core.runtime.IProgressMonitor)
+   *      java.util.Date, java.util.Date, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final IProgressMonitor monitor ) throws org.eclipse.core.runtime.CoreException
+  public IObservation[] createRainfall( Feature[] catchmentFeatures, Date from, Date to, String sourceFilter, IProgressMonitor monitor ) throws CoreException
   {
     /* Update the log. */
     LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde gestartet.", null ) );
@@ -183,7 +183,7 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
 
       final TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkXPath, new TimeseriesLinkType[ombrometerFeatures.length] );
       final URL sourceContext = ombrometerList.getParentFeature().getWorkspace().getContext();
-      final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, from, to, sourceContext );
+      final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, from, to, sourceFilter, sourceContext );
 
       /* Apply thiessen, if not yet done. */
       if( !ombrometerCollection.hasBeenProcessed() )

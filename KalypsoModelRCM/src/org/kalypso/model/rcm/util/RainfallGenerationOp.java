@@ -129,6 +129,8 @@ public class RainfallGenerationOp
 
   private final ILog m_log;
 
+  private String m_sourceFilter;
+
   /**
    * The constructor.
    * 
@@ -154,6 +156,15 @@ public class RainfallGenerationOp
     m_targetFrom = targetFrom;
     m_targetTo = targetTo;
     m_log = log;
+  }
+  
+  
+  /**
+   * Sets a filter that will be applied to all read observations. If <code>null</code>, the observation is read as is.
+   */
+  public void setSourceFilter( String sourceFilter )
+  {
+    m_sourceFilter = sourceFilter;
   }
 
   public void addGenerator( final String gmlId, final Date from, final Date to )
@@ -375,7 +386,7 @@ public class RainfallGenerationOp
 
     try
     {
-      final IObservation[] observations = rainGen.createRainfall( catchmentFeatures, from, to, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
+      final IObservation[] observations = rainGen.createRainfall( catchmentFeatures, from, to, m_sourceFilter, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
       final String msg = String.format( "Generator '%s' erfolgreich ausgeführt.", generatorName );
       logger.log( Level.INFO, -1, msg );
       return observations;
