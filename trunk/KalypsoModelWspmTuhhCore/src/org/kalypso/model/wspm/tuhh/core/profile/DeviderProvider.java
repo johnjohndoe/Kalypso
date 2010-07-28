@@ -62,10 +62,10 @@ public class DeviderProvider implements IProfilPointMarkerProvider
 
   public DeviderProvider( )
   {
-    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, new RGB( 200, 50, 0 ) );
-    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, new RGB( 0, 0, 255 ) );
-    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, new RGB( 0, 180, 0 ) );
-    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_WEHR, new RGB( 0, 128, 0 ) );
+    m_markerTypes.put( IWspmTuhhConstants.LAYER_DEVIDER+"_"+IWspmTuhhConstants.MARKER_TYP_BORDVOLL, new RGB( 200, 50, 0 ) );
+    m_markerTypes.put( IWspmTuhhConstants.LAYER_DEVIDER+"_"+IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, new RGB( 0, 0, 255 ) );
+    m_markerTypes.put( IWspmTuhhConstants.LAYER_DEVIDER+"_"+IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, new RGB( 0, 180, 0 ) );
+    m_markerTypes.put( IWspmTuhhConstants.LAYER_DEVIDER+"_"+IWspmTuhhConstants.MARKER_TYP_WEHR, new RGB( 0, 128, 0 ) );
   }
 
   /**
