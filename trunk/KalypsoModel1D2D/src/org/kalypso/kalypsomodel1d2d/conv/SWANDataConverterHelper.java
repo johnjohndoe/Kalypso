@@ -40,11 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author ilya
@@ -104,5 +110,68 @@ public class SWANDataConverterHelper
     return null;
 
   }
+  
+  
+  public static GM_Position readCoordinateShiftValues( final FileObject pFile )
+  {
+    GM_Position lPosRes = null;
+    
+    Scanner scannerFile = null;
+    Scanner scannerLine = null;
+    try
+    {
+
+      FileObject swanShiftCoordFileObject = pFile.getParent().getChild( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
+      if( swanShiftCoordFileObject == null )
+      {
+        return lPosRes;
+      }
+      File lFile = new File( swanShiftCoordFileObject.getURL().toURI() );
+
+      scannerFile = new Scanner( lFile );
+      Double lDoubleShiftY = null;
+      Double lDoubleShiftX = null;
+      while( scannerFile.hasNextLine() )
+      {
+        String lStrNextLine = scannerFile.nextLine();
+        if( lStrNextLine.contains( "=" ) ) { //$NON-NLS-1$
+          scannerLine = new Scanner( lStrNextLine );
+          scannerLine.useDelimiter( "=" ); //$NON-NLS-1$
+          String lStrValueName = scannerLine.next();
+          String lStrValue = scannerLine.next();
+          if( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_X.equalsIgnoreCase( lStrValueName ) )
+          {
+            lDoubleShiftX = Double.parseDouble( lStrValue );
+          }
+          else if( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_Y.equalsIgnoreCase( lStrValueName ) )
+          {
+            lDoubleShiftY = Double.parseDouble( lStrValue );
+          }
+          scannerLine.close();
+        }
+        else
+        {
+          // System.out.println("Empty or invalid line. Unable to process. Processing the results without shift!");
+        }
+      }
+      if( lDoubleShiftX != null && lDoubleShiftY != null )
+        lPosRes = GeometryFactory.createGM_Position( lDoubleShiftX, lDoubleShiftY );
+
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      if( scannerFile != null )
+        scannerFile.close();
+      if( scannerLine != null )
+        scannerLine.close();
+    }
+
+    return lPosRes;
+  }
+
 
 }

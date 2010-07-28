@@ -40,14 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -71,8 +77,10 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.conv.SWANDataConverterHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -89,6 +97,7 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
@@ -168,30 +177,35 @@ public class ResultManager implements ISimulation1D2DConstants
       {
         if( !m_resultDirSWAN.getName().getBaseName().endsWith( "zip" ) ) //$NON-NLS-1$
         {
-          try{
+          try
+          {
             FileObject swanResFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
             FileObject swanResShiftFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
             FileObject swanResOutTabFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "_out.tab" ); //$NON-NLS-1$
-            File zipOutput = new File( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip"  ); //$NON-NLS-1$
-            List< File > lListFilesToZip = new ArrayList<File>();
-            lListFilesToZip.add( new File( swanResFile.getURL().toURI() ) ); 
+            processSWANTabFile( swanResOutTabFile, swanResShiftFile );
+            File zipOutput = new File( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip" ); //$NON-NLS-1$
+            List<File> lListFilesToZip = new ArrayList<File>();
+            lListFilesToZip.add( new File( swanResFile.getURL().toURI() ) );
             lListFilesToZip.add( new File( swanResShiftFile.getURL().toURI() ) );
             lListFilesToZip.add( new File( swanResOutTabFile.getURL().toURI() ) );
-            if( m_controlModel.getINITialValuesSWAN() == 3 ){
+            if( m_controlModel.getINITialValuesSWAN() == 3 )
+            {
               FileObject swanResHotFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_HOT_FILE );
               lListFilesToZip.add( new File( swanResHotFile.getURL().toURI() ) );
             }
-            ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[ lListFilesToZip.size() ] ), new File( m_resultDirSWAN.getURL().toURI() ) );
+            ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[lListFilesToZip.size()] ), new File( m_resultDirSWAN.getURL().toURI() ) );
           }
-          catch (Exception e) {
+          catch( Exception e )
+          {
             e.printStackTrace();
           }
         }
         else
         {
-          //swan mat file should be unpacked for using in within JMatIO-Reader, so we put the uncompressed version in to the working directory. 
-            ZipUtilities.unzip( new File( m_resultDirSWAN.getURL().toURI() ), new File( m_outputDir.toURI() ) );
-            m_resultDirSWAN = VFSUtilities.getNewManager().resolveFile( m_outputDir.toURI().toURL().toExternalForm() ); 
+          // swan mat file should be unpacked for using in within JMatIO-Reader, so we put the uncompressed version in
+          // to the working directory.
+          ZipUtilities.unzip( new File( m_resultDirSWAN.getURL().toURI() ), new File( m_outputDir.toURI() ) );
+          m_resultDirSWAN = VFSUtilities.getNewManager().resolveFile( m_outputDir.toURI().toURL().toExternalForm() );
         }
       }
 
@@ -257,6 +271,70 @@ public class ResultManager implements ISimulation1D2DConstants
         }
       }
     }
+  }
+
+  private void processSWANTabFile( FileObject swanResOutTabFile, FileObject swanResShiftFile )
+  {
+    GM_Position lShiftPosition = SWANDataConverterHelper.readCoordinateShiftValues( swanResShiftFile );
+    if( lShiftPosition == null )
+    {
+      return;
+    }
+    try
+    {
+      if( swanResOutTabFile.isContentOpen() )
+      {
+        swanResOutTabFile.close();
+      }
+      FileObject swanResOutTabFileBackUp = swanResOutTabFile.getParent().resolveFile( swanResOutTabFile.getName().getBaseName() + ".bck" ); //$NON-NLS-1$
+      swanResOutTabFile.moveTo( swanResOutTabFileBackUp );
+      
+      int lIntLinesCounter = 0;
+      OutputStream lOutStream = swanResOutTabFile.getContent().getOutputStream();
+      DataInputStream lInDataStream = new DataInputStream( swanResOutTabFileBackUp.getContent().getInputStream() );
+
+      Formatter lFormatter = new Formatter( lOutStream, Charset.defaultCharset().name(), Locale.US );
+      while( lInDataStream.available() != 0 )
+      {
+        String lStrTmpLine = lInDataStream.readLine().trim();
+        ++lIntLinesCounter;
+        if( lStrTmpLine.startsWith( "%" ) ) { //$NON-NLS-1$
+          lFormatter.format( "%s\n", lStrTmpLine ); //$NON-NLS-1$ 
+          continue;
+        }
+        StringTokenizer lStrTokenizer = new StringTokenizer( lStrTmpLine, " " ); //$NON-NLS-1$
+        int lIntTokenCounter = 0;
+        String lStrNewLine = ""; //$NON-NLS-1$
+        while( lStrTokenizer.hasMoreTokens() )
+        {
+          String lStrToken = lStrTokenizer.nextToken();
+          if( lIntTokenCounter == 1 )
+          {
+            lStrNewLine += String.format( Locale.US, "%.5f\t", NumberUtils.parseQuietDouble( lStrToken ) + lShiftPosition.getX() ); //$NON-NLS-1$
+          }
+          else if( lIntTokenCounter == 2 )
+          {
+            lStrNewLine += String.format( Locale.US, "%.5f\t", NumberUtils.parseQuietDouble( lStrToken ) + lShiftPosition.getY() ); //$NON-NLS-1$
+          }
+          else
+          {
+            lStrNewLine += lStrToken + "\t"; //$NON-NLS-1$
+          }
+          lIntTokenCounter++;
+        }
+        lFormatter.format( "%s\n", lStrNewLine ); //$NON-NLS-1$
+
+      }
+      lFormatter.close();
+      lInDataStream.close();
+      lOutStream.close();
+    }
+    catch( Exception e )
+    {
+      return;
+    }
+
+    return;
   }
 
   private IStatus processResultFile( final FileObject file, final FileObject fileResSWAN, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel, final ICalcUnitResultMeta calcUnitResultMeta, final IProgressMonitor monitor, final boolean doFullEvaluate ) throws CoreException
