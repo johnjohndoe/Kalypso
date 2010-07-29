@@ -264,7 +264,7 @@ public class RainfallGenerationOp
 
     final SimpleTuppleModel clonedValues = new SimpleTuppleModel( values, new DateRange( from, to ) );
 
-    final SimpleObservation simpleObservation = new SimpleObservation( href, name, false, metadataList, axisList, clonedValues );
+    final SimpleObservation simpleObservation = new SimpleObservation( href, name, metadataList, axisList, clonedValues );
     return simpleObservation;
   }
 
