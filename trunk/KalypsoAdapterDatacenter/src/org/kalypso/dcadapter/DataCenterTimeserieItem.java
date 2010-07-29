@@ -271,15 +271,6 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
-   */
-  @Override
-  public void clearListeners( )
-  {
-    m_evtPrv.clearListeners();
-  }
-
-  /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
    */
   @Override
