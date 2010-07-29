@@ -41,13 +41,8 @@
 package org.kalypso.ui.wizards.imports.observation;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.TimeZone;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
@@ -68,7 +63,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.afgui.perspective.Perspective;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
@@ -90,14 +84,11 @@ import org.kalypso.repository.RepositoryContainerSingelton;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.file.FileItem;
 import org.kalypso.ui.wizards.i18n.Messages;
-import org.kalypso.zml.ObjectFactory;
-import org.kalypso.zml.Observation;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class ImportObservationWizard extends Wizard implements INewWizard
 {
-  private final static JAXBContext zmlJC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private ImportObservationSelectionWizardPage m_page1 = null;
 
@@ -327,26 +318,15 @@ public class ImportObservationWizard extends Wizard implements INewWizard
             newTuppelModel.setElement( countSrc + i, tuppelModelTarget.getElement( i, element ), element );
       }
       final String href = ""; //$NON-NLS-1$
-      final String id = ""; //$NON-NLS-1$
       final String name = srcObservation.getName();
       final MetadataList metadata = new MetadataList();
       if( targetObservation != null && selection.isRetainMetadata() )
         metadata.putAll( targetObservation.getMetadataList() );
       metadata.putAll( srcObservation.getMetadataList() );
 
-      final IObservation newObservation = new SimpleObservation( href, id, name, false, metadata, axesNew, newTuppelModel );
+      final IObservation newObservation = new SimpleObservation( href, name, false, metadata, axesNew, newTuppelModel );
 
-      final Observation type = ZmlFactory.createXML( newObservation, null );
-      // create new Observation...
-
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( zmlJC );
-      // use IResource
-      final FileOutputStream stream = new FileOutputStream( fileTarget.getPath() );
-      final OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" ); //$NON-NLS-1$
-      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      marshaller.marshal( type, writer );
-      // TODO handle exception, make sure stream is always closed!
-      writer.close();
+      ZmlFactory.writeToFile( newObservation, fileTarget );
 
       m_timeseriesFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
 

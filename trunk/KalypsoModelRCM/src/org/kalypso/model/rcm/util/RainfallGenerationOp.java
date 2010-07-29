@@ -157,12 +157,12 @@ public class RainfallGenerationOp
     m_targetTo = targetTo;
     m_log = log;
   }
-  
-  
+
+
   /**
    * Sets a filter that will be applied to all read observations. If <code>null</code>, the observation is read as is.
    */
-  public void setSourceFilter( String sourceFilter )
+  public void setSourceFilter( final String sourceFilter )
   {
     m_sourceFilter = sourceFilter;
   }
@@ -256,7 +256,6 @@ public class RainfallGenerationOp
     final IRequest request = new ObservationRequest( from, to );
 
     final String href = o.getHref();
-    final String identifier = o.getIdentifier();
     final String name = o.getName();
     final MetadataList metadataList = new MetadataList();
     metadataList.putAll( o.getMetadataList() );
@@ -265,7 +264,7 @@ public class RainfallGenerationOp
 
     final SimpleTuppleModel clonedValues = new SimpleTuppleModel( values, new DateRange( from, to ) );
 
-    final SimpleObservation simpleObservation = new SimpleObservation( href, identifier, name, false, metadataList, axisList, clonedValues );
+    final SimpleObservation simpleObservation = new SimpleObservation( href, name, false, metadataList, axisList, clonedValues );
     return simpleObservation;
   }
 
@@ -286,26 +285,23 @@ public class RainfallGenerationOp
     for( int i = 0; i < combinedObservations.length; i++ )
     {
       /* All arrays must be in the same order and must have the same length. */
-      IObservation observation = combinedObservations[i];
-      Feature feature = catchmentFeatureArray[i];
+      final IObservation observation = combinedObservations[i];
+      final Feature feature = catchmentFeatureArray[i];
       if( observation == null || feature == null )
         continue;
 
       /* Get the metadata list of this observation. */
-      MetadataList metadataList = observation.getMetadataList();
+      final MetadataList metadataList = observation.getMetadataList();
 
       /* Get the qnames (keys) of the properties, which should be added as additional metadata. */
-      QName[] qnames = m_catchmentMetadata.keySet().toArray( new QName[] {} );
-      for( int j = 0; j < qnames.length; j++ )
+      final QName[] qnames = m_catchmentMetadata.keySet().toArray( new QName[] {} );
+      for( final QName qname : qnames )
       {
-        /* Get the qname. */
-        QName qname = qnames[j];
-
         /* Get the target string. */
-        String target = m_catchmentMetadata.get( qname );
+        final String target = m_catchmentMetadata.get( qname );
 
         /* Get the metadata property. */
-        Object property = feature.getProperty( qname );
+        final Object property = feature.getProperty( qname );
 
         /* Add the metadata property. */
         if( property != null )

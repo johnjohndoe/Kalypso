@@ -175,7 +175,7 @@ public class IdleLanduseManager extends AbstractManager
     }
 
     final ITuppleModel model = new SimpleTuppleModel( axis, values );
-    final SimpleObservation observation = new SimpleObservation( null, null, fileDescription, true, new MetadataList(), axis, model );
+    final SimpleObservation observation = new SimpleObservation( null, fileDescription, true, new MetadataList(), axis, model );
     feature.setProperty( NaModelConstants.PARA_IDEAL_LANDUSE_ZML, observation );
 
     line = reader.readLine();

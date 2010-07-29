@@ -80,7 +80,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Holger Albert
  */
-public class RainfallGeneratorUtilities
+public final class RainfallGeneratorUtilities
 {
   /**
    * The constructor.
@@ -89,7 +89,6 @@ public class RainfallGeneratorUtilities
   {
   }
 
-  @SuppressWarnings("unchecked")
   public static GM_MultiSurface[] findCatchmentAreas( final Feature[] catchmentFeatures, final GMLXPath catchmentAreaXPath ) throws CoreException, GMLXPathException
   {
     /* Memory for the results. */
@@ -133,7 +132,7 @@ public class RainfallGeneratorUtilities
         if( href != null )
         {
           final String hrefFilter = ZmlURL.insertQueryPart( href, sourceFilter );
-          
+
           final String hrefRequest = ZmlURL.insertRequest( hrefFilter, request );
           final URL zmlLocation = link == null ? null : UrlResolverSingleton.resolveUrl( context, hrefRequest );
           if( zmlLocation != null )
@@ -174,7 +173,7 @@ public class RainfallGeneratorUtilities
     for( final IObservation observation : observations )
       observationValues.add( observation.getValues( null ) );
     final ITuppleModel[] tuppleModels = observationValues.toArray( new ITuppleModel[observationValues.size()] );
-    
+
     final ITuppleModel firstTuppleModel = firstObservation.getValues( null );
     final IAxis[] firstAxisList = firstTuppleModel.getAxisList();
 
@@ -189,7 +188,7 @@ public class RainfallGeneratorUtilities
     final ITuppleModel combinedTuppleModel = linearAdd.addWeighted( tuppleModels, weights );
 
     /* ATTENTION: Make sure the axes of the observation are in the same order as the axes of the combined tupple model. */
-    final SimpleObservation combinedObservation = new SimpleObservation( "", "", "", false, new MetadataList(), combinedTuppleModel.getAxisList(), combinedTuppleModel );
+    final SimpleObservation combinedObservation = new SimpleObservation( "", "", false, new MetadataList(), combinedTuppleModel.getAxisList(), combinedTuppleModel );
     combinedObservation.setName( "Generierte Zeitreihe" );
     if( firstStart != null )
       combinedObservation.getMetadataList().setProperty( TimeserieUtils.MD_VORHERSAGE_START, firstStart );
