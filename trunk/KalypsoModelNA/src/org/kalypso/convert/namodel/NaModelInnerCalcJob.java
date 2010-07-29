@@ -1283,7 +1283,7 @@ public class NaModelInnerCalcJob implements ISimulation
         // create observation object
         final String titleForObservation = DefaultPathGenerator.generateTitleForObservation( resultFeature, titlePropName, suffix );
 
-        final IObservation resultObservation = new SimpleObservation( resultPathRelative, titleForObservation, false, metadataList, axis, qTuppelModel ); //$NON-NLS-1$
+        final IObservation resultObservation = new SimpleObservation( resultPathRelative, titleForObservation, metadataList, axis, qTuppelModel ); //$NON-NLS-1$
 
         ZmlFactory.writeToFile( resultObservation, resultFile );
       }
@@ -1374,7 +1374,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     final IAxis[] axes = resultAxisList.toArray( new IAxis[0] );
     final ITuppleModel resultTuppleModel = new SimpleTuppleModel( axes, resultValuesList.toArray( new Object[0][] ) );
-    final IObservation resultObservation = new SimpleObservation( reportPathZML, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), false, new MetadataList(), axes, resultTuppleModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IObservation resultObservation = new SimpleObservation( reportPathZML, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), new MetadataList(), axes, resultTuppleModel ); //$NON-NLS-1$ //$NON-NLS-2$
     ZmlFactory.writeToFile( resultObservation, reportFileZML );
 
     FileOutputStream streamCSV = null;

@@ -123,23 +123,6 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#isEditable()
-   */
-  @Override
-  public boolean isEditable( )
-  {
-    return false;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getTarget()
-   */
-  public Object getTarget( )
-  {
-    return null;
-  }
-
-  /**
    * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */
   @Override
