@@ -58,6 +58,8 @@ public final class TuhhResultDataProvider implements IWspLayerData
 
   private IWspmResult[] initResults( final IWspmResultNode node )
   {
+    if( node == null )
+      return new IWspmResult[] {};
     final Collection<IWspmResult> results = new ArrayList<IWspmResult>();
 
     if( node instanceof IWspmResult )

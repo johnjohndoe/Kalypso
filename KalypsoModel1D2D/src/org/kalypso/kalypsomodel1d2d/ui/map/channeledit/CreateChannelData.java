@@ -228,27 +228,7 @@ public class CreateChannelData
     return goodThemes.toArray( new IKalypsoFeatureTheme[goodThemes.size()] );
   }
 
-  /**
-   * Gets the linestring themes in the Kalypso theme list
-   */
-  public IKalypsoFeatureTheme[] getBankThemes( )
-  {
-    /* implement visitor for cascading themes in mapPanel */
-    final IMapPanel panel = m_widget.getPanel();
-    final IMapModell mapModell = panel.getMapModell();
-    if( mapModell == null )
-      return null;
-    final LineThemePredicater predicate = new LineThemePredicater();
-    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
-    mapModell.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
-
-    final IKalypsoTheme[] result = visitor.getFoundThemes();
-    final IKalypsoFeatureTheme[] resultThemes = new IKalypsoFeatureTheme[result.length];
-    System.arraycopy( result, 0, resultThemes, 0, result.length );
-
-    return resultThemes;
-  }
-
+  
   /* --------------------- selection handling ---------------------------------- */
 
   public void changeSelectedProfiles( final IProfileFeature[] profileFeaturesToRemove, final IProfileFeature[] profileFeaturesToAdd )
