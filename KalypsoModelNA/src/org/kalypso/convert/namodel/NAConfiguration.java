@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on Oct 7, 2004
@@ -52,7 +52,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.schema.binding.Hydrotop;
@@ -68,9 +67,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NAConfiguration
 {
-
-  // private final URL m_schemaURL;
-
   private final File m_catchmentFile;
 
   private final File m_zftFile;
@@ -88,10 +84,6 @@ public class NAConfiguration
   private final URL m_rhbFormatURL;
 
   private final File m_netFile;
-
-  private final URL m_controlSchemaURL;
-
-  private final URL m_gmlModelURL;
 
   private final File m_asciiBaseDir;
 
@@ -119,8 +111,6 @@ public class NAConfiguration
 
   private String m_rootNodeId;
 
-  // private final URL m_metaSchemaURL;
-
   private final File m_hydrotopFile;
 
   private final File m_bodentypFile;
@@ -133,10 +123,6 @@ public class NAConfiguration
 
   private final File m_swaleAndTrenchFile;
 
-  // private final URL m_parameterSchemaURL;
-  //
-  // private final URL m_hydrotopSchemaUrl;
-
   private final URL m_parameterFormatURL;
 
   private final URL m_hydrotopFormatURL;
@@ -146,8 +132,6 @@ public class NAConfiguration
   private int m_minutesTimeStep = 60;
 
   private final IDManager m_idManager = new IDManager();
-
-  private String m_szenarioID = ""; //$NON-NLS-1$
 
   private NaNodeResultProvider m_nodeResultProvider = null;
 
@@ -171,11 +155,7 @@ public class NAConfiguration
 
   private GMLWorkspace m_synthNWorkspace = null;
 
-  private GMLWorkspace m_landuseWorkspace = null;
-
   private GMLWorkspace m_sudsWorkspace;
-
-  private final NACalculationLogger m_calculationLogger;
 
   private final static String PLC_LANDUSE_NAME_FORMAT = "PLC_%05d"; //$NON-NLS-1$
 
@@ -189,16 +169,20 @@ public class NAConfiguration
 
   private final Map<String, List<Double>> m_suds2HydrotopMaxPercRateMap = new HashMap<String, List<Double>>();
 
-  private NAConfiguration( final File asciiBaseDir, final File gmlBaseDir, final URL modelURL ) throws GMLSchemaException
+  public NAConfiguration( final File asciiBaseDir )
+  {
+    this( asciiBaseDir, null );
+  }
+
+  public NAConfiguration( final File asciiBaseDir, final File gmlBaseDir )
   {
     m_asciiBaseDir = asciiBaseDir;
     m_gmlBaseDir = gmlBaseDir;
-    m_gmlModelURL = modelURL;
 
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final GMLSchema schema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
-    final GMLSchema paraSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String) null );
-    final GMLSchema synthNSchema = schemaCatalog.getSchema( NaModelConstants.NS_SYNTHN, (String) null );
+    final GMLSchema schema = getSchema( schemaCatalog, NaModelConstants.NS_NAMODELL );
+    final GMLSchema paraSchema = getSchema( schemaCatalog, NaModelConstants.NS_NAPARAMETER );
+    final GMLSchema synthNSchema = getSchema( schemaCatalog,  NaModelConstants.NS_SYNTHN );
 
     // featuretypes
     m_nodeFT = schema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
@@ -208,7 +192,6 @@ public class NAConfiguration
     m_catchmentFT = schema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
     m_bodartFT = paraSchema.getFeatureType( NaModelConstants.PARA_SoilLayer_FT );
     m_statNFT = synthNSchema.getFeatureType( NaModelConstants.SYNTHN_STATN_FT );
-    m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" ); //$NON-NLS-1$
 
     // formats:
     m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" ); //$NON-NLS-1$
@@ -220,8 +203,9 @@ public class NAConfiguration
     m_parameterFormatURL = getClass().getResource( "formats/parameter.txt" ); //$NON-NLS-1$
     m_swaleAndTrenchFormatURL = getClass().getResource( "formats/swaleAndTrench.txt" ); //$NON-NLS-1$
     // ASCII
-    (new File( asciiBaseDir, "inp.dat" )).mkdirs(); //$NON-NLS-1$
-    (new File( asciiBaseDir, "hydro.top" )).mkdirs(); //$NON-NLS-1$
+    new File( asciiBaseDir, "inp.dat" ).mkdirs(); //$NON-NLS-1$
+    new File( asciiBaseDir, "hydro.top" ).mkdirs(); //$NON-NLS-1$
+
     m_catchmentFile = new File( asciiBaseDir, "inp.dat/we_nat.geb" ); //$NON-NLS-1$
     m_zftFile = new File( asciiBaseDir, "inp.dat/we_nat.zft" ); //$NON-NLS-1$
     m_channelFile = new File( asciiBaseDir, "inp.dat/we_nat.ger" ); //$NON-NLS-1$
@@ -234,33 +218,21 @@ public class NAConfiguration
     m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" ); //$NON-NLS-1$
     m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" ); //$NON-NLS-1$
     m_swaleAndTrenchFile = new File( asciiBaseDir, "inp.dat/we_nat.mr" ); //$NON-NLS-1$
-    m_calculationLogger = new NACalculationLogger( asciiBaseDir.getPath() );
   }
 
-  public NACalculationLogger getCalculationLogger( )
+  private GMLSchema getSchema( final GMLSchemaCatalog schemaCatalog, final String namespace )
   {
-    return m_calculationLogger;
+    try
+    {
+      return schemaCatalog.getSchema( namespace, (String) null );
+    }
+    catch( final GMLSchemaException e )
+    {
+      // will not happen
+      e.printStackTrace();
+      return null;
+    }
   }
-
-  public Logger getLogger( )
-  {
-    return getCalculationLogger().getLogger();
-  }
-
-  public static NAConfiguration getAscii2GmlConfiguration( final File asciiBaseDir, final File gmlBaseDir ) throws Exception
-  {
-    return new NAConfiguration( asciiBaseDir, gmlBaseDir, null );
-  }
-
-  public static NAConfiguration getGml2AsciiConfiguration( final URL modelURL, final File asciiBaseDir ) throws Exception
-  {
-    return new NAConfiguration( asciiBaseDir, null, modelURL );
-  }
-
-  // public URL getSchemaURL()
-  // {
-  // return m_schemaURL;
-  // }
 
   /**
    * Returns landuse name that is compatible with the calculation core; mappings are stored so once given ID is used
@@ -326,16 +298,6 @@ public class NAConfiguration
   public File getRHBFile( )
   {
     return m_rhbFile;
-  }
-
-  public URL getControlSchemaURL( )
-  {
-    return m_controlSchemaURL;
-  }
-
-  public URL getGMLModelURL( )
-  {
-    return m_gmlModelURL;
   }
 
   public File getAsciiBaseDir( )
@@ -418,25 +380,10 @@ public class NAConfiguration
     m_rootNodeId = rootNodeID;
   }
 
-  // public URL getMetaSchemaURL()
-  // {
-  // return m_metaSchemaURL;
-  // }
-
   public File getHydrotopFile( )
   {
     return m_hydrotopFile;
   }
-
-  // public URL getParameterSchemaURL()
-  // {
-  // return m_parameterSchemaURL;
-  // }
-
-  // public URL getHydrotopSchemaUrl()
-  // {
-  // return m_hydrotopSchemaUrl;
-  // }
 
   public URL getHydrotopFormatURL( )
   {
@@ -507,21 +454,6 @@ public class NAConfiguration
   }
 
   /**
-   * All output timeseries must be marked with the szenario id
-   * 
-   * @param szenarioID
-   */
-  public void setSzenarioID( final String szenarioID )
-  {
-    m_szenarioID = szenarioID;
-  }
-
-  public String getScenarioID( )
-  {
-    return m_szenarioID;
-  }
-
-  /**
    * @param nodeResultProvider
    */
   public void setNodeResultProvider( final NaNodeResultProvider nodeResultProvider )
@@ -537,19 +469,16 @@ public class NAConfiguration
   public void setAnnuality( final Double annuality )
   {
     m_annuality = annuality;
-
   }
 
   public void setDuration( final Double duration )
   {
     m_duration = duration;
-
   }
 
   public void setForm( final String precipitationForm )
   {
     m_precipitationForm = precipitationForm;
-
   }
 
   public String getPrecipitationForm( )
@@ -575,7 +504,6 @@ public class NAConfiguration
   public URL getZMLContext( )
   {
     return m_zmlContext;
-
   }
 
   public URL getSwaleAndTrenchFormatURL( )
@@ -631,16 +559,6 @@ public class NAConfiguration
   public GMLWorkspace getSynthNWorkspace( )
   {
     return m_synthNWorkspace;
-  }
-
-  public void setLanduseWorkspace( final GMLWorkspace landuseWorkspace )
-  {
-    m_landuseWorkspace = landuseWorkspace;
-  }
-
-  public GMLWorkspace getLanduseWorkspace( )
-  {
-    return m_landuseWorkspace;
   }
 
   public void setSudsWorkspace( final GMLWorkspace sudsWorkspace )

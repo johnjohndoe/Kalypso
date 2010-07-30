@@ -42,8 +42,6 @@ package org.kalypso.convert.namodel;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
-
 /**
  * @author doemming
  */
@@ -117,6 +115,10 @@ public interface NaModelConstants
 
   public static final String OUTPUT_DIR_NAME = "results"; //$NON-NLS-1$
 
+  public static final String ASCII_DIR_NAME = "ascii"; //$NON-NLS-1$
+
+  public static final String RESULT_DIR_NAME = "Ergebnisse"; //$NON-NLS-1$
+
   public static final String LZSIM_OUT_ID = "LZSIM_OUT"; //$NON-NLS-1$
 
   public static final String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT"; //$NON-NLS-1$
@@ -128,11 +130,6 @@ public interface NaModelConstants
   public static final String LOG_OUTERR_ID = "LOG_OUTERR"; //$NON-NLS-1$
 
   public static final String LOG_INFO_ID = "LOG_INFO"; //$NON-NLS-1$
-
-  /** GML property constants */
-  public static final QName GML_FEATURE_NAME_PROP = new QName( NS.GML2, "name" ); //$NON-NLS-1$
-
-  public static final QName GML_FEATURE_DESCRIPTION_PROP = new QName( NS.GML2, "description" ); //$NON-NLS-1$
 
   /** hydrotop.xsd */
   public static final QName HYDRO_MEMBER = new QName( NS_NAHYDROTOP, "hydrotopMember" ); //$NON-NLS-1$
@@ -543,5 +540,4 @@ public interface NaModelConstants
   public static final QName NACONTROL_USEOFFENDPRED_PROP = new QName( NS_NACONTROL, "useOffsetEndPrediction" ); //$NON-NLS-1$
 
   public static final QName NACONTROL_USE_RESULTS_PROP = new QName( NS_NACONTROL, "useResults" ); //$NON-NLS-1$
-
 }

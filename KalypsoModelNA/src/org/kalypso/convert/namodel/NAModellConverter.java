@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
@@ -44,6 +44,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import org.kalypso.convert.gml2core.SudsFileWriter;
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
@@ -97,7 +98,7 @@ public class NAModellConverter
 
   private final IdleLanduseManager m_idleLanduseManager;
 
-  public NAModellConverter( final NAConfiguration conf ) throws Exception
+  public NAModellConverter( final NAConfiguration conf, final Logger logger ) throws Exception
   {
     m_conf = conf;
 
@@ -109,7 +110,7 @@ public class NAModellConverter
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );
     m_nodeManager = new NetFileManager( m_conf );
 // m_rhbManager = new RHBManager( m_modelSchema, m_conf );
-    m_hydrotopManager = new HydrotopManager( m_conf );
+    m_hydrotopManager = new HydrotopManager( m_conf, logger );
 // m_swaleAndTrenchManager = new SwaleAndTrenchManager( m_modelSchema, m_conf );
     m_bodartManager = new BodenartManager( m_parameterSchema, m_conf );
     m_bodtypManager = new BodentypManager( m_parameterSchema, m_conf );
@@ -167,15 +168,15 @@ public class NAModellConverter
 
   }
 
-  public static Feature modelAsciiToFeature( final NAConfiguration conf ) throws Exception
+  public static Feature modelAsciiToFeature( final NAConfiguration conf, final Logger logger ) throws Exception
   {
-    final NAModellConverter main = new NAModellConverter( conf );
+    final NAModellConverter main = new NAModellConverter( conf, logger );
     return main.getParseManager().modelAsciiToFeature();
   }
 
-  public static Feature parameterAsciiToFeature( final NAConfiguration conf ) throws Exception
+  public static Feature parameterAsciiToFeature( final NAConfiguration conf, final Logger logger ) throws Exception
   {
-    final NAModellConverter main = new NAModellConverter( conf );
+    final NAModellConverter main = new NAModellConverter( conf, logger );
     return main.getParseManager().parameterAsciiToFeature();
   }
 

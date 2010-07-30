@@ -35,16 +35,12 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -66,7 +62,7 @@ public class IDManager
    * key: catchemntID<br>
    * value: list hydID in reihenfolge
    */
-  private Hashtable<String, List<String>> m_hydrohash = new Hashtable<String, List<String>>();
+  private final Hashtable<String, List<String>> m_hydrohash = new Hashtable<String, List<String>>();
 
   public IDManager( )
   {
@@ -74,17 +70,16 @@ public class IDManager
     m_idMapFeature.put( new IDMap( 9001, NODE ), new Object() );
   }
 
-  public Feature getFeature( int asciiID, int type )
+  public Feature getFeature( final int asciiID, final int type )
   {
     final IDMap map = new IDMap( asciiID, type );
     if( m_idMapFeature.containsKey( map ) )
-    {
       return (Feature) m_idMapFeature.get( map );
-    }
+
     return null;
   }
 
-  public int getAsciiID( Feature feature )
+  public int getAsciiID( final Feature feature )
   {
     if( !m_featureIDMap.containsKey( feature ) )
     {
@@ -98,9 +93,9 @@ public class IDManager
   /**
    * @param feature
    */
-  private int getType( Feature feature )
+  private int getType( final Feature feature )
   {
-    String name = feature.getFeatureType().getQName().getLocalPart();
+    final String name = feature.getFeatureType().getQName().getLocalPart();
     if( name.equals( "Catchment" ) ) //$NON-NLS-1$
       return CATCHMENT;
     if( name.endsWith( "Channel" ) ) //$NON-NLS-1$
@@ -113,25 +108,10 @@ public class IDManager
   /**
    * @param feature
    */
-  private IDMap generateAsciiID( Feature feature )
+  private IDMap generateAsciiID( final Feature feature )
   {
-    final QName idProp = NaModelConstants.GML_FEATURE_NAME_PROP;
-    int type = getType( feature );
-    // switch( type )
-    // {
-    // case CATCHMENT:
-    // idProp = "inum";
-    // break;
-    // case CHANNEL:
-    // idProp = "inum";
-    // break;
-    // case NODE:
-    // idProp = "num";
-    // break;
-    // default:
-    // idProp = "name";
-    // }
-    final Object property = feature.getProperty( idProp );
+    final int type = getType( feature );
+    final String property = feature.getName();
     /**
      * reserviert sind die Knoten 9001 (Anfangsknoten) <br>
      * 10000 (Endknoten) >= 10001 (Stränge, um das Netz zu vervollständigen)
@@ -140,7 +120,7 @@ public class IDManager
     {
       if( property != null )
       {
-        int testID = NumberUtils.toInteger( property.toString() );
+        final int testID = NumberUtils.toInteger( property );
         // int testID = Integer.parseInt( property.toString() );
         if( testID >= 1000 && testID < 10000 )
         {
@@ -150,7 +130,7 @@ public class IDManager
         }
       }
     }
-    catch( ParseException e )
+    catch( final ParseException e )
     {
       // e.printStackTrace();
       // ignore exception and generate new id
@@ -169,29 +149,28 @@ public class IDManager
   public void dump( final Writer writer ) throws IOException
   {
     final TreeSet<IDMap> sort = new TreeSet<IDMap>( new Comparator<Object>()
-    {
+        {
       @Override
-      public boolean equals( Object obj )
+      public boolean equals( final Object obj )
       {
         return false;
       }
 
       @Override
-      public int compare( Object o1, Object o2 )
+      public int compare( final Object o1, final Object o2 )
       {
-        IDMap m1 = (IDMap) o1;
-        IDMap m2 = (IDMap) o2;
-        int typeDiff = m1.getType() - m2.getType();
+        final IDMap m1 = (IDMap) o1;
+        final IDMap m2 = (IDMap) o2;
+        final int typeDiff = m1.getType() - m2.getType();
         if( typeDiff != 0 )
           return typeDiff;
         return m1.getAsciiID() - m2.getAsciiID();
       }
-    } );
+        } );
     sort.addAll( m_idMapFeature.keySet() );
     writer.write( String.format( Locale.US, "%-10s%-6s%-16s %-32s %-32s %-32s\n\n", "ASCII ID", "", "GML Type", "GML ID", "GML Name", "GML Description" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-    for( Iterator<IDMap> iter = sort.iterator(); iter.hasNext(); )
+    for( final IDMap idmap : sort )
     {
-      final IDMap idmap = iter.next();
       writer.write( String.format( Locale.US, "%-10s -->  ", idmap.toString() ) ); //$NON-NLS-1$
       final Object value = m_idMapFeature.get( idmap );
       if( value instanceof Feature )
@@ -207,7 +186,7 @@ public class IDManager
     }
   }
 
-  public List<Feature> getAllFeaturesFromType( int type )
+  public List<Feature> getAllFeaturesFromType( final int type )
   {
     final List<Feature> result = new ArrayList<Feature>();
     for( final Object featureObject : m_featureIDMap.keySet() )
@@ -224,7 +203,7 @@ public class IDManager
 
     int asciiID;
 
-    public IDMap( @SuppressWarnings("hiding") int asciiID, @SuppressWarnings("hiding") int type )
+    public IDMap( @SuppressWarnings("hiding") final int asciiID, @SuppressWarnings("hiding") final int type )
     {
       this.type = type;
       this.asciiID = asciiID;
@@ -250,7 +229,7 @@ public class IDManager
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals( Object other )
+    public boolean equals( final Object other )
     {
       if( !(other instanceof IDMap) )
         return false;
@@ -268,13 +247,13 @@ public class IDManager
     }
   }
 
-  public void addHydroInfo( Feature catchmentFE, List<String> hydrIdList )
+  public void addHydroInfo( final Feature catchmentFE, final List<String> hydrIdList )
   {
     m_hydrohash.put( catchmentFE.getId(), hydrIdList );
 
   }
 
-  public String getHydroFeatureId( Feature catchmentFE, int pos )
+  public String getHydroFeatureId( final Feature catchmentFE, final int pos )
   {
     final List<String> hydIdList = m_hydrohash.get( catchmentFE.getId() );
     return hydIdList.get( pos );
@@ -285,7 +264,7 @@ public class IDManager
     return m_hydrohash.keySet();
   }
 
-  public List<String> getSortedHydrosIDsfromLzsim( String catchmentID )
+  public List<String> getSortedHydrosIDsfromLzsim( final String catchmentID )
   {
     return m_hydrohash.get( catchmentID );
   }

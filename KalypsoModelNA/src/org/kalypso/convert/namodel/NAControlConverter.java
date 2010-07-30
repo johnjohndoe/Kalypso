@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
@@ -88,11 +88,11 @@ public class NAControlConverter
     // never instantiate
   }
 
-  public static void featureToASCII( NAConfiguration conf, File projectPath, GMLWorkspace controlWorkspace, GMLWorkspace modellWorkspace ) throws IOException
+  public static void featureToASCII( final NAConfiguration conf, final File startDir, final GMLWorkspace controlWorkspace, final GMLWorkspace modellWorkspace ) throws IOException
   {
-    final Feature controlFE = controlWorkspace.getRootFeature();
-    final File startDir = new File( projectPath, "start" ); //$NON-NLS-1$
     startDir.mkdirs();
+
+    final Feature controlFE = controlWorkspace.getRootFeature();
 
     final File startFile = new File( startDir, "we_nat_start.txt" ); //$NON-NLS-1$
     final File falStartFile = new File( startDir, "falstart.lst" ); //$NON-NLS-1$
@@ -117,7 +117,7 @@ public class NAControlConverter
     writer.close();
   }
 
-  private static void appendInitailDates( final Feature controlFE, final StringBuffer b, NAConfiguration conf )
+  private static void appendInitailDates( final Feature controlFE, final StringBuffer b, final NAConfiguration conf )
   {
     final DateFormat format = NATimeSettings.getInstance().getLzsLzgDateFormat();
 
@@ -132,10 +132,10 @@ public class NAControlConverter
     b.append( "99999\n" ); //$NON-NLS-1$
   }
 
-  private static void appendResultsToGenerate( NAConfiguration conf, Feature controlFE, StringBuffer b )
+  private static void appendResultsToGenerate( final NAConfiguration conf, final Feature controlFE, final StringBuffer b )
   {
-    int minutesOfTimeStep = conf.getMinutesOfTimeStep();
-    double hoursOfTimeStep = minutesOfTimeStep / 60d;
+    final int minutesOfTimeStep = conf.getMinutesOfTimeStep();
+    final double hoursOfTimeStep = minutesOfTimeStep / 60d;
     b.append( " " + hoursOfTimeStep + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_TMP_PROP ) ) + "       Temperatur                 .tmp\n" ); //$NON-NLS-1$
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_PRE_PROP ) ) + "       Niederschlag               .pre\n" ); //$NON-NLS-1$
@@ -156,13 +156,13 @@ public class NAControlConverter
     b.append( "n" + "       Kapil.Aufstieg/Perkolation .kap\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_VET_PROP ) ) + "       Evapotranspiration         .vet\n" ); //$NON-NLS-1$
 
-    
+
     // FIXME die mulden-rigolen sind abhänging von der version der exe. muss erst noch angepasst werden. rechnet jetzt
     // nur mit der v2.5 (ask Christoph)
 //    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QMR_PROP ) ) + "       Ausgabe MRS                .qmr\n" ); //$NON-NLS-1$
-    
-    
-    
+
+
+
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_HYD_PROP ) ) + "       Ausgabe Hydrotope          .hyd\n" ); //$NON-NLS-1$
     // if "2": output of *.txt and *.bil
     if( ((Boolean) (controlFE.getProperty( NaModelConstants.NACONTROL_BIL_PROP ))).booleanValue() )
@@ -203,45 +203,45 @@ public class NAControlConverter
     // boolean onlyRootNodeResult = FeatureHelper.booleanIsTrue( controlWorkspace.getRootFeature(),
     // "resultForRootNodeOnly", true );
     final String rootNodeID = (String) controlWorkspace.getRootFeature().getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP );
-    for( int i = 0; i < nodeFEs.length; i++ )
+    for( final Feature nodeFE : nodeFEs )
     {
       // fuer root node immer ein ergebnis generieren
-      if( rootNodeID != null && rootNodeID.equals( nodeFEs[i].getId() ) )
-        b.append( idManager.getAsciiID( nodeFEs[i] ) + "\n" ); //$NON-NLS-1$
+      if( rootNodeID != null && rootNodeID.equals( nodeFE.getId() ) )
+        b.append( idManager.getAsciiID( nodeFE ) + "\n" ); //$NON-NLS-1$
       // b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
       // fuer nicht root node nur ergebnisse generieren wenn gewuenscht
-      else if( rootNodeID == null && FeatureHelper.booleanIsTrue( nodeFEs[i], NaModelConstants.GENERATE_RESULT_PROP, false ) )
-        b.append( idManager.getAsciiID( nodeFEs[i] ) + "\n" ); //$NON-NLS-1$
+      else if( rootNodeID == null && FeatureHelper.booleanIsTrue( nodeFE, NaModelConstants.GENERATE_RESULT_PROP, false ) )
+        b.append( idManager.getAsciiID( nodeFE ) + "\n" ); //$NON-NLS-1$
       // b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
     }
     b.append( "99999\n" ); //$NON-NLS-1$
     // teilgebiete
     final IFeatureType catchmentFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
     final Feature[] catchmentFEs = modellWorkspace.getFeatures( catchmentFT );
-    for( int i = 0; i < catchmentFEs.length; i++ )
+    for( final Feature catchmentFE : catchmentFEs )
     {
-      if( FeatureHelper.booleanIsTrue( catchmentFEs[i], NaModelConstants.GENERATE_RESULT_PROP, false ) )
-        b.append( idManager.getAsciiID( catchmentFEs[i] ) + "\n" ); //$NON-NLS-1$
+      if( FeatureHelper.booleanIsTrue( catchmentFE, NaModelConstants.GENERATE_RESULT_PROP, false ) )
+        b.append( idManager.getAsciiID( catchmentFE ) + "\n" ); //$NON-NLS-1$
       // b.append( FeatureHelper.getAsString( catchmentFEs[i], "inum" ) + "\n" );
     }
     b.append( "99999\n" ); //$NON-NLS-1$
   }
 
-  private static void writeFalstart( NAConfiguration conf, File startFile, StringBuffer b )
+  private static void writeFalstart( final NAConfiguration conf, final File startFile, final StringBuffer b )
   {
 
-    String system = "we";// "sys"; //$NON-NLS-1$
-    String zustand = "nat"; //$NON-NLS-1$
+    final String system = "we";// "sys"; //$NON-NLS-1$
+    final String zustand = "nat"; //$NON-NLS-1$
     final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyy MM dd HH" ) ); //$NON-NLS-1$
 
-    String startDate = format.format( conf.getSimulationStart() );
-    String endDate = format.format( conf.getSimulationEnd() );
+    final String startDate = format.format( conf.getSimulationStart() );
+    final String endDate = format.format( conf.getSimulationEnd() );
 
     b.append( "xxx\n" ); //$NON-NLS-1$
     b.append( "x einzugsgebiet\n" ); //$NON-NLS-1$
     if( conf.isUsePrecipitationForm().equals( true ) )
     {
-      String preFormText = conf.getPrecipitationForm();
+      final String preFormText = conf.getPrecipitationForm();
       int preForm = 0;
       if( preFormText.equals( "Blockregen" ) ) //$NON-NLS-1$
       {
@@ -273,11 +273,11 @@ public class NAControlConverter
     }
   }
 
-  private static String getBoolean( Object object )
+  private static String getBoolean( final Object object )
   {
     if( object == null || (!(object instanceof Boolean)) )
       return "n"; //$NON-NLS-1$
-    boolean flag = ((Boolean) object).booleanValue();
+    final boolean flag = ((Boolean) object).booleanValue();
     if( flag )
       return "j"; //$NON-NLS-1$
     return "n"; //$NON-NLS-1$

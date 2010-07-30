@@ -49,7 +49,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class DefaultPathGenerator
 {
-
   public static String generateResultPathFor( final Feature feature, final String titleProperty, final String suffix, final String extra )
   {
     final String extraString;

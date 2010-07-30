@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.test;
 
@@ -45,6 +45,7 @@ import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAModellConverter;
@@ -70,33 +71,15 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
  */
 public class Test_NAModellConverter
 {
-  // public static void main( String[] args )
-  // {
-  // final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[] { new DeegreeUrlCatalog(), new UrlCatalogNA() }
-  // );
-  // GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
-  // try
-  // {
-  // // general
-  // final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-  // registry.registerTypeHandler( new ObservationLinkHandler() );
-  // registry.registerTypeHandler( new DiagramTypeHandler() );
-  // completeascii2gml();
-  // }
-  // catch( Exception e )
-  // {
-  // e.printStackTrace();
-  // }
-  // }
-
   public static void completeascii2gml( final File gmlBaseDir, final File asciiBaseDir ) throws Exception
   {
     // final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
     // File asciiBaseDir = new File(
     // "D:\\FE-Projekte\\2004_SchulungIngBueros\\KalypsoSchulung\\tmp\\ex6-longterm\\solution" );
 
-    final NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
-    final Feature modelRootFeature = NAModellConverter.modelAsciiToFeature( conf );
+    final NAConfiguration conf = new NAConfiguration( asciiBaseDir, gmlBaseDir );
+    final Logger anonymousLogger = Logger.getAnonymousLogger();
+    final Feature modelRootFeature = NAModellConverter.modelAsciiToFeature( conf, anonymousLogger );
 
     final String shapeDir = "D:\\Kalypso_NA\\9-Modelle\\7-Rantzau\\05_GIS\\NA-Modell"; //$NON-NLS-1$
     insertSHPGeometries( modelRootFeature, shapeDir );
@@ -104,9 +87,7 @@ public class Test_NAModellConverter
     final File modelGmlFile = new File( gmlBaseDir, "modell.gml" ); //$NON-NLS-1$
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final GMLSchema modelGmlSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
-    // final Document modelSchema = modelGmlSchema.getSchema();
 
-    // IFeatureType[] featureTypes = GMLSchemaUtil.getAllFeatureTypesFromSchema( modelGmlSchema );
     final IFeatureType[] featureTypes = modelGmlSchema.getAllFeatureTypes();
 
     final GMLWorkspace modelWorkspace = new GMLWorkspace_Impl( modelGmlSchema, featureTypes, modelRootFeature, modelGmlFile.toURL(), null, " project:/.model/schema/namodell.xsd", null ); //$NON-NLS-1$
@@ -174,12 +155,4 @@ public class Test_NAModellConverter
         System.out.println( Messages.getString( "org.kalypso.convert.namodel.NAModellConverter.25" ) + id ); //$NON-NLS-1$
     }
   }
-
-// public static void featureToAscii( NAConfiguration conf, GMLWorkspace modelWorkspace, GMLWorkspace
-// parameterWorkspace, GMLWorkspace hydrotopWorkspace, GMLWorkspace synthNWorkspace, final NaNodeResultProvider
-// nodeResultProvider ) throws Exception
-// {
-// NAModellConverter main = new NAModellConverter( conf );
-// main.write( modelWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, nodeResultProvider );
-// }
 }

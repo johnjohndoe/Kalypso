@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
@@ -388,7 +388,7 @@ public class CatchmentManager extends AbstractManager
     }
 
     if( sumGwwi > 1.001 )
-      throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.84", feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ) ) //$NON-NLS-1$
+      throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.84", feature.getName() ) //$NON-NLS-1$
           + ", AsciiID: " + asciiID ); //$NON-NLS-1$
     if( sumGwwi < 0.999 )
     {
@@ -396,7 +396,7 @@ public class CatchmentManager extends AbstractManager
       final double delta = 1 - sumGwwi;
       line13.append( "0 " ); //$NON-NLS-1$
       line14.append( delta + " " ); //$NON-NLS-1$
-      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88" ), feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ).toString(), Integer.toString( asciiID ), sumGwwi * 100.0 ) ); //$NON-NLS-1$
+      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88" ), feature.getName(), Integer.toString( asciiID ), sumGwwi * 100.0 ) ); //$NON-NLS-1$
       Logger.getAnonymousLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.92" ), delta * 100.0 ) ); //$NON-NLS-1$
     }
 
@@ -553,9 +553,9 @@ public class CatchmentManager extends AbstractManager
     while( iter.hasNext() )
     {
       final Feature statNFE = iter.next();
-      if( statNFE.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ) != null )
+      if( statNFE.getName() != null )
       {
-        if( ((statNFE.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP )).toString()).equals( synthNKey ) )
+        if( statNFE.getName().equals( synthNKey ) )
         {
           final List< ? > statNParameterList = (List< ? >) statNFE.getProperty( NaModelConstants.STATNPARA_MEMBER );
           final Iterator< ? > iter1 = statNParameterList.iterator();

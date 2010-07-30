@@ -44,6 +44,7 @@ package org.kalypso.ui.rrm.wizards;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -126,8 +127,9 @@ public class NewNAAsciiProjectWizard extends NewProjectWizard
   private void importParameter( final IPath paraPath, final File asciiBaseDir ) throws Exception
   {
     final File parameterGmlFile = paraPath.toFile();
-    final NAConfiguration ascii2GmlConfiguration = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, parameterGmlFile );
-    final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration );
+    final NAConfiguration ascii2GmlConfiguration = new NAConfiguration( asciiBaseDir, parameterGmlFile );
+    final Logger anonymousLogger = Logger.getAnonymousLogger();
+    final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration, anonymousLogger );
     final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( m_parameterSchema, m_parameterSchema.getAllFeatureTypes(), parameterRootFeature, null, null, "http://www.tuhh.de/parameter", null ); //$NON-NLS-1$
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
     System.out.println( Messages.getString( "org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.7" ) + parameterGmlFile.getPath() ); //$NON-NLS-1$

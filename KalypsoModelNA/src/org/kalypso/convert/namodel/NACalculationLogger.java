@@ -53,39 +53,33 @@ public class NACalculationLogger
 {
   private static final String NA_LOG_FILE_PATH[] = { NaModelConstants.OUTPUT_DIR_NAME, "Ergebnisse", "Aktuell", "Log", "calculation.log" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-  private boolean m_isLoggerActive;
-
-  private final String m_calculationFolder;
-
   private Logger m_logger;
 
   private FileHandler m_logHandler;
 
-  public NACalculationLogger( final String calculationFolder )
+  private final File m_logFile;
+
+  public NACalculationLogger( final File logFile )
   {
-    m_isLoggerActive = false;
-    m_calculationFolder = calculationFolder;
+    m_logFile = logFile;
   }
 
-  public final void startLogging( )
+  private final void startLogging( )
   {
-    if( m_isLoggerActive )
+    if( m_logHandler != null )
       return;
+
     try
     {
-      final StringBuffer buffer = new StringBuffer( m_calculationFolder );
-      for( final String pathMember : NA_LOG_FILE_PATH )
-        buffer.append( File.separator ).append( pathMember );
-      final File logFile = new File( buffer.toString() );
-      logFile.getParentFile().mkdirs();
-      logFile.createNewFile();
-      m_logHandler = new FileHandler( buffer.toString(), false );
+      m_logFile.getParentFile().mkdirs();
+      m_logFile.createNewFile();
+
+      m_logHandler = new FileHandler( m_logFile.getAbsolutePath(), false );
       m_logHandler.setFormatter( new SimpleFormatter() );
       m_logHandler.setEncoding( "UTF-8" );
 
       m_logger = Logger.getLogger( NA_LOG_FILE_PATH[NA_LOG_FILE_PATH.length - 1] );
       m_logger.addHandler( m_logHandler );
-      m_isLoggerActive = true;
       m_logger.info( "Calculation logging started" ); //$NON-NLS-1$
     }
     catch( final IOException e )
@@ -103,16 +97,12 @@ public class NACalculationLogger
 
   public final void stopLogging( )
   {
-    if( m_isLoggerActive )
+    if( m_logHandler != null )
     {
       m_logHandler.flush();
       m_logHandler.close();
-      m_isLoggerActive = false;
+      m_logHandler = null;
+      m_logger = null;
     }
   }
-
-// public static final Logger getProjectLogger( )
-// {
-// return Logger.getLogger( NA_LOGGER );
-// }
 }
