@@ -376,22 +376,22 @@ public class TrennerPanel extends AbstractProfilView
     if( bv_devs.length > 0 )
     {
       m_bvl_text.setVisible( true );
+      m_bvr_text.setVisible( true );
       m_bvl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, bv_devs[0].getPoint() ) ) ); //$NON-NLS-1$
     }
     else
     {
       m_bvl_text.setVisible( false );
+      m_bvr_text.setVisible( false );
       m_bvl_text.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
     }
 
     if( bv_devs.length > 1 )
     {
-      m_bvr_text.setVisible( true );
       m_bvr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, bv_devs[1].getPoint() ) ) ); //$NON-NLS-1$
     }
     else
     {
-      m_bvr_text.setVisible( false );
       m_bvr_text.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
     }
 
@@ -401,7 +401,7 @@ public class TrennerPanel extends AbstractProfilView
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
+    if( hint.isPointPropertiesChanged() || hint.isPointValuesChanged()||hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )

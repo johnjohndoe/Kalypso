@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
+import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -104,10 +105,13 @@ public class DeviderTheme extends AbstractProfilTheme
   public ILegendEntry[] createLegendEntries( )
   {
     final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
-    final String[] deviderIds = new String[getLayerManager().getLayers().length];
+
+    final IComponent[] deviders = getProfil().getPointMarkerTypes();
+    final String[] deviderIds = new String[deviders.length];
     int i = 0;
-    for( final IChartLayer layer : getLayerManager().getLayers() )
-      deviderIds[i++] = layer.getId();
+
+    for( final IComponent devider : deviders )
+      deviderIds[i++] = devider.getId();
 
     final LegendEntry le = new LegendEntry( this, getTitle() )
     {
