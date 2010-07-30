@@ -632,59 +632,59 @@ public class NaModelInnerCalcJob implements ISimulation
     final Integer minutesOfTimeStep = (Integer) metaFE.getProperty( NaModelConstants.CONTROL_MINUTES_TIMESTEP_PROP );
     if( minutesOfTimeStep != null )
       minutesTimeStep = minutesOfTimeStep.intValue() != 0 ? minutesOfTimeStep.intValue() : 60;
-      conf.setMinutesOfTimeStep( minutesTimeStep );
+    conf.setMinutesOfTimeStep( minutesTimeStep );
 
-      // choose simulation kernel
-      m_kalypsoKernelPath = chooseSimulationExe( (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP ), monitor );
-      if( m_kalypsoKernelPath == null )
-        return null;
+    // choose simulation kernel
+    m_kalypsoKernelPath = chooseSimulationExe( (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP ), monitor );
+    if( m_kalypsoKernelPath == null )
+      return null;
 
-      // choose precipitation form and parameters
-      final Boolean pns = (Boolean) metaFE.getProperty( NaModelConstants.CONTROL_PNS_PROP );
-      conf.setUsePrecipitationForm( pns == null ? false : pns );
-      if( conf.isUsePrecipitationForm().equals( true ) )
-      {
-        // the GUI asks for return period [a] - the fortran kernal needs annuality [1/a]
-        conf.setAnnuality( 1d / (Double) metaFE.getProperty( NaModelConstants.CONTROL_XJAH_PROP ) );
-        final Double durationMinutes = (Double) metaFE.getProperty( NaModelConstants.CONTROL_XWAHL2_PROP );
-        final Double durationHours = durationMinutes / 60d;
-        conf.setDuration( durationHours );
-        conf.setForm( (String) metaFE.getProperty( NaModelConstants.CONTROL_IPVER_PROP ) );
-      }
+    // choose precipitation form and parameters
+    final Boolean pns = (Boolean) metaFE.getProperty( NaModelConstants.CONTROL_PNS_PROP );
+    conf.setUsePrecipitationForm( pns == null ? false : pns );
+    if( conf.isUsePrecipitationForm().equals( true ) )
+    {
+      // the GUI asks for return period [a] - the fortran kernal needs annuality [1/a]
+      conf.setAnnuality( 1d / (Double) metaFE.getProperty( NaModelConstants.CONTROL_XJAH_PROP ) );
+      final Double durationMinutes = (Double) metaFE.getProperty( NaModelConstants.CONTROL_XWAHL2_PROP );
+      final Double durationHours = durationMinutes / 60d;
+      conf.setDuration( durationHours );
+      conf.setForm( (String) metaFE.getProperty( NaModelConstants.CONTROL_IPVER_PROP ) );
+    }
 
-      // set rootnode
-      conf.setRootNodeID( (String) controlWorkspace.getRootFeature().getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP ) );
+    // set rootnode
+    conf.setRootNodeID( (String) controlWorkspace.getRootFeature().getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP ) );
 
-      // generate modell files
-      conf.setModelWorkspace( modellWorkspace );
-      conf.setParameterWorkspace( parameterWorkspace );
-      conf.setHydrotopeWorkspace( hydrotopWorkspace );
-      conf.setSynthNWorkspace( synthNWorkspace );
-      conf.setLanduseWorkspace( landuseWorkspace );
-      conf.setSudsWorkspace( sudsWorkspace );
+    // generate modell files
+    conf.setModelWorkspace( modellWorkspace );
+    conf.setParameterWorkspace( parameterWorkspace );
+    conf.setHydrotopeWorkspace( hydrotopWorkspace );
+    conf.setSynthNWorkspace( synthNWorkspace );
+    conf.setLanduseWorkspace( landuseWorkspace );
+    conf.setSudsWorkspace( sudsWorkspace );
 
-      // generate control files
-      NAControlConverter.featureToASCII( conf, tmpDir, controlWorkspace, modellWorkspace );
+    // generate control files
+    NAControlConverter.featureToASCII( conf, tmpDir, controlWorkspace, modellWorkspace );
 
-      // update model with factor values from control
-      updateFactorParameter( modellWorkspace );
+    // update model with factor values from control
+    updateFactorParameter( modellWorkspace );
 
-      final NAModellConverter main = new NAModellConverter( conf );
-      main.write();
+    final NAModellConverter main = new NAModellConverter( conf );
+    main.write();
 
-      // dump idmapping to file
-      final IDManager idManager = conf.getIdManager();
-      Writer idWriter = null;
-      try
-      {
-        idWriter = new FileWriter( new File( tmpDir, "IdMap.txt" ) ); //$NON-NLS-1$
-        idManager.dump( idWriter );
-      }
-      finally
-      {
-        IOUtils.closeQuietly( idWriter );
-      }
-      return modellWorkspace;
+    // dump idmapping to file
+    final IDManager idManager = conf.getIdManager();
+    Writer idWriter = null;
+    try
+    {
+      idWriter = new FileWriter( new File( tmpDir, "IdMap.txt" ) ); //$NON-NLS-1$
+      idManager.dump( idWriter );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( idWriter );
+    }
+    return modellWorkspace;
   }
 
   /**
@@ -1224,9 +1224,9 @@ public class NaModelInnerCalcJob implements ISimulation
             final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" ); //$NON-NLS-1$
 
             copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { TimeserieConstants.MD_ALARM_1, TimeserieConstants.MD_ALARM_2, TimeserieConstants.MD_ALARM_3,
-              TimeserieConstants.MD_ALARM_4, TimeserieConstants.MD_GEWAESSER, TimeserieConstants.MD_FLUSSGEBIET, TimeserieConstants.MD_GKH, TimeserieConstants.MD_GKR,
-              TimeserieConstants.MD_HOEHENANGABEART, TimeserieConstants.MD_PEGELNULLPUNKT, TimeserieConstants.MD_WQWECHMANN, TimeserieConstants.MD_WQTABLE, TimeserieConstants.MD_TIMEZONE,
-              TimeserieConstants.MD_VORHERSAGE_START, TimeserieConstants.MD_VORHERSAGE_ENDE } );
+                TimeserieConstants.MD_ALARM_4, TimeserieConstants.MD_GEWAESSER, TimeserieConstants.MD_FLUSSGEBIET, TimeserieConstants.MD_GKH, TimeserieConstants.MD_GKR,
+                TimeserieConstants.MD_HOEHENANGABEART, TimeserieConstants.MD_PEGELNULLPUNKT, TimeserieConstants.MD_WQWECHMANN, TimeserieConstants.MD_WQTABLE, TimeserieConstants.MD_TIMEZONE,
+                TimeserieConstants.MD_VORHERSAGE_START, TimeserieConstants.MD_VORHERSAGE_ENDE } );
 
           }
         }
@@ -1283,7 +1283,7 @@ public class NaModelInnerCalcJob implements ISimulation
         // create observation object
         final String titleForObservation = DefaultPathGenerator.generateTitleForObservation( resultFeature, titlePropName, suffix );
 
-        final IObservation resultObservation = new SimpleObservation( resultPathRelative, titleForObservation, metadataList, axis, qTuppelModel ); //$NON-NLS-1$
+        final IObservation resultObservation = new SimpleObservation( resultPathRelative, titleForObservation, metadataList, qTuppelModel ); //$NON-NLS-1$
 
         ZmlFactory.writeToFile( resultObservation, resultFile );
       }
@@ -1374,7 +1374,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     final IAxis[] axes = resultAxisList.toArray( new IAxis[0] );
     final ITuppleModel resultTuppleModel = new SimpleTuppleModel( axes, resultValuesList.toArray( new Object[0][] ) );
-    final IObservation resultObservation = new SimpleObservation( reportPathZML, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), new MetadataList(), axes, resultTuppleModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IObservation resultObservation = new SimpleObservation( reportPathZML, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), new MetadataList(), resultTuppleModel ); //$NON-NLS-1$ //$NON-NLS-2$
     ZmlFactory.writeToFile( resultObservation, reportFileZML );
 
     FileOutputStream streamCSV = null;

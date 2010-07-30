@@ -64,7 +64,6 @@ import org.kalypso.model.rcm.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -157,7 +156,6 @@ public class RainfallGenerationOp
     m_targetTo = targetTo;
     m_log = log;
   }
-
 
   /**
    * Sets a filter that will be applied to all read observations. If <code>null</code>, the observation is read as is.
@@ -259,12 +257,11 @@ public class RainfallGenerationOp
     final String name = o.getName();
     final MetadataList metadataList = new MetadataList();
     metadataList.putAll( o.getMetadataList() );
-    final IAxis[] axisList = o.getAxisList(); // clone?
     final ITuppleModel values = o.getValues( request );
 
     final SimpleTuppleModel clonedValues = new SimpleTuppleModel( values, new DateRange( from, to ) );
 
-    final SimpleObservation simpleObservation = new SimpleObservation( href, name, metadataList, axisList, clonedValues );
+    final SimpleObservation simpleObservation = new SimpleObservation( href, name, metadataList, clonedValues );
     return simpleObservation;
   }
 
