@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
+import java.util.ArrayList;
+
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
@@ -56,6 +58,7 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -101,7 +104,25 @@ public class BuildingWeirTheme extends AbstractProfilTheme
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
     new ProfilOperationJob( operation ).schedule();
   }
-
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
+   */
+  @Override
+  public IChartLayer[] getLegendNodes( )
+  {
+    final ArrayList<IChartLayer> cl = new ArrayList<IChartLayer>();
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+    {
+      if( layer instanceof IProfilChartLayer )
+      {
+        if( getProfil().hasPointProperty( ((IProfilChartLayer) layer).getTargetComponent() ) )
+        {
+          cl.add( layer );
+        }
+      }
+    }
+    return cl.toArray( new IChartLayer[] {} );
+  }
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
    */

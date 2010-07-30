@@ -12,9 +12,11 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
+import de.openali.odysseus.chart.framework.model.data.impl.NumberDataOperator;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.registry.impl.NumberComparator;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
@@ -22,8 +24,11 @@ import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 public class LengthSectionBridgeLayer extends TupleResultLineLayer
 {
+  private final IDataOperator<Number> m_dop = new NumberDataOperator( new NumberComparator() );
+
   public LengthSectionBridgeLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
+
     super( data, lineStyle, pointStyle );
 
   }
@@ -81,32 +86,20 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     return getScreenRect( index );
   }
 
-  @SuppressWarnings("rawtypes")
   private final Rectangle getScreenRect( final int i )
   {
     final TupleResult result = m_data.getObservation().getResult();
+    final IRecord record = result.get( i );
     final int iUK = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
-    final Object[] domainValues = m_data.getDomainValues();
-    final Object[] targetValues = m_data.getTargetValues();
-    final Object[] uKValues = iUK < 0 ? new Object[] {} : ProfilUtil.getValuesFor( result.toArray( new IRecord[] {} ), result.getComponent( iUK ) );
-
-    final IAxis domainAxis = getDomainAxis();
-    final IAxis targetAxis = getTargetAxis();
-    final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass() );
-    final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass() );
-    if( dopDomain == null || dopTarget == null )
+    final int iOK = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK );
+    final int iST = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION );
+    final Double uK = ProfilUtil.getDoubleValueFor( iUK, record );
+    final Double oK = ProfilUtil.getDoubleValueFor( iOK, record );
+    final Double sT = ProfilUtil.getDoubleValueFor( iST, record );
+    if( uK == null || oK == null || sT == null )
       return null;
-    final Number domainValue = dopDomain.logicalToNumeric( domainValues[i] );
-    final Number domainValLeft = i > 0 ? dopDomain.logicalToNumeric( domainValues[i - 1] ) : domainValue;
-    final Number domainValRight = i < domainValues.length - 1 ? dopDomain.logicalToNumeric( domainValues[i + 1] ) : domainValue;
-    final Number targetValue = dopTarget.logicalToNumeric( targetValues[i] );
-    final Number uKValue = dopTarget.logicalToNumeric( uKValues[i] );
-    if( domainValue != null && targetValue != null && uKValue != null && domainValRight != null && domainValLeft != null )
-    {
-      final Point OKLeft = getCoordinateMapper().numericToScreen( (Double) domainValLeft + ((Double) domainValue - (Double) domainValLeft) / 2.0, targetValue );
-      final Point UKRight = getCoordinateMapper().numericToScreen( (Double) domainValue + ((Double) domainValRight - (Double) domainValue) / 2.0, uKValue );
-      return new Rectangle( OKLeft.x, OKLeft.y, UKRight.x - OKLeft.x, UKRight.y - OKLeft.y );
-    }
-    return null;
+    final Point pUK = getCoordinateMapper().numericToScreen( sT, uK );
+    final Point pOK = getCoordinateMapper().numericToScreen( sT, oK );
+    return new Rectangle( pOK.x - 5, pOK.y, 10, pUK.y - pOK.y );
   }
 }

@@ -47,9 +47,11 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -63,12 +65,36 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 
 /**
  * @author kimwerner
  */
 public class PointMarkerLayer extends AbstractProfilLayer
 {
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
+   */
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
+
+    final LegendEntry le = new LegendEntry( this, getTitle() )
+    {
+      @Override
+      public void paintSymbol( final GC gc, final Point size )
+      {
+        final IComponent cmp = getTargetComponent();
+        if( cmp != null )
+          markerProvider.drawMarker( new String[] { cmp.getId() }, gc );
+      }
+    };
+
+    return new ILegendEntry[] { le };
+  }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
@@ -97,7 +123,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
 
   public PointMarkerLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
   {
-    super( IWspmTuhhConstants.LAYER_DEVIDER +"_"+ targetRangeProperty, profil, targetRangeProperty, styleProvider );
+    super( IWspmTuhhConstants.LAYER_DEVIDER + "_" + targetRangeProperty, profil, targetRangeProperty, styleProvider );
 
     m_offset = offset;
 
