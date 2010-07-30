@@ -387,7 +387,12 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleListSelectionChanged( parent, hydrographInfoGroup, featureComposite, event );
+        try{
+          handleListSelectionChanged( parent, hydrographInfoGroup, featureComposite, event );
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
       }
     } );
 

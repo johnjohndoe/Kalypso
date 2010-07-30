@@ -16,6 +16,9 @@
    <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround"/>
    <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"/>
    <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
+   <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveHsig"/>
+   <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveDirection"/>
+   <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WavePeakPeriod"/>
   </sweExt:SortedRecordDefinition>
  </om:resultDefinition>
  <om:result></om:result>
