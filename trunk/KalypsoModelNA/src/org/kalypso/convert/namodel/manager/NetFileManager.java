@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
@@ -231,8 +231,8 @@ public class NetFileManager extends AbstractManager
       // adding Timeseries links
 
       final TimeseriesLinkType pegelLink = NAZMLGenerator.copyToTimeseriesLink( null, TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf // TODO
-      // NA_PEGEL
-      .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true ); //$NON-NLS-1$//$NON-NLS-2$
+          // NA_PEGEL
+          .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true ); //$NON-NLS-1$//$NON-NLS-2$
       final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
       fePropMap.put( pt, pegelLink );
 
@@ -276,11 +276,11 @@ public class NetFileManager extends AbstractManager
     // final FeatureProperty numPropertyKnotO = FeatureFactory.createFeatureProperty( "num", "" + iknotoNr );
     final Feature knotoFE = getFeature( iknotoNr, m_conf.getNodeFT() );
     nodeCollector.put( knotoFE.getId(), knotoFE );
-    knotoFE.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, "" + iknotoNr ); //$NON-NLS-1$
+    knotoFE.setName( "" + iknotoNr ); //$NON-NLS-1$
     // final FeatureProperty numPropertyKnotU = FeatureFactory.createFeatureProperty( "num", "" + iknotuNr );
     final Feature knotuFE = getFeature( iknotuNr, m_conf.getNodeFT() );
     nodeCollector.put( knotuFE.getId(), knotuFE );
-    knotuFE.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, "" + iknotuNr ); //$NON-NLS-1$
+    knotuFE.setName( "" + iknotuNr ); //$NON-NLS-1$
     // set node channel relations
     final Feature strangFE = getExistingFeature( istrngNr, new IFeatureType[] { m_conf.getKmChannelFT(), m_conf.getVChannelFT(), m_conf.getStChannelFT() } );
     // node -> strang

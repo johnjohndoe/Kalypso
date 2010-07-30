@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
@@ -81,6 +82,8 @@ public class HydrotopManager extends AbstractManager
   final NAConfiguration m_conf;
 
   final Hashtable<String, Double> m_landuseSealingRateMap = new Hashtable<String, Double>();
+
+  private final Logger m_logger;
 
   private class HydrotopSudsAsciiDescriptor
   {
@@ -145,17 +148,18 @@ public class HydrotopManager extends AbstractManager
     }
   }
 
-  public HydrotopManager( final NAConfiguration conf ) throws IOException
+  public HydrotopManager( final NAConfiguration conf, final Logger logger ) throws IOException
   {
     super( conf.getHydrotopFormatURL() );
     m_conf = conf;
+    m_logger = logger;
   }
 
   /**
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
   @Override
-  public String mapID( int id, IFeatureType ft )
+  public String mapID( final int id, final IFeatureType ft )
   {
     return null;
   }
@@ -164,13 +168,12 @@ public class HydrotopManager extends AbstractManager
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
   @Override
-  public Feature[] parseFile( URL url ) throws Exception
+  public Feature[] parseFile( final URL url ) throws Exception
   {
-
     return null;
   }
 
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace hydWorkspace, GMLWorkspace modelWorkspace, GMLWorkspace parameterWorkspace ) throws Exception
+  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace hydWorkspace, final GMLWorkspace modelWorkspace, final GMLWorkspace parameterWorkspace ) throws Exception
   {
     final IDManager idManager = m_conf.getIdManager();
     // Catchment
@@ -187,7 +190,7 @@ public class HydrotopManager extends AbstractManager
       final Double sealingRate = (Double) linkedSealingFE.getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING );
       final String landuseName = m_conf.getLanduseFeatureShortedName( landuseFE.getName() );
       if( m_landuseSealingRateMap.containsKey( landuseName ) )
-        m_conf.getLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.0", landuseName ) ); //$NON-NLS-1$
+        m_logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.0", landuseName ) ); //$NON-NLS-1$
       else
         m_landuseSealingRateMap.put( landuseName, sealingRate );
     }
@@ -229,7 +232,7 @@ public class HydrotopManager extends AbstractManager
             if( landuseSealing == null )
             {
               final String msg = "Unknown landuse found. Please re=create hydrotop file!"; //$NON-NLS-1$
-              m_conf.getLogger().severe( msg );
+              m_logger.severe( msg );
               throw new SimulationException( msg );
             }
             double totalSealingPercentage = landuseSealing.doubleValue() * hydrotop.getCorrSealing();
@@ -326,7 +329,7 @@ public class HydrotopManager extends AbstractManager
         final double fehler = Math.abs( catchmentGeometry.getArea() - totalHydrotopArea );
         final double fehlerinProzent = 100.0 * fehler / totalHydrotopArea;
         if( fehlerinProzent > 1.0 )
-          m_conf.getLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3", totalHydrotopArea, catchmentFE.getId(), catchmentGeometry.getArea(), fehler, fehlerinProzent ) ); //$NON-NLS-1$
+          m_logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3", totalHydrotopArea, catchmentFE.getId(), catchmentGeometry.getArea(), fehler, fehlerinProzent ) ); //$NON-NLS-1$
 
         if( anySuds )
         {

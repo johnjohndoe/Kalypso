@@ -91,15 +91,18 @@ public class LzsimManager
 
   private final Date[] m_initialDates;
 
-  public LzsimManager( Date[] initialDates )
+  private final File m_outputDir;
+
+  public LzsimManager( final Date[] initialDates, final File outputDir )
   {
     m_initialDates = initialDates;
+    m_outputDir = outputDir;
   }
 
   /**
    * Reads the initial values back from the ascii files, if any have been ordered.
    */
-  public void readInitialValues( final IDManager idManager, final File tmpDir, final Logger logger, final File outputDir ) throws Exception
+  public void readInitialValues( final IDManager idManager, final File lzsimDir, final Logger logger ) throws Exception
   {
     if( m_initialDates.length == 0 )
       return;
@@ -112,12 +115,11 @@ public class LzsimManager
     final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd 00" ) ); //$NON-NLS-1$
     final Pattern patternHeaderBODF = Pattern.compile( "([0-9]{8} [0-9]{2}) h ([0-9]+?) bodf" ); //$NON-NLS-1$
 
-    for( Date initialDate : m_initialDates )
+    for( final Date initialDate : m_initialDates )
     {
       final String iniDate = dateFormat.format( initialDate );
 
       // create new GMLworkspace for lzsim results
-      final File lzsimDir = new File( tmpDir, "lzsim" ); //$NON-NLS-1$
       final GMLWorkspace lzWorkspace = FeatureFactory.createGMLWorkspace( new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ), null, null ); //$NON-NLS-1$
       final Feature lzRootFE = lzWorkspace.getRootFeature();
       final XMLGregorianCalendar xmlIniDate = DateUtilities.toXMLGregorianCalendar( initialDate );
@@ -199,7 +201,7 @@ public class LzsimManager
                   counterHydros = 0;
                 }
               }
-                break;
+              break;
               case STATUS_READ_GWSP:
               {
                 final String[] strings = line.split( " " ); //$NON-NLS-1$
@@ -209,7 +211,7 @@ public class LzsimManager
                 lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "qb" ), qb ); //$NON-NLS-1$
                 status = STATUS_SEARCH_HEADER;
               }
-                break;
+              break;
               case STATUS_READ_SNOW:
                 final String[] strings = line.split( " " ); //$NON-NLS-1$
                 final Double h = Double.valueOf( strings[1] );// hoehe schnee
@@ -223,7 +225,7 @@ public class LzsimManager
         }
         catch( final Exception e )
         {
-          System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.LzsimManager.27", asciiID,feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ) )); //$NON-NLS-1$ 
+          System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", asciiID, feature.getName() ) ); //$NON-NLS-1$ 
         }
       }
 
@@ -266,19 +268,19 @@ public class LzsimManager
               lzChannelFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "qgs" ), qgs ); //$NON-NLS-1$
               status = STATUS_SEARCH_HEADER;
             }
-              break;
+            break;
           }
         }
       }// TODO: check, if we read any data for this date
-      final String resultPathRelative = "Ergebnisse/Aktuell/Anfangswerte/" + formatFileName.format( initialDate ) + ".gml";   //$NON-NLS-1$//$NON-NLS-2$
-      final File resultFile = new File( outputDir, resultPathRelative );
+      final String resultFilename = formatFileName.format( initialDate ) + ".gml"; //$NON-NLS-1$//$NON-NLS-2$
+      final File resultFile = new File( m_outputDir, resultFilename );
       resultFile.getParentFile().mkdirs();
       GmlSerializer.serializeWorkspace( resultFile, lzWorkspace, "UTF-8" ); //$NON-NLS-1$
       logger.info( Messages.getString("org.kalypso.convert.namodel.manager.LzsimManager.42", iniDate )); //$NON-NLS-1$
     }
   }
 
-  public static void writeLzsimFiles( final IDManager idManager, final File tmpDir, final GMLWorkspace iniValuesWorkspace )
+  public static void writeLzsimFiles( final IDManager idManager, final File lzsimDir, final GMLWorkspace iniValuesWorkspace )
   {
     final List<Feature> allNAChannelFeatures = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
     final Hashtable<String, Feature> channelIDToFeatureHash = new Hashtable<String, Feature>();
@@ -290,7 +292,6 @@ public class LzsimManager
     for( final Feature feature : allNACatchmentFeatures )
       catchmentIDToFeatureHash.put( feature.getId(), feature );
 
-    final File lzsimDir = new File( tmpDir, "lzsim" ); //$NON-NLS-1$
     final Feature iniValuesRootFeature = iniValuesWorkspace.getRootFeature();
     // Initial value date
     final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) iniValuesRootFeature.getProperty( new QName( NaModelConstants.NS_INIVALUES, "iniDate" ) ) ); //$NON-NLS-1$
@@ -385,10 +386,10 @@ public class LzsimManager
                 {
                   final Double bi = (Double) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "bi" ) ); //$NON-NLS-1$
                   lzsBuffer.append( FortranFormatHelper.printf( hydroPos, "i4" ) + FortranFormatHelper.printf( bi, "f7.2" ) );  //$NON-NLS-1$//$NON-NLS-2$
-                  final List<Double> bofs = (List<Double>) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "bofs" ) ); //$NON-NLS-1$
-                  for( final Double bof : bofs )
+                  final List< ? > bofs = (List< ? >) iniHydFe.getProperty( new QName( NaModelConstants.NS_INIVALUES, "bofs" ) ); //$NON-NLS-1$
+                  for( final Object bof : bofs )
                   {
-                    lzsBuffer.append( FortranFormatHelper.printf( bof, "f7.2" ) ); //$NON-NLS-1$
+                    lzsBuffer.append( FortranFormatHelper.printf( (Double) bof, "f7.2" ) ); //$NON-NLS-1$
                   }
                   lzsBuffer.append( "\n" ); //$NON-NLS-1$
                 }
