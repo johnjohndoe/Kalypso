@@ -324,7 +324,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
         metadata.putAll( targetObservation.getMetadataList() );
       metadata.putAll( srcObservation.getMetadataList() );
 
-      final IObservation newObservation = new SimpleObservation( href, name, metadata, axesNew, newTuppelModel );
+      final IObservation newObservation = new SimpleObservation( href, name, metadata, newTuppelModel );
 
       ZmlFactory.writeToFile( newObservation, fileTarget );
 

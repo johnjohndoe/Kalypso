@@ -148,7 +148,7 @@ public class IdleLanduseManager extends AbstractManager
     for( int i = 0; i < 12; i++ )
     {
       line = reader.readLine();
-      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.IdleLanduseManager.2",i ,line )); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.IdleLanduseManager.2", i, line ) ); //$NON-NLS-1$ //$NON-NLS-2$
       createProperties( propCollector, line, 10 );
 
       // day.month.[-1|00]
@@ -175,7 +175,7 @@ public class IdleLanduseManager extends AbstractManager
     }
 
     final ITuppleModel model = new SimpleTuppleModel( axis, values );
-    final SimpleObservation observation = new SimpleObservation( null, fileDescription, new MetadataList(), axis, model );
+    final SimpleObservation observation = new SimpleObservation( null, fileDescription, new MetadataList(), model );
     feature.setProperty( NaModelConstants.PARA_IDEAL_LANDUSE_ZML, observation );
 
     line = reader.readLine();
