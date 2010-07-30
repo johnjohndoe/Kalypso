@@ -527,7 +527,7 @@ public class Control1D2DConverterSWAN
         "$\n" + //$NON-NLS-1$
         "BLOCK 'COMPGRID' NOHEAD '%s.mat' XP YP HSIG TM01 DIR WATLEV WLEN FORCE VEL WIND %s \n" + //$NON-NLS-1$
         "POINTS 'P_%s' FILE '%s.txt'\n" + //$NON-NLS-1$
-        "TABLE 'P_%s' HEAD '%s_out.tab' %s XP YP HSIG DIR WATLEV WIND VEL %s \n" + //$NON-NLS-1$   
+        "TABLE 'P_%s' HEAD '%s_out.tab' %s XP YP HSIG DIR TM01 WATLEV WIND VEL %s \n" + //$NON-NLS-1$   
         "TEST 1,0\n" + //$NON-NLS-1$
         "COMPUTE %s %s\n" + //$NON-NLS-1$ 
         "STOP\n" + //$NON-NLS-1$
