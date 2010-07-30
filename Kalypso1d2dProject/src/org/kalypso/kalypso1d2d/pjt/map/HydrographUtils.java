@@ -238,6 +238,9 @@ public class HydrographUtils
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_DEPTH );
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY );
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+    componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG );
+    componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_PER );
+    componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_DIR );
 
     final String[] componentUrns = componentUrnList.toArray( new String[componentUrnList.size()] );
 

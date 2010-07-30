@@ -130,7 +130,107 @@
 					</PointStyle>
 				</Styles>
 			</Layer>
-
+			
+			<!-- Wave parameter -->
+			<Layer visible="true" id="waveHsigLayer">
+				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+					<Parameters>
+						<Parameter name="featureKey" value="hydrographFeatureKey" />
+						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveHsig" />
+					</Parameters>
+				</Provider>
+				<Title>Signifikante Wellenhöhe</Title>
+				<Description>Signifikante Wellenhöhe</Description>
+				<MapperRefs>
+					<DomainAxisRef ref="timeAxis" />
+					<TargetAxisRef ref="nnAxis" />
+				</MapperRefs>
+				<Styles>
+					<LineStyle role="line">
+						<Title>hsig line title</Title>
+						<Width>2</Width>
+						<LineColor>0000aa</LineColor>
+					</LineStyle>
+					<PointStyle role="point">
+						<Title>hsig point title</Title>
+						<Width>5</Width>
+						<Height>5</Height>
+						<Stroke>
+							<Width>1</Width>
+							<LineColor>0000aa</LineColor>
+						</Stroke>
+						<FillColor>3333aa</FillColor>
+					</PointStyle>
+				</Styles>
+			</Layer>
+			
+			<Layer visible="true" id="waveDirLayer">
+				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+					<Parameters>
+						<Parameter name="featureKey" value="hydrographFeatureKey" />
+						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveDirection" />
+					</Parameters>
+				</Provider>
+				<Title>Wellenrichtung</Title>
+				<Description>Wellenrichtung</Description>
+				<MapperRefs>
+					<DomainAxisRef ref="timeAxis" />
+					<TargetAxisRef ref="nnAxis" />
+				</MapperRefs>
+				<Styles>
+					<LineStyle role="line">
+						<Title>direction line title</Title>
+						<Width>2</Width>
+						<LineColor>0000aa</LineColor>
+					</LineStyle>
+					<PointStyle role="point">
+						<Title>direction point title</Title>
+						<Width>5</Width>
+						<Height>5</Height>
+						<Stroke>
+							<Width>1</Width>
+							<LineColor>0000aa</LineColor>
+						</Stroke>
+						<FillColor>3333aa</FillColor>
+					</PointStyle>
+				</Styles>
+			</Layer>
+			
+			<Layer visible="true" id="wavePeriodLayer">
+				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+					<Parameters>
+						<Parameter name="featureKey" value="hydrographFeatureKey" />
+						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WavePeakPeriod" />
+					</Parameters>
+				</Provider>
+				<Title>Wellenperiode(peak)</Title>
+				<Description>Wellenperiode(peak)</Description>
+				<MapperRefs>
+					<DomainAxisRef ref="timeAxis" />
+					<TargetAxisRef ref="nnAxis" />
+				</MapperRefs>
+				<Styles>
+					<LineStyle role="line">
+						<Title>peak period line title</Title>
+						<Width>2</Width>
+						<LineColor>0000aa</LineColor>
+					</LineStyle>
+					<PointStyle role="point">
+						<Title>peak period point title</Title>
+						<Width>5</Width>
+						<Height>5</Height>
+						<Stroke>
+							<Width>1</Width>
+							<LineColor>0000aa</LineColor>
+						</Stroke>
+						<FillColor>3333aa</FillColor>
+					</PointStyle>
+				</Styles>
+			</Layer>
+			
 		</Layers>
 		<Mappers>
 			<Axis id="nnAxis">
@@ -147,7 +247,7 @@
 			</Axis>
 			<Axis id="m3sAxis">
 				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Abfluss [m�/s]</Label>
+				<Label>Abfluss [m�/s]</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>RIGHT</Position>
 				<NumberRange>
