@@ -57,7 +57,6 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public class DeviderProvider implements IProfilPointMarkerProvider
 {
-
   private static final HashMap<String, RGB> m_markerTypes = new HashMap<String, RGB>();
 
   public DeviderProvider( )
@@ -72,9 +71,8 @@ public class DeviderProvider implements IProfilPointMarkerProvider
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getImageFor(java.lang.String)
    */
   @Override
-  public void drawMarker( final String[] markers, GC gc )
+  public void drawMarker( final String[] markers, final GC gc )
   {
-
     final int cnt = markers.length;
     final int offset = ((gc.getClipping().width - (3 * cnt)) / 2)+1;
     int i = 0;
@@ -100,7 +98,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getColorFor(java.lang.String)
    */
   @Override
-  public RGB getColorFor( String marker )
+  public RGB getColorFor( final String marker )
   {
     return m_markerTypes.get( marker );
   }
