@@ -51,11 +51,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author doemming
  */
-public class CalibarationConfig
+public class CalibrationConfig
 {
   private final List<ParameterOptimizeContext> m_contexts;
 
-  public CalibarationConfig( )
+  public CalibrationConfig( )
   {
     m_contexts = new ArrayList<ParameterOptimizeContext>();
   }

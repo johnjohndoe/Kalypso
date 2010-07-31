@@ -47,9 +47,9 @@ import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.NACalculationLogger;
 import org.kalypso.convert.namodel.NAModelSimulation;
-import org.kalypso.convert.namodel.NaSimulationDirs;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -112,7 +112,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     finally
     {
-      simulation.loadLogs();
+      simulation.translateLogs();
       naCalculationLogger.stopLogging();
 
       simulation.backupResults();

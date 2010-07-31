@@ -169,12 +169,6 @@ public class NAModellConverter
 
   }
 
-  public static Feature modelAsciiToFeature( final NAConfiguration conf, final Logger logger ) throws Exception
-  {
-    final NAModellConverter main = new NAModellConverter( conf, logger );
-    return main.getParseManager().modelAsciiToFeature();
-  }
-
   public static Feature parameterAsciiToFeature( final NAConfiguration conf, final Logger logger ) throws Exception
   {
     final NAModellConverter main = new NAModellConverter( conf, logger );
@@ -188,12 +182,4 @@ public class NAModellConverter
     stream.writeBytes( buffer.toString() );
     stream.close();
   }
-
-// public static void featureToAscii( NAConfiguration conf, GMLWorkspace modelWorkspace, GMLWorkspace
-// parameterWorkspace, GMLWorkspace hydrotopWorkspace, GMLWorkspace synthNWorkspace, final NaNodeResultProvider
-// nodeResultProvider ) throws Exception
-// {
-// NAModellConverter main = new NAModellConverter( conf );
-// main.write( modelWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, nodeResultProvider );
-// }
 }

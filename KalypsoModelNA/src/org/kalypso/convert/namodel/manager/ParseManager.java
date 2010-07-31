@@ -99,54 +99,6 @@ public class ParseManager
     m_idleLanduseManager = idleLanduseManager;
   }
 
-  public Feature modelAsciiToFeature( ) throws Exception, Exception
-  {
-    final ModelManager modelManager = new ModelManager();
-    // get all FeatureTypes...
-    final IFeatureType naModellFT = m_schema.getFeatureType( NaModelConstants.NA_MODEL_ROOT_FT );
-    final IFeatureType catchmentCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CATCHMENT_COLLECTION_FT );
-    final IFeatureType channelCollectionFT = m_schema.getFeatureType( NaModelConstants.NA_CHANNEL_COLLECTION_FT );
-    final IFeatureType nodeCollectionFT = m_schema.getFeatureType( NaModelConstants.NODE_COLLECTION_FT );
-
-    // create all Features (and FeatureCollections)
-    final Feature naModellFe = modelManager.createFeature( naModellFT );
-    final Feature catchmentCollectionFe = modelManager.createFeature( catchmentCollectionFT );
-    final Feature channelCollectionFe = modelManager.createFeature( channelCollectionFT );
-    final Feature nodeCollectionFe = modelManager.createFeature( nodeCollectionFT );
-
-    // complete Feature NaModell
-
-    naModellFe.setProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP, catchmentCollectionFe );
-
-    naModellFe.setProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP, channelCollectionFe );
-
-    naModellFe.setProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP, nodeCollectionFe );
-
-    // complete Feature CatchmentCollection
-    final IPropertyType catchmentMemberPT = catchmentCollectionFe.getFeatureType().getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
-    Feature[] features = m_catchmentManager.parseFile( m_conf.getCatchmentFile().toURL() );
-    for( final Feature feature : features )
-      FeatureHelper.addProperty( catchmentCollectionFe, catchmentMemberPT, feature );
-
-    // complete Features of ChannelCollections
-    final IPropertyType channelMemberPT = channelCollectionFe.getFeatureType().getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
-    features = m_channelManager.parseFile( m_conf.getChannelFile().toURL() );
-    for( final Feature feature : features )
-      FeatureHelper.addProperty( channelCollectionFe, channelMemberPT, feature );
-
-    // complete Feature NodeCollection
-    final IPropertyType nodeMemberPT = nodeCollectionFT.getProperty( NaModelConstants.NODE_MEMBER_PROP );
-    features = m_nodeManager.parseFile( m_conf.getNetFile().toURL() );
-    for( final Feature feature : features )
-      FeatureHelper.addProperty( nodeCollectionFe, nodeMemberPT, feature );
-
-    // complete Features of StorageChannel
-    // features = m_rhbManager.parseFile( m_conf.getRHBFile().toURL() );
-
-    System.out.println( "\n\n-----------------" ); //$NON-NLS-1$
-    return naModellFe;
-  }
-
   public Feature parameterAsciiToFeature( ) throws Exception, Exception
   {
     final ModelManager modelManager = new ModelManager();

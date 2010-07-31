@@ -55,8 +55,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
-/*
- * class NaNodeResultProvider created by @author doemming (01.05.2005)
+/**
+ * @author doemming
  */
 public class NaNodeResultProvider
 {
@@ -66,7 +66,7 @@ public class NaNodeResultProvider
 
   private final boolean m_useResults;
 
-  public NaNodeResultProvider( GMLWorkspace modellWorkspace, GMLWorkspace controlWorkspace, URL context )
+  public NaNodeResultProvider( final GMLWorkspace modellWorkspace, final GMLWorkspace controlWorkspace, final URL context )
   {
     m_context = context;
     final Feature controlFE = controlWorkspace.getRootFeature();
@@ -81,9 +81,8 @@ public class NaNodeResultProvider
     {
       final IFeatureType nodeFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
       final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
-      for( int i = 0; i < nodeFEs.length; i++ )
+      for( final Feature nodeFE : nodeFEs )
       {
-        final Feature nodeFE = nodeFEs[i];
         if( FeatureHelper.booleanIsTrue( nodeFE, NaModelConstants.GENERATE_RESULT_PROP, false ) )
           removeResult( nodeFE );
       }
@@ -97,7 +96,7 @@ public class NaNodeResultProvider
       return null;
     // optionen loeschen
     final String href = link.getHref().replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    IUrlResolver res = new UrlUtilities();
+    final IUrlResolver res = new UrlUtilities();
     return res.resolveURL( m_context, href );
   }
 
@@ -108,11 +107,11 @@ public class NaNodeResultProvider
       return null;
     // optionen loeschen
     final String href = link.getHref().replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    IUrlResolver res = new UrlUtilities();
+    final IUrlResolver res = new UrlUtilities();
     return res.resolveURL( m_context, href );
   }
 
-  public boolean resultExists( Feature nodeFE )
+  public boolean resultExists( final Feature nodeFE )
   {
     if( !m_useResults )
       return false;
@@ -123,7 +122,7 @@ public class NaNodeResultProvider
       final URL resultURL = getResultURL( nodeFE );
       resultURL.openStream();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return false;
     }
