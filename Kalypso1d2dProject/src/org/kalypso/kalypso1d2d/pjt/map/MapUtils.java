@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -125,7 +125,7 @@ public class MapUtils
     style.setType( "simple" ); //$NON-NLS-1$
     styleList.add( style );
 
-    final JAXBElement<StyledLayerType> layerType = TemplateUtilitites.OF_GISMAPVIEW.createLayer( element );
+    final JAXBElement<StyledLayerType> layerType = TemplateUtilities.OF_GISMAPVIEW.createLayer( element );
 
     layers.getLayer().add( 0, layerType );
     GisTemplateHelper.saveGisMapView( gismapview, writer, "UTF8" ); //$NON-NLS-1$
