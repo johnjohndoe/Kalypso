@@ -100,11 +100,15 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       m_succeeded = simulation.runSimulation( monitor );
     }
+    catch( final SimulationException se )
+    {
+      throw se;
+    }
     catch( final Exception e )
     {
       e.printStackTrace();
       logger.log( Level.SEVERE, STRING_SIMULATION_FAILED, e );
-      throw new SimulationException( STRING_SIMULATION_FAILED, e.getCause() );
+      throw new SimulationException( STRING_SIMULATION_FAILED, e );
     }
     finally
     {

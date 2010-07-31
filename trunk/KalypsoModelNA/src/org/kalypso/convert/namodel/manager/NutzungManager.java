@@ -97,7 +97,7 @@ public class NutzungManager extends AbstractManager
 
   private int m_idCounter = 0;
 
-  public NutzungManager( GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
+  public NutzungManager( final GMLSchema parameterSchema, final NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
     // m_crs = crs;
@@ -111,7 +111,7 @@ public class NutzungManager extends AbstractManager
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
    */
   @Override
-  public String mapID( int id, IFeatureType ft )
+  public String mapID( final int id, final IFeatureType ft )
   {
     return null;
   }
@@ -120,19 +120,19 @@ public class NutzungManager extends AbstractManager
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
   @Override
-  public Feature[] parseFile( URL url ) throws Exception
+  public Feature[] parseFile( final URL url ) throws Exception
   {
-    String nutzDatei = url.getPath().replaceAll( ".+/", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    String nutzID = nutzDatei.replaceAll( "\\.nuz", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    List<Feature> result = new ArrayList<Feature>();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+    final String nutzDatei = url.getPath().replaceAll( ".+/", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String nutzID = nutzDatei.replaceAll( "\\.nuz", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final List<Feature> result = new ArrayList<Feature>();
+    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
     while( (fe = readNextFeature( reader, nutzID )) != null )
       result.add( fe );
     return result.toArray( new Feature[result.size()] );
   }
 
-  private Feature readNextFeature( LineNumberReader reader, String nutzID ) throws Exception
+  private Feature readNextFeature( final LineNumberReader reader, final String nutzID ) throws Exception
   {
     final HashMap<String, String> landusePropCollector = new HashMap<String, String>();
     final Map<IPropertyType, Object> fePropMap = new LinkedHashMap<IPropertyType, Object>();
@@ -146,10 +146,10 @@ public class NutzungManager extends AbstractManager
     if( !m_LTable.containsKey( line ) )
     {
       m_idCounter = m_idCounter + 1;
-      Integer idleLanduseID = new Integer( m_idCounter );
+      final Integer idleLanduseID = new Integer( m_idCounter );
       m_LTable.put( line, idleLanduseID );
     }
-    Object idleLanduseStringID = m_LTable.get( line );
+    final Object idleLanduseStringID = m_LTable.get( line );
 
     // Kommentarzeilen
     line = reader.readLine();
@@ -219,25 +219,25 @@ public class NutzungManager extends AbstractManager
 
     for( final String resource : resources )
     {
-      final URL source = getClass().getResource( String.format( "/resources/idealLanduseSuds/%s.nuz", resource ) ); //$NON-NLS-1$
+      final URL source = getClass().getResource( String.format( "resources/idealLanduseSuds/%s.nuz", resource ) ); //$NON-NLS-1$
       final File destination = new File( String.format( "%s\\%s.nuz", m_conf.getNutzungDir(), resource ) ); //$NON-NLS-1$
       FileUtils.copyURLToFile( source, destination );
     }
   }
 
-  private void writeIdealLanduse( IObservation observation, Writer zmlWriter ) throws SensorException, IOException
+  private void writeIdealLanduse( final IObservation observation, final Writer zmlWriter ) throws SensorException, IOException
   {
-    IAxis[] axisList = observation.getAxisList();
-    IAxis idleDateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
-    IAxis kcAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_KC );
-    IAxis wtAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_WT );
-    IAxis laiAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_LAI );
-    ITuppleModel values = observation.getValues( null );
-    int count = values.getCount();
-    int yearOffset = 2001;
+    final IAxis[] axisList = observation.getAxisList();
+    final IAxis idleDateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
+    final IAxis kcAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_KC );
+    final IAxis wtAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_WT );
+    final IAxis laiAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_LAI );
+    final ITuppleModel values = observation.getValues( null );
+    final int count = values.getCount();
+    final int yearOffset = 2001;
     for( int row = 0; row < count; row++ )
     {// TODO: hier evtl. noch Zeitzone berücksichtigen - außerdem mit Fortran abgleichen!!!
-      Date date = (Date) values.getElement( row, idleDateAxis );
+      final Date date = (Date) values.getElement( row, idleDateAxis );
       final Calendar calendar = NATimeSettings.getInstance().getCalendar( date );
 
       final int year = calendar.get( Calendar.YEAR ) - yearOffset;
@@ -249,9 +249,9 @@ public class NutzungManager extends AbstractManager
       zmlWriter.write( "." ); //$NON-NLS-1$
       zmlWriter.write( FortranFormatHelper.printf( year, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-      Double kc = (Double) values.getElement( row, kcAxis );
-      Double wt = (Double) values.getElement( row, wtAxis );
-      Double lai = (Double) values.getElement( row, laiAxis );
+      final Double kc = (Double) values.getElement( row, kcAxis );
+      final Double wt = (Double) values.getElement( row, wtAxis );
+      final Double lai = (Double) values.getElement( row, laiAxis );
 
       zmlWriter.write( FortranFormatHelper.printf( kc, "f8.2" ) ); //$NON-NLS-1$
       zmlWriter.write( FortranFormatHelper.printf( wt, "f8.2" ) ); //$NON-NLS-1$

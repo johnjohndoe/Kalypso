@@ -84,9 +84,14 @@ public class NaModelCalcJob implements ISimulation
       if( calcJob != null )
         calcJob.run( tmpdir, dataProvider, resultEater, monitor );
     }
+    catch( final SimulationException e )
+    {
+      throw e;
+    }
     catch( final Exception e )
     {
-      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelCalcJob.0" ), e ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelCalcJob.0", e.getLocalizedMessage() ); //$NON-NLS-1$
+      throw new SimulationException( msg, e );
     }
   }
 
