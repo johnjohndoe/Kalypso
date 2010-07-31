@@ -75,7 +75,7 @@ public class NA_GlobalPreprocessingJob extends AbstractInternalStatusJob impleme
     try
     {
       final File parametersFile = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_PARAMETER_MODEL ) );
-      final URL sudsURL = getClass().getResource( "/resources/templates/suds.gml" ); //$NON-NLS-1$
+      final URL sudsURL = getClass().getResource( "resources/suds.gml" ); //$NON-NLS-1$
       final File sudsFile = File.createTempFile( "suds", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$
       FileUtils.copyURLToFile( sudsURL, sudsFile );
 
