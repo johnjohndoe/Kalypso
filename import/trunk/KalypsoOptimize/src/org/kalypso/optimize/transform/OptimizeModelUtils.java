@@ -40,19 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.transform;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.xpath.XPathAPI;
 import org.kalypso.contribs.java.xml.XMLUtilities;
@@ -66,7 +54,7 @@ import org.w3c.dom.NodeList;
  * 
  * @author doemming
  */
-public class OptimizeModelUtils
+public final class OptimizeModelUtils
 {
   private OptimizeModelUtils( )
   {
@@ -79,7 +67,7 @@ public class OptimizeModelUtils
       initializeModell( doc, context );
   }
 
-  public static void initializeModell( final Document doc, final ParameterOptimizeContext calContext ) throws TransformerException
+  private static void initializeModell( final Document doc, final ParameterOptimizeContext calContext ) throws TransformerException
   {
     final String value = Double.toString( calContext.getInitialValue() );
     setParameter( calContext.getxPaths(), value, doc );
@@ -91,7 +79,7 @@ public class OptimizeModelUtils
       transformModel( doc, values[i], contexts[i] );
   }
 
-  public static void transformModel( final Document doc, final double value, final ParameterOptimizeContext calContext ) throws TransformerException
+  private static void transformModel( final Document doc, final double value, final ParameterOptimizeContext calContext ) throws TransformerException
   {
     final String mode = calContext.getMode();
     if( ParameterOptimizeContext.MODE_FACTOR.equals( mode ) )
@@ -103,7 +91,7 @@ public class OptimizeModelUtils
       setParameter( calContext.getxPaths(), (new Double( value )).toString(), doc );
   }
 
-  public static void setParameter( final String[] querys, final String value, final Document myDom ) throws TransformerException
+  private static void setParameter( final String[] querys, final String value, final Document myDom ) throws TransformerException
   {
     for( final String query : querys )
     {
@@ -119,7 +107,7 @@ public class OptimizeModelUtils
     }
   }
 
-  public static void setParameter_Factor( final String[] querys, final double value, final Document myDom ) throws TransformerException
+  private static void setParameter_Factor( final String[] querys, final double value, final Document myDom ) throws TransformerException
   {
     for( final String query : querys )
     {
@@ -134,7 +122,7 @@ public class OptimizeModelUtils
     }
   }
 
-  public static void setParameter_Offset( final String[] querys, final double value, final Document myDom ) throws TransformerException
+  private static void setParameter_Offset( final String[] querys, final double value, final Document myDom ) throws TransformerException
   {
     for( final String query : querys )
     {
@@ -150,7 +138,7 @@ public class OptimizeModelUtils
   }
 
   // method returns nodeList to a given query
-  public static NodeList getXPath( final String xPathQuery, final Document domNode ) throws TransformerException
+  private static NodeList getXPath( final String xPathQuery, final Document domNode ) throws TransformerException
   {
     final String newXPathQuery = null;
     try
@@ -162,24 +150,5 @@ public class OptimizeModelUtils
       System.out.println( "Failed to resolve xpath: " + newXPathQuery );
       throw e;
     }
-  }
-
-  // method returns the Document of a xml-file
-  public static Document getXML( final InputStream inputStream ) throws Exception
-  {
-    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
-    return docuBuilder.parse( inputStream );
-  }
-
-  // method writes a document(node) to a file
-  public static void toFile( final File file, final Node node ) throws TransformerException, FileNotFoundException
-  {
-    final Transformer t = TransformerFactory.newInstance().newTransformer();
-    final DOMSource src = new DOMSource( node );
-    final FileOutputStream outStr = new FileOutputStream( file );
-    final OutputStreamWriter fw = new OutputStreamWriter( outStr );
-    final StreamResult result = new StreamResult( fw );
-    t.transform( src, result );
   }
 }

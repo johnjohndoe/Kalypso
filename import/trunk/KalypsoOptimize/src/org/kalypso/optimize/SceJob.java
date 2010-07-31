@@ -51,7 +51,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.URL;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
@@ -70,7 +69,6 @@ import org.kalypso.commons.java.lang.ProcessHelper.ProcessControlThread;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.optimizer.AutoCalibration;
-import org.kalypso.optimizer.ObjectFactory;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.w3c.dom.Document;
@@ -132,14 +130,11 @@ public class SceJob
   private void makeinputFiles( ) throws TransformerException, ParserConfigurationException, SAXException, IOException, JAXBException
   {
     // prepare scein.dat
-
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware( true );
     final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
 
-    final JAXBContext context = JaxbUtilities.createQuiet( ObjectFactory.class );
-    final Marshaller marshaller = JaxbUtilities.createMarshaller(context);
-    // marshaller.setProperty( "jaxb.encoding", "UTF-8" );
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( OptimizeJaxb.JC );
 
     final Document xmlDOM = docuBuilder.newDocument();
     marshaller.marshal( m_autoCalibration, xmlDOM );
