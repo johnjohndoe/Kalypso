@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.optimize;
 
@@ -51,7 +51,6 @@ import java.util.Date;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -75,10 +74,10 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.optimize.IOptimizingJob;
+import org.kalypso.optimize.OptimizeJaxb;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.optimize.transform.ParameterOptimizeContext;
 import org.kalypso.optimizer.AutoCalibration;
-import org.kalypso.optimizer.ObjectFactory;
 import org.kalypso.optimizer.Parameter;
 import org.kalypso.optimizer.Pegel;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -155,9 +154,7 @@ public class NAOptimizingJob implements IOptimizingJob
     final Date measuredStartDate = (Date) metaFE.getProperty( NaModelConstants.CONTROL_STARTSIMULATION );
     final Date measuredEndDate = (Date) metaFE.getProperty( NaModelConstants.CONTROL_FORECAST );
 
-    // todo: einmal static erzeugen
-    final JAXBContext context = JAXBContext.newInstance( ObjectFactory.class );
-    final Unmarshaller unmarshaller = context.createUnmarshaller();
+    final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
 
     m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( (File) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID ) );
 

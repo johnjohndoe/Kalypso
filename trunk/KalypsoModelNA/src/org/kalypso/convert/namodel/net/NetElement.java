@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.net;
 
@@ -147,32 +147,6 @@ public class NetElement
   public boolean isCalculated( )
   {
     return m_calculated;
-  }
-
-  /**
-   *  
-   */
-  public void berechne( final AsciiBuffer asciiBuffer, final List<Feature> nodeList ) throws IOException, Exception
-  {
-    if( isCalculated() )
-      return;
-
-    berechneOberlauf( asciiBuffer, nodeList );
-
-    // calculate me
-    write( asciiBuffer, nodeList );
-    generateTimeSeries();
-
-  }
-
-  public void berechneOberlauf( final AsciiBuffer asciiBuffer, final List<Feature> nodeList ) throws Exception
-  {
-    for( final NetElement netElement : m_upStreamDepends )
-    {
-      // berechne oberlauf
-      final NetElement element = netElement;
-      element.berechne( asciiBuffer, nodeList );
-    }
   }
 
   public void generateTimeSeries( ) throws IOException, Exception

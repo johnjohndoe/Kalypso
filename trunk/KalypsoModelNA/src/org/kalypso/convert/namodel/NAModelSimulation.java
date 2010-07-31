@@ -41,13 +41,11 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.MalformedURLException;
@@ -57,7 +55,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -65,39 +62,31 @@ import java.util.SortedMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.java.io.FileCopyVisitor;
-import org.kalypso.commons.java.io.FileUtilities;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.manager.LzsimManager;
-import org.kalypso.convert.namodel.optimize.CalibarationConfig;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
-import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.NaAsciiDirs;
+import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -116,21 +105,13 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXParseException;
 
 /**
  * @author Gernot Belger
@@ -142,14 +123,6 @@ public class NAModelSimulation
   public static final String EXECUTABLES_FILE_TEMPLATE = "Kalypso-NA_%s.exe"; //$NON-NLS-1$
 
   public static final String EXECUTABLES_FILE_PATTERN = "Kalypso-NA_(.+)\\.exe"; //$NON-NLS-1$
-
-  private static final String WE_RESOURCE_HYDROTOP_GML = "resources/WE/hydrotop.gml"; //$NON-NLS-1$
-
-  private static final String WE_PARAMETER_GML = "resources/WE/parameter.gml"; //$NON-NLS-1$
-
-  private static String[] CATCHMENT_FACTOR_PARAMETER_TARGET = { "retob", "retint", "aigw" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-  private final static String[][] CATCHMENT_FACTORS_PARAMETER = { new String[] { "retob", "faktorRetobRetint" }, new String[] { "retint", "faktorRetobRetint" }, new String[] { "aigw", "faktorAigw" } }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
   private final DateFormat START_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd(HH-mm-ss)" ); //$NON-NLS-1$
 
@@ -164,8 +137,6 @@ public class NAModelSimulation
   private final NAConfiguration m_conf;
 
   private final IDManager m_idManager;
-
-  private File m_kalypsoKernelPath = null;
 
   private final NaSimulationDirs m_simDirs;
 
@@ -184,7 +155,10 @@ public class NAModelSimulation
     m_naStatistics = new NAStatistics( m_logger );
   }
 
-  public void loadLogs( )
+  /**
+   * Translates the id inside the KalypsoNA log to KalypsoHydrology id's.
+   */
+  public void translateLogs( )
   {
     final NaFortranLogTranslater logTranslater = new NaFortranLogTranslater( m_simDirs.asciiDir, m_idManager, m_logger );
 
@@ -196,96 +170,27 @@ public class NAModelSimulation
 
   public boolean runSimulation( final ISimulationMonitor monitor ) throws Exception
   {
-    final File newModellFile = new File( m_simDirs.simulationDir, "namodellBerechnung.gml" ); //$NON-NLS-1$
+    final NaSimulationData simulationData = loadData();
 
-    monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.15" ) ); //$NON-NLS-1$
-    if( monitor.isCanceled() )
+    if( !preprocess( simulationData, monitor ) )
       return false;
-
-    if( m_inputProvider.hasID( NAOptimizingJob.IN_BestOptimizedRunDir_ID ) )
-    {
-      // while optimization, you can recycle files from a former run.
-      // implement here to copy the files to your tmp dir and while generating
-      // files you should check if files already exist, and on your option do
-      // not generate them.
-      // WARNING: never use result files or files that vary during
-      // optimization.
-      final URL url = (URL) m_inputProvider.getInputForID( NAOptimizingJob.IN_BestOptimizedRunDir_ID );
-      final File from1 = new File( url.getFile(), "klima.dat" ); //$NON-NLS-1$
-      final File to1 = new File( m_simDirs.asciiDir, "klima.dat" ); //$NON-NLS-1$
-      if( from1.exists() && to1.exists() )
-      {
-        final FileCopyVisitor copyVisitor = new FileCopyVisitor( from1, to1, true );
-        FileUtilities.accept( from1, copyVisitor, true );
-      }
-      final File from2 = new File( url.getFile(), "zufluss" ); //$NON-NLS-1$
-      final File to2 = new File( m_simDirs.asciiDir, "zufluss" ); //$NON-NLS-1$
-      if( from2.exists() && to2.exists() )
-      {
-        final FileCopyVisitor copyVisitor = new FileCopyVisitor( from2, to2, true );
-        FileUtilities.accept( from2, copyVisitor, true );
-      }
-
-      final File from3 = new File( url.getFile(), "hydro.top" ); //$NON-NLS-1$
-      final File to3 = new File( m_simDirs.asciiDir, "hydro.top" ); //$NON-NLS-1$
-      if( from3.exists() && to3.exists() )
-      {
-        final FileCopyVisitor copyVisitor = new FileCopyVisitor( from3, to3, true );
-        FileUtilities.accept( from3, copyVisitor, true );
-      }
-    }
-
-    // generiere ascii-dateien
-    monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.23" ) ); //$NON-NLS-1$
-    if( monitor.isCanceled() )
-      return false;
-
-    // calualtion model
-    final GMLWorkspace modellWorkspace = generateASCII( m_conf, m_simDirs, m_inputProvider, newModellFile, monitor );
-    if( modellWorkspace == null )
-      return false;
-
-    final URL naControlURL = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
-    final GMLWorkspace naControlWorkspace = GmlSerializer.createGMLWorkspace( naControlURL, null );
-
-    final URL iniValuesFolderURL = (URL) m_inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
-
-    if( iniValuesFolderURL != null )
-    {
-      // TODO: crude way to create the new URL, necessary as probably we do not have a '/' at the end of the path
-      final URL lzsimURL = new URL( iniValuesFolderURL.toExternalForm() + "/lzsim.gml" ); //$NON-NLS-1$
-      try
-      {
-        final GMLWorkspace iniValuesWorkspace = GmlSerializer.createGMLWorkspace( lzsimURL, null );
-        LzsimManager.writeLzsimFiles( m_idManager, m_simDirs.lzsimDir, iniValuesWorkspace );
-      }
-      // We still assume it is a file.... ignore file not found, we do not have starting conditions then
-      catch( final FileNotFoundException e )
-      {
-        m_logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.26" ), m_conf.getSimulationStart().toString() ); //$NON-NLS-1$
-      }
-    }
 
     if( monitor.isCanceled() )
       return false;
-
-    copyExecutable();
 
     // starte berechnung
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.27" ) ); //$NON-NLS-1$
     if( monitor.isCanceled() )
       return false;
 
-    // Create "out_we.nat", else Kalypso-NA will not run
-    m_simDirs.outWeNatDir.mkdirs();
-    startCalculation( monitor );
+    startCalculation( simulationData, monitor );
 
     final boolean succeeded = checkSucceeded();
     if( succeeded )
     {
       monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.28" ) ); //$NON-NLS-1$
       m_logger.log( Level.FINEST, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.29" ) ); //$NON-NLS-1$
-      loadResults( modellWorkspace, naControlWorkspace, m_logger, m_simDirs.resultDir, m_conf );
+      loadResults( simulationData, m_logger, m_simDirs.resultDir, m_conf );
       monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.30" ) ); //$NON-NLS-1$
       m_logger.log( Level.FINEST, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.31" ) ); //$NON-NLS-1$
 
@@ -298,6 +203,103 @@ public class NAModelSimulation
     }
 
     return succeeded;
+  }
+
+  private NaSimulationData loadData( ) throws Exception
+  {
+    final URL modelUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
+    final URL controlURL = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
+    final URL metaUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_META_ID );
+    final URL parameterUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
+    final URL hydrotopUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
+    final URL syntNUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID );
+    final URL lzsimUrl = getStartConditionFile();
+
+// final URL landuseUrl = getInputOrNull( NaModelConstants.IN_LANDUSE_ID );
+    final URL sudsUrl = getInputOrNull( NaModelConstants.IN_SUDS_ID );
+
+    // FIXME: check if still needed
+    final File newModellFile = new File( m_simDirs.simulationDir, "namodellBerechnung.gml" ); //$NON-NLS-1$
+
+    return new NaSimulationData( modelUrl, newModellFile, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
+  }
+
+  private URL getInputOrNull( final String id ) throws SimulationException
+  {
+    if( !m_inputProvider.hasID( id ) )
+      return null;
+
+    return (URL) m_inputProvider.getInputForID( id );
+  }
+
+  private boolean preprocess( final NaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
+  {
+    try
+    {
+      final NAModelPreprocessor preprocessor = new NAModelPreprocessor( m_conf, m_simDirs.asciiDirs, m_idManager, simulationData, m_logger );
+      preprocessor.setPreprocessedFilesDir( getPreprocessFilesDir() );
+      preprocessor.process( monitor );
+
+      dumpIdManager();
+
+      return true;
+    }
+    catch( final NAPreprocessorException e )
+    {
+      final String msg = String.format( "Failed to convert data in Kalypso-NA.exe format files: %s", e.getLocalizedMessage() );
+      m_logger.log( Level.SEVERE, msg, e );
+      return false;
+    }
+    catch( final OperationCanceledException e )
+    {
+      return false;
+    }
+  }
+
+  private void dumpIdManager( ) throws SimulationException
+  {
+    // dump idmapping to file
+    final IDManager idManager = m_conf.getIdManager();
+    Writer idWriter = null;
+    try
+    {
+      idWriter = new FileWriter( new File( m_simDirs.simulationDir, "IdMap.txt" ) ); //$NON-NLS-1$
+      idManager.dump( idWriter );
+    }
+    catch( final IOException e )
+    {
+      throw new SimulationException( "Failed to dump idManager", e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( idWriter );
+    }
+  }
+
+  private URL getStartConditionFile( ) throws SimulationException
+  {
+    if( !m_inputProvider.hasID( NaModelConstants.LZSIM_IN_ID ) )
+      return null;
+
+    final URL iniValuesFolderURL = (URL) m_inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
+    try
+    {
+      // TODO: crude way to create the new URL, necessary as probably we do not have a '/' at the end of the path
+      return new URL( iniValuesFolderURL.toExternalForm() + "/lzsim.gml" ); //$NON-NLS-1$
+    }
+    catch( final MalformedURLException e )
+    {
+      throw new SimulationException( "Failed to read start condition file", e );
+    }
+  }
+
+  private File getPreprocessFilesDir( ) throws SimulationException
+  {
+    if( !m_inputProvider.hasID( NAOptimizingJob.IN_BestOptimizedRunDir_ID ) )
+      return null;
+
+    final URL url = (URL) m_inputProvider.getInputForID( NAOptimizingJob.IN_BestOptimizedRunDir_ID );
+    return FileUtils.toFile( url );
   }
 
   public void backupResults( )
@@ -318,175 +320,44 @@ public class NAModelSimulation
     }
   }
 
-  private GMLWorkspace generateASCII( final NAConfiguration conf, final NaSimulationDirs simDirs, final ISimulationDataProvider dataProvider, final File newModellFile, final ISimulationMonitor monitor ) throws Exception
+  private File copyExecutable( final NaSimulationData simulationData, final File destDir ) throws SimulationException
   {
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
+    final GMLWorkspace metaWorkspace = simulationData.getMetaWorkspace();
     final Feature metaFE = metaWorkspace.getRootFeature();
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), null );
 
-    // model Parameter
-    final GMLWorkspace parameterWorkspace;
-    if( dataProvider.hasID( NaModelConstants.IN_PARAMETER_ID ) )
-      parameterWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID ), null );
-    else
-      parameterWorkspace = GmlSerializer.createGMLWorkspace( getClass().getResource( WE_PARAMETER_GML ), null );
-
-// GMLWorkspace landuseWorkspace = null;
-// if( dataProvider.hasID( NaModelConstants.IN_LANDUSE_ID ) )
-// {
-// final URL url = (URL) dataProvider.getInputForID( NaModelConstants.IN_LANDUSE_ID );
-// final File f = new File( url.toURI().getPath() );
-// if( f.exists() )
-// landuseWorkspace = GmlSerializer.createGMLWorkspace( url, null );
-// }
-
-    GMLWorkspace sudsWorkspace = null;
-    if( dataProvider.hasID( NaModelConstants.IN_SUDS_ID ) )
-    {
-      final URL url = (URL) dataProvider.getInputForID( NaModelConstants.IN_SUDS_ID );
-      final File f = new File( url.toURI().getPath() );
-      if( f.exists() )
-        sudsWorkspace = GmlSerializer.createGMLWorkspace( url, null );
-    }
-
-    // initialize model with values of control file
-    initializeModell( controlWorkspace.getRootFeature(), (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
-
-    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURI().toURL(), null );
-    // final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
-    ((GMLWorkspace_Impl) modellWorkspace).setContext( (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ) );
-
-    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modellWorkspace, controlWorkspace, conf.getZMLContext() );
-    conf.setNodeResultProvider( nodeResultProvider );
-    updateModelWithExtraVChannel( modellWorkspace, nodeResultProvider );
-
-    // model Parameter
-    final GMLWorkspace synthNWorkspace;
-    final File synthNGML = new File( ((URL) dataProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID )).getFile(), "calcSynthN.gml" ); //$NON-NLS-1$
-    if( synthNGML.exists() )
-      synthNWorkspace = GmlSerializer.createGMLWorkspace( synthNGML.toURI().toURL(), null );
-    else
-      synthNWorkspace = null;
-
-    // model Hydrotop
-    final GMLWorkspace hydrotopWorkspace;
-
-    if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
-    {
-      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID ), null );
-    }
-    else
-    {
-      // TODO: remove this special case: move hydrotop.gml into WE model
-      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( getClass().getResource( WE_RESOURCE_HYDROTOP_GML ), null );
-    }
-
-    final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT ) );
-    String targetCS = null;
-    for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
-    {
-      final GM_Object geom = (GM_Object) hydroFES[i].getProperty( NaModelConstants.HYDRO_PROP_GEOM );
-      if( geom != null && geom.getCoordinateSystem() != null )
-        targetCS = geom.getCoordinateSystem();
-    }
-    if( targetCS != null )
-    {
-      final TransformVisitor visitor = new TransformVisitor( targetCS );
-      modellWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE ); //$NON-NLS-1$
-    }
-
-    // setting duration of simulation...
-    // start
-    final Date start = DateUtilities.toDate( (XMLGregorianCalendar) metaFE.getProperty( NaModelConstants.CONTROL_STARTSIMULATION ) );
-    conf.setSimulationStart( start );
-    // start forecast
-
-    final Date startForecastDate = DateUtilities.toDate( (XMLGregorianCalendar) metaFE.getProperty( NaModelConstants.CONTROL_FORECAST ) );
-    conf.setSimulationForecasetStart( startForecastDate );
-    // end of simulation
-    int hoursForecast = 0; // default length of forecast hours
-    final Integer hoursOfForecast = (Integer) metaFE.getProperty( NaModelConstants.CONTROL_HOURS_FORECAST_PROP );
-    if( hoursOfForecast != null )
-      hoursForecast = hoursOfForecast.intValue();
-    final Calendar c = Calendar.getInstance();
-    c.setTime( startForecastDate );
-    c.add( Calendar.HOUR, hoursForecast );
-    final Date endDate = c.getTime();
-    conf.setSimulationEnd( endDate );
-
-    // calculate timestep
-    final Integer minutesOfTimeStep = (Integer) metaFE.getProperty( NaModelConstants.CONTROL_MINUTES_TIMESTEP_PROP );
-    final int minutesTimeStep;
-    if( minutesOfTimeStep != null && minutesOfTimeStep.intValue() != 0 )
-      minutesTimeStep = minutesOfTimeStep.intValue();
-    else
-      minutesTimeStep = 60;
-
-    conf.setMinutesOfTimeStep( minutesTimeStep );
-
-    // choose simulation kernel
-    m_kalypsoKernelPath = chooseSimulationExe( (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP ), monitor );
-    if( m_kalypsoKernelPath == null )
-      return null;
-
-    // choose precipitation form and parameters
-    final Boolean pns = (Boolean) metaFE.getProperty( NaModelConstants.CONTROL_PNS_PROP );
-    conf.setUsePrecipitationForm( pns == null ? false : pns );
-    if( conf.isUsePrecipitationForm().equals( true ) )
-    {
-      // the GUI asks for return period [a] - the fortran kernal needs annuality [1/a]
-      conf.setAnnuality( 1d / (Double) metaFE.getProperty( NaModelConstants.CONTROL_XJAH_PROP ) );
-      final Double durationMinutes = (Double) metaFE.getProperty( NaModelConstants.CONTROL_XWAHL2_PROP );
-      final Double durationHours = durationMinutes / 60d;
-      conf.setDuration( durationHours );
-      conf.setForm( (String) metaFE.getProperty( NaModelConstants.CONTROL_IPVER_PROP ) );
-    }
-
-    // set rootnode
-    conf.setRootNodeID( (String) controlWorkspace.getRootFeature().getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP ) );
-
-    // generate modell files
-    conf.setModelWorkspace( modellWorkspace );
-    conf.setParameterWorkspace( parameterWorkspace );
-    conf.setHydrotopeWorkspace( hydrotopWorkspace );
-    conf.setSynthNWorkspace( synthNWorkspace );
-    conf.setSudsWorkspace( sudsWorkspace );
-
-    // generate control files
-    NAControlConverter.featureToASCII( conf, simDirs.startDir, controlWorkspace, modellWorkspace );
-
-    // update model with factor values from control
-    updateFactorParameter( modellWorkspace );
-
-    final NAModellConverter main = new NAModellConverter( conf, m_logger );
-    main.write();
-
-    // dump idmapping to file
-    final IDManager idManager = conf.getIdManager();
-    Writer idWriter = null;
     try
     {
-      idWriter = new FileWriter( new File( simDirs.simulationDir, "IdMap.txt" ) ); //$NON-NLS-1$
-      idManager.dump( idWriter );
+      final String kalypsoNAVersion = (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP );
+      final File kalypsoNaExe = CalcCoreUtils.findExecutable( kalypsoNAVersion, EXECUTABLES_FILE_TEMPLATE, EXECUTABLES_FILE_PATTERN, CalcCoreUtils.COMPATIBILITY_MODE.NA );
+      if( kalypsoNaExe == null )
+        throw new SimulationException( "No Kalypso-NA.exe version configured." );
+
+      final File destFile = new File( destDir, kalypsoNaExe.getName() );
+      if( !destFile.exists() )
+        FileUtils.copyFile( kalypsoNaExe, destFile );
+
+      return destFile;
     }
-    finally
+    catch( final CoreException e )
     {
-      IOUtils.closeQuietly( idWriter );
+      final IStatus status = e.getStatus();
+      final String msg = String.format( "No Kalypso-NA.exe version configured: %s", status.getMessage() );
+      throw new SimulationException( msg, e );
     }
-    return modellWorkspace;
+    catch( final IOException e )
+    {
+      final String msg = String.format( "Failed to copy Kalypso-NA.exe into calculation directory: %s", e.getLocalizedMessage() );
+      throw new SimulationException( msg, e );
+    }
   }
 
-  private void copyExecutable( ) throws Exception
+  private void startCalculation( final NaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final File destFile = new File( m_simDirs.startDir, m_kalypsoKernelPath.getName() );
-    if( !destFile.exists() )
-      FileUtils.copyFile( m_kalypsoKernelPath, destFile );
-  }
+    final NaAsciiDirs asciiDirs = m_simDirs.asciiDirs;
+    final File startDir = asciiDirs.startDir;
+    final File kalypsoNaExe = copyExecutable( simulationData, startDir );
 
-  private void startCalculation( final ISimulationMonitor monitor ) throws SimulationException
-  {
-    final File exeFile = new File( m_simDirs.startDir, m_kalypsoKernelPath.getName() );
-    final String commandString = exeFile.getAbsolutePath();
+    final String commandString = kalypsoNaExe.getAbsolutePath();
 
     final long timeOut = 0l; // no timeout control
 
@@ -494,9 +365,9 @@ public class NAModelSimulation
     FileOutputStream errorOS = null;
     try
     {
-      logOS = new FileOutputStream( new File( m_simDirs.asciiDir, "exe.log" ) ); //$NON-NLS-1$
-      errorOS = new FileOutputStream( new File( m_simDirs.asciiDir, "exe.err" ) ); //$NON-NLS-1$
-      ProcessHelper.startProcess( commandString, new String[0], m_simDirs.startDir, monitor, timeOut, logOS, errorOS, null );
+      logOS = new FileOutputStream( new File( asciiDirs.asciiDir, "exe.log" ) ); //$NON-NLS-1$
+      errorOS = new FileOutputStream( new File( asciiDirs.asciiDir, "exe.err" ) ); //$NON-NLS-1$
+      ProcessHelper.startProcess( commandString, new String[0], startDir, monitor, timeOut, logOS, errorOS, null );
     }
     catch( final Exception e )
     {
@@ -516,7 +387,8 @@ public class NAModelSimulation
     LineNumberReader reader = null;
     try
     {
-      final File logFile = new File( m_simDirs.startDir, "output.res" ); //$NON-NLS-1$
+      final File startDir = m_simDirs.asciiDirs.startDir;
+      final File logFile = new File( startDir, "output.res" ); //$NON-NLS-1$
       logFileReader = new FileReader( logFile );
       reader = new LineNumberReader( logFileReader );
       String line;
@@ -539,11 +411,14 @@ public class NAModelSimulation
     return false;
   }
 
-  private void loadResults( final GMLWorkspace modellWorkspace, final GMLWorkspace naControlWorkspace, final Logger logger, final File resultDir, final NAConfiguration conf ) throws Exception
+  private void loadResults( final NaSimulationData simulationData, final Logger logger, final File resultDir, final NAConfiguration conf ) throws Exception
   {
-    loadTSResults( modellWorkspace, conf );
+    final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
+
+    loadTSResults( modelWorkspace, conf );
     try
     {
+      final GMLWorkspace naControlWorkspace = simulationData.getControlWorkspace();
       loadTesultTSPredictionIntervals( naControlWorkspace, logger, resultDir, conf );
     }
     catch( final Exception e )
@@ -554,7 +429,7 @@ public class NAModelSimulation
 
     final Date[] initialDates = conf.getInitialDates();
     final LzsimManager lzsimManager = new LzsimManager( initialDates, m_simDirs.anfangswertDir );
-    lzsimManager.readInitialValues( conf.getIdManager(), m_simDirs.lzsimDir, logger );
+    lzsimManager.readInitialValues( conf.getIdManager(), m_simDirs.asciiDirs.lzsimDir, logger );
   }
 
   private void loadTSResults( final GMLWorkspace modellWorkspace, final NAConfiguration conf ) throws Exception
@@ -635,7 +510,7 @@ public class NAModelSimulation
     // ASCII-Files
     // generiere ZML Ergebnis Dateien
     final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[] { "*" + suffix + "*" }, false, false, true ); //$NON-NLS-1$ //$NON-NLS-2$
-    final File[] qgsFiles = m_simDirs.outWeNatDir.listFiles( filter );
+    final File[] qgsFiles = m_simDirs.asciiDirs.outWeNatDir.listFiles( filter );
     if( qgsFiles.length != 0 )
     {
       // read ascii result file
@@ -790,253 +665,6 @@ public class NAModelSimulation
     }
   }
 
-  private void initializeModell( final Feature controlFeature, final URL inputModellURL, final File outputModelFile ) throws Exception
-  {
-    final CalibarationConfig config = new CalibarationConfig();
-    config.addFromNAControl( controlFeature );
-
-    Document modelDoc = null;
-    try
-    {
-      modelDoc = XMLHelper.getAsDOM( new InputSource( inputModellURL.openStream() ), true );
-    }
-
-    catch( final SAXParseException e )
-    {
-      e.printStackTrace();
-      final int lineNumber = e.getLineNumber();
-      System.out.println( e.getLocalizedMessage() + " #" + lineNumber ); //$NON-NLS-1$
-    }
-    catch( final Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-
-      throw e;
-    }
-
-    OptimizeModelUtils.initializeModel( modelDoc, config.getCalContexts() );
-
-    // TODO: take charset from Document
-    final String charset = "UTF-8"; //$NON-NLS-1$
-    final Writer writer = new OutputStreamWriter( new FileOutputStream( outputModelFile ), charset );
-    final Transformer t = TransformerFactory.newInstance().newTransformer();
-    t.transform( new DOMSource( modelDoc ), new StreamResult( writer ) );
-    writer.close();
-  }
-
-  /**
-   * update workspace and do some tricks in order to fix some things the fortran-kernel can not handle for now
-   * 
-   * @param workspace
-   * @throws Exception
-   */
-  private void updateModelWithExtraVChannel( final GMLWorkspace workspace, final NaNodeResultProvider nodeResultProvider ) throws Exception
-  {
-    updateGWNet( workspace );
-    updateNode2NodeNet( workspace );
-    updateZuflussNet( workspace );
-    updateResultAsZuflussNet( workspace, nodeResultProvider );
-  }
-
-  /**
-   * before: <br>
-   * <code>
-   * 
-   * Node1 O <---  O Node2
-   * 
-   * </code> after: <br>
-   * <code>
-   * 
-   * Node1 O <--- newVChannel <-- newNode O <-- newVChannel
-   *                                      A
-   *                                      |
-   *                                      O-- Node2
-   * 
-   * </code>
-   * 
-   * @param workspace
-   * @throws Exception
-   */
-  private void updateNode2NodeNet( final GMLWorkspace workspace ) throws Exception
-  {
-    final IFeatureType kontEntnahmeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ENTNAHME );
-    final IFeatureType ueberlaufFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_UEBERLAUF );
-    final IFeatureType verzweigungFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_VERZWEIGUNG );
-    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    final Feature[] features = workspace.getFeatures( nodeFT );
-    final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
-    for( final Feature nodeFE : features )
-    {
-      final Feature branchingFE = workspace.resolveLink( nodeFE, branchingMemberRT );
-      if( branchingFE != null )
-      {
-        final IFeatureType branchFT = branchingFE.getFeatureType();
-        final IRelationType branchingNodeMemberRT = (IRelationType) branchFT.getProperty( NaModelConstants.NODE_BRANCHING_NODE_MEMBER_PROP );
-        if( branchFT == kontEntnahmeFT || branchFT == ueberlaufFT || branchFT == verzweigungFT )
-        {
-          final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
-          if( targetNodeFE == null )
-          {
-            final String relationLabel = branchingNodeMemberRT.getAnnotation().getLabel();
-            final String branchingFElabel = FeatureHelper.getAnnotationValue( branchingFE, IAnnotation.ANNO_LABEL );
-            final String message = String.format( "'%s' not set for '%s' in Node '%s'", relationLabel, branchingFElabel, nodeFE.getName() );
-            throw new SimulationException( message );
-          }
-
-          final Feature newNodeFE = buildVChannelNet( workspace, targetNodeFE );
-          workspace.setFeatureAsComposition( branchingFE, branchingNodeMemberRT, newNodeFE, true );
-        }
-      }
-    }
-  }
-
-  /**
-   * TODO scetch<br>
-   * if results exists (from a former simulation) for a node, use this results as input, later the upstream nodes will
-   * be ignored for calculation
-   * 
-   * @param workspace
-   * @throws Exception
-   */
-  private void updateResultAsZuflussNet( final GMLWorkspace workspace, final NaNodeResultProvider nodeResultprovider ) throws Exception
-  {
-    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    final IFeatureType abstractChannelFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.CHANNEL_ABSTRACT_FT );
-    final Feature[] features = workspace.getFeatures( nodeFT );
-    for( final Feature nodeFE : features )
-    {
-      if( nodeResultprovider.resultExists( nodeFE ) )
-      {
-        final Object resultValue = nodeFE.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
-        // disconnect everything upstream (channel -> node)
-        final IRelationType downStreamNodeMemberRT = (IRelationType) abstractChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-        final Feature[] channelFEs = workspace.resolveWhoLinksTo( nodeFE, abstractChannelFT, downStreamNodeMemberRT );
-        for( final Feature element : channelFEs )
-        {
-          final Feature newEndNodeFE = workspace.createFeature( element, downStreamNodeMemberRT, nodeFT );
-          workspace.setFeatureAsComposition( element, downStreamNodeMemberRT, newEndNodeFE, true );
-        }
-        // add as zufluss
-        final Feature newNodeFE = buildVChannelNet( workspace, nodeFE );
-        // final FeatureProperty zuflussProp = FeatureFactory.createFeatureProperty( "zuflussZR", resultValue );
-        newNodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, resultValue );
-        newNodeFE.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
-      }
-    }
-  }
-
-  /**
-   * put one more VChannel to each Q-source, so that this discharge will appear in the result of the connected node <br>
-   * zml inflow <br>
-   * before: <br>
-   * <code>
-   * |Channel| <- o(1) <- input.zml <br>
-   * </code><br>
-   * now: <br>
-   * <code>
-   * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)|
-   *                                          A- input.zml <br>
-   * </code> constant inflow <br>
-   * before: <br>
-   * <code>
-   * |Channel| <- o(1) <- Q(constant) <br>
-   * </code><br>
-   * now: <br>
-   * <code>
-   * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)|
-   *                                          A- Q(constant)<br>
-   * </code>
-   * 
-   * @param workspace
-   * @throws Exception
-   */
-  private void updateZuflussNet( final GMLWorkspace workspace ) throws Exception
-  {
-
-    final IFeatureType kontZuflussFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ZUFLUSS );
-    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    final Feature[] features = workspace.getFeatures( nodeFT );
-    final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
-    for( final Feature nodeFE : features )
-    {
-      final Object zuflussValue = nodeFE.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP );
-      if( zuflussValue != null )
-      {
-        // update zufluss
-        final Feature newNode = buildVChannelNet( workspace, nodeFE );
-        // nove zufluss-property to new node
-        // nodeFE.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", null ) );
-        // newNode.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", zuflussValue ) );
-        nodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, null );
-        newNode.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, zuflussValue );
-        newNode.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
-      }
-      final Feature branchingFE = workspace.resolveLink( nodeFE, branchingMemberRT );
-      if( branchingFE != null && branchingFE.getFeatureType() == kontZuflussFT )
-      {
-        // update zufluss
-        final Feature newNode = buildVChannelNet( workspace, nodeFE );
-        // nove constant-inflow to new node
-        workspace.setFeatureAsComposition( nodeFE, branchingMemberRT, null, true );
-        workspace.setFeatureAsComposition( newNode, branchingMemberRT, branchingFE, true );
-      }
-    }
-  }
-
-  /**
-   * @param kalypsoNAVersion
-   *          name/version of simulation kernel
-   */
-  private File chooseSimulationExe( final String kalypsoNAVersion, final ISimulationMonitor monitor )
-  {
-    try
-    {
-      return CalcCoreUtils.findExecutable( kalypsoNAVersion, EXECUTABLES_FILE_TEMPLATE, EXECUTABLES_FILE_PATTERN, CalcCoreUtils.COMPATIBILITY_MODE.NA );
-    }
-    catch( final CoreException e )
-    {
-      final IStatus status = e.getStatus();
-      monitor.setFinishInfo( status.getSeverity(), status.getMessage() );
-      return null;
-    }
-  }
-
-  /**
-   * some parameter have factors that must be processed before generating asciifiles, as these factors do not occur in
-   * ascci-format
-   * 
-   * @param modellWorkspace
-   */
-  private void updateFactorParameter( final GMLWorkspace modellWorkspace )
-  {
-    // Catchments
-    final Feature[] catchmentFEs = modellWorkspace.getFeatures( modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT ) );
-    update( catchmentFEs, CATCHMENT_FACTOR_PARAMETER_TARGET, CATCHMENT_FACTORS_PARAMETER );
-
-    // KMChannels
-    final Feature[] kmChanneFEs = modellWorkspace.getFeatures( modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT ) );
-    for( final Feature feature : kmChanneFEs )
-    {
-      final double rkfFactor = FeatureHelper.getAsDouble( feature, NaModelConstants.KM_CHANNEL_FAKTOR_RKF_PROP, 1.0 );
-      final double rnfFactor = FeatureHelper.getAsDouble( feature, NaModelConstants.KM_CHANNEL_FAKTOR_RNF_PROP, 1.0 );
-      final List< ? > kmParameter = (List< ? >) feature.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
-      final Iterator< ? > iterator = kmParameter.iterator();
-      while( iterator.hasNext() )
-      {
-        final Feature kmParameterFE = (Feature) iterator.next();
-        // rnf
-        final double _rnf = rnfFactor * FeatureHelper.getAsDouble( kmParameterFE, NaModelConstants.KM_CHANNEL_RNF_PROP, 1.0 );
-        // FeatureProperty rnfProp = FeatureFactory.createFeatureProperty( "rnf", new Double( _rnf ) );
-        kmParameterFE.setProperty( NaModelConstants.KM_CHANNEL_RNF_PROP, new Double( _rnf ) );
-        // rkf
-        final double _rkf = rkfFactor * FeatureHelper.getAsDouble( kmParameterFE, NaModelConstants.KM_CHANNEL_RKF_PROP, 1.0 );
-        // FeatureProperty rkfProp = FeatureFactory.createFeatureProperty( "rkf", new Double( _rkf ) );
-        kmParameterFE.setProperty( NaModelConstants.KM_CHANNEL_RKF_PROP, new Double( _rkf ) );
-      }
-    }
-  }
-
   /**
    * @param naControlWorkspace
    * @param logger
@@ -1145,7 +773,7 @@ public class NAModelSimulation
     final String[] wildcards = new String[] { "*" + "bil" + "*" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( wildcards, false, false, true );
 
-    final File[] qgsFiles = m_simDirs.outWeNatDir.listFiles( filter );
+    final File[] qgsFiles = m_simDirs.asciiDirs.outWeNatDir.listFiles( filter );
     if( qgsFiles.length != 0 )
 
     {
@@ -1163,7 +791,7 @@ public class NAModelSimulation
         }
         catch( final IOException e )
         {
-          final String inputPath = m_simDirs.outWeNatDir.getName() + element.getName();
+          final String inputPath = m_simDirs.asciiDirs.outWeNatDir.getName() + element.getName();
           e.printStackTrace();
           System.out.println( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.223" ) + inputPath + Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.224" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -1231,120 +859,6 @@ public class NAModelSimulation
     if( suffix.equalsIgnoreCase( "sub" ) ) //$NON-NLS-1$
       return Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.25" ); //$NON-NLS-1$
     return suffix;
-  }
-
-  /**
-   * updates workspace, so that interflow and channelflow dependencies gets optimized <br>
-   * groundwater flow can now run in opposite direction to channel flow
-   * 
-   * @param workspace
-   */
-  private void updateGWNet( final GMLWorkspace workspace )
-  {
-    final IFeatureType catchmentFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
-    final IFeatureType vChannelFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
-    final Feature[] features = workspace.getFeatures( catchmentFT );
-    final IRelationType entwaesserungsStrangMemberRT = (IRelationType) catchmentFT.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-    for( final Feature catchmentFE : features )
-    {
-      final Feature orgChannelFE = workspace.resolveLink( catchmentFE, entwaesserungsStrangMemberRT );
-      if( orgChannelFE == null )
-        continue;
-      final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-      final Feature nodeFE = workspace.resolveLink( orgChannelFE, downStreamNodeMemberRT );
-      final Feature newChannelFE = workspace.createFeature( catchmentFE, entwaesserungsStrangMemberRT, vChannelFT );
-      // set new relation: catchment -> new V-channel
-      try
-      {
-        workspace.setFeatureAsComposition( catchmentFE, entwaesserungsStrangMemberRT, newChannelFE, true );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-      // set new relation: new V-channel -> downstream node
-      try
-      {
-        final IRelationType downStreamNodeMemberRT2 = (IRelationType) newChannelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-        workspace.addFeatureAsAggregation( newChannelFE, downStreamNodeMemberRT2, 1, nodeFE.getId() );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  /**
-   * before: <code>
-   * 
-   *     o(existing)
-   * 
-   * </code> after: <code>
-   * 
-   *  |new Channel3|
-   *     |
-   *     V
-   *     o(new Node2)  (return value)
-   *     |
-   *     V
-   *  |new Channel1|
-   *     |
-   *     V
-   *     o(existing)
-   * 
-   * </code>
-   */
-  private Feature buildVChannelNet( final GMLWorkspace workspace, final Feature existingNode ) throws Exception
-  {
-    final IFeatureType nodeColFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_COLLECTION_FT );
-    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    final IRelationType nodeMemberRT = (IRelationType) nodeColFT.getProperty( NaModelConstants.NODE_MEMBER_PROP );
-    final IFeatureType vChannelFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
-
-    final IFeatureType channelColFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NA_CHANNEL_COLLECTION_FT );
-    final IRelationType channelMemberRT = (IRelationType) channelColFT.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
-    final Feature channelColFE = workspace.getFeatures( channelColFT )[0];
-    final Feature nodeColFE = workspace.getFeatures( workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_COLLECTION_FT ) )[0];
-
-    // add to collections:
-    final Feature newChannelFE1 = workspace.createFeature( channelColFE, channelMemberRT, vChannelFT );
-    workspace.addFeatureAsComposition( channelColFE, channelMemberRT, 0, newChannelFE1 );
-    final Feature newChannelFE3 = workspace.createFeature( channelColFE, channelMemberRT, vChannelFT );
-    workspace.addFeatureAsComposition( channelColFE, channelMemberRT, 0, newChannelFE3 );
-    final Feature newNodeFE2 = workspace.createFeature( nodeColFE, nodeMemberRT, nodeFT );
-    workspace.addFeatureAsComposition( nodeColFE, nodeMemberRT, 0, newNodeFE2 );
-    final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-
-    // 3 -> 2
-    workspace.setFeatureAsAggregation( newChannelFE3, downStreamNodeMemberRT, newNodeFE2.getId(), true );
-    // 2 -> 1
-    final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
-    workspace.setFeatureAsAggregation( newNodeFE2, downStreamChannelMemberRT, newChannelFE1.getId(), true );
-    // 1 -> existing
-
-    // final IRelationType downStreamNodeMemberRT1 = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
-    workspace.setFeatureAsAggregation( newChannelFE1, downStreamNodeMemberRT, existingNode.getId(), true );
-    return newNodeFE2;
-  }
-
-  private void update( final Feature[] features, final String[] targetPropNames, final String[][] factorPropNames )
-  {
-    for( final Feature feature : features )
-    {
-      for( int _p = 0; _p < targetPropNames.length; _p++ ) // iterate parameters
-      {
-        final String[] factors = factorPropNames[_p];
-        double value = 1.0; // initial value
-        for( final String element : factors )
-          // iterate factors
-          value *= FeatureHelper.getAsDouble( feature, element, 1.0 );
-        // set parameter
-        final String targetPropName = targetPropNames[_p];
-        // FeatureProperty valueProp = FeatureFactory.createFeatureProperty( targetPropName, new Double( value ) );
-        feature.setProperty( targetPropName, new Double( value ) );
-      }
-    }
   }
 
   private IObservation loadPredictedResult( final File resultDir, final Feature rootFeature ) throws MalformedURLException, SensorException

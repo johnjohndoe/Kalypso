@@ -38,60 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel;
+package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
-
-import org.kalypso.model.hydrology.NaModelConstants;
 
 /**
  * Helper class that holds all the various directories used by the NA simulation.
  * 
  * @author Gernot Belger
  */
-public class NaSimulationDirs
+public class NaAsciiDirs
 {
-  public final File simulationDir;
+  public static final String DIR_KLIMA_DAT = "klima.dat"; //$NON-NLS-1$
 
-  public final File outputDir;
+  public static final String DIR_ZUFLUSS = "zufluss"; //$NON-NLS-1$
+
+  public static final String DIR_HYDRO_TOP = "hydro.top"; //$NON-NLS-1$
 
   public final File asciiDir;
 
   public final File startDir;
 
-  public final File resultDir;
+  public final File outWeNatDir;
 
-  public final File logDir;
+  public final File lzsimDir;
 
-  public final File currentResultDir;
+  public final File klimaDatDir;
 
-  public File outWeNatDir;
+  public final File hydroTopDir;
 
-  public File bilanzDir;
+  public final File zuflussDir;
 
-  public File anfangswertDir;
-
-  public File lzsimDir;
-
-  public File reportDir;
-
-  public NaSimulationDirs( final File simDir )
+  public NaAsciiDirs( @SuppressWarnings("hiding") final File asciiDir )
   {
-    simulationDir = simDir;
-
-    outputDir = new File( simulationDir, NaModelConstants.OUTPUT_DIR_NAME );
-    asciiDir = new File( simulationDir, NaModelConstants.ASCII_DIR_NAME );
+    this.asciiDir = asciiDir;
     startDir = new File( asciiDir, "start" ); //$NON-NLS-1$
+    klimaDatDir = new File( asciiDir, DIR_KLIMA_DAT );
+    hydroTopDir = new File( asciiDir, DIR_HYDRO_TOP );
+    zuflussDir = new File( asciiDir, DIR_ZUFLUSS );
     outWeNatDir = new File( asciiDir, "out_we.nat" ); //$NON-NLS-1$
     lzsimDir = new File( asciiDir, "lzsim" ); //$NON-NLS-1$
-
-    resultDir = new File( outputDir, NaModelConstants.RESULT_DIR_NAME );
-
-    currentResultDir = new File( resultDir, "Aktuell" ); //$NON-NLS-1$
-    anfangswertDir = new File( currentResultDir, "Anfangswerte" );//$NON-NLS-1$
-    bilanzDir = new File( currentResultDir, "Bilanz" );//$NON-NLS-1$
-    logDir = new File( currentResultDir, "Log" );//$NON-NLS-1$
-    reportDir = new File( currentResultDir, "Report" );//$NON-NLS-1$
   }
 
 }
