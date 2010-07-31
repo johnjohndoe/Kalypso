@@ -52,7 +52,6 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.optimize.CalcDataProviderDecorater;
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -66,6 +65,7 @@ import org.kalypso.gmlschema.property.restriction.MaxInclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.processing.NaModelCalcJob;
 import org.kalypso.model.hydrology.internal.processing.NaModelInnerCalcJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
@@ -82,7 +82,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NaModelParameterAnalyseSimulation implements ISimulation
 {
-
   private ISimulationDataProvider m_inputProvider;
 
   private File m_analyseDir;
@@ -95,7 +94,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
 
   protected boolean m_partResult = false;
 
-  public NaModelParameterAnalyseSimulation( Logger logger )
+  public NaModelParameterAnalyseSimulation( final Logger logger )
   {
     m_logger = logger;
   }
@@ -105,7 +104,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
   @Override
-  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     m_inputProvider = inputProvider;
     m_monitor = monitor;
@@ -124,22 +123,19 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
       final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( null, analyseXsdURL );
       final List<FeaturePropertyToProcess> list = new ArrayList<FeaturePropertyToProcess>();
       final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
-      for( int i = 0; i < featureTypes.length; i++ )
+      for( final IFeatureType ft : featureTypes )
       {
-        final IFeatureType ft = featureTypes[i];
         final IPropertyType[] properties = ft.getProperties();
-        for( int j = 0; j < properties.length; j++ )
+        for( final IPropertyType pt : properties )
         {
-          final IPropertyType pt = properties[j];
           if( pt instanceof IValuePropertyType )
           {
             Double min = null;
             Double max = null;
             final IValuePropertyType vpt = (IValuePropertyType) pt;
             final IRestriction[] restrictions = vpt.getRestriction();
-            for( int k = 0; k < restrictions.length; k++ )
+            for( final IRestriction restriction : restrictions )
             {
-              final IRestriction restriction = restrictions[k];
               if( restriction instanceof MinInclusiveRestriction )
                 min = ((MinInclusiveRestriction) restriction).getMinInclusive();
               else if( restriction instanceof MinExclusiveRestriction )
@@ -184,14 +180,14 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
       }
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new SimulationException( Messages.getString("org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation.7"), e ); //$NON-NLS-1$
     }
     resultEater.addResult( NaModelConstants.OUT_ZML, m_analyseResultDir );
   }
 
-  private void analyseRun( FeaturePropertyToProcess prop, final String key, int mode ) throws Exception
+  private void analyseRun( final FeaturePropertyToProcess prop, final String key, final int mode ) throws Exception
   {
     m_logger.info( "analyse run: " + key ); //$NON-NLS-1$
     final FeatureVisitor visitor = new AnalysisFeatureVisitor( prop, mode );
@@ -220,7 +216,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
     final ISimulationResultEater resultEater = new ISimulationResultEater()
     {
       @Override
-      public void addResult( String id, Object result )
+      public void addResult( final String id, final Object result )
       {
         if( id.equals( NaModelConstants.OUT_ZML ) )
         {
@@ -234,7 +230,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
           {
             FileUtilities.accept( fromDir, copyVisitor, true );
           }
-          catch( IOException e )
+          catch( final IOException e )
           {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -257,7 +253,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
   @Override
   public URL getSpezifikation( )
   {
-    return NaModelCalcJob.class.getResource( "resources/nacalcjob_spec.xml" ); //$NON-NLS-1$
+    return NaModelCalcJob.class.getResource( NaModelCalcJob.NACALCJOB_SPEC_XML_LOCATION );
   }
 
   class FeaturePropertyToProcess
@@ -270,7 +266,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
 
     private final double m_max;
 
-    public FeaturePropertyToProcess( IFeatureType ft, IPropertyType pt, Double min, Double max )
+    public FeaturePropertyToProcess( final IFeatureType ft, final IPropertyType pt, final Double min, final Double max )
     {
       m_ft = ft;
       m_pt = pt;

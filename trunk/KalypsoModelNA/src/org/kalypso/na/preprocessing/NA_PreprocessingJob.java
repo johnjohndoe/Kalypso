@@ -18,7 +18,6 @@ import org.kalypso.simulation.core.SimulationException;
  * 
  * @author Dejan Antanaskovic
  */
-
 public class NA_PreprocessingJob extends AbstractInternalStatusJob implements ISimulation
 {
   private final static String INPUT_STATUSQUO_RESULTSFOLDER = "StatusQuoResultsFolder"; //$NON-NLS-1$
