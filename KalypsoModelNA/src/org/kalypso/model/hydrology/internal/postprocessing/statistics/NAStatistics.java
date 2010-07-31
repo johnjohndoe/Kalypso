@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel;
+package org.kalypso.model.hydrology.internal.postprocessing.statistics;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -63,6 +63,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;

@@ -47,6 +47,8 @@ import java.util.logging.Logger;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.processing.NaModelInnerCalcJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizeMonitor;

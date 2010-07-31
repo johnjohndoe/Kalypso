@@ -42,7 +42,7 @@ package org.kalypso.convert.namodel.schema.binding.suds;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.model.hydrology.NaModelConstants;
 
 /**
  * @author kuch

@@ -38,14 +38,18 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel;
+package org.kalypso.model.hydrology.internal.processing;
 
 import java.io.File;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.kalypso.convert.namodel.NACalculationLogger;
+import org.kalypso.convert.namodel.NAModelSimulation;
+import org.kalypso.convert.namodel.NaSimulationDirs;
 import org.kalypso.convert.namodel.i18n.Messages;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;

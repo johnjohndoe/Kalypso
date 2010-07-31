@@ -1,4 +1,4 @@
-package org.kalypso.convert.namodel.timeseries.test;
+package org.kalypso.convert.namodel.test;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -25,14 +25,7 @@ public class BlockTimeSeriesTest extends TestCase
 {
   public void testBlocktimeSeries( ) throws IOException
   {
-    // 25.3.1990 Umstellung
-    //
-    // TreeMap map = load( "./resources/test.dat", "103" );
-    // TreeMap map2 = load( "resources/qgs.dat", "103" );
-    // assertNotNull( map );
-    // assertNotNull( map2 );
     final SortedMap<Date, String> map3 = load( "./resources/WinterSommerTest.dat", "103" ); //$NON-NLS-1$ //$NON-NLS-2$
-// TreeMap map3 = load( "./resources/WinterSommer24hTest.dat", "103" );
     check( map3, 28 );
   }
 
@@ -70,7 +63,7 @@ public class BlockTimeSeriesTest extends TestCase
     }
   }
 
-  public SortedMap<Date, String> load( final String resource, final String key ) throws IOException
+  private SortedMap<Date, String> load( final String resource, final String key ) throws IOException
   {
     final TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
     final BlockTimeSeries block = new BlockTimeSeries( timeZone );
@@ -78,7 +71,6 @@ public class BlockTimeSeriesTest extends TestCase
     final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
     final FileWriter fileWriter = new FileWriter( tmpFile );
     IOUtils.copy( resourceAsStream, fileWriter );
-// CopyUtils.copy( resourceAsStream, fileWriter );
     IOUtils.closeQuietly( fileWriter );
     block.importBlockFile( tmpFile );
     final SortedMap<Date, String> map = block.getTimeSerie( key );

@@ -61,6 +61,7 @@ import org.kalypso.convert.namodel.manager.SchneeManager;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

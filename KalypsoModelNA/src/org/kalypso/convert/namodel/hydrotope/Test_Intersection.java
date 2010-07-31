@@ -47,8 +47,8 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.Ignore;
 import org.kalypso.convert.namodel.FeatureListGeometryIntersector;
-import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.schema.binding.Geology;
 import org.kalypso.convert.namodel.schema.binding.GeologyCollection;
 import org.kalypso.convert.namodel.schema.binding.Landuse;
@@ -56,6 +56,7 @@ import org.kalypso.convert.namodel.schema.binding.LanduseCollection;
 import org.kalypso.convert.namodel.schema.binding.SoilType;
 import org.kalypso.convert.namodel.schema.binding.SoilTypeCollection;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -72,6 +73,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 /**
  * @author Dejan Antanaskovic
  */
+@Ignore(value = "Uses absolute pathes and hence does not run everywhere")
 public class Test_Intersection extends TestCase
 {
   public void test( ) throws Exception

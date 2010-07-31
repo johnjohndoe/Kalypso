@@ -43,8 +43,8 @@ package org.kalypso.convert.namodel.net.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 

@@ -50,6 +50,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;

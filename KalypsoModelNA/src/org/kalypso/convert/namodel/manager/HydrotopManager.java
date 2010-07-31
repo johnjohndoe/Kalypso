@@ -54,7 +54,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.schema.binding.Hydrotop;
 import org.kalypso.convert.namodel.schema.binding.suds.IGreenRoof;
@@ -63,6 +62,7 @@ import org.kalypso.convert.namodel.schema.binding.suds.ISwale;
 import org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
