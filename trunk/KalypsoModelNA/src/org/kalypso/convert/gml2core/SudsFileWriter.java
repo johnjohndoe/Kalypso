@@ -47,12 +47,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.manager.BodentypManager;
 import org.kalypso.convert.namodel.schema.binding.Hydrotop;
 import org.kalypso.convert.namodel.schema.binding.suds.Greenroof;
 import org.kalypso.convert.namodel.schema.binding.suds.Swale;
 import org.kalypso.convert.namodel.schema.binding.suds.SwaleInfiltrationDitch;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Object;

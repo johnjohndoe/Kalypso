@@ -96,6 +96,8 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
@@ -271,14 +273,16 @@ public class NAModelSimulation
 
     if( monitor.isCanceled() )
       return false;
-    // kopiere executable aus resourcen:
+
     copyExecutable();
 
     // starte berechnung
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.27" ) ); //$NON-NLS-1$
     if( monitor.isCanceled() )
       return false;
+
     startCalculation( monitor );
+
     final boolean succeeded = checkSucceeded();
     if( succeeded )
     {

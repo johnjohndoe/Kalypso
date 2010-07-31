@@ -61,6 +61,7 @@ import org.kalypso.convert.namodel.schema.binding.suds.Swale;
 import org.kalypso.convert.namodel.schema.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;

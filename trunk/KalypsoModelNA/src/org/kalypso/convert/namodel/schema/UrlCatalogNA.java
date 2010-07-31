@@ -45,7 +45,7 @@ import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
-import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.model.hydrology.NaModelConstants;
 
 /**
  * class UrlCatalogNA provides the schemas for kalypso rainfall runoff simulation created by

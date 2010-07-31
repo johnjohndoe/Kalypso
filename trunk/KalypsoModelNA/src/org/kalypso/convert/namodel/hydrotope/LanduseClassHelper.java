@@ -46,7 +46,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 

@@ -42,6 +42,8 @@ package org.kalypso.convert.namodel;
 
 import java.io.File;
 
+import org.kalypso.model.hydrology.NaModelConstants;
+
 /**
  * Helper class that holds all the various directories used by the NA simulation.
  * 

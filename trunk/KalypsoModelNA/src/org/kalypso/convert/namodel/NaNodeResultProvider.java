@@ -49,6 +49,7 @@ import java.util.List;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;

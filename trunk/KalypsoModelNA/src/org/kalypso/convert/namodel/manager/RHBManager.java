@@ -49,9 +49,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

@@ -55,12 +55,7 @@ import org.kalypso.convert.namodel.i18n.Messages;
  */
 public class BlockTimeSeriesDiffComperator implements IDiffComparator
 {
-
   private final double m_tollerance = 1e-3d;
-
-  public BlockTimeSeriesDiffComperator( )
-  {
-  }
 
   /**
    * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object,
