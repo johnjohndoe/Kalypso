@@ -71,6 +71,8 @@ public class NaSimulationDirs
 
   public File lzsimDir;
 
+  public File reportDir;
+
   public NaSimulationDirs( final File simDir )
   {
     simulationDir = simDir;
@@ -86,7 +88,8 @@ public class NaSimulationDirs
     currentResultDir = new File( resultDir, "Aktuell" ); //$NON-NLS-1$
     anfangswertDir = new File( currentResultDir, "Anfangswerte" );//$NON-NLS-1$
     bilanzDir = new File( currentResultDir, "Bilanz" );//$NON-NLS-1$
-    logDir = new File( currentResultDir, "Log" );
+    logDir = new File( currentResultDir, "Log" );//$NON-NLS-1$
+    reportDir = new File( currentResultDir, "Report" );//$NON-NLS-1$
   }
 
 }
