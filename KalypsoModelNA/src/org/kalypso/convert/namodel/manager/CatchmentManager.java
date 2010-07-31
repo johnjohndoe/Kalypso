@@ -118,9 +118,6 @@ public class CatchmentManager extends AbstractManager
   {
     final List<Feature> result = new ArrayList<Feature>();
     final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-    // FileReader(
-    // file
-    // ) );
     Feature fe = null;
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );

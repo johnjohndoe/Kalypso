@@ -203,10 +203,6 @@ public class NAModelSimulation
     if( monitor.isCanceled() )
       return false;
 
-    // Kopieren von Berechnungsstandardverzeichnis
-    final URL asciiTemplateURL = getClass().getResource( "template/emptyAsciiTemplate.zip" ); //$NON-NLS-1$
-    unzipInput( asciiTemplateURL, m_simDirs.asciiDir );
-
     if( m_inputProvider.hasID( NAOptimizingJob.IN_BestOptimizedRunDir_ID ) )
     {
       // while optimization, you can recycle files from a former run.
@@ -496,16 +492,6 @@ public class NAModelSimulation
     final File destFile = new File( m_simDirs.startDir, m_kalypsoKernelPath.getName() );
     if( !destFile.exists() )
       FileUtils.copyFile( m_kalypsoKernelPath, destFile );
-
-    // TODO: do not commit...
-// URL defaultZfl = getClass().getResource( m_resourceBase + "inp.dat/we999-weisseelster.zfl" );
-// FileUtils.copyURLToFile( defaultZfl, new File( basedir, "inp.dat/we999.zfl" ) );
-//
-// URL defaultVer = getClass().getResource( m_resourceBase + "klima.dat/std.ver" );
-// FileUtils.copyURLToFile( defaultVer, new File( basedir, "klima.dat/std.ver" ) );
-//
-// URL defaultTmp = getClass().getResource( m_resourceBase + "klima.dat/std.tmp" );
-// FileUtils.copyURLToFile( defaultTmp, new File( basedir, "klima.dat/std.tmp" ) );
   }
 
   private void startCalculation( final ISimulationMonitor monitor ) throws SimulationException
