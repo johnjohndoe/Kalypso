@@ -79,7 +79,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -277,6 +276,8 @@ public class NAModelSimulation
     if( monitor.isCanceled() )
       return false;
 
+    // Create "out_we.nat", else Kalypso-NA will not run
+    m_simDirs.outWeNatDir.mkdirs();
     startCalculation( monitor );
 
     final boolean succeeded = checkSucceeded();
@@ -297,18 +298,6 @@ public class NAModelSimulation
     }
 
     return succeeded;
-  }
-
-  private static void unzipInput( final URL asciiZipURL, final File exeDir )
-  {
-    try
-    {
-      ZipUtilities.unzip( asciiZipURL, exeDir );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
   }
 
   public void backupResults( )

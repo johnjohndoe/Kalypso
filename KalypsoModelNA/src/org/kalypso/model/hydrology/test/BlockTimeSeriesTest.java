@@ -25,7 +25,7 @@ public class BlockTimeSeriesTest extends TestCase
 {
   public void testBlocktimeSeries( ) throws IOException
   {
-    final SortedMap<Date, String> map3 = load( "./resources/WinterSommerTest.dat", "103" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final SortedMap<Date, String> map3 = load( "resources/WinterSommerTest.dat", "103" ); //$NON-NLS-1$ //$NON-NLS-2$
     check( map3, 28 );
   }
 
