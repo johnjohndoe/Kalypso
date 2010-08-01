@@ -48,18 +48,17 @@ import org.kalypsodeegree.model.feature.Feature;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * @author doemming
+ */
 public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
 {
-
   private final AsciiBuffer m_asciiBuffer;
 
   private int m_virtualChannelId = 10001;
 
   private final List<Feature> m_completedNodes = new ArrayList<Feature>();
 
-  /*
-   * @author doemming
-   */
   public CompleteDownstreamNetAsciiWriterVisitor( final AsciiBuffer asciiBuffer )
   {
     m_asciiBuffer = asciiBuffer;

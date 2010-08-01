@@ -60,13 +60,7 @@ public class AsciiBuffer
 
   private final StringBuffer m_hydBuffer = new StringBuffer();
 
-  private final StringBuffer m_bodartBuffer = new StringBuffer();
-
-  private final StringBuffer m_bodtypBuffer = new StringBuffer();
-
-  private final StringBuffer m_snowBuffer = new StringBuffer();
-
-  private final List<Feature> m_featuresToWrite = new ArrayList<Feature>();
+  private final List<Feature> m_markedFeatures = new ArrayList<Feature>();
 
   private final StringBuffer m_zftBuffer= new StringBuffer();
   private final StringBuffer m_swaleTrenchBuffer= new StringBuffer();
@@ -76,15 +70,15 @@ public class AsciiBuffer
   // nothing to do here
   }
 
-  public void addFeatureToWrite( Feature feature )
+  public void markFeatureForWrite( final Feature feature )
   {
-    if( !m_featuresToWrite.contains( feature ) )
-      m_featuresToWrite.add( feature );
+    if( !m_markedFeatures.contains( feature ) )
+      m_markedFeatures.add( feature );
   }
 
-  public boolean writeFeature( Feature feature )
+  public boolean isFeatureMakredForWrite( final Feature feature )
   {
-    return m_featuresToWrite.contains( feature );
+    return m_markedFeatures.contains( feature );
   }
 
   public StringBuffer getNetBuffer()
@@ -110,21 +104,6 @@ public class AsciiBuffer
   public StringBuffer getHydBuffer()
   {
     return m_hydBuffer;
-  }
-
-  public StringBuffer getBodartBuffer()
-  {
-    return m_bodartBuffer;
-  }
-
-  public StringBuffer getBodtypBuffer()
-  {
-    return m_bodtypBuffer;
-  }
-
-  public StringBuffer getSnowBuffer()
-  {
-    return m_snowBuffer;
   }
 
   public StringBuffer getZFTBuffer()

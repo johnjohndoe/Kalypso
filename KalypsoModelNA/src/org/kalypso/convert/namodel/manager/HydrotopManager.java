@@ -204,7 +204,7 @@ public class HydrotopManager extends AbstractManager
     while( catchmentIter.hasNext() )
     {
       final Feature catchmentFE = catchmentIter.next();
-      if( asciiBuffer.writeFeature( catchmentFE ) ) // do it only for relevant catchments
+      if( asciiBuffer.isFeatureMakredForWrite( catchmentFE ) ) // do it only for relevant catchments
       {
         final int catchmentAsciiID = idManager.getAsciiID( catchmentFE );
         boolean anySuds = false;

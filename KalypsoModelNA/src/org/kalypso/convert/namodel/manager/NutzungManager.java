@@ -86,7 +86,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class NutzungManager extends AbstractManager
 {
-
   private final NAConfiguration m_conf;
 
   private final IFeatureType m_LanduseFT;
@@ -100,11 +99,9 @@ public class NutzungManager extends AbstractManager
   public NutzungManager( final GMLSchema parameterSchema, final NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
-    // m_crs = crs;
     m_conf = conf;
     m_LanduseFT = parameterSchema.getFeatureType( NaModelConstants.PARA_LANDUSE );
     m_IdleLanduseFT = parameterSchema.getFeatureType( NaModelConstants.PARA_IDEAL_LANDUSE );
-
   }
 
   /**

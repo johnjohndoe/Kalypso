@@ -170,21 +170,21 @@ public class BodentypManager extends AbstractManager
     createProperties( propCollector, line, 1 );
 
     // generate id:
-    String asciiStringId = propCollector.get( "name" ); //$NON-NLS-1$
+    final String asciiStringId = propCollector.get( "name" ); //$NON-NLS-1$
     final Feature feature = getFeature( asciiStringId, m_bodentypFT );
 
-    int ianz = Integer.parseInt( propCollector.get( "ianz" ) ); //$NON-NLS-1$
-    HashMap<String, String> bodArtPropCollector = new HashMap<String, String>();
+    final int ianz = Integer.parseInt( propCollector.get( "ianz" ) ); //$NON-NLS-1$
+    final HashMap<String, String> bodArtPropCollector = new HashMap<String, String>();
     // BodArtParameterMember
     for( int i = 0; i < ianz; i++ )
     {
-      Feature bodArtParameterFeature = createFeature( m_bodenartFT );
+      final Feature bodArtParameterFeature = createFeature( m_bodenartFT );
       line = reader.readLine();
       System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.4", i, line ) ); //$NON-NLS-1$ 
       createProperties( bodArtPropCollector, line, 2 );
       // BodArtLink
       // final FeatureProperty BodArtNameProp = (FeatureProperty)bodArtPropCollector.get( "name" );
-      String asciiBodArtId = bodArtPropCollector.get( "name" ); //$NON-NLS-1$
+      final String asciiBodArtId = bodArtPropCollector.get( "name" ); //$NON-NLS-1$
       final Feature BodArtFE = getFeature( asciiBodArtId, m_conf.getBodartFT() );
 
       bodArtPropCollector.put( "soilLayerLink", BodArtFE.getId() ); //$NON-NLS-1$
@@ -203,7 +203,7 @@ public class BodentypManager extends AbstractManager
     return feature;
   }
 
-  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace paraWorkspace ) throws Exception
+  public void writeFile( final StringBuffer buffer, final GMLWorkspace paraWorkspace ) throws Exception
   {
     final List<Feature> paramSoiltypeLayers = (List<Feature>) paraWorkspace.getRootFeature().getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
     for( final Feature paramSoiltypeLayer : paramSoiltypeLayers )
@@ -218,7 +218,6 @@ public class BodentypManager extends AbstractManager
           Boolean xretProp = (Boolean) fe.getProperty( NaModelConstants.PARA_PROP_XRET );
           if( xretProp == null )
             xretProp = Boolean.FALSE;
-// throw new SimulationException( "Parameter WS: Property xretProp is null for feature " + paramSoiltypeLayer.getId() );
           final Layer layer = new Layer( bodArtLink.getName(), Double.parseDouble( fe.getProperty( NaModelConstants.PARA_PROP_XTIEF ).toString() ), xretProp );
           layers.add( layer );
         }
@@ -231,7 +230,6 @@ public class BodentypManager extends AbstractManager
     }
     addSudsSoilLayers();
 
-    final StringBuffer buffer = asciiBuffer.getBodtypBuffer();
 
     buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
     final Iterator<String> soilTypesIterator = m_soilTypes.keySet().iterator();

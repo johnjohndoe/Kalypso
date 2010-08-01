@@ -40,12 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.kalypso.convert.gml2core.SudsFileWriter;
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.manager.BodenartManager;
@@ -63,6 +60,7 @@ import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * import and export of kalypso rainfall runoff models converts between custom ascii format and gml format. importing
@@ -95,8 +93,6 @@ public class NAModellConverter
 
   private final SchneeManager m_schneeManager;
 
-// private final SwaleAndTrenchManager m_swaleAndTrenchManager;
-
   private final IdleLanduseManager m_idleLanduseManager;
 
   public NAModellConverter( final NAConfiguration conf, final Logger logger ) throws Exception
@@ -110,15 +106,13 @@ public class NAModellConverter
     m_catchmentManager = new CatchmentManager( m_modelSchema, m_conf );
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );
     m_nodeManager = new NetFileManager( m_conf );
-// m_rhbManager = new RHBManager( m_modelSchema, m_conf );
     m_hydrotopManager = new HydrotopManager( m_conf, logger );
-// m_swaleAndTrenchManager = new SwaleAndTrenchManager( m_modelSchema, m_conf );
     m_bodartManager = new BodenartManager( m_parameterSchema, m_conf );
     m_bodtypManager = new BodentypManager( m_parameterSchema, m_conf );
     m_nutzManager = new NutzungManager( m_parameterSchema, m_conf );
     m_schneeManager = new SchneeManager( m_parameterSchema, m_conf );
     m_idleLanduseManager = new IdleLanduseManager( m_parameterSchema, m_conf );
-    m_parseManager = new ParseManager( m_modelSchema, m_parameterSchema, conf, m_catchmentManager, m_gerinneManager, m_nodeManager, m_bodartManager, m_bodtypManager, m_nutzManager, m_schneeManager, m_idleLanduseManager );
+    m_parseManager = new ParseManager( m_parameterSchema, conf, m_bodartManager, m_bodtypManager, m_nutzManager, m_schneeManager, m_idleLanduseManager );
   }
 
   public ParseManager getParseManager( )
@@ -131,55 +125,57 @@ public class NAModellConverter
     // TODO replace this AsciiBuffer with some no-memory-consuming structure (regular StringBuffer)
     final AsciiBuffer asciiBuffer = new AsciiBuffer();
 
-    m_nodeManager.writeFile( asciiBuffer, m_conf.getModelWorkspace(), m_conf.getSynthNWorkspace() );
-    m_catchmentManager.writeFile( asciiBuffer, m_conf.getModelWorkspace() );
-    m_gerinneManager.writeFile( asciiBuffer, m_conf.getModelWorkspace() );
-// m_swaleAndTrenchManager.writeFile( asciiBuffer, modelWorkspace );
-    writeToFile( m_conf.getNetFile(), asciiBuffer.getNetBuffer() );
-    writeToFile( m_conf.getCatchmentFile(), asciiBuffer.getCatchmentBuffer() );
-    writeToFile( m_conf.getChannelFile(), asciiBuffer.getChannelBuffer() );
-    // writeToFile( m_conf.getSwaleAndTrenchFile(), asciiBuffer.getSwaleTrenchBuffer() );
-    writeToFile( m_conf.getRHBFile(), asciiBuffer.getRhbBuffer() );
-    writeToFile( m_conf.getZFTFile(), asciiBuffer.getZFTBuffer() );
+    final GMLWorkspace modelWorkspace = m_conf.getModelWorkspace();
+    final GMLWorkspace synthNWorkspace = m_conf.getSynthNWorkspace();
 
-    if( m_conf.getHydrotopeWorkspace() != null )
+    m_nodeManager.writeFile( asciiBuffer, modelWorkspace, synthNWorkspace );
+    m_catchmentManager.writeFile( asciiBuffer, modelWorkspace );
+    m_gerinneManager.writeFile( asciiBuffer, modelWorkspace );
+
+    FileUtils.writeStringToFile( m_conf.getNetFile(), asciiBuffer.getNetBuffer().toString(), null );
+    FileUtils.writeStringToFile( m_conf.getCatchmentFile(), asciiBuffer.getCatchmentBuffer().toString(), null );
+    FileUtils.writeStringToFile( m_conf.getChannelFile(), asciiBuffer.getChannelBuffer().toString(), null );
+    FileUtils.writeStringToFile( m_conf.getRHBFile(), asciiBuffer.getRhbBuffer().toString(), null );
+    FileUtils.writeStringToFile( m_conf.getZFTFile(), asciiBuffer.getZFTBuffer().toString(), null );
+
+    final GMLWorkspace parameterWorkspace = m_conf.getParameterWorkspace();
+
+    final GMLWorkspace hydrotopeWorkspace = m_conf.getHydrotopeWorkspace();
+    if( hydrotopeWorkspace != null )
     {
-      m_hydrotopManager.writeFile( asciiBuffer, m_conf.getHydrotopeWorkspace(), m_conf.getModelWorkspace(), m_conf.getParameterWorkspace() );
-      writeToFile( m_conf.getHydrotopFile(), asciiBuffer.getHydBuffer() );
+      m_hydrotopManager.writeFile( asciiBuffer, hydrotopeWorkspace, modelWorkspace, parameterWorkspace );
+      FileUtils.writeStringToFile( m_conf.getHydrotopFile(), asciiBuffer.getHydBuffer().toString(), null );
 
       // generate ascii mapping
       final StringBuffer buffer = new StringBuffer();
       for( final String line : m_conf.getHydrotopMapping() )
         buffer.append( line ).append( "\n" ); //$NON-NLS-1$
-      writeToFile( m_conf.getHydrotopMappingFile(), buffer );
+      FileUtils.writeStringToFile( m_conf.getHydrotopMappingFile(), buffer.toString(), null );
     }
 
-    if( m_conf.getParameterWorkspace() != null )
+    if( parameterWorkspace != null )
     {
-      m_bodartManager.writeFile( asciiBuffer, m_conf.getParameterWorkspace() );
-      m_bodtypManager.writeFile( asciiBuffer, m_conf.getParameterWorkspace() );
-      m_schneeManager.writeFile( asciiBuffer, m_conf.getParameterWorkspace() );
-      writeToFile( m_conf.getBodenartFile(), asciiBuffer.getBodartBuffer() );
-      writeToFile( m_conf.getBodentypFile(), asciiBuffer.getBodtypBuffer() );
-      writeToFile( m_conf.getSchneeFile(), asciiBuffer.getSnowBuffer() );
-      m_nutzManager.writeFile( m_conf.getParameterWorkspace() );
+      final StringBuffer bodartBuffer = new StringBuffer();
+      m_bodartManager.writeFile( bodartBuffer, parameterWorkspace );
+      FileUtils.writeStringToFile( m_conf.getBodenartFile(), bodartBuffer.toString(), null );
+
+      final StringBuffer bodtypBuffer = new StringBuffer();
+      m_bodtypManager.writeFile( bodtypBuffer, parameterWorkspace );
+      FileUtils.writeStringToFile( m_conf.getBodentypFile(), bodtypBuffer.toString(), null );
+
+      final StringBuffer snowBuffer = new StringBuffer();
+      m_schneeManager.writeFile( snowBuffer, parameterWorkspace );
+      FileUtils.writeStringToFile( m_conf.getSchneeFile(), snowBuffer.toString(), null );
+
+      m_nutzManager.writeFile( parameterWorkspace );
     }
 
     new SudsFileWriter( m_conf ).write();
-
   }
 
   public static Feature parameterAsciiToFeature( final NAConfiguration conf, final Logger logger ) throws Exception
   {
     final NAModellConverter main = new NAModellConverter( conf, logger );
     return main.getParseManager().parameterAsciiToFeature();
-  }
-
-  private final void writeToFile( final File file, final StringBuffer buffer ) throws IOException
-  {
-    final FileOutputStream fileOutputStream = new FileOutputStream( file );
-    final DataOutputStream stream = new DataOutputStream( fileOutputStream );
-    stream.writeBytes( buffer.toString() );
-    stream.close();
   }
 }

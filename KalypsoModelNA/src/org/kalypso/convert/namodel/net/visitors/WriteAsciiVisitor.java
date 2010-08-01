@@ -1,12 +1,3 @@
-package org.kalypso.convert.namodel.net.visitors;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypso.convert.namodel.manager.AsciiBuffer;
-import org.kalypso.convert.namodel.net.NetElement;
-import org.kalypsodeegree.model.feature.Feature;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -47,7 +38,18 @@ import org.kalypsodeegree.model.feature.Feature;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.convert.namodel.net.visitors;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.convert.namodel.manager.AsciiBuffer;
+import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypsodeegree.model.feature.Feature;
+
+/**
+ * @author doemming
+ */
 public class WriteAsciiVisitor extends NetElementVisitor
 {
   private final AsciiBuffer m_asciiBuffer;
@@ -56,9 +58,6 @@ public class WriteAsciiVisitor extends NetElementVisitor
 
   private final List<NetElement> m_visitedElements = new ArrayList<NetElement>();
 
-  /*
-   * @author doemming
-   */
   public WriteAsciiVisitor( final AsciiBuffer asciiBuffer )
   {
     m_asciiBuffer = asciiBuffer;
