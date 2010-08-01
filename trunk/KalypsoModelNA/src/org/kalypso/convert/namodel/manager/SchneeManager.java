@@ -129,26 +129,26 @@ public class SchneeManager extends AbstractManager
     return feature;
   }
 
-  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace paraWorkspace ) throws Exception
+  public void writeFile( final StringBuffer snowBuffer, final GMLWorkspace paraWorkspace ) throws Exception
   {
     final Feature rootFeature = paraWorkspace.getRootFeature();
     final List< ? > list = (List< ? >) rootFeature.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
-    asciiBuffer.getSnowBuffer().append( Messages.getString( "org.kalypso.convert.namodel.manager.SchneeManager.0" ) ); //$NON-NLS-1$
-    asciiBuffer.getSnowBuffer().append( "/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
-    asciiBuffer.getSnowBuffer().append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
+    snowBuffer.append( Messages.getString( "org.kalypso.convert.namodel.manager.SchneeManager.0" ) ); //$NON-NLS-1$
+    snowBuffer.append( "/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
+    snowBuffer.append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
     final Iterator< ? > iter = list.iterator();
     while( iter.hasNext() )
     {
       final Feature snowFE = (Feature) iter.next();
       // TODO: nur die schreiben, die auch in Gebietsdatei vorkommen
-      writeFeature( asciiBuffer, snowFE );
+      writeFeature( snowBuffer, snowFE );
     }
 
   }
 
-  private void writeFeature( final AsciiBuffer asciiBuffer, final Feature feature ) throws Exception
+  private void writeFeature( final StringBuffer snowBuffer, final Feature feature ) throws Exception
   {
-    asciiBuffer.getSnowBuffer().append( toAscci( feature, 13 ) + "\n" ); //$NON-NLS-1$
+    snowBuffer.append( toAscci( feature, 13 ) + "\n" ); //$NON-NLS-1$
   }
 
 }

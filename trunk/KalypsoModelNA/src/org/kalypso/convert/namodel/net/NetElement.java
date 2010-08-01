@@ -49,13 +49,11 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
-import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.manager.CatchmentManager;
 import org.kalypso.convert.namodel.manager.ChannelManager;
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.convert.namodel.manager.NetFileManager;
 import org.kalypso.convert.namodel.net.visitors.NetElementVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -71,7 +69,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * A NetElement encapsulates a Channel-Element and its dependencies <br>
- * In the example below each channel represents one netelement. Here you can see the dependencies related to the one
+ * In the example below each channel represents one net-element. Here you can see the dependencies related to the one
  * channel written in capital letter in the middle.
  * 
  * <pre>
@@ -102,21 +100,17 @@ public class NetElement
 
   private boolean m_calculated = false;
 
-  private final NetFileManager m_manager;
-
   private final List<NetElement> m_upStreamDepends = new ArrayList<NetElement>();
 
   private final List<NetElement> m_downStreamDepends = new ArrayList<NetElement>();
 
   private final Feature m_channelFE;
 
-  private static final String ANFANGSKNOTEN = "    9001"; //$NON-NLS-1$
+  private static final int ANFANGSKNOTEN = 9001; //$NON-NLS-1$
 
   private static final String ENDKNOTEN = "   10000"; //$NON-NLS-1$
 
   private final UrlUtilities m_urlUtils = new UrlUtilities();
-
-  // private static String[] m_netAsciiFormat;
 
   private final GMLWorkspace m_synthNWorkspace;
 
@@ -124,11 +118,10 @@ public class NetElement
 
   private final NAConfiguration m_conf;
 
-  public NetElement( final NetFileManager manager, final GMLWorkspace modellWorkspace, final GMLWorkspace synthNWorkspace, final Feature channelFE, final NAConfiguration conf )
+  public NetElement( final GMLWorkspace modellWorkspace, final GMLWorkspace synthNWorkspace, final Feature channelFE, final NAConfiguration conf )
   {
     m_synthNWorkspace = synthNWorkspace;
     m_channelFE = channelFE;
-    m_manager = manager;
     m_workspace = modellWorkspace;
     m_conf = conf;
   }
@@ -151,23 +144,22 @@ public class NetElement
 
   public void generateTimeSeries( ) throws IOException, Exception
   {
-    final IFeatureType catchmentFT = m_manager.m_conf.getCatchemtFT();
+    final IFeatureType catchmentFT = m_conf.getCatchemtFT();
     final IRelationType rt = (IRelationType) catchmentFT.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
     final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, catchmentFT, rt );
     for( final Feature feature : catchmentFeatures )
     {
-      final NAConfiguration conf = m_manager.m_conf;
-      final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( feature, new File( conf.getAsciiBaseDir(), "klima.dat" ), conf ); //$NON-NLS-1$
-      final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( feature, new File( m_manager.m_conf.getAsciiBaseDir(), "klima.dat" ), conf ); //$NON-NLS-1$
-      final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( feature, new File( m_manager.m_conf.getAsciiBaseDir(), "klima.dat" ), conf ); //$NON-NLS-1$
+      final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( feature, new File( m_conf.getAsciiBaseDir(), "klima.dat" ), m_conf ); //$NON-NLS-1$
+      final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( feature, new File( m_conf.getAsciiBaseDir(), "klima.dat" ), m_conf ); //$NON-NLS-1$
+      final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( feature, new File( m_conf.getAsciiBaseDir(), "klima.dat" ), m_conf ); //$NON-NLS-1$
       final File parent = targetFileN.getParentFile();
       if( !parent.exists() )
         parent.mkdirs();
 
-      if( conf.isUsePrecipitationForm().equals( true ) )
+      if( m_conf.isUsePrecipitationForm().equals( true ) )
       {
         if( !targetFileN.exists() )
-          CatchmentManager.WriteSynthNFile( targetFileN, feature, m_synthNWorkspace, conf );
+          CatchmentManager.WriteSynthNFile( targetFileN, feature, m_synthNWorkspace, m_conf );
       }
       else
       {
@@ -176,8 +168,7 @@ public class NetElement
         {
           final TimeseriesLinkType linkN = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_NIEDERSCHLAG );
 
-          // final URL linkURLN = m_urlUtils.resolveURL( m_workspace.getContext(), linkN.getHref() );
-          final URL linkURLN = m_urlUtils.resolveURL( conf.getZMLContext(), linkN.getHref() );
+          final URL linkURLN = m_urlUtils.resolveURL( m_conf.getZMLContext(), linkN.getHref() );
           final IObservation observation = ZmlFactory.parseXML( linkURLN, "ID_N" ); //$NON-NLS-1$
           final FileWriter writer = new FileWriter( targetFileN );
           NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RAINFALL, observation );
@@ -190,11 +181,10 @@ public class NetElement
           if( linkT != null )
           {
             final String hrefT = ZmlURL.insertFilter( linkT.getHref(), FILTER_T );
-            // final URL linkURLT = m_urlUtils.resolveURL( m_workspace.getContext(), hrefT );
-            final URL linkURLT = m_urlUtils.resolveURL( conf.getZMLContext(), hrefT );
+            final URL linkURLT = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefT );
             final IObservation observation = ZmlFactory.parseXML( linkURLT, "ID_T" ); //$NON-NLS-1$
             final FileWriter writer = new FileWriter( targetFileT );
-            NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(), TimeserieConstants.TYPE_TEMPERATURE, "1.0" ); //$NON-NLS-1$
+            NAZMLGenerator.createExt2File( writer, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), TimeserieConstants.TYPE_TEMPERATURE, "1.0" ); //$NON-NLS-1$
             IOUtils.closeQuietly( writer );
           }
         }
@@ -205,11 +195,10 @@ public class NetElement
           if( linkV != null )
           {
             final String hrefV = ZmlURL.insertFilter( linkV.getHref(), FILTER_V );
-            // final URL linkURLV = m_urlUtils.resolveURL( m_workspace.getContext(), hrefV );
-            final URL linkURLV = m_urlUtils.resolveURL( conf.getZMLContext(), hrefV );
+            final URL linkURLV = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefV );
             final IObservation observation = ZmlFactory.parseXML( linkURLV, "ID_V" ); //$NON-NLS-1$
             final FileWriter writer = new FileWriter( targetFileV );
-            NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(), TimeserieConstants.TYPE_EVAPORATION, "0.5" ); //$NON-NLS-1$
+            NAZMLGenerator.createExt2File( writer, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), TimeserieConstants.TYPE_EVAPORATION, "0.5" ); //$NON-NLS-1$
             IOUtils.closeQuietly( writer );
           }
         }
@@ -249,21 +238,23 @@ public class NetElement
 
   public void writeRootChannel( final AsciiBuffer asciiBuffer, final int virtualChannelId )
   {
+    final StringBuffer netBuffer = asciiBuffer.getNetBuffer();
+    final StringBuffer channelBuffer = asciiBuffer.getChannelBuffer();
+
     final IDManager idManager = m_conf.getIdManager();
 
     final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
     final Feature knotu = m_workspace.resolveLink( m_channelFE, rt );
     if( knotu == null )
       System.out.println( "knotU=null" ); //$NON-NLS-1$
-    asciiBuffer.getNetBuffer().append( "   " + virtualChannelId ); //$NON-NLS-1$
-    asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( knotu ), "i8" ) ); //$NON-NLS-1$
-    // asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( knotu, m_netAsciiFormat[11] ) );
-    asciiBuffer.getNetBuffer().append( ENDKNOTEN );
-    asciiBuffer.getNetBuffer().append( " 0\n" ); //$NON-NLS-1$
 
-    asciiBuffer.getChannelBuffer().append( virtualChannelId + "\n" ); //$NON-NLS-1$
-    asciiBuffer.getChannelBuffer().append( ChannelManager.VIRTUALCHANNEL + "\n" ); //$NON-NLS-1$
-    // m_virtual = true;
+    netBuffer.append( "   " + virtualChannelId ); //$NON-NLS-1$
+    netBuffer.append( String.format( "%8d", idManager.getAsciiID( knotu ) ) ); //$NON-NLS-1$
+    netBuffer.append( ENDKNOTEN );
+    netBuffer.append( " 0\n" ); //$NON-NLS-1$
+
+    channelBuffer.append( virtualChannelId + "\n" ); //$NON-NLS-1$
+    channelBuffer.append( ChannelManager.VIRTUALCHANNEL + "\n" ); //$NON-NLS-1$
   }
 
   /**
@@ -271,61 +262,81 @@ public class NetElement
    */
   public void write( final AsciiBuffer asciiBuffer, final List<Feature> nodeList )
   {
-    final IDManager idManager = m_conf.getIdManager();
-    asciiBuffer.addFeatureToWrite( getChannel() );
+    final Feature channel = getChannel();
+    asciiBuffer.markFeatureForWrite( channel );
 
-    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-    final Feature knotU = m_workspace.resolveLink( m_channelFE, rt );
+    m_calculated = true;
+
+    final StringBuffer netBuffer = asciiBuffer.getNetBuffer();
+
+    final IDManager idManager = m_conf.getIdManager();
 
     // append channel:
-    asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( m_channelFE ), "i8" ) ); //$NON-NLS-1$
+    final int channelID = idManager.getAsciiID( m_channelFE );
+    netBuffer.append( String.format( "%8d", channelID ) ); //$NON-NLS-1$
 
-    final IFeatureType nodeFT = m_manager.m_conf.getNodeFT();
-    final Feature[] features = m_workspace.getFeatures( nodeFT );
-    final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
-    Feature knotO = null;
-    for( final Feature feature : features )
-    {
-      if( m_channelFE == m_workspace.resolveLink( feature, downStreamChannelMemberRT ) )
-      {
-        knotO = feature;
-        continue;
-      }
-    }
-    m_calculated = true;
+    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
+    final Feature downstreamNode = m_workspace.resolveLink( m_channelFE, rt );
+    final Feature upstreamNode = findUpstreamNode();
+
     // collect related catchments
+    final IFeatureType catchemtFT = m_conf.getCatchemtFT();
+    final Feature[] catchmentFeatures = m_workspace.getFeatures( catchemtFT );
+    final Feature[] catchmentForThisChannel = findCatchments( catchemtFT, catchmentFeatures );
+
+    // append upstream node:
+    final int upstreamNodeID = upstreamNode == null ? ANFANGSKNOTEN : idManager.getAsciiID( upstreamNode );
+    netBuffer.append( String.format( "%8d", upstreamNodeID ) );
+
+    // append downstream node:
+    final int downstreamNodeID = idManager.getAsciiID( downstreamNode );
+    netBuffer.append( String.format( "%8d", downstreamNodeID ) ); //$NON-NLS-1$
+
+    // append catchments
+    netBuffer.append( " " + catchmentForThisChannel.length + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    for( final Object element : catchmentForThisChannel )
+    {
+      final Feature catchmentFE = (Feature) element;
+      asciiBuffer.markFeatureForWrite( catchmentFE );
+      final int chatchmentID = idManager.getAsciiID( catchmentFE );
+      netBuffer.append( String.format( "%8d\n", chatchmentID ) ); //$NON-NLS-1$
+    }
+
+    if( upstreamNode != null && !nodeList.contains( upstreamNode ) )
+      nodeList.add( upstreamNode );
+    if( downstreamNode != null && !nodeList.contains( downstreamNode ) )
+      nodeList.add( downstreamNode );
+  }
+
+  // FIXME:move into channel binding
+  private Feature[] findCatchments( final IFeatureType catchemtFT, final Feature[] catchmentFeatures )
+  {
     final List<Feature> catchmentList = new ArrayList<Feature>();
-    final IFeatureType catchemtFT = m_manager.m_conf.getCatchemtFT();
-    final Feature[] Cfeatures = m_workspace.getFeatures( catchemtFT );
 
     final IRelationType entwaesserungsStrangMemberRT = (IRelationType) catchemtFT.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-    for( final Feature cfeature : Cfeatures )
+    for( final Feature cfeature : catchmentFeatures )
     {
-      if( m_channelFE == m_workspace.resolveLink( cfeature, entwaesserungsStrangMemberRT ) )
+      final Feature channel = m_workspace.resolveLink( cfeature, entwaesserungsStrangMemberRT );
+      if( m_channelFE == channel )
         catchmentList.add( cfeature );
     }
 
-    // append upstream node:
-    if( knotO != null )
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( knotO ), "i8" ) ); //$NON-NLS-1$
-    else
-      asciiBuffer.getNetBuffer().append( ANFANGSKNOTEN );
+    return catchmentList.toArray( new Feature[catchmentList.size()] );
+  }
 
-    // append downstream node:
-    asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( knotU ), "i8" ) ); //$NON-NLS-1$
-
-    asciiBuffer.getNetBuffer().append( " " + catchmentList.size() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    for( final Object element : catchmentList )
+  // FIXME:move into channel binding
+  private Feature findUpstreamNode( )
+  {
+    final IFeatureType nodeFT = m_conf.getNodeFT();
+    final Feature[] features = m_workspace.getFeatures( nodeFT );
+    final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
+    for( final Feature node : features )
     {
-      final Feature catchmentFE = (Feature) element;
-      asciiBuffer.addFeatureToWrite( catchmentFE );
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( catchmentFE ), "i8" ) ); //$NON-NLS-1$
-      asciiBuffer.getNetBuffer().append( "\n" ); //$NON-NLS-1$
+      final Feature downStreamChannel = m_workspace.resolveLink( node, downStreamChannelMemberRT );
+      if( m_channelFE == downStreamChannel )
+        return node;
     }
-    if( knotO != null && !nodeList.contains( knotO ) )
-      nodeList.add( knotO );
-    if( knotU != null && !nodeList.contains( knotU ) )
-      nodeList.add( knotU );
+    return null;
   }
 
   public void accept( final NetElementVisitor visitor ) throws Exception

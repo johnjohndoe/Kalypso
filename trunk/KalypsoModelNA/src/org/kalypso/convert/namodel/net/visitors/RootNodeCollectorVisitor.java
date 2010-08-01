@@ -100,8 +100,8 @@ public class RootNodeCollectorVisitor extends NetElementVisitor
     return true;
   }
 
-  public List<NetElement> getRootNodeElements( )
+  public NetElement[] getRootNodeElements( )
   {
-    return m_rootNetElements;
+    return m_rootNetElements.toArray( new NetElement[m_rootNetElements.size()] );
   }
 }

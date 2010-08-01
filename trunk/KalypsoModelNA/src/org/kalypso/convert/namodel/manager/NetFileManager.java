@@ -47,6 +47,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -325,41 +326,30 @@ public class NetFileManager extends AbstractManager
    *          the synth precipitation workspace
    * @return a HashMap containing Channel-FeatureID (key) and NetElements (value)
    */
-  public HashMap<String, NetElement> generateNetElements( final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws SimulationException
+  public NetElement[] generateNetElements( final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws SimulationException
   {
     final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final IFeatureType kontEntnahmeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ENTNAHME );
     // final IFeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
     final IFeatureType ueberlaufFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_UEBERLAUF );
     final IFeatureType verzweigungFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_VERZWEIGUNG );
+
     // x -> rootNode
     // |
     // O -> virtueller Strang generiert NR xxx
     // |
     // x -> virtueller knoten generiert NR 10000
 
-    // list of channels
-    final List<Feature> channelList = new ArrayList<Feature>();
-    // fill it
-    final Feature[] vChannelFeatures = workspace.getFeatures( m_conf.getVChannelFT() );
-    for( final Feature vChannelFeature : vChannelFeatures )
-      channelList.add( vChannelFeature );
-    final Feature[] kmChannelFeatures = workspace.getFeatures( m_conf.getKmChannelFT() );
-    for( final Feature kmChannelFeature : kmChannelFeatures )
-      channelList.add( kmChannelFeature );
-    final Feature[] stChannelFeatures = workspace.getFeatures( m_conf.getStChannelFT() );
-    for( final Feature stChannelFeature : stChannelFeatures )
-      channelList.add( stChannelFeature );
+    final Feature[] channelFEs = getAllChannels( workspace );
 
-    // list of network elements
-    final HashMap<String, NetElement> netElements = new HashMap<String, NetElement>();
+    // REMARK: Fix: using LinkedHashMap, so net generation is independent of current gml-id of channel.
+    // Else, the net was generated differently for every simulation (due to the fact that the gml-ids change....)
+    final Map<String, NetElement> netElements = new LinkedHashMap<String, NetElement>();
     // generate net elements, each channel represents a netelement
-    final Feature[] channelFEs = channelList.toArray( new Feature[channelList.size()] );
     for( final Feature channelFE : channelFEs )
-      netElements.put( channelFE.getId(), new NetElement( this, workspace, synthNWorkspace, channelFE, m_conf ) );
+      netElements.put( channelFE.getId(), new NetElement( workspace, synthNWorkspace, channelFE, m_conf ) );
 
-    // find dependencies
-    // dependency: node - node
+    // find dependencies: node - node
     final Feature[] nodeFEs = workspace.getFeatures( m_conf.getNodeFT() );
     for( final Feature upStreamNodeFE : nodeFEs )
     {
@@ -397,6 +387,7 @@ public class NetFileManager extends AbstractManager
             // FIXME: shouldn't we throw an exception here?
             continue;
           }
+
           // set dependency
           final NetElement upStreamElement = netElements.get( upStreamChannelFE.getId() );
           final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
@@ -404,8 +395,8 @@ public class NetFileManager extends AbstractManager
         }
       }
     }
-    // dependency: channel - node
 
+    // dependency: channel - node
     for( final Feature channel : channelFEs )
     {
       final IRelationType rt = (IRelationType) channel.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
@@ -434,6 +425,7 @@ public class NetFileManager extends AbstractManager
 
       downStreamElement.addUpStream( upStreamElement );
     }
+
     // TODO check dependency storagechannel -> overflownode
     // dependency: catchment -> catchment
     final Feature[] catchmentFEs = workspace.getFeatures( m_conf.getCatchemtFT() );
@@ -484,7 +476,27 @@ public class NetFileManager extends AbstractManager
         downStreamElement.addUpStream( upStreamElement );
       }
     }
-    return netElements;
+
+    final Collection<NetElement> values = netElements.values();
+    return values.toArray( new NetElement[values.size()] );
+  }
+
+  private Feature[] getAllChannels( final GMLWorkspace workspace )
+  {
+    final List<Feature> channelList = new ArrayList<Feature>();
+
+    // FIXME: why not just acces the list of channels?
+
+    final Feature[] vChannelFeatures = workspace.getFeatures( m_conf.getVChannelFT() );
+    channelList.addAll( Arrays.asList( vChannelFeatures ) );
+
+    final Feature[] kmChannelFeatures = workspace.getFeatures( m_conf.getKmChannelFT() );
+    channelList.addAll( Arrays.asList( kmChannelFeatures ) );
+
+    final Feature[] stChannelFeatures = workspace.getFeatures( m_conf.getStChannelFT() );
+    channelList.addAll( Arrays.asList( stChannelFeatures ) );
+
+    return channelList.toArray( new Feature[channelList.size()] );
   }
 
   /**
@@ -499,7 +511,10 @@ public class NetFileManager extends AbstractManager
    */
   public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws Exception
   {
-    final HashMap<String, NetElement> netElements = generateNetElements( workspace, synthNWorkspace );
+    final StringBuffer netBuffer = asciiBuffer.getNetBuffer();
+
+    final NetElement[] netElements = generateNetElements( workspace, synthNWorkspace );
+
     // collect netelements that are direct upstream of result nodes
     final RootNodeCollectorVisitor rootNodeVisitor;
     final Feature rootNodeFE = workspace.getFeature( m_conf.getRootNodeId() );
@@ -507,36 +522,29 @@ public class NetFileManager extends AbstractManager
       rootNodeVisitor = new RootNodeCollectorVisitor( rootNodeFE );
     else
       rootNodeVisitor = new RootNodeCollectorVisitor();
-    for( final Object element2 : netElements.values() )
-    {
-      final NetElement element = (NetElement) element2;
+    for( final NetElement element : netElements )
       element.accept( rootNodeVisitor );
-    }
-    final List<NetElement> rootNetElements = rootNodeVisitor.getRootNodeElements();
+
+    final NetElement[] rootNetElements = rootNodeVisitor.getRootNodeElements();
 
     // write asciifiles: upstream-network of root nodes
     final WriteAsciiVisitor writeAsciiVisitor = new WriteAsciiVisitor( asciiBuffer );
     final SimulationVisitor simulationVisitor = new SimulationVisitor( writeAsciiVisitor );
-    for( final Object element2 : rootNetElements )
-    {
-      final NetElement element = (NetElement) element2;
+    for( final NetElement element : rootNetElements )
       simulationVisitor.visit( element );
-    }
 
     // write ascii: complete network below root nodes
     final CompleteDownstreamNetAsciiWriterVisitor completeNetVisitor = new CompleteDownstreamNetAsciiWriterVisitor( asciiBuffer );
-    for( final Object element : netElements.values() )
-    {
-      final NetElement netElement = (NetElement) element;
+    for( final NetElement netElement : netElements )
       netElement.accept( completeNetVisitor );
-    }
+
     final List<Feature> nodeCollector = writeAsciiVisitor.getNodeCollector();
-    asciiBuffer.getNetBuffer().append( "99999\n" ); //$NON-NLS-1$
-    appendNodeList( workspace, nodeCollector, asciiBuffer );
-    asciiBuffer.getNetBuffer().append( "99999\n" ); //$NON-NLS-1$
+    netBuffer.append( "99999\n" ); //$NON-NLS-1$
+    appendNodeList( workspace, nodeCollector, netBuffer );
+    netBuffer.append( "99999\n" ); //$NON-NLS-1$
   }
 
-  public void appendNodeList( final GMLWorkspace workspace, final List<Feature> nodeCollector, final AsciiBuffer asciiBuffer ) throws Exception, Exception
+  public void appendNodeList( final GMLWorkspace workspace, final List<Feature> nodeCollector, final StringBuffer netBuffer ) throws Exception, Exception
   {
     final IFeatureType kontEntnahmeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ENTNAHME );
     final IFeatureType kontZuflussFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ZUFLUSS );
@@ -545,10 +553,11 @@ public class NetFileManager extends AbstractManager
 
     final IDManager idManager = m_conf.getIdManager();
     final Iterator<Feature> iter = nodeCollector.iterator();
+
     while( iter.hasNext() )
     {
       final Feature nodeFE = iter.next();
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i5" ) ); //$NON-NLS-1$
+      netBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i5" ) ); //$NON-NLS-1$
 
       final int izug;
       final int iabg;
@@ -672,18 +681,18 @@ public class NetFileManager extends AbstractManager
         ivzwg = 0;
       }
 
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( izug, "i5" ) ); //$NON-NLS-1$
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( iabg, "i5" ) ); //$NON-NLS-1$
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( iueb, "i5" ) ); //$NON-NLS-1$
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( izuf, "i5" ) ); //$NON-NLS-1$
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( ivzwg, "i5" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-      asciiBuffer.getNetBuffer().append( specialBuffer.toString() );
-      writeQQRelation( nodeFE, asciiBuffer.getNetBuffer() );
+      netBuffer.append( FortranFormatHelper.printf( izug, "i5" ) ); //$NON-NLS-1$
+      netBuffer.append( FortranFormatHelper.printf( iabg, "i5" ) ); //$NON-NLS-1$
+      netBuffer.append( FortranFormatHelper.printf( iueb, "i5" ) ); //$NON-NLS-1$
+      netBuffer.append( FortranFormatHelper.printf( izuf, "i5" ) ); //$NON-NLS-1$
+      netBuffer.append( FortranFormatHelper.printf( ivzwg, "i5" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      netBuffer.append( specialBuffer.toString() );
+      writeQQRelation( nodeFE, netBuffer );
       // ENDKNOTEN
 
     }
-    asciiBuffer.getNetBuffer().append( " 9001    0    0    0    0    0\n" ); //$NON-NLS-1$
-    asciiBuffer.getNetBuffer().append( "10000    0    0    0    0    0\n" ); //$NON-NLS-1$
+    netBuffer.append( " 9001    0    0    0    0    0\n" ); //$NON-NLS-1$
+    netBuffer.append( "10000    0    0    0    0    0\n" ); //$NON-NLS-1$
   }
 
   private void writeQQRelation( final Feature node, final StringBuffer buffer ) throws SensorException

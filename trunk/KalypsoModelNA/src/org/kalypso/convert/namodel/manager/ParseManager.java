@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
@@ -59,19 +59,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class ParseManager
 {
-  private final CatchmentManager m_catchmentManager;
-
-  private final ChannelManager m_channelManager;
-
-  private final GMLSchema m_schema;
-
   private final GMLSchema m_paraSchema;
 
   private final NAConfiguration m_conf;
-
-  private final NetFileManager m_nodeManager;
-
-  // private final RHBManager m_rhbManager;
 
   private final BodenartManager m_bodartManager;
 
@@ -83,15 +73,10 @@ public class ParseManager
 
   private final IdleLanduseManager m_idleLanduseManager;
 
-  public ParseManager( final GMLSchema schema, final GMLSchema paraSchema, final NAConfiguration conf, final CatchmentManager catchmentManager, final ChannelManager channelManager, final NetFileManager nodeManager, final BodenartManager bodartManager, final BodentypManager bodtypManager, final NutzungManager nutzManager, final SchneeManager schneeManager, final IdleLanduseManager idleLanduseManager )
+  public ParseManager( final GMLSchema paraSchema, final NAConfiguration conf, final BodenartManager bodartManager, final BodentypManager bodtypManager, final NutzungManager nutzManager, final SchneeManager schneeManager, final IdleLanduseManager idleLanduseManager )
   {
     m_conf = conf;
-    m_catchmentManager = catchmentManager;
-    m_channelManager = channelManager;
-    m_nodeManager = nodeManager;
-    m_schema = schema;
     m_paraSchema = paraSchema;
-    // m_rhbManager = rhbManager;
     m_bodartManager = bodartManager;
     m_bodtypManager = bodtypManager;
     m_nutzManager = nutzManager;

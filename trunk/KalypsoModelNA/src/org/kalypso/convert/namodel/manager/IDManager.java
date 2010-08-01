@@ -40,6 +40,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -105,9 +106,6 @@ public class IDManager
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @param feature
-   */
   private IDMap generateAsciiID( final Feature feature )
   {
     final int type = getType( feature );
@@ -118,10 +116,9 @@ public class IDManager
      */
     try
     {
-      if( property != null )
+      if( !StringUtils.isBlank( property ) )
       {
         final int testID = NumberUtils.toInteger( property );
-        // int testID = Integer.parseInt( property.toString() );
         if( testID >= 1000 && testID < 10000 )
         {
           final IDMap map = new IDMap( testID, type );
@@ -132,17 +129,17 @@ public class IDManager
     }
     catch( final ParseException e )
     {
-      // e.printStackTrace();
       // ignore exception and generate new id
     }
+
     int testID = 1000;
     IDMap testMap = new IDMap( testID, type );
-
     while( m_idMapFeature.containsKey( testMap ) )
     {
       testID++;
       testMap = new IDMap( testID, type );
     }
+
     return testMap;
   }
 
@@ -150,12 +147,6 @@ public class IDManager
   {
     final TreeSet<IDMap> sort = new TreeSet<IDMap>( new Comparator<Object>()
         {
-      @Override
-      public boolean equals( final Object obj )
-      {
-        return false;
-      }
-
       @Override
       public int compare( final Object o1, final Object o2 )
       {
