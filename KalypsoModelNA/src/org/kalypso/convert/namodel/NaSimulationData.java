@@ -41,15 +41,7 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.URL;
-
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.contribs.java.xml.XMLHelper;
@@ -58,7 +50,6 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.w3c.dom.Document;
 
 /**
@@ -82,10 +73,10 @@ public class NaSimulationData
 
   private final GMLWorkspace m_lzsimWorkspace;
 
-  public NaSimulationData( final URL modelUrl, final File newModellFile, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl ) throws Exception
+  public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl ) throws Exception
   {
     m_controlWorkspace = GmlSerializer.createGMLWorkspace( controlURL, null );
-    m_modelWorkspace = loadModelWorkspace( modelUrl, newModellFile );
+    m_modelWorkspace = loadModelWorkspace( modelUrl );
     m_metaWorkspace = GmlSerializer.createGMLWorkspace( metaUrl, null );
     m_parameterWorkspace = GmlSerializer.createGMLWorkspace( parameterUrl, null );
     // FIXME: do not load hydrotopes, if preprocessed files exist
@@ -103,7 +94,7 @@ public class NaSimulationData
       m_synthNWorkspace = null;
   }
 
-  private GMLWorkspace loadModelWorkspace( final URL modelUrl, final File newModellFile ) throws SimulationException
+  private GMLWorkspace loadModelWorkspace( final URL modelUrl ) throws SimulationException
   {
     // Apply optimization parameters
     final CalibrationConfig config = new CalibrationConfig();
@@ -115,22 +106,11 @@ public class NaSimulationData
 
       OptimizeModelUtils.initializeModel( modelDoc, config.getCalContexts() );
 
-      // FIXME: performance: we do not need to write the model again: directly SAX-parse the model from DOM!
-
-      // TODO: take charset from Document
-      final String charset = "UTF-8"; //$NON-NLS-1$
-      final Writer writer = new OutputStreamWriter( new FileOutputStream( newModellFile ), charset );
-      final Transformer t = TransformerFactory.newInstance().newTransformer();
-      t.transform( new DOMSource( modelDoc ), new StreamResult( writer ) );
-      writer.close();
-
-      final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURI().toURL(), null );
-      ((GMLWorkspace_Impl) modellWorkspace).setContext( modelUrl );
-
-      return modellWorkspace;
+      return GmlSerializer.createGMLWorkspace( modelDoc, modelUrl, null );
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
       throw new SimulationException( "Failed to initialize model workspace", e );
     }
   }

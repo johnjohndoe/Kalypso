@@ -218,10 +218,7 @@ public class NAModelSimulation
 // final URL landuseUrl = getInputOrNull( NaModelConstants.IN_LANDUSE_ID );
     final URL sudsUrl = getInputOrNull( NaModelConstants.IN_SUDS_ID );
 
-    // FIXME: check if still needed
-    final File newModellFile = new File( m_simDirs.simulationDir, "namodellBerechnung.gml" ); //$NON-NLS-1$
-
-    return new NaSimulationData( modelUrl, newModellFile, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
+    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
   }
 
   private URL getInputOrNull( final String id ) throws SimulationException

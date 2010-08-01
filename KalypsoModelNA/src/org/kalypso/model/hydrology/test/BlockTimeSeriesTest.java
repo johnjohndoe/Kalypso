@@ -68,6 +68,7 @@ public class BlockTimeSeriesTest extends TestCase
     final TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
     final BlockTimeSeries block = new BlockTimeSeries( timeZone );
     final File tmpFile = File.createTempFile( "block", "txt" ); //$NON-NLS-1$ //$NON-NLS-2$
+    tmpFile.deleteOnExit();
     final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
     final FileWriter fileWriter = new FileWriter( tmpFile );
     IOUtils.copy( resourceAsStream, fileWriter );

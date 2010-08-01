@@ -78,7 +78,7 @@ public class NaPreprocessingTest
     final NAConfiguration conf = new NAConfiguration( asciiDir );
     final NaAsciiDirs outputDirs = new NaAsciiDirs( asciiDir );
     final IDManager idManager = new IDManager();
-    final NaSimulationData simulationData = createDemoModelsimulationData( outputDir );
+    final NaSimulationData simulationData = createDemoModelsimulationData();
     final Logger logger = Logger.getAnonymousLogger();
 
     final URL context = simulationData.getModelWorkspace().getContext();
@@ -92,12 +92,11 @@ public class NaPreprocessingTest
     // TODO: compare with some expected results
   }
 
-  private NaSimulationData createDemoModelsimulationData( final File outputDir ) throws Exception
+  private NaSimulationData createDemoModelsimulationData( ) throws Exception
   {
     final Class< ? extends NaPreprocessingTest> myClass = getClass();
 
     final URL modelUrl = myClass.getResource( "resources/demoModel_Langzeit/calcCase.gml" );
-    final File newModellFile = new File( outputDir, "newModell.gml" );
     final URL controlUrl = myClass.getResource( "resources/demoModel_Langzeit/expertControl.gml" );
     final URL metaUrl = myClass.getResource( "resources/demoModel_Langzeit/.calculation" );
     final URL parameterUrl = myClass.getResource( "resources/demoModel_Langzeit/calcParameter.gml" );
@@ -106,7 +105,7 @@ public class NaPreprocessingTest
     final URL syntNUrl = null;
     final URL lzsimUrl = null;
 
-    return new NaSimulationData( modelUrl, newModellFile, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
+    return new NaSimulationData( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
   }
 
 }
