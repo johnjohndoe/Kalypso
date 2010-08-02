@@ -232,8 +232,8 @@ public class NetFileManager extends AbstractManager
       // adding Timeseries links
 
       final TimeseriesLinkType pegelLink = NAZMLGenerator.copyToTimeseriesLink( null, ITimeserieConstants.TYPE_DATE, ITimeserieConstants.TYPE_WATERLEVEL, m_conf // TODO
-          // NA_PEGEL
-          .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true ); //$NON-NLS-1$//$NON-NLS-2$
+      // NA_PEGEL
+      .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true ); //$NON-NLS-1$//$NON-NLS-2$
       final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
       fePropMap.put( pt, pegelLink );
 
@@ -648,7 +648,7 @@ public class NetFileManager extends AbstractManager
         if( !targetFile.exists() )
         {
           final FileWriter writer = new FileWriter( targetFile );
-          final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" ); //$NON-NLS-1$
+          final IObservation observation = ZmlFactory.parseXML( linkURL ); //$NON-NLS-1$
           if( Boolean.TRUE.equals( nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) ) )
           {
             if( m_conf.isUsePrecipitationForm() )

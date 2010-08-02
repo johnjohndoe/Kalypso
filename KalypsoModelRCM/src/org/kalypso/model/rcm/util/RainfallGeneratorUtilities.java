@@ -136,7 +136,7 @@ public final class RainfallGeneratorUtilities
           final String hrefRequest = ZmlURL.insertRequest( hrefFilter, request );
           final URL zmlLocation = link == null ? null : UrlResolverSingleton.resolveUrl( context, hrefRequest );
           if( zmlLocation != null )
-            readObservations[i] = ZmlFactory.parseXML( zmlLocation, href );
+            readObservations[i] = ZmlFactory.parseXML( zmlLocation );
         }
       }
     }

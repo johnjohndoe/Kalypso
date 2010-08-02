@@ -52,11 +52,11 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
     final URL urlControlModelNA = (URL) inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.NA_ControlModel.name() );
     final URL urlModelWSPM = (URL) inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.WSPM_Model.name() );
     final URL urlStatisticalReportNA = (URL) inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.NA_StatisticalReport.name() );
-   
+
     final Object riverCode = inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.NA_RiverCode.name() );
     final String naRiverCode = riverCode == null ? "" : riverCode.toString();
     final String runOffEventID = inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.WSPM_RunoffEventID.name() ).toString();
-    
+
     try
     {
       final File outputFile = File.createTempFile( "outTempWspmModel", ".gml", tmpdir );
@@ -110,7 +110,7 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
             }
           }
 
-          final IObservation maxDischargesObservation = ZmlFactory.parseXML( urlStatisticalReportNA, null );
+          final IObservation maxDischargesObservation = ZmlFactory.parseXML( urlStatisticalReportNA );
           final IAxis[] axisList = maxDischargesObservation.getAxisList();
           IAxis axisNodeNr = null;
           IAxis axisMaxDischarge = null;

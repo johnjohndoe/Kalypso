@@ -101,11 +101,11 @@ public class NAZMLGenerator
    * @param targetRelativePath
    *          relative path from basedir to store target zml file
    */
-  public static TimeseriesLinkType copyToTimeseriesLink( URL copySource, String axis1Type, String axis2Type, File targetBaseDir, String targetRelativePath, boolean relative, boolean simulateCopy ) throws Exception
+  public static TimeseriesLinkType copyToTimeseriesLink( final URL copySource, final String axis1Type, final String axis2Type, final File targetBaseDir, final String targetRelativePath, final boolean relative, final boolean simulateCopy ) throws Exception
   {
 
-    File targetZmlFile = new File( targetBaseDir, targetRelativePath );
-    File dir = targetZmlFile.getParentFile();
+    final File targetZmlFile = new File( targetBaseDir, targetRelativePath );
+    final File dir = targetZmlFile.getParentFile();
     if( !dir.exists() )
       dir.mkdirs();
     if( !simulateCopy && !DEBUG )
@@ -113,14 +113,14 @@ public class NAZMLGenerator
       {
         convert( copySource, axis1Type, axis2Type, targetZmlFile );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
         System.out.println( "could not create ZML, but operation will continue..." ); //$NON-NLS-1$
       }
     if( relative )
       return generateobsLink( targetRelativePath );
-    UrlUtilities urlUtilities = new UrlUtilities();
+    final UrlUtilities urlUtilities = new UrlUtilities();
     final URL targetURL = urlUtilities.resolveURL( targetBaseDir.toURL(), targetRelativePath );
     return generateobsLink( targetURL.toExternalForm() );
   }
@@ -129,7 +129,7 @@ public class NAZMLGenerator
    * @param location
    *          location of zml data
    */
-  public static TimeseriesLinkType generateobsLink( String location ) throws Exception
+  public static TimeseriesLinkType generateobsLink( final String location ) throws Exception
   {
     final TimeseriesLinkType link = OF.createTimeseriesLinkType();
     link.setLinktype( "zml" ); //$NON-NLS-1$
@@ -138,28 +138,28 @@ public class NAZMLGenerator
     return link;
   }
 
-  private static void convert( URL sourceURL, String axis1Type, String axis2Type, File targetZmlFile ) throws Exception
+  private static void convert( final URL sourceURL, final String axis1Type, final String axis2Type, final File targetZmlFile ) throws Exception
   {
-    StringBuffer buffer = new StringBuffer();
+    final StringBuffer buffer = new StringBuffer();
     generateTmpZml( buffer, axis1Type, axis2Type, sourceURL );
 
-    File zmlTmpFile = File.createTempFile( "tmp", ".zml" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final File zmlTmpFile = File.createTempFile( "tmp", ".zml" ); //$NON-NLS-1$ //$NON-NLS-2$
     zmlTmpFile.deleteOnExit();
-    Writer tmpWriter = new FileWriter( zmlTmpFile );
+    final Writer tmpWriter = new FileWriter( zmlTmpFile );
     tmpWriter.write( buffer.toString() );
     tmpWriter.close();
 
-    IObservation observation = ZmlFactory.parseXML( zmlTmpFile.toURL(), "ID" ); //$NON-NLS-1$
+    final IObservation observation = ZmlFactory.parseXML( zmlTmpFile.toURL() ); //$NON-NLS-1$
     final Observation type = ZmlFactory.createXML( observation, null );
-    Marshaller marshaller = ZmlFactory.getMarshaller();
+    final Marshaller marshaller = ZmlFactory.getMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    Writer writer = new FileWriter( targetZmlFile );
+    final Writer writer = new FileWriter( targetZmlFile );
     marshaller.marshal( type, writer );
     writer.close();
 
   }
 
-  private static void generateTmpZml( StringBuffer buffer, String axis1Type, String axis2Type, URL sourceURL ) throws Exception
+  private static void generateTmpZml( final StringBuffer buffer, final String axis1Type, final String axis2Type, final URL sourceURL ) throws Exception
   {
     final String location = sourceURL.toExternalForm();
 
@@ -198,7 +198,7 @@ public class NAZMLGenerator
     buffer.append( "</observation>" ); //$NON-NLS-1$
   }
 
-  public static void createFile( FileWriter writer, String axisValueType, IObservation observation ) throws Exception
+  public static void createFile( final FileWriter writer, final String axisValueType, final IObservation observation ) throws Exception
   {
     createGRAPFile( writer, axisValueType, observation );
   }
@@ -209,7 +209,7 @@ public class NAZMLGenerator
     extWriter.write( observation, axisType, writer, defaultValue );
   }
 
-  private static void createGRAPFile( Writer writer, String valueAxisType, IObservation observation ) throws Exception
+  private static void createGRAPFile( final Writer writer, final String valueAxisType, final IObservation observation ) throws Exception
   {
     final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMddHHmm" ) ); //$NON-NLS-1$
 

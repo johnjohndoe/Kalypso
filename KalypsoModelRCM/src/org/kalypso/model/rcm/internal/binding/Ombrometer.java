@@ -189,7 +189,7 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
     final String href = link.getHref();
     final URL linkUrl = UrlResolverSingleton.resolveUrl( context, href );
 
-    return ZmlFactory.parseXML( linkUrl, link.toString() );
+    return ZmlFactory.parseXML( linkUrl );
   }
 
   private TimeseriesLinkType getTimeserieLink( )

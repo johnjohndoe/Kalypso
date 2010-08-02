@@ -64,7 +64,6 @@ import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.wizards.i18n.Messages;
 
-
 /**
  * @author doemming
  */
@@ -138,7 +137,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   @Override
   public void focusGained( final FocusEvent e )
   {
-    //    
+    //
   }
 
   /**
@@ -147,7 +146,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   @Override
   public void focusLost( final FocusEvent e )
   {
-    //    
+    //
   }
 
   /**
@@ -223,7 +222,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
    */
   public IObservation getTargetObservation( final URL url ) throws SensorException
   {
-    final IObservation observation = ZmlFactory.parseXML( url, "targetFile" ); //$NON-NLS-1$
+    final IObservation observation = ZmlFactory.parseXML( url ); //$NON-NLS-1$
     return observation;
   }
 

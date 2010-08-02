@@ -178,8 +178,8 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       final Map<String, DischargeData> izNodesMaxData = new HashMap<String, DischargeData>();
       final Map<String, DischargeData> calcNodesMaxData = new HashMap<String, DischargeData>();
 
-      final IObservation obs1 = ZmlFactory.parseXML( new File( statusQuoResultsFolder, "Report/statistics.zml" ).toURI().toURL(), "ID1" ); //$NON-NLS-1$ //$NON-NLS-2$
-      final IObservation obs2 = ZmlFactory.parseXML( new File( calculatedResultsFolder, "Report/statistics.zml" ).toURI().toURL(), "ID2" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IObservation obs1 = ZmlFactory.parseXML( new File( statusQuoResultsFolder, "Report/statistics.zml" ).toURI().toURL() ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IObservation obs2 = ZmlFactory.parseXML( new File( calculatedResultsFolder, "Report/statistics.zml" ).toURI().toURL() ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final IAxis[] axes1 = obs1.getAxisList();
       final IAxis[] axes2 = obs2.getAxisList();
