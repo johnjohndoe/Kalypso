@@ -110,7 +110,7 @@ public class StatisticResultComposite extends Composite
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
-              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%,.02f â‚¬", "", "%.00f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%,.02f €", "", "%.00f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
           // Flooded Area
@@ -121,7 +121,7 @@ public class StatisticResultComposite extends Composite
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
-              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%,.02f mÂ²", "", "%.00f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%,.02f €²", "", "%.00f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
           // Averaged Damage
@@ -132,7 +132,7 @@ public class StatisticResultComposite extends Composite
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
-              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%,.02f â‚¬/mÂ²", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%,.02f €/m²", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
           if( phenName.equals( "AnnualValue" ) )//$NON-NLS-1$
@@ -142,7 +142,7 @@ public class StatisticResultComposite extends Composite
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DOUBLE ) )
-              myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, headerName, SWT.RIGHT, 190, 10, "%,.02f â‚¬/mÂ²/a", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, headerName, SWT.RIGHT, 190, 10, "%,.02f €/²/a", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
           if( phenName.equals( "Landuse" ) )//$NON-NLS-1$
