@@ -65,8 +65,8 @@ public class BuildingWehr extends AbstractObservationBuilding
   private static IObservation<TupleResult> buildObservation( )
   {
     final TupleResult result = new TupleResult();
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
     final IRecord emptyRecord = result.createRecord();
 
     emptyRecord.setValue( 0, IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG );
@@ -80,7 +80,7 @@ public class BuildingWehr extends AbstractObservationBuilding
 
   public BuildingWehr( final IProfil profil, final IObservation<TupleResult> observation )
   {
-    super( profil, observation );
+    super( observation );
 
     addPointProperties( profil );
   }

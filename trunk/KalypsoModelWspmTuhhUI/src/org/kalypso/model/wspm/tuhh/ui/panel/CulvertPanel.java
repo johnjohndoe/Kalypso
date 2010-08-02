@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.panel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -86,7 +88,7 @@ import org.kalypso.observation.result.IComponent;
 /**
  * @author kimwerner
  */
-public class TubePanel extends AbstractProfilView
+public class CulvertPanel extends AbstractProfilView
 {
   protected ArrayList<PropertyLine> m_lines = new ArrayList<PropertyLine>( 8 );
 
@@ -96,11 +98,15 @@ public class TubePanel extends AbstractProfilView
 
   private ComboViewer m_cmb = null;
 
-  private final IProfileObject[] m_tubes = new IProfileObject[] { new BuildingKreis( null ), new BuildingTrapez( null ), new BuildingMaul( null ), new BuildingEi( null ) };
+  private final Map<String, IProfileBuilding> m_culverts = new HashMap<String, IProfileBuilding>();
 
-  public TubePanel( final IProfil profile )
+  public CulvertPanel( final IProfil profile )
   {
     super( profile );
+    m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_KREIS, new BuildingKreis() );
+    m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ, new BuildingTrapez( ) );
+    m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_MAUL, new BuildingMaul() );
+    m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_EI, new BuildingEi() );
   }
 
   private class PropertyLine
@@ -231,7 +237,7 @@ public class TubePanel extends AbstractProfilView
     m_cmb = new ComboViewer( m_propPanel );
     m_cmb.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.CENTER, false, false ) );
     m_cmb.setContentProvider( new ArrayContentProvider() );
-    m_cmb.setInput( m_tubes );
+    m_cmb.setInput( m_culverts.values() );
     m_cmb.setLabelProvider( new LabelProvider()
     {
 
@@ -256,20 +262,13 @@ public class TubePanel extends AbstractProfilView
 
         final IProfileBuilding old = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
         if( tube != null && !tube.getId().equals( old.getId() ) )
-        {
-          final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.8" ), getProfil(), true ); //$NON-NLS-1$
           getProfil().addProfileObjects( new IProfileObject[] { tube } );
-          for( final IComponent cmp : tube.getObjectProperties() )
-          {
-            final IComponent oldCmp = old.getObjectProperty( cmp.getId() );
-            if( oldCmp != null )
-              operation.addChange( new ProfileObjectEdit( tube, cmp, old.getValue( oldCmp ) ) );
-          }
-          new ProfilOperationJob( operation ).schedule();
-        }
       }
     } );
     m_toolkit.adapt( m_cmb.getCombo() );
+    final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
+    if( building != null )
+      m_cmb.setSelection( new StructuredSelection( m_culverts.get( building.getId() ) ) );
 
     final Label spacer = m_toolkit.createSeparator( m_propPanel, SWT.SEPARATOR | SWT.HORIZONTAL );
     spacer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
@@ -300,15 +299,6 @@ public class TubePanel extends AbstractProfilView
 
   protected void updateControls( )
   {
-    final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
-    if( building == null )
-      return;
-
-    for( final IProfileObject tube : m_tubes )
-    {
-      if( building.getId().equals( tube.getId() ) )
-        m_cmb.setSelection( new StructuredSelection( tube ) );
-    }
 
     for( final PropertyLine line : m_lines )
       line.updateValue();
@@ -317,7 +307,7 @@ public class TubePanel extends AbstractProfilView
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isObjectChanged() || hint.isObjectDataChanged() )
+    if( hint.isObjectDataChanged() )
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )
@@ -326,7 +316,6 @@ public class TubePanel extends AbstractProfilView
           @Override
           public void run( )
           {
-            // createPropertyPanel();
             updateControls();
           }
         } );

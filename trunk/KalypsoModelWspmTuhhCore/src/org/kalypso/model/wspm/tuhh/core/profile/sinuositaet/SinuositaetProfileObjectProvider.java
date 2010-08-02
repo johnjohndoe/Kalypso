@@ -59,7 +59,7 @@ public class SinuositaetProfileObjectProvider implements IProfileObjectProvider
   @Override
   public IProfileObject buildProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
   {
-    return new SinuositaetProfileObject( profile, observation );
+    return new SinuositaetProfileObject( observation );
   }
 
 }

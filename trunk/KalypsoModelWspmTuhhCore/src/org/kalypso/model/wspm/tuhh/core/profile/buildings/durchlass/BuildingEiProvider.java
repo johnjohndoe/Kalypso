@@ -58,7 +58,7 @@ public class BuildingEiProvider implements IProfileObjectProvider
   @Override
   public IProfileObject buildProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
   {
-    return new BuildingEi( profile, observation );
+    return new BuildingEi( observation );
   }
 
 }

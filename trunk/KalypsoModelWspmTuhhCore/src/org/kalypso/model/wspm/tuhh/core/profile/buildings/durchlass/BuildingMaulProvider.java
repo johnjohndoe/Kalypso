@@ -59,6 +59,6 @@ public class BuildingMaulProvider implements IProfileObjectProvider
   @Override
   public IProfileObject buildProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
   {
-    return new BuildingMaul( profile, observation );
+    return new BuildingMaul(  observation );
   }
 }

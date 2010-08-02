@@ -195,7 +195,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_TUBES ) )
     {
-      final IProfileObject building = new BuildingKreis( profil );
+      final IProfileObject building = new BuildingKreis();
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { building } );
       final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.6" ), profil, changes, true ); //$NON-NLS-1$

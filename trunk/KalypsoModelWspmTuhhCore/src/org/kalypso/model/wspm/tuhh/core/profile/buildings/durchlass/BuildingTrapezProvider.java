@@ -59,6 +59,6 @@ public final class BuildingTrapezProvider implements IProfileObjectProvider
   @Override
   public IProfileObject buildProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
   {
-    return new BuildingTrapez( profile, observation );
+    return new BuildingTrapez( observation );
   }
 }

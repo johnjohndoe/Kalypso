@@ -45,6 +45,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -54,29 +55,30 @@ public class BuildingMaul extends AbstractObservationBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_MAUL;
 
-  public BuildingMaul( final IProfil profil )
+  public BuildingMaul( )
   {
-    this( profil, buildObservation() );
+    this( buildObservation() );
   }
 
   private static IObservation<TupleResult> buildObservation( )
   {
     final TupleResult result = new TupleResult();
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) );
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
 
-    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, "Maul", result ); //$NON-NLS-1$
+    final IComponent buildingComponent = getObjectComponent( ID );
+    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, buildingComponent==null?ID:buildingComponent.getName(), result ); //$NON-NLS-1$
 
     return observation;
   }
 
-  public BuildingMaul( final IProfil profil, final IObservation<TupleResult> observation )
+  public BuildingMaul( final IObservation<TupleResult> observation )
   {
-    super( profil, observation );
+    super( observation );
   }
 
   /**

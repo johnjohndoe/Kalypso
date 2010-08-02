@@ -56,9 +56,9 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractObservationBuilding extends AbstractProfileObject implements IProfileBuilding
 {
-  protected AbstractObservationBuilding( final IProfil profile, final IObservation<TupleResult> observation )
+  protected AbstractObservationBuilding(final IObservation<TupleResult> observation )
   {
-    super( profile, observation );
+    super(observation );
   }
 
   /**

@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -76,14 +77,11 @@ public class TuhhProfil extends AbstractProfil
   @Override
   public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
-    for( final IProfileObject object : profileObjects )
+    // TODO: this restriction only exists for buildings! Other objects may occur several times...
+    final IProfileObject[] objects = getProfileObjects( IProfileBuilding.class );
+    for( final IProfileObject o : objects )
     {
-      // TODO: this restriction only exists for buildings! Other objects may occur several times...
-      final IProfileObject[] objects = getProfileObjects( object.getClass() );
-      for( final IProfileObject o : objects )
-      {
-        removeProfileObject( o );
-      }
+      removeProfileObject( o );
     }
 
     return super.addProfileObjects( profileObjects );

@@ -59,6 +59,6 @@ public class BuildingKreisProvider implements IProfileObjectProvider
   @Override
   public IProfileObject buildProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
   {
-    return new BuildingKreis( profile, observation );
+    return new BuildingKreis(  observation );
   }
 }
