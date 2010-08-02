@@ -65,14 +65,5 @@
    <krrcm:isUrbanLanduseType>false</krrcm:isUrbanLanduseType>
   </krrcm:RiskZoneDefinition>
  </krrcm:riskZoneDefinitionMember>
- <krrcm:riskZoneDefinitionMember>
-  <krrcm:RiskZoneDefinition gml:id="RiskZoneDefinition119504742029619">
-   <krrcm:name>hohe Betroffenheit, Freiflächen</krrcm:name>
-   <krrcm:lowerBoundaryValue>1.0</krrcm:lowerBoundaryValue>
-   <krrcm:colorStyle>#400080</krrcm:colorStyle>
-   <krrcm:zoneInternalNumber>6</krrcm:zoneInternalNumber>
-   <krrcm:isUrbanLanduseType>false</krrcm:isUrbanLanduseType>
-  </krrcm:RiskZoneDefinition>
- </krrcm:riskZoneDefinitionMember>
- </krrcm:RasterizationControlModel>
+</krrcm:RasterizationControlModel>
   

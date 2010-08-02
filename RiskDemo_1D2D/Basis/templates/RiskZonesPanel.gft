@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gft:featuretemplate name="Risk control panel"
 	xmlns:gft="featureview.template.kalypso.org"
 	xmlns:ns1="gistableview.template.kalypso.org"
@@ -28,8 +28,6 @@
 				<ns1:gistableview>
 					<ns1:layer>
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" label="Ordnungszahl" name="zoneInternalNumber" width="90" />
-						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" label="Risikozone" name="name" width="250" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" label="Ist bebaute Fläche?" name="isUrbanLanduseType" width="120" />
@@ -39,7 +37,7 @@
 							format="" name="colorStyle" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" label="Beschreibung" name="description" width="600" />
-						<ns1:sort propertyName="name" />
+						<ns1:sort propertyName="zoneInternalNumber" />
 					</ns1:layer>
 				</ns1:gistableview>
 			</gft:table>

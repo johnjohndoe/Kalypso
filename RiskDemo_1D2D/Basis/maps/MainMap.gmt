@@ -1,33 +1,31 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns1="obstableview.template.kalypso.org" name="Landnutzung">
-    <mapv:extent srs="EPSG:31467" bottom="773330.1155303955" top="782431.1534515381" right="3936661.8077957546" left="3926034.9548385227"/>
+<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
+<mapv:gismapview name="%MainMap.gismapview.Risikokarte" xmlns:mapv="gismapview.template.kalypso.org" xmlns:templ="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <mapv:translator id="commons.msgGetString">
+        <class xmlns="">org.kalypso.risk:org.kalypso.risk.i18n.Messages</class>
+    </mapv:translator>
+    <mapv:extent srs="EPSG:31467" bottom="770856.1045700847" top="784905.1644118489" right="3939017.1728579835" left="3923679.589776294"/>
     <mapv:layers>
-        <mapv:layer visible="false" name="Risikozonen" featurePath="#fid#CoverageCollection11946128304061/coverageMember" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="project:/Basis/models/RasterDataModel.gml" xlink:type="simple">
-            <templ:showChildren>true</templ:showChildren>
-            <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/RiskZonesCoverage.sld" xlink:type="simple"/>
+        <mapv:layer visible="false" name="%MainMap.mapv.layer.Risikozonen" id="ID_2" featurePath="#fid#CoverageCollection11946128304061/coverageMember" linktype="gml" xlink:type="simple" xlink:href="project:/Basis/models/RasterDataModel.gml" xlink:actuate="onRequest">
+            <templ:style style="Kalypso style" linktype="sld" xlink:type="simple" xlink:href="../styles/RiskZonesCoverage.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeId">riskZonesGridTheme</templ:property>
             <templ:property name="themeInfoId">org.kalypso.risk.plugin.RiskZonesThemeInfo</templ:property>
+            <templ:property name="themeId">riskZonesGridTheme</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="Schadenspotentiale" id="ID_1" linktype="gmt" xlink:actuate="onRequest" xlink:href="SpecificDamagePotentialMap.gmt" xlink:type="simple">
-            <templ:showChildren>true</templ:showChildren>
+        <mapv:layer visible="false" name="%SpecificDamagePotentialMap.gismapview.Schadenspotentiale" id="ID_3" linktype="gmt" xlink:type="simple" xlink:href="SpecificDamagePotentialMap.gmt" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
             <templ:property name="themeId">damagePotentialThemes</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="HQi" id="ID_2" linktype="gmt" xlink:actuate="onRequest" xlink:href="WaterlevelMap.gmt" xlink:type="simple">
-            <templ:showChildren>true</templ:showChildren>
+        <mapv:layer visible="false" name="%WaterlevelMap.mapv.gismapview.HQi" id="ID_4" linktype="gmt" xlink:type="simple" xlink:href="WaterlevelMap.gmt" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
             <templ:property name="themeId">depthGridThemes</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Landnutzung" featurePath="#fid#PolygonCollection11939277333431/polygonMember[Polygon]" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="project:/Basis/models/VectorDataModel.gml" xlink:type="simple">
-            <templ:showChildren>true</templ:showChildren>
-            <templ:style style="Kalypso style" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/LanduseVector.sld" xlink:type="simple"/>
+        <mapv:layer visible="true" name="%MainMap.mapv.layer.VectorData" id="ID_5" featurePath="#fid#PolygonCollection11939277333431/polygonMember[Polygon]" linktype="gml" xlink:type="simple" xlink:href="project:/Basis/models/VectorDataModel.gml" xlink:actuate="onRequest">
+            <templ:style style="Kalypso style" linktype="sld" xlink:type="simple" xlink:href="../styles/LanduseVector.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
-            <templ:property name="themeId">landuseTheme</templ:property>
             <templ:property name="themeInfoId">org.kalypso.ogc.gml.FeatureThemeInfo?format=${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel#sldStyle}</templ:property>
+            <templ:property name="themeId">landuseTheme</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="Grundlagen" id="ID_4" linktype="gmt" xlink:actuate="onRequest" xlink:href="BackroundMap.gmt" xlink:type="simple">
-            <templ:showChildren>true</templ:showChildren>
+        <mapv:layer visible="true" name="%MainMap.mapv.layer.Grundlagen" id="ID_6" linktype="gmt" xlink:type="simple" xlink:href="BackroundMap.gmt" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
     </mapv:layers>

@@ -15,7 +15,7 @@
             <templ:property name="deleteable">false</templ:property>
             <templ:property name="themeId">damagePotentialThemes</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="HQi" id="ID_4" linktype="gmt" xlink:type="simple" xlink:href="WaterlevelMap.gmt" xlink:actuate="onRequest">
+        <mapv:layer visible="false" name="%WaterlevelMap.mapv.gismapview.HQi" id="ID_4" linktype="gmt" xlink:type="simple" xlink:href="WaterlevelMap.gmt" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
             <templ:property name="themeId">depthGridThemes</templ:property>
         </mapv:layer>
@@ -25,7 +25,7 @@
             <templ:property name="themeInfoId">org.kalypso.ogc.gml.FeatureThemeInfo?format=${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel#sldStyle}</templ:property>
             <templ:property name="themeId">landuseTheme</templ:property>
         </mapv:layer>
-        <mapv:layer visible="false" name="%MainMap.mapv.layer.Grundlagen" id="ID_6" linktype="gmt" xlink:type="simple" xlink:href="BackroundMap.gmt" xlink:actuate="onRequest">
+        <mapv:layer visible="true" name="%MainMap.mapv.layer.Grundlagen" id="ID_6" linktype="gmt" xlink:type="simple" xlink:href="BackroundMap.gmt" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
     </mapv:layers>
