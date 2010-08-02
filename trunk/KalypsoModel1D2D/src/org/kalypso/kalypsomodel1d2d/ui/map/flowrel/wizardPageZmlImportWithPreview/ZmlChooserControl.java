@@ -135,7 +135,7 @@ public abstract class ZmlChooserControl
     data.horizontalAlignment = GridData.FILL;
     data.horizontalSpan = 1;
     data.grabExcessHorizontalSpace = false;
-    loadZmlBtn.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.2") ); //$NON-NLS-1$
+    loadZmlBtn.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.2" ) ); //$NON-NLS-1$
     loadZmlBtn.setLayoutData( data );
     final IFolder importFolder = m_importFolder;
     loadZmlBtn.addSelectionListener( new SelectionAdapter()
@@ -159,7 +159,7 @@ public abstract class ZmlChooserControl
         catch( final CoreException e1 )
         {
           final IStatus status = e1.getStatus();
-          ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.4"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+          ErrorDialog.openError( shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.4" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
           KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
         }
         treeViewer.refresh();
@@ -171,7 +171,7 @@ public abstract class ZmlChooserControl
     data.horizontalAlignment = GridData.FILL;
     data.horizontalSpan = 1;
     data.grabExcessHorizontalSpace = true;
-    vonLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.6") ); //$NON-NLS-1$
+    vonLbl.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.6" ) ); //$NON-NLS-1$
     vonLbl.setAlignment( SWT.RIGHT );
     vonLbl.setLayoutData( data );
 
@@ -229,7 +229,7 @@ public abstract class ZmlChooserControl
     data.horizontalAlignment = GridData.FILL;
     data.horizontalSpan = 2;
     data.grabExcessHorizontalSpace = true;
-    bisLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.8") ); //$NON-NLS-1$
+    bisLbl.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.8" ) ); //$NON-NLS-1$
     bisLbl.setAlignment( SWT.RIGHT );
     bisLbl.setLayoutData( data );
 
@@ -323,7 +323,7 @@ public abstract class ZmlChooserControl
 
         try
         {
-          m_observation = ZmlFactory.parseXML( selectedFile.toURL(), selectedFile.getAbsolutePath() );
+          m_observation = ZmlFactory.parseXML( selectedFile.toURL() );
         }
         catch( final MalformedURLException e )
         {
@@ -433,6 +433,6 @@ public abstract class ZmlChooserControl
     else if( type.equals( "Q" ) ) //$NON-NLS-1$
       return Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE;
 
-    throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.0") ); //$NON-NLS-1$
+    throw new IllegalStateException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.0" ) ); //$NON-NLS-1$
   }
 }

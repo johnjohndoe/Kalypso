@@ -71,8 +71,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypsodeegree.model.feature.Feature;
@@ -159,7 +159,7 @@ public class NAStatistics
       final String nodeTitle = getNodeTitle( feature );
       final String nodeDescription = getNodeDescription( feature );
 
-      final IObservation observation = ZmlFactory.parseXML( resultFile.toURI().toURL(), null );
+      final IObservation observation = ZmlFactory.parseXML( resultFile.toURI().toURL() );
 
       final NAStatisticsData data = new NAStatisticsData( observation );
       data.calculateStatistics();

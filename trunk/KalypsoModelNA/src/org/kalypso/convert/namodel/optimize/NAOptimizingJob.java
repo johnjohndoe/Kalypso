@@ -314,7 +314,7 @@ public class NAOptimizingJob implements IOptimizingJob
         // möglich ist ohne gemessene zeitreihe
         e.printStackTrace();
       }
-      final IObservation observation = ZmlFactory.parseXML( measuredURL, "measured" ); //$NON-NLS-1$
+      final IObservation observation = ZmlFactory.parseXML( measuredURL ); //$NON-NLS-1$
       final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeserieConstants.TYPE_DATE );
       final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeserieConstants.TYPE_RUNOFF );
       final ITuppleModel values = observation.getValues( null );
@@ -343,7 +343,7 @@ public class NAOptimizingJob implements IOptimizingJob
     final String calcHref = m_linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final File tsFile = new File( optimizeResultDir, calcHref );
-    final IObservation observation = ZmlFactory.parseXML( tsFile.toURL(), "result" ); //$NON-NLS-1$
+    final IObservation observation = ZmlFactory.parseXML( tsFile.toURL() ); //$NON-NLS-1$
     final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeserieConstants.TYPE_DATE );
     final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeserieConstants.TYPE_RUNOFF );
     final ITuppleModel values = observation.getValues( null );

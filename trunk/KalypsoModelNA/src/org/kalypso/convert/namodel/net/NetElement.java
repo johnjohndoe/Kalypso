@@ -169,7 +169,7 @@ public class NetElement
           final TimeseriesLinkType linkN = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_NIEDERSCHLAG );
 
           final URL linkURLN = m_urlUtils.resolveURL( m_conf.getZMLContext(), linkN.getHref() );
-          final IObservation observation = ZmlFactory.parseXML( linkURLN, "ID_N" ); //$NON-NLS-1$
+          final IObservation observation = ZmlFactory.parseXML( linkURLN ); //$NON-NLS-1$
           final FileWriter writer = new FileWriter( targetFileN );
           NAZMLGenerator.createFile( writer, ITimeserieConstants.TYPE_RAINFALL, observation );
           IOUtils.closeQuietly( writer );
@@ -182,7 +182,7 @@ public class NetElement
           {
             final String hrefT = ZmlURL.insertFilter( linkT.getHref(), FILTER_T );
             final URL linkURLT = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefT );
-            final IObservation observation = ZmlFactory.parseXML( linkURLT, "ID_T" ); //$NON-NLS-1$
+            final IObservation observation = ZmlFactory.parseXML( linkURLT ); //$NON-NLS-1$
             final FileWriter writer = new FileWriter( targetFileT );
             NAZMLGenerator.createExt2File( writer, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), ITimeserieConstants.TYPE_TEMPERATURE, "1.0" ); //$NON-NLS-1$
             IOUtils.closeQuietly( writer );
@@ -196,7 +196,7 @@ public class NetElement
           {
             final String hrefV = ZmlURL.insertFilter( linkV.getHref(), FILTER_V );
             final URL linkURLV = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefV );
-            final IObservation observation = ZmlFactory.parseXML( linkURLV, "ID_V" ); //$NON-NLS-1$
+            final IObservation observation = ZmlFactory.parseXML( linkURLV ); //$NON-NLS-1$
             final FileWriter writer = new FileWriter( targetFileV );
             NAZMLGenerator.createExt2File( writer, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), ITimeserieConstants.TYPE_EVAPORATION, "0.5" ); //$NON-NLS-1$
             IOUtils.closeQuietly( writer );

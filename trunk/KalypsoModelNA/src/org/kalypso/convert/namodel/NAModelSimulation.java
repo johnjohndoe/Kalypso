@@ -96,8 +96,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
@@ -575,12 +575,12 @@ public class NAModelSimulation
           if( itExists )
           {
             m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.132" ) ); //$NON-NLS-1$
-            final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" ); //$NON-NLS-1$
+            final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL ); //$NON-NLS-1$
 
             copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { ITimeserieConstants.MD_ALARM_1, ITimeserieConstants.MD_ALARM_2, ITimeserieConstants.MD_ALARM_3,
-              ITimeserieConstants.MD_ALARM_4, ITimeserieConstants.MD_GEWAESSER, ITimeserieConstants.MD_FLUSSGEBIET, ITimeserieConstants.MD_GKH, ITimeserieConstants.MD_GKR,
-              ITimeserieConstants.MD_HOEHENANGABEART, ITimeserieConstants.MD_PEGELNULLPUNKT, ITimeserieConstants.MD_WQWECHMANN, ITimeserieConstants.MD_WQTABLE, ITimeserieConstants.MD_TIMEZONE,
-              ITimeserieConstants.MD_VORHERSAGE_START, ITimeserieConstants.MD_VORHERSAGE_ENDE } );
+                ITimeserieConstants.MD_ALARM_4, ITimeserieConstants.MD_GEWAESSER, ITimeserieConstants.MD_FLUSSGEBIET, ITimeserieConstants.MD_GKH, ITimeserieConstants.MD_GKR,
+                ITimeserieConstants.MD_HOEHENANGABEART, ITimeserieConstants.MD_PEGELNULLPUNKT, ITimeserieConstants.MD_WQWECHMANN, ITimeserieConstants.MD_WQTABLE, ITimeserieConstants.MD_TIMEZONE,
+                ITimeserieConstants.MD_VORHERSAGE_START, ITimeserieConstants.MD_VORHERSAGE_ENDE } );
 
           }
         }
@@ -711,7 +711,7 @@ public class NAModelSimulation
       final URL pegelURL = nodeResultProvider.getMeasuredURL( rootFeature );
 
       // from measuered timeseries
-      final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" ); //$NON-NLS-1$
+      final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL ); //$NON-NLS-1$
       final ITuppleModel pegelValues = pegelObservation.getValues( null );
       final IAxis pegelDateAxis = ObservationUtilities.findAxisByClass( pegelObservation.getAxisList(), Date.class );
       final IAxis pegelValueAxis = ObservationUtilities.findAxisByType( pegelObservation.getAxisList(), axisType );
@@ -741,7 +741,7 @@ public class NAModelSimulation
     TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, tranpolinEnd, offsetStartPrediction, offsetEndPrediction, "+", axisType, KalypsoStati.BIT_DERIVATED, fileMitte, " - Spur Mitte", request ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // read the freshly created file into a new observation, we are going to umhüll it
-    final IObservation adaptedResultObservation = ZmlFactory.parseXML( fileMitte.toURI().toURL(), "adaptedVorhersage" ); //$NON-NLS-1$
+    final IObservation adaptedResultObservation = ZmlFactory.parseXML( fileMitte.toURI().toURL() ); //$NON-NLS-1$
 
     //
     // Second, we build the umhüllenden for the adapted result
@@ -865,7 +865,7 @@ public class NAModelSimulation
     // from predicted timeseries
     final UrlResolver urlResolver = new UrlResolver();
     final URL resultURL = urlResolver.resolveURL( resultDir.toURI().toURL(), resultLink.getHref() );
-    return ZmlFactory.parseXML( resultURL, "vorhersage" ); //$NON-NLS-1$
+    return ZmlFactory.parseXML( resultURL ); //$NON-NLS-1$
   }
 
   /**
