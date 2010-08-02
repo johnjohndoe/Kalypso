@@ -128,15 +128,8 @@ public class WspmProfileHelper
 
   public static <T extends IProfileBuilding> T getBuilding( final IProfil profile, final Class<T> buildingType )
   {
-    final IProfileBuilding[] profileObjects = profile.getProfileObjects( IProfileBuilding.class );
-    if( ArrayUtils.isEmpty( profileObjects ) )
-      return null;
-
-    final IProfileBuilding building = profileObjects[0];
-    if( buildingType.isInstance( building ) )
-      return buildingType.cast( building );
-
-    return null;
+    final IProfileBuilding[] profileObjects = profile.getProfileObjects( buildingType );
+    return ArrayUtils.isEmpty( profileObjects ) ? null : buildingType.cast( profileObjects[0] );
   }
 
 }

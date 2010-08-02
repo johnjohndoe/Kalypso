@@ -230,7 +230,7 @@ public class PrfSource implements IProfilSource
       {
         case 6:// Trapez
         {
-          final IProfileBuilding building = new BuildingTrapez( p );
+          final IProfileBuilding building = new BuildingTrapez( );
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;
@@ -250,7 +250,7 @@ public class PrfSource implements IProfilSource
         }
         case 7:// Kreis
         {
-          final IProfileBuilding building = new BuildingKreis( p );
+          final IProfileBuilding building = new BuildingKreis( );
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;
@@ -266,7 +266,7 @@ public class PrfSource implements IProfilSource
         }
         case 8:// Ei
         {
-          final IProfileBuilding building = new BuildingEi( p );
+          final IProfileBuilding building = new BuildingEi();
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;
@@ -284,7 +284,7 @@ public class PrfSource implements IProfilSource
         }
         case 9:// Maulprofil
         {
-          final IProfileBuilding building = new BuildingMaul( p );
+          final IProfileBuilding building = new BuildingMaul();
 
           if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
             return;

@@ -55,24 +55,24 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
 
   public SinuositaetProfileObject( final IProfil profile )
   {
-    this( profile, buildObservation() );
+    this( buildObservation() );
   }
 
   private static IObservation<TupleResult> buildObservation( )
   {
     final TupleResult result = new TupleResult();
-    result.addComponent( createObjectProperty( PROPERTY_KENNUNG ) );
-    result.addComponent( createObjectProperty( PROPERTY_SN ) );
-    result.addComponent( createObjectProperty( PROPERTY_GERINNE_ART ) );
-    result.addComponent( createObjectProperty( PROPERTY_LF ) );
+    result.addComponent( getObjectComponent( PROPERTY_KENNUNG ) );
+    result.addComponent( getObjectComponent( PROPERTY_SN ) );
+    result.addComponent( getObjectComponent( PROPERTY_GERINNE_ART ) );
+    result.addComponent( getObjectComponent( PROPERTY_LF ) );
 
     final Observation<TupleResult> observation = new Observation<TupleResult>( ID, "Sinuosität", result ); //$NON-NLS-1$
     return observation;
   }
 
-  public SinuositaetProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
+  public SinuositaetProfileObject( final IObservation<TupleResult> observation )
   {
-    super( profile, observation );
+    super( observation );
   }
 
   /**

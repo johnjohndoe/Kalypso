@@ -48,7 +48,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.TubePanel;
+import org.kalypso.model.wspm.tuhh.ui.panel.CulvertPanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -115,7 +115,7 @@ public class BuildingTubesTheme extends AbstractProfilTheme
   @Override
   public IProfilView createLayerPanel( )
   {
-    return new TubePanel( getProfil() );
+    return new CulvertPanel( getProfil() );
   }
 
 }

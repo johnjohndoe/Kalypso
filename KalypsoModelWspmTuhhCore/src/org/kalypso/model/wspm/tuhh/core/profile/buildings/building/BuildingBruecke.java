@@ -59,16 +59,16 @@ final public class BuildingBruecke extends AbstractObservationBuilding
 
   public BuildingBruecke( final IProfil profil )
   {
-    this( profil, buildTupleResult() );
+    this(profil, buildTupleResult() );
   }
 
   private static IObservation<TupleResult> buildTupleResult( )
   {
     final TupleResult result = new TupleResult();
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) );
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
-    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
     final IRecord emptyRecord = result.createRecord();
     result.add( emptyRecord );
     final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result );
@@ -76,16 +76,15 @@ final public class BuildingBruecke extends AbstractObservationBuilding
     return observation;
   }
 
-  public BuildingBruecke( final IProfil profil, final IObservation<TupleResult> observation )
+  public BuildingBruecke( final IProfil profil ,final IObservation<TupleResult> observation )
   {
-    super( profil, observation );
-
+    super( observation );
     addPointProperties( profil );
+
   }
 
   private void addPointProperties( final IProfil profil )
   {
-    final IComponent hoehe = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent uk = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
     if( !profil.hasPointProperty( uk ) )
       profil.addPointProperty( uk, null );
