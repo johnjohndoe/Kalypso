@@ -44,8 +44,17 @@ import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import junit.framework.Assert;
+
+import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.compare.structuremergeviewer.Differencer;
+import org.eclipse.compare.structuremergeviewer.IDiffElement;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
+import org.kalypso.commons.compare.CompareUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
@@ -64,9 +73,6 @@ public class NaPreprocessingTest
   /**
    * <code>
    * Optimize Log:
-   * Initially: ~9.9s
-   * 
-   * 
    * </code>
    */
   @Test
@@ -74,7 +80,47 @@ public class NaPreprocessingTest
   {
     final File outputDir = FileUtilities.createNewTempDir( "naDemoModelPreprocessingTest" );
     final File asciiDir = new File( outputDir, "ascii" );
+    final File asciiExpectedDir = new File( outputDir, "asciiExpected" );
 
+    /* Init preprocessor */
+    final NAModelPreprocessor preprocessor = createPreprocessor( asciiDir );
+
+    /* Create the ascii files */
+    final ISimulationMonitor monitor = new NullSimulationMonitor();
+    preprocessor.process( monitor );
+
+    /* Fetch the expected results */
+    asciiExpectedDir.mkdir();
+    ZipUtilities.unzip( getClass().getResource( "resources/demoModel_Langzeit/expectedAscii.zip" ), asciiExpectedDir );
+
+    // TODO: compare with expected results
+
+    final FileStructureComparator actualComparator = new FileStructureComparator( asciiDir );
+    final FileStructureComparator expectedComparator = new FileStructureComparator( asciiExpectedDir );
+
+    final Differencer differencer = new Differencer();
+    final Object differences = differencer.findDifferences( false, new NullProgressMonitor(), null, null, expectedComparator, actualComparator );
+    dumpDifferences( differences );
+  }
+
+  private void dumpDifferences( final Object differences )
+  {
+    if( differences == null )
+      return;
+
+    if( !(differences instanceof IDiffElement) )
+      Assert.fail( "Unknown differencer result: " + ObjectUtils.toString( differences ) );
+
+    final IDiffElement element = (IDiffElement) differences;
+    CompareUtils.dumpDiffElement( element, 0 );
+
+    Assert.fail( "Expected ascii files are different from actual ones. See console dump" );
+  }
+
+
+
+  private NAModelPreprocessor createPreprocessor( final File asciiDir ) throws Exception
+  {
     final NAConfiguration conf = new NAConfiguration( asciiDir );
     final NaAsciiDirs outputDirs = new NaAsciiDirs( asciiDir );
     final IDManager idManager = new IDManager();
@@ -85,22 +131,18 @@ public class NaPreprocessingTest
     conf.setZMLContext( context );
 
     final NAModelPreprocessor preprocessor = new NAModelPreprocessor( conf, outputDirs, idManager, simulationData, logger );
-
-    final ISimulationMonitor monitor = new NullSimulationMonitor();
-    preprocessor.process( monitor );
-
-    // TODO: compare with some expected results
+    return preprocessor;
   }
 
   private NaSimulationData createDemoModelsimulationData( ) throws Exception
   {
     final Class< ? extends NaPreprocessingTest> myClass = getClass();
 
-    final URL modelUrl = myClass.getResource( "resources/demoModel_Langzeit/calcCase.gml" );
-    final URL controlUrl = myClass.getResource( "resources/demoModel_Langzeit/expertControl.gml" );
-    final URL metaUrl = myClass.getResource( "resources/demoModel_Langzeit/.calculation" );
-    final URL parameterUrl = myClass.getResource( "resources/demoModel_Langzeit/calcParameter.gml" );
-    final URL hydrotopUrl = myClass.getResource( "resources/demoModel_Langzeit/calcHydrotop.gml" );
+    final URL modelUrl = myClass.getResource( "resources/demoModel_Langzeit/gmlInput/calcCase.gml" );
+    final URL controlUrl = myClass.getResource( "resources/demoModel_Langzeit/gmlInput/expertControl.gml" );
+    final URL metaUrl = myClass.getResource( "resources/demoModel_Langzeit/gmlInput/.calculation" );
+    final URL parameterUrl = myClass.getResource( "resources/demoModel_Langzeit/gmlInput/calcParameter.gml" );
+    final URL hydrotopUrl = myClass.getResource( "resources/demoModel_Langzeit/gmlInput/calcHydrotop.gml.gz" );
     final URL sudsUrl = null;
     final URL syntNUrl = null;
     final URL lzsimUrl = null;
