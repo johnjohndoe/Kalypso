@@ -42,14 +42,17 @@ package org.kalypso.convert.namodel.hydrotope;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.FeatureListGeometryIntersector;
 import org.kalypso.convert.namodel.i18n.Messages;
@@ -71,15 +74,19 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
@@ -92,6 +99,8 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class HydrotopeCreationOperation implements IRunnableWithProgress
 {
+  private static final String COORDINATE_SYSTEM = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
   private final FeatureList m_landuseList;
 
   private final FeatureList m_pedologyList;
@@ -157,18 +166,18 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
     if( m_workingArea == null )
     {
-      geometryIntersector.addFeatureList( m_catchmentsList );
       geometryIntersector.addFeatureList( m_pedologyList );
       geometryIntersector.addFeatureList( m_geologyList );
+      geometryIntersector.addFeatureList( m_catchmentsList );
       geometryIntersector.addFeatureList( m_landuseList );
       m_outputList.clear();
     }
     else
     {
       final GM_Envelope envelope = m_workingArea.getEnvelope();
-      geometryIntersector.addFeatureList( m_catchmentsList.query( envelope, null ) );
       geometryIntersector.addFeatureList( m_pedologyList.query( envelope, null ) );
       geometryIntersector.addFeatureList( m_geologyList.query( envelope, null ) );
+      geometryIntersector.addFeatureList( m_catchmentsList.query( envelope, null ) );
       geometryIntersector.addFeatureList( m_landuseList.query( envelope, null ) );
     }
     return geometryIntersector;
@@ -184,6 +193,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.0" ), 100 ); //$NON-NLS-1$
 
+    Date lDate = new Date();
+
+    IWorkbench wb = PlatformUI.getWorkbench();
+
     final FeatureListGeometryIntersector geometryIntersector = getIntersector();
     final List<MultiPolygon> intersectionList;
     try
@@ -191,14 +204,33 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       progress.setTaskName( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.1" ) ); //$NON-NLS-1$
       intersectionList = geometryIntersector.intersect( progress.newChild( 50 ) );
 
+      System.out.println( "INTERSECTION LIST: " + intersectionList.size() );
       progress.setTaskName( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.2" ) ); //$NON-NLS-1$
       progress.setWorkRemaining( intersectionList.size() );
 
+// if (intersectionList.size() > 0) {
+// m_outputList.clear();
+// for( Iterator iterator = intersectionList.iterator(); iterator.hasNext(); )
+// {
+// Geometry multiPolygon = (Geometry) iterator.next();
+// final Hydrotop hydrotop = (Hydrotop) m_workspace.createFeature( null, null, m_featureType );
+// GM_MultiSurface lGeometry = (GM_MultiSurface) JTSAdapter.wrap( multiPolygon );
+// if( lGeometry == null )
+// System.out.println( "lGeometrijaaa null #1" );
+// hydrotop.setGeometry( lGeometry );
+// hydrotop.setProperty( NaModelConstants.HYDRO_PROP_AREA, multiPolygon.getArea() );
+// m_outputList.add( hydrotop );
+// }
+// // m_outputList
+// return;
+//
+// }
+//
       if( m_outputList.size() > 0 )
       {
         final Geometry intersectionArea = new GeometryFactory().createGeometryCollection( intersectionList.toArray( new MultiPolygon[] {} ) ).buffer( 0.0 );
         // FIXME: check if the coordinate system is really required, it was always null in previous implementation
-        final GM_Envelope gmEnvelope = JTSAdapter.wrap( intersectionArea.getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+        final GM_Envelope gmEnvelope = JTSAdapter.wrap( intersectionArea.getEnvelopeInternal(), COORDINATE_SYSTEM );
         final List<Feature> list = m_outputList.query( gmEnvelope, null );
         for( final Feature feature : list )
         {
@@ -218,7 +250,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             else
             {
               final Geometry geometry = g.difference( intersectionArea );
-              final GM_MultiSurface hydrotopGeometry = toMultiSurface( geometry );
+              final GM_MultiSurface hydrotopGeometry = toMultiSurface( geometry, COORDINATE_SYSTEM );
               if( hydrotopGeometry != null )
                 hydrotop.setGeometry( hydrotopGeometry );
               else
@@ -249,8 +281,15 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           continue;
 
         final Hydrotop hydrotop = (Hydrotop) m_workspace.createFeature( null, null, m_featureType );
-        final Point interiorPoint = geometry.getInteriorPoint();
-        final GM_Envelope envelope = JTSAdapter.wrap( interiorPoint.getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+
+        final Point interiorPoint = geometryIntersector.getJustInteriorPointFixed( geometry );
+        if( interiorPoint == null )
+        {
+          System.out.println( "NULL + " + geometry );
+          continue;
+        }
+
+        final GM_Envelope envelope = JTSAdapter.wrap( interiorPoint.getEnvelopeInternal(), COORDINATE_SYSTEM );
         final GM_Point point = (GM_Point) JTSAdapter.wrap( interiorPoint );
 
         final List<Object> catchmentList = m_catchmentsList.query( envelope, null );
@@ -262,7 +301,11 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           for( final Object object : catchmentList )
           {
             final Feature catchment = (Feature) object;
-            if( catchment.getDefaultGeometryPropertyValue().contains( point ) )
+
+            GM_Object catchmentGeo = catchment.getDefaultGeometryPropertyValue();
+            boolean l_bTest = isPointInsidePolygon( catchmentGeo, point );
+// if( catchmentGeo.contains( point ) )
+            if( l_bTest )
             {
               catchmentFound = true;
               final IFeatureType featureType = catchment.getFeatureType();
@@ -282,11 +325,17 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         {
           Landuse landuse = null;
           for( final Landuse l : landuseList )
-            if( l.getDefaultGeometryPropertyValue().contains( point ) )
+          {
+            GM_Object normaleLanduse = l.getDefaultGeometryPropertyValue();
+
+            boolean l_bTest = isPointInsidePolygon( normaleLanduse, point );
+// if( normaleLanduse.contains( point ) )
+            if( l_bTest )
             {
               landuse = l;
               break;
             }
+          }
           if( landuse == null )
             continue;
 
@@ -339,11 +388,15 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         {
           SoilType soilType = null;
           for( final SoilType s : soilTypesList )
-            if( s.getDefaultGeometryPropertyValue().contains( point ) )
+          {
+            boolean l_bTest = isPointInsidePolygon( s.getDefaultGeometryPropertyValue(), point );
+// if( s.getDefaultGeometryPropertyValue().contains( point ) )
+            if( l_bTest )
             {
               soilType = s;
               break;
             }
+          }
           if( soilType == null )
             continue;
           final Object soiltypeClassLink = soilType.getSoilType();
@@ -362,11 +415,15 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         {
           Geology geology = null;
           for( final Geology g : geologyList )
-            if( g.getDefaultGeometryPropertyValue().contains( point ) )
+          {
+            boolean l_bTest = isPointInsidePolygon( g.getDefaultGeometryPropertyValue(), point );
+// if( g.getDefaultGeometryPropertyValue().contains( point ) )
+            if( l_bTest )
             {
               geology = g;
               break;
             }
+          }
           if( geology == null )
             continue;
           hydrotop.setMaxPerkolationRate( geology.getMaxPerkulationsRate() );
@@ -377,13 +434,19 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
         if( m_dissolveFeatures )
         {
-          final GM_Envelope featureGeometryEnvelope = JTSAdapter.wrap( geometry.getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+          final GM_Envelope featureGeometryEnvelope = JTSAdapter.wrap( geometry.getEnvelopeInternal(), COORDINATE_SYSTEM );
           final List<Feature> list = m_outputList.query( featureGeometryEnvelope, null );
           final List<Feature> featuresToMergeWith = new ArrayList<Feature>();
           final List<Geometry> geometriesToMergeWith = new ArrayList<Geometry>();
           for( final Feature f : list )
           {
             final Geometry g = JTSAdapter.export( f.getDefaultGeometryPropertyValue() );
+            if( g == null )
+            {
+              System.out.println( "Broken Feature:" + f + " MORE:" + f.getDefaultGeometryPropertyValue() );
+              m_outputList.remove( f );
+              continue;
+            }
             if( geometry.intersects( g ) )
               if( hydrotop.isEqualByPropertiesWith( f ) )
               {
@@ -393,76 +456,211 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           }
           if( !featuresToMergeWith.isEmpty() )
           {
-            m_outputList.removeAll( featuresToMergeWith );
             geometriesToMergeWith.add( geometry );
 
             Geometry union = null;
+
+            GeometryCollection geometryCollection = new GeometryFactory().createGeometryCollection( GeometryFactory.toGeometryArray( geometriesToMergeWith ) );
             try
             {
-              union = new GeometryFactory().createGeometryCollection( GeometryFactory.toGeometryArray( geometriesToMergeWith ) ).buffer( 0.0 );
+              union = geometryCollection.union();
+              m_outputList.removeAll( featuresToMergeWith );
             }
             catch( final Exception e )
             {
               Logger.getLogger( getClass().getName() ).log( Level.WARNING, e.getLocalizedMessage() );
-              union = geometry;
-              for( int i = 0; i < geometriesToMergeWith.size() - 1; i++ )
-                union = union.union( geometriesToMergeWith.get( i ) );
+              try
+              {
+                union = geometryCollection.buffer( 0.0 );
+                m_outputList.removeAll( featuresToMergeWith );
+              }
+              catch( Exception e2 )
+              {
+                System.out.println( "Karamba, buff0r ne rabotaet ..." );
+                try
+                {
+                  union = geometry;
+                  for( int i = 0; i < geometriesToMergeWith.size() - 1; i++ )
+                    union = union.union( geometriesToMergeWith.get( i ) );
+                  m_outputList.removeAll( featuresToMergeWith );
+                }
+                catch( Exception e3 )
+                {
+                  System.out.println( "NU VSE. ETO PI...." );
+                  continue;
+                }
+              }
             }
-            final GM_MultiSurface hydrotopGeometry = toMultiSurface( union );
+            final GM_MultiSurface hydrotopGeometry = toMultiSurface( union, COORDINATE_SYSTEM );
             if( hydrotopGeometry != null )
               hydrotop.setGeometry( hydrotopGeometry );
             else
             {
-              // TODO what to do?
+              System.out.println( "A sho delat-ta" );
             }
             hydrotop.setProperty( NaModelConstants.HYDRO_PROP_AREA, union.getArea() );
           }
           else
           {
-            hydrotop.setGeometry( (GM_MultiSurface) JTSAdapter.wrap( geometry ) );
+            GM_MultiSurface lGeometry = (GM_MultiSurface) JTSAdapter.wrap( geometry );
+            if( lGeometry == null )
+              System.out.println( "lGeometrijaaa null #1" );
+            hydrotop.setGeometry( lGeometry );
             hydrotop.setProperty( NaModelConstants.HYDRO_PROP_AREA, geometry.getArea() );
           }
         }
         else
         {
-          hydrotop.setGeometry( (GM_MultiSurface) JTSAdapter.wrap( geometry ) );
+          GM_MultiSurface lGeometry = (GM_MultiSurface) JTSAdapter.wrap( geometry );
+          if( lGeometry == null )
+            System.out.println( "lGeometrijaaa null #2" );
+          hydrotop.setGeometry( lGeometry );
           hydrotop.setProperty( NaModelConstants.HYDRO_PROP_AREA, geometry.getArea() );
         }
         hydrotop.setName( hydrotop.getId() );
         m_outputList.add( hydrotop );
       }
     }
-    catch( final GM_Exception e )
+// catch( final GM_Exception e )
+// {
+// throw new InvocationTargetException( e );
+// }
+// catch( final CoreException e )
+// {
+// throw new InvocationTargetException( e );
+// }
+    catch( final Throwable e )
     {
+      e.printStackTrace();
       throw new InvocationTargetException( e );
     }
-    catch( final CoreException e )
-    {
-      throw new InvocationTargetException( e );
-    }
+
+    System.out.println( "OUTPUT LIST: " + m_outputList.size() );
+
+    System.out.println( "Result: " + ((new Date()).getTime() - lDate.getTime()) );
 
   }
 
-  private final GM_MultiSurface toMultiSurface( final Geometry geometry )
+  private final GM_MultiSurface toMultiSurface( final Geometry geometry, final String crs )
   {
     try
     {
-      final GM_Object newGeometry = JTSAdapter.wrap( geometry );
+      final GM_Object newGeometry = JTSAdapter.wrap( geometry, crs );
       if( newGeometry instanceof GM_MultiSurface )
         return (GM_MultiSurface) newGeometry;
       else if( newGeometry instanceof GM_Surface )
       {
-        final List<GM_Surface< ? >> arrayList = new ArrayList<GM_Surface< ? >>();
-        arrayList.add( (GM_Surface< ? >) newGeometry );
+// final List<GM_Surface< ? >> arrayList = new ArrayList<GM_Surface< ? >>();
+// arrayList.add( (GM_Surface< ? >) newGeometry );
+        final ArrayList<GM_Surface> arrayList = new ArrayList<GM_Surface>();
+        arrayList.add( (GM_Surface) newGeometry );
         final GM_MultiSurface multiSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_MultiSurface( arrayList.toArray( new GM_Surface[0] ), newGeometry.getCoordinateSystem() );
         return multiSurface;
       }
+      else if( newGeometry instanceof GM_MultiPrimitive )
+      {
+        GeometryCollection lCol = (GeometryCollection) JTSAdapter.export( newGeometry );
+        return toMultiSurface( lCol.buffer( 0.0 ), crs );
+// final ArrayList<GM_Surface> arrayList = new ArrayList<GM_Surface>();
+// for( final GM_Object lGM_Obj: ((GM_MultiPrimitive)newGeometry).getAll() ){
+// arrayList.add( (GM_Surface) lGM_Obj );
+// }
+// final GM_MultiSurface multiSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_MultiSurface(
+// arrayList.toArray( new GM_Surface[0] ), newGeometry.getCoordinateSystem() );
+// return multiSurface;
+      }
+      System.out.println( "A kak takoja sluchilas ta" );
+      System.out.println( "A vot kak:" + newGeometry );
       return null;
     }
     catch( final GM_Exception e )
     {
+      e.printStackTrace();
+      System.out.println( "A sho sluchilas ta" );
       return null;
     }
+  }
+
+  public static final boolean isPointInsidePolygon( final GM_Position[] pos, final GM_Point point )
+  {
+    boolean isInside = false;
+    int nPoints = pos.length;
+
+    if( pos[nPoints - 1].equals( pos[0] ) == true )
+      nPoints -= 1;
+
+    int j = 0;
+    for( int i = 0; i < nPoints; i++ )
+    {
+      j++;
+      if( j == nPoints )
+        j = 0;
+
+      /*
+       * if (y[i] < pointY && y[j] >= pointY || y[j] < pointY && y[i] >= pointY) { nx = x - pos[0].x; if (x[i] + (pointY
+       * - y[i]) / (y[j] - y[i]) * (x[j] - x[i]) < pointX) { isInside = !isInside; } }
+       */
+
+      if( pos[i].getY() < point.getY() && (pos[j].getY() > point.getY() || AboutEqual( pos[j].getY(), point.getY() )) || (pos[j].getY() < point.getY() && (pos[i].getY() > point.getY()
+      /* || AboutEqual( pos[i].getY(), point.getY()) */)) )
+      {
+        if( (pos[i].getX() - point.getX()) + (point.getY() - pos[i].getY()) / (pos[j].getY() - pos[i].getY()) * (pos[j].getX() - pos[i].getX()) < 0 )
+        {
+          isInside = !isInside;
+        }
+        else if( isOnLine( pos[i], pos[j], point.getPosition() ) )
+        {
+          isInside = true;
+          break;
+        }
+      }
+    }
+
+    return isInside;
+  }
+
+  public static final boolean AboutEqual( final double x, final double y )
+  {
+    return Math.abs( x - y ) <= GM_Position.MUTE;
+  }
+
+  public static final boolean isPointInsidePolygon( final GM_Object gmObject, final GM_Point point )
+  {
+    if( gmObject instanceof GM_Surface )
+    {
+      final GM_SurfacePatch patch = ((GM_Surface< ? >) gmObject).get( 0 );
+      final GM_Position[] exteriorRing = patch.getExteriorRing();
+      final GM_Position[][] interiorRings = patch.getInteriorRings();
+
+      if( isPointInsidePolygon( exteriorRing, point ) == false )
+        return false;
+
+      if( interiorRings != null )
+        for( int i = 0; i < interiorRings.length; i++ )
+          if( isPointInsidePolygon( interiorRings[i], point ) == true )
+            return false;
+
+      return true;
+    }
+
+    if( gmObject instanceof GM_MultiSurface )
+    {
+      final GM_Surface< ? >[] surfaces = ((GM_MultiSurface) gmObject).getAllSurfaces();
+
+      if( surfaces != null )
+        for( int i = 0; i < surfaces.length; i++ )
+          if( isPointInsidePolygon( surfaces[i], point ) == true )
+            return true;
+
+      return false;
+    }
+
+    return false;
+  }
+
+  private static final boolean isOnLine( final GM_Position endPoint1, final GM_Position endPoint2, final GM_Position checkPoint )
+  {
+    return (checkPoint.getY() - endPoint1.getY()) / (endPoint2.getY() - endPoint1.getY()) == (checkPoint.getX() - endPoint1.getX()) / (endPoint2.getX() - endPoint1.getX());
   }
 
 }

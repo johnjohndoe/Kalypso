@@ -422,7 +422,9 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         newEdges.add( id );
       else
         statusList.add( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor.19", id, element ) ) ); //$NON-NLS-1$
-      System.out.println();
+      //TODO: what for?
+//      System.out.println();
+      
       if( !collectEdges.containsKey( id ) )
         collectEdges.put( id, edgeOrInvEdge );
 
