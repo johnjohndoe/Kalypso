@@ -91,17 +91,17 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -433,37 +433,37 @@ public class NAModelSimulation
   {
     // j Gesamtabfluss Knoten .qgs
     final IFeatureType nodeFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    loadTSResults( SUFFIX_QGS, nodeFT, TimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    loadTSResults( SUFFIX_QGS, nodeFT, ITimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     final IFeatureType catchmentFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
     final IFeatureType rhbChannelFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
     // j Niederschlag .pre
-    loadTSResults( "pre", catchmentFT, TimeserieConstants.TYPE_RAINFALL, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "pre", catchmentFT, ITimeserieConstants.TYPE_RAINFALL, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // j Temperatur .tmp
-    loadTSResults( "tmp", catchmentFT, TimeserieConstants.TYPE_TEMPERATURE, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "tmp", catchmentFT, ITimeserieConstants.TYPE_TEMPERATURE, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Interflow .qif
-    loadTSResults( "qif", catchmentFT, TimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "qif", catchmentFT, ITimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Grundwasser .qgw
-    loadTSResults( "qgw", catchmentFT, TimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "qgw", catchmentFT, ITimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Gesamtabfluss TG .qgg
-    loadTSResults( "qgg", catchmentFT, TimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "qgg", catchmentFT, ITimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Grundwasserstand .gws - Umrechnung von m auf cm
-    loadTSResults( "gws", catchmentFT, TimeserieConstants.TYPE_WATERLEVEL, null, null, modellWorkspace, 100.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "gws", catchmentFT, ITimeserieConstants.TYPE_WATERLEVEL, null, null, modellWorkspace, 100.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Basisabfluss .qbs
-    loadTSResults( "qbs", catchmentFT, TimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "qbs", catchmentFT, ITimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Oberflaechenabfluss .qna
-    loadTSResults( "qna", catchmentFT, TimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "qna", catchmentFT, ITimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Abfluss vers. Flaechen .qvs
-    loadTSResults( "qvs", catchmentFT, TimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "qvs", catchmentFT, ITimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // TODO:check output for the next time series
     // n Schnee .sch [mm]
-    loadTSResults( "sch", catchmentFT, TimeserieConstants.TYPE_WATERLEVEL, null, null, modellWorkspace, 0.1d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "sch", catchmentFT, ITimeserieConstants.TYPE_WATERLEVEL, null, null, modellWorkspace, 0.1d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Kluftgrundw1 .qt1
-    loadTSResults( "qt1", catchmentFT, TimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "qt1", catchmentFT, ITimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Kluftgrundw .qtg
-    loadTSResults( "qtg", catchmentFT, TimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "qtg", catchmentFT, ITimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Evapotranspiration .vet [mm]
-    loadTSResults( "vet", catchmentFT, TimeserieConstants.TYPE_EVAPORATION, null, null, modellWorkspace, 0.1d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "vet", catchmentFT, ITimeserieConstants.TYPE_EVAPORATION, null, null, modellWorkspace, 0.1d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // TODO: Zeitreihe als mittlere Bodenfeuchte aus Fortran übernehmen, daher bisher nicht zu übertragen (Zur zeit wird
     // die Bodenfeuchte des ersten Hydrotopes in allen Schichten ausgegeben)
@@ -473,11 +473,11 @@ public class NAModelSimulation
 
     // Straenge
     // n Wasserstand Speicher .sph [muNN]
-    loadTSResults( "sph", rhbChannelFT, TimeserieConstants.TYPE_NORMNULL, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "sph", rhbChannelFT, ITimeserieConstants.TYPE_NORMNULL, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Speicherueberlauf .sub [m³/s]
-    loadTSResults( "sub", rhbChannelFT, TimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "sub", rhbChannelFT, ITimeserieConstants.TYPE_RUNOFF, null, null, modellWorkspace, 1.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Speicherinhalt .spi [hm³] - Umrechnung auf m³
-    loadTSResults( "spi", rhbChannelFT, TimeserieConstants.TYPE_VOLUME, null, null, modellWorkspace, 1000000.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
+    loadTSResults( "spi", rhbChannelFT, ITimeserieConstants.TYPE_VOLUME, null, null, modellWorkspace, 1000000.0d, conf ); //$NON-NLS-1$ //$NON-NLS-2$
     // n Talsperrenverdunstung .spv [m³/d]
     // loadTSResults( "spv", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
     // modellWorkspace, logger, outputDir, 1.0d , idManager);
@@ -546,7 +546,7 @@ public class NAModelSimulation
           pos++;
         }
 
-        final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.4" ), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
+        final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.4" ), ITimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
         final IAxis qAxis = new DefaultAxis( axisTitle, resultType, TimeserieUtils.getUnit( resultType ), Double.class, false );
         final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( qAxis, true );
         final IAxis[] axis = new IAxis[] { dateAxis, qAxis, statusAxis };
@@ -577,10 +577,10 @@ public class NAModelSimulation
             m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.132" ) ); //$NON-NLS-1$
             final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" ); //$NON-NLS-1$
 
-            copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { TimeserieConstants.MD_ALARM_1, TimeserieConstants.MD_ALARM_2, TimeserieConstants.MD_ALARM_3,
-              TimeserieConstants.MD_ALARM_4, TimeserieConstants.MD_GEWAESSER, TimeserieConstants.MD_FLUSSGEBIET, TimeserieConstants.MD_GKH, TimeserieConstants.MD_GKR,
-              TimeserieConstants.MD_HOEHENANGABEART, TimeserieConstants.MD_PEGELNULLPUNKT, TimeserieConstants.MD_WQWECHMANN, TimeserieConstants.MD_WQTABLE, TimeserieConstants.MD_TIMEZONE,
-              TimeserieConstants.MD_VORHERSAGE_START, TimeserieConstants.MD_VORHERSAGE_ENDE } );
+            copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { ITimeserieConstants.MD_ALARM_1, ITimeserieConstants.MD_ALARM_2, ITimeserieConstants.MD_ALARM_3,
+              ITimeserieConstants.MD_ALARM_4, ITimeserieConstants.MD_GEWAESSER, ITimeserieConstants.MD_FLUSSGEBIET, ITimeserieConstants.MD_GKH, ITimeserieConstants.MD_GKR,
+              ITimeserieConstants.MD_HOEHENANGABEART, ITimeserieConstants.MD_PEGELNULLPUNKT, ITimeserieConstants.MD_WQWECHMANN, ITimeserieConstants.MD_WQTABLE, ITimeserieConstants.MD_TIMEZONE,
+              ITimeserieConstants.MD_VORHERSAGE_START, ITimeserieConstants.MD_VORHERSAGE_ENDE } );
 
           }
         }
@@ -898,11 +898,11 @@ public class NAModelSimulation
   {
     final IAxis[] axisList = observation.getAxisList();
 
-    if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_RUNOFF ) )
-      return TimeserieConstants.TYPE_RUNOFF;
+    if( ObservationUtilities.hasAxisOfType( axisList, ITimeserieConstants.TYPE_RUNOFF ) )
+      return ITimeserieConstants.TYPE_RUNOFF;
 
-    if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_WATERLEVEL ) )
-      return TimeserieConstants.TYPE_WATERLEVEL;
+    if( ObservationUtilities.hasAxisOfType( axisList, ITimeserieConstants.TYPE_WATERLEVEL ) )
+      return ITimeserieConstants.TYPE_WATERLEVEL;
 
     throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.50" ), null ); //$NON-NLS-1$
   }
