@@ -79,7 +79,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.simulation.core.SimulationException;
@@ -201,12 +201,12 @@ public class NetFileManager extends AbstractManager
         final String correctedPath = nzufPfad.replaceAll( "P:\\\\vwe04121\\\\modell\\\\hydrologie\\\\namod\\\\zufluss\\\\", m_conf.getAsciiBaseDir().toString() + "/Zufluss/" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final File tsFile = new File( correctedPath );
-        final TimeseriesLinkType link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, false, false );
+        final TimeseriesLinkType link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), ITimeserieConstants.TYPE_DATE, ITimeserieConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, false, false );
 
         final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_REPOSITORY_PROP );
         fePropMap.put( pt, link1 );
 
-        final TimeseriesLinkType link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, true, true );
+        final TimeseriesLinkType link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), ITimeserieConstants.TYPE_DATE, ITimeserieConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, true, true );
         final IPropertyType pt2 = nodeFT.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP );
         fePropMap.put( pt2, link2 );
       }
@@ -231,13 +231,13 @@ public class NetFileManager extends AbstractManager
 
       // adding Timeseries links
 
-      final TimeseriesLinkType pegelLink = NAZMLGenerator.copyToTimeseriesLink( null, TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf // TODO
+      final TimeseriesLinkType pegelLink = NAZMLGenerator.copyToTimeseriesLink( null, ITimeserieConstants.TYPE_DATE, ITimeserieConstants.TYPE_WATERLEVEL, m_conf // TODO
           // NA_PEGEL
           .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true ); //$NON-NLS-1$//$NON-NLS-2$
       final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
       fePropMap.put( pt, pegelLink );
 
-      final TimeseriesLinkType resultLink = NAZMLGenerator.copyToTimeseriesLink( null, TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RUNOFF, m_conf.getGmlBaseDir(), "Ergebnisse/Berechnet/Abfluss_" //$NON-NLS-1$
+      final TimeseriesLinkType resultLink = NAZMLGenerator.copyToTimeseriesLink( null, ITimeserieConstants.TYPE_DATE, ITimeserieConstants.TYPE_RUNOFF, m_conf.getGmlBaseDir(), "Ergebnisse/Berechnet/Abfluss_" //$NON-NLS-1$
           + fe.getId() + ".zml", true, true ); //$NON-NLS-1$
       final IPropertyType pt2 = nodeFT.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
       fePropMap.put( pt2, resultLink );
@@ -655,18 +655,18 @@ public class NetFileManager extends AbstractManager
             {
               final ITuppleModel values = observation.getValues( null );
               final IAxis[] axis = observation.getAxisList();
-              final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, TimeserieConstants.TYPE_DATE );
+              final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeserieConstants.TYPE_DATE );
               final long simulationStartDateMillis = ((Date) values.getElement( 0, dateAxis )).getTime();
               final long simulationEndDateMillis = ((Date) values.getElement( values.getCount() - 1, dateAxis )).getTime();
               final Date simulationStartDate = new Date( 100, 0, 1 );
               final Date simulationEndDate = new Date( simulationStartDate.getTime() + simulationEndDateMillis - simulationStartDateMillis );
-              NAZMLGenerator.createSyntheticFile( writer, TimeserieConstants.TYPE_RUNOFF, observation, simulationStartDate, simulationEndDate, m_conf.getMinutesOfTimeStep() );
+              NAZMLGenerator.createSyntheticFile( writer, ITimeserieConstants.TYPE_RUNOFF, observation, simulationStartDate, simulationEndDate, m_conf.getMinutesOfTimeStep() );
             }
             else
-              NAZMLGenerator.createSyntheticFile( writer, TimeserieConstants.TYPE_RUNOFF, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), m_conf.getMinutesOfTimeStep() );
+              NAZMLGenerator.createSyntheticFile( writer, ITimeserieConstants.TYPE_RUNOFF, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), m_conf.getMinutesOfTimeStep() );
           }
           else
-            NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RUNOFF, observation );
+            NAZMLGenerator.createFile( writer, ITimeserieConstants.TYPE_RUNOFF, observation );
           IOUtils.closeQuietly( writer );
         }
         specialBuffer.append( "    1234\n" ); // dummyLine //$NON-NLS-1$
@@ -702,8 +702,8 @@ public class NetFileManager extends AbstractManager
     if( relatedNodeID == null || observation == null || relatedNodeID.length() == 0 )
       return;
     final IAxis[] axisList = observation.getAxisList();
-    final IAxis q1Axis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_RUNOFF );
-    final IAxis q2Axis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_RUNOFF_RHB );
+    final IAxis q1Axis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_RUNOFF );
+    final IAxis q2Axis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_RUNOFF_RHB );
     final ITuppleModel values = observation.getValues( null );
     final int count = values.getCount();
     if( count < 1 )

@@ -60,7 +60,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -171,7 +171,7 @@ public class NetElement
           final URL linkURLN = m_urlUtils.resolveURL( m_conf.getZMLContext(), linkN.getHref() );
           final IObservation observation = ZmlFactory.parseXML( linkURLN, "ID_N" ); //$NON-NLS-1$
           final FileWriter writer = new FileWriter( targetFileN );
-          NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RAINFALL, observation );
+          NAZMLGenerator.createFile( writer, ITimeserieConstants.TYPE_RAINFALL, observation );
           IOUtils.closeQuietly( writer );
         }
         // T
@@ -184,7 +184,7 @@ public class NetElement
             final URL linkURLT = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefT );
             final IObservation observation = ZmlFactory.parseXML( linkURLT, "ID_T" ); //$NON-NLS-1$
             final FileWriter writer = new FileWriter( targetFileT );
-            NAZMLGenerator.createExt2File( writer, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), TimeserieConstants.TYPE_TEMPERATURE, "1.0" ); //$NON-NLS-1$
+            NAZMLGenerator.createExt2File( writer, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), ITimeserieConstants.TYPE_TEMPERATURE, "1.0" ); //$NON-NLS-1$
             IOUtils.closeQuietly( writer );
           }
         }
@@ -198,7 +198,7 @@ public class NetElement
             final URL linkURLV = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefV );
             final IObservation observation = ZmlFactory.parseXML( linkURLV, "ID_V" ); //$NON-NLS-1$
             final FileWriter writer = new FileWriter( targetFileV );
-            NAZMLGenerator.createExt2File( writer, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), TimeserieConstants.TYPE_EVAPORATION, "0.5" ); //$NON-NLS-1$
+            NAZMLGenerator.createExt2File( writer, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), ITimeserieConstants.TYPE_EVAPORATION, "0.5" ); //$NON-NLS-1$
             IOUtils.closeQuietly( writer );
           }
         }

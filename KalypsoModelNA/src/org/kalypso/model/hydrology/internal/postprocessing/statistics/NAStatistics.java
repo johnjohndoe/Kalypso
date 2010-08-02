@@ -67,12 +67,12 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypsodeegree.model.feature.Feature;
@@ -211,12 +211,12 @@ public class NAStatistics
   private IAxis[] createAxes( )
   {
     final List<IAxis> resultAxisList = new ArrayList<IAxis>();
-    resultAxisList.add( new DefaultAxis( "NODE_ID", TimeserieConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "STATION", TimeserieConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "DATE", TimeserieConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "DISCHARGE", TimeserieConstants.TYPE_RUNOFF, TimeserieUtils.getUnit( TimeserieConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
-    resultAxisList.add( new DefaultAxis( "PATH", TimeserieConstants.TYPE_DESCRIPTION, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "VOLUME", TimeserieConstants.TYPE_VOLUME, TimeserieUtils.getUnit( TimeserieConstants.TYPE_VOLUME ), Double.class, false ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( "NODE_ID", ITimeserieConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "STATION", ITimeserieConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "DATE", ITimeserieConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "DISCHARGE", ITimeserieConstants.TYPE_RUNOFF, TimeserieUtils.getUnit( ITimeserieConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( "PATH", ITimeserieConstants.TYPE_DESCRIPTION, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "VOLUME", ITimeserieConstants.TYPE_VOLUME, TimeserieUtils.getUnit( ITimeserieConstants.TYPE_VOLUME ), Double.class, false ) ); //$NON-NLS-1$
     return resultAxisList.toArray( new IAxis[resultAxisList.size()] );
   }
 

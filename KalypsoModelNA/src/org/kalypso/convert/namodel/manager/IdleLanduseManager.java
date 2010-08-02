@@ -17,10 +17,10 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -141,7 +141,7 @@ public class IdleLanduseManager extends AbstractManager
     // IdleLanduse exists in another Landuse
     else
       return null;
-    final String[] wtKcLaiAxis = new String[] { TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_KC, TimeserieConstants.TYPE_WT, TimeserieConstants.TYPE_LAI };
+    final String[] wtKcLaiAxis = new String[] { ITimeserieConstants.TYPE_DATE, ITimeserieConstants.TYPE_KC, ITimeserieConstants.TYPE_WT, ITimeserieConstants.TYPE_LAI };
 
     final Object[][] values = new Object[12][4];
     final IAxis[] axis = TimeserieUtils.createDefaultAxes( wtKcLaiAxis, true );
