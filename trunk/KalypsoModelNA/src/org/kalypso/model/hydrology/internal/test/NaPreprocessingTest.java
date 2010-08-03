@@ -146,9 +146,4 @@ public class NaPreprocessingTest
 
     Assert.fail( "Expected ascii files are different from actual ones. See console dump" );
   }
-
-
-
-
-
 }

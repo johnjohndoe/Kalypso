@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class NaModelCalcJob implements ISimulation
 {
-  public static final String NACALCJOB_SPEC_XML_LOCATION = "/org/kalypso/model/hydrology/internal/processing/nacalcjob_spec.xml"; //$NON-NLS-1$
+  public static final String NACALCJOB_SPEC_XML_LOCATION = "nacalcjob_spec.xml"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,

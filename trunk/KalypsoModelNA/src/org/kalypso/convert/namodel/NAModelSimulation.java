@@ -41,12 +41,8 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.LineNumberReader;
-import java.io.Reader;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -66,10 +62,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -79,14 +72,13 @@ import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
+import org.kalypso.model.hydrology.internal.processing.KalypsoNaProcessor;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -119,10 +111,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class NAModelSimulation
 {
   private static final String SUFFIX_QGS = "qgs";
-
-  public static final String EXECUTABLES_FILE_TEMPLATE = "Kalypso-NA_%s.exe"; //$NON-NLS-1$
-
-  public static final String EXECUTABLES_FILE_PATTERN = "Kalypso-NA_(.+)\\.exe"; //$NON-NLS-1$
 
   private final DateFormat START_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd(HH-mm-ss)" ); //$NON-NLS-1$
 
@@ -183,9 +171,9 @@ public class NAModelSimulation
     if( monitor.isCanceled() )
       return false;
 
-    startCalculation( simulationData, monitor );
-
-    final boolean succeeded = checkSucceeded();
+    final String exeVersion = getExeVersion( simulationData );
+    final KalypsoNaProcessor processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, exeVersion );
+    final boolean succeeded = processor.run( monitor );
     if( succeeded )
     {
       monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.28" ) ); //$NON-NLS-1$
@@ -317,95 +305,12 @@ public class NAModelSimulation
     }
   }
 
-  private File copyExecutable( final NaSimulationData simulationData, final File destDir ) throws SimulationException
+  // FIXME: move into feature binding
+  private String getExeVersion( final NaSimulationData simulationData )
   {
     final GMLWorkspace metaWorkspace = simulationData.getMetaWorkspace();
     final Feature metaFE = metaWorkspace.getRootFeature();
-
-    try
-    {
-      final String kalypsoNAVersion = (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP );
-      final File kalypsoNaExe = CalcCoreUtils.findExecutable( kalypsoNAVersion, EXECUTABLES_FILE_TEMPLATE, EXECUTABLES_FILE_PATTERN, CalcCoreUtils.COMPATIBILITY_MODE.NA );
-      if( kalypsoNaExe == null )
-        throw new SimulationException( "No Kalypso-NA.exe version configured." );
-
-      final File destFile = new File( destDir, kalypsoNaExe.getName() );
-      if( !destFile.exists() )
-        FileUtils.copyFile( kalypsoNaExe, destFile );
-
-      return destFile;
-    }
-    catch( final CoreException e )
-    {
-      final IStatus status = e.getStatus();
-      final String msg = String.format( "No Kalypso-NA.exe version configured: %s", status.getMessage() );
-      throw new SimulationException( msg, e );
-    }
-    catch( final IOException e )
-    {
-      final String msg = String.format( "Failed to copy Kalypso-NA.exe into calculation directory: %s", e.getLocalizedMessage() );
-      throw new SimulationException( msg, e );
-    }
-  }
-
-  private void startCalculation( final NaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
-  {
-    final NaAsciiDirs asciiDirs = m_simDirs.asciiDirs;
-    final File startDir = asciiDirs.startDir;
-    final File kalypsoNaExe = copyExecutable( simulationData, startDir );
-
-    final String commandString = kalypsoNaExe.getAbsolutePath();
-
-    final long timeOut = 0l; // no timeout control
-
-    FileOutputStream logOS = null;
-    FileOutputStream errorOS = null;
-    try
-    {
-      logOS = new FileOutputStream( new File( asciiDirs.asciiDir, "exe.log" ) ); //$NON-NLS-1$
-      errorOS = new FileOutputStream( new File( asciiDirs.asciiDir, "exe.err" ) ); //$NON-NLS-1$
-      ProcessHelper.startProcess( commandString, new String[0], startDir, monitor, timeOut, logOS, errorOS, null );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.249" ), e ); //$NON-NLS-1$
-    }
-    finally
-    {
-      IOUtils.closeQuietly( logOS );
-      IOUtils.closeQuietly( errorOS );
-    }
-  }
-
-  private boolean checkSucceeded( )
-  {
-    Reader logFileReader = null;
-    LineNumberReader reader = null;
-    try
-    {
-      final File startDir = m_simDirs.asciiDirs.startDir;
-      final File logFile = new File( startDir, "output.res" ); //$NON-NLS-1$
-      logFileReader = new FileReader( logFile );
-      reader = new LineNumberReader( logFileReader );
-      String line;
-      while( (line = reader.readLine()) != null )
-      {
-        if( line.indexOf( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.54" ) ) >= 0 || line.indexOf( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.55" ) ) >= 0 ) //$NON-NLS-1$ //$NON-NLS-2$
-          return true;
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( reader );
-      IOUtils.closeQuietly( logFileReader );
-    }
-
-    return false;
+    return (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP );
   }
 
   private void loadResults( final NaSimulationData simulationData, final Logger logger, final File resultDir, final NAConfiguration conf ) throws Exception
@@ -578,9 +483,9 @@ public class NAModelSimulation
             final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL ); //$NON-NLS-1$
 
             copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { ITimeserieConstants.MD_ALARM_1, ITimeserieConstants.MD_ALARM_2, ITimeserieConstants.MD_ALARM_3,
-                ITimeserieConstants.MD_ALARM_4, ITimeserieConstants.MD_GEWAESSER, ITimeserieConstants.MD_FLUSSGEBIET, ITimeserieConstants.MD_GKH, ITimeserieConstants.MD_GKR,
-                ITimeserieConstants.MD_HOEHENANGABEART, ITimeserieConstants.MD_PEGELNULLPUNKT, ITimeserieConstants.MD_WQWECHMANN, ITimeserieConstants.MD_WQTABLE, ITimeserieConstants.MD_TIMEZONE,
-                ITimeserieConstants.MD_VORHERSAGE_START, ITimeserieConstants.MD_VORHERSAGE_ENDE } );
+              ITimeserieConstants.MD_ALARM_4, ITimeserieConstants.MD_GEWAESSER, ITimeserieConstants.MD_FLUSSGEBIET, ITimeserieConstants.MD_GKH, ITimeserieConstants.MD_GKR,
+              ITimeserieConstants.MD_HOEHENANGABEART, ITimeserieConstants.MD_PEGELNULLPUNKT, ITimeserieConstants.MD_WQWECHMANN, ITimeserieConstants.MD_WQTABLE, ITimeserieConstants.MD_TIMEZONE,
+              ITimeserieConstants.MD_VORHERSAGE_START, ITimeserieConstants.MD_VORHERSAGE_ENDE } );
 
           }
         }
