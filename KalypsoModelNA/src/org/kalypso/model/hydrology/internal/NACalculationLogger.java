@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel;
+package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,14 +46,12 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import org.kalypso.model.hydrology.NaModelConstants;
-
 /**
  * @author Dejan Antanaskovic
  */
 public class NACalculationLogger
 {
-  private static final String NA_LOG_FILE_PATH[] = { NaModelConstants.OUTPUT_DIR_NAME, "Ergebnisse", "Aktuell", "Log", "calculation.log" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+  public static final String LOGFILE_NAME = "calculation.log"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
   private Logger m_logger;
 
@@ -61,9 +59,9 @@ public class NACalculationLogger
 
   private final File m_logFile;
 
-  public NACalculationLogger( final File logFile )
+  public NACalculationLogger( final File logDir )
   {
-    m_logFile = logFile;
+    m_logFile = new File( logDir, LOGFILE_NAME );
   }
 
   private final void startLogging( )
@@ -80,7 +78,7 @@ public class NACalculationLogger
       m_logHandler.setFormatter( new SimpleFormatter() );
       m_logHandler.setEncoding( "UTF-8" );
 
-      m_logger = Logger.getLogger( NA_LOG_FILE_PATH[NA_LOG_FILE_PATH.length - 1] );
+      m_logger = Logger.getLogger( LOGFILE_NAME );
       m_logger.addHandler( m_logHandler );
       m_logger.info( "Calculation logging started" ); //$NON-NLS-1$
     }
