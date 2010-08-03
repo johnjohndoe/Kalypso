@@ -50,23 +50,22 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.dwd.DWDObservationRaster;
-import org.kalypso.dwd.DWDRasterHelper;
 import org.kalypso.dwd.dwdzml.DwdzmlConf;
-import org.kalypso.dwd.dwdzml.ObjectFactory;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target.Map;
+import org.kalypso.dwd.dwdzml.ObjectFactory;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -200,17 +199,17 @@ public class DWDTaskDelegate
 
       try
       {
-        final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true, true );
+        final IAxis dateAxis = new DefaultAxis( "Datum", ITimeserieConstants.TYPE_DATE, "", Date.class, true, true );
         final String title = TimeserieUtils.getName( axisType );
         final IAxis valueAxis = new DefaultAxis( title, axisType, TimeserieUtils.getUnit( axisType ), TimeserieUtils.getDataClass( axisType ), false, true );
         final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( valueAxis, true );
         final IAxis[] axis = new IAxis[] { dateAxis, valueAxis, statusAxis };
 
-        final ITuppleModel tupleModel = new SimpleTuppleModel( axis, tupleData );
+        final ITupleModel tupleModel = new SimpleTupleModel( axis, tupleData );
 
         final MetadataList metadataList = new MetadataList();
 
-        final IObservation dwdObservation = new SimpleObservation( "href", "ID", title, false, metadataList, axis, tupleModel );
+        final IObservation dwdObservation = new SimpleObservation( "href", title, metadataList, tupleModel );
 
         final IObservation forecastObservation;
         // generate href from filter and intervall
@@ -227,7 +226,7 @@ public class DWDTaskDelegate
         IObservation targetObservation = null;
         try
         {
-          targetObservation = ZmlFactory.parseXML( sourceURL, title );
+          targetObservation = ZmlFactory.parseXML( sourceURL );
         }
         catch( final Exception e )
         {
@@ -249,7 +248,7 @@ public class DWDTaskDelegate
           baseObservation = new SimpleObservation( axis );
 
         fc.initFilter( srcObs, baseObservation, targetContext.toURL() );
-        TimeserieUtils.setTargetForecast( fc, startForecast, stopSim );
+        MetadataHelper.setTargetForecast( fc.getMetadataList(), startForecast, stopSim );
 
         // ----------------
         // add all the metadata from task-parameters
