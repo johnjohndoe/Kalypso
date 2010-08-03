@@ -67,12 +67,6 @@ public class KalypsoNaProcessor
 
   public static final String EXECUTABLES_FILE_PATTERN = "Kalypso-NA_(.+)\\.exe"; //$NON-NLS-1$
 
-  private static final String STRING_RESULT_SUCCESSFUL_1 = "berechnung wurde ohne fehler beendet"; //$NON-NLS-1$
-
-  private static final String STRING_RESULT_SUCCESSFUL_2 = "Berechnung wurde ohne Fehler beendet!";
-
-  private static final String FILENAME_OUTPUT_RES = "output.res"; //$NON-NLS-1$
-
   private static final String FILENAME_EXE_LOG = "exe.log";//$NON-NLS-1$
 
   private static final String FILENAME_EXE_ERR = "exe.err";//$NON-NLS-1$
@@ -87,15 +81,13 @@ public class KalypsoNaProcessor
     m_exeVersion = exeVersion;
   }
 
-  public boolean run( final ISimulationMonitor monitor ) throws SimulationException
+  public void run( final ISimulationMonitor monitor ) throws SimulationException
   {
     final File kalypsoNaExe = copyExecutable();
     if( kalypsoNaExe == null )
-      return false;
+      return;
 
     runExe( kalypsoNaExe, monitor );
-
-    return checkSucceeded();
   }
 
   private File copyExecutable( ) throws SimulationException
@@ -150,32 +142,4 @@ public class KalypsoNaProcessor
       IOUtils.closeQuietly( errorOS );
     }
   }
-
-  private boolean checkSucceeded( )
-  {
-    final String logContent = readOutputRes();
-    if( logContent == null )
-      return false;
-
-    if( logContent.contains( STRING_RESULT_SUCCESSFUL_1 ) )
-      return true;
-    if( logContent.contains( STRING_RESULT_SUCCESSFUL_2 ) )
-      return true;
-
-    return false;
-  }
-
-  private String readOutputRes( )
-  {
-    try
-    {
-      return FileUtils.readFileToString( new File( m_asciiDirs.startDir, FILENAME_OUTPUT_RES ), null );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
 }

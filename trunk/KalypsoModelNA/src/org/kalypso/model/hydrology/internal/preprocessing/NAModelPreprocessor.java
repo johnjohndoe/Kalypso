@@ -189,7 +189,7 @@ public class NAModelPreprocessor
 
     try
     {
-      HydroHash hydroHash = m_conf.getHydroHash();
+      final HydroHash hydroHash = m_conf.getHydroHash();
       LzsimManager.writeLzsimFiles( m_idManager, hydroHash, m_asciiDirs.lzsimDir, lzsimWorkspace );
     }
     catch( final Exception e )

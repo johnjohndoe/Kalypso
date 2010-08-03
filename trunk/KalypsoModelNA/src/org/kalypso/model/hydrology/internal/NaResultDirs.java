@@ -42,42 +42,29 @@ package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
 
-import org.kalypso.model.hydrology.NaModelConstants;
-
 /**
- * Helper class that holds all the various directories used by the NA simulation.
+ * Helper class that holds all the directories inside the 'current' result dir
  * 
  * @author Gernot Belger
  */
-public class NaSimulationDirs
+public class NaResultDirs
 {
-  public final File simulationDir;
-
-  public final File outputDir;
-
-  public final File asciiDir;
-
-  public final File resultDir;
-
   public final File currentResultDir;
 
-  public final NaResultDirs currentResultDirs;
+  public final File logDir;
 
-  public NaAsciiDirs asciiDirs;
+  public final File bilanzDir;
 
-  public NaSimulationDirs( final File simDir )
+  public final File anfangswertDir;
+
+  public final File reportDir;
+
+  public NaResultDirs( final File resultDir )
   {
-    simulationDir = simDir;
-
-    asciiDir = new File( simulationDir, NaModelConstants.ASCII_DIR_NAME );
-    asciiDirs = new NaAsciiDirs( asciiDir );
-
-    outputDir = new File( simulationDir, NaModelConstants.OUTPUT_DIR_NAME );
-
-    resultDir = new File( outputDir, NaModelConstants.RESULT_DIR_NAME );
-
-    currentResultDir = new File( resultDir, "Aktuell" ); //$NON-NLS-1$
-    currentResultDirs = new NaResultDirs( currentResultDir );
+    currentResultDir = resultDir;
+    anfangswertDir = new File( currentResultDir, "Anfangswerte" );//$NON-NLS-1$
+    bilanzDir = new File( currentResultDir, "Bilanz" );//$NON-NLS-1$
+    logDir = new File( currentResultDir, "Log" );//$NON-NLS-1$
+    reportDir = new File( currentResultDir, "Report" );//$NON-NLS-1$
   }
-
 }
