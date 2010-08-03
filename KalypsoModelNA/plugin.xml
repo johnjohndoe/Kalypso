@@ -4,7 +4,7 @@
      <extension
            point="org.kalypso.simulation.core.simulation">
         <simulation
-              simulationClass="org.kalypso.model.hydrology.internal.processing.NaModelCalcJob"
+              simulationClass="org.kalypso.model.hydrology.internal.simulation.NaModelCalcJob"
               catalogClass="org.kalypso.convert.namodel.schema.UrlCatalogNA"
               typeID="KalypsoNA"/>
       <simulation

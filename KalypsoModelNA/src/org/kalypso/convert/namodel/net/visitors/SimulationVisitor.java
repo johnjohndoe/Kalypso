@@ -3,9 +3,9 @@ package org.kalypso.convert.namodel.net.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.NetElementCircleFinder;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *

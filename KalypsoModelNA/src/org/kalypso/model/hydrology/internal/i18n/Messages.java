@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.i18n;
+package org.kalypso.model.hydrology.internal.i18n;
 
 import java.util.IllegalFormatException;
 import java.util.Locale;
@@ -50,7 +50,7 @@ import java.util.ResourceBundle;
  */
 public class Messages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.convert.namodel.i18n.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = Messages.class.getPackage().getName() + ".messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 

@@ -1,4 +1,4 @@
-package org.kalypso.model.hydrology.test;
+package org.kalypso.model.hydrology.internal.test;
 
 import java.io.File;
 import java.io.FileWriter;

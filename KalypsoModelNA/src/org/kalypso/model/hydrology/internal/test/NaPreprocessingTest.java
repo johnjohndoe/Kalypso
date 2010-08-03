@@ -38,14 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.test;
+package org.kalypso.model.hydrology.internal.test;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
@@ -60,7 +62,6 @@ import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
-import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.NullSimulationMonitor;
 
 /**
@@ -70,11 +71,6 @@ import org.kalypso.simulation.core.NullSimulationMonitor;
  */
 public class NaPreprocessingTest
 {
-  /**
-   * <code>
-   * Optimize Log:
-   * </code>
-   */
   @Test
   public void testDemoModel( ) throws Exception
   {
@@ -82,44 +78,16 @@ public class NaPreprocessingTest
     final File asciiDir = new File( outputDir, "ascii" );
     final File asciiExpectedDir = new File( outputDir, "asciiExpected" );
 
-    /* Init preprocessor */
-    final NAModelPreprocessor preprocessor = createPreprocessor( asciiDir );
+    final NAModelPreprocessor preprocessor = initPreprocessor( asciiDir );
 
-    /* Create the ascii files */
-    final ISimulationMonitor monitor = new NullSimulationMonitor();
-    preprocessor.process( monitor );
+    preprocessor.process( new NullSimulationMonitor() );
 
-    /* Fetch the expected results */
-    asciiExpectedDir.mkdir();
-    ZipUtilities.unzip( getClass().getResource( "resources/demoModel_Langzeit/expectedAscii.zip" ), asciiExpectedDir );
+    checkResult( asciiDir, asciiExpectedDir );
 
-    // TODO: compare with expected results
-
-    final FileStructureComparator actualComparator = new FileStructureComparator( asciiDir );
-    final FileStructureComparator expectedComparator = new FileStructureComparator( asciiExpectedDir );
-
-    final Differencer differencer = new Differencer();
-    final Object differences = differencer.findDifferences( false, new NullProgressMonitor(), null, null, expectedComparator, actualComparator );
-    dumpDifferences( differences );
+    FileUtils.forceDelete( outputDir );
   }
 
-  private void dumpDifferences( final Object differences )
-  {
-    if( differences == null )
-      return;
-
-    if( !(differences instanceof IDiffElement) )
-      Assert.fail( "Unknown differencer result: " + ObjectUtils.toString( differences ) );
-
-    final IDiffElement element = (IDiffElement) differences;
-    CompareUtils.dumpDiffElement( element, 0 );
-
-    Assert.fail( "Expected ascii files are different from actual ones. See console dump" );
-  }
-
-
-
-  private NAModelPreprocessor createPreprocessor( final File asciiDir ) throws Exception
+  private NAModelPreprocessor initPreprocessor( final File asciiDir ) throws Exception
   {
     final NAConfiguration conf = new NAConfiguration( asciiDir );
     final NaAsciiDirs outputDirs = new NaAsciiDirs( asciiDir );
@@ -149,5 +117,38 @@ public class NaPreprocessingTest
 
     return new NaSimulationData( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
   }
+
+  private void checkResult( final File asciiDir, final File asciiExpectedDir ) throws IOException
+  {
+    /* Fetch the expected results */
+    asciiExpectedDir.mkdir();
+    ZipUtilities.unzip( getClass().getResource( "resources/demoModel_Langzeit/expectedAscii.zip" ), asciiExpectedDir );
+
+    /* compare with expected results */
+    final FileStructureComparator actualComparator = new FileStructureComparator( asciiDir );
+    final FileStructureComparator expectedComparator = new FileStructureComparator( asciiExpectedDir );
+
+    final Differencer differencer = new Differencer();
+    final Object differences = differencer.findDifferences( false, new NullProgressMonitor(), null, null, expectedComparator, actualComparator );
+    dumpDifferences( differences );
+  }
+
+  private void dumpDifferences( final Object differences )
+  {
+    if( differences == null )
+      return;
+
+    if( !(differences instanceof IDiffElement) )
+      Assert.fail( "Unknown differencer result: " + ObjectUtils.toString( differences ) );
+
+    final IDiffElement element = (IDiffElement) differences;
+    CompareUtils.dumpDiffElement( element, 0 );
+
+    Assert.fail( "Expected ascii files are different from actual ones. See console dump" );
+  }
+
+
+
+
 
 }

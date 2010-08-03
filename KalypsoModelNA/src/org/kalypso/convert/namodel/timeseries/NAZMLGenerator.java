@@ -55,7 +55,7 @@ import java.util.TreeMap;
 import javax.xml.bind.Marshaller;
 
 import org.kalypso.contribs.java.net.UrlUtilities;
-import org.kalypso.convert.namodel.i18n.Messages;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;

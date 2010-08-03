@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

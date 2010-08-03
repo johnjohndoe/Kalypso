@@ -51,10 +51,10 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.schema.binding.Geology;
 import org.kalypso.convert.namodel.schema.binding.GeologyCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
