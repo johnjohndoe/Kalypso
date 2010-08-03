@@ -102,7 +102,7 @@ public class LzsimManager
   /**
    * Reads the initial values back from the ascii files, if any have been ordered.
    */
-  public void readInitialValues( final IDManager idManager, final File lzsimDir, final Logger logger ) throws Exception
+  public void readInitialValues( final IDManager idManager, final HydroHash hydroHash, final File lzsimDir, final Logger logger ) throws Exception
   {
     if( m_initialDates.length == 0 )
       return;
@@ -183,7 +183,7 @@ public class LzsimManager
                 lzWorkspace.addFeatureAsComposition( lzCatchmentFE, lzinitHydMemberRT, 0, lzHydFE );
                 final String[] strings = line.split( " " ); //$NON-NLS-1$
                 final int pos = Integer.parseInt( strings[0] ) - 1;
-                final String hydroID = idManager.getHydroFeatureId( feature, pos );
+                final String hydroID = hydroHash.getHydroFeatureId( feature, pos );
                 lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ), hydroID ); //$NON-NLS-1$
                 final Double interception = Double.valueOf( strings[1] );
                 final List<Double> bofs = new ArrayList<Double>();
@@ -280,7 +280,7 @@ public class LzsimManager
     }
   }
 
-  public static void writeLzsimFiles( final IDManager idManager, final File lzsimDir, final GMLWorkspace iniValuesWorkspace )
+  public static void writeLzsimFiles( final IDManager idManager, final HydroHash hydroHash, final File lzsimDir, final GMLWorkspace iniValuesWorkspace )
   {
     final List<Feature> allNAChannelFeatures = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
     final Hashtable<String, Feature> channelIDToFeatureHash = new Hashtable<String, Feature>();
@@ -334,7 +334,7 @@ public class LzsimManager
 
     // for all catchments in the calculation - in the hydrohash(catchmentsIDs, list of hydrotopesIDs)
     final List<?> catchmentList = (List<?>) iniValuesRootFeature.getProperty( NaModelConstants.INI_CATCHMENT_MEMBER_PROP );
-    final Set<String> catchmentIdsFromLzsim = idManager.getCatchmentIdsFromLzsim();
+    final Set<String> catchmentIdsFromLzsim = hydroHash.getCatchmentIdsFromLzsim();
     for( final String catchmentID : catchmentIdsFromLzsim )
     {
       final StringBuffer lzsBuffer = new StringBuffer();
@@ -349,7 +349,7 @@ public class LzsimManager
       final String fileName = "we" + asciiCatchmentID + ".lzs";  //$NON-NLS-1$//$NON-NLS-2$
 
       final File lzsFile = new File( lzsimDir, fileName );
-      final List<String> sortedHydrosIDsfromLzsim = idManager.getSortedHydrosIDsfromLzsim( catchmentID );
+      final List<String> sortedHydrosIDsfromLzsim = hydroHash.getSortedHydrosIDsfromLzsim( catchmentID );
       // find catchmentID in the iniValues
       for( int i = 0; i < catchmentList.size(); i++ )
       {

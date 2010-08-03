@@ -44,9 +44,6 @@ import org.kalypso.core.KalypsoCorePlugin;
  */
 public class NATimeSettings
 {
-//  // Very dangerous... and probably does not always work correctly
-//  private static String CALCULATION_CORE_TIMEZONE = "GMT+1"; //"UTC"; //$NON-NLS-1$
-
   private static NATimeSettings m_instance = null;
 
   private final TimeZone m_timeZone;
