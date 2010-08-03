@@ -51,6 +51,15 @@
    </extension>
 
 	<extension point="org.eclipse.ui.handlers">
+		   <handler
+		         class="org.kalypso.model.wspm.tuhh.ui.actions.simplify.SimplifyProfileHandler"
+		         commandId="org.kalypso.model.wspm.tuhh.ui.command.profile.simplify">
+		      <enabledWhen>
+		         <reference
+		               definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+		         </reference>
+		      </enabledWhen>
+		   </handler>
           <handler
                 class="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesHandler"
                 commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv">
@@ -453,20 +462,21 @@
     </menuContribution>
     <menuContribution
           locationURI="popup:org.kalypso.model.wspm.ui.profileChange?after=additions">
-       <command
-             commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
-             style="push">
+       <command commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport" style="push">
           <visibleWhen
                 checkEnabled="true">
           </visibleWhen>
        </command>
-       <command
-             commandId="org.kalypso.model.wspm.ui.command.profile.interpolation"
-             style="push">
+       <command commandId="org.kalypso.model.wspm.ui.command.profile.interpolation" style="push">
           <visibleWhen
                 checkEnabled="true">
           </visibleWhen>
        </command>
+      <command commandId="org.kalypso.model.wspm.tuhh.ui.command.profile.simplify" style="push">
+         <visibleWhen
+               checkEnabled="true">
+         </visibleWhen>
+      </command>
     </menuContribution>
     <menuContribution
           locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
@@ -499,50 +509,55 @@
           name="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description.name"
           description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description">
     </command>
-    <command
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
           description="%command.description"
           id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv"
           name="%command.name.0">
     </command>
-    <command
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
           description="%command.description.0"
           id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek"
           name="%command.name.1">
     </command>
-    <command
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
           description="%command.description.1"
           id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng"
           name="%command.name.2">
     </command>
-    <command
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
           description="%command.description.2"
           id="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf"
           name="%command.name.3">
     </command>
-    <command
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
           description="%command.description.3"
           id="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
           name="%command.name.4">
     </command>
-    <command
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
           description="%command.description.4"
           id="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
           name="%command.name.5">
     </command>
-    <command
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
           id="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
           name="%command.name.6">
     </command>
-    <command
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
 	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
 	       name="%command.name.7">
 	</command>
     <command id="org.kalypso.model.wspm.ui.command.profile.LineShapeExport" name="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.name" description="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.description"/>
-    <command
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
           description="%command.description.6"
           id="org.kalypso.model.wspm.ui.command.profile.interpolation"
           name="%command.name.9">
     </command>
+   <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
+        description="Simplify profile by removing unimportant points"
+        id="org.kalypso.model.wspm.tuhh.ui.command.profile.simplify"
+        name="Simplify">
+   </command>
   </extension>
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">
