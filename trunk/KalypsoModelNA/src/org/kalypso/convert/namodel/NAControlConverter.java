@@ -52,7 +52,6 @@ import java.util.Locale;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.manager.LzsimManager;
 import org.kalypso.convert.namodel.schema.binding.suds.AbstractSud;
@@ -62,6 +61,7 @@ import org.kalypso.convert.namodel.schema.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;

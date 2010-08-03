@@ -62,8 +62,6 @@ public class BlockTimeSeries
 {
   private final DateFormat m_dateFormat;
 
-  // private final DateFormat m_outputDateFormat = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
-
   private final static int SEARCH_TIMEOFFSET = 0;
 
   private final static int SEARCH_BLOCK_HEADER = 1;
@@ -80,8 +78,6 @@ public class BlockTimeSeries
   private final Pattern pBlock = Pattern.compile( "\\D*(\\d+)\\D+(\\d+)\\D+(\\d+)\\D*" ); //$NON-NLS-1$
 
   private final Pattern pHeader = Pattern.compile( "\\s*(-?+\\d+\\.\\d+)\\s*" ); //$NON-NLS-1$
-
-  // private final Pattern pHeader = Pattern.compile( "\\D*(\\d+\\.\\d+)\\D*" );
 
   private final Hashtable<String, SortedMap<Date, String>> m_blocks;
 

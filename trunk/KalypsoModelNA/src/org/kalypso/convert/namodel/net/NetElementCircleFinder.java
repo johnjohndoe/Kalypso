@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.kalypso.convert.namodel.i18n.Messages;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 
 /**
  * @author doemming

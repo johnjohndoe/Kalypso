@@ -48,7 +48,7 @@ import java.util.SortedMap;
 
 import org.kalypso.commons.diff.IDiffComparator;
 import org.kalypso.commons.diff.IDiffLogger;
-import org.kalypso.convert.namodel.i18n.Messages;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 
 /**
  * @author kuepfer
