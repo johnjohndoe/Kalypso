@@ -76,7 +76,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
@@ -653,7 +653,7 @@ public class NetFileManager extends AbstractManager
           {
             if( m_conf.isUsePrecipitationForm() )
             {
-              final ITuppleModel values = observation.getValues( null );
+              final ITupleModel values = observation.getValues( null );
               final IAxis[] axis = observation.getAxisList();
               final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeserieConstants.TYPE_DATE );
               final long simulationStartDateMillis = ((Date) values.getElement( 0, dateAxis )).getTime();
@@ -704,7 +704,7 @@ public class NetFileManager extends AbstractManager
     final IAxis[] axisList = observation.getAxisList();
     final IAxis q1Axis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_RUNOFF );
     final IAxis q2Axis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_RUNOFF_RHB );
-    final ITuppleModel values = observation.getValues( null );
+    final ITupleModel values = observation.getValues( null );
     final int count = values.getCount();
     if( count < 1 )
       return;

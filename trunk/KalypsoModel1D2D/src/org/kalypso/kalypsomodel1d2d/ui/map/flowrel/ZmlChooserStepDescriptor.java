@@ -57,7 +57,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
@@ -132,7 +132,7 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
     try
     {
       final org.kalypso.ogc.sensor.IObservation zmlObservation = m_wizardPageZmlChooser.getObservation();
-      final ITuppleModel model = zmlObservation.getValues( null );
+      final ITupleModel model = zmlObservation.getValues( null );
 
       IAxis dateAxis;
       IAxis valueAxis;

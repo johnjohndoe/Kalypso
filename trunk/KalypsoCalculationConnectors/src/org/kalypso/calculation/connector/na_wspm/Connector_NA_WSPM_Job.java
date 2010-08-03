@@ -22,7 +22,7 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.simulation.core.AbstractInternalStatusJob;
 import org.kalypso.simulation.core.ISimulation;
@@ -139,7 +139,7 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
             return;
           }
 
-          final ITuppleModel tuppleModel = maxDischargesObservation.getValues( null );
+          final ITupleModel tuppleModel = maxDischargesObservation.getValues( null );
 
           final IFeatureType naNodeFeatureType = workspaceNA.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
           final Feature[] naNodes = workspaceNA.getFeatures( naNodeFeatureType );

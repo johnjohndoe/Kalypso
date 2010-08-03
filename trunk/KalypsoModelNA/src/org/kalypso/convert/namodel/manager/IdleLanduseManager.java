@@ -16,9 +16,9 @@ import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -174,7 +174,7 @@ public class IdleLanduseManager extends AbstractManager
       values[i][3] = xlai;
     }
 
-    final ITuppleModel model = new SimpleTuppleModel( axis, values );
+    final ITupleModel model = new SimpleTupleModel( axis, values );
     final SimpleObservation observation = new SimpleObservation( null, fileDescription, new MetadataList(), model );
     feature.setProperty( NaModelConstants.PARA_IDEAL_LANDUSE_ZML, observation );
 

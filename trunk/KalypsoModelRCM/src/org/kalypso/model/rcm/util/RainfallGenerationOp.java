@@ -65,10 +65,10 @@ import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -257,9 +257,9 @@ public class RainfallGenerationOp
     final String name = o.getName();
     final MetadataList metadataList = new MetadataList();
     metadataList.putAll( o.getMetadataList() );
-    final ITuppleModel values = o.getValues( request );
+    final ITupleModel values = o.getValues( request );
 
-    final SimpleTuppleModel clonedValues = new SimpleTuppleModel( values, new DateRange( from, to ) );
+    final SimpleTupleModel clonedValues = new SimpleTupleModel( values, new DateRange( from, to ) );
 
     final SimpleObservation simpleObservation = new SimpleObservation( href, name, metadataList, clonedValues );
     return simpleObservation;

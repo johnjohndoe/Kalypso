@@ -90,12 +90,12 @@ import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorExceptio
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -550,7 +550,7 @@ public class NAModelSimulation
         final IAxis qAxis = new DefaultAxis( axisTitle, resultType, TimeserieUtils.getUnit( resultType ), Double.class, false );
         final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( qAxis, true );
         final IAxis[] axis = new IAxis[] { dateAxis, qAxis, statusAxis };
-        final ITuppleModel qTuppelModel = new SimpleTuppleModel( axis, tupelData );
+        final ITupleModel qTuppelModel = new SimpleTupleModel( axis, tupelData );
 
         final MetadataList metadataList = new MetadataList();
 
@@ -682,7 +682,7 @@ public class NAModelSimulation
     final File fileOben = getResultFileFor( resultDir, rootFeature, new QName( NaModelConstants.NS_NACONTROL, "qAblageSpurOberer" ) ); //$NON-NLS-1$
 
     // Initalize some commen variables
-    final ITuppleModel resultValues = resultObservation.getValues( null );
+    final ITupleModel resultValues = resultObservation.getValues( null );
     final IAxis resultDateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class );
     final IAxis resultValueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
 
@@ -712,7 +712,7 @@ public class NAModelSimulation
 
       // from measuered timeseries
       final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL ); //$NON-NLS-1$
-      final ITuppleModel pegelValues = pegelObservation.getValues( null );
+      final ITupleModel pegelValues = pegelObservation.getValues( null );
       final IAxis pegelDateAxis = ObservationUtilities.findAxisByClass( pegelObservation.getAxisList(), Date.class );
       final IAxis pegelValueAxis = ObservationUtilities.findAxisByType( pegelObservation.getAxisList(), axisType );
       final double measureValue = ObservationUtilities.getInterpolatedValueAt( pegelValues, pegelDateAxis, pegelValueAxis, startForecast );

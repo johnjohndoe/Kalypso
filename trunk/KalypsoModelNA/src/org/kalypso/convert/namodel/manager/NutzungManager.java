@@ -77,7 +77,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
@@ -229,7 +229,7 @@ public class NutzungManager extends AbstractManager
     final IAxis kcAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_KC );
     final IAxis wtAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_WT );
     final IAxis laiAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_LAI );
-    final ITuppleModel values = observation.getValues( null );
+    final ITupleModel values = observation.getValues( null );
     final int count = values.getCount();
     final int yearOffset = 2001;
     for( int row = 0; row < count; row++ )

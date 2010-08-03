@@ -53,7 +53,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
@@ -169,12 +169,12 @@ public final class RainfallGeneratorUtilities
     final String firstStart = firstMetadataList.getProperty( TimeserieUtils.MD_VORHERSAGE_START );
     final String firstEnde = firstMetadataList.getProperty( TimeserieUtils.MD_VORHERSAGE_ENDE );
 
-    final List<ITuppleModel> observationValues = new ArrayList<ITuppleModel>();
+    final List<ITupleModel> observationValues = new ArrayList<ITupleModel>();
     for( final IObservation observation : observations )
       observationValues.add( observation.getValues( null ) );
-    final ITuppleModel[] tuppleModels = observationValues.toArray( new ITuppleModel[observationValues.size()] );
+    final ITupleModel[] tuppleModels = observationValues.toArray( new ITupleModel[observationValues.size()] );
 
-    final ITuppleModel firstTuppleModel = firstObservation.getValues( null );
+    final ITupleModel firstTuppleModel = firstObservation.getValues( null );
     final IAxis[] firstAxisList = firstTuppleModel.getAxisList();
 
     final IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
@@ -185,7 +185,7 @@ public final class RainfallGeneratorUtilities
       firstStatusAxis = KalypsoStatusUtils.createStatusAxisFor( firstValueAxis, true );
 
     final TuppleModelsLinearAdd linearAdd = new TuppleModelsLinearAdd( firstValueAxis.getType(), firstDateAxis, firstValueAxis, firstStatusAxis );
-    final ITuppleModel combinedTuppleModel = linearAdd.addWeighted( tuppleModels, weights );
+    final ITupleModel combinedTuppleModel = linearAdd.addWeighted( tuppleModels, weights );
 
     /* ATTENTION: Make sure the axes of the observation are in the same order as the axes of the combined tupple model. */
     final SimpleObservation combinedObservation = new SimpleObservation( "", "", new MetadataList(), combinedTuppleModel );

@@ -69,10 +69,10 @@ import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -247,11 +247,11 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       final IAxis[] axesSrc = m_page2.getAxisMappingSrc();
       final IAxis[] axesNew = m_page2.getAxisMappingTarget();
 
-      final ITuppleModel tuppelModelSrc = srcObservation.getValues( null );
+      final ITupleModel tuppelModelSrc = srcObservation.getValues( null );
       final int countSrc = tuppelModelSrc.getCount();
 
       final IObservation targetObservation;
-      final ITuppleModel tuppelModelTarget;
+      final ITupleModel tuppelModelTarget;
       final int countTarget;
       if( fileTarget.exists() && (selection.isAppend() || selection.isRetainMetadata()) )
       {
@@ -269,7 +269,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
         countTarget = 0;
       }
       // create new values
-      final ITuppleModel newTuppelModel;
+      final ITupleModel newTuppelModel;
       if( tuppelModelTarget != null )
       {
         // w/q specials...
@@ -277,19 +277,19 @@ public class ImportObservationWizard extends Wizard implements INewWizard
         {
           final WQTuppleModel wq = (WQTuppleModel) (tuppelModelTarget);
           final Object[][] newValues = new Object[countSrc + countTarget][axesNew.length - 1];
-          final ITuppleModel model = new SimpleTuppleModel( axesNew, newValues );
+          final ITupleModel model = new SimpleTupleModel( axesNew, newValues );
           newTuppelModel = new WQTuppleModel( model, axesNew, wq.getDateAxis(), wq.getSrcAxis(), wq.getSrcStatusAxis(), wq.getDestAxis(), wq.getDestStatusAxis(), wq.getConverter(), wq.getDestAxisPos(), wq.getDestStatusAxisPos() );
         }
         else
         {
           final Object[][] newValues = new Object[countSrc + countTarget][axesNew.length];
-          newTuppelModel = new SimpleTuppleModel( axesNew, newValues );
+          newTuppelModel = new SimpleTupleModel( axesNew, newValues );
         }
       }
       else
       {
         final Object[][] newValues = new Object[countSrc + countTarget][axesNew.length];
-        newTuppelModel = new SimpleTuppleModel( axesNew, newValues );
+        newTuppelModel = new SimpleTupleModel( axesNew, newValues );
       }
       // fill from source
       for( int i = 0; i < countSrc; i++ )

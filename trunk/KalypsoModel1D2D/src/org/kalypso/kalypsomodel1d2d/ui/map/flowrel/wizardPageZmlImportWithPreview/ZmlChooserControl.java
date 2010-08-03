@@ -46,7 +46,7 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
@@ -342,7 +342,7 @@ public abstract class ZmlChooserControl
           DateRange dateRange = null;
           try
           {
-            final ITuppleModel values = m_observation.getValues( null );
+            final ITupleModel values = m_observation.getValues( null );
             final IAxis[] axisList = values.getAxisList();
             final IAxis axis = ObservationUtilities.findAxisByType( axisList, "date" ); //$NON-NLS-1$
             m_dateFrom = (Date) values.getElement( 0, axis );
