@@ -79,9 +79,9 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class HydrotopManager extends AbstractManager
 {
-  final NAConfiguration m_conf;
+  private final NAConfiguration m_conf;
 
-  final Hashtable<String, Double> m_landuseSealingRateMap = new Hashtable<String, Double>();
+  private final Map<String, Double> m_landuseSealingRateMap = new Hashtable<String, Double>();
 
   private final Logger m_logger;
 
@@ -342,7 +342,7 @@ public class HydrotopManager extends AbstractManager
         for( final String line : hydrotopOutputList )
           asciiBuffer.getHydBuffer().append( line ).append( "\n" ); //$NON-NLS-1$
 
-        idManager.addHydroInfo( catchmentFE, hydIdList );
+        m_conf.getHydroHash().addHydroInfo( catchmentFE, hydIdList );
       }
     }
   }

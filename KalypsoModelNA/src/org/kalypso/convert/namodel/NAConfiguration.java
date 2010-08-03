@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.kalypso.convert.namodel.manager.HydroHash;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.schema.binding.Hydrotop;
 import org.kalypso.gmlschema.GMLSchema;
@@ -136,7 +137,7 @@ public class NAConfiguration
 
   private NaNodeResultProvider m_nodeResultProvider = null;
 
-  private Boolean m_pns;
+  private boolean m_pns;
 
   private Double m_annuality;
 
@@ -170,6 +171,8 @@ public class NAConfiguration
 
   private final Map<String, List<Double>> m_suds2HydrotopMaxPercRateMap = new HashMap<String, List<Double>>();
 
+  private final HydroHash m_hydroHash = new HydroHash();
+  
   public NAConfiguration( final File asciiBaseDir )
   {
     this( asciiBaseDir, null );
@@ -434,12 +437,12 @@ public class NAConfiguration
     m_minutesTimeStep = minutesTimeStep;
   }
 
-  public void setUsePrecipitationForm( final Boolean pns )
+  public void setUsePrecipitationForm( final boolean pns )
   {
     m_pns = pns;
   }
 
-  public Boolean isUsePrecipitationForm( )
+  public boolean isUsePrecipitationForm( )
   {
     return m_pns;
   }
@@ -609,6 +612,11 @@ public class NAConfiguration
     for( final double value : list )
       average += value;
     return average / list.size();
+  }
+
+  public HydroHash getHydroHash(  )
+  {
+    return m_hydroHash;
   }
 
 }

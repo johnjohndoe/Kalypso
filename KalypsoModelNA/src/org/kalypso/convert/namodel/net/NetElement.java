@@ -156,7 +156,7 @@ public class NetElement
       if( !parent.exists() )
         parent.mkdirs();
 
-      if( m_conf.isUsePrecipitationForm().equals( true ) )
+      if( m_conf.isUsePrecipitationForm() )
       {
         if( !targetFileN.exists() )
           CatchmentManager.WriteSynthNFile( targetFileN, feature, m_synthNWorkspace, m_conf );

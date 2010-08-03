@@ -230,7 +230,6 @@ public class NAControlConverter
 
   private static void writeFalstart( final NAConfiguration conf, final File startFile, final StringBuffer b )
   {
-
     final String system = "we";// "sys"; //$NON-NLS-1$
     final String zustand = "nat"; //$NON-NLS-1$
     final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyy MM dd HH" ) ); //$NON-NLS-1$
@@ -240,7 +239,7 @@ public class NAControlConverter
 
     b.append( "xxx\n" ); //$NON-NLS-1$
     b.append( "x einzugsgebiet\n" ); //$NON-NLS-1$
-    if( conf.isUsePrecipitationForm().equals( true ) )
+    if( conf.isUsePrecipitationForm() )
     {
       final String preFormText = conf.getPrecipitationForm();
       int preForm = 0;

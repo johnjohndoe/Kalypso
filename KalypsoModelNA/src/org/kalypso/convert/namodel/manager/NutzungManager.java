@@ -195,7 +195,7 @@ public class NutzungManager extends AbstractManager
   private void writeFeature( final Feature feature, final Feature linkedIdealLanduseFE ) throws Exception
   {
     final String nutzName = m_conf.getLanduseFeatureShortedName( feature.getName() );
-    final File outputFile = new File( String.format( "%s\\%s.nuz", m_conf.getNutzungDir(), nutzName ) ); //$NON-NLS-1$
+    final File outputFile = new File( m_conf.getNutzungDir(), nutzName + ".nuz" ); //$NON-NLS-1$
     final FileWriter writer = new FileWriter( outputFile );
     writer.write( linkedIdealLanduseFE.getName() );
     writer.write( "\nidealisierter jahresgang" );// "ideali" ist Kennung! //$NON-NLS-1$
@@ -217,7 +217,7 @@ public class NutzungManager extends AbstractManager
     for( final String resource : resources )
     {
       final URL source = getClass().getResource( String.format( "resources/idealLanduseSuds/%s.nuz", resource ) ); //$NON-NLS-1$
-      final File destination = new File( String.format( "%s\\%s.nuz", m_conf.getNutzungDir(), resource ) ); //$NON-NLS-1$
+      final File destination = new File( m_conf.getNutzungDir(), resource + ".nuz" ); //$NON-NLS-1$
       FileUtils.copyURLToFile( source, destination );
     }
   }

@@ -58,6 +58,7 @@ import org.kalypso.convert.namodel.NAControlConverter;
 import org.kalypso.convert.namodel.NAModellConverter;
 import org.kalypso.convert.namodel.NaNodeResultProvider;
 import org.kalypso.convert.namodel.NaSimulationData;
+import org.kalypso.convert.namodel.manager.HydroHash;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.manager.LzsimManager;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -188,7 +189,8 @@ public class NAModelPreprocessor
 
     try
     {
-      LzsimManager.writeLzsimFiles( m_idManager, m_asciiDirs.lzsimDir, lzsimWorkspace );
+      HydroHash hydroHash = m_conf.getHydroHash();
+      LzsimManager.writeLzsimFiles( m_idManager, hydroHash, m_asciiDirs.lzsimDir, lzsimWorkspace );
     }
     catch( final Exception e )
     {
@@ -274,7 +276,7 @@ public class NAModelPreprocessor
     // choose precipitation form and parameters
     final Boolean pns = (Boolean) metaFE.getProperty( NaModelConstants.CONTROL_PNS_PROP );
     m_conf.setUsePrecipitationForm( pns == null ? false : pns );
-    if( m_conf.isUsePrecipitationForm().equals( true ) )
+    if( m_conf.isUsePrecipitationForm() )
     {
       // the GUI asks for return period [a] - the fortran kernal needs annuality [1/a]
       m_conf.setAnnuality( 1d / (Double) metaFE.getProperty( NaModelConstants.CONTROL_XJAH_PROP ) );

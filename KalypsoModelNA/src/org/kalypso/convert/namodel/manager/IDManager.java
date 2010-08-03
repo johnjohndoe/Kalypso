@@ -29,19 +29,23 @@
  */
 package org.kalypso.convert.namodel.manager;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
+import java.util.Map;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -55,27 +59,21 @@ public class IDManager
 
   public final static int NODE = 3;
 
-  final Hashtable<Object, IDMap> m_featureIDMap = new Hashtable<Object, IDMap>(); // feature -> IDMap
+  final Map<Feature, IDMap> m_featureIDMap = new HashMap<Feature, IDMap>(); // feature -> IDMap
 
-  final Hashtable<IDMap, Object> m_idMapFeature = new Hashtable<IDMap, Object>(); // IDMap -> feature
-
-  /**
-   * key: catchemntID<br>
-   * value: list hydID in reihenfolge
-   */
-  private final Hashtable<String, List<String>> m_hydrohash = new Hashtable<String, List<String>>();
+  final Map<IDMap, Feature> m_idMapFeature = new HashMap<IDMap, Feature>(); // IDMap -> feature
 
   public IDManager( )
   {
-    m_idMapFeature.put( new IDMap( 10000, NODE ), new Object() );
-    m_idMapFeature.put( new IDMap( 9001, NODE ), new Object() );
+    m_idMapFeature.put( new IDMap( 10000, NODE ), null );
+    m_idMapFeature.put( new IDMap( 9001, NODE ), null );
   }
 
   public Feature getFeature( final int asciiID, final int type )
   {
     final IDMap map = new IDMap( asciiID, type );
     if( m_idMapFeature.containsKey( map ) )
-      return (Feature) m_idMapFeature.get( map );
+      return m_idMapFeature.get( map );
 
     return null;
   }
@@ -91,9 +89,6 @@ public class IDManager
     return m_featureIDMap.get( feature ).getAsciiID();
   }
 
-  /**
-   * @param feature
-   */
   private int getType( final Feature feature )
   {
     final String name = feature.getFeatureType().getQName().getLocalPart();
@@ -143,21 +138,29 @@ public class IDManager
     return testMap;
   }
 
+  public void dump( File idMapFile ) throws SimulationException
+  {
+    Writer idWriter = null;
+    try
+    {
+      idWriter = new FileWriter( idMapFile ); //$NON-NLS-1$
+      dump( idWriter );
+      idWriter.close();
+    }
+    catch( final IOException e )
+    {
+      throw new SimulationException( "Failed to dump idManager", e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( idWriter );
+    }
+  }
+  
   public void dump( final Writer writer ) throws IOException
   {
-    final TreeSet<IDMap> sort = new TreeSet<IDMap>( new Comparator<Object>()
-        {
-      @Override
-      public int compare( final Object o1, final Object o2 )
-      {
-        final IDMap m1 = (IDMap) o1;
-        final IDMap m2 = (IDMap) o2;
-        final int typeDiff = m1.getType() - m2.getType();
-        if( typeDiff != 0 )
-          return typeDiff;
-        return m1.getAsciiID() - m2.getAsciiID();
-      }
-        } );
+    final SortedSet<IDMap> sort = new TreeSet<IDMap>( IDMap.COMPARATOR );
+    
     sort.addAll( m_idMapFeature.keySet() );
     writer.write( String.format( Locale.US, "%-10s%-6s%-16s %-32s %-32s %-32s\n\n", "ASCII ID", "", "GML Type", "GML ID", "GML Name", "GML Description" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
     for( final IDMap idmap : sort )
@@ -187,77 +190,4 @@ public class IDManager
     }
     return result;
   }
-
-  public class IDMap
-  {
-    final int type;
-
-    int asciiID;
-
-    public IDMap( @SuppressWarnings("hiding") final int asciiID, @SuppressWarnings("hiding") final int type )
-    {
-      this.type = type;
-      this.asciiID = asciiID;
-    }
-
-    public int getAsciiID( )
-    {
-      return asciiID;
-    }
-
-    public int getType( )
-    {
-      return type;
-    }
-
-    @Override
-    public String toString( )
-    {
-      return asciiID + " [" + type + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals( final Object other )
-    {
-      if( !(other instanceof IDMap) )
-        return false;
-      final IDMap otherMap = (IDMap) other;
-      return otherMap.getAsciiID() == asciiID && otherMap.getType() == type;
-    }
-
-    /**
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode( )
-    {
-      return asciiID + type * 100000;
-    }
-  }
-
-  public void addHydroInfo( final Feature catchmentFE, final List<String> hydrIdList )
-  {
-    m_hydrohash.put( catchmentFE.getId(), hydrIdList );
-
-  }
-
-  public String getHydroFeatureId( final Feature catchmentFE, final int pos )
-  {
-    final List<String> hydIdList = m_hydrohash.get( catchmentFE.getId() );
-    return hydIdList.get( pos );
-  }
-
-  public Set<String> getCatchmentIdsFromLzsim( )
-  {
-    return m_hydrohash.keySet();
-  }
-
-  public List<String> getSortedHydrosIDsfromLzsim( final String catchmentID )
-  {
-    return m_hydrohash.get( catchmentID );
-  }
-
 }

@@ -273,7 +273,7 @@ public class CatchmentManager extends AbstractManager
 
     // 3
     final StringBuffer b = new StringBuffer();
-    if( m_conf.isUsePrecipitationForm().equals( true ) )
+    if( m_conf.isUsePrecipitationForm() )
     {
       b.append( "s " ); //$NON-NLS-1$
     }
@@ -489,7 +489,7 @@ public class CatchmentManager extends AbstractManager
 
   public static String getNiederschlagEingabeDateiString( final Feature feature, final NAConfiguration conf )
   {
-    if( conf.isUsePrecipitationForm().equals( true ) )
+    if( conf.isUsePrecipitationForm() )
     {
       return getEingabeDateiString( feature, conf, "synthZR", ITimeserieConstants.TYPE_RAINFALL ); //$NON-NLS-1$
     }

@@ -41,9 +41,7 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -61,11 +59,11 @@ import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.convert.namodel.manager.HydroHash;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.manager.LzsimManager;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
@@ -243,22 +241,9 @@ public class NAModelSimulation
 
   private void dumpIdManager( ) throws SimulationException
   {
-    // dump idmapping to file
-    final IDManager idManager = m_conf.getIdManager();
-    Writer idWriter = null;
-    try
-    {
-      idWriter = new FileWriter( new File( m_simDirs.simulationDir, "IdMap.txt" ) ); //$NON-NLS-1$
-      idManager.dump( idWriter );
-    }
-    catch( final IOException e )
-    {
-      throw new SimulationException( "Failed to dump idManager", e );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( idWriter );
-    }
+    File idMapFile = new File( m_simDirs.simulationDir, "IdMap.txt" ); //$NON-NLS-1$
+
+    m_idManager.dump( idMapFile );
   }
 
   private URL getStartConditionFile( ) throws SimulationException
@@ -330,8 +315,9 @@ public class NAModelSimulation
     loadTextFileResults();
 
     final Date[] initialDates = conf.getInitialDates();
+    final HydroHash hydroHash = m_conf.getHydroHash();
     final LzsimManager lzsimManager = new LzsimManager( initialDates, m_simDirs.anfangswertDir );
-    lzsimManager.readInitialValues( conf.getIdManager(), m_simDirs.asciiDirs.lzsimDir, logger );
+    lzsimManager.readInitialValues( m_idManager, hydroHash, m_simDirs.asciiDirs.lzsimDir, logger );
   }
 
   private void loadTSResults( final GMLWorkspace modellWorkspace, final NAConfiguration conf ) throws Exception
@@ -483,9 +469,9 @@ public class NAModelSimulation
             final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL ); //$NON-NLS-1$
 
             copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { ITimeserieConstants.MD_ALARM_1, ITimeserieConstants.MD_ALARM_2, ITimeserieConstants.MD_ALARM_3,
-              ITimeserieConstants.MD_ALARM_4, ITimeserieConstants.MD_GEWAESSER, ITimeserieConstants.MD_FLUSSGEBIET, ITimeserieConstants.MD_GKH, ITimeserieConstants.MD_GKR,
-              ITimeserieConstants.MD_HOEHENANGABEART, ITimeserieConstants.MD_PEGELNULLPUNKT, ITimeserieConstants.MD_WQWECHMANN, ITimeserieConstants.MD_WQTABLE, ITimeserieConstants.MD_TIMEZONE,
-              ITimeserieConstants.MD_VORHERSAGE_START, ITimeserieConstants.MD_VORHERSAGE_ENDE } );
+                ITimeserieConstants.MD_ALARM_4, ITimeserieConstants.MD_GEWAESSER, ITimeserieConstants.MD_FLUSSGEBIET, ITimeserieConstants.MD_GKH, ITimeserieConstants.MD_GKR,
+                ITimeserieConstants.MD_HOEHENANGABEART, ITimeserieConstants.MD_PEGELNULLPUNKT, ITimeserieConstants.MD_WQWECHMANN, ITimeserieConstants.MD_WQTABLE, ITimeserieConstants.MD_TIMEZONE,
+                ITimeserieConstants.MD_VORHERSAGE_START, ITimeserieConstants.MD_VORHERSAGE_ENDE } );
 
           }
         }
