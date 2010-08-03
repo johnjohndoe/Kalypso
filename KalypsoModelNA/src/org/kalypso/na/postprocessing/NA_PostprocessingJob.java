@@ -36,7 +36,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
@@ -202,8 +202,8 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       if( useOnlyResult )
         pathAxis1 = pathAxis2;
 
-      final ITuppleModel values1 = obs1.getValues( null );
-      final ITuppleModel values2 = obs2.getValues( null );
+      final ITupleModel values1 = obs1.getValues( null );
+      final ITupleModel values2 = obs2.getValues( null );
       final int cnt1 = values1.getCount();
       final int cnt2 = values2.getCount();
       if( cnt1 != cnt2 )

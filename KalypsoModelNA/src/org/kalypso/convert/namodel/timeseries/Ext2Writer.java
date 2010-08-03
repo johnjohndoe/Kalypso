@@ -38,7 +38,7 @@ import java.util.Date;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 
@@ -71,7 +71,7 @@ public class Ext2Writer
     final IAxis[] axisList = observation.getAxisList();
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class );
-    final ITuppleModel values = observation.getValues( null );
+    final ITupleModel values = observation.getValues( null );
     int obsOffset = 0;
     final int maxOffset = values.getCount();
     Date obsDate = (Date) values.getElement( obsOffset, dateAxis );

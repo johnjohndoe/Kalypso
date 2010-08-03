@@ -55,7 +55,7 @@ import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
@@ -219,7 +219,7 @@ public class OmbrometerUtils
   public static String analyseOmbrometer( final IObservation observation ) throws SensorException
   {
     final IAxis axis = ObservationUtilities.findAxisByType( observation.getAxisList(), "N" );
-    final ITuppleModel values = observation.getValues( null );
+    final ITupleModel values = observation.getValues( null );
 
     final int goods = countStatus( values, axis );
     final int count = values.getCount();
@@ -231,7 +231,7 @@ public class OmbrometerUtils
    * 
    * @throws SensorException
    */
-  private static int countStatus( final ITuppleModel values, final IAxis axis ) throws SensorException
+  private static int countStatus( final ITupleModel values, final IAxis axis ) throws SensorException
   {
     final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values.getAxisList(), axis );
     int count = 0;

@@ -61,7 +61,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
@@ -277,7 +277,7 @@ public class ChannelManager extends AbstractManager
     final IAxis waterTableAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_NORMNULL );
     final IAxis volumeAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_VOLUME );
     final IAxis dischargeAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_RUNOFF );
-    final ITuppleModel values = observation.getValues( null );
+    final ITupleModel values = observation.getValues( null );
     final int count = values.getCount();
     for( int row = 0; row < count; row++ )
     {

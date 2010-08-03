@@ -66,11 +66,11 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -140,7 +140,7 @@ public class NAStatistics
   private IObservation createObservation( final Object[][] resultValues )
   {
     final IAxis[] resultAxes = createAxes();
-    final ITuppleModel resultTuppleModel = new SimpleTuppleModel( resultAxes, resultValues );
+    final ITupleModel resultTuppleModel = new SimpleTupleModel( resultAxes, resultValues );
     return new SimpleObservation( FILENAME_ZML, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), new MetadataList(), resultTuppleModel );
   }
 
@@ -230,7 +230,7 @@ public class NAStatistics
   {
     final File reportFileCSV = new File( reportDir, FILENAME_CSV );
 
-    final ITuppleModel values = observation.getValues( null );
+    final ITupleModel values = observation.getValues( null );
     final IAxis[] resultAxisList = observation.getAxisList();
 
     FileOutputStream streamCSV = null;

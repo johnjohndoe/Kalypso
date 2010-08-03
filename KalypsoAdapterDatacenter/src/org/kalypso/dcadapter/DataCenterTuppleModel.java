@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxisRange;
@@ -19,7 +19,7 @@ import com.bce.datacenter.db.timeseries.TimeserieTupple;
  * 
  * @author marc
  */
-public class DataCenterTuppleModel implements ITuppleModel
+public class DataCenterTuppleModel implements ITupleModel
 {
   private final TimeserieTupple[] m_tupples;
 
@@ -134,7 +134,7 @@ public class DataCenterTuppleModel implements ITuppleModel
   /**
    * Creates tupples according to the model
    */
-  public static TimeserieTupple[] toTupples( final ITuppleModel model ) throws SensorException
+  public static TimeserieTupple[] toTupples( final ITupleModel model ) throws SensorException
   {
     final IAxis[] axes = model.getAxisList();
     

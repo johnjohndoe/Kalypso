@@ -58,7 +58,7 @@ import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
@@ -221,7 +221,7 @@ public class NAZMLGenerator
     final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeserieConstants.TYPE_DATE );
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axis, valueAxisType );
 
-    final ITuppleModel values = observation.getValues( null );
+    final ITupleModel values = observation.getValues( null );
     for( int i = 0; i < values.getCount(); i++ )
     {
       final Date date = (Date) values.getElement( i, dateAxis );
@@ -251,7 +251,7 @@ public class NAZMLGenerator
     final IAxis[] axis = observation.getAxisList();
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axis, valueAxisType );
 
-    final ITuppleModel values = observation.getValues( null );
+    final ITupleModel values = observation.getValues( null );
     final SortedMap<Date, Double> valuesMap = new TreeMap<Date, Double>();
     final long interpolationStep = (simulationEnd.getTime() - simulationStart.getTime()) / (values.getCount() - 1);
     for( int i = 0; i < values.getCount(); i++ )

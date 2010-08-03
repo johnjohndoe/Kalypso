@@ -10,7 +10,7 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
@@ -193,7 +193,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
   @Override
-  public ITuppleModel getValues( final IRequest request ) throws SensorException
+  public ITupleModel getValues( final IRequest request ) throws SensorException
   {
     final TimeserieTupple[] tupples;
 
@@ -219,7 +219,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
   @Override
-  public void setValues( final ITuppleModel values ) throws SensorException
+  public void setValues( final ITupleModel values ) throws SensorException
   {
     m_ts.setValues( DataCenterTuppleModel.toTupples( values ) );
 

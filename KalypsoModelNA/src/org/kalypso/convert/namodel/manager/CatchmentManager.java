@@ -70,7 +70,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
@@ -443,7 +443,7 @@ public class CatchmentManager extends AbstractManager
     final IAxis[] axisList = observation.getAxisList();
     final IAxis hoursAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_HOURS );
     final IAxis normAreaAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_NORM );
-    final ITuppleModel values = observation.getValues( null );
+    final ITupleModel values = observation.getValues( null );
     final int count = values.getCount();
     final double t0 = ((Double) values.getElement( 0, hoursAxis )).doubleValue();
     final double t1 = ((Double) values.getElement( 1, hoursAxis )).doubleValue();
@@ -572,7 +572,7 @@ public class CatchmentManager extends AbstractManager
                 final IAxis minutesAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_MIN );
                 final IAxis precipitationAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_RAINFALL );
                 buffer.append( FortranFormatHelper.printf( annualityKey, "f6.3" ) + " " + "1" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                final ITuppleModel values = observation.getValues( null );
+                final ITupleModel values = observation.getValues( null );
                 final int count = values.getCount();
                 // if( count > 20 )
                 // throw new Exception( "Fehler!!! NA-Modell: Anzahl Wertepaare synth Niederschlag > maximale Anzahl

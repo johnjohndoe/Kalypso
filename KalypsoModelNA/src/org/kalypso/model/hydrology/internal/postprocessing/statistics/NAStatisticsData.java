@@ -44,7 +44,7 @@ import java.util.Date;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
@@ -77,7 +77,7 @@ public class NAStatisticsData
     if( dateAxis == null || valueAxis == null )
       return;
 
-    final ITuppleModel tuppleModel = m_observation.getValues( null );
+    final ITupleModel tuppleModel = m_observation.getValues( null );
 
     m_timestepSeconds = findTimestep( dateAxis, tuppleModel );
 
@@ -105,7 +105,7 @@ public class NAStatisticsData
     m_volume += value * m_timestepSeconds;
   }
 
-  private static double findTimestep( final IAxis dateAxis, final ITuppleModel tuppleModel ) throws SensorException
+  private static double findTimestep( final IAxis dateAxis, final ITupleModel tuppleModel ) throws SensorException
   {
     // here we assume constant timestep in the whole timeseries data
     if( tuppleModel.getCount() == 1 )
