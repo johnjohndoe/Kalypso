@@ -92,8 +92,7 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
   {
     if( result.getComponents().length == 0 )
     {
-      // Special case: result is yet empty: this can happen for a new profile are for a profile created from a new
-      // profile-feature
+      // Special case: result is yet empty: this can happen for a new profile created from a new profile-feature
       result.addComponent( getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) );
       result.addComponent( getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) );
       result.addComponent( getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) );
