@@ -314,29 +314,28 @@ public class RainfallGenerationOp
   /**
    * Combines a list of observations into a single one.
    */
-  public static IObservation combineObservations( final List<IObservation> observationList )
+  public static IObservation combineObservations( final List<IObservation> observations )
   {
     try
     {
-      final int size = observationList.size();
-      if( size == 0 )
+      if( observations.isEmpty() )
         return null;
-      else if( size == 1 )
-        return observationList.get( 0 );
-      else
-      {
-        final IObservation[] obses = observationList.toArray( new IObservation[size] );
-        final ForecastFilter fc = new ForecastFilter();
-        fc.initFilter( obses, obses[0], null );
-        return fc;
-      }
+      else if( observations.size() == 1 )
+        return observations.get( 0 );
+
+      final ForecastFilter fc = new ForecastFilter();
+
+      final IObservation[] combine = observations.toArray( new IObservation[] {} );
+      fc.initFilter( combine, combine[0], null );
+
+      return fc;
     }
     catch( final SensorException e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoModelRcmActivator.getDefault().getLog().log( status );
-      return null;
+      KalypsoModelRcmActivator.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+
+    return null;
   }
 
   /**

@@ -138,13 +138,15 @@ public class DWDTask extends Task
     try
     {
       final Project antProject = getProject();
-      // REMARK: It is NOT possible to put this inner class into an own .class file (at least not inside the plugin code)
+      // REMARK: It is NOT possible to put this inner class into an own .class file (at least not inside the plugin
+// code)
       // else we get an LinkageError when accessing the Project class.
       final ILogger logger = new ILogger()
       {
         /**
          * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
          */
+        @Override
         public void log( final Level level, final int msgCode, final String message )
         {
           final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
