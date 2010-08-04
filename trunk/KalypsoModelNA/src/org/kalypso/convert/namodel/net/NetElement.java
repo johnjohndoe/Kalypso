@@ -144,14 +144,17 @@ public class NetElement
 
   public void generateTimeSeries( ) throws IOException, Exception
   {
+    final File asciiBaseDir = m_conf.getAsciiBaseDir();
+    final File klimaDir = new File( asciiBaseDir, "klima.dat" );
+
     final IFeatureType catchmentFT = m_conf.getCatchemtFT();
     final IRelationType rt = (IRelationType) catchmentFT.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
     final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, catchmentFT, rt );
     for( final Feature feature : catchmentFeatures )
     {
-      final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( feature, new File( m_conf.getAsciiBaseDir(), "klima.dat" ), m_conf ); //$NON-NLS-1$
-      final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( feature, new File( m_conf.getAsciiBaseDir(), "klima.dat" ), m_conf ); //$NON-NLS-1$
-      final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( feature, new File( m_conf.getAsciiBaseDir(), "klima.dat" ), m_conf ); //$NON-NLS-1$
+      final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( feature, klimaDir, m_conf ); //$NON-NLS-1$
+      final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( feature, klimaDir, m_conf ); //$NON-NLS-1$
+      final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( feature, klimaDir, m_conf ); //$NON-NLS-1$
       final File parent = targetFileN.getParentFile();
       if( !parent.exists() )
         parent.mkdirs();
