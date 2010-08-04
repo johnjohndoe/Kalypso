@@ -275,11 +275,9 @@ public class NAControlConverter
 
   private static String getBoolean( final Object object )
   {
-    if( object == null || (!(object instanceof Boolean)) )
-      return "n"; //$NON-NLS-1$
-    final boolean flag = ((Boolean) object).booleanValue();
-    if( flag )
+    if( object instanceof Boolean && (Boolean) object )
       return "j"; //$NON-NLS-1$
+
     return "n"; //$NON-NLS-1$
   }
 

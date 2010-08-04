@@ -127,6 +127,8 @@ public class NAModellConverter
 
     final GMLWorkspace modelWorkspace = m_conf.getModelWorkspace();
     final GMLWorkspace synthNWorkspace = m_conf.getSynthNWorkspace();
+    final GMLWorkspace parameterWorkspace = m_conf.getParameterWorkspace();
+    final GMLWorkspace hydrotopeWorkspace = m_conf.getHydrotopeWorkspace();
 
     m_nodeManager.writeFile( asciiBuffer, modelWorkspace, synthNWorkspace );
     m_catchmentManager.writeFile( asciiBuffer, modelWorkspace );
@@ -138,9 +140,6 @@ public class NAModellConverter
     FileUtils.writeStringToFile( m_conf.getRHBFile(), asciiBuffer.getRhbBuffer().toString(), null );
     FileUtils.writeStringToFile( m_conf.getZFTFile(), asciiBuffer.getZFTBuffer().toString(), null );
 
-    final GMLWorkspace parameterWorkspace = m_conf.getParameterWorkspace();
-
-    final GMLWorkspace hydrotopeWorkspace = m_conf.getHydrotopeWorkspace();
     if( hydrotopeWorkspace != null )
     {
       m_hydrotopManager.writeFile( asciiBuffer, hydrotopeWorkspace, modelWorkspace, parameterWorkspace );
