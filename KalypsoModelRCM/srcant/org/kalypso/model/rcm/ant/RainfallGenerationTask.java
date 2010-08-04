@@ -127,7 +127,7 @@ public class RainfallGenerationTask extends Task
     m_generators.add( generator );
   }
 
-  public void setSourceFilter( String sourceFilter )
+  public void setSourceFilter( final String sourceFilter )
   {
     m_sourceFilter = sourceFilter;
   }
