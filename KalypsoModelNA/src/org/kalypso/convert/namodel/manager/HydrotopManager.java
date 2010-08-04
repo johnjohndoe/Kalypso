@@ -223,6 +223,8 @@ public class HydrotopManager extends AbstractManager
         int hydrotopAsciiID = 0;
         for( final Hydrotop hydrotop : hydInEnvList )
         {
+          // FIXME: slow: is it really necessary to intersect hydrotopes with catchments? Doesnt the hydrotopes already
+          // have the i of catchment? At least we should cache pointintrin / interior point to spped up
           final Geometry hydrotopGeometry = JTSAdapter.export( hydrotop.getGeometry() );
           if( catchmentGeometry.contains( hydrotopGeometry.getInteriorPoint() ) )
           {
