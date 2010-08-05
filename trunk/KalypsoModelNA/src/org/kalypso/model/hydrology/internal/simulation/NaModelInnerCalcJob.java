@@ -93,7 +93,6 @@ public class NaModelInnerCalcJob implements ISimulation
     final NAModelSimulation simulation = new NAModelSimulation( simDirs, inputProvider, logger );
 
     final File resultDir = simDirs.resultDir;
-    resultEater.addResult( NaModelConstants.OUT_ZML, resultDir );
 
     try
     {
@@ -115,6 +114,8 @@ public class NaModelInnerCalcJob implements ISimulation
 
       simulation.backupResults();
     }
+    
+    resultEater.addResult( NaModelConstants.OUT_ZML, resultDir );
   }
 
   public boolean isSucceeded( )
