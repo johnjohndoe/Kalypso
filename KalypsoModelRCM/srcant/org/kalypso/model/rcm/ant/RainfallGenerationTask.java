@@ -106,6 +106,8 @@ public class RainfallGenerationTask extends Task
 
   private String m_sourceFilter = null;
 
+  private URL m_gmlContext;
+  
   private URL m_rcmUrl;
 
   private URL m_catchmentUrl;
@@ -132,6 +134,11 @@ public class RainfallGenerationTask extends Task
     m_sourceFilter = sourceFilter;
   }
 
+  public void setContext(final URL context )
+  {
+    m_gmlContext = context;
+  }
+  
   public void setRcmUrl( final URL rcmUrl )
   {
     m_rcmUrl = rcmUrl;
@@ -212,7 +219,7 @@ public class RainfallGenerationTask extends Task
       progress.subTask( "Operation wird initialisiert" );
 
       /* Load the catchment workspace. */
-      final GMLWorkspace catchmentWorkspace = GmlSerializer.createGMLWorkspace( m_catchmentUrl, null );
+      final GMLWorkspace catchmentWorkspace = GmlSerializer.createGMLWorkspace( m_catchmentUrl, m_gmlContext, null, null );
 
       /* Tansform the catchment workspace. */
       final TransformVisitor transformVisitor = new TransformVisitor( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
@@ -225,7 +232,7 @@ public class RainfallGenerationTask extends Task
       if( m_logFile != null )
         log = new GeoStatusLog( m_logFile );
 
-      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, null, m_targetFilter, m_targetFrom, m_targetTo, log );
+      final RainfallGenerationOp operation = new RainfallGenerationOp( m_gmlContext, m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, null, m_targetFilter, m_targetFrom, m_targetTo, log );
       operation.setSourceFilter( m_sourceFilter );
       for( final Generator generator : m_generators )
       {

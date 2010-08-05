@@ -130,22 +130,17 @@ public class RainfallGenerationOp
 
   private String m_sourceFilter;
 
+  private final URL m_gmlContext;
+
   /**
-   * The constructor.
-   * 
-   * @param rcmGmlLocation
-   * @param catchmentWorkspace
-   * @param catchmentFeaturePath
-   * @param catchmentObservationPath
-   * @param catchmentMetadata
-   * @param targetFilter
-   * @param targetFrom
-   * @param targetTo
+   *
+   * @param gmlContext If set to non-<code>null</code>, this location will be set to the rcm-workspace as context.
    * @param log
    *          If provided, the generators will write messages to this log.
    */
-  public RainfallGenerationOp( final URL rcmGmlLocation, final GMLWorkspace catchmentWorkspace, final String catchmentFeaturePath, final String catchmentObservationPath, final Map<QName, String> catchmentMetadata, final String targetFilter, final Date targetFrom, final Date targetTo, final ILog log )
+  public RainfallGenerationOp( final URL gmlContext, final URL rcmGmlLocation, final GMLWorkspace catchmentWorkspace, final String catchmentFeaturePath, final String catchmentObservationPath, final Map<QName, String> catchmentMetadata, final String targetFilter, final Date targetFrom, final Date targetTo, final ILog log )
   {
+    m_gmlContext = gmlContext;
     m_rcmGmlLocation = rcmGmlLocation;
     m_catchmentWorkspace = catchmentWorkspace;
     m_catchmentFeaturePath = catchmentFeaturePath;
@@ -183,7 +178,7 @@ public class RainfallGenerationOp
       results[i] = new ArrayList<IObservation>();
 
     // 2. Load and verify generators
-    final GMLWorkspace rcmWorkspace = loadGML( "Lade Gebietsniederschlagsmodelldefinition", m_rcmGmlLocation, logger, progress );
+    final GMLWorkspace rcmWorkspace = loadGML( "Lade Gebietsniederschlagsmodelldefinition", logger, progress );
 
     for( final Generator generatorDesc : m_generators )
     {
@@ -468,14 +463,14 @@ public class RainfallGenerationOp
     return array;
   }
 
-  private GMLWorkspace loadGML( final String msg, final URL location, final ILogger logger, final SubMonitor progress ) throws CoreException
+  private GMLWorkspace loadGML( final String msg, final ILogger logger, final SubMonitor progress ) throws CoreException
   {
     try
     {
       progress.subTask( msg );
-      logger.log( Level.INFO, -1, msg + ": " + location );
+      logger.log( Level.INFO, -1, msg + ": " + m_rcmGmlLocation );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( location, null );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_rcmGmlLocation, m_gmlContext, null, null );
 
       /* Transform. */
       final TransformVisitor transformVisitor = new TransformVisitor( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
@@ -490,7 +485,7 @@ public class RainfallGenerationOp
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim GML-Laden: " + location, e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim GML-Laden: " + m_rcmGmlLocation, e );
       throw new CoreException( status );
     }
   }
