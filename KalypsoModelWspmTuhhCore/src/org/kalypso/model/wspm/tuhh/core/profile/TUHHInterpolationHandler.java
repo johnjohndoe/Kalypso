@@ -53,12 +53,23 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class TUHHInterpolationHandler implements IInterpolationHandler
 {
-  final String[] m_interpolIDs = new String[] { IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOCHWERT,
-      IWspmConstants.POINT_PROPERTY_RECHTSWERT, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE,
-      IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR };
+  /* Get interpolated value during interpolation */
+  private final static String[] m_interpolIDs = new String[] { IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOCHWERT,
+    IWspmConstants.POINT_PROPERTY_RECHTSWERT, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE,
+    IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR };
 
-  final String[] m_defaultIDs = new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP,
-      IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS };
+  /* Gets value of first point during interpolation */
+  private final static String[] m_constantIDs = new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP,
+    IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS };
+
+  /**
+   * @see org.kalypso.observation.result.IInterpolationHandler#getInterpolationCoponent()
+   */
+  @Override
+  public String getInterpolationComponent( )
+  {
+    return IWspmConstants.POINT_PROPERTY_BREITE;
+  }
 
   /**
    * @see org.kalypso.observation.result.IInterpolationHandler#doInterpolation(java.lang.String, java.lang.Double,
@@ -84,7 +95,7 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
         record.setValue( i, interp );
       }
 
-      for( final String id : m_defaultIDs )
+      for( final String id : m_constantIDs )
       {
         final int i = result.indexOfComponent( id );
         if( i < 0 )
