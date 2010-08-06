@@ -45,6 +45,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.wspwin.core.prf.IWspWinConstants;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockDescription;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 
@@ -98,6 +99,6 @@ public final class LengthSectionMapping
    */
   public static boolean isText( final DataBlockHeader dbh )
   {
-    return dbh.getSpecification( 8 ) == 12;
+    return dbh.getSpecification( 8 ) == IWspWinConstants.SPEZIALPROFIL_TEXT;
   }
 }

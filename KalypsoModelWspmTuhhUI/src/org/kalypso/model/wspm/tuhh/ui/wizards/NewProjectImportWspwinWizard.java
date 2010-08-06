@@ -115,6 +115,10 @@ public class NewProjectImportWspwinWizard extends NewWspmProjectWizard // extend
       if( !status.isOK() )
         throw new CoreException( status );
     }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );

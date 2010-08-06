@@ -75,6 +75,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.wspwin.core.prf.PrfReader;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * @author kimwerner
@@ -122,6 +123,9 @@ public class PrfSource implements IProfilSource
   private String findCoordinateSystem( final IProfil profile )
   {
     final int rwIndex = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    if( rwIndex == -1 )
+      return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
     final IRecord[] points = profile.getPoints();
     for( final IRecord point : points )
     {
@@ -314,15 +318,15 @@ public class PrfSource implements IProfilSource
     final IComponent component = building.getObjectProperty( propertyID );
     if( sT.hasMoreTokens() )
       try
-      {
+    {
         building.setValue( component, Double.parseDouble( sT.nextToken() ) );
         return true;
-      }
-      catch( final IllegalArgumentException e )
-      {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, e.getMessage(), e ) );
-        return false;
-      }
+    }
+    catch( final IllegalArgumentException e )
+    {
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, e.getMessage(), e ) );
+      return false;
+    }
     else
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.16" ) + component.getName(), null ) ); //$NON-NLS-1$
 
@@ -458,7 +462,7 @@ public class PrfSource implements IProfilSource
     }
     if( pCount > 2 )
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.29", p.getStation() ) //$NON-NLS-1$
-      , null ) ); //$NON-NLS-1$
+          , null ) ); //$NON-NLS-1$
 
     if( p1 != null )
     {
@@ -492,7 +496,7 @@ public class PrfSource implements IProfilSource
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
     if( pCount > 2 )
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.32", p.getStation() ) //$NON-NLS-1$
-      , null ) ); //$NON-NLS-1$
+          , null ) ); //$NON-NLS-1$
 
     if( p1 != null )
     {
@@ -618,7 +622,7 @@ public class PrfSource implements IProfilSource
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
     if( pCount > 2 )
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.43", p.getStation() ) //$NON-NLS-1$
-      , null ) ); //$NON-NLS-1$
+          , null ) ); //$NON-NLS-1$
 
     if( p1 != null )
     {
@@ -639,19 +643,6 @@ public class PrfSource implements IProfilSource
   @Override
   public IProfil[] read( final String profileTyp, final Reader reader ) throws IOException
   {
-// IProfil profil = null;
-// if( profiles instanceof ArrayList< ? > )
-// {
-// final ArrayList< ? > al = (ArrayList< ? >) profiles;
-// final Object oProf = al.size() > 0 ? al.get( 0 ) : null;
-// profil = oProf instanceof IProfil ? (IProfil) oProf : null;
-// }
-// else if( profiles instanceof IProfil[] )
-// {
-// final IProfil[] profs = (IProfil[]) profiles;
-// profil = profs.length > 0 ? profs[0] : null;
-// }
-// else
     final IProfil profil = ProfilFactory.createProfil( profileTyp );
 
     if( profil == null )
