@@ -108,7 +108,7 @@ public class NutzungManager extends AbstractManager
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
    */
   @Override
-  public String mapID( final int id, final IFeatureType ft )
+  protected String mapID( final int id, final IFeatureType ft )
   {
     return null;
   }

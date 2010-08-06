@@ -57,14 +57,13 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
+/**
+ * @author huebsch
+ */
 public class SchneeManager extends AbstractManager
 {
-
   private final IFeatureType m_snowFT;
 
-  /*
-   * @author huebsch
-   */
   public SchneeManager( final GMLSchema parameterSchema, final NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
@@ -75,7 +74,7 @@ public class SchneeManager extends AbstractManager
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
   @Override
-  public String mapID( final int id, final IFeatureType ft )
+  protected String mapID( final int id, final IFeatureType ft )
   {
     return ft.getQName().getLocalPart() + id;
   }
@@ -88,9 +87,6 @@ public class SchneeManager extends AbstractManager
   {
     final List<Feature> result = new ArrayList<Feature>();
     final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-    // FileReader(
-    // file
-    // ) );
     Feature fe = null;
     // Kommentarzeilen
     for( int i = 0; i <= 2; i++ )

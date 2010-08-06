@@ -111,11 +111,10 @@ public class NAModelSimulation
     if( monitor.isCanceled() )
       return false;
 
-    monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.27" ) ); //$NON-NLS-1$
+    process( monitor, simulationData );
 
-    final String exeVersion = getExeVersion( simulationData );
-    final KalypsoNaProcessor processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, exeVersion );
-    processor.run( monitor );
+    if( monitor.isCanceled() )
+      return false;
 
     return postProcess( simulationData, monitor );
   }
@@ -186,6 +185,7 @@ public class NAModelSimulation
     }
   }
 
+
   private File getPreprocessFilesDir( ) throws SimulationException
   {
     if( !m_inputProvider.hasID( NAOptimizingJob.IN_BestOptimizedRunDir_ID ) )
@@ -211,6 +211,15 @@ public class NAModelSimulation
       final String msg = String.format( "Failed to backup results to directory: %s (%s)", resultDirTo.getAbsoluteFile(), e.getLocalizedMessage() );
       m_logger.warning( msg );
     }
+  }
+
+  private void process( final ISimulationMonitor monitor, final NaSimulationData simulationData ) throws SimulationException
+  {
+    monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.27" ) ); //$NON-NLS-1$
+
+    final String exeVersion = getExeVersion( simulationData );
+    final KalypsoNaProcessor processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, exeVersion );
+    processor.run( monitor );
   }
 
   // FIXME: move into feature binding

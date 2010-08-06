@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
@@ -63,7 +63,7 @@ public class RHBManager extends AbstractManager
 
   final public NAConfiguration m_conf;
 
-  public RHBManager( GMLSchema schema, NAConfiguration conf ) throws IOException
+  public RHBManager( final GMLSchema schema, final NAConfiguration conf ) throws IOException
   {
     super( conf.getRHBFormatURL() );
     m_conf = conf;
@@ -74,17 +74,17 @@ public class RHBManager extends AbstractManager
    * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
   @Override
-  public Feature[] parseFile( URL url ) throws Exception
+  public Feature[] parseFile( final URL url ) throws Exception
   {
-    List<Feature> result = new ArrayList<Feature>();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );
+    final List<Feature> result = new ArrayList<Feature>();
+    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );
     Feature fe = null;
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
     return result.toArray( new Feature[result.size()] );
   }
 
-  private Feature readNextFeature( LineNumberReader reader ) throws Exception
+  private Feature readNextFeature( final LineNumberReader reader ) throws Exception
   {
     final HashMap<String, String> propCollector = new HashMap<String, String>();
     String line;
@@ -98,9 +98,9 @@ public class RHBManager extends AbstractManager
       System.out.println( i + ": " + line ); //$NON-NLS-1$
       createProperties( propCollector, line, i );
     }
-    int asciiID = Integer.parseInt( propCollector.get( "inum" ) ); //$NON-NLS-1$
+    final int asciiID = Integer.parseInt( propCollector.get( "inum" ) ); //$NON-NLS-1$
     final Feature rhbStrangFE = getFeature( asciiID, m_conf.getStChannelFT() );
-    int iknotNr = Integer.parseInt( propCollector.get( "iknot" ) ); //$NON-NLS-1$
+    final int iknotNr = Integer.parseInt( propCollector.get( "iknot" ) ); //$NON-NLS-1$
     if( iknotNr > 0 )
     {
       final Feature knotFE = getFeature( iknotNr, m_conf.getNodeFT() );
@@ -131,7 +131,7 @@ public class RHBManager extends AbstractManager
   }
 
   @Override
-  public String mapID( int id, IFeatureType ft )
+  protected String mapID( final int id, final IFeatureType ft )
   {
     return ft.getQName().getLocalPart() + id;
   }

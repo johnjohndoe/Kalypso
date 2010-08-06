@@ -78,7 +78,7 @@ public class BodenartManager extends AbstractManager
    * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
    */
   @Override
-  public String mapID( final int id, final IFeatureType ft )
+  protected String mapID( final int id, final IFeatureType ft )
   {
     throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.BodenartManager.0" ) ); //$NON-NLS-1$
   }
