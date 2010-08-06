@@ -49,7 +49,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -523,10 +522,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         }
 
         // CHECK: probably the style will be automatically reloaded by the pool, so updating the colormap here may not
-        // really
-        // set the right colorMap entry here...
+        // really set the right colorMap entry here...
         updateStylePanel( runoffEventTheme );
-
         m_colorMapTableViewer.getControl().getParent().getParent().layout( true, true );
       }
     }
@@ -582,12 +579,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
 
     return null;
-  }
-
-  public static IFile getSldFile( final IRunoffEvent event ) throws CoreException
-  {
-    final IFolder eventFolder = getEventFolder( event );
-    return eventFolder.getFile( "wsp.sld" ); //$NON-NLS-1$
   }
 
   public static IFolder getEventFolder( final IRunoffEvent event ) throws CoreException
