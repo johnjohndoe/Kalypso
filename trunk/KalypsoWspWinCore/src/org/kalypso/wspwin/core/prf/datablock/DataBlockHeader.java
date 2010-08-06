@@ -150,9 +150,10 @@ public class DataBlockHeader
 
   private void parseThirdLine( )
   {
-    final StringTokenizer sT = (m_thirdLine == null) ? null : new StringTokenizer( m_thirdLine );
+    final StringTokenizer sT = m_thirdLine == null ? null : new StringTokenizer( m_thirdLine );
     if( sT == null )
       return;
+
     while( sT.hasMoreTokens() )
     {
       try
