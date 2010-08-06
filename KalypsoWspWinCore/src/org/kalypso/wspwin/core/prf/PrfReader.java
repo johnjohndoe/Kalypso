@@ -50,6 +50,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
@@ -95,32 +96,49 @@ public class PrfReader
     br.readLine();
 
     // jetzt die einzelnen Datenblöcke laden
-    for( int i = 0; i < pointCounts.length; i++ )
+    for( final int pointCount : pointCounts )
     {
       try
       {
         final DataBlockHeader dbh = new DataBlockHeader( br );
-        final int int8 = dbh.getSpecification( 8 );
-        if( int8 > 0 )
+        if( isValid( dbh ) )
         {
-          final IDataBlock dB = new TextDataBlock( dbh );
-          dB.readFromReader( pointCounts[i], br );
-          m_dbs.put( createFirstLine( dbh.getFirstLine() ), dB );
-        }
-        else
-        {
-          final IDataBlock dB = new CoordDataBlock( dbh );
-          dB.readFromReader( pointCounts[i], br );
-          m_dbs.put( createFirstLine( dbh.getFirstLine() ), dB );
+          final int int8 = dbh.getSpecification( 8 );
+          if( int8 == IWspWinConstants.SPEZIALPROFIL_COMMENT || int8 == IWspWinConstants.SPEZIALPROFIL_TEXT )
+          {
+            final IDataBlock dB = new TextDataBlock( dbh );
+            dB.readFromReader( pointCount, br );
+            m_dbs.put( createFirstLine( dbh.getFirstLine() ), dB );
+          }
+          else
+          {
+            final IDataBlock dB = new CoordDataBlock( dbh );
+            dB.readFromReader( pointCount, br );
+            m_dbs.put( createFirstLine( dbh.getFirstLine() ), dB );
+          }
         }
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
-        m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.PrfReader.0") ); //$NON-NLS-1$
+        m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.wspwin.core.prf.PrfReader.0" ) ); //$NON-NLS-1$
         throw new IOException();
       }
     }
     br.close();
+  }
+
+  private boolean isValid( final DataBlockHeader dbh )
+  {
+    if( StringUtils.isBlank( dbh.getFirstLine() ) )
+      return false;
+
+    if( dbh.getSecondLine() == null )
+      return false;
+
+    if( StringUtils.isBlank( dbh.getThirdLine() ) )
+      return false;
+
+    return true;
   }
 
   public String createFirstLine( final String key )
@@ -181,7 +199,7 @@ public class PrfReader
     final StringTokenizer sT = (string == null) ? null : new StringTokenizer( string );
     final int count = (sT == null) ? -1 : sT.countTokens() - 1;
     if( (count < 0) || (count != Integer.parseInt( sT.nextToken() )) )
-      m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.PrfReader.39") ); //$NON-NLS-1$
+      m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.wspwin.core.prf.PrfReader.39" ) ); //$NON-NLS-1$
 
     final int[] counts = new int[count];
     for( int i = 0; i < count; i++ )
@@ -206,7 +224,7 @@ public class PrfReader
 
     if( !r.ready() )
     {
-      m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.PrfReader.40") ); //$NON-NLS-1$
+      m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.wspwin.core.prf.PrfReader.40" ) ); //$NON-NLS-1$
       throw new IOException();
     }
 
@@ -215,7 +233,7 @@ public class PrfReader
       final String line = r.readLine();
       if( line == null )
       {
-        m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.PrfReader.41") ); //$NON-NLS-1$
+        m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.wspwin.core.prf.PrfReader.41" ) ); //$NON-NLS-1$
         break;
       }
 

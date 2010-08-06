@@ -99,7 +99,6 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
       // profile-feature
       result.addComponent( getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) );
       result.addComponent( getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) );
-      result.addComponent( getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) );
       result.addComponent( getPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
       result.addComponent( getPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     }
@@ -126,10 +125,9 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
     if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( propertyID ) )
       return new Double( 0.0 );
 
-   return super.getDefaultValue( propertyID );
+    return super.getDefaultValue( propertyID );
 
   }
-
 
   public IComponent getPointProperty( final String propertyId )
   {
@@ -147,7 +145,5 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
 
     return featureComponent;
   }
-
-
 
 }

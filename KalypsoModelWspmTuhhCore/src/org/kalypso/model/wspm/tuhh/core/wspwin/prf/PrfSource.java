@@ -73,6 +73,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.wspwin.core.prf.PrfReader;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * @author kimwerner
@@ -120,6 +121,9 @@ public class PrfSource implements IProfilSource
   private String findCoordinateSystem( final IProfil profile )
   {
     final int rwIndex = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    if( rwIndex == -1 )
+      return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
     final IRecord[] points = profile.getPoints();
     for( final IRecord point : points )
     {
