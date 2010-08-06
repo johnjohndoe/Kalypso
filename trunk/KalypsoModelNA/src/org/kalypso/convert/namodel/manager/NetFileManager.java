@@ -89,32 +89,30 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * @author doemming erstellt die netzdatei aus namodell.gml oder liest aus netzdatei und erstellt namodell.gml ----
- *         logik bei der netzerstellung: wird im control ein rootnode angegeben, so wird das netz hierfuer erstellt.
- *         vorhandene ergebnisse oberhalb des rootnode werden als zufluss gerechnet. oder wird im control kein rotnode
- *         angegeben so wird das netz fuer die zu generierenden ergebnisse erstellt vorhandene ergebnisse oberhalb der
- *         zu berechneneden knoten werden als zufluss gerechnet. Wobei zu generierende Ergebnisse stets neu berechnet
- *         werden und niemals als Zufluss dienen.
+ * erstellt die netzdatei aus namodell.gml oder liest aus netzdatei und erstellt namodell.gml ----<br/>
+ * logik bei der netzerstellung: wird im control ein rootnode angegeben, so wird das netz hierfuer erstellt. vorhandene
+ * ergebnisse oberhalb des rootnode werden als zufluss gerechnet. oder wird im control kein rotnode angegeben so wird
+ * das netz fuer die zu generierenden ergebnisse erstellt.<br/>
+ * vorhandene ergebnisse oberhalb der zu berechneneden knoten werden als zufluss gerechnet. Wobei zu generierende
+ * Ergebnisse stets neu berechnet werden und niemals als Zufluss dienen.
+ * 
+ * @author doemming
  */
 public class NetFileManager extends AbstractManager
 {
-  public static boolean DEBUG = false;
-
   final public NAConfiguration m_conf;
 
-  private final UrlUtilities m_urlUtilities;
-
-  // private IPropertyType m_property;
+  private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
   public NetFileManager( final NAConfiguration conf ) throws IOException
   {
     super( conf.getNetFormatURL() );
+
     m_conf = conf;
-    m_urlUtilities = new UrlUtilities();
   }
 
   @Override
-  public String mapID( final int id, final IFeatureType ft )
+  protected String mapID( final int id, final IFeatureType ft )
   {
     return ft.getQName().getLocalPart() + id;
   }
@@ -232,8 +230,8 @@ public class NetFileManager extends AbstractManager
       // adding Timeseries links
 
       final TimeseriesLinkType pegelLink = NAZMLGenerator.copyToTimeseriesLink( null, ITimeserieConstants.TYPE_DATE, ITimeserieConstants.TYPE_WATERLEVEL, m_conf // TODO
-      // NA_PEGEL
-      .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true ); //$NON-NLS-1$//$NON-NLS-2$
+          // NA_PEGEL
+          .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true ); //$NON-NLS-1$//$NON-NLS-2$
       final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
       fePropMap.put( pt, pegelLink );
 

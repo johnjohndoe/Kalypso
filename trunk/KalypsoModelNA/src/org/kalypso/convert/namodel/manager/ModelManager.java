@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on Oct 6, 2004
@@ -55,19 +55,13 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ModelManager extends AbstractManager
 {
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
-   */
   public ModelManager( ) throws IOException
   {
     super( null );
   }
 
   @Override
-  public String mapID( int id, IFeatureType ft )
+  protected String mapID( final int id, final IFeatureType ft )
   {
     return ft.getQName().getLocalPart() + id;
   }
@@ -78,7 +72,7 @@ public class ModelManager extends AbstractManager
    * @see org.kalypso.convert.AbstractManager#parseFile(java.io.File)
    */
   @Override
-  public Feature[] parseFile( URL url )
+  public Feature[] parseFile( final URL url )
   {
     // nothing to do
     return null;

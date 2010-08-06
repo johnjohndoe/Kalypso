@@ -291,7 +291,7 @@ public class ChannelManager extends AbstractManager
   }
 
   @Override
-  public String mapID( final int id, final IFeatureType ft )
+  protected String mapID( final int id, final IFeatureType ft )
   {
     return ft.getQName().getLocalPart() + id;
   }
