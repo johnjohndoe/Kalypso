@@ -353,7 +353,7 @@ public class NetFileManager extends AbstractManager
       channelList.add( stChannelFeature );
 
     // list of network elements
-    final HashMap<String, NetElement> netElements = new HashMap<String, NetElement>();
+    final HashMap<String, NetElement> netElements = new LinkedHashMap<String, NetElement>();
     // generate net elements, each channel represents a netelement
     final Feature[] channelFEs = channelList.toArray( new Feature[channelList.size()] );
     for( final Feature channelFE : channelFEs )
