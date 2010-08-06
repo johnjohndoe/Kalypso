@@ -107,7 +107,7 @@ public class BridgePanel extends AbstractProfilView
       m_label = toolkit.createLabel( parent, "" ); //$NON-NLS-1$
 
       m_text = toolkit.createText( parent, null, SWT.FILL | SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-      m_text.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, true ) );
+      m_text.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
       m_text.addModifyListener( doubleModifyListener );
       m_text.addFocusListener( new FocusAdapter()
       {
