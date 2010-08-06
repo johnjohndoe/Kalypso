@@ -72,14 +72,14 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   {
     final Feature coveragesFeature = (Feature) getFeature().getProperty( QNAME_PROP_RESULT_COVERAGES );
     if( coveragesFeature == null )
-      return internal_createResultCoverages( );
+      return internal_createResultCoverages();
 
     return (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class );
   }
 
   /**
-   * Creates a new result collection and returns it.<br>
-   * If the result collection already exists, the eixsting one will be returned.
+   * Creates a new result collection and returns it.<br/>
+   * If the result collection already exists, the existing one will be returned.
    * 
    * @see org.kalypso.model.flood.binding.IRunoffEvent#createResultCoverages()
    */
@@ -89,10 +89,11 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
     final ICoverageCollection existingCoverages = getResultCoverages();
     if( existingCoverages != null )
       return existingCoverages;
-    return internal_createResultCoverages( );
+    return internal_createResultCoverages();
   }
-  
-  private ICoverageCollection internal_createResultCoverages( ){
+
+  private ICoverageCollection internal_createResultCoverages( )
+  {
     final IRelationType relationType = (IRelationType) getFeature().getFeatureType().getProperty( QNAME_PROP_RESULT_COVERAGES );
     final GMLWorkspace workspace = getFeature().getWorkspace();
     final Feature newFeature = workspace.createFeature( getFeature(), relationType, relationType.getTargetFeatureType() );

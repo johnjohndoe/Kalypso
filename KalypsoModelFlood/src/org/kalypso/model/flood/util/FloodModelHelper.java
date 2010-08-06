@@ -46,7 +46,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -78,7 +77,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class FloodModelHelper
 {
@@ -230,39 +228,28 @@ public class FloodModelHelper
   }
 
   /**
-   * removes the specified coverage file
+   * Removes the specified coverage file.<br/>
+   * The model is NOT automatically saved after this operation.
    */
   public static IStatus removeResultCoverages( final SzenarioDataProvider dataProvider, final ICoverageCollection resultCoverages )
   {
     final ICoverage[] coverages = resultCoverages.toArray( new ICoverage[resultCoverages.size()] );
     try
     {
-      final CommandableWorkspace workspace = dataProvider.getCommandableWorkSpace( IFloodModel.class );
+      final CommandableWorkspace workspace = dataProvider.getCommandableWorkSpace( IFloodModel.class.getName() );
 
       for( final ICoverage coverageToDelete : coverages )
       {
         /* Delete underlying grid grid file */
         final IStatus status = CoverageManagementHelper.deleteGridFile( coverageToDelete );
-        // ErrorDialog.openError( shell, "Löschen von Raster-Daten fehlgeschlagen", "Rasterdatei (" +
-        // coverageToDelete.getName() + ") konnte nicht gelöscht werden.", status );
-
-        if( status == Status.OK_STATUS )
-        {
-          /* Delete coverage from collection */
-          // final Feature parentFeature = resultCoverages.getWrappedFeature();
-          // final IRelationType pt = (IRelationType) parentFeature.getFeatureType().getProperty(
-          // ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
-          final Feature coverageFeature = coverageToDelete.getFeature();
-
-          final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
-          workspace.postCommand( command );
-
-          /* save the model */
-          // TODO: use a flag if the model should be getting save
-          dataProvider.saveModel( IFloodModel.class, new NullProgressMonitor() );
-        }
-        else
+        if( !status.isOK() )
           return status;
+
+        /* Delete coverage from collection */
+        final Feature coverageFeature = coverageToDelete.getFeature();
+
+        final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
+        workspace.postCommand( command );
       }
       return Status.OK_STATUS;
     }
@@ -283,30 +270,7 @@ public class FloodModelHelper
    */
   public static IRunoffEvent[] askUserForEvents( final Shell shell, final IFeatureWrapperCollection<IRunoffEvent> events )
   {
-    final LabelProvider labelProvider = new LabelProvider()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
-      @Override
-      public String getText( final Object element )
-      {
-        final IRunoffEvent event = (IRunoffEvent) element;
-        final ICoverageCollection resultCoverages = event.getResultCoverages();
-        if( resultCoverages != null && resultCoverages.size() > 0 )
-        {
-          return event.getName() + Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.18" ); //$NON-NLS-1$
-        }
-        else
-        {
-          final String name = event.getName();
-          if( name == null || name.length() == 0 )
-            return "[" + event.getGmlID() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-          else
-            return name;
-        }
-      }
-    };
+    final LabelProvider labelProvider = new RunoffEventForProcessingLabelProvider();
 
     final ListSelectionDialog dialog = new ListSelectionDialog( shell, events, new ArrayContentProvider(), labelProvider, Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.21" ) ); //$NON-NLS-1$
     dialog.setTitle( Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.22" ) ); //$NON-NLS-1$
