@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.handlers;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -53,6 +53,7 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -61,15 +62,19 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.core.SimulationKalypsoFlood;
 import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.util.FloodModelHelper;
+import org.kalypso.model.flood.util.RunoffEventForProcessingLabelProvider;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -79,6 +84,7 @@ import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.views.map.MapView;
+import org.kalypso.util.swt.StatusDialog;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -101,23 +107,24 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     {
       /* Get context */
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      final Shell shell = HandlerUtil.getActiveShellChecked( event );
+      final String commandName = HandlerUtils.getCommandName( event );
       final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-      final IFloodModel model = dataProvider.getModel( IFloodModel.class );
+      final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName(), IFloodModel.class );
       final IFeatureWrapperCollection<IRunoffEvent> events = model.getEvents();
 
       /* Get the map */
       final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
       final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
       if( mapView == null )
-        throw new ExecutionException( Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.0") ); //$NON-NLS-1$
+        throw new ExecutionException( Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.0" ) ); //$NON-NLS-1$
 
       final IMapPanel mapPanel = mapView.getMapPanel();
 
       /* wait for map to load */
-      if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.1"), Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.1" ), Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return null;
 
       /* ask user which events to process? */
@@ -126,39 +133,31 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       if( eventsToProcess == null )
         return null;
 
-      // decision dialog for user, if he wants to overwrite existing data
-      final List<IRunoffEvent> eventListToProcess = new LinkedList<IRunoffEvent>();
-      for( final IRunoffEvent runoffEvent : eventsToProcess )
-      {
-        final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
+      if( !askToReallyProcess( eventsToProcess, shell, commandName ) )
+        return null;
 
-        if( resultCoverages.size() != 0 )
-        {
-          if( MessageDialog.openQuestion( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.3") + runoffEvent.getName() + Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.4"), Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.5") ) == true ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          {
-            // clear existing results (gml and file and themes).
-            final IStatus status = FloodModelHelper.removeResultCoverages( dataProvider, resultCoverages );
-            if( status == Status.OK_STATUS )
-            {
-              eventListToProcess.add( runoffEvent );
-            }
-          }
-        }
-        else
-        {
-          eventListToProcess.add( runoffEvent );
-        }
+      /* Delete results */
+      final IStatus deleteStatus = deleteExistingResults( eventsToProcess, dataProvider );
+      if( !deleteStatus.isOK() )
+      {
+        new StatusDialog( shell, deleteStatus, commandName ).open();
+        return null;
       }
+
+      markEventsForProvessing( events, eventsToProcess );
+
+      // remove themes (processed coverages only)
+      final IMapModell mapModell = mapPanel.getMapModell();
+      final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.6" ), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
+      FloodModelHelper.removeWspThemes( wspTheme, eventsToProcess );
+
+      saveModel( shell, commandName, dataProvider );
 
       // check prerequisites
       // - event has at least 1 tin
       // - at least one grid present
 
-      final IMapModell mapModell = mapPanel.getMapModell();
-      final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.6"), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      final IRunoffEvent[] event2process = eventListToProcess.toArray( new IRunoffEvent[eventListToProcess.size()] );
-      runCalculation( shell, scenarioFolder, model, event2process, dataProvider, wspTheme );
+      runCalculation( shell, scenarioFolder, eventsToProcess, wspTheme );
       return null;
     }
     catch( final Exception e )
@@ -169,38 +168,97 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     }
   }
 
-  private void runCalculation( final Shell shell, final IFolder scenarioFolder, final IFloodModel model, final IRunoffEvent[] eventsToProcess, final SzenarioDataProvider dataProvider, final AbstractCascadingLayerTheme wspTheme )
+  private void saveModel( final Shell shell, final String title, final SzenarioDataProvider dataProvider )
   {
-    if( eventsToProcess.length == 0 )
-    {
-      MessageDialog.openInformation( shell, "Flood-Modeller", Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.9") ); //$NON-NLS-1$ //$NON-NLS-2$
-      return;
-    }
-    // remove themes (processed coverages only)
-    FloodModelHelper.removeWspThemes( wspTheme, eventsToProcess );
-
-    for( final IRunoffEvent runoffEvent : model.getEvents() )
-    {
-      runoffEvent.setMarkedForProcessing( false );
-    }
-    for( final IRunoffEvent runoffEvent : eventsToProcess )
-    {
-      runoffEvent.setMarkedForProcessing( true );
-    }
-    // REMARK: post an empty command in order to make the pool dirty, else save does not work.
-    final ICommand command = new EmptyCommand( Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.10"), false ); //$NON-NLS-1$
     try
     {
-      dataProvider.postCommand( IFloodModel.class, command );
-      dataProvider.saveModel( IFloodModel.class, new NullProgressMonitor() );
+      // REMARK: post an empty command in order to make the pool dirty, else save does not work.
+      final ICommand command = new EmptyCommand( "", false ); //$NON-NLS-1$
+      dataProvider.postCommand( IFloodModel.class.getName(), command );
+      dataProvider.saveModel( IFloodModel.class.getName(), new NullProgressMonitor() );
     }
     catch( final Exception e1 )
     {
-      ErrorDialog.openError( shell, "Flood-Modeller", Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.12"), Status.CANCEL_STATUS ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( shell, title, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.12" ), Status.CANCEL_STATUS ); //$NON-NLS-1$ //$NON-NLS-2$
+      return;
+    }
+  }
+
+  // TODO this is REALLY ugly. We need to send the gml-ids to process via a wps input, not by tweaking the model-data
+  // itself. Also need for another costly save of the (eventually) very big model.
+  private void markEventsForProvessing( final IFeatureWrapperCollection<IRunoffEvent> events, final IRunoffEvent[] eventsToProcess )
+  {
+    for( final IRunoffEvent runoffEvent : events )
+      runoffEvent.setMarkedForProcessing( false );
+
+    for( final IRunoffEvent runoffEvent : eventsToProcess )
+      runoffEvent.setMarkedForProcessing( true );
+  }
+
+  // FIXME: still too slow: we save the (quite big) model for every event!
+  private IStatus deleteExistingResults( final IRunoffEvent[] eventsToProcess, final SzenarioDataProvider dataProvider )
+  {
+    final Collection<IStatus> results = new ArrayList<IStatus>();
+
+    for( final IRunoffEvent event : eventsToProcess )
+    {
+      final ICoverageCollection resultCoverages = event.getResultCoverages();
+
+      final IStatus status = FloodModelHelper.removeResultCoverages( dataProvider, resultCoverages );
+      if( !status.isOK() )
+        results.add( status );
+    }
+
+    if( results.size() == 0 )
+      return Status.OK_STATUS;
+
+    final IStatus[] children = results.toArray( new IStatus[results.size()] );
+    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, 0, children, "Failed to delete existing results", null );
+  }
+
+  /** decision dialog for user, if he wants to overwrite existing data */
+  private boolean askToReallyProcess( final IRunoffEvent[] eventsToProcess, final Shell shell, final String title )
+  {
+    final IRunoffEvent[] eventsWithResults = getEventsWithResults( eventsToProcess );
+    if( eventsWithResults.length == 0 )
+      return true;
+
+    final StringBuilder message = new StringBuilder();
+    message.append( Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.3" ) ).append( '\n' ); //$NON-NLS-1$
+    for( final IRunoffEvent eventWithResults : eventsWithResults )
+    {
+      final String eventLabel = RunoffEventForProcessingLabelProvider.getEventLabel( eventWithResults );
+      message.append( "- " ).append( eventLabel ).append( '\n' ); //$NON-NLS-1$
+    }
+    message.append( Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.4" ) ); //$NON-NLS-1$
+
+    final String msg = message.toString();
+    return MessageDialog.openQuestion( shell, title, msg );
+  }
+
+  private IRunoffEvent[] getEventsWithResults( final IRunoffEvent[] eventsToProcess )
+  {
+    final Collection<IRunoffEvent> eventsWithResults = new ArrayList<IRunoffEvent>( eventsToProcess.length );
+
+    for( final IRunoffEvent event : eventsToProcess )
+    {
+      final ICoverageCollection resultCoverages = event.getResultCoverages();
+      if( resultCoverages.size() != 0 )
+        eventsWithResults.add( event );
+    }
+
+    return eventsWithResults.toArray( new IRunoffEvent[eventsWithResults.size()] );
+  }
+
+  private void runCalculation( final Shell shell, final IFolder scenarioFolder, final IRunoffEvent[] eventsToProcess, final AbstractCascadingLayerTheme wspTheme )
+  {
+    if( eventsToProcess.length == 0 )
+    {
+      MessageDialog.openInformation( shell, "Flood-Modeller", Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.9" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
-    final Job job = new Job( Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.13") ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.13" ) ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -222,13 +280,13 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
               }
               catch( final Exception e )
               {
-                showErrorDialog( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.14") + e.getLocalizedMessage() ); //$NON-NLS-1$
+                showErrorDialog( shell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.14" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
                 return StatusUtilities.createErrorStatus( e.getLocalizedMessage(), new Object[] {} );
               }
             }
-            showInfoDialog( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.15") ); //$NON-NLS-1$
+            showInfoDialog( shell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.15" ) ); //$NON-NLS-1$
           }
-          showErrorDialog( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.16"), status ); //$NON-NLS-1$
+          showErrorDialog( shell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.16" ), status ); //$NON-NLS-1$
         }
         catch( final Exception e )
         {
@@ -261,7 +319,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       @Override
       public void run( )
       {
-        MessageDialog.openInformation( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.17"), message ); //$NON-NLS-1$
+        MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.17" ), message ); //$NON-NLS-1$
       }
     } );
   }
@@ -273,7 +331,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       @Override
       public void run( )
       {
-        MessageDialog.openError( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.18"), message ); //$NON-NLS-1$
+        MessageDialog.openError( shell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.18" ), message ); //$NON-NLS-1$
       }
     } );
   }
@@ -285,7 +343,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       @Override
       public void run( )
       {
-        ErrorDialog.openError( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.19"), message, status ); //$NON-NLS-1$
+        ErrorDialog.openError( shell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.19" ), message, status ); //$NON-NLS-1$
       }
     } );
   }

@@ -1,19 +1,20 @@
 package org.kalypso.model.flood.ui.map.operations;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.ui.map.EventManagementWidget;
@@ -50,51 +51,23 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
+    monitor.beginTask( "Deleting Runoff Events / TINs", m_treeSelection.length + 10 );
+    final Collection<IStatus> removeResults = new ArrayList<IStatus>();
     try
     {
       for( final Object element : m_treeSelection )
       {
         final Feature featureToRemove = (Feature) element;
+        monitor.subTask( String.format( String.format( "Deleting '%s'", featureToRemove.getName() ) ) );
 
-        /* Delete associated themes */
-        final IRunoffEvent runoffEvent = (IRunoffEvent) featureToRemove.getAdapter( IRunoffEvent.class );
-        if( runoffEvent != null )
-        {
-          /* Delete themes from map */
-          deleteThemes( m_wspThemes, runoffEvent );
-
-          /* Delete underlying grid files */
-          final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
-
-          final Display display = PlatformUI.getWorkbench().getDisplay();
-          display.asyncExec( new Runnable()
-          {
-            @Override
-            public void run( )
-            {
-              FloodModelHelper.removeResultCoverages( m_provider, resultCoverages );
-            }
-          } );
-
-          /* Delete event folder */
-          final IFolder eventFolder = EventManagementWidget.getEventFolder( runoffEvent );
-          eventFolder.delete( true, new NullProgressMonitor() );
-        }
-
-        /* Delete coverage from collection */
-        // final Feature parentFeature = featureToRemove.getParent();
-        // final IRelationType pt = featureToRemove.getParentRelation();
-        final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class );
-
-        final DeleteFeatureCommand command = new DeleteFeatureCommand( featureToRemove );
-
-        workspace.postCommand( command );
+        final IStatus removeResult = removeEvent( featureToRemove, new SubProgressMonitor( monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK ) );
+        if( !removeResult.isOK() )
+          removeResults.add( removeResult );
       }
 
-      /*
-       * Save model and map, as undo is not possible here and the user should not be able to 'verwerfen' the changes
-       */
-      m_provider.saveModel( IFloodModel.class, new SubProgressMonitor( monitor, 1 ) );
+      /* Save model, as undo is not possible here and the user should not be able to revert the changes */
+      monitor.subTask( "Saving flood model" );
+      m_provider.saveModel( IFloodModel.class.getName(), new SubProgressMonitor( monitor, 10 ) );
     }
     catch( final Exception e )
     {
@@ -104,6 +77,48 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
       throw new InvocationTargetException( e );
     }
 
+    if( removeResults.size() == 0 )
+      return Status.OK_STATUS;
+
+    final IStatus[] children = removeResults.toArray( new IStatus[removeResults.size()] );
+    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, 0, children, "Problem(s) occured during removal of runoff events", null );
+  }
+
+  private IStatus removeEvent( final Feature featureToRemove, final IProgressMonitor monitor ) throws CoreException, Exception
+  {
+    final String msg = String.format( "Deleting %s - ", featureToRemove.getName() );
+    monitor.beginTask( msg, 100 );
+
+    final IRunoffEvent runoffEvent = (IRunoffEvent) featureToRemove.getAdapter( IRunoffEvent.class );
+    IStatus removeResult = null;
+    if( runoffEvent != null )
+    {
+      monitor.subTask( "removing themes from map" );
+      deleteThemes( m_wspThemes, runoffEvent );
+      monitor.worked( 10 );
+
+      /* Delete underlying tin files */
+      monitor.subTask( "removing underlying tin files" );
+      final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
+      removeResult = FloodModelHelper.removeResultCoverages( m_provider, resultCoverages );
+      monitor.worked( 60 );
+
+      /* Delete event folder */
+      monitor.subTask( "removing tin folder" );
+      final IFolder eventFolder = EventManagementWidget.getEventFolder( runoffEvent );
+      eventFolder.delete( true, new SubProgressMonitor( monitor, 20 ) );
+    }
+
+    /* Delete coverage from collection */
+    monitor.subTask( "removing runoff event from model" );
+    final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class.getName() );
+    final DeleteFeatureCommand command = new DeleteFeatureCommand( featureToRemove );
+    workspace.postCommand( command );
+    monitor.worked( 10 );
+
+    // TODO: Probably we need a more sophisticated error handling here
+    if( removeResult != null )
+      return removeResult;
     return Status.OK_STATUS;
   }
 
