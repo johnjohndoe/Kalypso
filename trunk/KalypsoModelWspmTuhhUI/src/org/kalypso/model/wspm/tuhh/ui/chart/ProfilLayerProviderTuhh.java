@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.IWspmPhenomenonConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
@@ -79,6 +80,7 @@ import org.kalypso.model.wspm.ui.view.table.GenericComponentUiHandlerProvider;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
@@ -188,19 +190,64 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
       final IProfilChange[] changes = new IProfilChange[1];
-      changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { new BuildingWehr( profil ) } );
-
+      final BuildingWehr bw = new BuildingWehr( profil );
+      setInitialValues( bw, profil );
+      changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { bw } );
       final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.5" ), profil, changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_TUBES ) )
     {
-      final IProfileObject building = new BuildingKreis();
+      final BuildingKreis building = new BuildingKreis();
+      setInitialValues( building, profil );
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { building } );
       final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.6" ), profil, changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
     }
+  }
+
+  private final void setInitialValues( final BuildingKreis building, final IProfil profil )
+  {
+    final IProfilPointMarker[] marker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    if( marker.length == 2 )
+    {
+
+      final IRecord p1 = marker[0].getPoint();
+      final IRecord p2 = marker[1].getPoint();
+      final Double x1 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_BREITE, p1 );
+      final Double y1 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p1 );
+      final Double x2 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_BREITE, p2 );
+      final Double y2 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p2 );
+
+      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_BEZUGSPUNKT_X ), x1 + (x2 - x1) / 2 );
+      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_BEZUGSPUNKT_Y ), y1 + (y2 - y1) / 2 );
+      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_BREITE ), 2.0 );
+      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_SOHLGEFAELLE ), 5.0 );
+      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_RAUHEIT ), 0.0 );
+
+    }
+
+  }
+
+  private final void setInitialValues( final BuildingWehr building, final IProfil profil )
+  {
+    final IProfilPointMarker[] marker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    if( marker.length == 2 )
+    {
+
+      final IRecord p1 = marker[0].getPoint();
+      final IRecord p2 = marker[1].getPoint();
+      final int index = profil.indexOfProperty( POINT_PROPERTY_HOEHE );
+      final Double y1 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p1 );
+      final Double y2 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p2 );
+      p1.setValue( index, y1);
+      p2.setValue( index, y2);
+
+      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_FORMBEIWERT ), 1.0 );
+
+    }
+
   }
 
   @Override
