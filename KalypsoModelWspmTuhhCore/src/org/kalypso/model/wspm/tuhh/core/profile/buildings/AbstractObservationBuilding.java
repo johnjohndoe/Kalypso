@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 
 import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -56,9 +55,9 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractObservationBuilding extends AbstractProfileObject implements IProfileBuilding
 {
-  protected AbstractObservationBuilding(final IObservation<TupleResult> observation )
+  protected AbstractObservationBuilding( final IObservation<TupleResult> observation )
   {
-    super(observation );
+    super( observation );
   }
 
   /**
@@ -77,6 +76,21 @@ public abstract class AbstractObservationBuilding extends AbstractProfileObject 
       result.add( result.createRecord() );
 
     return result.get( 0 ).getValue( index );
+  }
+
+  public void cloneValuesFrom( final IProfileBuilding building )
+  {
+    for( final IComponent cmp : this.getObjectProperties() )
+    {
+      try
+      {
+        this.setValue( cmp, building.getValue(cmp ) );
+      }
+      catch( IllegalArgumentException e )
+      {
+        continue;
+      }
+    }
   }
 
   /**
@@ -102,7 +116,14 @@ public abstract class AbstractObservationBuilding extends AbstractProfileObject 
     if( index < 0 )
       throw new IllegalArgumentException( component.getName() );
 
-    final IRecord record = result.size() == 0 ? result.createRecord() : result.get( 0 );
+    final IRecord record;
+    if( result.size() == 0 )
+    {
+      record = result.createRecord();
+      result.add( record );
+    }
+    else
+      record = result.get( 0 );
     record.setValue( index, value );
   }
 

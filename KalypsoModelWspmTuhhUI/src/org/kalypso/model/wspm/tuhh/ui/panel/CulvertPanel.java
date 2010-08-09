@@ -71,6 +71,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
@@ -104,7 +105,7 @@ public class CulvertPanel extends AbstractProfilView
   {
     super( profile );
     m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_KREIS, new BuildingKreis() );
-    m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ, new BuildingTrapez( ) );
+    m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ, new BuildingTrapez() );
     m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_MAUL, new BuildingMaul() );
     m_culverts.put( IWspmTuhhConstants.BUILDING_TYP_EI, new BuildingEi() );
   }
@@ -177,7 +178,7 @@ public class CulvertPanel extends AbstractProfilView
         return;
 
       final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
-      m_text.setText( val.toString() );
+      m_text.setText( String.format( "%.4f", val ) );
       if( m_text.isFocusControl() )
         m_text.selectAll();
     }
@@ -258,11 +259,14 @@ public class CulvertPanel extends AbstractProfilView
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
-        final IProfileBuilding tube = (IProfileBuilding) selection.getFirstElement();
+        final AbstractObservationBuilding tube = (AbstractObservationBuilding) selection.getFirstElement();
 
         final IProfileBuilding old = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
         if( tube != null && !tube.getId().equals( old.getId() ) )
+        {
+          tube.cloneValuesFrom( old );
           getProfil().addProfileObjects( new IProfileObject[] { tube } );
+        }
       }
     } );
     m_toolkit.adapt( m_cmb.getCombo() );
