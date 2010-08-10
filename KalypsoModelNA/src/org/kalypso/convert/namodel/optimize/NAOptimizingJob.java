@@ -61,7 +61,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileUtil;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.simulation.NaModelInnerCalcJob;
@@ -144,19 +146,19 @@ public class NAOptimizingJob implements IOptimizingJob
     // .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
     final Feature rootFeature = controlWorkspace.getRootFeature();
     m_linkMeasuredTS = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NACONTROL_PEGEL_ZR_PROP );
-    m_linkCalcedTS = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
+    m_linkCalcedTS = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NACONTROL_RESULT_TIMESERIESLINK_PROP );
 
     // final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
     // final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
     // .getURLForID( NaModelConstants.IN_META_ID ), metaSchemaURL );
     final Feature metaFE = metaWorkspace.getRootFeature();
-    final Date measuredStartDate = (Date) metaFE.getProperty( NaModelConstants.CONTROL_STARTSIMULATION );
-    final Date measuredEndDate = (Date) metaFE.getProperty( NaModelConstants.CONTROL_FORECAST );
+    final Date measuredStartDate = DateUtilities.toDate( metaFE.getProperty( NaModelConstants.CONTROL_STARTSIMULATION ) );
+    final Date measuredEndDate = DateUtilities.toDate( metaFE.getProperty( NaModelConstants.CONTROL_FORECAST ) );
 
     final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
 
-    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( (File) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID ) );
+    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( FileUtils.toFile((URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID ) ));
 
     // correct in intervall autocalibration
     final Pegel pegel = m_autoCalibration.getPegel();
@@ -257,7 +259,7 @@ public class NAOptimizingJob implements IOptimizingJob
   @Override
   public void optimize( final Parameter[] parameterConf, final double values[] ) throws Exception
   {
-    final Document dom = XMLHelper.getAsDOM( (File) m_dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), true );
+    final Document dom = XMLHelper.getAsDOM( FileUtils.toFile( (URL) m_dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID )), true );
 
     final ParameterOptimizeContext[] calcContexts = new ParameterOptimizeContext[parameterConf.length];
     for( int i = 0; i < parameterConf.length; i++ )

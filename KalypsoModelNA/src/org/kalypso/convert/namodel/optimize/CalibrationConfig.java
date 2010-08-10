@@ -72,7 +72,7 @@ public class CalibrationConfig
         "CatchmentsFaktn", //$NON-NLS-1$
         "CatchmentsFaktorAigw" }; //$NON-NLS-1$
 
-    final String[][] xpathModel = new String[][] { new String[] { queryBaseCatchment + "faktorBianf" }, //$NON-NLS-1$
+    final String[][] xpathModel = new String[][] { new String[] { queryBaseCatchment + "bianf" }, //$NON-NLS-1$
         new String[] { queryBaseCatchment + "faktorRetobRetint" }, //$NON-NLS-1$
         new String[] { queryBaseCatchment + "faktn" }, //$NON-NLS-1$
         new String[] { queryBaseCatchment + "faktorAigw" } }; //$NON-NLS-1$
