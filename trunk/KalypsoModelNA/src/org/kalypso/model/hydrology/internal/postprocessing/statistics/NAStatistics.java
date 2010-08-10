@@ -265,6 +265,9 @@ public class NAStatistics
 
   private String asText( final Object currentElement, final int j )
   {
+    if( currentElement == null )
+      return "";
+    
     switch( j )
     {
       case 0:

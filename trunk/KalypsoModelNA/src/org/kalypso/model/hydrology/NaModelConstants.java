@@ -540,4 +540,6 @@ public interface NaModelConstants
   public static final QName NACONTROL_USEOFFENDPRED_PROP = new QName( NS_NACONTROL, "useOffsetEndPrediction" ); //$NON-NLS-1$
 
   public static final QName NACONTROL_USE_RESULTS_PROP = new QName( NS_NACONTROL, "useResults" ); //$NON-NLS-1$
+  
+  public static final QName NACONTROL_PEGEL_ZR_PROP = new QName( NS_NACONTROL, "pegelZR" ); //$NON-NLS-1$
 }

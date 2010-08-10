@@ -108,7 +108,7 @@ public class NAStatisticsData
   private static double findTimestep( final IAxis dateAxis, final ITupleModel tuppleModel ) throws SensorException
   {
     // here we assume constant timestep in the whole timeseries data
-    if( tuppleModel.getCount() == 1 )
+    if( tuppleModel.getCount() < 2 )
       return 0.0;
 
     final Date date0 = (Date) tuppleModel.getElement( 0, dateAxis );
