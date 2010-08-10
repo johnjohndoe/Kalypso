@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.binding;
+package org.kalypso.model.hydrology.binding;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -59,29 +59,27 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class NAControl extends Feature_Impl
 {
-  public static final String NS_NAMETA = NaModelConstants.NS_NAMETA;
+  private static final String NS_NAMETA = NaModelConstants.NS_NAMETA;
 
-  public static final QName PROP_STARTSIMULATION = new QName( NS_NAMETA, "startsimulation" ); //$NON-NLS-1$
+  private static final QName PROP_STARTSIMULATION = new QName( NS_NAMETA, "startsimulation" ); //$NON-NLS-1$
 
-  public static final QName PROP_FORECAST = new QName( NS_NAMETA, "startforecast" ); //$NON-NLS-1$
+  private static final QName PROP_FORECAST = new QName( NS_NAMETA, "startforecast" ); //$NON-NLS-1$
 
-  public static final QName PROP_SCENARIO_ID = new QName( NS_NAMETA, "scenarioId" ); //$NON-NLS-1$
+  private static final QName PROP_HOURS_FORECAST = new QName( NS_NAMETA, "hoursforecast" ); //$NON-NLS-1$
 
-  public static final QName PROP_HOURS_FORECAST = new QName( NS_NAMETA, "hoursforecast" ); //$NON-NLS-1$
+  private static final QName PROP_MINUTES_TIMESTEP = new QName( NS_NAMETA, "minutesTimestep" ); //$NON-NLS-1$
 
-  public static final QName PROP_MINUTES_TIMESTEP = new QName( NS_NAMETA, "minutesTimestep" ); //$NON-NLS-1$
+  private static final QName PROP_VERSION_KALYPSONA = new QName( NS_NAMETA, "versionKalypsoNA" ); //$NON-NLS-1$
 
-  public static final QName PROP_VERSION_KALYPSONA = new QName( NS_NAMETA, "versionKalypsoNA" ); //$NON-NLS-1$
+  private static final QName PROP_PNS = new QName( NS_NAMETA, "pns" ); //$NON-NLS-1$
 
-  public static final QName PROP_PNS = new QName( NS_NAMETA, "pns" ); //$NON-NLS-1$
+  private static final QName PROP_XJAH = new QName( NS_NAMETA, "xjah" ); //$NON-NLS-1$
 
-  public static final QName PROP_XJAH = new QName( NS_NAMETA, "xjah" ); //$NON-NLS-1$
+  private static final QName PROP_XWAHL2 = new QName( NS_NAMETA, "xwahl2" ); //$NON-NLS-1$
 
-  public static final QName PROP_XWAHL2 = new QName( NS_NAMETA, "xwahl2" ); //$NON-NLS-1$
+  private static final QName PROP_IPVER = new QName( NS_NAMETA, "ipver" ); //$NON-NLS-1$
 
-  public static final QName PROP_IPVER = new QName( NS_NAMETA, "ipver" ); //$NON-NLS-1$
-
-  public static final QName PROP_RETURN_PERIOD = new QName( NS_NAMETA, "returnPeriod" ); //$NON-NLS-1$
+  private static final QName PROP_RETURN_PERIOD = new QName( NS_NAMETA, "returnPeriod" ); //$NON-NLS-1$
 
   public NAControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -157,6 +155,11 @@ public class NAControl extends Feature_Impl
   public String getExeVersion( )
   {
     return getProperty( PROP_VERSION_KALYPSONA, String.class );
+  }
+
+  public Integer getReturnPeriod( )
+  {
+    return getProperty( PROP_RETURN_PERIOD, Integer.class );
   }
 
 }

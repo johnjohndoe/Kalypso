@@ -67,7 +67,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.binding.NAControl;
+import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -78,6 +80,7 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -103,7 +106,7 @@ public class CatchmentManager extends AbstractManager
   {
     super( conf.getCatchmentFormatURL() );
     m_conf = conf;
-    m_catchmentFT = schema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
+    m_catchmentFT = schema.getFeatureType( Catchment.FEATURE_CATCHMENT );
     final IRelationType ftp1 = (IRelationType) m_catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
     m_bodenKorrekturFT = ftp1.getTargetFeatureType();
 
@@ -246,15 +249,13 @@ public class CatchmentManager extends AbstractManager
 
   public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws Exception
   {
-    final Feature rootFeature = workspace.getRootFeature();
-    final Feature col = (Feature) rootFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-    final List< ? > list = (List< ? >) col.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
-    final Iterator< ? > iter = list.iterator();
-    while( iter.hasNext() )
+    final NaModell naModel = (NaModell) workspace.getRootFeature();
+
+    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+    for( final Catchment catchment : catchments )
     {
-      final Feature catchmentFE = (Feature) iter.next();
-      if( asciiBuffer.isFeatureMakredForWrite( catchmentFE ) )
-        writeFeature( asciiBuffer, workspace, catchmentFE );
+      if( asciiBuffer.isFeatureMakredForWrite( catchment ) )
+        writeFeature( asciiBuffer, workspace, catchment );
     }
   }
 

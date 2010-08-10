@@ -38,40 +38,57 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.binding.suds;
+package org.kalypso.model.hydrology.binding;
+
+import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * @author Dirk Kuch
+ * Binding class for rrmLanduse:Landuse
+ * 
+ * @author Gernot Belger
  */
-public class Swale extends AbstractSwale implements ISwale
+public class SoilType extends Feature_Impl
 {
-  public Swale( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public static final QName QNAME = new QName( NaModelConstants.NS_NAPEDOLOGIE, "Soiltype" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAPEDOLOGIE, "location" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_SOILTYPE = new QName( NaModelConstants.NS_NAPEDOLOGIE, "soilTypeLink" ); //$NON-NLS-1$
+
+  public SoilType( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.convert.namodel.schema.binding.suds.ISwale#getElementType()
-   */
-  @Override
-  public String getElementType( )
+  public GM_MultiSurface getGeometry( )
   {
-    final Object property = getProperty( QN_PROPERTY_ELEMENT_TYPE );
-    if( property instanceof String )
-      return (String) property;
-    return "20"; //$NON-NLS-1$
+    return getProperty( QNAME_PROP_GEOMETRY, GM_MultiSurface.class );
+  }
+
+  public void setGeometry( final GM_MultiSurface geometry )
+  {
+    setProperty( QNAME_PROP_GEOMETRY, geometry );
   }
 
   /**
-   * @see org.kalypso.convert.namodel.schema.binding.suds.IAbstractSwale#getIdealLanduseName()
+   * @param landuseClass
+   *          Must be either a {@link org.kalypsodeegree.model.feature.Feature} (maybe xlinked) or a {@link String}-ref
+   *          to a feature.
    */
-  @Override
-  public String getIdealLanduseName( )
+  public void setSoilType( final Object soilType )
   {
-    return IDEAL_LANDUSE;
+    setProperty( QNAME_PROP_SOILTYPE, soilType );
+  }
+
+  public Object getSoilType( )
+  {
+    return getProperty( QNAME_PROP_SOILTYPE );
   }
 
 }

@@ -53,8 +53,11 @@ import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -114,14 +117,13 @@ public class SwaleAndTrenchManager extends AbstractManager
     final IDManager idManager = m_conf.getIdManager();
     // Line 5
     final GM_Curve sTGeomProp = (GM_Curve) feature.getProperty( NaModelConstants.MRS_GEOM_PROP );
-    final Feature modelRootFeature = workSpace.getRootFeature();
-    final Feature modelCol = (Feature) modelRootFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-    final List< ? > catchmentList = (List< ? >) modelCol.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
-    final Iterator< ? > catchmentIter = catchmentList.iterator();
+    final NaModell naModel = (NaModell) workSpace.getRootFeature();
+    final IFeatureBindingCollection<Catchment> catchmentList = naModel.getCatchments();
+    final Iterator<Catchment> catchmentIter = catchmentList.iterator();
     int catchmentAsciiID = 0;
     while( catchmentIter.hasNext() & catchmentAsciiID == 0 )
     {
-      final Feature catchmentFE = (Feature) catchmentIter.next();
+      final Catchment catchmentFE = catchmentIter.next();
       final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
       if( tGGeomProp.contains( sTGeomProp.getStartPoint() ) )
       {

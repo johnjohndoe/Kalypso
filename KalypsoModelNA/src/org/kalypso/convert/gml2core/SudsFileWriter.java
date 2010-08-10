@@ -49,12 +49,15 @@ import java.util.TreeMap;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.BodentypManager;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.binding.Hydrotop;
-import org.kalypso.model.hydrology.internal.binding.suds.Greenroof;
-import org.kalypso.model.hydrology.internal.binding.suds.Swale;
-import org.kalypso.model.hydrology.internal.binding.suds.SwaleInfiltrationDitch;
+import org.kalypso.model.hydrology.binding.Hydrotop;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.suds.Greenroof;
+import org.kalypso.model.hydrology.binding.suds.Swale;
+import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -83,8 +86,8 @@ public class SudsFileWriter extends AbstractCoreFileWriter
     if( m_config.getModelWorkspace() != null && m_config.getHydrotopeWorkspace() != null && m_config.getSudsWorkspace() != null )
     {
       final TreeMap<String, TreeMap<String, List<String>>> sudsMap = new TreeMap<String, TreeMap<String, List<String>>>();
-      final Feature catchmentCollection = (Feature) m_config.getModelWorkspace().getRootFeature().getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-      final FeatureList catchmentList = (FeatureList) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
+      final NaModell naModel = (NaModell) m_config.getModelWorkspace().getRootFeature();
+      final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
 
       m_config.getHydrotopeWorkspace().getRootFeature();
       final FeatureList hydrotopFeatureList = (FeatureList) m_config.getHydrotopeWorkspace().getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
@@ -97,13 +100,11 @@ public class SudsFileWriter extends AbstractCoreFileWriter
           final GM_Object hydrotopGeometryProperty = hydrotop.getDefaultGeometryPropertyValue();
           final Geometry hydrotopGeometry = JTSAdapter.export( hydrotopGeometryProperty );
           final GM_Object hydrotopInteriorPoint = JTSAdapter.wrap( hydrotopGeometry.getInteriorPoint() );
-          final List<Feature> list = catchmentList.query( hydrotopGeometryProperty.getEnvelope(), null );
-          for( final Feature catchment : list )
+          final List<Catchment> list = catchments.query( hydrotopGeometryProperty.getEnvelope() );
+          for( final Catchment catchment : list )
+          {
             if( catchment.getDefaultGeometryPropertyValue().contains( hydrotopInteriorPoint ) )
             {
-// final Feature strang = (Feature) catchment.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-// final String drainageNodeName = (String) strang.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-
               final String catchmentName = catchment.getName();
               if( !sudsMap.containsKey( catchmentName ) )
                 sudsMap.put( catchmentName, new TreeMap<String, List<String>>() );
@@ -172,6 +173,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                 map.put( key, value );
               }
             }
+          }
         }
       }
       m_contentBuffer.setLength( 0 );

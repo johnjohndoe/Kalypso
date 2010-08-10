@@ -57,11 +57,13 @@ import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.binding.Hydrotop;
-import org.kalypso.model.hydrology.internal.binding.suds.IGreenRoof;
-import org.kalypso.model.hydrology.internal.binding.suds.ISealing;
-import org.kalypso.model.hydrology.internal.binding.suds.ISwale;
-import org.kalypso.model.hydrology.internal.binding.suds.ISwaleInfiltrationDitch;
+import org.kalypso.model.hydrology.binding.Hydrotop;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.suds.IGreenRoof;
+import org.kalypso.model.hydrology.binding.suds.ISealing;
+import org.kalypso.model.hydrology.binding.suds.ISwale;
+import org.kalypso.model.hydrology.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -177,8 +179,7 @@ public class HydrotopManager extends AbstractManager
   {
     final IDManager idManager = m_conf.getIdManager();
     // Catchment
-    final Feature catchmentCollection = (Feature) modelWorkspace.getRootFeature().getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-    final List<Feature> catchmentList = (List<Feature>) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
+    final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
 
     final List<Feature> landuseList = (List<Feature>) parameterWorkspace.getRootFeature().getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
     final Iterator<Feature> landuseIter = landuseList.iterator();
@@ -195,18 +196,18 @@ public class HydrotopManager extends AbstractManager
         m_landuseSealingRateMap.put( landuseName, sealingRate );
     }
 
-    final Iterator<Feature> catchmentIter = catchmentList.iterator();
     // vollständige HydrotopList
     final FeatureList hydList = (FeatureList) hydWorkspace.getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
 
     final List<Feature> soilTypeList = (List<Feature>) parameterWorkspace.getRootFeature().getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
     asciiBuffer.getHydBuffer().append( Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.2" ) ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    while( catchmentIter.hasNext() )
+
+    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+    for( final Catchment catchment : catchments )
     {
-      final Feature catchmentFE = catchmentIter.next();
-      if( asciiBuffer.isFeatureMakredForWrite( catchmentFE ) ) // do it only for relevant catchments
+      if( asciiBuffer.isFeatureMakredForWrite( catchment ) ) // do it only for relevant catchments
       {
-        final int catchmentAsciiID = idManager.getAsciiID( catchmentFE );
+        final int catchmentAsciiID = idManager.getAsciiID( catchment );
         boolean anySuds = false;
         final List<String> hydIdList = new ArrayList<String>();
         final List<String> hydrotopOutputList = new ArrayList<String>();
@@ -215,11 +216,11 @@ public class HydrotopManager extends AbstractManager
         double totalHydrotopSealedArea = 0.0;
         double totalSudsNaturalArea = 0.0;
         double totalSudsSealedArea = 0.0;
-        final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
+        final GM_Object tGGeomProp = (GM_Object) catchment.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
         final Geometry catchmentGeometry = JTSAdapter.export( tGGeomProp );
 
         // Hydrotope im TeilgebietsEnvelope
-        final List<Hydrotop> hydInEnvList = hydList.query( catchmentFE.getBoundedBy(), null );
+        final List<Hydrotop> hydInEnvList = hydList.query( catchment.getBoundedBy(), null );
         int hydrotopAsciiID = 0;
         for( final Hydrotop hydrotop : hydInEnvList )
         {
@@ -331,7 +332,7 @@ public class HydrotopManager extends AbstractManager
         final double fehler = Math.abs( catchmentGeometry.getArea() - totalHydrotopArea );
         final double fehlerinProzent = 100.0 * fehler / totalHydrotopArea;
         if( fehlerinProzent > 1.0 )
-          m_logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3", totalHydrotopArea, catchmentFE.getId(), catchmentGeometry.getArea(), fehler, fehlerinProzent ) ); //$NON-NLS-1$
+          m_logger.log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.3", totalHydrotopArea, catchment.getId(), catchmentGeometry.getArea(), fehler, fehlerinProzent ) ); //$NON-NLS-1$
 
         if( anySuds )
         {
@@ -344,7 +345,7 @@ public class HydrotopManager extends AbstractManager
         for( final String line : hydrotopOutputList )
           asciiBuffer.getHydBuffer().append( line ).append( "\n" ); //$NON-NLS-1$
 
-        m_conf.getHydroHash().addHydroInfo( catchmentFE, hydIdList );
+        m_conf.getHydroHash().addHydroInfo( catchment, hydIdList );
       }
     }
   }

@@ -67,10 +67,11 @@ import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaResultDirs;
-import org.kalypso.model.hydrology.internal.binding.NAControl;
-import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.ogc.sensor.IAxis;
@@ -256,7 +257,7 @@ public class NaPostProcessor
     final String targetTSLink = descriptor.getTargetTSLink();
 
     final IFeatureType FT_NODE = m_modelWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    final IFeatureType FT_CATCHMENT = m_modelWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
+    final IFeatureType FT_CATCHMENT = m_modelWorkspace.getGMLSchema().getFeatureType( Catchment.FEATURE_CATCHMENT );
     final IFeatureType FT_STORAGE_CHANNEL = m_modelWorkspace.getGMLSchema().getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
 
     final boolean isConsiderableFeatureType = FT_NODE.equals( resultFT ) || FT_CATCHMENT.equals( resultFT ) || FT_STORAGE_CHANNEL.equals( resultFT );

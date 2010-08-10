@@ -65,9 +65,10 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.binding.GeologyCollection;
-import org.kalypso.model.hydrology.internal.binding.LanduseCollection;
-import org.kalypso.model.hydrology.internal.binding.SoilTypeCollection;
+import org.kalypso.model.hydrology.binding.GeologyCollection;
+import org.kalypso.model.hydrology.binding.LanduseCollection;
+import org.kalypso.model.hydrology.binding.SoilTypeCollection;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
@@ -118,7 +119,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
           flPedology = list;
         else if( GeologyCollection.QNAME_PROP_GEOLOGYMEMBER.equals( featureTypeProperty.getQName() ) )
           flGeology = list;
-        else if( NaModelConstants.CATCHMENT_MEMBER_PROP.equals( featureTypeProperty.getQName() ) )
+        else if( NaModell.MEMBER_CATCHMENT.equals( featureTypeProperty.getQName() ) )
           flCatchment = list;
 
         if( list.size() == 0 )

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.binding;
+package org.kalypso.model.hydrology.binding;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.binding.PolygonIntersectionHelper.ImportType;
+import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -57,87 +57,87 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for rrmLanduse:LanduseCollection's
+ * Binding class for rrmSoilType:SoilTypeCollection's
  * 
  * @author Gernot Belger
  */
-public class LanduseCollection extends Feature_Impl
+public class SoilTypeCollection extends Feature_Impl
 {
-  public static final QName QNAME_PROP_LANDUSEMEMBER = new QName( NaModelConstants.NS_NALANDUSE, "landuseMember" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_SOILTYPEMEMBER = new QName( NaModelConstants.NS_NAPEDOLOGIE, "soiltypeMember" ); //$NON-NLS-1$
 
-  private final IFeatureBindingCollection<Landuse> m_landuses;
+  private final IFeatureBindingCollection<SoilType> m_soilTypes;
 
-  public LanduseCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public SoilTypeCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_landuses = new FeatureBindingCollection<Landuse>( this, Landuse.class, QNAME_PROP_LANDUSEMEMBER );
+    m_soilTypes = new FeatureBindingCollection<SoilType>( this, SoilType.class, QNAME_PROP_SOILTYPEMEMBER );
   }
 
-  public IFeatureBindingCollection<Landuse> getLanduses( )
+  public IFeatureBindingCollection<SoilType> getSoilTypes( )
   {
-    return m_landuses;
+    return m_soilTypes;
   }
 
   /**
-   * Create/Import a new landuse into this collection.
+   * Create/Import a new soilType into this collection.
    * 
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
-  public Landuse importLanduse( final String label, final GM_MultiSurface geometry, final ImportType importType, final List<IStatus> log )
+  public SoilType importSoilType( final String label, final GM_MultiSurface geometry, final ImportType importType, final List<IStatus> log )
   {
     if( geometry == null )
       return null;
 
-    // Handle existing landuses that intersect the new one
-    final List<Landuse> existingLanduses = m_landuses.query( geometry.getEnvelope() );
-    for( final Landuse existingLanduse : existingLanduses )
+    // Handle existing soilTypes that intersect the new one
+    final List<SoilType> existingSoilTypes = m_soilTypes.query( geometry.getEnvelope() );
+    for( final SoilType existingPedology : existingSoilTypes )
     {
       switch( importType )
       {
         case DELETE_INTERSECTING:
         {
-          m_landuses.remove( existingLanduse );
-          final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.1", existingLanduse.getId() ); //$NON-NLS-1$
+          m_soilTypes.remove( existingPedology );
+          final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.1", existingPedology.getId() ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
           break;
 
         case IGNORE_INTERSECTING:
         {
-          final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.2", label ); //$NON-NLS-1$
+          final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.2", label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
           return null;
 
         case INTERSECT:
         {
-          final GM_MultiSurface existingGeometry = existingLanduse.getGeometry();
+          final GM_MultiSurface existingGeometry = existingPedology.getGeometry();
           final GM_MultiSurface difference = PolygonIntersectionHelper.createDifference( geometry, existingGeometry );
           if( difference != null )
-          {// TODO: check if area of difference is > 0!
-            existingLanduse.setGeometry( difference );
-            final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.3", existingLanduse.getId(), label ); //$NON-NLS-1$
+          {
+            existingPedology.setGeometry( difference );
+            final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.3", existingPedology.getId(), label ); //$NON-NLS-1$
             log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
           }
           else
           {
-            m_landuses.remove( existingLanduse );
-            final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.4", existingLanduse.getId(), label ); //$NON-NLS-1$
+            m_soilTypes.remove( existingPedology );
+            final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.4", existingPedology.getId(), label ); //$NON-NLS-1$
             log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
           }
         }
 
         case CLEAR_OUTPUT:
-          // nothing to do, we add all landuses
+          // nothing to do, we add all soilTypes
           break;
       }
     }
 
-    // Create new landuse
-    final Landuse landuse = m_landuses.addNew( Landuse.QNAME );
-    landuse.setName( label );
-    landuse.setGeometry( geometry );
-    return landuse;
+    // Create new soilType
+    final SoilType pedology = m_soilTypes.addNew( SoilType.QNAME );
+    pedology.setName( label );
+    pedology.setGeometry( geometry );
+    return pedology;
   }
 }

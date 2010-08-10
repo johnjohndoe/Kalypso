@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.binding;
+package org.kalypso.model.hydrology.binding;
 
 import java.util.Date;
 import java.util.List;

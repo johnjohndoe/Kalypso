@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.binding.suds;
+package org.kalypso.model.hydrology.binding.suds;
 
 import javax.xml.namespace.QName;
 

@@ -54,9 +54,9 @@ import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.HydroHash;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.manager.LzsimManager;
+import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
-import org.kalypso.model.hydrology.internal.binding.NAControl;
-import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -157,6 +157,9 @@ public class NAModelPreprocessor
     m_asciiDirs.outWeNatDir.mkdirs();
   }
 
+  /**
+   * Changes the modell-workspace before it is really written into ascii files.
+   */
   private void tweakGmlModel( final GMLWorkspace modelWorkspace, final String rootNodeID, final boolean useResults ) throws Exception
   {
     final URL zmlContext = m_conf.getZMLContext();

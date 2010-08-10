@@ -46,7 +46,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
-import org.kalypso.model.hydrology.internal.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.optimize.transform.ParameterOptimizeContext;
 
 /**

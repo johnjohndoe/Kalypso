@@ -50,17 +50,20 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Ignore;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.binding.Geology;
-import org.kalypso.model.hydrology.internal.binding.GeologyCollection;
-import org.kalypso.model.hydrology.internal.binding.Landuse;
-import org.kalypso.model.hydrology.internal.binding.LanduseCollection;
-import org.kalypso.model.hydrology.internal.binding.SoilType;
-import org.kalypso.model.hydrology.internal.binding.SoilTypeCollection;
+import org.kalypso.model.hydrology.binding.Geology;
+import org.kalypso.model.hydrology.binding.GeologyCollection;
+import org.kalypso.model.hydrology.binding.Landuse;
+import org.kalypso.model.hydrology.binding.LanduseCollection;
+import org.kalypso.model.hydrology.binding.SoilType;
+import org.kalypso.model.hydrology.binding.SoilTypeCollection;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -96,8 +99,9 @@ public class Test_Intersection extends TestCase
 
     final GMLWorkspace outputWS = GmlSerializer.createGMLWorkspace( template, null );
 
-    final Feature catchmentCollection = (Feature) catchmentWS.getRootFeature().getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-    final FeatureList catchmentFeatureList = (FeatureList) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
+    final NaModell naModel = (NaModell) catchmentWS.getRootFeature();
+    final List< ? > catchments = naModel.getCatchments();
+
     final FeatureList landuseFeatureList = (FeatureList) landuseWS.getRootFeature().getProperty( LanduseCollection.QNAME_PROP_LANDUSEMEMBER );
     final FeatureList soilTypesFeatureList = (FeatureList) pedologyWS.getRootFeature().getProperty( SoilTypeCollection.QNAME_PROP_SOILTYPEMEMBER );
     final FeatureList geologiesFeatureList = (FeatureList) geologyWS.getRootFeature().getProperty( GeologyCollection.QNAME_PROP_GEOLOGYMEMBER );
@@ -106,7 +110,7 @@ public class Test_Intersection extends TestCase
     final IFeatureType typeHydrotop = outputWS.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT );
 
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
-    geometryIntersector.addFeatureList( catchmentFeatureList );
+    geometryIntersector.addFeatureList( (List<Feature>)catchments );
     geometryIntersector.addFeatureList( soilTypesFeatureList );
     geometryIntersector.addFeatureList( geologiesFeatureList );
     geometryIntersector.addFeatureList( landuseFeatureList );
@@ -119,18 +123,20 @@ public class Test_Intersection extends TestCase
       final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
 
-      final List<Object> catchmentList = catchmentFeatureList.query( envelope, null );
+      final List<Catchment> catchmentList = ((IFeatureBindingCollection<Catchment>) catchments).query( envelope );
       if( catchmentList.size() == 0 )
         continue;
       else
       {
         boolean catchmentFound = false;
-        for( final Object object : catchmentList )
-          if( ((Feature) object).getDefaultGeometryPropertyValue().contains( point ) )
+        for( final Catchment object : catchmentList )
+        {
+          if( object.getDefaultGeometryPropertyValue().contains( point ) )
           {
             catchmentFound = true;
             break;
           }
+        }
         if( !catchmentFound )
           continue;
       }

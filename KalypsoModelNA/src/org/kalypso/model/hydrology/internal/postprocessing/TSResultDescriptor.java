@@ -43,6 +43,7 @@ package org.kalypso.model.hydrology.internal.postprocessing;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
@@ -53,19 +54,19 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 public enum TSResultDescriptor
 {
   qgs(".qgs", NaModelConstants.NODE_ELEMENT_FT, ITimeseriesConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", 1.0d), //$NON-NLS-3$ //$NON-NLS-4$
-  pre("j Niederschlag .pre", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_RAINFALL, null, null, 1.0d),
-  tmp("j Temperatur .tmp", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_TEMPERATURE, null, null, 1.0d),
-  qif("n Interflow .qif", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  qgw("n Grundwasser .qgw", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  qgg("n Gesamtabfluss TG .qgg", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  gws("n Grundwasserstand .gws - Umrechnung von m auf cm", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_WATERLEVEL, null, null, 100.0d),
-  qbs("n Basisabfluss .qbs", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  qna("n Oberflaechenabfluss .qna", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  qvs("n Abfluss vers. Flaechen .qvs", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  sch("// n Schnee .sch [mm]", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_WATERLEVEL, null, null, 0.1d),
-  qt1("n Kluftgrundw1 .qt1", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  qtg("n Kluftgrundw .qtg", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  vet("n Evapotranspiration .vet [mm]", NaModelConstants.CATCHMENT_ELEMENT_FT, ITimeseriesConstants.TYPE_EVAPORATION, null, null, 0.1d),
+  pre("j Niederschlag .pre", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RAINFALL, null, null, 1.0d),
+  tmp("j Temperatur .tmp", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_TEMPERATURE, null, null, 1.0d),
+  qif("n Interflow .qif", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
+  qgw("n Grundwasser .qgw", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
+  qgg("n Gesamtabfluss TG .qgg", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
+  gws("n Grundwasserstand .gws - Umrechnung von m auf cm", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_WATERLEVEL, null, null, 100.0d),
+  qbs("n Basisabfluss .qbs", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
+  qna("n Oberflaechenabfluss .qna", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
+  qvs("n Abfluss vers. Flaechen .qvs", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
+  sch("// n Schnee .sch [mm]", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_WATERLEVEL, null, null, 0.1d),
+  qt1("n Kluftgrundw1 .qt1", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
+  qtg("n Kluftgrundw .qtg", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
+  vet("n Evapotranspiration .vet [mm]", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_EVAPORATION, null, null, 0.1d),
 
   // Straenge
   sph("n Wasserstand Speicher .sph [muNN]", NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT, ITimeseriesConstants.TYPE_NORMNULL, null, null, 1.0d),

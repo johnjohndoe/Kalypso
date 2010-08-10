@@ -56,14 +56,17 @@ import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.binding.NAControl;
-import org.kalypso.model.hydrology.internal.binding.NAModellControl;
-import org.kalypso.model.hydrology.internal.binding.suds.Greenroof;
-import org.kalypso.model.hydrology.internal.binding.suds.Swale;
-import org.kalypso.model.hydrology.internal.binding.suds.SwaleInfiltrationDitch;
+import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.suds.Greenroof;
+import org.kalypso.model.hydrology.binding.suds.Swale;
+import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class NAControlConverter
@@ -279,12 +282,12 @@ public class NAControlConverter
 
     writer.append( "99999\n" ); //$NON-NLS-1$
     // teilgebiete
-    final IFeatureType catchmentFT = gmlSchema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
-    final Feature[] catchmentFEs = modellWorkspace.getFeatures( catchmentFT );
-    for( final Feature catchmentFE : catchmentFEs )
+    final NaModell naModel = (NaModell) modellWorkspace.getRootFeature();
+    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+    for( final Catchment catchment : catchments )
     {
-      if( FeatureHelper.booleanIsTrue( catchmentFE, NaModelConstants.GENERATE_RESULT_PROP, false ) )
-        writer.append( idManager.getAsciiID( catchmentFE ) + "\n" ); //$NON-NLS-1$
+      if( FeatureHelper.booleanIsTrue( catchment, NaModelConstants.GENERATE_RESULT_PROP, false ) )
+        writer.append( idManager.getAsciiID( catchment ) + "\n" ); //$NON-NLS-1$
     }
     writer.append( "99999\n" ); //$NON-NLS-1$
   }

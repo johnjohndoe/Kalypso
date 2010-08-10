@@ -60,8 +60,9 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.binding.Hydrotop;
-import org.kalypso.model.hydrology.internal.binding.NAControl;
+import org.kalypso.model.hydrology.binding.Hydrotop;
+import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -173,7 +174,7 @@ public class NAConfiguration
     m_vChannelFT = schema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
     m_stChannelFT = schema.getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
     m_kmChannelFT = schema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
-    m_catchmentFT = schema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
+    m_catchmentFT = schema.getFeatureType( Catchment.FEATURE_CATCHMENT );
     m_bodartFT = paraSchema.getFeatureType( NaModelConstants.PARA_SoilLayer_FT );
     m_statNFT = synthNSchema.getFeatureType( NaModelConstants.SYNTHN_STATN_FT );
 
