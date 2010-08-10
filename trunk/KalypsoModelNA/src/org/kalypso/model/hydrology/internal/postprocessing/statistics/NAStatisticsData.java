@@ -47,7 +47,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
 /**
  * @author Gernot Belger
@@ -72,8 +72,8 @@ public class NAStatisticsData
   public void calculateStatistics( ) throws SensorException
   {
     final IAxis[] axisList = m_observation.getAxisList();
-    final IAxis dateAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_DATE );
-    final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_RUNOFF );
+    final IAxis dateAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_DATE );
+    final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF );
     if( dateAxis == null || valueAxis == null )
       return;
 

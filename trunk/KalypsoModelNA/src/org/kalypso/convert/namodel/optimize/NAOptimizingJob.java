@@ -71,7 +71,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizeJaxb;
@@ -315,8 +315,8 @@ public class NAOptimizingJob implements IOptimizingJob
         e.printStackTrace();
       }
       final IObservation observation = ZmlFactory.parseXML( measuredURL ); //$NON-NLS-1$
-      final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeserieConstants.TYPE_DATE );
-      final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeserieConstants.TYPE_RUNOFF );
+      final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_DATE );
+      final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_RUNOFF );
       final ITupleModel values = observation.getValues( null );
       for( int i = 0; i < values.getCount(); i++ )
       {
@@ -344,8 +344,8 @@ public class NAOptimizingJob implements IOptimizingJob
 
     final File tsFile = new File( optimizeResultDir, calcHref );
     final IObservation observation = ZmlFactory.parseXML( tsFile.toURL() ); //$NON-NLS-1$
-    final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeserieConstants.TYPE_DATE );
-    final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeserieConstants.TYPE_RUNOFF );
+    final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_DATE );
+    final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_RUNOFF );
     final ITupleModel values = observation.getValues( null );
     for( int i = 0; i < values.getCount(); i++ )
     {

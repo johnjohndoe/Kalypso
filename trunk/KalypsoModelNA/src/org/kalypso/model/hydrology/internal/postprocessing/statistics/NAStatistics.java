@@ -71,7 +71,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -211,12 +211,12 @@ public class NAStatistics
   private IAxis[] createAxes( )
   {
     final List<IAxis> resultAxisList = new ArrayList<IAxis>();
-    resultAxisList.add( new DefaultAxis( "NODE_ID", ITimeserieConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "STATION", ITimeserieConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "DATE", ITimeserieConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "DISCHARGE", ITimeserieConstants.TYPE_RUNOFF, TimeserieUtils.getUnit( ITimeserieConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
-    resultAxisList.add( new DefaultAxis( "PATH", ITimeserieConstants.TYPE_DESCRIPTION, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "VOLUME", ITimeserieConstants.TYPE_VOLUME, TimeserieUtils.getUnit( ITimeserieConstants.TYPE_VOLUME ), Double.class, false ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( "NODE_ID", ITimeseriesConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "STATION", ITimeseriesConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "DATE", ITimeseriesConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "DISCHARGE", ITimeseriesConstants.TYPE_RUNOFF, TimeserieUtils.getUnit( ITimeseriesConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( "PATH", ITimeseriesConstants.TYPE_DESCRIPTION, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "VOLUME", ITimeseriesConstants.TYPE_VOLUME, TimeserieUtils.getUnit( ITimeseriesConstants.TYPE_VOLUME ), Double.class, false ) ); //$NON-NLS-1$
     return resultAxisList.toArray( new IAxis[resultAxisList.size()] );
   }
 

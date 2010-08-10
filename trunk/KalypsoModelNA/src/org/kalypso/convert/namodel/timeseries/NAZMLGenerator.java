@@ -61,7 +61,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.Observation;
@@ -218,7 +218,7 @@ public class NAZMLGenerator
     // write data
 
     final IAxis[] axis = observation.getAxisList();
-    final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeserieConstants.TYPE_DATE );
+    final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeseriesConstants.TYPE_DATE );
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axis, valueAxisType );
 
     final ITupleModel values = observation.getValues( null );

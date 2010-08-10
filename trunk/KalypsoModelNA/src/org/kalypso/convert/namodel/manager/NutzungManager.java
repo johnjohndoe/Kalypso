@@ -80,7 +80,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -225,10 +225,10 @@ public class NutzungManager extends AbstractManager
   private void writeIdealLanduse( final IObservation observation, final Writer zmlWriter ) throws SensorException, IOException
   {
     final IAxis[] axisList = observation.getAxisList();
-    final IAxis idleDateAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_DATE );
-    final IAxis kcAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_KC );
-    final IAxis wtAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_WT );
-    final IAxis laiAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_LAI );
+    final IAxis idleDateAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_DATE );
+    final IAxis kcAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_KC );
+    final IAxis wtAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_WT );
+    final IAxis laiAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_LAI );
     final ITupleModel values = observation.getValues( null );
     final int count = values.getCount();
     final int yearOffset = 2001;

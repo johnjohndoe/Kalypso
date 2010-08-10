@@ -16,7 +16,7 @@ import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.IObservationConstants;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -141,8 +141,8 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
       {
         final String strBegin = DateUtilities.printDateTime( begin, KalypsoCorePlugin.getDefault().getTimeZone() );
         final String strRealEnd = DateUtilities.printDateTime( begin, KalypsoCorePlugin.getDefault().getTimeZone() );
-        m_metadataList.put( ITimeserieConstants.MD_DATE_BEGIN, strBegin );
-        m_metadataList.put( ITimeserieConstants.MD_DATE_END, strRealEnd );
+        m_metadataList.put( ITimeseriesConstants.MD_DATE_BEGIN, strBegin );
+        m_metadataList.put( ITimeseriesConstants.MD_DATE_END, strRealEnd );
       }
     }
 
@@ -160,7 +160,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
       // TODO status axis...
       m_axes = new IAxis[2];
 
-      m_axes[0] = new DefaultAxis( Messages.getString( "org.kalypso.dcadapter.DataCenterTimeserieItem.2" ), ITimeserieConstants.TYPE_DATE, "", Date.class, true, true ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_axes[0] = new DefaultAxis( Messages.getString( "org.kalypso.dcadapter.DataCenterTimeserieItem.2" ), ITimeseriesConstants.TYPE_DATE, "", Date.class, true, true ); //$NON-NLS-1$ //$NON-NLS-2$
 
       String type = "?"; //$NON-NLS-1$
       String unit = "?"; //$NON-NLS-1$
