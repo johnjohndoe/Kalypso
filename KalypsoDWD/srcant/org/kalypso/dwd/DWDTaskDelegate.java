@@ -60,7 +60,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -199,7 +199,7 @@ public class DWDTaskDelegate
 
       try
       {
-        final IAxis dateAxis = new DefaultAxis( "Datum", ITimeserieConstants.TYPE_DATE, "", Date.class, true, true );
+        final IAxis dateAxis = new DefaultAxis( "Datum", ITimeseriesConstants.TYPE_DATE, "", Date.class, true, true );
         final String title = TimeserieUtils.getName( axisType );
         final IAxis valueAxis = new DefaultAxis( title, axisType, TimeserieUtils.getUnit( axisType ), TimeserieUtils.getDataClass( axisType ), false, true );
         final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( valueAxis, true );
