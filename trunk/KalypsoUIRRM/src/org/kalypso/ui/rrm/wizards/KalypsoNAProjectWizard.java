@@ -81,6 +81,8 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
@@ -89,6 +91,7 @@ import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -171,19 +174,19 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     addPage( m_createPreferencePage );
 
     m_createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, Messages.getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) ); //$NON-NLS-1$
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) ); //$NON-NLS-1$
 
     addPage( m_createMappingCatchmentPage );
     final IFeatureType gewaesserFT = createGewaesserFT();
     m_createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, Messages.getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, gewaesserFT );
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, gewaesserFT );
     addPage( m_createMappingRiverPage );
 
     m_createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, Messages.getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) ); //$NON-NLS-1$
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) ); //$NON-NLS-1$
     addPage( m_createMappingNodePage );
     m_createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, Messages.getString( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) ); //$NON-NLS-1$
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) ); //$NON-NLS-1$
     addPage( m_createMappingHydrotopPage );
   }
 
@@ -416,11 +419,12 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   private void mapCatchment( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
   {
-    final Feature rootFeature = m_modelWS.getRootFeature();
-    final IFeatureType modelFT = getFeatureType( "Catchment" ); //$NON-NLS-1$
-    final Feature catchmentCollectionFE = (Feature) rootFeature.getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-    final FeatureList catchmentList = (FeatureList) catchmentCollectionFE.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
-    final IRelationType targetRelation = catchmentList.getParentFeatureTypeProperty();
+    final NaModell naModel = (NaModell) m_modelWS.getRootFeature();
+    final IFeatureType catchmentFT = getFeatureType( "Catchment" ); //$NON-NLS-1$
+
+    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+
+// final IRelationType targetRelation = catchments.getParentFeatureTypeProperty();
 
     // find column for id
     final String idColKey;
@@ -434,9 +438,14 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     {
       final Feature sourceFeature = (Feature) sourceFeatureList.get( i );
       final String fid = getId( idColKey, sourceFeature, "TG" ); //$NON-NLS-1$
-      final Feature targetFeature = FeatureFactory.createFeature( catchmentCollectionFE, targetRelation, fid, modelFT, true );
-      final IPropertyType flaechPT = modelFT.getProperty( NaModelConstants.NA_MODEL_FLAECH_PROP );
-      final IRelationType bodenkorrekturMemberRT = (IRelationType) modelFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
+
+// final Feature targetFeature = FeatureFactory.createFeature( catchmentCollectionFE, targetRelation, fid, catchmentFT,
+// true );
+
+      final Catchment targetFeature = catchments.addNew( Catchment.FEATURE_CATCHMENT, fid );
+
+      final IPropertyType flaechPT = catchmentFT.getProperty( NaModelConstants.NA_MODEL_FLAECH_PROP );
+      final IRelationType bodenkorrekturMemberRT = (IRelationType) catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
       final Iterator<Object> it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
@@ -481,7 +490,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
       final int soilLayerNo = Integer.parseInt( m_createPreferencePage.getSoilLayerNo() );
       for( int j = 0; j < soilLayerNo; j++ )
       {
-        final IRelationType bodFtProp = (IRelationType) modelFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
+        final IRelationType bodFtProp = (IRelationType) catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
         final IFeatureType bodenKorrekturFT = bodFtProp.getTargetFeatureType();
         final Feature newFeature = m_modelWS.createFeature( targetFeature, bodenkorrekturMemberRT, bodenKorrekturFT );
         try
@@ -493,7 +502,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
           e.printStackTrace();
         }
       }
-      catchmentList.add( targetFeature );
+// catchmentList.add( targetFeature );
     }
   }
 

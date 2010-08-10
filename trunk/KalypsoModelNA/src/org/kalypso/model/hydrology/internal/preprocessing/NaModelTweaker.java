@@ -48,9 +48,12 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -145,34 +148,54 @@ public class NaModelTweaker
   }
 
   /**
-   * updates workspace, so that interflow and channelflow dependencies gets optimized <br>
-   * groundwater flow can now run in opposite direction to channel flow
+   * Updates workspace, so that interflow and channelflow dependencies gets optimized <br>
+   * Groundwater flow can now run in opposite direction to channel flow.<br>
+   * before: <code>
+   * 
+   *     -C-o (existing channel c with catchment T and downstream node o)
+   *      ^
+   *      T
+   * 
+   * </code> after: <code>
+   * 
+   *     -C-o 
+   *        |
+   *        V<T  (new virtual channel with existing catchment T, downstream node o and no upstream node)
+   * 
+   * </code>
    * 
    * @param workspace
    */
   private void updateGWNet( )
   {
-    final IFeatureType catchmentFT = m_modelWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
-    final IFeatureType vChannelFT = m_modelWorkspace.getGMLSchema().getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
-    final Feature[] features = m_modelWorkspace.getFeatures( catchmentFT );
-    final IRelationType entwaesserungsStrangMemberRT = (IRelationType) catchmentFT.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-    for( final Feature catchmentFE : features )
+    final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
+
+    final IGMLSchema gmlSchema = m_modelWorkspace.getGMLSchema();
+
+    final IFeatureType vChannelFT = gmlSchema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
+
+    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+    for( final Catchment catchment : catchments )
     {
-      final Feature orgChannelFE = m_modelWorkspace.resolveLink( catchmentFE, entwaesserungsStrangMemberRT );
-      if( orgChannelFE == null )
+      final IRelationType catchmentRT = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
+      final Feature channelFE = m_modelWorkspace.resolveLink( catchment, catchmentRT );
+      if( channelFE == null )
         continue;
+
       final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-      final Feature nodeFE = m_modelWorkspace.resolveLink( orgChannelFE, downStreamNodeMemberRT );
-      final Feature newChannelFE = m_modelWorkspace.createFeature( catchmentFE, entwaesserungsStrangMemberRT, vChannelFT );
-      // set new relation: catchment -> new V-channel
+      final Feature nodeFE = m_modelWorkspace.resolveLink( channelFE, downStreamNodeMemberRT );
+
+      final Feature newChannelFE = m_modelWorkspace.createFeature( catchment, catchmentRT, vChannelFT );
       try
       {
-        m_modelWorkspace.setFeatureAsComposition( catchmentFE, entwaesserungsStrangMemberRT, newChannelFE, true );
+        // set new relation: catchment -> new V-channel
+        m_modelWorkspace.setFeatureAsComposition( catchment, catchmentRT, newChannelFE, true );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
       }
+
       // set new relation: new V-channel -> downstream node
       try
       {
@@ -345,11 +368,12 @@ public class NaModelTweaker
   private void updateFactorParameter( )
   {
     final IGMLSchema gmlSchema = m_modelWorkspace.getGMLSchema();
+    final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
     // Catchments
-    final Feature[] catchmentFEs = m_modelWorkspace.getFeatures( gmlSchema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT ) );
-    for( final Feature catchmentFE : catchmentFEs )
-      updateCatchment( catchmentFE );
+    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+    for( final Catchment catchment : catchments )
+      updateCatchment( catchment );
 
     // KMChannels
     final Feature[] kmChanneFEs = m_modelWorkspace.getFeatures( gmlSchema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT ) );
@@ -357,7 +381,7 @@ public class NaModelTweaker
       updateKMChannel( kmChanneFE );
   }
 
-  private void updateCatchment( final Feature catchmentFE )
+  private void updateCatchment( final Catchment catchmentFE )
   {
     for( int _p = 0; _p < CATCHMENT_FACTOR_PARAMETER_TARGET.length; _p++ ) // iterate parameters
     {

@@ -270,13 +270,8 @@ public interface NaModelConstants
   public static final QName NODE_QQRELATED_NODE_PROP = new QName( NS_NAMODELL, "qqRelatedNode" ); //$NON-NLS-1$
 
   // catchments
-  public static final QName CATCHMENT_ELEMENT_FT = new QName( NS_NAMODELL, "Catchment" ); //$NON-NLS-1$
 
   public static final QName CATCHMENT_GEOM_PROP = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
-
-  public static final QName CATCHMENT_COLLECTION_MEMBER_PROP = new QName( NS_NAMODELL, "CatchmentCollectionMember" ); //$NON-NLS-1$
-
-  public static final QName CATCHMENT_MEMBER_PROP = new QName( NS_NAMODELL, "catchmentMember" ); //$NON-NLS-1$
 
   public static final QName BODENKORREKTUR_MEMBER = new QName( NS_NAMODELL, "bodenkorrekturmember" ); //$NON-NLS-1$
 

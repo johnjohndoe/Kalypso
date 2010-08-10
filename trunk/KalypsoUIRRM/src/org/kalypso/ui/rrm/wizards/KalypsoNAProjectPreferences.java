@@ -30,6 +30,7 @@
 package org.kalypso.ui.rrm.wizards;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
@@ -45,6 +46,7 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.rrm.i18n.Messages;
 
@@ -102,9 +104,9 @@ public class KalypsoNAProjectPreferences extends WizardPage
     soilLabel.setLayoutData( new GridData(SWT.FILL, SWT.CENTER, true, true) );
     soilLabel.setText( Messages.getString( "KalypsoNAProjectPreferences.SoilGroupLable" ) ); //$NON-NLS-1$
     m_soilCombo = new Combo( soil, SWT.READ_ONLY );
-    final IFeatureType catchmentFT = m_modelSchema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
+    final IFeatureType catchmentFT = m_modelSchema.getFeatureType( Catchment.FEATURE_CATCHMENT );
     final int maxOccursSoil = catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER ).getMaxOccurs();
-    final ArrayList<String> noSoilLayer = new ArrayList<String>();
+    final List<String> noSoilLayer = new ArrayList<String>();
     for( int i = 0; i < maxOccursSoil + 1; i++ )
       noSoilLayer.add( String.valueOf( i ) );
     m_soilCombo.setItems( noSoilLayer.toArray( new String[maxOccursSoil] ) );

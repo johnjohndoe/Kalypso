@@ -31,7 +31,9 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.binding.suds.PlaningArea;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.suds.PlaningArea;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -54,6 +56,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -154,9 +157,10 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       sudsWorkspace.accept( transformVisitor, sudsWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       final Geometry planingAreaGeometry;
       final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "naModel" ), null ); //$NON-NLS-1$
-      modelWorkspace.accept( transformVisitor, modelWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-      final Feature catchmentCollection = (Feature) modelWorkspace.getRootFeature().getProperty( NaModelConstants.CATCHMENT_COLLECTION_MEMBER_PROP );
-      final FeatureList catchmentList = (FeatureList) catchmentCollection.getProperty( NaModelConstants.CATCHMENT_MEMBER_PROP );
+      final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
+
+      modelWorkspace.accept( transformVisitor, naModel, FeatureVisitor.DEPTH_INFINITE );
+      final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
       final PlaningArea planingArea = (PlaningArea) sudsWorkspace.getRootFeature().getProperty( PlaningArea.QNAME_PROP_PLANING_AREA_MEMBER );
       final boolean planningAreaDefined = planingArea != null;
       if( planningAreaDefined )
@@ -168,7 +172,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         /*
          * TODO: This should happen only if the calculation is started by PLC Manager application. Implement such check.
          */
-        final GM_Envelope envelope = catchmentList.getBoundingBox();
+        final GM_Envelope envelope = catchments.getBoundingBox();
         planingAreaGeometry = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );
       }
 
@@ -236,7 +240,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         }
       }
 
-      final Feature nodeCollection = (Feature) modelWorkspace.getRootFeature().getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
+      final Feature nodeCollection = (Feature) naModel.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
       final FeatureList nodeList = (FeatureList) nodeCollection.getProperty( NaModelConstants.NODE_MEMBER_PROP );
 
       final File outputSubfolderSteady = new File( tmpdir, "izNodes" ); //$NON-NLS-1$
@@ -252,10 +256,8 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       }
       else
       {
-
-        for( final Object o : catchmentList )
+        for( final Catchment catchment : catchments )
         {
-          final Feature catchment = (Feature) o;
           // FIXME: do not use default geometry property at all!
           final Geometry geometry = JTSAdapter.export( catchment.getDefaultGeometryPropertyValue() );
           if( planingAreaGeometry.intersects( geometry ) )

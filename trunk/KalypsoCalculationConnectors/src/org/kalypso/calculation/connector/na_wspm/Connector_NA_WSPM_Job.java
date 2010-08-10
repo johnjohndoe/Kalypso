@@ -13,6 +13,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_NA_WSPM;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.observation.result.IComponent;
@@ -189,9 +190,13 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
             }
           }
           ObservationFeatureFactory.toFeature( wspmObservation, wspmObservationFeature );
-          final Object returnPeriod = workspaceControlModelNA.getRootFeature().getProperty( NaModelConstants.CONTROL_RETURN_PERIOD_PROP );
+          final NAControl naControl = (NAControl) workspaceControlModelNA.getRootFeature();
+
+          final Integer returnPeriod = naControl.getReturnPeriod();
+          final int returnPeriodToSet = returnPeriod != null && returnPeriod > 0 ? returnPeriod : 1;
+
           final QName returnPeriodQName = new QName( IWspmConstants.NS_WSPMRUNOFF, "returnPeriod" );
-          wspmObservationFeature.setProperty( returnPeriodQName, (returnPeriod != null && ((Integer) returnPeriod) > 0) ? returnPeriod : 1 );
+          wspmObservationFeature.setProperty( returnPeriodQName, returnPeriodToSet );
           GmlSerializer.serializeWorkspace( outputFile, workspaceWSPM, "UTF-8" );
           setStatus( STATUS.OK, "Success" );
         }

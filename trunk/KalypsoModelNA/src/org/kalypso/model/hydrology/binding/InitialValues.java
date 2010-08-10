@@ -38,20 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.binding.suds;
+package org.kalypso.model.hydrology.binding;
+
+import java.util.Date;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * @author kuch
+ * Binding class for {org.kalypso.namodell.control}initialValues.
+ * 
+ * @author Gernot Belger
  */
-public interface ISwale extends IAbstractSwale
+public class InitialValues extends Feature_Impl
 {
-  public static final String IDEAL_LANDUSE = "Mulde_N"; //$NON-NLS-1$
+  private static final QName PROP_WRITE = new QName( NAModellControl.NS_NACONTROL, "write" ); //$NON-NLS-1$
 
-  public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // EnumSwaleType //$NON-NLS-1$
+  private static final QName PROP_INITIALDATE = new QName( NAModellControl.NS_NACONTROL, "initialDate" ); //$NON-NLS-1$
 
-  public String getElementType( );
+  public InitialValues( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public boolean doWrite( )
+  {
+    final Boolean doWrite = getProperty( PROP_WRITE, Boolean.class );
+    if( doWrite == null )
+      return false;
+
+    return doWrite;
+  }
+
+  public Date getInitialDate( )
+  {
+    return DateUtilities.toDate( getProperty( PROP_INITIALDATE ) );
+  }
 }

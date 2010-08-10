@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.binding;
+package org.kalypso.model.hydrology.binding;
 
 import javax.xml.namespace.QName;
 
@@ -53,15 +53,17 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * 
  * @author Gernot Belger
  */
-public class SoilType extends Feature_Impl
+public class Geology extends Feature_Impl
 {
-  public static final QName QNAME = new QName( NaModelConstants.NS_NAPEDOLOGIE, "Soiltype" ); //$NON-NLS-1$
+  public static final QName QNAME = new QName( NaModelConstants.NS_NAGEOLOGIE, "Geologie" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAPEDOLOGIE, "location" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAGEOLOGIE, "location" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_SOILTYPE = new QName( NaModelConstants.NS_NAPEDOLOGIE, "soilTypeLink" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_MAXPERKULATIONSRATE = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
 
-  public SoilType( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public static final QName QNAME_PROP_GWFACTOR = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
+
+  public Geology( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -76,19 +78,23 @@ public class SoilType extends Feature_Impl
     setProperty( QNAME_PROP_GEOMETRY, geometry );
   }
 
-  /**
-   * @param landuseClass
-   *          Must be either a {@link org.kalypsodeegree.model.feature.Feature} (maybe xlinked) or a {@link String}-ref
-   *          to a feature.
-   */
-  public void setSoilType( final Object soilType )
+  public void setMaxPerkulationsRate( final double value )
   {
-    setProperty( QNAME_PROP_SOILTYPE, soilType );
+    setProperty( QNAME_PROP_MAXPERKULATIONSRATE, value );
   }
 
-  public Object getSoilType( )
+  public double getMaxPerkulationsRate( )
   {
-    return getProperty( QNAME_PROP_SOILTYPE );
+    return getProperty( QNAME_PROP_MAXPERKULATIONSRATE, Double.class );
   }
 
+  public void setGWFactor( final double value )
+  {
+    setProperty( QNAME_PROP_GWFACTOR, value );
+  }
+
+  public double getGWFactor( )
+  {
+    return getProperty( QNAME_PROP_GWFACTOR, Double.class );
+  }
 }
