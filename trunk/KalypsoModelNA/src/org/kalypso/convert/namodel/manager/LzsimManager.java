@@ -53,7 +53,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -407,28 +406,4 @@ public class LzsimManager
       }
     }
   }
-
-  /**
-   * Read initial dates from gml-configuration.
-   */
-  public static Date[] getInitialDates( final Feature controlFE )
-  {
-    final List< ? > dateList = (List< ? >) controlFE.getProperty( NaModelConstants.NACONTROL_INITIALVALUEDATE_PROP );
-    if( dateList == null )
-      return new Date[0];
-
-    final TreeSet<Date> dateWriteSet = new TreeSet<Date>();
-    for( final Object object : dateList )
-    {
-      final Feature fe = (Feature) object;
-      final Boolean write = (Boolean) fe.getProperty( NaModelConstants.NACONTROL_WRITE_PROP );
-      // by default it is false now, but for backward compatibility check if there is any value
-      if( write != null && write.booleanValue() )
-      {
-        final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) fe.getProperty( NaModelConstants.NACONTROL_INITIALDATE_PROP ) );
-        dateWriteSet.add( initialDate );
-      }
-    }
-
-    return dateWriteSet.toArray( new Date[dateWriteSet.size()] );
-  }}
+}

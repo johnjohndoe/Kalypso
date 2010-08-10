@@ -55,13 +55,13 @@ import java.util.Map;
 
 import org.kalypso.convert.namodel.manager.HydroHash;
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.convert.namodel.schema.binding.Hydrotop;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.Hydrotop;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -111,8 +111,6 @@ public class NAConfiguration
 
   private Date m_simulationEnd;
 
-  private String m_rootNodeId;
-
   private final File m_hydrotopFile;
 
   private final File m_bodentypFile;
@@ -135,8 +133,6 @@ public class NAConfiguration
 
   private final IDManager m_idManager = new IDManager();
 
-  private NaNodeResultProvider m_nodeResultProvider = null;
-
   private boolean m_pns;
 
   private Double m_annuality;
@@ -146,8 +142,6 @@ public class NAConfiguration
   private String m_precipitationForm;
 
   private URL m_zmlContext;
-
-  private Date[] m_initialDates;
 
   private GMLWorkspace m_modelWorkspace = null;
 
@@ -374,16 +368,6 @@ public class NAConfiguration
     return m_simulationForecast;
   }
 
-  public String getRootNodeId( )
-  {
-    return m_rootNodeId;
-  }
-
-  public void setRootNodeID( final String rootNodeID )
-  {
-    m_rootNodeId = rootNodeID;
-  }
-
   public File getHydrotopFile( )
   {
     return m_hydrotopFile;
@@ -457,19 +441,6 @@ public class NAConfiguration
     return m_idManager;
   }
 
-  /**
-   * @param nodeResultProvider
-   */
-  public void setNodeResultProvider( final NaNodeResultProvider nodeResultProvider )
-  {
-    m_nodeResultProvider = nodeResultProvider;
-  }
-
-  public NaNodeResultProvider getNodeResultProvider( )
-  {
-    return m_nodeResultProvider;
-  }
-
   public void setAnnuality( final Double annuality )
   {
     m_annuality = annuality;
@@ -513,16 +484,6 @@ public class NAConfiguration
   public URL getSwaleAndTrenchFormatURL( )
   {
     return m_swaleAndTrenchFormatURL;
-  }
-
-  public void setInitalValues( final Date[] initialDates )
-  {
-    m_initialDates = initialDates;
-  }
-
-  public Date[] getInitialDates( )
-  {
-    return m_initialDates;
   }
 
   public void setModelWorkspace( final GMLWorkspace modelWorkspace )

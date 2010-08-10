@@ -43,13 +43,13 @@ package org.kalypso.convert.namodel;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
-import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -62,23 +62,24 @@ public class NaNodeResultProvider
 {
   private final URL m_context;
 
-  private final List<Feature> removedResults = new ArrayList<Feature>();
+  private final Collection<Feature> m_removedResults = new LinkedHashSet<Feature>();
 
   private final boolean m_useResults;
 
-  public NaNodeResultProvider( final GMLWorkspace modellWorkspace, final GMLWorkspace controlWorkspace, final URL context )
+  public NaNodeResultProvider( final GMLWorkspace modellWorkspace, final NAModellControl naControl, final URL context )
   {
     m_context = context;
-    final Feature controlFE = controlWorkspace.getRootFeature();
-    m_useResults = FeatureHelper.booleanIsTrue( controlFE, NaModelConstants.NACONTROL_USE_RESULTS_PROP, true );
-    final String resultNodeID = (String) controlFE.getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP );
-    // exclude some node from providing results
-    if( resultNodeID != null )
+    m_useResults = naControl.isUseResults();
+
+    final String rootNodeID = naControl.getRootNodeID();
+    if( rootNodeID != null )
     {
-      removeResult( modellWorkspace.getFeature( resultNodeID ) );
+      // The root node may never be used as results
+      removeResult( modellWorkspace.getFeature( rootNodeID ) );
     }
     else
     {
+      // Remove all nodes, that have 'isResult' checked
       final IFeatureType nodeFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
       final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
       for( final Feature nodeFE : nodeFEs )
@@ -89,49 +90,42 @@ public class NaNodeResultProvider
     }
   }
 
+  private void removeResult( final Feature nodeFE )
+  {
+    m_removedResults.add( nodeFE );
+  }
+
+  public boolean checkResultExists( final Feature nodeFE )
+  {
+    if( !m_useResults )
+      return false;
+
+    if( m_removedResults.contains( nodeFE ) )
+      return false;
+
+    try
+    {
+      final URL resultURL = getResultURL( nodeFE );
+      if( resultURL == null )
+        return false;
+
+      return FileUtilities.checkIsAccessible( resultURL );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      return false;
+    }
+  }
+
   private URL getResultURL( final Feature nodeFE ) throws MalformedURLException
   {
     final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
     if( link == null )
       return null;
-    // optionen loeschen
+
+    // delete query part
     final String href = link.getHref().replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IUrlResolver res = new UrlUtilities();
-    return res.resolveURL( m_context, href );
-  }
-
-  public URL getMeasuredURL( final Feature nodeFE ) throws MalformedURLException
-  {
-    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
-    if( link == null )
-      return null;
-    // optionen loeschen
-    final String href = link.getHref().replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IUrlResolver res = new UrlUtilities();
-    return res.resolveURL( m_context, href );
-  }
-
-  public boolean resultExists( final Feature nodeFE )
-  {
-    if( !m_useResults )
-      return false;
-    if( removedResults.contains( nodeFE ) )
-      return false;
-    try
-    {
-      final URL resultURL = getResultURL( nodeFE );
-      resultURL.openStream();
-    }
-    catch( final Exception e )
-    {
-      return false;
-    }
-    return true;
-  }
-
-  private void removeResult( final Feature nodeFE )
-  {
-    if( !removedResults.contains( nodeFE ) )
-      removedResults.add( nodeFE );
+    return new URL( m_context, href );
   }
 }

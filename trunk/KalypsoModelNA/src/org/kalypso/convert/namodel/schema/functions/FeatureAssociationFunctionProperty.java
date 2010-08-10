@@ -68,13 +68,6 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
 {
   private QName m_linkName;
 
-// public FeatureAssociationFunctionProperty( )
-// {
-// super( ftp.getFeatureQName(), new QName( "virtual", "link_" + ftp.getName() ), 0, 1,
-// GeometryUtilities.getLineStringClass() );
-// m_linkName = ftp;
-// }
-
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */

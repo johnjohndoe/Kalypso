@@ -38,21 +38,36 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.schema.binding.suds;
+package org.kalypso.model.hydrology.internal.binding.suds;
+
+import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
-/**
- * @author Dirk Kuch
- */
-public abstract class AbstractSud extends Feature_Impl
+public class PlaningArea extends Feature_Impl
 {
-  public AbstractSud( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public static final QName QNAME_PROP_PLANING_AREA_MEMBER = new QName( NaModelConstants.NS_NASUDS, "planingAreaMember" ); //$NON-NLS-1$
+
+  public static final QName QNAME = new QName( NaModelConstants.NS_NASUDS, "PlaningArea" ); //$NON-NLS-1$
+
+  private static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NASUDS, "boundary" ); //$NON-NLS-1$
+
+  public PlaningArea( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  public GM_MultiSurface getGeometry( )
+  {
+    return getProperty( QNAME_PROP_GEOMETRY, GM_MultiSurface.class );
+  }
 
+  public void setGeometry( final GM_MultiSurface geometry )
+  {
+    setProperty( QNAME_PROP_GEOMETRY, geometry );
+  }
 }

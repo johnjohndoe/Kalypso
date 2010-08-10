@@ -100,15 +100,18 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class NetFileManager extends AbstractManager
 {
-  final public NAConfiguration m_conf;
-
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
-  public NetFileManager( final NAConfiguration conf ) throws IOException
+  private final NAConfiguration m_conf;
+
+  private final String m_rootNodeId;
+
+  public NetFileManager( final NAConfiguration conf, final String rootNodeId ) throws IOException
   {
     super( conf.getNetFormatURL() );
 
     m_conf = conf;
+    m_rootNodeId = rootNodeId;
   }
 
   @Override
@@ -515,7 +518,8 @@ public class NetFileManager extends AbstractManager
 
     // collect netelements that are direct upstream of result nodes
     final RootNodeCollectorVisitor rootNodeVisitor;
-    final Feature rootNodeFE = workspace.getFeature( m_conf.getRootNodeId() );
+
+    final Feature rootNodeFE = workspace.getFeature( m_rootNodeId );
     if( rootNodeFE != null )
       rootNodeVisitor = new RootNodeCollectorVisitor( rootNodeFE );
     else

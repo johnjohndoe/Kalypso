@@ -46,10 +46,18 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.optimize.CalibrationConfig;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
+import org.kalypso.optimize.transform.ParameterOptimizeContext;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.w3c.dom.Document;
 
 /**
@@ -57,8 +65,6 @@ import org.w3c.dom.Document;
  */
 public class NaSimulationData
 {
-  private final GMLWorkspace m_controlWorkspace;
-
   private final GMLWorkspace m_metaWorkspace;
 
   private final GMLWorkspace m_parameterWorkspace;
@@ -73,9 +79,13 @@ public class NaSimulationData
 
   private final GMLWorkspace m_lzsimWorkspace;
 
+  private final NAModellControl m_naModellControl;
+
   public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl ) throws Exception
   {
-    m_controlWorkspace = GmlSerializer.createGMLWorkspace( controlURL, null );
+    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlURL, null );
+    m_naModellControl = (NAModellControl) controlWorkspace.getRootFeature();
+
     m_modelWorkspace = loadModelWorkspace( modelUrl );
     m_metaWorkspace = GmlSerializer.createGMLWorkspace( metaUrl, null );
     m_parameterWorkspace = GmlSerializer.createGMLWorkspace( parameterUrl, null );
@@ -92,19 +102,51 @@ public class NaSimulationData
       m_synthNWorkspace = GmlSerializer.createGMLWorkspace( syntNGML, null );
     else
       m_synthNWorkspace = null;
+
+    transformModelToHydrotopeCrs();
+  }
+
+  private void transformModelToHydrotopeCrs( )
+  {
+    final String targetCS = determineHydrotopeCrs();
+    if( targetCS == null )
+      return;
+
+    final TransformVisitor visitor = new TransformVisitor( targetCS );
+    final Feature rootFeature = m_modelWorkspace.getRootFeature();
+    m_modelWorkspace.accept( visitor, rootFeature, FeatureVisitor.DEPTH_INFINITE ); //$NON-NLS-1$
+  }
+
+  private String determineHydrotopeCrs( )
+  {
+    // TODO: this is wrong: why transform the model to the hydrotope workspace?
+    // Normally, we should transform both (better every loaded model) into the current kalypso crs
+    final IFeatureType hydrotopeFT = m_hydrotopWorkspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT );
+    // FIXME: access hydrotopes directly, do not fetch them into a big list!
+    final Feature[] hydroFES = m_hydrotopWorkspace.getFeatures( hydrotopeFT );
+    String targetCS = null;
+    for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
+    {
+      // FIXME: performance: is it really necessary to check ALL geometries here???
+      final GM_Object geom = (GM_Object) hydroFES[i].getProperty( NaModelConstants.HYDRO_PROP_GEOM );
+      if( geom != null && geom.getCoordinateSystem() != null )
+        targetCS = geom.getCoordinateSystem();
+    }
+    return targetCS;
   }
 
   private GMLWorkspace loadModelWorkspace( final URL modelUrl ) throws SimulationException
   {
     // Apply optimization parameters
-    final CalibrationConfig config = new CalibrationConfig();
-    config.addFromNAControl( m_controlWorkspace.getRootFeature() );
+    // TODO: does not really belong here, shouldn't the optimize job do this?
+    final CalibrationConfig config = new CalibrationConfig( m_naModellControl );
+    final ParameterOptimizeContext[] calContexts = config.getCalContexts();
 
     try
     {
       final Document modelDoc = XMLHelper.getAsDOM( modelUrl, true );
 
-      OptimizeModelUtils.initializeModel( modelDoc, config.getCalContexts() );
+      OptimizeModelUtils.initializeModel( modelDoc, calContexts );
 
       return GmlSerializer.createGMLWorkspace( modelDoc, modelUrl, null );
     }
@@ -131,9 +173,9 @@ public class NaSimulationData
     return GmlSerializer.createGMLWorkspace( location, null );
   }
 
-  public GMLWorkspace getControlWorkspace( )
+  public NAModellControl getNaControl( )
   {
-    return m_controlWorkspace;
+    return m_naModellControl;
   }
 
   public GMLWorkspace getModelWorkspace( )
