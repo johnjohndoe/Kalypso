@@ -218,5 +218,9 @@
               class="org.kalypso.model.hydrology.internal.binding.InitialValues"
               qname="{org.kalypso.namodell.control}initialValues">
         </feature>
+        <feature
+              class="org.kalypso.model.hydrology.internal.binding.NAControl"
+              qname="{org.kalypso.na.control}NAControl">
+        </feature>
      </extension>
 </plugin>

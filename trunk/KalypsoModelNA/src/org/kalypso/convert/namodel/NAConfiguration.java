@@ -47,7 +47,6 @@ package org.kalypso.convert.namodel;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -62,6 +61,7 @@ import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.binding.Hydrotop;
+import org.kalypso.model.hydrology.internal.binding.NAControl;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -105,12 +105,6 @@ public class NAConfiguration
 
   private final IFeatureType m_statNFT;
 
-  private Date m_simulationForecast;
-
-  private Date m_simulationStart;
-
-  private Date m_simulationEnd;
-
   private final File m_hydrotopFile;
 
   private final File m_bodentypFile;
@@ -129,19 +123,11 @@ public class NAConfiguration
 
   private final URL m_swaleAndTrenchFormatURL;
 
-  private int m_minutesTimeStep = 60;
-
   private final IDManager m_idManager = new IDManager();
 
-  private boolean m_pns;
-
-  private Double m_annuality;
-
-  private Double m_duration;
-
-  private String m_precipitationForm;
-
   private URL m_zmlContext;
+
+  private NAControl m_metaControl = null;
 
   private GMLWorkspace m_modelWorkspace = null;
 
@@ -166,7 +152,7 @@ public class NAConfiguration
   private final Map<String, List<Double>> m_suds2HydrotopMaxPercRateMap = new HashMap<String, List<Double>>();
 
   private final HydroHash m_hydroHash = new HydroHash();
-  
+
   public NAConfiguration( final File asciiBaseDir )
   {
     this( asciiBaseDir, null );
@@ -338,36 +324,6 @@ public class NAConfiguration
     return m_stChannelFT;
   }
 
-  public void setSimulationForecasetStart( final Date simulationForecast )
-  {
-    m_simulationForecast = simulationForecast;
-  }
-
-  public void setSimulationStart( final Date simulationStart )
-  {
-    m_simulationStart = simulationStart;
-  }
-
-  public void setSimulationEnd( final Date simulationEnd )
-  {
-    m_simulationEnd = simulationEnd;
-  }
-
-  public Date getSimulationStart( )
-  {
-    return m_simulationStart;
-  }
-
-  public Date getSimulationEnd( )
-  {
-    return m_simulationEnd;
-  }
-
-  public Date getSimulationForecastStart( )
-  {
-    return m_simulationForecast;
-  }
-
   public File getHydrotopFile( )
   {
     return m_hydrotopFile;
@@ -413,62 +369,9 @@ public class NAConfiguration
     return m_bodartFT;
   }
 
-  /**
-   * @param minutesTimeStep
-   */
-  public void setMinutesOfTimeStep( final int minutesTimeStep )
-  {
-    m_minutesTimeStep = minutesTimeStep;
-  }
-
-  public void setUsePrecipitationForm( final boolean pns )
-  {
-    m_pns = pns;
-  }
-
-  public boolean isUsePrecipitationForm( )
-  {
-    return m_pns;
-  }
-
-  public int getMinutesOfTimeStep( )
-  {
-    return m_minutesTimeStep;
-  }
-
   public IDManager getIdManager( )
   {
     return m_idManager;
-  }
-
-  public void setAnnuality( final Double annuality )
-  {
-    m_annuality = annuality;
-  }
-
-  public void setDuration( final Double duration )
-  {
-    m_duration = duration;
-  }
-
-  public void setForm( final String precipitationForm )
-  {
-    m_precipitationForm = precipitationForm;
-  }
-
-  public String getPrecipitationForm( )
-  {
-    return m_precipitationForm;
-  }
-
-  public Double getAnnuality( )
-  {
-    return m_annuality;
-  }
-
-  public Double getDuration( )
-  {
-    return m_duration;
   }
 
   public void setZMLContext( final URL zmlContext )
@@ -578,6 +481,16 @@ public class NAConfiguration
   public HydroHash getHydroHash(  )
   {
     return m_hydroHash;
+  }
+
+  public void setMetaControl( final NAControl metaControl )
+  {
+    m_metaControl = metaControl;
+  }
+
+  public NAControl getMetaControl( )
+  {
+    return m_metaControl;
   }
 
 }

@@ -45,6 +45,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -59,6 +60,7 @@ import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAControl;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -147,6 +149,10 @@ public class NetElement
     final File asciiBaseDir = m_conf.getAsciiBaseDir();
     final File klimaDir = new File( asciiBaseDir, "klima.dat" );
 
+    final NAControl metaControl = m_conf.getMetaControl();
+    final Date simulationStart = metaControl.getSimulationStart();
+    final Date simulationEnd = metaControl.getSimulationEnd();
+
     final IFeatureType catchmentFT = m_conf.getCatchemtFT();
     final IRelationType rt = (IRelationType) catchmentFT.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
     final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, catchmentFT, rt );
@@ -159,7 +165,7 @@ public class NetElement
       if( !parent.exists() )
         parent.mkdirs();
 
-      if( m_conf.isUsePrecipitationForm() )
+      if( metaControl.isUsePrecipitationForm() )
       {
         if( !targetFileN.exists() )
           CatchmentManager.WriteSynthNFile( targetFileN, feature, m_synthNWorkspace, m_conf );
@@ -187,7 +193,7 @@ public class NetElement
             final URL linkURLT = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefT );
             final IObservation observation = ZmlFactory.parseXML( linkURLT ); //$NON-NLS-1$
             final FileWriter writer = new FileWriter( targetFileT );
-            NAZMLGenerator.createExt2File( writer, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), ITimeseriesConstants.TYPE_TEMPERATURE, "1.0" ); //$NON-NLS-1$
+            NAZMLGenerator.createExt2File( writer, observation, simulationStart, simulationEnd, ITimeseriesConstants.TYPE_TEMPERATURE, "1.0" ); //$NON-NLS-1$
             IOUtils.closeQuietly( writer );
           }
         }
@@ -201,7 +207,7 @@ public class NetElement
             final URL linkURLV = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefV );
             final IObservation observation = ZmlFactory.parseXML( linkURLV ); //$NON-NLS-1$
             final FileWriter writer = new FileWriter( targetFileV );
-            NAZMLGenerator.createExt2File( writer, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), ITimeseriesConstants.TYPE_EVAPORATION, "0.5" ); //$NON-NLS-1$
+            NAZMLGenerator.createExt2File( writer, observation, simulationStart, simulationEnd, ITimeseriesConstants.TYPE_EVAPORATION, "0.5" ); //$NON-NLS-1$
             IOUtils.closeQuietly( writer );
           }
         }

@@ -39,7 +39,7 @@
  *
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.convert.namodel;
+package org.kalypso.model.hydrology.internal.preprocessing;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,7 +49,6 @@ import java.util.LinkedHashSet;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -66,12 +65,11 @@ public class NaNodeResultProvider
 
   private final boolean m_useResults;
 
-  public NaNodeResultProvider( final GMLWorkspace modellWorkspace, final NAModellControl naControl, final URL context )
+  public NaNodeResultProvider( final GMLWorkspace modellWorkspace, final boolean useResults, final String rootNodeID, final URL zmlContext )
   {
-    m_context = context;
-    m_useResults = naControl.isUseResults();
+    m_context = zmlContext;
+    m_useResults = useResults;
 
-    final String rootNodeID = naControl.getRootNodeID();
     if( rootNodeID != null )
     {
       // The root node may never be used as results

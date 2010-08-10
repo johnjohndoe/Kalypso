@@ -450,29 +450,6 @@ public interface NaModelConstants
 
   public static final QName INI_CATCHMENT_LINK_HYD_PROP = new QName( NS_INIVALUES, "hyd" ); //$NON-NLS-1$
 
-  /** control.xsd */
-  public static final QName CONTROL_STARTSIMULATION = new QName( NS_NAMETA, "startsimulation" ); //$NON-NLS-1$
-
-  public static final QName CONTROL_FORECAST = new QName( NS_NAMETA, "startforecast" ); //$NON-NLS-1$
-
-  public static final QName CONTROL_SCENARIO_ID_PROP = new QName( NS_NAMETA, "scenarioId" ); //$NON-NLS-1$
-
-  public static final QName CONTROL_HOURS_FORECAST_PROP = new QName( NS_NAMETA, "hoursforecast" ); //$NON-NLS-1$
-
-  public static final QName CONTROL_MINUTES_TIMESTEP_PROP = new QName( NS_NAMETA, "minutesTimestep" ); //$NON-NLS-1$
-
-  public static final QName CONTROL_VERSION_KALYPSONA_PROP = new QName( NS_NAMETA, "versionKalypsoNA" ); //$NON-NLS-1$
-
-  public static final QName CONTROL_PNS_PROP = new QName( NS_NAMETA, "pns" ); //$NON-NLS-1$
-
-  public static final QName CONTROL_XJAH_PROP = new QName( NS_NAMETA, "xjah" ); //$NON-NLS-1$
-
-  public static final QName CONTROL_XWAHL2_PROP = new QName( NS_NAMETA, "xwahl2" ); //$NON-NLS-1$
-
-  public static final QName CONTROL_IPVER_PROP = new QName( NS_NAMETA, "ipver" ); //$NON-NLS-1$
-
-  public static final QName CONTROL_RETURN_PERIOD_PROP = new QName( NS_NAMETA, "returnPeriod" ); //$NON-NLS-1$
-
   /** synthN.xsd */
   public static final QName SYNTHN_STATN_FT = new QName( NS_SYNTHN, "StatN" );
 

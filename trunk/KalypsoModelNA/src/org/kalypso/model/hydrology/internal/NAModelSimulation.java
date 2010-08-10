@@ -53,20 +53,20 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaPostProcessor;
 import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAControl;
 import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.processing.KalypsoNaProcessor;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -218,17 +218,10 @@ public class NAModelSimulation
   {
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.27" ) ); //$NON-NLS-1$
 
-    final String exeVersion = getExeVersion( simulationData );
+    final NAControl metaControl = simulationData.getMetaControl();
+    final String exeVersion = metaControl.getExeVersion();
     final KalypsoNaProcessor processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, exeVersion );
     processor.run( monitor );
-  }
-
-  // FIXME: move into feature binding
-  private String getExeVersion( final NaSimulationData simulationData )
-  {
-    final GMLWorkspace metaWorkspace = simulationData.getMetaWorkspace();
-    final Feature metaFE = metaWorkspace.getRootFeature();
-    return (String) metaFE.getProperty( NaModelConstants.CONTROL_VERSION_KALYPSONA_PROP );
   }
 
   private boolean postProcess( final NaSimulationData simulationData, final ISimulationMonitor monitor ) throws Exception

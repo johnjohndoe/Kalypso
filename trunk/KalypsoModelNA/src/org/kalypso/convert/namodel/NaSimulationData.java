@@ -48,6 +48,7 @@ import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.optimize.CalibrationConfig;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAControl;
 import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
@@ -65,8 +66,6 @@ import org.w3c.dom.Document;
  */
 public class NaSimulationData
 {
-  private final GMLWorkspace m_metaWorkspace;
-
   private final GMLWorkspace m_parameterWorkspace;
 
   private final GMLWorkspace m_sudsWorkspace;
@@ -81,13 +80,17 @@ public class NaSimulationData
 
   private final NAModellControl m_naModellControl;
 
+  private final NAControl m_metaControl;
+
   public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl ) throws Exception
   {
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlURL, null );
     m_naModellControl = (NAModellControl) controlWorkspace.getRootFeature();
 
     m_modelWorkspace = loadModelWorkspace( modelUrl );
-    m_metaWorkspace = GmlSerializer.createGMLWorkspace( metaUrl, null );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaUrl, null );
+    m_metaControl = (NAControl) metaWorkspace.getRootFeature();
+
     m_parameterWorkspace = GmlSerializer.createGMLWorkspace( parameterUrl, null );
     // FIXME: do not load hydrotopes, if preprocessed files exist
     m_hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopUrl, null );
@@ -183,9 +186,9 @@ public class NaSimulationData
     return m_modelWorkspace;
   }
 
-  public GMLWorkspace getMetaWorkspace( )
+  public NAControl getMetaControl( )
   {
-    return m_metaWorkspace;
+    return m_metaControl;
   }
 
   public GMLWorkspace getParameterWorkspace( )
