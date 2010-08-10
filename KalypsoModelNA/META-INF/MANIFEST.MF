@@ -17,6 +17,6 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.convert.namodel,
  org.kalypso.convert.namodel.hydrotope,
- org.kalypso.convert.namodel.schema.binding,
- org.kalypso.convert.namodel.schema.binding.suds,
- org.kalypso.model.hydrology
+ org.kalypso.model.hydrology,
+ org.kalypso.model.hydrology.internal.binding,
+ org.kalypso.model.hydrology.internal.binding.suds

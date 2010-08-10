@@ -38,27 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.schema.binding.suds;
+package org.kalypso.model.hydrology.internal.binding.suds;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Dejan Antanaskovic
+ * @author kuch
  */
-public interface ISealing extends Feature
+public interface ISwale extends IAbstractSwale
 {
-  public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); //$NON-NLS-1$
+  public static final String IDEAL_LANDUSE = "Mulde_N"; //$NON-NLS-1$
 
-  public QName QN_PROPERTY_SEALING_FACTOR = new QName( NaModelConstants.NS_NASUDS, "sealingFactor" ); //$NON-NLS-1$
-
-  public double SEALING_FACTOR_DEFAULT_VALUE = 1.0;
+  public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // EnumSwaleType //$NON-NLS-1$
 
   public String getElementType( );
-
-  public double getSealingFactor( );
-
-  public void setSealingFactor( final Double value );
 }

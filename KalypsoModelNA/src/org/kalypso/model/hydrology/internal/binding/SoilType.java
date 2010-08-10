@@ -38,17 +38,14 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.schema.binding;
+package org.kalypso.model.hydrology.internal.binding;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -56,35 +53,17 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * 
  * @author Gernot Belger
  */
-public class Landuse extends Feature_Impl
+public class SoilType extends Feature_Impl
 {
-  public static final QName QNAME = new QName( NaModelConstants.NS_NALANDUSE, "Landuse" ); //$NON-NLS-1$
+  public static final QName QNAME = new QName( NaModelConstants.NS_NAPEDOLOGIE, "Soiltype" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NALANDUSE, "location" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAPEDOLOGIE, "location" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "landuseclassLink" ); //$NON-NLS-1$
+  public static final QName QNAME_PROP_SOILTYPE = new QName( NaModelConstants.NS_NAPEDOLOGIE, "soilTypeLink" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CORRSEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
-
-  public static final QName QNAME_PROP_DRAINAGETYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "drainageType" ); //$NON-NLS-1$
-
-  public static final QName QNAME_PROP_SUD_MEMBERS = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
-
-  private final IFeatureBindingCollection<Feature> m_suds = new FeatureBindingCollection<Feature>( this, Feature.class, QNAME_PROP_SUD_MEMBERS );
-
-  public Landuse( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public SoilType( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
-  }
-
-  public IFeatureBindingCollection<Feature> getSudCollection( )
-  {
-    return m_suds;
-  }
-
-  public Feature[] getSuds( )
-  {
-    return m_suds.toArray( new Feature[] {} );
   }
 
   public GM_MultiSurface getGeometry( )
@@ -102,33 +81,14 @@ public class Landuse extends Feature_Impl
    *          Must be either a {@link org.kalypsodeegree.model.feature.Feature} (maybe xlinked) or a {@link String}-ref
    *          to a feature.
    */
-  public void setLanduse( final Object landuseClass )
+  public void setSoilType( final Object soilType )
   {
-    setProperty( QNAME_PROP_LANDUSE, landuseClass );
+    setProperty( QNAME_PROP_SOILTYPE, soilType );
   }
 
-  public Object getLanduse( )
+  public Object getSoilType( )
   {
-    return getProperty( QNAME_PROP_LANDUSE );
+    return getProperty( QNAME_PROP_SOILTYPE );
   }
 
-  public Double getCorrSealing( )
-  {
-    return getProperty( QNAME_PROP_CORRSEALING, Double.class );
-  }
-
-  public void setCorrSealing( final Double corrSealing )
-  {
-    setProperty( QNAME_PROP_CORRSEALING, corrSealing );
-  }
-
-  public String getDrainageType( )
-  {
-    return getProperty( QNAME_PROP_DRAINAGETYPE, String.class );
-  }
-
-  public void setDrainageType( final String drainageType )
-  {
-    setProperty( QNAME_PROP_DRAINAGETYPE, drainageType );
-  }
 }

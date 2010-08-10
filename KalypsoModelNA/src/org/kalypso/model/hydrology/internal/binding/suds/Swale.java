@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.schema.binding.suds;
+package org.kalypso.model.hydrology.internal.binding.suds;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -46,15 +46,15 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 /**
  * @author Dirk Kuch
  */
-public class SwaleInfiltrationDitch extends AbstractSwale implements ISwaleInfiltrationDitch
+public class Swale extends AbstractSwale implements ISwale
 {
-  public SwaleInfiltrationDitch( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public Swale( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
-   * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getElementType()
+   * @see org.kalypso.convert.namodel.schema.binding.suds.ISwale#getElementType()
    */
   @Override
   public String getElementType( )
@@ -62,33 +62,7 @@ public class SwaleInfiltrationDitch extends AbstractSwale implements ISwaleInfil
     final Object property = getProperty( QN_PROPERTY_ELEMENT_TYPE );
     if( property instanceof String )
       return (String) property;
-    return "30"; //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getMaxPercRate()
-   */
-  @Override
-  public double getMaxPercRate( )
-  {
-    final Object property = getProperty( QN_PROPERTY_MAX_PERC_RATE );
-    if( property instanceof Double )
-      return (Double) property;
-
-    return 2.8E-15;
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getPercentToGroundwater()
-   */
-  @Override
-  public double getPercentToGroundwater( )
-  {
-    final Object property = getProperty( QN_PROPERTY_PERCENT_TO_GROUNDWATER );
-    if( property instanceof Double )
-      return (Double) property;
-
-    return 1.0;
+    return "20"; //$NON-NLS-1$
   }
 
   /**

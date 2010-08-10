@@ -58,6 +58,7 @@ import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
@@ -237,9 +238,9 @@ public class NAModelSimulation
     m_logger.log( Level.FINEST, messageStartPostprocess );
 
     final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
-    final GMLWorkspace naControlWorkspace = simulationData.getControlWorkspace();
+    final NAModellControl naControl = simulationData.getNaControl();
 
-    final NaPostProcessor postProcessor = new NaPostProcessor( m_conf, m_logger, modelWorkspace, naControlWorkspace );
+    final NaPostProcessor postProcessor = new NaPostProcessor( m_conf, m_logger, modelWorkspace, naControl );
     postProcessor.process( m_simDirs.asciiDirs, m_simDirs.currentResultDirs );
     return postProcessor.isSucceeded();
   }

@@ -474,72 +474,8 @@ public interface NaModelConstants
   public static final QName CONTROL_RETURN_PERIOD_PROP = new QName( NS_NAMETA, "returnPeriod" ); //$NON-NLS-1$
 
   /** synthN.xsd */
-  public static final QName SYNTHN_STATN_FT = new QName( NS_SYNTHN, "StatN" ); //$NON-NLS-1$
+  public static final QName SYNTHN_STATN_FT = new QName( NS_SYNTHN, "StatN" );
 
-  /** nacontrol.xsd */
-  public static final QName NACONTROL_INITIALVALUEDATE_PROP = new QName( NS_NACONTROL, "InitialValueDate" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_WRITE_PROP = new QName( NS_NACONTROL, "write" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_INITIALDATE_PROP = new QName( NS_NACONTROL, "initialDate" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_TMP_PROP = new QName( NS_NACONTROL, "tmp" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_PRE_PROP = new QName( NS_NACONTROL, "pre" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_SCH_PROP = new QName( NS_NACONTROL, "sch" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_BOF_PROP = new QName( NS_NACONTROL, "bof" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_BSP_PROP = new QName( NS_NACONTROL, "bsp" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_GWS_PROP = new QName( NS_NACONTROL, "gws" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_QGS_PROP = new QName( NS_NACONTROL, "qgs" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_QGG_PROP = new QName( NS_NACONTROL, "qgg" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_QNA_PROP = new QName( NS_NACONTROL, "qna" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_QIF_PROP = new QName( NS_NACONTROL, "qif" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_QVS_PROP = new QName( NS_NACONTROL, "qvs" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_QBS_PROP = new QName( NS_NACONTROL, "qbs" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_QT1_PROP = new QName( NS_NACONTROL, "qt1" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_QTG_PROP = new QName( NS_NACONTROL, "qtg" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_QGW_PROP = new QName( NS_NACONTROL, "qgw" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_VET_PROP = new QName( NS_NACONTROL, "vet" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_QMR_PROP = new QName( NS_NACONTROL, "qmr" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_HYD_PROP = new QName( NS_NACONTROL, "hyd" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_BIL_PROP = new QName( NS_NACONTROL, "bil" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_NMQ_PROP = new QName( NS_NACONTROL, "nmq" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_SPI_PROP = new QName( NS_NACONTROL, "spi" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_SUP_PROP = new QName( NS_NACONTROL, "sup" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_RESULT_TIMESERIESLINK_PROP = new QName( NS_NACONTROL, "qberechnetZR" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_ROOTNODE_PROP = new QName( NS_NACONTROL, "rootNode" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_AUTOCALI_PROP = new QName( NS_NACONTROL, "automaticCallibration" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_ACCPRED_PROP = new QName( NS_NACONTROL, "accuracyPrediction" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_USEOFFSTARTPRED_PROP = new QName( NS_NACONTROL, "useOffsetStartPrediction" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_USEOFFENDPRED_PROP = new QName( NS_NACONTROL, "useOffsetEndPrediction" ); //$NON-NLS-1$
-
-  public static final QName NACONTROL_USE_RESULTS_PROP = new QName( NS_NACONTROL, "useResults" ); //$NON-NLS-1$
-  
-  public static final QName NACONTROL_PEGEL_ZR_PROP = new QName( NS_NACONTROL, "pegelZR" ); //$NON-NLS-1$
+  /** Suds */
+  public static final QName SUDS_PROP_SUDS_MEMBER = new QName( NS_NASUDS, "sudMember" ); //$NON-NLS-1$
 }

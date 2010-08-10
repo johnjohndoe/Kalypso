@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.schema.binding;
+package org.kalypso.model.hydrology.internal.binding;
 
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -71,7 +71,6 @@ public class PolygonIntersectionHelper
    * Creates the difference for the {@link ImportType#INTERSECT} import type. Anything not resulting in a surface is
    * ignored.
    */
-  @SuppressWarnings("unchecked")
   public static GM_MultiSurface createDifference( final GM_MultiSurface geometry, final GM_MultiSurface existingGeometry )
   {
     final GM_Object difference = existingGeometry.difference( geometry );

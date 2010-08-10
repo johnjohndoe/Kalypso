@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.schema.binding;
+package org.kalypso.model.hydrology.internal.binding;
 
 import javax.xml.namespace.QName;
 

@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:na="org.kalypso.namodell.control" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="org.kalypso.namodell.control" elementFormDefault="qualified" version="0.8">
-	<annotation>
-		<appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
-		</appinfo>
-	</annotation>
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
-	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
-	<element name="NAModellControl" type="na:_NAModellControlType"/>
-	<complexType name="baseFeatureType">
+
+  <import namespace="http://www.opengis.net/gml"/>
+  <import namespace="obslink.zml.kalypso.org"/>
+	
+  <element name="NAModellControl" type="na:NAModellControlType" substitutionGroup="gml:_Feature"/>
+  <complexType name="NAModellControlType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
-				<sequence/>
-			</extension>
-		</complexContent>
-	</complexType>
-	<complexType name="_NAModellControlType">
-		<complexContent>
-			<extension base="na:baseFeatureType">
 				<sequence>
 					<element name="description" type="string"/>
 					<element name="name" type="string"/>
@@ -55,8 +45,12 @@
 					</element>
 -->
 					<element name="vet" type="boolean"/>
-					<element name="qmr" type="boolean"/>
-					<!--JH: hier muss 1oder 2 stehen,1 für Jahreswerte - 2 für Mittelwerte (evtl. im Fortran-Code umstellen?!?)-->
+					<element name="qmr" type="boolean">
+                      <annotation>
+                        <documentation>Deprecated: Mulden Rigolen sind jetzt anders implementiert</documentation>
+                      </annotation>
+                    </element>
+					<!--JH: hier muss 1 oder 2 stehen,1 für Jahreswerte - 2 für Mittelwerte (evtl. im Fortran-Code umstellen?!?)-->
 					<element name="hyd" type="boolean"/>
 					<!--JH: hier kann true (Abflussbilanz bil.dat), false, 1 (Abflussbilanz bil.txt) oder 2 (Abflussbilanz bil.dat und bil.txt) angegeben werden (evtl. im Fortran-Code umstellen)-->
 					<element name="bil" type="boolean"/>
@@ -125,30 +119,28 @@
 					<element name="qAblageSpurOberer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 					<element name="qAblageSpurUnterer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 					<element name="useResults" type="boolean" minOccurs="0"/>
-					<element name="InitialValueDate" type="na:initialValueDateAssociationType" minOccurs="0" maxOccurs="100"/>
+					<element name="InitialValueDate" minOccurs="0" maxOccurs="100">
+                    	<complexType>
+                    		<sequence>
+                    			<element ref="na:initialValues"/>
+                    		</sequence>
+                    	</complexType>
+                    </element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="initialValueDateAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:initialValues"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<element name="initialValues" type="na:initialValuesType" substitutionGroup="gml:_Feature">
+  
+	<element name="initialValues" substitutionGroup="gml:_Feature">
+    	<complexType >
+    		<complexContent>
+    			<extension base="gml:AbstractFeatureType">
+    				<sequence>
+    					<element name="write" type="boolean" default="false"/>
+    					<element name="initialDate" type="date"/>
+    				</sequence>
+    			</extension>
+    		</complexContent>
+    	</complexType>
 	</element>
-	<complexType name="initialValuesType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="write" type="boolean" default="false"/>
-					<element name="initialDate" type="date"/>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
 </schema>

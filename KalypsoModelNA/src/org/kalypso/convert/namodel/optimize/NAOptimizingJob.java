@@ -66,6 +66,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.simulation.NaModelInnerCalcJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -140,18 +141,13 @@ public class NAOptimizingJob implements IOptimizingJob
     m_dataProvider = dataProvider;
     m_monitor = monitor;
 
-    // final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
+    // FIXME: already loaded in main job, will also be loaded in inner jobs; can we avoid this?
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), null );
-    // final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-    // .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
-    final Feature rootFeature = controlWorkspace.getRootFeature();
-    m_linkMeasuredTS = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NACONTROL_PEGEL_ZR_PROP );
-    m_linkCalcedTS = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NACONTROL_RESULT_TIMESERIESLINK_PROP );
+    final NAModellControl naControl = (NAModellControl) controlWorkspace.getRootFeature();
+    m_linkMeasuredTS = naControl.getPegelZRLink();
+    m_linkCalcedTS = naControl.getResultLink();
 
-    // final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
-    // final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-    // .getURLForID( NaModelConstants.IN_META_ID ), metaSchemaURL );
     final Feature metaFE = metaWorkspace.getRootFeature();
     final Date measuredStartDate = DateUtilities.toDate( metaFE.getProperty( NaModelConstants.CONTROL_STARTSIMULATION ) );
     final Date measuredEndDate = DateUtilities.toDate( metaFE.getProperty( NaModelConstants.CONTROL_FORECAST ) );

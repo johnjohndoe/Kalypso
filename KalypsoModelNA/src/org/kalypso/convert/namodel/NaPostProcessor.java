@@ -54,8 +54,6 @@ import java.util.SortedMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.io.FileUtils;
 import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
@@ -69,6 +67,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaResultDirs;
+import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.TSResultDescriptor;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
@@ -117,16 +116,16 @@ public class NaPostProcessor
 
   private final GMLWorkspace m_modelWorkspace;
 
-  private final GMLWorkspace m_controlWorkspace;
-
   private boolean m_isSucceeded;
 
-  public NaPostProcessor( final NAConfiguration conf, final Logger logger, final GMLWorkspace modelWorkspace, final GMLWorkspace naControlWorkspace )
+  private final NAModellControl m_naControl;
+
+  public NaPostProcessor( final NAConfiguration conf, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl )
   {
     m_conf = conf;
     m_logger = logger;
     m_modelWorkspace = modelWorkspace;
-    m_controlWorkspace = naControlWorkspace;
+    m_naControl = naControl;
     m_naStatistics = new NAStatistics( logger );
   }
 
@@ -153,7 +152,7 @@ public class NaPostProcessor
 
     copyStatisticResultFile( asciiDirs, resultDirs );
 
-    final Date[] initialDates = m_conf.getInitialDates();
+    final Date[] initialDates = m_naControl.getInitialDatesToBeWritten();
     final HydroHash hydroHash = m_conf.getHydroHash();
     final LzsimManager lzsimManager = new LzsimManager( initialDates, resultDirs.anfangswertDir );
     lzsimManager.readInitialValues( m_conf.getIdManager(), hydroHash, asciiDirs.lzsimDir, m_logger );
@@ -424,14 +423,13 @@ public class NaPostProcessor
   private void loadTesultTSPredictionIntervals( final File resultDir ) throws Exception
   {
     // Load the calculated prediction
-    final Feature rootFeature = m_controlWorkspace.getRootFeature();
-    final IObservation resultObservation = loadPredictedResult( resultDir, rootFeature );
+    final IObservation resultObservation = loadPredictedResult( resultDir );
     final IAxis[] axisList = resultObservation.getAxisList();
     final String axisType = determineTranpolinAxis( resultObservation );
 
-    final File fileMitte = getResultFileFor( resultDir, rootFeature, new QName( NaModelConstants.NS_NACONTROL, "qAblageSpurMittlerer" ) ); //$NON-NLS-1$
-    final File fileUnten = getResultFileFor( resultDir, rootFeature, new QName( NaModelConstants.NS_NACONTROL, "qAblageSpurUnterer" ) ); //$NON-NLS-1$
-    final File fileOben = getResultFileFor( resultDir, rootFeature, new QName( NaModelConstants.NS_NACONTROL, "qAblageSpurOberer" ) ); //$NON-NLS-1$
+    final File fileMitte = getAblageFileFor( resultDir, m_naControl.getQAblageMittlererLink() );
+    final File fileUnten = getAblageFileFor( resultDir, m_naControl.getQAblageUntererLink() );
+    final File fileOben = getAblageFileFor( resultDir, m_naControl.getQAblageObererLink() );
 
     // Initalize some commen variables
     final ITupleModel resultValues = resultObservation.getValues( null );
@@ -459,8 +457,7 @@ public class NaPostProcessor
     double deltaMeasureCalculation;
     try
     {
-      final NaNodeResultProvider nodeResultProvider = m_conf.getNodeResultProvider();
-      final URL pegelURL = nodeResultProvider.getMeasuredURL( rootFeature );
+      final URL pegelURL = getMeasuredURL();
 
       // from measuered timeseries
       final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL ); //$NON-NLS-1$
@@ -477,11 +474,13 @@ public class NaPostProcessor
 
     final double offsetStartPrediction;
     final double offsetEndPrediction;
-    if( FeatureHelper.booleanIsTrue( rootFeature, NaModelConstants.NACONTROL_USEOFFSTARTPRED_PROP, false ) )
+
+    if( m_naControl.doUseOffsetStartPred() )
       offsetStartPrediction = deltaMeasureCalculation;
     else
       offsetStartPrediction = 0;
-    if( FeatureHelper.booleanIsTrue( rootFeature, NaModelConstants.NACONTROL_USEOFFENDPRED_PROP, false ) )
+
+    if( m_naControl.doUseOffsetEndPred() )
       offsetEndPrediction = deltaMeasureCalculation;
     else
       offsetEndPrediction = 0;
@@ -499,7 +498,7 @@ public class NaPostProcessor
     // Second, we build the umhüllenden for the adapted result
     //
     double accuracyPrediction = LhwzHelper.getDefaultUmhuellendeAccuracy();
-    final Double featureAccuracy = (Double) rootFeature.getProperty( NaModelConstants.NACONTROL_ACCPRED_PROP );
+    final Double featureAccuracy = m_naControl.getPredictionAccuracy();
     if( featureAccuracy == null )
       m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.44", accuracyPrediction ) ); //$NON-NLS-1$ 
     else
@@ -516,9 +515,9 @@ public class NaPostProcessor
     TranProLinFilterUtilities.transformAndWrite( adaptedResultObservation, calBegin, calEnd, 0, endOffset, "+", axisType, KalypsoStati.BIT_DERIVATED, fileOben, " - spur Oben", request ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  private IObservation loadPredictedResult( final File resultDir, final Feature rootFeature ) throws MalformedURLException, SensorException
+  private IObservation loadPredictedResult( final File resultDir ) throws MalformedURLException, SensorException
   {
-    final TimeseriesLinkType resultLink = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NACONTROL_RESULT_TIMESERIESLINK_PROP );
+    final TimeseriesLinkType resultLink = m_naControl.getResultLink();
 
     // from predicted timeseries
     final UrlResolver urlResolver = new UrlResolver();
@@ -542,11 +541,10 @@ public class NaPostProcessor
     throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.50" ), null ); //$NON-NLS-1$
   }
 
-  private File getResultFileFor( final File resultDir, final Feature feature, final QName tsLinkPropName )
+  private File getAblageFileFor( final File resultDir, final TimeseriesLinkType trackLink )
   {
     try
     {
-      final TimeseriesLinkType trackLink = (TimeseriesLinkType) feature.getProperty( tsLinkPropName );
       final String href = trackLink.getHref();
       final File resultFile = new File( resultDir, href );
       resultFile.getParentFile().mkdirs();
@@ -557,5 +555,18 @@ public class NaPostProcessor
       Logger.getAnonymousLogger().log( Level.WARNING, e.getLocalizedMessage() );
       return null; // no track available
     }
+  }
+
+  // FIXME: does not belong into this class
+  public URL getMeasuredURL( ) throws MalformedURLException
+  {
+    final TimeseriesLinkType link = m_naControl.getPegelZRLink();
+    if( link == null )
+      return null;
+
+    // optionen loeschen
+    final String href = link.getHref().replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final URL zmlContext = m_conf.getZMLContext();
+    return new URL( zmlContext, href );
   }
 }

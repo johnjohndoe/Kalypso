@@ -49,18 +49,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.convert.namodel.manager.LzsimManager;
-import org.kalypso.convert.namodel.schema.binding.suds.AbstractSud;
-import org.kalypso.convert.namodel.schema.binding.suds.Greenroof;
-import org.kalypso.convert.namodel.schema.binding.suds.Swale;
-import org.kalypso.convert.namodel.schema.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAModellControl;
+import org.kalypso.model.hydrology.internal.binding.suds.Greenroof;
+import org.kalypso.model.hydrology.internal.binding.suds.Swale;
+import org.kalypso.model.hydrology.internal.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -89,11 +86,9 @@ public class NAControlConverter
     // never instantiate
   }
 
-  public static void featureToASCII( final NAConfiguration conf, final File startDir, final GMLWorkspace controlWorkspace, final GMLWorkspace modellWorkspace ) throws IOException
+  public static void featureToASCII( final NAConfiguration conf, final File startDir, final NAModellControl naControl, final GMLWorkspace modellWorkspace ) throws IOException
   {
     startDir.mkdirs();
-
-    final Feature controlFE = controlWorkspace.getRootFeature();
 
     final File startFile = new File( startDir, "we_nat_start.txt" ); //$NON-NLS-1$
     final File falStartFile = new File( startDir, "falstart.lst" ); //$NON-NLS-1$
@@ -108,23 +103,21 @@ public class NAControlConverter
 
     // generate Start
     final StringBuffer b = new StringBuffer();
-    appendResultsToGenerate( conf, controlFE, b );
-    appendResultInformation( modellWorkspace, controlWorkspace, b, conf.getIdManager() );
+    appendResultsToGenerate( conf, naControl, b );
+    appendResultInformation( modellWorkspace, naControl, b, conf.getIdManager() );
     // Startwerte fuer die kurzzeitsimulation
-    appendInitailDates( controlFE, b, conf );
+    appendInitialDates( naControl, b );
     // write it
     final FileWriter writer = new FileWriter( startFile );
     writer.write( b.toString() );
     writer.close();
   }
 
-  private static void appendInitailDates( final Feature controlFE, final StringBuffer b, final NAConfiguration conf )
+  private static void appendInitialDates( final NAModellControl controlFE, final StringBuffer b )
   {
     final DateFormat format = NATimeSettings.getInstance().getLzsLzgDateFormat();
 
-    final Date[] initialDates = LzsimManager.getInitialDates( controlFE );
-    conf.setInitalValues( initialDates );
-
+    final Date[] initialDates = controlFE.getInitialDatesToBeWritten();
     for( final Date iniDate : initialDates )
     {
       final String iniString = format.format( iniDate );
@@ -133,77 +126,72 @@ public class NAControlConverter
     b.append( "99999\n" ); //$NON-NLS-1$
   }
 
-  private static void appendResultsToGenerate( final NAConfiguration conf, final Feature controlFE, final StringBuffer b )
+  private static void appendResultsToGenerate( final NAConfiguration conf, final NAModellControl controlFE, final StringBuffer b )
   {
     final int minutesOfTimeStep = conf.getMinutesOfTimeStep();
     final double hoursOfTimeStep = minutesOfTimeStep / 60d;
     b.append( " " + hoursOfTimeStep + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_TMP_PROP ) ) + "       Temperatur                 .tmp\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_PRE_PROP ) ) + "       Niederschlag               .pre\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SCH_PROP ) ) + "       Schnee                     .sch\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_BOF_PROP ) ) + "       Bodenfeuchte               .bof\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_BSP_PROP ) ) + "       Bodenspeicher              .bsp\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_GWS_PROP ) ) + "       Grundwasserstand           .gws\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QGS_PROP ) ) + "       Gesamtabfluss Knoten       .qgs\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QGG_PROP ) ) + "       Gesamtabfluss TG           .qgg\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QNA_PROP ) ) + "       nat. Oberflaechenabfluss   .qna\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QIF_PROP ) ) + "       Interflow                  .qif\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QVS_PROP ) ) + "       Abfluss vers. Flaechen     .qvs\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QBS_PROP ) ) + "       Basisabfluss               .qbs\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QT1_PROP ) ) + "       Kluftgrundw1               .qt1\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QTG_PROP ) ) + "       Kluftgrundw                .qtg\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QGW_PROP ) ) + "       Grundwasserabfluss         .qgw\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateTMP() ) + "       Temperatur                 .tmp\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGeneratePRE() ) + "       Niederschlag               .pre\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateSCH() ) + "       Schnee                     .sch\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateBOF() ) + "       Bodenfeuchte               .bof\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateBSP() ) + "       Bodenspeicher              .bsp\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateGWS() ) + "       Grundwasserstand           .gws\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateQGS() ) + "       Gesamtabfluss Knoten       .qgs\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateQGG() ) + "       Gesamtabfluss TG           .qgg\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateQNA() ) + "       nat. Oberflaechenabfluss   .qna\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateQIF() ) + "       Interflow                  .qif\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateQVS() ) + "       Abfluss vers. Flaechen     .qvs\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateQBS() ) + "       Basisabfluss               .qbs\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateQT1() ) + "       Kluftgrundw1               .qt1\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateQTG() ) + "       Kluftgrundw                .qtg\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateQGW() ) + "       Grundwasserabfluss         .qgw\n" ); //$NON-NLS-1$
     // sollte nicht bei der Ausgabe erzeugt werden, da Berechnung mit kap. Aufstieg noch nicht implementiert!
     b.append( "n" + "       Kapil.Aufstieg/Perkolation .kap\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_VET_PROP ) ) + "       Evapotranspiration         .vet\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateVET() ) + "       Evapotranspiration         .vet\n" ); //$NON-NLS-1$
 
-
-    // FIXME die mulden-rigolen sind abhänging von der version der exe. muss erst noch angepasst werden. rechnet jetzt
-    // nur mit der v2.5 (ask Christoph)
-//    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QMR_PROP ) ) + "       Ausgabe MRS                .qmr\n" ); //$NON-NLS-1$
-
-
-
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_HYD_PROP ) ) + "       Ausgabe Hydrotope          .hyd\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateHYD() ) + "       Ausgabe Hydrotope          .hyd\n" ); //$NON-NLS-1$
     // if "2": output of *.txt and *.bil
-    if( ((Boolean) (controlFE.getProperty( NaModelConstants.NACONTROL_BIL_PROP ))).booleanValue() )
+    if( controlFE.doGenerateBIL() )
       b.append( "2" + "       Abflussbilanz              .bil\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     else
       b.append( "n" + "       Abflussbilanz              .bil\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_NMQ_PROP ) ) + "       Statistische Abflusswerte  .nmq\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateNMQ() ) + "       Statistische Abflusswerte  .nmq\n" ); //$NON-NLS-1$
     // Folgende Dateien werden zusätzlich mit Speicherinhalt generiert .sph, .spv, .spn, .spb
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SPI_PROP ) ) + "       Speicherinhalt             .spi\n" ); //$NON-NLS-1$
-    b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SUP_PROP ) ) + "       Speicherueberlauf          .sup\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateSPI() ) + "       Speicherinhalt             .spi\n" ); //$NON-NLS-1$
+    b.append( getBoolean( controlFE.doGenerateSUP() ) + "       Speicherueberlauf          .sup\n" ); //$NON-NLS-1$
 
+    // FIXME: bad abstraction, put into helper class
     final GMLWorkspace sudsWorkspace = conf.getSudsWorkspace();
     boolean hasGreenRoofs = false;
     boolean hasSwaleInfiltrationDitches = false;
     boolean hasSwales = false;
     if( sudsWorkspace != null )
     {
-      final List<AbstractSud> suds = (List<AbstractSud>) sudsWorkspace.getRootFeature().getProperty( new QName( Messages.getString("NAControlConverter.0"), Messages.getString("NAControlConverter.1") ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      for( final AbstractSud sudsItem : suds )
+      final List< ? > suds = (List< ? >) sudsWorkspace.getRootFeature().getProperty( NaModelConstants.SUDS_PROP_SUDS_MEMBER ); //$NON-NLS-1$ //$NON-NLS-2$
+      for( final Object sudsItem : suds )
       {
         hasGreenRoofs |= sudsItem instanceof Greenroof;
         hasSwaleInfiltrationDitches |= sudsItem instanceof SwaleInfiltrationDitch;
         hasSwales |= sudsItem instanceof Swale;
       }
     }
-    b.append( String.format( Locale.US, Messages.getString("NAControlConverter.2"), hasGreenRoofs ? Messages.getString("NAControlConverter.3") : Messages.getString("NAControlConverter.4"), Messages.getString("NAControlConverter.5"), Messages.getString("NAControlConverter.6") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    b.append( String.format( Locale.US, Messages.getString("NAControlConverter.7"), hasGreenRoofs ? Messages.getString("NAControlConverter.8") : Messages.getString("NAControlConverter.9"), Messages.getString("NAControlConverter.10"), Messages.getString("NAControlConverter.11") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    b.append( String.format( Locale.US, Messages.getString("NAControlConverter.12"), hasSwaleInfiltrationDitches ? Messages.getString("NAControlConverter.13") : Messages.getString("NAControlConverter.14"), Messages.getString("NAControlConverter.15"), Messages.getString("NAControlConverter.16") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    b.append( String.format( Locale.US, Messages.getString("NAControlConverter.17"), hasSwaleInfiltrationDitches ? Messages.getString("NAControlConverter.18") : Messages.getString("NAControlConverter.19"), Messages.getString("NAControlConverter.20"), Messages.getString("NAControlConverter.21") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    b.append( String.format( Locale.US, Messages.getString("NAControlConverter.22"), hasSwales ? Messages.getString("NAControlConverter.23") : Messages.getString("NAControlConverter.24"), Messages.getString("NAControlConverter.25"), Messages.getString("NAControlConverter.26") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
+    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Überlauf", ".qgu" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasGreenRoofs ? "j" : "n", "Gründach Drainrohr", ".qgr" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Überlauf Mulden-Rigolen", ".que" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwaleInfiltrationDitches ? "j" : "n", "Drainrohr Mulden-Rigolen", ".qmr" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    b.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwales ? "j" : "n", "Überlauf Mulden", ".mul" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
   }
 
-  private static void appendResultInformation( final GMLWorkspace modellWorkspace, final GMLWorkspace controlWorkspace, final StringBuffer b, final IDManager idManager )
+  private static void appendResultInformation( final GMLWorkspace modellWorkspace, final NAModellControl naControl, final StringBuffer b, final IDManager idManager )
   {
     // knoten
     final IFeatureType nodeFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
     // boolean onlyRootNodeResult = FeatureHelper.booleanIsTrue( controlWorkspace.getRootFeature(),
     // "resultForRootNodeOnly", true );
-    final String rootNodeID = (String) controlWorkspace.getRootFeature().getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP );
+    final String rootNodeID = naControl.getRootNodeID();
     for( final Feature nodeFE : nodeFEs )
     {
       // fuer root node immer ein ergebnis generieren
@@ -273,9 +261,9 @@ public class NAControlConverter
     }
   }
 
-  private static String getBoolean( final Object object )
+  private static String getBoolean( final boolean property )
   {
-    if( object instanceof Boolean && (Boolean) object )
+    if( property )
       return "j"; //$NON-NLS-1$
 
     return "n"; //$NON-NLS-1$

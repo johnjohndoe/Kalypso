@@ -47,6 +47,7 @@ import java.util.logging.Logger;
 import org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.IOptimizingJob;
@@ -57,9 +58,7 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author doemming
@@ -104,10 +103,10 @@ public class NaModelCalcJob implements ISimulation
 
     // testen ob calcjob optimization hat
     final URL controlLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
+    // FIXME: do we really need to load this workspace twice (also in inner calc job)
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlLocation, null );
-    final Feature rootFeature = controlWorkspace.getRootFeature();
-    final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, NaModelConstants.NACONTROL_AUTOCALI_PROP, false );
-    if( optimize )
+    final NAModellControl naControl = (NAModellControl) controlWorkspace.getRootFeature();
+    if( naControl.doOptimize() )
     {
       final IOptimizingJob optimizeJob = new NAOptimizingJob( tmpdir, dataProvider, new OptimizeMonitor( monitor ) );
       return new OptimizerCalJob( logger, optimizeJob );

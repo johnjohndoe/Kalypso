@@ -38,20 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.schema.binding.suds;
+package org.kalypso.model.hydrology.internal.binding.suds;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
- * @author kuch
+ * @author Dejan Antanaskovic
  */
-public interface ISwale extends IAbstractSwale
+public final class Sealing extends AbstractSud implements ISealing
 {
-  public static final String IDEAL_LANDUSE = "Mulde_N"; //$NON-NLS-1$
+  public Sealing( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
 
-  public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // EnumSwaleType //$NON-NLS-1$
+  /**
+   * @see org.kalypso.convert.namodel.schema.binding.suds.ISealing#getSealingFactor()
+   */
+  @Override
+  public double getSealingFactor( )
+  {
+    final Double property = (Double) getProperty( QN_PROPERTY_SEALING_FACTOR );
+    return property == null ? SEALING_FACTOR_DEFAULT_VALUE : property.doubleValue();
+  }
 
-  public String getElementType( );
+  /**
+   * @see org.kalypso.convert.namodel.schema.binding.suds.ISealing#setSealingFactor(java.lang.Double)
+   */
+  @Override
+  public void setSealingFactor( final Double value )
+  {
+    setProperty( QN_PROPERTY_SEALING_FACTOR, value == null ? SEALING_FACTOR_DEFAULT_VALUE : value );
+  }
+
+  /**
+   * @see org.kalypso.convert.namodel.schema.binding.suds.ISealing#getElementType()
+   */
+  @Override
+  public String getElementType( )
+  {
+    return getProperty( QN_PROPERTY_ELEMENT_TYPE, String.class );
+  }
+
 }

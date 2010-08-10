@@ -66,15 +66,13 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
+import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * Converts KalypsoHydrology gml files to Kalypso-NA ascii files.
@@ -126,6 +124,20 @@ public class NAModelPreprocessor
 
   public void process( final ISimulationMonitor monitor ) throws NAPreprocessorException, OperationCanceledException
   {
+    try
+    {
+      doProcess( monitor );
+    }
+    catch( final Exception e )
+    {
+      // Handle only unexpected exceptions here. Everything else should be handling deeper down!
+      e.printStackTrace();
+      throw new NAPreprocessorException( "Failed to generate Kalypso-NA ASCII files", e );
+    }
+  }
+
+  private void doProcess( final ISimulationMonitor monitor ) throws Exception
+  {
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.15" ) ); //$NON-NLS-1$
     checkCancel( monitor );
 
@@ -133,7 +145,7 @@ public class NAModelPreprocessor
     checkCancel( monitor );
 
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.23" ) ); //$NON-NLS-1$
-    generateAscii();
+    generateASCII();
     checkCancel( monitor );
 
     writeStartCondition();
@@ -198,54 +210,25 @@ public class NAModelPreprocessor
     }
   }
 
-// TODO: split generateASCII (the real one) into several smaller blocks
-  private void generateAscii( ) throws NAPreprocessorException
-  {
-    try
-    {
-      generateASCII();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new NAPreprocessorException( "Failed to generate Kalypso-NA ASCII files", e );
-    }
-  }
-
+  // FIXME: improve exceptin handling! Do not throw generic Exception!
+  // FIXME: split up intos smaller junks!
   private void generateASCII( ) throws Exception
   {
     final GMLWorkspace metaWorkspace = m_simulationData.getMetaWorkspace();
-    final GMLWorkspace controlWorkspace = m_simulationData.getControlWorkspace();
+    final NAModellControl naControl = m_simulationData.getNaControl();
     final GMLWorkspace modelWorkspace = m_simulationData.getModelWorkspace();
     final GMLWorkspace hydrotopWorkspace = m_simulationData.getHydrotopWorkspace();
     final GMLWorkspace sudsWorkspace = m_simulationData.getSudsWorkspace();
     final GMLWorkspace parameterWorkspace = m_simulationData.getParameterWorkspace();
     final GMLWorkspace synthNWorkspace = m_simulationData.getSynthNWorkspace();
 
-    final Feature metaFE = metaWorkspace.getRootFeature();
+    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modelWorkspace, naControl, m_conf.getZMLContext() );
 
-    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modelWorkspace, controlWorkspace, m_conf.getZMLContext() );
-    m_conf.setNodeResultProvider( nodeResultProvider );
     updateModelWithExtraVChannel( modelWorkspace, nodeResultProvider );
-
-    // Grrr... this does not belong here... move it where the workspaces are loaded
-    final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT ) );
-    String targetCS = null;
-    for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
-    {
-      // FIXME: performance: is it really necessary to check ALL geometries here???
-      final GM_Object geom = (GM_Object) hydroFES[i].getProperty( NaModelConstants.HYDRO_PROP_GEOM );
-      if( geom != null && geom.getCoordinateSystem() != null )
-        targetCS = geom.getCoordinateSystem();
-    }
-    if( targetCS != null )
-    {
-      final TransformVisitor visitor = new TransformVisitor( targetCS );
-      modelWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE ); //$NON-NLS-1$
-    }
 
     // setting duration of simulation...
     // start
+    final Feature metaFE = metaWorkspace.getRootFeature();
     m_simulationStart = DateUtilities.toDate( (XMLGregorianCalendar) metaFE.getProperty( NaModelConstants.CONTROL_STARTSIMULATION ) );
     m_conf.setSimulationStart( m_simulationStart );
     // start forecast
@@ -286,9 +269,6 @@ public class NAModelPreprocessor
       m_conf.setForm( (String) metaFE.getProperty( NaModelConstants.CONTROL_IPVER_PROP ) );
     }
 
-    // set rootnode
-    m_conf.setRootNodeID( (String) controlWorkspace.getRootFeature().getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP ) );
-
     // generate modell files
     // FIXME: remove these setters/getters from m_conf
     m_conf.setModelWorkspace( modelWorkspace );
@@ -298,12 +278,14 @@ public class NAModelPreprocessor
     m_conf.setSudsWorkspace( sudsWorkspace );
 
     // generate control files
-    NAControlConverter.featureToASCII( m_conf, m_asciiDirs.startDir, controlWorkspace, modelWorkspace );
+    NAControlConverter.featureToASCII( m_conf, m_asciiDirs.startDir, naControl, modelWorkspace );
 
     // update model with factor values from control
     updateFactorParameter( modelWorkspace );
 
-    final NAModellConverter main = new NAModellConverter( m_conf, m_logger );
+    final String rootNodeID = naControl.getRootNodeID();
+
+    final NAModellConverter main = new NAModellConverter( m_conf, rootNodeID, m_logger );
     main.write();
   }
 
@@ -488,7 +470,6 @@ public class NAModelPreprocessor
   }
 
   /**
-   * TODO scetch<br>
    * if results exists (from a former simulation) for a node, use this results as input, later the upstream nodes will
    * be ignored for calculation
    * 
@@ -502,7 +483,7 @@ public class NAModelPreprocessor
     final Feature[] features = workspace.getFeatures( nodeFT );
     for( final Feature nodeFE : features )
     {
-      if( nodeResultprovider.resultExists( nodeFE ) )
+      if( nodeResultprovider.checkResultExists( nodeFE ) )
       {
         final Object resultValue = nodeFE.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
         // disconnect everything upstream (channel -> node)

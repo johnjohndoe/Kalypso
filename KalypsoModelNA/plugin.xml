@@ -142,33 +142,33 @@
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.LanduseCollection"
+              class="org.kalypso.model.hydrology.internal.binding.LanduseCollection"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}LanduseCollection">
         </feature>
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.Landuse"
+              class="org.kalypso.model.hydrology.internal.binding.Landuse"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse">
         </feature>
      </extension>
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.SoilTypeCollection"
+              class="org.kalypso.model.hydrology.internal.binding.SoilTypeCollection"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}SoiltypeCollection">
         </feature>
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.SoilType"
+              class="org.kalypso.model.hydrology.internal.binding.SoilType"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype">
         </feature>
      </extension>
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.GeologyCollection"
+              class="org.kalypso.model.hydrology.internal.binding.GeologyCollection"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}GeologieCollection">
         </feature>
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.Geology"
+              class="org.kalypso.model.hydrology.internal.binding.Geology"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie">
         </feature>
      </extension>
@@ -176,27 +176,27 @@
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.suds.AbstractSud"
+              class="org.kalypso.model.hydrology.internal.binding.suds.AbstractSud"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}_Sud">
         </feature>
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.suds.SwaleInfiltrationDitch"
+              class="org.kalypso.model.hydrology.internal.binding.suds.SwaleInfiltrationDitch"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}SwaleInfiltrationDitch">
         </feature>
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.suds.Swale"
+              class="org.kalypso.model.hydrology.internal.binding.suds.Swale"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}Swale">
         </feature>
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.suds.Greenroof"
+              class="org.kalypso.model.hydrology.internal.binding.suds.Greenroof"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}GreenRoof">
         </feature>
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.suds.Sealing"
+              class="org.kalypso.model.hydrology.internal.binding.suds.Sealing"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}Sealing">
         </feature>
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.suds.PlaningArea"
+              class="org.kalypso.model.hydrology.internal.binding.suds.PlaningArea"
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/suds}PlaningArea">
         </feature>
      </extension>
@@ -204,8 +204,19 @@
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
-              class="org.kalypso.convert.namodel.schema.binding.Hydrotop"
+              class="org.kalypso.model.hydrology.internal.binding.Hydrotop"
               qname="{http://www.tuhh.de/hydrotop}Hydrotop">
+        </feature>
+     </extension>
+     <extension
+           point="org.kalypso.deegree.featureBinding">
+        <feature
+              class="org.kalypso.model.hydrology.internal.binding.NAModellControl"
+              qname="{org.kalypso.namodell.control}NAModellControl">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.internal.binding.InitialValues"
+              qname="{org.kalypso.namodell.control}initialValues">
         </feature>
      </extension>
 </plugin>

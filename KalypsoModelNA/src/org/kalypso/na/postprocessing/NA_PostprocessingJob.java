@@ -21,7 +21,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.convert.namodel.schema.binding.suds.PlaningArea;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -32,6 +31,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.suds.PlaningArea;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;

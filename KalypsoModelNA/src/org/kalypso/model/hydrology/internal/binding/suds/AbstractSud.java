@@ -38,63 +38,21 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.schema.binding;
-
-import javax.xml.namespace.QName;
+package org.kalypso.model.hydrology.internal.binding.suds;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for rrmLanduse:Landuse
- * 
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class Geology extends Feature_Impl
+public abstract class AbstractSud extends Feature_Impl
 {
-  public static final QName QNAME = new QName( NaModelConstants.NS_NAGEOLOGIE, "Geologie" ); //$NON-NLS-1$
-
-  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAGEOLOGIE, "location" ); //$NON-NLS-1$
-
-  public static final QName QNAME_PROP_MAXPERKULATIONSRATE = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
-
-  public static final QName QNAME_PROP_GWFACTOR = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
-
-  public Geology( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public AbstractSud( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public GM_MultiSurface getGeometry( )
-  {
-    return getProperty( QNAME_PROP_GEOMETRY, GM_MultiSurface.class );
-  }
 
-  public void setGeometry( final GM_MultiSurface geometry )
-  {
-    setProperty( QNAME_PROP_GEOMETRY, geometry );
-  }
-
-  public void setMaxPerkulationsRate( final double value )
-  {
-    setProperty( QNAME_PROP_MAXPERKULATIONSRATE, value );
-  }
-
-  public double getMaxPerkulationsRate( )
-  {
-    return getProperty( QNAME_PROP_MAXPERKULATIONSRATE, Double.class );
-  }
-
-  public void setGWFactor( final double value )
-  {
-    setProperty( QNAME_PROP_GWFACTOR, value );
-  }
-
-  public double getGWFactor( )
-  {
-    return getProperty( QNAME_PROP_GWFACTOR, Double.class );
-  }
 }
