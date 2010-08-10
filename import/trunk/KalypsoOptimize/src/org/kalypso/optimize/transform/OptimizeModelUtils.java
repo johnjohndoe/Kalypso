@@ -86,8 +86,7 @@ public final class OptimizeModelUtils
       setParameter_Factor( calContext.getxPaths(), value, doc );
     else if( ParameterOptimizeContext.MODE_OFFSET.equals( mode ) )
       setParameter_Offset( calContext.getxPaths(), value, doc );
-    else
-      // mode direct
+    else // mode direct
       setParameter( calContext.getxPaths(), (new Double( value )).toString(), doc );
   }
 

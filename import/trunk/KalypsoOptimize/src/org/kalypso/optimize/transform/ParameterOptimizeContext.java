@@ -90,7 +90,6 @@ public class ParameterOptimizeContext
     m_mode = parameter.getMode();
 
     m_xPaths = parameter.getXpath().toArray( new String[parameter.getXpath().size()] );
-
   }
 
   public double getUpperBound()
