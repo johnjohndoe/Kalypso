@@ -73,6 +73,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -653,7 +654,10 @@ public class NetFileManager extends AbstractManager
           final IObservation observation = ZmlFactory.parseXML( linkURL ); //$NON-NLS-1$
           if( Boolean.TRUE.equals( nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) ) )
           {
-            if( m_conf.isUsePrecipitationForm() )
+            final NAControl metaControl = m_conf.getMetaControl();
+            final Integer minutesOfTimestep = metaControl.getMinutesOfTimestep();
+
+            if( metaControl.isUsePrecipitationForm() )
             {
               final ITupleModel values = observation.getValues( null );
               final IAxis[] axis = observation.getAxisList();
@@ -662,10 +666,15 @@ public class NetFileManager extends AbstractManager
               final long simulationEndDateMillis = ((Date) values.getElement( values.getCount() - 1, dateAxis )).getTime();
               final Date simulationStartDate = new Date( 100, 0, 1 );
               final Date simulationEndDate = new Date( simulationStartDate.getTime() + simulationEndDateMillis - simulationStartDateMillis );
-              NAZMLGenerator.createSyntheticFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation, simulationStartDate, simulationEndDate, m_conf.getMinutesOfTimeStep() );
+
+              NAZMLGenerator.createSyntheticFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation, simulationStartDate, simulationEndDate, minutesOfTimestep );
             }
             else
-              NAZMLGenerator.createSyntheticFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), m_conf.getMinutesOfTimeStep() );
+            {
+              final Date simulationStart = metaControl.getSimulationStart();
+              final Date simulationEnd = metaControl.getSimulationEnd();
+              NAZMLGenerator.createSyntheticFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation, simulationStart, simulationEnd, minutesOfTimestep );
+            }
           }
           else
             NAZMLGenerator.createFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation );

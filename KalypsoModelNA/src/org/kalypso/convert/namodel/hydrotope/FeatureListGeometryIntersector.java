@@ -38,14 +38,10 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel;
+package org.kalypso.convert.namodel.hydrotope;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -56,12 +52,8 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.model.sort.SplitSortSpatialIndex;
 
@@ -100,8 +92,6 @@ public class FeatureListGeometryIntersector
   private final HashMap<Integer, List<Feature>> m_sourceLayers = new HashMap<Integer, List<Feature>>();
 
   private boolean m_initialized = false;
-
-  private String m_strCrs = null;
 
   private List<Geometry> m_intersectionCandidates = null;
 
@@ -177,7 +167,7 @@ public class FeatureListGeometryIntersector
   /**
    * Intersects features given as a list of feature lists, produces the result into the resultList<br>
    */
-  public List<MultiPolygon> intersect( final IProgressMonitor monitor ) throws GM_Exception, CoreException
+  public List<MultiPolygon> intersect( final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.0" ), 1000 ); //$NON-NLS-1$
 
@@ -202,7 +192,7 @@ public class FeatureListGeometryIntersector
           progress.subTask( Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", count, countFeatures ) ); //$NON-NLS-1$
         count++;
 
-        GM_Object gmObj = feature.getDefaultGeometryPropertyValue();
+        final GM_Object gmObj = feature.getDefaultGeometryPropertyValue();
         final List<Geometry> featurePolygons = new ArrayList<Geometry>();
         try
         {
@@ -212,12 +202,12 @@ public class FeatureListGeometryIntersector
             export = JTSAdapter.export( gmObj );
             featurePolygons.addAll( removeGeometryCollections( normalizeGeometry( export ) ) );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             // ...
           }
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
@@ -226,9 +216,9 @@ public class FeatureListGeometryIntersector
           final List<Object> checkedCandidates = m_geometryChecked.query( featurePolygon.getEnvelopeInternal() );
           boolean l_polygonAlreadyChecked = false;
 
-          for( Iterator iterator = checkedCandidates.iterator(); iterator.hasNext(); )
+          for( final Object element : checkedCandidates )
           {
-            Geometry geo = (Geometry) iterator.next();
+            final Geometry geo = (Geometry) element;
 
             if( featurePolygon.equalsExact( geo, 0.01 ) )
             {
@@ -276,7 +266,7 @@ public class FeatureListGeometryIntersector
                   {
                     difference = normalizeGeometry( normalizeGeometry( candidatePolygon ).difference( featurePolygon ) );
                   }
-                  catch( Exception e )
+                  catch( final Exception e )
                   {
                     e.printStackTrace();
                   }
@@ -299,18 +289,18 @@ public class FeatureListGeometryIntersector
                 else if( matrix.isOverlaps( dimF, dimC ) )
                 {
                   // two polygons are (really) intersected, i.e. they have common intersection polygon
-                  Geometry metaIntersection = candidatePolygon.intersection( featurePolygon );
-                  List<Geometry> intersections = removeGeometryCollections( normalizeGeometry( metaIntersection ) );
+                  final Geometry metaIntersection = candidatePolygon.intersection( featurePolygon );
+                  final List<Geometry> intersections = removeGeometryCollections( normalizeGeometry( metaIntersection ) );
                   if( intersections.size() > 0 )
                   {
 
                     try
                     {
-                      Geometry lGeo = ((new GeometryFactory()).createGeometryCollection( intersections.toArray( new Geometry[intersections.size()] ) )).buffer( 0.0 );
+                      final Geometry lGeo = ((new GeometryFactory()).createGeometryCollection( intersections.toArray( new Geometry[intersections.size()] ) )).buffer( 0.0 );
                       intersections.clear();
                       intersections.add( normalizeGeometry( lGeo ) );
                     }
-                    catch( Exception e )
+                    catch( final Exception e )
                     {
                       e.printStackTrace();
                       // TODO: handle exception
@@ -325,7 +315,7 @@ public class FeatureListGeometryIntersector
                       {
                         difference = normalizeGeometry( candidatePolygon.difference( featurePolygon ) );
                       }
-                      catch( Exception e )
+                      catch( final Exception e )
                       {
                         e.printStackTrace();
                       }
@@ -340,7 +330,7 @@ public class FeatureListGeometryIntersector
                       {
                         difference = normalizeGeometry( featurePolygon.difference( candidatePolygon ) );
                       }
-                      catch( Exception e )
+                      catch( final Exception e )
                       {
                         e.printStackTrace();
                       }
@@ -356,24 +346,24 @@ public class FeatureListGeometryIntersector
               {
                 try
                 {
-                  Geometry union = (new GeometryFactory()).createGeometryCollection( m_coverBuffer.toArray( new Geometry[m_coverBuffer.size()] ) ).union();
+                  final Geometry union = (new GeometryFactory()).createGeometryCollection( m_coverBuffer.toArray( new Geometry[m_coverBuffer.size()] ) ).union();
 
-                  List<Geometry> unionList = removeGeometryCollections( union );
-                  for( Geometry geoUnion : unionList )
+                  final List<Geometry> unionList = removeGeometryCollections( union );
+                  for( final Geometry geoUnion : unionList )
                   {
 
-                    Geometry difference = normalizeGeometry( featurePolygon.difference( normalizeGeometry( geoUnion ) ) );
+                    final Geometry difference = normalizeGeometry( featurePolygon.difference( normalizeGeometry( geoUnion ) ) );
                     index( difference );
                   }
                 }
-                catch( Exception e )
+                catch( final Exception e )
                 {
                   Geometry cutGeo = getUnrolledPolygon( featurePolygon );
 
-                  List<Geometry> listHoles = getUnrolledHolesFromPolygon( featurePolygon );
+                  final List<Geometry> listHoles = getUnrolledHolesFromPolygon( featurePolygon );
                   if( listHoles.size() != 0 )
                   {
-                    for( Geometry dirko : listHoles )
+                    for( final Geometry dirko : listHoles )
                     {
                       index( dirko );
                       buffer( dirko );
@@ -381,7 +371,7 @@ public class FeatureListGeometryIntersector
                   }
 
                   boolean brokenPolygonAdded = false;
-                  for( Geometry geo : m_coverBuffer )
+                  for( final Geometry geo : m_coverBuffer )
                   {
 // Geometry cutGeo = null;
 // featureGeometry is covered (contained, because they are not equal) by candidateGeometry
@@ -390,7 +380,7 @@ public class FeatureListGeometryIntersector
                       cutGeo = (cutGeo.difference( geo )).buffer( 0.0 );
                       cutGeo = normalizeGeometry( cutGeo );
                     }
-                    catch( Exception e3 )
+                    catch( final Exception e3 )
                     {
                       brokenPolygonAdded = true;
                     }
@@ -450,12 +440,12 @@ public class FeatureListGeometryIntersector
     return false;
   }
 
-  public List<Geometry> normalizeGeometry( List<Geometry> removeGeometryCollections )
+  public List<Geometry> normalizeGeometry( final List<Geometry> removeGeometryCollections )
   {
-    List<Geometry> lListRes = new ArrayList<Geometry>();
+    final List<Geometry> lListRes = new ArrayList<Geometry>();
     for( final Geometry geometry : removeGeometryCollections )
     {
-      Geometry normalizedGeometry = normalizeGeometry( geometry );
+      final Geometry normalizedGeometry = normalizeGeometry( geometry );
       if( normalizedGeometry != null )
         lListRes.add( normalizedGeometry );
     }
@@ -483,7 +473,7 @@ public class FeatureListGeometryIntersector
       if( geometry.getCoordinates().length == 0 || isInvalidArea( geometry ) )
         return false;
 
-      Point point = getJustInteriorPointFixed( geometry );
+      final Point point = getJustInteriorPointFixed( geometry );
       final List<Object> list = m_index.query( geometry.getEnvelopeInternal() );
       for( final Object object : list )
       {
@@ -503,7 +493,7 @@ public class FeatureListGeometryIntersector
   {
     if( !m_index.remove( geometry.getEnvelopeInternal(), geometry ) )
     {
-      Point point = getJustInteriorPointFixed( geometry );
+      final Point point = getJustInteriorPointFixed( geometry );
 // Point point = geometry.getInteriorPoint();
       final List<Object> list = m_index.query( geometry.getEnvelopeInternal() );
       for( final Object object : list )
@@ -531,7 +521,7 @@ public class FeatureListGeometryIntersector
     if( coordsOrig == null || coordsOrig.size() < 4 )
       return;
 
-    List<Coordinate> coords = new ArrayList<Coordinate>( coordsOrig );
+    final List<Coordinate> coords = new ArrayList<Coordinate>( coordsOrig );
 
     if( isSnappy( coords.get( coords.size() - 1 ), coords.get( 0 ) ) )
     {
@@ -539,12 +529,12 @@ public class FeatureListGeometryIntersector
     }
     coords.add( coords.get( 0 ) );
 
-    LinearRing exteriorRing = new GeometryFactory().createLinearRing( coords.toArray( new Coordinate[coords.size()] ) );
+    final LinearRing exteriorRing = new GeometryFactory().createLinearRing( coords.toArray( new Coordinate[coords.size()] ) );
 
     appendCandidate( new GeometryFactory().createPolygon( exteriorRing, null ) );
   }
 
-  private void appendCandidate( Geometry geo )
+  private void appendCandidate( final Geometry geo )
   {
 // System.err.println( "---- Appending candidate: " + geo );
     m_intersectionCandidates.add( geo );
@@ -562,8 +552,8 @@ public class FeatureListGeometryIntersector
 
   private final boolean isSnappy( final Coordinate first, final Coordinate second )
   {
-    double x = Math.abs( first.x - second.x );
-    double y = Math.abs( first.y - second.y );
+    final double x = Math.abs( first.x - second.x );
+    final double y = Math.abs( first.y - second.y );
 
     return (x * x + y * y) < snapDistance;
   }
@@ -577,13 +567,13 @@ public class FeatureListGeometryIntersector
 
       final SplitSortSpatialIndex index = new SplitSortSpatialIndex( ringEnv.getEnvelopeInternal() );
       final SplitSortSpatialIndex indexEdges = new SplitSortSpatialIndex( ringEnv.getEnvelopeInternal() );
-      List<Coordinate> coordListNew = new ArrayList<Coordinate>();
+      final List<Coordinate> coordListNew = new ArrayList<Coordinate>();
       for( int i = 0; i < coordinatesList.length - 1; i++ )
       {
-        Coordinate coord = coordinatesList[i];
+        final Coordinate coord = coordinatesList[i];
         if( isSnappy( coord, prePrev ) == true )
         {
-          Coordinate to_remove = coordListNew.get( coordListNew.size() - 1 );
+          final Coordinate to_remove = coordListNew.get( coordListNew.size() - 1 );
           index.remove( new Envelope( to_remove ), to_remove );
           coordListNew.remove( to_remove );
 
@@ -598,11 +588,11 @@ public class FeatureListGeometryIntersector
 
         if( isSnappy( coord, previous ) == false )
         {
-          List<Object> list = index.query( createSnapEnvelope( coord ) );
+          final List<Object> list = index.query( createSnapEnvelope( coord ) );
 
           if( list != null && list.size() > 0 )
           {
-            List<Coordinate> lListToRemove = new ArrayList<Coordinate>();
+            final List<Coordinate> lListToRemove = new ArrayList<Coordinate>();
 
             boolean boolFoundToRemove = false;
             for( int j = 0; j < coordListNew.size(); ++j )
@@ -625,16 +615,16 @@ public class FeatureListGeometryIntersector
           }
           else
           {
-            List<Object> listEdges = indexEdges.query( createSnapEnvelope( coord ) );
+            final List<Object> listEdges = indexEdges.query( createSnapEnvelope( coord ) );
             if( listEdges != null && listEdges.size() > 0 )
             {
-              List<Coordinate> lListToRemove = new ArrayList<Coordinate>();
+              final List<Coordinate> lListToRemove = new ArrayList<Coordinate>();
               lListToRemove.clear();
               boolean boolFoundToRemove = false;
               for( int j = 0; j < listEdges.size(); ++j )
               {
-                Coordinate edgeCoordFirst = ((Coordinate[]) (listEdges.get( j )))[0];
-                Coordinate edgeCoordSecond = ((Coordinate[]) (listEdges.get( j )))[1];
+                final Coordinate edgeCoordFirst = ((Coordinate[]) (listEdges.get( j )))[0];
+                final Coordinate edgeCoordSecond = ((Coordinate[]) (listEdges.get( j )))[1];
                 if( isOnLine( GeometryFactory.createPointFromInternalCoord( edgeCoordFirst, ringEnv ), GeometryFactory.createPointFromInternalCoord( edgeCoordSecond, ringEnv ), GeometryFactory.createPointFromInternalCoord( coord, ringEnv ) ) )
                 {
                   for( int k = 0; k < coordListNew.size(); ++k )
@@ -660,7 +650,7 @@ public class FeatureListGeometryIntersector
             }
             if( coordListNew.size() > 0 )
             {
-              Coordinate actualPrev = coordListNew.get( coordListNew.size() - 1 );
+              final Coordinate actualPrev = coordListNew.get( coordListNew.size() - 1 );
               indexEdges.insert( new Envelope( actualPrev, coord ), new Coordinate[] { actualPrev, coord } );
             }
             coordListNew.add( coord );
@@ -679,7 +669,7 @@ public class FeatureListGeometryIntersector
       }
 
       // check the last point
-      Coordinate last = coordinatesList[coordinatesList.length - 1];
+      final Coordinate last = coordinatesList[coordinatesList.length - 1];
       if( isSnappy( previous, last ) )
       {
         coordListNew.remove( coordListNew.size() - 1 );
@@ -689,7 +679,7 @@ public class FeatureListGeometryIntersector
       coordListNew.add( last );
       return coordListNew;
     }
-    catch( Throwable e )
+    catch( final Throwable e )
     {
       e.printStackTrace();
       // TODO: handle exception
@@ -706,7 +696,7 @@ public class FeatureListGeometryIntersector
 
   private Geometry normalizePolygon( final Polygon poly )
   {
-    List<Coordinate> exteriorListNew = normalizeRing( poly.getExteriorRing().getCoordinates(), poly.getEnvelope() );
+    final List<Coordinate> exteriorListNew = normalizeRing( poly.getExteriorRing().getCoordinates(), poly.getEnvelope() );
 
     // not even a triangle !
     if( exteriorListNew.size() < 4 )
@@ -715,13 +705,13 @@ public class FeatureListGeometryIntersector
       return null;
     }
 
-    LinearRing exteriorRing = new GeometryFactory().createLinearRing( exteriorListNew.toArray( new Coordinate[exteriorListNew.size()] ) );
+    final LinearRing exteriorRing = new GeometryFactory().createLinearRing( exteriorListNew.toArray( new Coordinate[exteriorListNew.size()] ) );
 
     // unroll holes
-    List<LinearRing> holes = new ArrayList<LinearRing>();
+    final List<LinearRing> holes = new ArrayList<LinearRing>();
     for( int i = 0; i < poly.getNumInteriorRing(); i++ )
     {
-      List<Coordinate> interiorListNew = normalizeRing( poly.getInteriorRingN( i ).getCoordinates(), poly.getInteriorRingN( i ).getEnvelope() );
+      final List<Coordinate> interiorListNew = normalizeRing( poly.getInteriorRingN( i ).getCoordinates(), poly.getInteriorRingN( i ).getEnvelope() );
       // not even a triangle !
       if( interiorListNew.size() < 4 )
       {
@@ -732,7 +722,7 @@ public class FeatureListGeometryIntersector
       LinearRing interiorRing = new GeometryFactory().createLinearRing( interiorListNew.toArray( new Coordinate[interiorListNew.size()] ) );
 
       // test if some other hole touches this one. otherwise difference method on this geometry will nto work
-      for( LinearRing ring : holes )
+      for( final LinearRing ring : holes )
       {
         if( interiorRing.touches( ring ) || interiorRing.intersects( ring ) )
         {
@@ -747,10 +737,10 @@ public class FeatureListGeometryIntersector
     return new GeometryFactory().createPolygon( exteriorRing, holes.toArray( new LinearRing[holes.size()] ) );
   }
 
-  private LinearRing normalizeHole( LinearRing holeToTest, LineString oldHole )
+  private LinearRing normalizeHole( final LinearRing holeToTest, final LineString oldHole )
   {
     final SplitSortSpatialIndex index = new SplitSortSpatialIndex( oldHole.getEnvelopeInternal() );
-    List<Coordinate> coordListNew = new ArrayList<Coordinate>();
+    final List<Coordinate> coordListNew = new ArrayList<Coordinate>();
 
     // populate index
     for( int i = 0; i < oldHole.getCoordinates().length - 1; i++ )
@@ -759,25 +749,25 @@ public class FeatureListGeometryIntersector
     for( int i = 0; i < holeToTest.getCoordinates().length - 1; i++ )
     {
       Coordinate point = holeToTest.getCoordinateN( i );
-      List<Object> list = index.query( createSnapEnvelope( point ) );
+      final List<Object> list = index.query( createSnapEnvelope( point ) );
 
       if( list != null && list.size() > 0 )
       {
-        for( Object obj : list )
+        for( final Object obj : list )
         {
-          Coordinate coord = (Coordinate) obj;
+          final Coordinate coord = (Coordinate) obj;
 
           if( isSnappy( point, coord ) )
           {
-            Point a = new GeometryFactory().createPoint( point );
-            Point b = holeToTest.getCentroid();
+            final Point a = new GeometryFactory().createPoint( point );
+            final Point b = holeToTest.getCentroid();
 
-            double deltaX = b.getX() - a.getX();
-            double deltaY = b.getY() - a.getY();
-            double gip = a.distance( b );
+            final double deltaX = b.getX() - a.getX();
+            final double deltaY = b.getY() - a.getY();
+            final double gip = a.distance( b );
 
-            double fx = Math.signum( deltaX ) * 3.0 * snapDistance * (deltaX * deltaX) / gip;
-            double fy = Math.signum( deltaX ) * 3.0 * snapDistance * (deltaY * deltaY) / gip;
+            final double fx = Math.signum( deltaX ) * 3.0 * snapDistance * (deltaX * deltaX) / gip;
+            final double fy = Math.signum( deltaX ) * 3.0 * snapDistance * (deltaY * deltaY) / gip;
 
             point = new Coordinate( a.getX() + fx, a.getY() + fy );
           }
@@ -795,31 +785,31 @@ public class FeatureListGeometryIntersector
     return resultRing;
   }
 
-  private void debugPrint( final Polygon poly )
-  {
-    FileWriter writer;
-    List<Coordinate> exteriorListNew = Arrays.asList( poly.getExteriorRing().getCoordinates() );
-    try
-    {
-      writer = new FileWriter( "e:\\db_temp\\poly.txt", true );
-      writer.write( "----------------------- \r\n" );
-      writer.write( "POLYGON: " + poly.getSRID() + "\r\n" );
-
-      for( Coordinate c : exteriorListNew )
-      {
-        String a = "" + c.x + "\t" + c.y + "\r\n";
-        a.replace( '.', ',' );
-        writer.write( a );
-      }
-      writer.write( "----------------------- \r\n" );
-      writer.close();
-    }
-    catch( IOException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
+// private void debugPrint( final Polygon poly )
+// {
+// FileWriter writer;
+// final List<Coordinate> exteriorListNew = Arrays.asList( poly.getExteriorRing().getCoordinates() );
+// try
+// {
+// writer = new FileWriter( "e:\\db_temp\\poly.txt", true );
+// writer.write( "----------------------- \r\n" );
+// writer.write( "POLYGON: " + poly.getSRID() + "\r\n" );
+//
+// for( final Coordinate c : exteriorListNew )
+// {
+// final String a = "" + c.x + "\t" + c.y + "\r\n";
+// a.replace( '.', ',' );
+// writer.write( a );
+// }
+// writer.write( "----------------------- \r\n" );
+// writer.close();
+// }
+// catch( final IOException e )
+// {
+// // TODO Auto-generated catch block
+// e.printStackTrace();
+// }
+// }
 
   private Geometry normalizeGeometry( final Geometry geometry )
   {
@@ -839,11 +829,11 @@ public class FeatureListGeometryIntersector
     if( geometry instanceof MultiPolygon || geometry instanceof GeometryCollection )
     {
       final GeometryCollection collection = (GeometryCollection) geometry;
-      List<Geometry> newCol = new ArrayList<Geometry>();
+      final List<Geometry> newCol = new ArrayList<Geometry>();
       for( int x = 0; x < collection.getNumGeometries(); x++ )
       {
 
-        Geometry normalizedGeometry = normalizeGeometry( collection.getGeometryN( x ) );
+        final Geometry normalizedGeometry = normalizeGeometry( collection.getGeometryN( x ) );
         if( normalizedGeometry != null )
           newCol.add( normalizedGeometry );
       }
@@ -851,7 +841,7 @@ public class FeatureListGeometryIntersector
       if( newCol.size() == 0 )
         return null;
 
-      GeometryCollection geometryCollection = new GeometryFactory().createGeometryCollection( GeometryFactory.toGeometryArray( newCol ) );
+      final GeometryCollection geometryCollection = new GeometryFactory().createGeometryCollection( GeometryFactory.toGeometryArray( newCol ) );
       return geometryCollection;
     }
 
@@ -863,10 +853,10 @@ public class FeatureListGeometryIntersector
 
     if( geometry instanceof Polygon )
     {
-      Polygon poly = (Polygon) geometry;
+      final Polygon poly = (Polygon) geometry;
 
-      LinearRing exteriorRing = new GeometryFactory().createLinearRing( poly.getExteriorRing().getCoordinates() );
-      Polygon firstPoly = new GeometryFactory().createPolygon( exteriorRing, null );
+      final LinearRing exteriorRing = new GeometryFactory().createLinearRing( poly.getExteriorRing().getCoordinates() );
+      final Polygon firstPoly = new GeometryFactory().createPolygon( exteriorRing, null );
 
       return firstPoly;
     }
@@ -876,45 +866,20 @@ public class FeatureListGeometryIntersector
 
   private List<Geometry> getUnrolledHolesFromPolygon( final Geometry geometry )
   {
-    List<Geometry> listResult = new ArrayList<Geometry>();
+    final List<Geometry> listResult = new ArrayList<Geometry>();
 
     if( geometry instanceof Polygon )
     {
-      Polygon poly = (Polygon) geometry;
+      final Polygon poly = (Polygon) geometry;
 
       // unroll holes
       for( int i = 0; i < poly.getNumInteriorRing(); i++ )
       {
-        LinearRing interiorRing = new GeometryFactory().createLinearRing( poly.getInteriorRingN( i ).getCoordinates() );
-        Polygon newPoly = new GeometryFactory().createPolygon( interiorRing, null );
+        final LinearRing interiorRing = new GeometryFactory().createLinearRing( poly.getInteriorRingN( i ).getCoordinates() );
+        final Polygon newPoly = new GeometryFactory().createPolygon( interiorRing, null );
         listResult.add( newPoly );
       }
 
-    }
-
-    return listResult;
-  }
-
-  private List<Geometry> unrollHoles( final Geometry geometry )
-  {
-    List<Geometry> listResult = new ArrayList<Geometry>();
-
-    if( geometry instanceof Point || geometry instanceof MultiPoint || geometry instanceof LineString || geometry instanceof MultiLineString )
-    {
-      listResult.add( geometry );
-    }
-    else if( geometry instanceof Polygon )
-    {
-      listResult.add( getUnrolledPolygon( geometry ) );
-      listResult.addAll( getUnrolledHolesFromPolygon( geometry ) );
-    }
-    else if( geometry instanceof MultiPolygon || geometry instanceof GeometryCollection )
-    {
-      final GeometryCollection collection = (GeometryCollection) geometry;
-      for( int x = 0; x < collection.getNumGeometries(); x++ )
-      {
-        listResult.addAll( unrollHoles( collection.getGeometryN( x ) ) );
-      }
     }
 
     return listResult;
@@ -1021,16 +986,16 @@ public class FeatureListGeometryIntersector
     // second method, shifted centroid
     for( int i = 0; i < poly.getExteriorRing().getNumPoints() - 1; i++ )
     {
-      Point b = poly.getExteriorRing().getPointN( i );
+      final Point b = poly.getExteriorRing().getPointN( i );
 
-      double deltaX = b.getX() - point.getX();
-      double deltaY = b.getY() - point.getY();
-      double gip = point.distance( b );
+      final double deltaX = b.getX() - point.getX();
+      final double deltaY = b.getY() - point.getY();
+      final double gip = point.distance( b );
 
-      double fx = Math.signum( deltaX ) * 4.0 / 5.0 * (deltaX * deltaX) / gip;
-      double fy = Math.signum( deltaY ) * 4.0 / 5.0 * (deltaY * deltaY) / gip;
+      final double fx = Math.signum( deltaX ) * 4.0 / 5.0 * (deltaX * deltaX) / gip;
+      final double fy = Math.signum( deltaY ) * 4.0 / 5.0 * (deltaY * deltaY) / gip;
 
-      Point np = new GeometryFactory().createPoint( new Coordinate( point.getX() + fx, point.getY() + fy ) );
+      final Point np = new GeometryFactory().createPoint( new Coordinate( point.getX() + fx, point.getY() + fy ) );
 
       if( isPointInsidePolygon( poly, np ) == true )
         return np;
@@ -1040,12 +1005,12 @@ public class FeatureListGeometryIntersector
     // third method, walking triangle
     for( int index = 0; index < poly.getExteriorRing().getNumPoints() - 2; index++ )
     {
-      Point a = poly.getExteriorRing().getPointN( index );
-      Point b = poly.getExteriorRing().getPointN( index + 1 );
-      Point c = poly.getExteriorRing().getPointN( poly.getExteriorRing().getNumPoints() - 2 - index );
+      final Point a = poly.getExteriorRing().getPointN( index );
+      final Point b = poly.getExteriorRing().getPointN( index + 1 );
+      final Point c = poly.getExteriorRing().getPointN( poly.getExteriorRing().getNumPoints() - 2 - index );
 
-      double centroidX = (a.getX() + b.getX() + c.getX()) / 3;
-      double centroidY = (a.getY() + b.getY() + c.getY()) / 3;
+      final double centroidX = (a.getX() + b.getX() + c.getX()) / 3;
+      final double centroidY = (a.getY() + b.getY() + c.getY()) / 3;
 
 // System.out.println("Triangle:");
 // System.out.println("" + a.getX() + "\t" + a.getY());
@@ -1053,7 +1018,7 @@ public class FeatureListGeometryIntersector
 // System.out.println("" + c.getX() + "\t" + c.getY());
 // System.out.println("" + centroidX + "\t" + centroidY);
 
-      Point np = new GeometryFactory().createPoint( new Coordinate( centroidX, centroidY ) );
+      final Point np = new GeometryFactory().createPoint( new Coordinate( centroidX, centroidY ) );
 
       if( isPointInsidePolygon( poly, np ) == true )
         return np;
@@ -1063,9 +1028,9 @@ public class FeatureListGeometryIntersector
     // last method! angle analysis of each points area
     for( int index = 1; index < poly.getExteriorRing().getNumPoints() - 1; index++ )
     {
-      Point pa = poly.getExteriorRing().getPointN( index - 1 );
-      Point pb = poly.getExteriorRing().getPointN( index );
-      Point pc = poly.getExteriorRing().getPointN( index + 1 );
+      final Point pa = poly.getExteriorRing().getPointN( index - 1 );
+      final Point pb = poly.getExteriorRing().getPointN( index );
+      final Point pc = poly.getExteriorRing().getPointN( index + 1 );
 
       // lower bound
       double distA = Math.max( snapDistance * 4, pa.distance( pb ) / 2 );
@@ -1075,11 +1040,11 @@ public class FeatureListGeometryIntersector
       distA = Math.min( snapDistance * 1000, distA );
       distC = Math.min( snapDistance * 1000, distC );
 
-      double dist = Math.min( distA, distC );
+      final double dist = Math.min( distA, distC );
 
-      Coordinate ca = new Coordinate( pa.getX(), pa.getY() );
-      Coordinate cb = new Coordinate( pb.getX(), pb.getY() );
-      Coordinate cc = new Coordinate( pc.getX(), pc.getY() );
+      final Coordinate ca = new Coordinate( pa.getX(), pa.getY() );
+      final Coordinate cb = new Coordinate( pb.getX(), pb.getY() );
+      final Coordinate cc = new Coordinate( pc.getX(), pc.getY() );
 
       double angle = Angle.angleBetween( ca, cb, cc );
       if( angle < Math.PI / 180 )
@@ -1088,8 +1053,8 @@ public class FeatureListGeometryIntersector
 
       for( double rot = 0; rot < 2 * Math.PI; rot += angle )
       {
-        Coordinate runner = new Coordinate( pb.getX() + Math.cos( rot ) * dist, pb.getY() + Math.sin( rot ) * dist );
-        Point np = new GeometryFactory().createPoint( runner );
+        final Coordinate runner = new Coordinate( pb.getX() + Math.cos( rot ) * dist, pb.getY() + Math.sin( rot ) * dist );
+        final Point np = new GeometryFactory().createPoint( runner );
 
         if( isPointInsidePolygon( poly, np ) == true )
           return np;
@@ -1146,7 +1111,7 @@ public class FeatureListGeometryIntersector
   {
     if( geo instanceof Polygon )
     {
-      Polygon poly = (Polygon) geo;
+      final Polygon poly = (Polygon) geo;
       final LineString exteriorRing = poly.getExteriorRing();
 
       if( isPointInsidePolygon( exteriorRing, point ) == false )

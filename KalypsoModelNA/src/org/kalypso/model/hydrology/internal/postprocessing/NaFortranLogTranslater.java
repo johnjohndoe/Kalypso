@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel;
+package org.kalypso.model.hydrology.internal.postprocessing;
 
 import java.io.File;
 import java.util.logging.Logger;

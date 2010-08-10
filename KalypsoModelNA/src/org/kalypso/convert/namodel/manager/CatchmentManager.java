@@ -67,6 +67,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -273,14 +274,11 @@ public class CatchmentManager extends AbstractManager
 
     // 3
     final StringBuffer b = new StringBuffer();
-    if( m_conf.isUsePrecipitationForm() )
-    {
+    if( m_conf.getMetaControl().isUsePrecipitationForm() )
       b.append( "s " ); //$NON-NLS-1$
-    }
     else
-    {
       b.append( "n " ); //$NON-NLS-1$
-    }
+
     b.append( getNiederschlagEingabeDateiString( feature, m_conf ) );
     b.append( " " + getNiederschlagEingabeDateiString( feature, m_conf ) ); //$NON-NLS-1$
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -489,10 +487,10 @@ public class CatchmentManager extends AbstractManager
 
   public static String getNiederschlagEingabeDateiString( final Feature feature, final NAConfiguration conf )
   {
-    if( conf.isUsePrecipitationForm() )
-    {
+    final NAControl metaControl = conf.getMetaControl();
+    if( metaControl.isUsePrecipitationForm() )
       return getEingabeDateiString( feature, conf, "synthZR", ITimeseriesConstants.TYPE_RAINFALL ); //$NON-NLS-1$
-    }
+
     return getEingabeDateiString( feature, conf, "niederschlagZR", ITimeseriesConstants.TYPE_RAINFALL ); //$NON-NLS-1$
 
   }
@@ -542,9 +540,11 @@ public class CatchmentManager extends AbstractManager
 
   public static void WriteSynthNFile( final File targetFileN, final Feature feature, final GMLWorkspace synthNWorkspace, final NAConfiguration conf ) throws Exception
   {
+    final NAControl metaControl = conf.getMetaControl();
+
     final List<Feature> statNList = new ArrayList<Feature>();
     final StringBuffer buffer = new StringBuffer();
-    final Double annualityKey = conf.getAnnuality();
+    final Double annualityKey = metaControl.getAnnuality();
     // Kostra-Kachel/ synth. N gebietsabhängig
     final String synthNKey = (String) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_SYNTH );
     statNList.addAll( Arrays.asList( synthNWorkspace.getFeatures( conf.getstatNFT() ) ) );
@@ -582,7 +582,7 @@ public class CatchmentManager extends AbstractManager
                 {
                   final Double minutesValue = (Double) values.getElement( row, minutesAxis );
                   final Double hoursValue = minutesValue / 60d;
-                  if( hoursValue.equals( conf.getDuration() ) )
+                  if( hoursValue.equals( metaControl.getDurationHours() ) )
                   {
                     final Double precipitationValue = (Double) values.getElement( row, precipitationAxis );
                     buffer.append( FortranFormatHelper.printf( hoursValue, "f9.3" ) + " " + FortranFormatHelper.printf( precipitationValue, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$

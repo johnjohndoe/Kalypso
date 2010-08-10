@@ -61,11 +61,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs.FileUtil;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.binding.NAControl;
 import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.simulation.NaModelInnerCalcJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -88,7 +87,6 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.w3c.dom.Document;
 
@@ -148,9 +146,9 @@ public class NAOptimizingJob implements IOptimizingJob
     m_linkCalcedTS = naControl.getResultLink();
 
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
-    final Feature metaFE = metaWorkspace.getRootFeature();
-    final Date measuredStartDate = DateUtilities.toDate( metaFE.getProperty( NaModelConstants.CONTROL_STARTSIMULATION ) );
-    final Date measuredEndDate = DateUtilities.toDate( metaFE.getProperty( NaModelConstants.CONTROL_FORECAST ) );
+    final NAControl metaControl = (NAControl) metaWorkspace.getRootFeature();
+    final Date measuredStartDate = metaControl.getSimulationStart();
+    final Date measuredEndDate = metaControl.getStartForecast();
 
     final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
 

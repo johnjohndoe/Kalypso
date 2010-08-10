@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel;
+package org.kalypso.model.hydrology.internal.postprocessing;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +58,8 @@ import org.apache.commons.io.FileUtils;
 import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.convert.namodel.DefaultPathGenerator;
+import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.HydroHash;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.manager.LzsimManager;
@@ -67,9 +69,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaResultDirs;
+import org.kalypso.model.hydrology.internal.binding.NAControl;
 import org.kalypso.model.hydrology.internal.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.postprocessing.TSResultDescriptor;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
@@ -436,8 +438,9 @@ public class NaPostProcessor
     final IAxis resultDateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class );
     final IAxis resultValueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
 
-    final Date startForecast = m_conf.getSimulationForecastStart();
-    final Date endForecast = m_conf.getSimulationEnd();
+    final NAControl metaControl = m_conf.getMetaControl();
+    final Date startForecast = metaControl.getStartForecast();
+    final Date endForecast = metaControl.getSimulationEnd();
 
     final IAxisRange rangeFor = resultValues.getRangeFor( resultDateAxis );
     final Date endPrediction = (Date) rangeFor.getUpper();

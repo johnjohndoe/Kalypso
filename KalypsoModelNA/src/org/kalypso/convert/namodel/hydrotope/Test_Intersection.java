@@ -48,7 +48,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Ignore;
-import org.kalypso.convert.namodel.FeatureListGeometryIntersector;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.binding.Geology;
