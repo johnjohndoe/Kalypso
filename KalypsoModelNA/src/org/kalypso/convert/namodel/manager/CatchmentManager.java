@@ -73,7 +73,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -232,7 +232,7 @@ public class CatchmentManager extends AbstractManager
     // is relative
     // no copy
 
-    final Object relativeLink = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(), ITimeserieConstants.TYPE_DATE, ITimeserieConstants.TYPE_RAINFALL, m_conf.getGmlBaseDir(), relativeZmlPath, true, true );
+    final Object relativeLink = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(), ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_RAINFALL, m_conf.getGmlBaseDir(), relativeZmlPath, true, true );
     fePropMap.put( m_catchmentFT.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_NIEDERSCHLAG ), relativeLink );
 
     // continue reading
@@ -441,8 +441,8 @@ public class CatchmentManager extends AbstractManager
     zftBuffer.append( FortranFormatHelper.printf( asciiID, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IAxis[] axisList = observation.getAxisList();
-    final IAxis hoursAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_HOURS );
-    final IAxis normAreaAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_NORM );
+    final IAxis hoursAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_HOURS );
+    final IAxis normAreaAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_NORM );
     final ITupleModel values = observation.getValues( null );
     final int count = values.getCount();
     final double t0 = ((Double) values.getElement( 0, hoursAxis )).doubleValue();
@@ -491,16 +491,16 @@ public class CatchmentManager extends AbstractManager
   {
     if( conf.isUsePrecipitationForm() )
     {
-      return getEingabeDateiString( feature, conf, "synthZR", ITimeserieConstants.TYPE_RAINFALL ); //$NON-NLS-1$
+      return getEingabeDateiString( feature, conf, "synthZR", ITimeseriesConstants.TYPE_RAINFALL ); //$NON-NLS-1$
     }
-    return getEingabeDateiString( feature, conf, "niederschlagZR", ITimeserieConstants.TYPE_RAINFALL ); //$NON-NLS-1$
+    return getEingabeDateiString( feature, conf, "niederschlagZR", ITimeseriesConstants.TYPE_RAINFALL ); //$NON-NLS-1$
 
   }
 
   public static String getTemperaturEingabeDateiString( final Feature feature, final NAConfiguration conf )
   {
     if( feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_TEMPERATUR ) != null )
-      return getEingabeDateiString( feature, conf, "temperaturZR", ITimeserieConstants.TYPE_TEMPERATURE ); //$NON-NLS-1$
+      return getEingabeDateiString( feature, conf, "temperaturZR", ITimeseriesConstants.TYPE_TEMPERATURE ); //$NON-NLS-1$
     return STD_TEMP_FILENAME;
 
   }
@@ -532,7 +532,7 @@ public class CatchmentManager extends AbstractManager
   private static String getVerdunstungEingabeDateiString( final Feature feature, final NAConfiguration conf )
   {
     if( feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_VERDUNSTUNG ) != null )
-      return getEingabeDateiString( feature, conf, "verdunstungZR", ITimeserieConstants.TYPE_EVAPORATION ); //$NON-NLS-1$
+      return getEingabeDateiString( feature, conf, "verdunstungZR", ITimeseriesConstants.TYPE_EVAPORATION ); //$NON-NLS-1$
     return STD_VERD_FILENAME;
 
     // int asciiID = conf.getIdManager().getAsciiID( feature );
@@ -569,8 +569,8 @@ public class CatchmentManager extends AbstractManager
               {
                 final IObservation observation = (IObservation) tnProp;
                 final IAxis[] axisList = observation.getAxisList();
-                final IAxis minutesAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_MIN );
-                final IAxis precipitationAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_RAINFALL );
+                final IAxis minutesAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_MIN );
+                final IAxis precipitationAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RAINFALL );
                 buffer.append( FortranFormatHelper.printf( annualityKey, "f6.3" ) + " " + "1" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                 final ITupleModel values = observation.getValues( null );
                 final int count = values.getCount();

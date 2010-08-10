@@ -64,7 +64,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -274,9 +274,9 @@ public class ChannelManager extends AbstractManager
   private void writeWVQ( final IObservation observation, final StringBuffer rhbBuffer ) throws SensorException
   {
     final IAxis[] axisList = observation.getAxisList();
-    final IAxis waterTableAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_NORMNULL );
-    final IAxis volumeAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_VOLUME );
-    final IAxis dischargeAxis = ObservationUtilities.findAxisByType( axisList, ITimeserieConstants.TYPE_RUNOFF );
+    final IAxis waterTableAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_NORMNULL );
+    final IAxis volumeAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_VOLUME );
+    final IAxis dischargeAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF );
     final ITupleModel values = observation.getValues( null );
     final int count = values.getCount();
     for( int row = 0; row < count; row++ )

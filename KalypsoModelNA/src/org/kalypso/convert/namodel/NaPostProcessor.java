@@ -81,7 +81,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -303,7 +303,7 @@ public class NaPostProcessor
         }
 
         final String axisTitle = TSResultDescriptor.getAxisTitleForSuffix( suffix );
-        final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.4" ), ITimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
+        final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.4" ), ITimeseriesConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
         final IAxis qAxis = new DefaultAxis( axisTitle, resultType, TimeserieUtils.getUnit( resultType ), Double.class, false );
         final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( qAxis, true );
         final IAxis[] axis = new IAxis[] { dateAxis, qAxis, statusAxis };
@@ -334,10 +334,10 @@ public class NaPostProcessor
             m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.132" ) ); //$NON-NLS-1$
             final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL ); //$NON-NLS-1$
 
-            copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { ITimeserieConstants.MD_ALARM_1, ITimeserieConstants.MD_ALARM_2, ITimeserieConstants.MD_ALARM_3,
-              ITimeserieConstants.MD_ALARM_4, ITimeserieConstants.MD_GEWAESSER, ITimeserieConstants.MD_FLUSSGEBIET, ITimeserieConstants.MD_GKH, ITimeserieConstants.MD_GKR,
-              ITimeserieConstants.MD_HOEHENANGABEART, ITimeserieConstants.MD_PEGELNULLPUNKT, ITimeserieConstants.MD_WQWECHMANN, ITimeserieConstants.MD_WQTABLE, ITimeserieConstants.MD_TIMEZONE,
-              ITimeserieConstants.MD_VORHERSAGE_START, ITimeserieConstants.MD_VORHERSAGE_ENDE } );
+            copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { ITimeseriesConstants.MD_ALARM_1, ITimeseriesConstants.MD_ALARM_2, ITimeseriesConstants.MD_ALARM_3,
+              ITimeseriesConstants.MD_ALARM_4, ITimeseriesConstants.MD_GEWAESSER, ITimeseriesConstants.MD_FLUSSGEBIET, ITimeseriesConstants.MD_GKH, ITimeseriesConstants.MD_GKR,
+              ITimeseriesConstants.MD_HOEHENANGABEART, ITimeseriesConstants.MD_PEGELNULLPUNKT, ITimeseriesConstants.MD_WQWECHMANN, ITimeseriesConstants.MD_WQTABLE, ITimeseriesConstants.MD_TIMEZONE,
+              ITimeseriesConstants.MD_VORHERSAGE_START, ITimeseriesConstants.MD_VORHERSAGE_ENDE } );
           }
         }
         // lese ergebnis-link um target fuer zml zu finden
@@ -533,11 +533,11 @@ public class NaPostProcessor
   {
     final IAxis[] axisList = observation.getAxisList();
 
-    if( ObservationUtilities.hasAxisOfType( axisList, ITimeserieConstants.TYPE_RUNOFF ) )
-      return ITimeserieConstants.TYPE_RUNOFF;
+    if( ObservationUtilities.hasAxisOfType( axisList, ITimeseriesConstants.TYPE_RUNOFF ) )
+      return ITimeseriesConstants.TYPE_RUNOFF;
 
-    if( ObservationUtilities.hasAxisOfType( axisList, ITimeserieConstants.TYPE_WATERLEVEL ) )
-      return ITimeserieConstants.TYPE_WATERLEVEL;
+    if( ObservationUtilities.hasAxisOfType( axisList, ITimeseriesConstants.TYPE_WATERLEVEL ) )
+      return ITimeseriesConstants.TYPE_WATERLEVEL;
 
     throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.50" ), null ); //$NON-NLS-1$
   }

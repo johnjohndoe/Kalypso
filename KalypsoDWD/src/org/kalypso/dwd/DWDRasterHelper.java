@@ -63,7 +63,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.kalypso.contribs.java.io.IOUtilities;
-import org.kalypso.ogc.sensor.metadata.ITimeserieConstants;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
 /**
  * Helper class for dwd raster based methods
@@ -194,9 +194,9 @@ public class DWDRasterHelper
     switch( dwdKey )
     {
       case DWDRaster.KEY_RAIN:
-        return ITimeserieConstants.TYPE_RAINFALL;
+        return ITimeseriesConstants.TYPE_RAINFALL;
       case DWDRaster.KEY_TEMP:
-        return ITimeserieConstants.TYPE_TEMPERATURE;
+        return ITimeseriesConstants.TYPE_TEMPERATURE;
     }
     return null;
   }
