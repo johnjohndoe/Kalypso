@@ -82,7 +82,7 @@ public abstract class AbstractManager
 
   }
 
-  public Feature getFeature( final String asciiStringId, final IFeatureType ft )
+  protected Feature getFeature( final String asciiStringId, final IFeatureType ft )
   {
     final String fId = mapID( asciiStringId, ft );
     if( !m_allFeatures.containsKey( fId ) )
@@ -126,7 +126,6 @@ public abstract class AbstractManager
     final IntID intID = new IntID( id, ft );
     final String stringID = m_map.get( intID );
     return m_allFeatures.get( stringID );
-
   }
 
   private static int count = 0;
@@ -135,7 +134,6 @@ public abstract class AbstractManager
   {
     final String stringID = mapID( count++, ft );
     return FeatureFactory.createFeature( null, null, stringID, ft, false );
-
   }
 
   private void createFeature( final IntID intID )
@@ -178,12 +176,12 @@ public abstract class AbstractManager
 
   public abstract Feature[] parseFile( URL url ) throws Exception;
 
-  public void createProperties( final HashMap<String, String> propCollector, final String line, final int formatLine ) throws Exception
+  protected void createProperties( final Map<String, String> propCollector, final String line, final int formatLine ) throws Exception
   {
     createProperties( propCollector, line, m_asciiFormat[formatLine] );
   }
 
-  protected void createProperties( final HashMap<String, String> propCollector, final String line, final String formatLine ) throws Exception
+  protected void createProperties( final Map<String, String> propCollector, final String line, final String formatLine ) throws Exception
   {
     final Map<String, String> propertyMap = FortranFormatHelper.scanf( formatLine, line );
     final Iterator<String> it = propertyMap.keySet().iterator();
@@ -194,7 +192,7 @@ public abstract class AbstractManager
     }
   }
 
-  public String toAscci( final Feature feature, final int formatLineIndex )
+  protected String toAscci( final Feature feature, final int formatLineIndex )
   {
     return ASCIIHelper.toAsciiLine( feature, m_asciiFormat[formatLineIndex] );
   }
@@ -204,7 +202,7 @@ public abstract class AbstractManager
    * Integer), methodes with not simple types must call
    * <code>setParsedProperties( Feature feature, Collection<FeatureProperty> collection )</code>
    */
-  public void setParsedProperties( final Feature feature, final HashMap<String, String> col )
+  private void setParsedProperties2( final Feature feature, final Map<String, String> col )
   {
     final IFeatureType ft = feature.getFeatureType();
     final IPropertyType[] props = ft.getProperties();
@@ -231,15 +229,15 @@ public abstract class AbstractManager
     }
   }
 
-  public void setParsedProperties( final Feature feature, final HashMap<String, String> mapCol, final Map<IPropertyType, Object> propertyValues )
+  protected void setParsedProperties( final Feature feature, final Map<String, String> mapCol, final Map<IPropertyType, Object> propertyValues )
   {
     if( mapCol != null )
-      setParsedProperties( feature, mapCol );
+      setParsedProperties2( feature, mapCol );
     if( propertyValues != null )
       setParsedProperties( feature, propertyValues );
   }
 
-  public void setParsedProperties( final Feature feature, final Map<IPropertyType, Object> values )
+  private void setParsedProperties( final Feature feature, final Map<IPropertyType, Object> values )
   {
     final IFeatureType ft = feature.getFeatureType();
     for( final Map.Entry<IPropertyType, Object> entry : values.entrySet() )

@@ -105,7 +105,7 @@ public class NAModellConverter
 
     m_catchmentManager = new CatchmentManager( m_modelSchema, m_conf );
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );
-    m_nodeManager = new NetFileManager( m_conf, rootNodeID );
+    m_nodeManager = new NetFileManager( m_conf, rootNodeID, logger );
     m_hydrotopManager = new HydrotopManager( m_conf, logger );
     m_bodartManager = new BodenartManager( m_parameterSchema, m_conf );
     m_bodtypManager = new BodentypManager( m_parameterSchema, m_conf );

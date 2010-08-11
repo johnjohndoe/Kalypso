@@ -44,7 +44,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+
+import org.kalypso.contribs.java.util.logging.SimplisticFormatter;
 
 /**
  * @author Dejan Antanaskovic
@@ -75,7 +76,7 @@ public class NACalculationLogger
       m_logFile.createNewFile();
 
       m_logHandler = new FileHandler( m_logFile.getAbsolutePath(), false );
-      m_logHandler.setFormatter( new SimpleFormatter() );
+      m_logHandler.setFormatter( new SimplisticFormatter() );
       m_logHandler.setEncoding( "UTF-8" );
 
       m_logger = Logger.getLogger( LOGFILE_NAME );

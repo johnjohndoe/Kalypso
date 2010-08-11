@@ -128,18 +128,6 @@ public class NAConfiguration
 
   private URL m_zmlContext;
 
-  private NAControl m_metaControl = null;
-
-  private GMLWorkspace m_modelWorkspace = null;
-
-  private GMLWorkspace m_parameterWorkspace = null;
-
-  private GMLWorkspace m_hydrotopeWorkspace = null;
-
-  private GMLWorkspace m_synthNWorkspace = null;
-
-  private GMLWorkspace m_sudsWorkspace;
-
   private final static String PLC_LANDUSE_NAME_FORMAT = "PLC_%05d"; //$NON-NLS-1$
 
   private int m_plcLanduseCounter = 1;
@@ -153,6 +141,8 @@ public class NAConfiguration
   private final Map<String, List<Double>> m_suds2HydrotopMaxPercRateMap = new HashMap<String, List<Double>>();
 
   private final HydroHash m_hydroHash = new HydroHash();
+
+  private NaSimulationData m_simulationData = null;
 
   public NAConfiguration( final File asciiBaseDir )
   {
@@ -203,6 +193,11 @@ public class NAConfiguration
     m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" ); //$NON-NLS-1$
     m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" ); //$NON-NLS-1$
     m_swaleAndTrenchFile = new File( asciiBaseDir, "inp.dat/we_nat.mr" ); //$NON-NLS-1$
+  }
+
+  public void setSimulationData( final NaSimulationData simulationData )
+  {
+    m_simulationData = simulationData;
   }
 
   private GMLSchema getSchema( final GMLSchemaCatalog schemaCatalog, final String namespace )
@@ -390,54 +385,29 @@ public class NAConfiguration
     return m_swaleAndTrenchFormatURL;
   }
 
-  public void setModelWorkspace( final GMLWorkspace modelWorkspace )
-  {
-    m_modelWorkspace = modelWorkspace;
-  }
-
   public GMLWorkspace getModelWorkspace( )
   {
-    return m_modelWorkspace;
-  }
-
-  public void setParameterWorkspace( final GMLWorkspace parameterWorkspace )
-  {
-    m_parameterWorkspace = parameterWorkspace;
+    return m_simulationData.getModelWorkspace();
   }
 
   public GMLWorkspace getParameterWorkspace( )
   {
-    return m_parameterWorkspace;
-  }
-
-  public void setHydrotopeWorkspace( final GMLWorkspace hydrotopeWorkspace )
-  {
-    m_hydrotopeWorkspace = hydrotopeWorkspace;
+    return m_simulationData.getParameterWorkspace();
   }
 
   public GMLWorkspace getHydrotopeWorkspace( )
   {
-    return m_hydrotopeWorkspace;
-  }
-
-  public void setSynthNWorkspace( final GMLWorkspace synthNWorkspace )
-  {
-    m_synthNWorkspace = synthNWorkspace;
+    return m_simulationData.getHydrotopWorkspace();
   }
 
   public GMLWorkspace getSynthNWorkspace( )
   {
-    return m_synthNWorkspace;
-  }
-
-  public void setSudsWorkspace( final GMLWorkspace sudsWorkspace )
-  {
-    m_sudsWorkspace = sudsWorkspace;
+    return m_simulationData.getSynthNWorkspace();
   }
 
   public GMLWorkspace getSudsWorkspace( )
   {
-    return m_sudsWorkspace;
+    return m_simulationData.getSudsWorkspace();
   }
 
   public File getHydrotopMappingFile( )
@@ -484,14 +454,9 @@ public class NAConfiguration
     return m_hydroHash;
   }
 
-  public void setMetaControl( final NAControl metaControl )
-  {
-    m_metaControl = metaControl;
-  }
-
   public NAControl getMetaControl( )
   {
-    return m_metaControl;
+    return m_simulationData.getMetaControl();
   }
 
 }
