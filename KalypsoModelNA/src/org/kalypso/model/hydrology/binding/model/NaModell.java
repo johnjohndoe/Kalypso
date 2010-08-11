@@ -68,7 +68,19 @@ public class NaModell extends Feature_Impl
   @Deprecated
   public static final QName MEMBER_CATCHMENT = new QName( NS_NAMODELL, "catchmentMember" ); //$NON-NLS-1$
 
+  private static final QName MEMBER_CHANNEL_COLLECTION = new QName( NS_NAMODELL, "ChannelCollectionMember" ); //$NON-NLS-1$
+
+  // /**
+  // * @deprecated Should not be used outside of this class.
+  // */
+  private static final QName MEMBER_CHANNEL = new QName( NS_NAMODELL, "channelMember" ); //$NON-NLS-1$
+
+// <element name="NodeCollectionMember" type="na:NodeCollectionAssociationType"/>
+// <element name="SwaleAndTrenchCollectionMember" type="na:SwaleAndTrenchCollectionAssociationType"/>
+
   private IFeatureBindingCollection<Catchment> m_catchments = null;
+
+  private IFeatureBindingCollection<Channel> m_channels = null;
 
   public NaModell( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -79,11 +91,22 @@ public class NaModell extends Feature_Impl
   {
     if( m_catchments == null )
     {
-      final Feature catchmentsMember = getProperty( MEMBER_CATCHMENT_COLLECTION, Feature.class );
-      m_catchments = new FeatureBindingCollection<Catchment>( catchmentsMember, Catchment.class, MEMBER_CATCHMENT );
+      final Feature catchmentCollection = getProperty( MEMBER_CATCHMENT_COLLECTION, Feature.class );
+      m_catchments = new FeatureBindingCollection<Catchment>( catchmentCollection, Catchment.class, MEMBER_CATCHMENT );
     }
 
     return m_catchments;
+  }
+
+  public synchronized IFeatureBindingCollection<Channel> getChannels( )
+  {
+    if( m_channels == null )
+    {
+      final Feature channelCollection = getProperty( MEMBER_CHANNEL_COLLECTION, Feature.class );
+      m_channels = new FeatureBindingCollection<Channel>( channelCollection, Channel.class, MEMBER_CHANNEL );
+    }
+
+    return m_channels;
   }
 
   /**

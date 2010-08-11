@@ -77,6 +77,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -500,7 +501,7 @@ public class NetFileManager extends AbstractManager
     if( netElement instanceof Catchment )
       return String.format( "Teilgebiet #%s", name );
 
-    if( GMLSchemaUtilities.substitutes( netElement.getFeatureType(), NaModelConstants.CHANNEL_ABSTRACT_FT ) )
+    if( netElement instanceof Channel )
       return String.format( "Strang #%s", name );
 
     if( GMLSchemaUtilities.substitutes( netElement.getFeatureType(), NaModelConstants.NODE_ELEMENT_FT ) )

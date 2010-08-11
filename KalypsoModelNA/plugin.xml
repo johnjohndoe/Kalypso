@@ -234,5 +234,9 @@
               class="org.kalypso.model.hydrology.binding.model.Catchment"
               qname="{http://www.tuhh.de/kalypsoNA}Catchment">
         </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.model.Channel"
+              qname="{http://www.tuhh.de/kalypsoNA}_Channel">
+        </feature>
      </extension>
 </plugin>
