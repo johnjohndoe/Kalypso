@@ -82,7 +82,7 @@ public class FunctionMultiError extends IErrorFunktion
     Arrays.fill( valid, true );
     for( int i = 0; i < m_functions.length; i++ )
     {
-      final IErrorFunktion function = m_functions[i];
+      final IErrorFunktion function = m_functions[i]; // FIXME: calculateError is called twice per function, is this really necessary? Normalization should happen in this implementation 
       final double calculateError = function.calculateError( calcedTS );
       if( !Double.isInfinite( calculateError ) && !Double.isNaN( calculateError ) )
         error[i] = calculateError;
