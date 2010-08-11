@@ -379,8 +379,9 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="ChannelCollection" type="na:ChannelCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="ChannelCollectionType">
+	
+  <element name="ChannelCollection" substitutionGroup="gml:_Feature">
+	<complexType >
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
@@ -389,6 +390,8 @@
 			</restriction>
 		</complexContent>
 	</complexType>
+  </element>
+  
 	<complexType name="ChannelAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
@@ -398,7 +401,8 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="_Channel" type="na:AbstractChannelType" abstract="true" substitutionGroup="gml:_Feature"/>
+	
+    <element name="_Channel" type="na:AbstractChannelType" abstract="true" substitutionGroup="gml:_Feature"/>
 	<!-- Channel super type -->
 	<complexType name="AbstractChannelType">
 		<complexContent>

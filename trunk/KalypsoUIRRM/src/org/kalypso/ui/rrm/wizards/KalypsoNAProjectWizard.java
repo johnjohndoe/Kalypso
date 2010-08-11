@@ -82,6 +82,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -215,6 +216,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     return GMLSchemaFactory.createFeatureType( featureQName, pts );
   }
 
+  @Deprecated
   private IFeatureType getFeatureType( final String featureName )
   {
     IFeatureType ft = null;
@@ -566,25 +568,17 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   private void mapRiver( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
   {
-    final Feature rootFeature = m_modelWS.getRootFeature();
-
-    final Feature channelCollectionFE = (Feature) rootFeature.getProperty( NaModelConstants.CHANNEL_COLLECTION_MEMBER_PROP );
-    final FeatureList channelList = (FeatureList) channelCollectionFE.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
-    final IRelationType targetRelation = channelList.getParentFeatureTypeProperty();
+    final NaModell naModell = (NaModell) m_modelWS.getRootFeature();
 
     // find column for id
-    final String idColKey;
-    if( mapping.containsKey( "name" ) ) //$NON-NLS-1$
-    {
-      idColKey = (String) mapping.get( "name" ); //$NON-NLS-1$
-    }
-    else
-      idColKey = null;
+    final String idColKey = findColumnForId( mapping );
 
     // StrangArt is defined in dummyFeatureType (member variable)
     final String typeKey = (String) mapping.get( "StrangArt" ); //$NON-NLS-1$
     // remove the channel type mapping (just needed once)
     mapping.remove( typeKey );
+
+    final IFeatureBindingCollection<Channel> channels = naModell.getChannels();
 
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
@@ -607,14 +601,13 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
       {
         case 0:
         {
-          final IFeatureType vFT = getFeatureType( "VirtualChannel" ); //$NON-NLS-1$
-          targetFeature = FeatureFactory.createFeature( channelCollectionFE, targetRelation, fid, vFT, true );
+          targetFeature = channels.addNew( NaModelConstants.V_CHANNEL_ELEMENT_FT, fid );
           break;
         }
         case 1:
         {
           final IFeatureType kmFT = getFeatureType( "KMChannel" ); //$NON-NLS-1$
-          targetFeature = FeatureFactory.createFeature( channelCollectionFE, targetRelation, fid, kmFT, true );
+          targetFeature = channels.addNew( NaModelConstants.KM_CHANNEL_ELEMENT_FT, fid );
 
           final IRelationType parameterMemberRT = (IRelationType) kmFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
           final List< ? > list = FeatureFactory.createFeatureList( targetFeature, parameterMemberRT );
@@ -623,7 +616,8 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
           for( int j = 0; j < channelNo; j++ )
           {
             final IFeatureType kmParameterFT = parameterMemberRT.getTargetFeatureType();
-            final Feature newFeature = m_modelWS.createFeature( targetFeature, targetRelation, kmParameterFT );
+
+            final Feature newFeature = m_modelWS.createFeature( targetFeature, parameterMemberRT, kmParameterFT );
             try
             {
               m_modelWS.addFeatureAsComposition( targetFeature, parameterMemberRT, j, newFeature );
@@ -638,8 +632,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
         }
         case 2:
         {
-          final IFeatureType storageFT = getFeatureType( "StorageChannel" ); //$NON-NLS-1$
-          targetFeature = FeatureFactory.createFeature( channelCollectionFE, targetRelation, fid, storageFT, true );
+          targetFeature = channels.addNew( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT, fid );
           break;
         }
         case 3:
@@ -651,6 +644,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
           break;
         }
       }// switch
+
       final Iterator<Object> it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
@@ -688,9 +682,15 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
           }
         }
       }
-      channelList.add( targetFeature );
-
     }// for i
 
   }// mapRiver
+
+  private String findColumnForId( final Map<Object, Object> mapping )
+  {
+    if( mapping.containsKey( "name" ) ) //$NON-NLS-1$
+      return (String) mapping.get( "name" ); //$NON-NLS-1$
+
+    return null;
+  }
 }

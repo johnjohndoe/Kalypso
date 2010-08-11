@@ -49,6 +49,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -116,21 +117,21 @@ public class NaModelTweaker
   {
     final IGMLSchema gmlSchema = m_modelWorkspace.getGMLSchema();
 
+    final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
+
     final IFeatureType nodeColFT = gmlSchema.getFeatureType( NaModelConstants.NODE_COLLECTION_FT );
     final IFeatureType nodeFT = gmlSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final IRelationType nodeMemberRT = (IRelationType) nodeColFT.getProperty( NaModelConstants.NODE_MEMBER_PROP );
     final IFeatureType vChannelFT = gmlSchema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
 
-    final IFeatureType channelColFT = gmlSchema.getFeatureType( NaModelConstants.NA_CHANNEL_COLLECTION_FT );
-    final IRelationType channelMemberRT = (IRelationType) channelColFT.getProperty( NaModelConstants.CHANNEL_MEMBER_PROP );
-    final Feature channelColFE = m_modelWorkspace.getFeatures( channelColFT )[0];
     final Feature nodeColFE = m_modelWorkspace.getFeatures( gmlSchema.getFeatureType( NaModelConstants.NODE_COLLECTION_FT ) )[0];
 
+    final IFeatureBindingCollection<Channel> channels = naModel.getChannels();
+
     // add to collections:
-    final Feature newChannelFE1 = m_modelWorkspace.createFeature( channelColFE, channelMemberRT, vChannelFT );
-    m_modelWorkspace.addFeatureAsComposition( channelColFE, channelMemberRT, 0, newChannelFE1 );
-    final Feature newChannelFE3 = m_modelWorkspace.createFeature( channelColFE, channelMemberRT, vChannelFT );
-    m_modelWorkspace.addFeatureAsComposition( channelColFE, channelMemberRT, 0, newChannelFE3 );
+    final Feature newChannelFE1 = channels.addNew( NaModelConstants.V_CHANNEL_ELEMENT_FT );
+    final Feature newChannelFE3 = channels.addNew( NaModelConstants.V_CHANNEL_ELEMENT_FT );
+
     final Feature newNodeFE2 = m_modelWorkspace.createFeature( nodeColFE, nodeMemberRT, nodeFT );
     m_modelWorkspace.addFeatureAsComposition( nodeColFE, nodeMemberRT, 0, newNodeFE2 );
     final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
@@ -334,7 +335,7 @@ public class NaModelTweaker
     final IGMLSchema gmlSchema = m_modelWorkspace.getGMLSchema();
 
     final IFeatureType nodeFT = gmlSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    final IFeatureType abstractChannelFT = gmlSchema.getFeatureType( NaModelConstants.CHANNEL_ABSTRACT_FT );
+    final IFeatureType abstractChannelFT = gmlSchema.getFeatureType( Channel.FEATURE_CHANNEL );
     final Feature[] features = m_modelWorkspace.getFeatures( nodeFT );
     for( final Feature nodeFE : features )
     {
@@ -343,6 +344,7 @@ public class NaModelTweaker
         final Object resultValue = nodeFE.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
         // disconnect everything upstream (channel -> node)
         final IRelationType downStreamNodeMemberRT = (IRelationType) abstractChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
+        // FIXME: move into node binding class!
         final Feature[] channelFEs = m_modelWorkspace.resolveWhoLinksTo( nodeFE, abstractChannelFT, downStreamNodeMemberRT );
         for( final Feature element : channelFEs )
         {

@@ -165,13 +165,8 @@ public interface NaModelConstants
   public static final QName HYDRO_ENUM_HYDTYPE_REGULAR = new QName( NS_NAHYDROTOP, "Bodenspeicher" ); //$NON-NLS-1$
 
   /** namodell.xsd */
+
   // channels
-  public static final QName CHANNEL_COLLECTION_MEMBER_PROP = new QName( NS_NAMODELL, "ChannelCollectionMember" ); //$NON-NLS-1$
-
-  public static final QName CHANNEL_MEMBER_PROP = new QName( NS_NAMODELL, "channelMember" ); //$NON-NLS-1$
-
-  public static final QName CHANNEL_ABSTRACT_FT = new QName( NS_NAMODELL, "_Channel" ); //$NON-NLS-1$
-
   public static final QName CHANNEL_GEOM_PROP = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 
   public static final QName STORAGE_CHANNEL_ZMLINLINE_PROP = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
@@ -378,9 +373,7 @@ public interface NaModelConstants
 
   public static final QName NA_MODEL_ROOT_FT = new QName( NS_NAMODELL, "NaModell" ); //$NON-NLS-1$
 
-  public static final QName NA_CATCHMENT_COLLECTION_FT = new QName( NS_NAMODELL, "CatchmentCollection" ); //$NON-NLS-1$
-
-  public static final QName NA_CHANNEL_COLLECTION_FT = new QName( NS_NAMODELL, "ChannelCollection" ); //$NON-NLS-1$
+//  public static final QName NA_CHANNEL_COLLECTION_FT = new QName( NS_NAMODELL, "ChannelCollection" ); //$NON-NLS-1$
 
   /** parameter.xsd */
   public static final QName PARA_ROOT_FT = new QName( NS_NAPARAMETER, "Parameter" ); //$NON-NLS-1$
