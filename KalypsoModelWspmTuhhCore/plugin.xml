@@ -57,6 +57,13 @@
             id="org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter"
             name="%org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter">
       </filter>
+      <filter
+            class="org.kalypso.model.wspm.tuhh.core.profile.pointfilter.LastPointProfilePointFilter"
+            description="The last relevant point of this profile. This filter is usefull to set the roughness to the last point, as Kalypso-1d.exe needs this."
+            id="org.kalypso.model.wspm.tuhh.core.profile.pointfilter.LastPointProfilePointFilter"
+            name="Right model boundary"
+            usageHint="section">
+      </filter>
    </extension>
    <extension
          point="org.kalypso.model.wspm.core.profilPointMarkerProvider">

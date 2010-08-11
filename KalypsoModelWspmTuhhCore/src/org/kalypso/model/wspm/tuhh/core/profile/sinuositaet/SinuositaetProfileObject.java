@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
 
 import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IRecord;
@@ -52,8 +51,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class SinuositaetProfileObject extends AbstractProfileObject implements ISinuositaetProfileObject
 {
-
-  public SinuositaetProfileObject( final IProfil profile )
+  public SinuositaetProfileObject( )
   {
     this( buildObservation() );
   }
