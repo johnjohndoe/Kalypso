@@ -141,7 +141,7 @@ public class NaFortranLogTranslater
     }
   }
 
-  private String findAsciiType( final String elementString )
+  private static String findAsciiType( final String elementString )
   {
     if( elementString.contains( "Teilgebiet" ) ) //$NON-NLS-1$
       return "Teilgebiet"; //$NON-NLS-1$
@@ -155,7 +155,7 @@ public class NaFortranLogTranslater
     return null;
   }
 
-  private int findType( final String elementString )
+  private static int findType( final String elementString )
   {
     if( elementString.contains( "Teilgebiet" ) ) //$NON-NLS-1$
       return IDManager.CATCHMENT;

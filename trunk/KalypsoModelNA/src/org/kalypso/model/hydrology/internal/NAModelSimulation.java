@@ -105,6 +105,7 @@ public class NAModelSimulation
   public boolean runSimulation( final ISimulationMonitor monitor ) throws Exception
   {
     final NaSimulationData simulationData = loadData();
+    m_conf.setSimulationData( simulationData );
 
     if( !preprocess( simulationData, monitor ) )
       return false;

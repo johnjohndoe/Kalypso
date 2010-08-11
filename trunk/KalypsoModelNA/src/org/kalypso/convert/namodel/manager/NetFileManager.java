@@ -60,6 +60,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
@@ -69,11 +70,13 @@ import org.kalypso.convert.namodel.net.visitors.RootNodeCollectorVisitor;
 import org.kalypso.convert.namodel.net.visitors.SimulationVisitor;
 import org.kalypso.convert.namodel.net.visitors.WriteAsciiVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -107,12 +110,15 @@ public class NetFileManager extends AbstractManager
 
   private final String m_rootNodeId;
 
-  public NetFileManager( final NAConfiguration conf, final String rootNodeId ) throws IOException
+  private final Logger m_logger;
+
+  public NetFileManager( final NAConfiguration conf, final String rootNodeId, final Logger logger ) throws IOException
   {
     super( conf.getNetFormatURL() );
 
     m_conf = conf;
     m_rootNodeId = rootNodeId;
+    m_logger = logger;
   }
 
   @Override
@@ -148,16 +154,10 @@ public class NetFileManager extends AbstractManager
       if( line.startsWith( "9999" ) ) //$NON-NLS-1$
         return;
 
-      final HashMap<String, String> propCollector = new HashMap<String, String>();
+      final Map<String, String> propCollector = new HashMap<String, String>();
       final Map<IPropertyType, Object> fePropMap = new LinkedHashMap<IPropertyType, Object>();
       System.out.println( 3 + ": " + line ); //$NON-NLS-1$
       createProperties( propCollector, line, 2 );
-      // final FeatureProperty knotProp = propCollector.get( "knot" );
-      // final FeatureProperty izugProp = propCollector.get( "izug" );
-      // final FeatureProperty iabgProp = propCollector.get( "iabg" );
-      // final FeatureProperty iuebProp = propCollector.get( "iueb" );
-      // final FeatureProperty izufProp = propCollector.get( "izuf" );
-      // final FeatureProperty ivzwgProp = propCollector.get( "ivzwg" );
 
       final int knot = Integer.parseInt( propCollector.get( "knot" ) ); //$NON-NLS-1$
       final int izug = Integer.parseInt( propCollector.get( "izug" ) ); //$NON-NLS-1$
@@ -203,12 +203,12 @@ public class NetFileManager extends AbstractManager
         final String correctedPath = nzufPfad.replaceAll( "P:\\\\vwe04121\\\\modell\\\\hydrologie\\\\namod\\\\zufluss\\\\", m_conf.getAsciiBaseDir().toString() + "/Zufluss/" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final File tsFile = new File( correctedPath );
-        final TimeseriesLinkType link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, false, false );
+        final TimeseriesLinkType link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURI().toURL(), ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, false, false );
 
         final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_REPOSITORY_PROP );
         fePropMap.put( pt, link1 );
 
-        final TimeseriesLinkType link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, true, true );
+        final TimeseriesLinkType link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURI().toURL(), ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, true, true );
         final IPropertyType pt2 = nodeFT.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP );
         fePropMap.put( pt2, link2 );
       }
@@ -224,12 +224,6 @@ public class NetFileManager extends AbstractManager
         final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_VERZW_MEMBER_PROP );
         fePropMap.put( pt, targetNodeFE.getId() );
       }
-// final Set<Entry<String, String>> set = propCollector.entrySet();
-// for( final Entry<String, String> entry : set )
-// {
-// Entry element = (Entry) iter.next();
-// System.out.println( element.getKey() + "=" + ((FeatureProperty) element.getValue()).getValue() );
-// }
 
       // adding Timeseries links
 
@@ -385,7 +379,7 @@ public class NetFileManager extends AbstractManager
 
           if( upStreamChannelFE == downStreamChannelFE )
           {
-            System.out.println( "impossible net at #" + upStreamChannelFE.getId() + "\n Node-Node relation to it self" ); //$NON-NLS-1$ //$NON-NLS-2$
+            logWarning( "Impossible net at %s: Node-Node relation to itself", upStreamChannelFE );
             // FIXME: shouldn't we throw an exception here?
             continue;
           }
@@ -405,20 +399,21 @@ public class NetFileManager extends AbstractManager
       final Feature downStreamNodeFE = workspace.resolveLink( channel, rt );
       if( downStreamNodeFE == null )
       {
-        System.out.println( "Channel #" + channel.getId() + "is outside network" ); //$NON-NLS-1$ //$NON-NLS-2$
+        logWarning( "%s is outside network", channel );
         continue;
       }
+
       final IRelationType rt2 = (IRelationType) downStreamNodeFE.getFeatureType().getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
       final Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, rt2 );
       if( downStreamChannelFE == null )
       {
-        System.out.println( "Node #" + downStreamNodeFE.getId() + " has no downstream connection" ); //$NON-NLS-1$ //$NON-NLS-2$
+        logWarning( "%s has no downstream connection", downStreamNodeFE );
         continue;
       }
       // set dependency
       if( channel == downStreamChannelFE )
       {
-        System.out.println( "impossible net at #" + channel.getId() + "\n channel discharges to it self" ); //$NON-NLS-1$ //$NON-NLS-2$
+        logWarning( "Impossible net at %s: channel discharges to itself", channel );
         continue;
       }
 
@@ -438,7 +433,7 @@ public class NetFileManager extends AbstractManager
       final Feature upStreamFE = workspace.resolveLink( catchmentFE, rt );
       if( upStreamFE == null )
       {
-        System.out.println( " Catchment #" + catchmentFE.getId() + " is not connected to network" ); //$NON-NLS-1$ //$NON-NLS-2$
+        logWarning( "%s is not connected to network", catchmentFE );
         continue;
       }
 
@@ -452,20 +447,20 @@ public class NetFileManager extends AbstractManager
         final Feature downStreamCatchmentFE = workspace.resolveLink( abflussFE, rt2 );
         if( downStreamCatchmentFE == null )
         {
-          Logger.getAnonymousLogger().log( Level.WARNING, String.format( "Downstream catchment for #%s cannot be resolved.", abflussFE.getId() ) ); //$NON-NLS-1$
+          logWarning( "Downstream catchment for %s cannot be resolved.", abflussFE );
           continue;
         }
         final IRelationType rt3 = (IRelationType) downStreamCatchmentFE.getFeatureType().getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
         final Feature downStreamChannelFE = workspace.resolveLink( downStreamCatchmentFE, rt3 );
         if( downStreamChannelFE == null )
         {
-          Logger.getAnonymousLogger().log( Level.WARNING, String.format( "Catchment #%s is not connected to network.", downStreamCatchmentFE.getId() ) ); //$NON-NLS-1$
+          logWarning( "%s is not connected to network.", downStreamCatchmentFE );
           continue;
         }
         final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
         if( downStreamElement == null )
         {
-          System.out.println( " TODO" ); //$NON-NLS-1$
+          logWarning( "%s has no downstream net element.", downStreamCatchmentFE );
           continue;
         }
 
@@ -481,6 +476,37 @@ public class NetFileManager extends AbstractManager
 
     final Collection<NetElement> values = netElements.values();
     return values.toArray( new NetElement[values.size()] );
+  }
+
+  private void logWarning( final String format, final Feature... netElements )
+  {
+    final String[] logLabels = new String[netElements.length];
+    for( int i = 0; i < logLabels.length; i++ )
+      logLabels[i] = getLogLabel( netElements[i] );
+
+    final String msg = String.format( format, (Object[]) logLabels ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_logger.log( Level.WARNING, msg );
+  }
+
+  /**
+   * TODO: not a good place, should be moved elsewhere.
+   */
+  private static String getLogLabel( final Feature netElement )
+  {
+    final String defaultName = String.format( "<Unbekannt> (GML-ID: %s)", netElement.getId() );
+    final String gmlName = netElement.getName();
+    final String name = StringUtils.isBlank( gmlName ) ? defaultName : gmlName;
+
+    if( netElement instanceof Catchment )
+      return String.format( "Teilgebiet #%s", name );
+
+    if( GMLSchemaUtilities.substitutes( netElement.getFeatureType(), NaModelConstants.CHANNEL_ABSTRACT_FT ) )
+      return String.format( "Strang #%s", name );
+
+    if( GMLSchemaUtilities.substitutes( netElement.getFeatureType(), NaModelConstants.NODE_ELEMENT_FT ) )
+      return String.format( "Knoten #%s", name );
+
+    return name;
   }
 
   private Feature[] getAllChannels( final GMLWorkspace workspace )

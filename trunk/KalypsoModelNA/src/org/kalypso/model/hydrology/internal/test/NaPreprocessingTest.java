@@ -60,11 +60,9 @@ import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.simulation.core.NullSimulationMonitor;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Tests preprocessing of KalypsoHydrology simulation.
@@ -91,44 +89,19 @@ public class NaPreprocessingTest
 
   private NAModelPreprocessor initPreprocessor( final File asciiDir ) throws Exception
   {
-
     final NaAsciiDirs outputDirs = new NaAsciiDirs( asciiDir );
     final IDManager idManager = new IDManager();
     final NaSimulationData simulationData = createDemoModelsimulationData();
 
-    final NAConfiguration conf = createNAConfiguration( asciiDir, simulationData );
+    final NAConfiguration conf = new NAConfiguration( asciiDir );
+    conf.setSimulationData( simulationData );
 
     final URL context = simulationData.getModelWorkspace().getContext();
     conf.setZMLContext( context );
 
-    // FIXME: let preprocessor log into normal logfile!
     final Logger logger = Logger.getAnonymousLogger();
     final NAModelPreprocessor preprocessor = new NAModelPreprocessor( conf, outputDirs, idManager, simulationData, logger );
     return preprocessor;
-  }
-
-  private NAConfiguration createNAConfiguration( final File asciiDir, final NaSimulationData simulationData )
-  {
-    final NAConfiguration conf = new NAConfiguration( asciiDir );
-
-    // FIXME: remove these setters/getters from m_conf
-    // we should not use the NAConfiguration any more, as long as we do
-    // we need the workspaces
-    final NAControl metaControl = simulationData.getMetaControl();
-    final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
-    final GMLWorkspace hydrotopWorkspace = simulationData.getHydrotopWorkspace();
-    final GMLWorkspace sudsWorkspace = simulationData.getSudsWorkspace();
-    final GMLWorkspace parameterWorkspace = simulationData.getParameterWorkspace();
-    final GMLWorkspace synthNWorkspace = simulationData.getSynthNWorkspace();
-
-    conf.setMetaControl( metaControl );
-    conf.setModelWorkspace( modelWorkspace );
-    conf.setParameterWorkspace( parameterWorkspace );
-    conf.setHydrotopeWorkspace( hydrotopWorkspace );
-    conf.setSynthNWorkspace( synthNWorkspace );
-    conf.setSudsWorkspace( sudsWorkspace );
-
-    return conf;
   }
 
   private NaSimulationData createDemoModelsimulationData( ) throws Exception

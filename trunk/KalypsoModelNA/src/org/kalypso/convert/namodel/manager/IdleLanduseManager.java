@@ -1,29 +1,3 @@
-package org.kalypso.convert.namodel.manager;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-
-import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.timeseries.NATimeSettings;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypsodeegree.model.feature.Feature;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -64,13 +38,37 @@ import org.kalypsodeegree.model.feature.Feature;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-/*
- * 
+package org.kalypso.convert.namodel.manager;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+
+import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.timeseries.NATimeSettings;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypsodeegree.model.feature.Feature;
+
+/**
  * @author huebsch
  */
 public class IdleLanduseManager extends AbstractManager
 {
-
   private final IFeatureType m_IdleLanduseFT;
 
   private final IFeatureType m_landuseFT;
@@ -196,9 +194,8 @@ public class IdleLanduseManager extends AbstractManager
 
   }
 
-  public Feature readNextcsvFeature( final LineNumberReader reader2 ) throws IOException
+  private Feature readNextcsvFeature( final LineNumberReader reader2 ) throws IOException
   {
-
     final HashMap<String, String> landusePropCollector = new HashMap<String, String>();
     String line;
     line = reader2.readLine();
@@ -232,12 +229,10 @@ public class IdleLanduseManager extends AbstractManager
     while( (fe = readNextsealingFeature( reader )) != null )
       result.add( fe );
     return result.toArray( new Feature[result.size()] );
-
   }
 
-  public Feature readNextsealingFeature( final LineNumberReader reader3 ) throws IOException
+  private Feature readNextsealingFeature( final LineNumberReader reader3 ) throws IOException
   {
-
     final HashMap<String, String> sealingPropCollector = new HashMap<String, String>();
     String line;
     line = reader3.readLine();
