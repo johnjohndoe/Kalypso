@@ -70,7 +70,6 @@ import org.kalypso.convert.namodel.net.visitors.RootNodeCollectorVisitor;
 import org.kalypso.convert.namodel.net.visitors.SimulationVisitor;
 import org.kalypso.convert.namodel.net.visitors.WriteAsciiVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -78,6 +77,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -325,9 +325,8 @@ public class NetFileManager extends AbstractManager
    */
   public NetElement[] generateNetElements( final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws SimulationException
   {
-    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
+    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( Node.FEATURE_NODE );
     final IFeatureType kontEntnahmeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ENTNAHME );
-    // final IFeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
     final IFeatureType ueberlaufFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_UEBERLAUF );
     final IFeatureType verzweigungFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_VERZWEIGUNG );
 
@@ -504,7 +503,7 @@ public class NetFileManager extends AbstractManager
     if( netElement instanceof Channel )
       return String.format( "Strang #%s", name );
 
-    if( GMLSchemaUtilities.substitutes( netElement.getFeatureType(), NaModelConstants.NODE_ELEMENT_FT ) )
+    if( netElement instanceof Node )
       return String.format( "Knoten #%s", name );
 
     return name;

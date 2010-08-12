@@ -51,6 +51,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -119,21 +120,18 @@ public class NaModelTweaker
 
     final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
-    final IFeatureType nodeColFT = gmlSchema.getFeatureType( NaModelConstants.NODE_COLLECTION_FT );
-    final IFeatureType nodeFT = gmlSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    final IRelationType nodeMemberRT = (IRelationType) nodeColFT.getProperty( NaModelConstants.NODE_MEMBER_PROP );
+    final IFeatureType nodeFT = gmlSchema.getFeatureType( Node.FEATURE_NODE );
     final IFeatureType vChannelFT = gmlSchema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
 
-    final Feature nodeColFE = m_modelWorkspace.getFeatures( gmlSchema.getFeatureType( NaModelConstants.NODE_COLLECTION_FT ) )[0];
+    final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
 
     final IFeatureBindingCollection<Channel> channels = naModel.getChannels();
 
     // add to collections:
     final Feature newChannelFE1 = channels.addNew( NaModelConstants.V_CHANNEL_ELEMENT_FT );
     final Feature newChannelFE3 = channels.addNew( NaModelConstants.V_CHANNEL_ELEMENT_FT );
+    final Feature newNodeFE2 = nodes.addNew( Node.FEATURE_NODE );
 
-    final Feature newNodeFE2 = m_modelWorkspace.createFeature( nodeColFE, nodeMemberRT, nodeFT );
-    m_modelWorkspace.addFeatureAsComposition( nodeColFE, nodeMemberRT, 0, newNodeFE2 );
     final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
 
     // 3 -> 2
@@ -232,16 +230,18 @@ public class NaModelTweaker
   private void updateNode2NodeNet( ) throws Exception
   {
     final IGMLSchema gmlSchema = m_modelWorkspace.getGMLSchema();
+    final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
     final IFeatureType kontEntnahmeFT = gmlSchema.getFeatureType( NaModelConstants.NODE_VERZW_ENTNAHME );
     final IFeatureType ueberlaufFT = gmlSchema.getFeatureType( NaModelConstants.NODE_VERZW_UEBERLAUF );
     final IFeatureType verzweigungFT = gmlSchema.getFeatureType( NaModelConstants.NODE_VERZW_VERZWEIGUNG );
-    final IFeatureType nodeFT = gmlSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    final Feature[] features = m_modelWorkspace.getFeatures( nodeFT );
+    final IFeatureType nodeFT = gmlSchema.getFeatureType( Node.FEATURE_NODE );
+
     final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
-    for( final Feature nodeFE : features )
+    final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+    for( final Node node : nodes )
     {
-      final Feature branchingFE = m_modelWorkspace.resolveLink( nodeFE, branchingMemberRT );
+      final Feature branchingFE = m_modelWorkspace.resolveLink( node, branchingMemberRT );
       if( branchingFE != null )
       {
         final IFeatureType branchFT = branchingFE.getFeatureType();
@@ -253,7 +253,7 @@ public class NaModelTweaker
           {
             final String relationLabel = branchingNodeMemberRT.getAnnotation().getLabel();
             final String branchingFElabel = FeatureHelper.getAnnotationValue( branchingFE, IAnnotation.ANNO_LABEL );
-            final String message = String.format( "'%s' not set for '%s' in Node '%s'", relationLabel, branchingFElabel, nodeFE.getName() );
+            final String message = String.format( "'%s' not set for '%s' in Node '%s'", relationLabel, branchingFElabel, node.getName() );
             throw new SimulationException( message );
           }
 
@@ -292,32 +292,34 @@ public class NaModelTweaker
   private void updateZuflussNet( ) throws Exception
   {
     final IGMLSchema gmlSchema = m_modelWorkspace.getGMLSchema();
+    final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
     final IFeatureType kontZuflussFT = gmlSchema.getFeatureType( NaModelConstants.NODE_VERZW_ZUFLUSS );
-    final IFeatureType nodeFT = gmlSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    final Feature[] features = m_modelWorkspace.getFeatures( nodeFT );
+    final IFeatureType nodeFT = gmlSchema.getFeatureType( Node.FEATURE_NODE );
     final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
-    for( final Feature nodeFE : features )
+
+    final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+    for( final Node node : nodes )
     {
-      final Object zuflussValue = nodeFE.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP );
+      final Object zuflussValue = node.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP );
       if( zuflussValue != null )
       {
         // update zufluss
-        final Feature newNode = buildVChannelNet( nodeFE );
+        final Feature newNode = buildVChannelNet( node );
         // nove zufluss-property to new node
         // nodeFE.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", null ) );
         // newNode.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", zuflussValue ) );
-        nodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, null );
+        node.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, null );
         newNode.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, zuflussValue );
-        newNode.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
+        newNode.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, node.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
       }
-      final Feature branchingFE = m_modelWorkspace.resolveLink( nodeFE, branchingMemberRT );
+      final Feature branchingFE = m_modelWorkspace.resolveLink( node, branchingMemberRT );
       if( branchingFE != null && branchingFE.getFeatureType() == kontZuflussFT )
       {
         // update zufluss
-        final Feature newNode = buildVChannelNet( nodeFE );
+        final Feature newNode = buildVChannelNet( node );
         // nove constant-inflow to new node
-        m_modelWorkspace.setFeatureAsComposition( nodeFE, branchingMemberRT, null, true );
+        m_modelWorkspace.setFeatureAsComposition( node, branchingMemberRT, null, true );
         m_modelWorkspace.setFeatureAsComposition( newNode, branchingMemberRT, branchingFE, true );
       }
     }
@@ -333,29 +335,30 @@ public class NaModelTweaker
   private void updateResultAsZuflussNet( ) throws Exception
   {
     final IGMLSchema gmlSchema = m_modelWorkspace.getGMLSchema();
+    final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
-    final IFeatureType nodeFT = gmlSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
+    final IFeatureType nodeFT = gmlSchema.getFeatureType( Node.FEATURE_NODE );
     final IFeatureType abstractChannelFT = gmlSchema.getFeatureType( Channel.FEATURE_CHANNEL );
-    final Feature[] features = m_modelWorkspace.getFeatures( nodeFT );
-    for( final Feature nodeFE : features )
+
+    final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+    for( final Node node : nodes )
     {
-      if( m_nodeResultProvider.checkResultExists( nodeFE ) )
+      if( m_nodeResultProvider.checkResultExists( node ) )
       {
-        final Object resultValue = nodeFE.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
+        final Object resultValue = node.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
         // disconnect everything upstream (channel -> node)
         final IRelationType downStreamNodeMemberRT = (IRelationType) abstractChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
         // FIXME: move into node binding class!
-        final Feature[] channelFEs = m_modelWorkspace.resolveWhoLinksTo( nodeFE, abstractChannelFT, downStreamNodeMemberRT );
+        final Feature[] channelFEs = m_modelWorkspace.resolveWhoLinksTo( node, abstractChannelFT, downStreamNodeMemberRT );
         for( final Feature element : channelFEs )
         {
           final Feature newEndNodeFE = m_modelWorkspace.createFeature( element, downStreamNodeMemberRT, nodeFT );
           m_modelWorkspace.setFeatureAsComposition( element, downStreamNodeMemberRT, newEndNodeFE, true );
         }
         // add as zufluss
-        final Feature newNodeFE = buildVChannelNet( nodeFE );
-        // final FeatureProperty zuflussProp = FeatureFactory.createFeatureProperty( "zuflussZR", resultValue );
+        final Feature newNodeFE = buildVChannelNet( node );
         newNodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, resultValue );
-        newNodeFE.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
+        newNodeFE.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, node.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
       }
     }
   }

@@ -56,6 +56,7 @@ import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.manager.LzsimManager;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -124,6 +125,7 @@ public class NAModelPreprocessor
     final GMLWorkspace modelWorkspace = m_simulationData.getModelWorkspace();
     final NAControl metaControl = m_simulationData.getMetaControl();
     final GMLWorkspace sudsWorkspace = m_simulationData.getSudsWorkspace();
+    final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
 
     final String rootNodeID = naControl.getRootNodeID();
     final boolean useResults = naControl.isUseResults();
@@ -141,7 +143,7 @@ public class NAModelPreprocessor
     monitor.setMessage( "Writing control files for Kalypso-NA" );
     final NAControlConverter naControlConverter = new NAControlConverter( metaControl, m_asciiDirs.startDir );
     naControlConverter.writeFalstart();
-    naControlConverter.writeStartFile( naControl, modelWorkspace, sudsWorkspace, m_idManager );
+    naControlConverter.writeStartFile( naControl, naModel, sudsWorkspace, m_idManager );
     checkCancel( monitor );
 
     // write net and so on....

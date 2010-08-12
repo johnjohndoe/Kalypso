@@ -14,6 +14,8 @@ import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CO
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.observation.result.IComponent;
@@ -33,6 +35,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements ISimulation
 {
@@ -142,26 +145,26 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
 
           final ITupleModel tuppleModel = maxDischargesObservation.getValues( null );
 
-          final IFeatureType naNodeFeatureType = workspaceNA.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-          final Feature[] naNodes = workspaceNA.getFeatures( naNodeFeatureType );
+          final NaModell naModel = (NaModell) workspaceNA.getRootFeature();
+          final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
 
           for( int i = 0; i < tuppleModel.getCount(); i++ )
           {
             final String nodeNr = tuppleModel.getElement( i, axisNodeNr ).toString();
             final Double maxDischarge = Double.parseDouble( tuppleModel.getElement( i, axisMaxDischarge ).toString() );
-            for( final Feature feature : naNodes )
+            for( final Node node : nodes )
             {
-              if( feature.getName().equals( nodeNr ) )
+              if( node.getName().equals( nodeNr ) )
               {
                 if( naRiverCode != null && naRiverCode.length() > 0 )
                 {
-                  final Object nodeRiverCodeProperty = feature.getProperty( NaModelConstants.NODE_RIVER_CODE_PROP );
+                  final Object nodeRiverCodeProperty = node.getProperty( NaModelConstants.NODE_RIVER_CODE_PROP );
                   if( nodeRiverCodeProperty == null || !naRiverCode.equals( nodeRiverCodeProperty ) )
                   {
                     continue;
                   }
                 }
-                final Object riverKilometerProp = feature.getProperty( NaModelConstants.NODE_RIVER_KILOMETER_PROP );
+                final Object riverKilometerProp = node.getProperty( NaModelConstants.NODE_RIVER_KILOMETER_PROP );
                 if( riverKilometerProp != null )
                 {
                   final Double nodeRiverKilometerProperty = Double.parseDouble( riverKilometerProp.toString() );

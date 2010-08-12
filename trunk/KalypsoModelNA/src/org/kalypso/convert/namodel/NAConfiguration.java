@@ -63,6 +63,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.Hydrotop;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -160,7 +161,7 @@ public class NAConfiguration
     final GMLSchema synthNSchema = getSchema( schemaCatalog,  NaModelConstants.NS_SYNTHN );
 
     // featuretypes
-    m_nodeFT = schema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
+    m_nodeFT = schema.getFeatureType( Node.FEATURE_NODE );
     m_vChannelFT = schema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
     m_stChannelFT = schema.getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
     m_kmChannelFT = schema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );

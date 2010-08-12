@@ -61,8 +61,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -153,7 +152,7 @@ public class NAStatistics
       final Feature feature = entry.getKey();
       final File resultFile = entry.getValue();
 
-      if( !GMLSchemaUtilities.substitutes( feature.getFeatureType(), NaModelConstants.NODE_ELEMENT_FT ) )
+      if( !(feature instanceof Node) )
         continue;
 
       final String nodeTitle = getNodeTitle( feature );
@@ -267,7 +266,7 @@ public class NAStatistics
   {
     if( currentElement == null )
       return "";
-    
+
     switch( j )
     {
       case 0:
