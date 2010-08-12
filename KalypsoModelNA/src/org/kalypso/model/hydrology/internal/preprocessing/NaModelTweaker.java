@@ -241,7 +241,9 @@ public class NaModelTweaker
 
     final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
     final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
-    for( final Node node : nodes )
+    // Copy to array, as the list is manipulated on the fly.
+    final Node[] nodeArray = nodes.toArray( new Node[nodes.size()] );
+    for( final Node node : nodeArray )
     {
       final Feature branchingFE = m_modelWorkspace.resolveLink( node, branchingMemberRT );
       if( branchingFE != null )
@@ -301,7 +303,8 @@ public class NaModelTweaker
     final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
 
     final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
-    for( final Node node : nodes )
+    final Node[] nodeArray = nodes.toArray( new Node[nodes.size()] );
+    for( final Node node : nodeArray )
     {
       final Object zuflussValue = node.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP );
       if( zuflussValue != null )
