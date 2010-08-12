@@ -235,7 +235,7 @@ public class NAModelSimulation
     final NAModellControl naControl = simulationData.getNaControl();
 
     final NaPostProcessor postProcessor = new NaPostProcessor( m_conf, m_logger, modelWorkspace, naControl );
-    postProcessor.process( m_simDirs.asciiDirs, m_simDirs.currentResultDirs );
+    postProcessor.process( m_simDirs.asciiDirs, m_simDirs );
     return postProcessor.isSucceeded();
   }
 }
