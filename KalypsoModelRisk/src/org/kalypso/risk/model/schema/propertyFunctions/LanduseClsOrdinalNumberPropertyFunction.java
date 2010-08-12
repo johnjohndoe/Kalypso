@@ -63,7 +63,7 @@ public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunc
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
-  public void init( Map<String, String> properties )
+  public void init( final Map<String, String> properties )
   {
   }
 
@@ -89,7 +89,7 @@ public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunc
           return object;
       }
     }
-    catch( IllegalStateException e )
+    catch( final IllegalStateException e )
     {
       return null;
     }
@@ -100,7 +100,7 @@ public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunc
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
+  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     return null;
   }

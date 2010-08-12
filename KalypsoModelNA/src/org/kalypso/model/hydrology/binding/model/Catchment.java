@@ -44,17 +44,15 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}Catchment.
  * 
  * @author Gernot Belger
  */
-public class Catchment extends Feature_Impl
+public class Catchment extends AbstractNaModelElement
 {
-  public static final QName FEATURE_CATCHMENT = new QName( NaModelConstants.NS_NAMODELL, "Catchment" ); //$NON-NLS-1$
+  public static final QName FEATURE_CATCHMENT = new QName( NS_NAMODELL, "Catchment" ); //$NON-NLS-1$
 
   public Catchment( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

@@ -32,6 +32,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.suds.PlaningArea;
@@ -245,7 +246,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       outputSubfolderSteady.mkdirs();
       outputSubfolderCalculated.mkdirs();
 
-      final List<Feature> affectedNodes = new ArrayList<Feature>();
+      final List<Node> affectedNodes = new ArrayList<Node>();
 
       // FIXME: this is planer client code and DOES NOT belong here!
       if( !planningAreaDefined )
@@ -263,33 +264,31 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           {
             // resolve downstream channel and node, and add node to the affected nodes list
             final IRelationType downstreamChannelRT = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-            final Feature downstreamChannel = modelWorkspace.resolveLink( catchment, downstreamChannelRT );
+            final Channel downstreamChannel = (Channel) modelWorkspace.resolveLink( catchment, downstreamChannelRT );
             if( downstreamChannel != null )
             {
-              final IRelationType downstreamNodeRT = (IRelationType) downstreamChannel.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-              final Feature downstreamNode = modelWorkspace.resolveLink( downstreamChannel, downstreamNodeRT );
+              final Node downstreamNode = downstreamChannel.getDownstreamNode();
               if( downstreamNode != null )
                 affectedNodes.add( downstreamNode );
             }
           }
         }
         // resolve all downstream nodes (from those who are the direct downstream nodes for the affected catchments)
-        final List<Feature> additionalDownstreamNodes = new ArrayList<Feature>();
-        for( final Feature node : affectedNodes )
+        final List<Node> additionalDownstreamNodes = new ArrayList<Node>();
+        for( final Node node : affectedNodes )
         {
           // resolve downstream channel and node, and add node to the affected nodes list (if not already there)
           final IRelationType downstreamChannelRT = (IRelationType) node.getFeatureType().getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
-          final Feature downstreamChannel = modelWorkspace.resolveLink( node, downstreamChannelRT );
+          final Channel downstreamChannel = (Channel) modelWorkspace.resolveLink( node, downstreamChannelRT );
           if( downstreamChannel != null )
           {
-            final IRelationType downstreamNodeRT = (IRelationType) downstreamChannel.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-            final Feature downstreamNode = modelWorkspace.resolveLink( downstreamChannel, downstreamNodeRT );
+            final Node downstreamNode = downstreamChannel.getDownstreamNode();
             if( downstreamNode != null && !additionalDownstreamNodes.contains( downstreamNode ) )
               additionalDownstreamNodes.add( downstreamNode );
           }
         }
         // additional list is the easiest way to avoid concurrent modification exception...
-        for( final Feature node : additionalDownstreamNodes )
+        for( final Node node : additionalDownstreamNodes )
         {
           if( !affectedNodes.contains( node ) )
             affectedNodes.add( node );

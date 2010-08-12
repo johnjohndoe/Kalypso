@@ -40,24 +40,76 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}Node.
  * 
  * @author Gernot Belger
  */
-public class Node extends Feature_Impl
+public class Node extends AbstractNaModelElement
 {
   public static final QName FEATURE_NODE = new QName( NaModelConstants.NS_NAMODELL, "Node" ); //$NON-NLS-1$
+
+  /** @deprecated Do not use directly, use accessor methods instead. */
+  @Deprecated
+  public static final QName PROP_ZUFLUSS_ZR = new QName( NS_NAMODELL, "zuflussZR" ); //$NON-NLS-1$
+
+  /** @deprecated Do not use directly, use accessor methods instead. */
+  @Deprecated
+  public static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NAMODELL, "qberechnetZR" ); //$NON-NLS-1$
 
   public Node( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public TimeseriesLinkType getZuflussLink( )
+  {
+    return getProperty( PROP_ZUFLUSS_ZR, TimeseriesLinkType.class );
+  }
+
+  public void setZuflussLink( final TimeseriesLinkType zuflussLink )
+  {
+    setProperty( PROP_ZUFLUSS_ZR, zuflussLink );
+  }
+
+  public TimeseriesLinkType getResultLink( )
+  {
+    return getProperty( PROP_RESULT_TIMESERIESLINK, TimeseriesLinkType.class );
+  }
+
+  public void setResultLink( final TimeseriesLinkType zuflussLink )
+  {
+    setProperty( PROP_RESULT_TIMESERIESLINK, zuflussLink );
+  }
+
+  /**
+   * Returns all channels of this na modell that have this node as downstream node.
+   */
+  public Channel[] findUpstreamChannels( )
+  {
+    final Collection<Channel> upstreamChannels = new ArrayList<Channel>();
+
+    final NaModell naModel = getNaModel();
+
+    final IFeatureBindingCollection<Channel> channels = naModel.getChannels();
+    for( final Channel channel : channels )
+    {
+      final Node downstreamNode = channel.getDownstreamNode();
+      if( downstreamNode == this )
+        upstreamChannels.add( channel );
+    }
+
+    return upstreamChannels.toArray( new Channel[upstreamChannels.size()] );
   }
 }

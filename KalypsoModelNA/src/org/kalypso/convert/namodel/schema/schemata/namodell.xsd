@@ -48,6 +48,7 @@
 	</complexType>
   </element>
 
+    <!--  FIXME: this association is wrong: it should only allow for links, not sub-members -->
 	<complexType name="NodeAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">

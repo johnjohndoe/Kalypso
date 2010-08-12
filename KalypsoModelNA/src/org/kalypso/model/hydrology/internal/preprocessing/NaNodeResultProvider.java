@@ -95,7 +95,7 @@ public class NaNodeResultProvider
     m_removedResults.add( nodeFE );
   }
 
-  public boolean checkResultExists( final Feature nodeFE )
+  public boolean checkResultExists( final Node nodeFE )
   {
     if( !m_useResults )
       return false;
@@ -118,9 +118,9 @@ public class NaNodeResultProvider
     }
   }
 
-  private URL getResultURL( final Feature nodeFE ) throws MalformedURLException
+  private URL getResultURL( final Node node ) throws MalformedURLException
   {
-    final TimeseriesLinkType link = (TimeseriesLinkType) nodeFE.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
+    final TimeseriesLinkType link = node.getResultLink();
     if( link == null )
       return null;
 
