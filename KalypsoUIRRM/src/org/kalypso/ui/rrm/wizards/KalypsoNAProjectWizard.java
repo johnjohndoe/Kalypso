@@ -84,8 +84,11 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
+import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
+import org.kalypso.model.hydrology.binding.model.VirtualChannel;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
@@ -606,13 +609,13 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
       {
         case 0:
         {
-          targetFeature = channels.addNew( NaModelConstants.V_CHANNEL_ELEMENT_FT, fid );
+          targetFeature = channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL, fid );
           break;
         }
         case 1:
         {
           final IFeatureType kmFT = getFeatureType( "KMChannel" ); //$NON-NLS-1$
-          targetFeature = channels.addNew( NaModelConstants.KM_CHANNEL_ELEMENT_FT, fid );
+          targetFeature = channels.addNew( KMChannel.FEATURE_KM_CHANNEL, fid );
 
           final IRelationType parameterMemberRT = (IRelationType) kmFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
           final List< ? > list = FeatureFactory.createFeatureList( targetFeature, parameterMemberRT );
@@ -637,7 +640,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
         }
         case 2:
         {
-          targetFeature = channels.addNew( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT, fid );
+          targetFeature = channels.addNew( StorageChannel.FEATURE_STORAGE_CHANNEL, fid );
           break;
         }
         case 3:

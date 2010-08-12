@@ -58,6 +58,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.KMChannel;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
+import org.kalypso.model.hydrology.binding.model.VirtualChannel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -96,9 +99,9 @@ public class ChannelManager extends AbstractManager
   {
     super( conf.getChannelFormatURL() );
     m_conf = conf;
-    m_virtualChannelFT = schema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
-    m_storageChannelFT = schema.getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
-    m_kmChannelFT = schema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
+    m_virtualChannelFT = schema.getFeatureType( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
+    m_storageChannelFT = schema.getFeatureType( StorageChannel.FEATURE_STORAGE_CHANNEL );
+    m_kmChannelFT = schema.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
     m_kmParameterFT = schema.getFeatureType( NaModelConstants.KM_CHANNEL_PARAMETER_FT );
   }
 

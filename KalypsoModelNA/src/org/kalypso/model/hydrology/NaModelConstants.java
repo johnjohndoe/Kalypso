@@ -179,12 +179,6 @@ public interface NaModelConstants
 
   public static final QName STORAGE_CHANNEL_HVVSQD_PROP = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
 
-  public static final QName STORAGE_CHANNEL_ELEMENT_FT = new QName( NS_NAMODELL, "StorageChannel" ); //$NON-NLS-1$
-
-  public static final QName KM_CHANNEL_ELEMENT_FT = new QName( NS_NAMODELL, "KMChannel" ); //$NON-NLS-1$
-
-  public static final QName V_CHANNEL_ELEMENT_FT = new QName( NS_NAMODELL, "VirtualChannel" ); //$NON-NLS-1$
-
   public static final QName KM_CHANNEL_PARAMETER_FT = new QName( NS_NAMODELL, "KMParameter" ); //$NON-NLS-1$
 
   public static final QName KM_CHANNEL_PARAMETER_MEMBER = new QName( NS_NAMODELL, "KMParameterMember" ); //$NON-NLS-1$

@@ -8,7 +8,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.rrm.kmupdate.KMUpdateWizard;
@@ -50,7 +50,7 @@ public class KMUpdateAction implements IActionDelegate
       m_selection = (IFeatureSelection) selection;
       final Feature feature = (Feature) m_selection.getFirstElement();
       final QName qName = feature.getFeatureType().getQName();
-      if( NaModelConstants.KM_CHANNEL_ELEMENT_FT.equals( qName ) )
+      if( KMChannel.FEATURE_KM_CHANNEL.equals( qName ) )
         action.setEnabled( true );
     }
   }

@@ -82,6 +82,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.km.AbstractKMValue;
 import org.kalypso.model.km.ProfileDataSet;
 import org.kalypso.model.km.ProfileFactory;
@@ -130,7 +131,7 @@ public class KMUpdateWizardPage extends WizardPage
   public KMUpdateWizardPage( final CommandableWorkspace workspace, final IFeatureSelection selection )
   {
     super( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.0" ),//  //$NON-NLS-1$
-    Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.1" ), null ); //$NON-NLS-1$
+        Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.1" ), null ); //$NON-NLS-1$
     m_workspace = workspace;
     final EasyFeatureWrapper[] allFeatures = selection.getAllFeatures();
     m_selection = new Feature[allFeatures.length];
@@ -264,7 +265,7 @@ public class KMUpdateWizardPage extends WizardPage
 
   protected void createNewKMGroup( )
   {
-    final IFeatureType kmFT = m_workspace.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
+    final IFeatureType kmFT = m_workspace.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
     final Feature[] features = m_workspace.getFeatures( kmFT );
 
     final KalininMiljukovGroupType kmGroup = m_factory.createKalininMiljukovGroupType();
@@ -282,7 +283,7 @@ public class KMUpdateWizardPage extends WizardPage
   {
     final KalininMiljukovType km =
 
-    m_factory.createKalininMiljukovType();
+      m_factory.createKalininMiljukovType();
     km.setId( feature.getId() );
     km.setFilePattern( "*km" ); //$NON-NLS-1$
     km.setPath( "" ); //$NON-NLS-1$
@@ -501,13 +502,13 @@ public class KMUpdateWizardPage extends WizardPage
     }
     final String separator = "\n-------------------------------------\n"; //$NON-NLS-1$
     final String message = //
-    Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.26" ) + monitorBuffer.toString()//  //$NON-NLS-1$
-        + separator//
-        + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.27" ) + errorBuffer.toString() //  //$NON-NLS-1$
-        + separator //
-        + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.28" ) + detailBuffer.toString() // //$NON-NLS-1$
-        + separator //
-        + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.29" ) + selectionBuffer.toString(); //$NON-NLS-1$
+      Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.26" ) + monitorBuffer.toString()//  //$NON-NLS-1$
+      + separator//
+      + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.27" ) + errorBuffer.toString() //  //$NON-NLS-1$
+      + separator //
+      + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.28" ) + detailBuffer.toString() // //$NON-NLS-1$
+      + separator //
+      + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.29" ) + selectionBuffer.toString(); //$NON-NLS-1$
     // MessageDialog.openInformation( getShell(), "Erfolg der Berechnungen", message );
     final Dialog dialog = new ScrolledTextInformationDialog( getShell(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.30" ), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.31" ), message ); //$NON-NLS-1$ //$NON-NLS-2$
     dialog.open();
@@ -539,7 +540,7 @@ public class KMUpdateWizardPage extends WizardPage
       result = changeList;
 
     final KalininMiljukovType km = getForID( feature.getId() );
-    final IFeatureType kmFT = m_workspace.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
+    final IFeatureType kmFT = m_workspace.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
     final IFeatureType kmPaFT = m_workspace.getFeatureType( NaModelConstants.KM_CHANNEL_PARAMETER_FT );
 
     final IRelationType kmRT = (IRelationType) kmFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
