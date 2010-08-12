@@ -40,36 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.model;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for {http://www.tuhh.de/kalypsoNA}_Channel.
+ * Binding class for {http://www.tuhh.de/kalypsoNA}Catchment.
  * 
  * @author Gernot Belger
  */
-public abstract class Channel extends AbstractNaModelElement
+public class AbstractNaModelElement extends Feature_Impl
 {
-  public static final QName FEATURE_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "_Channel" ); //$NON-NLS-1$
+  protected static final String NS_NAMODELL = NaModelConstants.NS_NAMODELL;
 
-  private static final QName CHANNEL_DOWNSTREAMNODE_MEMBER = new QName( NS_NAMODELL, "downStreamNodeMember" ); //$NON-NLS-1$
-
-  public Channel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public AbstractNaModelElement( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public void setDownstreamNode( final Node newNodeFE2 )
+  /** Gets the root feature of my own workspace as {@link NaModell}. */
+  protected NaModell getNaModel( )
   {
-    setProperty( CHANNEL_DOWNSTREAMNODE_MEMBER, newNodeFE2.getId() );
+    return (NaModell) getWorkspace().getRootFeature();
   }
 
-  public Node getDownstreamNode( )
-  {
-    return (Node) FeatureHelper.resolveLink( this, CHANNEL_DOWNSTREAMNODE_MEMBER, true );
-  }
 }

@@ -64,9 +64,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public abstract class AbstractManager
 {
-  private final static HashMap<IntID, String> m_map = new HashMap<IntID, String>();
+  // FIXME: completely dangerous! static but not really used static
+  // FIXME: these hashmap NEVER get cleared...! This is a memory leak!
+  private final static Map<IntID, String> m_map = new HashMap<IntID, String>();
 
-  private static final HashMap<String, Feature> m_allFeatures = new HashMap<String, Feature>();
+  private static final Map<String, Feature> m_allFeatures = new HashMap<String, Feature>();
 
   private String[] m_asciiFormat;
 
@@ -101,7 +103,7 @@ public abstract class AbstractManager
     return ft.getQName().getLocalPart() + "_" + asciiStringId; //$NON-NLS-1$
   }
 
-  public Feature getFeature( final int asciiID, final IFeatureType ft )
+  protected Feature getFeature( final int asciiID, final IFeatureType ft )
   {
     final IntID intID = new IntID( asciiID, ft );
     if( !m_map.containsKey( intID ) )
@@ -110,7 +112,7 @@ public abstract class AbstractManager
     return m_allFeatures.get( stringID );
   }
 
-  public Feature getExistingFeature( final int id, final IFeatureType[] ft )
+  protected Feature getExistingFeature( final int id, final IFeatureType[] ft )
   {
     for( final IFeatureType element : ft )
     {

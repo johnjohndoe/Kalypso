@@ -61,6 +61,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.Channel;
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -68,6 +71,7 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * A NetElement encapsulates a Channel-Element and its dependencies <br>
@@ -106,7 +110,7 @@ public class NetElement
 
   private final List<NetElement> m_downStreamDepends = new ArrayList<NetElement>();
 
-  private final Feature m_channelFE;
+  private final Channel m_channel;
 
   private static final int ANFANGSKNOTEN = 9001; //$NON-NLS-1$
 
@@ -120,23 +124,23 @@ public class NetElement
 
   private final NAConfiguration m_conf;
 
-  public NetElement( final GMLWorkspace modellWorkspace, final GMLWorkspace synthNWorkspace, final Feature channelFE, final NAConfiguration conf )
+  public NetElement( final GMLWorkspace modellWorkspace, final GMLWorkspace synthNWorkspace, final Channel channel, final NAConfiguration conf )
   {
     m_synthNWorkspace = synthNWorkspace;
-    m_channelFE = channelFE;
+    m_channel = channel;
     m_workspace = modellWorkspace;
     m_conf = conf;
   }
 
   public Feature getChannel( )
   {
-    return m_channelFE;
+    return m_channel;
   }
 
   public Feature getDownStreamNode( )
   {
-    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( NaModelConstants.DOWNSTREAM_NODE_MEMBER_PROP );
-    return m_workspace.resolveLink( m_channelFE, rt );
+    final IRelationType rt = (IRelationType) m_channel.getFeatureType().getProperty( NaModelConstants.DOWNSTREAM_NODE_MEMBER_PROP );
+    return m_workspace.resolveLink( m_channel, rt );
   }
 
   public boolean isCalculated( )
@@ -155,7 +159,7 @@ public class NetElement
 
     final IFeatureType catchmentFT = m_conf.getCatchemtFT();
     final IRelationType rt = (IRelationType) catchmentFT.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-    final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, catchmentFT, rt );
+    final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channel, catchmentFT, rt );
     for( final Feature feature : catchmentFeatures )
     {
       final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( feature, klimaDir, m_conf ); //$NON-NLS-1$
@@ -252,8 +256,7 @@ public class NetElement
 
     final IDManager idManager = m_conf.getIdManager();
 
-    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-    final Feature knotu = m_workspace.resolveLink( m_channelFE, rt );
+    final Node knotu = m_channel.getDownstreamNode();
     if( knotu == null )
       System.out.println( "knotU=null" ); //$NON-NLS-1$
 
@@ -269,7 +272,7 @@ public class NetElement
   /**
    * writes part 1 of netfile
    */
-  public void write( final AsciiBuffer asciiBuffer, final List<Feature> nodeList )
+  public void write( final AsciiBuffer asciiBuffer, final List<Node> nodeList )
   {
     final Feature channel = getChannel();
     asciiBuffer.markFeatureForWrite( channel );
@@ -281,12 +284,11 @@ public class NetElement
     final IDManager idManager = m_conf.getIdManager();
 
     // append channel:
-    final int channelID = idManager.getAsciiID( m_channelFE );
+    final int channelID = idManager.getAsciiID( m_channel );
     netBuffer.append( String.format( "%8d", channelID ) ); //$NON-NLS-1$
 
-    final IRelationType rt = (IRelationType) m_channelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-    final Feature downstreamNode = m_workspace.resolveLink( m_channelFE, rt );
-    final Feature upstreamNode = findUpstreamNode();
+    final Node downstreamNode = m_channel.getDownstreamNode();
+    final Node upstreamNode = findUpstreamNode();
 
     // collect related catchments
     final IFeatureType catchemtFT = m_conf.getCatchemtFT();
@@ -326,7 +328,7 @@ public class NetElement
     for( final Feature cfeature : catchmentFeatures )
     {
       final Feature channel = m_workspace.resolveLink( cfeature, entwaesserungsStrangMemberRT );
-      if( m_channelFE == channel )
+      if( m_channel == channel )
         catchmentList.add( cfeature );
     }
 
@@ -334,15 +336,19 @@ public class NetElement
   }
 
   // FIXME:move into channel binding
-  private Feature findUpstreamNode( )
+  private Node findUpstreamNode( )
   {
     final IFeatureType nodeFT = m_conf.getNodeFT();
-    final Feature[] features = m_workspace.getFeatures( nodeFT );
+
+    final NaModell naModel = (NaModell) m_workspace.getRootFeature();
+    final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+
     final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
-    for( final Feature node : features )
+
+    for( final Node node : nodes )
     {
       final Feature downStreamChannel = m_workspace.resolveLink( node, downStreamChannelMemberRT );
-      if( m_channelFE == downStreamChannel )
+      if( m_channel == downStreamChannel )
         return node;
     }
     return null;

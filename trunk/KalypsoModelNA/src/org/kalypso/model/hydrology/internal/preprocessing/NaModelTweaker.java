@@ -55,6 +55,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.VirtualChannel;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -116,35 +117,33 @@ public class NaModelTweaker
    * 
    * </code>
    */
-  private Feature buildVChannelNet( final Feature existingNode ) throws Exception
+  private Node buildVChannelNet( final Node existingNode ) throws Exception
   {
     final IGMLSchema gmlSchema = m_modelWorkspace.getGMLSchema();
 
     final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
     final IFeatureType nodeFT = gmlSchema.getFeatureType( Node.FEATURE_NODE );
-    final IFeatureType vChannelFT = gmlSchema.getFeatureType( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
 
     final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
 
     final IFeatureBindingCollection<Channel> channels = naModel.getChannels();
 
     // add to collections:
-    final Feature newChannelFE1 = channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
-    final Feature newChannelFE3 = channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
-    final Feature newNodeFE2 = nodes.addNew( Node.FEATURE_NODE );
-
-    final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
+    final Channel newChannelFE1 = channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
+    final Channel newChannelFE3 = channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
+    final Node newNodeFE2 = nodes.addNew( Node.FEATURE_NODE );
 
     // 3 -> 2
-    m_modelWorkspace.setFeatureAsAggregation( newChannelFE3, downStreamNodeMemberRT, newNodeFE2.getId(), true );
+    newChannelFE3.setDownstreamNode( newNodeFE2 );
+
     // 2 -> 1
     final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
     m_modelWorkspace.setFeatureAsAggregation( newNodeFE2, downStreamChannelMemberRT, newChannelFE1.getId(), true );
-    // 1 -> existing
 
-    // final IRelationType downStreamNodeMemberRT1 = (IRelationType) vChannelFT.getProperty( "downStreamNodeMember" );
-    m_modelWorkspace.setFeatureAsAggregation( newChannelFE1, downStreamNodeMemberRT, existingNode.getId(), true );
+    // 1 -> existing
+    newChannelFE1.setDownstreamNode( existingNode );
+
     return newNodeFE2;
   }
 
@@ -171,26 +170,21 @@ public class NaModelTweaker
   {
     final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
-    final IGMLSchema gmlSchema = m_modelWorkspace.getGMLSchema();
-
-    final IFeatureType vChannelFT = gmlSchema.getFeatureType( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
-
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
     for( final Catchment catchment : catchments )
     {
       final IRelationType catchmentRT = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-      final Feature channelFE = m_modelWorkspace.resolveLink( catchment, catchmentRT );
+      final Channel channelFE = (Channel) m_modelWorkspace.resolveLink( catchment, catchmentRT );
       if( channelFE == null )
         continue;
 
-      final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-      final Feature nodeFE = m_modelWorkspace.resolveLink( channelFE, downStreamNodeMemberRT );
+      final Node node = channelFE.getDownstreamNode();
 
-      final Feature newChannelFE = m_modelWorkspace.createFeature( catchment, catchmentRT, vChannelFT );
+      final Channel newChannel = naModel.getChannels().addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
       try
       {
         // set new relation: catchment -> new V-channel
-        m_modelWorkspace.setFeatureAsComposition( catchment, catchmentRT, newChannelFE, true );
+        m_modelWorkspace.setFeatureAsComposition( catchment, catchmentRT, newChannel, true );
       }
       catch( final Exception e )
       {
@@ -198,15 +192,7 @@ public class NaModelTweaker
       }
 
       // set new relation: new V-channel -> downstream node
-      try
-      {
-        final IRelationType downStreamNodeMemberRT2 = (IRelationType) newChannelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-        m_modelWorkspace.addFeatureAsAggregation( newChannelFE, downStreamNodeMemberRT2, 1, nodeFE.getId() );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
+      newChannel.setDownstreamNode( node );
     }
   }
 
@@ -252,7 +238,7 @@ public class NaModelTweaker
         final IRelationType branchingNodeMemberRT = (IRelationType) branchFT.getProperty( NaModelConstants.NODE_BRANCHING_NODE_MEMBER_PROP );
         if( branchFT == kontEntnahmeFT || branchFT == ueberlaufFT || branchFT == verzweigungFT )
         {
-          final Feature targetNodeFE = m_modelWorkspace.resolveLink( branchingFE, branchingNodeMemberRT );
+          final Node targetNodeFE = (Node) m_modelWorkspace.resolveLink( branchingFE, branchingNodeMemberRT );
           if( targetNodeFE == null )
           {
             final String relationLabel = branchingNodeMemberRT.getAnnotation().getLabel();
@@ -261,7 +247,7 @@ public class NaModelTweaker
             throw new SimulationException( message );
           }
 
-          final Feature newNodeFE = buildVChannelNet( targetNodeFE );
+          final Node newNodeFE = buildVChannelNet( targetNodeFE );
           m_modelWorkspace.setFeatureAsComposition( branchingFE, branchingNodeMemberRT, newNodeFE, true );
         }
       }
@@ -306,18 +292,17 @@ public class NaModelTweaker
     final Node[] nodeArray = nodes.toArray( new Node[nodes.size()] );
     for( final Node node : nodeArray )
     {
-      final Object zuflussValue = node.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP );
-      if( zuflussValue != null )
+      final TimeseriesLinkType zuflussLink = node.getZuflussLink();
+      if( zuflussLink != null )
       {
         // update zufluss
-        final Feature newNode = buildVChannelNet( node );
+        final Node newNode = buildVChannelNet( node );
         // nove zufluss-property to new node
-        // nodeFE.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", null ) );
-        // newNode.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", zuflussValue ) );
-        node.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, null );
-        newNode.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, zuflussValue );
+        node.setZuflussLink( null );
+        newNode.setZuflussLink( zuflussLink );
         newNode.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, node.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
       }
+
       final Feature branchingFE = m_modelWorkspace.resolveLink( node, branchingMemberRT );
       if( branchingFE != null && branchingFE.getFeatureType() == kontZuflussFT )
       {
@@ -339,11 +324,7 @@ public class NaModelTweaker
    */
   private void updateResultAsZuflussNet( ) throws Exception
   {
-    final IGMLSchema gmlSchema = m_modelWorkspace.getGMLSchema();
     final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
-
-    final IFeatureType nodeFT = gmlSchema.getFeatureType( Node.FEATURE_NODE );
-    final IFeatureType abstractChannelFT = gmlSchema.getFeatureType( Channel.FEATURE_CHANNEL );
 
     final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
     final Node[] nodeArray = nodes.toArray( new Node[nodes.size()] );
@@ -351,19 +332,17 @@ public class NaModelTweaker
     {
       if( m_nodeResultProvider.checkResultExists( node ) )
       {
-        final Object resultValue = node.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
+        final TimeseriesLinkType resultLink = node.getResultLink();
         // disconnect everything upstream (channel -> node)
-        final IRelationType downStreamNodeMemberRT = (IRelationType) abstractChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
-        // FIXME: move into node binding class!
-        final Feature[] channelFEs = m_modelWorkspace.resolveWhoLinksTo( node, abstractChannelFT, downStreamNodeMemberRT );
-        for( final Feature element : channelFEs )
+        final Channel[] upstreamChannels = node.findUpstreamChannels();
+        for( final Channel channel : upstreamChannels )
         {
-          final Feature newEndNodeFE = m_modelWorkspace.createFeature( element, downStreamNodeMemberRT, nodeFT );
-          m_modelWorkspace.setFeatureAsComposition( element, downStreamNodeMemberRT, newEndNodeFE, true );
+          final Node newEndNodeFE = nodes.addNew( Node.FEATURE_NODE );
+          channel.setDownstreamNode( newEndNodeFE );
         }
         // add as zufluss
-        final Feature newNodeFE = buildVChannelNet( node );
-        newNodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, resultValue );
+        final Node newNodeFE = buildVChannelNet( node );
+        newNodeFE.setZuflussLink( resultLink );
         newNodeFE.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, node.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
       }
     }

@@ -45,7 +45,7 @@ import java.util.List;
 
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.net.NetElement;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.model.hydrology.binding.model.Node;
 
 /**
  * @author doemming
@@ -54,14 +54,14 @@ public class WriteAsciiVisitor extends NetElementVisitor
 {
   private final AsciiBuffer m_asciiBuffer;
 
-  private final List<Feature> m_nodeCollector;
+  private final List<Node> m_nodeCollector;
 
   private final List<NetElement> m_visitedElements = new ArrayList<NetElement>();
 
   public WriteAsciiVisitor( final AsciiBuffer asciiBuffer )
   {
     m_asciiBuffer = asciiBuffer;
-    m_nodeCollector = new ArrayList<Feature>();
+    m_nodeCollector = new ArrayList<Node>();
   }
 
   /**
@@ -89,7 +89,7 @@ public class WriteAsciiVisitor extends NetElementVisitor
     return m_visitedElements;
   }
 
-  public List<Feature> getNodeCollector( )
+  public List<Node> getNodeCollector( )
   {
     return m_nodeCollector;
   }

@@ -235,11 +235,7 @@ public interface NaModelConstants
   public static final QName NODE_COLLECTION_FT = new QName( NS_NAMODELL, "NodeCollection" ); //$NON-NLS-1$
 
 
-  public static final QName NODE_RESULT_TIMESERIESLINK_PROP = new QName( NS_NAMODELL, "qberechnetZR" ); //$NON-NLS-1$
-
   public static final QName NODE_ZUFLUSS_ZR_REPOSITORY_PROP = new QName( NS_NAMODELL, "zuflussZRRepository" ); //$NON-NLS-1$
-
-  public static final QName NODE_ZUFLUSS_ZR_PROP = new QName( NS_NAMODELL, "zuflussZR" ); //$NON-NLS-1$
 
   public static final QName NODE_SYNTHETIC_ZUFLUSS_ZR_PROP = new QName( NS_NAMODELL, "syntheticZuflussZR" ); //$NON-NLS-1$
 
@@ -345,8 +341,6 @@ public interface NaModelConstants
 
   // link Properties
   public static final QName LINK_CATCHMENT_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" ); //$NON-NLS-1$
-
-  public static final QName LINK_CHANNEL_DOWNSTREAMNODE = new QName( NS_NAMODELL, "downStreamNodeMember" ); //$NON-NLS-1$
 
   public static final QName LINK_NODE_DOWNSTREAMCHANNEL = new QName( NS_NAMODELL, "downStreamChannelMember" ); //$NON-NLS-1$
 
