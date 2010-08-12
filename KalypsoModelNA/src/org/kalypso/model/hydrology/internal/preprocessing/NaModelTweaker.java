@@ -346,7 +346,8 @@ public class NaModelTweaker
     final IFeatureType abstractChannelFT = gmlSchema.getFeatureType( Channel.FEATURE_CHANNEL );
 
     final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
-    for( final Node node : nodes )
+    final Node[] nodeArray = nodes.toArray( new Node[nodes.size()] );
+    for( final Node node : nodeArray )
     {
       if( m_nodeResultProvider.checkResultExists( node ) )
       {

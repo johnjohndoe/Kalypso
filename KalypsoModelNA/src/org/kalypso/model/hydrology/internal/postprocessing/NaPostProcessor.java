@@ -55,6 +55,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.tools.ant.taskdefs.Concat;
 import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -74,6 +75,7 @@ import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaResultDirs;
+import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.ogc.sensor.IAxis;
@@ -134,9 +136,10 @@ public class NaPostProcessor
     m_naStatistics = new NAStatistics( logger );
   }
 
-  public void process( final NaAsciiDirs asciiDirs, final NaResultDirs resultDirs ) throws Exception
+  public void process( final NaAsciiDirs asciiDirs, final NaSimulationDirs simDirs ) throws Exception
   {
-    translateLogs( asciiDirs, resultDirs );
+    final NaResultDirs currentResultDirs = simDirs.currentResultDirs;
+    translateLogs( asciiDirs, currentResultDirs );
 
     m_isSucceeded = checkSuccess( asciiDirs );
 
@@ -145,24 +148,24 @@ public class NaPostProcessor
 
     // FIXME: (much) better error handling! and error recovery...
 
-    loadTSResults( asciiDirs.outWeNatDir, resultDirs.currentResultDir );
+    loadTSResults( asciiDirs.outWeNatDir, simDirs.currentResultDir );
     try
     {
-      loadTesultTSPredictionIntervals( resultDirs.currentResultDir );
+      loadTesultTSPredictionIntervals( simDirs.outputDir );
     }
     catch( final Exception e )
     {
       m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.83", e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
 
-    copyStatisticResultFile( asciiDirs, resultDirs );
+    copyStatisticResultFile( asciiDirs, currentResultDirs );
 
     final Date[] initialDates = m_naControl.getInitialDatesToBeWritten();
     final HydroHash hydroHash = m_conf.getHydroHash();
-    final LzsimManager lzsimManager = new LzsimManager( initialDates, resultDirs.anfangswertDir );
+    final LzsimManager lzsimManager = new LzsimManager( initialDates, currentResultDirs.anfangswertDir );
     lzsimManager.readInitialValues( m_conf.getIdManager(), hydroHash, asciiDirs.lzsimDir, m_logger );
 
-    m_naStatistics.writeStatistics( resultDirs.currentResultDir, resultDirs.reportDir );
+    m_naStatistics.writeStatistics( simDirs.currentResultDir, currentResultDirs.reportDir );
   }
 
   /**
