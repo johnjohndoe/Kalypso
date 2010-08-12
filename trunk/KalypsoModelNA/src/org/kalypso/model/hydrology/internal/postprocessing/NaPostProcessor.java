@@ -71,6 +71,7 @@ import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaResultDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -259,7 +260,7 @@ public class NaPostProcessor
 
     final IFeatureType FT_NODE = m_modelWorkspace.getGMLSchema().getFeatureType( Node.FEATURE_NODE );
     final IFeatureType FT_CATCHMENT = m_modelWorkspace.getGMLSchema().getFeatureType( Catchment.FEATURE_CATCHMENT );
-    final IFeatureType FT_STORAGE_CHANNEL = m_modelWorkspace.getGMLSchema().getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
+    final IFeatureType FT_STORAGE_CHANNEL = m_modelWorkspace.getGMLSchema().getFeatureType( StorageChannel.FEATURE_STORAGE_CHANNEL );
 
     final boolean isConsiderableFeatureType = FT_NODE.equals( resultFT ) || FT_CATCHMENT.equals( resultFT ) || FT_STORAGE_CHANNEL.equals( resultFT );
 

@@ -52,6 +52,7 @@ import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -67,7 +68,7 @@ public class RHBManager extends AbstractManager
   {
     super( conf.getRHBFormatURL() );
     m_conf = conf;
-    m_storageChannelFT = schema.getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
+    m_storageChannelFT = schema.getFeatureType( StorageChannel.FEATURE_STORAGE_CHANNEL );
   }
 
   /**

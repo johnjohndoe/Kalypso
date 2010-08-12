@@ -43,7 +43,7 @@ package org.kalypso.ui.rrm.kmupdate;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -57,12 +57,12 @@ public class KMUpdateContentProvider implements IStructuredContentProvider
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
   @Override
-  public Object[] getElements( Object inputElement )
+  public Object[] getElements( final Object inputElement )
   {
     if( inputElement instanceof GMLWorkspace )
     {
       final GMLWorkspace workspace = (GMLWorkspace) inputElement;
-      final IFeatureType ft = workspace.getGMLSchema().getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT);
+      final IFeatureType ft = workspace.getGMLSchema().getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
       final Feature[] features = workspace.getFeatures( ft );
       return features;
     }
@@ -83,7 +83,7 @@ public class KMUpdateContentProvider implements IStructuredContentProvider
    *      java.lang.Object)
    */
   @Override
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     // TODO Auto-generated method stub
   }

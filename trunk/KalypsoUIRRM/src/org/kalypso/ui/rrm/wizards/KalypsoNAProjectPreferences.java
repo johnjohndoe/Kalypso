@@ -47,6 +47,7 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.rrm.i18n.Messages;
 
@@ -140,7 +141,7 @@ public class KalypsoNAProjectPreferences extends WizardPage
     channelLabel.setText( Messages.getString( "KalypsoNAProjectPreferences.KMChannelGroupLable" ) ); //$NON-NLS-1$
     channelLabel.setLayoutData( new GridData(SWT.FILL, SWT.CENTER, true, true) );
     m_channelCombo = new Combo( channel, SWT.READ_ONLY );
-    final IFeatureType kmChannelFT = m_modelSchema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
+    final IFeatureType kmChannelFT = m_modelSchema.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
     final int maxOccursKM = kmChannelFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER ).getMaxOccurs();
     final ArrayList<String> noKMDischarge = new ArrayList<String>();
     for( int i = 0; i < maxOccursKM + 1; i++ )

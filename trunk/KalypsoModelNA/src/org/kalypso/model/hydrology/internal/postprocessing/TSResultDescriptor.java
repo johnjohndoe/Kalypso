@@ -42,9 +42,9 @@ package org.kalypso.model.hydrology.internal.postprocessing;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
@@ -70,9 +70,9 @@ public enum TSResultDescriptor
   vet("n Evapotranspiration .vet [mm]", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_EVAPORATION, null, null, 0.1d),
 
   // Straenge
-  sph("n Wasserstand Speicher .sph [muNN]", NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT, ITimeseriesConstants.TYPE_NORMNULL, null, null, 1.0d),
-  sub("n Speicherueberlauf .sub [m³/s]", NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  spi("n Speicherinhalt .spi [hm³] - Umrechnung auf m³", NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT, ITimeseriesConstants.TYPE_VOLUME, null, null, 1000000.0d);
+  sph("n Wasserstand Speicher .sph [muNN]", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_NORMNULL, null, null, 1.0d),
+  sub("n Speicherueberlauf .sub [m³/s]", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
+  spi("n Speicherinhalt .spi [hm³] - Umrechnung auf m³", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_VOLUME, null, null, 1000000.0d);
 
   private final String m_description;
 

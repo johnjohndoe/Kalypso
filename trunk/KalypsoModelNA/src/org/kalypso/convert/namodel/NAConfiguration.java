@@ -63,7 +63,10 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.Hydrotop;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
+import org.kalypso.model.hydrology.binding.model.VirtualChannel;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -162,9 +165,9 @@ public class NAConfiguration
 
     // featuretypes
     m_nodeFT = schema.getFeatureType( Node.FEATURE_NODE );
-    m_vChannelFT = schema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
-    m_stChannelFT = schema.getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT );
-    m_kmChannelFT = schema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
+    m_vChannelFT = schema.getFeatureType( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
+    m_stChannelFT = schema.getFeatureType( StorageChannel.FEATURE_STORAGE_CHANNEL );
+    m_kmChannelFT = schema.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
     m_catchmentFT = schema.getFeatureType( Catchment.FEATURE_CATCHMENT );
     m_bodartFT = paraSchema.getFeatureType( NaModelConstants.PARA_SoilLayer_FT );
     m_statNFT = synthNSchema.getFeatureType( NaModelConstants.SYNTHN_STATN_FT );

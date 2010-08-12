@@ -50,8 +50,10 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
+import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.VirtualChannel;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -121,15 +123,15 @@ public class NaModelTweaker
     final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
     final IFeatureType nodeFT = gmlSchema.getFeatureType( Node.FEATURE_NODE );
-    final IFeatureType vChannelFT = gmlSchema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
+    final IFeatureType vChannelFT = gmlSchema.getFeatureType( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
 
     final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
 
     final IFeatureBindingCollection<Channel> channels = naModel.getChannels();
 
     // add to collections:
-    final Feature newChannelFE1 = channels.addNew( NaModelConstants.V_CHANNEL_ELEMENT_FT );
-    final Feature newChannelFE3 = channels.addNew( NaModelConstants.V_CHANNEL_ELEMENT_FT );
+    final Feature newChannelFE1 = channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
+    final Feature newChannelFE3 = channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
     final Feature newNodeFE2 = nodes.addNew( Node.FEATURE_NODE );
 
     final IRelationType downStreamNodeMemberRT = (IRelationType) vChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
@@ -171,7 +173,7 @@ public class NaModelTweaker
 
     final IGMLSchema gmlSchema = m_modelWorkspace.getGMLSchema();
 
-    final IFeatureType vChannelFT = gmlSchema.getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
+    final IFeatureType vChannelFT = gmlSchema.getFeatureType( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
 
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
     for( final Catchment catchment : catchments )
@@ -381,7 +383,7 @@ public class NaModelTweaker
       updateCatchment( catchment );
 
     // KMChannels
-    final Feature[] kmChanneFEs = m_modelWorkspace.getFeatures( gmlSchema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT ) );
+    final Feature[] kmChanneFEs = m_modelWorkspace.getFeatures( gmlSchema.getFeatureType( KMChannel.FEATURE_KM_CHANNEL ) );
     for( final Feature kmChanneFE : kmChanneFEs )
       updateKMChannel( kmChanneFE );
   }
