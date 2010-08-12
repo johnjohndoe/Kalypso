@@ -53,18 +53,16 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.suds.Greenroof;
 import org.kalypso.model.hydrology.binding.suds.Swale;
 import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -166,13 +164,13 @@ public class NAControlConverter
     return 0;
   }
 
-  public void writeStartFile( final NAModellControl naControl, final GMLWorkspace modellWorkspace, final GMLWorkspace sudsWorkspace, final IDManager idManager ) throws IOException
+  public void writeStartFile( final NAModellControl naControl, final NaModell naModel, final GMLWorkspace sudsWorkspace, final IDManager idManager ) throws IOException
   {
     PrintWriter writer = null;
     try
     {
       writer = new PrintWriter( m_startFile );
-      writeStartFile( writer, naControl, modellWorkspace, sudsWorkspace, idManager );
+      writeStartFile( writer, naControl, naModel, sudsWorkspace, idManager );
       writer.close();
     }
     finally
@@ -181,10 +179,10 @@ public class NAControlConverter
     }
   }
 
-  private void writeStartFile( final PrintWriter writer, final NAModellControl naControl, final GMLWorkspace modellWorkspace, final GMLWorkspace sudsWorkspace, final IDManager idManager )
+  private void writeStartFile( final PrintWriter writer, final NAModellControl naControl, final NaModell naModel, final GMLWorkspace sudsWorkspace, final IDManager idManager )
   {
     writeResultsToGenerate( naControl, sudsWorkspace, writer );
-    writeResultInformation( modellWorkspace, naControl, idManager, writer );
+    writeResultInformation( naModel, naControl, idManager, writer );
     writeInitialDates( naControl, writer );
   }
 
@@ -259,30 +257,32 @@ public class NAControlConverter
     writer.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwales ? "j" : "n", "Überlauf Mulden", ".mul" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
   }
 
-  private static void writeResultInformation( final GMLWorkspace modellWorkspace, final NAModellControl naControl, final IDManager idManager, final PrintWriter writer )
+  private static void writeResultInformation( final NaModell naModel, final NAModellControl naControl, final IDManager idManager, final PrintWriter writer )
   {
     // knoten
-    final IGMLSchema gmlSchema = modellWorkspace.getGMLSchema();
-    final IFeatureType nodeFT = gmlSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-    final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
+// final IGMLSchema gmlSchema = modellWorkspace.getGMLSchema();
+// final IFeatureType nodeFT = gmlSchema.getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
+// final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
+
     final String rootNodeID = naControl.getRootNodeID();
-    for( final Feature nodeFE : nodeFEs )
+
+    final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+    for( final Node node : nodes )
     {
-      if( rootNodeID != null && rootNodeID.equals( nodeFE.getId() ) )
+      if( rootNodeID != null && rootNodeID.equals( node.getId() ) )
       {
         // fuer root node immer ein ergebnis generieren
-        writer.append( idManager.getAsciiID( nodeFE ) + "\n" ); //$NON-NLS-1$
+        writer.append( idManager.getAsciiID( node ) + "\n" ); //$NON-NLS-1$
       }
-      else if( rootNodeID == null && FeatureHelper.booleanIsTrue( nodeFE, NaModelConstants.GENERATE_RESULT_PROP, false ) )
+      else if( rootNodeID == null && FeatureHelper.booleanIsTrue( node, NaModelConstants.GENERATE_RESULT_PROP, false ) )
       {
         // fuer nicht root node nur ergebnisse generieren wenn gewuenscht
-        writer.append( idManager.getAsciiID( nodeFE ) + "\n" ); //$NON-NLS-1$
+        writer.append( idManager.getAsciiID( node ) + "\n" ); //$NON-NLS-1$
       }
     }
 
     writer.append( "99999\n" ); //$NON-NLS-1$
     // teilgebiete
-    final NaModell naModel = (NaModell) modellWorkspace.getRootFeature();
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
     for( final Catchment catchment : catchments )
     {

@@ -47,11 +47,13 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -78,12 +80,12 @@ public class NaNodeResultProvider
     else
     {
       // Remove all nodes, that have 'isResult' checked
-      final IFeatureType nodeFT = modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
-      final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
-      for( final Feature nodeFE : nodeFEs )
+      final NaModell naModel = (NaModell) modellWorkspace.getRootFeature();
+      final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+      for( final Node node : nodes )
       {
-        if( FeatureHelper.booleanIsTrue( nodeFE, NaModelConstants.GENERATE_RESULT_PROP, false ) )
-          removeResult( nodeFE );
+        if( FeatureHelper.booleanIsTrue( node, NaModelConstants.GENERATE_RESULT_PROP, false ) )
+          removeResult( node );
       }
     }
   }

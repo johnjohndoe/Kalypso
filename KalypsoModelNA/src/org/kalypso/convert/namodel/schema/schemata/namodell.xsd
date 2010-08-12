@@ -35,8 +35,9 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="NodeCollection" type="na:NodeCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="NodeCollectionType">
+
+  <element name="NodeCollection" substitutionGroup="gml:_Feature">
+	<complexType >
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
@@ -45,6 +46,8 @@
 			</restriction>
 		</complexContent>
 	</complexType>
+  </element>
+
 	<complexType name="NodeAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
@@ -54,7 +57,8 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="Node" type="na:NodeFeatureType" substitutionGroup="gml:_Feature"/>
+	
+  <element name="Node" type="na:NodeFeatureType" substitutionGroup="gml:_Feature"/>
 	<complexType name="NodeFeatureType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">

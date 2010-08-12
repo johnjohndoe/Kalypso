@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
@@ -53,7 +54,7 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
  */
 public enum TSResultDescriptor
 {
-  qgs(".qgs", NaModelConstants.NODE_ELEMENT_FT, ITimeseriesConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", 1.0d), //$NON-NLS-3$ //$NON-NLS-4$
+  qgs(".qgs", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", 1.0d), //$NON-NLS-3$ //$NON-NLS-4$
   pre("j Niederschlag .pre", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RAINFALL, null, null, 1.0d),
   tmp("j Temperatur .tmp", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_TEMPERATURE, null, null, 1.0d),
   qif("n Interflow .qif", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),

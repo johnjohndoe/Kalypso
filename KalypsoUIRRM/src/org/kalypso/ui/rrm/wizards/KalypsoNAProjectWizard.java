@@ -53,6 +53,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
@@ -84,6 +85,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
@@ -510,11 +512,15 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   private void mapNode( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
   {
-    final Feature rootFeature = m_modelWS.getRootFeature();
-    final IFeatureType modelFT = getFeatureType( "Node" ); //$NON-NLS-1$
-    final Feature nodeCollectionFE = (Feature) rootFeature.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
-    final FeatureList nodeList = (FeatureList) nodeCollectionFE.getProperty( NaModelConstants.NODE_MEMBER_PROP );
-    final IRelationType targetRelation = nodeList.getParentFeatureTypeProperty();
+    final NaModell naModel = (NaModell) m_modelWS.getRootFeature();
+//    final IFeatureType modelFT = getFeatureType( "Node" ); //$NON-NLS-1$
+
+// final Feature nodeCollectionFE = (Feature) rootFeature.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
+// final FeatureList nodeList = (FeatureList) nodeCollectionFE.getProperty( NaModelConstants.NODE_MEMBER_PROP );
+
+    final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+
+// final IRelationType targetRelation = nodeList.getParentFeatureTypeProperty();
 
     // find column for id
     final String idColKey;
@@ -529,12 +535,12 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     {
       final Feature sourceFeature = (Feature) sourceFeatureList.get( i );
       final String fid = getId( idColKey, sourceFeature, "K" ); //$NON-NLS-1$
-      final Feature targetFeature = FeatureFactory.createFeature( nodeCollectionFE, targetRelation, fid, modelFT, true );
-      final Iterator<Object> it = mapping.keySet().iterator();
-      while( it.hasNext() )
+      final Feature targetFeature = nodes.addNew( Node.FEATURE_NODE, fid );
+
+      for( final Entry<Object, Object> entry : mapping.entrySet() )
       {
-        final String targetkey = (String) it.next();
-        final String sourcekey = (String) mapping.get( targetkey );
+        final String targetkey = (String) entry.getKey();
+        final String sourcekey = (String) entry.getValue();
         if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
         {
           final Object so = sourceFeature.getProperty( sourcekey );
@@ -562,7 +568,6 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
           }
         }
       }
-      nodeList.add( targetFeature );
     }
   }
 

@@ -75,12 +75,18 @@ public class NaModell extends Feature_Impl
   // */
   private static final QName MEMBER_CHANNEL = new QName( NS_NAMODELL, "channelMember" ); //$NON-NLS-1$
 
-// <element name="NodeCollectionMember" type="na:NodeCollectionAssociationType"/>
-// <element name="SwaleAndTrenchCollectionMember" type="na:SwaleAndTrenchCollectionAssociationType"/>
+
+  private static final QName MEMBER_NODE_COLLECTION = new QName( NS_NAMODELL, "NodeCollectionMember" ); //$NON-NLS-1$
+
+  private static final QName MEMBER_NODE = new QName( NS_NAMODELL, "nodeMember" ); //$NON-NLS-1$
+
+  // <element name="SwaleAndTrenchCollectionMember" type="na:SwaleAndTrenchCollectionAssociationType"/>
 
   private IFeatureBindingCollection<Catchment> m_catchments = null;
 
   private IFeatureBindingCollection<Channel> m_channels = null;
+
+  private IFeatureBindingCollection<Node> m_nodes = null;
 
   public NaModell( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -107,6 +113,17 @@ public class NaModell extends Feature_Impl
     }
 
     return m_channels;
+  }
+
+  public synchronized IFeatureBindingCollection<Node> getNodes( )
+  {
+    if( m_nodes == null )
+    {
+      final Feature nodeCollection = getProperty( MEMBER_NODE_COLLECTION, Feature.class );
+      m_nodes = new FeatureBindingCollection<Node>( nodeCollection, Node.class, MEMBER_NODE );
+    }
+
+    return m_nodes;
   }
 
   /**

@@ -216,10 +216,6 @@ public interface NaModelConstants
   // nodes
   public static final QName NODE_GEOM_PROP = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 
-  public static final QName NODE_ELEMENT_FT = new QName( NS_NAMODELL, "Node" ); //$NON-NLS-1$
-
-  public static final QName NODE_MEMBER_PROP = new QName( NS_NAMODELL, "nodeMember" ); //$NON-NLS-1$
-
   public static final QName NODE_BRANCHING_MEMBER_PROP = new QName( NS_NAMODELL, "branchingMember" ); //$NON-NLS-1$
 
   public static final QName NODE_BRANCHING_NODE_MEMBER_PROP = new QName( NS_NAMODELL, "branchingNodeMember" ); //$NON-NLS-1$
@@ -244,7 +240,6 @@ public interface NaModelConstants
 
   public static final QName NODE_COLLECTION_FT = new QName( NS_NAMODELL, "NodeCollection" ); //$NON-NLS-1$
 
-  public static final QName NODE_COLLECTION_MEMBER_PROP = new QName( NS_NAMODELL, "NodeCollectionMember" ); //$NON-NLS-1$
 
   public static final QName NODE_RESULT_TIMESERIESLINK_PROP = new QName( NS_NAMODELL, "qberechnetZR" ); //$NON-NLS-1$
 

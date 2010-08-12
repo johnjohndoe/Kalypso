@@ -33,6 +33,7 @@ import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.suds.PlaningArea;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -53,7 +54,6 @@ import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -240,9 +240,6 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         }
       }
 
-      final Feature nodeCollection = (Feature) naModel.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
-      final FeatureList nodeList = (FeatureList) nodeCollection.getProperty( NaModelConstants.NODE_MEMBER_PROP );
-
       final File outputSubfolderSteady = new File( tmpdir, "izNodes" ); //$NON-NLS-1$
       final File outputSubfolderCalculated = new File( tmpdir, "sudsNodes" ); //$NON-NLS-1$
       outputSubfolderSteady.mkdirs();
@@ -250,9 +247,11 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
       final List<Feature> affectedNodes = new ArrayList<Feature>();
 
+      // FIXME: this is planer client code and DOES NOT belong here!
       if( !planningAreaDefined )
       {
-        affectedNodes.addAll( nodeList );
+        final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+        affectedNodes.addAll( nodes );
       }
       else
       {
