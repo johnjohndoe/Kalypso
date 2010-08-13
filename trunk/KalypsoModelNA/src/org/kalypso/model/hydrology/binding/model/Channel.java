@@ -60,21 +60,21 @@ public abstract class Channel extends AbstractNaModelElement
 {
   public static final QName FEATURE_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "_Channel" ); //$NON-NLS-1$
 
-  private static final QName CHANNEL_DOWNSTREAMNODE_MEMBER = new QName( NS_NAMODELL, "downStreamNodeMember" ); //$NON-NLS-1$
+  private static final QName LINK_DOWNSTREAMNODE = new QName( NS_NAMODELL, "downStreamNodeMember" ); //$NON-NLS-1$
 
   public Channel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public void setDownstreamNode( final Node newNodeFE2 )
+  public void setDownstreamNode( final Node downstreamNode )
   {
-    setProperty( CHANNEL_DOWNSTREAMNODE_MEMBER, newNodeFE2.getId() );
+    setProperty( LINK_DOWNSTREAMNODE, downstreamNode.getId() );
   }
 
   public Node getDownstreamNode( )
   {
-    return (Node) FeatureHelper.resolveLink( this, CHANNEL_DOWNSTREAMNODE_MEMBER, true );
+    return (Node) FeatureHelper.resolveLink( this, LINK_DOWNSTREAMNODE, true );
   }
 
   /**
@@ -95,6 +95,24 @@ public abstract class Channel extends AbstractNaModelElement
     }
 
     return catchmentList.toArray( new Catchment[catchmentList.size()] );
+  }
+
+  /**
+   * Returns the node connected to this channel.<br/>
+   * Use with care, as this methods involves a linear search through all nodes.
+   */
+  public Node findUpstreamNode( )
+  {
+    final NaModell naModel = getNaModel();
+    final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+
+    for( final Node node : nodes )
+    {
+      final Channel downStreamChannel = node.getDownstreamChannel();
+      if( this == downStreamChannel )
+        return node;
+    }
+    return null;
   }
 
 }

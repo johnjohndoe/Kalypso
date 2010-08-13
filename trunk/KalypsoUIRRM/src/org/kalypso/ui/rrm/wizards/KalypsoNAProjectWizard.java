@@ -85,6 +85,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
+import org.kalypso.model.hydrology.binding.model.KMParameter;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
@@ -617,25 +618,12 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
           final IFeatureType kmFT = getFeatureType( "KMChannel" ); //$NON-NLS-1$
           targetFeature = channels.addNew( KMChannel.FEATURE_KM_CHANNEL, fid );
 
-          final IRelationType parameterMemberRT = (IRelationType) kmFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
-          final List< ? > list = FeatureFactory.createFeatureList( targetFeature, parameterMemberRT );
-          targetFeature.setProperty( parameterMemberRT, list );
+          final KMChannel targetChannel = (KMChannel) targetFeature;
+          final IFeatureBindingCollection<KMParameter> parameters = targetChannel.getParameters();
+          parameters.clear();
           final int channelNo = Integer.parseInt( m_createPreferencePage.getKMChannelNo() );
           for( int j = 0; j < channelNo; j++ )
-          {
-            final IFeatureType kmParameterFT = parameterMemberRT.getTargetFeatureType();
-
-            final Feature newFeature = m_modelWS.createFeature( targetFeature, parameterMemberRT, kmParameterFT );
-            try
-            {
-              m_modelWS.addFeatureAsComposition( targetFeature, parameterMemberRT, j, newFeature );
-            }
-            catch( final Exception e )
-            {
-              e.printStackTrace();
-            }
-          }
-
+            parameters.addNew( KMParameter.FEATURE_KM_PARAMETER );
           break;
         }
         case 2:

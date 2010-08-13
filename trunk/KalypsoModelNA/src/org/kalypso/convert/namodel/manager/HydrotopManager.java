@@ -205,7 +205,7 @@ public class HydrotopManager extends AbstractManager
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
     for( final Catchment catchment : catchments )
     {
-      if( asciiBuffer.isFeatureMakredForWrite( catchment ) ) // do it only for relevant catchments
+      if( asciiBuffer.isFeatureMarkedForWrite( catchment ) ) // do it only for relevant catchments
       {
         final int catchmentAsciiID = idManager.getAsciiID( catchment );
         boolean anySuds = false;

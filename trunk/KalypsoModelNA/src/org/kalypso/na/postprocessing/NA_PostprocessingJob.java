@@ -277,8 +277,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         for( final Node node : affectedNodes )
         {
           // resolve downstream channel and node, and add node to the affected nodes list (if not already there)
-          final IRelationType downstreamChannelRT = (IRelationType) node.getFeatureType().getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
-          final Channel downstreamChannel = (Channel) modelWorkspace.resolveLink( node, downstreamChannelRT );
+          final Channel downstreamChannel = node.getDownstreamChannel();
           if( downstreamChannel != null )
           {
             final Node downstreamNode = downstreamChannel.getDownstreamNode();

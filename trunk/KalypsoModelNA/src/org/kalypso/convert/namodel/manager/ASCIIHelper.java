@@ -50,13 +50,12 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ASCIIHelper
 {
-  public static String toAsciiLine( Feature feature, String formatLine )
+  public static String toAsciiLine( final Feature feature, final String formatLine )
   {
-    StringBuffer result = new StringBuffer( "" ); //$NON-NLS-1$
-    String[] formats = FortranFormatHelper.patternBrackets.split( formatLine );
-    for( int i = 0; i < formats.length; i++ )
+    final StringBuffer result = new StringBuffer( "" ); //$NON-NLS-1$
+    final String[] formats = FortranFormatHelper.patternBrackets.split( formatLine );
+    for( final String format : formats )
     {
-      String format = formats[i];
       Matcher m = FortranFormatHelper.pPairFormat.matcher( format );
       if( m.matches() )
         result.append( ASCIIHelper.toAsciiValue( feature, format ) );
@@ -68,7 +67,7 @@ public class ASCIIHelper
     return result.toString();
   }
 
-  public static String toAsciiValue( Feature feature, String pairFormat )
+  public static String toAsciiValue( final Feature feature, final String pairFormat )
   {
     if( "".equals( pairFormat ) ) //$NON-NLS-1$
       return ""; //$NON-NLS-1$
@@ -78,11 +77,11 @@ public class ASCIIHelper
     if( "IGNORE".equals( s[0] ) ) //$NON-NLS-1$
       return ""; //$NON-NLS-1$
     //        System.out.println(s[0]);
-    Object property = feature.getProperty( s[0] );
+    final Object property = feature.getProperty( s[0] );
 
     if( property == null )
       return "(" + s[0] + "==NULL ?)"; //$NON-NLS-1$ //$NON-NLS-2$
-    String value = property.toString(); // PropertyName
+    final String value = property.toString(); // PropertyName
 
     final String format = s[1];
     return FortranFormatHelper.printf( value, format );

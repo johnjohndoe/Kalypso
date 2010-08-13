@@ -62,13 +62,10 @@ import org.kalypso.convert.namodel.manager.ChannelManager;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.net.visitors.NetElementVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
-import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
@@ -81,7 +78,6 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * A NetElement encapsulates a Channel-Element and its dependencies <br>
@@ -148,12 +144,6 @@ public class NetElement
   public Channel getChannel( )
   {
     return m_channel;
-  }
-
-  public Feature getDownStreamNode( )
-  {
-    final IRelationType rt = (IRelationType) m_channel.getFeatureType().getProperty( NaModelConstants.DOWNSTREAM_NODE_MEMBER_PROP );
-    return m_workspace.resolveLink( m_channel, rt );
   }
 
   public boolean isCalculated( )
@@ -239,9 +229,8 @@ public class NetElement
 
   public Feature getChannelsBelowDownStreamNode( )
   {
-    final Feature downStreamNode = getDownStreamNode();
-    final IRelationType rt = (IRelationType) downStreamNode.getFeatureType().getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
-    return m_workspace.resolveLink( downStreamNode, rt );
+    final Node downStreamNode = m_channel.getDownstreamNode();
+    return downStreamNode.getDownstreamChannel();
   }
 
   public List<NetElement> getDownStreamNetElements( )
@@ -300,7 +289,7 @@ public class NetElement
     netBuffer.append( String.format( "%8d", channelID ) ); //$NON-NLS-1$
 
     final Node downstreamNode = m_channel.getDownstreamNode();
-    final Node upstreamNode = findUpstreamNode();
+    final Node upstreamNode = m_channel.findUpstreamNode();
 
     final Catchment[] catchmentForThisChannel = m_channel.findCatchments();
 
@@ -326,25 +315,6 @@ public class NetElement
       nodeList.add( upstreamNode );
     if( downstreamNode != null && !nodeList.contains( downstreamNode ) )
       nodeList.add( downstreamNode );
-  }
-
-  // FIXME:move into channel binding
-  private Node findUpstreamNode( )
-  {
-    final IFeatureType nodeFT = m_conf.getNodeFT();
-
-    final NaModell naModel = (NaModell) m_workspace.getRootFeature();
-    final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
-
-    final IRelationType downStreamChannelMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
-
-    for( final Node node : nodes )
-    {
-      final Feature downStreamChannel = m_workspace.resolveLink( node, downStreamChannelMemberRT );
-      if( m_channel == downStreamChannel )
-        return node;
-    }
-    return null;
   }
 
   public void accept( final NetElementVisitor visitor ) throws Exception

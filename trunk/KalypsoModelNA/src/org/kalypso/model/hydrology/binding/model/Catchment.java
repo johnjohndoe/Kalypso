@@ -57,6 +57,18 @@ public class Catchment extends AbstractNaModelElement
 
   private static final QName LINK_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" ); //$NON-NLS-1$
 
+  private static final QName PROP_RETOB = new QName( NS_NAMODELL, "retob" ); //$NON-NLS-1$
+
+  private static final QName PROP_FAKTOR_RETOB = new QName( NS_NAMODELL, "faktorRetob" ); //$NON-NLS-1$
+
+  private static final QName PROP_RETINT = new QName( NS_NAMODELL, "retint" ); //$NON-NLS-1$
+
+  private static final QName PROP_FAKTOR_RETINT = new QName( NS_NAMODELL, "faktorRetint" ); //$NON-NLS-1$
+
+  private static final QName PROP_AIGW = new QName( NS_NAMODELL, "aigw" ); //$NON-NLS-1$
+
+  private static final QName PROP_FAKTOR_AIGW = new QName( NS_NAMODELL, "faktorAigw" ); //$NON-NLS-1$
+
   public Catchment( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -71,4 +83,38 @@ public class Catchment extends AbstractNaModelElement
   {
     FeatureHelper.setAsLink( this, LINK_CHANNEL, channel );
   }
+
+  public double getRetob( )
+  {
+    // TODO: check default value
+    return getDoubleProperty( PROP_RETOB, 1.0 );
+  }
+
+  public double getFaktorRetob( )
+  {
+    return getDoubleProperty( PROP_FAKTOR_RETOB, 1.0 );
+  }
+
+  public double getRetint( )
+  {
+    // TODO: check default value
+    return getDoubleProperty( PROP_RETINT, 1.0 );
+  }
+
+  public double getFaktorRetint( )
+  {
+    return getDoubleProperty( PROP_FAKTOR_RETINT, 1.0 );
+  }
+
+  public double getAigw( )
+  {
+    // TODO: check default value
+    return getDoubleProperty( PROP_AIGW, 1.0 );
+  }
+
+  public double getFaktorAigw( )
+  {
+    return getDoubleProperty( PROP_FAKTOR_AIGW, 1.0 );
+  }
+
 }

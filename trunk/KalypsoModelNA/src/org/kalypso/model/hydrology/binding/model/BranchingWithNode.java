@@ -44,48 +44,29 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * Binding class for {http://www.tuhh.de/kalypsoNA}KMChannel.
+ * Binding class for {http://www.tuhh.de/kalypsoNA}_Branching.
  * 
  * @author Gernot Belger
  */
-public class KMChannel extends Channel
+public abstract class BranchingWithNode extends Branching
 {
-  public static final QName FEATURE_KM_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "KMChannel" ); //$NON-NLS-1$
+  private static final QName LINK_NODE = new QName( NS_NAMODELL, "branchingNodeMember" ); //$NON-NLS-1$
 
-  private static final QName PROP_FAKTOR_RKF = new QName( NS_NAMODELL, "faktorRkf" ); //$NON-NLS-1$
-
-  private static final QName PROP_FAKTOR_RNF = new QName( NS_NAMODELL, "faktorRnf" ); //$NON-NLS-1$
-
-  public static final QName MEMBER_PARAMETER = new QName( NS_NAMODELL, "KMParameterMember" ); //$NON-NLS-1$
-
-  private IFeatureBindingCollection<KMParameter> m_parameters = null;
-
-
-  public KMChannel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public BranchingWithNode( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public synchronized IFeatureBindingCollection<KMParameter> getParameters( )
+  public Node getNode( )
   {
-    if( m_parameters == null )
-      m_parameters = new FeatureBindingCollection<KMParameter>( this, KMParameter.class, MEMBER_PARAMETER );
-
-    return m_parameters;
+    return (Node) FeatureHelper.resolveLink( this, LINK_NODE, true );
   }
 
-  public double getFaktorRkf( )
+  public void setNode( final Node node )
   {
-    return getDoubleProperty( PROP_FAKTOR_RKF, 1.0 );
-  }
-
-  public double getFaktorRnf( )
-  {
-    return getDoubleProperty( PROP_FAKTOR_RNF, 1.0 );
+    setProperty( LINK_NODE, node.getId() );
   }
 }

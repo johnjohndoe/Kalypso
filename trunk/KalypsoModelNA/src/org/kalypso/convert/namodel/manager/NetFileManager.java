@@ -72,10 +72,16 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.Branching;
+import org.kalypso.model.hydrology.binding.model.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
+import org.kalypso.model.hydrology.binding.model.KontEntnahme;
+import org.kalypso.model.hydrology.binding.model.KontZufluss;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.Ueberlauf;
+import org.kalypso.model.hydrology.binding.model.Verzweigung;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -104,6 +110,31 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class NetFileManager extends AbstractManager
 {
+  private static final class ZuflussBean
+  {
+    public final int m_izug;
+
+    public final int m_iabg;
+
+    public final int m_iueb;
+
+    public final int m_izuf;
+
+    public final int m_ivzwg;
+
+    public final double m_value;
+
+    public ZuflussBean( final int izug, final int iabg, final int iueb, final int izuf, final int ivzwg, final double value )
+    {
+      m_izug = izug;
+      m_iabg = iabg;
+      m_iueb = iueb;
+      m_izuf = izuf;
+      m_ivzwg = ivzwg;
+      m_value = value;
+    }
+  }
+
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
   private final NAConfiguration m_conf;
@@ -266,23 +297,24 @@ public class NetFileManager extends AbstractManager
     // create node feature and
     // set node numbers
 
-    final Node knotoFE = (Node) getFeature( iknotoNr, m_conf.getNodeFT() );
-    nodeCollector.put( knotoFE.getId(), knotoFE );
-    knotoFE.setName( "" + iknotoNr ); //$NON-NLS-1$
+    final Node knoto = (Node) getFeature( iknotoNr, m_conf.getNodeFT() );
+    nodeCollector.put( knoto.getId(), knoto );
+    knoto.setName( "" + iknotoNr ); //$NON-NLS-1$
     final Node knotuFE = (Node) getFeature( iknotuNr, m_conf.getNodeFT() );
     nodeCollector.put( knotuFE.getId(), knotuFE );
     knotuFE.setName( "" + iknotuNr ); //$NON-NLS-1$
     // set node channel relations
-    final Channel strangFE = (Channel) getExistingFeature( istrngNr, new IFeatureType[] { m_conf.getKmChannelFT(), m_conf.getVChannelFT(), m_conf.getStChannelFT() } );
+    final Channel strang = (Channel) getExistingFeature( istrngNr, new IFeatureType[] { m_conf.getKmChannelFT(), m_conf.getVChannelFT(), m_conf.getStChannelFT() } );
     // node -> strang
-    if( strangFE == null )
+    if( strang == null )
       System.out.println( istrngNr );
     //
     else
     {
-      knotoFE.setProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL, strangFE.getId() );
+      knoto.setDownstreamChannel( strang );
+
       // strang -> node
-      strangFE.setDownstreamNode( knotuFE );
+      strang.setDownstreamNode( knotuFE );
 
       // Teilgebiete lesen
       for( int i = 0; i < iteil; i++ )
@@ -293,7 +325,7 @@ public class NetFileManager extends AbstractManager
         createProperties( col, line, 1 );
         final int nteil = Integer.parseInt( col.get( "nteil" ) ); //$NON-NLS-1$
         final Catchment teilgebFE = (Catchment) getFeature( nteil, m_conf.getCatchemtFT() );
-        teilgebFE.setChannel( strangFE );
+        teilgebFE.setChannel( strang );
       }
     }
     readNet( reader, nodeCollector );
@@ -310,11 +342,6 @@ public class NetFileManager extends AbstractManager
    */
   private NetElement[] generateNetElements( final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws SimulationException
   {
-    final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( Node.FEATURE_NODE );
-    final IFeatureType kontEntnahmeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ENTNAHME );
-    final IFeatureType ueberlaufFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_UEBERLAUF );
-    final IFeatureType verzweigungFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_VERZWEIGUNG );
-
     // x -> rootNode
     // |
     // O -> virtueller Strang generiert NR xxx
@@ -338,22 +365,17 @@ public class NetFileManager extends AbstractManager
     final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
     for( final Node upStreamNode : nodes )
     {
-      final IFeatureType upstreamFT = upStreamNode.getFeatureType();
-      final IRelationType rt = (IRelationType) upstreamFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
-      final Feature upStreamChannelFE = workspace.resolveLink( upStreamNode, rt );
-      final Feature branchingFE = upStreamNode.getBranching();
-      if( branchingFE != null )
+      final Channel upStreamChannel = upStreamNode.getDownstreamChannel();
+      final Branching branching = upStreamNode.getBranching();
+      if( branching != null )
       {
-        final IFeatureType branchingFT = branchingFE.getFeatureType();
-        if( branchingFT == kontEntnahmeFT || branchingFT == ueberlaufFT || branchingFT == verzweigungFT )
+        if( branching instanceof BranchingWithNode )
         {
-          final IRelationType rt1 = (IRelationType) branchingFT.getProperty( NaModelConstants.NODE_BRANCHING_NODE_MEMBER_PROP );
-          final Feature downStreamNodeFE = workspace.resolveLink( branchingFE, rt1 );
+          final Node downStreamNode = ((BranchingWithNode) branching).getNode();
 
-          final IRelationType rt3 = (IRelationType) nodeFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
-          final Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, rt3 );
+          final Channel downStreamChannelFE = downStreamNode.getDownstreamChannel();
 
-          if( upStreamChannelFE == null )
+          if( upStreamChannel == null )
           {
             final String message = String.format( "Inconsistent net: Node '%s' with branch has no upstream channel.", upStreamNode.getName() );
             throw new SimulationException( message );
@@ -365,15 +387,15 @@ public class NetFileManager extends AbstractManager
             throw new SimulationException( message );
           }
 
-          if( upStreamChannelFE == downStreamChannelFE )
+          if( upStreamChannel == downStreamChannelFE )
           {
-            logWarning( "Impossible net at %s: Node-Node relation to itself", upStreamChannelFE );
+            logWarning( "Impossible net at %s: Node-Node relation to itself", upStreamChannel );
             // FIXME: shouldn't we throw an exception here?
             continue;
           }
 
           // set dependency
-          final NetElement upStreamElement = netElements.get( upStreamChannelFE.getId() );
+          final NetElement upStreamElement = netElements.get( upStreamChannel.getId() );
           final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
           downStreamElement.addUpStream( upStreamElement );
         }
@@ -390,22 +412,21 @@ public class NetFileManager extends AbstractManager
         continue;
       }
 
-      final IRelationType rt2 = (IRelationType) downStreamNode.getFeatureType().getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
-      final Feature downStreamChannelFE = workspace.resolveLink( downStreamNode, rt2 );
-      if( downStreamChannelFE == null )
+      final Channel downStreamChannel = downStreamNode.getDownstreamChannel();
+      if( downStreamChannel == null )
       {
         logWarning( "%s has no downstream connection", downStreamNode );
         continue;
       }
       // set dependency
-      if( channel == downStreamChannelFE )
+      if( channel == downStreamChannel )
       {
         logWarning( "Impossible net at %s: channel discharges to itself", channel );
         continue;
       }
 
       final NetElement upStreamElement = netElements.get( channel.getId() );
-      final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
+      final NetElement downStreamElement = netElements.get( downStreamChannel.getId() );
 
       downStreamElement.addUpStream( upStreamElement );
     }
@@ -534,151 +555,20 @@ public class NetFileManager extends AbstractManager
 
   public void appendNodeList( final GMLWorkspace workspace, final List<Node> nodeCollector, final StringBuffer netBuffer ) throws Exception, Exception
   {
-    final IFeatureType kontEntnahmeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ENTNAHME );
-    final IFeatureType kontZuflussFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ZUFLUSS );
-    final IFeatureType ueberlaufFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_UEBERLAUF );
-    final IFeatureType verzweigungFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_VERZWEIGUNG );
-
     final IDManager idManager = m_conf.getIdManager();
 
     for( final Node node : nodeCollector )
     {
       netBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( node ), "i5" ) ); //$NON-NLS-1$
 
-      final int izug;
-      final int iabg;
-      final int iueb;
-      final int izuf;
-      final int ivzwg;
-
       final StringBuffer specialBuffer = new StringBuffer();
+      final ZuflussBean zuflussBean = appendZuflussStuff( node, workspace, idManager, specialBuffer );
 
-      final TimeseriesLinkType zuflussLink = node.getZuflussLink();
-      final IFeatureType nodeFT = node.getFeatureType();
-      final Feature branchingFE = node.getBranching();
-      if( branchingFE != null )
-      {
-        final IRelationType branchingNodeMemberRT = (IRelationType) branchingFE.getFeatureType().getProperty( NaModelConstants.NODE_BRANCHING_NODE_MEMBER_PROP );
-        final IFeatureType branchingFT = branchingFE.getFeatureType();
-        if( branchingFT == kontZuflussFT )
-        {
-          izug = 1;
-          iabg = 0;
-          iueb = 0;
-          izuf = 0;
-          ivzwg = 0;
-          final double qzug = FeatureHelper.getAsDouble( branchingFE, NaModelConstants.NODE_VERZW_QZUG_PROP, 0d );
-          specialBuffer.append( FortranFormatHelper.printf( qzug, "f10.3" ) ); //$NON-NLS-1$
-        }
-        else if( branchingFT == verzweigungFT )
-        {
-          izug = 0;
-          iabg = 0;
-          iueb = 0;
-          izuf = 0;
-          ivzwg = 1;
-
-          final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
-          final double zproz = FeatureHelper.getAsDouble( branchingFE, NaModelConstants.NODE_VERZW_ZPROZ_PROP, 0d );
-          specialBuffer.append( FortranFormatHelper.printf( zproz, "f10.3" ) ); //$NON-NLS-1$
-          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        else if( branchingFT == kontEntnahmeFT )
-        {
-          izug = 0;
-          iabg = 1;
-          iueb = 0;
-          izuf = 0;
-          ivzwg = 0;
-          final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
-          final double qabg = FeatureHelper.getAsDouble( branchingFE, NaModelConstants.NODE_VERZW_QABG_PROP, 0d );
-          specialBuffer.append( FortranFormatHelper.printf( qabg, "f10.3" ) ); //$NON-NLS-1$
-          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        else if( branchingFT == ueberlaufFT )
-        {
-          izug = 0;
-          iabg = 0;
-          iueb = 1;
-          izuf = 0;
-          ivzwg = 0;
-          final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
-          final double queb = FeatureHelper.getAsDouble( branchingFE, NaModelConstants.NODE_VERZW_QUEB_PROP, 0d );
-          specialBuffer.append( FortranFormatHelper.printf( queb, "f10.3" ) ); //$NON-NLS-1$
-          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        else
-        {
-          izug = 0;
-          iabg = 0;
-          iueb = 0;
-          izuf = 0;
-          ivzwg = 0;
-        }
-      }
-      else if( zuflussLink != null )
-      {
-        izug = 0;
-        iabg = 0;
-        iueb = 0;
-        ivzwg = 0;
-        izuf = 5;
-        final String zuflussFileName = getZuflussEingabeDateiString( node, m_conf );
-        final File targetFile = new File( m_conf.getAsciiBaseDir(), "zufluss/" + zuflussFileName ); //$NON-NLS-1$
-        final File parent = targetFile.getParentFile();
-        if( !parent.exists() )
-          parent.mkdirs();
-        final String zuflussFile = ZmlURL.getIdentifierPart( zuflussLink.getHref() );
-        final URL linkURL = m_urlUtilities.resolveURL( workspace.getContext(), zuflussFile );
-        if( !targetFile.exists() )
-        {
-          final FileWriter writer = new FileWriter( targetFile );
-          final IObservation observation = ZmlFactory.parseXML( linkURL ); //$NON-NLS-1$
-          if( Boolean.TRUE.equals( node.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) ) )
-          {
-            final NAControl metaControl = m_conf.getMetaControl();
-            final Integer minutesOfTimestep = metaControl.getMinutesOfTimestep();
-
-            if( metaControl.isUsePrecipitationForm() )
-            {
-              final ITupleModel values = observation.getValues( null );
-              final IAxis[] axis = observation.getAxisList();
-              final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeseriesConstants.TYPE_DATE );
-              final long simulationStartDateMillis = ((Date) values.getElement( 0, dateAxis )).getTime();
-              final long simulationEndDateMillis = ((Date) values.getElement( values.getCount() - 1, dateAxis )).getTime();
-              final Date simulationStartDate = new Date( 100, 0, 1 );
-              final Date simulationEndDate = new Date( simulationStartDate.getTime() + simulationEndDateMillis - simulationStartDateMillis );
-
-              NAZMLGenerator.createSyntheticFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation, simulationStartDate, simulationEndDate, minutesOfTimestep );
-            }
-            else
-            {
-              final Date simulationStart = metaControl.getSimulationStart();
-              final Date simulationEnd = metaControl.getSimulationEnd();
-              NAZMLGenerator.createSyntheticFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation, simulationStart, simulationEnd, minutesOfTimestep );
-            }
-          }
-          else
-            NAZMLGenerator.createFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation );
-          IOUtils.closeQuietly( writer );
-        }
-        specialBuffer.append( "    1234\n" ); // dummyLine //$NON-NLS-1$
-        specialBuffer.append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      }
-      else
-      {
-        izug = 0;
-        iabg = 0;
-        iueb = 0;
-        izuf = 0;
-        ivzwg = 0;
-      }
-
-      netBuffer.append( FortranFormatHelper.printf( izug, "i5" ) ); //$NON-NLS-1$
-      netBuffer.append( FortranFormatHelper.printf( iabg, "i5" ) ); //$NON-NLS-1$
-      netBuffer.append( FortranFormatHelper.printf( iueb, "i5" ) ); //$NON-NLS-1$
-      netBuffer.append( FortranFormatHelper.printf( izuf, "i5" ) ); //$NON-NLS-1$
-      netBuffer.append( FortranFormatHelper.printf( ivzwg, "i5" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      netBuffer.append( String.format( "%5d", zuflussBean.m_izug ) ); //$NON-NLS-1$
+      netBuffer.append( String.format( "%5d", zuflussBean.m_iabg ) ); //$NON-NLS-1$
+      netBuffer.append( String.format( "%5d", zuflussBean.m_iueb ) ); //$NON-NLS-1$
+      netBuffer.append( String.format( "%5d", zuflussBean.m_izuf ) ); //$NON-NLS-1$
+      netBuffer.append( String.format( "%5d", zuflussBean.m_ivzwg ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       netBuffer.append( specialBuffer.toString() );
       writeQQRelation( node, netBuffer );
       // ENDKNOTEN
@@ -686,6 +576,117 @@ public class NetFileManager extends AbstractManager
 
     netBuffer.append( " 9001    0    0    0    0    0\n" ); //$NON-NLS-1$
     netBuffer.append( "10000    0    0    0    0    0\n" ); //$NON-NLS-1$
+  }
+
+  private ZuflussBean appendZuflussStuff( final Node node, final GMLWorkspace workspace, final IDManager idManager, final StringBuffer specialBuffer ) throws Exception
+  {
+    // TODO: like this, only one branching can be used at the same time. Also, braching and zufluss cannot appear at
+    // the same time. Is both intented? Isn't kalypso-na able to do more?
+    final Branching branching = node.getBranching();
+    if( branching != null )
+      return appendBranching( branching, idManager, specialBuffer );
+
+    final TimeseriesLinkType zuflussLink = node.getZuflussLink();
+    if( zuflussLink != null )
+      return appendZuflussLink( node, zuflussLink, workspace, specialBuffer );
+
+    return new ZuflussBean( 0, 0, 0, 0, 0, Double.NaN );
+  }
+
+  private ZuflussBean appendZuflussLink( final Node node, final TimeseriesLinkType zuflussLink, final GMLWorkspace workspace, final StringBuffer specialBuffer ) throws Exception
+  {
+    final ZuflussBean bean = new ZuflussBean( 0, 0, 0, 5, 0, Double.NaN );
+
+    // FIXME: awful: this code does too much at once!
+    final String zuflussFileName = getZuflussEingabeDateiString( node, m_conf );
+    final File targetFile = new File( m_conf.getAsciiBaseDir(), "zufluss/" + zuflussFileName ); //$NON-NLS-1$
+    final File parent = targetFile.getParentFile();
+    if( !parent.exists() )
+      parent.mkdirs();
+    final String zuflussFile = ZmlURL.getIdentifierPart( zuflussLink.getHref() );
+    final URL linkURL = m_urlUtilities.resolveURL( workspace.getContext(), zuflussFile );
+    if( !targetFile.exists() )
+    {
+      final FileWriter writer = new FileWriter( targetFile );
+      final IObservation observation = ZmlFactory.parseXML( linkURL ); //$NON-NLS-1$
+
+      final Boolean isSynteticZufluss = node.isSynteticZufluss();
+
+      if( isSynteticZufluss != null && isSynteticZufluss )
+      {
+        final NAControl metaControl = m_conf.getMetaControl();
+        final Integer minutesOfTimestep = metaControl.getMinutesOfTimestep();
+
+        if( metaControl.isUsePrecipitationForm() )
+        {
+          final ITupleModel values = observation.getValues( null );
+          final IAxis[] axis = observation.getAxisList();
+          final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeseriesConstants.TYPE_DATE );
+          final long simulationStartDateMillis = ((Date) values.getElement( 0, dateAxis )).getTime();
+          final long simulationEndDateMillis = ((Date) values.getElement( values.getCount() - 1, dateAxis )).getTime();
+          final Date simulationStartDate = new Date( 100, 0, 1 );
+          final Date simulationEndDate = new Date( simulationStartDate.getTime() + simulationEndDateMillis - simulationStartDateMillis );
+
+          NAZMLGenerator.createSyntheticFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation, simulationStartDate, simulationEndDate, minutesOfTimestep );
+        }
+        else
+        {
+          final Date simulationStart = metaControl.getSimulationStart();
+          final Date simulationEnd = metaControl.getSimulationEnd();
+          NAZMLGenerator.createSyntheticFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation, simulationStart, simulationEnd, minutesOfTimestep );
+        }
+      }
+      else
+        NAZMLGenerator.createFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation );
+      IOUtils.closeQuietly( writer );
+    }
+    specialBuffer.append( "    1234\n" ); // dummyLine //$NON-NLS-1$
+    specialBuffer.append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    return bean;
+  }
+
+  private ZuflussBean appendBranching( final Branching branching, final IDManager idManager, final StringBuffer specialBuffer )
+  {
+    final ZuflussBean bean = getZuflussBean( branching );
+    specialBuffer.append( FortranFormatHelper.printf( bean.m_value, "f10.3" ) ); //$NON-NLS-1$
+
+    if( branching instanceof BranchingWithNode )
+    {
+      final Node targetNodeFE = ((BranchingWithNode) branching).getNode();
+      specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    return bean;
+  }
+
+  private ZuflussBean getZuflussBean( final Branching branching )
+  {
+    if( branching instanceof KontZufluss )
+    {
+      final double qzug = FeatureHelper.getAsDouble( branching, NaModelConstants.NODE_VERZW_QZUG_PROP, 0d );
+      return new ZuflussBean( 1, 0, 0, 0, 0, qzug );
+    }
+
+    if( branching instanceof Verzweigung )
+    {
+      final double zproz = FeatureHelper.getAsDouble( branching, NaModelConstants.NODE_VERZW_ZPROZ_PROP, 0d );
+      return new ZuflussBean( 0, 0, 0, 0, 1, zproz );
+    }
+
+    if( branching instanceof KontEntnahme )
+    {
+      final double qabg = FeatureHelper.getAsDouble( branching, NaModelConstants.NODE_VERZW_QABG_PROP, 0d );
+      return new ZuflussBean( 0, 1, 0, 0, 0, qabg );
+    }
+
+    if( branching instanceof Ueberlauf )
+    {
+      final double queb = FeatureHelper.getAsDouble( branching, NaModelConstants.NODE_VERZW_QUEB_PROP, 0d );
+      return new ZuflussBean( 0, 0, 1, 0, 0, queb );
+    }
+
+    throw new IllegalArgumentException( "Illegal branching type: " + branching.getClass() );
   }
 
   private void writeQQRelation( final Feature node, final StringBuffer buffer ) throws SensorException

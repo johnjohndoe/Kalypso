@@ -44,48 +44,45 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
- * Binding class for {http://www.tuhh.de/kalypsoNA}KMChannel.
+ * Binding class for {http://www.tuhh.de/kalypsoNA}KMParameter.
  * 
  * @author Gernot Belger
  */
-public class KMChannel extends Channel
+public class KMParameter extends AbstractNaModelElement
 {
-  public static final QName FEATURE_KM_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "KMChannel" ); //$NON-NLS-1$
+  public static final QName FEATURE_KM_PARAMETER = new QName( NS_NAMODELL, "KMParameter" ); //$NON-NLS-1$
 
-  private static final QName PROP_FAKTOR_RKF = new QName( NS_NAMODELL, "faktorRkf" ); //$NON-NLS-1$
+  public static final QName PROP_RKF = new QName( NS_NAMODELL, "rkf" ); //$NON-NLS-1$
 
-  private static final QName PROP_FAKTOR_RNF = new QName( NS_NAMODELL, "faktorRnf" ); //$NON-NLS-1$
+  public static final QName PROP_RNF = new QName( NS_NAMODELL, "rnf" ); //$NON-NLS-1$
 
-  public static final QName MEMBER_PARAMETER = new QName( NS_NAMODELL, "KMParameterMember" ); //$NON-NLS-1$
-
-  private IFeatureBindingCollection<KMParameter> m_parameters = null;
-
-
-  public KMChannel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public KMParameter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public synchronized IFeatureBindingCollection<KMParameter> getParameters( )
+  public double getRkf( )
   {
-    if( m_parameters == null )
-      m_parameters = new FeatureBindingCollection<KMParameter>( this, KMParameter.class, MEMBER_PARAMETER );
-
-    return m_parameters;
+// TODO: check default value
+    return getDoubleProperty( PROP_RKF, 1.0 );
   }
 
-  public double getFaktorRkf( )
+  public void setRkf( final double rkf )
   {
-    return getDoubleProperty( PROP_FAKTOR_RKF, 1.0 );
+    setProperty( PROP_RKF, rkf );
   }
 
-  public double getFaktorRnf( )
+  public double getRnf( )
   {
-    return getDoubleProperty( PROP_FAKTOR_RNF, 1.0 );
+// TODO: check default value
+    return getDoubleProperty( PROP_RNF, 1.0 );
   }
+
+  public void setRnf( final double rnf )
+  {
+    setProperty( PROP_RNF, rnf );
+  }
+
 }
