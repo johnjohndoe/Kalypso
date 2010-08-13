@@ -81,7 +81,6 @@ public abstract class AbstractManager
   {
     if( parseDefinition != null )
       readParseDefinition( parseDefinition );
-
   }
 
   protected Feature getFeature( final String asciiStringId, final IFeatureType ft )
@@ -194,7 +193,7 @@ public abstract class AbstractManager
     }
   }
 
-  protected String toAscci( final Feature feature, final int formatLineIndex )
+  protected String toAscii( final Feature feature, final int formatLineIndex )
   {
     return ASCIIHelper.toAsciiLine( feature, m_asciiFormat[formatLineIndex] );
   }

@@ -142,7 +142,7 @@ public class KalypsoNAProjectPreferences extends WizardPage
     channelLabel.setLayoutData( new GridData(SWT.FILL, SWT.CENTER, true, true) );
     m_channelCombo = new Combo( channel, SWT.READ_ONLY );
     final IFeatureType kmChannelFT = m_modelSchema.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
-    final int maxOccursKM = kmChannelFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER ).getMaxOccurs();
+    final int maxOccursKM = kmChannelFT.getProperty( KMChannel.MEMBER_PARAMETER ).getMaxOccurs();
     final ArrayList<String> noKMDischarge = new ArrayList<String>();
     for( int i = 0; i < maxOccursKM + 1; i++ )
       noKMDischarge.add( String.valueOf( i ) );

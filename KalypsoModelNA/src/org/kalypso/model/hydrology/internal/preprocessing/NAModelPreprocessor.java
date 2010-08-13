@@ -167,7 +167,8 @@ public class NAModelPreprocessor
     final URL zmlContext = m_conf.getZMLContext();
 
     final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modelWorkspace, useResults, rootNodeID, zmlContext );
-    final NaModelTweaker naModelTweaker = new NaModelTweaker( modelWorkspace, nodeResultProvider );
+    final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
+    final NaModelTweaker naModelTweaker = new NaModelTweaker( naModel, nodeResultProvider );
     naModelTweaker.tweakModel();
   }
 

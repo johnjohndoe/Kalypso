@@ -40,21 +40,29 @@
   <element name="NodeCollection" substitutionGroup="gml:_Feature">
 	<complexType >
 		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="nodeMember" type="na:NodeAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="nodeMember" type="na:NodeMemberType" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
-			</restriction>
+			</extension>
 		</complexContent>
 	</complexType>
   </element>
 
-    <!--  FIXME: this association is wrong: it should only allow for links, not sub-members -->
-	<complexType name="NodeAssociationType">
+	<complexType name="NodeMemberType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:Node" minOccurs="0" maxOccurs="0"/>
+					<element ref="na:Node" minOccurs="1" maxOccurs="1"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="NodeLinkType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:Node" minOccurs="0" maxOccurs="0" />
 				</sequence>
                 <attributeGroup ref="xlink:simpleLink"/>
 			</restriction>
@@ -91,14 +99,17 @@
 			</extension>
 		</complexContent>
 	</complexType>
+  
 	<complexType name="BranchingAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:_Branching"/>
+					<element ref="na:_Branching" minOccurs="1" maxOccurs="1" />
 				</sequence>
+                <!-- Actually we would like to mark this member as inline only, put this is not possible with kalypso's gml 2.2  parser -->
+                <attribute ref="xlink:href" use="prohibited" />
 			</restriction>
-		</complexContent>
+  	</complexContent>
 	</complexType>
 	<element name="_Branching" type="na:AbstractBranchingType" abstract="true" substitutionGroup="gml:_Feature"/>
 	<complexType name="AbstractBranchingType">
@@ -118,34 +129,43 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="KontEntnahme" type="na:ContExtractionFeatureType" substitutionGroup="na:_Branching"/>
+  
+    <element name="_BranchingWithNode" type="na:AbstractBranchingWithNodeType" substitutionGroup="na:_Branching"/>
+    <complexType name="AbstractBranchingWithNodeType">
+      <complexContent>
+        <extension base="na:AbstractBranchingType">
+          <sequence>
+            <element name="branchingNodeMember" type="na:NodeLinkType"/>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  
+	<element name="KontEntnahme" type="na:ContExtractionFeatureType" substitutionGroup="na:_BranchingWithNode"/>
 	<complexType name="ContExtractionFeatureType">
 		<complexContent>
-			<extension base="na:AbstractBranchingType">
+			<extension base="na:AbstractBranchingWithNodeType">
 				<sequence>
-					<element name="branchingNodeMember" type="na:NodeAssociationType"/>
 					<element name="qabg" type="double"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="Ueberlauf" type="na:OverfallFeatureType" substitutionGroup="na:_Branching"/>
+	<element name="Ueberlauf" type="na:OverfallFeatureType" substitutionGroup="na:_BranchingWithNode"/>
 	<complexType name="OverfallFeatureType">
 		<complexContent>
-			<extension base="na:AbstractBranchingType">
+			<extension base="na:AbstractBranchingWithNodeType">
 				<sequence>
-					<element name="branchingNodeMember" type="na:NodeAssociationType"/>
 					<element name="queb" type="double"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="Verzweigung" type="na:BranchingFeatureType" substitutionGroup="na:_Branching"/>
+	<element name="Verzweigung" type="na:BranchingFeatureType" substitutionGroup="na:_BranchingWithNode"/>
 	<complexType name="BranchingFeatureType">
 		<complexContent>
-			<extension base="na:AbstractBranchingType">
+			<extension base="na:AbstractBranchingWithNodeType">
 				<sequence>
-					<element name="branchingNodeMember" type="na:NodeAssociationType"/>
 					<element name="zproz" default="1.0">
 						<simpleType>
 							<restriction base="double">
@@ -180,11 +200,11 @@
 	</complexType>
 	<complexType name="CatchmentCollectionType">
 		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="catchmentMember" type="na:CatchmentAssociationType" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
-			</restriction>
+			</extension>
 		</complexContent>
 	</complexType>
 	
@@ -254,7 +274,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="izkn_vers" type="na:NodeAssociationType" minOccurs="0"/>
+					<element name="izkn_vers" type="na:NodeLinkType" minOccurs="0"/>
 					<element name="tint" type="double" minOccurs="0"/>
 					<element name="rintmx" type="double" minOccurs="0"/>
 					<!-- 
@@ -352,7 +372,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="izkn" type="na:NodeAssociationType" minOccurs="0"/>
+					<element name="izkn" type="na:NodeLinkType" minOccurs="0"/>
 					<!-- ZR niederschlag -->
 					<element name="niederschlagZR" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<!--ZR Temperatur-->
@@ -390,11 +410,11 @@
   <element name="ChannelCollection" substitutionGroup="gml:_Feature">
 	<complexType >
 		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="channelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
-			</restriction>
+			</extension>
 		</complexContent>
 	</complexType>
   </element>
@@ -416,7 +436,8 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="Ort" type="gml:LineStringPropertyType"/>
-					<element name="downStreamNodeMember" type="na:NodeAssociationType"/>
+                    <!-- FIXME: not optional, correct? -->
+					<element name="downStreamNodeMember" type="na:NodeLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -450,7 +471,7 @@
 		<complexContent>
 			<extension base="na:AbstractChannelType">
 				<sequence>
-					<element name="iknotNodeMember" type="na:NodeAssociationType" minOccurs="0"/>
+					<element name="iknotNodeMember" type="na:NodeLinkType" minOccurs="0"/>
 					<element name="sv" type="double"/>
 					<element name="vmax" type="double"/>
 					<element name="vmin" type="double"/>
@@ -473,11 +494,11 @@
 	<element name="SwaleAndTrenchCollection" type="na:SwaleAndTrenchCollectionType" substitutionGroup="gml:_Feature"/>
 	<complexType name="SwaleAndTrenchCollectionType">
 		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="swaleTrenchMember" type="na:SwaleAndTrenchAssociationType" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
-			</restriction>
+			</extension>
 		</complexContent>
 	</complexType>
 	<complexType name="SwaleAndTrenchAssociationType">
@@ -504,7 +525,7 @@
 					<element name="boden" type="string"/>
 					<element name="maxPerk" type="double"/>
 					<element name="InflowGW" type="double"/>
-					<element name="dischargeNode" type="na:NodeAssociationType"/>
+					<element name="dischargeNode" type="na:NodeLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>

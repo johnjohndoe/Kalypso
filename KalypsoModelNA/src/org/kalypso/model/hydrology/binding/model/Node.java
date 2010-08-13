@@ -49,7 +49,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -70,7 +69,11 @@ public class Node extends AbstractNaModelElement
   @Deprecated
   public static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NAMODELL, "qberechnetZR" ); //$NON-NLS-1$
 
+  private static final QName PROP_SYNTHETIC_ZUFLUSS_ZR = new QName( NS_NAMODELL, "syntheticZuflussZR" ); //$NON-NLS-1$
+
   private static final QName MEMBER_BRANCHING = new QName( NS_NAMODELL, "branchingMember" ); //$NON-NLS-1$
+
+  private static final QName LINK_DOWNSTREAMCHANNEL = new QName( NS_NAMODELL, "downStreamChannelMember" ); //$NON-NLS-1$
 
   public Node( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -118,13 +121,34 @@ public class Node extends AbstractNaModelElement
     return upstreamChannels.toArray( new Channel[upstreamChannels.size()] );
   }
 
-  public Feature getBranching( )
+  public Branching getBranching( )
   {
-    return FeatureHelper.resolveLink( this, MEMBER_BRANCHING, true );
+    return (Branching) FeatureHelper.resolveLink( this, MEMBER_BRANCHING, true );
   }
 
-  public void setBranching( final Feature branching )
+  public void setBranching( final Branching branching )
   {
     setProperty( MEMBER_BRANCHING, branching );
   }
+
+  public Boolean isSynteticZufluss( )
+  {
+    return getProperty( PROP_SYNTHETIC_ZUFLUSS_ZR, Boolean.class );
+  }
+
+  public void setIsSynteticZufluss( final Boolean isSynteticZufluss )
+  {
+    setProperty( PROP_SYNTHETIC_ZUFLUSS_ZR, isSynteticZufluss );
+  }
+
+  public void setDownstreamChannel( final Channel downstreamChannel )
+  {
+    FeatureHelper.setAsLink( this, LINK_DOWNSTREAMCHANNEL, downstreamChannel );
+  }
+
+  public Channel getDownstreamChannel( )
+  {
+    return (Channel) FeatureHelper.resolveLink( this, LINK_DOWNSTREAMCHANNEL, true );
+  }
+
 }

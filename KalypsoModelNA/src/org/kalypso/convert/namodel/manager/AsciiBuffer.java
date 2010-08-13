@@ -76,7 +76,7 @@ public class AsciiBuffer
       m_markedFeatures.add( feature );
   }
 
-  public boolean isFeatureMakredForWrite( final Feature feature )
+  public boolean isFeatureMarkedForWrite( final Feature feature )
   {
     return m_markedFeatures.contains( feature );
   }

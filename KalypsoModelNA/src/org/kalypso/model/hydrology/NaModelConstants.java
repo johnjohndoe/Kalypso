@@ -179,23 +179,11 @@ public interface NaModelConstants
 
   public static final QName STORAGE_CHANNEL_HVVSQD_PROP = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
 
-  public static final QName KM_CHANNEL_PARAMETER_FT = new QName( NS_NAMODELL, "KMParameter" ); //$NON-NLS-1$
-
-  public static final QName KM_CHANNEL_PARAMETER_MEMBER = new QName( NS_NAMODELL, "KMParameterMember" ); //$NON-NLS-1$
-
-  public static final QName KM_CHANNEL_FAKTOR_RKF_PROP = new QName( NS_NAMODELL, "faktorRkf" ); //$NON-NLS-1$
-
   public static final QName KM_CHANNEL_QRK_PROP = new QName( NS_NAMODELL, "qrk" ); //$NON-NLS-1$
-
-  public static final QName KM_CHANNEL_RKF_PROP = new QName( NS_NAMODELL, "rkf" ); //$NON-NLS-1$
 
   public static final QName KM_CHANNEL_RKV_PROP = new QName( NS_NAMODELL, "rkv" ); //$NON-NLS-1$
 
   public static final QName KM_CHANNEL_C_PROP = new QName( NS_NAMODELL, "c" ); //$NON-NLS-1$
-
-  public static final QName KM_CHANNEL_FAKTOR_RNF_PROP = new QName( NS_NAMODELL, "faktorRnf" ); //$NON-NLS-1$
-
-  public static final QName KM_CHANNEL_RNF_PROP = new QName( NS_NAMODELL, "rnf" ); //$NON-NLS-1$
 
   public static final QName KM_CHANNEL_RNV_PROP = new QName( NS_NAMODELL, "rnv" ); //$NON-NLS-1$
 
@@ -205,12 +193,8 @@ public interface NaModelConstants
 
   public static final QName IKNOT_MEMBER_PROP = new QName( NS_NAMODELL, "iknotNodeMember" ); //$NON-NLS-1$
 
-  public static final QName DOWNSTREAM_NODE_MEMBER_PROP = new QName( NS_NAMODELL, "downStreamNodeMember" ); //$NON-NLS-1$
-
   // nodes
   public static final QName NODE_GEOM_PROP = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
-
-  public static final QName NODE_BRANCHING_NODE_MEMBER_PROP = new QName( NS_NAMODELL, "branchingNodeMember" ); //$NON-NLS-1$
 
   public static final QName NODE_VERZW_MEMBER_PROP = new QName( NS_NAMODELL, "verzweigungNodeMember" ); //$NON-NLS-1$
 
@@ -234,8 +218,6 @@ public interface NaModelConstants
 
 
   public static final QName NODE_ZUFLUSS_ZR_REPOSITORY_PROP = new QName( NS_NAMODELL, "zuflussZRRepository" ); //$NON-NLS-1$
-
-  public static final QName NODE_SYNTHETIC_ZUFLUSS_ZR_PROP = new QName( NS_NAMODELL, "syntheticZuflussZR" ); //$NON-NLS-1$
 
   public static final QName NODE_PEGEL_ZR_PROP = new QName( NS_NAMODELL, "pegelZR" ); //$NON-NLS-1$
 
@@ -269,10 +251,6 @@ public interface NaModelConstants
 
   public static final QName CATCHMENT_PROP_RETBAS = new QName( NS_NAMODELL, "retbas" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_RETINT = new QName( NS_NAMODELL, "retint" ); //$NON-NLS-1$
-
-  public static final QName CATCHMENT_PROP_RETOB = new QName( NS_NAMODELL, "retob" ); //$NON-NLS-1$
-
   public static final QName CATCHMENT_PROP_RETVS = new QName( NS_NAMODELL, "retvs" ); //$NON-NLS-1$
 
   public static final QName CATCHMENT_PROP_RETGW = new QName( NS_NAMODELL, "retgw" ); //$NON-NLS-1$
@@ -282,10 +260,6 @@ public interface NaModelConstants
   public static final QName CATCHMENT_PROP_XJAH = new QName( NS_NAMODELL, "xjah" ); //$NON-NLS-1$
 
   public static final QName CATCHMENT_PROP_FAKTOR_RETBAS = new QName( NS_NAMODELL, "faktorRetbas" ); //$NON-NLS-1$
-
-  public static final QName CATCHMENT_PROP_FAKTOR_RETINT = new QName( NS_NAMODELL, "faktorRetint" ); //$NON-NLS-1$
-
-  public static final QName CATCHMENT_PROP_FAKTOR_RETOB = new QName( NS_NAMODELL, "faktorRetob" ); //$NON-NLS-1$
 
   public static final QName CATCHMENT_PROP_FAKTOR_RETVS = new QName( NS_NAMODELL, "faktorRetvs" ); //$NON-NLS-1$
 
@@ -338,8 +312,6 @@ public interface NaModelConstants
   public static final QName MRS_INFLOW_GW_PROP = new QName( NS_NAMODELL, "InflowGW" ); //$NON-NLS-1$
 
   // link Properties
-
-  public static final QName LINK_NODE_DOWNSTREAMCHANNEL = new QName( NS_NAMODELL, "downStreamChannelMember" ); //$NON-NLS-1$
 
   public static final QName LINK_MRS_DISCHARGE_NODE_PROP = new QName( NS_NAMODELL, "dischargeNode" ); //$NON-NLS-1$
 

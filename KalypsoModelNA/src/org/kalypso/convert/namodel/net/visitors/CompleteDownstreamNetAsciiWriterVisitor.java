@@ -72,7 +72,7 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
   {
     if( !netElement.isCalculated() )
       return false;
-    final Feature nodeToComplete = netElement.getDownStreamNode();
+    final Feature nodeToComplete = netElement.getChannel().getDownstreamNode();
     // check if node allready checked
     if( m_completedNodes.contains( nodeToComplete ) )
       return false;

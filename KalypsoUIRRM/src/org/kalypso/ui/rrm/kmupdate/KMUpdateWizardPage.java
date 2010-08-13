@@ -80,9 +80,9 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
+import org.kalypso.model.hydrology.binding.model.KMParameter;
 import org.kalypso.model.km.AbstractKMValue;
 import org.kalypso.model.km.ProfileDataSet;
 import org.kalypso.model.km.ProfileFactory;
@@ -94,6 +94,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovGroupType;
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
@@ -467,9 +468,9 @@ public class KMUpdateWizardPage extends WizardPage
     boolean susccess = true;
     for( final Object object : checkedElements )
     {
-      if( object instanceof Feature )
+      if( object instanceof KMChannel )
       {
-        final Feature feature = (Feature) object;
+        final KMChannel feature = (KMChannel) object;
         try
         {
           updateFeature( errorLogger, detailedLogger, feature, changes );
@@ -530,28 +531,24 @@ public class KMUpdateWizardPage extends WizardPage
     return null;
   }
 
-  private List<FeatureChange> updateFeature( final ILogger errorLogger, final ILogger detailedLogger, final Feature feature, final List<FeatureChange> changeList ) throws Exception
+  private List<FeatureChange> updateFeature( final ILogger errorLogger, final ILogger detailedLogger, final KMChannel kmChannel, final List<FeatureChange> changeList ) throws Exception
   {
-    final String log = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.32" ) + m_KMUpdateLabelProvider.getText( feature ) + ":"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String log = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.32" ) + m_KMUpdateLabelProvider.getText( kmChannel ) + ":"; //$NON-NLS-1$ //$NON-NLS-2$
     final List<FeatureChange> result;
     if( changeList == null )
       result = new ArrayList<FeatureChange>();
     else
       result = changeList;
 
-    final KalininMiljukovType km = getForID( feature.getId() );
+    final KalininMiljukovType km = getForID( kmChannel.getId() );
     final IFeatureType kmFT = m_workspace.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
-    final IFeatureType kmPaFT = m_workspace.getFeatureType( NaModelConstants.KM_CHANNEL_PARAMETER_FT );
-
-    final IRelationType kmRT = (IRelationType) kmFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
+    final IFeatureType kmPaFT = m_workspace.getFeatureType( KMParameter.FEATURE_KM_PARAMETER );
 
     final IPropertyType kmKMStartPT = kmFT.getProperty( NaModelConstants.KM_CHANNEL_KMSTART );
     final IPropertyType kmKMEndPT = kmFT.getProperty( NaModelConstants.KM_CHANNEL_KMEND );
 
     final IPropertyType qrkPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_QRK_PROP );
-    final IPropertyType rkfPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_RKF_PROP );
     final IPropertyType rkvT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_RKV_PROP );
-    final IPropertyType rnfPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_RNF_PROP );
     final IPropertyType rnvPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_RNV_PROP );
     final IPropertyType cPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_C_PROP );
 
@@ -595,12 +592,12 @@ public class KMUpdateWizardPage extends WizardPage
     // TODO:make it more general - not reduced to 5
     final int max = 5;
     final AbstractKMValue[] values = profileSet.getKMValues();
-    final Feature[] kmParameter = m_workspace.resolveLinks( feature, kmRT );
 
-    result.add( new FeatureChange( feature, kmKMStartPT, km.getKmStart() ) );
-    result.add( new FeatureChange( feature, kmKMEndPT, km.getKmEnd() ) );
+    result.add( new FeatureChange( kmChannel, kmKMStartPT, km.getKmStart() ) );
+    result.add( new FeatureChange( kmChannel, kmKMEndPT, km.getKmEnd() ) );
 
-    if( kmParameter.length < max )
+    final IFeatureBindingCollection<KMParameter> kmParameter = kmChannel.getParameters();
+    if( kmParameter.size() < max )
     {
       errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.38" ) ); //$NON-NLS-1$
       // TODO add new features
@@ -608,20 +605,14 @@ public class KMUpdateWizardPage extends WizardPage
     else
     {
       detailedLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.39" ) ); //$NON-NLS-1$
-      for( int i = 0; i < kmParameter.length; i++ )
+      for( int i = 0; i < kmParameter.size(); i++ )
       {
-        final Feature kmParameterFE = kmParameter[i];
+        final Feature kmParameterFE = kmParameter.get( i );
         final AbstractKMValue value = values[i];
         detailedLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, (i + 1) + ". " + value.toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-        // result.add( new FeatureChange( kmParameterFE, rkfPT, value.getK() ) );
-        // result.add( new FeatureChange( kmParameterFE, rkvT, value.getKForeland() ) );
-        // result.add( new FeatureChange( kmParameterFE, rnfPT, value.getN() ) );
-        // result.add( new FeatureChange( kmParameterFE, rnvPT, value.getNForeland() ) );
-        // result.add( new FeatureChange( kmParameterFE, qrkPT, value.getQSum() ) );
-        // result.add( new FeatureChange( kmParameterFE, cPT, value.getAlpha() ) );
-        result.add( new FeatureChange( kmParameterFE, rkfPT, Double.parseDouble( FortranFormatHelper.printf( value.getK(), "f8.4" ) ) ) ); //$NON-NLS-1$
+        result.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RKF, Double.parseDouble( FortranFormatHelper.printf( value.getK(), "f8.4" ) ) ) ); //$NON-NLS-1$
         result.add( new FeatureChange( kmParameterFE, rkvT, Double.parseDouble( FortranFormatHelper.printf( value.getKForeland(), "f8.4" ) ) ) ); //$NON-NLS-1$
-        result.add( new FeatureChange( kmParameterFE, rnfPT, Double.parseDouble( FortranFormatHelper.printf( value.getN(), "f7.2" ) ) ) ); //$NON-NLS-1$
+        result.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RNF, Double.parseDouble( FortranFormatHelper.printf( value.getN(), "f7.2" ) ) ) ); //$NON-NLS-1$
         result.add( new FeatureChange( kmParameterFE, rnvPT, Double.parseDouble( FortranFormatHelper.printf( value.getNForeland(), "f7.2" ) ) ) ); //$NON-NLS-1$
         result.add( new FeatureChange( kmParameterFE, qrkPT, Double.parseDouble( FortranFormatHelper.printf( value.getQSum(), "f8.3" ) ) ) ); //$NON-NLS-1$
         result.add( new FeatureChange( kmParameterFE, cPT, Double.parseDouble( FortranFormatHelper.printf( value.getAlpha(), "f8.3" ) ) ) ); //$NON-NLS-1$

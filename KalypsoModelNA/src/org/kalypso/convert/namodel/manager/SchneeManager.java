@@ -144,7 +144,7 @@ public class SchneeManager extends AbstractManager
 
   private void writeFeature( final StringBuffer snowBuffer, final Feature feature ) throws Exception
   {
-    snowBuffer.append( toAscci( feature, 13 ) + "\n" ); //$NON-NLS-1$
+    snowBuffer.append( toAscii( feature, 13 ) + "\n" ); //$NON-NLS-1$
   }
 
 }

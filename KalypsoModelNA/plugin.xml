@@ -250,5 +250,25 @@
               class="org.kalypso.model.hydrology.binding.model.StorageChannel"
               qname="{http://www.tuhh.de/kalypsoNA}StorageChannel">
         </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.model.KontEntnahme"
+              qname="{http://www.tuhh.de/kalypsoNA}KontEntnahme">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.model.KontZufluss"
+              qname="{http://www.tuhh.de/kalypsoNA}KontZufluss">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.model.Ueberlauf"
+              qname="{http://www.tuhh.de/kalypsoNA}Ueberlauf">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.model.Verzweigung"
+              qname="{http://www.tuhh.de/kalypsoNA}Verzweigung">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.model.KMParameter"
+              qname="{http://www.tuhh.de/kalypsoNA}KMParameter">
+        </feature>
      </extension>
 </plugin>
