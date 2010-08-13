@@ -210,8 +210,6 @@ public interface NaModelConstants
   // nodes
   public static final QName NODE_GEOM_PROP = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 
-  public static final QName NODE_BRANCHING_MEMBER_PROP = new QName( NS_NAMODELL, "branchingMember" ); //$NON-NLS-1$
-
   public static final QName NODE_BRANCHING_NODE_MEMBER_PROP = new QName( NS_NAMODELL, "branchingNodeMember" ); //$NON-NLS-1$
 
   public static final QName NODE_VERZW_MEMBER_PROP = new QName( NS_NAMODELL, "verzweigungNodeMember" ); //$NON-NLS-1$
@@ -340,7 +338,6 @@ public interface NaModelConstants
   public static final QName MRS_INFLOW_GW_PROP = new QName( NS_NAMODELL, "InflowGW" ); //$NON-NLS-1$
 
   // link Properties
-  public static final QName LINK_CATCHMENT_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" ); //$NON-NLS-1$
 
   public static final QName LINK_NODE_DOWNSTREAMCHANNEL = new QName( NS_NAMODELL, "downStreamChannelMember" ); //$NON-NLS-1$
 

@@ -103,7 +103,7 @@ public class NAModellConverter
     m_modelSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
     final GMLSchema m_parameterSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER, (String) null );
 
-    m_catchmentManager = new CatchmentManager( m_modelSchema, m_conf );
+    m_catchmentManager = new CatchmentManager( m_modelSchema, m_conf, logger );
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );
     m_nodeManager = new NetFileManager( m_conf, rootNodeID, logger );
     m_hydrotopManager = new HydrotopManager( m_conf, logger );

@@ -40,11 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -72,4 +76,25 @@ public abstract class Channel extends AbstractNaModelElement
   {
     return (Node) FeatureHelper.resolveLink( this, CHANNEL_DOWNSTREAMNODE_MEMBER, true );
   }
+
+  /**
+   * Returns all catchments of the mode that link to this channel.<br/>
+   * Handle with care, as this methods involves a linear search through all catchments of the model.
+   */
+  public Catchment[] findCatchments( )
+  {
+    final List<Catchment> catchmentList = new ArrayList<Catchment>();
+
+    final NaModell naModel = getNaModel();
+    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+    for( final Catchment catchment : catchments )
+    {
+      final Channel channel = catchment.getChannel();
+      if( this == channel )
+        catchmentList.add( catchment );
+    }
+
+    return catchmentList.toArray( new Catchment[catchmentList.size()] );
+  }
+
 }

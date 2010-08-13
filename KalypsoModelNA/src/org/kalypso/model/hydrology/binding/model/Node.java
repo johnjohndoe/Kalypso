@@ -49,7 +49,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}Node.
@@ -67,6 +69,8 @@ public class Node extends AbstractNaModelElement
   /** @deprecated Do not use directly, use accessor methods instead. */
   @Deprecated
   public static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NAMODELL, "qberechnetZR" ); //$NON-NLS-1$
+
+  private static final QName MEMBER_BRANCHING = new QName( NS_NAMODELL, "branchingMember" ); //$NON-NLS-1$
 
   public Node( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -94,7 +98,8 @@ public class Node extends AbstractNaModelElement
   }
 
   /**
-   * Returns all channels of this na modell that have this node as downstream node.
+   * Returns all channels of this na modell that have this node as downstream node.<br/>
+   * Use with care, as this method involves a linear search through all existing channels.
    */
   public Channel[] findUpstreamChannels( )
   {
@@ -111,5 +116,15 @@ public class Node extends AbstractNaModelElement
     }
 
     return upstreamChannels.toArray( new Channel[upstreamChannels.size()] );
+  }
+
+  public Feature getBranching( )
+  {
+    return FeatureHelper.resolveLink( this, MEMBER_BRANCHING, true );
+  }
+
+  public void setBranching( final Feature branching )
+  {
+    setProperty( MEMBER_BRANCHING, branching );
   }
 }

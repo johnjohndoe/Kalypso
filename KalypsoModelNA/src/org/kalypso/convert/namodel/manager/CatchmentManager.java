@@ -41,13 +41,11 @@
 package org.kalypso.convert.namodel.manager;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -58,7 +56,6 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
@@ -102,10 +99,13 @@ public class CatchmentManager extends AbstractManager
 
   private static final HashMap<String, String> m_fileMap = new HashMap<String, String>();
 
-  public CatchmentManager( final GMLSchema schema, final NAConfiguration conf ) throws IOException
+  private final Logger m_logger;
+
+  public CatchmentManager( final GMLSchema schema, final NAConfiguration conf, final Logger logger ) throws IOException
   {
     super( conf.getCatchmentFormatURL() );
     m_conf = conf;
+    m_logger = logger;
     m_catchmentFT = schema.getFeatureType( Catchment.FEATURE_CATCHMENT );
     final IRelationType ftp1 = (IRelationType) m_catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
     m_bodenKorrekturFT = ftp1.getTargetFeatureType();
@@ -299,7 +299,9 @@ public class CatchmentManager extends AbstractManager
     }
     else
     {
-      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.0", asciiID ) ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.0", asciiID ); //$NON-NLS-1$
+      m_logger.log( Level.WARNING, msg );
+
       catchmentBuffer.append( "we999.zfl\n" ); //$NON-NLS-1$
 
       // BUG: this can never work, as the we999 file is not available
@@ -537,69 +539,5 @@ public class CatchmentManager extends AbstractManager
     // int asciiID = conf.getIdManager().getAsciiID( feature );
     // if( feature.getProperty( "verdunstungZR" ) != null )
     // return "C_" + Integer.toString( asciiID ).trim() + ".ver";
-  }
-
-  public static void WriteSynthNFile( final File targetFileN, final Feature feature, final GMLWorkspace synthNWorkspace, final NAConfiguration conf ) throws Exception
-  {
-    final NAControl metaControl = conf.getMetaControl();
-
-    final List<Feature> statNList = new ArrayList<Feature>();
-    final StringBuffer buffer = new StringBuffer();
-    final Double annualityKey = metaControl.getAnnuality();
-    // Kostra-Kachel/ synth. N gebietsabhängig
-    final String synthNKey = (String) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_SYNTH );
-    statNList.addAll( Arrays.asList( synthNWorkspace.getFeatures( conf.getstatNFT() ) ) );
-    final Iterator<Feature> iter = statNList.iterator();
-    while( iter.hasNext() )
-    {
-      final Feature statNFE = iter.next();
-      if( statNFE.getName() != null )
-      {
-        if( statNFE.getName().equals( synthNKey ) )
-        {
-          final List< ? > statNParameterList = (List< ? >) statNFE.getProperty( NaModelConstants.STATNPARA_MEMBER );
-          final Iterator< ? > iter1 = statNParameterList.iterator();
-          while( iter1.hasNext() )
-          {
-            final Feature fe = (Feature) iter1.next();
-            final String annuality = Double.toString( 1d / (Double) fe.getProperty( NaModelConstants.STATN_PROP_XJAH ) );
-            if( annuality.equals( annualityKey.toString() ) )
-            {
-              final Object tnProp = fe.getProperty( NaModelConstants.CATCHMENT_PROP_STATN_DIAG );
-              if( tnProp instanceof IObservation )
-              {
-                final IObservation observation = (IObservation) tnProp;
-                final IAxis[] axisList = observation.getAxisList();
-                final IAxis minutesAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_MIN );
-                final IAxis precipitationAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RAINFALL );
-                buffer.append( FortranFormatHelper.printf( annualityKey, "f6.3" ) + " " + "1" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                final ITupleModel values = observation.getValues( null );
-                final int count = values.getCount();
-                // if( count > 20 )
-                // throw new Exception( "Fehler!!! NA-Modell: Anzahl Wertepaare synth Niederschlag > maximale Anzahl
-                // (20) \n Niederschlag:" + synthNKey + "\n Wiederkehrwahrscheinlichkeit: "
-                // + annualityKey );
-                for( int row = 0; row < count; row++ )
-                {
-                  final Double minutesValue = (Double) values.getElement( row, minutesAxis );
-                  final Double hoursValue = minutesValue / 60d;
-                  if( hoursValue.equals( metaControl.getDurationHours() ) )
-                  {
-                    final Double precipitationValue = (Double) values.getElement( row, precipitationAxis );
-                    buffer.append( FortranFormatHelper.printf( hoursValue, "f9.3" ) + " " + FortranFormatHelper.printf( precipitationValue, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                  }
-                }
-                final FileWriter writer = new FileWriter( targetFileN );
-                writer.write( buffer.toString() );
-                IOUtils.closeQuietly( writer );
-              }
-              else
-                System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.143", synthNKey, annualityKey ) ); //$NON-NLS-1$
-            }
-          }
-        }
-      }
-    }
-
   }
 }

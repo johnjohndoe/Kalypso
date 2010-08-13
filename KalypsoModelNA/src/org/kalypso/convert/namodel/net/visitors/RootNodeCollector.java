@@ -48,42 +48,37 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
-public class RootNodeCollectorVisitor extends NetElementVisitor
+public class RootNodeCollector
 {
   private final List<NetElement> m_rootNetElements = new ArrayList<NetElement>();
 
   private final Feature m_singleResultNode;
 
+  private final NetElement[] m_allNetElements;
+
   /**
-   * collect netelement for given result node <br>
+   * Collects all NetElements (channels) whose downstream node should produceresults.<br/>
    * visitor also updates generate result status of nodes <br>
    * sets given root node generate result status to "true" <br>
    * sets all other nodes generate result status to "false"
    * 
    * @author doemming
    */
-  public RootNodeCollectorVisitor( final Feature singleResultNode )
+  public RootNodeCollector( final NetElement[] netElements, final Feature singleResultNode )
   {
+    m_allNetElements = netElements;
     m_singleResultNode = singleResultNode;
+
+    for( final NetElement element : m_allNetElements )
+      visit( element );
   }
 
-  /**
-   * collect all netelements that have direct downstream depedency to a result node
-   */
-  public RootNodeCollectorVisitor( )
-  {
-    m_singleResultNode = null;
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
-   */
-  @Override
-  public boolean visit( final NetElement netElement )
+  private void visit( final NetElement netElement )
   {
     final Feature nodeFE = netElement.getDownStreamNode();
     if( nodeFE == null )
-      return true;
+      return;
+
     if( m_singleResultNode == null )
     {
       if( FeatureHelper.booleanIsTrue( nodeFE, NaModelConstants.GENERATE_RESULT_PROP, false ) )
@@ -91,13 +86,11 @@ public class RootNodeCollectorVisitor extends NetElementVisitor
     }
     else
     {
-      // final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty( "generateResult", new Boolean(
-      // nodeFE == m_singleResultNode ) );
       nodeFE.setProperty( NaModelConstants.GENERATE_RESULT_PROP, new Boolean( nodeFE == m_singleResultNode ) );
       if( m_singleResultNode == nodeFE )
         m_rootNetElements.add( netElement );
     }
-    return true;
+
   }
 
   public NetElement[] getRootNodeElements( )
