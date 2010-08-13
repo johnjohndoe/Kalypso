@@ -1,12 +1,3 @@
-package org.kalypso.convert.namodel.net.visitors;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypso.convert.namodel.net.NetElement;
-import org.kalypso.convert.namodel.net.NetElementCircleFinder;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -47,23 +38,29 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.convert.namodel.net.visitors;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypso.convert.namodel.net.NetElementCircleFinder;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
+
+/**
+ * @author doemming
+ */
 public class SimulationVisitor extends NetElementVisitor
 {
   private final NetElementVisitor m_innerVisitor;
 
-  private final List<NetElement> m_simulated;
+  private final List<NetElement> m_simulated = new ArrayList<NetElement>();
 
   private final List<NetElement> m_cycleTest = new ArrayList<NetElement>();
 
-  /*
-   * @author doemming
-   */
   public SimulationVisitor( final NetElementVisitor innerVisitor )
   {
     m_innerVisitor = innerVisitor;
-    m_simulated = new ArrayList<NetElement>();
-
   }
 
   /**

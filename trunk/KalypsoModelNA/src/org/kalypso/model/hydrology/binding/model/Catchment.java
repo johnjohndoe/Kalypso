@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}Catchment.
@@ -54,8 +55,20 @@ public class Catchment extends AbstractNaModelElement
 {
   public static final QName FEATURE_CATCHMENT = new QName( NS_NAMODELL, "Catchment" ); //$NON-NLS-1$
 
+  private static final QName LINK_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" ); //$NON-NLS-1$
+
   public Catchment( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public Channel getChannel( )
+  {
+    return (Channel) FeatureHelper.resolveLink( this, LINK_CHANNEL, true );
+  }
+
+  public void setChannel( final Channel channel )
+  {
+    FeatureHelper.setAsLink( this, LINK_CHANNEL, channel );
   }
 }

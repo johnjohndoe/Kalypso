@@ -46,12 +46,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -66,7 +63,7 @@ import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.visitors.CompleteDownstreamNetAsciiWriterVisitor;
-import org.kalypso.convert.namodel.net.visitors.RootNodeCollectorVisitor;
+import org.kalypso.convert.namodel.net.visitors.RootNodeCollector;
 import org.kalypso.convert.namodel.net.visitors.SimulationVisitor;
 import org.kalypso.convert.namodel.net.visitors.WriteAsciiVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
@@ -295,8 +292,8 @@ public class NetFileManager extends AbstractManager
         System.out.println( 1 + ": " + line ); //$NON-NLS-1$
         createProperties( col, line, 1 );
         final int nteil = Integer.parseInt( col.get( "nteil" ) ); //$NON-NLS-1$
-        final Feature teilgebFE = getFeature( nteil, m_conf.getCatchemtFT() );
-        teilgebFE.setProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL, strangFE.getId() );
+        final Catchment teilgebFE = (Catchment) getFeature( nteil, m_conf.getCatchemtFT() );
+        teilgebFE.setChannel( strangFE );
       }
     }
     readNet( reader, nodeCollector );
@@ -311,7 +308,7 @@ public class NetFileManager extends AbstractManager
    *          the synth precipitation workspace
    * @return a HashMap containing Channel-FeatureID (key) and NetElements (value)
    */
-  public NetElement[] generateNetElements( final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws SimulationException
+  private NetElement[] generateNetElements( final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws SimulationException
   {
     final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( Node.FEATURE_NODE );
     final IFeatureType kontEntnahmeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_ENTNAHME );
@@ -332,17 +329,19 @@ public class NetFileManager extends AbstractManager
     final Map<String, NetElement> netElements = new LinkedHashMap<String, NetElement>();
     // generate net elements, each channel represents a netelement
     for( final Channel channelFE : channels )
-      netElements.put( channelFE.getId(), new NetElement( workspace, synthNWorkspace, channelFE, m_conf ) );
+    {
+      final NetElement netElement = new NetElement( workspace, synthNWorkspace, channelFE, m_conf, m_logger );
+      netElements.put( channelFE.getId(), netElement );
+    }
 
     // find dependencies: node - node
-    final Feature[] nodeFEs = workspace.getFeatures( m_conf.getNodeFT() );
-    for( final Feature upStreamNodeFE : nodeFEs )
+    final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+    for( final Node upStreamNode : nodes )
     {
-      final IFeatureType upstreamFT = upStreamNodeFE.getFeatureType();
+      final IFeatureType upstreamFT = upStreamNode.getFeatureType();
       final IRelationType rt = (IRelationType) upstreamFT.getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
-      final Feature upStreamChannelFE = workspace.resolveLink( upStreamNodeFE, rt );
-      final IRelationType rt2 = (IRelationType) upstreamFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
-      final Feature branchingFE = workspace.resolveLink( upStreamNodeFE, rt2 );
+      final Feature upStreamChannelFE = workspace.resolveLink( upStreamNode, rt );
+      final Feature branchingFE = upStreamNode.getBranching();
       if( branchingFE != null )
       {
         final IFeatureType branchingFT = branchingFE.getFeatureType();
@@ -356,13 +355,13 @@ public class NetFileManager extends AbstractManager
 
           if( upStreamChannelFE == null )
           {
-            final String message = String.format( "Inconsistent net: Node '%s' with branch has no upstream channel.", upStreamNodeFE.getName() );
+            final String message = String.format( "Inconsistent net: Node '%s' with branch has no upstream channel.", upStreamNode.getName() );
             throw new SimulationException( message );
           }
 
           if( downStreamChannelFE == null )
           {
-            final String message = String.format( "Inconsistent net: Node '%s' with branch has no downstream channel.", upStreamNodeFE.getName() );
+            final String message = String.format( "Inconsistent net: Node '%s' with branch has no downstream channel.", upStreamNode.getName() );
             throw new SimulationException( message );
           }
 
@@ -413,33 +412,31 @@ public class NetFileManager extends AbstractManager
 
     // TODO check dependency storagechannel -> overflownode
     // dependency: catchment -> catchment
-    final Feature[] catchmentFEs = workspace.getFeatures( m_conf.getCatchemtFT() );
-    for( final Feature catchmentFE : catchmentFEs )
+    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+    for( final Catchment catchment : catchments )
     {
       // upstream
-      final IRelationType rt = (IRelationType) catchmentFE.getFeatureType().getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-      final Feature upStreamFE = workspace.resolveLink( catchmentFE, rt );
-      if( upStreamFE == null )
+      final Channel upstreamChannel = catchment.getChannel();
+      if( upstreamChannel == null )
       {
-        logWarning( "%s is not connected to network", catchmentFE );
+        logWarning( "%s is not connected to network", catchment );
         continue;
       }
 
-      final NetElement upStreamElement = netElements.get( upStreamFE.getId() );
+      final NetElement upStreamElement = netElements.get( upstreamChannel.getId() );
       // downstream
-      final IRelationType rt1 = (IRelationType) catchmentFE.getFeatureType().getProperty( NaModelConstants.GRUNDWASSERABFLUSS_MEMBER );
-      final Feature[] abflussFEs = workspace.resolveLinks( catchmentFE, rt1 );
+      final IRelationType rt1 = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.GRUNDWASSERABFLUSS_MEMBER );
+      final Feature[] abflussFEs = workspace.resolveLinks( catchment, rt1 );
       for( final Feature abflussFE : abflussFEs )
       {
         final IRelationType rt2 = (IRelationType) abflussFE.getFeatureType().getProperty( NaModelConstants.CATCHMENT_PROP_NGWZU );
-        final Feature downStreamCatchmentFE = workspace.resolveLink( abflussFE, rt2 );
+        final Catchment downStreamCatchmentFE = (Catchment) workspace.resolveLink( abflussFE, rt2 );
         if( downStreamCatchmentFE == null )
         {
           logWarning( "Downstream catchment for %s cannot be resolved.", abflussFE );
           continue;
         }
-        final IRelationType rt3 = (IRelationType) downStreamCatchmentFE.getFeatureType().getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-        final Feature downStreamChannelFE = workspace.resolveLink( downStreamCatchmentFE, rt3 );
+        final Channel downStreamChannelFE = downStreamCatchmentFE.getChannel();
         if( downStreamChannelFE == null )
         {
           logWarning( "%s is not connected to network.", downStreamCatchmentFE );
@@ -452,7 +449,7 @@ public class NetFileManager extends AbstractManager
           continue;
         }
 
-        if( upStreamFE == downStreamChannelFE )
+        if( upstreamChannel == downStreamChannelFE )
         {
           // two catchments discharges to the same channel, no need to generate
           // dependency cause it is the same channel
@@ -497,24 +494,6 @@ public class NetFileManager extends AbstractManager
     return name;
   }
 
-  private Feature[] getAllChannels( final GMLWorkspace workspace )
-  {
-    final List<Feature> channelList = new ArrayList<Feature>();
-
-    // FIXME: why not just acces the list of channels?
-
-    final Feature[] vChannelFeatures = workspace.getFeatures( m_conf.getVChannelFT() );
-    channelList.addAll( Arrays.asList( vChannelFeatures ) );
-
-    final Feature[] kmChannelFeatures = workspace.getFeatures( m_conf.getKmChannelFT() );
-    channelList.addAll( Arrays.asList( kmChannelFeatures ) );
-
-    final Feature[] stChannelFeatures = workspace.getFeatures( m_conf.getStChannelFT() );
-    channelList.addAll( Arrays.asList( stChannelFeatures ) );
-
-    return channelList.toArray( new Feature[channelList.size()] );
-  }
-
   /**
    * writes netfile (ascii)
    * 
@@ -525,23 +504,15 @@ public class NetFileManager extends AbstractManager
    * @param synthNWorkspace
    *          workspace for synthetic precipitation
    */
-  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws Exception
+  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace modelWorkspace, final GMLWorkspace synthNWorkspace ) throws Exception
   {
     final StringBuffer netBuffer = asciiBuffer.getNetBuffer();
 
-    final NetElement[] netElements = generateNetElements( workspace, synthNWorkspace );
+    final NetElement[] netElements = generateNetElements( modelWorkspace, synthNWorkspace );
 
     // collect netelements that are direct upstream of result nodes
-    final RootNodeCollectorVisitor rootNodeVisitor;
-
-    final Feature rootNodeFE = workspace.getFeature( m_rootNodeId );
-    if( rootNodeFE != null )
-      rootNodeVisitor = new RootNodeCollectorVisitor( rootNodeFE );
-    else
-      rootNodeVisitor = new RootNodeCollectorVisitor();
-    for( final NetElement element : netElements )
-      element.accept( rootNodeVisitor );
-
+    final Feature rootNodeFE = modelWorkspace.getFeature( m_rootNodeId );
+    final RootNodeCollector rootNodeVisitor = new RootNodeCollector( netElements, rootNodeFE );
     final NetElement[] rootNetElements = rootNodeVisitor.getRootNodeElements();
 
     // write asciifiles: upstream-network of root nodes
@@ -557,7 +528,7 @@ public class NetFileManager extends AbstractManager
 
     final List<Node> nodeCollector = writeAsciiVisitor.getNodeCollector();
     netBuffer.append( "99999\n" ); //$NON-NLS-1$
-    appendNodeList( workspace, nodeCollector, netBuffer );
+    appendNodeList( modelWorkspace, nodeCollector, netBuffer );
     netBuffer.append( "99999\n" ); //$NON-NLS-1$
   }
 
@@ -569,12 +540,10 @@ public class NetFileManager extends AbstractManager
     final IFeatureType verzweigungFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_VERZW_VERZWEIGUNG );
 
     final IDManager idManager = m_conf.getIdManager();
-    final Iterator<Node> iter = nodeCollector.iterator();
 
-    while( iter.hasNext() )
+    for( final Node node : nodeCollector )
     {
-      final Node nodeFE = iter.next();
-      netBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i5" ) ); //$NON-NLS-1$
+      netBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( node ), "i5" ) ); //$NON-NLS-1$
 
       final int izug;
       final int iabg;
@@ -584,10 +553,9 @@ public class NetFileManager extends AbstractManager
 
       final StringBuffer specialBuffer = new StringBuffer();
 
-      final TimeseriesLinkType zuflussLink = nodeFE.getZuflussLink();
-      final IFeatureType nodeFT = nodeFE.getFeatureType();
-      final IRelationType rt = (IRelationType) nodeFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
-      final Feature branchingFE = workspace.resolveLink( nodeFE, rt );
+      final TimeseriesLinkType zuflussLink = node.getZuflussLink();
+      final IFeatureType nodeFT = node.getFeatureType();
+      final Feature branchingFE = node.getBranching();
       if( branchingFE != null )
       {
         final IRelationType branchingNodeMemberRT = (IRelationType) branchingFE.getFeatureType().getProperty( NaModelConstants.NODE_BRANCHING_NODE_MEMBER_PROP );
@@ -655,7 +623,7 @@ public class NetFileManager extends AbstractManager
         iueb = 0;
         ivzwg = 0;
         izuf = 5;
-        final String zuflussFileName = getZuflussEingabeDateiString( nodeFE, m_conf );
+        final String zuflussFileName = getZuflussEingabeDateiString( node, m_conf );
         final File targetFile = new File( m_conf.getAsciiBaseDir(), "zufluss/" + zuflussFileName ); //$NON-NLS-1$
         final File parent = targetFile.getParentFile();
         if( !parent.exists() )
@@ -666,7 +634,7 @@ public class NetFileManager extends AbstractManager
         {
           final FileWriter writer = new FileWriter( targetFile );
           final IObservation observation = ZmlFactory.parseXML( linkURL ); //$NON-NLS-1$
-          if( Boolean.TRUE.equals( nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) ) )
+          if( Boolean.TRUE.equals( node.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) ) )
           {
             final NAControl metaControl = m_conf.getMetaControl();
             final Integer minutesOfTimestep = metaControl.getMinutesOfTimestep();
@@ -712,10 +680,10 @@ public class NetFileManager extends AbstractManager
       netBuffer.append( FortranFormatHelper.printf( izuf, "i5" ) ); //$NON-NLS-1$
       netBuffer.append( FortranFormatHelper.printf( ivzwg, "i5" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       netBuffer.append( specialBuffer.toString() );
-      writeQQRelation( nodeFE, netBuffer );
+      writeQQRelation( node, netBuffer );
       // ENDKNOTEN
-
     }
+
     netBuffer.append( " 9001    0    0    0    0    0\n" ); //$NON-NLS-1$
     netBuffer.append( "10000    0    0    0    0    0\n" ); //$NON-NLS-1$
   }

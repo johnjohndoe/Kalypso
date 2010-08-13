@@ -263,8 +263,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
           if( planingAreaGeometry.intersects( geometry ) )
           {
             // resolve downstream channel and node, and add node to the affected nodes list
-            final IRelationType downstreamChannelRT = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-            final Channel downstreamChannel = (Channel) modelWorkspace.resolveLink( catchment, downstreamChannelRT );
+            final Channel downstreamChannel = catchment.getChannel();
             if( downstreamChannel != null )
             {
               final Node downstreamNode = downstreamChannel.getDownstreamNode();
