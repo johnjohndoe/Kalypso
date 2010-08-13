@@ -243,7 +243,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     for( final IRunoffEvent event : eventsToProcess )
     {
       final ICoverageCollection resultCoverages = event.getResultCoverages();
-      if( resultCoverages.size() != 0 )
+      if( resultCoverages.getCoverages().size() != 0 )
         eventsWithResults.add( event );
     }
 

@@ -90,6 +90,7 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -166,24 +167,26 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     {
       /* remove existing (invalid) coverages from the model and clean statistic */
       final ICoverageCollection outputCoverages = rasterModel.getRiskZonesCoverage();
-      for( final ICoverage coverage : outputCoverages )
+      IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
+      for( final ICoverage coverage : outputCoveragesList )
         CoverageManagementHelper.deleteGridFile( coverage );
 
-      outputCoverages.clear();
+      outputCoveragesList.clear();
       controlModel.resetStatistics();
 
       final ICoverageCollection baseCoverages = RiskModelHelper.getMaxReturnPeriodCollection( rasterModel.getSpecificDamageCoverageCollection() );
+      IFeatureBindingCollection<ICoverage> baseCoveragesList = baseCoverages.getCoverages();
 
-      final int ticks = 100 / baseCoverages.size();
-      for( int i = 0; i < baseCoverages.size(); i++ )
+      final int ticks = 100 / baseCoveragesList.size();
+      for( int i = 0; i < baseCoveragesList.size(); i++ )
       {
-        final ICoverage srcSpecificDamageCoverage = baseCoverages.get( i );
+        final ICoverage srcSpecificDamageCoverage = baseCoveragesList.get( i );
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( srcSpecificDamageCoverage );
         final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, rasterModel.getSpecificDamageCoverageCollection(), vectorModel.getLandusePolygonCollection(), controlModel.getLanduseClassesList(), controlModel.getRiskZoneDefinitionsList() );
 
         // TODO: change name: better: use input name
-        final String outputCoverageFileName = String.format( "%s_%02d.bin", outputCoverages.getGmlID(), i ); //$NON-NLS-1$
+        final String outputCoverageFileName = String.format( "%s_%02d.bin", outputCoverages.getId(), i ); //$NON-NLS-1$
         // final String outputCoverageFileName = "RiskZonesCoverage_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$
         final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
         final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
@@ -197,7 +200,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
 
         /* fireModellEvent to redraw a map */
         final GMLWorkspace workspace = rasterModel.getFeature().getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModel.getFeature(), new Feature[] { outputCoverages.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModel.getFeature(), new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
 
       // statistics...

@@ -25,7 +25,7 @@ import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
@@ -56,7 +56,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
 
       final GMLWorkspace workspace = m_rasterDataModel.getFeature().getWorkspace();
 
-      final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = m_rasterDataModel.getWaterlevelCoverageCollection();
+      final IFeatureBindingCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = m_rasterDataModel.getWaterlevelCoverageCollection();
       for( final AsciiRasterInfo asciiRasterInfo : m_rasterInfos )
       {
         monitor.subTask( " HQ " + asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
@@ -86,10 +86,10 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         annualCoverageCollection.setName( Messages.getString( "org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable.0" ) + asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
         annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
         final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
-        final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
-        final Feature coverageFeature = workspace.createFeature( annualCoverageCollection.getFeature(), parentRelation, rgcFeatureType );
-        final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
-        annualCoverageCollection.add( coverage );
+        final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
+        final Feature coverageFeature = workspace.createFeature( annualCoverageCollection, parentRelation, rgcFeatureType );
+        final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageFeature;
+        annualCoverageCollection.getCoverages().add( coverage );
         coverage.setRangeSet( rangeSetFile );
         coverage.setGridDomain( ascii2Binary.getGridDomain() );
         coverage.setName( binFileName );
@@ -103,7 +103,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e,Messages.getString( "org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable.2" ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable.2" ) ); //$NON-NLS-1$
     }
   }
 }

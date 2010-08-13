@@ -71,6 +71,7 @@ import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -233,7 +234,8 @@ public class FloodModelHelper
    */
   public static IStatus removeResultCoverages( final SzenarioDataProvider dataProvider, final ICoverageCollection resultCoverages )
   {
-    final ICoverage[] coverages = resultCoverages.toArray( new ICoverage[resultCoverages.size()] );
+    IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
+    final ICoverage[] coverages = resultCoveragesList.toArray( new ICoverage[resultCoveragesList.size()] );
     try
     {
       final CommandableWorkspace workspace = dataProvider.getCommandableWorkSpace( IFloodModel.class.getName() );
@@ -246,7 +248,7 @@ public class FloodModelHelper
           return status;
 
         /* Delete coverage from collection */
-        final Feature coverageFeature = coverageToDelete.getFeature();
+        final Feature coverageFeature = coverageToDelete;
 
         final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
         workspace.postCommand( command );

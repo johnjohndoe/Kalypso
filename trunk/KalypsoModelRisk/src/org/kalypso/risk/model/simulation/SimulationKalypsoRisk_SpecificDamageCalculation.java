@@ -75,10 +75,11 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gismapview.Gismapview.Layers;
+import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 
@@ -170,7 +171,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
    */
   private void doDamagePotentialCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final int importantDigits, final IProgressMonitor monitor ) throws SimulationException
   {
-    final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterModel.getSpecificDamageCoverageCollection();
+    final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterModel.getSpecificDamageCoverageCollection();
     final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorModel.getLandusePolygonCollection();
     final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
@@ -190,8 +191,9 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       for( int i = 0; i < specificDamageCoverageCollection.size(); i++ )
       {
         final IAnnualCoverageCollection annualCoverageCollection = specificDamageCoverageCollection.get( i );
-        for( int k = 0; k < annualCoverageCollection.size(); k++ )
-          CoverageManagementHelper.deleteGridFile( annualCoverageCollection.get( k ) );
+        IFeatureBindingCollection<ICoverage> coverages = annualCoverageCollection.getCoverages();
+        for( int k = 0; k < coverages.size(); k++ )
+          CoverageManagementHelper.deleteGridFile( coverages.get( k ) );
       }
       specificDamageCoverageCollection.clear();
 
@@ -214,7 +216,8 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       /* loop over all waterdepths */
       for( final IAnnualCoverageCollection srcAnnualCoverages : rasterModel.getWaterlevelCoverageCollection() )
       {
-        int srcAnnualCoverageSize = srcAnnualCoverages.size();
+        IFeatureBindingCollection<ICoverage> srcAnnualCoveragesList = srcAnnualCoverages.getCoverages();
+        int srcAnnualCoverageSize = srcAnnualCoveragesList.size();
         final int perCoverageTicks = 100 / srcAnnualCoverageSize;
         String taskName = Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10", srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
         final SubMonitor subMonitor = SubMonitor.convert( monitor, taskName, 100 );
@@ -226,14 +229,14 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
 
         for( int i = 0; i < srcAnnualCoverageSize; i++ )
         {
-          final ICoverage inputCoverage = srcAnnualCoverages.get( i );
+          final ICoverage inputCoverage = srcAnnualCoveragesList.get( i );
           if( srcAnnualCoverageSize > 1 )
             subMonitor.subTask( String.format( "%s (%s)", taskName, inputCoverage.getName() ) ); //$NON-NLS-1$
           final RectifiedGridCoverageGeoGrid inputGrid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( inputCoverage );
           final double cellSize = Math.abs( inputGrid.getOffsetX().x - inputGrid.getOffsetY().x ) * Math.abs( inputGrid.getOffsetX().y - inputGrid.getOffsetY().y );
 
           // create sequential grid reader
-          final SequentialBinaryGeoGridReader inputGridReader = new RiskSpecificDamageGrid(inputGrid, inputGrid.getGridURL(), polygonCollection, landuseClasses, cellSize, returnPeriod);
+          final SequentialBinaryGeoGridReader inputGridReader = new RiskSpecificDamageGrid( inputGrid, inputGrid.getGridURL(), polygonCollection, landuseClasses, cellSize, returnPeriod );
 
           // prepare the name, path and file for the output grid
           final String outputCoverageFileName = String.format( "specificDamage_HQ%d_%02d.bin", srcAnnualCoverages.getReturnPeriod(), i ); //$NON-NLS-1$
@@ -246,8 +249,8 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           // inputGrid.getOffsetY(), inputGrid.getSourceCRS(), false );
 
           /* add the new coverage to the collection */
-//          final ICoverage newCoverage = GeoGridUtilities.addSequentialBinaryGridAsCoverage( destCoverageCollection, outputGrid, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
-          
+          //          final ICoverage newCoverage = GeoGridUtilities.addSequentialBinaryGridAsCoverage( destCoverageCollection, outputGrid, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
+
           final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, inputGridReader, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
           inputGridReader.close();
@@ -270,6 +273,5 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcSpecificDamageRunnable.1" ) + ": " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
-
 
 }

@@ -64,6 +64,7 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -152,26 +153,29 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
     {
       /* remove existing (invalid) coverages from the model */
       final ICoverageCollection outputCoverages = rasterModelOutput.getRiskZonesCoverage();
-      for( final ICoverage coverage : outputCoverages )
+      IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
+      for( final ICoverage coverage : outputCoveragesList )
         CoverageManagementHelper.deleteGridFile( coverage );
 
-      outputCoverages.clear();
+      outputCoveragesList.clear();
 
       final ICoverageCollection inputCoverages1 = rasterModelInput1.getRiskZonesCoverage();
       final ICoverageCollection inputCoverages2 = rasterModelInput2.getRiskZonesCoverage();
 
-      if( inputCoverages1.size() != inputCoverages2.size() )
+      IFeatureBindingCollection<ICoverage> inputCoverages1List = inputCoverages1.getCoverages();
+      IFeatureBindingCollection<ICoverage> inputCoverages2List = inputCoverages2.getCoverages();
+      if( inputCoverages1List.size() != inputCoverages2List.size() )
         return;
 
-      for( int i = 0; i < inputCoverages1.size(); i++ )
+      for( int i = 0; i < inputCoverages1List.size(); i++ )
       {
-        final ICoverage inputCoverage1 = inputCoverages1.get( i );
+        final ICoverage inputCoverage1 = inputCoverages1List.get( i );
         ICoverage inputCoverage2 = null;
-        for( final ICoverage iCoverage : inputCoverages2 )
+        for( final ICoverage coverage : inputCoverages2List )
         {
-          if( iCoverage.getEnvelope().equals( inputCoverage1.getEnvelope() ) )
+          if( coverage.getEnvelope().equals( inputCoverage1.getEnvelope() ) )
           {
-            inputCoverage2 = iCoverage;
+            inputCoverage2 = coverage;
             break;
           }
         }
@@ -182,7 +186,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
           final IGeoGrid inputGrid2 = GeoGridUtilities.toGrid( inputCoverage2 );
           final IGeoGrid outputGrid = new RiskZonesDifferenceGrid( inputGrid1, inputGrid2 );
 
-          final String outputCoverageFileName = String.format( "%s_%02d.bin", outputCoverages.getGmlID(), i ); //$NON-NLS-1$
+          final String outputCoverageFileName = String.format( "%s_%02d.bin", outputCoverages.getId(), i ); //$NON-NLS-1$
           final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
           final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
           final ICoverage newCoverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
@@ -199,7 +203,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
 
         /* fireModellEvent to redraw a map */
         final GMLWorkspace workspace = rasterModelOutput.getFeature().getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModelOutput.getFeature(), new Feature[] { outputCoverages.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModelOutput.getFeature(), new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
 
     }

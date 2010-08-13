@@ -22,6 +22,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
@@ -92,10 +93,11 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       {
         if( coverageCollection.getReturnPeriod() == 100 )
         {
-          for( final ICoverage coverage : coverageCollection )
+          IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
+          for( final ICoverage coverage : coverages )
           {
             changeCoverageFilePathPrefix( coverage, "statusQuo/" + riskStatusQuoRasterFolderInput.getName() );
-            inundationStatusQuoCoverageCollection.add( coverage );
+            inundationStatusQuoCoverageCollection.getCoverages().add( coverage );
           }
         }
       }
@@ -103,10 +105,11 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       {
         if( coverageCollection.getReturnPeriod() == 100 )
         {
-          for( final ICoverage coverage : coverageCollection )
+          IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
+          for( final ICoverage coverage : coverages )
           {
             changeCoverageFilePathPrefix( coverage, "calculated/" + riskStatusQuoRasterFolderInput.getName() );
-            inundationCalculatedCoverageCollection.add( coverage );
+            inundationCalculatedCoverageCollection.getCoverages().add( coverage );
           }
         }
       }
@@ -114,29 +117,30 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       {
         if( coverageCollection.getReturnPeriod() == 100 )
         {
-          for( final ICoverage coverage : coverageCollection )
+          IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
+          for( final ICoverage coverage : coverages )
           {
             changeCoverageFilePathPrefix( coverage, "difference/" + riskStatusQuoRasterFolderOutput.getName() );
-            inundationDifferenceCoverageCollection.add( coverage );
+            inundationDifferenceCoverageCollection.getCoverages().add( coverage );
           }
         }
       }
 
       // adding risk zones coverages to the model
-      for( final ICoverage coverage : riskStatusQuoRasterDataModel.getRiskZonesCoverage() )
+      for( final ICoverage coverage : riskStatusQuoRasterDataModel.getRiskZonesCoverage().getCoverages() )
       {
         changeCoverageFilePathPrefix( coverage, "statusQuo/" + riskStatusQuoRasterFolderOutput.getName() );
-        riskStatusQuoCoverageCollection.add( coverage );
+        riskStatusQuoCoverageCollection.getCoverages().add( coverage );
       }
-      for( final ICoverage coverage : riskCalculatedRasterDataModel.getRiskZonesCoverage() )
+      for( final ICoverage coverage : riskCalculatedRasterDataModel.getRiskZonesCoverage().getCoverages() )
       {
         changeCoverageFilePathPrefix( coverage, "calculated/" + riskCalculatedRasterFolderOutput.getName() );
-        riskCalculatedCoverageCollection.add( coverage );
+        riskCalculatedCoverageCollection.getCoverages().add( coverage );
       }
-      for( final ICoverage coverage : riskDifferenceRasterDataModel.getRiskZonesCoverage() )
+      for( final ICoverage coverage : riskDifferenceRasterDataModel.getRiskZonesCoverage().getCoverages() )
       {
         changeCoverageFilePathPrefix( coverage, "difference/" + riskDifferenceRasterFolderOutput.getName() );
-        riskDifferenceCoverageCollection.add( coverage );
+        riskDifferenceCoverageCollection.getCoverages().add( coverage );
       }
 
       final File naFolder = new File( tmpdir, "rrm" );

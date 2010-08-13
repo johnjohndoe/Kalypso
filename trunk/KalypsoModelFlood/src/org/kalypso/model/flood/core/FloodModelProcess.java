@@ -75,6 +75,7 @@ import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -169,7 +170,7 @@ public class FloodModelProcess
     double minWsp = Double.MAX_VALUE;
     double maxWsp = -Double.MAX_VALUE;
     final CountGeoGridWalker countWalker = new CountGeoGridWalker( true );
-    for( final ICoverage coverage : terrainModel )
+    for( final ICoverage coverage : terrainModel.getCoverages() )
     {
       final IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
 
@@ -232,7 +233,7 @@ public class FloodModelProcess
     final VolumeGeoGridWalker volumeWalker = new VolumeGeoGridWalker( currentWsp, false );
 
     double volume = 0.0;
-    for( final ICoverage coverage : terrainModel )
+    for( final ICoverage coverage : terrainModel.getCoverages() )
     {
       final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
@@ -251,22 +252,21 @@ public class FloodModelProcess
   private void processEvent( final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
   {
     final ICoverageCollection terrainModel = m_model.getTerrainModel();
-    final SubMonitor progress = SubMonitor.convert( monitor, terrainModel.size() * 100 );
+    IFeatureBindingCollection<ICoverage> terrainCoverages = terrainModel.getCoverages();
+    final SubMonitor progress = SubMonitor.convert( monitor, terrainCoverages.size() * 100 );
     // TODO: shouldn't we filter by the event?
     final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
 
     /* check for existing result coverages */
     final ICoverageCollection resultCoverages = event.getResultCoverages();
-    if( resultCoverages.size() != 0 )
-    {
+    if( resultCoverages.getCoverages().size() != 0 )
       throw new IllegalStateException( Messages.getString( "org.kalypso.model.flood.core.FloodModelProcess.1" ) + event.getName() ); //$NON-NLS-1$
-    }
 
     final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
     final IFolder eventsFolder = scenarioFolder.getFolder( "events" ); //$NON-NLS-1$
     final IFolder eventFolder = eventsFolder.getFolder( event.getDataPath().toPortableString() );
 
-    for( final ICoverage terrainCoverage : terrainModel )
+    for( final ICoverage terrainCoverage : terrainCoverages )
     {
       progress.subTask( terrainCoverage.getName() );
 
