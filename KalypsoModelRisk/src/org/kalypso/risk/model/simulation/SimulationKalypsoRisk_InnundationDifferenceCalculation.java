@@ -62,7 +62,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 
 /**
@@ -133,14 +133,17 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
     try
     {
       /* remove existing (invalid) coverages from the model */
-      final IFeatureWrapperCollection<IAnnualCoverageCollection> resultCollection = rasterModelOutput.getWaterlevelCoverageCollection();
+      final IFeatureBindingCollection<IAnnualCoverageCollection> resultCollection = rasterModelOutput.getWaterlevelCoverageCollection();
       for( final IAnnualCoverageCollection collection : resultCollection )
-        for( final ICoverage coverage : collection )
+      {
+        IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
+        for( final ICoverage coverage : coverages )
           CoverageManagementHelper.deleteGridFile( coverage );
+      }
       resultCollection.clear();
 
-      final IFeatureWrapperCollection<IAnnualCoverageCollection> inputCoverageCollection1 = rasterModelInput1.getWaterlevelCoverageCollection();
-      final IFeatureWrapperCollection<IAnnualCoverageCollection> inputCoverageCollection2 = rasterModelInput2.getWaterlevelCoverageCollection();
+      final IFeatureBindingCollection<IAnnualCoverageCollection> inputCoverageCollection1 = rasterModelInput1.getWaterlevelCoverageCollection();
+      final IFeatureBindingCollection<IAnnualCoverageCollection> inputCoverageCollection2 = rasterModelInput2.getWaterlevelCoverageCollection();
 
       if( inputCoverageCollection1.size() != inputCoverageCollection2.size() )
         return;
@@ -167,19 +170,21 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
       resultCoverageCollection.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.2" ), 100 ) ); //$NON-NLS-1$
 
       // calculate actual difference
-      for( int i = 0; i < collection1_HQ100.size(); i++ )
+      IFeatureBindingCollection<ICoverage> coverages1_HG100 = collection1_HQ100.getCoverages();
+      for( int i = 0; i < coverages1_HG100.size(); i++ )
       {
-        final ICoverage inputCoverage1 = collection1_HQ100.get( i );
+        final ICoverage inputCoverage1 = coverages1_HG100.get( i );
         ICoverage inputCoverage2 = null;
 
         // find the appropriate coverage from another collection
         // we assumed that both collections contains coverage sets which member coverage always covers the same area in
         // both sets, which is the case for Planer-Client calculation
-        for( final ICoverage iCoverage : collection2_HQ100 )
+        IFeatureBindingCollection<ICoverage> coverages2_HQ100 = collection2_HQ100.getCoverages();
+        for( final ICoverage coverage : coverages2_HQ100 )
         {
-          if( iCoverage.getEnvelope().equals( inputCoverage1.getEnvelope() ) )
+          if( coverage.getEnvelope().equals( inputCoverage1.getEnvelope() ) )
           {
-            inputCoverage2 = iCoverage;
+            inputCoverage2 = coverage;
             break;
           }
         }
@@ -191,7 +196,7 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
           final SubstractionGrid outputGrid = new SubstractionGrid( inputGrid1, inputGrid2 );
           outputGrid.usePositiveValuesOnly( true );
 
-          final String outputCoverageFileName = String.format( "%s_%02d.bin", resultCoverageCollection.getGmlID(), i ); //$NON-NLS-1$
+          final String outputCoverageFileName = String.format( "%s_%02d.bin", resultCoverageCollection.getId(), i ); //$NON-NLS-1$
           final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
           final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
           final ICoverage newCoverage = GeoGridUtilities.addCoverage( resultCoverageCollection, outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$

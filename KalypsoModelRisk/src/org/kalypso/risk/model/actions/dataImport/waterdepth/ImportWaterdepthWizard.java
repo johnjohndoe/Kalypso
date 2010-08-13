@@ -61,14 +61,12 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable;
-import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -153,8 +151,10 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
       RiskModelHelper.updateWaterdepthLayers( rasterDataModel, rasterInfos, mapModell );
 
       // fireModellEvent to redraw a map...
-      final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getFeature(), new Feature[] { waterdepthCoverageCollection.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      // final IFeatureBindingCollection<IAnnualCoverageCollection> waterdepthCoverageCollection =
+      // rasterDataModel.getWaterlevelCoverageCollection();
+      final Feature f1 = (Feature) rasterDataModel.getFeature().getProperty( IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, f1, new Feature[] { f1 }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     }
     catch( final Exception e )

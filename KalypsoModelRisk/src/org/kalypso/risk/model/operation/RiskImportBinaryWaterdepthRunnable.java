@@ -25,7 +25,7 @@ import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
@@ -58,7 +58,7 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
       monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.7" ) ); //$NON-NLS-1$
 
       final GMLWorkspace workspace = m_rasterDataModel.getFeature().getWorkspace();
-      final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = m_rasterDataModel.getWaterlevelCoverageCollection();
+      final IFeatureBindingCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = m_rasterDataModel.getWaterlevelCoverageCollection();
 
       for( final AsciiRasterInfo raster : m_rasters )
       {
@@ -88,16 +88,16 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
         annualCoverageCollection.setName( "HQ " + raster.getReturnPeriod() ); //$NON-NLS-1$
         annualCoverageCollection.setReturnPeriod( raster.getReturnPeriod() );
         final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
-        final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
-        final Feature coverageFeature = workspace.createFeature( annualCoverageCollection.getFeature(), parentRelation, rgcFeatureType );
+        final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
+        final Feature coverageFeature = workspace.createFeature( annualCoverageCollection, parentRelation, rgcFeatureType );
 
-        final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
+        final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageFeature;
         coverage.setRangeSet( rangeSetFile );
         coverage.setGridDomain( raster.getGridDomain() );
         coverage.setName( binFileName );
-        coverage.setDescription(Messages.getString( "org.kalypso.risk.model.operation.RiskImportBinaryWaterdepthRunnable.4" ) + raster.getSourceFile().getName() ); //$NON-NLS-1$
+        coverage.setDescription( Messages.getString( "org.kalypso.risk.model.operation.RiskImportBinaryWaterdepthRunnable.4" ) + raster.getSourceFile().getName() ); //$NON-NLS-1$
 
-        annualCoverageCollection.add( coverage );
+        annualCoverageCollection.getCoverages().add( coverage );
       }
 
       return Status.OK_STATUS;
@@ -105,7 +105,7 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e,Messages.getString( "org.kalypso.risk.model.operation.RiskImportBinaryWaterdepthRunnable.5" ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.risk.model.operation.RiskImportBinaryWaterdepthRunnable.5" ) ); //$NON-NLS-1$
     }
   }
 
@@ -118,7 +118,7 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
     if( !srcFolder.exists() )
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.risk.model.operation.RiskImportBinaryWaterdepthRunnable.6" ) ) ); //$NON-NLS-1$
     if( !destFolder.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus(Messages.getString( "org.kalypso.risk.model.operation.RiskImportBinaryWaterdepthRunnable.7" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.risk.model.operation.RiskImportBinaryWaterdepthRunnable.7" ) ) ); //$NON-NLS-1$
 
     srcFolder.accept( new IResourceVisitor()
     {

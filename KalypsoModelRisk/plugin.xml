@@ -275,4 +275,11 @@
             name="%org.kalypso.risk.preferences.KalypsoRiskPreferencePage">
       </page>
    </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.risk.model.schema.binding.AnnualCoverage"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel}AnnualCoverage">
+      </feature>
+   </extension>
 </plugin>

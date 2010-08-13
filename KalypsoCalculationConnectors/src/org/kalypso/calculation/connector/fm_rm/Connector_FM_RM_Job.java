@@ -26,10 +26,11 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gismapview.Gismapview.Layers;
+import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -68,7 +69,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
       final IRasterDataModel riskRasterDataModel = (IRasterDataModel) rmModel.getRootFeature().getAdapter( IRasterDataModel.class );
 
       final IFeatureWrapperCollection<IRunoffEvent> floodModelEvents = floodModel.getEvents();
-      final IFeatureWrapperCollection<IAnnualCoverageCollection> riskWaterlevelCoverageCollection = riskRasterDataModel.getWaterlevelCoverageCollection();
+      final IFeatureBindingCollection<IAnnualCoverageCollection> riskWaterlevelCoverageCollection = riskRasterDataModel.getWaterlevelCoverageCollection();
       riskWaterlevelCoverageCollection.clear();
       for( final IRunoffEvent runoffEvent : floodModelEvents )
       {
@@ -76,7 +77,8 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
         annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" );
         annualCoverageCollection.setReturnPeriod( runoffEvent.getReturnPeriod() );
         final ICoverageCollection coverages = runoffEvent.getResultCoverages();
-        for( final ICoverage coverage : coverages )
+        IFeatureBindingCollection<ICoverage> coveragesList = coverages.getCoverages();
+        for( final ICoverage coverage : coveragesList )
         {
           if( fmScenarioFolderAbsolutePath != null && coverage instanceof RectifiedGridCoverage )
           {
@@ -95,7 +97,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
               }
             }
           }
-          annualCoverageCollection.add( coverage );
+          annualCoverageCollection.getCoverages().add( coverage );
         }
       }
       GmlSerializer.serializeWorkspace( rmOutputFile, rmModel, "UTF-8" );

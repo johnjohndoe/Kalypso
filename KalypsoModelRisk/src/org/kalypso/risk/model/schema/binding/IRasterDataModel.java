@@ -4,13 +4,13 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 public interface IRasterDataModel extends IModel
 {
   public static final String MODEL_NAME = "RasterDataModel"; //$NON-NLS-1$
-  
+
   public static final String MODEL_ID = "org.kalypso.risk.model.schema.binding.IRasterDataModel"; //$NON-NLS-1$
 
   public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTER_DATA_MODEL, "RasterDataModel" ); //$NON-NLS-1$
@@ -25,9 +25,9 @@ public interface IRasterDataModel extends IModel
 
   public QName PROPERTY_RISK_ZONES_COVERAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTER_DATA_MODEL, "riskZonesCoverage" ); //$NON-NLS-1$
 
-  public IFeatureWrapperCollection<IAnnualCoverageCollection> getWaterlevelCoverageCollection( );
+  public IFeatureBindingCollection<IAnnualCoverageCollection> getWaterlevelCoverageCollection( );
 
-  public IFeatureWrapperCollection<IAnnualCoverageCollection> getSpecificDamageCoverageCollection( );
+  public IFeatureBindingCollection<IAnnualCoverageCollection> getSpecificDamageCoverageCollection( );
 
   public ICoverageCollection getLanduseCoverage( );
 

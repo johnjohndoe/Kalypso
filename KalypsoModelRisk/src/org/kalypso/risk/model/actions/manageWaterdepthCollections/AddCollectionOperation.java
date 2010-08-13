@@ -15,7 +15,7 @@ import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -49,7 +49,7 @@ public final class AddCollectionOperation implements ICoreRunnableWithProgress
       monitor.beginTask( Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.AddCollectionOperation.0" ), 7 ); //$NON-NLS-1$
 
       /* Create a unique name */
-      final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = m_model.getWaterlevelCoverageCollection();
+      final IFeatureBindingCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = m_model.getWaterlevelCoverageCollection();
 
       ProgressUtilities.worked( monitor, 1 );
 
@@ -57,7 +57,7 @@ public final class AddCollectionOperation implements ICoreRunnableWithProgress
       final IAnnualCoverageCollection newCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
       newCoverageCollection.setName( m_eventName );
       newCoverageCollection.setReturnPeriod( m_returnPeriod );
-      m_newFeature = newCoverageCollection.getFeature();
+      m_newFeature = newCoverageCollection;
 
       ProgressUtilities.worked( monitor, 1 );
 
@@ -65,7 +65,7 @@ public final class AddCollectionOperation implements ICoreRunnableWithProgress
        * Save model and map, as undo is not possible here and the user should not be able to 'verwerfen' the changes
        */
       final GMLWorkspace workspace = m_model.getFeature().getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getFeature(), new Feature[] { newCoverageCollection.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, newCoverageCollection.getParent(), new Feature[] { newCoverageCollection }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       m_provider.postCommand( IRasterDataModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       m_provider.saveModel( IRasterDataModel.class.getName(), new SubProgressMonitor( monitor, 1 ) );
 

@@ -23,7 +23,7 @@ public final class RunoffEventForProcessingLabelProvider extends LabelProvider
     final IRunoffEvent event = (IRunoffEvent) element;
 
     final ICoverageCollection resultCoverages = event.getResultCoverages();
-    if( resultCoverages != null && resultCoverages.size() > 0 )
+    if( resultCoverages != null && resultCoverages.getCoverages().size() > 0 )
       return Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.18", event.getName() ); //$NON-NLS-1$
 
     return getEventLabel( event );

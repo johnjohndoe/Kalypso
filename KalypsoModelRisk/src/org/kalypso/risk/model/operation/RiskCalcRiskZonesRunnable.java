@@ -50,6 +50,7 @@ import org.kalypso.risk.model.utils.RiskStatisticTableValues;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -88,22 +89,22 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     try
     {
       /* remove existing (invalid) coverages from the model and clean statistic */
-      m_rasterModel.getRiskZonesCoverage().clear();
+      m_rasterModel.getRiskZonesCoverage().getCoverages().clear();
       m_controlModel.resetStatistics();
 
       final ICoverageCollection outputCoverages = m_rasterModel.getRiskZonesCoverage();
 
       final IAnnualCoverageCollection maxCoveragesCollection = RiskModelHelper.getMaxReturnPeriodCollection( m_rasterModel.getSpecificDamageCoverageCollection() );
       final ICoverageCollection baseCoverages = maxCoveragesCollection;
-
-      for( int i = 0; i < baseCoverages.size(); i++ )
+      IFeatureBindingCollection<ICoverage> baseCoveragesList = baseCoverages.getCoverages();
+      for( int i = 0; i < baseCoveragesList.size(); i++ )
       {
-        final ICoverage srcSpecificDamageCoverage = baseCoverages.get( i );
+        final ICoverage srcSpecificDamageCoverage = baseCoveragesList.get( i );
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( srcSpecificDamageCoverage );
         final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, m_rasterModel.getSpecificDamageCoverageCollection(), m_vectorModel.getLandusePolygonCollection(), m_controlModel.getLanduseClassesList(), m_controlModel.getRiskZoneDefinitionsList() );
 
-        final String outputCoverageFileName = String.format( "%s_%02d.bin", outputCoverages.getGmlID(), i ); //$NON-NLS-1$
+        final String outputCoverageFileName = String.format( "%s_%02d.bin", outputCoverages.getId(), i ); //$NON-NLS-1$
         // final String outputCoverageFileName = "RiskZonesCoverage_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$
         final String outputCoverageFileRelativePath = ISimulationSpecKalypsoRisk.CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
         final IFile outputCoverageFile = m_scenarioFolder.getFile( new Path( "models/" + outputCoverageFileRelativePath ) ); //$NON-NLS-1$
@@ -117,7 +118,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
         /* fireModellEvent to redraw a map */
         final GMLWorkspace workspace = m_rasterModel.getFeature().getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_rasterModel.getFeature(), new Feature[] { outputCoverages.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_rasterModel.getFeature(), new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
 
       // statistics...

@@ -34,7 +34,9 @@ import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.util.swt.StatusDialog2;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
@@ -177,8 +179,8 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
     for( final IRunoffEvent runoffEvent : selectedEvents )
     {
       final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
-
-      if( resultCoverages.size() == 0 )
+      IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
+      if( resultCoveragesList.size() == 0 )
       {
         MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.12" ), Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.13" ) + runoffEvent.getName() + Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }

@@ -136,7 +136,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   @Override
   public void setResultCoverages( final ICoverageCollection collection )
   {
-    getFeature().setProperty( QNAME_PROP_RESULT_COVERAGES, collection.getFeature() );
+    getFeature().setProperty( QNAME_PROP_RESULT_COVERAGES, collection );
   }
 
   /**

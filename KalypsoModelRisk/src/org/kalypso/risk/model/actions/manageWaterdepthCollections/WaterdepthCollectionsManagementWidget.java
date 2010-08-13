@@ -113,7 +113,7 @@ import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -327,7 +327,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
       final GMLXPath rootPath = new GMLXPath( pathToModel, IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
       gmlcp.setRootPath( rootPath );
 
-      final IFeatureWrapperCollection<IAnnualCoverageCollection> collection = m_model.getWaterlevelCoverageCollection();
+      final IFeatureBindingCollection<IAnnualCoverageCollection> collection = m_model.getWaterlevelCoverageCollection();
       if( collection.size() > 0 )
         m_eventViewer.setSelection( new StructuredSelection( collection.get( 0 ) ), true );
     }
@@ -599,7 +599,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
         {
           try
           {
-            final GM_Envelope envelope = ((ICoverage) adaptedObject).getFeature().getBoundedBy();
+            final GM_Envelope envelope = ((ICoverage) adaptedObject).getBoundedBy();
             paintEnvelope( g, envelope );
           }
           catch( final GeometryException e )
@@ -609,7 +609,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
         }
         else if( adaptedObject instanceof IAnnualCoverageCollection )
         {
-          paintEnvelope( g, ((IAnnualCoverageCollection) adaptedObject).getWrappedList().getBoundingBox() );
+          paintEnvelope( g, ((IAnnualCoverageCollection) adaptedObject).getCoverages().getBoundingBox() );
         }
 
         try
@@ -684,10 +684,10 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     final Object adaptedObject = adaptToKnownObject( selectedObject );
 
     if( adaptedObject instanceof ICoverageCollection )
-      return ((ICoverageCollection) adaptedObject).getFeature().getBoundedBy();
+      return ((ICoverageCollection) adaptedObject).getBoundedBy();
 
     if( adaptedObject instanceof ICoverage )
-      return ((ICoverage) adaptedObject).getFeature().getBoundedBy();
+      return ((ICoverage) adaptedObject).getBoundedBy();
 
     return null;
   }

@@ -66,6 +66,7 @@ import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -78,7 +79,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 {
   private final Map<String, List<BinaryGeoGridReader>> m_gridMap;
 
-  private final IFeatureWrapperCollection<IAnnualCoverageCollection> m_annualCoverageCollection;
+  private final IFeatureBindingCollection<IAnnualCoverageCollection> m_annualCoverageCollection;
 
   private final IFeatureWrapperCollection<ILandusePolygon> m_landusePolygonCollection;
 
@@ -108,7 +109,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private IGeoTransformer m_geoTransformer;
 
-  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureWrapperCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
+  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureBindingCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
   {
     super( resultGrid );
     m_riskZoneDefinitionsList = riskZoneDefinitionsList;
@@ -137,16 +138,15 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     for( final IAnnualCoverageCollection collection : m_annualCoverageCollection )
     {
       final List<BinaryGeoGridReader> gridList = new ArrayList<BinaryGeoGridReader>();
-
-      for( final ICoverage coverage : collection )
+      IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
+      for( final ICoverage coverage : coverages )
       {
         RectifiedGridCoverageGeoGrid grid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( coverage );
-
         BinaryGeoGridReader lReader = new BinaryGeoGridReader( grid, grid.getGridURL() );
         gridList.add( lReader );
       }
 
-      m_gridMap.put( collection.getGmlID(), gridList );
+      m_gridMap.put( collection.getId(), gridList );
     }
 
     m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 1, BigDecimal.ROUND_HALF_UP );
@@ -306,7 +306,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
    */
   private double getValue( final IAnnualCoverageCollection collection, final Coordinate coordinate ) throws GeoGridException
   {
-    final List<BinaryGeoGridReader> list = m_gridMap.get( collection.getGmlID() );
+    final List<BinaryGeoGridReader> list = m_gridMap.get( collection.getId() );
     for( final BinaryGeoGridReader geoGrid : list )
     {
       if( geoGrid.getEnvelope().contains( coordinate ) )

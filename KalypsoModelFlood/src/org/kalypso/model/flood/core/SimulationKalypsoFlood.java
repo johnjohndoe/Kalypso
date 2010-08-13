@@ -85,6 +85,7 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.graphics.transformation.GeoTransformUtils;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -256,7 +257,8 @@ public class SimulationKalypsoFlood implements ISimulation
 
   private IStatus processVolume( final IRunoffEvent event, final IFloodVolumePolygon volumePolygon, final ICoverageCollection terrainCoverages, final IProgressMonitor monitor ) throws SimulationException, GeoGridException, GM_Exception
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, terrainCoverages.size() * 2 );
+    IFeatureBindingCollection<ICoverage> terrainCoveragesList = terrainCoverages.getCoverages();
+    final SubMonitor progress = SubMonitor.convert( monitor, terrainCoveragesList.size() * 2 );
 
     final BigDecimal volumeValue = volumePolygon.getVolume();
     String volumeName = volumePolygon.getName();
@@ -278,7 +280,7 @@ public class SimulationKalypsoFlood implements ISimulation
     double maxWsp = Double.NEGATIVE_INFINITY;
     double maxVol = Double.NaN;
     final CountGeoGridWalker countWalker = new CountGeoGridWalker( true );
-    for( final ICoverage coverage : terrainCoverages )
+    for( final ICoverage coverage : terrainCoveragesList )
     {
       progress.subTask( String.format( STR_EREIGNISE_xS_VOLUMENERMITTLUNG_xS_COVERAGE_xS, event.getName(), volumeName, coverage.getName() ) );
 
@@ -413,14 +415,15 @@ public class SimulationKalypsoFlood implements ISimulation
    */
   private double calcVolume( final GM_Object volumeGmObject, final ICoverageCollection terrainCollection, final double currentWsp, final IProgressMonitor monitor ) throws SimulationException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, terrainCollection.size() );
+    IFeatureBindingCollection<ICoverage> terrainCoverages = terrainCollection.getCoverages();
+    final SubMonitor progress = SubMonitor.convert( monitor, terrainCoverages.size() );
 
     try
     {
       final VolumeGeoGridWalker volumeWalker = new VolumeGeoGridWalker( currentWsp, false );
 
       double volume = 0.0;
-      for( final ICoverage coverage : terrainCollection )
+      for( final ICoverage coverage : terrainCoverages )
       {
         IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
 
@@ -460,7 +463,8 @@ public class SimulationKalypsoFlood implements ISimulation
   private void processEvent( final IFloodModel model, final File eventFolder, final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
   {
     final ICoverageCollection terrainModel = model.getTerrainModel();
-    final SubMonitor progress = SubMonitor.convert( monitor, terrainModel.size() );
+    IFeatureBindingCollection<ICoverage> terrainCoverages = terrainModel.getCoverages();
+    final SubMonitor progress = SubMonitor.convert( monitor, terrainCoverages.size() );
 
     // TODO: shouldn't we filter by the event?
     final IFeatureWrapperCollection<IFloodPolygon> polygons = model.getPolygons();
@@ -475,16 +479,17 @@ public class SimulationKalypsoFlood implements ISimulation
      * org.kalypso.model.flood.handlers.ProcessFloodModelHandler), we are asking user to delete or to keep existing
      * results; so, we cannot just throw an exception here! What to do?
      */
-    if( resultCoverages.size() != 0 )
+    IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
+    if( resultCoveragesList.size() != 0 )
     {
       // FIXME @dejan multiple processing of process chain leads to this exception // hotfix: clear list
-      resultCoverages.clear(); // hotfix!!!
+      resultCoveragesList.clear(); // hotfix!!!
       // throw new IllegalStateException( "Event enthält noch Ergebnisse: " + event.getName() );
     }
 
     // final IFolder eventFolder = eventsFolder.getFolder( event.getDataPath().toPortableString() );
 
-    for( final ICoverage terrainCoverage : terrainModel )
+    for( final ICoverage terrainCoverage : terrainCoverages )
     {
       progress.subTask( String.format( STR_EREIGNIS_xS_FLIESSTIEFENERMITTLUNG_xS, event.getName(), terrainCoverage.getName() ) );
 

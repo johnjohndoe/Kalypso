@@ -69,6 +69,7 @@ import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -140,7 +141,7 @@ public class RiskModelHelper
    * @throws SAXException
    * @throws CoreException
    */
-  public static void updateDamageStyle( final IFile sldFile, final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection ) throws IOException, SAXException, CoreException
+  public static void updateDamageStyle( final IFile sldFile, final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection ) throws IOException, SAXException, CoreException
   {
     BigDecimal maxDamageValue = new BigDecimal( -Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
     BigDecimal minDamageValue = new BigDecimal( Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
@@ -186,15 +187,16 @@ public class RiskModelHelper
    * @throws Exception
    */
   // TODO: nor more used, remove!?
-  public static IAnnualCoverageCollection createSpecificDamageCoverages( final IFolder scenarioFolder, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final List<ILanduseClass> landuseClassesList ) throws Exception
+  public static IAnnualCoverageCollection createSpecificDamageCoverages( final IFolder scenarioFolder, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final List<ILanduseClass> landuseClassesList ) throws Exception
   {
     final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
 
     final int returnPeriod = sourceCoverageCollection.getReturnPeriod();
 
-    for( int i = 0; i < sourceCoverageCollection.size(); i++ )
+    IFeatureBindingCollection<ICoverage> coverages = sourceCoverageCollection.getCoverages();
+    for( int i = 0; i < coverages.size(); i++ )
     {
-      final ICoverage inputCoverage = sourceCoverageCollection.get( i );
+      final ICoverage inputCoverage = coverages.get( i );
 
       final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
       final double cellSize = Math.abs( inputGrid.getOffsetX().x - inputGrid.getOffsetY().x ) * Math.abs( inputGrid.getOffsetX().y - inputGrid.getOffsetY().y );
@@ -308,7 +310,7 @@ public class RiskModelHelper
     final Map<FIELD, String> propertyMap = LAYER_PROPERTY_MAP.get( type );
     final String localizedLayerName = Messages.getString( propertyMap.get( FIELD.I18N_LAYER_NAME ) );
     final String layerName = String.format( localizedLayerName, coverageCollection.getReturnPeriod() );
-    final String featurePath = String.format( "#fid#%s/coverageMember", coverageCollection.getFeature().getId() ); //$NON-NLS-1$
+    final String featurePath = String.format( "#fid#%s/coverageMember", coverageCollection.getId() ); //$NON-NLS-1$
     final String themeInfoClass = propertyMap.get( FIELD.THEMEINFO_CLASS );
     final String localizedThemeInfoLabel = propertyMap.containsKey( FIELD.I18N_THEMEINFO_LABEL ) ? Messages.getString( propertyMap.get( FIELD.I18N_THEMEINFO_LABEL ) ) : null;
     final String styleURN = propertyMap.get( FIELD.STYLE_URN );
@@ -418,10 +420,11 @@ public class RiskModelHelper
   {
     try
     {
-      for( int i = 0; i < inputCoverages.size(); i++ )
+      IFeatureBindingCollection<ICoverage> coverages = inputCoverages.getCoverages();
+      for( int i = 0; i < coverages.size(); i++ )
       {
-        final ICoverage inputCoverage = inputCoverages.get( i );
-        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14", i + 1, inputCoverages.size() ), 100 ); //$NON-NLS-1$
+        final ICoverage inputCoverage = coverages.get( i );
+        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14", i + 1, coverages.size() ), 100 ); //$NON-NLS-1$
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
         final int sizeY = inputGrid.getSizeY();
@@ -504,13 +507,13 @@ public class RiskModelHelper
    *          raster collection
    * @return {@link IAnnualCoverageCollection} with greatest return period value
    */
-  public static IAnnualCoverageCollection getMaxReturnPeriodCollection( final IFeatureWrapperCollection<IAnnualCoverageCollection> waterDepthCoverageCollection )
+  public static IAnnualCoverageCollection getMaxReturnPeriodCollection( final IFeatureBindingCollection<IAnnualCoverageCollection> waterDepthCoverageCollection )
   {
     int maxReturnPeriod = Integer.MIN_VALUE;
     IAnnualCoverageCollection maxCoveragesCollection = null;
     for( final IAnnualCoverageCollection annualCoverageCollection : waterDepthCoverageCollection )
     {
-      if( annualCoverageCollection.getReturnPeriod() > maxReturnPeriod && annualCoverageCollection.size() > 0 )
+      if( annualCoverageCollection.getReturnPeriod() > maxReturnPeriod && annualCoverageCollection.getCoverages().size() > 0 )
       {
         maxReturnPeriod = annualCoverageCollection.getReturnPeriod();
         maxCoveragesCollection = annualCoverageCollection;
@@ -530,7 +533,7 @@ public class RiskModelHelper
    * @throws SAXException
    * @throws CoreException
    */
-  public static void updateDamageLayers( final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final GisTemplateMapModell mapModell ) throws Exception
+  public static void updateDamageLayers( final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
 
@@ -569,7 +572,7 @@ public class RiskModelHelper
 
     parentKalypsoTheme.setVisible( true );
 
-    final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = model.getWaterlevelCoverageCollection();
+    final IFeatureBindingCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = model.getWaterlevelCoverageCollection();
 
     for( int i = 0; i < rasterInfos.size(); i++ )
     {
@@ -581,7 +584,7 @@ public class RiskModelHelper
     }
   }
 
-  private static int getCollectionIndex( final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection, final int returnPeriod )
+  private static int getCollectionIndex( final IFeatureBindingCollection<IAnnualCoverageCollection> waterdepthCoverageCollection, final int returnPeriod )
   {
     int index = 0;
 
@@ -701,7 +704,7 @@ public class RiskModelHelper
   public static void addEventThemes( final IKalypsoCascadingTheme parentKalypsoTheme, final IAnnualCoverageCollection annualCoverageCollection ) throws CoreException
   {
     // Check, if theme already exists
-    final String featurePath = "#fid#" + annualCoverageCollection.getGmlID() + "/coverageMember"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String featurePath = "#fid#" + annualCoverageCollection.getId() + "/coverageMember"; //$NON-NLS-1$ //$NON-NLS-2$
     final IKalypsoFeatureTheme existingTheme = CascadingThemeHelper.findThemeWithFeaturePath( parentKalypsoTheme, featurePath );
     if( existingTheme != null )
     {
@@ -781,7 +784,7 @@ public class RiskModelHelper
     if( rasterDataModel == null )
       throw new CoreException( failedToLoadRiskStatus );
 
-    final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
+    final IFeatureBindingCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
 
     /* --- demo code for accessing the depth grid coverage collections --- */
     final IContainer scenarioFolder = riskDataProvider.getScenarioFolder();
@@ -805,17 +808,18 @@ public class RiskModelHelper
       annualCoverageCollection.setName( names[i] );
       annualCoverageCollection.setDescription( descriptions[i] );
       annualCoverageCollection.setReturnPeriod( returnPeriods[i] );
-      createdFeatures.add( annualCoverageCollection.getFeature() );
+      createdFeatures.add( annualCoverageCollection );
 
       int coverageCount = 0;
-      for( final ICoverage coverage : grids[i] )
+      IFeatureBindingCollection<ICoverage> coverages = grids[i].getCoverages();
+      for( final ICoverage coverage : coverages )
       {
-        final String subtaks = Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17", names[i], coverageCount + 1, grids[i].size() ); //$NON-NLS-1$
+        final String subtaks = Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17", names[i], coverageCount + 1, coverages.size() ); //$NON-NLS-1$
         monitor.subTask( subtaks );
 
         // NO! When imported from Flood, return period is always 1 by default, so files will be overwritten!
         //        final String targetFileName = String.format( "grid_%d_%d", annualCoverageCollection.getReturnPeriod(), coverageCount ); //$NON-NLS-1$
-        final String targetFileName = String.format( "grid_%s_%d", annualCoverageCollection.getGmlID(), coverageCount ); //$NON-NLS-1$
+        final String targetFileName = String.format( "grid_%s_%d", annualCoverageCollection.getId(), coverageCount ); //$NON-NLS-1$
 
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
@@ -838,8 +842,9 @@ public class RiskModelHelper
 
     /* ------ */
     // TODO: maybe save other models?
+    final Feature f1 = (Feature) rasterDataModel.getFeature().getProperty( IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
     final GMLWorkspace workspace = rasterDataModel.getFeature().getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, f1, createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     riskDataProvider.postCommand( IRasterDataModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.20" ), false ) ); //$NON-NLS-1$
     riskDataProvider.saveModel( IRasterDataModel.class.getName(), new NullProgressMonitor() );
   }
