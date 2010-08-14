@@ -56,12 +56,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.Hydrotop;
-import org.kalypso.model.hydrology.binding.Hydrotop.HYDROTOP_TYPE;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.SoilType;
-import org.kalypso.model.hydrology.binding.suds.Greenroof;
-import org.kalypso.model.hydrology.binding.suds.Swale;
-import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -280,7 +276,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
             final GM_Object catchmentGeo = catchment.getDefaultGeometryPropertyValue();
             final boolean l_bTest = isPointInsidePolygon( catchmentGeo, point );
-// if( catchmentGeo.contains( point ) )
             if( l_bTest )
             {
               catchmentFound = true;
@@ -321,7 +316,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             hydrotop.setLanduse( ((XLinkedFeature_Impl) landuseClassLink).getFeatureId() );
           else
             hydrotop.setLanduse( featureLanduse.getName() );
-          hydrotop.setDrainageType( landuse.getDrainageType() );
           if( m_isSealingCorrectionForced )
           {
             hydrotop.setCorrSealing( m_forcedSealingCorrectionFactorValue );
@@ -343,17 +337,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
               final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, sudsMemberRT, ft, href, null, null, null, null, null );
               hydrotopeSudsCollection.add( lnk );
-
-              final Feature sudFeature = ((XLinkedFeature_Impl) feature).getFeature();
-              if( sudFeature instanceof Swale || sudFeature instanceof SwaleInfiltrationDitch )
-                hydrotop.setHydrotopType( HYDROTOP_TYPE.MULDEN_RIGOLE );
-              else if( sudFeature instanceof Greenroof )
-                hydrotop.setHydrotopType( HYDROTOP_TYPE.DACHBEGRUENUNG );
-              else
-                hydrotop.setHydrotopType( HYDROTOP_TYPE.BODENSPEICHER );
             }
-            else
-              hydrotop.setHydrotopType( HYDROTOP_TYPE.BODENSPEICHER );
           }
         }
         else
