@@ -205,6 +205,10 @@ public class NetElement
     final String hrefWithFilter = filter == null ? href : ZmlURL.insertFilter( href, filter );
 
     final URL location = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefWithFilter );
+
+    // TODO: maybe we could cache the read observations, this would give quite some performance improvement, if the same
+// observation is used more than once
+
     final IObservation observation = ZmlFactory.parseXML( location ); //$NON-NLS-1$
 
     final StringBuffer writer = new StringBuffer();
