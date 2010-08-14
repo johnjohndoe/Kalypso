@@ -45,15 +45,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.kalypso.contribs.java.lang.DoubleToString;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -73,16 +70,6 @@ public final class NAZMLGenerator
   private static final ObjectFactory OF = new ObjectFactory();
 
   private static final DateFormat DF_GRAP_HEADER = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMddHHmm" ) ); //$NON-NLS-1$
-
-  private static final FieldPosition NO_OP_FIELD_POSITION = new FieldPosition( 0 );
-
-  private static final NumberFormat GRAP_VALUE_FORMAT = DecimalFormat.getNumberInstance( Locale.US );
-  static
-  {
-    GRAP_VALUE_FORMAT.setMinimumFractionDigits( 3 );
-    GRAP_VALUE_FORMAT.setMaximumFractionDigits( 3 );
-    GRAP_VALUE_FORMAT.setGroupingUsed( false );
-  }
 
   /**
    * debug = true skips converting ascii timeseries to zml timeseries while importing ascii
@@ -268,7 +255,9 @@ public final class NAZMLGenerator
 
     writer.append( grapDate ).append( ' ' );
 
-    GRAP_VALUE_FORMAT.format( valueToWrite, writer, NO_OP_FIELD_POSITION );
+    DoubleToString.appendFormattedNoThousands( writer, valueToWrite, 3, '.' );
+
+// GRAP_VALUE_FORMAT.format( valueToWrite, writer, NO_OP_FIELD_POSITION );
 
     writer.append( '\n' );
   }
