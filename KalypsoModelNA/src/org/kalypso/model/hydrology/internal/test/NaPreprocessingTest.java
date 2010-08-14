@@ -48,12 +48,11 @@ import java.util.logging.Logger;
 import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.compare.structuremergeviewer.Differencer;
-import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
-import org.kalypso.commons.compare.CompareUtils;
+import org.kalypso.commons.compare.DifferenceDumper;
+import org.kalypso.commons.compare.FileContentAssertDumper;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
@@ -74,45 +73,70 @@ public class NaPreprocessingTest
   @Test
   public void testDemoModel( ) throws Exception
   {
-    final File outputDir = FileUtilities.createNewTempDir( "naDemoModelPreprocessingTest" );
+    testRunPreprocessing( "naDemoModel", "resources/demoModel_Langzeit" );
+  }
+
+  @Test
+  public void testWeisseElsterLangzeit( ) throws Exception
+  {
+    testRunPreprocessing( "WeisseElsterLangzeit", "resources/weisseElster_langzeit" );
+  }
+
+  @Test
+  public void testWeisseElsterLangzeitPerformance( ) throws Exception
+  {
+    for( int i = 0; i < 10; i++ )
+      testRunPreprocessing( "WeisseElsterLangzeit", "resources/weisseElster_langzeit" );
+  }
+
+  private void testRunPreprocessing( final String label, final String baseResourceLocation ) throws Exception
+  {
+    final File outputDir = FileUtilities.createNewTempDir( label + "PreprocessingTest" );
     final File asciiDir = new File( outputDir, "ascii" );
     final File asciiExpectedDir = new File( outputDir, "asciiExpected" );
 
-    final NAModelPreprocessor preprocessor = initPreprocessor( asciiDir );
+    final NAConfiguration conf = new NAConfiguration( asciiDir );
+
+    final NAModelPreprocessor preprocessor = initPreprocessor( baseResourceLocation, asciiDir, conf );
 
     preprocessor.process( new NullSimulationMonitor() );
 
-    checkResult( asciiDir, asciiExpectedDir );
+
+    final File idMapFile = new File( outputDir, "IdMap.txt" ); //$NON-NLS-1$
+    conf.getIdManager().dump( idMapFile );
+
+    checkResult( baseResourceLocation, asciiDir, asciiExpectedDir );
 
     FileUtils.forceDelete( outputDir );
   }
 
-  private NAModelPreprocessor initPreprocessor( final File asciiDir ) throws Exception
+  private NAModelPreprocessor initPreprocessor( final String baseResourceLocation, final File asciiDir, final NAConfiguration conf ) throws Exception
   {
     final NaAsciiDirs outputDirs = new NaAsciiDirs( asciiDir );
-    final IDManager idManager = new IDManager();
-    final NaSimulationData simulationData = createDemoModelsimulationData();
 
-    final NAConfiguration conf = new NAConfiguration( asciiDir );
+    final URL gmlInputZipLocation = getClass().getResource( baseResourceLocation + "/gmlInput.zip" );
+    final URL baseURL = new URL( String.format( "jar:%s!/", gmlInputZipLocation.toExternalForm() ) );
+
+    final NaSimulationData simulationData = createDemoModelsimulationData( baseURL );
+
     conf.setSimulationData( simulationData );
 
     final URL context = simulationData.getModelWorkspace().getContext();
     conf.setZMLContext( context );
 
     final Logger logger = Logger.getAnonymousLogger();
+    final IDManager idManager = conf.getIdManager();
     final NAModelPreprocessor preprocessor = new NAModelPreprocessor( conf, outputDirs, idManager, simulationData, logger );
     return preprocessor;
   }
 
-  private NaSimulationData createDemoModelsimulationData( ) throws Exception
+  private NaSimulationData createDemoModelsimulationData( final URL base ) throws Exception
   {
-    final Class< ? extends NaPreprocessingTest> myClass = getClass();
-
-    final URL modelUrl = myClass.getResource( "resources/demoModel_Langzeit/gmlInput/calcCase.gml" );
-    final URL controlUrl = myClass.getResource( "resources/demoModel_Langzeit/gmlInput/expertControl.gml" );
-    final URL metaUrl = myClass.getResource( "resources/demoModel_Langzeit/gmlInput/.calculation" );
-    final URL parameterUrl = myClass.getResource( "resources/demoModel_Langzeit/gmlInput/calcParameter.gml" );
-    final URL hydrotopUrl = myClass.getResource( "resources/demoModel_Langzeit/gmlInput/calcHydrotop.gml.gz" );
+    final URL modelUrl = new URL( base, "calcCase.gml" );
+    final URL controlUrl = new URL( base, "expertControl.gml" );
+    final URL metaUrl = new URL( base, ".calculation" );
+    final URL parameterUrl = new URL( base, "calcParameter.gml" );
+    final URL hydrotopUrl = new URL( base, "calcHydrotop.gml" );
     final URL sudsUrl = null;
     final URL syntNUrl = null;
     final URL lzsimUrl = null;
@@ -120,11 +144,11 @@ public class NaPreprocessingTest
     return new NaSimulationData( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
   }
 
-  private void checkResult( final File asciiDir, final File asciiExpectedDir ) throws IOException
+  private void checkResult( final String baseResourceLocation, final File asciiDir, final File asciiExpectedDir ) throws IOException
   {
     /* Fetch the expected results */
     asciiExpectedDir.mkdir();
-    ZipUtilities.unzip( getClass().getResource( "resources/demoModel_Langzeit/expectedAscii.zip" ), asciiExpectedDir );
+    ZipUtilities.unzip( getClass().getResource( baseResourceLocation + "/expectedAscii.zip" ), asciiExpectedDir );
 
     /* compare with expected results */
     final FileStructureComparator actualComparator = new FileStructureComparator( asciiDir );
@@ -135,17 +159,13 @@ public class NaPreprocessingTest
     dumpDifferences( differences );
   }
 
-  private void dumpDifferences( final Object differences )
+  private static void dumpDifferences( final Object differences )
   {
-    if( differences == null )
-      return;
+    final FileContentAssertDumper elementDumper = new FileContentAssertDumper();
+    final DifferenceDumper differenceDumper = new DifferenceDumper( differences, elementDumper );
+    differenceDumper.dumpDifferences();
 
-    if( !(differences instanceof IDiffElement) )
-      Assert.fail( "Unknown differencer result: " + ObjectUtils.toString( differences ) );
-
-    final IDiffElement element = (IDiffElement) differences;
-    CompareUtils.dumpDiffElement( element, 0 );
-
-    Assert.fail( "Expected ascii files are different from actual ones. See console dump" );
+    if( differenceDumper.hasDifferences() )
+      Assert.fail( "Expected ascii files are different from actual ones. See console dump" );
   }
 }

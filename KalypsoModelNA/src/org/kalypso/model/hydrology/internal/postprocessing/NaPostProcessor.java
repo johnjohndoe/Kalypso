@@ -55,7 +55,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.tools.ant.taskdefs.Concat;
 import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -215,6 +214,7 @@ public class NaPostProcessor
   }
 
   /** kopiere statistische Ergebnis-Dateien */
+  // FIXME: why copy? bilanz does not belong to ascii and should be directly written to result dirs
   private void copyStatisticResultFile( final NaAsciiDirs asciiDirs, final NaResultDirs resultDirs )
   {
     resultDirs.bilanzDir.mkdirs();
