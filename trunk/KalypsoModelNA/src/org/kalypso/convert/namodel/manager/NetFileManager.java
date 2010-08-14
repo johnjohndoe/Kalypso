@@ -41,7 +41,6 @@
 package org.kalypso.convert.namodel.manager;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
@@ -56,7 +55,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
@@ -607,7 +606,7 @@ public class NetFileManager extends AbstractManager
     final URL linkURL = m_urlUtilities.resolveURL( workspace.getContext(), zuflussFile );
     if( !targetFile.exists() )
     {
-      final FileWriter writer = new FileWriter( targetFile );
+      final StringBuffer writer = new StringBuffer();
       final IObservation observation = ZmlFactory.parseXML( linkURL ); //$NON-NLS-1$
 
       final Boolean isSynteticZufluss = node.isSynteticZufluss();
@@ -638,7 +637,8 @@ public class NetFileManager extends AbstractManager
       }
       else
         NAZMLGenerator.createFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation );
-      IOUtils.closeQuietly( writer );
+
+      FileUtils.writeStringToFile( targetFile, writer.toString() );
     }
     specialBuffer.append( "    1234\n" ); // dummyLine //$NON-NLS-1$
     specialBuffer.append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

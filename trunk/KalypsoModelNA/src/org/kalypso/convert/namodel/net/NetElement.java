@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
@@ -168,8 +169,7 @@ public class NetElement
       final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( feature, klimaDir, m_conf ); //$NON-NLS-1$
       final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( feature, klimaDir, m_conf ); //$NON-NLS-1$
       final File parent = targetFileN.getParentFile();
-      if( !parent.exists() )
-        parent.mkdirs();
+      parent.mkdirs();
 
       if( metaControl.isUsePrecipitationForm() )
       {
@@ -178,47 +178,43 @@ public class NetElement
       }
       else
       {
-        // N
-        if( !targetFileN.exists() )
-        {
-          final TimeseriesLinkType linkN = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_NIEDERSCHLAG );
+        final TimeseriesLinkType linkN = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_NIEDERSCHLAG );
+        writeTimeseries( targetFileN, linkN, ITimeseriesConstants.TYPE_RAINFALL, null, null, null, null );
 
-          final URL linkURLN = m_urlUtils.resolveURL( m_conf.getZMLContext(), linkN.getHref() );
-          final IObservation observation = ZmlFactory.parseXML( linkURLN ); //$NON-NLS-1$
-          final FileWriter writer = new FileWriter( targetFileN );
-          NAZMLGenerator.createFile( writer, ITimeseriesConstants.TYPE_RAINFALL, observation );
-          IOUtils.closeQuietly( writer );
-        }
-        // T
-        if( !targetFileT.exists() )
-        {
-          final TimeseriesLinkType linkT = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_TEMPERATUR );
-          if( linkT != null )
-          {
-            final String hrefT = ZmlURL.insertFilter( linkT.getHref(), FILTER_T );
-            final URL linkURLT = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefT );
-            final IObservation observation = ZmlFactory.parseXML( linkURLT ); //$NON-NLS-1$
-            final FileWriter writer = new FileWriter( targetFileT );
-            NAZMLGenerator.createExt2File( writer, observation, simulationStart, simulationEnd, ITimeseriesConstants.TYPE_TEMPERATURE, "1.0" ); //$NON-NLS-1$
-            IOUtils.closeQuietly( writer );
-          }
-        }
-        // V
-        if( !targetFileV.exists() )
-        {
-          final TimeseriesLinkType linkV = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_VERDUNSTUNG );
-          if( linkV != null )
-          {
-            final String hrefV = ZmlURL.insertFilter( linkV.getHref(), FILTER_V );
-            final URL linkURLV = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefV );
-            final IObservation observation = ZmlFactory.parseXML( linkURLV ); //$NON-NLS-1$
-            final FileWriter writer = new FileWriter( targetFileV );
-            NAZMLGenerator.createExt2File( writer, observation, simulationStart, simulationEnd, ITimeseriesConstants.TYPE_EVAPORATION, "0.5" ); //$NON-NLS-1$
-            IOUtils.closeQuietly( writer );
-          }
-        }
+        final TimeseriesLinkType linkT = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_TEMPERATUR );
+        writeTimeseries( targetFileT, linkT, ITimeseriesConstants.TYPE_TEMPERATURE, FILTER_T, "1.0", simulationStart, simulationEnd );
+
+        final TimeseriesLinkType linkV = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_VERDUNSTUNG );
+        writeTimeseries( targetFileV, linkV, ITimeseriesConstants.TYPE_EVAPORATION, FILTER_V, "0.5", simulationStart, simulationEnd );
       }
     }
+  }
+
+  private void writeTimeseries( final File targetFile, final TimeseriesLinkType link, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws Exception
+  {
+    if( link == null )
+      return;
+
+    if( targetFile.exists() )
+      return;
+
+    // TODO: remove
+// System.out.println( "Writing " + targetFile.getName() );
+
+    final String href = link.getHref();
+    final String hrefWithFilter = filter == null ? href : ZmlURL.insertFilter( href, filter );
+
+    final URL location = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefWithFilter );
+    final IObservation observation = ZmlFactory.parseXML( location ); //$NON-NLS-1$
+
+    final StringBuffer writer = new StringBuffer();
+
+    if( defaultValue == null )
+      NAZMLGenerator.createFile( writer, valueAxisType, observation );
+    else
+      NAZMLGenerator.createExt2File( writer, observation, simulationStart, simulationEnd, valueAxisType, defaultValue ); //$NON-NLS-1$
+
+    FileUtils.writeStringToFile( targetFile, writer.toString() );
   }
 
   private void addDownStream( final NetElement downStreamElement )

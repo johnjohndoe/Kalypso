@@ -30,7 +30,6 @@
 package org.kalypso.convert.namodel.timeseries;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,7 +56,7 @@ public class Ext2Writer
 
   private final Date m_end;
 
-  private DateFormat m_dateFormat;
+  private final DateFormat m_dateFormat;
 
   public Ext2Writer( final Date start, final Date end )
   {
@@ -66,7 +65,7 @@ public class Ext2Writer
     m_end = end;
   }
 
-  public void write( final IObservation observation, final String axisType, final Writer writer, final String defaultValue ) throws IOException, SensorException
+  public void write( final IObservation observation, final String axisType, final Appendable writer, final String defaultValue ) throws IOException, SensorException
   {
     final IAxis[] axisList = observation.getAxisList();
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
@@ -77,7 +76,7 @@ public class Ext2Writer
     Date obsDate = (Date) values.getElement( obsOffset, dateAxis );
 
     // TimeserieUtils.
-    writer.write( "EX2\n" ); // header //$NON-NLS-1$
+    writer.append( "EX2\n" ); // header //$NON-NLS-1$
     final Calendar calendarStart = NATimeSettings.getInstance().getCalendar( m_start );
     calendarStart.set( Calendar.DAY_OF_YEAR, 0 );
     calendarStart.set( Calendar.HOUR_OF_DAY, 7 );
@@ -85,7 +84,7 @@ public class Ext2Writer
 
     final Calendar calendarEnd = NATimeSettings.getInstance().getCalendar();
     calendarEnd.setTime( m_end );
-    int writeTillYear = calendarEnd.get( Calendar.YEAR ) + 1;
+    final int writeTillYear = calendarEnd.get( Calendar.YEAR ) + 1;
     boolean goOn = true;
     while( goOn )
     {
@@ -95,17 +94,17 @@ public class Ext2Writer
         obsOffset++;
         obsDate = (Date) values.getElement( obsOffset, dateAxis );
       }
-      writer.write( m_dateFormat.format( date ) );
+      writer.append( m_dateFormat.format( date ) );
       if( Math.abs( obsDate.getTime() - date.getTime() ) <= twelveHinMillis )
       {
         final Double value = (Double) values.getElement( obsOffset, valueAxis );
-        writer.write( value.toString() );
+        writer.append( value.toString() );
       }
       else
       {
-        writer.write( defaultValue );
+        writer.append( defaultValue );
       }
-      writer.write( "\n" ); //$NON-NLS-1$
+      writer.append( '\n' );
       calendarStart.add( Calendar.DATE, 1 );
       final int year = calendarStart.get( Calendar.YEAR );
       if( year > writeTillYear )

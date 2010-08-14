@@ -41,7 +41,9 @@
 package org.kalypso.convert.namodel.net.visitors;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.NetElementCircleFinder;
@@ -56,7 +58,7 @@ public class SimulationVisitor extends NetElementVisitor
 
   private final List<NetElement> m_simulated = new ArrayList<NetElement>();
 
-  private final List<NetElement> m_cycleTest = new ArrayList<NetElement>();
+  private final Set<NetElement> m_cycleTest = new HashSet<NetElement>();
 
   public SimulationVisitor( final NetElementVisitor innerVisitor )
   {
