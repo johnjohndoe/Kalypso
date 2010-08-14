@@ -115,26 +115,21 @@ public class BankSelectorFunction implements IRectangleMapFunction
     final FeatureList featureList = bankTheme.getFeatureList();
     final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
 
-    final List list = featureList.query( envelope, null );
+    final List< ? > list = featureList.query( envelope, null );
     final Polygon rectanglePoly = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );
 
-    for( final Iterator iter = list.iterator(); iter.hasNext(); )
+    for( final Iterator< ? > iter = list.iterator(); iter.hasNext(); )
     {
       GM_Curve line = null;
 
       final Object o = iter.next();
       final Feature feature = FeatureHelper.getFeature( workspace, o );
 
-      final GM_Object geometry = feature.getDefaultGeometryProperty();
+      final GM_Object geometry = feature.getDefaultGeometryPropertyValue();
 
       if( geometry instanceof GM_MultiCurve )
       {
         final GM_MultiCurve multiline = (GM_MultiCurve) geometry;
-        if( multiline == null )
-        {
-          SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.2" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-          return;
-        }
         if( multiline.getSize() > 1 )
         {
           SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.4" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -146,11 +141,6 @@ public class BankSelectorFunction implements IRectangleMapFunction
       else if( geometry instanceof GM_Curve )
       {
         final GM_Curve curve = (GM_Curve) geometry;
-        if( curve == null )
-        {
-          SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.6" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-          return;
-        }
         line = curve;
       }
       try
@@ -195,7 +185,7 @@ public class BankSelectorFunction implements IRectangleMapFunction
 
   private GM_Curve getCurveFromBanklineFeature( final Feature feature )
   {
-    final GM_Object geometry = feature.getDefaultGeometryProperty();
+    final GM_Object geometry = feature.getDefaultGeometryPropertyValue();
 
     GM_Curve bankCurve = null;
 
