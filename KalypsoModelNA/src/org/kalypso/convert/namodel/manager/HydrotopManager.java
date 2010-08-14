@@ -226,6 +226,10 @@ public class HydrotopManager extends AbstractManager
         {
           // FIXME: slow: is it really necessary to intersect hydrotopes with catchments? Doesnt the hydrotopes already
           // have the i of catchment? At least we should cache pointintrin / interior point to spped up
+
+          // FIXME: hydrotope-gml even contain links to the catchment! So there really is no need for this.
+          // Only some old hydrotope gml's have null-links, so we just need something for backwards compability.
+
           final Geometry hydrotopGeometry = JTSAdapter.export( hydrotop.getGeometry() );
           if( catchmentGeometry.contains( hydrotopGeometry.getInteriorPoint() ) )
           {

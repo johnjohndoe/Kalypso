@@ -82,12 +82,12 @@ public class NaPreprocessingTest
     testRunPreprocessing( "WeisseElsterLangzeit", "resources/weisseElster_langzeit" );
   }
 
-  @Test
-  public void testWeisseElsterLangzeitPerformance( ) throws Exception
-  {
-    for( int i = 0; i < 10; i++ )
-      testRunPreprocessing( "WeisseElsterLangzeit", "resources/weisseElster_langzeit" );
-  }
+// @Test
+// public void testWeisseElsterLangzeitPerformance( ) throws Exception
+// {
+// for( int i = 0; i < 10; i++ )
+// testRunPreprocessing( "WeisseElsterLangzeit", "resources/weisseElster_langzeit" );
+// }
 
   private void testRunPreprocessing( final String label, final String baseResourceLocation ) throws Exception
   {

@@ -95,27 +95,19 @@ public class Hydrotop extends Feature_Impl
     }
   }
 
-  private static final int DEFAULT_ASCII_HYDROTOP_TYPE = 0;
-
   public static final QName QNAME = new QName( NaModelConstants.NS_NAHYDROTOP, "Hydrotop" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAHYDROTOP, "position" ); //$NON-NLS-1$
+  private static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAHYDROTOP, "position" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_AREA = new QName( NaModelConstants.NS_NAHYDROTOP, "area" ); //$NON-NLS-1$
+  private static final QName QNAME_PROP_LANDUSE = new QName( NaModelConstants.NS_NAHYDROTOP, "landuse" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_LANDUSE = new QName( NaModelConstants.NS_NAHYDROTOP, "landuse" ); //$NON-NLS-1$
+  private static final QName QNAME_PROP_SOILTYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "soiltype" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_SOILTYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "soiltype" ); //$NON-NLS-1$
+  private static final QName QNAME_PROP_CORR_SEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CORR_SEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
+  private static final QName QNAME_PROP_M_PERKM = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DRAINAGE_TYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "drainageType" ); //$NON-NLS-1$
-
-  public static final QName QNAME_PROP_M_PERKM = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
-
-  public static final QName QNAME_PROP_M_F1GWS = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
-
-  public static final QName QNAME_PROP_HYD_TYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "hydType" ); //$NON-NLS-1$
+  private static final QName QNAME_PROP_M_F1GWS = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
 
   public static final QName QNAME_PROP_SUD_MEMBERS = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
 
@@ -178,16 +170,6 @@ public class Hydrotop extends Feature_Impl
     setProperty( QNAME_PROP_CORR_SEALING, value );
   }
 
-  public String getDrainageType( )
-  {
-    return getProperty( QNAME_PROP_DRAINAGE_TYPE, String.class );
-  }
-
-  public void setDrainageType( final String value )
-  {
-    setProperty( QNAME_PROP_DRAINAGE_TYPE, value );
-  }
-
   public double getMaxPerkolationRate( )
   {
     return getProperty( QNAME_PROP_M_PERKM, Double.class );
@@ -206,30 +188,6 @@ public class Hydrotop extends Feature_Impl
   public void setGWFactor( final double value )
   {
     setProperty( QNAME_PROP_M_F1GWS, value );
-  }
-
-  public int getAsciiHydrotopType( )
-  {
-    final HYDROTOP_TYPE hydrotopType = getHydrotopType();
-    return hydrotopType == null ? DEFAULT_ASCII_HYDROTOP_TYPE : hydrotopType.getAsciiValue();
-  }
-
-  public HYDROTOP_TYPE getHydrotopType( )
-  {
-    try
-    {
-      final String property = getProperty( QNAME_PROP_HYD_TYPE, String.class );
-      return property == null ? null : HYDROTOP_TYPE.valueOf( property );
-    }
-    catch( final IllegalArgumentException e )
-    {
-      return null;
-    }
-  }
-
-  public void setHydrotopType( final HYDROTOP_TYPE value )
-  {
-    setProperty( QNAME_PROP_HYD_TYPE, value.getName() );
   }
 
   public XLinkedFeature_Impl getCatchmentMember( )
@@ -253,16 +211,11 @@ public class Hydrotop extends Feature_Impl
         return false;
       if( getCatchmentMember() == null || other.getCatchmentMember() == null || !getCatchmentMember().getFeatureId().equals( other.getCatchmentMember().getFeatureId() ) )
         return false;
-      if( (getDrainageType() == null && other.getDrainageType() == null) || (getDrainageType() != null && !getDrainageType().equals( other.getDrainageType() )) )
-        return false;
       if( getCorrSealing() != other.getCorrSealing() )
         return false;
       if( getMaxPerkolationRate() != other.getMaxPerkolationRate() )
         return false;
       if( getGWFactor() != other.getGWFactor() )
-        return false;
-      final HYDROTOP_TYPE hydrotopType = getHydrotopType();
-      if( !(hydrotopType == null && other.getHydrotopType() == null) || (hydrotopType != null && !hydrotopType.equals( other.getHydrotopType() )) )
         return false;
       if( getSudCollection().size() != other.getSudCollection().size() )
         return false;
