@@ -150,7 +150,7 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
    *      java.util.Date, java.util.Date, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IObservation[] createRainfall( Feature[] catchmentFeatures, Date from, Date to, String sourceFilter, IProgressMonitor monitor ) throws CoreException
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final String sourceFilter, final IProgressMonitor monitor ) throws CoreException
   {
     /* Update the log. */
     LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde gestartet.", null ) );
@@ -217,7 +217,7 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
 
         final Geometry areaGeometry = JTSAdapter.export( area );
         final double[] weights = JTSUtilities.fractionAreasOf( areaGeometry, ombrometerPolygons );
-        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights );
+        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://thiessen" );
       }
 
       /* Update the log. */

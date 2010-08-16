@@ -126,7 +126,7 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
    * @param propValues
    *          The property values.
    */
-  public InverseDistanceRainfallGenerator( Object parent, IRelationType parentRelation, IFeatureType featureType, String id, Object[] propValues )
+  public InverseDistanceRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, featureType, id, propValues );
 
@@ -137,95 +137,96 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
    * @see org.kalypso.model.rcm.binding.IRainfallGenerator#setLog(org.eclipse.core.runtime.ILog)
    */
   @Override
-  public void setLog( ILog log )
+  public void setLog( final ILog log )
   {
     m_log = log;
   }
 
   /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.feature.Feature[], java.util.Date, java.util.Date, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.feature.Feature[],
+   *      java.util.Date, java.util.Date, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IObservation[] createRainfall( Feature[] catchmentFeatures, Date from, Date to, String sourceFilter, IProgressMonitor monitor ) throws CoreException
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final String sourceFilter, final IProgressMonitor monitor ) throws CoreException
   {
     /* Update the log. */
     LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde gestartet.", null ) );
 
     /* Get the needed properties. */
-    Feature ombrometerCollection = getProperty( QNAME_PROP_ombrometerCollection, Feature.class );
-    String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
-    String linkPath = getProperty( QNAME_PROP_timeseriesLinkPath, String.class );
-    String stationLocationPath = getProperty( QNAME_PROP_stationLocationPath, String.class );
-    BigInteger numberOmbrometers = getProperty( QNAME_PROP_numberOmbrometers, BigInteger.class );
-    String catchmentAreaPath = getProperty( QNAME_PROP_catchmentAreaPath, String.class );
+    final Feature ombrometerCollection = getProperty( QNAME_PROP_ombrometerCollection, Feature.class );
+    final String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
+    final String linkPath = getProperty( QNAME_PROP_timeseriesLinkPath, String.class );
+    final String stationLocationPath = getProperty( QNAME_PROP_stationLocationPath, String.class );
+    final BigInteger numberOmbrometers = getProperty( QNAME_PROP_numberOmbrometers, BigInteger.class );
+    final String catchmentAreaPath = getProperty( QNAME_PROP_catchmentAreaPath, String.class );
 
     /* Create the paths. */
-    GMLXPath collectionXPath = new GMLXPath( collectionPath, getWorkspace().getNamespaceContext() );
-    GMLXPath linkXPath = new GMLXPath( linkPath, getWorkspace().getNamespaceContext() );
-    GMLXPath stationLocationXPath = new GMLXPath( stationLocationPath, getWorkspace().getNamespaceContext() );
-    GMLXPath catchmentAreaXPath = new GMLXPath( catchmentAreaPath, getWorkspace().getNamespaceContext() );
+    final GMLXPath collectionXPath = new GMLXPath( collectionPath, getWorkspace().getNamespaceContext() );
+    final GMLXPath linkXPath = new GMLXPath( linkPath, getWorkspace().getNamespaceContext() );
+    final GMLXPath stationLocationXPath = new GMLXPath( stationLocationPath, getWorkspace().getNamespaceContext() );
+    final GMLXPath catchmentAreaXPath = new GMLXPath( catchmentAreaPath, getWorkspace().getNamespaceContext() );
 
     try
     {
       /* Get the ombrometers. */
-      FeatureList ombrometerList = (FeatureList) GMLXPathUtilities.query( collectionXPath, ombrometerCollection );
+      final FeatureList ombrometerList = (FeatureList) GMLXPathUtilities.query( collectionXPath, ombrometerCollection );
 
       /* Convert to an array. */
-      List<Feature> featureList = new ArrayList<Feature>( ombrometerList.size() );
-      GMLWorkspace workspace = ombrometerList.getParentFeature().getWorkspace();
-      for( Object object : ombrometerList )
+      final List<Feature> featureList = new ArrayList<Feature>( ombrometerList.size() );
+      final GMLWorkspace workspace = ombrometerList.getParentFeature().getWorkspace();
+      for( final Object object : ombrometerList )
       {
-        Feature feature = FeatureHelper.getFeature( workspace, object );
+        final Feature feature = FeatureHelper.getFeature( workspace, object );
         if( feature != null )
         {
           // TODO Should be in the generator gml (rcm) ...
-          Boolean active = (Boolean) feature.getProperty( IOmbrometer.QNAME_PROP_ISUSED );
+          final Boolean active = (Boolean) feature.getProperty( IOmbrometer.QNAME_PROP_ISUSED );
           if( active != null && active.booleanValue() == true )
             featureList.add( feature );
         }
       }
 
       /* Convert to an array. */
-      Feature[] ombrometerFeatures = featureList.toArray( new Feature[featureList.size()] );
+      final Feature[] ombrometerFeatures = featureList.toArray( new Feature[featureList.size()] );
 
       /* Convert to zml observations . */
-      TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkXPath, new TimeseriesLinkType[ombrometerFeatures.length] );
-      URL sourceContext = ombrometerList.getParentFeature().getWorkspace().getContext();
-      IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, from, to, sourceFilter, sourceContext );
+      final TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkXPath, new TimeseriesLinkType[ombrometerFeatures.length] );
+      final URL sourceContext = ombrometerList.getParentFeature().getWorkspace().getContext();
+      final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, from, to, sourceFilter, sourceContext );
 
       /* Get the station locations. */
-      GM_Point[] ombrometerStations = FeatureHelper.getProperties( ombrometerFeatures, stationLocationXPath, new GM_Point[ombrometerFeatures.length] );
+      final GM_Point[] ombrometerStations = FeatureHelper.getProperties( ombrometerFeatures, stationLocationXPath, new GM_Point[ombrometerFeatures.length] );
 
       /* Convert to JTS geometries. */
-      Point[] ombrometerPoints = new Point[ombrometerStations.length];
-      IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final Point[] ombrometerPoints = new Point[ombrometerStations.length];
+      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       for( int i = 0; i < ombrometerStations.length; i++ )
       {
-        GM_Point ombrometerPoint = ombrometerStations[i];
-        GM_Object ombrometerTransformed = transformer.transform( ombrometerPoint );
+        final GM_Point ombrometerPoint = ombrometerStations[i];
+        final GM_Object ombrometerTransformed = transformer.transform( ombrometerPoint );
         ombrometerPoints[i] = (Point) JTSAdapter.export( ombrometerTransformed );
       }
 
       /* Get all catchment areas. */
-      GM_MultiSurface[] areas = RainfallGeneratorUtilities.findCatchmentAreas( catchmentFeatures, catchmentAreaXPath );
+      final GM_MultiSurface[] areas = RainfallGeneratorUtilities.findCatchmentAreas( catchmentFeatures, catchmentAreaXPath );
 
       /* Iterate through all catchments. */
-      IObservation[] result = new IObservation[areas.length];
+      final IObservation[] result = new IObservation[areas.length];
       for( int i = 0; i < areas.length; i++ )
       {
         /* Get the catchment. */
-        GM_MultiSurface area = areas[i];
+        final GM_MultiSurface area = areas[i];
         if( area == null )
           continue;
 
         /* Convert to a JTS geometry. */
-        Geometry areaGeometry = JTSAdapter.export( area );
+        final Geometry areaGeometry = JTSAdapter.export( area );
 
         /* Get the weights. */
-        double[] weights = getWeights( areaGeometry, ombrometerPoints, numberOmbrometers.intValue() );
+        final double[] weights = getWeights( areaGeometry, ombrometerPoints, numberOmbrometers.intValue() );
 
         /* Combine the observations. */
-        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights );
+        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://inverse.distance" );
       }
 
       /* Update the log. */
@@ -233,28 +234,28 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
 
       return result;
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       /* Update the log. */
       LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Inverse Distanz) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
 
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to convert Geometrie: " + e.toString(), e ) );
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       /* Update the log. */
       LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Inverse Distanz) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
 
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to combine Observations: " + e.toString(), e ) );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       /* Update the log. */
       LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Inverse Distanz) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
 
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to load Observations: " + e.toString(), e ) );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       /* Update the log. */
       LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Inverse Distanz) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
@@ -281,24 +282,24 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
    *          used. The unused ombrometers will get a 0.0 factor.
    * @return The weights (factors) for each ombrometer observation (in the same order as the ombrometers).
    */
-  private double[] getWeights( Geometry areaGeometry, Point[] ombrometerPoints, int numberOmbrometers )
+  private double[] getWeights( final Geometry areaGeometry, final Point[] ombrometerPoints, final int numberOmbrometers )
   {
     /* Get the inverse distance element, containing the factor, for each omrometer observation. */
     /* They will be still sorted by the distance to the area. */
-    List<InverseDistanceElement> elements = getFactors( areaGeometry, ombrometerPoints, numberOmbrometers );
+    final List<InverseDistanceElement> elements = getFactors( areaGeometry, ombrometerPoints, numberOmbrometers );
 
     /* So bring the factors in the right order again. */
-    double[] weights = new double[ombrometerPoints.length];
+    final double[] weights = new double[ombrometerPoints.length];
     for( int i = 0; i < elements.size(); i++ )
     {
       /* Get the inverse distance element, containing the factor. */
-      InverseDistanceElement element = elements.get( i );
+      final InverseDistanceElement element = elements.get( i );
 
       /* Get the index. */
-      int index = element.getIndex();
+      final int index = element.getIndex();
 
       /* Get the factor. */
-      double factor = element.getFactor();
+      final double factor = element.getFactor();
 
       /* Set it at the right place. */
       weights[index] = factor;
@@ -319,26 +320,26 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
    *          used. The unused ombrometers will get a 0.0 factor.
    * @return The factors for each ombrometer observation (they will be sorted by the distance to the area).
    */
-  private List<InverseDistanceElement> getFactors( Geometry areaGeometry, Point[] ombrometerPoints, int numberOmbrometers )
+  private List<InverseDistanceElement> getFactors( final Geometry areaGeometry, final Point[] ombrometerPoints, final int numberOmbrometers )
   {
     /* Create the inverse distance elements. */
-    List<InverseDistanceElement> elements = getInverseDistanceElemets( areaGeometry, ombrometerPoints );
+    final List<InverseDistanceElement> elements = getInverseDistanceElemets( areaGeometry, ombrometerPoints );
 
     /* The sum of all distances. */
     double sumDistances = 0.0;
 
     /* Calculate the distances. */
-    List<Double> distances = new ArrayList<Double>();
+    final List<Double> distances = new ArrayList<Double>();
     for( int i = 0; i < elements.size(); i++ )
     {
       if( numberOmbrometers > 0 && i >= numberOmbrometers )
         break;
 
       /* Get the inverse distance element. */
-      InverseDistanceElement element = elements.get( i );
+      final InverseDistanceElement element = elements.get( i );
 
       /* Get the distance. */
-      double distance = 1 / element.getDistance();
+      final double distance = 1 / element.getDistance();
 
       /* First add it to the sum of distances. */
       sumDistances = sumDistances + distance;
@@ -354,13 +355,13 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
         break;
 
       /* Get the inverse distance element. */
-      InverseDistanceElement element = elements.get( i );
+      final InverseDistanceElement element = elements.get( i );
 
       /* Get the distance. */
-      Double distance = distances.get( i );
+      final Double distance = distances.get( i );
 
       /* Calculate the factor. */
-      double factor = (distance.doubleValue() / sumDistances);
+      final double factor = (distance.doubleValue() / sumDistances);
 
       /* Add it to the corresponding element. */
       element.setFactor( factor );
@@ -382,18 +383,18 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
    *         geometry and the second item of an element will be a ombrometer point of the list. The elements will be
    *         sorted by the distance of the contained items.
    */
-  private List<InverseDistanceElement> getInverseDistanceElemets( Geometry areaGeometry, Point[] ombrometerPoints )
+  private List<InverseDistanceElement> getInverseDistanceElemets( final Geometry areaGeometry, final Point[] ombrometerPoints )
   {
     /* Memory for the results. */
-    List<InverseDistanceElement> results = new ArrayList<InverseDistanceElement>();
+    final List<InverseDistanceElement> results = new ArrayList<InverseDistanceElement>();
 
     for( int i = 0; i < ombrometerPoints.length; i++ )
     {
       /* Get the ombrometer point. */
-      Point ombrometerPoint = ombrometerPoints[i];
+      final Point ombrometerPoint = ombrometerPoints[i];
 
       /* Create the inverse distance element. */
-      InverseDistanceElement element = new InverseDistanceElement( areaGeometry, ombrometerPoint, i );
+      final InverseDistanceElement element = new InverseDistanceElement( areaGeometry, ombrometerPoint, i );
 
       /* Add to the results. */
       results.add( element );
