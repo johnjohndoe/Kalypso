@@ -63,6 +63,7 @@ import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.TuppleModelsLinearAdd;
+import org.kalypso.ogc.sensor.timeseries.datasource.AddDataSourceObservationHandler;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -151,9 +152,11 @@ public final class RainfallGeneratorUtilities
    *          The observations to combine.
    * @param weights
    *          The weights to use.
+   * @param dataSource
+   *          The data source of the resulting observation
    * @return A new combined observation.
    */
-  public static IObservation combineObses( final IObservation[] observations, final double[] weights ) throws SensorException
+  public static IObservation combineObses( final IObservation[] observations, final double[] weights, final String dataSource ) throws SensorException
   {
     /* There should be a weight for each observation. */
     Assert.isTrue( observations.length == weights.length );
@@ -164,6 +167,7 @@ public final class RainfallGeneratorUtilities
       return null;
 
     /* Some things of the first observation. */
+
     final IObservation firstObservation = observations[0];
     final MetadataList firstMetadataList = firstObservation.getMetadataList();
     final String firstStart = firstMetadataList.getProperty( TimeserieUtils.MD_VORHERSAGE_START );
@@ -172,6 +176,7 @@ public final class RainfallGeneratorUtilities
     final List<ITupleModel> observationValues = new ArrayList<ITupleModel>();
     for( final IObservation observation : observations )
       observationValues.add( observation.getValues( null ) );
+
     final ITupleModel[] tuppleModels = observationValues.toArray( new ITupleModel[observationValues.size()] );
 
     final ITupleModel firstTuppleModel = firstObservation.getValues( null );
@@ -195,6 +200,9 @@ public final class RainfallGeneratorUtilities
     if( firstEnde != null )
       combinedObservation.getMetadataList().setProperty( TimeserieUtils.MD_VORHERSAGE_ENDE, firstEnde );
 
-    return combinedObservation;
+    /**
+     * ignore original data sources because rainfall generator combines different data sources
+     */
+    return new AddDataSourceObservationHandler( dataSource, dataSource, combinedObservation ).extend();
   }
 }
