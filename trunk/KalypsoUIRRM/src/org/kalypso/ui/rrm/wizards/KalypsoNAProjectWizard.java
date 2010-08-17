@@ -82,6 +82,9 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.Hydrotop;
+import org.kalypso.model.hydrology.binding.IHydrotope;
+import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
@@ -96,7 +99,6 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -319,23 +321,19 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   private void mapHyd( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
   {
-    final Feature rootFeature = m_hydWS.getRootFeature();
-    final IFeatureType hydFT = getFeatureType( "Hydrotop" ); //$NON-NLS-1$
+    final NAHydrotop naHydrotop = (NAHydrotop) m_hydWS.getRootFeature();
 
-    final FeatureList hydList = (FeatureList) rootFeature.getProperty( NaModelConstants.HYDRO_MEMBER );
-    final IRelationType targetRelation = hydList.getParentFeatureTypeProperty();
+    final IFeatureBindingCollection<IHydrotope> hydList = naHydrotop.getHydrotopes();
 
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
       final Feature sourceFeature = (Feature) sourceFeatureList.get( i );
-      final Feature targetFeature = FeatureFactory.createFeature( rootFeature, targetRelation, sourceFeature.getId(), hydFT, true );
-      final IPropertyType flaechPT = hydFT.getProperty( NaModelConstants.HYDRO_PROP_AREA );
-// final IPropertyType fakVersPT = hydFT.getProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR );
+      final IHydrotope targetFeature = hydList.addNew( Hydrotop.QNAME, sourceFeature.getId() );
       final Iterator<Object> it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
         final String targetkey = (String) it.next();
-        final IPropertyType targetPT = hydFT.getProperty( targetkey );
+        final IPropertyType targetPT = targetFeature.getFeatureType().getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
         if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
         {
@@ -345,8 +343,6 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
           if( so instanceof GM_MultiSurface )
           {
             targetFeature.setProperty( targetPT, so );
-            final double area = GeometryUtilities.calcArea( (GM_Object) so );
-            targetFeature.setProperty( flaechPT, new Double( area ) );
           }
           else if( so instanceof GM_Surface )
           {
@@ -355,8 +351,6 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
             final GM_MultiSurface MultiSurface = GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
             so = MultiSurface;
             targetFeature.setProperty( targetPT, so );
-            final double area = GeometryUtilities.calcArea( (GM_Object) so );
-            targetFeature.setProperty( flaechPT, new Double( area ) );
           }
           else if( pt instanceof IValuePropertyType )
           {

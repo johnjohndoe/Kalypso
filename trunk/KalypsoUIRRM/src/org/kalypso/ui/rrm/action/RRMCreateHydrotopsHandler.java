@@ -64,9 +64,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
+import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
+import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -75,8 +76,10 @@ import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -101,16 +104,17 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     FeatureList flPedology = null;
     FeatureList flGeology = null;
     FeatureList flCatchment = null;
-    FeatureList flHydrotops = null;
+    IFeatureBindingCollection<IHydrotope> flHydrotops = null;
     for( final IKalypsoTheme kalypsoTheme : themes )
     {
       final FeatureList list = ((IKalypsoFeatureTheme) kalypsoTheme).getFeatureList();
       final IRelationType featureTypeProperty = list.getParentFeatureTypeProperty();
+      final Feature parentFeature = list.getParentFeature();
       if( featureTypeProperty == null )
         return error( shell,  Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.1", kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
 
-      if( NaModelConstants.HYDRO_MEMBER.equals( featureTypeProperty.getQName() ) )
-        flHydrotops = list;
+      if( parentFeature instanceof NAHydrotop )
+        flHydrotops = ((NAHydrotop) parentFeature).getHydrotopes();
       else
       {
         if( LanduseCollection.QNAME_PROP_LANDUSEMEMBER.equals( featureTypeProperty.getQName() ) )
@@ -135,7 +139,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     final FeatureList fflPedology = flPedology;
     final FeatureList fflGeology = flGeology;
     final FeatureList fflCatchment = flCatchment;
-    final FeatureList fflHydrotops = flHydrotops;
+    final IFeatureBindingCollection<IHydrotope> fflHydrotops = flHydrotops;
 
     if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.4"), Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.5") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
@@ -148,7 +152,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
-        final HydrotopeCreationOperation op = new HydrotopeCreationOperation( fflLanduse, fflPedology, fflGeology, fflCatchment, fflHydrotops, workspace );
+        final HydrotopeCreationOperation op = new HydrotopeCreationOperation( fflLanduse, fflPedology, fflGeology, fflCatchment, fflHydrotops, workspace, null );
         op.setDissolveMode( true );
         try
         {
