@@ -106,22 +106,6 @@
       </defaultEnablement>
    </extension>
     <extension
-          point="org.eclipse.ui.intro.config">
-       <config
-             content=""
-             id="org.kalypso.model.product.introConfigId"
-             introId="org.kalypso.model.product.intro">
-          <presentation
-                home-page-id="root">
-             <implementation
-                   kind="html"
-                   os="win32,linux,macosx"
-                   style="content/shared.css">
-             </implementation>
-          </presentation>
-       </config>
-    </extension>
-    <extension
           point="org.eclipse.ui.navigator.viewer">
        <viewer
              viewerId="org.eclipse.ui.views.ResourceNavigator">
