@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,18 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -50,7 +56,36 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ASCIIHelper
 {
-  public static String toAsciiLine( final Feature feature, final String formatLine )
+  private final String[] m_asciiFormat;
+
+  public ASCIIHelper( final URL parseDefinition )
+  {
+    InputStream is = null;
+    List< ? > lines = new ArrayList<String>();
+    try
+    {
+      is = parseDefinition.openStream();
+      lines = IOUtils.readLines( is );
+      is.close();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+
+    m_asciiFormat = lines.toArray( new String[lines.size()] );
+  }
+
+  public String toAscii( final Feature feature, final int formatLineIndex )
+  {
+    return ASCIIHelper.toAsciiLine( feature, m_asciiFormat[formatLineIndex] );
+  }
+
+  private static String toAsciiLine( final Feature feature, final String formatLine )
   {
     final StringBuffer result = new StringBuffer( "" ); //$NON-NLS-1$
     final String[] formats = FortranFormatHelper.patternBrackets.split( formatLine );
@@ -67,7 +102,7 @@ public class ASCIIHelper
     return result.toString();
   }
 
-  public static String toAsciiValue( final Feature feature, final String pairFormat )
+  private static String toAsciiValue( final Feature feature, final String pairFormat )
   {
     if( "".equals( pairFormat ) ) //$NON-NLS-1$
       return ""; //$NON-NLS-1$

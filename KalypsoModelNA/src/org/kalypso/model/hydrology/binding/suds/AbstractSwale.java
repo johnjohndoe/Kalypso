@@ -49,7 +49,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class AbstractSwale extends AbstractSud implements IAbstractSwale
 {
-
   public AbstractSwale( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );

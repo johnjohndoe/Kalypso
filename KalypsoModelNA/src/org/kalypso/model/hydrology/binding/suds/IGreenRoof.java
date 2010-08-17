@@ -43,12 +43,11 @@ package org.kalypso.model.hydrology.binding.suds;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public interface IGreenRoof extends Feature
+public interface IGreenRoof extends ISudsWithElementType
 {
   public static final String IDEAL_LANDUSE_EXTENSIVE = "GRext_N"; //$NON-NLS-1$
 
@@ -96,8 +95,6 @@ public interface IGreenRoof extends Feature
   public QName QN_PROPERTY_EMERGENCY_SPILL_PIPE_ROUGHNESS = new QName( NaModelConstants.NS_NASUDS, "emergencySpillPipeRoughness" ); // double //$NON-NLS-1$
 
   public QName QN_PROPERTY_EMERGENCY_SPILL_HEIGHT = new QName( NaModelConstants.NS_NASUDS, "emergencySpillHeight" ); // double //$NON-NLS-1$
-
-  public String getElementType( );
 
   public Double getAreaPercentage( );
 

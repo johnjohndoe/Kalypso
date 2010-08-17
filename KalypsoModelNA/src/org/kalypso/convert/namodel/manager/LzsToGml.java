@@ -60,17 +60,19 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -156,18 +158,14 @@ public class LzsToGml
 
   private void readCatchmentStartCondition( final Catchment catchment ) throws Exception
   {
-    final Feature lzRootFE = m_lzWorkspace.getRootFeature();
-    final IGMLSchema gmlSchema = m_lzWorkspace.getGMLSchema();
-    final IFeatureType lzrootFT = gmlSchema.getFeatureType( new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ) ); //$NON-NLS-1$
-    final IFeatureType lzCatchmentFT = gmlSchema.getFeatureType( new QName( NaModelConstants.NS_INIVALUES, "Catchment" ) ); //$NON-NLS-1$
-    final IRelationType lzCatchmentMemberRT = (IRelationType) lzrootFT.getProperty( NaModelConstants.INI_CATCHMENT_MEMBER_PROP );
+    final InitialValues initialValues = (InitialValues) m_lzWorkspace.getRootFeature();
 
-    final Feature lzCatchmentFE = m_lzWorkspace.createFeature( lzRootFE, lzCatchmentMemberRT, lzCatchmentFT );
-    m_lzWorkspace.addFeatureAsComposition( lzRootFE, lzCatchmentMemberRT, 0, lzCatchmentFE );
-    lzCatchmentFE.setProperty( NaModelConstants.INI_HYD_FEATUREID_PROP, catchment.getId() );
+    final IFeatureBindingCollection<org.kalypso.model.hydrology.binding.initialValues.Catchment> catchments = initialValues.getCatchments();
+    final org.kalypso.model.hydrology.binding.initialValues.Catchment iniCatchment = catchments.addNew( org.kalypso.model.hydrology.binding.initialValues.Catchment.FEATURE_CATCHMENT );
+    iniCatchment.setNaCatchmentID( catchment );
 
     final int asciiID = m_idManager.getAsciiID( catchment );
-    lzCatchmentFE.setName( Integer.toString( asciiID ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    iniCatchment.setName( Integer.toString( asciiID ) ); //$NON-NLS-1$ //$NON-NLS-2$
     final String fileName = String.format( "we%s.lzs", asciiID ); //$NON-NLS-1$
     final File lzsFile = new File( m_lzsimDir, fileName );
 
@@ -176,7 +174,7 @@ public class LzsToGml
     try
     {
       fileReader = new FileReader( lzsFile );
-      readLzsFile( fileReader, catchment, lzCatchmentFE );
+      readLzsFile( fileReader, catchment, iniCatchment );
       fileReader.close();
     }
     catch( final Exception e )
@@ -285,17 +283,12 @@ public class LzsToGml
       // FIXME: shoudn't we throw some exception here?
       return;
 
-    final IGMLSchema gmlSchema = m_lzWorkspace.getGMLSchema();
-    final Feature lzRootFE = m_lzWorkspace.getRootFeature();
-    final IFeatureType lzrootFT = gmlSchema.getFeatureType( new QName( NaModelConstants.NS_INIVALUES, "InitialValues" ) ); //$NON-NLS-1$
-    final IRelationType lzChannelMemberRT = (IRelationType) lzrootFT.getProperty( NaModelConstants.INI_CHANNEL_MEMBER_PROP );
-    final IFeatureType lzChannelFT = gmlSchema.getFeatureType( new QName( NaModelConstants.NS_INIVALUES, "Channel" ) ); //$NON-NLS-1$
+    final InitialValues initialValues = (InitialValues) m_lzWorkspace.getRootFeature();
 
-    final Feature lzChannelFE = m_lzWorkspace.createFeature( lzRootFE, lzChannelMemberRT, lzChannelFT );
-    m_lzWorkspace.addFeatureAsComposition( lzRootFE, lzChannelMemberRT, 0, lzChannelFE );
-    lzChannelFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ), channel.getId() ); //$NON-NLS-1$
-    lzChannelFE.setName( Integer.toString( asciiID ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
+    final IFeatureBindingCollection<org.kalypso.model.hydrology.binding.initialValues.Channel> channels = initialValues.getChannels();
+    final org.kalypso.model.hydrology.binding.initialValues.Channel iniChannel = channels.addNew( org.kalypso.model.hydrology.binding.initialValues.Channel.FEATURE_CHANNEL );
+    iniChannel.setNaChannelID( channel );
+    iniChannel.setName( Integer.toString( asciiID ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     FileReader fileReader = null;
     try
@@ -305,7 +298,7 @@ public class LzsToGml
       fileReader.close();
 
       if( !Double.isNaN( qgs ) )
-        lzChannelFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "qgs" ), qgs ); //$NON-NLS-1$
+        iniChannel.setQgs( qgs );
     }
     finally
     {

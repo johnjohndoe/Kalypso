@@ -204,6 +204,10 @@
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
+              class="org.kalypso.model.hydrology.binding.NAHydrotop"
+              qname="{http://www.tuhh.de/hydrotop}NAHydrotop">
+        </feature>
+        <feature
               class="org.kalypso.model.hydrology.binding.Hydrotop"
               qname="{http://www.tuhh.de/hydrotop}Hydrotop">
         </feature>
@@ -269,6 +273,36 @@
         <feature
               class="org.kalypso.model.hydrology.binding.model.KMParameter"
               qname="{http://www.tuhh.de/kalypsoNA}KMParameter">
+        </feature>
+     </extension>
+     <extension
+           point="org.kalypso.deegree.featureBinding">
+        <feature
+              class="org.kalypso.model.hydrology.binding.parameter.Parameter"
+              qname="{http://www.tuhh.de/parameter}Parameter">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.parameter.Soiltype"
+              qname="{http://www.tuhh.de/parameter}Soiltype">
+        </feature>
+     </extension>
+     <extension
+           point="org.kalypso.deegree.featureBinding">
+        <feature
+              class="org.kalypso.model.hydrology.binding.initialValues.InitialValues"
+              qname="{http://www.tuhh.de/initialValues}InitialValues">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.initialValues.Catchment"
+              qname="{http://www.tuhh.de/initialValues}Catchment">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.initialValues.Channel"
+              qname="{http://www.tuhh.de/initialValues}Channel">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.initialValues.IniHyd"
+              qname="{http://www.tuhh.de/initialValues}IniHyd">
         </feature>
      </extension>
 </plugin>

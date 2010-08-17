@@ -61,7 +61,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * This function property creates 'arrows' from links beetween features.
  * 
- * @author Andreas von D�mming
+ * @author Andreas von Dömming
  * @author Gernot Belger
  */
 public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction

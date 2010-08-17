@@ -45,6 +45,8 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
@@ -102,6 +104,13 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       throw se;
     }
+    catch( final OperationCanceledException e )
+    {
+      final String msg = "Simulation cancelled by user";
+      logger.log( Level.INFO, msg );
+      monitor.setFinishInfo( IStatus.CANCEL, msg );
+      return;
+    }
     catch( final Exception e )
     {
       e.printStackTrace();
@@ -114,7 +123,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
       simulation.backupResults();
     }
-    
+
     resultEater.addResult( NaModelConstants.OUT_ZML, resultDir );
   }
 

@@ -48,12 +48,13 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Ignore;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
+import org.kalypso.model.hydrology.binding.Hydrotop;
+import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
+import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -65,6 +66,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -106,8 +108,8 @@ public class Test_Intersection extends TestCase
     final FeatureList soilTypesFeatureList = (FeatureList) pedologyWS.getRootFeature().getProperty( SoilTypeCollection.QNAME_PROP_SOILTYPEMEMBER );
     final FeatureList geologiesFeatureList = (FeatureList) geologyWS.getRootFeature().getProperty( GeologyCollection.QNAME_PROP_GEOLOGYMEMBER );
 
-    final FeatureList hydrotopFeatureList = (FeatureList) outputWS.getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
-    final IFeatureType typeHydrotop = outputWS.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT );
+    final NAHydrotop hydrotopeCollection = (NAHydrotop) outputWS.getRootFeature();
+    final IFeatureBindingCollection<IHydrotope> hydrotopes = hydrotopeCollection.getHydrotopes();
 
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
     geometryIntersector.addFeatureList( (List<Feature>)catchments );
@@ -116,10 +118,9 @@ public class Test_Intersection extends TestCase
     geometryIntersector.addFeatureList( landuseFeatureList );
     final List<MultiPolygon> intersectionList = geometryIntersector.intersect( new NullProgressMonitor() );
 
-    hydrotopFeatureList.clear();
     for( final Geometry geometry : intersectionList )
     {
-      final Feature feature = outputWS.createFeature( null, null, typeHydrotop );
+      final IHydrotope hydrotop = hydrotopes.addNew( Hydrotop.QNAME );
       final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
 
@@ -146,11 +147,13 @@ public class Test_Intersection extends TestCase
       {
         Landuse landuse = null;
         for( final Landuse l : landuseList )
+        {
           if( l.getDefaultGeometryPropertyValue().contains( point ) )
           {
             landuse = l;
             break;
           }
+        }
         if( landuse == null )
           continue;
         final Object landuseClassLink = landuse.getLanduse();
@@ -159,9 +162,8 @@ public class Test_Intersection extends TestCase
           value = ((XLinkedFeature_Impl) landuseClassLink).getFeatureId();
         else
           value = landuseClassLink.toString().substring( landuseClassLink.toString().indexOf( "#" ) + 1 );
-        feature.setProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME, value );
-        feature.setProperty( NaModelConstants.HYDRO_PROP_DAINAGETYPE, landuse.getDrainageType() );
-        feature.setProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR, landuse.getCorrSealing() );
+        hydrotop.setLanduse( value );
+        hydrotop.setCorrSealing( landuse.getCorrSealing() );
       }
       else
         continue;
@@ -171,20 +173,25 @@ public class Test_Intersection extends TestCase
       {
         SoilType soilType = null;
         for( final SoilType s : soilTypesList )
+        {
           if( s.getDefaultGeometryPropertyValue().contains( point ) )
           {
             soilType = s;
             break;
           }
+        }
+
         if( soilType == null )
           continue;
+
         final Object soiltypeClassLink = soilType.getSoilType();
         String value = "";
         if( soiltypeClassLink instanceof XLinkedFeature_Impl )
           value = ((XLinkedFeature_Impl) soiltypeClassLink).getFeatureId();
         else
           value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 );
-        feature.setProperty( NaModelConstants.HYDRO_PROP_SOILTYPE, value );
+
+        hydrotop.setSoilType( value );
       }
       else
         continue;
@@ -201,16 +208,13 @@ public class Test_Intersection extends TestCase
           }
         if( geology == null )
           continue;
-        feature.setProperty( NaModelConstants.HYDRO_PROP_MAXPERCOLATIONSRATE, geology.getMaxPerkulationsRate() );
-        feature.setProperty( NaModelConstants.HYDRO_PROP_INFLOWRATEGW, geology.getGWFactor() );
+        hydrotop.setMaxPerkolationRate( geology.getMaxPerkulationsRate() );
+        hydrotop.setGWFactor( geology.getGWFactor() );
       }
       else
         continue;
 
-      feature.setProperty( NaModelConstants.HYDRO_PROP_GEOM, JTSAdapter.wrap( geometry ) );
-      feature.setProperty( NaModelConstants.HYDRO_PROP_AREA, geometry.getArea() );
-
-      hydrotopFeatureList.add( feature );
+      hydrotop.setGeometry( (GM_MultiSurface) JTSAdapter.wrap( geometry ) );
     }
 
     GmlSerializer.serializeWorkspace( outputGML, outputWS, "UTF-8" );

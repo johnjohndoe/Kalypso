@@ -41,16 +41,9 @@
 package org.kalypso.convert.namodel.manager;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,10 +51,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
@@ -83,14 +72,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author doemming
  */
-public class CatchmentManager extends AbstractManager
+public class CatchmentManager
 {
-  private final IFeatureType m_catchmentFT;
-
-  private final IFeatureType m_bodenKorrekturFT;
-
-  private final IFeatureType m_grundwasserabflussFT;
-
   private final NAConfiguration m_conf;
 
   public static final String STD_TEMP_FILENAME = "std.tmp"; //$NON-NLS-1$
@@ -101,138 +84,13 @@ public class CatchmentManager extends AbstractManager
 
   private final Logger m_logger;
 
-  public CatchmentManager( final GMLSchema schema, final NAConfiguration conf, final Logger logger ) throws IOException
+  private final ASCIIHelper m_asciiHelper;
+
+  public CatchmentManager( final NAConfiguration conf, final Logger logger )
   {
-    super( conf.getCatchmentFormatURL() );
+    m_asciiHelper = new ASCIIHelper( getClass().getResource( "resources/formats/WernerCatchment.txt" ) ); //$NON-NLS-1$
     m_conf = conf;
     m_logger = logger;
-    m_catchmentFT = schema.getFeatureType( Catchment.FEATURE_CATCHMENT );
-    final IRelationType ftp1 = (IRelationType) m_catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
-    m_bodenKorrekturFT = ftp1.getTargetFeatureType();
-
-    final IRelationType ftp2 = (IRelationType) m_catchmentFT.getProperty( NaModelConstants.GRUNDWASSERABFLUSS_MEMBER );
-    m_grundwasserabflussFT = ftp2.getTargetFeatureType();
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
-   */
-  @Override
-  public Feature[] parseFile( final URL url ) throws Exception
-  {
-    final List<Feature> result = new ArrayList<Feature>();
-    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-    Feature fe = null;
-    while( (fe = readNextFeature( reader )) != null )
-      result.add( fe );
-    return result.toArray( new Feature[result.size()] );
-  }
-
-  private Feature readNextFeature( final LineNumberReader reader ) throws Exception
-  {
-    final HashMap<String, String> propCollector = new HashMap<String, String>();
-    final Map<IPropertyType, Object> fePropMap = new LinkedHashMap<IPropertyType, Object>();
-    String line;
-    // 0-8
-    for( int i = 0; i <= 8; i++ )
-    {
-      line = reader.readLine();
-      if( line == null )
-        return null;
-      System.out.println( i + ": " + line ); //$NON-NLS-1$
-      createProperties( propCollector, line, i );
-    }
-    // FeatureProperty prop = propCollector.get( "anzlayy" );
-    final int anzlayy = Integer.parseInt( propCollector.get( "anzlayy" ) ); //$NON-NLS-1$
-    final List<Feature> list = new ArrayList<Feature>();
-    final IPropertyType pt = m_catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
-    fePropMap.put( pt, list );
-    // 9
-    for( int i = 0; i < anzlayy; i++ )
-    {
-      line = reader.readLine();
-      System.out.println( i + ": " + line ); //$NON-NLS-1$
-      final HashMap<String, String> col2 = new HashMap<String, String>();
-      createProperties( col2, line, 9 );
-      final Feature bodenkorrekturFE = createFeature( m_bodenKorrekturFT );
-      // Collection collection = col2.values();
-      setParsedProperties( bodenkorrekturFE, col2, null );
-      list.add( bodenkorrekturFE );
-    }
-    // 10-11
-    for( int i = 10; i <= 11; i++ )
-    {
-      line = reader.readLine();
-      System.out.println( i + ": " + line ); //$NON-NLS-1$
-      createProperties( propCollector, line, i );
-    }
-    // 12
-    line = reader.readLine();
-    System.out.println( "12: " + line ); //$NON-NLS-1$
-    createProperties( propCollector, line, 12 );
-
-    // FeatureProperty prop = propCollector.get( "igwzu" );
-    // 13-14
-    final int igwzu = Integer.parseInt( propCollector.get( "igwzu" ) ); //$NON-NLS-1$
-    final List<Feature> gwList = new ArrayList<Feature>();
-
-    fePropMap.put( m_catchmentFT.getProperty( NaModelConstants.GRUNDWASSERABFLUSS_MEMBER ), gwList );
-    if( igwzu > 0 )
-    {
-      final HashMap<String, String> col2 = new HashMap<String, String>();
-      final String format13 = FortranFormatHelper.createFormatLine( "ngwzu", "*", "_", igwzu ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-      final String format14 = FortranFormatHelper.createFormatLine( "gwwi", "*", "_", igwzu ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-      line = reader.readLine();
-      System.out.println( "13: " + line ); //$NON-NLS-1$
-      createProperties( col2, line, format13 );
-      line = reader.readLine();
-      System.out.println( "14: " + line ); //$NON-NLS-1$
-      createProperties( col2, line, format14 );
-      for( int i = 0; i < igwzu; i++ )
-      {
-        final Feature fe = createFeature( m_grundwasserabflussFT );
-        // FeatureProperty fp1 = (FeatureProperty) col2.get( "ngwzu" + i );
-        final int ngwzuID = Integer.parseInt( col2.get( "ngwzu" + i ) ); //$NON-NLS-1$
-        final Feature ngwzuFE = getFeature( ngwzuID, m_catchmentFT );
-        final String ngwzuStringID = ngwzuFE.getId();
-        // FeatureProperty ngwzuProp = FeatureFactory.createFeatureProperty( "ngwzu", ngwzuStringID );
-        fe.setProperty( NaModelConstants.CATCHMENT_PROP_NGWZU, ngwzuStringID );
-        // FeatureProperty fp2 = (FeatureProperty) col2.get( "gwwi" + i );
-        // FeatureProperty nwwiProp = FeatureFactory.createFeatureProperty( "gwwi", fp2.getValue() );
-        fe.setProperty( NaModelConstants.CATCHMENT_PROP_GWWI, col2.get( "gwwi" + i ) ); //$NON-NLS-1$
-        gwList.add( fe );
-      }
-    }
-    // 15
-    line = reader.readLine();
-    System.out.println( 15 + ": " + line ); //$NON-NLS-1$
-    createProperties( propCollector, line, 15 );
-
-    // generate id:
-    // prop = propCollector.get( "inum" );
-    final int asciiID = Integer.parseInt( propCollector.get( "name" ) ); //$NON-NLS-1$
-
-    final Feature feature = getFeature( asciiID, m_catchmentFT );
-
-    // handle timeseries: convert to zmllink
-    // FeatureProperty ts = propCollector.get( "kurzzeit" );
-    final String tsFileString = propCollector.get( "kurzzeit" ); //$NON-NLS-1$
-    final String relativeZmlPath = "Niederschlag/Niederschlag_" + feature.getId() + ".zml"; //$NON-NLS-1$ //$NON-NLS-2$
-    final File orgTsFile = new File( m_conf.getAsciiBaseDir(), "klima.dat/" + tsFileString ); //$NON-NLS-1$
-
-    // calculation LINK
-    // is relative
-    // no copy
-
-    final Object relativeLink = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(), ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_RAINFALL, m_conf.getGmlBaseDir(), relativeZmlPath, true, true );
-    fePropMap.put( m_catchmentFT.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_NIEDERSCHLAG ), relativeLink );
-
-    // continue reading
-
-    // Collection collection = propCollector.values();
-    setParsedProperties( feature, propCollector, fePropMap );
-    line = reader.readLine();
-    return feature;
   }
 
   public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws Exception
@@ -258,7 +116,7 @@ public class CatchmentManager extends AbstractManager
 
     // 1-2
     for( int i = 1; i <= 2; i++ )
-      catchmentBuffer.append( toAscii( catchment, i ) + "\n" ); //$NON-NLS-1$
+      catchmentBuffer.append( m_asciiHelper.toAscii( catchment, i ) + "\n" ); //$NON-NLS-1$
 
     // 3
     if( m_conf.getMetaControl().isUsePrecipitationForm() )
@@ -296,7 +154,7 @@ public class CatchmentManager extends AbstractManager
     catchmentBuffer.append( "we.hyd\n" ); //$NON-NLS-1$
 
     // 7
-    catchmentBuffer.append( toAscii( catchment, 7 ) + "\n" ); //$NON-NLS-1$
+    catchmentBuffer.append( m_asciiHelper.toAscii( catchment, 7 ) + "\n" ); //$NON-NLS-1$
 
     // 8
     final List< ? > list = (List< ? >) catchment.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
@@ -323,7 +181,7 @@ public class CatchmentManager extends AbstractManager
     while( iter.hasNext() )
     {
       final Feature fe = (Feature) iter.next();
-      catchmentBuffer.append( toAscii( fe, 9 ) + " 1.0" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      catchmentBuffer.append( m_asciiHelper.toAscii( fe, 9 ) + " 1.0" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     // 10 (____(f_eva,f4.2)_(aint,f3.1)__(aigw,f6.2)____(fint,f4.2)____(ftra,f4.2))
@@ -368,8 +226,7 @@ public class CatchmentManager extends AbstractManager
       if( linkedFE == null )
         throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", FeatureHelper.getAsString( fe, "ngwzu" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
       line13.append( Integer.toString( idManager.getAsciiID( linkedFE ) ).trim() + " " ); //$NON-NLS-1$
-      // line13.append( toAscci( linkedFE, 17 ) + " " );
-      line14.append( toAscii( fe, 14 ) + " " ); //$NON-NLS-1$
+      line14.append( m_asciiHelper.toAscii( fe, 14 ) + " " ); //$NON-NLS-1$
       sumGwwi += ((Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_GWWI )).doubleValue();
     }
 
@@ -438,15 +295,6 @@ public class CatchmentManager extends AbstractManager
       final Double normAreaValue = (Double) values.getElement( row, normAreaAxis );
       zftBuffer.append( FortranFormatHelper.printf( hoursValue, "*" ) + " " + FortranFormatHelper.printf( normAreaValue, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
-  }
-
-  /**
-   * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
-   */
-  @Override
-  protected String mapID( final int id, final IFeatureType ft )
-  {
-    return ft.getQName().getLocalPart() + id;
   }
 
   public static String getEingabeDateiString( final Feature feature, final NAConfiguration conf, final String propName, final String axisType )

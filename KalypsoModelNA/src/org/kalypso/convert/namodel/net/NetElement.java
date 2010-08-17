@@ -199,7 +199,7 @@ public class NetElement
       return;
 
     // TODO: remove
-// System.out.println( "Writing " + targetFile.getName() );
+    // System.out.println( "Writing " + targetFile.getName() );
 
     final String href = link.getHref();
     final String hrefWithFilter = filter == null ? href : ZmlURL.insertFilter( href, filter );
@@ -207,7 +207,7 @@ public class NetElement
     final URL location = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefWithFilter );
 
     // TODO: maybe we could cache the read observations, this would give quite some performance improvement, if the same
-// observation is used more than once
+    // observation is used more than once
 
     final IObservation observation = ZmlFactory.parseXML( location ); //$NON-NLS-1$
 

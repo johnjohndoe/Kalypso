@@ -51,14 +51,14 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAModellConverter;
 import org.kalypso.convert.namodel.NaSimulationData;
-import org.kalypso.convert.namodel.manager.HydroHash;
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.convert.namodel.manager.LzsimManager;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -80,6 +80,8 @@ public class NAModelPreprocessor
   private final Logger m_logger;
 
   private final NaAsciiDirs m_asciiDirs;
+
+  private HydroHash m_hydroHash;
 
   public NAModelPreprocessor( final NAConfiguration conf, final NaAsciiDirs asciiDirs, final IDManager idManager, final NaSimulationData simulationData, final Logger logger )
   {
@@ -148,11 +150,13 @@ public class NAModelPreprocessor
 
     // write net and so on....
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.23" ) ); //$NON-NLS-1$
-    new NAModellConverter( m_conf, rootNodeID, m_logger ).write();
+    final NAModellConverter naModellConverter = new NAModellConverter( m_conf, rootNodeID, m_logger );
+    naModellConverter.write();
+    m_hydroHash = naModellConverter.getHydroHash();
     checkCancel( monitor );
 
     // Write start conditions, shouldn't this go into the general ascii writer?
-    writeStartCondition();
+    writeStartCondition( m_hydroHash );
     checkCancel( monitor );
 
     // Create "out_we.nat", else Kalypso-NA will not run
@@ -206,10 +210,10 @@ public class NAModelPreprocessor
     }
   }
 
-  private void writeStartCondition( ) throws NAPreprocessorException
+  private void writeStartCondition( final HydroHash hydroHash ) throws NAPreprocessorException
   {
-    final GMLWorkspace lzsimWorkspace = m_simulationData.getLzsimWorkspace();
-    if( lzsimWorkspace == null )
+    final InitialValues initialValues = m_simulationData.getInitialValues();
+    if( initialValues == null )
     {
       final Date simulationStart = m_simulationData.getMetaControl().getSimulationStart();
       final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.26", simulationStart ); //$NON-NLS-1$
@@ -219,12 +223,17 @@ public class NAModelPreprocessor
 
     try
     {
-      final HydroHash hydroHash = m_conf.getHydroHash();
-      LzsimManager.writeLzsimFiles( m_idManager, hydroHash, m_asciiDirs.lzsimDir, lzsimWorkspace );
+      final LzsimWriter lzsimWriter = new LzsimWriter( m_idManager, hydroHash, initialValues );
+      lzsimWriter.writeLzsimFiles( m_asciiDirs.lzsimDir );
     }
     catch( final Exception e )
     {
       throw new NAPreprocessorException( "Failed to write start condition", e );
     }
+  }
+
+  public HydroHash getHydroHash( )
+  {
+    return m_hydroHash;
   }
 }

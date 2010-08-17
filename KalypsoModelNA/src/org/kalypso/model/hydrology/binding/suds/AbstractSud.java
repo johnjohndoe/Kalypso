@@ -47,12 +47,10 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractSud extends Feature_Impl
+public abstract class AbstractSud extends Feature_Impl implements ISuds
 {
   public AbstractSud( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
-
-
 }

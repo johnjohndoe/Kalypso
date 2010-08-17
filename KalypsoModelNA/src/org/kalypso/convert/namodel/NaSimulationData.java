@@ -46,17 +46,19 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.optimize.CalibrationConfig;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.optimize.transform.ParameterOptimizeContext;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.w3c.dom.Document;
@@ -70,8 +72,6 @@ public class NaSimulationData
 
   private final GMLWorkspace m_sudsWorkspace;
 
-  private final GMLWorkspace m_hydrotopWorkspace;
-
   private final GMLWorkspace m_synthNWorkspace;
 
   private final GMLWorkspace m_modelWorkspace;
@@ -82,20 +82,26 @@ public class NaSimulationData
 
   private final NAControl m_metaControl;
 
+  private final NAHydrotop m_hydrotopeCollection;
+
+  private final NaModell m_naModel;
+
   public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl ) throws Exception
   {
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlURL, null );
     m_naModellControl = (NAModellControl) controlWorkspace.getRootFeature();
 
     m_modelWorkspace = loadModelWorkspace( modelUrl );
+    m_naModel = (NaModell) m_modelWorkspace.getRootFeature();
+
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaUrl, null );
     m_metaControl = (NAControl) metaWorkspace.getRootFeature();
 
     m_parameterWorkspace = GmlSerializer.createGMLWorkspace( parameterUrl, null );
     // FIXME: do not load hydrotopes, if preprocessed files exist
-    m_hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopUrl, null );
+    final GMLWorkspace hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopUrl, null );
+    m_hydrotopeCollection = (NAHydrotop) hydrotopWorkspace.getRootFeature();
 
-// m_landuseWorkspace = loadAndCheckForFile( landuseUrl );
     m_sudsWorkspace = loadAndCheckForFile( sudsUrl );
     m_lzsimWorkspace = loadAndCheckForFile( lzsimUrl );
 
@@ -116,26 +122,22 @@ public class NaSimulationData
       return;
 
     final TransformVisitor visitor = new TransformVisitor( targetCS );
-    final Feature rootFeature = m_modelWorkspace.getRootFeature();
-    m_modelWorkspace.accept( visitor, rootFeature, FeatureVisitor.DEPTH_INFINITE ); //$NON-NLS-1$
+    m_modelWorkspace.accept( visitor, m_naModel, FeatureVisitor.DEPTH_INFINITE ); //$NON-NLS-1$
   }
 
   private String determineHydrotopeCrs( )
   {
     // TODO: this is wrong: why transform the model to the hydrotope workspace?
     // Normally, we should transform both (better every loaded model) into the current kalypso crs
-    final IFeatureType hydrotopeFT = m_hydrotopWorkspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT );
-    // FIXME: access hydrotopes directly, do not fetch them into a big list!
-    final Feature[] hydroFES = m_hydrotopWorkspace.getFeatures( hydrotopeFT );
-    String targetCS = null;
-    for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
+    final IFeatureBindingCollection<IHydrotope> hydrotopes = m_hydrotopeCollection.getHydrotopes();
+    for( final IHydrotope hydrotop : hydrotopes )
     {
-      // FIXME: performance: is it really necessary to check ALL geometries here???
-      final GM_Object geom = (GM_Object) hydroFES[i].getProperty( NaModelConstants.HYDRO_PROP_GEOM );
+      final GM_Object geom = hydrotop.getGeometry();
       if( geom != null && geom.getCoordinateSystem() != null )
-        targetCS = geom.getCoordinateSystem();
+        return geom.getCoordinateSystem();
     }
-    return targetCS;
+
+    return null;
   }
 
   private GMLWorkspace loadModelWorkspace( final URL modelUrl ) throws SimulationException
@@ -186,6 +188,11 @@ public class NaSimulationData
     return m_modelWorkspace;
   }
 
+  public NaModell getNaModel( )
+  {
+    return m_naModel;
+  }
+
   public NAControl getMetaControl( )
   {
     return m_metaControl;
@@ -194,11 +201,6 @@ public class NaSimulationData
   public GMLWorkspace getParameterWorkspace( )
   {
     return m_parameterWorkspace;
-  }
-
-  public GMLWorkspace getHydrotopWorkspace( )
-  {
-    return m_hydrotopWorkspace;
   }
 
   public GMLWorkspace getSudsWorkspace( )
@@ -211,9 +213,17 @@ public class NaSimulationData
     return m_synthNWorkspace;
   }
 
-  public GMLWorkspace getLzsimWorkspace( )
+  public NAHydrotop getHydrotopCollection( )
   {
-    return m_lzsimWorkspace;
+    return m_hydrotopeCollection;
+  }
+
+  public InitialValues getInitialValues( )
+  {
+    if( m_lzsimWorkspace == null )
+      return null;
+
+    return (InitialValues) m_lzsimWorkspace.getRootFeature();
   }
 
 }

@@ -41,12 +41,7 @@
 
 package org.kalypso.convert.namodel.manager;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -55,32 +50,24 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.parameter.Parameter;
+import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.binding.suds.IAbstractSwale;
+import org.kalypso.model.hydrology.binding.suds.IGreenRoof.EUsageType;
 import org.kalypso.model.hydrology.binding.suds.ISwale;
 import org.kalypso.model.hydrology.binding.suds.ISwaleInfiltrationDitch;
-import org.kalypso.model.hydrology.binding.suds.IGreenRoof.EUsageType;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author huebsch
  */
-public class BodentypManager extends AbstractManager
+public class BodentypManager
 {
-  private final NAConfiguration m_conf;
-
-  private final IFeatureType m_bodentypFT;
-
-  private final IFeatureType m_bodenartFT;
-
   private final Map<String, List<Layer>> m_soilTypes = new LinkedHashMap<String, List<Layer>>();
 
   private final class Layer
@@ -114,101 +101,13 @@ public class BodentypManager extends AbstractManager
     }
   }
 
-  // private static final String BodArtParameterPropName = "soilLayerParameterMember";
-
-  public BodentypManager( final GMLSchema parameterSchema, final NAConfiguration conf ) throws IOException
-  {
-    super( conf.getParameterFormatURL() );
-    m_conf = conf;
-    m_bodentypFT = parameterSchema.getFeatureType( NaModelConstants.PARA_Soiltype_FT );
-    m_bodenartFT = parameterSchema.getFeatureType( NaModelConstants.PARA_SoilLayerParameter_FT );
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
-   */
-  @Override
-  protected String mapID( final int id, final IFeatureType ft )
-  {
-    // TODO check if maximal allowed ASCII variable length constraint is fulfilled
-    return ft.getQName().getLocalPart() + id;
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
-   */
-  @Override
-  public Feature[] parseFile( final URL url ) throws Exception
-  {
-    final List<Feature> result = new ArrayList<Feature>();
-    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-    Feature fe = null;
-    // Kommentarzeilen
-    // TODO What is the point of this printout??
-    for( int i = 0; i <= 2; i++ )
-    {
-      final String line = reader.readLine();
-      if( line == null )
-        return null;
-
-      System.out.println( String.format( "%6d : %s", reader.getLineNumber(), line ) ); //$NON-NLS-1$
-    }
-    while( (fe = readNextFeature( reader )) != null )
-      result.add( fe );
-    return result.toArray( new Feature[result.size()] );
-  }
-
-  private Feature readNextFeature( final LineNumberReader reader ) throws Exception
-  {
-    final HashMap<String, String> propCollector = new HashMap<String, String>();
-    String line;
-    // 1
-    line = reader.readLine();
-    if( line == null )
-      return null;
-    System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
-    createProperties( propCollector, line, 1 );
-
-    // generate id:
-    final String asciiStringId = propCollector.get( "name" ); //$NON-NLS-1$
-    final Feature feature = getFeature( asciiStringId, m_bodentypFT );
-
-    final int ianz = Integer.parseInt( propCollector.get( "ianz" ) ); //$NON-NLS-1$
-    final HashMap<String, String> bodArtPropCollector = new HashMap<String, String>();
-    // BodArtParameterMember
-    for( int i = 0; i < ianz; i++ )
-    {
-      final Feature bodArtParameterFeature = createFeature( m_bodenartFT );
-      line = reader.readLine();
-      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.4", i, line ) ); //$NON-NLS-1$ 
-      createProperties( bodArtPropCollector, line, 2 );
-      // BodArtLink
-      // final FeatureProperty BodArtNameProp = (FeatureProperty)bodArtPropCollector.get( "name" );
-      final String asciiBodArtId = bodArtPropCollector.get( "name" ); //$NON-NLS-1$
-      final Feature BodArtFE = getFeature( asciiBodArtId, m_conf.getBodartFT() );
-
-      bodArtPropCollector.put( "soilLayerLink", BodArtFE.getId() ); //$NON-NLS-1$
-      bodArtParameterFeature.setProperty( NaModelConstants.PARA_SOIL_LAYER_LINK, BodArtFE.getId() );
-
-      // Collection collection = bodArtPropCollector.values();
-      setParsedProperties( bodArtParameterFeature, bodArtPropCollector, null );
-
-      final IPropertyType pt = m_bodentypFT.getProperty( NaModelConstants.PARA_SOIL_LAYER_PARAMETER_MEMBER );
-      FeatureHelper.addProperty( feature, pt, bodArtParameterFeature );
-    }
-
-    // continue reading
-    // Collection collection = propCollector.values();
-    setParsedProperties( feature, propCollector, null );
-    return feature;
-  }
-
   public void writeFile( final StringBuffer buffer, final GMLWorkspace paraWorkspace ) throws Exception
   {
-    final List<Feature> paramSoiltypeLayers = (List<Feature>) paraWorkspace.getRootFeature().getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
-    for( final Feature paramSoiltypeLayer : paramSoiltypeLayers )
+    final Parameter parameter = (Parameter) paraWorkspace.getRootFeature();
+    final IFeatureBindingCollection<Soiltype> soiltypes = parameter.getSoiltypes();
+    for( final Soiltype soiltype : soiltypes )
     {
-      final List<Feature> bodartList = (List<Feature>) paramSoiltypeLayer.getProperty( NaModelConstants.PARA_SOIL_LAYER_PARAMETER_MEMBER );
+      final List<Feature> bodartList = (List<Feature>) soiltype.getProperty( NaModelConstants.PARA_SOIL_LAYER_PARAMETER_MEMBER );
       final List<Layer> layers = new ArrayList<Layer>();
       for( final Feature fe : bodartList )
       {
@@ -222,9 +121,9 @@ public class BodentypManager extends AbstractManager
           layers.add( layer );
         }
         else
-          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", paramSoiltypeLayer.getId(), fe.getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) ) ); //$NON-NLS-1$
+          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), fe.getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) ) ); //$NON-NLS-1$
       }
-      final String layerName = paramSoiltypeLayer.getName();
+      final String layerName = soiltype.getName();
       if( !m_soilTypes.containsKey( layerName ) )
         m_soilTypes.put( layerName, layers );
     }

@@ -49,9 +49,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
  */
 public interface ISwale extends IAbstractSwale
 {
-  public static final String IDEAL_LANDUSE = "Mulde_N"; //$NON-NLS-1$
+  String IDEAL_LANDUSE = "Mulde_N"; //$NON-NLS-1$
 
-  public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // EnumSwaleType //$NON-NLS-1$
-
-  public String getElementType( );
+  QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // EnumSwaleType //$NON-NLS-1$
 }

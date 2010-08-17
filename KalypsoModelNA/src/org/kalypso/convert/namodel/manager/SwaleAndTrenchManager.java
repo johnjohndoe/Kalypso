@@ -40,17 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -65,36 +58,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author huebsch
  */
-public class SwaleAndTrenchManager extends AbstractManager
+public class SwaleAndTrenchManager
 {
-  private final NAConfiguration m_conf;
+  private final IDManager m_idManager;
 
-  public SwaleAndTrenchManager( final NAConfiguration conf ) throws IOException
+  public SwaleAndTrenchManager( final IDManager idManager )
   {
-    super( conf.getSwaleAndTrenchFormatURL() );
-    m_conf = conf;
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
-   */
-  @Override
-  public Feature[] parseFile( final URL url ) throws Exception
-  {
-    final List<Feature> result = new ArrayList<Feature>();
-    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-    Feature fe = null;
-    while( (fe = readNextFeature( reader )) != null )
-      result.add( fe );
-    return result.toArray( new Feature[result.size()] );
-  }
-
-  private Feature readNextFeature( final LineNumberReader reader ) throws Exception
-  {
-    // added to remove yellow things
-    reader.getLineNumber();
-    // TODO: code!!!
-    return null;
+    m_idManager = idManager;
   }
 
   public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws Exception
@@ -114,21 +84,19 @@ public class SwaleAndTrenchManager extends AbstractManager
 
   private void writeFeature( final AsciiBuffer asciiBuffer, final GMLWorkspace workSpace, final Feature feature ) throws Exception
   {
-    final IDManager idManager = m_conf.getIdManager();
     // Line 5
     final GM_Curve sTGeomProp = (GM_Curve) feature.getProperty( NaModelConstants.MRS_GEOM_PROP );
     final NaModell naModel = (NaModell) workSpace.getRootFeature();
     final IFeatureBindingCollection<Catchment> catchmentList = naModel.getCatchments();
-    final Iterator<Catchment> catchmentIter = catchmentList.iterator();
-    int catchmentAsciiID = 0;
-    while( catchmentIter.hasNext() & catchmentAsciiID == 0 )
+    for( final Catchment catchment : catchmentList )
     {
-      final Catchment catchmentFE = catchmentIter.next();
-      final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
+      final GM_Object tGGeomProp = catchment.getGeometry();
       if( tGGeomProp.contains( sTGeomProp.getStartPoint() ) )
       {
-        catchmentAsciiID = idManager.getAsciiID( catchmentFE );
+        final int catchmentAsciiID = m_idManager.getAsciiID( catchment );
         asciiBuffer.getSwaleTrenchBuffer().append( catchmentAsciiID + "\n" ); //$NON-NLS-1$
+        if( catchmentAsciiID != 0 )
+          break;
       }
     }
 
@@ -156,19 +124,10 @@ public class SwaleAndTrenchManager extends AbstractManager
     // ist der link nicht gesetzt wird der Defaultwert Knotennummer 0 gesetzt, im model entspircht das dem Quellknoten
     // des Teilgebietes.
     if( nodeFeSTDischarge != null )
-      asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeSTDischarge ) ), "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( Integer.toString( m_idManager.getAsciiID( nodeFeSTDischarge ) ), "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     else
       asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( Integer.toString( 0 ), "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     asciiBuffer.getSwaleTrenchBuffer().append( "# ende MR \n " ); //$NON-NLS-1$
 
-  }
-
-  /**
-   * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
-   */
-  @Override
-  protected String mapID( final int id, final IFeatureType ft )
-  {
-    return ft.getQName().getLocalPart() + id;
   }
 }
