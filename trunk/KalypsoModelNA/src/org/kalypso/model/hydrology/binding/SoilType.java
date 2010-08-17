@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for rrmLanduse:Landuse
+ * Binding class for {http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype
  * 
  * @author Gernot Belger
  */

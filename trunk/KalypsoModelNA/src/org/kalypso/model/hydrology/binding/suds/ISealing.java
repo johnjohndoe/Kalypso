@@ -43,20 +43,17 @@ package org.kalypso.model.hydrology.binding.suds;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dejan Antanaskovic
  */
-public interface ISealing extends Feature
+public interface ISealing extends ISuds
 {
   public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); //$NON-NLS-1$
 
   public QName QN_PROPERTY_SEALING_FACTOR = new QName( NaModelConstants.NS_NASUDS, "sealingFactor" ); //$NON-NLS-1$
 
   public double SEALING_FACTOR_DEFAULT_VALUE = 1.0;
-
-  public String getElementType( );
 
   public double getSealingFactor( );
 

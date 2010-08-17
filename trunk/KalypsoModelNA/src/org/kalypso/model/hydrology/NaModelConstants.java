@@ -131,39 +131,6 @@ public interface NaModelConstants
 
   public static final String LOG_INFO_ID = "LOG_INFO"; //$NON-NLS-1$
 
-  /** hydrotop.xsd */
-  public static final QName HYDRO_MEMBER = new QName( NS_NAHYDROTOP, "hydrotopMember" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_ELEMENT_FT = new QName( NS_NAHYDROTOP, "Hydrotop" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_FT = new QName( NS_NAHYDROTOP, "HydrotopFeatureType" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_PROP_SEAL_CORR_FACTOR = new QName( NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_PROP_GEOM = new QName( NS_NAHYDROTOP, "position" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_PROP_AREA = new QName( NS_NAHYDROTOP, "area" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_PROP_LANDUSE_NAME = new QName( NS_NAHYDROTOP, "landuse" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_PROP_SOILTYPE = new QName( NS_NAHYDROTOP, "soiltype" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_PROP_HYDTYPE = new QName( NS_NAHYDROTOP, "hydType" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_PROP_DAINAGETYPE = new QName( NS_NAHYDROTOP, "drainageType" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_PROP_MAXPERCOLATIONSRATE = new QName( NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_PROP_INFLOWRATEGW = new QName( NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_PROP_SUDS = new QName( NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_ENUM_HYDTYPE_SWALETRENCH = new QName( NS_NAHYDROTOP, "MuldenRigole" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_ENUM_HYDTYPE_GREENROOF = new QName( NS_NAHYDROTOP, "Dachbegruenung" ); //$NON-NLS-1$
-
-  public static final QName HYDRO_ENUM_HYDTYPE_REGULAR = new QName( NS_NAHYDROTOP, "Bodenspeicher" ); //$NON-NLS-1$
-
   /** namodell.xsd */
 
   // channels
@@ -230,8 +197,6 @@ public interface NaModelConstants
   public static final QName NODE_QQRELATED_NODE_PROP = new QName( NS_NAMODELL, "qqRelatedNode" ); //$NON-NLS-1$
 
   // catchments
-
-  public static final QName CATCHMENT_GEOM_PROP = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 
   public static final QName BODENKORREKTUR_MEMBER = new QName( NS_NAMODELL, "bodenkorrekturmember" ); //$NON-NLS-1$
 
@@ -328,15 +293,11 @@ public interface NaModelConstants
 //  public static final QName NA_CHANNEL_COLLECTION_FT = new QName( NS_NAMODELL, "ChannelCollection" ); //$NON-NLS-1$
 
   /** parameter.xsd */
-  public static final QName PARA_ROOT_FT = new QName( NS_NAPARAMETER, "Parameter" ); //$NON-NLS-1$
-
   public static final QName PARA_LANDUSE_FT = new QName( NS_NAPARAMETER, "LanduseType" ); //$NON-NLS-1$
 
   public static final QName PARA_LANDUSE = new QName( NS_NAPARAMETER, "Landuse" ); //$NON-NLS-1$
 
   public static final QName PARA_SEALING = new QName( NS_NAPARAMETER, "Sealing" ); //$NON-NLS-1$
-
-  public static final QName PARA_Soiltype_FT = new QName( NS_NAPARAMETER, "Soiltype" ); //$NON-NLS-1$
 
   public static final QName PARA_SoilLayerParameter_FT = new QName( NS_NAPARAMETER, "SoilLayerParameter" ); //$NON-NLS-1$
 
@@ -360,8 +321,6 @@ public interface NaModelConstants
 
   public static final QName PARA_IDEAL_LANDUSE_ZML = new QName( NS_NAPARAMETER, "idealLandUseZML" ); //$NON-NLS-1$
 
-  public static final QName PARA_SOILTYPE_MEMBER = new QName( NS_NAPARAMETER, "soiltypeMember" ); //$NON-NLS-1$
-
   public static final QName PARA_LANDUSE_PROP_SEALING = new QName( NS_NAPARAMETER, "m_vers" ); //$NON-NLS-1$
 
   public static final QName PARA_LANDUSE_PROP_SEALING_LINK = new QName( NS_NAPARAMETER, "sealingLink" ); //$NON-NLS-1$
@@ -380,13 +339,7 @@ public interface NaModelConstants
   public static final QName DEFAULT_MRS_LANDUSE_PROP = new QName( NS_NAPARAMETER, "15" ); // Nutzung Grünland //$NON-NLS-1$
 
   /** initalValues.xsd */
-  public static final QName INI_CATCHMENT_MEMBER_PROP = new QName( NS_INIVALUES, "catchmentMember" ); //$NON-NLS-1$
-
-  public static final QName INI_CHANNEL_MEMBER_PROP = new QName( NS_INIVALUES, "channelMember" ); //$NON-NLS-1$
-
   public static final QName INI_HYD_MEMBER_PROP = new QName( NS_INIVALUES, "IniHyd" ); //$NON-NLS-1$
-
-  public static final QName INI_HYD_FEATUREID_PROP = new QName( NS_INIVALUES, "featureId" ); //$NON-NLS-1$
 
   public static final QName INI_CATCHMENT_LINK_HYD_PROP = new QName( NS_INIVALUES, "hyd" ); //$NON-NLS-1$
 

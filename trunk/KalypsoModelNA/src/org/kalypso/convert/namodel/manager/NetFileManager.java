@@ -41,13 +41,9 @@
 package org.kalypso.convert.namodel.manager;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -66,8 +62,6 @@ import org.kalypso.convert.namodel.net.visitors.RootNodeCollector;
 import org.kalypso.convert.namodel.net.visitors.SimulationVisitor;
 import org.kalypso.convert.namodel.net.visitors.WriteAsciiVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
@@ -81,7 +75,6 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.Ueberlauf;
 import org.kalypso.model.hydrology.binding.model.Verzweigung;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -107,7 +100,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author doemming
  */
-public class NetFileManager extends AbstractManager
+public class NetFileManager
 {
   private static final class ZuflussBean
   {
@@ -142,192 +135,11 @@ public class NetFileManager extends AbstractManager
 
   private final Logger m_logger;
 
-  public NetFileManager( final NAConfiguration conf, final String rootNodeId, final Logger logger ) throws IOException
+  public NetFileManager( final NAConfiguration conf, final String rootNodeId, final Logger logger )
   {
-    super( conf.getNetFormatURL() );
-
     m_conf = conf;
     m_rootNodeId = rootNodeId;
     m_logger = logger;
-  }
-
-  @Override
-  protected String mapID( final int id, final IFeatureType ft )
-  {
-    return ft.getQName().getLocalPart() + id;
-  }
-
-  /**
-   * importing ascii file to gml-modell
-   * 
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
-   */
-  @Override
-  public Feature[] parseFile( final URL url ) throws Exception
-  {
-    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );
-    final HashMap<String, Feature> nodeCollector = new HashMap<String, Feature>();
-    readNet( reader, nodeCollector );
-    readNodeList( reader );
-    final Collection<Feature> valueCol = nodeCollector.values();
-    return valueCol.toArray( new Feature[valueCol.size()] );
-  }
-
-  /**
-   * importing ascii part 2 : the nodeList
-   */
-  private void readNodeList( final LineNumberReader reader ) throws Exception
-  {
-    String line;
-    while( (line = reader.readLine()) != null )
-    {
-      if( line.startsWith( "9999" ) ) //$NON-NLS-1$
-        return;
-
-      final Map<String, String> propCollector = new HashMap<String, String>();
-      final Map<IPropertyType, Object> fePropMap = new LinkedHashMap<IPropertyType, Object>();
-      System.out.println( 3 + ": " + line ); //$NON-NLS-1$
-      createProperties( propCollector, line, 2 );
-
-      final int knot = Integer.parseInt( propCollector.get( "knot" ) ); //$NON-NLS-1$
-      final int izug = Integer.parseInt( propCollector.get( "izug" ) ); //$NON-NLS-1$
-      final int iabg = Integer.parseInt( propCollector.get( "iabg" ) ); //$NON-NLS-1$
-      final int iueb = Integer.parseInt( propCollector.get( "iueb" ) ); //$NON-NLS-1$
-      final int izuf = Integer.parseInt( propCollector.get( "izuf" ) ); //$NON-NLS-1$
-      final int ivzwg = Integer.parseInt( propCollector.get( "ivzwg" ) ); //$NON-NLS-1$
-
-      final IFeatureType nodeFT = m_conf.getNodeFT();
-      final Feature fe = getFeature( knot, nodeFT );
-      if( izug > 0 ) // ZUGABE
-      {
-        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.NetFileManager.8" ) ); //$NON-NLS-1$
-        // TODO...
-      }
-      if( iabg > 0 ) // ABGABE
-      {
-        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.NetFileManager.9" ) ); //$NON-NLS-1$
-        // TODO...
-      }
-      if( iueb > 0 ) // UEBERLAUF
-      {
-        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.NetFileManager.10" ) ); //$NON-NLS-1$
-        // TODO...
-      }
-      if( izuf > 0 ) // ZUGABE oder ABGABE Kennlinie
-      {
-        if( izuf != 5 )
-          throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.NetFileManager.11", izuf ) ); //$NON-NLS-1$
-        line = reader.readLine();
-        System.out.println( 6 + ": " + line ); //$NON-NLS-1$
-        // da nur izuf==5 unterstuetzt wird ist zeile 6 nicht relevant
-
-        line = reader.readLine();
-        System.out.println( 7 + ": " + line ); //$NON-NLS-1$
-        createProperties( propCollector, line, 7 );// nzufPfad
-        final String nzufPfad = propCollector.get( "nzufPfad" ); //$NON-NLS-1$
-        // create timeserieslink
-
-        final String zmlPath = "Zufluss/Zufluss_" + fe.getId() + ".zml"; //$NON-NLS-1$ //$NON-NLS-2$
-
-        // Was!?
-        final String correctedPath = nzufPfad.replaceAll( "P:\\\\vwe04121\\\\modell\\\\hydrologie\\\\namod\\\\zufluss\\\\", m_conf.getAsciiBaseDir().toString() + "/Zufluss/" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-        final File tsFile = new File( correctedPath );
-        final TimeseriesLinkType link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURI().toURL(), ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, false, false );
-
-        final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_REPOSITORY_PROP );
-        fePropMap.put( pt, link1 );
-
-        final TimeseriesLinkType link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURI().toURL(), ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, true, true );
-        final IPropertyType pt2 = nodeFT.getProperty( Node.PROP_ZUFLUSS_ZR );
-        fePropMap.put( pt2, link2 );
-      }
-      if( ivzwg > 0 ) // VERZWEIGUNG
-      {
-        line = reader.readLine();
-        System.out.println( 8 + ": " + line ); //$NON-NLS-1$
-        createProperties( propCollector, line, 10 );// zproz ikz
-        // resolve targetnode
-        // FeatureProperty ikzProp = propCollector.get( "ikz" );
-        final int ikz = Integer.parseInt( propCollector.get( "ikz" ) ); //$NON-NLS-1$
-        final Feature targetNodeFE = getFeature( ikz, nodeFT );
-        final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_VERZW_MEMBER_PROP );
-        fePropMap.put( pt, targetNodeFE.getId() );
-      }
-
-      // adding Timeseries links
-
-      final TimeseriesLinkType pegelLink = NAZMLGenerator.copyToTimeseriesLink( null, ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_WATERLEVEL, m_conf // TODO
-          // NA_PEGEL
-          .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true ); //$NON-NLS-1$//$NON-NLS-2$
-      final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
-      fePropMap.put( pt, pegelLink );
-
-      final TimeseriesLinkType resultLink = NAZMLGenerator.copyToTimeseriesLink( null, ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_RUNOFF, m_conf.getGmlBaseDir(), "Ergebnisse/Berechnet/Abfluss_" //$NON-NLS-1$
-          + fe.getId() + ".zml", true, true ); //$NON-NLS-1$
-      final IPropertyType pt2 = nodeFT.getProperty( Node.PROP_RESULT_TIMESERIESLINK );
-      fePropMap.put( pt2, resultLink );
-
-      setParsedProperties( fe, propCollector, fePropMap );
-    }
-  }
-
-  /**
-   * importing ascii part 1 : the network
-   */
-  private void readNet( final LineNumberReader reader, final HashMap<String, Feature> nodeCollector ) throws Exception
-  {
-    final HashMap<String, String> propCollector = new HashMap<String, String>();
-    String line;
-    line = reader.readLine();
-    if( line == null || line.startsWith( "9999" ) ) //$NON-NLS-1$
-      return;
-    if( line.startsWith( "\\" ) ) //$NON-NLS-1$
-    {
-      readNet( reader, nodeCollector );
-      return;
-    }
-    System.out.println( 0 + ": " + line ); //$NON-NLS-1$
-    createProperties( propCollector, line, 0 );
-    final int iteil = Integer.parseInt( propCollector.get( "iteil" ) ); //$NON-NLS-1$
-    final int istrngNr = Integer.parseInt( propCollector.get( "istrng" ) ); //$NON-NLS-1$
-    final int iknotoNr = Integer.parseInt( propCollector.get( "iknoto" ) ); //$NON-NLS-1$
-    final int iknotuNr = Integer.parseInt( propCollector.get( "iknotu" ) ); //$NON-NLS-1$
-    // create node feature and
-    // set node numbers
-
-    final Node knoto = (Node) getFeature( iknotoNr, m_conf.getNodeFT() );
-    nodeCollector.put( knoto.getId(), knoto );
-    knoto.setName( "" + iknotoNr ); //$NON-NLS-1$
-    final Node knotuFE = (Node) getFeature( iknotuNr, m_conf.getNodeFT() );
-    nodeCollector.put( knotuFE.getId(), knotuFE );
-    knotuFE.setName( "" + iknotuNr ); //$NON-NLS-1$
-    // set node channel relations
-    final Channel strang = (Channel) getExistingFeature( istrngNr, new IFeatureType[] { m_conf.getKmChannelFT(), m_conf.getVChannelFT(), m_conf.getStChannelFT() } );
-    // node -> strang
-    if( strang == null )
-      System.out.println( istrngNr );
-    //
-    else
-    {
-      knoto.setDownstreamChannel( strang );
-
-      // strang -> node
-      strang.setDownstreamNode( knotuFE );
-
-      // Teilgebiete lesen
-      for( int i = 0; i < iteil; i++ )
-      {
-        line = reader.readLine();
-        final HashMap<String, String> col = new HashMap<String, String>();
-        System.out.println( 1 + ": " + line ); //$NON-NLS-1$
-        createProperties( col, line, 1 );
-        final int nteil = Integer.parseInt( col.get( "nteil" ) ); //$NON-NLS-1$
-        final Catchment teilgebFE = (Catchment) getFeature( nteil, m_conf.getCatchemtFT() );
-        teilgebFE.setChannel( strang );
-      }
-    }
-    readNet( reader, nodeCollector );
   }
 
   /**

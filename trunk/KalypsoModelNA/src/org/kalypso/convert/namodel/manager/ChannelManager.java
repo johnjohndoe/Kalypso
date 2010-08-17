@@ -40,20 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Channel;
@@ -77,7 +67,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author doemming
  */
-public class ChannelManager extends AbstractManager
+public class ChannelManager
 {
   public static final int VIRTUALCHANNEL = 0;
 
@@ -85,93 +75,14 @@ public class ChannelManager extends AbstractManager
 
   private static final int STORAGECHANNEL = 2;
 
-  private final IFeatureType m_virtualChannelFT;
-
-  private final IFeatureType m_storageChannelFT;
-
-  private final IFeatureType m_kmChannelFT;
-
   private final NAConfiguration m_conf;
 
-  public ChannelManager( final GMLSchema schema, final NAConfiguration conf ) throws IOException
+  private final ASCIIHelper m_asciiHelper;
+
+  public ChannelManager( final NAConfiguration conf )
   {
-    super( conf.getChannelFormatURL() );
+    m_asciiHelper = new ASCIIHelper( getClass().getResource( "resources/formats/gerinne.txt" ) );
     m_conf = conf;
-    m_virtualChannelFT = schema.getFeatureType( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
-    m_storageChannelFT = schema.getFeatureType( StorageChannel.FEATURE_STORAGE_CHANNEL );
-    m_kmChannelFT = schema.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
-   */
-  @Override
-  public Feature[] parseFile( final URL url ) throws Exception
-  {
-    final List<Feature> result = new ArrayList<Feature>();
-    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-    // FileReader(
-    // file
-    // ) );
-    Feature fe = null;
-    while( (fe = readNextFeature( reader )) != null )
-      result.add( fe );
-    return result.toArray( new Feature[result.size()] );
-  }
-
-  private Feature readNextFeature( final LineNumberReader reader ) throws Exception
-  {
-    final Map<String, String> propCollector = new HashMap<String, String>();
-    String line;
-    // 0-1
-    for( int i = 0; i <= 1; i++ )
-    {
-      line = reader.readLine();
-      if( line == null )
-        return null;
-      System.out.println( i + ": " + line ); //$NON-NLS-1$
-      createProperties( propCollector, line, i );
-    }
-    // FeatureProperty idProp = (FeatureProperty)propCollector.get( "inum" );
-    // FeatureProperty artProp = (FeatureProperty)propCollector.get( "iart" );
-
-    final int asciiID = Integer.parseInt( propCollector.get( "name" ) ); //$NON-NLS-1$
-    final int art = Integer.parseInt( propCollector.get( "iart" ) ); //$NON-NLS-1$
-    Feature feature;
-    switch( art )
-    {
-      case VIRTUALCHANNEL:
-        feature = getFeature( asciiID, m_virtualChannelFT );
-        break;
-      case KMCHANNEL:
-        feature = getFeature( asciiID, m_kmChannelFT );
-        line = reader.readLine();
-        System.out.println( 2 + ": " + line ); //$NON-NLS-1$
-        createProperties( propCollector, line, 2 );
-        // parse kalinin-miljukov-parameter
-        final Map<String, String> kmPropCollector = new HashMap<String, String>();
-
-        final KMChannel kmChannel = (KMChannel) feature;
-        final IFeatureBindingCollection<KMParameter> kmParameters = kmChannel.getParameters();
-        for( int i = 0; i < 5; i++ )
-        {
-          final KMParameter kmParameterFeature = kmParameters.addNew( KMParameter.FEATURE_KM_PARAMETER );
-          line = reader.readLine();
-          System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.ChannelManager.0", i, line ) ); //$NON-NLS-1$ 
-          createProperties( kmPropCollector, line, 3 );
-          // final Collection collection = kmPropCollector.values();
-          setParsedProperties( kmParameterFeature, kmPropCollector, null );
-        }
-        break;
-      case STORAGECHANNEL:
-        feature = getFeature( asciiID, m_storageChannelFT );
-        break;
-      default:
-        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.ChannelManager.1", art ) ); //$NON-NLS-1$ 
-    }
-    // Collection collection = propCollector.values();
-    setParsedProperties( feature, propCollector, null );
-    return feature;
   }
 
   public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws Exception
@@ -208,7 +119,7 @@ public class ChannelManager extends AbstractManager
       final KMChannel kmChannel = (KMChannel) channel;
       final IFeatureBindingCollection<KMParameter> parameters = kmChannel.getParameters();
       for( final KMParameter kmParameter : parameters )
-        channelBuffer.append( toAscii( kmParameter, 3 ) + "\n" ); //$NON-NLS-1$
+        channelBuffer.append( m_asciiHelper.toAscii( kmParameter, 3 ) + "\n" ); //$NON-NLS-1$
     }
     else if( channel instanceof StorageChannel ) //$NON-NLS-1$
     {
@@ -229,7 +140,7 @@ public class ChannelManager extends AbstractManager
       rhbBuffer.append( "  0.00" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       // (itext,a80)
       // RHB 8
-      rhbBuffer.append( toAscii( channel, 8 ) + "\n" ); //$NON-NLS-1$
+      rhbBuffer.append( m_asciiHelper.toAscii( channel, 8 ) + "\n" ); //$NON-NLS-1$
       // (lfs,i4)_(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
       // RHB 9-10
       rhbBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( dwonstreamNode ), "i4" ) ); //$NON-NLS-1$
@@ -238,7 +149,6 @@ public class ChannelManager extends AbstractManager
       final Double vmin = ((Double) channel.getProperty( NaModelConstants.STORAGE_CHANNEL_VMIN_PROP )) / 1000000;
       rhbBuffer.append( " " + " FUNKTION " + FortranFormatHelper.printf( sv, "f9.6" ) + " " + FortranFormatHelper.printf( vmax, "f9.6" ) + " " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
           + FortranFormatHelper.printf( vmin, "f9.6" ) ); //$NON-NLS-1$
-      // asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
 
       final Object wvqProp = channel.getProperty( NaModelConstants.STORAGE_CHANNEL_HVVSQD_PROP );
       if( wvqProp instanceof IObservation )
@@ -286,11 +196,5 @@ public class ChannelManager extends AbstractManager
       rhbBuffer.append( "        " + FortranFormatHelper.printf( v, "f9.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       rhbBuffer.append( "      " + FortranFormatHelper.printf( q, "f8.3" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
-  }
-
-  @Override
-  protected String mapID( final int id, final IFeatureType ft )
-  {
-    return ft.getQName().getLocalPart() + id;
   }
 }

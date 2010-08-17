@@ -73,9 +73,6 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<!-- 
-					<element minOccurs="1" maxOccurs="1" name="SudType" type="suds:EnumSudType" />
-					 -->
 				</sequence>
 			</extension>
 		</complexContent>

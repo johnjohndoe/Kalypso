@@ -41,19 +41,11 @@
 
 package org.kalypso.convert.namodel.manager;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
@@ -63,84 +55,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author hübsch
  */
-public class BodenartManager extends AbstractManager
+public class BodenartManager
 {
-  private final IFeatureType m_bodenartFT;
-
-  public BodenartManager( final GMLSchema parameterSchema, final NAConfiguration conf ) throws IOException
-  {
-    super( conf.getParameterFormatURL() );
-
-    m_bodenartFT = parameterSchema.getFeatureType( NaModelConstants.PARA_SoilLayer_FT );
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.IFeatureType)
-   */
-  @Override
-  protected String mapID( final int id, final IFeatureType ft )
-  {
-    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.BodenartManager.0" ) ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
-   */
-  @Override
-  public Feature[] parseFile( final URL url ) throws Exception
-  {
-    final List<Feature> result = new ArrayList<Feature>();
-    final LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-    // file
-    // ) );
-    Feature fe = null;
-    // 3 Kommentarzeilen
-    for( int i = 0; i <= 2; i++ )
-    {
-      String line;
-      line = reader.readLine();
-      if( line == null )
-        return null;
-
-      // TODO remove println
-      System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
-    }
-    while( (fe = readNextFeature( reader )) != null )
-      result.add( fe );
-    return result.toArray( new Feature[result.size()] );
-  }
-
-  private Feature readNextFeature( final LineNumberReader reader ) throws Exception
-  {
-    final HashMap<String, String> propCollector = new HashMap<String, String>();
-    String line;
-    // 6
-    line = reader.readLine();
-    if( line == null )
-      return null;
-    System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
-    createProperties( propCollector, line, 6 );
-
-    // generate id:
-    final String asciiStringId = propCollector.get( "name" ); //$NON-NLS-1$
-    final Feature feature = getFeature( asciiStringId, m_bodenartFT );
-
-    // continue reading
-
-    setParsedProperties( feature, propCollector, null );
-    return feature;
-  }
-
-  /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#getFeature(int,
-   *      org.kalypsodeegree.model.feature.IFeatureType)
-   */
-  @Override
-  public Feature getFeature( final int asciiID, final IFeatureType ft )
-  {
-    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.manager.BodenartManager.4" ) ); //$NON-NLS-1$
-  }
-
   public void writeFile( final StringBuffer bodartBuffer, final GMLWorkspace paraWorkspace ) throws Exception
   {
     final Feature rootFeature = paraWorkspace.getRootFeature();

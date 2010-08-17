@@ -60,9 +60,7 @@ import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.convert.namodel.DefaultPathGenerator;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.manager.HydroHash;
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.convert.namodel.manager.LzsimManager;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -77,6 +75,7 @@ import org.kalypso.model.hydrology.internal.NaResultDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -126,12 +125,15 @@ public class NaPostProcessor
 
   private final NAModellControl m_naControl;
 
-  public NaPostProcessor( final NAConfiguration conf, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl )
+  private final HydroHash m_hydroHash;
+
+  public NaPostProcessor( final NAConfiguration conf, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final HydroHash hydroHash )
   {
     m_conf = conf;
     m_logger = logger;
     m_modelWorkspace = modelWorkspace;
     m_naControl = naControl;
+    m_hydroHash = hydroHash;
     m_naStatistics = new NAStatistics( logger );
   }
 
@@ -160,9 +162,8 @@ public class NaPostProcessor
     copyStatisticResultFile( asciiDirs, currentResultDirs );
 
     final Date[] initialDates = m_naControl.getInitialDatesToBeWritten();
-    final HydroHash hydroHash = m_conf.getHydroHash();
-    final LzsimManager lzsimManager = new LzsimManager( initialDates, currentResultDirs.anfangswertDir );
-    lzsimManager.readInitialValues( m_conf.getIdManager(), hydroHash, asciiDirs.lzsimDir, m_logger );
+    final LzsimReader lzsimManager = new LzsimReader( initialDates, currentResultDirs.anfangswertDir );
+    lzsimManager.readInitialValues( m_conf.getIdManager(), m_hydroHash, asciiDirs.lzsimDir, m_logger );
 
     m_naStatistics.writeStatistics( simDirs.currentResultDir, currentResultDirs.reportDir );
   }

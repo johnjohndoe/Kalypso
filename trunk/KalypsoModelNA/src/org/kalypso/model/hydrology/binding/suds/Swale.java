@@ -62,6 +62,7 @@ public class Swale extends AbstractSwale implements ISwale
     final Object property = getProperty( QN_PROPERTY_ELEMENT_TYPE );
     if( property instanceof String )
       return (String) property;
+
     return "20"; //$NON-NLS-1$
   }
 

@@ -1,0 +1,4 @@
+/Parameter zur Schneeberechnung nach dem snow compaction verfahren
+/                     wwo wwmax snotem snorad h0
+/                      *    *     *      *    *
+norddeutschland     0.2 0.45 0.25 0.35 0.0

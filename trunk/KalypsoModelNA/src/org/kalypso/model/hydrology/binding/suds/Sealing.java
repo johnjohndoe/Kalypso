@@ -71,14 +71,4 @@ public final class Sealing extends AbstractSud implements ISealing
   {
     setProperty( QN_PROPERTY_SEALING_FACTOR, value == null ? SEALING_FACTOR_DEFAULT_VALUE : value );
   }
-
-  /**
-   * @see org.kalypso.convert.namodel.schema.binding.suds.ISealing#getElementType()
-   */
-  @Override
-  public String getElementType( )
-  {
-    return getProperty( QN_PROPERTY_ELEMENT_TYPE, String.class );
-  }
-
 }

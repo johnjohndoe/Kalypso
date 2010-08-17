@@ -51,7 +51,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
@@ -63,6 +62,7 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.processing.KalypsoNaProcessor;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -107,9 +107,7 @@ public class NAModelSimulation
     final NaSimulationData simulationData = loadData();
     m_conf.setSimulationData( simulationData );
 
-    if( !preprocess( simulationData, monitor ) )
-      return false;
-
+    final HydroHash hydroHash = preprocess( simulationData, monitor );
     if( monitor.isCanceled() )
       return false;
 
@@ -118,7 +116,7 @@ public class NAModelSimulation
     if( monitor.isCanceled() )
       return false;
 
-    return postProcess( simulationData, monitor );
+    return postProcess( simulationData, hydroHash, monitor );
   }
 
   private NaSimulationData loadData( ) throws Exception
@@ -131,7 +129,6 @@ public class NAModelSimulation
     final URL syntNUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID );
     final URL lzsimUrl = getStartConditionFile();
 
-// final URL landuseUrl = getInputOrNull( NaModelConstants.IN_LANDUSE_ID );
     final URL sudsUrl = getInputOrNull( NaModelConstants.IN_SUDS_ID );
 
     return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
@@ -145,7 +142,7 @@ public class NAModelSimulation
     return (URL) m_inputProvider.getInputForID( id );
   }
 
-  private boolean preprocess( final NaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
+  private HydroHash preprocess( final NaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
@@ -156,17 +153,13 @@ public class NAModelSimulation
       final File idMapFile = new File( m_simDirs.simulationDir, "IdMap.txt" ); //$NON-NLS-1$
       m_idManager.dump( idMapFile );
 
-      return true;
+      return preprocessor.getHydroHash();
     }
     catch( final NAPreprocessorException e )
     {
       final String msg = String.format( "Failed to convert data in Kalypso-NA.exe format files: %s", e.getLocalizedMessage() );
       m_logger.log( Level.SEVERE, msg, e );
-      return false;
-    }
-    catch( final OperationCanceledException e )
-    {
-      return false;
+      throw new SimulationException( msg );
     }
   }
 
@@ -225,7 +218,7 @@ public class NAModelSimulation
     processor.run( monitor );
   }
 
-  private boolean postProcess( final NaSimulationData simulationData, final ISimulationMonitor monitor ) throws Exception
+  private boolean postProcess( final NaSimulationData simulationData, final HydroHash hydroHash, final ISimulationMonitor monitor ) throws Exception
   {
     final String messageStartPostprocess = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.28" ); //$NON-NLS-1$
     monitor.setMessage( messageStartPostprocess ); 
@@ -234,7 +227,7 @@ public class NAModelSimulation
     final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
     final NAModellControl naControl = simulationData.getNaControl();
 
-    final NaPostProcessor postProcessor = new NaPostProcessor( m_conf, m_logger, modelWorkspace, naControl );
+    final NaPostProcessor postProcessor = new NaPostProcessor( m_conf, m_logger, modelWorkspace, naControl, hydroHash );
     postProcessor.process( m_simDirs.asciiDirs, m_simDirs );
     return postProcessor.isSucceeded();
   }

@@ -46,7 +46,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
@@ -109,7 +109,7 @@ public class NaNodeResultProvider
       if( resultURL == null )
         return false;
 
-      return FileUtilities.checkIsAccessible( resultURL );
+      return UrlUtilities.checkIsAccessible( resultURL );
     }
     catch( final MalformedURLException e )
     {

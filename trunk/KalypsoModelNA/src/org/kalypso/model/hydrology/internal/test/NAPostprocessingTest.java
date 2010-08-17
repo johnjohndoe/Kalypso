@@ -62,6 +62,7 @@ import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -116,7 +117,9 @@ public class NAPostprocessingTest
     final NaAsciiDirs naAsciiDirs = new NaAsciiDirs( asciiBaseDir );
     final NaSimulationDirs naSimulationDirs = new NaSimulationDirs( resultsDir );
 
-    final NaPostProcessor postProcessor = new NaPostProcessor( conf, logger, modelWorkspace, naControl );
+    final HydroHash hydroHash = new HydroHash( null );
+
+    final NaPostProcessor postProcessor = new NaPostProcessor( conf, logger, modelWorkspace, naControl, hydroHash );
     postProcessor.process( naAsciiDirs, naSimulationDirs );
 
     return resultsDir;

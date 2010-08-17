@@ -46,13 +46,7 @@ package org.kalypso.convert.namodel;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
-import org.kalypso.convert.namodel.manager.HydroHash;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
@@ -60,8 +54,8 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.Hydrotop;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.Node;
@@ -78,17 +72,9 @@ public class NAConfiguration
 
   private final File m_zftFile;
 
-  private final URL m_ChannelFormatURL;
-
-  private final URL m_catchmentFormatURL;
-
   private final File m_channelFile;
 
   private final File m_rhbFile;
-
-  private final URL m_netFormatURL;
-
-  private final URL m_rhbFormatURL;
 
   private final File m_netFile;
 
@@ -122,29 +108,11 @@ public class NAConfiguration
 
   private final File m_swaleAndTrenchFile;
 
-  private final URL m_parameterFormatURL;
-
-  private final URL m_hydrotopFormatURL;
-
-  private final URL m_swaleAndTrenchFormatURL;
-
   private final IDManager m_idManager = new IDManager();
 
   private URL m_zmlContext;
 
-  private final static String PLC_LANDUSE_NAME_FORMAT = "PLC_%05d"; //$NON-NLS-1$
-
-  private int m_plcLanduseCounter = 1;
-
-  private final Map<String, String> m_landuseLongNamesMap = new HashMap<String, String>();
-
   private final File m_hydrotopMappingFile;
-
-  private final List<String> m_hydrotopMapping = new ArrayList<String>();
-
-  private final Map<String, List<Double>> m_suds2HydrotopMaxPercRateMap = new HashMap<String, List<Double>>();
-
-  private final HydroHash m_hydroHash = new HydroHash();
 
   private NaSimulationData m_simulationData = null;
 
@@ -172,15 +140,6 @@ public class NAConfiguration
     m_bodartFT = paraSchema.getFeatureType( NaModelConstants.PARA_SoilLayer_FT );
     m_statNFT = synthNSchema.getFeatureType( NaModelConstants.SYNTHN_STATN_FT );
 
-    // formats:
-    m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" ); //$NON-NLS-1$
-    // kalypsoNa-sourcecode
-    m_ChannelFormatURL = getClass().getResource( "formats/gerinne.txt" ); //$NON-NLS-1$
-    m_netFormatURL = getClass().getResource( "formats/netzdatei.txt" ); //$NON-NLS-1$
-    m_rhbFormatURL = getClass().getResource( "formats/JessicaRHB.txt" ); //$NON-NLS-1$
-    m_hydrotopFormatURL = getClass().getResource( "formats/hydrotop.txt" ); //$NON-NLS-1$
-    m_parameterFormatURL = getClass().getResource( "formats/parameter.txt" ); //$NON-NLS-1$
-    m_swaleAndTrenchFormatURL = getClass().getResource( "formats/swaleAndTrench.txt" ); //$NON-NLS-1$
     // ASCII
     new File( asciiBaseDir, "inp.dat" ).mkdirs(); //$NON-NLS-1$
     new File( asciiBaseDir, "hydro.top" ).mkdirs(); //$NON-NLS-1$
@@ -218,40 +177,9 @@ public class NAConfiguration
     }
   }
 
-  /**
-   * Returns landuse name that is compatible with the calculation core; mappings are stored so once given ID is used
-   * again if requested; for null gml names, the new ID is given without storing it
-   */
-  public final String getLanduseFeatureShortedName( final String featureName )
-  {
-    if( featureName != null && featureName.length() < 10 )
-      return featureName;
-    final String shortName = String.format( Locale.US, PLC_LANDUSE_NAME_FORMAT, m_plcLanduseCounter++ );
-    System.out.println( "Created " + shortName + " for " + featureName ); //$NON-NLS-1$ //$NON-NLS-2$
-    if( featureName == null )
-      return shortName;
-    final String string = m_landuseLongNamesMap.get( featureName );
-    if( string == null )
-    {
-      m_landuseLongNamesMap.put( featureName, shortName );
-      return shortName;
-    }
-    return string;
-  }
-
-  public URL getChannelFormatURL( )
-  {
-    return m_ChannelFormatURL;
-  }
-
   public File getChannelFile( )
   {
     return m_channelFile;
-  }
-
-  public URL getCatchmentFormatURL( )
-  {
-    return m_catchmentFormatURL;
   }
 
   public File getCatchmentFile( )
@@ -264,19 +192,9 @@ public class NAConfiguration
     return m_zftFile;
   }
 
-  public URL getNetFormatURL( )
-  {
-    return m_netFormatURL;
-  }
-
   public File getNetFile( )
   {
     return m_netFile;
-  }
-
-  public URL getRHBFormatURL( )
-  {
-    return m_rhbFormatURL;
   }
 
   public File getRHBFile( )
@@ -329,16 +247,6 @@ public class NAConfiguration
     return m_hydrotopFile;
   }
 
-  public URL getHydrotopFormatURL( )
-  {
-    return m_hydrotopFormatURL;
-  }
-
-  public URL getParameterFormatURL( )
-  {
-    return m_parameterFormatURL;
-  }
-
   public File getBodentypFile( )
   {
     return m_bodentypFile;
@@ -384,11 +292,6 @@ public class NAConfiguration
     return m_zmlContext;
   }
 
-  public URL getSwaleAndTrenchFormatURL( )
-  {
-    return m_swaleAndTrenchFormatURL;
-  }
-
   public GMLWorkspace getModelWorkspace( )
   {
     return m_simulationData.getModelWorkspace();
@@ -396,12 +299,15 @@ public class NAConfiguration
 
   public GMLWorkspace getParameterWorkspace( )
   {
+    if( m_simulationData == null )
+      return null;
+
     return m_simulationData.getParameterWorkspace();
   }
 
-  public GMLWorkspace getHydrotopeWorkspace( )
+  public NAHydrotop getHydrotopeCollection( )
   {
-    return m_simulationData.getHydrotopWorkspace();
+    return m_simulationData.getHydrotopCollection();
   }
 
   public GMLWorkspace getSynthNWorkspace( )
@@ -417,45 +323,6 @@ public class NAConfiguration
   public File getHydrotopMappingFile( )
   {
     return m_hydrotopMappingFile;
-  }
-
-  public void addHydrotopMapping( final int catchmentAsciiID, final int hydrotopAsciiID, final Hydrotop hydrotop )
-  {
-    getHydrotopMapping().add( String.format( Locale.US, "%6d %6d   --->   [%s] \t%s", catchmentAsciiID, hydrotopAsciiID, hydrotop.getId(), hydrotop.getName() ) ); //$NON-NLS-1$
-  }
-
-  public List<String> getHydrotopMapping( )
-  {
-    return m_hydrotopMapping;
-  }
-
-  public void addSudsMaxPercRateMember( final String sudsFeatureID, final Double hydrotopMaxPerkolationRate )
-  {
-    List<Double> list = m_suds2HydrotopMaxPercRateMap.get( sudsFeatureID );
-    if( list == null )
-    {
-      list = new ArrayList<Double>();
-      m_suds2HydrotopMaxPercRateMap.put( sudsFeatureID, list );
-    }
-    if( hydrotopMaxPerkolationRate == null || Double.isNaN( hydrotopMaxPerkolationRate ) )
-      return;
-    list.add( hydrotopMaxPerkolationRate );
-  }
-
-  public Double getSudsAverageMaxPercRate( final String sudsFeatureID )
-  {
-    final List<Double> list = m_suds2HydrotopMaxPercRateMap.get( sudsFeatureID );
-    if( list == null || list.size() == 0 )
-      return Double.NaN;
-    double average = 0.0;
-    for( final double value : list )
-      average += value;
-    return average / list.size();
-  }
-
-  public HydroHash getHydroHash(  )
-  {
-    return m_hydroHash;
   }
 
   public NAControl getMetaControl( )

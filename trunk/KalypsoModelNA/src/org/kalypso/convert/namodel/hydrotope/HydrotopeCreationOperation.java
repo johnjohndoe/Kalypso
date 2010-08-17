@@ -51,13 +51,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.Hydrotop;
+import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.SoilType;
+import org.kalypso.model.hydrology.binding.suds.ISuds;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -101,11 +103,9 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
   private final FeatureList m_catchmentsList;
 
-  private final FeatureList m_outputList;
+  private final IFeatureBindingCollection<IHydrotope> m_outputList;
 
   private final GMLWorkspace m_workspace;
-
-  private final IFeatureType m_featureType;
 
   private boolean m_dissolveFeatures = true;
 
@@ -115,7 +115,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
   private boolean m_isSealingCorrectionForced = false;
 
-  public HydrotopeCreationOperation( final FeatureList landuseList, final FeatureList pedologyList, final FeatureList geologyList, final FeatureList catchmentsList, final FeatureList outputList, final GMLWorkspace outputWorkspace )
+  public HydrotopeCreationOperation( final FeatureList landuseList, final FeatureList pedologyList, final FeatureList geologyList, final FeatureList catchmentsList, final IFeatureBindingCollection<IHydrotope> outputList, final GMLWorkspace outputWorkspace, final GM_MultiSurface workingArea )
   {
     m_landuseList = landuseList;
     m_pedologyList = pedologyList;
@@ -123,18 +123,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     m_catchmentsList = catchmentsList;
     m_outputList = outputList;
     m_workspace = outputWorkspace;
-    m_featureType = m_workspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT );
-  }
-
-  public HydrotopeCreationOperation( final FeatureList landuseList, final FeatureList pedologyList, final FeatureList geologyList, final FeatureList catchmentsList, final FeatureList outputList, final GMLWorkspace outputWorkspace, final GM_MultiSurface workingArea )
-  {
-    m_landuseList = landuseList;
-    m_pedologyList = pedologyList;
-    m_geologyList = geologyList;
-    m_catchmentsList = catchmentsList;
-    m_outputList = outputList;
-    m_workspace = outputWorkspace;
-    m_featureType = m_workspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT );
     m_workingArea = workingArea;
   }
 
@@ -203,41 +191,35 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         final Geometry intersectionArea = new GeometryFactory().createGeometryCollection( intersectionList.toArray( new MultiPolygon[] {} ) ).buffer( 0.0 );
         // FIXME: check if the coordinate system is really required, it was always null in previous implementation
         final GM_Envelope gmEnvelope = JTSAdapter.wrap( intersectionArea.getEnvelopeInternal(), COORDINATE_SYSTEM );
-        final List<Feature> list = m_outputList.query( gmEnvelope, null );
-        for( final Feature feature : list )
+        final List<IHydrotope> list = m_outputList.query( gmEnvelope );
+        for( final IHydrotope hydrotop : list )
         {
-          feature.getDefaultGeometryPropertyValue();
-          if( feature instanceof Hydrotop )
+          final Geometry g = JTSAdapter.export( hydrotop.getGeometry() );
+          if( g.disjoint( intersectionArea ) || g.touches( intersectionArea ) )
+            continue;
+
+          if( g.coveredBy( intersectionArea ) )
+            m_outputList.remove( hydrotop );
+          else
           {
-            final Hydrotop hydrotop = (Hydrotop) feature;
-            final Geometry g = JTSAdapter.export( hydrotop.getGeometry() );
-            if( g.disjoint( intersectionArea ) || g.touches( intersectionArea ) )
-            {
-              continue;
-            }
-            else if( g.coveredBy( intersectionArea ) )
-            {
-              m_outputList.remove( feature );
-            }
+            final Geometry geometry = g.difference( intersectionArea );
+            final GM_MultiSurface hydrotopGeometry = toMultiSurface( geometry, COORDINATE_SYSTEM );
+            if( hydrotopGeometry != null )
+              hydrotop.setGeometry( hydrotopGeometry );
             else
             {
-              final Geometry geometry = g.difference( intersectionArea );
-              final GM_MultiSurface hydrotopGeometry = toMultiSurface( geometry, COORDINATE_SYSTEM );
-              if( hydrotopGeometry != null )
-                hydrotop.setGeometry( hydrotopGeometry );
-              else
-              {
-                // TODO what to do?
-              }
-              break;
+              // TODO what to do?
             }
           }
         }
       }
+
       int count = 0;
 
-      final IRelationType sudsMemberRT = (IRelationType) m_workspace.getGMLSchema().getFeatureType( Hydrotop.QNAME ).getProperty( Hydrotop.QNAME_PROP_SUD_MEMBERS );
-      final IRelationType catchmentMemberRT = (IRelationType) m_workspace.getGMLSchema().getFeatureType( Hydrotop.QNAME ).getProperty( Hydrotop.QNAME_PROP_CATCHMENT_MEMBER );
+      final IGMLSchema gmlSchema = m_workspace.getGMLSchema();
+      final IFeatureType hydrotopeFT = gmlSchema.getFeatureType( Hydrotop.QNAME );
+      final IRelationType sudsMemberRT = (IRelationType) hydrotopeFT.getProperty( Hydrotop.QNAME_PROP_SUD_MEMBERS );
+      final IRelationType catchmentMemberRT = (IRelationType) hydrotopeFT.getProperty( Hydrotop.QNAME_PROP_CATCHMENT_MEMBER );
 
       for( final Geometry geometry : intersectionList )
       {
@@ -252,7 +234,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         if( geometry.getArea() == 0.0 )
           continue;
 
-        final Hydrotop hydrotop = (Hydrotop) m_workspace.createFeature( null, null, m_featureType );
 
         final Point interiorPoint = geometryIntersector.getJustInteriorPointFixed( geometry );
         if( interiorPoint == null )
@@ -267,28 +248,28 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         final List<Object> catchmentList = m_catchmentsList.query( envelope, null );
         if( catchmentList.size() == 0 )
           continue;
-        else
-        {
-          boolean catchmentFound = false;
-          for( final Object object : catchmentList )
-          {
-            final Feature catchment = (Feature) object;
 
-            final GM_Object catchmentGeo = catchment.getDefaultGeometryPropertyValue();
-            final boolean l_bTest = isPointInsidePolygon( catchmentGeo, point );
-            if( l_bTest )
-            {
-              catchmentFound = true;
-              final IFeatureType featureType = catchment.getFeatureType();
-              final String href = String.format( "modell.gml#%s", catchment.getId() ); //$NON-NLS-1$
-              final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, catchmentMemberRT, featureType, href, null, null, null, null, null );
-              hydrotop.setCatchmentMember( lnk );
-              break;
-            }
+        final IHydrotope hydrotop = m_outputList.addNew( Hydrotop.QNAME );
+
+        boolean catchmentFound = false;
+        for( final Object object : catchmentList )
+        {
+          final Feature catchment = (Feature) object;
+
+          final GM_Object catchmentGeo = catchment.getDefaultGeometryPropertyValue();
+          final boolean l_bTest = isPointInsidePolygon( catchmentGeo, point );
+          if( l_bTest )
+          {
+            catchmentFound = true;
+            final IFeatureType featureType = catchment.getFeatureType();
+            final String href = String.format( "modell.gml#%s", catchment.getId() ); //$NON-NLS-1$
+            final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, catchmentMemberRT, featureType, href, null, null, null, null, null );
+            hydrotop.setCatchmentMember( lnk );
+            break;
           }
-          if( !catchmentFound )
-            continue;
         }
+        if( !catchmentFound )
+          continue;
 
         final List<Landuse> landuseList = m_landuseList.query( envelope, null );
 
@@ -300,7 +281,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             final GM_Object normaleLanduse = l.getDefaultGeometryPropertyValue();
 
             final boolean l_bTest = isPointInsidePolygon( normaleLanduse, point );
-// if( normaleLanduse.contains( point ) )
             if( l_bTest )
             {
               landuse = l;
@@ -326,7 +306,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             hydrotop.setCorrSealing( corrSealing );
           }
           final IFeatureBindingCollection<Feature> landuseSudsCollection = landuse.getSudCollection();
-          final IFeatureBindingCollection<Feature> hydrotopeSudsCollection = hydrotop.getSudCollection();
+          final IFeatureBindingCollection<ISuds> hydrotopeSudsCollection = hydrotop.getSudCollection();
+          final FeatureList hydrotopeFeatureList = hydrotopeSudsCollection.getFeatureList();
           for( final Feature feature : landuseSudsCollection )
           {
             // TODO check why landuse have the collection of suds, when hydrotop may be connected to just one sud
@@ -336,7 +317,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
               final String href = String.format( "suds.gml#%s", ((XLinkedFeature_Impl) feature).getFeatureId() ); //$NON-NLS-1$
 
               final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, sudsMemberRT, ft, href, null, null, null, null, null );
-              hydrotopeSudsCollection.add( lnk );
+              hydrotopeFeatureList.add( lnk );
             }
           }
         }
@@ -393,7 +374,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         if( m_dissolveFeatures )
         {
           final GM_Envelope featureGeometryEnvelope = JTSAdapter.wrap( geometry.getEnvelopeInternal(), COORDINATE_SYSTEM );
-          final List<Feature> list = m_outputList.query( featureGeometryEnvelope, null );
+          final List<IHydrotope> list = m_outputList.query( featureGeometryEnvelope );
           final List<Feature> featuresToMergeWith = new ArrayList<Feature>();
           final List<Geometry> geometriesToMergeWith = new ArrayList<Geometry>();
           for( final Feature f : list )
@@ -456,7 +437,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             {
               System.out.println( "A sho delat-ta" );
             }
-            hydrotop.setProperty( NaModelConstants.HYDRO_PROP_AREA, union.getArea() );
           }
           else
           {
@@ -464,7 +444,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             if( lGeometry == null )
               System.out.println( "lGeometrijaaa null #1" );
             hydrotop.setGeometry( lGeometry );
-            hydrotop.setProperty( NaModelConstants.HYDRO_PROP_AREA, geometry.getArea() );
           }
         }
         else
@@ -473,10 +452,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           if( lGeometry == null )
             System.out.println( "lGeometrijaaa null #2" );
           hydrotop.setGeometry( lGeometry );
-          hydrotop.setProperty( NaModelConstants.HYDRO_PROP_AREA, geometry.getArea() );
         }
         hydrotop.setName( hydrotop.getId() );
-        m_outputList.add( hydrotop );
       }
     }
     catch( final Throwable e )
@@ -500,8 +477,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         return (GM_MultiSurface) newGeometry;
       else if( newGeometry instanceof GM_Surface )
       {
-        final ArrayList<GM_Surface> arrayList = new ArrayList<GM_Surface>();
-        arrayList.add( (GM_Surface) newGeometry );
+        final ArrayList<GM_Surface< ? >> arrayList = new ArrayList<GM_Surface< ? >>();
+        arrayList.add( (GM_Surface< ? >) newGeometry );
         final GM_MultiSurface multiSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_MultiSurface( arrayList.toArray( new GM_Surface[0] ), newGeometry.getCoordinateSystem() );
         return multiSurface;
       }

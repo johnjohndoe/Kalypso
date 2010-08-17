@@ -54,6 +54,7 @@ import org.junit.Test;
 import org.kalypso.commons.compare.DifferenceDumper;
 import org.kalypso.commons.compare.FileContentAssertDumper;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
 import org.kalypso.convert.namodel.NAConfiguration;
@@ -74,6 +75,12 @@ public class NaPreprocessingTest
   public void testDemoModel( ) throws Exception
   {
     testRunPreprocessing( "naDemoModel", "resources/demoModel_Langzeit" );
+  }
+
+  @Test
+  public void testDemoModelWithSuds( ) throws Exception
+  {
+    testRunPreprocessing( "naDemoModelWithSuds", "resources/demoModel_WithSuds" );
   }
 
   @Test
@@ -101,7 +108,6 @@ public class NaPreprocessingTest
 
     preprocessor.process( new NullSimulationMonitor() );
 
-
     final File idMapFile = new File( outputDir, "IdMap.txt" ); //$NON-NLS-1$
     conf.getIdManager().dump( idMapFile );
 
@@ -113,6 +119,7 @@ public class NaPreprocessingTest
   private NAModelPreprocessor initPreprocessor( final String baseResourceLocation, final File asciiDir, final NAConfiguration conf ) throws Exception
   {
     final NaAsciiDirs outputDirs = new NaAsciiDirs( asciiDir );
+    final Logger logger = Logger.getAnonymousLogger();
 
     final URL gmlInputZipLocation = getClass().getResource( baseResourceLocation + "/gmlInput.zip" );
     final URL baseURL = new URL( String.format( "jar:%s!/", gmlInputZipLocation.toExternalForm() ) );
@@ -124,7 +131,6 @@ public class NaPreprocessingTest
     final URL context = simulationData.getModelWorkspace().getContext();
     conf.setZMLContext( context );
 
-    final Logger logger = Logger.getAnonymousLogger();
     final IDManager idManager = conf.getIdManager();
     final NAModelPreprocessor preprocessor = new NAModelPreprocessor( conf, outputDirs, idManager, simulationData, logger );
     return preprocessor;
@@ -137,11 +143,19 @@ public class NaPreprocessingTest
     final URL metaUrl = new URL( base, ".calculation" );
     final URL parameterUrl = new URL( base, "calcParameter.gml" );
     final URL hydrotopUrl = new URL( base, "calcHydrotop.gml" );
-    final URL sudsUrl = null;
+    final URL sudsUrl = checkUrlExists( new URL( base, "suds.gml" ) );
     final URL syntNUrl = null;
-    final URL lzsimUrl = null;
+    final URL lzsimUrl = checkUrlExists( new URL( base, "Anfangswerte/lzsim.gml" ) );
 
     return new NaSimulationData( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
+  }
+
+  private URL checkUrlExists( final URL url )
+  {
+    if( UrlUtilities.checkIsAccessible( url ) )
+      return url;
+
+    return null;
   }
 
   private void checkResult( final String baseResourceLocation, final File asciiDir, final File asciiExpectedDir ) throws IOException
