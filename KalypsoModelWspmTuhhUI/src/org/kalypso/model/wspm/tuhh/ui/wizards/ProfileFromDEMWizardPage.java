@@ -53,7 +53,9 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.dialog.compare.ProfileChart;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
+import org.kalypso.model.wspm.ui.dialog.compare.ProfileChartComposite;
+import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
 /**
  * @author barbarins
@@ -151,7 +153,9 @@ public class ProfileFromDEMWizardPage extends WizardPage
       }
     } );
 
-    final ProfileChart profileChart = new ProfileChart( container, SWT.BORDER, m_profile );
+    final IProfilLayerProvider lp = m_profile == null ? null : KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_profile.getType() );
+
+    final ProfileChartComposite profileChart = new ProfileChartComposite( container, SWT.BORDER, lp, m_profile );
     profileChart.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
   }
 
