@@ -224,7 +224,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       building.setValue( building.getObjectProperty( BUILDING_PROPERTY_BEZUGSPUNKT_Y ), y1 + (y2 - y1) / 2 );
       building.setValue( building.getObjectProperty( BUILDING_PROPERTY_BREITE ), 2.0 );
       building.setValue( building.getObjectProperty( BUILDING_PROPERTY_SOHLGEFAELLE ), 5.0 );
-      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_RAUHEIT ), 0.0 );
+      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_RAUHEIT ), 0.3 );
 
     }
 

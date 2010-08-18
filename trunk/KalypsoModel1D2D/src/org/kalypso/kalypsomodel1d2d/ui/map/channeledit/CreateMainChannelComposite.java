@@ -88,13 +88,12 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.action.ProfilChartActionsEnum;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.IWspmOverlayConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
-import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.SelectionWidget;
@@ -932,7 +931,7 @@ public class CreateMainChannelComposite extends Composite
       final SegmentData currentSegment = m_data.getSelectedSegment();
       final ProfilChartView profilChartView = new ProfilChartView();
       final IProfilLayerProvider layerProvider = new ProfilOverlayLayerProvider();
-      profilChartView.setProfil( profil );
+      profilChartView.setProfil( profil,null );
       profilChartView.setLayerProvider( layerProvider );
 
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
