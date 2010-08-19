@@ -49,6 +49,8 @@ import java.util.regex.Matcher;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -102,24 +104,44 @@ public class ASCIIHelper
     return result.toString();
   }
 
+  @SuppressWarnings("deprecation")
   private static String toAsciiValue( final Feature feature, final String pairFormat )
   {
     if( "".equals( pairFormat ) ) //$NON-NLS-1$
       return ""; //$NON-NLS-1$
     final String[] s = pairFormat.split( "," ); //$NON-NLS-1$
-    if( "todo".equals( s[0] ) ) //$NON-NLS-1$
-      return "(TODO:" + s[0] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-    if( "IGNORE".equals( s[0] ) ) //$NON-NLS-1$
+    final String propLocalName = s[0];
+    if( "todo".equals( propLocalName ) ) //$NON-NLS-1$
+      return "(TODO:" + propLocalName + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    if( "IGNORE".equals( propLocalName ) ) //$NON-NLS-1$
       return ""; //$NON-NLS-1$
-    //        System.out.println(s[0]);
-    final Object property = feature.getProperty( s[0] );
 
-    if( property == null )
-      return "(" + s[0] + "==NULL ?)"; //$NON-NLS-1$ //$NON-NLS-2$
-    final String value = property.toString(); // PropertyName
+    final IFeatureType featureType = feature.getFeatureType();
+    final IPropertyType propertyType = featureType.getProperty( propLocalName );
+    if( propertyType == null )
+      throw new IllegalArgumentException( String.format( "Unknown property: ", propLocalName ) );
+
+    final Object value = getValue( feature, propertyType );
 
     final String format = s[1];
-    return FortranFormatHelper.printf( value, format );
+    return FortranFormatHelper.printf( value.toString(), format );
+  }
+
+  private static Object getValue( final Feature feature, final IPropertyType propertyType )
+  {
+    final Object propertyValue = feature.getProperty( propertyType );
+
+    if( propertyType.isList() )
+    {
+      final List< ? > value = (List< ? >) propertyValue;
+      if( value != null && value.size() > 0 )
+        return value.get( 0 );
+    }
+
+    if( propertyValue != null )
+      return propertyValue.toString();
+
+    return String.format( "(%s==NULL ?)", propertyType.getQName().getLocalPart() ); //$NON-NLS-1$
   }
 
 }
