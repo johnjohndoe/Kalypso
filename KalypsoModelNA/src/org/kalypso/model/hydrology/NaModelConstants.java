@@ -134,8 +134,6 @@ public interface NaModelConstants
   /** namodell.xsd */
 
   // channels
-  public static final QName CHANNEL_GEOM_PROP = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
-
   public static final QName STORAGE_CHANNEL_ZMLINLINE_PROP = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
 
   public static final QName STORAGE_CHANNEL_VMAX_PROP = new QName( NS_NAMODELL, "vmax" ); //$NON-NLS-1$
@@ -289,8 +287,6 @@ public interface NaModelConstants
   public static final QName NA_MODEL_FLAECH_PROP = new QName( NS_NAMODELL, "flaech" ); //$NON-NLS-1$
 
   public static final QName NA_MODEL_ROOT_FT = new QName( NS_NAMODELL, "NaModell" ); //$NON-NLS-1$
-
-//  public static final QName NA_CHANNEL_COLLECTION_FT = new QName( NS_NAMODELL, "ChannelCollection" ); //$NON-NLS-1$
 
   /** parameter.xsd */
   public static final QName PARA_LANDUSE_FT = new QName( NS_NAPARAMETER, "LanduseType" ); //$NON-NLS-1$

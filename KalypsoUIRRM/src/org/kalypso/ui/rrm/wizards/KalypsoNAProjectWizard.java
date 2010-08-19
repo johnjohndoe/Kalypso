@@ -39,17 +39,14 @@
  *
  *  ---------------------------------------------------------------------------*/
 
-/*
- * Created on 31.01.2005
- *
- */
 package org.kalypso.ui.rrm.wizards;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -58,6 +55,8 @@ import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -68,10 +67,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.annotation.DefaultAnnotation;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -106,20 +104,37 @@ import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * @author kuepfer
  */
 public class KalypsoNAProjectWizard extends NewProjectWizard
 {
-  public static final String CATEGORY_TEMPLATE = "org.kalypso.model.rrm.templateProjects";//$NON-NLS-1$
+  private static final QName QNAME_STRANGART = new QName( "wizard.kalypso.na", "StrangArt" );
 
-  public static final String NULL_KEY = "-NULL-"; //$NON-NLS-1$
+  /** Mapping option for geometry properties: do nothing, geometry is not changed. */
+  private static final int GEO_MAPPING_NONE = 0;
+
+  /** Mapping option for geometry properties: wrap {@link GM_Surface}s into a {@link GM_MultiSurface}. */
+  private final static int GEO_MAPPING_SURFACE_2_MULTISURFACE = 0x1 << 0;
+
+  /**
+   * Mapping option for geometry properties: convert {@link GM_MultiSurface}s into a {@link GM_Surface} by just taking
+   * the first element.
+   */
+  private final static int GEO_MAPPING_MULTISURFACE_2_SURFACE = 0x1 << 1;
+
+  /**
+   * Mapping option for geometry properties: convert {@link GM_MultiCurve}s into a {@link GM_Curve} by just taking the
+   * first element.
+   */
+  private static final int GEO_MAPPING_MULTICURVE_2_CURVE = 0x1 << 2;
+
+  public static final String CATEGORY_TEMPLATE = "org.kalypso.model.rrm.templateProjects";//$NON-NLS-1$
 
   static final String CATCHMENT_PAGE = "page_type:catchment"; //$NON-NLS-1$
 
@@ -145,30 +160,13 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   private KalypsoNAProjectPreferences m_createPreferencePage;
 
-  private final GMLSchema m_modelSchema;
-
   private GMLWorkspace m_modelWS;
-
-  private GMLSchema m_hydrotopSchema;
 
   private GMLWorkspace m_hydWS;
 
   public KalypsoNAProjectWizard( )
   {
     super( CATEGORY_TEMPLATE, true );
-
-    GMLSchema schema = null;
-    try
-    {
-      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      schema = schemaCatalog.getSchema( NaModelConstants.NS_NAMODELL, (String) null );
-      m_hydrotopSchema = schemaCatalog.getSchema( NaModelConstants.NS_NAHYDROTOP, (String) null );
-    }
-    catch( final Exception e1 )
-    {
-      e1.printStackTrace();
-    }
-    m_modelSchema = schema;
 
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "KalypsoNAProjectWizard.9" ) ); //$NON-NLS-1$
@@ -179,59 +177,23 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
   {
     super.addPages();
 
-    m_createPreferencePage = new KalypsoNAProjectPreferences( PREFERENCE_PAGE, m_modelSchema );
+    m_createPreferencePage = new KalypsoNAProjectPreferences( PREFERENCE_PAGE );
     addPage( m_createPreferencePage );
 
     m_createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, Messages.getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
-        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) ); //$NON-NLS-1$
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getCatchmentTargetProperties() );
 
     addPage( m_createMappingCatchmentPage );
-    final IFeatureType gewaesserFT = createGewaesserFT();
     m_createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, Messages.getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
-        ImageProvider.IMAGE_KALYPSO_ICON_BIG, gewaesserFT );
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getChannelTargetProperties() );
     addPage( m_createMappingRiverPage );
 
     m_createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, Messages.getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
-        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) ); //$NON-NLS-1$
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getNodeTargetProperties() ); //$NON-NLS-1$
     addPage( m_createMappingNodePage );
     m_createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, Messages.getString( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
-        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) ); //$NON-NLS-1$
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getHydrotopeTargetProperties() ); //$NON-NLS-1$
     addPage( m_createMappingHydrotopPage );
-  }
-
-  private IFeatureType createGewaesserFT( )
-  {
-    // TODO: set annotations to CustomPropertyTypes in order to translate this stuff
-    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final QName featureQName = new QName( "wizard.kalypso.na", "Gewässer" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IMarshallingTypeHandler lineStringTH = registry.getTypeHandlerForClassName( GeometryUtilities.getLineStringClass() );
-    final IAnnotation annoOrt = new DefaultAnnotation( Locale.getDefault().getLanguage(), Messages.getString( "KalypsoNAProjectWizard.1" ) ); //$NON-NLS-1$
-    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH, 0, 1, false, annoOrt ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-
-    final IAnnotation annoName = new DefaultAnnotation( Locale.getDefault().getLanguage(), Messages.getString( "KalypsoNAProjectWizard.3" ) ); //$NON-NLS-1$
-    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH, 1, 1, false, annoName ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IAnnotation annoDescription = new DefaultAnnotation( Locale.getDefault().getLanguage(), Messages.getString( "KalypsoNAProjectWizard.5" ) ); //$NON-NLS-1$
-    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH, 1, 1, false, annoDescription ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IMarshallingTypeHandler integerTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_INT );
-    final IAnnotation annoStrangArt = new DefaultAnnotation( Locale.getDefault().getLanguage(), Messages.getString( "KalypsoNAProjectWizard.7" ) ); //$NON-NLS-1$
-    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH, 0, 1, false, annoStrangArt ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IPropertyType[] pts = new IPropertyType[] { pt1, pt2, pt3, pt4 };
-
-    return GMLSchemaFactory.createFeatureType( featureQName, pts );
-  }
-
-  @Deprecated
-  private IFeatureType getFeatureType( final String featureName )
-  {
-    IFeatureType ft = null;
-    ft = m_modelSchema.getFeatureType( new QName( NaModelConstants.NS_NAMODELL, featureName ) );
-    if( ft == null )
-      ft = m_hydrotopSchema.getFeatureType( new QName( NaModelConstants.NS_NAHYDROTOP, featureName ) );
-    return ft;
   }
 
   /**
@@ -257,21 +219,22 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     }
 
     // map catchment shape file
-    final Map<Object, Object> catchmentMapping = m_createMappingCatchmentPage.getMapping();
+    final Map<IValuePropertyType, IValuePropertyType> catchmentMapping = m_createMappingCatchmentPage.getMapping();
     if( catchmentMapping != null && catchmentMapping.size() != 0 )
     {
       final List< ? > catchmentFeatureList = m_createMappingCatchmentPage.getFeatureList();
       mapCatchment( catchmentFeatureList, catchmentMapping );
     }
+
     // map river shape file
-    final Map<Object, Object> riverMapping = m_createMappingRiverPage.getMapping();
+    final Map<IValuePropertyType, IValuePropertyType> riverMapping = m_createMappingRiverPage.getMapping();
     if( riverMapping != null && riverMapping.size() != 0 )
     {
       final List< ? > riverFeatureList = m_createMappingRiverPage.getFeatureList();
       mapRiver( riverFeatureList, riverMapping );
     }
     // map node shape file
-    final Map<Object, Object> nodeMapping = m_createMappingNodePage.getMapping();
+    final Map<IValuePropertyType, IValuePropertyType> nodeMapping = m_createMappingNodePage.getMapping();
     if( nodeMapping != null && nodeMapping.size() != 0 )
     {
       final List< ? > nodeFeatureList = m_createMappingNodePage.getFeatureList();
@@ -279,7 +242,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     }
 
     // map hydrotop shape file
-    final Map<Object, Object> hydMapping = m_createMappingHydrotopPage.getMapping();
+    final Map<IValuePropertyType, IValuePropertyType> hydMapping = m_createMappingHydrotopPage.getMapping();
     if( hydMapping != null && hydMapping.size() != 0 )
     {
       final List< ? > hydFeatureList = m_createMappingHydrotopPage.getFeatureList();
@@ -319,173 +282,47 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     }
   }
 
-  private void mapHyd( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
+  private void mapHyd( final List< ? > sourceFeatureList, final Map<IValuePropertyType, IValuePropertyType> mapping )
   {
     final NAHydrotop naHydrotop = (NAHydrotop) m_hydWS.getRootFeature();
 
     final IFeatureBindingCollection<IHydrotope> hydList = naHydrotop.getHydrotopes();
 
-    for( int i = 0; i < sourceFeatureList.size(); i++ )
+    for( final Object sourceElement : sourceFeatureList )
     {
-      final Feature sourceFeature = (Feature) sourceFeatureList.get( i );
+      final Feature sourceFeature = (Feature) sourceElement;
       final IHydrotope targetFeature = hydList.addNew( Hydrotop.QNAME, sourceFeature.getId() );
-      final Iterator<Object> it = mapping.keySet().iterator();
-      while( it.hasNext() )
-      {
-        final String targetkey = (String) it.next();
-        final IPropertyType targetPT = targetFeature.getFeatureType().getProperty( targetkey );
-        final String sourcekey = (String) mapping.get( targetkey );
-        if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
-        {
-          Object so = sourceFeature.getProperty( sourcekey );
-          final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
 
-          if( so instanceof GM_MultiSurface )
-          {
-            targetFeature.setProperty( targetPT, so );
-          }
-          else if( so instanceof GM_Surface )
-          {
-            final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) so;
-            final GM_Surface<GM_SurfacePatch>[] surfaces = new GM_Surface[] { surface };
-            final GM_MultiSurface MultiSurface = GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
-            so = MultiSurface;
-            targetFeature.setProperty( targetPT, so );
-          }
-          else if( pt instanceof IValuePropertyType )
-          {
-            final IValuePropertyType vpt = (IValuePropertyType) pt;
-            if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
-            {
-              targetFeature.setProperty( targetkey, so );
-            }
-            else
-            {
-              try
-              {
-                targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
-              }
-              catch( final Exception e )
-              {
-                e.printStackTrace();
-              }
-            }
-          }
-        }
-      }
-      hydList.add( targetFeature );
+      copyValues( sourceFeature, targetFeature, mapping, GEO_MAPPING_SURFACE_2_MULTISURFACE );
     }
   }
 
-  /**
-   * generates an ID based on the FeatureType. If the idColKey variable is set, then use this field to generate the ID
-   * and check if the ID doesn´t exist in the idMap. if the id ColKey is not set, use the ID of the sourceFeature (shape
-   * file).
-   * 
-   * @param idColKey
-   * @param sourceFeature
-   * @param IDText
-   * @return fid
-   */
-  private String getId( final String idColKey, final Feature sourceFeature, final String IDText )
-  {
-    String fid;
-    if( idColKey != null )
-    {
-      String idKey = null;
-      try
-      {
-        idKey = SpecialPropertyMapper.map( (sourceFeature.getProperty( idColKey )).getClass(), Integer.class, sourceFeature.getProperty( idColKey ) ).toString();
-      }
-      catch( final Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      // String idKey = (sourceFeature.getProperty( idColKey )).toString();
-      if( !m_IDMap.containsKey( IDText + idKey ) )
-      {
-        fid = IDText + idKey;
-        m_IDMap.put( fid, sourceFeature );
-      }
-      else
-      {
-        fid = sourceFeature.getId();
-        m_IDMap.put( fid, sourceFeature );
-      }
-    }
-    else
-      fid = sourceFeature.getId();
-    return fid;
-  }
-
-  private void mapCatchment( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
+  private void mapCatchment( final List< ? > sourceFeatureList, final Map<IValuePropertyType, IValuePropertyType> mapping )
   {
     final NaModell naModel = (NaModell) m_modelWS.getRootFeature();
-    final IFeatureType catchmentFT = getFeatureType( "Catchment" ); //$NON-NLS-1$
+    final IFeatureType catchmentFT = GMLSchemaUtilities.getFeatureTypeQuiet( Catchment.FEATURE_CATCHMENT ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
 
-// final IRelationType targetRelation = catchments.getParentFeatureTypeProperty();
-
     // find column for id
-    final String idColKey;
-    if( mapping.containsKey( "name" ) ) //$NON-NLS-1$
+    final IValuePropertyType idColKey = findColumnForId( mapping );
+
+    for( final Object sourceElement : sourceFeatureList )
     {
-      idColKey = (String) mapping.get( "name" ); //$NON-NLS-1$
-    }
-    else
-      idColKey = null;
-    for( int i = 0; i < sourceFeatureList.size(); i++ )
-    {
-      final Feature sourceFeature = (Feature) sourceFeatureList.get( i );
+      final Feature sourceFeature = (Feature) sourceElement;
+
       final String fid = getId( idColKey, sourceFeature, "TG" ); //$NON-NLS-1$
 
-// final Feature targetFeature = FeatureFactory.createFeature( catchmentCollectionFE, targetRelation, fid, catchmentFT,
-// true );
-
       final Catchment targetFeature = catchments.addNew( Catchment.FEATURE_CATCHMENT, fid );
-
-      final IPropertyType flaechPT = catchmentFT.getProperty( NaModelConstants.NA_MODEL_FLAECH_PROP );
       final IRelationType bodenkorrekturMemberRT = (IRelationType) catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
-      final Iterator<Object> it = mapping.keySet().iterator();
-      while( it.hasNext() )
-      {
-        final String targetkey = (String) it.next();
-// final IPropertyType targetPT = modelFT.getProperty( targetkey );
-        final String sourcekey = (String) mapping.get( targetkey );
-        if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
-        {
-          final Object so = sourceFeature.getProperty( sourcekey );
-          final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
-          if( so instanceof GM_MultiSurface )
-          {
-            final GM_Surface< ? >[] surfaces = new GM_Surface[] { ((GM_MultiSurface) so).getSurfaceAt( 0 ) };
-            final Long area = new Long( (long) (surfaces[0]).getArea() );
-            targetFeature.setProperty( flaechPT, area );
-            targetFeature.setProperty( targetkey, surfaces[0] );
-          }
-          else if( pt instanceof IValuePropertyType )
-          {
-            final IValuePropertyType vpt = (IValuePropertyType) pt;
-            if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
-            {
-              targetFeature.setProperty( targetkey, so );
-            }
-            else
-            {
-              try
-              {
-                targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
-              }
-              catch( final Exception e )
-              {
-                e.printStackTrace();
-              }
-            }
-          }
-        }
-      }
+
+      copyValues( sourceFeature, targetFeature, mapping, GEO_MAPPING_MULTISURFACE_2_SURFACE );
+
+      /* Set area: TODO: probably not needed any more, check! */
+      final GM_Surface< ? > geometry = targetFeature.getGeometry();
+      if( geometry != null )
+        targetFeature.setProperty( NaModelConstants.NA_MODEL_FLAECH_PROP, new Long( (long) geometry.getArea() ) );
+
       // Bodenkorrekturparameter erstellen
       final List< ? > list = FeatureFactory.createFeatureList( targetFeature, bodenkorrekturMemberRT );
       targetFeature.setProperty( NaModelConstants.BODENKORREKTUR_MEMBER, list );
@@ -504,88 +341,45 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
           e.printStackTrace();
         }
       }
-// catchmentList.add( targetFeature );
     }
   }
 
-  private void mapNode( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
+  private void mapNode( final List< ? > sourceFeatureList, final Map<IValuePropertyType, IValuePropertyType> mapping )
   {
     final NaModell naModel = (NaModell) m_modelWS.getRootFeature();
-//    final IFeatureType modelFT = getFeatureType( "Node" ); //$NON-NLS-1$
-
-// final Feature nodeCollectionFE = (Feature) rootFeature.getProperty( NaModelConstants.NODE_COLLECTION_MEMBER_PROP );
-// final FeatureList nodeList = (FeatureList) nodeCollectionFE.getProperty( NaModelConstants.NODE_MEMBER_PROP );
 
     final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
 
-// final IRelationType targetRelation = nodeList.getParentFeatureTypeProperty();
-
     // find column for id
-    final String idColKey;
-    if( mapping.containsKey( "name" ) ) //$NON-NLS-1$
-    {
-      idColKey = (String) mapping.get( "name" ); //$NON-NLS-1$
-    }
-    else
-      idColKey = null;
+    final IValuePropertyType idColKey = findColumnForId( mapping );
 
-    for( int i = 0; i < sourceFeatureList.size(); i++ )
+    for( final Object sourceElement : sourceFeatureList )
     {
-      final Feature sourceFeature = (Feature) sourceFeatureList.get( i );
+      final Feature sourceFeature = (Feature) sourceElement;
       final String fid = getId( idColKey, sourceFeature, "K" ); //$NON-NLS-1$
       final Feature targetFeature = nodes.addNew( Node.FEATURE_NODE, fid );
 
-      for( final Entry<Object, Object> entry : mapping.entrySet() )
-      {
-        final String targetkey = (String) entry.getKey();
-        final String sourcekey = (String) entry.getValue();
-        if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
-        {
-          final Object so = sourceFeature.getProperty( sourcekey );
-          final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
-          if( so instanceof GM_Object )
-            targetFeature.setProperty( targetkey, so );
-          else if( pt instanceof IValuePropertyType )
-          {
-            final IValuePropertyType vpt = (IValuePropertyType) pt;
-            if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
-            {
-              targetFeature.setProperty( targetkey, so );
-            }
-            else
-            {
-              try
-              {
-                targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
-              }
-              catch( final Exception e )
-              {
-                e.printStackTrace();
-              }
-            }
-          }
-        }
-      }
+      copyValues( sourceFeature, targetFeature, mapping, GEO_MAPPING_NONE );
     }
   }
 
-  private void mapRiver( final List< ? > sourceFeatureList, final Map<Object, Object> mapping )
+  private void mapRiver( final List< ? > sourceFeatureList, final Map<IValuePropertyType, IValuePropertyType> mapping )
   {
     final NaModell naModell = (NaModell) m_modelWS.getRootFeature();
 
     // find column for id
-    final String idColKey = findColumnForId( mapping );
+    final IValuePropertyType idColKey = findColumnForId( mapping );
 
     // StrangArt is defined in dummyFeatureType (member variable)
-    final String typeKey = (String) mapping.get( "StrangArt" ); //$NON-NLS-1$
+    final IValuePropertyType typeKey = findColumn( mapping, QNAME_STRANGART ); //$NON-NLS-1$
     // remove the channel type mapping (just needed once)
-    mapping.remove( typeKey );
+    removeColumn( mapping, QNAME_STRANGART );
 
     final IFeatureBindingCollection<Channel> channels = naModell.getChannels();
 
-    for( int i = 0; i < sourceFeatureList.size(); i++ )
+    for( final Object sourceElement : sourceFeatureList )
     {
-      final Feature sourceFeature = (Feature) sourceFeatureList.get( i );
+      final Feature sourceFeature = (Feature) sourceElement;
       final Object o = sourceFeature.getProperty( typeKey );
       int channelType = 0;
       try
@@ -598,89 +392,252 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
         throw new NumberFormatException( Messages.getString( "KalypsoNAProjectWizard.ExceptionStrangArt" ) ); //$NON-NLS-1$
       }
 
-      Feature targetFeature = null;
       final String fid = getId( idColKey, sourceFeature, "S" ); //$NON-NLS-1$
-      switch( channelType )
-      {
-        case 0:
-        {
-          targetFeature = channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL, fid );
-          break;
-        }
-        case 1:
-        {
-          final IFeatureType kmFT = getFeatureType( "KMChannel" ); //$NON-NLS-1$
-          targetFeature = channels.addNew( KMChannel.FEATURE_KM_CHANNEL, fid );
 
-          final KMChannel targetChannel = (KMChannel) targetFeature;
-          final IFeatureBindingCollection<KMParameter> parameters = targetChannel.getParameters();
-          parameters.clear();
-          final int channelNo = Integer.parseInt( m_createPreferencePage.getKMChannelNo() );
-          for( int j = 0; j < channelNo; j++ )
-            parameters.addNew( KMParameter.FEATURE_KM_PARAMETER );
-          break;
-        }
-        case 2:
-        {
-          targetFeature = channels.addNew( StorageChannel.FEATURE_STORAGE_CHANNEL, fid );
-          break;
-        }
-        case 3:
-        {
-          throw new NotImplementedException( Messages.getString( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
-        }
-        default:
-        {
-          break;
-        }
-      }// switch
+      final Feature targetFeature = createFeatureForChannelType( channelType, channels, fid );
 
-      final Iterator<Object> it = mapping.keySet().iterator();
-      while( it.hasNext() )
-      {
-        final String targetkey = (String) it.next();
-        final String sourcekey = (String) mapping.get( targetkey );
-        if( "StrangArt".equals( targetkey ) ) //$NON-NLS-1$
-          continue;
-        if( !sourcekey.equalsIgnoreCase( NULL_KEY ) )
-        {
-          final Object so = sourceFeature.getProperty( sourcekey );
-          final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
-          if( so instanceof GM_MultiCurve )
-          {
-            final GM_Curve[] curves = new GM_Curve[] { ((GM_MultiCurve) so).getCurveAt( 0 ) };
-            targetFeature.setProperty( targetkey, curves[0] );
-          }
-          else if( pt instanceof IValuePropertyType )
-          {
-            final IValuePropertyType vpt = (IValuePropertyType) pt;
-            if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
-            {
-              targetFeature.setProperty( targetkey, so );
-            }
-            else
-            {
-              try
-              {
-                targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
-              }
-              catch( final Exception e )
-              {
-                e.printStackTrace();
-              }
-            }
-          }
-        }
-      }
-    }// for i
+      copyValues( sourceFeature, targetFeature, mapping, GEO_MAPPING_MULTICURVE_2_CURVE );
+    }
+  }
 
-  }// mapRiver
-
-  private String findColumnForId( final Map<Object, Object> mapping )
+  private Channel createFeatureForChannelType( final int channelType, final IFeatureBindingCollection<Channel> channels, final String fid )
   {
-    if( mapping.containsKey( "name" ) ) //$NON-NLS-1$
-      return (String) mapping.get( "name" ); //$NON-NLS-1$
+    switch( channelType )
+    {
+      case 0:
+        return channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL, fid );
+
+      case 1:
+      {
+        final KMChannel targetChannel = channels.addNew( KMChannel.FEATURE_KM_CHANNEL, fid, KMChannel.class );
+        final IFeatureBindingCollection<KMParameter> parameters = targetChannel.getParameters();
+        parameters.clear();
+        final int channelNo = Integer.parseInt( m_createPreferencePage.getKMChannelNo() );
+        for( int j = 0; j < channelNo; j++ )
+          parameters.addNew( KMParameter.FEATURE_KM_PARAMETER );
+
+        return targetChannel;
+      }
+
+      case 2:
+        return channels.addNew( StorageChannel.FEATURE_STORAGE_CHANNEL, fid );
+
+      case 3:
+        throw new NotImplementedException( Messages.getString( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
+
+      default:
+        throw new IllegalArgumentException( String.format( "Unuknown channel type: %d. Valid values are 0,1 or 2.", channelType ) );
+    }
+  }
+
+  private void copyValues( final Feature sourceFeature, final Feature targetFeature, final Map<IValuePropertyType, IValuePropertyType> mapping, final int geoMappingOption )
+  {
+    for( final Entry<IValuePropertyType, IValuePropertyType> entry : mapping.entrySet() )
+    {
+      final IValuePropertyType targetkey = entry.getKey();
+      final IValuePropertyType sourcekey = entry.getValue();
+
+      copyValue( sourceFeature, sourcekey, targetFeature, targetkey, geoMappingOption );
+    }
+  }
+
+  private void copyValue( final Feature sourceFeature, final IValuePropertyType sourcekey, final Feature targetFeature, final IValuePropertyType targetkey, final int geoMappingOption )
+  {
+    final IFeatureType targetFT = targetFeature.getFeatureType();
+    final Object sourceValue = sourceFeature.getProperty( sourcekey );
+    final Object targetValue = mapValue( targetFT, sourceValue, targetkey, geoMappingOption );
+    targetFeature.setProperty( targetkey, targetValue );
+  }
+
+  private Object mapValue( final IFeatureType targetFT, final Object sourceValue, final IPropertyType targetPT, final int geoMappingOption )
+  {
+    if( sourceValue instanceof GM_Object )
+      return mapGeometry( (GM_Object) sourceValue, geoMappingOption );
+
+    final IGMLSchema schema = targetFT.getGMLSchema();
+    final String gmlVersion = schema.getGMLVersion();
+    if( gmlVersion.startsWith( "3" ) && Feature.QN_NAME.equals( targetPT.getQName() ) )
+    {
+      final List<String> nameList = new ArrayList<String>();
+      nameList.add( ObjectUtils.toString( sourceValue, StringUtils.EMPTY ) );
+      return nameList;
+    }
+
+    if( targetPT instanceof IValuePropertyType )
+      return mapValuePropertyType( sourceValue, (IValuePropertyType) targetPT );
 
     return null;
   }
+
+  private GM_Object mapGeometry( final GM_Object sourceValue, final int mappingOption )
+  {
+    if( (mappingOption & GEO_MAPPING_SURFACE_2_MULTISURFACE) != 0 && sourceValue instanceof GM_Surface )
+    {
+      final GM_Surface< ? >[] surfaces = new GM_Surface[] { (GM_Surface< ? >) ((GM_Surface< ? >) sourceValue) };
+      return GeometryFactory.createGM_MultiSurface( surfaces, ((GM_Surface< ? >) ((GM_Surface< ? >) sourceValue)).getCoordinateSystem() );
+    }
+
+    if( (mappingOption & GEO_MAPPING_MULTISURFACE_2_SURFACE) != 0 && sourceValue instanceof GM_MultiSurface )
+    {
+      final GM_Surface< ? >[] surfaces = new GM_Surface[] { ((GM_MultiSurface) sourceValue).getSurfaceAt( 0 ) };
+      return surfaces[0];
+    }
+
+    if( (mappingOption & GEO_MAPPING_MULTICURVE_2_CURVE) != 0 && sourceValue instanceof GM_MultiCurve )
+    {
+      final GM_Curve[] curves = new GM_Curve[] { ((GM_MultiCurve) sourceValue).getCurveAt( 0 ) };
+      return curves[0];
+    }
+
+
+    return sourceValue;
+  }
+
+  private Object mapValuePropertyType( final Object sourceValue, final IValuePropertyType vpt )
+  {
+    if( sourceValue.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
+      return sourceValue;
+
+    try
+    {
+      return SpecialPropertyMapper.map( sourceValue.getClass(), vpt.getTypeHandler().getValueClass(), sourceValue );
+    }
+    catch( final Exception e )
+    {
+      // we do not print the stack trace!
+      final String msg = String.format( "Unable to map value '%s', to property '%s' of type %s.", ObjectUtils.toString( sourceValue ), vpt.getQName(), vpt.getValueQName() );
+      final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
+      KalypsoUIRRMPlugin.getDefault().getLog().log( status );
+    }
+
+    return null;
+
+  }
+
+  private static IValuePropertyType findColumnForId( final Map<IValuePropertyType, IValuePropertyType> mapping )
+  {
+    return findColumn( mapping, Feature.QN_NAME );
+  }
+
+  private static IValuePropertyType findColumn( final Map<IValuePropertyType, IValuePropertyType> mapping, final QName qname )
+  {
+    for( final IValuePropertyType targetKey : mapping.keySet() )
+    {
+      if( qname.equals( targetKey.getQName() ) )
+        return mapping.get( targetKey );
+    }
+
+    return null;
+  }
+
+  private static void removeColumn( final Map<IValuePropertyType, IValuePropertyType> mapping, final QName qname )
+  {
+    for( final IValuePropertyType targetKey : mapping.keySet() )
+    {
+      if( qname.equals( targetKey.getQName() ) )
+      {
+        mapping.remove( targetKey );
+        return;
+      }
+    }
+  }
+
+  /**
+   * generates an ID based on the FeatureType. If the idColKey variable is set, then use this field to generate the ID
+   * and check if the ID doesn´t exist in the idMap. if the id ColKey is not set, use the ID of the sourceFeature (shape
+   * file).
+   * 
+   * @param idColKey
+   * @param sourceFeature
+   * @param IDText
+   * @return fid
+   */
+  private String getId( final IValuePropertyType idColKey, final Feature sourceFeature, final String idText )
+  {
+    if( idColKey == null )
+      return sourceFeature.getId();
+
+    try
+    {
+      final String idKey = SpecialPropertyMapper.map( (sourceFeature.getProperty( idColKey )).getClass(), Integer.class, sourceFeature.getProperty( idColKey ) ).toString();
+
+      final String key = idText + idKey;
+      if( !m_IDMap.containsKey( key ) )
+      {
+        m_IDMap.put( key, sourceFeature );
+        return key;
+      }
+      else
+      {
+        final String fid = sourceFeature.getId();
+        m_IDMap.put( fid, sourceFeature );
+        return fid;
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return sourceFeature.getId();
+  }
+
+
+  private IValuePropertyType[] getAllValueProperties( final IFeatureType targetFT )
+  {
+    final Collection<IValuePropertyType> result = new ArrayList<IValuePropertyType>();
+
+    final IPropertyType[] targetFtp = targetFT.getProperties();
+    for( final IPropertyType ftp : targetFtp )
+    {
+      final QName qName = ftp.getQName();
+      if( qName.equals( GMLConstants.QN_LOCATION ) || qName.equals( Feature.QN_BOUNDED_BY ) )
+        continue;
+
+      if( ftp instanceof IValuePropertyType )
+      {
+        final IValuePropertyType targetPT = (IValuePropertyType) ftp;
+        if( !targetPT.isVirtual() && !targetPT.isList() )
+          result.add( targetPT );
+      }
+    }
+
+    return result.toArray( new IValuePropertyType[result.size()] );
+  }
+
+  private IValuePropertyType[] getCatchmentTargetProperties( )
+  {
+    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( Catchment.FEATURE_CATCHMENT );
+    return getAllValueProperties( featureType );
+  }
+
+  private IValuePropertyType[] getChannelTargetProperties( )
+  {
+    final IFeatureType channelFT = GMLSchemaUtilities.getFeatureTypeQuiet( Channel.FEATURE_CHANNEL );
+
+    final IValuePropertyType propOrt = (IValuePropertyType) channelFT.getProperty( Channel.PROP_ORT );
+    final IValuePropertyType propName = (IValuePropertyType) channelFT.getProperty( Channel.QN_NAME );
+    final IValuePropertyType propDescription = (IValuePropertyType) channelFT.getProperty( Channel.QN_DESCRIPTION );
+
+    // Create fake property type for 'channel type'
+    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IMarshallingTypeHandler integerTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_INT );
+    final IAnnotation annoStrangArt = new DefaultAnnotation( Locale.getDefault().getLanguage(), Messages.getString( "KalypsoNAProjectWizard.7" ) ); //$NON-NLS-1$
+    final IValuePropertyType propStrangArt = GMLSchemaFactory.createValuePropertyType( QNAME_STRANGART, integerTH, 0, 1, false, annoStrangArt ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    return new IValuePropertyType[] { propOrt, propName, propDescription, propStrangArt };
+  }
+
+  private IValuePropertyType[] getNodeTargetProperties( )
+  {
+    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( Node.FEATURE_NODE );
+    return getAllValueProperties( featureType );
+  }
+
+  private IValuePropertyType[] getHydrotopeTargetProperties( )
+  {
+    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( IHydrotope.QNAME );
+    return getAllValueProperties( featureType );
+  }
+
 }

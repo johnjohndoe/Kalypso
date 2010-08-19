@@ -32,7 +32,6 @@ package org.kalypso.ui.rrm.wizards;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -43,7 +42,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -56,8 +55,6 @@ import org.kalypso.ui.rrm.i18n.Messages;
  */
 public class KalypsoNAProjectPreferences extends WizardPage
 {
-  private final GMLSchema m_modelSchema;
-
   String m_soilLayerNo = null;
 
   String m_kmChannelNo = null;
@@ -66,27 +63,12 @@ public class KalypsoNAProjectPreferences extends WizardPage
 
   private Combo m_soilCombo;
 
-  /**
-   * @param schema
-   */
-
-  public KalypsoNAProjectPreferences( final String pageName, final GMLSchema schema )
+  public KalypsoNAProjectPreferences( final String pageName )
   {
     super( pageName );
     setTitle( Messages.getString( "KalypsoNAProjectPreferences.Title" ) ); //$NON-NLS-1$
     setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     setDescription( Messages.getString( "KalypsoNAProjectPreferences.Description" ) ); //$NON-NLS-1$
-    m_modelSchema = schema;
-  }
-
-  /**
-   *
-   */
-
-  public KalypsoNAProjectPreferences( final String pageName, final String title, final ImageDescriptor titleImage, final GMLSchema schema )
-  {
-    super( pageName, title, titleImage );
-    m_modelSchema = schema;
   }
 
   /**
@@ -105,7 +87,8 @@ public class KalypsoNAProjectPreferences extends WizardPage
     soilLabel.setLayoutData( new GridData(SWT.FILL, SWT.CENTER, true, true) );
     soilLabel.setText( Messages.getString( "KalypsoNAProjectPreferences.SoilGroupLable" ) ); //$NON-NLS-1$
     m_soilCombo = new Combo( soil, SWT.READ_ONLY );
-    final IFeatureType catchmentFT = m_modelSchema.getFeatureType( Catchment.FEATURE_CATCHMENT );
+    final IFeatureType catchmentFT = GMLSchemaUtilities.getFeatureTypeQuiet( Catchment.FEATURE_CATCHMENT );
+
     final int maxOccursSoil = catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER ).getMaxOccurs();
     final List<String> noSoilLayer = new ArrayList<String>();
     for( int i = 0; i < maxOccursSoil + 1; i++ )
@@ -141,7 +124,8 @@ public class KalypsoNAProjectPreferences extends WizardPage
     channelLabel.setText( Messages.getString( "KalypsoNAProjectPreferences.KMChannelGroupLable" ) ); //$NON-NLS-1$
     channelLabel.setLayoutData( new GridData(SWT.FILL, SWT.CENTER, true, true) );
     m_channelCombo = new Combo( channel, SWT.READ_ONLY );
-    final IFeatureType kmChannelFT = m_modelSchema.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
+
+    final IFeatureType kmChannelFT = GMLSchemaUtilities.getFeatureTypeQuiet( KMChannel.FEATURE_KM_CHANNEL );
     final int maxOccursKM = kmChannelFT.getProperty( KMChannel.MEMBER_PARAMETER ).getMaxOccurs();
     final ArrayList<String> noKMDischarge = new ArrayList<String>();
     for( int i = 0; i < maxOccursKM + 1; i++ )

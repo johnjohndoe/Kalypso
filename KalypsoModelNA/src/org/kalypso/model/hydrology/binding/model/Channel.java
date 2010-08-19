@@ -62,6 +62,8 @@ public abstract class Channel extends AbstractNaModelElement
 
   private static final QName LINK_DOWNSTREAMNODE = new QName( NS_NAMODELL, "downStreamNodeMember" ); //$NON-NLS-1$
 
+  public static final QName PROP_ORT = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
+
   public Channel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
