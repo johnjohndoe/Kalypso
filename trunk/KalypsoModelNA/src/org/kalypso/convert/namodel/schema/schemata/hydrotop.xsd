@@ -4,8 +4,8 @@
   xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:naModel="http://www.tuhh.de/kalypsoNA" elementFormDefault="qualified" version="0.9">
 
   <import namespace="http://www.opengis.net/gml" />
-  <import namespace="http://www.tuhh.de/kalypsoNA" />
-  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" />
+  <import namespace="http://www.tuhh.de/kalypsoNA" schemaLocation="namodell.xsd" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" schemaLocation="suds.xsd"/>
 
   <element name="NAHydrotop" substitutionGroup="gml:_Feature">
     <complexType>
