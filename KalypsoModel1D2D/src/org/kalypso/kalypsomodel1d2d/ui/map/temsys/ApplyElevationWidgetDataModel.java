@@ -225,8 +225,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
    * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(org.kalypso.ogc.gml.selection.IFeatureSelection)
    */
   @Override
-  @SuppressWarnings("unchecked")
-  public void selectionChanged( final IFeatureSelection selection )
+  public void selectionChanged( final Object source, final IFeatureSelection selection )
   {
     // TODO pat maybe get th list from dataModel
     if( m_ignoreMapSelection )
@@ -266,16 +265,16 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   {
     return m_selectedNodeList;
   }
-  
+
   public void saveModels() throws CoreException{
-//    try
-//    {
-      m_dataProvider.saveModel( new NullProgressMonitor() );
-//    }
-//    catch( CoreException e )
-//    {
-//      e.printStackTrace();
-//    }
+    //    try
+    //    {
+    m_dataProvider.saveModel( new NullProgressMonitor() );
+    //    }
+    //    catch( CoreException e )
+    //    {
+    //      e.printStackTrace();
+    //    }
   }
 
 }

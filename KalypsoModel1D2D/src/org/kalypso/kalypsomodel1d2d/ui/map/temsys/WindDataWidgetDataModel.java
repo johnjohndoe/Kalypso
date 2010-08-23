@@ -58,8 +58,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
@@ -71,14 +69,14 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * @author ig
  * 
  */
-public class WindDataWidgetDataModel extends KeyBasedDataModel implements IFeatureSelectionListener
+public class WindDataWidgetDataModel extends KeyBasedDataModel
 {
   public static final String STR_WIND_STEP_PROP_NAME = "windStepActual";
 
   public static final String WIND_THEME = "_WINDDATA_THEME_"; //$NON-NLS-1$
 
   private static final String[] KEYS = { IWindModel.class.toString(), IWindDataModelSystem.class.toString(), IWindDataModel.class.toString(), IMapModell.class.toString(), IMapPanel.class.toString(),
-      WIND_THEME };
+    WIND_THEME };
 
   private final ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
 
@@ -171,7 +169,6 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel implements IFeatu
 
   public void setMapPanel( final IMapPanel mapPanel )
   {
-    mapPanel.getSelectionManager().addSelectionListener( this );
     setData( IMapPanel.class.toString(), mapPanel );
   }
 
@@ -184,24 +181,16 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel implements IFeatu
       return lWindDataModelSystem.getWindDataModels();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(org.kalypso.ogc.gml.selection.IFeatureSelection)
-   */
-  @Override
-  public void selectionChanged( IFeatureSelection selection )
-  {
-  }
-
   private static Map<String, Map<String, Object>> m_mapProperiesData = new HashMap<String, Map<String, Object>>();
 
   private static IWindDataModelSystem m_selectedWindSystem;
 
   public static synchronized IWindDataModel getActualWindDataModel( final String pStrSystemId )
   {
-    Map<String, Object> lMapActualWindProps = m_mapProperiesData.get( pStrSystemId );
+    final Map<String, Object> lMapActualWindProps = m_mapProperiesData.get( pStrSystemId );
     if( lMapActualWindProps != null )
     {
-      IWindDataModel lActWindDataModel = (IWindDataModel) lMapActualWindProps.get( STR_WIND_STEP_PROP_NAME );
+      final IWindDataModel lActWindDataModel = (IWindDataModel) lMapActualWindProps.get( STR_WIND_STEP_PROP_NAME );
       if( lActWindDataModel != null )
       {
         return lActWindDataModel;
@@ -244,7 +233,7 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel implements IFeatu
     return m_selectedWindSystem;
   }
 
-  public static final void setSelectedWindSystem( IWindDataModelSystem windSystem )
+  public static final void setSelectedWindSystem( final IWindDataModelSystem windSystem )
   {
     m_selectedWindSystem = windSystem;
   }
