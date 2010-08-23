@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -54,6 +51,7 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
@@ -105,64 +103,54 @@ public class BewuchsRule extends AbstractValidatorRule
     final IRecord[] VorlandR = profil.getPoints( rightIndex, points.length - 1 );
     final IRecord[] Flussschl = profil.getPoints( leftIndex, rightIndex - 1 );
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-    final boolean VorlandLhasValues = validateArea( profil, collector, VorlandL, pluginId );
-    final boolean VorlandRhasValues = validateArea( profil, collector, VorlandR, pluginId );
-
-    try
+ 
+    if( Flussschl.length > 0 )
     {
-      if( (VorlandLhasValues | VorlandRhasValues) && Flussschl.length > 0 )
+      int i = leftIndex;
+      for( final IRecord point : Flussschl )
       {
-        int i = leftIndex;
-        for( final IRecord point : Flussschl )
+        final Double ax = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point );
+        final Double ay = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point );
+        final Double dp = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point );
+
+        if( ax.isNaN() || ay.isNaN() || dp.isNaN() )
         {
-          final Double ax = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point );
-          final Double ay = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point );
-          final Double dp = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point );
-
-          if( ax.isNaN() || ay.isNaN() || dp.isNaN() )
-          {
-            continue;
-          }
-          else
-          {
-            if( ax + ay + dp != 0 )
-            {
-              collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.0" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new DelBewuchsResolution() ); //$NON-NLS-1$ //$NON-NLS-2$
-              break;
-            }
-          }
-          i++;
+          continue;
         }
-        final int lastIndex = leftIndex > 0 ? leftIndex - 1 : leftIndex;
-
-        // FIXME: use WspmProfileHelper#getBuilding( getProfil(), IProfileBuilding.class ) in order to retreive
-        // buildings! Same for all other validators
-
-        if( ArrayUtils.isEmpty( profil.getProfileObjects( AbstractObservationBuilding.class ) ) )
+        else
         {
-          final Double ax1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, points[lastIndex] );
-
-          if( (VorlandLhasValues == true && !ax1.isNaN()) && (VorlandLhasValues && ax1 == 0.0) )
-            collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.2" ), String.format( "km %.4f", profil.getStation() ), lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// , //$NON-NLS-1$ //$NON-NLS-2$
-
-          final Double ax2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, rightP );
-
-          if( (VorlandRhasValues == true && !ax2.isNaN()) && (VorlandRhasValues && ax2 == 0.0) )
-            collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.2" ), String.format( "km %.4f", profil.getStation() ), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// , //$NON-NLS-1$ //$NON-NLS-2$
-
+          if( ax + ay + dp != 0 )
+          {
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.0" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new DelBewuchsResolution() ); //$NON-NLS-1$ //$NON-NLS-2$
+            break;
+          }
         }
+        i++;
       }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.6" ), e ) ); //$NON-NLS-1$
+      final int lastIndex = leftIndex > 0 ? leftIndex - 1 : leftIndex;
+
+      if( WspmProfileHelper.getBuilding( profil, AbstractObservationBuilding.class ) == null )
+      {
+        final boolean VorlandLhasValues = validateArea( profil, collector, VorlandL, pluginId );
+        final boolean VorlandRhasValues = validateArea( profil, collector, VorlandR, pluginId );
+
+        final Double ax1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, points[lastIndex] );
+
+        if( (VorlandLhasValues == true && !ax1.isNaN()) && (VorlandLhasValues && ax1 == 0.0) )
+          collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.2" ), String.format( "km %.4f", profil.getStation() ), lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// , //$NON-NLS-1$ //$NON-NLS-2$
+
+        final Double ax2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, rightP );
+
+        if( (VorlandRhasValues == true && !ax2.isNaN()) && (VorlandRhasValues && ax2 == 0.0) )
+          collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.2" ), String.format( "km %.4f", profil.getStation() ), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// , //$NON-NLS-1$ //$NON-NLS-2$
+      }
     }
   }
 
   private boolean validateArea( final IProfil profil, final IValidatorMarkerCollector collector, final IRecord[] subList, final String pluginId ) throws CoreException
   {
     boolean hasValues = false;
+    boolean hasErrors = false;
     if( subList.length < 1 )
       return false;
     for( final IRecord point : subList )
@@ -172,10 +160,13 @@ public class BewuchsRule extends AbstractValidatorRule
       final Double dp = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point );
       if( ax.isNaN() || ay.isNaN() || dp.isNaN() )
       {
-        // TODO: führt zu 1000 Fehlern, wenn der Bewuchs nicht gesetzt ist (nach Zuweisung Landnutzung z.b.)
+        // displays only first error
+        if( hasErrors )
+          continue;
+
+        hasErrors = true;
         final String stationFormatted = String.format( "km %.4f", profil.getStation() );
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.7" ), stationFormatted, profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
-        continue;
       }
       else
       {

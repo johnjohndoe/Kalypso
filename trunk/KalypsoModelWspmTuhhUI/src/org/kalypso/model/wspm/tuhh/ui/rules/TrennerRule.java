@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution;
@@ -88,12 +89,9 @@ public class TrennerRule extends AbstractValidatorRule
       collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.0" ), String.format( "km %.4f", profil.getStation() ), 0, null, pluginId, new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
-    if( ArrayUtils.isEmpty( objects ) )
+    final IProfileObject building = WspmProfileHelper.getBuilding( profil, AbstractObservationBuilding.class );
+    if( building == null )
       return;
-
-    final IProfileObject building = objects[0];
-
     // Regel für fehlende Trennflächen bei Durchlässen erlauben
     // TUHH-Hack
     if( tf.length == 0 && !isDurchlass( building ) )

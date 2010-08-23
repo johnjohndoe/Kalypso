@@ -100,15 +100,9 @@ public class RauheitRule extends AbstractValidatorRule
     for( final IRecord point : points )
     {
       final Double value = ProfilUtil.getDoubleValueFor( pointProp.getId(), point );
-      if( value.isNaN() )
+      if( value.isNaN() || value <= 0.0 )
       {
-        final Object oVal = point.getValue( profil.indexOfProperty( pointProp ) );
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0", oVal ), stationId, profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
-        break;
-      }
-      else if( value <= 0.0 )
-      {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.2", value ), stationId, profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0" ), stationId, profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
       }
     }
