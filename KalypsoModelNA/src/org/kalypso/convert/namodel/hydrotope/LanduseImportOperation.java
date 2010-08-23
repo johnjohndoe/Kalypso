@@ -160,6 +160,14 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
           final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.3", label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
+        else
+        {
+          final IStatus isValidTop = TopologyChecker.checkTopology( geometry, label );
+          if( !isValidTop.isOK() )
+          {
+            log.add( isValidTop );
+          }
+        }
 
         final Landuse landuse = m_output.importLanduse( label, geometry, m_importType, log );
         if( landuse != null )

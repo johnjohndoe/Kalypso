@@ -105,7 +105,7 @@ public class GeologyImportOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final int size = m_inputDescriptor.size();
-    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.0"), size + 10 ); //$NON-NLS-1$
+    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.0" ), size + 10 ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<Geology> geologies = m_output.getGeologies();
     if( m_importType == ImportType.CLEAR_OUTPUT )
@@ -124,8 +124,16 @@ public class GeologyImportOperation implements ICoreRunnableWithProgress
 
         if( geometry == null )
         {
-          final String message =  Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.1", label ); //$NON-NLS-1$
-          log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+          final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.1", label ); //$NON-NLS-1$
+          log.add( StatusUtilities.createStatus( IStatus.ERROR, message, null ) );
+        }
+        else
+        {
+          final IStatus isValidTop = TopologyChecker.checkTopology( geometry, label );
+          if( !isValidTop.isOK() )
+          {
+            log.add( isValidTop );
+          }
         }
 
         final Geology geology = m_output.importGeology( label, geometry, m_importType, log );
