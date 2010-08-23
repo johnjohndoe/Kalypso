@@ -61,10 +61,6 @@
             introId="org.kalypso.model.product.introID"
             productId="org.kalypso.model.product.product">
       </introProductBinding>
-      <intro
-            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
-            id="org.kalypso.model.product.intro">
-      </intro>
    </extension>
     <extension
          point="org.eclipse.ui.activities">
