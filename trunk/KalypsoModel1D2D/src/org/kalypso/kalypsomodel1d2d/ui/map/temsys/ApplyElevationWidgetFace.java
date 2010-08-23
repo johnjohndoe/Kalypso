@@ -107,8 +107,7 @@ class ApplyElevationWidgetFace
   private final IFeatureSelectionListener featureSelectionListener = new IFeatureSelectionListener()
   {
     @Override
-    @SuppressWarnings( { "synthetic-access", "unchecked" })//$NON-NLS-1$
-    public void selectionChanged( final IFeatureSelection selection )
+    public void selectionChanged( final Object source, final IFeatureSelection selection )
     {
       if( m_nodeElevationViewer == null )
         return;
@@ -233,7 +232,7 @@ class ApplyElevationWidgetFace
     // Creates Section to Configure the Color for Different Elevations
     elevationColorSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     elevationColorSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.4" ) //$NON-NLS-1$
-    // "Select Colors for MAX Elevation and MIN Elevation "
+        // "Select Colors for MAX Elevation and MIN Elevation "
     );
     // elevationColorSection.addPaintListener( drawListener );
 
