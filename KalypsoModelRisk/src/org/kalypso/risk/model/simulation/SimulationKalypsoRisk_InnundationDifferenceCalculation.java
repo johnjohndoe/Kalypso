@@ -136,7 +136,7 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
       final IFeatureBindingCollection<IAnnualCoverageCollection> resultCollection = rasterModelOutput.getWaterlevelCoverageCollection();
       for( final IAnnualCoverageCollection collection : resultCollection )
       {
-        IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
+        final IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
         for( final ICoverage coverage : coverages )
           CoverageManagementHelper.deleteGridFile( coverage );
       }
@@ -170,7 +170,7 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
       resultCoverageCollection.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.2" ), 100 ) ); //$NON-NLS-1$
 
       // calculate actual difference
-      IFeatureBindingCollection<ICoverage> coverages1_HG100 = collection1_HQ100.getCoverages();
+      final IFeatureBindingCollection<ICoverage> coverages1_HG100 = collection1_HQ100.getCoverages();
       for( int i = 0; i < coverages1_HG100.size(); i++ )
       {
         final ICoverage inputCoverage1 = coverages1_HG100.get( i );
@@ -179,7 +179,7 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
         // find the appropriate coverage from another collection
         // we assumed that both collections contains coverage sets which member coverage always covers the same area in
         // both sets, which is the case for Planer-Client calculation
-        IFeatureBindingCollection<ICoverage> coverages2_HQ100 = collection2_HQ100.getCoverages();
+        final IFeatureBindingCollection<ICoverage> coverages2_HQ100 = collection2_HQ100.getCoverages();
         for( final ICoverage coverage : coverages2_HQ100 )
         {
           if( coverage.getEnvelope().equals( inputCoverage1.getEnvelope() ) )
