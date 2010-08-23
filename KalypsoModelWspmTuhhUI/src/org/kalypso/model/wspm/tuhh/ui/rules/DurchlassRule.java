@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -53,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution;
@@ -66,11 +64,9 @@ public class DurchlassRule extends AbstractValidatorRule
   @Override
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    final IProfileBuilding[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
-    if( ArrayUtils.isEmpty( objects ) )
+    final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, AbstractObservationBuilding.class );
+    if( building == null )
       return;
-
-    final IProfileBuilding building = objects[0];
 
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
     if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( building.getId() ) )
@@ -103,24 +99,14 @@ public class DurchlassRule extends AbstractValidatorRule
     {
       collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.1", compKST.getName() ), String.format( "km %.4f", profil.getStation() ), 0, null, pluginId, new DelRoughnessResolution( new String[] {}, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) ); //$NON-NLS-1$//$NON-NLS-2$ 
     }
-
-    try
+    for( final IComponent property : building.getObjectProperties() )
     {
-      for( final IComponent property : building.getObjectProperties() )
+      final Object oValue = building.getValue( property );
+      if( oValue == null || ((Double) oValue).isNaN() )
       {
-        final Object oValue = building.getValue( property );
-        if( oValue == null || ((Double) oValue).isNaN() )
-        {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.4", property.getName() ), String.format( "km %.4f", profil.getStation() ), 0, null, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          break;
-        }
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.4", property.getName() ), String.format( "km %.4f", profil.getStation() ), 0, null, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        break;
       }
     }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.7" ), e ) ); //$NON-NLS-1$
-    }
-
   }
 }

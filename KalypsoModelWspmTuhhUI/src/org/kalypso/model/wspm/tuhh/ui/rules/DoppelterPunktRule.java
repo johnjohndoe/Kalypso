@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.rules;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -65,33 +63,24 @@ public class DoppelterPunktRule extends AbstractValidatorRule
   {
     if( profil == null )
       return;
+    final IRecord[] points = profil.getPoints();
+    IRecord prevPoint = null;
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+    final IComponent cB = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent cH = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    if( cB == null || cH == null )
+      return;
+    final int iB = profil.indexOfProperty( cB );
 
-    try
+    for( final IRecord point : points )
     {
-      final IRecord[] points = profil.getPoints();
-      IRecord prevPoint = null;
-      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      final IComponent cB = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-      final IComponent cH = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-      if( cB == null || cH == null )
-        return;
-      final int iB = profil.indexOfProperty( cB );
-
-      for( final IRecord point : points )
-      {
-        if( prevPoint != null )
-          if( ProfilUtil.comparePoints( new IComponent[] { cB, cH }, prevPoint, point ) )
-          {
-            final String msg = Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.DoppelterPunktRule.0" , point.getValue( iB ) ); //$NON-NLS-1$
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, msg, String.format("km %.4f" , profil.getStation() ), profil.indexOfPoint( point ), cB.getId(), pluginId ); //$NON-NLS-1$
-          }
-        prevPoint = point;
-      }
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.DoppelterPunktRule.2"), e ) ); //$NON-NLS-1$
+      if( prevPoint != null )
+        if( ProfilUtil.comparePoints( new IComponent[] { cB, cH }, prevPoint, point ) )
+        {
+          final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DoppelterPunktRule.0", point.getValue( iB ) ); //$NON-NLS-1$
+          collector.createProfilMarker( IMarker.SEVERITY_WARNING, msg, String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( point ), cB.getId(), pluginId ); //$NON-NLS-1$
+        }
+      prevPoint = point;
     }
   }
 }

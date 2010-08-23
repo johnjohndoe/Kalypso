@@ -40,22 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
@@ -73,32 +70,21 @@ public class WehrRule extends AbstractValidatorRule
     if( profil == null )
       return;
 
-    final IProfileObject[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
-    if( ArrayUtils.isEmpty( objects ) )
+    final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, AbstractObservationBuilding.class );
+
+    if( building == null || !IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() ) )
       return;
 
-    final IProfileObject building = objects[0];
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+    validateLimits( profil, collector, pluginId );
+    validateProfilLines( profil, collector, pluginId );
+    validateDevider( profil, collector, pluginId );
+    validateParams( profil, collector, pluginId );
+    validateBewuchs( profil, collector, pluginId );
 
-    if( !IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() ) )
-      return;
-
-    try
-    {
-      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      validateLimits( profil, collector, pluginId );
-      validateProfilLines( profil, collector, pluginId );
-      validateDevider( profil, collector, pluginId );
-      validateParams( profil, collector, pluginId );
-      validateBewuchs( profil, collector, pluginId );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.0" ), e ) ); //$NON-NLS-1$
-    }
   }
 
-  private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
+  private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws CoreException
   {
     final IProfilPointMarker[] wehrDevider = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     if( wehrDevider == null || wehrDevider.length < 1 )
@@ -114,7 +100,7 @@ public class WehrRule extends AbstractValidatorRule
       collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.3" ), String.format( "km %.4f", profil.getStation() ), index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  private void validateBewuchs( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
+  private void validateBewuchs( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws CoreException
   {
 
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) == null )
@@ -139,16 +125,14 @@ public class WehrRule extends AbstractValidatorRule
     }
   }
 
-  private void validateParams( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
+  private void validateParams( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws CoreException
   {
 
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
 
-    final IProfileBuilding[] objects = profil.getProfileObjects( AbstractObservationBuilding.class );
-    if( ArrayUtils.isEmpty( objects ) )
+    final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, AbstractObservationBuilding.class );
+    if( building == null )
       return;
-
-    final IProfileBuilding building = objects[0];
 
     final IComponent cmp = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
     if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( building.getValue( cmp ) ) )
@@ -178,7 +162,7 @@ public class WehrRule extends AbstractValidatorRule
     }
   }
 
-  private void validateProfilLines( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
+  private void validateProfilLines( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws CoreException
   {
 
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
@@ -202,7 +186,7 @@ public class WehrRule extends AbstractValidatorRule
     }
   }
 
-  private void validateLimits( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
+  private void validateLimits( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws CoreException
   {
     final IProfilPointMarker[] devider = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( devider.length < 2 )

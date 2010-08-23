@@ -11,12 +11,8 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
-import de.openali.odysseus.chart.framework.model.data.impl.NumberDataOperator;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.NumberComparator;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
@@ -24,8 +20,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 public class LengthSectionBridgeLayer extends TupleResultLineLayer
 {
-  private final IDataOperator<Number> m_dop = new NumberDataOperator( new NumberComparator() );
-
+ 
   public LengthSectionBridgeLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
 
@@ -96,7 +91,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final Double uK = ProfilUtil.getDoubleValueFor( iUK, record );
     final Double oK = ProfilUtil.getDoubleValueFor( iOK, record );
     final Double sT = ProfilUtil.getDoubleValueFor( iST, record );
-    if( uK == null || oK == null || sT == null )
+    if( uK.isNaN() || oK.isNaN() || sT.isNaN() )
       return null;
     final Point pUK = getCoordinateMapper().numericToScreen( sT, uK );
     final Point pOK = getCoordinateMapper().numericToScreen( sT, oK );
