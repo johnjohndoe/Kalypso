@@ -58,9 +58,9 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
-import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -114,7 +114,7 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final int size = m_inputDescriptor.size();
-    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString("org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.0"), size + 10 ); //$NON-NLS-1$
+    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.0" ), size + 10 ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<SoilType> soilTypes = m_output.getSoilTypes();
     if( m_importType == ImportType.CLEAR_OUTPUT )
@@ -140,14 +140,22 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
         final String soilTypeRef = m_soilTypes.get( soilTypeLink );
         if( soilTypeRef == null )
         {
-          final String message = Messages.getString("org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.2", soilTypeLink, i + 1 ); //$NON-NLS-1$
+          final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.2", soilTypeLink, i + 1 ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
         if( geometry == null )
         {
-          final String message = Messages.getString("org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.3", label ); //$NON-NLS-1$
+          final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.3", label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+        }
+        else
+        {
+          final IStatus isValidTop = TopologyChecker.checkTopology( geometry, label );
+          if( !isValidTop.isOK() )
+          {
+            log.add( isValidTop );
+          }
         }
 
         final SoilType soilType = m_output.importSoilType( label, geometry, m_importType, log );

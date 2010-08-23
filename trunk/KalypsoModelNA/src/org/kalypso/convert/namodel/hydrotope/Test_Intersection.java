@@ -47,7 +47,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.junit.Ignore;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.binding.Hydrotop;
@@ -72,24 +71,23 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author Dejan Antanaskovic
  */
-@Ignore(value = "Uses absolute pathes and hence does not run everywhere")
 public class Test_Intersection extends TestCase
 {
   public void test( ) throws Exception
   {
-    final File catchmentGML = new File( "D:\\eclipse_runtime_Connector\\01-Kollau-NA-PlanerClient\\modell.gml" );
-    final File landuseGML = new File( "D:\\eclipse_runtime_Connector\\01-Kollau-NA-PlanerClient\\landuse.gml" );
-    final File pedologyGML = new File( "D:\\eclipse_runtime_Connector\\01-Kollau-NA-PlanerClient\\pedologie.gml" );
-    final File geologyGML = new File( "D:\\eclipse_runtime_Connector\\01-Kollau-NA-PlanerClient\\geologie.gml" );
+    final File catchmentGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\modell.gml" );
+    final File landuseGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\landuse.gml" );
+    final File pedologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\pedologie.gml" );
+    final File geologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\geologie.gml" );
 
-    final File template = new File( "D:\\eclipse_runtime_Connector\\01-Kollau-NA-PlanerClient\\hydrotop.gml" );
+    final File template = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\hydrotop.gml" );
 // final File template = new File( "D:\\eclipse_runtime_Connector\\01-Kollau-NA-PlanerClient\\template.gml" );
-    final File outputGML = new File( "D:\\eclipse_runtime_Connector\\01-Kollau-NA-PlanerClient\\__test_output_" + new Date().getTime() + ".gml" );
+    final File outputGML = new File( "d:\\temp\\__test_output_" + new Date().getTime() + ".gml" );
     if( outputGML.exists() )
       outputGML.delete();
     outputGML.createNewFile();
@@ -112,11 +110,11 @@ public class Test_Intersection extends TestCase
     final IFeatureBindingCollection<IHydrotope> hydrotopes = hydrotopeCollection.getHydrotopes();
 
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
-    geometryIntersector.addFeatureList( (List<Feature>)catchments );
+    geometryIntersector.addFeatureList( (List<Feature>) catchments );
     geometryIntersector.addFeatureList( soilTypesFeatureList );
     geometryIntersector.addFeatureList( geologiesFeatureList );
     geometryIntersector.addFeatureList( landuseFeatureList );
-    final List<MultiPolygon> intersectionList = geometryIntersector.intersect( new NullProgressMonitor() );
+    final List<Polygon> intersectionList = geometryIntersector.intersect( new NullProgressMonitor() );
 
     for( final Geometry geometry : intersectionList )
     {
@@ -214,7 +212,7 @@ public class Test_Intersection extends TestCase
       else
         continue;
 
-      hydrotop.setGeometry( (GM_MultiSurface) JTSAdapter.wrap( geometry ) );
+      hydrotop.setGeometry( (GM_MultiSurface) JTSAdapter.wrap( JTSAdapter.jtsFactory.createMultiPolygon( new Polygon[] { (Polygon) geometry } ) ) );
     }
 
     GmlSerializer.serializeWorkspace( outputGML, outputWS, "UTF-8" );
