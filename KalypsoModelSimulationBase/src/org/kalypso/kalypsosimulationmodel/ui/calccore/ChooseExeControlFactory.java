@@ -71,6 +71,12 @@ public class ChooseExeControlFactory implements IExtensionsFeatureControlFactory
     Assert.isNotNull( filePattern, "'exePattern' parameter must be specified for ChooseExeControl" ); //$NON-NLS-1$
     Assert.isNotNull( label, "'label' parameter must be specified for ChooseExeControl" ); //$NON-NLS-1$
 
+    final Object property = feature.getProperty( pt );
+    if( property == null )
+    {
+      feature.setProperty( pt, "" );
+    }
+    
     if( dir == null || !".".equals( dir.toLowerCase() ) )
     {
       final ChooseExeControl control = new ChooseExeControl( feature, pt, filePattern, label );
