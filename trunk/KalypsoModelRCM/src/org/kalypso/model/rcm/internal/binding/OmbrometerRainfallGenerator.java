@@ -230,14 +230,14 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
       /* Update the log. */
       LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
 
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to convert Geometrie: " + e.toString(), e ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to convert geometry: " + e.toString(), e ) );
     }
     catch( final SensorException e )
     {
       /* Update the log. */
       LogUtilities.logQuietly( m_log, new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, String.format( "Generator Ombrometer (Thiessen) wurde mit einem Fehler beendet: %s", e.getLocalizedMessage() ), e ) );
 
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to combine Observations: " + e.toString(), e ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to combine observations: " + e.toString(), e ) );
     }
     catch( final MalformedURLException e )
     {
@@ -276,8 +276,9 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
     }
 
     // REMARK: huge buffer ratio. Does not really change the result (as long as all catchments are covered), but we do
-    // not need to worry where to get the buffer as we do ont save the result here. Mainly needed for the visualisation.
+    // not need to worry where to get the buffer as we don't save the result here. Mainly needed for the visualisation.
     final double bufferRatio = 10;
+
     /* Recalculate Thiessen */
     final Map<IOmbrometer, GM_Surface<GM_SurfacePatch>> areas = OmbrometerUtils.thiessenPolygons( Arrays.asList( ombrometerFeatures ), bufferRatio, monitor );
     for( final Entry<IOmbrometer, GM_Surface<GM_SurfacePatch>> entry : areas.entrySet() )
