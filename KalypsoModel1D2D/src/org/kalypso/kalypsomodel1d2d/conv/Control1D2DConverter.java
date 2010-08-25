@@ -585,7 +585,7 @@ public class Control1D2DConverter
       ihre = 0;
     }
 
-    formatter.format( "DT MIN%18.8f%8d%8d%8.2f", timeStepMinutes, year, dayOfYear, ihre ); //$NON-NLS-1$
+    formatter.format( "DT MIN %e%8d%8d%8.2f", timeStepMinutes, year, dayOfYear, ihre ); //$NON-NLS-1$
 
     // BC lines
     if( niti == 0 )

@@ -65,8 +65,8 @@
 				<gft:toolbar>
 					<gft:menuContribution uri="org.kalypso.ui.tupleResult.menus.standardReadOnly"/>
 				</gft:toolbar>
-				<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" editable="false" alignment="SWT.LEFT | SWT.READ_ONLY" displayFormat="%1$td.%1$tm.%1$tY %1$tH:%1$tM"
-					parseFormat="dd.MM.yyyy HH:mm" />
+				<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" editable="false" alignment="SWT.LEFT | SWT.READ_ONLY" displayFormat="%1$td.%1$tm.%1$tY %1$tH:%1$tM:%1$tS.%1$tL"
+					parseFormat="dd.MM.yyyy HH:mm:ss:SSS" />
 				<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.2f"
 					nullFormat="&lt;nicht gesetzt&gt;" />
 				<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.3f"
