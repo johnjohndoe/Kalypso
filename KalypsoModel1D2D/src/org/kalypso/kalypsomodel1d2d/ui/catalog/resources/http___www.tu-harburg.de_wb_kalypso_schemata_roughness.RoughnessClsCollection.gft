@@ -12,11 +12,10 @@
 	<gft:group property="wbr:roughnessClsMember" style="0">
 		<gft:gridData horizontalSpan="2" verticalSpan="2"
 			horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"
-			heightHint="200" grabExcessHorizontalSpace="true"
-			grabExcessVerticalSpace="true" />
+			heightHint="200" grabExcessVerticalSpace="true" />
 		<gft:gridLayout numColumns="2" horizontalSpacing="10"
 			numRows="2" />
-		<gft:table property="wbr:roughnessClsMember" style="SWT.NONE">
+		<gft:table property="wbr:roughnessClsMember" style="SWT.NONE" showToolbar="true" showContextMenu="true">
 			<gft:gridData horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
 				grabExcessHorizontalSpace="true" />
@@ -45,7 +44,7 @@
 			horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"
 			grabExcessVerticalSpace="true" />
 		<gft:gridLayout numColumns="1" horizontalSpacing="5" />
-		<gft:table property="wbr:roughness_GroundClsMember" style="SWT.NONE">
+		<gft:table property="wbr:roughness_GroundClsMember" style="SWT.NONE" showToolbar="true" showContextMenu="true">
 			<gft:gridData horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" heightHint="150"
 				grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
@@ -69,7 +68,7 @@
 			minimumHeight="200" horizontalAlignment="GridData.FILL"
 			verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
 		<gft:gridLayout numColumns="2" horizontalSpacing="5" />
-		<gft:table property="wbr:roughness_VegetationClsMember">
+		<gft:table property="wbr:roughness_VegetationClsMember" showToolbar="true" showContextMenu="true">
 			<gft:gridData verticalAlignment="GridData.FILL"
 				horizontalAlignment="GridData.FILL" heightHint="200"
 				grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
@@ -96,7 +95,7 @@
 			grabExcessVerticalSpace="true" />
 		<gft:gridLayout numColumns="1" horizontalSpacing="5" />
 		<gft:table property="wbr:roughness_EddyViscosityClsMember"
-			style="SWT.NONE">
+			style="SWT.NONE" showToolbar="true" showContextMenu="true">
 			<gft:gridData verticalAlignment="GridData.FILL"
 				horizontalAlignment="GridData.FILL" heightHint="50"
 				grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
