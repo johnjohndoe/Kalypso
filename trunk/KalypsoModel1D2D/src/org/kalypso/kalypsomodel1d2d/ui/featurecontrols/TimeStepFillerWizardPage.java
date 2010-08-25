@@ -43,8 +43,18 @@ package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -58,8 +68,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 
 /**
@@ -67,20 +78,15 @@ import org.kalypso.util.swtcalendar.SWTCalendarDialog;
  */
 public class TimeStepFillerWizardPage extends WizardPage
 {
-  // This was used for showing the 'from' date in the first place. For parsing, date time was used. Is there any reason
-  // for this??
-  //  private static final DateFormat DATEFORMAT = new SimpleDateFormat( "dd.MM.yyyy 00:00" ); //$NON-NLS-1$
-
-  //  private static final String DEFAULTSTEP = "60"; //$NON-NLS-1$
-
   int m_timeStep_val;
 
   Date m_dateFrom = new Date();
 
   Date m_dateTo = new Date();
 
-//changed to string to allow more flexible expansion of "Relaxation Factor"
   String m_uRelFactor;
+
+  int m_field = Calendar.MINUTE;
 
   public TimeStepFillerWizardPage( )
   {
@@ -119,7 +125,9 @@ public class TimeStepFillerWizardPage extends WizardPage
   @Override
   public void createControl( final Composite parent )
   {
-    final DateFormat DATETIMEFORMAT = KalypsoGisPlugin.getDefault().getDisplayDateTimeFormat();
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    final DateFormat dateTimeFormat = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss.SSS" );
+    dateTimeFormat.setTimeZone( timeZone );
 
     final Composite container = new Composite( parent, SWT.NULL );
     final GridLayout gridLayout = new GridLayout( 3, false );
@@ -127,7 +135,6 @@ public class TimeStepFillerWizardPage extends WizardPage
     setControl( container );
 
     final GridData gridBeginning = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
-    final GridData gridEnd = new GridData( SWT.END, SWT.CENTER, false, false );
     final GridData gridFillHorizontal = new GridData( SWT.FILL, SWT.CENTER, true, false );
 
     final Label vonLbl = new Label( container, SWT.NONE );
@@ -142,7 +149,7 @@ public class TimeStepFillerWizardPage extends WizardPage
       {
         try
         {
-          m_dateFrom = DATETIMEFORMAT.parse( dateTimeFrom.getText() );
+          m_dateFrom = dateTimeFormat.parse( dateTimeFrom.getText() );
           if( getStartDate().after( getFinishDate() ) )
           {
             setMessage( null );
@@ -165,7 +172,7 @@ public class TimeStepFillerWizardPage extends WizardPage
         getWizard().getContainer().updateButtons();
       }
     } );
-    dateTimeFrom.setText( DATETIMEFORMAT.format( m_dateFrom ) );
+    dateTimeFrom.setText( dateTimeFormat.format( m_dateFrom ) );
     dateTimeFrom.setLayoutData( gridFillHorizontal );
 
     final Button dateFromBtn = new Button( container, SWT.NONE );
@@ -182,7 +189,7 @@ public class TimeStepFillerWizardPage extends WizardPage
         if( calendarDialog.open() == Window.OK )
         {
           m_dateFrom = calendarDialog.getDate();
-          dateTimeFrom.setText( DATETIMEFORMAT.format( m_dateFrom ) );
+          dateTimeFrom.setText( dateTimeFormat.format( m_dateFrom ) );
         }
       }
     } );
@@ -199,7 +206,7 @@ public class TimeStepFillerWizardPage extends WizardPage
       {
         try
         {
-          m_dateTo = DATETIMEFORMAT.parse( dateTimeTo.getText() );
+          m_dateTo = dateTimeFormat.parse( dateTimeTo.getText() );
           if( getStartDate().after( getFinishDate() ) )
           {
             setMessage( null );
@@ -221,7 +228,7 @@ public class TimeStepFillerWizardPage extends WizardPage
       }
     } );
 
-    dateTimeTo.setText( DATETIMEFORMAT.format( m_dateTo ) );
+    dateTimeTo.setText( dateTimeFormat.format( m_dateTo ) );
     dateTimeTo.setLayoutData( gridFillHorizontal );
 
     final Button dateToBtn = new Button( container, SWT.NONE );
@@ -238,7 +245,7 @@ public class TimeStepFillerWizardPage extends WizardPage
         if( calendarDialog.open() == Window.OK )
         {
           m_dateTo = calendarDialog.getDate();
-          dateTimeTo.setText( DATETIMEFORMAT.format( m_dateTo ) );
+          dateTimeTo.setText( dateTimeFormat.format( m_dateTo ) );
         }
       }
     } );
@@ -273,15 +280,36 @@ public class TimeStepFillerWizardPage extends WizardPage
     dateTimeStep.setText( Integer.toString( m_timeStep_val ) );
     dateTimeStep.setLayoutData( gridFillHorizontal );
 
-    final Label emptylabel_1 = new Label( container, SWT.NONE );
-    emptylabel_1.setLayoutData( gridEnd );
-    emptylabel_1.setText( "" ); //$NON-NLS-1$
+    final ComboViewer comboViewer = new ComboViewer( container, SWT.DROP_DOWN | SWT.READ_ONLY );
+    comboViewer.setContentProvider( new ArrayContentProvider() );
+    comboViewer.setLabelProvider( new LabelProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( final Object element )
+      {
+        return ((FIELD) element).getAddLabel();
+      }
+    } );
+    comboViewer.setInput( new Object[] { FIELD.WEEK_OF_YEAR, FIELD.DAY_OF_YEAR, FIELD.HOUR, FIELD.MINUTE, FIELD.SECOND, FIELD.MILLISECOND } );
+    comboViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        m_field = ((FIELD) ((IStructuredSelection) event.getSelection()).getFirstElement()).getField();
+        getWizard().getContainer().updateButtons();
+      }
+    } );
+    comboViewer.setSelection( new StructuredSelection( FIELD.MINUTE ), true );
 
     final Label uRelFactorLabel = new Label( container, SWT.NONE );
     uRelFactorLabel.setLayoutData( gridBeginning );
     uRelFactorLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.16" ) ); //$NON-NLS-1$
 
-//  changed to string to allow more flexible expansion of "Relaxation Factor"
+    // changed to string to allow more flexible expansion of "Relaxation Factor"
     final Text uRelFactorCombo = new Text( container, SWT.BORDER );
 
     uRelFactorCombo.setLayoutData( gridFillHorizontal );
@@ -295,10 +323,6 @@ public class TimeStepFillerWizardPage extends WizardPage
         getWizard().getContainer().updateButtons();
       }
     } );
-
-    final Label emptylabel_2 = new Label( container, SWT.NONE );
-    emptylabel_2.setLayoutData( gridEnd );
-    emptylabel_2.setText( "" ); //$NON-NLS-1$
 
     container.layout();
   }
@@ -318,9 +342,14 @@ public class TimeStepFillerWizardPage extends WizardPage
     return m_timeStep_val;
   }
 
-//changed to string to allow more flexible expansion of "Relaxation Factor"
+  // changed to string to allow more flexible expansion of "Relaxation Factor"
   public String getUnderRelaxationFactorValue( )
   {
     return m_uRelFactor;
+  }
+
+  public int getField( )
+  {
+    return m_field;
   }
 }

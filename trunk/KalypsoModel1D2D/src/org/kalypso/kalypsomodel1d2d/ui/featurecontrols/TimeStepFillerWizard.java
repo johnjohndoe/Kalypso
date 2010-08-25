@@ -116,7 +116,7 @@ public class TimeStepFillerWizard extends Wizard
       record.setValue( m_result.indexOfComponent( ordinalNumberComponent ), new BigInteger( Integer.toString( ordinalNumber++ ) ) );
       record.setValue( m_result.indexOfComponent( timeComponent ), new XMLGregorianCalendarImpl( calendarFrom ) );
       record.setValue( m_result.indexOfComponent( relaxFactorComponent ), m_timeStepFillerWizardPage.getUnderRelaxationFactorValue() );
-      calendarFrom.add( Calendar.MINUTE, m_timeStepFillerWizardPage.getTimeSteps() );
+      calendarFrom.add( m_timeStepFillerWizardPage.getField(), m_timeStepFillerWizardPage.getTimeSteps() );
       records.add( record );
     }
     m_result.addAll( records );
