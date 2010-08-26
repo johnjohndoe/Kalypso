@@ -238,7 +238,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
           if( count > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
           {
-            if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.2"), org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.3") + WARNING_MAX_LANDUSE_CLASSES_NUMBER + org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.6") ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.2" ), org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.3", WARNING_MAX_LANDUSE_CLASSES_NUMBER ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
               return false;
             else
               break;
@@ -281,7 +281,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
       szenarioDataProvider.postCommand( IRasterizationControlModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       szenarioDataProvider.postCommand( IVectorDataModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-      
+
       /* creating styles */
       final IFile polygonSldFile = scenarioFolder.getFile( "styles/LanduseVector.sld" ); //$NON-NLS-1$
       if( polygonSldFile.exists() )
@@ -289,9 +289,9 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
       final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
-      final List <Layer> layers = new ArrayList<Layer>();
-      layers.add( SLDHelper.polygonStyleLayer( null, landuseClassesList, ILandusePolygon.PROPERTY_GEOMETRY,ILandusePolygon.PROPERTY_SLDSTYLE , null, null, new NullProgressMonitor() ) );
-      SLDHelper.exportPolygonSymbolyzerSLD( polygonSldFile, layers.toArray((new Layer[0])), new NullProgressMonitor() ); //$NON-NLS-1$ //$NON-NLS-2$
+      final List<Layer> layers = new ArrayList<Layer>();
+      layers.add( SLDHelper.polygonStyleLayer( null, landuseClassesList, ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, new NullProgressMonitor() ) );
+      SLDHelper.exportPolygonSymbolyzerSLD( polygonSldFile, layers.toArray( (new Layer[0]) ), new NullProgressMonitor() ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final IFile rasterSldFile = scenarioFolder.getFile( "styles/LanduseCoverage.sld" ); //$NON-NLS-1$
       if( rasterSldFile.exists() )

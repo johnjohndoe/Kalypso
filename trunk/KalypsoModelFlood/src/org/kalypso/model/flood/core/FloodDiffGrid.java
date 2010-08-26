@@ -158,8 +158,8 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     if( containsClipPolygons( polygons ) == true )
       return Double.NaN;
 
-    if( !Double.isNaN( wspValue ) )
-      return wspValue - terrainValue;
+//    if( !Double.isNaN( wspValue ) )
+//      return wspValue - terrainValue;
 
     /* - if extrapolation: getExtrapolationsvalue */
     final IFloodExtrapolationPolygon extrapolPolygon = getExtrapolPolygons( polygons );
