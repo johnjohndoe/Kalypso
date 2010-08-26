@@ -89,7 +89,7 @@ Simulationszeit:
 			</text>
 			<extensioncontrol style="SWT.NONE" property="versionKalypsoNA" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
 				<param name="label" value="NA·Kalypso" />
-				<param name="exePattern" value="na-kalypso_(.*).exe" />
+				<param name="exePattern" value="Kalypso-NA_(.*).exe" />
 			</extensioncontrol>
 			
 			<label property="returnPeriod" style="SWT.NONE">
