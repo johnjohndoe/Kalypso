@@ -237,7 +237,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
           if( count > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
           {
-            if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.2"), org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.3") + WARNING_MAX_LANDUSE_CLASSES_NUMBER + org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.6") ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.2"), org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.3", WARNING_MAX_LANDUSE_CLASSES_NUMBER ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
               return false;
             else
               break;
