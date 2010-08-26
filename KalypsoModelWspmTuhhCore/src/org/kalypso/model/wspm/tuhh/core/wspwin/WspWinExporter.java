@@ -73,7 +73,9 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -360,6 +362,18 @@ public class WspWinExporter
 
   }
 
+  private final static String getRoughnessForFG( final FLIESSGESETZ fg )
+  {
+    if( FLIESSGESETZ.DARCY_WEISBACH_MIT_FORMEINFLUSS.equals( fg ) )
+      return (IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS);
+    else if( FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS.equals( fg ) )
+      return (IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS);
+    else if( FLIESSGESETZ.MANNING_STRICKLER.equals( fg ) )
+      return (IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST);
+    else
+      return "";
+  }
+
   private static void write1DTuhhZustand( final TuhhCalculation calculation, final boolean isDirectionUpstreams, final File zustFile, final File psiFile ) throws IOException
   {
     final TuhhReach reach = calculation.getReach();
@@ -405,7 +419,7 @@ public class WspWinExporter
 
           final File outPrfFile = new File( zustFile.getParentFile(), prfName );
           prfWriter = new PrintWriter( outPrfFile );
-          final IProfilSink ps = new PrfSink();
+          final IProfilSink ps = new PrfSink( getRoughnessForFG( calculation.getFliessgesetz() ) );
           ps.write( new IProfil[] { profil }, prfWriter );
           prfWriter.flush();
           prfWriter.close();

@@ -144,9 +144,12 @@ public class PointMarkerLayer extends AbstractProfilLayer
       return;
 
     final IProfil profil = getProfil();
-    final IRecord profilPoint = profil.getPoint( pos );
+    final Point2D numPoint = toNumeric( point );
+    if( numPoint == null )
+      return;
 
-    final IRecord newPoint = ProfilUtil.findNearestPoint( profil, toNumeric( point ).getX() );
+    final IRecord profilPoint = profil.getPoint( pos );
+    final IRecord newPoint = ProfilUtil.findNearestPoint( profil, numPoint.getX() );
     if( newPoint == profilPoint )
       return;
 

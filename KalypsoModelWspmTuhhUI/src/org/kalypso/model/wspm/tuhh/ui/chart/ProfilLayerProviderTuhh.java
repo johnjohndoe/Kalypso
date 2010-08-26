@@ -199,35 +199,12 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( layerId.equals( IWspmTuhhConstants.LAYER_TUBES ) )
     {
       final BuildingKreis building = new BuildingKreis();
-      setInitialValues( building, profil );
+      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_RAUHEIT ), 0.2 );
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { building } );
       final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.6" ), profil, changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
     }
-  }
-
-  private final void setInitialValues( final BuildingKreis building, final IProfil profil )
-  {
-    final IProfilPointMarker[] marker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    if( marker.length == 2 )
-    {
-
-      final IRecord p1 = marker[0].getPoint();
-      final IRecord p2 = marker[1].getPoint();
-      final Double x1 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_BREITE, p1 );
-      final Double y1 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p1 );
-      final Double x2 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_BREITE, p2 );
-      final Double y2 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p2 );
-
-      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_BEZUGSPUNKT_X ), x1 + (x2 - x1) / 2 );
-      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_BEZUGSPUNKT_Y ), y1 + (y2 - y1) / 2 );
-      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_BREITE ), 2.0 );
-      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_SOHLGEFAELLE ), 5.0 );
-      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_RAUHEIT ), 0.3 );
-
-    }
-
   }
 
   private final void setInitialValues( final BuildingWehr building, final IProfil profil )
@@ -241,8 +218,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       final int index = profil.indexOfProperty( POINT_PROPERTY_HOEHE );
       final Double y1 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p1 );
       final Double y2 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p2 );
-      p1.setValue( index, y1);
-      p2.setValue( index, y2);
+      p1.setValue( index, y1 );
+      p2.setValue( index, y2 );
 
       building.setValue( building.getObjectProperty( BUILDING_PROPERTY_FORMBEIWERT ), 1.0 );
 
