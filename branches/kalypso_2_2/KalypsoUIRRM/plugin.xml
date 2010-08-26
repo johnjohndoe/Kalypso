@@ -253,6 +253,11 @@
           <command commandId="org.kalypso.action.model.setBasicModel" style="push"/>
           <command commandId="org.kalypso.action.model.runCalcCase" style="push"/>
           <separator name="additions" visible="false"/>
+          <visibleWhen checkEnabled="false">
+            <with variable="activePartId">
+              <equals value="org.eclipse.ui.views.ResourceNavigator" />
+            </with>
+          </visibleWhen>
        </menu>
     </menuContribution>
  </extension>
