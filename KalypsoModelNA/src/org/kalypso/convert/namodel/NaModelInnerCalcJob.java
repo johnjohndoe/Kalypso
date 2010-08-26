@@ -345,7 +345,8 @@ public class NaModelInnerCalcJob implements ISimulation
           if( element.isDirectory() ) // Ergebnisse
           {
             resultEater.addResult( NaModelConstants.OUT_ZML, element );
-            return;
+//            return;
+            break;
           }
         }
       }
