@@ -59,6 +59,9 @@ import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
@@ -68,6 +71,7 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsosimulationmodel.KalypsoModelSimulationBase;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -381,10 +385,15 @@ public class CatchmentManager extends AbstractManager
 
       if( linkedFE == null )
         throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", FeatureHelper.getAsString( fe, "ngwzu" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      line13.append( Integer.toString( idManager.getAsciiID( linkedFE ) ).trim() + " " ); //$NON-NLS-1$
+      line13.append( Integer.toString( idManager.getAsciiID( linkedFE ) ) ).append( " " ); //$NON-NLS-1$
       // line13.append( toAscci( linkedFE, 17 ) + " " );
-      line14.append( toAscci( fe, 14 ) + " " ); //$NON-NLS-1$
-      sumGwwi += ((Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_GWWI )).doubleValue();
+      line14.append( toAscci( fe, 14 ) ).append( " " ); //$NON-NLS-1$
+      final Double gwwiValue = (Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_GWWI );
+      if( gwwiValue == null )
+      {
+        throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.83", fe.getName() ) ); //$NON-NLS-1$
+      }
+      sumGwwi += gwwiValue.doubleValue();
     }
 
     if( sumGwwi > 1.001 )
@@ -396,8 +405,8 @@ public class CatchmentManager extends AbstractManager
       double delta = 1 - sumGwwi;
       line13.append( "0 " ); //$NON-NLS-1$
       line14.append( delta + " " ); //$NON-NLS-1$
-      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88"), feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ).toString(), Integer.toString( asciiID ), sumGwwi * 100.0 ) ); //$NON-NLS-1$
-      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.92"), delta * 100.0 ) ); //$NON-NLS-1$
+      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88" ), feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ).toString(), Integer.toString( asciiID ), sumGwwi * 100.0 ) ); //$NON-NLS-1$
+      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.92" ), delta * 100.0 ) ); //$NON-NLS-1$
     }
 
     if( gwList.size() > 0 )
