@@ -138,9 +138,6 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     if( containsClipPolygons( polygons ) == true )
       return Double.NaN;
 
-    if( !Double.isNaN( wspValue ) )
-      return wspValue - terrainValue;
-
     /* - if extrapolation: getExtrapolationsvalue */
     final IFloodExtrapolationPolygon extrapolPolygon = getExtrapolPolygons( polygons );
     if( extrapolPolygon != null )
@@ -272,8 +269,9 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     {
       for( final IFloodPolygon polygon : list )
       {
-        if( polygon.contains( pos ) && polygon.getEvents().contains( m_event ) )
-          polygonList.add( polygon );
+        if( polygon.contains( pos )) 
+            if(polygon.getEvents().contains( m_event ) )
+                polygonList.add( polygon );
       }
     }
 
