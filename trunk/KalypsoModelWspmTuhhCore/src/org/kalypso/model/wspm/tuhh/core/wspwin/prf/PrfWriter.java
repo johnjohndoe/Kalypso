@@ -99,8 +99,16 @@ public class PrfWriter implements IPrfConstants
 
   private final IWaterlevel[] m_waterlevels;
 
+  private final String m_defaultRoughnessType;
+
   public PrfWriter( final IProfil profil, final IWaterlevel[] waterlevels )
   {
+    this( profil, waterlevels, "" );
+  }
+
+  public PrfWriter( final IProfil profil, final IWaterlevel[] waterlevels, final String defaultRoughnessType )
+  {
+    m_defaultRoughnessType = defaultRoughnessType;
     m_profil = profil;
     m_waterlevels = waterlevels;
     fillDefaultPrfMetadata();
@@ -250,7 +258,7 @@ public class PrfWriter implements IPrfConstants
 
   private void writePoints( )
   {
-    final DataBlockHeader dbh = createHeader( "GEL" ); //$NON-NLS-1$
+    final DataBlockHeader dbh = createHeader( IWspmConstants.POINT_PROPERTY_HOEHE ); //$NON-NLS-1$
     final CoordDataBlock db = new CoordDataBlock( dbh );
     writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ), db, null );
     m_dbWriter.addDataBlock( db );
@@ -268,60 +276,91 @@ public class PrfWriter implements IPrfConstants
 
   }
 
+  private final IComponent[] getRoughness( )
+  {
+    final IComponent comp = m_profil.hasPointProperty( m_defaultRoughnessType );
+    if( comp != null )
+      return new IComponent[] { comp };
+
+    return new IComponent[] { m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ), m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) };
+  }
+
   private void writeRauheit( )
   {
     CoordDataBlock dbr = null;
-    if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
-    {
-      final DataBlockHeader dbhr = createHeader( "KS" ); //$NON-NLS-1$
-      dbr = new CoordDataBlock( dbhr );
-      writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ), dbr, 0.0 );
-    }
-    else if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) != null )
-    {
-      final DataBlockHeader dbhr = createHeader( "KST" ); //$NON-NLS-1$
-      dbr = new CoordDataBlock( dbhr );
-      writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ), dbr, 0.0 );
-    }
-    else
-    {
-      // TODO: if (isDurchlass(buildings) {final DataBlockHeader dbhr = createHeader( building.getRauheitTyp()
-      // );}
 
-      final DataBlockHeader dbhr = createHeader( "KS" ); //$NON-NLS-1$
+    final IComponent[] cmpR = getRoughness();
+    for( final IComponent c : cmpR )
+    {
+      if( c == null )
+        continue;
+      final DataBlockHeader dbhr = createHeader( c.getId() ); //$NON-NLS-1$
       dbr = new CoordDataBlock( dbhr );
-      final int size = m_profil.getPoints().length;
-      dbr.setCoords( new Double[size], new Double[size] );
+      writeCoords( c, dbr, 0.0 );
+      m_dbWriter.addDataBlock( dbr );
     }
-
     final IProfileBuilding[] buildings = m_profil.getProfileObjects( AbstractObservationBuilding.class );
     if( istDurchlass( buildings ) )
     {
+      // TODO: Building dont't know its roughnesstype, so we need a default
+      final DataBlockHeader dbhr = createHeader( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ); //$NON-NLS-1$
+      dbr = new CoordDataBlock( dbhr );
+      final int size = m_profil.getPoints().length;
+      dbr.setCoords( new Double[size], new Double[size] );
       final Double roughness = BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, buildings[0] );
       for( int i = 0; i < dbr.getY().length; i++ )
       {
         dbr.getY()[i] = roughness;
       }
+      m_dbWriter.addDataBlock( dbr );
     }
 
-    m_dbWriter.addDataBlock( dbr );
+// if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
+// {
+//      final DataBlockHeader dbhr = createHeader( "KS" ); //$NON-NLS-1$
+// dbr = new CoordDataBlock( dbhr );
+// writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ), dbr, 0.0 );
+// }
+// else if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) != null )
+// {
+//      final DataBlockHeader dbhr = createHeader( "KST" ); //$NON-NLS-1$
+// dbr = new CoordDataBlock( dbhr );
+// writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ), dbr, 0.0 );
+// }
+// else
+// {
+// // TODO: if (isDurchlass(buildings) {final DataBlockHeader dbhr = createHeader( building.getRauheitTyp()
+// // );}
+//
+//      final DataBlockHeader dbhr = createHeader( "KS" ); //$NON-NLS-1$
+// dbr = new CoordDataBlock( dbhr );
+// final int size = m_profil.getPoints().length;
+// dbr.setCoords( new Double[size], new Double[size] );
+// }
+
   }
 
   private final DataBlockHeader createHeader( final String key )
   {
-    if( key.startsWith( "GEL" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.POINT_PROPERTY_HOEHE.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "GELAENDE-", "HOEHE" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( key.startsWith( "TRENNF" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "TRENNFLAECHEN" ); //$NON-NLS-1$
 
-    if( key.startsWith( "DUR" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "DURCHSTROEMTE", "BEREICHE" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( key.startsWith( "KST" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( key ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "BORDVOLL" ); //$NON-NLS-1$
+
+    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( key ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "TRENNLINIE", "WEHR" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "RAUHEIT", "kst   m" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( key.startsWith( "KS" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS.equals( key ) )
       return new DataBlockHeader( "RAUHEIT", "k-s   m" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( key.startsWith( "REC" ) ) //$NON-NLS-1$
@@ -338,9 +377,6 @@ public class PrfWriter implements IPrfConstants
 
     if( key.startsWith( "KOM" ) ) //$NON-NLS-1$
       return new DataBlockHeader( "KOMMENTAR:" ); //$NON-NLS-1$
-
-    if( key.startsWith( "BOR" ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "BORDVOLL" ); //$NON-NLS-1$
 
     if( key.startsWith( "AX" ) ) //$NON-NLS-1$
       return new DataBlockHeader( "AX   m" ); //$NON-NLS-1$
@@ -365,9 +401,6 @@ public class PrfWriter implements IPrfConstants
 
     if( key.startsWith( "OK-W" ) ) //$NON-NLS-1$
       return new DataBlockHeader( "OK-WEHR" ); //$NON-NLS-1$
-
-    if( key.startsWith( "TRENNL" ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "TRENNLINIE", "WEHR" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new DataBlockHeader( key );
   }
@@ -421,14 +454,15 @@ public class PrfWriter implements IPrfConstants
 
   private void writeDevider( )
   {
-    writeDeviderTyp( "TRENNF", m_profil.getPointMarkerFor( m_profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) ) ); //$NON-NLS-1$
-    writeDeviderTyp( "BOR", m_profil.getPointMarkerFor( m_profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) ) ); //$NON-NLS-1$
-    writeDeviderTyp( "DUR", m_profil.getPointMarkerFor( m_profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) ) ); //$NON-NLS-1$
-    writeDeviderTyp( "TRENNL", m_profil.getPointMarkerFor( m_profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) ) ); //$NON-NLS-1$
+    writeDeviderTyp( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ); //$NON-NLS-1$
+    writeDeviderTyp( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ); //$NON-NLS-1$
+    writeDeviderTyp( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ); //$NON-NLS-1$
+    writeDeviderTyp( IWspmTuhhConstants.MARKER_TYP_WEHR ); //$NON-NLS-1$
   }
 
-  private void writeDeviderTyp( final String key, final IProfilPointMarker[] deviders )
+  private void writeDeviderTyp( final String key )
   {
+    final IProfilPointMarker[] deviders = m_profil.getPointMarkerFor( m_profil.hasPointProperty( key ) );
     if( deviders == null || deviders.length == 0 )
       return;
 
@@ -516,9 +550,9 @@ public class PrfWriter implements IPrfConstants
       try
       {
         final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) ) //$NON-NLS-1$
-        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
-        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
-        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
         dbu.setSecondLine( secLine );
       }
       catch( final Exception e )
