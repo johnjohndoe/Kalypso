@@ -208,7 +208,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
       for( final String id : existingSteps.keySet() )
       {
         Date date = existingSteps.get( id );
-        if( date == null )
+        if( date == null || date.getTime() == 0)
         {
           ids.add( id );
         }
