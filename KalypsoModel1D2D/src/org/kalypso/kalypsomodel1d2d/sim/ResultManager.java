@@ -137,6 +137,8 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private Map<Date, FileObject> m_mapDateFile;
 
+  private final TupleResult m_timeSteps;
+
   public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
     this( fileObjectRMA, fileObjectSWAN, caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class ), caseDataProvider.getModel( IControlModelGroup.class.getName(), IControlModelGroup.class ).getModel1D2DCollection().getActiveControlModel(), caseDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class ), caseDataProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class ), geoLog );
@@ -158,6 +160,9 @@ public class ResultManager implements ISimulation1D2DConstants
     m_parameters.add( ResultType.TYPE.WATERLEVEL );
     m_parameters.add( ResultType.TYPE.VELOCITY );
     m_parameters.add( ResultType.TYPE.TERRAIN );
+    
+    final IObservation<TupleResult> obs = controlModel.getTimeSteps();
+    m_timeSteps = obs.getResult();
   }
 
   public IStatus processResults( final ICalcUnitResultMeta calcUnitMeta, final boolean doFullEvaluate, final IProgressMonitor monitor )
@@ -425,11 +430,8 @@ public class ResultManager implements ISimulation1D2DConstants
 
     final int step = Integer.parseInt( string );
 
-    final IObservation<TupleResult> obs = controlModel.getTimeSteps();
-    final TupleResult timeSteps = obs.getResult();
-
-    final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) timeSteps.get( step ).getValue( componentTime );
+    final IComponent componentTime = ComponentUtilities.findComponentByID( m_timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) m_timeSteps.get( step ).getValue( componentTime );
     return DateUtilities.toDate( stepCal );
   }
 
