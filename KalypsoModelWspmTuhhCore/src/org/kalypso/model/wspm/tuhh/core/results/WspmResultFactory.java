@@ -66,7 +66,7 @@ public final class WspmResultFactory
     if( feature instanceof TuhhCalculation )
       return new WspmResultCalculationNode( parent, (TuhhCalculation) feature );
 
-    throw new UnsupportedOperationException();
+    return null;
   }
 
 }

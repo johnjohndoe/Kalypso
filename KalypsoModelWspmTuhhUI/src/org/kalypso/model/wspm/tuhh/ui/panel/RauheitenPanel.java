@@ -100,7 +100,6 @@ public class RauheitenPanel extends AbstractProfilView
 
   protected final HashMap<String, IComponent> m_RauheitTypes = new HashMap<String, IComponent>();
 
-  protected HashMap<String, Double> m_RauheitMap = new HashMap<String, Double>();
 
   public RauheitenPanel( final IProfil profile )
   {
@@ -113,9 +112,7 @@ public class RauheitenPanel extends AbstractProfilView
       if( componentID.startsWith( IWspmTuhhConstants.POINT_PROPERTY + "RAUHEIT" ) ) //$NON-NLS-1$
       {
         final IComponent component = provider.getPointProperty( componentID );
-
         m_RauheitTypes.put( componentID, component );
-
       }
     }
 
@@ -147,13 +144,7 @@ public class RauheitenPanel extends AbstractProfilView
       @Override
       public String getText( final Object element )
       {
-        if( element instanceof IComponent )
-        {
-          final IComponent component = (IComponent) element;
-
-          return component.getName();
-        }
-        return super.getText( element );
+        return ((IComponent) element).getName();
       }
     } );
 
@@ -167,7 +158,6 @@ public class RauheitenPanel extends AbstractProfilView
         if( old == null )
           return;
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-
         final IComponent selected = (IComponent) selection.getFirstElement();
 
         if( !old.getId().equals( selected.getId() ) )
@@ -258,7 +248,7 @@ public class RauheitenPanel extends AbstractProfilView
         setValues( i_left, i_rechts, value );
       }
     } );
-    
+
     // Rauheitswerte Vorland rechts
     addLabel( toolkit, auto, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.10" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.11" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     m_re = addText( toolkit, auto, null );
