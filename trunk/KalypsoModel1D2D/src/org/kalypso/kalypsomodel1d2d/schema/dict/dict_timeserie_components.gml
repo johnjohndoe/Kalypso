@@ -68,7 +68,7 @@
 	
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="UnderRelaxationFactor">
-			<gml:name>Relaxationsfaktor [-]</gml:name>
+			<gml:name>Relaxationsfaktor</gml:name>
 			<swe:property xlink:href="#phenomenonUnderRelaxationFactor" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -95,7 +95,7 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Waterlevel">
 			<gml:description>Wasserstand [NN+m]</gml:description>
-			<gml:name>Wasserstand [NN+m]</gml:name>
+			<gml:name>Wasserstand</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -111,7 +111,7 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaveHsig">
 			<gml:description>Signifikante Wellenhöhe [m]</gml:description>
-			<gml:name>Signifikante Wellenhöhe [m]</gml:name>
+			<gml:name>Signifikante Wellenhöhe</gml:name>
 			<swe:property xlink:href="#phenomenonWaveHsig" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -143,7 +143,7 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaveDirection">
 			<gml:description>Wellenrichtung [deg]</gml:description>
-			<gml:name>Wellenrichtung [deg]</gml:name>
+			<gml:name>Wellenrichtung</gml:name>
 			<swe:property xlink:href="#phenomenonWaveDirection" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -175,7 +175,7 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaterlevelUpstream">
 			<gml:description>Oberwasser [NN+m]</gml:description>
-			<gml:name>h-O [NN+m]</gml:name>
+			<gml:name>h-O</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -191,7 +191,7 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WaterlevelDownstream">
 			<gml:description>Unterwasser [NN+m]</gml:description>
-			<gml:name>h-U [NN+m]</gml:name>
+			<gml:name>h-U</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -207,14 +207,14 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Discharge">
 			<gml:description>Abfluss [m³/s]</gml:description>
-			<gml:name>Abfluss [m³/s]</gml:name>
+			<gml:name>Abfluss</gml:name>
 			<swe:property xlink:href="#phenomenonDischarge" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m3_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m³/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -223,14 +223,14 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Velocity">
 			<gml:description>Geschwindigkeit [m/s]</gml:description>
-			<gml:name>Geschwindigkeit [m/s]</gml:name>
+			<gml:name>Geschwindigkeit</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -239,7 +239,7 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Depth">
 			<gml:description>Fließtiefe [m]</gml:description>
-			<gml:name>Fließtiefe [m]</gml:name>
+			<gml:name>Fließtiefe</gml:name>
 			<swe:property xlink:href="#phenomenonDepth" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -255,14 +255,14 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge1D">
 			<gml:description>spezifischer Abfluss [m³/s/m²]</gml:description>
-			<gml:name>Abfluss [m³/s/m²]</gml:name>
+			<gml:name>Abfluss</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge1D" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m3_s_m2" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m³/s/m²" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -271,14 +271,14 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge2D">
 			<gml:description>spezifischer Abfluss [m³/s/m]</gml:description>
-			<gml:name>Abfluss [m³/s/m]</gml:name>
+			<gml:name>Abfluss</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge2D" />
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m3_s_m" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m³/s/m" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -295,7 +295,7 @@
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -311,7 +311,7 @@
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -373,7 +373,7 @@
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -389,7 +389,7 @@
 					<st:restriction base="decimal">
 						<st:fractionDigits value="4" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#m_s" />
+					<gml:unitOfMeasure uom="dict_uom.xml#m/s" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -431,7 +431,7 @@
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonUnderRelaxationFactor">
 			<gml:description>Wichtungsfaktor [-]</gml:description>
-			<gml:name>Wichtungsfaktor [-]</gml:name>
+			<gml:name>Wichtungsfaktor</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
@@ -445,35 +445,35 @@
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonDischarge">
 			<gml:description>Abfluss [m³/s]</gml:description>
-			<gml:name>Abfluss [m³/s]</gml:name>
+			<gml:name>Abfluss</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonVelocity">
 			<gml:description>Geschwindigkeit [m/s]</gml:description>
-			<gml:name>Geschwindigkeit [m/s]</gml:name>
+			<gml:name>Geschwindigkeit</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonDepth">
 			<gml:description>Fließtiefe [m]</gml:description>
-			<gml:name>Fließtiefe [m]</gml:name>
+			<gml:name>Fließtiefe</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonSpecificDischarge1D">
 			<gml:description>spezifischer Abfluss [m³/s/m²]</gml:description>
-			<gml:name>spezifischer Abfluss [m³/s/m²]</gml:name>
+			<gml:name>spezifischer Abfluss</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonSpecificDischarge2D">
 			<gml:description>spezifischer Abfluss [m³/s/m]</gml:description>
-			<gml:name>spezifischer Abfluss [m³/s/m]</gml:name>
+			<gml:name>spezifischer Abfluss</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 	
@@ -487,14 +487,14 @@
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonWavePer">
 			<gml:description>Wellenperiode [s]</gml:description>
-			<gml:name>Wellenperiode [s]</gml:name>
+			<gml:name>Wellenperiode</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonWaveDirection">
 			<gml:description>Wellenrichtung [deg]</gml:description>
-			<gml:name>Wellenrichtung [deg]</gml:name>
+			<gml:name>Wellenrichtung</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 

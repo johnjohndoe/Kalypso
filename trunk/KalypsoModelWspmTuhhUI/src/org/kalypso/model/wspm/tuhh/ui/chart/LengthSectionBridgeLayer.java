@@ -8,6 +8,7 @@ import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -20,7 +21,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 public class LengthSectionBridgeLayer extends TupleResultLineLayer
 {
- 
+
   public LengthSectionBridgeLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
 
@@ -59,19 +60,17 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   protected final String getTooltip( final int index )
   {
     final TupleResult tr = m_data.getObservation().getResult();
-    final int targetOKComponentIndex = tr.indexOfComponent( m_data.getTargetComponentName() );
+    final IRecord rec = tr.get( index );
+    final int targetOKComponentIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK );
     final int targetUKComponentIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
     final int commentIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_TEXT );
-    final String targetOKComponentLabel = tr.getComponent( targetOKComponentIndex ).getName();
-    final String targetUKComponentLabel = tr.getComponent( targetUKComponentIndex ).getName();
-    final String targetOKComponentUnit = tr.getComponent( targetOKComponentIndex ).getUnit();
-    final String targetUKComponentUnit = tr.getComponent( targetUKComponentIndex ).getUnit();
-    final Object uk = tr.get( index ).getValue( targetUKComponentIndex );
-    final Object ok = tr.get( index ).getValue( targetOKComponentIndex );
+    final String targetOKComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetOKComponentIndex ) );
+    final String targetUKComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetUKComponentIndex ) );
+    final Double uk = ProfilUtil.getDoubleValueFor( targetUKComponentIndex, rec );
+    final Object ok = ProfilUtil.getDoubleValueFor( targetOKComponentIndex, rec );
     if( commentIndex < 0 )
-      return String.format( TOOLTIP_FORMAT, new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit } );
-    return String.format( TOOLTIP_FORMAT + "%n%s", new Object[] { "max. " + targetOKComponentLabel, ok, targetOKComponentUnit, "min. " + targetUKComponentLabel, uk, targetUKComponentUnit, //$NON-NLS-1$
-        tr.get( index ).getValue( commentIndex ) } );
+      return String.format( "max. %-12s %.4f %nmin. %-12s %.4f", new Object[] { targetOKComponentLabel, ok, targetUKComponentLabel, uk } );//$NON-NLS-1$
+    return String.format( "max. %-12s %.4f %nmin. %-12s %.4f%n%s", new Object[] { targetOKComponentLabel, ok, targetUKComponentLabel, uk, tr.get( index ).getValue( commentIndex ) } );//$NON-NLS-1$
 
   }
 
