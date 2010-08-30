@@ -225,9 +225,14 @@ public class CatchmentManager
 
       if( linkedFE == null )
         throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", FeatureHelper.getAsString( fe, "ngwzu" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      line13.append( Integer.toString( idManager.getAsciiID( linkedFE ) ).trim() + " " ); //$NON-NLS-1$
-      line14.append( m_asciiHelper.toAscii( fe, 14 ) + " " ); //$NON-NLS-1$
-      sumGwwi += ((Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_GWWI )).doubleValue();
+      line13.append( Integer.toString( idManager.getAsciiID( linkedFE ) ) ).append( " " ); //$NON-NLS-1$
+      line14.append( m_asciiHelper.toAscii( fe, 14 ) ).append( " " ); //$NON-NLS-1$
+
+      final Double gwwiValue = (Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_GWWI );
+      if( gwwiValue == null )
+        throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.83", fe.getName() ) ); //$NON-NLS-1$
+
+      sumGwwi += gwwiValue.doubleValue();
     }
 
     if( sumGwwi > 1.001 )
