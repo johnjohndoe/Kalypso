@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
 
 	<Chart id="runoffChart">
 		<Title>Ganglinie</Title>
 		<Description>Berechnungsergebnisse</Description>
 		<Layers>
 			<Layer visible="true" id="gridLayer">
-				<Provider epid="de.openali.odysseus.chart.ext.layer.provider.Grid" >
+				<Provider epid="de.openali.odysseus.chart.ext.layer.provider.Grid">
 					<Parameters>
-						<Parameter name="orientation" value="VERTICAL"/>
+						<Parameter name="orientation" value="VERTICAL" />
 					</Parameters>
 				</Provider>
 				<Title>Grid Layer</Title>
 				<Description>Grid Layer</Description>
-				
+
 				<MapperRefs>
 					<DomainAxisRef ref="timeAxis" />
 					<TargetAxisRef ref="nnAxis" />
@@ -29,13 +29,16 @@
 					</LineStyle>
 				</Styles>
 			</Layer>
-			
+
 			<Layer visible="true" id="wspLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+				<Provider
+					epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
 					<Parameters>
 						<Parameter name="featureKey" value="hydrographFeatureKey" />
-						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" />
+						<Parameter name="domainComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+						<Parameter name="valueComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" />
 					</Parameters>
 				</Provider>
 				<Title>Wasserstand</Title>
@@ -58,17 +61,22 @@
 							<Width>1</Width>
 							<LineColor>0000aa</LineColor>
 						</Stroke>
-						<FillColor>3333aa</FillColor>
+						<FillColor>
+							3333aa
+						</FillColor>
 					</PointStyle>
 				</Styles>
 			</Layer>
-			
+
 			<Layer visible="true" id="dischargeLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+				<Provider
+					epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
 					<Parameters>
 						<Parameter name="featureKey" value="hydrographFeatureKey" />
-						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" />
+						<Parameter name="domainComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+						<Parameter name="valueComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" />
 					</Parameters>
 				</Provider>
 				<Title>Abfluss</Title>
@@ -83,7 +91,7 @@
 						<Width>2</Width>
 						<LineColor>00aa00</LineColor>
 					</LineStyle>
-					
+
 					<PointStyle role="point">
 						<Title>discharge point title</Title>
 						<Width>5</Width>
@@ -92,17 +100,22 @@
 							<Width>1</Width>
 							<LineColor>00aa00</LineColor>
 						</Stroke>
-						<FillColor>33aa33</FillColor>
+						<FillColor>
+							33aa33
+						</FillColor>
 					</PointStyle>
 				</Styles>
 			</Layer>
-			
+
 			<Layer visible="true" id="velocityLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+				<Provider
+					epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
 					<Parameters>
 						<Parameter name="featureKey" value="hydrographFeatureKey" />
-						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Velocity" />
+						<Parameter name="domainComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+						<Parameter name="valueComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Velocity" />
 					</Parameters>
 				</Provider>
 				<Title>Geschwindigkeit</Title>
@@ -117,7 +130,7 @@
 						<Width>2</Width>
 						<LineColor>aa0000</LineColor>
 					</LineStyle>
-					
+
 					<PointStyle role="point">
 						<Title>velocity point title</Title>
 						<Width>5</Width>
@@ -126,18 +139,23 @@
 							<Width>1</Width>
 							<LineColor>aa0000</LineColor>
 						</Stroke>
-						<FillColor>aa3333</FillColor>
+						<FillColor>
+							aa3333
+						</FillColor>
 					</PointStyle>
 				</Styles>
 			</Layer>
-			
+
 			<!-- Wave parameter -->
 			<Layer visible="true" id="waveHsigLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+				<Provider
+					epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
 					<Parameters>
 						<Parameter name="featureKey" value="hydrographFeatureKey" />
-						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveHsig" />
+						<Parameter name="domainComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+						<Parameter name="valueComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveHsig" />
 					</Parameters>
 				</Provider>
 				<Title>Signifikante Wellenhöhe</Title>
@@ -160,17 +178,22 @@
 							<Width>1</Width>
 							<LineColor>0000aa</LineColor>
 						</Stroke>
-						<FillColor>3333aa</FillColor>
+						<FillColor>
+							3333aa
+						</FillColor>
 					</PointStyle>
 				</Styles>
 			</Layer>
-			
+
 			<Layer visible="true" id="waveDirLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+				<Provider
+					epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
 					<Parameters>
 						<Parameter name="featureKey" value="hydrographFeatureKey" />
-						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveDirection" />
+						<Parameter name="domainComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+						<Parameter name="valueComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaveDirection" />
 					</Parameters>
 				</Provider>
 				<Title>Wellenrichtung</Title>
@@ -193,17 +216,22 @@
 							<Width>1</Width>
 							<LineColor>0000aa</LineColor>
 						</Stroke>
-						<FillColor>3333aa</FillColor>
+						<FillColor>
+							3333aa
+						</FillColor>
 					</PointStyle>
 				</Styles>
 			</Layer>
-			
+
 			<Layer visible="true" id="wavePeriodLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+				<Provider
+					epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
 					<Parameters>
 						<Parameter name="featureKey" value="hydrographFeatureKey" />
-						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
-						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WavePeakPeriod" />
+						<Parameter name="domainComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+						<Parameter name="valueComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WavePeakPeriod" />
 					</Parameters>
 				</Provider>
 				<Title>Wellenperiode(peak)</Title>
@@ -226,15 +254,18 @@
 							<Width>1</Width>
 							<LineColor>0000aa</LineColor>
 						</Stroke>
-						<FillColor>3333aa</FillColor>
+						<FillColor>
+							3333aa
+						</FillColor>
 					</PointStyle>
 				</Styles>
 			</Layer>
-			
+
 		</Layers>
 		<Mappers>
 			<Axis id="nnAxis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+				<Provider
+					epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
 				<Label>Wasserspiegel [NN+m]</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>LEFT</Position>
@@ -242,35 +273,33 @@
 					<MinValue>5.0</MinValue>
 					<MaxValue>10.0</MaxValue>
 				</NumberRange>
-				<PreferredAdjustment before="1" range="20" after="1"/>			
+				<PreferredAdjustment before="1" range="20"
+					after="1" />
 				<RendererRef ref="NumberWspAxisRenderer" />
 			</Axis>
 			<Axis id="m3sAxis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Abfluss [m�/s]</Label>
+				<Provider
+					epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+				<Label>Abfluss [m³/s]</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>RIGHT</Position>
-				<NumberRange>
-					<MinValue>5.0</MinValue>
-					<MaxValue>10.0</MaxValue>
-				</NumberRange>
-				<PreferredAdjustment before="1" range="20" after="1"/>			
+				<PreferredAdjustment before="30" range="60"
+					after="10" />
 				<RendererRef ref="NumberDisAxisRenderer" />
 			</Axis>
 			<Axis id="msAxis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+				<Provider
+					epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
 				<Label>Geschwindigkeit [m/s]</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>RIGHT</Position>
-				<NumberRange>
-					<MinValue>5.0</MinValue>
-					<MaxValue>10.0</MaxValue>
-				</NumberRange>
-				<PreferredAdjustment before="1" range="20" after="1"/>			
+				<PreferredAdjustment before="1" range="20"
+					after="1" />
 				<RendererRef ref="NumberVelAxisRenderer" />
 			</Axis>
 			<Axis id="timeAxis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+				<Provider
+					epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
 				<Label>Datum</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>BOTTOM</Position>
@@ -280,56 +309,108 @@
 				</DurationRange>
 				<RendererRef ref="CalendarAxisRenderer" />
 			</Axis>
-			<!-- NOT USED
-			<Axis id="wsp_Axis">
-				<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-				<Label>Wassertiefe [m]</Label>
-				<Direction>POSITIVE</Direction>
-				<Position>BOTTOM</Position>
-				<NumberRange>
-					<MinValue>5.0</MinValue>
-					<MaxValue>10.0</MaxValue>
-				</NumberRange>
-				<RendererRef ref="NumberAxisRenderer" />
-			</Axis>
-			-->
+			<!-- NOT USED <Axis id="wsp_Axis"> <Provider epid="org.kalypso.chart.ext.axis.provider.Number" 
+				/> <Label>Wassertiefe [m]</Label> <Direction>POSITIVE</Direction> <Position>BOTTOM</Position> 
+				<NumberRange> <MinValue>5.0</MinValue> <MaxValue>10.0</MaxValue> </NumberRange> 
+				<RendererRef ref="NumberAxisRenderer" /> </Axis> -->
 		</Mappers>
 		<Renderers>
 			<AxisRenderer id="NumberWspAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+				<Provider
+					epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
-						<Parameter name="color" value="#0000aa" />
 						<Parameter name="inset_tick" value="1" />
+						<Parameter name="hide_cut" value="true" />
+						<Parameter name="gap" value="3" />
 					</Parameters>
 				</Provider>
+				<Styles>
+                    <LineStyle role="axisLine">
+                        <Title></Title>
+                        <LineColor>0000aa</LineColor>
+                    </LineStyle>
+                    <TextStyle role="axisLabel">
+                        <Title></Title>
+                        <TextColor>0000aa</TextColor>
+                    </TextStyle>
+                    <LineStyle role="tickLine">
+                        <Title></Title>
+                        <LineColor>0000aa</LineColor>
+                    </LineStyle>
+                    <TextStyle role="tickLabel">
+                        <Title></Title>
+                        <TextColor>0000aa</TextColor>
+                    </TextStyle>
+                </Styles>
 			</AxisRenderer>
 			<AxisRenderer id="NumberDisAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+				<Provider
+					epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
-						<Parameter name="color" value="#00aa00" />
 						<Parameter name="inset_tick" value="1" />
+						<Parameter name="hide_cut" value="true" />
+						<Parameter name="gap" value="3" />
 					</Parameters>
 				</Provider>
+				<Styles>
+                    <LineStyle role="axisLine">
+                        <Title></Title>
+                        <LineColor>00aa00</LineColor>
+                    </LineStyle>
+                    <TextStyle role="axisLabel">
+                        <Title></Title>
+                        <TextColor>00aa00</TextColor>
+                    </TextStyle>
+                    <LineStyle role="tickLine">
+                        <Title></Title>
+                        <LineColor>00aa00</LineColor>
+                    </LineStyle>
+                    <TextStyle role="tickLabel">
+                        <Title></Title>
+                        <TextColor>00aa00</TextColor>
+                    </TextStyle>
+                </Styles>
 			</AxisRenderer>
 			<AxisRenderer id="NumberVelAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+				<Provider
+					epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
-						<Parameter name="color" value="#aa0000" />
 						<Parameter name="inset_tick" value="1" />
+						<Parameter name="hide_cut" value="true" />
 					</Parameters>
 				</Provider>
+				<Styles>
+                    <LineStyle role="axisLine">
+                        <Title></Title>
+                        <LineColor>aa0000</LineColor>
+                    </LineStyle>
+                    <TextStyle role="axisLabel">
+                        <Title></Title>
+                        <TextColor>aa0000</TextColor>
+                    </TextStyle>
+                    <LineStyle role="tickLine">
+                        <Title></Title>
+                        <LineColor>aa0000</LineColor>
+                    </LineStyle>
+                    <TextStyle role="tickLabel">
+                        <Title></Title>
+                        <TextColor>aa0000</TextColor>
+                    </TextStyle>
+                </Styles>
 			</AxisRenderer>
 			<AxisRenderer id="CalendarAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider">
+				<Provider
+					epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider">
 					<Parameters>
-						<Parameter name="color" value="#000000" />
-						<Parameter name="date-format" value="dd.MM.\nHH:mm"/>
+						<Parameter name="date-format" value="dd.MM.\nHH:mm" />
 						<Parameter name="inset_tick" value="1" />
+						<Parameter name="hide_cut" value="true" />
+						<Parameter name="gap" value="3" />
 					</Parameters>
 				</Provider>
 			</AxisRenderer>
 		</Renderers>
-		
+
 	</Chart>
 
 

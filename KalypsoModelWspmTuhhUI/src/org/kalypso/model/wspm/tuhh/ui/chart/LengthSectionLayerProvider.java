@@ -83,7 +83,7 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
       layer.setVisible( true );
       return layer;
     }
-    return new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( Messages.LengthSectionLayerProvider_8, IPointStyle.class ) ); //$NON-NLS-1$
+    return new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

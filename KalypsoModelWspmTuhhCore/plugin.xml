@@ -135,10 +135,4 @@
             provider="org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObjectProvider">
       </objectProvider>
    </extension>
-    <extension
-         point="org.kalypso.core.catalogContribution">
-      <catalogContribution
-            class="org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetDictionary">
-      </catalogContribution>
-   </extension>
-</plugin>
+ </plugin>
