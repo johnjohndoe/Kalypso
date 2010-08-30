@@ -51,6 +51,8 @@ public class KalypsoModelWspmTuhhCorePlugin extends Plugin
   // The shared instance.
   private static KalypsoModelWspmTuhhCorePlugin PLUGIN;
 
+  public static String PLUGIN_ID = null;
+
   /**
    * The constructor.
    */
@@ -66,6 +68,8 @@ public class KalypsoModelWspmTuhhCorePlugin extends Plugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
+
+    PLUGIN_ID = context.getBundle().getSymbolicName();
   }
 
   /**

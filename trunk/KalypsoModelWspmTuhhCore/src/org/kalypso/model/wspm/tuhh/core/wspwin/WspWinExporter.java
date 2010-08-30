@@ -64,7 +64,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -74,6 +73,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
@@ -164,8 +164,8 @@ public class WspWinExporter
       }
       catch( final Throwable t )
       {
-        t.printStackTrace();
-        return StatusUtilities.statusFromThrowable( t );
+        final String message = String.format( "Fehler beim Export der Kalypso-1D Dateien: %s", t.getLocalizedMessage() );
+        return new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message, t );
       }
       finally
       {
@@ -195,6 +195,10 @@ public class WspWinExporter
     final TuhhReach reach = calculation.getReach();
     if( reach == null )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.11" ) ); //$NON-NLS-1$
+
+    final TuhhReachProfileSegment[] profileSegments = reach.getReachProfileSegments();
+    if( profileSegments.length == 0 )
+      throw new IllegalArgumentException( "Strang enthält keine Profile. Export/Berechnug nicht möglich." );
 
     final boolean isDirectionUpstreams = reach.isDirectionUpstreams();
 
@@ -428,6 +432,7 @@ public class WspWinExporter
         {
           IOUtils.closeQuietly( prfWriter );
         }
+        prfWriter.close();
       }
 
       zustWriter.flush();
