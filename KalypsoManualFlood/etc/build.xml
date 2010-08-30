@@ -36,7 +36,7 @@
 	<property name="doc.profiled.path" value="${build.profiling.dir}/docbook-profiled.xml" />
 
 	<property name="publishing.dir" value="${workspace}/KalypsoBuild/publishing" />
-	<property name="docbook.dtd.dir" value="${publishing.dir}/docbookxml44" />
+	<property name="docbook.dtd.dir" value="${publishing.dir}/docbook-xml-4.4" />
 	<property name="docbook.xsl.dir" value="${publishing.dir}/docbook-xsl-1.69.1" />
 	<property name="docbook.latex.xsl.dir" value="${publishing.dir}/db2latex-xsl-0.8pre1_patched" />
 	<property name="xincluder.xsd.dir" value="${publishing.dir}/xincluder" />
