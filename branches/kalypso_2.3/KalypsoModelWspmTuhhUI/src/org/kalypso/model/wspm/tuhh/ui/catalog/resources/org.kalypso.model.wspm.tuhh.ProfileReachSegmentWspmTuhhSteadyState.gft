@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<gft:featureview typename="tuhh:WPointsObservation" style="SWT.NONE" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
+	xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:om="http://www.opengis.net/om" xmlns:ogc="http://www.opengis.net/ogc">
+        <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+        <gft:gridLayout numColumns="2"/>
+
+        <gft:label property="tuhh:station" visible="true" tooltip="Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird." style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="tuhh:station" tooltip="Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird." style="SWT.BORDER" >
+            <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+            <gft:format>%.4f</gft:format>
+        </gft:text>
+
+        <gft:label text="Profil" visible="true" tooltip="Für Strangsegment verwendetes Profil" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+
+        <gft:combo property="tuhh:profileMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+             <gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+         </gft:combo>
+</gft:featureview>
+
