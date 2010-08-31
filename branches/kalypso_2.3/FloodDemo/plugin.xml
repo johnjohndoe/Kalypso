@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.kalypso.contribs.eclipseplatform.projectTemplate">
+      <project
+            category="org.kalypso.model.flood.demoProject"
+            data="/"
+            description="%flood.project.description"
+            label="%flood.project.label"
+            projectName="%flood.project.projectName">
+      </project>
+   </extension>
+</plugin>
