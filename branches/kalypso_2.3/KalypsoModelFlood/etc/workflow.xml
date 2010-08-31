@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Workflow URI="org.kalypso.model.flood.WF_KalypsoFlood" xmlns="http://www.renew.de/workflow/base"
+	xmlns:con="http://www.renew.de/workflow/contexts" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	defaultTask="org.kalypso.model.flood.ManageWaterlevelData">
+	<Help>NONE</Help>
+	<Name>KalypsoFlood-Workflow</Name>
+
+	<TaskGroup URI="org.kalypso.model.flood.DataLoad" context="FloodMap">
+		<Help>%KalypsoFlood_DataLoad_help</Help>
+		<Name>%KalypsoFlood_DataLoad</Name>
+		<Task context="ImportBaseMap" URI="org.kalypso.model.flood.ImportBackgroundData">
+			<Help>%KalypsoFlood_DataLoad_ImportBackgroundData_help</Help>
+			<Name>%KalypsoFlood_DataLoad_ImportBackgroundData</Name>
+		</Task>
+		<Task context="FloodMap" URI="org.kalypso.model.flood.ManageWaterlevelData">
+			<Help>%KalypsoFlood_DataLoad_ManageWaterlevelData_help</Help>
+			<Name>%KalypsoFlood_DataLoad_ManageWaterlevelData</Name>
+		</Task>
+		<Task context="CoverageTheme" URI="org.kalypso.model.flood.ManageDTMData">
+			<Help>%KalypsoFlood_DataLoad_ManageDTMData_help</Help>
+			<Name>%KalypsoFlood_DataLoad_ManageDTMData</Name>
+		</Task>
+	</TaskGroup>
+
+	<Task type="SYNCHRONOUS" context="FloodMap" URI="org.kalypso.model.flood.PolygonEditing">
+		<Help>%KalypsoFlood_PolygonEditing_help</Help>
+		<Name>%KalypsoFlood_PolygonEditing</Name>
+	</Task>
+
+	<Task context="FloodMap" URI="org.kalypso.model.flood.ProcessFloodModel">
+		<Help>%KalypsoFlood_ProcessFloodModel_help</Help>
+		<Name>%KalypsoFlood_ProcessFloodModel</Name>
+	</Task>
+
+	<TaskGroup URI="org.kalypso.model.flood.Postprocessing" context="FloodMap">
+		<Help>%KalypsoFlood_Postprocessing_help</Help>
+		<Name>%KalypsoFlood_Postprocessing</Name>
+		<Task context="FloodMap" URI="org.kalypso.model.flood.VisualizeDepthData">
+			<Help>%KalypsoFlood_Postprocessing_VisualizeDepthData_help</Help>
+			<Name>%KalypsoFlood_Postprocessing_VisualizeDepthData</Name>
+		</Task>
+		<Task URI="org.kalypso.model.flood.GenerateRiskModel" context="FloodMap">
+			<Help>%KalypsoFlood_Postprocessing_GenerateRiskModel_help</Help>
+			<Name>%KalypsoFlood_Postprocessing_GenerateRiskModel</Name>
+		</Task>
+	</TaskGroup>
+
+	<Perspectives>
+		<con:PerspectiveContext id="ContextFloodModelling"
+			perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
+			<!-- perspectiveId="org.kalypso.flood.perspective.Perspective"> -->
+
+			<con:WorkbenchSiteContext id="MapContext" parent="ContextFloodModelling">
+				<con:ViewContext id="MapOutlineView" partId="org.kalypso.ui.views.outline" parent="MapContext" />
+				<con:ViewContext id="MapView" partId="org.kalypso.ui.views.mapView" parent="MapContext">
+					<con:ExtensionContext id="BaseMap" parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:WizardContext id="ImportBaseMap"
+							wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
+						<con:Parameter name="type" value="mapViewInputContext" />
+						<con:Parameter name="input" value="maps/base.gmt" />
+					</con:ExtensionContext>
+
+					<con:ExtensionContext id="FloodMap" parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+
+						<con:ExtensionContext id="CoverageTheme" parent="FloodMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type" value="themeContext" />
+							<con:Parameter name="input" value="{http://www.opengis.net/gml}_Coverage" />
+						</con:ExtensionContext>
+						<con:Parameter name="type" value="mapViewInputContext" />
+						<con:Parameter name="input" value="maps/flood.gmt" />
+
+					</con:ExtensionContext>
+
+				</con:ViewContext>
+
+			</con:WorkbenchSiteContext>
+
+			<con:ViewContext id="FeatureSelectionView" partId="org.kalypso.featureview.views.FeatureView"
+				parent="ContextFloodModelling" />
+
+		</con:PerspectiveContext>
+	</Perspectives>
+</Workflow>
