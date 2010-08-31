@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.model.rcm.internal.UrlCatalogRcm"
+            id="org.kalypso.model.rcm.UrlCatalogRcm">
+      </catalog>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            class="org.kalypso.model.rcm.ant.RainfallGenerationTask"
+            library="lib/anttasks.jar"
+            name="kalypso.rainfallGeneration">
+      </antTask>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.model.rcm.internal.binding.Ombrometer"
+            qname="{org.kalypso.model.rcm.ombrometer}Ombrometer">
+      </feature>
+      <feature
+            class="org.kalypso.model.rcm.internal.binding.OmbrometerRainfallGenerator"
+            qname="{org.kalypso.model.rcm}OmbrometerRainfallGenerator">
+      </feature>
+      <feature
+            class="org.kalypso.model.rcm.internal.binding.OmbrometerCollection"
+            qname="{org.kalypso.model.rcm.ombrometer}OmbrometerCollection">
+      </feature>
+      <feature
+            class="org.kalypso.model.rcm.internal.binding.InverseDistanceRainfallGenerator"
+            qname="{org.kalypso.model.rcm}InverseDistanceRainfallGenerator">
+      </feature>
+   </extension>
+
+</plugin>
