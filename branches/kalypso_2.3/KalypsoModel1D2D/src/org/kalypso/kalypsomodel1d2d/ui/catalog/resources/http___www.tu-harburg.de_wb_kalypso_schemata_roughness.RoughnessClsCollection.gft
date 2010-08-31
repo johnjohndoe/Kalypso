@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="wbr:RoughnessClsCollection"
+	style="SWT.NONE" xmlns:gft="featureview.template.kalypso.org"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
+	xmlns:ns1="gistableview.template.kalypso.org">
+	<gft:gridData verticalAlignment="GridData.FILL"
+		horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
+		grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="2" numRows="4"
+		makeColumnsEqualWidth="false" horizontalSpacing="10" />
+
+	<gft:group property="wbr:roughnessClsMember" style="0">
+		<gft:gridData horizontalSpan="2" verticalSpan="2"
+			horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"
+			heightHint="200" grabExcessVerticalSpace="true" />
+		<gft:gridLayout numColumns="2" horizontalSpacing="10"
+			numRows="2" />
+		<gft:table property="wbr:roughnessClsMember" style="SWT.NONE" showToolbar="true" showContextMenu="true">
+			<gft:gridData horizontalAlignment="GridData.FILL"
+				verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
+				grabExcessHorizontalSpace="true" />
+			<ns1:gistableview>
+				<ns1:layer>
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="name" width="200" />
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="roughness_GroundLink" width="150" />
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="roughness_VegetationLink" width="150" />
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="roughness_EddyViscosityLink" width="150" />
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="colorStyle" width="150" />
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="description" width="150" />
+					<ns1:sort propertyName="name" />
+				</ns1:layer>
+			</ns1:gistableview>
+		</gft:table>
+	</gft:group>
+
+	<gft:group property="wbr:roughness_GroundClsMember" style="0">
+		<gft:gridData horizontalSpan="1" minimumHeight="150"
+			horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"
+			grabExcessVerticalSpace="true" />
+		<gft:gridLayout numColumns="1" horizontalSpacing="5" />
+		<gft:table property="wbr:roughness_GroundClsMember" style="SWT.NONE" showToolbar="true" showContextMenu="true">
+			<gft:gridData horizontalAlignment="GridData.FILL"
+				verticalAlignment="GridData.FILL" heightHint="150"
+				grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+			<ns1:gistableview>
+				<ns1:layer>
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="name" width="200" />
+					<ns1:column alignment="SWT.CENTER" editable="true"
+						format="" name="ks" width="70" />
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="description" width="150" />
+					<ns1:sort propertyName="name" />
+				</ns1:layer>
+			</ns1:gistableview>
+		</gft:table>
+	</gft:group>
+
+	<gft:group property="wbr:roughness_VegetationClsMember"
+		style="0">
+		<gft:gridData horizontalSpan="1" verticalSpan="2"
+			minimumHeight="200" horizontalAlignment="GridData.FILL"
+			verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+		<gft:gridLayout numColumns="2" horizontalSpacing="5" />
+		<gft:table property="wbr:roughness_VegetationClsMember" showToolbar="true" showContextMenu="true">
+			<gft:gridData verticalAlignment="GridData.FILL"
+				horizontalAlignment="GridData.FILL" heightHint="200"
+				grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+			<ns1:gistableview>
+				<ns1:layer>
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="name" width="200" />
+					<ns1:column alignment="SWT.END" editable="true" format=""
+						name="axay" width="70" />
+					<ns1:column alignment="SWT.END" editable="true" format=""
+						name="dp" width="70" />
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="description" width="100" />
+					<ns1:sort propertyName="name" />
+				</ns1:layer>
+			</ns1:gistableview>
+		</gft:table>
+	</gft:group>
+
+	<gft:group property="wbr:roughness_EddyViscosityClsMember"
+		style="0">
+		<gft:gridData horizontalSpan="1" minimumHeight="50"
+			horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"
+			grabExcessVerticalSpace="true" />
+		<gft:gridLayout numColumns="1" horizontalSpacing="5" />
+		<gft:table property="wbr:roughness_EddyViscosityClsMember"
+			style="SWT.NONE" showToolbar="true" showContextMenu="true">
+			<gft:gridData verticalAlignment="GridData.FILL"
+				horizontalAlignment="GridData.FILL" heightHint="50"
+				grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+			<ns1:gistableview>
+				<ns1:layer>
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="name" width="100" />
+					<ns1:column alignment="SWT.CENTER" editable="true"
+						format="" name="exx" width="80" />
+					<ns1:column alignment="SWT.CENTER" editable="true"
+						format="" name="eyx" width="80" />
+					<ns1:column alignment="SWT.CENTER" editable="true"
+						format="" name="exy" width="80" />
+					<ns1:column alignment="SWT.CENTER" editable="true"
+						format="" name="eyy" width="80" />
+					<ns1:column alignment="SWT.LEFT" editable="true" format=""
+						name="description" width="100" />
+					<ns1:sort propertyName="name" />
+				</ns1:layer>
+			</ns1:gistableview>
+		</gft:table>
+	</gft:group>
+</gft:featureview>
+
