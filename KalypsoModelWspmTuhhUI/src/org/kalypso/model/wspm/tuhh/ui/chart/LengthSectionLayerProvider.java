@@ -65,25 +65,31 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
   public IChartLayer getLayer( final URL context )
   {
     final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null ); //$NON-NLS-1$
+    final IChartLayer layer;
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK.equals( targetComponentName ) )
     {
-      final LengthSectionBridgeLayer layer = new LengthSectionBridgeLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      layer.setVisible( true );
-      return layer;
+      layer = new LengthSectionBridgeLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    if( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK.equals( targetComponentName ) )
+    else if( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK.equals( targetComponentName ) )
     {
-      final LengthSectionWeirLayer layer = new LengthSectionWeirLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      layer.setVisible( true );
-      return layer;
+      layer = new LengthSectionWeirLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    if( IWspmConstants.LENGTH_SECTION_PROPERTY_RUNOFF.equals( targetComponentName ) )
+    else if( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN.equals( targetComponentName ) )
     {
-      final LengthSectionRunOffLayer layer = new LengthSectionRunOffLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      layer.setVisible( true );
-      return layer;
+      layer = new LengthSectionCulvertLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    return new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    else if( IWspmConstants.LENGTH_SECTION_PROPERTY_RUNOFF.equals( targetComponentName ) )
+    {
+      layer = new LengthSectionRunOffLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    else if( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND.equals( targetComponentName ) )
+    {
+      layer = new LengthSectionSoilLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    else
+      layer = new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    return layer;
   }
 
   /**
@@ -92,15 +98,19 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
   public TupleResultDomainValueData< ? , ? > getDataContainer( )
   {
     final IParameterContainer pc = getParameterContainer();
+    return getDataContainer( pc, pc.getParameterValue( "targetComponentId", null ) ); //$NON-NLS-1$
+  }
+
+  private TupleResultDomainValueData< ? , ? > getDataContainer( final IParameterContainer pc, final String targetComponentId )
+  {
 
     final String href = pc.getParameterValue( "href", null ); //$NON-NLS-1$
-
     final String observationId = pc.getParameterValue( "observationId", null ); //$NON-NLS-1$
     final String domainComponentName = pc.getParameterValue( "domainComponentId", null ); //$NON-NLS-1$
-    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null ); //$NON-NLS-1$
+    final String targetComponentName = targetComponentId;
 
     if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
-      return new TupleResultDomainValueData( getContext(), href, observationId, domainComponentName, targetComponentName );
+      return new TupleResultDomainValueData<Object, Object>( getContext(), href, observationId, domainComponentName, targetComponentName );
 
     return null;
 

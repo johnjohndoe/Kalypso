@@ -250,7 +250,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( layerID.equals( IWspmConstants.LAYER_GELAENDE ) )
     {
       return new CrossSectionTheme( profil, new IProfilChartLayer[] { new StationLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE ),
-          new PointsLineLayer( layerID, profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ) }, cmLeft );
+          new StationPointLayer( layerID, profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ) }, cmLeft );
     }
 
     if( layerID.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
@@ -279,7 +279,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     }
 
     if( layerID.equals( IWspmTuhhConstants.LAYER_TUBES ) )
-      return new BuildingTubesTheme( profil, new IProfilChartLayer[] { new TubeLayer( profil, m_lsp ) }, cmLeft );
+      return new BuildingTubesTheme( profil, new IProfilChartLayer[] { new CulvertLayer( profil, m_lsp ) }, cmLeft );
 
     if( layerID.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
     {
