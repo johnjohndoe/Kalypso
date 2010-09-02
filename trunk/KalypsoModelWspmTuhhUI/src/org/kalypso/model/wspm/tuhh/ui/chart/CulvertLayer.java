@@ -61,9 +61,9 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 /**
  * @author kimwerner
  */
-public class TubeLayer extends AbstractProfilLayer
+public class CulvertLayer extends AbstractProfilLayer
 {
-  public TubeLayer( final IProfil profil, final ILayerStyleProvider styleProvider )
+  public CulvertLayer( final IProfil profil, final ILayerStyleProvider styleProvider )
   {
     super( IWspmTuhhConstants.LAYER_TUBES, profil, IWspmConstants.POINT_PROPERTY_HOEHE, styleProvider );
     getLineStyle().setColor( new RGB( 255, 255, 100 ) );

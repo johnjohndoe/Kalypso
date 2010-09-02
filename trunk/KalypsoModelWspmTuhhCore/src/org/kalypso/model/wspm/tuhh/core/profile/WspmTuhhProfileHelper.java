@@ -49,7 +49,6 @@ import java.io.InvalidObjectException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -61,6 +60,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBui
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource;
 import org.kalypso.observation.IObservation;
@@ -163,29 +163,25 @@ public class WspmTuhhProfileHelper
       }
 
       // Profile Objects
-      final IProfileBuilding[] profilObject = profil.getProfileObjects( AbstractObservationBuilding.class );
-      if( !ArrayUtils.isEmpty( profilObject ) )
+      final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, AbstractObservationBuilding.class );
+      if( building != null )
       {
-        final IProfileBuilding building = profilObject[0];
-
-        if( mtf.length < 2 )
+        final IRecord[] section = ProfilUtil.getInnerPoints( profil, mtf[0], mtf[1] ).toArray( new IRecord[] {} );
+        if( building instanceof BuildingWehr )
         {
-          station.setValue( 9, valueToBigDecimal( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ), true );// ROHR_DN
+          station.setValue( 5, valueToBigDecimal( ProfilUtil.getSectionMaxValueFor( section, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) ), true ); // BridgeOK
+        }
+        else if( building instanceof BuildingBruecke )
+        {
+          station.setValue( 7, valueToBigDecimal( ProfilUtil.getSectionMinValueFor( section, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) ) ), true ); // BridgeUK
+          station.setValue( 6, valueToBigDecimal( ProfilUtil.getSectionMaxValueFor( section, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) ) ), true ); // BridgeOK
+          station.setValue( 8, valueToBigDecimal( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ), true ); // BridgeWidth
         }
         else
         {
-          final IRecord[] section = ProfilUtil.getInnerPoints( profil, mtf[0], mtf[1] ).toArray( new IRecord[] {} );
-          if( building instanceof BuildingWehr )
-          {
-            station.setValue( 5, valueToBigDecimal( ProfilUtil.getSectionMaxValueFor( section, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) ), true ); // BridgeOK
-          }
-          if( building instanceof BuildingBruecke )
-          {
-            station.setValue( 7, valueToBigDecimal( ProfilUtil.getSectionMinValueFor( section, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) ) ), true ); // BridgeUK
-            station.setValue( 6, valueToBigDecimal( ProfilUtil.getSectionMaxValueFor( section, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) ) ), true ); // BridgeOK
-            station.setValue( 8, valueToBigDecimal( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ), true ); // BridgeWidth
-          }
+          station.setValue( 9, valueToBigDecimal( building.getValueFor(  IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ), true );// ROHR_DN
         }
+
       }
 
       lsResult.add( station );
