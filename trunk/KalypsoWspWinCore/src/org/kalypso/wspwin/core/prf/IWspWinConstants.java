@@ -48,4 +48,19 @@ public interface IWspWinConstants
   int SPEZIALPROFIL_TEXT = 12;
 
   int SPEZIALPROFIL_COMMENT = 17;
+
+  int SPEZIALPROFIL_TRAPEZ = 6;
+
+  int SPEZIALPROFIL_KREIS = 7;
+
+  int SPEZIALPROFIL_EI = 8;
+
+  int SPEZIALPROFIL_MAUL = 9;
+  
+  int DATA_BLOCK_TYPE_UNKNOWN = 0;
+  
+  int DATA_BLOCK_TYPE_TEXT = 2;
+  
+  int DATA_BLOCK_TYPE_COORDINATE = 4;
+
 }
