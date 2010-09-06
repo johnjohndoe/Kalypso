@@ -195,7 +195,7 @@ public class WehrRule extends AbstractValidatorRule
     final IRecord lastPoint = devider[devider.length - 1].getPoint();
     IRecord point = null;
     final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final int iOKWehr = profil.indexOfProperty( IWspmTuhhConstants.BUILDING_TYP_WEHR );
+    final int iOKWehr = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     if( iOKWehr < 0 || iHoehe < 0 )
       return;
     final Object p1H = firstPoint.getValue( iHoehe );

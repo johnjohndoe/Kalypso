@@ -70,8 +70,8 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final Double ok = ProfilUtil.getDoubleValueFor( targetOKComponentIndex, rec );
     final Double bw = ProfilUtil.getDoubleValueFor( bridgeWidthIndex, rec );
     if( commentIndex < 0 )
-      return String.format( "max. %-12s %.4f %nmin. %-12s %.4f%n%s %.4f", new Object[] { targetOKComponentLabel, ok, targetUKComponentLabel, uk,bridgeWidthComponentLabel,bw } );//$NON-NLS-1$
-    return String.format( "max. %-12s %.4f %nmin. %-12s %.4f%n%s %.4f%n%s", new Object[] { targetOKComponentLabel, ok, targetUKComponentLabel,bridgeWidthComponentLabel,bw, uk, tr.get( index ).getValue( commentIndex ) } );//$NON-NLS-1$
+      return String.format( "max. %-12s %.4f %nmin. %-12s %.4f%n%s %.4f", new Object[] { targetOKComponentLabel, ok, targetUKComponentLabel, uk, bridgeWidthComponentLabel, bw } );//$NON-NLS-1$
+    return String.format( "max. %-12s %.4f %nmin. %-12s %.4f%n%s %.4f%n%s", new Object[] { targetOKComponentLabel, ok, targetUKComponentLabel, bridgeWidthComponentLabel, bw, uk, tr.get( index ).getValue( commentIndex ) } );//$NON-NLS-1$
 
   }
 
@@ -85,18 +85,14 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   {
     final TupleResult result = m_data.getObservation().getResult();
     final IRecord record = result.get( i );
-    final int iUK = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
-    final int iOK = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK );
-    final int iST = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION );
-    final int iBR = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH );
-    final Double uK = ProfilUtil.getDoubleValueFor( iUK, record );
-    final Double oK = ProfilUtil.getDoubleValueFor( iOK, record );
-    final Double sT = ProfilUtil.getDoubleValueFor( iST, record );
-    final Double bR = ProfilUtil.getDoubleValueFor( iBR, record );
-    if(bR.isNaN() || uK.isNaN() || oK.isNaN() || sT.isNaN() )
+    final Double uK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, record );
+    final Double oK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, record );
+    final Double sT = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, record );
+    final Double bR = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, record );
+    if( bR.isNaN() || uK.isNaN() || oK.isNaN() || sT.isNaN() )
       return null;
-    final Point pUK = getCoordinateMapper().numericToScreen( sT+ bR/2000, uK );
-    final Point pOK = getCoordinateMapper().numericToScreen( sT- bR/2000, oK );
-    return new Rectangle( pOK.x , pOK.y, pOK.x-pUK.x, pUK.y - pOK.y );
+    final Point pUK = getCoordinateMapper().numericToScreen( sT + bR / 2000, uK );
+    final Point pOK = getCoordinateMapper().numericToScreen( sT - bR / 2000, oK );
+    return new Rectangle( pOK.x - 3, pOK.y, Math.max( 6, pOK.x - pUK.x ), pUK.y - pOK.y );
   }
 }

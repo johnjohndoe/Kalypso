@@ -86,6 +86,19 @@ public class PrfReader
     return m_metaMap.get( index );
   }
 
+  private final int getDataBlockType( final int key )
+  {
+    if( key == IWspWinConstants.SPEZIALPROFIL_COMMENT )
+      return IWspWinConstants.DATA_BLOCK_TYPE_TEXT;
+    else if( key == IWspWinConstants.SPEZIALPROFIL_TEXT )
+      return IWspWinConstants.DATA_BLOCK_TYPE_TEXT;
+    else if( key >= IWspWinConstants.SPEZIALPROFIL_TRAPEZ && key <= IWspWinConstants.SPEZIALPROFIL_MAUL )
+      return IWspWinConstants.DATA_BLOCK_TYPE_TEXT;
+    else if( key == 0 )
+      return IWspWinConstants.DATA_BLOCK_TYPE_COORDINATE;
+    return IWspWinConstants.DATA_BLOCK_TYPE_UNKNOWN;
+  }
+
   public void readFromReader( final BufferedReader br ) throws IOException
   {
     readMetadata( br );
@@ -103,19 +116,24 @@ public class PrfReader
         final DataBlockHeader dbh = new DataBlockHeader( br );
         if( isValid( dbh ) )
         {
-          final int spezialProfileType = dbh.getSpecification( 8 );
-          if( spezialProfileType == IWspWinConstants.SPEZIALPROFIL_COMMENT || spezialProfileType == IWspWinConstants.SPEZIALPROFIL_TEXT )
+          final int dataBlockType = getDataBlockType( dbh.getSpecification( 8 ) );
+          if( dataBlockType == IWspWinConstants.DATA_BLOCK_TYPE_TEXT )
           {
             final IDataBlock dB = new TextDataBlock( dbh );
             dB.readFromReader( pointCount, br );
             m_dbs.put( createFirstLine( dbh.getFirstLine() ), dB );
           }
-          else
+          else if( dataBlockType == IWspWinConstants.DATA_BLOCK_TYPE_COORDINATE )
           {
             final IDataBlock dB = new CoordDataBlock( dbh );
             dB.readFromReader( pointCount, br );
             m_dbs.put( createFirstLine( dbh.getFirstLine() ), dB );
           }
+          else
+          {
+          }
+          // donothing
+
         }
       }
       catch( final IOException e )

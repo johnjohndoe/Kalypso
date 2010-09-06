@@ -94,12 +94,9 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   {
     final TupleResult result = m_data.getObservation().getResult();
     final IRecord record = result.get( i );
-    final int iDN = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_ROHR_DN );
-    final int iUK = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_GROUND );
-    final int iST = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION );
-    final Double dN = ProfilUtil.getDoubleValueFor( iDN, record );
-    final Double sT = ProfilUtil.getDoubleValueFor( iST, record );
-    final Double uK = ProfilUtil.getDoubleValueFor( iUK, record );
+    final Double dN = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, record );
+    final Double sT = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, record );
+    final Double uK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_GROUND, record );
     if( uK.isNaN() || dN.isNaN() || sT.isNaN() )
       return null;
     final Point pOK = getCoordinateMapper().numericToScreen( sT, uK );

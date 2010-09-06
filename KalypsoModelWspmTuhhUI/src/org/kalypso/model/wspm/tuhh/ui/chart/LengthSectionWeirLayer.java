@@ -77,17 +77,14 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
   {
     final TupleResult result = m_data.getObservation().getResult();
     final IRecord record = result.get( i );
-    final int iOK = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WEIR_OK );
-    final int iUK = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_GROUND );
-    final int iST = m_data.getObservation().getResult().indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION );
-    final Double oK = ProfilUtil.getDoubleValueFor( iOK, record );
-    final Double sT = ProfilUtil.getDoubleValueFor( iST, record );
-    final Double uK = ProfilUtil.getDoubleValueFor( iUK, record );
+    final Double oK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, record );
+    final Double sT = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, record );
+    final Double uK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_GROUND, record );
     if( uK.isNaN() || oK.isNaN() || sT.isNaN() )
       return null;
     final Point pOK = getCoordinateMapper().numericToScreen( sT, oK );
     final Point pUK = getCoordinateMapper().numericToScreen( sT, uK );
-    return new Rectangle( pOK.x - 2, pOK.y, 4, pUK.y - pOK.y );
+    return new Rectangle( pOK.x - 1, pOK.y, 3, pUK.y - pOK.y );
   }
 
 }

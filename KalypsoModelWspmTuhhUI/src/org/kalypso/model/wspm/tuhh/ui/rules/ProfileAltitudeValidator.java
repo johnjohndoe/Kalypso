@@ -152,6 +152,8 @@ public class ProfileAltitudeValidator
    */
   public final int validate( final int begin, final int end, final String componentID, final int check, final boolean orEqual )
   {
+    if( begin < 0 )
+      return -1;
     final int step = begin < end ? 1 : -1;
     int i = begin;
     int lastPos = -1;
