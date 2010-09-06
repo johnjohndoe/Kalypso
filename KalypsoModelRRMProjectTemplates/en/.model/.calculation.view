@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featureview typename="NAControl" xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" style="0" tooltip="TopLevel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="featureview.template.kalypso.org
 D:\Kalypso\KalypsoCore\etc\schemas\template\featureview.xsd">
-	<gridData grabExcessHorizontalSpace="false"/>
+	<gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.TOP" grabExcessHorizontalSpace="true"/>
 	<gridLayout numColumns="1" horizontalSpacing="10"/>
 	<label text="Steuerparameter eingeben" style="0"/>
 	<group style="0" text="Steuerparameter">
