@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gft:featuretemplate xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
-	<!-- TODO: show title in gft-view: Längsschnitt -->
+	<!-- TODO: show title in gft-view: %TITLE% -->
     <gft:layer id="layer_1" featurePath="" linktype="gml" xlink:href="Daten/Längsschnitt.gml"/>
     <gft:view typename="om:Observation" style="SWT.NONE" xmlns:om="http://www.opengis.net/om">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
