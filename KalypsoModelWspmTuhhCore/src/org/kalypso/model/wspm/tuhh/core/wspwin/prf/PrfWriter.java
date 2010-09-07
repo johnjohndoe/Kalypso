@@ -281,39 +281,65 @@ public class PrfWriter implements IPrfConstants
     final IComponent comp = m_profil.hasPointProperty( m_defaultRoughnessType );
     if( comp != null )
       return new IComponent[] { comp };
+    final IComponent rks = m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
+    final IComponent rkst = m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
+    if( rks == null && rkst == null )
+      return new IComponent[] {};
+    return new IComponent[] { rks, rkst };
+  }
 
-    return new IComponent[] { m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ), m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) };
+  private final Double getRoughnessFromBuilding( )
+  {
+    final IProfileBuilding[] buildings = m_profil.getProfileObjects( AbstractObservationBuilding.class );
+    if( !istDurchlass( buildings ) )
+      return Double.NaN;
+    return BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, buildings[0] );
   }
 
   private void writeRauheit( )
   {
     CoordDataBlock dbr = null;
-
+    final Double buildingRoughness = getRoughnessFromBuilding();
     final IComponent[] cmpR = getRoughness();
+    if( cmpR.length == 0 )
+    {
+      final DataBlockHeader dbhr = createHeader( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ); //$NON-NLS-1$
+      dbr = new CoordDataBlock( dbhr );
+      writeCoords( null, dbr, buildingRoughness.isNaN() ? 0.0 : buildingRoughness );
+      if( !buildingRoughness.isNaN() )
+        dbr.getY()[0] = buildingRoughness;
+      m_dbWriter.addDataBlock( dbr );
+    }
     for( final IComponent c : cmpR )
     {
       if( c == null )
         continue;
       final DataBlockHeader dbhr = createHeader( c.getId() ); //$NON-NLS-1$
       dbr = new CoordDataBlock( dbhr );
-      writeCoords( c, dbr, 0.0 );
+      writeCoords( c, dbr, buildingRoughness.isNaN() ? 0.0 : buildingRoughness );
+      if( !buildingRoughness.isNaN() )
+        dbr.getY()[0] = buildingRoughness;
       m_dbWriter.addDataBlock( dbr );
     }
-    final IProfileBuilding[] buildings = m_profil.getProfileObjects( AbstractObservationBuilding.class );
-    if( istDurchlass( buildings ) )
-    {
-      // TODO: Building dont't know its roughnesstype, so we need a default
-      final DataBlockHeader dbhr = createHeader( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ); //$NON-NLS-1$
-      dbr = new CoordDataBlock( dbhr );
-      final int size = m_profil.getPoints().length;
-      dbr.setCoords( new Double[size], new Double[size] );
-      final Double roughness = BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, buildings[0] );
-      for( int i = 0; i < dbr.getY().length; i++ )
-      {
-        dbr.getY()[i] = roughness;
-      }
-      m_dbWriter.addDataBlock( dbr );
-    }
+
+  }
+
+// final IProfileBuilding[] buildings = m_profil.getProfileObjects( AbstractObservationBuilding.class );
+// if( istDurchlass( buildings ) )
+// {
+// // TODO: Building dont't know its roughnesstype, so we need a default
+//      final DataBlockHeader dbhr = createHeader( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ); //$NON-NLS-1$
+// dbr = new CoordDataBlock( dbhr );
+// final int size = m_profil.getPoints().length;
+// dbr.setCoords( new Double[size], new Double[size] );
+// final Double roughness = BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, buildings[0]
+// );
+// for( int i = 0; i < dbr.getY().length; i++ )
+// {
+// dbr.getY()[i] = roughness;
+// }
+// m_dbWriter.addDataBlock( dbr );
+// }
 
 // if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
 // {
@@ -337,8 +363,6 @@ public class PrfWriter implements IPrfConstants
 // final int size = m_profil.getPoints().length;
 // dbr.setCoords( new Double[size], new Double[size] );
 // }
-
-  }
 
   private final DataBlockHeader createHeader( final String key )
   {
@@ -418,7 +442,7 @@ public class PrfWriter implements IPrfConstants
     {
       final Double x = (Double) point.getValue( iBreite );
 
-      final Double value = (Double) point.getValue( iProp );
+      final Double value = iProp < 0 ? null : (Double) point.getValue( iProp );
       if( value == null )
       {
         if( nullValue != null )
