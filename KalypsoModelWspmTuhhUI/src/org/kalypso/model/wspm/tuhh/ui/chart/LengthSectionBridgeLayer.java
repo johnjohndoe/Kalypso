@@ -71,7 +71,8 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final Double bw = ProfilUtil.getDoubleValueFor( bridgeWidthIndex, rec );
     if( commentIndex < 0 )
       return String.format( "max. %-12s %.4f %nmin. %-12s %.4f%n%s %.4f", new Object[] { targetOKComponentLabel, ok, targetUKComponentLabel, uk, bridgeWidthComponentLabel, bw } );//$NON-NLS-1$
-    return String.format( "max. %-12s %.4f %nmin. %-12s %.4f%n%s %.4f%n%s", new Object[] { targetOKComponentLabel, ok, targetUKComponentLabel, bridgeWidthComponentLabel, bw, uk, tr.get( index ).getValue( commentIndex ) } );//$NON-NLS-1$
+    final Object comment = tr.get( index ).getValue( commentIndex );
+    return String.format( "max. %-12s %.4f %nmin. %-12s %.4f%n%s %.4f%n%s", new Object[] { targetOKComponentLabel, ok, targetUKComponentLabel, uk, bridgeWidthComponentLabel, bw, comment } );//$NON-NLS-1$
 
   }
 
