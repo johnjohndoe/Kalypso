@@ -140,7 +140,9 @@ public class WspmTuhhProfileHelper
       station.setValue( 0, valueToBigDecimal( profil.getStation() ), true );// Station
       // Kennung
       // TODO: IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE
-      station.setValue( 2, ProfilUtil.stationToBigDecimal( ProfilUtil.getMinValueFor( profil, profHei ) ), true ); // Ground
+      final Double minValueFor = ProfilUtil.getMinValueFor( profil, profHei );
+      final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( minValueFor );
+      station.setValue( 2, bigStation, true ); // Ground
       final IProfilPointMarker[] mbv = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
       final IProfilPointMarker[] mtf = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
 
