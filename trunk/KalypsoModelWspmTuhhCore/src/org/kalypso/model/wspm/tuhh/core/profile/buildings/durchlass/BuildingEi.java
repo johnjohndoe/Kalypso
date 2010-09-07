@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
@@ -53,7 +52,6 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class BuildingEi extends AbstractObservationBuilding
 {
-
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_EI;
 
   public BuildingEi( )
