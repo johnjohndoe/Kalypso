@@ -68,11 +68,6 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
 
   private boolean m_isCreateLocation = true;
 
-  public GelaendeProfileCreator( final ProfileData data, final String soilPolygon )
-  {
-    this( "Gelände", data, soilPolygon ); //$NON-NLS-1$
-  }
-
   public GelaendeProfileCreator( final String description, final ProfileData data, final String soilPolygon )
   {
     super( description, data );

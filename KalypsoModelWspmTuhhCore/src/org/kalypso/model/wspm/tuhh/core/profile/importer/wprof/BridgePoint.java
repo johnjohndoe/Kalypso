@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
+import org.kalypso.model.wspm.tuhh.core.wprof.WProfProfileType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -175,12 +176,8 @@ public class BridgePoint implements IWProfPoint
     return m_wprofPoint.getProfileName();
   }
 
-  /**
-   * @return
-   * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getProfileType()
-   */
   @Override
-  public int getProfileType( )
+  public WProfProfileType getProfileType( )
   {
     return m_wprofPoint.getProfileType();
   }

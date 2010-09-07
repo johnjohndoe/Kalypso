@@ -77,6 +77,10 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
   private final String m_bridgeWidthPointsID;
 
+  private IWProfPoint[] m_ukPoints;
+
+  private IWProfPoint[] m_okPoints;
+
   public BridgeProfileCreator( final ProfileData data, final String soilPolygon, final String ukPoints, final String okPoints, final String bridgeWidthPoints, final String description )
   {
     super( description, data, soilPolygon );
@@ -289,8 +293,64 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
   protected IWProfPoint[] getUkPoints( )
   {
+    initUkOk();
+
+    return swapBackJumps( m_ukPoints );
+  }
+
+  /**
+   * Initialize uk/ok: swap uk/ok if ok below ok.
+   */
+  private void initUkOk( )
+  {
+    /* Init only once */
+    if( m_ukPoints != null )
+      return;
+
     final IWProfPoint[] ukPoints = getPoints( m_ukPointsID );
-    return swapBackJumps( ukPoints );
+    final IWProfPoint[] okPoints = getPoints( m_okPointsID );
+
+    /* If only one of them is set, we assume it is uk */
+    if( ukPoints == null )
+    {
+      m_ukPoints = okPoints;
+      return;
+    }
+
+    if( okPoints == null )
+    {
+      m_ukPoints = ukPoints;
+      return;
+    }
+
+    final double maxUk = findMax( ukPoints );
+    final double maxOk = findMax( ukPoints );
+
+    /* if uk over ok, we swap */
+    if( maxUk > maxOk )
+    {
+      m_okPoints = ukPoints;
+      m_ukPoints = okPoints;
+    }
+    else
+    {
+      m_ukPoints = ukPoints;
+      m_okPoints = okPoints;
+    }
+  }
+
+  private double findMax( final IWProfPoint[] points )
+  {
+    double maxValue = -Double.MAX_VALUE;
+
+    for( final IWProfPoint point : points )
+    {
+      final double value = point.getValue();
+      if( !Double.isNaN( value ) )
+        maxValue = Math.max( maxValue, value );
+    }
+
+    return maxValue;
   }
 
   private static final BigDecimal MIN_DISTTANCE = new BigDecimal( "0.0001" ); //$NON-NLS-1$
@@ -355,11 +415,12 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
   protected IWProfPoint[] getOkPoints( )
   {
-    final IWProfPoint[] points = getPoints( m_okPointsID );
-    if( points == null )
+    initUkOk();
+
+    if( m_okPoints == null )
       return null;
 
-    return swapBackJumps( points );
+    return swapBackJumps( m_okPoints );
   }
 
   private void addDefaultProperty( final IProfil profile, final String propertyToSet, final String propertyToCopy )
