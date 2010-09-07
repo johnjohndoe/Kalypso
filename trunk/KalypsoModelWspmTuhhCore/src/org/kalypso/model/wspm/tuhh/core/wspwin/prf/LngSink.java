@@ -45,7 +45,7 @@ import java.io.Writer;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
-import org.kalypso.model.wspm.tuhh.core.profile.WspmTuhhProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.profile.LengthSectionCreator;
 import org.kalypso.model.wspm.tuhh.core.wspwin.LengthSectionExporter;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -61,7 +61,8 @@ public class LngSink implements IProfilSink
   @Override
   public final boolean write( final IProfil[] profiles, final Writer writer ) throws IOException
   {
-    final IObservation<TupleResult> obs = WspmTuhhProfileHelper.profilesToLengthSection( profiles );
+    final LengthSectionCreator lsCreator = new LengthSectionCreator( profiles );
+    final IObservation<TupleResult> obs = lsCreator.toLengthSection();
     final LengthSectionExporter lngExp = new LengthSectionExporter();
     return lngExp.write( obs, writer );
   }

@@ -46,28 +46,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kimwerner
@@ -94,100 +77,5 @@ public class WspmTuhhProfileHelper
     {
       throw new InvalidObjectException( e.getLocalizedMessage() );
     }
-  }
-
-  private final static BigDecimal valueToBigDecimal( final Object value )
-  {
-    if( value instanceof BigDecimal )
-      return (BigDecimal) value;
-
-    if( value instanceof Number )
-    {
-      final double val = ((Number) value).doubleValue();
-      if( Double.isNaN( val ) )
-        return null;
-
-      return new BigDecimal( val ).setScale( IProfileFeature.STATION_SCALE, RoundingMode.HALF_UP );
-    }
-    else
-      return null;
-  }
-
-  public static final IObservation<TupleResult> profilesToLengthSection( final IProfil[] profiles )
-  {
-    final TupleResult lsResult = new TupleResult();
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT ) );
-    lsResult.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_H_BV ) );
-
-    for( final IProfil profil : profiles )
-    {
-      final IComponent profHei = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-      final int indHei = profil.indexOfProperty( profHei );
-
-      final IRecord station = lsResult.createRecord();
-      final String desc = profil.getDescription();
-      station.setValue( 10, "".equals( desc ) ? null : desc ); //$NON-NLS-1$
-      station.setValue( 0, valueToBigDecimal( profil.getStation() ), true );// Station
-      // Kennung
-      // TODO: IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE
-      final Double minValueFor = ProfilUtil.getMinValueFor( profil, profHei );
-      final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( minValueFor );
-      station.setValue( 2, bigStation, true ); // Ground
-      final IProfilPointMarker[] mbv = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
-      final IProfilPointMarker[] mtf = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-
-      // Devider
-      if( mbv.length == 2 )
-      {
-        final BigDecimal boLi = valueToBigDecimal( mbv[0].getPoint().getValue( indHei ) );
-        final BigDecimal boRe = valueToBigDecimal( mbv[1].getPoint().getValue( indHei ) );
-        station.setValue( 3, boLi, true ); // BOE_LI
-        station.setValue( 4, boRe, true ); // BOE_RE
-        station.setValue( 11, valueToBigDecimal( Math.min( boLi.doubleValue(), boRe.doubleValue() ) ), true ); // H_BV
-      }
-      else if( mtf.length == 2 )
-      {
-        final BigDecimal boLi = valueToBigDecimal( mtf[0].getPoint().getValue( indHei ) );
-        final BigDecimal boRe = valueToBigDecimal( mtf[1].getPoint().getValue( indHei ) );
-        station.setValue( 3, boLi, true ); // BOE_LI
-        station.setValue( 4, boRe, true ); // BOE_RE
-        station.setValue( 11, valueToBigDecimal( Math.min( boLi.doubleValue(), boRe.doubleValue() ) ), true ); // H_BV
-      }
-
-      // Profile Objects
-      final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, AbstractObservationBuilding.class );
-      if( building != null )
-      {
-        final IRecord[] section = ProfilUtil.getInnerPoints( profil, mtf[0], mtf[1] ).toArray( new IRecord[] {} );
-        if( building instanceof BuildingWehr )
-        {
-          station.setValue( 5, valueToBigDecimal( ProfilUtil.getSectionMaxValueFor( section, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) ), true ); // BridgeOK
-        }
-        else if( building instanceof BuildingBruecke )
-        {
-          station.setValue( 7, valueToBigDecimal( ProfilUtil.getSectionMinValueFor( section, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) ) ), true ); // BridgeUK
-          station.setValue( 6, valueToBigDecimal( ProfilUtil.getSectionMaxValueFor( section, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) ) ), true ); // BridgeOK
-          station.setValue( 8, valueToBigDecimal( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ), true ); // BridgeWidth
-        }
-        else
-        {
-          station.setValue( 9, valueToBigDecimal( building.getValueFor(  IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ), true );// ROHR_DN
-        }
-
-      }
-
-      lsResult.add( station );
-    }
-    return new Observation<TupleResult>( "LengthSectionResult", "Profiles Length Section", lsResult );
   }
 }

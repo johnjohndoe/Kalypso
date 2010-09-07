@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.SortedMap;
@@ -53,29 +54,37 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.tuhh.core.profile.WspmTuhhProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.profile.LengthSectionCreator;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.GmlSerializerFeatureProviderFactory;
+import org.kalypso.util.swt.StatusDialog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -139,47 +148,67 @@ public class CreateLengthSectionWizard extends Wizard
     final IFolder parentFolder = wspmProjekt.getFolder( "Längsschnitte" ); //$NON-NLS-1$
     try
     {
-      if( !parentFolder.exists() )
-        parentFolder.create( false, true, new NullProgressMonitor() );
-
-      final String fName = String.format( "station(%.4f)%d", ((IProfileFeature) profilFeatures[0]).getStation(), profilFeatures.length ); //$NON-NLS-1$
-      final IFolder targetFolder = parentFolder.getFolder( fName );
-      if( !targetFolder.exists() )
-        targetFolder.create( false, true, new NullProgressMonitor() );
-
-      final IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) ); //$NON-NLS-1$
-      final File targetJavaFile = targetFile.getLocation().toFile();
-
-      final String gmlVersion = null;
-      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final IGMLSchema schema = schemaCatalog.getSchema( new QName( "http://www.opengis.net/om", "Observation" ).getNamespaceURI(), gmlVersion ); //$NON-NLS-1$ //$NON-NLS-2$
-      final IFeatureType rootFeatureType = schema.getFeatureType( new QName( "http://www.opengis.net/om", "Observation" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      final Feature rootFeature = FeatureFactory.createFeature( null, null, "LengthSectionResult", rootFeatureType, true );
-      final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, null, new GmlSerializerFeatureProviderFactory(), null );
-      final IObservation<TupleResult> lengthSection = WspmTuhhProfileHelper.profilesToLengthSection( extractProfiles( profilFeatures ) );
-      ObservationFeatureFactory.toFeature( lengthSection, rootFeature );
-      GmlSerializer.serializeWorkspace( targetJavaFile, lsWorkspace, "UTF-8" ); //$NON-NLS-1$
-
-      final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) ); //$NON-NLS-1$
-      if( !kodFile.exists() )
-      {
-        final URL resource = getClass().getResource( "resources/LS_no_result.kod" ); //$NON-NLS-1$
-        String kod = FileUtilities.toString( resource, "UTF-8" ).replaceAll( "%GMLFILENAME%", fName + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$
-        kod = kod.replaceAll( "%TITLE%", fName ); //$NON-NLS-1$
-        kod = kod.replaceAll( "%DESCRIPTION%", fName ); //$NON-NLS-1$
-        final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" ); //$NON-NLS-1$
-        kodFile.create( inputStream, true, new NullProgressMonitor() );
-      }
-
-      targetFolder.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
-
-      final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-      IDE.openEditor( page, kodFile, true );
+      doExport( profilFeatures, context, parentFolder );
     }
     catch( final Throwable t )
     {
-      t.printStackTrace();
+      final String message = String.format( "Failed to export length section", t.getLocalizedMessage() );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message, t );
+      KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( status );
+      new StatusDialog( getShell(), status, getWindowTitle() ).open();
     }
     return true;
+  }
+
+  private void doExport( final Object[] profilFeatures, final URL context, final IFolder parentFolder ) throws CoreException, GMLSchemaException, IOException, GmlSerializeException, PartInitException
+  {
+    if( !parentFolder.exists() )
+      parentFolder.create( false, true, new NullProgressMonitor() );
+
+    final String fName = String.format( "station(%.4f)%d", ((IProfileFeature) profilFeatures[0]).getStation(), profilFeatures.length ); //$NON-NLS-1$
+    final IFolder targetFolder = parentFolder.getFolder( fName );
+    if( !targetFolder.exists() )
+      targetFolder.create( false, true, new NullProgressMonitor() );
+
+    final IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) ); //$NON-NLS-1$
+    final File targetJavaFile = targetFile.getLocation().toFile();
+
+    final String gmlVersion = null;
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final IGMLSchema schema = schemaCatalog.getSchema( new QName( "http://www.opengis.net/om", "Observation" ).getNamespaceURI(), gmlVersion ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFeatureType rootFeatureType = schema.getFeatureType( new QName( "http://www.opengis.net/om", "Observation" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final Feature rootFeature = FeatureFactory.createFeature( null, null, "LengthSectionResult", rootFeatureType, true );
+    final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, null, new GmlSerializerFeatureProviderFactory(), null );
+
+    final IProfil[] profiles = extractProfiles( profilFeatures );
+    final LengthSectionCreator lsCreator = new LengthSectionCreator( profiles );
+    final IObservation<TupleResult> lengthSection = lsCreator.toLengthSection();
+
+    ObservationFeatureFactory.toFeature( lengthSection, rootFeature );
+    GmlSerializer.serializeWorkspace( targetJavaFile, lsWorkspace, "UTF-8" ); //$NON-NLS-1$
+
+    final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) ); //$NON-NLS-1$
+    final IFile tableFile = targetFolder.getFile( new Path( fName + ".gft" ) ); //$NON-NLS-1$
+    copyResourceFile( "resources/LS_no_result.kod", kodFile, fName ); //$NON-NLS-1$
+    copyResourceFile( "resources/table.gft", tableFile, fName ); //$NON-NLS-1$
+
+    final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    IDE.openEditor( page, kodFile, true );
+  }
+
+  private void copyResourceFile( final String resource, final IFile targetFile, final String fName ) throws IOException, CoreException
+  {
+    if( targetFile.exists() )
+      return;
+
+    final URL resourceLocation = getClass().getResource( resource );
+    String kod = FileUtilities.toString( resourceLocation, "UTF-8" );
+    kod = kod.replaceAll( "%GMLFILENAME%", fName + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$
+    kod = kod.replaceAll( "%TITLE%", fName ); //$NON-NLS-1$
+    kod = kod.replaceAll( "%DESCRIPTION%", fName ); //$NON-NLS-1$
+    final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" ); //$NON-NLS-1$
+    targetFile.create( inputStream, true, new NullProgressMonitor() );
+
+    targetFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
   }
 }
