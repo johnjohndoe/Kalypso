@@ -52,8 +52,10 @@ import java.io.LineNumberReader;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -66,7 +68,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
  * Helper class for dwd raster based methods
- * 
+ *
  * @author doemming
  */
 public class DWDRasterHelper
@@ -97,7 +99,7 @@ public class DWDRasterHelper
 
   /**
    * Return the most recent DWD file from the given folder, or null if nothing found.
-   * 
+   *
    * @param srcDir
    *          folder to look at
    * @param prefix
@@ -286,7 +288,7 @@ public class DWDRasterHelper
 
   /**
    * This function returns the unit for the given key.
-   * 
+   *
    * @param dwdKey
    *          The key.
    * @return The unit.
@@ -414,20 +416,20 @@ public class DWDRasterHelper
         {
           case 1:
           {
-            final String[] values = (line.trim()).split( " +", 13 );
+            final String[] values = readValues( line, 5 ); // Do not trim the line...
             for( final String value2 : values )
             {
               final double value = Double.parseDouble( value2 );
               raster.setValueFor( new Date( blockDate ), cellpos, (value + offset) * factor );
               cellpos++;
             }
+            break;
           }
-          break;
 
           case 2:
           {
             // One line represents all 78 values for one position.
-            final String[] values = (line.trim()).split( " +" );
+            final String[] values = readValues( line, 5 ); // Do not trim the line...
             final Calendar valueDate = Calendar.getInstance();
             valueDate.setTimeInMillis( blockDate );
             for( final String valueStr : values )
@@ -438,9 +440,8 @@ public class DWDRasterHelper
             }
 
             cellpos++;
+            break;
           }
-
-          break;
         }
       }
 
@@ -450,6 +451,30 @@ public class DWDRasterHelper
     {
       IOUtils.closeQuietly( reader );
     }
+  }
+
+  private static String[] readValues( String line, int numberChars )
+  {
+    /* Memory for the results. */
+    List<String> values = new ArrayList<String>();
+
+    /* The number of read chars. */
+    int readChars = 0;
+
+    /* Read as long it is possible. */
+    while( readChars < line.length() )
+    {
+      /* Read the next sequence of chars. */
+      String value = line.substring( readChars, readChars + numberChars );
+
+      /* Add the value. */
+      values.add( value );
+
+      /* Increase the number of read chars. */
+      readChars = readChars + numberChars;
+    }
+
+    return values.toArray( new String[] {} );
   }
 
   /**
@@ -532,7 +557,7 @@ public class DWDRasterHelper
    * <p>
    * Remark: we put this method here instead of one of the FileUtility classes, so we may deploy the DWDServlet without
    * too many dependencies.
-   * 
+   *
    * @return null, f the file is empty or could not be read.
    */
   public static String readFirstLine( final File file )
