@@ -2,91 +2,83 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wprof;
-
-import java.math.BigDecimal;
-import java.net.URL;
-
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger
  */
-public interface IWProfPoint
+public enum WProfProfileType
 {
-  String getRiverId( );
+  Gewässerprofil(2, "Gewässerprofil"),
+  Brückenprofil(3, "Brückenprofil"),
+  Absturzprofil(4, "Absturzprofil"),
+  Wehrprofil(5, "Wehrprofil"),
+  Verdohlungsprofil(6, "Verdohlungsprofil"),
+  LängsbegleitendeStruktur(7, "Längsbegleitende Struktur"),
+  EinzelpunkteAusserhalbVonBauwerken(9, "Einzelpunkte außerhalb Von Bauwerken"),
+  SonstigesProfil(0, "Sonstiges Profil");
 
-  BigDecimal getStation( );
+  private final int m_wspmId;
 
-  GM_Point getLocation( );
+  private final String m_label;
 
-  String getComment( );
+  private WProfProfileType( final int wspmId, final String label )
+  {
+    m_wspmId = wspmId;
+    m_label = label;
+  }
 
-  BigDecimal getDistance( );
+  public String getLabel( )
+  {
+    return m_label;
+  }
 
-  double getValue( );
+  public static WProfProfileType valueOf( final int type )
+  {
+    final WProfProfileType[] values = WProfProfileType.values();
+    for( final WProfProfileType wprofType : values )
+    {
+      if( wprofType.m_wspmId == type )
+        return wprofType;
+    }
 
-  String getObjectType( );
+    return null;
+  }
 
-  int getPunktattribut( );
-
-  WProfProfileType getProfileType( );
-
-  URL[] getPhotos( );
-
-  String getProfileComment( );
-
-  String getPNam( );
-
-  String getProfileName( );
-
-  /**
-   * The point number within one part of a profile ('ord')
-   */
-  Number getNumber( );
-
-  int getPartNumber( );
-
-  String getRiverName( );
-
-  Feature getFeature( );
-
-  boolean hasPhotos( );
 }
