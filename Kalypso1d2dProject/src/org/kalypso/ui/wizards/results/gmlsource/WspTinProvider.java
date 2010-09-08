@@ -64,7 +64,6 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.afgui.scenarios.IScenario;
-import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.views.ScenarioContentProvider;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -237,7 +236,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   {
     try
     {
-      if( parentElement instanceof IProject || parentElement instanceof Scenario )
+      if( parentElement instanceof IProject || parentElement instanceof IScenario )
       {
         final List<Object> children = new ArrayList<Object>();
 
@@ -397,7 +396,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       }
     }
 
-    throw new IllegalStateException( Messages.getString("org.kalypso.ui.wizards.results.gmlsource.WspTinProvider.1") + element ); //$NON-NLS-1$
+    throw new IllegalStateException( Messages.getString( "org.kalypso.ui.wizards.results.gmlsource.WspTinProvider.1" ) + element ); //$NON-NLS-1$
   }
 
   /**
@@ -406,14 +405,14 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   @Override
   public boolean hasChildren( final Object element )
   {
-    if( element instanceof IProject || element instanceof Scenario )
+    if( element instanceof IProject || element instanceof IScenario )
     {
       if( m_scenarioContentProvider.hasChildren( element ) )
       {
         return true;
       }
 
-      if( element instanceof Scenario )
+      if( element instanceof IScenario )
       {
         return true;
       }
