@@ -48,6 +48,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -137,7 +138,7 @@ public class LzsimWriter
   {
     try
     {
-      final String lzgContent = String.format( LZG_FORMAT_STRING, iniDate, "qgs", iniChannel.getQgs() ); //$NON-NLS-1$ 
+      final String lzgContent = String.format( Locale.US, LZG_FORMAT_STRING, iniDate, "qgs", iniChannel.getQgs() ); //$NON-NLS-1$ 
       FileUtils.writeStringToFile( lzgFile, lzgContent );
     }
     catch( final IOException e )
@@ -203,26 +204,26 @@ public class LzsimWriter
       // snow
       final Double h = iniCatchment.getH();
       final Double ws = iniCatchment.getWS();
-      writer.format( LZS_FORMAT_STRING, iniDate, "snow", h, ws ); //$NON-NLS-1$ 
+      writer.format( Locale.US, LZS_FORMAT_STRING, iniDate, "snow", h, ws ); //$NON-NLS-1$ 
 
       // groundwater
       final Double hgws = iniCatchment.getHwgs();
       final Double qb = iniCatchment.getQb();
-      writer.format( LZS_FORMAT_STRING, iniDate, "gwsp", hgws, qb ); //$NON-NLS-1$
+      writer.format( Locale.US, LZS_FORMAT_STRING, iniDate, "gwsp", hgws, qb ); //$NON-NLS-1$
 
       // hydrotops (interception storage content& soil moisture)
-      writer.format( "%s h  %4d bodf\n", iniDate, iniHyds.length ); //$NON-NLS-1$ 
+      writer.format( Locale.US, "%s h  %4d bodf\n", iniDate, iniHyds.length ); //$NON-NLS-1$ 
 
       for( int i = 0; i < iniHyds.length; i++ )
       {
         final IniHyd iniHyd = iniHyds[i];
         final Double bi = iniHyd.getBi();
 
-        writer.format( "%4d%7.2f", i + 1, bi ); //$NON-NLS-1$
+        writer.format( Locale.US, "%4d%7.2f", i + 1, bi ); //$NON-NLS-1$
 
         final List<Double> bofs = iniHyd.getBofs();
         for( final Double bof : bofs )
-          writer.format( "%7.2f", bof ); //$NON-NLS-1$
+          writer.format( Locale.US, "%7.2f", bof ); //$NON-NLS-1$
 
         writer.append( "\n" );
       }
