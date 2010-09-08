@@ -41,10 +41,12 @@
 package org.kalypso.model.hydrology.internal.postprocessing;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.convert.namodel.manager.IDManager;
@@ -84,22 +86,47 @@ public class NaFortranLogTranslater
 
   public void translate( final File resultFile )
   {
-    readLog();
-    translateLog();
-    writeLog( resultFile );
+    if( readLog() )
+    {
+      translateLog();
+      writeLog( resultFile );
+    }
+    else
+      copyLog( resultFile );
   }
 
-  private void readLog( )
+  private void copyLog( final File resultFile )
+  {
+    final String info = String.format( "KalypsoNA log file will be copied, element id's are NOT translated." );
+    m_logger.info( info );
+
+    try
+    {
+      FileUtils.copyFile( m_logFile, resultFile );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+
+      final String msg = String.format( "Failed to copy KalypsoNA log file %s", e.getLocalizedMessage() );
+      m_logger.warning( msg );
+    }
+  }
+
+  private boolean readLog( )
   {
     try
     {
       m_workspace = GmlSerializer.createGMLWorkspace( m_logFile, null );
+      return true;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String msg = String.format( "Failed to read KalypsoNA log file %s", e.getLocalizedMessage() );
+      final String msg = String.format( "Failed to translate KalypsoNA log file %s", e.getLocalizedMessage() );
       m_logger.warning( msg );
+
+      return false;
     }
   }
 
