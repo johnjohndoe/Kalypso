@@ -96,10 +96,10 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
 
   public ExternalFileGmlSourceProvider( )
   {
-    m_fileDelegate.addFilter( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.1" ), "*.*" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_fileDelegate.addFilter( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.4" ), "*.gml" );//$NON-NLS-1$ //$NON-NLS-2$
     m_fileDelegate.addFilter( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.2" ), "*.hmo" );//$NON-NLS-1$ //$NON-NLS-2$
     m_fileDelegate.addFilter( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.3" ), "*.shp" );//$NON-NLS-1$ //$NON-NLS-2$
-    m_fileDelegate.addFilter( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.4" ), "*.gml" );//$NON-NLS-1$ //$NON-NLS-2$
+    m_fileDelegate.addFilter( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.1" ), "*.*" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
