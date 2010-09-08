@@ -104,7 +104,8 @@ public class PrfReader
         if( isValid( dbh ) )
         {
           final int spezialProfileType = dbh.getSpecification( 8 );
-          if( spezialProfileType == IWspWinConstants.SPEZIALPROFIL_COMMENT || spezialProfileType == IWspWinConstants.SPEZIALPROFIL_TEXT )
+          // REMARK: test for durchlässe (6-9) backported from trunc, no need for merging.
+          if( spezialProfileType == IWspWinConstants.SPEZIALPROFIL_COMMENT || spezialProfileType == IWspWinConstants.SPEZIALPROFIL_TEXT || (spezialProfileType >= 6 && spezialProfileType <= 9) )
           {
             final IDataBlock dB = new TextDataBlock( dbh );
             dB.readFromReader( pointCount, br );
