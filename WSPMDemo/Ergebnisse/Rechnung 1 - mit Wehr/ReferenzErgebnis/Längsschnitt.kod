@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="ls">
-    <Title>Längsschnitt - Rechnung 1 - mit Brücke</Title>
+    <Title>Längsschnitt - Rechnung 1 - mit Wehr</Title>
     <Description/>
     <Layers>
       <Layer id="Boe_li" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -199,7 +199,7 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer id="Culvert" visible="false">
+      <Layer id="Culvert" visible="true">
         <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
           <Parameters>
             <Parameter value="Daten/Längsschnitt.gml" name="href"/>
@@ -230,7 +230,7 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer id="Weir" visible="false">
+      <Layer id="Weir" visible="true">
         <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
           <Parameters>
             <Parameter value="Daten/Längsschnitt.gml" name="href"/>
@@ -262,7 +262,7 @@
 
         </Styles>
       </Layer>
-      <Layer id="Bridge" visible="true">
+      <Layer id="Bridge" visible="false">
         <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
           <Parameters>
             <Parameter value="Daten/Längsschnitt.gml" name="href"/>

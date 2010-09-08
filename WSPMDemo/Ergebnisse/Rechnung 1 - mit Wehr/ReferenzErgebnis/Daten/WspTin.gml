@@ -1849,8 +1849,8 @@
      <gml:exterior>
       <gml:LinearRing>
        <gml:pos>3930118.2720136717 775457.259 363.732</gml:pos>
-       <gml:pos>3930120.1900129393 775504.8919994201 363.734000000095</gml:pos>
-       <gml:pos>3929805.908 775614.3299991455 363.734000000095</gml:pos>
+       <gml:pos>3930120.1900129393 775504.8919994201 365.2819999523163</gml:pos>
+       <gml:pos>3929805.908 775614.3299991455 365.2819999523163</gml:pos>
        <gml:pos>3930118.2720136717 775457.259 363.732</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
@@ -1860,7 +1860,7 @@
       <gml:LinearRing>
        <gml:pos>3929873.89300061 775478.8019992675 363.732</gml:pos>
        <gml:pos>3930118.2720136717 775457.259 363.732</gml:pos>
-       <gml:pos>3929805.908 775614.3299991455 363.734000000095</gml:pos>
+       <gml:pos>3929805.908 775614.3299991455 365.2819999523163</gml:pos>
        <gml:pos>3929873.89300061 775478.8019992675 363.732</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
@@ -1868,580 +1868,580 @@
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930120.1900129393 775504.892 363.734</gml:pos>
-       <gml:pos>3930168.312998779 775591.3679979248 363.74100000021605</gml:pos>
-       <gml:pos>3929991.299998291 775656.1009996338 363.74100000021605</gml:pos>
-       <gml:pos>3930120.1900129393 775504.892 363.734</gml:pos>
+       <gml:pos>3930120.1900129393 775504.892 365.282</gml:pos>
+       <gml:pos>3930168.312998779 775591.3679979248 365.282</gml:pos>
+       <gml:pos>3929991.299998291 775656.1009996338 365.282</gml:pos>
+       <gml:pos>3930120.1900129393 775504.892 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3929805.908 775614.33000354 363.734</gml:pos>
-       <gml:pos>3930120.1900129393 775504.892 363.734</gml:pos>
-       <gml:pos>3929991.299998291 775656.1009996338 363.74100000021605</gml:pos>
-       <gml:pos>3929805.908 775614.33000354 363.734</gml:pos>
+       <gml:pos>3929805.908 775614.33000354 365.282</gml:pos>
+       <gml:pos>3930120.1900129393 775504.892 365.282</gml:pos>
+       <gml:pos>3929991.299998291 775656.1009996338 365.282</gml:pos>
+       <gml:pos>3929805.908 775614.33000354 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930168.313000488 775591.368 363.741</gml:pos>
-       <gml:pos>3930210.4860046385 775682.2889976196 363.743000000095</gml:pos>
-       <gml:pos>3930028.4069984434 775748.3549995117 363.743000000095</gml:pos>
-       <gml:pos>3930168.313000488 775591.368 363.741</gml:pos>
+       <gml:pos>3930168.313000488 775591.368 365.282</gml:pos>
+       <gml:pos>3930210.4860046385 775682.2889976196 365.282</gml:pos>
+       <gml:pos>3930028.4069984434 775748.3549995117 365.282</gml:pos>
+       <gml:pos>3930168.313000488 775591.368 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3929991.3 775656.101001709 363.741</gml:pos>
-       <gml:pos>3930168.313000488 775591.368 363.741</gml:pos>
-       <gml:pos>3930028.4069984434 775748.3549995117 363.743000000095</gml:pos>
-       <gml:pos>3929991.3 775656.101001709 363.741</gml:pos>
+       <gml:pos>3929991.3 775656.101001709 365.282</gml:pos>
+       <gml:pos>3930168.313000488 775591.368 365.282</gml:pos>
+       <gml:pos>3930028.4069984434 775748.3549995117 365.282</gml:pos>
+       <gml:pos>3929991.3 775656.101001709 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930210.485994751 775682.289 363.743</gml:pos>
-       <gml:pos>3930249.5690025636 775769.2300018921 363.7440000000475</gml:pos>
-       <gml:pos>3930071.873999054 775840.3269943848 363.7440000000475</gml:pos>
-       <gml:pos>3930210.485994751 775682.289 363.743</gml:pos>
+       <gml:pos>3930210.485994751 775682.289 365.282</gml:pos>
+       <gml:pos>3930249.5690025636 775769.2300018921 365.282</gml:pos>
+       <gml:pos>3930071.873999054 775840.3269943848 365.282</gml:pos>
+       <gml:pos>3930210.485994751 775682.289 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930028.407 775748.3550018921 363.743</gml:pos>
-       <gml:pos>3930210.485994751 775682.289 363.743</gml:pos>
-       <gml:pos>3930071.873999054 775840.3269943848 363.7440000000475</gml:pos>
-       <gml:pos>3930028.407 775748.3550018921 363.743</gml:pos>
+       <gml:pos>3930028.407 775748.3550018921 365.282</gml:pos>
+       <gml:pos>3930210.485994751 775682.289 365.282</gml:pos>
+       <gml:pos>3930071.873999054 775840.3269943848 365.282</gml:pos>
+       <gml:pos>3930028.407 775748.3550018921 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930249.569007324 775769.23 363.744</gml:pos>
-       <gml:pos>3930281.12500708 775853.7059979248 363.744</gml:pos>
-       <gml:pos>3930102.700999664 775938.4149975586 363.744</gml:pos>
-       <gml:pos>3930249.569007324 775769.23 363.744</gml:pos>
+       <gml:pos>3930249.569007324 775769.23 365.282</gml:pos>
+       <gml:pos>3930281.12500708 775853.7059979248 365.282</gml:pos>
+       <gml:pos>3930102.700999664 775938.4149975586 365.282</gml:pos>
+       <gml:pos>3930249.569007324 775769.23 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930071.874 775840.327000122 363.744</gml:pos>
-       <gml:pos>3930249.569007324 775769.23 363.744</gml:pos>
-       <gml:pos>3930102.700999664 775938.4149975586 363.744</gml:pos>
-       <gml:pos>3930071.874 775840.327000122 363.744</gml:pos>
+       <gml:pos>3930071.874 775840.327000122 365.282</gml:pos>
+       <gml:pos>3930249.569007324 775769.23 365.282</gml:pos>
+       <gml:pos>3930102.700999664 775938.4149975586 365.282</gml:pos>
+       <gml:pos>3930071.874 775840.327000122 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930281.1249959716 775853.706 363.744</gml:pos>
-       <gml:pos>3930303.8019979247 775945.1099993286 363.7450000000475</gml:pos>
-       <gml:pos>3930135.453998352 776039.7470003662 363.7450000000475</gml:pos>
-       <gml:pos>3930281.1249959716 775853.706 363.744</gml:pos>
+       <gml:pos>3930281.1249959716 775853.706 365.282</gml:pos>
+       <gml:pos>3930303.8019979247 775945.1099993286 365.282</gml:pos>
+       <gml:pos>3930135.453998352 776039.7470003662 365.282</gml:pos>
+       <gml:pos>3930281.1249959716 775853.706 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930102.701 775938.4149996338 363.744</gml:pos>
-       <gml:pos>3930281.1249959716 775853.706 363.744</gml:pos>
-       <gml:pos>3930135.453998352 776039.7470003662 363.7450000000475</gml:pos>
-       <gml:pos>3930102.701 775938.4149996338 363.744</gml:pos>
+       <gml:pos>3930102.701 775938.4149996338 365.282</gml:pos>
+       <gml:pos>3930281.1249959716 775853.706 365.282</gml:pos>
+       <gml:pos>3930135.453998352 776039.7470003662 365.282</gml:pos>
+       <gml:pos>3930102.701 775938.4149996338 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930303.802007202 775945.11 363.745</gml:pos>
-       <gml:pos>3930324.431005005 776068.6259988403 363.747000000095</gml:pos>
-       <gml:pos>3930156.5850005187 776122.4100030517 363.747000000095</gml:pos>
-       <gml:pos>3930303.802007202 775945.11 363.745</gml:pos>
+       <gml:pos>3930303.802007202 775945.11 365.282</gml:pos>
+       <gml:pos>3930324.431005005 776068.6259988403 365.282</gml:pos>
+       <gml:pos>3930156.5850005187 776122.4100030517 365.282</gml:pos>
+       <gml:pos>3930303.802007202 775945.11 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930135.454 776039.7470010376 363.745</gml:pos>
-       <gml:pos>3930303.802007202 775945.11 363.745</gml:pos>
-       <gml:pos>3930156.5850005187 776122.4100030517 363.747000000095</gml:pos>
-       <gml:pos>3930135.454 776039.7470010376 363.745</gml:pos>
+       <gml:pos>3930135.454 776039.7470010376 365.282</gml:pos>
+       <gml:pos>3930303.802007202 775945.11 365.282</gml:pos>
+       <gml:pos>3930156.5850005187 776122.4100030517 365.282</gml:pos>
+       <gml:pos>3930135.454 776039.7470010376 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930324.430993042 776068.626 363.747</gml:pos>
-       <gml:pos>3930338.8480004882 776187.8450017701 363.749000000095</gml:pos>
-       <gml:pos>3930174.108000717 776214.8920064698 363.749000000095</gml:pos>
-       <gml:pos>3930324.430993042 776068.626 363.747</gml:pos>
+       <gml:pos>3930324.430993042 776068.626 365.282</gml:pos>
+       <gml:pos>3930338.8480004882 776187.8450017701 365.282</gml:pos>
+       <gml:pos>3930174.108000717 776214.8920064698 365.282</gml:pos>
+       <gml:pos>3930324.430993042 776068.626 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930156.585 776122.4100003968 363.747</gml:pos>
-       <gml:pos>3930324.430993042 776068.626 363.747</gml:pos>
-       <gml:pos>3930174.108000717 776214.8920064698 363.749000000095</gml:pos>
-       <gml:pos>3930156.585 776122.4100003968 363.747</gml:pos>
+       <gml:pos>3930156.585 776122.4100003968 365.282</gml:pos>
+       <gml:pos>3930324.430993042 776068.626 365.282</gml:pos>
+       <gml:pos>3930174.108000717 776214.8920064698 365.282</gml:pos>
+       <gml:pos>3930156.585 776122.4100003968 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930338.848005493 776187.845 363.749</gml:pos>
-       <gml:pos>3930368.113004883 776248.18900177 363.7500000000475</gml:pos>
-       <gml:pos>3930201.518999298 776327.4089953613 363.7500000000475</gml:pos>
-       <gml:pos>3930338.848005493 776187.845 363.749</gml:pos>
+       <gml:pos>3930338.848005493 776187.845 365.282</gml:pos>
+       <gml:pos>3930368.113004883 776248.18900177 365.282</gml:pos>
+       <gml:pos>3930201.518999298 776327.4089953613 365.282</gml:pos>
+       <gml:pos>3930338.848005493 776187.845 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930174.108 776214.892000885 363.749</gml:pos>
-       <gml:pos>3930338.848005493 776187.845 363.749</gml:pos>
-       <gml:pos>3930201.518999298 776327.4089953613 363.7500000000475</gml:pos>
-       <gml:pos>3930174.108 776214.892000885 363.749</gml:pos>
+       <gml:pos>3930174.108 776214.892000885 365.282</gml:pos>
+       <gml:pos>3930338.848005493 776187.845 365.282</gml:pos>
+       <gml:pos>3930201.518999298 776327.4089953613 365.282</gml:pos>
+       <gml:pos>3930174.108 776214.892000885 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930368.1129941405 776248.189 363.75</gml:pos>
-       <gml:pos>3930383.9669980467 776264.8389996185 363.75</gml:pos>
-       <gml:pos>3930270.438998169 776421.4930008545 363.75</gml:pos>
-       <gml:pos>3930368.1129941405 776248.189 363.75</gml:pos>
+       <gml:pos>3930368.1129941405 776248.189 365.282</gml:pos>
+       <gml:pos>3930383.9669980467 776264.8389996185 365.282</gml:pos>
+       <gml:pos>3930270.438998169 776421.4930008545 365.282</gml:pos>
+       <gml:pos>3930368.1129941405 776248.189 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930201.519 776327.4090012207 363.75</gml:pos>
-       <gml:pos>3930368.1129941405 776248.189 363.75</gml:pos>
-       <gml:pos>3930270.438998169 776421.4930008545 363.75</gml:pos>
-       <gml:pos>3930201.519 776327.4090012207 363.75</gml:pos>
+       <gml:pos>3930201.519 776327.4090012207 365.282</gml:pos>
+       <gml:pos>3930368.1129941405 776248.189 365.282</gml:pos>
+       <gml:pos>3930270.438998169 776421.4930008545 365.282</gml:pos>
+       <gml:pos>3930201.519 776327.4090012207 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930383.9669998777 776264.839 363.75</gml:pos>
-       <gml:pos>3930409.9830063474 776284.0920002594 363.75</gml:pos>
-       <gml:pos>3930402.271000732 776504.2519943848 363.75</gml:pos>
-       <gml:pos>3930383.9669998777 776264.839 363.75</gml:pos>
+       <gml:pos>3930383.9669998777 776264.839 365.282</gml:pos>
+       <gml:pos>3930409.9830063474 776284.0920002594 365.282</gml:pos>
+       <gml:pos>3930402.271000732 776504.2519943848 365.282</gml:pos>
+       <gml:pos>3930383.9669998777 776264.839 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930270.439 776421.493006958 363.75</gml:pos>
-       <gml:pos>3930383.9669998777 776264.839 363.75</gml:pos>
-       <gml:pos>3930402.271000732 776504.2519943848 363.75</gml:pos>
-       <gml:pos>3930270.439 776421.493006958 363.75</gml:pos>
+       <gml:pos>3930270.439 776421.493006958 365.282</gml:pos>
+       <gml:pos>3930383.9669998777 776264.839 365.282</gml:pos>
+       <gml:pos>3930402.271000732 776504.2519943848 365.282</gml:pos>
+       <gml:pos>3930270.439 776421.493006958 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930409.9829998934 776284.092 363.75</gml:pos>
-       <gml:pos>3930533.4330025637 776372.4780015869 363.75</gml:pos>
-       <gml:pos>3930424.2880001985 776514.7870073242 363.75</gml:pos>
-       <gml:pos>3930409.9829998934 776284.092 363.75</gml:pos>
+       <gml:pos>3930409.9829998934 776284.092 365.282</gml:pos>
+       <gml:pos>3930533.4330025637 776372.4780015869 365.282</gml:pos>
+       <gml:pos>3930424.2880001985 776514.7870073242 365.282</gml:pos>
+       <gml:pos>3930409.9829998934 776284.092 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930402.271 776504.252003662 363.75</gml:pos>
-       <gml:pos>3930409.9829998934 776284.092 363.75</gml:pos>
-       <gml:pos>3930424.2880001985 776514.7870073242 363.75</gml:pos>
-       <gml:pos>3930402.271 776504.252003662 363.75</gml:pos>
+       <gml:pos>3930402.271 776504.252003662 365.282</gml:pos>
+       <gml:pos>3930409.9829998934 776284.092 365.282</gml:pos>
+       <gml:pos>3930424.2880001985 776514.7870073242 365.282</gml:pos>
+       <gml:pos>3930402.271 776504.252003662 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930533.4329966432 776372.478 363.75</gml:pos>
-       <gml:pos>3930606.860998047 776475.19700177 363.7510000000475</gml:pos>
-       <gml:pos>3930451.308000458 776549.274005249 363.7510000000475</gml:pos>
-       <gml:pos>3930533.4329966432 776372.478 363.75</gml:pos>
+       <gml:pos>3930533.4329966432 776372.478 365.282</gml:pos>
+       <gml:pos>3930606.860998047 776475.19700177 365.282</gml:pos>
+       <gml:pos>3930451.308000458 776549.274005249 365.282</gml:pos>
+       <gml:pos>3930533.4329966432 776372.478 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930424.288 776514.7870057373 363.75</gml:pos>
-       <gml:pos>3930533.4329966432 776372.478 363.75</gml:pos>
-       <gml:pos>3930451.308000458 776549.274005249 363.7510000000475</gml:pos>
-       <gml:pos>3930424.288 776514.7870057373 363.75</gml:pos>
+       <gml:pos>3930424.288 776514.7870057373 365.282</gml:pos>
+       <gml:pos>3930533.4329966432 776372.478 365.282</gml:pos>
+       <gml:pos>3930451.308000458 776549.274005249 365.282</gml:pos>
+       <gml:pos>3930424.288 776514.7870057373 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930606.8609937746 776475.197 363.751</gml:pos>
-       <gml:pos>3930644.2310041506 776592.5530028077 363.751</gml:pos>
-       <gml:pos>3930482.6960004885 776606.9439940186 363.751</gml:pos>
-       <gml:pos>3930606.8609937746 776475.197 363.751</gml:pos>
+       <gml:pos>3930606.8609937746 776475.197 365.282</gml:pos>
+       <gml:pos>3930644.2310041506 776592.5530028077 365.282</gml:pos>
+       <gml:pos>3930482.6960004885 776606.9439940186 365.282</gml:pos>
+       <gml:pos>3930606.8609937746 776475.197 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930451.308 776549.274003479 363.751</gml:pos>
-       <gml:pos>3930606.8609937746 776475.197 363.751</gml:pos>
-       <gml:pos>3930482.6960004885 776606.9439940186 363.751</gml:pos>
-       <gml:pos>3930451.308 776549.274003479 363.751</gml:pos>
+       <gml:pos>3930451.308 776549.274003479 365.282</gml:pos>
+       <gml:pos>3930606.8609937746 776475.197 365.282</gml:pos>
+       <gml:pos>3930482.6960004885 776606.9439940186 365.282</gml:pos>
+       <gml:pos>3930451.308 776549.274003479 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930644.231003662 776592.553 363.751</gml:pos>
-       <gml:pos>3930651.3710030518 776706.4709992675 363.751</gml:pos>
-       <gml:pos>3930489.509000202 776689.8000016479 363.751</gml:pos>
-       <gml:pos>3930644.231003662 776592.553 363.751</gml:pos>
+       <gml:pos>3930644.231003662 776592.553 365.282</gml:pos>
+       <gml:pos>3930651.3710030518 776706.4709992675 365.2830000000475</gml:pos>
+       <gml:pos>3930489.509000202 776689.8000016479 365.2830000000475</gml:pos>
+       <gml:pos>3930644.231003662 776592.553 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930482.696 776606.943999794 363.751</gml:pos>
-       <gml:pos>3930644.231003662 776592.553 363.751</gml:pos>
-       <gml:pos>3930489.509000202 776689.8000016479 363.751</gml:pos>
-       <gml:pos>3930482.696 776606.943999794 363.751</gml:pos>
+       <gml:pos>3930482.696 776606.943999794 365.282</gml:pos>
+       <gml:pos>3930644.231003662 776592.553 365.282</gml:pos>
+       <gml:pos>3930489.509000202 776689.8000016479 365.2830000000475</gml:pos>
+       <gml:pos>3930482.696 776606.943999794 365.282</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930651.371007324 776706.470999527 363.751</gml:pos>
-       <gml:pos>3930646.5999959717 776800.8540008545 363.751</gml:pos>
-       <gml:pos>3930468.551 776792.594998169 363.751</gml:pos>
-       <gml:pos>3930651.371007324 776706.470999527 363.751</gml:pos>
+       <gml:pos>3930651.371007324 776706.470999527 365.283</gml:pos>
+       <gml:pos>3930646.5999959717 776800.8540008545 365.283</gml:pos>
+       <gml:pos>3930468.551 776792.594998169 365.283</gml:pos>
+       <gml:pos>3930651.371007324 776706.470999527 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930489.509000183 776689.8 363.751</gml:pos>
-       <gml:pos>3930651.371007324 776706.470999527 363.751</gml:pos>
-       <gml:pos>3930468.551 776792.594998169 363.751</gml:pos>
-       <gml:pos>3930489.509000183 776689.8 363.751</gml:pos>
+       <gml:pos>3930489.509000183 776689.8 365.283</gml:pos>
+       <gml:pos>3930651.371007324 776706.470999527 365.283</gml:pos>
+       <gml:pos>3930468.551 776792.594998169 365.283</gml:pos>
+       <gml:pos>3930489.509000183 776689.8 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930646.599998169 776800.8539998245 363.751</gml:pos>
-       <gml:pos>3930649.646003418 776816.4469992828 363.751</gml:pos>
-       <gml:pos>3930464.305 776808.6019999695 363.751</gml:pos>
-       <gml:pos>3930646.599998169 776800.8539998245 363.751</gml:pos>
+       <gml:pos>3930646.599998169 776800.8539998245 365.283</gml:pos>
+       <gml:pos>3930649.646003418 776816.4469992828 365.283</gml:pos>
+       <gml:pos>3930464.305 776808.6019999695 365.283</gml:pos>
+       <gml:pos>3930646.599998169 776800.8539998245 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930468.5509998132 776792.595 363.751</gml:pos>
-       <gml:pos>3930646.599998169 776800.8539998245 363.751</gml:pos>
-       <gml:pos>3930464.305 776808.6019999695 363.751</gml:pos>
-       <gml:pos>3930468.5509998132 776792.595 363.751</gml:pos>
+       <gml:pos>3930468.5509998132 776792.595 365.283</gml:pos>
+       <gml:pos>3930646.599998169 776800.8539998245 365.283</gml:pos>
+       <gml:pos>3930464.305 776808.6019999695 365.283</gml:pos>
+       <gml:pos>3930468.5509998132 776792.595 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930649.646003418 776816.4469997901 363.751</gml:pos>
-       <gml:pos>3930661.327003174 776858.0009982605 363.751</gml:pos>
-       <gml:pos>3930530.755996399 776921.0669963378 363.751</gml:pos>
-       <gml:pos>3930649.646003418 776816.4469997901 363.751</gml:pos>
+       <gml:pos>3930649.646003418 776816.4469997901 365.283</gml:pos>
+       <gml:pos>3930661.327003174 776858.0009982605 365.283</gml:pos>
+       <gml:pos>3930530.755996399 776921.0669963378 365.283</gml:pos>
+       <gml:pos>3930649.646003418 776816.4469997901 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930464.305 776808.602 363.751</gml:pos>
-       <gml:pos>3930649.646003418 776816.4469997901 363.751</gml:pos>
-       <gml:pos>3930530.755996399 776921.0669963378 363.751</gml:pos>
-       <gml:pos>3930464.305 776808.602 363.751</gml:pos>
+       <gml:pos>3930464.305 776808.602 365.283</gml:pos>
+       <gml:pos>3930649.646003418 776816.4469997901 365.283</gml:pos>
+       <gml:pos>3930530.755996399 776921.0669963378 365.283</gml:pos>
+       <gml:pos>3930464.305 776808.602 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930661.3269991456 776858.001 363.751</gml:pos>
-       <gml:pos>3930710.117999512 776929.5309987793 363.751</gml:pos>
-       <gml:pos>3930580.708999115 777022.512001587 363.751</gml:pos>
-       <gml:pos>3930661.3269991456 776858.001 363.751</gml:pos>
+       <gml:pos>3930661.3269991456 776858.001 365.283</gml:pos>
+       <gml:pos>3930710.117999512 776929.5309987793 365.283</gml:pos>
+       <gml:pos>3930580.708999115 777022.512001587 365.283</gml:pos>
+       <gml:pos>3930661.3269991456 776858.001 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930530.756 776921.0670018921 363.751</gml:pos>
-       <gml:pos>3930661.3269991456 776858.001 363.751</gml:pos>
-       <gml:pos>3930580.708999115 777022.512001587 363.751</gml:pos>
-       <gml:pos>3930530.756 776921.0670018921 363.751</gml:pos>
+       <gml:pos>3930530.756 776921.0670018921 365.283</gml:pos>
+       <gml:pos>3930661.3269991456 776858.001 365.283</gml:pos>
+       <gml:pos>3930580.708999115 777022.512001587 365.283</gml:pos>
+       <gml:pos>3930530.756 776921.0670018921 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930710.117996582 776929.531 363.751</gml:pos>
-       <gml:pos>3930774.1959995115 776983.0189989624 363.751</gml:pos>
-       <gml:pos>3930665.922996887 777101.9419954834 363.751</gml:pos>
-       <gml:pos>3930710.117996582 776929.531 363.751</gml:pos>
+       <gml:pos>3930710.117996582 776929.531 365.283</gml:pos>
+       <gml:pos>3930774.1959995115 776983.0189989624 365.283</gml:pos>
+       <gml:pos>3930665.922996887 777101.9419954834 365.283</gml:pos>
+       <gml:pos>3930710.117996582 776929.531 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930580.709 777022.5120028076 363.751</gml:pos>
-       <gml:pos>3930710.117996582 776929.531 363.751</gml:pos>
-       <gml:pos>3930665.922996887 777101.9419954834 363.751</gml:pos>
-       <gml:pos>3930580.709 777022.5120028076 363.751</gml:pos>
+       <gml:pos>3930580.709 777022.5120028076 365.283</gml:pos>
+       <gml:pos>3930710.117996582 776929.531 365.283</gml:pos>
+       <gml:pos>3930665.922996887 777101.9419954834 365.283</gml:pos>
+       <gml:pos>3930580.709 777022.5120028076 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930774.1960026245 776983.019 363.751</gml:pos>
-       <gml:pos>3930825.0160023193 777018.6509999695 363.751</gml:pos>
-       <gml:pos>3930778.008998535 777169.8920010986 363.751</gml:pos>
-       <gml:pos>3930774.1960026245 776983.019 363.751</gml:pos>
+       <gml:pos>3930774.1960026245 776983.019 365.283</gml:pos>
+       <gml:pos>3930825.0160023193 777018.6509999695 365.283</gml:pos>
+       <gml:pos>3930778.008998535 777169.8920010986 365.283</gml:pos>
+       <gml:pos>3930774.1960026245 776983.019 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930665.923 777101.941996521 363.751</gml:pos>
-       <gml:pos>3930774.1960026245 776983.019 363.751</gml:pos>
-       <gml:pos>3930778.008998535 777169.8920010986 363.751</gml:pos>
-       <gml:pos>3930665.923 777101.941996521 363.751</gml:pos>
+       <gml:pos>3930665.923 777101.941996521 365.283</gml:pos>
+       <gml:pos>3930774.1960026245 776983.019 365.283</gml:pos>
+       <gml:pos>3930778.008998535 777169.8920010986 365.283</gml:pos>
+       <gml:pos>3930665.923 777101.941996521 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930825.0159999696 777018.651 363.751</gml:pos>
-       <gml:pos>3930930.2609989014 777068.623000122 363.751</gml:pos>
-       <gml:pos>3930855.5770007935 777201.3480062255 363.751</gml:pos>
-       <gml:pos>3930825.0159999696 777018.651 363.751</gml:pos>
+       <gml:pos>3930825.0159999696 777018.651 365.283</gml:pos>
+       <gml:pos>3930930.2609989014 777068.623000122 365.283</gml:pos>
+       <gml:pos>3930855.5770007935 777201.3480062255 365.283</gml:pos>
+       <gml:pos>3930825.0159999696 777018.651 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930778.009 777169.8919973144 363.751</gml:pos>
-       <gml:pos>3930825.0159999696 777018.651 363.751</gml:pos>
-       <gml:pos>3930855.5770007935 777201.3480062255 363.751</gml:pos>
-       <gml:pos>3930778.009 777169.8919973144 363.751</gml:pos>
+       <gml:pos>3930778.009 777169.8919973144 365.283</gml:pos>
+       <gml:pos>3930825.0159999696 777018.651 365.283</gml:pos>
+       <gml:pos>3930855.5770007935 777201.3480062255 365.283</gml:pos>
+       <gml:pos>3930778.009 777169.8919973144 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930930.260998108 777068.623 363.751</gml:pos>
-       <gml:pos>3931017.127994873 777113.3450001221 363.75700000005213</gml:pos>
-       <gml:pos>3930946.2209971924 777248.7080067139 363.75700000005213</gml:pos>
-       <gml:pos>3930930.260998108 777068.623 363.751</gml:pos>
+       <gml:pos>3930930.260998108 777068.623 365.283</gml:pos>
+       <gml:pos>3931017.127994873 777113.3450001221 365.283</gml:pos>
+       <gml:pos>3930946.2209971924 777248.7080067139 365.283</gml:pos>
+       <gml:pos>3930930.260998108 777068.623 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930855.577 777201.3480061035 363.751</gml:pos>
-       <gml:pos>3930930.260998108 777068.623 363.751</gml:pos>
-       <gml:pos>3930946.2209971924 777248.7080067139 363.75700000005213</gml:pos>
-       <gml:pos>3930855.577 777201.3480061035 363.751</gml:pos>
+       <gml:pos>3930855.577 777201.3480061035 365.283</gml:pos>
+       <gml:pos>3930930.260998108 777068.623 365.283</gml:pos>
+       <gml:pos>3930946.2209971924 777248.7080067139 365.283</gml:pos>
+       <gml:pos>3930855.577 777201.3480061035 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931017.1279976806 777113.345 363.757</gml:pos>
-       <gml:pos>3931110.65799646 777174.4620005798 363.757</gml:pos>
-       <gml:pos>3931020.7290032348 777296.4519946289 363.757</gml:pos>
-       <gml:pos>3931017.1279976806 777113.345 363.757</gml:pos>
+       <gml:pos>3931017.1279976806 777113.345 365.283</gml:pos>
+       <gml:pos>3931110.65799646 777174.4620005798 365.283</gml:pos>
+       <gml:pos>3931020.7290032348 777296.4519946289 365.283</gml:pos>
+       <gml:pos>3931017.1279976806 777113.345 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3930946.221 777248.7080065918 363.757</gml:pos>
-       <gml:pos>3931017.1279976806 777113.345 363.757</gml:pos>
-       <gml:pos>3931020.7290032348 777296.4519946289 363.757</gml:pos>
-       <gml:pos>3930946.221 777248.7080065918 363.757</gml:pos>
+       <gml:pos>3930946.221 777248.7080065918 365.283</gml:pos>
+       <gml:pos>3931017.1279976806 777113.345 365.283</gml:pos>
+       <gml:pos>3931020.7290032348 777296.4519946289 365.283</gml:pos>
+       <gml:pos>3930946.221 777248.7080065918 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931110.6580008543 777174.462 363.757</gml:pos>
-       <gml:pos>3931195.326000122 777245.712 363.7779999997169</gml:pos>
-       <gml:pos>3931089.181003479 777354.0680028077 363.7779999997169</gml:pos>
-       <gml:pos>3931110.6580008543 777174.462 363.757</gml:pos>
+       <gml:pos>3931110.6580008543 777174.462 365.283</gml:pos>
+       <gml:pos>3931195.326000122 777245.712 365.34200000035764</gml:pos>
+       <gml:pos>3931089.181003479 777354.0680028077 365.34200000035764</gml:pos>
+       <gml:pos>3931110.6580008543 777174.462 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931020.729 777296.4519978638 363.757</gml:pos>
-       <gml:pos>3931110.6580008543 777174.462 363.757</gml:pos>
-       <gml:pos>3931089.181003479 777354.0680028077 363.7779999997169</gml:pos>
-       <gml:pos>3931020.729 777296.4519978638 363.757</gml:pos>
+       <gml:pos>3931020.729 777296.4519978638 365.283</gml:pos>
+       <gml:pos>3931110.6580008543 777174.462 365.283</gml:pos>
+       <gml:pos>3931089.181003479 777354.0680028077 365.34200000035764</gml:pos>
+       <gml:pos>3931020.729 777296.4519978638 365.283</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931195.325996643 777245.712 363.778</gml:pos>
-       <gml:pos>3931271.2420046385 777324.581003296 363.8190000011325</gml:pos>
-       <gml:pos>3931151.877998596 777420.6119938965 363.8190000011325</gml:pos>
-       <gml:pos>3931195.325996643 777245.712 363.778</gml:pos>
+       <gml:pos>3931195.325996643 777245.712 365.342</gml:pos>
+       <gml:pos>3931271.2420046385 777324.581003296 365.4809999985695</gml:pos>
+       <gml:pos>3931151.877998596 777420.6119938965 365.4809999985695</gml:pos>
+       <gml:pos>3931195.325996643 777245.712 365.342</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931089.181 777354.0680028077 363.778</gml:pos>
-       <gml:pos>3931195.325996643 777245.712 363.778</gml:pos>
-       <gml:pos>3931151.877998596 777420.6119938965 363.8190000011325</gml:pos>
-       <gml:pos>3931089.181 777354.0680028077 363.778</gml:pos>
+       <gml:pos>3931089.181 777354.0680028077 365.342</gml:pos>
+       <gml:pos>3931195.325996643 777245.712 365.342</gml:pos>
+       <gml:pos>3931151.877998596 777420.6119938965 365.4809999985695</gml:pos>
+       <gml:pos>3931089.181 777354.0680028077 365.342</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931271.241998413 777324.581 363.819</gml:pos>
-       <gml:pos>3931333.7959992676 777412.2649981079 363.84400000037255</gml:pos>
-       <gml:pos>3931205.6820008545 777496.5430056152 363.84400000037255</gml:pos>
-       <gml:pos>3931271.241998413 777324.581 363.819</gml:pos>
+       <gml:pos>3931271.241998413 777324.581 365.481</gml:pos>
+       <gml:pos>3931333.7959992676 777412.2649981079 365.481</gml:pos>
+       <gml:pos>3931205.6820008545 777496.5430056152 365.481</gml:pos>
+       <gml:pos>3931271.241998413 777324.581 365.481</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931151.878 777420.61199823 363.819</gml:pos>
-       <gml:pos>3931271.241998413 777324.581 363.819</gml:pos>
-       <gml:pos>3931205.6820008545 777496.5430056152 363.84400000037255</gml:pos>
-       <gml:pos>3931151.878 777420.61199823 363.819</gml:pos>
+       <gml:pos>3931151.878 777420.61199823 365.481</gml:pos>
+       <gml:pos>3931271.241998413 777324.581 365.481</gml:pos>
+       <gml:pos>3931205.6820008545 777496.5430056152 365.481</gml:pos>
+       <gml:pos>3931151.878 777420.61199823 365.481</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931333.795998413 777412.265 363.844</gml:pos>
-       <gml:pos>3931395.812004883 777500.70199646 363.8570000002682</gml:pos>
-       <gml:pos>3931251.81499942 777577.093994751 363.8570000002682</gml:pos>
-       <gml:pos>3931333.795998413 777412.265 363.844</gml:pos>
+       <gml:pos>3931333.795998413 777412.265 365.481</gml:pos>
+       <gml:pos>3931395.812004883 777500.70199646 365.481</gml:pos>
+       <gml:pos>3931251.81499942 777577.093994751 365.481</gml:pos>
+       <gml:pos>3931333.795998413 777412.265 365.481</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931205.682 777496.542999878 363.844</gml:pos>
-       <gml:pos>3931333.795998413 777412.265 363.844</gml:pos>
-       <gml:pos>3931251.81499942 777577.093994751 363.8570000002682</gml:pos>
-       <gml:pos>3931205.682 777496.542999878 363.844</gml:pos>
+       <gml:pos>3931205.682 777496.542999878 365.481</gml:pos>
+       <gml:pos>3931333.795998413 777412.265 365.481</gml:pos>
+       <gml:pos>3931251.81499942 777577.093994751 365.481</gml:pos>
+       <gml:pos>3931205.682 777496.542999878 365.481</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931395.8119940185 777500.702 363.857</gml:pos>
-       <gml:pos>3931440.046994629 777599.5200007935 363.87000000026825</gml:pos>
-       <gml:pos>3931286.731999817 777662.3369945069 363.87000000026825</gml:pos>
-       <gml:pos>3931395.8119940185 777500.702 363.857</gml:pos>
+       <gml:pos>3931395.8119940185 777500.702 365.481</gml:pos>
+       <gml:pos>3931440.046994629 777599.5200007935 365.481</gml:pos>
+       <gml:pos>3931286.731999817 777662.3369945069 365.481</gml:pos>
+       <gml:pos>3931395.8119940185 777500.702 365.481</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931251.815 777577.0939982911 363.857</gml:pos>
-       <gml:pos>3931395.8119940185 777500.702 363.857</gml:pos>
-       <gml:pos>3931286.731999817 777662.3369945069 363.87000000026825</gml:pos>
-       <gml:pos>3931251.815 777577.0939982911 363.857</gml:pos>
+       <gml:pos>3931251.815 777577.0939982911 365.481</gml:pos>
+       <gml:pos>3931395.8119940185 777500.702 365.481</gml:pos>
+       <gml:pos>3931286.731999817 777662.3369945069 365.481</gml:pos>
+       <gml:pos>3931251.815 777577.0939982911 365.481</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931440.0470024412 777599.52 363.87</gml:pos>
-       <gml:pos>3931458.1599937743 777712.7830004883 363.8830000002682</gml:pos>
-       <gml:pos>3931308.8450008696 777744.1780047608 363.8830000002682</gml:pos>
-       <gml:pos>3931440.0470024412 777599.52 363.87</gml:pos>
+       <gml:pos>3931440.0470024412 777599.52 365.481</gml:pos>
+       <gml:pos>3931458.1599937743 777712.7830004883 365.481</gml:pos>
+       <gml:pos>3931308.8450008696 777744.1780047608 365.481</gml:pos>
+       <gml:pos>3931440.0470024412 777599.52 365.481</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3931286.732 777662.3370013428 363.87</gml:pos>
-       <gml:pos>3931440.0470024412 777599.52 363.87</gml:pos>
-       <gml:pos>3931308.8450008696 777744.1780047608 363.8830000002682</gml:pos>
-       <gml:pos>3931286.732 777662.3370013428 363.87</gml:pos>
+       <gml:pos>3931286.732 777662.3370013428 365.481</gml:pos>
+       <gml:pos>3931440.0470024412 777599.52 365.481</gml:pos>
+       <gml:pos>3931308.8450008696 777744.1780047608 365.481</gml:pos>
+       <gml:pos>3931286.732 777662.3370013428 365.481</gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
@@ -2450,5 +2450,5 @@
  </triangulatedSurfaceMember>
  <unit>NN+m</unit>
  <parameter>h</parameter>
- <date>2010-09-06T11:10:45.944Z</date>
+ <date>2010-09-07T12:31:28.535Z</date>
 </TriangulatedSurfaceFeature>
