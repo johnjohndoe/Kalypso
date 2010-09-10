@@ -206,9 +206,9 @@ public class KMUpdateWizardPage extends WizardPage
 
     final String path = getDialogSettings().get( getResourceKey() );
     m_configPath = path;
-    if( path == null )
-      createNewKMConfiguration();
-    else
+    createNewKMConfiguration();
+
+    if( path != null )
     {
       text.setText( m_configPath );
       loadAs( path );
@@ -246,32 +246,32 @@ public class KMUpdateWizardPage extends WizardPage
   // FIXME: probably move into own wrapper class!
   protected void createNewKMConfiguration( )
   {
-    final IFeatureType kmFT = m_workspace.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
-    final Feature[] features = m_workspace.getFeatures( kmFT );
+    final KMChannel[] kmChannels = m_naModel.getKMChannels();
 
     final KalininMiljukovGroupType kmGroup = OF.createKalininMiljukovGroupType();
     final List<KalininMiljukovType> kalininMiljukovList = kmGroup.getKalininMiljukov();
 
-    for( final Feature feature : features )
+    for( final KMChannel channel : kmChannels )
     {
-      final KalininMiljukovType km = createKMForFeature( feature );
+      final KalininMiljukovType km = createKMForFeature( channel );
       kalininMiljukovList.add( km );
     }
     setKMGroup( kmGroup );
   }
 
-  protected KalininMiljukovType createKMForFeature( final Feature feature )
+  protected KalininMiljukovType createKMForFeature( final KMChannel feature )
   {
     final KalininMiljukovType km = OF.createKalininMiljukovType();
     km.setId( feature.getId() );
     km.setFilePattern( "*km" ); //$NON-NLS-1$
     km.setPath( "" ); //$NON-NLS-1$
 
-    final Double propStart = (Double) feature.getProperty( NaModelConstants.KM_CHANNEL_KMSTART );
-    km.setKmStart( propStart );
+    final Double kmStart = feature.getKMStart();
+    km.setKmStart( kmStart );
 
-    final Double propEnd = (Double) feature.getProperty( NaModelConstants.KM_CHANNEL_KMEND );
+    final Double propEnd = feature.getKMEnd();
     km.setKmEnd( propEnd );
+
     return km;
   }
 
@@ -323,22 +323,17 @@ public class KMUpdateWizardPage extends WizardPage
       return;
 
     final Object firstElement = selection.getFirstElement();
-    if( firstElement instanceof Feature )
+    if( firstElement instanceof KMChannel )
     {
-      final Feature feature = (Feature) firstElement;
-      final String fid = feature.getId();
-      KalininMiljukovType km = getForID( fid );
-      // FIXME: if km created here, it never goes into the km-group (and will never be saved)
-      if( km == null )
-      {
-        km = createKMForFeature( feature );
-        // FIXME: put km into km-group
-      }
+      final KMChannel channel = (KMChannel) firstElement;
+      final String fid = channel.getId();
+      final KalininMiljukovType km = getForID( fid );
 
-      m_kmViewer.setInput( km );
+      final String label = m_kmUpdateLabelProvider.getText( channel );
+      m_kmViewer.setInput( label, km );
     }
     else
-      m_kmViewer.setInput( null );
+      m_kmViewer.setInput( "", null );
   }
 
   void loadAs( final String path )
@@ -351,7 +346,7 @@ public class KMUpdateWizardPage extends WizardPage
       if( object instanceof JAXBElement )
       {
         final JAXBElement< ? > object2 = (JAXBElement< ? >) object;
-        setKMGroup( (KalininMiljukovGroupType) object2.getValue() );
+        applyKMGroup( (KalininMiljukovGroupType) object2.getValue() );
       }
     }
     catch( final Exception ex )
@@ -359,6 +354,30 @@ public class KMUpdateWizardPage extends WizardPage
       final String message = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.12", path ); //$NON-NLS-1$
       MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.11" ), message ); //$NON-NLS-1$
       createNewKMConfiguration();
+    }
+  }
+
+  private void applyKMGroup( final KalininMiljukovGroupType loadedGroup )
+  {
+    final List<KalininMiljukovType> kalininMiljukov = loadedGroup.getKalininMiljukov();
+    for( final KalininMiljukovType loadedKmType : kalininMiljukov )
+    {
+      final String id = loadedKmType.getId();
+      final KalininMiljukovType kmType = getForID( id );
+      if( kmType != null )
+      {
+        // clone into
+        kmType.setFilePattern( loadedKmType.getFilePattern() );
+        kmType.setPath( loadedKmType.getPath() );
+        kmType.setKmStart( loadedKmType.getKmStart() );
+        kmType.setKmEnd( loadedKmType.getKmEnd() );
+        kmType.setRiverName( loadedKmType.getRiverName() );
+
+        final List<Profile> profiles = kmType.getProfile();
+        profiles.clear();
+        final List<Profile> loadedProfiles = loadedKmType.getProfile();
+        profiles.addAll( loadedProfiles );
+      }
     }
   }
 
@@ -384,7 +403,7 @@ public class KMUpdateWizardPage extends WizardPage
     }
   }
 
-  // FIXME: mopve into own class!
+  // FIXME: move into own class!
   public boolean finish( )
   {
     // next line forces the dialog setting into the xml-binding objects
@@ -428,7 +447,7 @@ public class KMUpdateWizardPage extends WizardPage
 
     };
 
-    m_kmViewer.setInput( null );
+    m_kmViewer.setInput( "", null );
     getDialogSettings().put( getResourceKey(), m_configPath );
 
     if( saveAs( m_configPath ) )
@@ -477,7 +496,6 @@ public class KMUpdateWizardPage extends WizardPage
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     final String separator = "\n-------------------------------------\n"; //$NON-NLS-1$
@@ -524,8 +542,8 @@ public class KMUpdateWizardPage extends WizardPage
     final IFeatureType kmFT = m_workspace.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
     final IFeatureType kmPaFT = m_workspace.getFeatureType( KMParameter.FEATURE_KM_PARAMETER );
 
-    final IPropertyType kmKMStartPT = kmFT.getProperty( NaModelConstants.KM_CHANNEL_KMSTART );
-    final IPropertyType kmKMEndPT = kmFT.getProperty( NaModelConstants.KM_CHANNEL_KMEND );
+    final IPropertyType kmKMStartPT = kmFT.getProperty( KMChannel.PROP_KMSTART );
+    final IPropertyType kmKMEndPT = kmFT.getProperty( KMChannel.PROP_KMEND );
 
     final IPropertyType qrkPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_QRK_PROP );
     final IPropertyType rkvT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_RKV_PROP );

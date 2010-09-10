@@ -74,6 +74,8 @@ public class DirectoryFieldWidget implements ISelectionProvider
 
   private final List<ISelectionChangedListener> m_listeners = new ArrayList<ISelectionChangedListener>();
 
+  private final Button m_button;
+
   public DirectoryFieldWidget( final String label, final String toolTip, final boolean dirOnly, final Composite parent, final int sp1, final int sp2, final int sp3 )
   {
     m_dirOnly = dirOnly;
@@ -98,12 +100,12 @@ public class DirectoryFieldWidget implements ISelectionProvider
       }
     } );
 
-    final Button button = new Button( parent, SWT.NONE );
-    button.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.1" ) ); //$NON-NLS-1$
+    m_button = new Button( parent, SWT.NONE );
+    m_button.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.1" ) ); //$NON-NLS-1$
     final GridData data3 = new GridData();
     data3.horizontalSpan = sp3;
-    button.setLayoutData( data3 );
-    button.addSelectionListener( new SelectionAdapter()
+    m_button.setLayoutData( data3 );
+    m_button.addSelectionListener( new SelectionAdapter()
     {
       private String m_lastPath = null;
 
@@ -190,5 +192,11 @@ public class DirectoryFieldWidget implements ISelectionProvider
       if( firstElement instanceof String )
         m_text.setText( (String) firstElement ); // fire event ? TODO
     }
+  }
+
+  public void setEnabled( final boolean enabled )
+  {
+    m_button.setEnabled( enabled );
+    m_text.setEnabled( enabled );
   }
 }
