@@ -40,96 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.kmupdate;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.commons.xml.NS;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.model.hydrology.binding.model.KMChannel;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author doemming
  */
-public class KMUpdateLabelProvider implements ILabelProvider
+public class KMUpdateLabelProvider extends LabelProvider
 {
-  private final QName m_gmlName = new QName( NS.GML2, "name" ); //$NON-NLS-1$
-
-  /**
-   * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-   */
-  @Override
-  public Image getImage( final Object element )
-  {
-    // no images so far
-    return null;
-  }
-
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
   @Override
   public String getText( final Object element )
   {
-    final StringBuffer buffer = new StringBuffer();
+    if( !(element instanceof KMChannel) )
+      return element.toString();
 
-    if( element instanceof Feature )
-    {
-      final Feature feature = (Feature) element;
+    final KMChannel channel = (KMChannel) element;
+    final String label = FeatureHelper.getAnnotationValue( channel, IAnnotation.ANNO_LABEL );
 
-      final IFeatureType ft = feature.getFeatureType();
-      final IAnnotation annotation = ft.getAnnotation();
-      buffer.append( annotation.getLabel() );
-
-      final Object name = feature.getProperty( m_gmlName );
-      if( name != null && name instanceof String )
-        buffer.append( " \"" + name + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$
-      else
-        buffer.append( " \"\"" ); //$NON-NLS-1$
-      buffer.append( "   (ID=#" + feature.getId() + ")" ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-    return buffer.toString();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-   */
-  @Override
-  public void addListener( final ILabelProviderListener listener )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
-   */
-  @Override
-  public boolean isLabelProperty( final Object element, final String property )
-  {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-   */
-  @Override
-  public void removeListener( final ILabelProviderListener listener )
-  {
-    // TODO Auto-generated method stub
-
+    return String.format( "%s (ID=#%s)", label, channel.getId() );
   }
 }

@@ -68,10 +68,9 @@ import org.kalypso.ui.rrm.i18n.Messages;
  */
 public class DirectoryFieldWidget implements ISelectionProvider
 {
+  private final Text m_text;
 
-  final Text m_text;
-
-  final boolean m_dirOnly;
+  private final boolean m_dirOnly;
 
   private final List<ISelectionChangedListener> m_listeners = new ArrayList<ISelectionChangedListener>();
 
@@ -84,7 +83,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
     final GridData data = new GridData();
     data.horizontalSpan = sp1;
     label1.setLayoutData( data );
-    m_text = new Text( parent, SWT.NONE );
+    m_text = new Text( parent, SWT.BORDER );
     m_text.setToolTipText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.0" ) ); // TODO always show complete path as tooltip //$NON-NLS-1$
     final GridData data2 = new GridData( GridData.FILL_HORIZONTAL );
     data2.horizontalSpan = sp2;
@@ -118,9 +117,12 @@ public class DirectoryFieldWidget implements ISelectionProvider
             dialog.setFilterPath( m_lastPath );
           // dialog.setText( );
           final String filePath = dialog.open();
-          m_text.setText( filePath );
-          m_lastPath = filePath;
-          fireSelectionChangeEvent();
+          if( filePath != null )
+          {
+            m_text.setText( filePath );
+            m_lastPath = filePath;
+            fireSelectionChangeEvent();
+          }
         }
         else
         {

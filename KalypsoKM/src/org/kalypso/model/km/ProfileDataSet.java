@@ -19,7 +19,7 @@ public class ProfileDataSet
   private final SortedSet<ProfileData> m_profileSort = new TreeSet<ProfileData>( new Comparator<ProfileData>()
   {
     @Override
-    public int compare( ProfileData p1, ProfileData p2 )
+    public int compare( final ProfileData p1, final ProfileData p2 )
     {
       return Double.compare( p1.getPosition(), p2.getPosition() );
     }
@@ -38,7 +38,7 @@ public class ProfileDataSet
     m_endPosition = m_profileSort.last().getPosition();
   }
 
-  public ProfileDataSet( final File[] profileFiles, double min, double max )
+  public ProfileDataSet( final File[] profileFiles, final double min, final double max )
   {
     m_startPosition = min;
     m_endPosition = max;
@@ -55,11 +55,10 @@ public class ProfileDataSet
     return m_endPosition;
   }
 
-  private void init( final File[] profileFiles, boolean validatePosition )
+  private void init( final File[] profileFiles, final boolean validatePosition )
   {
-    for( int i = 0; i < profileFiles.length; i++ )
+    for( final File file : profileFiles )
     {
-      final File file = profileFiles[i];
       final ProfileData qwProfile;
       try
       {
@@ -72,9 +71,8 @@ public class ProfileDataSet
         }
         else
           m_profileSort.add( qwProfile );
-
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString("org.kalypso.model.km.ProfileDataSet.0") + file.getAbsolutePath() ); //$NON-NLS-1$
         e.printStackTrace();
@@ -83,7 +81,7 @@ public class ProfileDataSet
     final ProfileData[] profiles = m_profileSort.toArray( new ProfileData[m_profileSort.size()] );
     for( int i = 0; i < profiles.length; i++ )
     {
-      ProfileData data = profiles[i];
+      final ProfileData data = profiles[i];
       if( i > 0 )
         data.setPrev( profiles[i - 1] );
       if( i + 1 < profiles.length )
@@ -101,16 +99,15 @@ public class ProfileDataSet
     final ProfileData data = m_profileSort.first();
 
     // generate kmValues for each q;
-    int maxValues = data.getNumberKMValues();
+    final int maxValues = data.getNumberKMValues();
     final List<AbstractKMValue> kmMergedForIndexOverProfiles = new ArrayList<AbstractKMValue>();
     for( int index = 0; index < maxValues; index++ )
     {
       final ProfileData[] profiles = m_profileSort.toArray( new ProfileData[m_profileSort.size()] );
       // collect KMValues for one index (row) over all profiles
       final List<AbstractKMValue> kmForIndexOverProfiles = new ArrayList<AbstractKMValue>();
-      for( int counterProfile = 0; counterProfile < profiles.length; counterProfile++ )
+      for( final ProfileData profile : profiles )
       {
-        final ProfileData profile = profiles[counterProfile];
         kmForIndexOverProfiles.add( profile.getKMValue( index ) );
       }
       // merge collection to one kmvalue
@@ -124,29 +121,29 @@ public class ProfileDataSet
     {
 
       @Override
-      public int compare( AbstractKMValue km1, AbstractKMValue km2 )
+      public int compare( final AbstractKMValue km1, final AbstractKMValue km2 )
       {
         return Double.compare( km1.getQSum(), km2.getQSum() );
       }
 
     } );
-    for( int i = 0; i < kmMerged.length; i++ )
-      sort.add( kmMerged[i] );
+    for( final AbstractKMValue element : kmMerged )
+      sort.add( element );
 
     // Calculate for the number of discharges (at the moment always 5)
     final AbstractKMValue kmFirst = kmMerged[0];
     final AbstractKMValue kmLast = kmMerged[kmMerged.length - 1];
-    double qFirst = kmFirst.getQSum();
-    double qLast = kmLast.getQSum();
+    final double qFirst = kmFirst.getQSum();
+    final double qLast = kmLast.getQSum();
     final List<AbstractKMValue> result = new ArrayList<AbstractKMValue>();
 
     // Use the 5 discharges as follows: first,(first+middle)/2,middle,middle+last)/2,last
     result.add( getKM( sort, qFirst ) );
     m_length = kmMerged.length - 1;
-    int interval = m_length / 4;
+    final int interval = m_length / 4;
     for( int i = 1; i < 4; i++ )
     {
-      double q = kmMerged[i * interval].getQSum();
+      final double q = kmMerged[i * interval].getQSum();
       result.add( getKM( sort, q ) );
     }
     result.add( getKM( sort, qLast ) );
@@ -154,9 +151,8 @@ public class ProfileDataSet
     return result.toArray( new AbstractKMValue[result.size()] );
   }
 
-  private AbstractKMValue getKM( SortedSet<AbstractKMValue> sort, double q ) throws SameXValuesException
+  private AbstractKMValue getKM( final SortedSet<AbstractKMValue> sort, final double q ) throws SameXValuesException
   {
-
     final DummyKMValue value = new DummyKMValue( q );
     final SortedSet<AbstractKMValue> headSet = sort.headSet( value );
     if( headSet.isEmpty() )
@@ -165,17 +161,17 @@ public class ProfileDataSet
     }
     final AbstractKMValue km1 = headSet.last();
     final AbstractKMValue km2 = sort.tailSet( value ).first();
-    KMValueFromQinterpolation strandKMValue = new KMValueFromQinterpolation( q, km1, km2 );
+    final KMValueFromQinterpolation strandKMValue = new KMValueFromQinterpolation( q, km1, km2 );
     // TODO: check if this is right: Setting n to maximum 30 (Prof.Pasche)
     if( strandKMValue.getN() > 30d )
     {
-      double prod = strandKMValue.getN() * strandKMValue.getK();
+      final double prod = strandKMValue.getN() * strandKMValue.getK();
       strandKMValue.setN( 30d );
       strandKMValue.setK( prod / 30d );
     }
     if( strandKMValue.getNForeland() > 30d )
     {
-      double prod = strandKMValue.getNForeland() * strandKMValue.getKForeland();
+      final double prod = strandKMValue.getNForeland() * strandKMValue.getKForeland();
       strandKMValue.setNf( 30d );
       strandKMValue.setKf( prod / 30d );
     }
@@ -186,7 +182,7 @@ public class ProfileDataSet
   {
     private final double m_q;
 
-    public DummyKMValue( double q )
+    public DummyKMValue( final double q )
     {
       m_q = q;
     }

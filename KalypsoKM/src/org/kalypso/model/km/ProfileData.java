@@ -20,9 +20,9 @@ public class ProfileData
 
   private final File m_file;
 
-  private String m_comment;
+  private final String m_comment;
 
-  public ProfileData( final File file, double min, double max, double meter )
+  public ProfileData( final File file, final double min, final double max, final double meter )
   {
     m_file = file;
     m_meter = meter;
@@ -39,7 +39,7 @@ public class ProfileData
   /**
    * @return
    */
-  public double getRange( double minPos, double maxPos )
+  public double getRange( final double minPos, final double maxPos )
   {
     final double resultMax;
     final double resultMin;
@@ -61,10 +61,8 @@ public class ProfileData
   public String toString( )
   {
     final StringBuffer result = new StringBuffer( Messages.getString("org.kalypso.model.km.ProfileData.0") + m_meter + Messages.getString("org.kalypso.model.km.ProfileData.1") ); //$NON-NLS-1$ //$NON-NLS-2$
-    for( int i = 0; i < m_rows.length; i++ )
+    for( final Row row : m_rows )
     {
-      Row row = m_rows[i];
-
       result.append( row.toString() );
       result.append( "\n" ); //$NON-NLS-1$
 
@@ -77,17 +75,17 @@ public class ProfileData
     return m_meter;
   }
 
-  public void setPrev( ProfileData profile )
+  public void setPrev( final ProfileData profile )
   {
     m_prevProfile = profile;
   }
 
-  public void setNext( ProfileData profile )
+  public void setNext( final ProfileData profile )
   {
     m_nextProfile = profile;
   }
 
-  public void set( Row[] rowArray )
+  public void set( final Row[] rowArray )
   {
     m_rows = rowArray;
   }
@@ -97,14 +95,13 @@ public class ProfileData
     return m_rows.length - 1;
   }
 
-  public AbstractKMValue getKMValue( int index )
+  public AbstractKMValue getKMValue( final int index )
   {
     return new KMValue( getRange( m_min, m_max ), m_rows[index], m_rows[index + 1] );
   }
 
-  public boolean isValidForKalypso( StringBuffer buffer )
+  public boolean isValidForKalypso( final StringBuffer buffer )
   {
-
     if( m_rows.length < 6 ) // not enough values for calculation
     {
       buffer.append( m_meter + Messages.getString("org.kalypso.model.km.ProfileData.3") ); //$NON-NLS-1$
