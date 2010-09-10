@@ -6,10 +6,9 @@ import org.kalypso.model.km.i18n.Messages;
 
 public class KMValueFromQinterpolation extends AbstractKMValue
 {
-
   private final double m_q;
 
-  private double m_aplha;
+  private final double m_aplha;
 
   private double m_k;
 
@@ -19,13 +18,13 @@ public class KMValueFromQinterpolation extends AbstractKMValue
 
   private double m_nf;
 
-  private double m_qf;
+  private final double m_qf;
 
   private final AbstractKMValue m_km1;
 
 //  private boolean m_changed;
 
-  public KMValueFromQinterpolation( double q, AbstractKMValue km1, AbstractKMValue km2 ) throws SameXValuesException
+  public KMValueFromQinterpolation( final double q, final AbstractKMValue km1, final AbstractKMValue km2 ) throws SameXValuesException
   {
     m_km1 = km1;
     final LinearEquation alpha = new LinearEquation( km1.getQSum(), km1.getAlpha(), km2.getQSum(), km2.getAlpha() );
@@ -101,22 +100,22 @@ public class KMValueFromQinterpolation extends AbstractKMValue
     return m_qf;
   }
 
-  public void setK( double k )
+  public void setK( final double k )
   {
     m_k = k;
   }
 
-  public void setKf( double kf )
+  public void setKf( final double kf )
   {
     m_kf = kf;
   }
 
-  public void setN( double n )
+  public void setN( final double n )
   {
     m_n = n;
   }
 
-  public void setNf( double nf )
+  public void setNf( final double nf )
   {
     m_nf = nf;
   }

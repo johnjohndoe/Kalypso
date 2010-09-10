@@ -41,7 +41,6 @@
 package org.kalypso.ui.rrm.kmupdate;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,11 +51,10 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -65,6 +63,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -83,15 +82,15 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.km.AbstractKMValue;
 import org.kalypso.model.km.ProfileDataSet;
 import org.kalypso.model.km.ProfileFactory;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -106,38 +105,41 @@ import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.ObjectFactory;
  */
 public class KMUpdateWizardPage extends WizardPage
 {
+  // FIXME: move into helper class
+  public final static ObjectFactory OF = new ObjectFactory();
 
-  private Composite m_top = null;
+  public final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
-  KMViewer m_kmViewer = null;
+  private KMViewer m_kmViewer = null;
 
   private final Feature[] m_selection;
 
+  /**
+   * @deprecated Use m_namodel instead
+   */
+  @Deprecated
   private final CommandableWorkspace m_workspace;
 
   private CheckboxTableViewer m_channelListViewer;
 
   private KalininMiljukovGroupType m_kmGroup = null;
 
-  final ObjectFactory m_factory = new ObjectFactory();
+  private String m_configPath = null;
 
-  final JAXBContext m_context = JaxbUtilities.createQuiet( ObjectFactory.class );
+  private final KMUpdateLabelProvider m_kmUpdateLabelProvider = new KMUpdateLabelProvider();
 
-  final KalypsoUIRRMPlugin m_plugin = KalypsoUIRRMPlugin.getDefault();
-
-  String m_configPath = null;
-
-  private final KMUpdateLabelProvider m_KMUpdateLabelProvider = new KMUpdateLabelProvider();
+  private final NaModell m_naModel;
 
   public KMUpdateWizardPage( final CommandableWorkspace workspace, final IFeatureSelection selection )
   {
-    super( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.0" ),//  //$NON-NLS-1$
-        Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.1" ), null ); //$NON-NLS-1$
+    super( "kmPage", Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.0" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    setDescription( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.1" ) ); //$NON-NLS-1$
+
     m_workspace = workspace;
-    final EasyFeatureWrapper[] allFeatures = selection.getAllFeatures();
-    m_selection = new Feature[allFeatures.length];
-    for( int i = 0; i < allFeatures.length; i++ )
-      m_selection[i] = allFeatures[i].getFeature();
+    m_naModel = (NaModell) m_workspace.getRootFeature();
+
+    m_selection = FeatureSelectionHelper.getFeatures( selection );
   }
 
   /**
@@ -146,130 +148,108 @@ public class KMUpdateWizardPage extends WizardPage
   @Override
   public void createControl( final Composite parent )
   {
-    m_top = new Composite( parent, SWT.NONE );
-
-    final GridLayout gridLayout = new GridLayout( 2, true );
-    m_top.setLayout( gridLayout );
-    final GridData data0 = new GridData( GridData.FILL_BOTH );
-    data0.grabExcessHorizontalSpace = true;
-    data0.grabExcessVerticalSpace = true;
-    m_top.setLayoutData( data0 );
-
-    final Composite configGroup = new Composite( m_top, SWT.FILL );
-    final GridData data5 = new GridData( GridData.FILL_HORIZONTAL );
-    data5.horizontalSpan = 2;
-    data5.grabExcessHorizontalSpace = true;
-    configGroup.setLayoutData( data5 );
-
-    createGenerateArea( configGroup );
+    final Composite top = new Composite( parent, SWT.NONE );
+    top.setLayout( new GridLayout( 2, true ) );
 
     // column 1 tree-group
-    final Group treeGroup = new Group( m_top, SWT.FILL );
-    treeGroup.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.2" ) ); //$NON-NLS-1$
-    final GridData data2 = new GridData( GridData.FILL_BOTH );
-    data2.grabExcessHorizontalSpace = true;
-    data2.grabExcessVerticalSpace = true;
-    treeGroup.setLayoutData( data2 );
+    final Group treeGroup = createKMChannelListViewer( top );
+    treeGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     // column 2 KM detailed
-    final Group kmGroup = new Group( m_top, SWT.NONE );
+    final Group kmGroup = new Group( top, SWT.NONE );
     kmGroup.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.3" ) ); //$NON-NLS-1$
-    final GridData data4 = new GridData( GridData.FILL_BOTH );
-    data4.grabExcessHorizontalSpace = true;
-    data4.grabExcessVerticalSpace = true;
-    kmGroup.setLayoutData( data4 );
+    kmGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     m_kmViewer = new KMViewer( kmGroup );
 
-    treeGroup.setLayout( new GridLayout() );
-    createKMChannelListViewer( treeGroup );
+    final Composite configPanel = createGenerateArea( top );
+    configPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
 
-    if( m_selection.length > 0 )
-      m_channelListViewer.setSelection( new StructuredSelection( m_selection[0] ) );
-    m_channelListViewer.setCheckedElements( m_selection );
-
-    setControl( m_top );
+    setControl( top );
   }
 
-  private void createGenerateArea( final Composite parent )
+  private Composite createGenerateArea( final Composite parent )
   {
-    parent.setLayout( new GridLayout( 3, false ) );
+    final Composite configPanel = new Composite( parent, SWT.NONE );
+    configPanel.setLayout( new GridLayout( 4, false ) );
 
-    final Label label = new Label( parent, SWT.NONE );
+    final Label label = new Label( configPanel, SWT.NONE );
     label.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.4" ) ); //$NON-NLS-1$
-    label.setLayoutData( new GridData() );
 
-    final Text text = new Text( parent, SWT.READ_ONLY | SWT.BORDER );
-    final GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
-    gridData.grabExcessHorizontalSpace = true;
-    text.setLayoutData( gridData );
+    final Text text = new Text( configPanel, SWT.READ_ONLY | SWT.BORDER );
+    text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final Button loadButton = new Button( parent, SWT.PUSH );
+    final Button loadButton = new Button( configPanel, SWT.PUSH );
     loadButton.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.5" ) ); //$NON-NLS-1$
+    loadButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
-    final Label space = new Label( parent, SWT.NONE );
-    final GridData data = new GridData();
-    data.horizontalSpan = 2;
-    space.setLayoutData( data );
-
-    final Button saveButton = new Button( parent, SWT.PUSH );
+    final Button saveButton = new Button( configPanel, SWT.PUSH );
     saveButton.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.6" ) ); //$NON-NLS-1$
+    saveButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
     loadButton.addSelectionListener( new SelectionAdapter()
     {
-
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final FileDialog dialog = new FileDialog( parent.getShell(), SWT.OPEN );
-        dialog.setFilterExtensions( new String[] { "*.km_xml" } ); //$NON-NLS-1$
-        final String path = dialog.open();
-        if( path != null && path.length() > 0 )
-        {
-          m_configPath = path;
-          text.setText( path );
-          loadAs( path );
-        }
-        // else
-        // ;// TODO message
+        handleLoadConfig( text );
       }
-
     } );
 
     saveButton.addSelectionListener( new SelectionAdapter()
     {
-
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final FileDialog dialog = new FileDialog( parent.getShell(), SWT.SAVE );
-        dialog.setFilterExtensions( new String[] { "*.km_xml" } ); //$NON-NLS-1$
-        final String path = dialog.open();
-        if( path != null && path.length() > 0 )
-        {
-          m_configPath = path;
-          text.setText( path );
-          saveAs( path );
-        }
+        handleSaveconfig( text );
       }
     } );
 
-    final String path = m_plugin.getDialogSettings().get( getResourceKey() );
+    final String path = getDialogSettings().get( getResourceKey() );
     m_configPath = path;
     if( path == null )
-      createNewKMGroup();
+      createNewKMConfiguration();
     else
     {
-      text.setText( path );
+      text.setText( m_configPath );
       loadAs( path );
     }
+
+    return configPanel;
   }
 
-  protected void createNewKMGroup( )
+  protected void handleSaveconfig( final Text text )
+  {
+    final FileDialog dialog = new FileDialog( getShell(), SWT.SAVE );
+    dialog.setFilterExtensions( new String[] { "*.km_xml" } ); //$NON-NLS-1$
+    final String path = dialog.open();
+    if( path == null || path.length() <= 0 )
+      return;
+
+    text.setText( path );
+    m_configPath = path;
+    saveAs( path );
+  }
+
+  protected void handleLoadConfig( final Text text )
+  {
+    final FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
+    dialog.setFilterExtensions( new String[] { "*.km_xml" } ); //$NON-NLS-1$
+    final String path = dialog.open();
+    if( path == null || path.length() <= 0 )
+      return;
+
+    text.setText( path );
+    m_configPath = path;
+    loadAs( path );
+  }
+
+  // FIXME: probably move into own wrapper class!
+  protected void createNewKMConfiguration( )
   {
     final IFeatureType kmFT = m_workspace.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
     final Feature[] features = m_workspace.getFeatures( kmFT );
 
-    final KalininMiljukovGroupType kmGroup = m_factory.createKalininMiljukovGroupType();
+    final KalininMiljukovGroupType kmGroup = OF.createKalininMiljukovGroupType();
     final List<KalininMiljukovType> kalininMiljukovList = kmGroup.getKalininMiljukov();
 
     for( final Feature feature : features )
@@ -282,87 +262,90 @@ public class KMUpdateWizardPage extends WizardPage
 
   protected KalininMiljukovType createKMForFeature( final Feature feature )
   {
-    final KalininMiljukovType km =
-
-      m_factory.createKalininMiljukovType();
+    final KalininMiljukovType km = OF.createKalininMiljukovType();
     km.setId( feature.getId() );
     km.setFilePattern( "*km" ); //$NON-NLS-1$
     km.setPath( "" ); //$NON-NLS-1$
 
-    final Object propStart = feature.getProperty( NaModelConstants.KM_CHANNEL_KMSTART );
-    final Object propEnd = feature.getProperty( NaModelConstants.KM_CHANNEL_KMEND );
+    final Double propStart = (Double) feature.getProperty( NaModelConstants.KM_CHANNEL_KMSTART );
+    km.setKmStart( propStart );
 
-    if( propStart != null )
-      km.setKmStart( (Double) propStart );
-    if( propEnd != null )
-      km.setKmEnd( (Double) propEnd );
+    final Double propEnd = (Double) feature.getProperty( NaModelConstants.KM_CHANNEL_KMEND );
+    km.setKmEnd( propEnd );
     return km;
   }
 
   protected void setKMGroup( final KalininMiljukovGroupType kmGroup )
   {
     m_kmGroup = kmGroup;
-    if( m_channelListViewer != null )
-    {
-      m_channelListViewer.refresh();
-      m_channelListViewer.setSelection( new ISelection()
-      {
-        @Override
-        public boolean isEmpty( )
-        {
-          return true;
-        }
-      } );
-    }
+    if( m_channelListViewer == null )
+      return;
+
+    m_channelListViewer.refresh();
+    m_channelListViewer.setSelection( StructuredSelection.EMPTY );
   }
 
-  private void createKMChannelListViewer( final Composite parent )
+  private Group createKMChannelListViewer( final Composite parent )
   {
-    m_channelListViewer = CheckboxTableViewer.newCheckList( parent, SWT.H_SCROLL | SWT.V_SCROLL );
+    final Group treeGroup = new Group( parent, SWT.FILL );
+    treeGroup.setLayout( new FillLayout() );
+    treeGroup.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.2" ) ); //$NON-NLS-1$
 
-    m_channelListViewer.setContentProvider( new KMUpdateContentProvider() );
+    m_channelListViewer = CheckboxTableViewer.newCheckList( treeGroup, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
 
-    m_channelListViewer.setLabelProvider( m_KMUpdateLabelProvider );
+    final KMChannel[] kmChannels = m_naModel.getKMChannels();
 
-    // viewer.setSelection( m_selection ); TODO
-    m_channelListViewer.setInput( m_workspace );
-    final GridData data3 = new GridData( GridData.FILL_BOTH );
-    data3.grabExcessHorizontalSpace = true;
-    data3.grabExcessVerticalSpace = true;
+    m_channelListViewer.setContentProvider( new ArrayContentProvider() );
 
-    m_channelListViewer.getControl().setLayoutData( data3 );
+    m_channelListViewer.setLabelProvider( m_kmUpdateLabelProvider );
+    m_channelListViewer.setInput( kmChannels );
 
     m_channelListViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        handleChannelListChanged( selection );
+      }
+    } );
 
-        final Object firstElement = selection.getFirstElement();
-        if( firstElement instanceof Feature )
-        {
-          final Feature feature = (Feature) firstElement;
-          final String fid = feature.getId();
-          KalininMiljukovType km = getForID( fid );
-          if( km == null )
-            km = createKMForFeature( feature );
-          m_kmViewer.setInput( km );
-        }
-        else
-          m_kmViewer.setInput( null );
+    if( m_selection.length > 0 )
+      m_channelListViewer.setSelection( new StructuredSelection( m_selection[0] ) );
+    m_channelListViewer.setCheckedElements( m_selection );
+
+    return treeGroup;
+  }
+
+  protected void handleChannelListChanged( final IStructuredSelection selection )
+  {
+    if( m_kmViewer == null )
+      return;
+
+    final Object firstElement = selection.getFirstElement();
+    if( firstElement instanceof Feature )
+    {
+      final Feature feature = (Feature) firstElement;
+      final String fid = feature.getId();
+      KalininMiljukovType km = getForID( fid );
+      // FIXME: if km created here, it never goes into the km-group (and will never be saved)
+      if( km == null )
+      {
+        km = createKMForFeature( feature );
+        // FIXME: put km into km-group
       }
 
-    } );
+      m_kmViewer.setInput( km );
+    }
+    else
+      m_kmViewer.setInput( null );
   }
 
   void loadAs( final String path )
   {
-    final Unmarshaller unmarshaller;
     try
     {
-      unmarshaller = m_context.createUnmarshaller();
+      final Unmarshaller unmarshaller = JC.createUnmarshaller();
       final File file = new File( path );
       final Object object = unmarshaller.unmarshal( file );
       if( object instanceof JAXBElement )
@@ -375,7 +358,7 @@ public class KMUpdateWizardPage extends WizardPage
     {
       final String message = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.12", path ); //$NON-NLS-1$
       MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.11" ), message ); //$NON-NLS-1$
-      createNewKMGroup();
+      createNewKMConfiguration();
     }
   }
 
@@ -383,29 +366,25 @@ public class KMUpdateWizardPage extends WizardPage
   {
     if( path == null )
       return false;
-    FileWriter writer = null;
+
     try
     {
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( m_context );
       final File file = new File( path );
-      final JAXBElement<KalininMiljukovGroupType> element = m_factory.createKalininMiljukovGroup( m_kmGroup );
-      writer = new FileWriter( file );
-      marshaller.marshal( element, writer );
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
+      final JAXBElement<KalininMiljukovGroupType> element = OF.createKalininMiljukovGroup( m_kmGroup );
+      marshaller.marshal( element, file );
       return true;
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
+      final String msg = String.format( "Failed to write configuration file", e.getLocalizedMessage() );
+      MessageDialog.openError( getShell(), getWizard().getWindowTitle(), msg );
       return false;
     }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
-
   }
 
+  // FIXME: mopve into own class!
   public boolean finish( )
   {
     // next line forces the dialog setting into the xml-binding objects
@@ -450,7 +429,7 @@ public class KMUpdateWizardPage extends WizardPage
     };
 
     m_kmViewer.setInput( null );
-    m_plugin.getDialogSettings().put( getResourceKey(), m_configPath );
+    getDialogSettings().put( getResourceKey(), m_configPath );
 
     if( saveAs( m_configPath ) )
       monitorLogger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.14" ) + m_configPath + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -474,11 +453,11 @@ public class KMUpdateWizardPage extends WizardPage
         try
         {
           updateFeature( errorLogger, detailedLogger, feature, changes );
-          monitorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.20" ) + m_KMUpdateLabelProvider.getText( feature ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+          monitorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.20" ) + m_kmUpdateLabelProvider.getText( feature ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch( final Exception e )
         {
-          errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.22" ) + m_KMUpdateLabelProvider.getText( feature ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+          errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.22" ) + m_kmUpdateLabelProvider.getText( feature ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
           e.printStackTrace();
           susccess = false;
         }
@@ -521,6 +500,7 @@ public class KMUpdateWizardPage extends WizardPage
   {
     if( m_kmGroup == null )
       return null;
+
     final List<KalininMiljukovType> kalininMiljukov = m_kmGroup.getKalininMiljukov();
     for( final Object element : kalininMiljukov )
     {
@@ -533,7 +513,7 @@ public class KMUpdateWizardPage extends WizardPage
 
   private List<FeatureChange> updateFeature( final ILogger errorLogger, final ILogger detailedLogger, final KMChannel kmChannel, final List<FeatureChange> changeList ) throws Exception
   {
-    final String log = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.32" ) + m_KMUpdateLabelProvider.getText( kmChannel ) + ":"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String log = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.32" ) + m_kmUpdateLabelProvider.getText( kmChannel ) + ":"; //$NON-NLS-1$ //$NON-NLS-2$
     final List<FeatureChange> result;
     if( changeList == null )
       result = new ArrayList<FeatureChange>();

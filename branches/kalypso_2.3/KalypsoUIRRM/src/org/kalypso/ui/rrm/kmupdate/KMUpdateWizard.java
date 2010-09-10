@@ -44,27 +44,21 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
+
 /**
  * @author doemming
  */
 public class KMUpdateWizard extends Wizard
 {
+  private final KMUpdateWizardPage m_kmUpdatePage;
 
-  private KMUpdateWizardPage m_kmUpdatePage;
-
-  public KMUpdateWizard( CommandableWorkspace workspace, IFeatureSelection selection )
+  public KMUpdateWizard( final CommandableWorkspace workspace, final IFeatureSelection selection )
   {
     m_kmUpdatePage = new KMUpdateWizardPage( workspace, selection );
-  }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
-  @Override
-  public void addPages( )
-  {
+    setWindowTitle( "KM Parameters" );
+
     addPage( m_kmUpdatePage );
-    //    super.addPages();
   }
 
   /**
@@ -82,6 +76,7 @@ public class KMUpdateWizard extends Wizard
   @Override
   public boolean canFinish( )
   {
+    // FIXME: no page should handle that itself
     return m_kmUpdatePage.isPageComplete();
   }
 }
