@@ -63,6 +63,10 @@ public class KMChannel extends Channel
 
   public static final QName MEMBER_PARAMETER = new QName( NS_NAMODELL, "KMParameterMember" ); //$NON-NLS-1$
 
+  public static final QName PROP_KMSTART = new QName( NS_NAMODELL, "startkm" ); //$NON-NLS-1$
+
+  public static final QName PROP_KMEND = new QName( NS_NAMODELL, "endkm" ); //$NON-NLS-1$
+
   private IFeatureBindingCollection<KMParameter> m_parameters = null;
 
 
@@ -87,5 +91,15 @@ public class KMChannel extends Channel
   public double getFaktorRnf( )
   {
     return getDoubleProperty( PROP_FAKTOR_RNF, 1.0 );
+  }
+
+  public Double getKMStart( )
+  {
+    return getProperty( PROP_KMSTART, Double.class );
+  }
+
+  public Double getKMEnd( )
+  {
+    return getProperty( PROP_KMEND, Double.class );
   }
 }
