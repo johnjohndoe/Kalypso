@@ -53,6 +53,8 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovGroupType;
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.ObjectFactory;
@@ -62,6 +64,8 @@ import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.ObjectFactory;
  */
 public final class KMBindingUtils
 {
+  public final static String KM_NAMESPACE = "http://www.kalypso.wb.tu-harburg.de/rrm/kalininmiljukov";
+
   public final static ObjectFactory OF = new ObjectFactory();
 
   public final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
@@ -119,6 +123,24 @@ public final class KMBindingUtils
   public static void save( final KalininMiljukovGroupType kmGroup, final File file ) throws JAXBException
   {
     final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    marshaller.setProperty( Marshaller.JAXB_ENCODING, "UTF-8" );
+
+    final NamespacePrefixMapper prefixMapper = new NamespacePrefixMapper()
+    {
+      @Override
+      public String getPreferredPrefix( final String namespaceUri, final String suggestion, final boolean requirePrefix )
+      {
+        if( KM_NAMESPACE.equals( namespaceUri ) )
+          return "";
+
+        return null;
+      }
+    };
+
+
+    marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", prefixMapper );
+
     final JAXBElement<KalininMiljukovGroupType> element = OF.createKalininMiljukovGroup( kmGroup );
     marshaller.marshal( element, file );
   }
