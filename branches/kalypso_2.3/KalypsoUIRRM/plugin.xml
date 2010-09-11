@@ -233,7 +233,7 @@
  <extension
        point="org.eclipse.ui.menus">
     <menuContribution
-          locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+          locationURI="menu:org.eclipse.ui.main.menu?after=edit">
        <menu label="%org.kalypso.simulation.ui.menu.calcCase.label" mnemonic="%org.kalypso.simulation.ui.menu.calcCase.mnemonic">
           <separator name="calcCaseStart" visible="false"/>
           <command commandId="org.kalypso.ui.rrm.command.calccase.newCalcCase" style="push"/>
