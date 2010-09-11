@@ -8,7 +8,6 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends Plugin
 {
-
   /**
    * The plug-in ID.
    */
@@ -19,19 +18,12 @@ public class Activator extends Plugin
    */
   private static Activator plugin;
 
-  /**
-   * The constructor.
-   */
-  public Activator( )
-  {
-  }
-
   /*
    * (non-Javadoc)
    * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
 
@@ -43,7 +35,7 @@ public class Activator extends Plugin
    * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     plugin = null;
 
