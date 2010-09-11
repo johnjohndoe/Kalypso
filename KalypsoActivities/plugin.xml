@@ -78,6 +78,16 @@
              isEqualityPattern="false"
              pattern="org\.eclipse\.compare/compareWithPatch">
        </activityPatternBinding>
+ 	   <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            isEqualityPattern="true"
+            pattern="org.eclipse.platform/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.KalypsoModelProduct"
+            isEqualityPattern="true"
+            pattern="org.eclipse.ui.window.showKeyAssist">
+      </activityPatternBinding>       
        <activityPatternBinding
              activityId="org.kalypso.activities.activities.KalypsoModelProduct"
              isEqualityPattern="true"
