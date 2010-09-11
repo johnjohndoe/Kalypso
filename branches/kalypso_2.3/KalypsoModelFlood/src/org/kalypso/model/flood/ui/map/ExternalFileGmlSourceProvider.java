@@ -164,8 +164,10 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
 
     final boolean needsCrs = checkNeedsCrs( m_file );
     final String crs = needsCrs ? m_crsPanel.getSelectedCRS() : null;
-    if( needsCrs && crs == null )
-      return null;
+    // FIXME:commented out, due to racing condition in crs-combo, this will never be true when the page tries to figure
+    // out if the page is Complete.
+    // if( needsCrs && crs == null )
+    // return null;
 
     final String name = m_file.getName();
     final String description = ""; //$NON-NLS-1$
@@ -206,7 +208,9 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
   {
     m_file = file;
 
-    m_crsPanel.setVisible( checkNeedsCrs( file ) );
+    m_crsPanel.setVisible( file != null && checkNeedsCrs( file ) );
+
+    // TODO: should notifiy dialog that page is not complete
   }
 
 
