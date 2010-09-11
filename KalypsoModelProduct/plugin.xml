@@ -133,5 +133,20 @@
        </viewerActionBinding>
     </extension>
 
+   <extension point="org.eclipse.ui.menus">
+        <menuContribution
+              locationURI="toolbar:org.eclipse.ui.main.toolbar">
+           <toolbar
+                 id="org.kalypso.model.product.toolbar"
+                 label="Info">
+              <command
+                    commandId="org.eclipse.ui.help.aboutAction"
+                    icon="icons/about.gif"
+                    style="push">
+              </command>
+           </toolbar>
+        </menuContribution>
+    </extension>
+
 
 </plugin>
