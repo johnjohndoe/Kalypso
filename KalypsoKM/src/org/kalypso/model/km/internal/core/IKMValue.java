@@ -41,7 +41,7 @@
 package org.kalypso.model.km.internal.core;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public interface IKMValue
 {

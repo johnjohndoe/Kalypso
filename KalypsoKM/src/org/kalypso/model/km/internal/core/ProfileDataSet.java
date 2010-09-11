@@ -2,8 +2,6 @@ package org.kalypso.model.km.internal.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -141,11 +139,11 @@ public class ProfileDataSet
   private IKMValue getKMValue( final int index )
   {
     final ProfileData[] profiles = m_profileSort.toArray( new ProfileData[m_profileSort.size()] );
-    final List<IKMValue> kmValues = new ArrayList<IKMValue>();
-    for( final ProfileData profile : profiles )
-      kmValues.add( profile.getKMValue( index ) );
+    final IKMValue[] profileKMs = new IKMValue[profiles.length];
 
-    final IKMValue[] kmForIndexOverProfileArray = kmValues.toArray( new IKMValue[kmValues.size()] );
-    return new MulitKMValue( kmForIndexOverProfileArray );
+    for( int i = 0; i < profileKMs.length; i++ )
+      profileKMs[i] = profiles[i].getKMValue( index );
+
+    return new MultiKMValue( profileKMs );
   }
 }

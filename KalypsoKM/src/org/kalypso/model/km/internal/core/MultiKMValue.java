@@ -1,34 +1,42 @@
 package org.kalypso.model.km.internal.core;
 
-import org.kalypso.model.km.internal.i18n.Messages;
 
 /**
- * interpolates KM for some profiles at same discharge
+ * Aggregation of Kalinin-Miljukov parameters for one river strand.
  * 
  * @author doemming
  */
-class MulitKMValue extends AbstractKMValue
+class MultiKMValue extends AbstractKMValue
 {
+  /* Average (weighted by length) of all inner alphas's */
   private final double m_alpha;
 
+  /* Sum of all inner km-length */
   private final double m_length;
 
+  /* Average (weighted by length) of all inner k's */
   private final double m_k;
 
+  /* Average (weighted by length) of all inner kForeland's */
   private final double m_kForeland;
 
+  /* Sum of all inner n's */
   private final double m_n;
 
+  /* Sum of all inner nForeland's */
   private final double m_nForeland;
 
-  private final IKMValue m_innerKM;
+  /* q of first km */
+  private final double m_q;
 
-  /*
-   * Aggregation of Kalinin-Miljukov parameters for one river strand.
-   */
-  public MulitKMValue( final IKMValue[] values )
+  /* qForeland of first km */
+  private final double m_qForeland;
+
+  public MultiKMValue( final IKMValue[] values )
   {
-    m_innerKM = values[0];
+    m_q = values[0].getQ();
+    m_qForeland = values[0].getQForeland();
+
     double length = 0;
     double alpha = 0;
     double k = 0;
@@ -44,6 +52,7 @@ class MulitKMValue extends AbstractKMValue
       n += km.getN();
       nForeland += km.getNForeland();
     }
+
     // calculate mean values for the strand by the merged profiles
     m_alpha = alpha / length;
     m_length = length;
@@ -51,16 +60,6 @@ class MulitKMValue extends AbstractKMValue
     m_kForeland = kForeland / length;
     m_n = n;
     m_nForeland = nForeland;
-    // TODO: Put in logger, because of tooooo many values!!!
-    System.out.println( Messages.getString( "org.kalypso.model.km.MulitKMValue.0" ) + values.length + Messages.getString( "org.kalypso.model.km.MulitKMValue.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    for( int i = 0; i < values.length; i++ )
-    {
-      System.out.println( Messages.getString( "org.kalypso.model.km.MulitKMValue.2" ) + (i + 1) + ":" ); //$NON-NLS-1$ //$NON-NLS-2$
-      System.out.println( "-------------" ); //$NON-NLS-1$
-      final IKMValue value = values[i];
-      System.out.println( value );
-    }
-    System.out.println( Messages.getString( "org.kalypso.model.km.MulitKMValue.5" ) + this ); //$NON-NLS-1$
   }
 
   @Override
@@ -104,13 +103,13 @@ class MulitKMValue extends AbstractKMValue
   @Override
   public double getQ( )
   {
-    return m_innerKM.getQ();
+    return m_q;
   }
 
   @Override
   public double getQForeland( )
   {
-    return m_innerKM.getQForeland();
+    return m_qForeland;
   }
 
 }
