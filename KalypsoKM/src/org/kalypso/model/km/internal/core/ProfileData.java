@@ -8,10 +8,6 @@ public class ProfileData
 {
   private final double m_meter;
 
-  private ProfileData m_nextProfile;
-
-  private ProfileData m_prevProfile;
-
   private final double m_min;
 
   private final double m_max;
@@ -19,6 +15,8 @@ public class ProfileData
   private Row[] m_rows;
 
   private final File m_file;
+
+  private double m_range;
 
   public ProfileData( final File file, final double min, final double max, final double meter )
   {
@@ -33,20 +31,27 @@ public class ProfileData
     return m_file;
   }
 
-  public double getRange( final double minPos, final double maxPos )
+  // FIXME: instead of setting prev/next and later calculate range: directly set range from outside
+  public double calculateRange( final ProfileData prevProfile, final ProfileData nextProfile )
   {
     final double resultMax;
     final double resultMin;
 
-    if( m_nextProfile == null )
-      resultMax = maxPos;
+    if( nextProfile == null )
+      resultMax = m_max;
     else
-      resultMax = Math.min( getPosition() + (m_nextProfile.getPosition() - getPosition()) / 2d, maxPos );
-    if( m_prevProfile == null )
-      resultMin = minPos;
+      resultMax = Math.min( getPosition() + (nextProfile.getPosition() - getPosition()) / 2d, m_max );
+    if( prevProfile == null )
+      resultMin = m_min;
     else
-      resultMin = Math.max( getPosition() - (getPosition() - m_prevProfile.getPosition()) / 2d, minPos );
+      resultMin = Math.max( getPosition() - (getPosition() - prevProfile.getPosition()) / 2d, m_min );
+
     return resultMax - resultMin;
+  }
+
+  private double getRange( )
+  {
+    return m_range;
   }
 
   @Override
@@ -67,16 +72,6 @@ public class ProfileData
     return m_meter;
   }
 
-  public void setPrev( final ProfileData profile )
-  {
-    m_prevProfile = profile;
-  }
-
-  public void setNext( final ProfileData profile )
-  {
-    m_nextProfile = profile;
-  }
-
   public void set( final Row[] rowArray )
   {
     m_rows = rowArray;
@@ -89,7 +84,7 @@ public class ProfileData
 
   public IKMValue getKMValue( final int index )
   {
-    return new KMValue( getRange( m_min, m_max ), m_rows[index], m_rows[index + 1] );
+    return new KMValue( getRange(), m_rows[index], m_rows[index + 1] );
   }
 
   public String isValidForKalypso( )
@@ -121,6 +116,11 @@ public class ProfileData
     }
 
     return null;
+  }
+
+  public void setRange( final double range )
+  {
+    m_range = range;
   }
 
 }
