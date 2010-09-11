@@ -49,6 +49,13 @@ import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
  */
 public class KMViewerCheckStateProvider implements ICheckStateProvider
 {
+  private final KMViewer m_kmViewer;
+
+  public KMViewerCheckStateProvider( final KMViewer kmViewer )
+  {
+    m_kmViewer = kmViewer;
+  }
+
   /**
    * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
    */
@@ -67,6 +74,9 @@ public class KMViewerCheckStateProvider implements ICheckStateProvider
   @Override
   public boolean isGrayed( final Object element )
   {
+    if( element instanceof Profile )
+      return !m_kmViewer.isValid( (Profile) element );
+
     return false;
   }
 

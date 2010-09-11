@@ -20,15 +20,12 @@ public class ProfileData
 
   private final File m_file;
 
-  private final String m_comment;
-
   public ProfileData( final File file, final double min, final double max, final double meter )
   {
     m_file = file;
     m_meter = meter;
     m_min = min;
     m_max = max;
-    m_comment = null;
   }
 
   public File getFile( )
@@ -36,9 +33,6 @@ public class ProfileData
     return m_file;
   }
 
-  /**
-   * @return
-   */
   public double getRange( final double minPos, final double maxPos )
   {
     final double resultMax;
@@ -52,8 +46,6 @@ public class ProfileData
       resultMin = minPos;
     else
       resultMin = Math.max( getPosition() - (getPosition() - m_prevProfile.getPosition()) / 2d, minPos );
-    // if( resultMax - resultMin < 0 )
-    // System.out.println( " debug" );
     return resultMax - resultMin;
   }
 
@@ -100,47 +92,35 @@ public class ProfileData
     return new KMValue( getRange( m_min, m_max ), m_rows[index], m_rows[index + 1] );
   }
 
-  public boolean isValidForKalypso( final StringBuffer buffer )
+  public String isValidForKalypso( )
   {
     if( m_rows.length < 6 ) // not enough values for calculation
-    {
-      buffer.append( m_meter + Messages.getString( "org.kalypso.model.km.ProfileData.3" ) ); //$NON-NLS-1$
-      return false;
-    }
+      return m_meter + Messages.getString( "org.kalypso.model.km.ProfileData.3" ); //$NON-NLS-1$
+
     for( int i = 0; i < m_rows.length - 1; i++ )
     {
-      if( (m_rows[i].getQ() - m_rows[i + 1].getQ()) > 0.009 )// Änderung in der dritten Nachkommastelle O.K. -
-        // Rechenungenauigkeiten im Hydraulikmodell
+      if( (m_rows[i].getQ() - m_rows[i + 1].getQ()) > 0.009 )
       {
-        buffer.append( m_meter + Messages.getString( "org.kalypso.model.km.ProfileData.4" ) + (i + 2) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-        return false;
+        // Änderung in der dritten Nachkommastelle O.K. -
+        // Rechenungenauigkeiten im Hydraulikmodell
+        return Messages.getString( "org.kalypso.model.km.ProfileData.4" ) + (i + 2); //$NON-NLS-1$
       }
     }
 
     // TODO: Check if values above bordfull is necessary!
     if( m_rows[m_rows.length - 1].getAlpha() >= 1.0 ) // no values above bordfull
-    {
-      buffer.append( m_meter + Messages.getString( "org.kalypso.model.km.ProfileData.6" ) ); //$NON-NLS-1$
-      return false;
-    }
+      return Messages.getString( "org.kalypso.model.km.ProfileData.6" ); //$NON-NLS-1$
+
     for( int i = 0; i < m_rows.length - 1; i++ )
     {
       if( m_rows[i].getSlope() < 0.0 )
       {
-        buffer.append( m_meter + Messages.getString( "org.kalypso.model.km.ProfileData.7" ) + (i + 2) + "\n" //$NON-NLS-1$ //$NON-NLS-2$
-            + Messages.getString( "org.kalypso.model.km.ProfileData.9" ) ); //$NON-NLS-1$
-        return true;
+        return Messages.getString( "org.kalypso.model.km.ProfileData.7" ) + (i + 2) //$NON-NLS-1$ 
+        + Messages.getString( "org.kalypso.model.km.ProfileData.9" ); //$NON-NLS-1$
       }
     }
 
-    buffer.append( m_meter + Messages.getString( "org.kalypso.model.km.ProfileData.10" ) ); //$NON-NLS-1$
-    return true;
-
-  }
-
-  public String getComment( )
-  {
-    return m_comment;
+    return null;
   }
 
 }

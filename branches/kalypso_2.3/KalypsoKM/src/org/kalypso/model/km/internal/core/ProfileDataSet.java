@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -89,9 +88,9 @@ public class ProfileDataSet
     }
   }
 
-  public Iterator<ProfileData> getAllProfiles( )
+  public ProfileData[] getAllProfiles( )
   {
-    return m_profileSort.iterator();
+    return m_profileSort.toArray( new ProfileData[m_profileSort.size()] );
   }
 
   public IKMValue[] getKMValues( ) throws SameXValuesException
