@@ -3,8 +3,7 @@ package org.kalypso.model.km.internal.core;
 import java.util.Comparator;
 
 /**
- * @author belger
- *
+ * @author Gernot Belger
  */
 final class KMValueComparator implements Comparator<IKMValue>
 {

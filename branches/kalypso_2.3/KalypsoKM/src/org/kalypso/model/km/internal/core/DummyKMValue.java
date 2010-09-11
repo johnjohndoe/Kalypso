@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.core;
 
+/**
+ * Just represents a discharge value, used to sorting.
+ */
 class DummyKMValue extends AbstractKMValue
 {
   private final double m_q;

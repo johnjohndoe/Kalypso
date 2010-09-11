@@ -13,8 +13,16 @@ abstract class AbstractKMValue implements IKMValue
   @Override
   public final String toString( )
   {
-    return "\n Qges:        " + new Formatter().format( "%8.3f", getQSum() ) + "\t Laenge:       " + new Formatter().format( "%7.2f", getLength() ) + "\n Q(Fluss):    " + new Formatter().format( "%8.3f", getQ() ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-    + "\t k(Fluss):      " + new Formatter().format( "%8.4f", getK() ) + "\t    n(Fluss):    " + new Formatter().format( "%7.2f", getN() ) + "\n Q(Vorland): " + new Formatter().format( "%8.3f", getQForeland() ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-    + "\t k (Vorland):  " + new Formatter().format( "%8.4f", getKForeland() ) + "\t n(Vorland): " + new Formatter().format( "%7.2f", getNForeland() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final Formatter formatter = new Formatter();
+    formatter.format( "\n Qges:        %8.3f", getQSum() ); //$NON-NLS-1$
+    formatter.format( "\t Laenge:      %8.2f", getLength() ); //$NON-NLS-1$
+    formatter.format( "\n Q(Fluss):    %8.3f", getQ() ); //$NON-NLS-1$
+    formatter.format( "\t k(Fluss):    %8.4f", getK() ); //$NON-NLS-1$
+    formatter.format( "\t n(Fluss):    %8.2f", getN() ); //$NON-NLS-1$
+    formatter.format( "\n Q(Vorland):  %8.3f", getQForeland() ); //$NON-NLS-1$
+    formatter.format( "\t k (Vorland): %8.4f", getKForeland() ); //$NON-NLS-1$
+    formatter.format( "\t n(Vorland):  %8.2f", getNForeland() ); //$NON-NLS-1$
+
+    return formatter.toString();
   }
 }

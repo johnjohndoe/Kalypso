@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.kalypso.model.km.internal.i18n.Messages;
 
+// FIXME: cannot work because of the eclipse dependencies. If ever, we need to make an IApplication from this code.
 public class Main
 {
   public static void main( final String[] args )
