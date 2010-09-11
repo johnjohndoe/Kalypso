@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.ui.kmupdate;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.util.swt.StatusDialog;
 
 
 /**
@@ -57,6 +60,7 @@ public class KMUpdateWizard extends Wizard
     m_kmUpdatePage = new KMUpdateWizardPage( workspace, selection );
 
     setWindowTitle( "KM Parameters" );
+    setNeedsProgressMonitor( true );
 
     addPage( m_kmUpdatePage );
   }
@@ -67,7 +71,18 @@ public class KMUpdateWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    return m_kmUpdatePage.finish();
+    final boolean savePage = m_kmUpdatePage.finish();
+    if( !savePage )
+      return false;
+
+    final KMUpdateOperation kmUpdateOperation = m_kmUpdatePage.createOperation();
+
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, false, kmUpdateOperation );
+    if( result.matches( IStatus.CANCEL ) )
+      return false;
+
+    new StatusDialog( getShell(), result, getWindowTitle() ).open();
+    return result.isOK();
   }
 
   /**

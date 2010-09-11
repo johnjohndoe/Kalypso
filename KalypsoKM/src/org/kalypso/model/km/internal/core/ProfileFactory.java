@@ -28,6 +28,15 @@ public class ProfileFactory
 
   final static Pattern PATTERN_TABLE = Pattern.compile( _S + _I + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + ".*?" ); //$NON-NLS-1$
 
+  final static FileFilter KM_FILEFILTER = new FileFilter()
+  {
+    @Override
+    public boolean accept( final File file )
+    {
+      return file.getName().endsWith( "km" ); //$NON-NLS-1$
+    }
+  };
+
   public static ProfileDataSet createProfileSet( final File[] profileFiles, final double minKM, final double maxKM )
   {
     return new ProfileDataSet( profileFiles, 1000d * minKM, 1000d * maxKM );
@@ -35,30 +44,13 @@ public class ProfileFactory
 
   public static ProfileDataSet createProfileSet( final File profileDir, final double minKM, final double maxKM )
   {
-    final FileFilter filter = new FileFilter()
-    {
-      @Override
-      public boolean accept( final File file )
-      {
-        return file.getName().endsWith( "km" ); //$NON-NLS-1$
-      }
-    };
-    final File[] profileFiles = profileDir.listFiles( filter );
+    final File[] profileFiles = profileDir.listFiles( KM_FILEFILTER );
     return createProfileSet( profileFiles, minKM, maxKM );
   }
 
   public static ProfileDataSet createProfileSet( final File profileDir )
   {
-    final FileFilter filter = new FileFilter()
-    {
-      @Override
-      public boolean accept( final File file )
-      {
-        return file.getName().endsWith( "km" ); //$NON-NLS-1$
-      }
-    };
-
-    final File[] profileFiles = profileDir.listFiles( filter );
+    final File[] profileFiles = profileDir.listFiles( KM_FILEFILTER );
     return new ProfileDataSet( profileFiles );
   }
 

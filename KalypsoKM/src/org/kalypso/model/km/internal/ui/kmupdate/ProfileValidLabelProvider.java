@@ -50,6 +50,13 @@ import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
  */
 public class ProfileValidLabelProvider extends CellLabelProvider
 {
+  private final KMViewer m_kmViewer;
+
+  public ProfileValidLabelProvider( final KMViewer kmViewer )
+  {
+    m_kmViewer = kmViewer;
+  }
+
   /**
    * @see org.eclipse.jface.viewers.CellLabelProvider#update(org.eclipse.jface.viewers.ViewerCell)
    */
@@ -57,11 +64,7 @@ public class ProfileValidLabelProvider extends CellLabelProvider
   public void update( final ViewerCell cell )
   {
     final Profile profile = (Profile) cell.getElement();
-
-    final StringBuffer message = new StringBuffer();
-    // TODO: profile should remember validity
-// profile.isValidForKalypso( message );
-
+    final String message = m_kmViewer.getValidMessage( profile );
     cell.setText( message.toString() );
   }
 
