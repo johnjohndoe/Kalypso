@@ -201,10 +201,10 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
   }
 
   /**
-   * @see org.eclipse.jface.preference.PreferencePage#performApply()
+   * @see org.eclipse.jface.preference.PreferencePage#performOk()
    */
   @Override
-  protected void performApply( )
+  public boolean performOk( )
   {
     /* Get the preference store. */
     final IPreferenceStore store = getPreferenceStore();
@@ -221,16 +221,7 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
 
     /* Save the plugin preferences. */
     KalypsoRiskPlugin.getDefault().savePluginPreferences();
-    super.performApply();
-  }
 
-  /**
-   * @see org.eclipse.jface.preference.PreferencePage#performOk()
-   */
-  @Override
-  public boolean performOk( )
-  {
-    performApply();
     return super.performOk();
   }
 }

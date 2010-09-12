@@ -52,8 +52,11 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
+import org.eclipse.ui.internal.registry.ActionSetRegistry;
+import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import org.kalypso.afgui.perspective.Perspective;
 import org.osgi.framework.Bundle;
 
@@ -127,10 +130,16 @@ public class KalypsoModelWorkbenchAdvisor extends WorkbenchAdvisor
    * @see org.eclipse.ui.application.WorkbenchAdvisor#initialize(org.eclipse.ui.application.IWorkbenchConfigurer)
    */
   @Override
-  public void initialize( IWorkbenchConfigurer configurer )
+  public void initialize( final IWorkbenchConfigurer configurer )
   {
     configurer.setSaveAndRestore( true );
     declareWorkbenchImages();
+
+    // REMARK: disable all action sets initially;
+    final ActionSetRegistry reg = WorkbenchPlugin.getDefault().getActionSetRegistry();
+    final IActionSetDescriptor[] sets = reg.getActionSets();
+    for( final IActionSetDescriptor actionSet : sets )
+      actionSet.setInitiallyVisible( false );
   }
 
   /**
@@ -158,7 +167,7 @@ public class KalypsoModelWorkbenchAdvisor extends WorkbenchAdvisor
     final String PATH_OBJECT = ICONS_PATH + "obj16/"; // Model object //$NON-NLS-1$
     final String PATH_WIZBAN = ICONS_PATH + "wizban/"; // Wizard //$NON-NLS-1$
 
-    Bundle ideBundle = Platform.getBundle( IDEWorkbenchPlugin.IDE_WORKBENCH );
+    final Bundle ideBundle = Platform.getBundle( IDEWorkbenchPlugin.IDE_WORKBENCH );
     declareWorkbenchImage( ideBundle, IDEInternalWorkbenchImages.IMG_ETOOL_BUILD_EXEC, PATH_ETOOL + "build_exec.gif", false ); //$NON-NLS-1$
     declareWorkbenchImage( ideBundle, IDEInternalWorkbenchImages.IMG_ETOOL_BUILD_EXEC_HOVER, PATH_ETOOL + "build_exec.gif", false ); //$NON-NLS-1$
     declareWorkbenchImage( ideBundle, IDEInternalWorkbenchImages.IMG_ETOOL_BUILD_EXEC_DISABLED, PATH_DTOOL + "build_exec.gif", false ); //$NON-NLS-1$
@@ -207,10 +216,10 @@ public class KalypsoModelWorkbenchAdvisor extends WorkbenchAdvisor
    *          <code>true</code> if this is a shared image, and <code>false</code> if this is not a shared image
    * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#declareImage
    */
-  private void declareWorkbenchImage( Bundle ideBundle, String symbolicName, String path, boolean shared )
+  private void declareWorkbenchImage( final Bundle ideBundle, final String symbolicName, final String path, final boolean shared )
   {
-    URL url = FileLocator.find( ideBundle, new Path( path ), null );
-    ImageDescriptor desc = ImageDescriptor.createFromURL( url );
+    final URL url = FileLocator.find( ideBundle, new Path( path ), null );
+    final ImageDescriptor desc = ImageDescriptor.createFromURL( url );
     getWorkbenchConfigurer().declareImage( symbolicName, desc, shared );
   }
 }
