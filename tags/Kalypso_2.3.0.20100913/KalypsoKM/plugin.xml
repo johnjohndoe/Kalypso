@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="%KalypsoUIRRM.updateKMParameter.tooltip"
+            id="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters"
+            name="%KalypsoUIRRM.updateKMParameter.label">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters"
+            icon="icons/kmStrang.gif">
+      </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.kalypso.model.km.internal.ui.kmupdate.KMUpdateHandler"
+            commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters">
+         <enabledWhen>
+            <and>
+               <systemTest
+                     property="org.kalypso.rrrm.km.updateAction"
+                     value="isActive">
+               </systemTest>
+               <with
+                     variable="selection">
+                  <iterate ifEmpty="false">
+	                  <test
+	                        property="org.kalypso.core.qname"
+	                        value="{http://www.tuhh.de/kalypsoNA}KMChannel">
+	                  </test>
+                  </iterate>
+               </with>
+            </and>
+         </enabledWhen>
+      </handler>
+   </extension>
+   
+<extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+      <command
+            commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters"
+            style="push">
+         <visibleWhen checkEnabled="true"/>
+      </command>
+    </menuContribution>
+  </extension>   
+   
+</plugin>
