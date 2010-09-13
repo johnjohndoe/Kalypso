@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoNA">
+    <input id="MetaSteuerdaten" path=".calculation" relativeToCalcCase="true"/>
+    <input id="Modell" path="calcCase.gml" relativeToCalcCase="true"/>
+    <input id="Control" path="expertControl.gml" relativeToCalcCase="true"/>
+	<input id="Hydrotop" path="calcHydrotop.gml" relativeToCalcCase="true"/>
+	<input id="Parameter" path="calcParameter.gml" relativeToCalcCase="true"/>
+
+    <input id="SceConf" path=".sce.xml" relativeToCalcCase="true"/>
+
+	<!-- Zeitreihen als Verzeichnisse -->
+    <input id="NiederschlagDir" path="Precipitation" relativeToCalcCase="true"/>
+    <input id="KlimaDir" path="Climate" relativeToCalcCase="true"/>
+        <input id="ZuflussDir" path="Tributary" relativeToCalcCase="true"/>
+    <input id="PegelDir" path="Gauge" relativeToCalcCase="true"/>
+    <input id="ErgebnisDir" path="Results" relativeToCalcCase="true"/>
+    <input id="LZSIM_IN" path="InitialValues" relativeToCalcCase="true"/>   
+
+	<output id="OUT_ZML" path="Results" relativeToCalcCase="true"/>
+
+	<output id="LOG_INFO" path="/Results/Logs/CalcInfo.txt" relativeToCalcCase="true"/>
+	<output id="LOG_EXE_STDOUT" path="/Results/Logs/InputExe.txt" relativeToCalcCase="true"/>
+	<output id="LOG_EXE_ERROUT" path="/Results/Logs/ErrorExe.txt" relativeToCalcCase="true"/>
+	<output id="LOG_OUTRES" path="/Results/Logs/output.res" relativeToCalcCase="true"/>
+	<output id="LOG_OUTERR" path="/Results/Logs/output.err" relativeToCalcCase="true"/>
+
+</modeldata>
+
