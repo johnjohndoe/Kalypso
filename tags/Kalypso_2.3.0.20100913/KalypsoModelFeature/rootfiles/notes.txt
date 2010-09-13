@@ -1,0 +1,18 @@
+Notes:
+kalypso_2.2.0_RC2_build20100312
+===============================
+
+This is Version 2.2.0 Release Candidate 2 of Kalypso
+
+For further information, visit http://kalypso.sourceforge.net
+
+Unless otherwise indicated, all Content is provided to you under the terms and conditions of the GNU Lesser General Public License ("LGPL"). 
+A copy of the LGPL is provided with this Content and is also available at http://www.gnu.org/licenses/lgpl.html. 
+Please see:
+- lgpl-3.0.txt
+- http://kalypso.sourceforge.net/legal/kalypso_notice.html
+- http://kalypso.sourceforge.net/legal/libraries.html
+
+Changes:
+For Changes & Bugfixes please see
+http://sourceforge.net/apps/mediawiki/kalypso/index.php?title=Change_Log_Kalypso_2.2.0
