@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.kalypso.contribs.eclipseplatform.projectTemplate">
+      <project
+            category="org.kalypso.model.risk.demoProject"
+            data="/"
+            description="%risk.project.description"
+            icon="etc/RiskProjectLogo.gif"
+            label="%risk.project.label"
+            projectName="%risk.project.projectName">
+      </project>
+   </extension>
+</plugin>
