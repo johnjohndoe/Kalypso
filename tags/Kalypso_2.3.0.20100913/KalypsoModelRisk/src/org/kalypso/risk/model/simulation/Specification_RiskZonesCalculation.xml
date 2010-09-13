@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoRisk_RiskZonesCalculation">
+    <input id="CONTROL_MODEL" path="models/RasterizationControlModel.gml" relativeToCalcCase="true"/>
+	<input id="RASTER_MODEL" path="models/RasterDataModel.gml" relativeToCalcCase="true"/>
+    <input id="VECTOR_MODEL" path="models/VectorDataModel.gml" relativeToCalcCase="true"/>
+	<input id="INPUT_RASTER_FOLDER" path="models/raster/input" relativeToCalcCase="true"/>
+	<input id="OUTPUT_RASTER_FOLDER" path="models/raster/output" relativeToCalcCase="true"/>
+    <output id="CONTROL_MODEL" path="models/RasterizationControlModel.gml" relativeToCalcCase="true"/>
+	<output id="RASTER_MODEL" path="models/RasterDataModel.gml" relativeToCalcCase="true"/>
+    <output id="VECTOR_MODEL" path="models/VectorDataModel.gml" relativeToCalcCase="true"/>
+	<output id="OUTPUT_RASTER_FOLDER" path="models/raster/output" relativeToCalcCase="true"/>
+</modelspec>
