@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
+	
+	<Chart id="profilChart">
+		<Title>King-Profil</Title>
+		<Description>King-Profil</Description>
+		<Layers>
+			<Layer visible="true" id="kingLayer">
+				<Provider epid="org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider" >
+					<Parameters>
+						<Parameter name="featureKey" value="kingFeatureKey" />
+					</Parameters>	
+				</Provider>
+				<Title>Profil</Title>
+				<Description>Profil</Description>
+				<MapperRefs>
+					<DomainAxisRef ref="breite_Axis" />
+					<TargetAxisRef ref="hoehe_Axis" />
+				</MapperRefs>
+				<Styles>
+					<LineStyle role="line">
+						<Title></Title>
+						<Width>2</Width>
+						<LineColor>0000ff</LineColor>
+					</LineStyle>
+				</Styles>
+			</Layer>
+		</Layers>
+		<Mappers>
+			<Axis id="breite_Axis">
+				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear"></Provider>
+				<Label>Breite [m]</Label>
+				<Direction>POSITIVE</Direction>
+				<Position>BOTTOM</Position>
+				<NumberRange>
+					<MinValue>0</MinValue>
+					<MaxValue>100</MaxValue>
+				</NumberRange>
+				<RendererRef ref="NumberAxisRenderer"/>
+			</Axis>
+			<Axis id="hoehe_Axis">
+				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+				<Label>Höhe [m]</Label>
+				
+				<Direction>POSITIVE</Direction>
+				<Position>LEFT</Position>
+				<NumberRange>
+					<MinValue>5</MinValue>
+					<MaxValue>10</MaxValue>
+				</NumberRange>
+				<RendererRef ref="NumberAxisRenderer"/>
+			</Axis>
+			
+		</Mappers>
+		<Renderers>
+			<AxisRenderer id="NumberAxisRenderer">
+				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+					<Parameters>
+						<Parameter name="color" value="#ff0000"/>
+						<Parameter name="inset_tick " value="1"/>
+					</Parameters>
+				</Provider>
+			</AxisRenderer>
+		</Renderers>
+		
+	</Chart>
+	
+	
+	
+	
+</ChartConfiguration>
+
