@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+	<!-- org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:sld:default"
+		uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState.sld" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:sld:selected"
+		uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState_selected.sld" />
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState.gft" />
+
+	<!-- {org.kalypso.model.wspm.tuhh}ProfileMarker -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileMarker:sld:default"
+		uri="org.kalypso.model.wspm.tuhh.ProfileMarker.sld" />
+
+	<!-- org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:swtimage:default"
+		uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.gif" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:uiproperties:default"
+		uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.properties" />
+
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationWspmTuhhSteadyState:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.gft" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:StartCondition:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.StartCondition.gft" />
+
+	<!-- org.kalypso.model.wspm.tuhh:CalculationReibConstWspmTuhhSteadyState -->
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationReibConstWspmTuhhSteadyState:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.CalculationReibConstWspmTuhhSteadyState.gft" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationReibConstWspmTuhhSteadyState:swtimage:default"
+		uri="org.kalypso.model.wspm.tuhh.CalculationReibConstWspmTuhhSteadyState.gif" />
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationReibConstWspmTuhhSteadyState:uiproperties:default"
+		uri="org.kalypso.model.wspm.tuhh.CalculationReibConstWspmTuhhSteadyState.properties" />
+
+	<!--urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:swtimage:default"
+		uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.gif" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.gft" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:uiproperties:default"
+		uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState.properties" />
+
+	<!--urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:QIntervallResult -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:QIntervallResult:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.QIntervallResult.gft" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:QIntervallResult:uiproperties:default"
+		uri="org.kalypso.model.wspm.tuhh.QIntervallResult.properties" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:QIntervallResult:swtimage:default"
+		uri="org.kalypso.model.wspm.tuhh.QIntervallResult.gif" />
+
+	<!-- Diagramm Konfiguration for QIntervallResult -->
+	<catalog:system systemId="urn:kalypso:chart:configuration:QIntervallResult" uri="QIntervallResult.kod" />
+
+	<!-- SubReachDefinition -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:SubReachDefinition:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.SubReachDefinition.gft" />
+	<!-- RunOffInterval -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:RunOffInterval:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.RunOffInterval.gft" />
+	<!-- CalcPolynomes -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalcPolynomes:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.CalcPolynomes.gft" />
+
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:SpecialOptions:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.SpecialOptions.gft" />
+
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:WaterlevelParameter:featureview:default"
+		uri="org.kalypso.model.wspm.tuhh.WaterlevelParameter.gft" />
+
+</catalog:catalog>
+
