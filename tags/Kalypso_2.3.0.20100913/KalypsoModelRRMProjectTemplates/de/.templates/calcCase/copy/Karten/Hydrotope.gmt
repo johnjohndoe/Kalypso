@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns1="obstableview.template.kalypso.org">
+    <mapv:extent srs="EPSG:31467" bottom="5944134.846555632" top="5947028.510236543" right="3563038.249530063" left="3559991.0845026476"/>
+    <mapv:layers active="ID_0">
+        <mapv:layer visible="true" name="Knoten" featurePath="NodeCollectionMember/nodeMember" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:fts_node:rule:rule_Ort</templ:legendicon>
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Virtuelle Stränge" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Kalinin-Miljukov Stränge" featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="RHB Stränge" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Teilgebiete" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+		<mapv:layer visible="false" name="Landnutzung" featurePath="landuseMember" id="ID_5" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcLanduse.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="false" name="Pedologie" featurePath="soiltypeMember" id="ID_6" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcPedologie.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="false" name="Geologie" featurePath="geologieMember" id="ID_7" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcGeologie.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Hydrotope" featurePath="hydrotopMember" id="ID_8" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcHydrotop.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+    </mapv:layers>
+</mapv:gismapview>

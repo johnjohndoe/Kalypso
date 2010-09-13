@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featureview typename="NAControl" xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" style="0" tooltip="TopLevel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="featureview.template.kalypso.org
+D:\Kalypso\KalypsoCore\etc\schemas\template\featureview.xsd">
+	<gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.TOP" grabExcessHorizontalSpace="true"/>
+	<gridLayout numColumns="1" horizontalSpacing="10"/>
+	<label text="Steuerparameter eingeben" style="0"/>
+	<group style="0" text="Steuerparameter">
+		<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+		<gridLayout numColumns="2" horizontalSpacing="10"/>
+		<label property="startsimulation" style="0"/>
+		<text property="startsimulation" style="2048">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+		</text>
+		<label property="startforecast" style="0"/>
+		<text property="startforecast" style="2048">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+		</text>
+		<label property="hoursforecast" style="0"/>
+		<text property="hoursforecast" style="2048">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+		</text>
+		<label property="minutesTimestep" style="0"/>
+		<text property="minutesTimestep" style="2048">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+		</text>
+	</group>
+	<label text="Metadaten eingeben" style="0"/>
+	<group style="0" text="Metadaten">
+		<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+		<gridLayout numColumns="2" horizontalSpacing="10"/>
+		<label property="editor" style="0"/>
+		<text property="editor" style="2048">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+		</text>
+		<label property="description" style="0"/>
+		<text property="description" style="2048">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+		</text>
+		<label property="comment" style="0">
+			<gridData verticalAlignment="1" horizontalAlignment="1"/>
+		</label>
+		<text property="comment" style="2050">
+			<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+		</text>
+		<label property="calctime" style="0"/>
+		<text property="calctime" style="2048">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+		</text>
+	</group>
+</featureview>
