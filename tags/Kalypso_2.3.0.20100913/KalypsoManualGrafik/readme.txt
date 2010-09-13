@@ -1,0 +1,1 @@
+Benutzerhandbuch für das Grafikprogramm.
