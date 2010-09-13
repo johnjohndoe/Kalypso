@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
+	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+	<!--
+		<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:FloodExtrapolationPolygon:sld:default" uri="FloodExtrapolationPolygon.sld" />
+	-->
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:FloodExtrapolationPolygon:featureview:default"
+		uri="org.kalypso.model.flood.FloodExtrapolationPolygon.gft" />
+
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:FloodClipPolygon:featureview:default"
+		uri="org.kalypso.model.flood.FloodClipPolygon.gft" />
+
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:FloodVolumePolygon:featureview:default"
+		uri="org.kalypso.model.flood.FloodVolumePolygon.gft" />
+
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:TinReference:uiproperties:default"
+		uri="org.kalypso.model.flood.TinReference.properties" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:TinReference:swtimage:default"
+		uri="org.kalypso.model.flood.TinReference.gif" />
+
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:RunoffEvent:swtimage:default"
+		uri="org.kalypso.model.flood.RunoffEvent.gif" />
+
+
+</catalog:catalog>
+
