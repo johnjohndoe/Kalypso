@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	ANMERKUNG: das bookinfo wird nicht direkt in etwas anzeigbares umgesetzt, sondern
+	lediglich Daten heruasgenommen und an verschiedenen Stellen angezeigt. Deshalb bringt es z.B.
+	nichts, Bilder direkt unter bookinfo einzubauen. Diese müssen wie z.b. im subtitle geschehen in elemente
+	wandern, welche tatächlich angezeigt werden.
+-->
+
+<bookinfo>
+  <title>Kalypso WSPM - Anwenderhandbuch</title>
+
+  <subtitle>
+				<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="img/bookinfo/KalypsoWSPM.png"
+						format="PNG" scale="85"/>
+				</imageobject>
+			</mediaobject>
+
+  	&bookinfo.subtitle;
+  </subtitle>
+
+  <author>
+    <surname>TUHH - Institut für Wasserbau</surname>
+
+    <address>Denickestrasse 22 21073 Hamburg</address>
+  </author>
+
+  <!-- Als Version wird immer die korrespondierende Version des Programms verwendet -->
+  <pubdate>Version 2.0.0, Juni 2008</pubdate>
+
+  <!-- Bei den beiden folgenden Tags funktioniert das Profiling nicht
+  		deshalb müsste man hier eigene bookinfos pro deploy machen, wenns benötigt wird.
+  -->
+  <!--
+  <copyright>
+  	<year>2008</year>
+  	<holder><para>Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de</para>
+<para>Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+(Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/</para></holder>
+  </copyright>
+  <legalnotice>
+  <para>THIS SOFTWARE AND MANUAL ARE PROVIDED "AS IS" AND WITH-OUT WARRANTIES AS TO PERFORMANCE OR MERCHANTABILITY.
+THIS SOFTWARE IS PROVIDED WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES WHATSOEVER. BECAUSE OF THE DIVERSITY OF
+CONDITIONS AND HARDWARE UNDER WHICH THIS SOFTWARE MAY BE USED, NO WARRANTY OF FITNESS FOR A PARTICULAR PURPOSE
+IS OFFERED. THE USER IS ADVISED TO TEST THIS SOFTWARE THOROUGHLY BEFORE RELYING ON IT. THE USER MUST ASSUME
+THE ENTIRE RISK OF USING THIS SOFTWARE.</para>
+  </legalnotice>
+   -->
+</bookinfo>
