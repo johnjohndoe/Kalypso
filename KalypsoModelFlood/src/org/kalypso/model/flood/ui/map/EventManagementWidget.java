@@ -490,13 +490,13 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     for( final ITinReference tin : tins )
     {
       final BigDecimal min = tin.getMin();
-      if( min.compareTo( event_min ) == -1 )
+      if( min != null && min.compareTo( event_min ) == -1 )
       {
         event_min = min;
       }
 
       final BigDecimal max = tin.getMax();
-      if( max.compareTo( event_max ) == 1 )
+      if( max != null && max.compareTo( event_max ) == 1 )
       {
         event_max = max;
       }
