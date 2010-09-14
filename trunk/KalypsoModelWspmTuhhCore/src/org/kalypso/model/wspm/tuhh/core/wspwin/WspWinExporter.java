@@ -269,7 +269,8 @@ public class WspWinExporter
       pw.format( "# %s%n", SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT ).format( new Date() ) ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
-      pw.format( "PROJEKTPFAD=%s%n", zustFile.getParentFile().getParent() ); //$NON-NLS-1$
+      // TODO: normally instead of the projekt path, also a '.' should work.
+      pw.format( "PROJEKTPFAD=%s%n", zustFile.getParentFile().getParentFile().getAbsolutePath() ); //$NON-NLS-1$
       pw.format( "STRANGDATEI=%s%n", zustFile.getName() ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$

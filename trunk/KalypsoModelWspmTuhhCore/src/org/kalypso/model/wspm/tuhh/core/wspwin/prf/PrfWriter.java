@@ -400,7 +400,10 @@ public class PrfWriter implements IPrfConstants
       return new DataBlockHeader( "OK-BRUECKE" ); //$NON-NLS-1$
 
     if( key.startsWith( "KOM" ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "KOMMENTAR:" ); //$NON-NLS-1$
+    {
+      // REMARK: Important: Kommmentar MUST be written with lower case letters, else WspWin will not read it...
+      return new DataBlockHeader( "Kommentar:" ); //$NON-NLS-1$
+    }
 
     if( key.startsWith( "AX" ) ) //$NON-NLS-1$
       return new DataBlockHeader( "AX   m" ); //$NON-NLS-1$
@@ -574,9 +577,9 @@ public class PrfWriter implements IPrfConstants
       try
       {
         final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
+        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
+        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
+        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
         dbu.setSecondLine( secLine );
       }
       catch( final Exception e )
