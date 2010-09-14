@@ -18,7 +18,7 @@
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://dev.bjoernsen.de/updatesites/kalypso_2.3"/>
+      <update label="%updateSiteName" url="http://master.dl.sourceforge.net/project/kalypso/Kalypso/2.3/update-site"/>
    </url>
 
    <includes
@@ -33,12 +33,6 @@
 
    <plugin
          id="org.kalypso.KalypsoManualFlood"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.kalypso.KalypsoManualNA"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
