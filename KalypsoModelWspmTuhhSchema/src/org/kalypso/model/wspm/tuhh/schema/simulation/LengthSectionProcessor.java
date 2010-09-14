@@ -162,7 +162,8 @@ public class LengthSectionProcessor
 
       m_dataDir.mkdirs();
 
-      final String fileName = String.format( m_gmlFilePattern, runoff ); //$NON-NLS-1$
+      final String fileName = m_gmlFilePattern.replaceAll( PATTERN_RUNOFF, runoff.toString() );
+
       m_gmlFile = new File( m_dataDir, fileName );
       m_result = postProcess( m_gmlFile, runoff );
     }
