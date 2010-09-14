@@ -69,9 +69,7 @@ public class KalypsoModelApplication extends IDEApplicationCopy
   @Override
   protected WorkbenchAdvisor createWorkbenchAdvisor( final DelayedEventsProcessor processor )
   {
-    // FIXME: use processor
-
     final boolean isExpert = Boolean.getBoolean( SYSPROP_EXPERT_MODE );
-    return new KalypsoModelWorkbenchAdvisor( !isExpert );
+    return new KalypsoModelWorkbenchAdvisor( processor, !isExpert );
   }
 }
