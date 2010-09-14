@@ -1,11 +1,11 @@
-package org.kalypso.model.km;
+package org.kalypso.model.km.internal.core;
 
 /**
- * calculates KM values from 2 rows of 1D-simulation results (QW-table of one profile)
+ * Calculates KM values from 2 rows of 1D-simulation results (QW-table of one profile).
  * 
  * @author doemming
  */
-public class KMValue extends AbstractKMValue
+class KMValue extends AbstractKMValue
 {
   private final double m_k;
 
@@ -26,30 +26,39 @@ public class KMValue extends AbstractKMValue
   /*
    * Calculates the Kalinin-Miljukov parameters for one profile (one set per discharge)
    */
-  public KMValue( double length, Row row1, Row row2 )
-  {// Discharge River
+  public KMValue( final double length, final Row row1, final Row row2 )
+  {
+    // Discharge River
     final double qm = (row1.getQ() + row2.getQ()) / 2d;
+
     // Discharge Forelands
     final double qmForeland = (row1.getQforeland() + row2.getQforeland()) / 2d;
+
     // Delta Watertable
     final double dh = Math.abs( row2.getHNN() - row1.getHNN() );
+
     // Delta Area River
     final double dA = Math.abs( row2.getArea() - row1.getArea() );
+
     // Delta Area Forelands
     final double dAForeland = Math.abs( row2.getAreaForeland() - row1.getAreaForeland() );
+
     // Delta Dischrage River
     final double dq = Math.abs( row2.getQ() - row1.getQ() );
+
     // Delta Discharge Forelands
     final double dqForeland = Math.abs( row2.getQforeland() - row1.getQforeland() );
     // Mean Slope
-    // TODO: check: a problem occures, if the slope is negative (first solution: take the absulute values - bacause
+    // TODO: check: a problem occures, if the slope is negative (first solution: take the absoulute values - because
     // negative values
     // are very small)
     final double slope = (Math.abs( row1.getSlope() ) + Math.abs( row2.getSlope() )) / 2d;
 
     final double li = qm * dh / (slope * dq);
+
     // Retention coefficient River
     final double ki = (li * dA / dq) / 3600d;
+
     // Number of storages river
     final double n = length / li;
 
@@ -69,6 +78,7 @@ public class KMValue extends AbstractKMValue
       m_kForeland = kiForeland;
       m_nForeland = nForeland;
     }
+
     // Distribution factor
     m_alpha = 1 - qmForeland / (qm + qmForeland);
     m_length = length;
