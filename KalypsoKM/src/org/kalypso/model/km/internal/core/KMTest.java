@@ -1,9 +1,12 @@
-package org.kalypso.model.km;
+package org.kalypso.model.km.internal.core;
 
 import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.junit.Ignore;
+
+@Ignore
 public class KMTest extends TestCase
 {
   public void testKMCalculation( ) throws Exception

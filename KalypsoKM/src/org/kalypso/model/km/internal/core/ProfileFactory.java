@@ -1,4 +1,4 @@
-package org.kalypso.model.km;
+package org.kalypso.model.km.internal.core;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -28,50 +28,44 @@ public class ProfileFactory
 
   final static Pattern PATTERN_TABLE = Pattern.compile( _S + _I + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + ".*?" ); //$NON-NLS-1$
 
-  public static ProfileDataSet createProfileSet( final File[] profileFiles, double minKM, double maxKM )
+  final static FileFilter KM_FILEFILTER = new FileFilter()
+  {
+    @Override
+    public boolean accept( final File file )
+    {
+      return file.getName().endsWith( "km" ); //$NON-NLS-1$
+    }
+  };
+
+  public static ProfileDataSet createProfileSet( final File[] profileFiles, final double minKM, final double maxKM )
   {
     return new ProfileDataSet( profileFiles, 1000d * minKM, 1000d * maxKM );
-
   }
 
-  public static ProfileDataSet createProfileSet( final File profileDir, double minKM, double maxKM )
+  public static ProfileDataSet createProfileSet( final File profileDir, final double minKM, final double maxKM )
   {
-    final FileFilter filter = new FileFilter()
-    {
-      @Override
-      public boolean accept( final File file )
-      {
-        return file.getName().endsWith( "km" ); //$NON-NLS-1$
-      }
-    };
-    final File[] profileFiles = profileDir.listFiles( filter );
+    final File[] profileFiles = profileDir.listFiles( KM_FILEFILTER );
     return createProfileSet( profileFiles, minKM, maxKM );
   }
 
   public static ProfileDataSet createProfileSet( final File profileDir )
   {
-    final FileFilter filter = new FileFilter()
-    {
-      @Override
-      public boolean accept( final File file )
-      {
-        return file.getName().endsWith( "km" ); //$NON-NLS-1$
-      }
-    };
-    final File[] profileFiles = profileDir.listFiles( filter );
-
+    final File[] profileFiles = profileDir.listFiles( KM_FILEFILTER );
     return new ProfileDataSet( profileFiles );
   }
 
-  public static ProfileData createQWProfile( final File file, double min, double max ) throws IOException
+  public static ProfileData createQWProfile( final File file, final double min, final double max ) throws IOException
   {
     final FileReader fileReader = new FileReader( file );
     final LineNumberReader lineReader = new LineNumberReader( fileReader );
-    String line;
     ProfileData wqProfile = null;
     final List<Row> rows = new ArrayList<Row>();
-    while( (line = lineReader.readLine()) != null )
+    while( lineReader.ready() )
     {
+      final String line = lineReader.readLine();
+      if( line == null )
+        break;
+
       final Matcher kmMatcher = PATTERN_HEAD.matcher( line );
       if( kmMatcher.matches() )
       {

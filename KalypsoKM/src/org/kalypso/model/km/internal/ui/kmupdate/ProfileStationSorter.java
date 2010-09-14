@@ -38,55 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.km.i18n;
+package org.kalypso.model.km.internal.ui.kmupdate;
 
-import java.util.IllegalFormatException;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
+
+import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
 
 /**
- * @author kimwerner
- *
+ * @author Gernot Belger
  */
-public class Messages
+public class ProfileStationSorter extends ViewerSorter
 {
-  private static final String BUNDLE_NAME = "org.kalypso.model.km.i18n.messages"; //$NON-NLS-1$
-
-  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
-
-  private static final Object[] NO_ARGS = new Object[0];
-
-  private Messages( )
+  /**
+   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
+   */
+  @Override
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-  }
+    final Profile p1 = (Profile) e1;
+    final Profile p2 = (Profile) e2;
 
-/*
- * java reflections needs this method-signatur
- */
-  public static String getString( final String key )
-  {
-    return getString( key, NO_ARGS );
-  }
+    final Double station1 = p1.getPositionKM();
+    final Double station2 = p2.getPositionKM();
 
-  public static String getString( final String key, final Object... args )
-  {
-    String formatStr = ""; //$NON-NLS-1$
-    try
-    {
-      formatStr = RESOURCE_BUNDLE.getString( key );
-      if( args.length == 0 )
-        return formatStr;
-
-      return String.format( formatStr, args );
-    }
-    catch( final MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
-    catch( final IllegalFormatException e )
-    {
-      e.printStackTrace();
-      return '!' + formatStr + '!';
-    }
+    return Double.compare( station1, station2 );
   }
 }
