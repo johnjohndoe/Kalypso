@@ -2,26 +2,6 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension
-         id="KalypsoUIRRMPopupManu"
-         name="KalypsoUIRRMPopupManu"
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="false"
-            id="KalypsoUIRRM.kmContribution"
-            objectClass="org.kalypsodeegree.model.feature.Feature">
-         <filter
-               name="featureType"
-               value="http://www.tuhh.de/kalypsoNA#KMChannel"/>
-         <action
-               class="org.kalypso.ui.rrm.action.KMUpdateAction"
-               icon="icons/kmStrang.gif"
-               id="KalypsoUIRRM.updateKMParameter"
-               label="%KalypsoUIRRM.updateKMParameter.label"
-               style="push"
-               tooltip="%KalypsoUIRRM.updateKMParameter.tooltip"/>
-      </objectContribution>
-   </extension>
-   <extension
          point="org.kalypso.core.catalogContribution">
       <catalogContribution
             class="org.kalypso.ui.rrm.catalog.RRMFeatureTypeStyleCatalogContribution"
@@ -253,7 +233,7 @@
  <extension
        point="org.eclipse.ui.menus">
     <menuContribution
-          locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+          locationURI="menu:org.eclipse.ui.main.menu?after=edit">
        <menu label="%org.kalypso.simulation.ui.menu.calcCase.label" mnemonic="%org.kalypso.simulation.ui.menu.calcCase.mnemonic">
           <separator name="calcCaseStart" visible="false"/>
           <command commandId="org.kalypso.ui.rrm.command.calccase.newCalcCase" style="push"/>
