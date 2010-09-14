@@ -47,6 +47,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.Ignore;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.binding.Hydrotop;
@@ -76,6 +77,7 @@ import com.vividsolutions.jts.geom.Polygon;
 /**
  * @author Dejan Antanaskovic
  */
+@Ignore
 public class Test_Intersection extends TestCase
 {
   public void test( ) throws Exception

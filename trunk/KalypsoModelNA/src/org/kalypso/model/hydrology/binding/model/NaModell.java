@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -113,6 +116,19 @@ public class NaModell extends Feature_Impl
     }
 
     return m_channels;
+  }
+
+  public KMChannel[] getKMChannels( )
+  {
+    final List<KMChannel> result = new ArrayList<KMChannel>();
+    final IFeatureBindingCollection<Channel> channels = getChannels();
+    for( final Channel channel : channels )
+    {
+      if( channel instanceof KMChannel )
+        result.add( (KMChannel) channel );
+    }
+
+    return result.toArray( new KMChannel[result.size()] );
   }
 
   public synchronized IFeatureBindingCollection<Node> getNodes( )
