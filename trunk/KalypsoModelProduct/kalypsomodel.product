@@ -528,9 +528,9 @@ Library.
    </features>
 
    <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="3" />
-      <plugin id="org.kalypso.contribs.ogc31" autoStart="true" startLevel="0" />
    </configurations>
 
 </product>
