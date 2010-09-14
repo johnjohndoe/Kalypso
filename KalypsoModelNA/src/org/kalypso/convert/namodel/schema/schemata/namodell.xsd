@@ -287,7 +287,7 @@
             (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*)
             (igwzu,*)
           -->
-					<element name="aigw" type="double"/>
+					<element name="aigw" type="double" default="1.0"/>
 					<!--        Retentionskonstanten       -->
 					<element name="retvs" default="2.0">
 						<simpleType>
