@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.wprof;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -123,14 +124,41 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
     if( value instanceof String )
     {
+      // REMARK: backport from trunc; no need to merge...
       if( Number.class.isAssignableFrom( type ) )
-        return type.cast( new BigDecimal( (String) value ) );
+      {
+        final BigDecimal decimal = new BigDecimal( (String) value );
+        return toNumber( decimal, type );
+      }
     }
 
     /* Will throw an ClassCastException, that is intended */
     return type.cast( value );
   }
 
+  // REMARK: backport from trunc; no need to merge...
+  private <T> T toNumber( final BigDecimal in, final Class<T> outType )
+  {
+    if( Byte.class == outType )
+      return outType.cast( in.byteValue() );
+    if( Short.class == outType )
+      return outType.cast( in.shortValue() );
+    if( Integer.class == outType )
+      return outType.cast( in.intValue() );
+    if( Long.class == outType )
+      return outType.cast( in.longValue() );
+    if( Float.class == outType )
+      return outType.cast( in.floatValue() );
+    if( Double.class == outType )
+      return outType.cast( in.doubleValue() );
+
+    if( BigInteger.class == outType )
+      return outType.cast( in.toBigInteger() );
+
+    return outType.cast( in );
+  }
+  
+  
   @SuppressWarnings("deprecation")
   private IPropertyType getPropertyType( final String propertySpecificationName )
   {
