@@ -70,6 +70,15 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
     {
       layer = new LengthSectionBridgeLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
+    else if( IWspmConstants.LENGTH_SECTION_THEME_BUILDINGS.equals( targetComponentName ) )
+    {
+      layer = new LengthSectionBuildingTheme( //
+      new IChartLayer[] {
+          new LengthSectionBridgeLayer( getDataContainer( getParameterContainer(), IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK ), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ), //$NON-NLS-1$ //$NON-NLS-2$
+          new LengthSectionWeirLayer(  getDataContainer( getParameterContainer(), IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK ), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ), //$NON-NLS-1$ //$NON-NLS-2$
+          new LengthSectionCulvertLayer( getDataContainer( getParameterContainer(), IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ), //$NON-NLS-1$ //$NON-NLS-2$
+      } );
+    }
     else if( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK.equals( targetComponentName ) )
     {
       layer = new LengthSectionWeirLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$

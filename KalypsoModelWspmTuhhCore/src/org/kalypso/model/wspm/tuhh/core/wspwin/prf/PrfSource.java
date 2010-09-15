@@ -72,6 +72,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrap
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.wspwin.core.prf.IWspWinConstants;
 import org.kalypso.wspwin.core.prf.PrfReader;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
@@ -232,7 +233,7 @@ public class PrfSource implements IProfilSource
         rauheit = dbRau.getY()[0];
       switch( dbh.getSpecification( 8 ) )
       {
-        case 6:// Trapez
+        case IWspWinConstants.SPEZIALPROFIL_TRAPEZ:
         {
           final IProfileBuilding building = new BuildingTrapez( );
 
@@ -252,7 +253,7 @@ public class PrfSource implements IProfilSource
           p.addProfileObjects( new IProfileObject[] { building } );
           break;
         }
-        case 7:// Kreis
+        case IWspWinConstants.SPEZIALPROFIL_KREIS:
         {
           final IProfileBuilding building = new BuildingKreis( );
 
@@ -268,7 +269,7 @@ public class PrfSource implements IProfilSource
           p.addProfileObjects( new IProfileObject[] { building } );
           break;
         }
-        case 8:// Ei
+        case IWspWinConstants.SPEZIALPROFIL_EI:
         {
           final IProfileBuilding building = new BuildingEi();
 
@@ -286,7 +287,7 @@ public class PrfSource implements IProfilSource
           p.addProfileObjects( new IProfileObject[] { building } );
           break;
         }
-        case 9:// Maulprofil
+        case IWspWinConstants.SPEZIALPROFIL_MAUL:
         {
           final IProfileBuilding building = new BuildingMaul();
 

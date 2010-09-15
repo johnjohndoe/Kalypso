@@ -50,6 +50,7 @@ import org.apache.commons.lang.NotImplementedException;
 
 /**
  * @author Dirk Kuch
+ * @author kimwerner
  */
 public class SinuositaetDataBlock extends AbstractDataBlock implements IDataBlock
 {
