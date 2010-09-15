@@ -5,6 +5,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.IObservation;
@@ -14,6 +15,7 @@ import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
@@ -77,9 +79,17 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   }
 
   @Override
-  protected Rectangle getHoverRect( final Point screen, final int index )
+  public EditInfo getHover( Point pos )
   {
-    return getScreenRect( index );
+    if( !isVisible() )
+      return null;
+    for( int i = 0; i < m_data.getDomainValues().length; i++ )
+    {
+      final Rectangle hover = getScreenRect( i );
+      if( hover != null && hover.contains( pos ) )
+        return new EditInfo( this, null, null, i, getTooltip( i ), RectangleUtils.getCenterPoint( hover ) );
+    }
+    return null;
   }
 
   private final Rectangle getScreenRect( final int i )
@@ -90,10 +100,10 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final Double oK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, record );
     final Double sT = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, record );
     final Double bR = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, record );
-    if( bR.isNaN() || uK.isNaN() || oK.isNaN() || sT.isNaN() )
+    if( bR.isNaN() || uK.isNaN() || sT.isNaN() )// || oK.isNaN()
       return null;
     final Point pUK = getCoordinateMapper().numericToScreen( sT + bR / 2000, uK );
-    final Point pOK = getCoordinateMapper().numericToScreen( sT - bR / 2000, oK );
+    final Point pOK = getCoordinateMapper().numericToScreen( sT - bR / 2000, uK+3 );
     return new Rectangle( pOK.x - 3, pOK.y, Math.max( 6, pOK.x - pUK.x ), pUK.y - pOK.y );
   }
 }

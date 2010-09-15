@@ -16,6 +16,7 @@ import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
@@ -85,9 +86,17 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   }
 
   @Override
-  protected Rectangle getHoverRect( final Point screen, final int index )
+  public EditInfo getHover( Point pos )
   {
-    return getScreenRect( index );
+    if( !isVisible() )
+      return null;
+    for( int i = 0; i < m_data.getDomainValues().length; i++ )
+    {
+      final Rectangle hover = getScreenRect( i );
+      if( hover != null && hover.contains( pos ) )
+        return new EditInfo( this, null, null, i, getTooltip( i ), RectangleUtils.getCenterPoint( hover ) );
+    }
+    return null;
   }
 
   private final Rectangle getScreenRect( final int i )

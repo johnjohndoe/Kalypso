@@ -79,8 +79,8 @@ import org.kalypso.wspwin.core.prf.DataBlockWriter;
 import org.kalypso.wspwin.core.prf.IWspWinConstants;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
+import org.kalypso.wspwin.core.prf.datablock.DoubleDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
-import org.kalypso.wspwin.core.prf.datablock.SinuositaetDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
 
 /**
@@ -234,7 +234,7 @@ public class PrfWriter implements IPrfConstants
   private void writeComment( )
   {
     final String comment = m_profil.getComment();
-    final DataBlockHeader dbh = createHeader( "KOM" ); //$NON-NLS-1$
+    final DataBlockHeader dbh = createHeader(IWspmConstants.POINT_PROPERTY_COMMENT); //$NON-NLS-1$
     final TextDataBlock db = new TextDataBlock( dbh );
 
     final StringReader stringReader = new StringReader( comment );
@@ -324,46 +324,6 @@ public class PrfWriter implements IPrfConstants
 
   }
 
-// final IProfileBuilding[] buildings = m_profil.getProfileObjects( AbstractObservationBuilding.class );
-// if( istDurchlass( buildings ) )
-// {
-// // TODO: Building dont't know its roughnesstype, so we need a default
-//      final DataBlockHeader dbhr = createHeader( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ); //$NON-NLS-1$
-// dbr = new CoordDataBlock( dbhr );
-// final int size = m_profil.getPoints().length;
-// dbr.setCoords( new Double[size], new Double[size] );
-// final Double roughness = BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, buildings[0]
-// );
-// for( int i = 0; i < dbr.getY().length; i++ )
-// {
-// dbr.getY()[i] = roughness;
-// }
-// m_dbWriter.addDataBlock( dbr );
-// }
-
-// if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
-// {
-//      final DataBlockHeader dbhr = createHeader( "KS" ); //$NON-NLS-1$
-// dbr = new CoordDataBlock( dbhr );
-// writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ), dbr, 0.0 );
-// }
-// else if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) != null )
-// {
-//      final DataBlockHeader dbhr = createHeader( "KST" ); //$NON-NLS-1$
-// dbr = new CoordDataBlock( dbhr );
-// writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ), dbr, 0.0 );
-// }
-// else
-// {
-// // TODO: if (isDurchlass(buildings) {final DataBlockHeader dbhr = createHeader( building.getRauheitTyp()
-// // );}
-//
-//      final DataBlockHeader dbhr = createHeader( "KS" ); //$NON-NLS-1$
-// dbr = new CoordDataBlock( dbhr );
-// final int size = m_profil.getPoints().length;
-// dbr.setCoords( new Double[size], new Double[size] );
-// }
-
   private final DataBlockHeader createHeader( final String key )
   {
     if( IWspmTuhhConstants.POINT_PROPERTY_HOEHE.equals( key ) ) //$NON-NLS-1$
@@ -387,50 +347,53 @@ public class PrfWriter implements IPrfConstants
     if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS.equals( key ) )
       return new DataBlockHeader( "RAUHEIT", "k-s   m" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( key.startsWith( "REC" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "RECHTSWERT" ); //$NON-NLS-1$
 
-    if( key.startsWith( "HOC" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "HOCHWERT" ); //$NON-NLS-1$
 
-    if( key.startsWith( "UK-B" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "UK-BRUECKE" ); //$NON-NLS-1$
 
-    if( key.startsWith( "OK-B" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "OK-BRUECKE" ); //$NON-NLS-1$
 
-    if( key.startsWith( "KOM" ) ) //$NON-NLS-1$
+    if( IWspmConstants.POINT_PROPERTY_COMMENT.equals( key )) //$NON-NLS-1$
     {
       // REMARK: Important: Kommmentar MUST be written with lower case letters, else WspWin will not read it...
       return new DataBlockHeader( "Kommentar:" ); //$NON-NLS-1$
     }
 
-    if( key.startsWith( "AX" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "AX   m" ); //$NON-NLS-1$
 
-    if( key.startsWith( "AY" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "AY   m" ); //$NON-NLS-1$
 
-    if( key.startsWith( "DP" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "DP   m" ); //$NON-NLS-1$
 
-    if( key.startsWith( "EI" ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "EI" ); //$NON-NLS-1$
+    if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( key ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "EI", "", IWspWinConstants.SPEZIALPROFIL_EI ); //$NON-NLS-1$
 
-    if( key.startsWith( "KRE" ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "KREIS" ); //$NON-NLS-1$
+    if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( key ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "KREIS", "", IWspWinConstants.SPEZIALPROFIL_KREIS ); //$NON-NLS-1$
 
-    if( key.startsWith( "TRA" ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "TRAPEZ" ); //$NON-NLS-1$
+    if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( key ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "TRAPEZ", "", IWspWinConstants.SPEZIALPROFIL_TRAPEZ ); //$NON-NLS-1$
 
-    if( key.startsWith( "MAU" ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "MAULPROFIL" ); //$NON-NLS-1$
+    if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( key ) ) //$NON-NLS-1$
+      return new DataBlockHeader( "MAULPROFIL", "", IWspWinConstants.SPEZIALPROFIL_MAUL ); //$NON-NLS-1$
 
-    if( key.startsWith( "OK-W" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "OK-WEHR" ); //$NON-NLS-1$
+    if( ISinuositaetProfileObject.ID.equals( key ) )
 
+      return new DataBlockHeader( "SINOUSITAET", "[-]", IWspWinConstants.SPEZIALPROFIL_SINOUSITAET );//$NON-NLS-1$
     return new DataBlockHeader( key );
   }
+
 
   private void writeCoords( final IComponent prop, final CoordDataBlock db, final Double nullValue )
   {
@@ -468,12 +431,12 @@ public class PrfWriter implements IPrfConstants
 
   private void writeHochRechts( )
   {
-    final DataBlockHeader dbhh = createHeader( "HOC" ); //$NON-NLS-1$
+    final DataBlockHeader dbhh = createHeader( IWspmConstants.POINT_PROPERTY_HOCHWERT ); //$NON-NLS-1$
     final CoordDataBlock dbh = new CoordDataBlock( dbhh );
     writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ), dbh, null );
     m_dbWriter.addDataBlock( dbh );
 
-    final DataBlockHeader dbhr = createHeader( "REC" ); //$NON-NLS-1$
+    final DataBlockHeader dbhr = createHeader( IWspmConstants.POINT_PROPERTY_RECHTSWERT ); //$NON-NLS-1$
     final CoordDataBlock dbr = new CoordDataBlock( dbhr );
     writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ), dbr, null );
     m_dbWriter.addDataBlock( dbr );
@@ -561,25 +524,24 @@ public class PrfWriter implements IPrfConstants
 
   }
 
-  // FIXME: überall: use constants for the magic number defining the Spezialprofiltyp!
   private void writeBuilding( final IProfileBuilding building )
   {
     final String buildingType = building.getId();
     if( buildingType.equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) )
     {
-      final DataBlockHeader dbho = createHeader( "OK-B" ); //$NON-NLS-1$
+      final DataBlockHeader dbho = createHeader( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ); //$NON-NLS-1$
       final CoordDataBlock dbo = new CoordDataBlock( dbho );
       writeCoords( m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), dbo, null );
       m_dbWriter.addDataBlock( dbo );
-      final DataBlockHeader dbhu = createHeader( "UK-B" ); //$NON-NLS-1$
+      final DataBlockHeader dbhu = createHeader( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ); //$NON-NLS-1$
       final CoordDataBlock dbu = new CoordDataBlock( dbhu );
       writeCoords( m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), dbu, null );
       try
       {
         final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) ) //$NON-NLS-1$
-        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
-        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
-        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
         dbu.setSecondLine( secLine );
       }
       catch( final Exception e )
@@ -610,33 +572,33 @@ public class PrfWriter implements IPrfConstants
       }
       m_dbWriter.addDataBlock( dbw );
     }
-    else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_EI ) == 0 )
+    else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( buildingType ) )
     {
-      final DataBlockHeader dbhe = createHeader( "EI" ); //$NON-NLS-1$
-      final TextDataBlock dbe = new TextDataBlock( dbhe );
-      dbe.setThirdLine( "0  0  0  0  0  0  0  0  8" ); //$NON-NLS-1$
+      final DataBlockHeader dbhe = createHeader( IWspmTuhhConstants.BUILDING_TYP_EI );
+      final DoubleDataBlock dbe = new DoubleDataBlock( dbhe );
       try
       {
-        dbe.addLine( getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
-            + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
-            + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) );
+        dbe.setDoubles( new Double[] { (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
+            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ),
+            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
       }
+
       catch( final Exception e )
       {
         KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.37" ), e ) ); //$NON-NLS-1$
       }
       m_dbWriter.addDataBlock( dbe );
     }
-    else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_MAUL ) == 0 )
+    else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( buildingType ) )
     {
-      final DataBlockHeader dbhm = createHeader( "MAU" ); //$NON-NLS-1$
-      final TextDataBlock dbm = new TextDataBlock( dbhm );
-      dbm.setThirdLine( "0  0  0  0  0  0  0  0  9" ); //$NON-NLS-1$
+      final DataBlockHeader dbhm = createHeader( buildingType );
+      final DoubleDataBlock dbm = new DoubleDataBlock( dbhm );
+
       try
       {
-        dbm.addLine( getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
-            + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
-            + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) );
+        dbm.setDoubles( new Double[] { (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
+            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ),
+            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
       }
       catch( final Exception e )
       {
@@ -644,15 +606,16 @@ public class PrfWriter implements IPrfConstants
       }
       m_dbWriter.addDataBlock( dbm );
     }
-    else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_KREIS ) == 0 )
+    else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( buildingType ) )
     {
-      final DataBlockHeader dbhk = createHeader( "KRE" ); //$NON-NLS-1$
-      final TextDataBlock dbk = new TextDataBlock( dbhk );
-      dbk.setThirdLine( "0  0  0  0  0  0  0  0  7" ); //$NON-NLS-1$
+      final DataBlockHeader dbhk = createHeader( buildingType );
+      final DoubleDataBlock dbk = new DoubleDataBlock( dbhk );
+
       try
       {
-        dbk.addLine( getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
-            + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) );
+        dbk.setDoubles( new Double[] { (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ),
+            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ),
+            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
       }
       catch( final Exception e )
       {
@@ -661,16 +624,15 @@ public class PrfWriter implements IPrfConstants
       m_dbWriter.addDataBlock( dbk );
     }
 
-    else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) == 0 )
+    else if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( buildingType ) )
     {
-      final DataBlockHeader dbht = createHeader( "TRA" ); //$NON-NLS-1$
-      final TextDataBlock dbt = new TextDataBlock( dbht );
-      dbt.setThirdLine( "0  0  0  0  0  0  0  0  6" ); //$NON-NLS-1$
+      final DataBlockHeader dbht = createHeader( buildingType ); //$NON-NLS-1$
+      final DoubleDataBlock dbt = new DoubleDataBlock( dbht );
       try
       {
-        dbt.addLine( getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
-            + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
-            + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) );
+        dbt.setDoubles( new Double[] { (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ),
+            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ),
+            (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ), (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) } );
       }
       catch( final Exception e )
       {
@@ -687,41 +649,27 @@ public class PrfWriter implements IPrfConstants
     {
       final ISinuositaetProfileObject sinuosity = (ISinuositaetProfileObject) profileObject;
 
-      final DataBlockHeader header = createHeader( "SINUOSITAET" ); //$NON-NLS-1$
-      final SinuositaetDataBlock dataBlock = new SinuositaetDataBlock( header );
-
+      final DataBlockHeader header = createHeader( sinuosity.getId() ); //$NON-NLS-1$
+      final DoubleDataBlock dataBlock = new DoubleDataBlock( header );
       final SINUOSITAET_KENNUNG kennung = sinuosity.getKennung();
       final double sinus = sinuosity.getSinuositaet();
       final SINUOSITAET_GERINNE_ART gerinne = sinuosity.getGerinneArt();
       final double lf = sinuosity.getLf();
 
-      final String data = String.format( "%d %.3f %d %.3f", kennung.toInteger(), sinus, gerinne.toInteger(), lf );
-      dataBlock.setFirstLine( data );
+      dataBlock.setDoubles( new Double[] { new Double( kennung.toInteger() ), sinus, new Double( gerinne.toInteger() ), lf } );
 
       m_dbWriter.addDataBlock( dataBlock );
     }
 
   }
 
-  private String getDoubleStr( final Object o )
-  {
-    try
-    {
-      return Double.valueOf( o.toString() ).isNaN() ? "       0.0000" : String.format( Locale.US, " %12.4f", o ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-    catch( final Exception e )
-    {
-      return "       0.0000"; //$NON-NLS-1$
-    }
-  }
-
   private void writeBewuchs( )
   {
-    final DataBlockHeader dbhx = createHeader( "AX" ); //$NON-NLS-1$
+    final DataBlockHeader dbhx = createHeader( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
     final CoordDataBlock dbx = new CoordDataBlock( dbhx );
-    final DataBlockHeader dbhy = createHeader( "AY" ); //$NON-NLS-1$
+    final DataBlockHeader dbhy = createHeader( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
     final CoordDataBlock dby = new CoordDataBlock( dbhy );
-    final DataBlockHeader dbhp = createHeader( "DP" ); //$NON-NLS-1$
+    final DataBlockHeader dbhp = createHeader( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
     final CoordDataBlock dbp = new CoordDataBlock( dbhp );
     writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ), dbx, 0.0 );
     writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), dby, 0.0 );

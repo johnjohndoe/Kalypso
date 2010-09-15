@@ -54,6 +54,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
+import org.kalypso.wspwin.core.prf.datablock.DoubleDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
 
@@ -93,10 +94,26 @@ public class PrfReader
     else if( key == IWspWinConstants.SPEZIALPROFIL_TEXT )
       return IWspWinConstants.DATA_BLOCK_TYPE_TEXT;
     else if( key >= IWspWinConstants.SPEZIALPROFIL_TRAPEZ && key <= IWspWinConstants.SPEZIALPROFIL_MAUL )
-      return IWspWinConstants.DATA_BLOCK_TYPE_TEXT;
+      return IWspWinConstants.DATA_BLOCK_TYPE_DOUBLE;
     else if( key == 0 )
       return IWspWinConstants.DATA_BLOCK_TYPE_COORDINATE;
     return IWspWinConstants.DATA_BLOCK_TYPE_UNKNOWN;
+  }
+
+  private final IDataBlock createDataBlock( final DataBlockHeader dbh, final int dataBlockType )
+  {
+    if( dataBlockType == IWspWinConstants.DATA_BLOCK_TYPE_DOUBLE )
+    {
+      return new DoubleDataBlock( dbh );
+    }
+    else if( dataBlockType == IWspWinConstants.DATA_BLOCK_TYPE_COORDINATE )
+    {
+      return new CoordDataBlock( dbh );
+    }
+    else
+    {
+      return new TextDataBlock( dbh );
+    }
   }
 
   public void readFromReader( final BufferedReader br ) throws IOException
@@ -117,23 +134,9 @@ public class PrfReader
         if( isValid( dbh ) )
         {
           final int dataBlockType = getDataBlockType( dbh.getSpecification( 8 ) );
-          if( dataBlockType == IWspWinConstants.DATA_BLOCK_TYPE_TEXT )
-          {
-            final IDataBlock dB = new TextDataBlock( dbh );
-            dB.readFromReader( pointCount, br );
-            m_dbs.put( createFirstLine( dbh.getFirstLine() ), dB );
-          }
-          else if( dataBlockType == IWspWinConstants.DATA_BLOCK_TYPE_COORDINATE )
-          {
-            final IDataBlock dB = new CoordDataBlock( dbh );
-            dB.readFromReader( pointCount, br );
-            m_dbs.put( createFirstLine( dbh.getFirstLine() ), dB );
-          }
-          else
-          {
-          }
-          // donothing
-
+          final IDataBlock dB = createDataBlock( dbh, dataBlockType );
+          dB.readFromReader( pointCount, br );
+          m_dbs.put( createFirstLine( dbh.getFirstLine() ), dB );
         }
       }
       catch( final IOException e )

@@ -5,6 +5,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -13,6 +14,7 @@ import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
@@ -28,6 +30,20 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
   {
     super( data, lineStyle, pointStyle );
 
+  }
+
+  @Override
+  public EditInfo getHover( Point pos )
+  {
+    if( !isVisible() )
+      return null;
+    for( int i = 0; i < m_data.getDomainValues().length; i++ )
+    {
+      final Rectangle hover = getScreenRect( i );
+      if( hover != null && hover.contains( pos ) )
+        return new EditInfo( this, null, null, i, getTooltip( i ), RectangleUtils.getCenterPoint( hover ) );
+    }
+    return null;
   }
 
   @Override
@@ -65,12 +81,6 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
         rf.paint( gc );
       }
     }
-  }
-
-  @Override
-  protected Rectangle getHoverRect( final Point screen, final int index )
-  {
-    return getScreenRect( index );
   }
 
   private final Rectangle getScreenRect( final int i )

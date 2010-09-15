@@ -57,10 +57,14 @@ public interface IWspWinConstants
 
   int SPEZIALPROFIL_MAUL = 9;
   
+ int SPEZIALPROFIL_SINOUSITAET = 14; 
+
   int DATA_BLOCK_TYPE_UNKNOWN = 0;
-  
+
   int DATA_BLOCK_TYPE_TEXT = 2;
-  
+
   int DATA_BLOCK_TYPE_COORDINATE = 4;
+
+  int DATA_BLOCK_TYPE_DOUBLE = 8;
 
 }
