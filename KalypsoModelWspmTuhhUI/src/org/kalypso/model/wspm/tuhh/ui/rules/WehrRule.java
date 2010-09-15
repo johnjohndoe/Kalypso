@@ -87,9 +87,9 @@ public class WehrRule extends AbstractValidatorRule
   private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws CoreException
   {
     final IProfilPointMarker[] wehrDevider = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
-    if( wehrDevider == null || wehrDevider.length < 1 )
-      return;
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    if( wehrDevider == null || wehrDevider.length < 1 || deviders == null || deviders.length < 2 )
+      return;
     final int index1 = profil.indexOfPoint( wehrDevider[0].getPoint() );
     final int index2 = profil.indexOfPoint( wehrDevider[wehrDevider.length - 1].getPoint() );
     final int index3 = profil.indexOfPoint( deviders[0].getPoint() );
