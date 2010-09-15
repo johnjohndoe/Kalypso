@@ -98,6 +98,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
   private final IValuePropertyType[] m_targetProperties;
 
+  private boolean m_skip = true;
+
   public KalypsoNAProjectWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final IValuePropertyType[] targetProperties )
   {
     super( pageName, title, titleImage );
@@ -119,8 +121,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage
     // build wizard page
     final Button skipRadioButton = new Button( topComposite, SWT.CHECK );
     skipRadioButton.setText( getTitle() );
-    final boolean skipPage = false;
-    skipRadioButton.setSelection( skipPage );
+    skipRadioButton.setSelection( !m_skip );
     skipRadioButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -138,14 +139,18 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
     createMappingGroup( topComposite );
 
-    m_mappingGroup.setVisible( skipPage );
-    m_fileGroup.setVisible( skipPage );
+    m_mappingGroup.setVisible( !m_skip );
+    m_fileGroup.setVisible( !m_skip );
   }
 
   protected void handleSkipCheckboxSelected( final boolean selection )
   {
+    m_skip = !selection;
+    
     m_mappingGroup.setVisible( selection );
     m_fileGroup.setVisible( selection );
+    
+    validate();
   }
 
   private Control createFileGroup( final Composite parent )
@@ -262,6 +267,9 @@ public class KalypsoNAProjectWizardPage extends WizardPage
    */
   public Map<IValuePropertyType, IValuePropertyType> getMapping( )
   {
+    if( m_skip )
+      return null;
+    
     if( m_sourceGroup == null )
       return null;
 
@@ -279,6 +287,9 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
   private boolean doValidate( )
   {
+    if( m_skip )
+      return true;
+    
     if( m_crs == null )
     {
       setMessage( Messages.getString( "KalypsoNAProjectWizardPage.ErrorMessageNotSupportedCS" ), IMessageProvider.ERROR ); //$NON-NLS-1$
