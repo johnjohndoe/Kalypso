@@ -113,7 +113,36 @@ public class RainfallGenerationTask extends Task
     }
   }
 
+  public final static class Metadata
+  {
+    private String m_name;
+
+    private String m_value;
+
+    public String getName( )
+    {
+      return m_name;
+    }
+
+    public String getValue( )
+    {
+      return m_value;
+    }
+
+    public void setName( final String name )
+    {
+      m_name = name;
+    }
+
+    public void setValue( final String value )
+    {
+      m_value = value;
+    }
+  }
+
   private final List<Generator> m_generators = new ArrayList<Generator>();
+
+  private final List<Metadata> m_metadata = new ArrayList<Metadata>();
 
   private String m_sourceFilter = null;
 
@@ -138,6 +167,11 @@ public class RainfallGenerationTask extends Task
   public void addConfiguredGenerator( final Generator generator )
   {
     m_generators.add( generator );
+  }
+
+  public void addConfiguredMetadata( final Metadata metadata )
+  {
+    m_metadata.add( metadata );
   }
 
   public void setSourceFilter( final String sourceFilter )
@@ -243,7 +277,10 @@ public class RainfallGenerationTask extends Task
       if( m_logFile != null )
         log = new GeoStatusLog( m_logFile );
 
-      final RainfallGenerationOp operation = new RainfallGenerationOp( m_gmlContext, m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, null, m_targetFilter, m_targetFrom, m_targetTo, log );
+      final RainfallGenerationOp operation = new RainfallGenerationOp( m_gmlContext, m_rcmUrl, catchmentWorkspace, m_catchmentFeaturePath, m_catchmentObservationPath, m_targetFilter, m_targetFrom, m_targetTo, log );
+      for( final Metadata metadata : m_metadata )
+        operation.addCatchmentMetadata( metadata.getName(), metadata.getValue() );
+
       operation.setSourceFilter( m_sourceFilter );
       for( final Generator generator : m_generators )
       {
