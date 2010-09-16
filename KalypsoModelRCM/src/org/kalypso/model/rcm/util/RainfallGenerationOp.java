@@ -44,8 +44,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import javax.xml.namespace.QName;
@@ -110,13 +112,13 @@ public class RainfallGenerationOp
 
   private final List<IStatus> m_generatorStati = new ArrayList<IStatus>();
 
+  private final Map<String, Object> m_metadataMapping = new HashMap<String, Object>();
+
   private final URL m_rcmGmlLocation;
 
   private final String m_catchmentFeaturePath;
 
   private final String m_catchmentObservationPath;
-
-  private final Map<QName, String> m_catchmentMetadata;
 
   private final String m_targetFilter;
 
@@ -138,18 +140,34 @@ public class RainfallGenerationOp
    * @param log
    *          If provided, the generators will write messages to this log.
    */
-  public RainfallGenerationOp( final URL gmlContext, final URL rcmGmlLocation, final GMLWorkspace catchmentWorkspace, final String catchmentFeaturePath, final String catchmentObservationPath, final Map<QName, String> catchmentMetadata, final String targetFilter, final Date targetFrom, final Date targetTo, final ILog log )
+  public RainfallGenerationOp( final URL gmlContext, final URL rcmGmlLocation, final GMLWorkspace catchmentWorkspace, final String catchmentFeaturePath, final String catchmentObservationPath, final String targetFilter, final Date targetFrom, final Date targetTo, final ILog log )
   {
     m_gmlContext = gmlContext;
     m_rcmGmlLocation = rcmGmlLocation;
     m_catchmentWorkspace = catchmentWorkspace;
     m_catchmentFeaturePath = catchmentFeaturePath;
     m_catchmentObservationPath = catchmentObservationPath;
-    m_catchmentMetadata = catchmentMetadata;
     m_targetFilter = targetFilter;
     m_targetFrom = targetFrom;
     m_targetTo = targetTo;
     m_log = log;
+  }
+
+  /**
+   * Adds metadata to each generated observation: the metadata is set with the property value of the corresponding
+   * catchment feature.
+   */
+  public void addCatchmentFeatureMetadata( final String metadataName, final QName catchmentFeatureProperty )
+  {
+    m_metadataMapping.put( metadataName, catchmentFeatureProperty );
+  }
+
+  /**
+   * Adds metadata to each generated observation: the metadata is set to a fixed value.
+   */
+  public void addCatchmentMetadata( final String metadataName, final String value )
+  {
+    m_metadataMapping.put( metadataName, value );
   }
 
   /**
@@ -271,39 +289,47 @@ public class RainfallGenerationOp
 
   private void addAdditionalMetadata( final Feature[] catchmentFeatureArray, final IObservation[] combinedObservations )
   {
-    if( m_catchmentMetadata == null || m_catchmentMetadata.size() == 0 )
-      return;
-
     for( int i = 0; i < combinedObservations.length; i++ )
     {
-      /* All arrays must be in the same order and must have the same length. */
       final IObservation observation = combinedObservations[i];
-      final Feature feature = catchmentFeatureArray[i];
-      if( observation == null || feature == null )
+      if( observation == null )
         continue;
 
-      /* Get the metadata list of this observation. */
+      /* All arrays must be in the same order and must have the same length. */
+      final Feature feature = catchmentFeatureArray[i];
+
       final MetadataList metadataList = observation.getMetadataList();
 
-      /* Get the qnames (keys) of the properties, which should be added as additional metadata. */
-      final QName[] qnames = m_catchmentMetadata.keySet().toArray( new QName[] {} );
-      for( final QName qname : qnames )
+      for( final Entry<String, Object> entry : m_metadataMapping.entrySet() )
       {
-        /* Get the target string. */
-        final String target = m_catchmentMetadata.get( qname );
-
-        /* Get the metadata property. */
-        final Object property = feature.getProperty( qname );
-
-        /* Add the metadata property. */
-        if( property != null )
-          metadataList.setProperty( target, property.toString() );
-        else
-          metadataList.setProperty( target, "-" );
+        final String metadataName = entry.getKey();
+        final Object value = entry.getValue();
+        final String metadataValue = getMetadataValue( value, feature );
+        if( metadataValue != null )
+          metadataList.setProperty( metadataName, metadataValue );
       }
-
-      // TODO More fixed metadata ...
     }
+  }
+
+  private String getMetadataValue( final Object value, final Feature feature )
+  {
+    if( value instanceof QName )
+    {
+      if( feature == null )
+        return null;
+
+      /* Get the metadata property. */
+      final Object property = feature.getProperty( (QName) value );
+      if( property == null )
+        return "-";
+
+      return property.toString();
+    }
+
+    if( value == null )
+      return null;
+
+    return value.toString();
   }
 
   /**
