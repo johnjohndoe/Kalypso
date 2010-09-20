@@ -206,7 +206,8 @@ public class PreSWANKalypso implements ISimulation
         m_windRelationshipModel = (IWindModel) windWorkspace.getRootFeature().getAdapter( IWindModel.class );
       }
 
-      m_additionalDataURL = (URL) inputProvider.getInputForID( ADDITIONAL_DATA_FILE );
+      if( inputProvider.hasID( ADDITIONAL_DATA_FILE ) )
+        m_additionalDataURL = (URL) inputProvider.getInputForID( ADDITIONAL_DATA_FILE );
 
       final FileObject lFileObjWorkingDir = manager.toFileObject( tmpdir );
 
