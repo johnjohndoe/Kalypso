@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export;
+package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
 import java.io.File;
 
@@ -49,70 +49,36 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
-import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 
 /**
- * @author kimwerner
+ * @author Gernot Belger
  */
-public class ExportFileChooserPage extends ValidatingWizardPage
+public class SobekFileChooser
 {
   private FileChooserGroup m_fileChooserGroup;
 
+  private final FileChooserDelegateSave m_delegate;
+
+  private final SobekProfileExportFileChooserPage m_page;
+
   private File m_file;
 
-  private final IFileChooserDelegate m_fileChooser;
+  private final IDialogSettings m_dialogSettings;
 
-  private String m_fileGroupText = ""; //$NON-NLS-1$
-
-  public ExportFileChooserPage( final IFileChooserDelegate fileChooser )
+  public SobekFileChooser( final SobekProfileExportFileChooserPage page, final IDialogSettings dialogSettings, final String filterLabel, final String extension )
   {
-    super( "exportProfileFileChooserPage" ); //$NON-NLS-1$
-
-    m_fileChooser = fileChooser;
+    m_page = page;
+    m_dialogSettings = dialogSettings;
+    m_delegate = new FileChooserDelegateSave();
+    m_delegate.addFilter( filterLabel, "*." + extension ); //$NON-NLS-1$
   }
 
-  public void setFileGroupText( final String fileGroupText )
+  public final void createControl( final Composite parent, final String groupLabel )
   {
-    m_fileGroupText = fileGroupText;
-  }
-
-  protected IFileChooserDelegate getFileChooserDelegate( )
-  {
-    return m_fileChooser;
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  public void createControl( final Composite parent )
-  {
-    final Composite comp = new Composite( parent, SWT.NONE );
-    comp.setLayout( new GridLayout() );
-
-    createPageContent( comp );
-
-    setControl( comp );
-
-    super.createControl( parent );
-  }
-
-  /**
-   * Creates the contents of this page, intended to be overwritten by clients.<br>
-   * Clients should call the super implementation of this method, before adding its own contents.
-   * 
-   * @param parent
-   *          A composite with a grid layout.
-   */
-  protected void createPageContent( final Composite parent )
-  {
-    createFileChooser( parent );
-  }
-
-  private void createFileChooser( final Composite comp )
-  {
-    m_fileChooserGroup = new FileChooserGroup( m_fileChooser );
+    m_fileChooserGroup = new FileChooserGroup( m_delegate );
     m_fileChooserGroup.addFileChangedListener( new FileChooserGroup.FileChangedListener()
     {
       @Override
@@ -123,23 +89,32 @@ public class ExportFileChooserPage extends ValidatingWizardPage
     } );
 
     m_fileChooserGroup.setShowLabel( false );
-    final Group group = m_fileChooserGroup.createGroup( comp, SWT.NONE );
-    group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    group.setText( m_fileGroupText );
 
-    final IDialogSettings dialogSettings = getDialogSettings();
-    m_fileChooserGroup.setDialogSettings( dialogSettings );
+    final Group group = new Group( parent, SWT.NONE );
+    group.setLayout( new GridLayout( 3, false ) );
+    group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    group.setText( groupLabel );
+
+    m_fileChooserGroup.createControlsInGrid( group );
+
+    createOtherControls( group );
+
+    m_fileChooserGroup.setDialogSettings( m_dialogSettings );
 
     final File file = m_fileChooserGroup.getFile();
     if( file != null )
       setFile( file );
   }
 
+  protected void createOtherControls( @SuppressWarnings("unused") final Composite parent )
+  {
+  }
+
   protected void setFile( final File file )
   {
     m_file = file;
 
-    updateMessage();
+    m_page.updateMessage();
   }
 
   public File getFile( )
@@ -147,9 +122,17 @@ public class ExportFileChooserPage extends ValidatingWizardPage
     return m_file;
   }
 
-  @Override
-  protected IMessageProvider validatePage( )
+  public IMessageProvider validate( )
   {
-    return m_fileChooser.validate( m_file );
+    // Ignore empty file -> we will not export it
+    if( m_file == null )
+      return null;
+
+    return m_delegate.validate( m_file );
+  }
+
+  public ISobekProfileExportOperation createOperation( final IProfileFeature[] profiles, final String idPattern )
+  {
+    return new SobekDefExportOperation( getFile(), profiles, idPattern );
   }
 }

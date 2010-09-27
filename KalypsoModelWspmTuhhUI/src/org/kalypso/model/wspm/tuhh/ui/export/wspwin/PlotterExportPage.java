@@ -60,9 +60,9 @@ public class PlotterExportPage extends ExportPrfFileChooserPage
 
   private boolean m_doPrint;
 
-  public PlotterExportPage( final IFileChooserDelegate fileChooser, final String extension )
+  public PlotterExportPage( final IFileChooserDelegate fileChooser )
   {
-    super( fileChooser, extension );
+    super( fileChooser );
   }
 
   /**

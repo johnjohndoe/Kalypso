@@ -72,7 +72,7 @@ public class PrfExportProfilesWizard extends ExportProfilesWizard
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
-    m_profileFileChooserPage = new ExportPrfFileChooserPage( dirDelegate, null );
+    m_profileFileChooserPage = new ExportPrfFileChooserPage( dirDelegate );
     m_profileFileChooserPage.setTitle( "Ablageverzeichnis wählen" );
     m_profileFileChooserPage.setDescription( "Bitte wählen Sie das Ablageverzeichnis aus." );
     m_profileFileChooserPage.setFileGroupText( "Ablageverzeichnis" );

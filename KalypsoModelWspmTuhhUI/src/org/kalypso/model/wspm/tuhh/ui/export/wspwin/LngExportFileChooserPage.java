@@ -59,9 +59,9 @@ public class LngExportFileChooserPage extends ExportFileChooserPage
 
   private boolean m_doOpenPlotter;
 
-  public LngExportFileChooserPage( final IFileChooserDelegate fileChooser, final String extension )
+  public LngExportFileChooserPage( final IFileChooserDelegate fileChooser )
   {
-    super( fileChooser, extension );
+    super( fileChooser );
   }
 
   /**

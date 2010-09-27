@@ -41,25 +41,16 @@
 package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
@@ -74,9 +65,9 @@ public class ExportPrfFileChooserPage extends ExportFileChooserPage
 
   private String m_filenamePattern = "<Name>_<Station>"; //$NON-NLS-1$
 
-  public ExportPrfFileChooserPage( final IFileChooserDelegate fileChooser, final String extension )
+  public ExportPrfFileChooserPage( final IFileChooserDelegate fileChooser )
   {
-    super( fileChooser, extension );
+    super( fileChooser );
   }
 
   /**
@@ -116,46 +107,7 @@ public class ExportPrfFileChooserPage extends ExportFileChooserPage
       }
     } );
 
-    final MenuManager menuManager = createPatternMenu( text );
-    menuManager.setRemoveAllWhenShown( false );
-
-    final Button button = new Button( group, SWT.ARROW | SWT.LEFT );
-    button.setToolTipText( "Insert a token from the list of available patterns" );
-    final Menu menu = menuManager.createContextMenu( button );
-
-    button.setMenu( menu );
-
-    button.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        final Point displayLocation = button.toDisplay( e.x, e.y );
-        menu.setLocation( displayLocation );
-        menu.setVisible( true );
-      }
-    } );
-
-    button.addDisposeListener( new DisposeListener()
-    {
-      @Override
-      public void widgetDisposed( final DisposeEvent e )
-      {
-        menu.dispose();
-        menuManager.dispose();
-      }
-    } );
-  }
-
-  private MenuManager createPatternMenu( final Text text )
-  {
-    final MenuManager menuManager = new MenuManager();
-
-    final IContributionItem[] items = ProfilePatternInputReplacer.getINSTANCE().asContributionItems( text );
-    for( final IContributionItem item : items )
-      menuManager.add( item );
-
-    return menuManager;
+    ProfilePatternInputReplacer.getINSTANCE().createPatternButton( group, text );
   }
 
   protected void handleFilenamePatternChanged( final String currentValue )

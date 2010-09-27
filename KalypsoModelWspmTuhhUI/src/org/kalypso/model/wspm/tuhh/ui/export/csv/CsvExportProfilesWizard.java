@@ -84,7 +84,7 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
     final FileChooserDelegateSave delegateSave = new FileChooserDelegateSave();
     delegateSave.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
 
-    m_profileFileChooserPage = new ExportFileChooserPage( delegateSave, EXTENSION );
+    m_profileFileChooserPage = new ExportFileChooserPage( delegateSave );
     m_profileFileChooserPage.setTitle( STR_CHOOSE_EXPORT_FILE_TITLE );
     m_profileFileChooserPage.setDescription( STR_CHOOSE_EXPORT_FILE_MESSAGE );
     m_profileFileChooserPage.setFileGroupText( STR_EXPORT_FILE_GROUP_TEXT );

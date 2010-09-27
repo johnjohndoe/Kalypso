@@ -76,7 +76,7 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
 
     final FileChooserDelegateSave saveDelegate = new FileChooserDelegateSave();
     saveDelegate.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
-    m_profileFileChooserPage = new LngExportFileChooserPage( saveDelegate, EXTENSION );
+    m_profileFileChooserPage = new LngExportFileChooserPage( saveDelegate );
     m_profileFileChooserPage.setTitle( STR_CHOOSE_EXPORT_FILE_TITLE );
     m_profileFileChooserPage.setDescription( STR_CHOOSE_EXPORT_FILE_MESSAGE );
     m_profileFileChooserPage.setFileGroupText( STR_EXPORT_FILE_GROUP_TEXT );

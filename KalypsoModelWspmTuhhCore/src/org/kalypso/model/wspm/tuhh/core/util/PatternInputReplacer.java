@@ -47,6 +47,16 @@ import java.util.List;
 
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -71,14 +81,14 @@ public class PatternInputReplacer<T>
     return formatter.toString();
   }
 
-  public String replaceTokens( final String text, final T context )
+  public String replaceTokens( final String pattern, final T context )
   {
-    if( text == null )
+    if( pattern == null )
       return null;
 
     final IPatternInput<T>[] tokens = getTokens();
 
-    String result = text;
+    String result = pattern;
     for( final IPatternInput<T> token : tokens )
       result = token.replace( result, context );
 
@@ -100,4 +110,54 @@ public class PatternInputReplacer<T>
 
     return items.toArray( new IContributionItem[items.size()] );
   }
+
+  private MenuManager createPatternMenu( final Text text )
+  {
+    final MenuManager menuManager = new MenuManager();
+
+    final IContributionItem[] items = asContributionItems( text );
+    for( final IContributionItem item : items )
+      menuManager.add( item );
+
+    return menuManager;
+  }
+
+  /**
+   * Creates a menu-button that insert pattern into the given text field.
+   */
+  public Button createPatternButton( final Composite parent, final Text text )
+  {
+    final MenuManager menuManager = createPatternMenu( text );
+    menuManager.setRemoveAllWhenShown( false );
+
+    final Button button = new Button( parent, SWT.ARROW | SWT.LEFT );
+    button.setToolTipText( "Insert a token from the list of available patterns" );
+    final Menu menu = menuManager.createContextMenu( button );
+
+    button.setMenu( menu );
+
+    button.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final Point displayLocation = button.toDisplay( e.x, e.y );
+        menu.setLocation( displayLocation );
+        menu.setVisible( true );
+      }
+    } );
+
+    button.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        menu.dispose();
+        menuManager.dispose();
+      }
+    } );
+
+    return button;
+  }
+
 }
