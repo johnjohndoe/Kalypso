@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.rules;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -52,7 +51,6 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
 import org.kalypso.observation.result.IComponent;
@@ -102,8 +100,7 @@ public class BewuchsRule extends AbstractValidatorRule
     final IRecord[] VorlandL = profil.getPoints( 0, leftIndex - 1 );
     final IRecord[] VorlandR = profil.getPoints( rightIndex, points.length - 1 );
     final IRecord[] Flussschl = profil.getPoints( leftIndex, rightIndex - 1 );
-    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
- 
+
     if( Flussschl.length > 0 )
     {
       int i = leftIndex;
@@ -121,7 +118,7 @@ public class BewuchsRule extends AbstractValidatorRule
         {
           if( ax + ay + dp != 0 )
           {
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.0" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new DelBewuchsResolution() ); //$NON-NLS-1$ //$NON-NLS-2$
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.0" ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, new DelBewuchsResolution() ); //$NON-NLS-1$ //$NON-NLS-2$
             break;
           }
         }
@@ -131,23 +128,23 @@ public class BewuchsRule extends AbstractValidatorRule
 
       if( WspmProfileHelper.getBuilding( profil, AbstractObservationBuilding.class ) == null )
       {
-        final boolean VorlandLhasValues = validateArea( profil, collector, VorlandL, pluginId );
-        final boolean VorlandRhasValues = validateArea( profil, collector, VorlandR, pluginId );
+        final boolean VorlandLhasValues = validateArea( profil, collector, VorlandL );
+        final boolean VorlandRhasValues = validateArea( profil, collector, VorlandR );
 
         final Double ax1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, points[lastIndex] );
 
         if( (VorlandLhasValues == true && !ax1.isNaN()) && (VorlandLhasValues && ax1 == 0.0) )
-          collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.2" ), String.format( "km %.4f", profil.getStation() ), lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// , //$NON-NLS-1$ //$NON-NLS-2$
+          collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.2" ), String.format( "km %.4f", profil.getStation() ), lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );// , //$NON-NLS-1$ //$NON-NLS-2$
 
         final Double ax2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, rightP );
 
         if( (VorlandRhasValues == true && !ax2.isNaN()) && (VorlandRhasValues && ax2 == 0.0) )
-          collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.2" ), String.format( "km %.4f", profil.getStation() ), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// , //$NON-NLS-1$ //$NON-NLS-2$
+          collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.2" ), String.format( "km %.4f", profil.getStation() ), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );// , //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }
 
-  private boolean validateArea( final IProfil profil, final IValidatorMarkerCollector collector, final IRecord[] subList, final String pluginId ) throws CoreException
+  private boolean validateArea( final IProfil profil, final IValidatorMarkerCollector collector, final IRecord[] subList ) throws CoreException
   {
     boolean hasValues = false;
     boolean hasErrors = false;
@@ -166,7 +163,7 @@ public class BewuchsRule extends AbstractValidatorRule
 
         hasErrors = true;
         final String stationFormatted = String.format( "km %.4f", profil.getStation() );
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.7" ), stationFormatted, profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.7" ), stationFormatted, profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else
       {
@@ -183,7 +180,7 @@ public class BewuchsRule extends AbstractValidatorRule
 
             final String text = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.9", stringBuffer.toString() ); //$NON-NLS-1$
 
-            collector.createProfilMarker( IMarker.SEVERITY_ERROR, text, String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId ); //$NON-NLS-1$
+            collector.createProfilMarker( IMarker.SEVERITY_ERROR, text, String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$
           }
           else
             hasValues = true;

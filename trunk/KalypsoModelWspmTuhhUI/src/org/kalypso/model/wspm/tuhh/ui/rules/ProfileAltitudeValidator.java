@@ -42,14 +42,12 @@ package org.kalypso.model.wspm.tuhh.ui.rules;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -60,8 +58,6 @@ public class ProfileAltitudeValidator
 {
   private final IProfil m_profil;
 
-  private final String m_pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-
   private final double m_delta;
 
   private final IComponent m_Breite;
@@ -70,7 +66,7 @@ public class ProfileAltitudeValidator
 
   private final String m_station;
 
-  public ProfileAltitudeValidator( IProfil profil, final IValidatorMarkerCollector collector )
+  public ProfileAltitudeValidator( final IProfil profil, final IValidatorMarkerCollector collector )
   {
     m_Breite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     m_delta = m_Breite == null ? 0.0001 : m_Breite.getPrecision();
@@ -84,24 +80,14 @@ public class ProfileAltitudeValidator
     return m_profil.getPoints();
   }
 
-  public String getPluginId( )
-  {
-    return m_pluginId;
-  }
-
-  public double getDelta( )
-  {
-    return m_delta;
-  }
-
   public final void createMarker( final String message, final int pos, final String componentID ) throws CoreException
   {
-    m_collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, m_station, pos, componentID, m_pluginId );
+    m_collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, m_station, pos, componentID );
   }
 
   public final void createMarker( final String message, final int pos, final String componentID, final IProfilMarkerResolution resolution ) throws CoreException
   {
-    m_collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, m_station, pos, componentID, m_pluginId, new IProfilMarkerResolution[] { resolution } );
+    m_collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, m_station, pos, componentID, new IProfilMarkerResolution[] { resolution } );
   }
 
   public final int whileEqual( final int begin, final int end, final String componentID )
