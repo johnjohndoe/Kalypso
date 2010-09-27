@@ -295,6 +295,16 @@ public class NetFileManager
         }
         downStreamElement.addUpStream( upStreamElement );
       }
+
+      final Node overflowNode = catchment.getOverflowNode();
+      if( overflowNode != null )
+      {
+        final NetElement netElement = netElements.get( overflowNode.getId() );
+        if( netElement != null )
+        {
+          netElement.setOverflowNode( overflowNode );
+        }
+      }
     }
 
     final Collection<NetElement> values = netElements.values();

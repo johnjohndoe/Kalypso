@@ -58,6 +58,8 @@ public class Catchment extends AbstractNaModelElement
 
   private static final QName LINK_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" ); //$NON-NLS-1$
 
+  private static final QName LINK_OVERFLOW_NODE = new QName( NS_NAMODELL, "izkn_vers" ); //$NON-NLS-1$
+
   private static final QName PROP_GEOM = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 
   private static final QName PROP_RETOB = new QName( NS_NAMODELL, "retob" ); //$NON-NLS-1$
@@ -71,7 +73,6 @@ public class Catchment extends AbstractNaModelElement
   private static final QName PROP_AIGW = new QName( NS_NAMODELL, "aigw" ); //$NON-NLS-1$
 
   private static final QName PROP_FAKTOR_AIGW = new QName( NS_NAMODELL, "faktorAigw" ); //$NON-NLS-1$
-
 
   public Catchment( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -124,6 +125,11 @@ public class Catchment extends AbstractNaModelElement
   public double getFaktorAigw( )
   {
     return getDoubleProperty( PROP_FAKTOR_AIGW, 1.0 );
+  }
+
+  public Node getOverflowNode( )
+  {
+    return (Node) FeatureHelper.resolveLink( this, LINK_OVERFLOW_NODE, true );
   }
 
 }
