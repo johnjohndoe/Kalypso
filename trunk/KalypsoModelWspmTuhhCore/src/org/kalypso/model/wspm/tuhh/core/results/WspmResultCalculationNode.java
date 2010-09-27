@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.io.filefilter.NameFileFilter;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -125,6 +126,10 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode
   @Override
   public String getLabel( )
   {
+    final IWspmResultNode[] childResults = getChildResults();
+    if( ArrayUtils.isEmpty( childResults ) )
+      return String.format( "%s (Ergebnis liegt nicht vor)", m_calculation.getName() );
+
     return m_calculation.getName();
   }
 
