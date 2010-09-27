@@ -218,6 +218,12 @@
               id="pasche.durchlass"
               type="org.kalypso.model.wspm.tuhh.profiletype">
         </rule>
+        <rule
+              class="org.kalypso.model.wspm.tuhh.ui.rules.DuplicateComponentRule"
+              description="Doppelte Komponenten"
+              id="general.duplicateComponent"
+              type="org.kalypso.model.wspm.tuhh.profiletype">
+        </rule>
    </extension>
    <extension
          point="org.kalypso.core.catalogContribution">
@@ -345,6 +351,12 @@
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution"
                name="Rauheit entfernen">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution"
+               description="Entfernt eine Komponente aus dem Profil"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution"
+               name="Komponente entfernen">
          </reparator>
       </extension>
        <extension
