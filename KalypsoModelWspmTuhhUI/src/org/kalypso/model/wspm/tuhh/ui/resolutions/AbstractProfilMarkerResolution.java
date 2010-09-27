@@ -64,23 +64,16 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author  kimwerner
- */
-/**
  * @author kimwerner
  */
 public abstract class AbstractProfilMarkerResolution implements IProfilMarkerResolution
 {
-
   private final String m_label;
 
   private final String m_description;
 
   private final Image m_image;
 
-  /**
-   * 
-   */
   public AbstractProfilMarkerResolution( final String label, final String description, final Image image )
   {
     m_label = label;
@@ -90,22 +83,13 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
 
   /**
    * @see org.eclipse.ui.IMarkerResolution2#getDescription()
-   * @uml.property name="description"
-   */
-  /**
-   * @see org.eclipse.ui.IMarkerResolution2#getDescription()
    */
   @Override
   public String getDescription( )
   {
-
     return m_description;
   }
 
-  /**
-   * @see org.eclipse.ui.IMarkerResolution2#getImage()
-   * @uml.property name="image"
-   */
   /**
    * @see org.eclipse.ui.IMarkerResolution2#getImage()
    */
@@ -153,7 +137,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
       KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       return null;
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -165,14 +149,14 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
    * @see org.eclipse.ui.IMarkerResolution#run(org.eclipse.core.resources.IMarker)
    */
   @Override
-  public void run( IMarker marker )
+  public void run( final IMarker marker )
   {
     final CommandableWorkspace ws = getWorkspace( marker );
 
     Feature feature;
     try
     {
-      String profileFeatureId = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).toString();
+      final String profileFeatureId = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).toString();
       feature = ws == null ? null : ws.getFeature( profileFeatureId );
 
       if( feature != null )
@@ -185,12 +169,12 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
             marker.delete();// delete marker because ProblemView is no Listener on GMLWorkspace
             // final ICommand command = new ChangeFeaturesCommand( ws, ProfileFeatureFactory.toFeatureAsChanges( profil,
 // feature ) );
-            // ws.postCommand( command );
+// ws.postCommand( command );
           }
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new UnknownError( e.getLocalizedMessage() );
     }
@@ -199,7 +183,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
 
   protected final String[] getParameter( final String parameterStream )
   {
-    StringTokenizer st = new StringTokenizer( parameterStream, ";" ); //$NON-NLS-1$
+    final StringTokenizer st = new StringTokenizer( parameterStream, ";" ); //$NON-NLS-1$
     final int size = st.countTokens();
     final String[] params = new String[size];
     for( int i = 0; i < size; i++ )
@@ -216,7 +200,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
    * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#setData(java.lang.String)
    */
   @Override
-  public void setData( String parameterStream )
+  public void setData( final String parameterStream )
   {
     getParameter( parameterStream );
   }

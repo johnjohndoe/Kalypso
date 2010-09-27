@@ -49,10 +49,8 @@ import org.kalypso.observation.result.IRecord;
 /**
  * @author kimwerner
  */
-
 public class AddBewuchsResolution extends AbstractProfilMarkerResolution
 {
-
   Integer m_pointIndex;
 
   boolean m_orientationLeft;
@@ -130,7 +128,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
    */
   @Override
-  public void setData( String parameterStream )
+  public void setData( final String parameterStream )
   {
     final String[] params = getParameter( parameterStream );
     try
@@ -138,7 +136,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
       m_pointIndex = new Integer( params[1] );
       m_orientationLeft = new Boolean( params[2] );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new IllegalArgumentException();
     }

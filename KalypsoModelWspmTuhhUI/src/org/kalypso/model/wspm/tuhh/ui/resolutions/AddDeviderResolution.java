@@ -42,9 +42,12 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.observation.result.IComponent;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -80,56 +83,51 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
     if( m_deviderType == "" || profil.getPoints().length < 1 ) //$NON-NLS-1$
       throw new IllegalStateException();
 
-    final IComponent cTarget = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    if( cTarget == null )
+    final IProfilPointMarker[] markers = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    if( markers.length == 2 )
     {
-      if( profil.getPoints().length > 0 )
-      {
-        final IProfilPointMarker m1 = profil.createPointMarker( m_deviderType, profil.getPoint( 0 ) );
-        final IProfilPointMarker m2 = profil.createPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
-        m1.setInterpretedValue( true );
-        m2.setInterpretedValue( true );
-        profil.setActivePoint( profil.getPoint( 0 ) );
-      }
-      else
-        return false;
-    }
-    else
-    {
-      final IProfilPointMarker[] markers = profil.getPointMarkerFor( cTarget );
-      if( markers.length > 0 )
-      {
-        final IProfilPointMarker m1 = profil.createPointMarker( m_deviderType, markers[0].getPoint() );
-        final IProfilPointMarker m2 = profil.createPointMarker( m_deviderType, markers[markers.length - 1].getPoint() );
-        m1.setInterpretedValue( true );
-        m2.setInterpretedValue( true );
-        profil.setActivePoint( markers[0].getPoint() );
-      }
-      else
-      {
-        final IProfilPointMarker m1 = profil.createPointMarker( m_deviderType, profil.getPoint( 0 ) );
-        final IProfilPointMarker m2 = profil.createPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
-        m1.setInterpretedValue( true );
-        m2.setInterpretedValue( true );
-        profil.setActivePoint( profil.getPoint( 0 ) );
-      }
+      createMarkers( profil, markers[0].getPoint(), markers[markers.length - 1].getPoint() );
       return true;
     }
+    else if( profil.getPoints().length > 0 )
+    {
+      createMarkers( profil, profil.getPoint( 0 ), profil.getPoint( profil.getPoints().length - 1 ) );
+      return true;
+    }
+
     return false;
+  }
+
+  private void createMarkers( final IProfil profil, final IRecord pointLeft, final IRecord pointRight )
+  {
+    final ProfilOperation operation = new ProfilOperation( "Add Devider", profil, true ); //$NON-NLS-1$
+
+    // TODO: the atomic operations are adding a column and setting values to it
+    // we need api for that; the marker api is too strongly coupled into the profile
+
+    final IProfilPointMarker m1 = profil.createPointMarker( m_deviderType, pointLeft );
+    final IProfilPointMarker m2 = profil.createPointMarker( m_deviderType, pointRight );
+    m1.setInterpretedValue( true );
+    m2.setInterpretedValue( true );
+
+    // operation.addChange( new PointMarkerSetPoint( devider, newPoint ) );
+
+    operation.addChange( new ActiveObjectEdit( profil, pointLeft, null ) );
+    new ProfilOperationJob( operation ).schedule();
   }
 
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
    */
   @Override
-  public void setData( String parameterStream )
+  public void setData( final String parameterStream )
   {
     final String[] params = getParameter( parameterStream );
     try
     {
       m_deviderType = params[1];
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new IllegalArgumentException();
     }

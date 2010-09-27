@@ -52,10 +52,8 @@ import org.kalypso.observation.result.IComponent;
 /**
  * @author kimwerner
  */
-
 public class DelRoughnessResolution extends AbstractProfilMarkerResolution
 {
-
   private boolean m_initialized = false;
 
   private String m_roughness;
@@ -104,28 +102,27 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
     if( m_roughness != null )
       return m_roughness;
 
-    final ListSelectionDialog lsd = new ListSelectionDialog( shell, m_roughnessTyps, new ArrayContentProvider()
+    final LabelProvider labelProvider = new LabelProvider()
     {
-    }, new LabelProvider()
-    {
-
       /**
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
         try
         {
           return profil.getPointPropertyFor( element.toString() ).getName();
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           return element.toString();
         }
       }
-    }, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution.4" ) ); //$NON-NLS-1$
+    };
 
+    final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution.4" ); //$NON-NLS-1$
+    final ListSelectionDialog lsd = new ListSelectionDialog( shell, m_roughnessTyps, new ArrayContentProvider(), labelProvider, msg );
     if( lsd.open() == 0 )
     {
       final Object[] roughness = lsd.getResult();
@@ -161,7 +158,7 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
         {
           m_roughness = getUIresult( PlatformUI.getWorkbench().getDisplay().getActiveShell(), profil );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           // handle exception: no shell available here
           return false;
@@ -183,7 +180,7 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
    */
   @Override
-  public void setData( String parameterStream )
+  public void setData( final String parameterStream )
   {
 
     final String[] params = getParameter( parameterStream );
@@ -198,7 +195,7 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
       m_roughnessTyps = rt;
       m_initialized = true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new IllegalArgumentException();
     }
@@ -209,7 +206,7 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setUIresult(java.lang.String)
    */
   @Override
-  public void setUIresult( String result )
+  public void setUIresult( final String result )
   {
     m_roughness = result;
   }
