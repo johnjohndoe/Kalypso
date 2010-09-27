@@ -41,55 +41,55 @@
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Formatter;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.export.wspwin.ProfilePatternInputReplacer;
 import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
  */
-public class SobekProfileExporter
+public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
 {
-  private final Formatter m_formatter;
+  private final String m_idPattern;
 
-  private final Collection<IStatus> m_stati = new ArrayList<IStatus>();
-
-  public SobekProfileExporter( final File file ) throws FileNotFoundException
+  public SobekDefExportOperation( final File targetFile, final IProfileFeature[] profilesToExport, final String idPattern )
   {
-    m_formatter = new Formatter( file );
+    super( targetFile, profilesToExport );
+
+    m_idPattern = idPattern;
   }
 
-  public void writeProfile( final IProfil profil )
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation#getLabel()
+   */
+  @Override
+  public String getLabel( )
   {
-    final String profileName = profil.getName();
-    final String pnam = getPNam( profileName );
-    final String userPrefix = ""; //$NON-NLS-1$
+    return ".def Datei";
+  }
 
-    // TODO: get id-pattern from user: see .prf export how to do it
-    // final Object id = String.format( "%s%s%.4f", userPrefix, profil.getStation() );
-
-    final Object id = String.format( "%s%s", userPrefix, pnam ); //$NON-NLS-1$
-
+  @Override
+  protected void writeProfile( final Formatter formatter, final IProfil profil )
+  {
     final IRecord[] points = getPointsToExport( profil );
-
     if( points == null )
       return;
 
-    m_formatter.format( "CRDS id '%s' nm '%s' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz%n", id, profileName ); //$NON-NLS-1$
-    m_formatter.format( "TBLE%n" ); //$NON-NLS-1$
+    final String id = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_idPattern, profil );
+    final String profileName = profil.getName();
+
+    formatter.format( "CRDS id '%s' nm '%s' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz%n", id, profileName ); //$NON-NLS-1$
+    formatter.format( "TBLE%n" ); //$NON-NLS-1$
 
     final int widhtIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final int heightIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
@@ -98,19 +98,10 @@ public class SobekProfileExporter
     {
       final Number y = (Number) point.getValue( widhtIndex );
       final Number z = (Number) point.getValue( heightIndex );
-      m_formatter.format( Locale.US, "%.4f %.4f <%n", y, z ); //$NON-NLS-1$
+      formatter.format( Locale.US, "%.4f %.4f <%n", y, z ); //$NON-NLS-1$
     }
-    m_formatter.format( "tble%n" ); //$NON-NLS-1$
-    m_formatter.format( "crds%n" ); //$NON-NLS-1$
-  }
-
-  private String getPNam( final String profileName )
-  {
-    final String[] split = profileName.split( " " ); //$NON-NLS-1$
-    if( split.length == 0 )
-      return "-"; //$NON-NLS-1$
-
-    return split[0];
+    formatter.format( "tble%n" ); //$NON-NLS-1$
+    formatter.format( "crds%n" ); //$NON-NLS-1$
   }
 
   private IRecord[] getPointsToExport( final IProfil profil )
@@ -128,7 +119,7 @@ public class SobekProfileExporter
     {
       final String message = String.format( "Gewählte Markierung (%s) bei Profil %.4f (%s) nicht gesetzt. Es wurden alle Profilpunkte exportiert.", markerLabel, profil.getStation(), profil.getName() );
       final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
-      m_stati.add( status );
+      add( status );
       return profil.getPoints();
     }
 
@@ -140,33 +131,4 @@ public class SobekProfileExporter
 
     return profil.getPoints( startIndex, endIndex );
   }
-
-  public void close( ) throws IOException
-  {
-    m_formatter.flush();
-    checkIO();
-    m_formatter.close();
-    checkIO();
-  }
-
-  private void checkIO( ) throws IOException
-  {
-    final IOException ioException = m_formatter.ioException();
-    if( ioException != null )
-      throw ioException;
-  }
-
-  public void closeQuiet( )
-  {
-    m_formatter.close();
-  }
-
-  public IStatus getStatus( )
-  {
-    final IStatus[] children = m_stati.toArray( new IStatus[m_stati.size()] );
-    if( children.length > 0 )
-      return new MultiStatus( KalypsoModelWspmTuhhUIPlugin.getID(), -1, children, "Es sind Probleme beim SOBEK-Export aufgetreten", null );
-    return Status.OK_STATUS;
-  }
-
 }

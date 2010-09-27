@@ -69,7 +69,7 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
-    m_profileFileChooserPage = new PlotterExportPage( dirDelegate, null );
+    m_profileFileChooserPage = new PlotterExportPage( dirDelegate );
     m_profileFileChooserPage.setTitle( "Temporäres Ablageverzeichnis wählen" );
     m_profileFileChooserPage.setDescription( "Bitte wählen Sie das Verzeichnis für die temporär exportierten .prf Dateien aus." );
     m_profileFileChooserPage.setFileGroupText( "Temporäres Ablageverzeichnis" );

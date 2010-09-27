@@ -87,6 +87,14 @@ public class TuhhProfil extends AbstractProfil
     return super.addProfileObjects( profileObjects );
   }
 
+  /**
+   * FIXME: this creates a marker (virtually) but does not really change the profile, except maybe add the
+   * marker-component to it.<br/>
+   * This is very confusing! Instead, we should directly set the value and return the real marker.
+   * 
+   * @see org.kalypso.model.wspm.core.profil.IProfil#createPointMarker(java.lang.String,
+   *      org.kalypso.observation.result.IRecord)
+   */
   @Override
   public IProfilPointMarker createPointMarker( final String markerID, final IRecord point )
   {
@@ -170,16 +178,16 @@ public class TuhhProfil extends AbstractProfil
       return null;
 
     final String id = component.getId();
-    if( id.equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) && value.equals( "none" ) ) //$NON-NLS-1$
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( id ) && "none".equals( value ) )
       return null;
 
-    if( id.equals( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) && value.equals( Boolean.FALSE ) )
+    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( id ) && Boolean.FALSE.equals( value ) )
       return null;
 
-    if( id.equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) && value.equals( Boolean.FALSE ) )
+    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( id ) && Boolean.FALSE.equals( value ) )
       return null;
 
-    if( id.equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) && (value instanceof Double) && ((Double) value).isNaN() )
+    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( id ) && (value instanceof Double) && ((Double) value).isNaN() )
       return null;
 
     return new ProfilDevider( component, record );

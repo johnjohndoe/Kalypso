@@ -40,19 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
@@ -62,34 +60,16 @@ import org.kalypso.model.wspm.ui.action.ProfileSelection;
  */
 public class SobekExportProfilesWizard extends ExportProfilesWizard
 {
-  private static final String FILTER_LABEL = "SOBEK Profile.def File";
-
-  private static final String EXTENSION = "def"; //$NON-NLS-1$
-
-  private final ExportFileChooserPage m_profileFileChooserPage;
+  private final SobekProfileExportFileChooserPage m_profileFileChooserPage;
 
   public SobekExportProfilesWizard( final ProfileSelection selection )
   {
     super( selection );
 
+    setHelpAvailable( false );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
-    final FileChooserDelegateSave saveDelegate = new FileChooserDelegateSave();
-    saveDelegate.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
-    m_profileFileChooserPage = new ExportFileChooserPage( saveDelegate, EXTENSION );
-    m_profileFileChooserPage.setTitle( STR_CHOOSE_EXPORT_FILE_TITLE );
-    m_profileFileChooserPage.setDescription( STR_CHOOSE_EXPORT_FILE_MESSAGE );
-    m_profileFileChooserPage.setFileGroupText( STR_EXPORT_FILE_GROUP_TEXT );
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
-  @Override
-  public void addPages( )
-  {
-    super.addPages();
-
+    m_profileFileChooserPage = new SobekProfileExportFileChooserPage();
     addPage( m_profileFileChooserPage );
   }
 
@@ -100,36 +80,26 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
   @Override
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
-    SobekProfileExporter exporter = null;
+    final ISobekProfileExportOperation[] operations = m_profileFileChooserPage.getOperations( profiles );
+    final Collection<IStatus> problems = new ArrayList<IStatus>( operations.length );
 
-    try
+    monitor.beginTask( "SOBEK Export", operations.length );
+
+    for( final ISobekProfileExportOperation operation : operations )
     {
-      monitor.beginTask( "Profile exportieren", profiles.length );
+      monitor.subTask( operation.getLabel() );
 
-      final File file = m_profileFileChooserPage.getFile();
-      exporter = new SobekProfileExporter( file );
-      for( final IProfileFeature profil : profiles )
-      {
-        exporter.writeProfile( profil.getProfil() );
-        ProgressUtilities.worked( monitor, 1 );
-      }
-      exporter.close();
-
-      final IStatus status = exporter.getStatus();
-      if( !status.isOK() )
-        throw new CoreException( status );
+      final IStatus execute = operation.execute( new SubProgressMonitor( monitor, 1 ) );
+      if( !execute.isOK() )
+        problems.add( execute );
     }
-    catch( final IOException e )
+
+    final IStatus[] problemChildren = problems.toArray( new IStatus[problems.size()] );
+    if( problemChildren.length > 0 )
     {
-      final String message = String.format( "Failed to write profiles" );
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
+      final String message = "Beim SOBEK Export traten Probleme auf";
+      final IStatus status = new MultiStatus( KalypsoModelWspmTuhhUIPlugin.getID(), 0, problemChildren, message, null );
       throw new CoreException( status );
-    }
-    finally
-    {
-      if( exporter != null )
-        exporter.closeQuiet();
-      monitor.done();
     }
   }
 }
