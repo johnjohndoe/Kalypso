@@ -52,10 +52,14 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IComponent;
@@ -170,12 +174,14 @@ public class PointMarkerLayer extends AbstractProfilLayer
     }
   }
 
-  // TODO: we should use the profile commands to change the profile here!
   protected void moveDevider( final IProfilPointMarker devider, final IRecord newPoint )
   {
     final IProfil profil = getProfil();
-    devider.setPoint( newPoint );
-    profil.setActivePoint( newPoint );
+
+    final ProfilOperation operation = new ProfilOperation( "", profil, true ); //$NON-NLS-1$
+    operation.addChange( new PointMarkerSetPoint( devider, newPoint ) );
+    operation.addChange( new ActiveObjectEdit( profil, newPoint, null ) );
+    new ProfilOperationJob( operation ).schedule();
   }
 
   /**
