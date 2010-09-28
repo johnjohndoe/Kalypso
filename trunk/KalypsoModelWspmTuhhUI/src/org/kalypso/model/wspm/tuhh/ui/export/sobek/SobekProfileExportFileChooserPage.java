@@ -70,13 +70,13 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   private static final String DEF_FILTER_LABEL = "SOBEK Profile.def File";
 
   // FIXME
-  private static final String FRIC_GROUP_LABEL = "'profile.fric' Datei";
+  private static final String FRIC_GROUP_LABEL = "'friction.dat' Datei";
 
-  private static final String FRIC_FILTER_LABEL = "SOBEK Profile.fric File";
+  private static final String FRIC_FILTER_LABEL = "SOBEK friction.dat File";
 
   private static final String DEF_EXTENSION = "def"; //$NON-NLS-1$
 
-  private static final String FRIC_EXTENSION = "fric"; //$NON-NLS-1$
+  private static final String FRIC_EXTENSION = "dat"; //$NON-NLS-1$
 
   private static final String SETTINGS_ID_PATTERN = "idPattern"; //$NON-NLS-1$
 
@@ -106,7 +106,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
     createPatternControl( comp );
 
     final IDialogSettings defSettings = PluginUtilities.getSection( getDialogSettings(), "def" );
-    final IDialogSettings fricSettings = PluginUtilities.getSection( getDialogSettings(), "fric" );
+    final IDialogSettings fricSettings = PluginUtilities.getSection( getDialogSettings(), "dat" );
     m_defFileChooser = new SobekFileChooser( this, defSettings, DEF_FILTER_LABEL, DEF_EXTENSION );
     m_defFileChooser.createControl( comp, DEF_GROUP_LABEL );
     m_fricFileChooser = new SobekFricFileChooser( this, fricSettings, FRIC_FILTER_LABEL, FRIC_EXTENSION );

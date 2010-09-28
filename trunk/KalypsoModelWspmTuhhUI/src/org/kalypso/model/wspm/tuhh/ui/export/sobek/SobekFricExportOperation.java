@@ -62,8 +62,6 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
 
   private final String m_roughnesId;
 
-  private int m_counter = 0;
-
   private final String m_idPattern;
 
   public SobekFricExportOperation( final File fricFile, final IProfileFeature[] profiles, final IFlowZoneType[] zoneTypes, final String roughnesId, final String idPattern )
@@ -80,7 +78,7 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
   @Override
   public String getLabel( )
   {
-    return ".fric Datei";
+    return ".dat Datei";
   }
 
   /**
@@ -92,8 +90,8 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
   {
     final SobekFrictionZone[] frictionZones = findZones( profil );
 
-    final String fricid = String.format( "Rau_%d", m_counter++ );
     final String crdef = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_idPattern, profil );
+    final String fricid = String.format( "Rau_%s", crdef );
 
     final String name = profil.getName();
     formatter.format( "CRFR id '%s' nm '%s' cs '%s'%n", fricid, name, crdef );
@@ -115,7 +113,7 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
     formatter.format( "TBLE%n" );
 
     for( final SobekFrictionZone zone : frictionZones )
-      formatter.format( "%.4f %.4f <          '%s%n", zone.getFrom(), zone.getTo(), zone.getComment() );
+      formatter.format( "%.4f %.4f <%n", zone.getFrom(), zone.getTo() );
 
     formatter.format( "tble%n" );
   }
@@ -126,7 +124,7 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
     formatter.format( "TBLE%n" );
 
     for( final SobekFrictionZone zone : frictionZones )
-      formatter.format( "%d %s <             ' %s%n", zone.getFrictionType(), zone.getFrictionString(), zone.getComment() );
+      formatter.format( "%d %s <%n", zone.getFrictionType(), zone.getFrictionString() );
 
     formatter.format( "tble%n" );
   }
@@ -165,6 +163,9 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
   {
     final int widthIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final int roughnessIndex = profil.indexOfProperty( m_roughnesId );
+    // FIXME: throw exception instead and collect stati and show them to user
+    if( roughnessIndex == -1 )
+      return -1.0;
 
     double totalLength = 0.0;
     double totalRoughness = 0.0;
