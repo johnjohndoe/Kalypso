@@ -67,6 +67,15 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
       }
         } );
 
+    addReplacer( new AbstractPatternInput<IProfil>( "<Name11>", "Name (11 Zeichen)" ) //$NON-NLS-1$
+        {
+      @Override
+      public String replace( final String text, final IProfil profile )
+      {
+        return text.replaceAll( getToken(), profile.getName().substring( 0, 11 ) );
+      }
+        } );
+
     addReplacer( new AbstractPatternInput<IProfil>( "<Description>", "Beschreibung" ) //$NON-NLS-1$
         {
       @Override
