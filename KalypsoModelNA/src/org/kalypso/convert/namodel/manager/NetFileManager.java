@@ -262,6 +262,11 @@ public class NetFileManager
       }
 
       final NetElement upStreamElement = netElements.get( upstreamChannel.getId() );
+      
+      final Node overflowNode = catchment.getOverflowNode();
+      if( overflowNode != null )
+        upStreamElement.setOverflowNode( overflowNode );
+      
       // downstream
       final IRelationType rt1 = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.GRUNDWASSERABFLUSS_MEMBER );
       final Feature[] abflussFEs = workspace.resolveLinks( catchment, rt1 );
@@ -294,16 +299,6 @@ public class NetFileManager
           continue;
         }
         downStreamElement.addUpStream( upStreamElement );
-      }
-
-      final Node overflowNode = catchment.getOverflowNode();
-      if( overflowNode != null )
-      {
-        final NetElement netElement = netElements.get( overflowNode.getId() );
-        if( netElement != null )
-        {
-          netElement.setOverflowNode( overflowNode );
-        }
       }
     }
 
