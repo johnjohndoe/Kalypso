@@ -44,6 +44,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -112,7 +113,7 @@ public class CatchmentManager
     // 0
     final IDManager idManager = m_conf.getIdManager();
     final int asciiID = idManager.getAsciiID( catchment );
-    catchmentBuffer.append( String.format( "           %5d      7\n", asciiID ) ); //$NON-NLS-1$
+    catchmentBuffer.append( String.format(Locale.US, "           %5d      7\n", asciiID ) ); //$NON-NLS-1$
 
     // 1-2
     for( int i = 1; i <= 2; i++ )
@@ -161,7 +162,7 @@ public class CatchmentManager
 
     // Der Versiegelungsgrad vsg wird gesetzt, da er im Rechenkern aus der Hydrotopdatei übernommen wird und somit in
     // der Gebietsdatei uninteressant ist.
-    catchmentBuffer.append( String.format( "1.000%5d", list.size() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    catchmentBuffer.append( String.format(Locale.US,  "1.000%5d", list.size() ) ); //$NON-NLS-1$ //$NON-NLS-2$
     catchmentBuffer.append( "       1.0" ); // JH: dummy for bimax, because it is not used in fortran! //$NON-NLS-1$ //$NON-NLS-2$
     catchmentBuffer.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( catchment, "bianf" ), "f5.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
@@ -187,7 +188,7 @@ public class CatchmentManager
     // 10 (____(f_eva,f4.2)_(aint,f3.1)__(aigw,f6.2)____(fint,f4.2)____(ftra,f4.2))
     // JH: only "aigw" from gml. other parameters are not used by fortran program - dummys!
     final double aigw = catchment.getFaktorAigw() * catchment.getAigw();
-    catchmentBuffer.append( String.format( "1.00 0.0 %6.2f 0.00 0.00\n", aigw ) ); //$NON-NLS-1$
+    catchmentBuffer.append( String.format(Locale.US, "1.00 0.0 %6.2f 0.00 0.00\n", aigw ) ); //$NON-NLS-1$
 
     // 11 (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*))
     // if correction factors of retention constants are choosen, retention constants correction
@@ -244,8 +245,8 @@ public class CatchmentManager
       final double delta = 1 - sumGwwi;
       line13.append( "0 " ); //$NON-NLS-1$
       line14.append( delta + " " ); //$NON-NLS-1$
-      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88" ), catchment.getName(), Integer.toString( asciiID ), sumGwwi * 100.0 ) ); //$NON-NLS-1$
-      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.92" ), delta * 100.0 ) ); //$NON-NLS-1$
+      Logger.getAnonymousLogger().log( Level.WARNING, String.format(Locale.US,  Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88" ), catchment.getName(), Integer.toString( asciiID ), sumGwwi * 100.0 ) ); //$NON-NLS-1$
+      Logger.getAnonymousLogger().log( Level.WARNING, String.format(Locale.US,  Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.92" ), delta * 100.0 ) ); //$NON-NLS-1$
     }
 
     if( gwList.size() > 0 )
