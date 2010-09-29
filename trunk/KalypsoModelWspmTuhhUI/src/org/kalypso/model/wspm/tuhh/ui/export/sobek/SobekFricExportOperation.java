@@ -205,7 +205,7 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
     if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS.equals( m_roughnesId ) )
       return FrictionType.White_Colebrook;
 
-    if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS.equals( m_roughnesId ) )
+    if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST.equals( m_roughnesId ) )
       return FrictionType.Strickler_Ks;
 
     return FrictionType.unknown1;
