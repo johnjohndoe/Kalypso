@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -72,6 +76,10 @@ import org.kalypso.observation.result.IComponent;
  */
 public class SobekFricFileChooser extends SobekFileChooser
 {
+  private static final String SETTING_ROUGHNESS = "roughnessId";
+
+  private static final String SETTING_ZONES = "zones";
+
   private final static LabelProvider LABELPROVIDER = new LabelProvider()
   {
     /**
@@ -85,13 +93,52 @@ public class SobekFricFileChooser extends SobekFileChooser
     }
   };
 
+  private static final IFlowZoneType[] ALL_ZONES = new IFlowZoneType[] { new LeftForeland(), new LeftBank(), new MainChannel(), new RightBank(), new RightForeland() };
+
   private String m_roughnessId = IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS;
 
-  private IFlowZoneType[] m_zoneTypes;
+  private IFlowZoneType[] m_zoneTypes = new IFlowZoneType[0];
+
 
   public SobekFricFileChooser( final SobekProfileExportFileChooserPage page, final IDialogSettings dialogSettings, final String filterLabel, final String extension )
   {
     super( page, dialogSettings, filterLabel, extension );
+
+    readSettings( dialogSettings );
+  }
+
+  private void readSettings( final IDialogSettings dialogSettings )
+  {
+    if( dialogSettings == null )
+      return;
+
+    final String savedRoughness = dialogSettings.get( SETTING_ROUGHNESS );
+    if( !StringUtils.isBlank( savedRoughness ) )
+      m_roughnessId = savedRoughness;
+
+    final String[] savedZones = dialogSettings.getArray( SETTING_ZONES );
+    if( savedZones != null )
+    {
+      final Collection<IFlowZoneType> zoneTypes = new ArrayList<IFlowZoneType>( savedZones.length );
+      for( final String className : savedZones )
+      {
+        final IFlowZoneType zone = findZone( className );
+        if( zone != null )
+          zoneTypes.add( zone );
+      }
+      m_zoneTypes = zoneTypes.toArray( new IFlowZoneType[zoneTypes.size()] );
+    }
+  }
+
+  private IFlowZoneType findZone( final String className )
+  {
+    for( final IFlowZoneType zoneType : ALL_ZONES )
+    {
+      if( className.equals( zoneType.getClass().getName() ) )
+        return zoneType;
+    }
+
+    return null;
   }
 
   @Override
@@ -125,6 +172,10 @@ public class SobekFricFileChooser extends SobekFileChooser
   protected void handleRoughnessSelectionChanged( final IStructuredSelection selection )
   {
     m_roughnessId = (String) selection.getFirstElement();
+
+    final IDialogSettings dialogSettings = getDialogSettings();
+    if( dialogSettings != null )
+      dialogSettings.put( SETTING_ROUGHNESS, m_roughnessId );
   }
 
   private void createZoneChooser( final Composite parent )
@@ -133,11 +184,11 @@ public class SobekFricFileChooser extends SobekFileChooser
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
     final CheckboxTableViewer zoneViewer = new CheckboxTableViewer( table );
 
-    final IFlowZoneType[] allZones = new IFlowZoneType[] { new LeftForeland(), new LeftBank(), new MainChannel(), new RightBank(), new RightForeland() };
-
     zoneViewer.setLabelProvider( new LabelProvider() );
     zoneViewer.setContentProvider( new ArrayContentProvider() );
-    zoneViewer.setInput( allZones );
+    zoneViewer.setInput( ALL_ZONES );
+
+    zoneViewer.setCheckedElements( m_zoneTypes );
 
     zoneViewer.addCheckStateListener( new ICheckStateListener()
     {
@@ -154,6 +205,15 @@ public class SobekFricFileChooser extends SobekFileChooser
     m_zoneTypes = new IFlowZoneType[objects.length];
     for( int i = 0; i < objects.length; i++ )
       m_zoneTypes[i] = (IFlowZoneType) objects[i];
+
+    final IDialogSettings dialogSettings = getDialogSettings();
+    if( dialogSettings != null )
+    {
+      final String[] zoneNames = new String[m_zoneTypes.length];
+      for( int i = 0; i < zoneNames.length; i++ )
+        zoneNames[i] = m_zoneTypes[i].getClass().getName();
+      dialogSettings.put( SETTING_ZONES, zoneNames );
+    }
   }
 
   @Override

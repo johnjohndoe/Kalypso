@@ -76,6 +76,11 @@ public class SobekFileChooser
     m_delegate.addFilter( filterLabel, "*." + extension ); //$NON-NLS-1$
   }
 
+  protected IDialogSettings getDialogSettings( )
+  {
+    return m_dialogSettings;
+  }
+
   public final void createControl( final Composite parent, final String groupLabel )
   {
     m_fileChooserGroup = new FileChooserGroup( m_delegate );

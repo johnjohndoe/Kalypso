@@ -180,7 +180,7 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
       final double width2 = getRecordValue( widthIndex, point2 );
       final double roughness = getRecordValue( roughnessIndex, point1 );
 
-      if( from <= width1 && from <= width2 && width1 < to && width2 < to )
+      if( from <= width1 && from <= width2 && width1 <= to && width2 <= to )
       {
         final double segmentLength = Math.abs( width2 - width1 );
         totalLength += segmentLength;
