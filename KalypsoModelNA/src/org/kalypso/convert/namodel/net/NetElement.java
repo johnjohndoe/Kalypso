@@ -114,7 +114,7 @@ public class NetElement
   private boolean m_calculated = false;
 
   private final List<NetElement> m_upStreamDepends = new ArrayList<NetElement>();
-
+  
   private final List<NetElement> m_downStreamDepends = new ArrayList<NetElement>();
 
   private final Channel m_channel;
@@ -132,6 +132,8 @@ public class NetElement
   private final NAConfiguration m_conf;
 
   private final Logger m_logger;
+  
+  private Node m_overflowNode;
 
   public NetElement( final GMLWorkspace modellWorkspace, final GMLWorkspace synthNWorkspace, final Channel channel, final NAConfiguration conf, final Logger logger )
   {
@@ -140,6 +142,7 @@ public class NetElement
     m_workspace = modellWorkspace;
     m_conf = conf;
     m_logger = logger;
+    setOverflowNode( null );
   }
 
   public Channel getChannel( )
@@ -310,7 +313,8 @@ public class NetElement
       final int chatchmentID = idManager.getAsciiID( catchmentFE );
       netBuffer.append( String.format( "%8d\n", chatchmentID ) ); //$NON-NLS-1$
     }
-
+    
+    // TODO: SIDE-EFFECT! Move 'nodeList.add(...)' code to the list owner object!
     if( upstreamNode != null && !nodeList.contains( upstreamNode ) )
       nodeList.add( upstreamNode );
     if( downstreamNode != null && !nodeList.contains( downstreamNode ) )
@@ -341,7 +345,7 @@ public class NetElement
     final List<Feature> statNList = new ArrayList<Feature>();
     final StringBuffer buffer = new StringBuffer();
     final Double annualityKey = metaControl.getAnnuality();
-    // Kostra-Kachel/ synth. N gebietsabhängig
+    // Kostra-Kachel/ synth. N gebietsabhï¿½ngig
     final String synthNKey = (String) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_SYNTH );
     statNList.addAll( Arrays.asList( m_synthNWorkspace.getFeatures( m_conf.getstatNFT() ) ) );
     final Iterator<Feature> iter = statNList.iterator();
@@ -399,5 +403,15 @@ public class NetElement
       }
     }
 
+  }
+
+  public void setOverflowNode( final Node overflowNode )
+  {
+    m_overflowNode = overflowNode;
+  }
+
+  public Node getOverflowNode( )
+  {
+    return m_overflowNode;
   }
 }

@@ -57,6 +57,8 @@ public class Catchment extends AbstractNaModelElement
   public static final QName FEATURE_CATCHMENT = new QName( NS_NAMODELL, "Catchment" ); //$NON-NLS-1$
 
   private static final QName LINK_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" ); //$NON-NLS-1$
+  
+  private static final QName LINK_OVERFLOW_NODE = new QName( NS_NAMODELL, "izkn_vers" ); //$NON-NLS-1$
 
   private static final QName PROP_GEOM = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 
@@ -72,6 +74,9 @@ public class Catchment extends AbstractNaModelElement
 
   private static final QName PROP_FAKTOR_AIGW = new QName( NS_NAMODELL, "faktorAigw" ); //$NON-NLS-1$
 
+  private static final QName PROP_BIANF = new QName( NS_NAMODELL, "bianf" ); //$NON-NLS-1$
+  private static final QName PROP_TINT = new QName( NS_NAMODELL, "tint" ); //$NON-NLS-1$
+  private static final QName PROP_RINTMX = new QName( NS_NAMODELL, "rintmx" ); //$NON-NLS-1$
 
   public Catchment( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -86,6 +91,11 @@ public class Catchment extends AbstractNaModelElement
   public void setChannel( final Channel channel )
   {
     FeatureHelper.setAsLink( this, LINK_CHANNEL, channel );
+  }
+  
+  public Node getOverflowNode( )
+  {
+    return (Node) FeatureHelper.resolveLink( this, LINK_OVERFLOW_NODE, true );
   }
 
   public GM_Surface< ? > getGeometry( )
@@ -124,6 +134,23 @@ public class Catchment extends AbstractNaModelElement
   public double getFaktorAigw( )
   {
     return getDoubleProperty( PROP_FAKTOR_AIGW, 1.0 );
+  }
+
+  public double getBianf( )
+  {
+    return getDoubleProperty( PROP_BIANF, 0.0 );
+  }
+  
+  public double getTint( )
+  {
+    // TODO: schema defines no default value, check if 0.0 is acceptable!
+    return getDoubleProperty( PROP_TINT, 0.0 );
+  }
+
+  public double getRintmx( )
+  {
+    // TODO: schema defines no default value, check if 0.0 is acceptable!
+    return getDoubleProperty( PROP_RINTMX, 0.0 );
   }
 
 }
