@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -70,6 +70,9 @@ public class WriteAsciiVisitor extends NetElementVisitor
   public boolean visit( final NetElement netElement )
   {
     netElement.write( m_asciiBuffer, m_nodeCollector );
+    final Node overflowNode = netElement.getOverflowNode();
+    if( overflowNode != null && !m_nodeCollector.contains( overflowNode ) )
+      m_nodeCollector.add( overflowNode );
     try
     {
       netElement.generateTimeSeries();
