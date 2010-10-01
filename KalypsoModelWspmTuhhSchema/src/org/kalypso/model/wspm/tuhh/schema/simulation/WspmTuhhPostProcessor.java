@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.PrintWriter;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
@@ -72,9 +71,6 @@ public class WspmTuhhPostProcessor
 
   private static final String LSFILE_PATTERN_REIB_CONST = "lengthSection_<runoff>.gml";//$NON-NLS-1$ 
 
-  // TODO: check: why two logs?
-  private final PrintWriter m_simulationLog;
-
   private final LogHelper m_log;
 
   private final File m_dathDir;
@@ -89,7 +85,7 @@ public class WspmTuhhPostProcessor
 
   private final URL m_ovwMapURL;
 
-  public WspmTuhhPostProcessor( final TuhhCalculation calculation, final File tmpDir, final File dathDir, final String epsThinning, final URL ovwMapURL, final ISimulationResultEater resultEater, final LogHelper log, final PrintWriter simulationLog )
+  public WspmTuhhPostProcessor( final TuhhCalculation calculation, final File tmpDir, final File dathDir, final String epsThinning, final URL ovwMapURL, final ISimulationResultEater resultEater, final LogHelper log )
   {
     m_calculation = calculation;
     m_tmpDir = tmpDir;
@@ -98,7 +94,6 @@ public class WspmTuhhPostProcessor
     m_ovwMapURL = ovwMapURL;
     m_resultEater = resultEater;
     m_log = log;
-    m_simulationLog = simulationLog;
   }
 
   private void addResult( final String id, final File file, final String messageKey, final String errorKey ) throws SimulationException
@@ -121,7 +116,7 @@ public class WspmTuhhPostProcessor
     // load results + copy to result folder + unzip templates
     monitor.setProgress( 80 );
     monitor.setMessage( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.13" ) ); //$NON-NLS-1$
-    m_simulationLog.println( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.14" ) ); //$NON-NLS-1$
+    m_log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.14" ) ); //$NON-NLS-1$
 
     // alle Modi
     final File ctrlFile = new File( m_dathDir, "Kontroll.log" ); //$NON-NLS-1$

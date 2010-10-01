@@ -69,6 +69,7 @@ import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
@@ -196,6 +197,8 @@ public class WspWinExporter
     if( reach == null )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.11" ) ); //$NON-NLS-1$
 
+    final WspmWaterBody reachWater = reach.getWaterBody();
+
     final TuhhReachProfileSegment[] profileSegments = reach.getReachProfileSegments();
     if( profileSegments.length == 0 )
       throw new IllegalArgumentException( "Strang enthält keine Profile. Export/Berechnug nicht möglich." );
@@ -209,6 +212,13 @@ public class WspWinExporter
       final IRunOffEvent runOffEvent = calculation.getRunOffEvent();
       if( runOffEvent == null )
         throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.12" ) ); //$NON-NLS-1$
+
+      final WspmWaterBody runoffWater = runOffEvent.getParent();
+      if( runoffWater != reachWater )
+      {
+        final String error = String.format( "Abflussereigniss '%s' (Gewässer '%s') und Zustand '%s' (Gewässer '%s') sind in unterschiedlichen Gewässer definiert. Bitte prüfen Sie die Berechnungseinstellungen.", runOffEvent.getName(), runoffWater.getName(), reach.getName(), reachWater.getName() );
+        throw new IllegalArgumentException( error );
+      }
 
       write1DTuhhRunOff( runOffEvent, isDirectionUpstreams, qwtFile );
     }
@@ -434,6 +444,12 @@ public class WspWinExporter
           IOUtils.closeQuietly( prfWriter );
         }
         prfWriter.close();
+      }
+
+      if( fileCount == 0 )
+      {
+        final String error = String.format( "Es wurden keine Profile an den Rechenkern übergeben. Bitte prüfen Sie Ihre Rechenkerneinstellungen." );
+        throw new IllegalArgumentException( error );
       }
 
       zustWriter.flush();
