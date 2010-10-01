@@ -42,19 +42,18 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
@@ -69,6 +68,7 @@ import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
@@ -118,17 +118,10 @@ public class WspmTuhhCalcJob implements ISimulation
   @Override
   public void run( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final URL modellGmlURL = (URL) inputProvider.getInputForID( INPUT_MODELL_GML );
-    final String calcXPath = (String) inputProvider.getInputForID( INPUT_CALC_PATH );
-    final String epsThinning = (String) inputProvider.getInputForID( INPUT_EPS_THINNING );
-    final URL ovwMapURL = findOvwMapUrl( inputProvider );
-
     final File simulogFile = new File( tmpDir, "simulation.log" ); //$NON-NLS-1$
     resultEater.addResult( OUTPUT_SIMULATION_LOG, simulogFile );
 
-    PrintWriter pwSimuLog = null;
-    final InputStream zipInputStream = null;
-    OutputStream strmKernelErr = null;
+    PrintStream pwSimuLog = null;
     try
     {
       final PrintStream calcOutConsumer = m_calcOutConsumer;
@@ -157,9 +150,41 @@ public class WspmTuhhCalcJob implements ISimulation
           calcOutConsumer.write( b );
         }
       };
-      pwSimuLog = new PrintWriter( new OutputStreamWriter( osSimuLog, "CP1252" ) ); //$NON-NLS-1$
+      pwSimuLog = new PrintStream( osSimuLog, true, "CP1252" ); //$NON-NLS-1$
 
       final LogHelper log = new LogHelper( pwSimuLog, monitor, calcOutConsumer );
+
+      doRun( tmpDir, inputProvider, resultEater, monitor, osSimuLog, log );
+    }
+    catch( final SimulationException e )
+    {
+      printLog( pwSimuLog, e );
+      throw e;
+    }
+    catch( final Exception e )
+    {
+      final String msg = String.format( "Fehler bei der Berechnung: %s", e.getLocalizedMessage() );
+      final SimulationException simulationException = new SimulationException( msg, e );
+      printLog( pwSimuLog, simulationException );
+      throw simulationException;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( pwSimuLog );
+    }
+  }
+
+  private void doRun( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor, final OutputStream osSimuLog, final LogHelper log ) throws SimulationException, Exception, GMLXPathException, IOException, FileNotFoundException, ProcessTimeoutException
+  {
+    OutputStream strmKernelErr = null;
+
+    try
+    {
+      final URL modellGmlURL = (URL) inputProvider.getInputForID( INPUT_MODELL_GML );
+      final String calcXPath = (String) inputProvider.getInputForID( INPUT_CALC_PATH );
+      final String epsThinning = (String) inputProvider.getInputForID( INPUT_EPS_THINNING );
+      final URL ovwMapURL = findOvwMapUrl( inputProvider );
+
       log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.7" ), calcXPath ); //$NON-NLS-1$
 
       final GMLXPath calcpath = new GMLXPath( calcXPath, null );
@@ -212,20 +237,20 @@ public class WspmTuhhCalcJob implements ISimulation
       if( log.checkCanceled() )
         return;
 
-      final WspmTuhhPostProcessor postProcessor = new WspmTuhhPostProcessor( calculation, tmpDir, dathDir, epsThinning, ovwMapURL, resultEater, log, pwSimuLog );
+      final WspmTuhhPostProcessor postProcessor = new WspmTuhhPostProcessor( calculation, tmpDir, dathDir, epsThinning, ovwMapURL, resultEater, log );
       postProcessor.run( monitor );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( "Fehler bei der Berechnung", e ); //$NON-NLS-1$
     }
     finally
     {
-      IOUtils.closeQuietly( pwSimuLog );
-      IOUtils.closeQuietly( zipInputStream );
       IOUtils.closeQuietly( strmKernelErr );
     }
+  }
+
+  private void printLog( final PrintStream ps, final SimulationException e )
+  {
+    final PrintStream outStream = ps == null ? System.out : ps;
+    outStream.println( e.getLocalizedMessage() );
+    e.printStackTrace( outStream );
   }
 
   private URL findOvwMapUrl( final ISimulationDataProvider inputProvider ) throws SimulationException
