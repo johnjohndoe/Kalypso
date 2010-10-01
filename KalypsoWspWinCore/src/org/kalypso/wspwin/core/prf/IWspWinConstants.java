@@ -57,7 +57,7 @@ public interface IWspWinConstants
 
   int SPEZIALPROFIL_MAUL = 9;
   
- int SPEZIALPROFIL_SINOUSITAET = 14; 
+ int SPEZIALPROFIL_SINUOSITAET = 14; 
 
   int DATA_BLOCK_TYPE_UNKNOWN = 0;
 

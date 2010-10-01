@@ -131,7 +131,7 @@
             provider="org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehrProvider">
       </objectProvider>
       <objectProvider
-            id="urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinusitaetTypes#SINUOSITAET"
+            id="urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUOSITAET"
             provider="org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObjectProvider">
       </objectProvider>
    </extension>

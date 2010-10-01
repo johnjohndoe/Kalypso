@@ -98,9 +98,9 @@ public class DoubleDataBlock extends AbstractDataBlock
     return m_values;
   }
 
-  private static Double[] readDoubleBlock( final int count, final BufferedReader reader )
+  private final Double[] readDoubleBlock( final int count, final BufferedReader reader )
   {
-    final Double[] values = new Double[count];
+    m_values = new Double[count];
 
     int counter = 0;
 
@@ -121,38 +121,36 @@ public class DoubleDataBlock extends AbstractDataBlock
         // verwerfen??
         // aber es hilft beim Einlesen von Geokoordinaten mit z.B. Schrottrauheiten(nur der Datanblock wird verworfen)
         m_logger.log( Level.SEVERE, e.getLocalizedMessage() );
-        return values;
+        return m_values;
       }
 
       if( count < 1 )
-        return values;
+        return m_values;
 
       String dblStr = ""; //$NON-NLS-1$
-      final int ci = (sT.countTokens() / 2);
+      final int ci = sT.countTokens();
 
-      if( ci < 4 && counter + ci < count )
+      if( counter + ci < count )
       {
         m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.1" ) ); //$NON-NLS-1$
-        return values;
+        return m_values;
       }
 
       for( int i = 0; i < ci; i++ )
       {
         try
         {
-          sT.nextToken();// Zero vor dem Double überspringen
           dblStr = sT.nextToken();
-
-          values[counter] = Double.parseDouble( dblStr );
+          m_values[counter] = Double.parseDouble( dblStr );
         }
         catch( final NoSuchElementException e )
         {
-          values[counter] = 0.0;
+          m_values[counter] = 0.0;
           m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.2", dblStr, counter + 1, e.getLocalizedMessage() ) ); //$NON-NLS-1$
         }
         counter++;
         if( counter == count )
-          return values;
+          return m_values;
       }
     }
   }

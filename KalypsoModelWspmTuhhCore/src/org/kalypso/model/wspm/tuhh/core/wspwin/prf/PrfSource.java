@@ -43,13 +43,17 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.util.StringTokenizer;
+
+import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.math.Range;
 import org.kalypso.commons.math.geom.PolyLine;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -69,8 +73,12 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
+import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
+import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.wspwin.core.prf.IWspWinConstants;
 import org.kalypso.wspwin.core.prf.PrfReader;
@@ -106,6 +114,7 @@ public class PrfSource implements IProfilSource
         readBewuchs( p, pr );
         readComment( p, pr );
         readGeoCoord( p, pr );
+        readSinousitaet( p, pr );
         if( !(readWehr( p, pr ) || readBridge( p, pr )) )
           readBuilding( p, pr );
       }
@@ -211,6 +220,32 @@ public class PrfSource implements IProfilSource
     writePointProperty( p, rechtswert, dbr );
   }
 
+  private void readSinousitaet( final IProfil p, final PrfReader pr )
+  {
+    IDataBlock db = pr.getDataBlock( "SINUOSITAET" ); //$NON-NLS-1$
+    if( db == null )
+      return;
+    final Double[] sin = db.getX();
+    final SinuositaetProfileObject profileObject = new SinuositaetProfileObject();
+    final IObservation<TupleResult> observation = profileObject.getObservation();
+    final TupleResult result = observation.getResult();
+
+    final int indexKennung = result.indexOfComponent( ISinuositaetProfileObject.PROPERTY_KENNUNG );
+    final int indexSinuositaet = result.indexOfComponent( ISinuositaetProfileObject.PROPERTY_SN );
+    final int indexGerinneArt = result.indexOfComponent( ISinuositaetProfileObject.PROPERTY_GERINNE_ART );
+    final int indexLinearFaktor = result.indexOfComponent( ISinuositaetProfileObject.PROPERTY_LF );
+
+    final IRecord record = result.createRecord();
+    record.setValue( indexKennung, sin[0] );
+    record.setValue( indexSinuositaet, sin[1] );
+    record.setValue( indexGerinneArt, sin[2] );
+    record.setValue( indexLinearFaktor, sin[3] );
+
+    result.add( record );
+
+    p.addProfileObjects( profileObject );
+  }
+
   private void readBuilding( final IProfil p, final PrfReader pr )
   {
     IDataBlock db = pr.getDataBlock( "EI" ); //$NON-NLS-1$
@@ -223,115 +258,75 @@ public class PrfSource implements IProfilSource
     if( db == null )
       return;
     final DataBlockHeader dbh = db.getDataBlockHeader();
-    final String[] value = db.getText();
-    if( value != null && value.length > 0 )
+    final Double[] values = db.getX();
+
+    double rauheit = 0.0;
+    final IDataBlock dbRau = pr.getDataBlock( "RAU" ); //$NON-NLS-1$
+    if( dbRau != null && dbRau.getY().length > 0 )
+      rauheit = dbRau.getY()[0];
+    final IProfileBuilding building;
+    switch( dbh.getSpecification( 8 ) )
     {
-      final StringTokenizer sT = new StringTokenizer( value[0], " " ); //$NON-NLS-1$
-      double rauheit = 0.0;
-      final IDataBlock dbRau = pr.getDataBlock( "RAU" ); //$NON-NLS-1$
-      if( dbRau != null && dbRau.getY().length > 0 )
-        rauheit = dbRau.getY()[0];
-      switch( dbh.getSpecification( 8 ) )
+      // important: changing property-positions will cause wrong parameter for building
+      case IWspWinConstants.SPEZIALPROFIL_TRAPEZ:
       {
-        case IWspWinConstants.SPEZIALPROFIL_TRAPEZ:
-        {
-          final IProfileBuilding building = new BuildingTrapez( );
-
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) )
-            return;
-          building.setValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, rauheit );
-          p.addProfileObjects( new IProfileObject[] { building } );
-          break;
-        }
-        case IWspWinConstants.SPEZIALPROFIL_KREIS:
-        {
-          final IProfileBuilding building = new BuildingKreis( );
-
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) )
-            return;
-          building.setValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, rauheit );
-          p.addProfileObjects( new IProfileObject[] { building } );
-          break;
-        }
-        case IWspWinConstants.SPEZIALPROFIL_EI:
-        {
-          final IProfileBuilding building = new BuildingEi();
-
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) )
-            return;
-          building.setValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, rauheit );
-          p.addProfileObjects( new IProfileObject[] { building } );
-          break;
-        }
-        case IWspWinConstants.SPEZIALPROFIL_MAUL:
-        {
-          final IProfileBuilding building = new BuildingMaul();
-
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
-            return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) )
-            return;
-          building.setValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, rauheit );
-          p.addProfileObjects( new IProfileObject[] { building } );
-          break;
-        }
-
+        building = new BuildingTrapez();
+        writeBuildingProperties( building, values, new String[] { IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE,
+            IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X,
+            IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y } );
+        break;
       }
+      case IWspWinConstants.SPEZIALPROFIL_KREIS:
+      {
+        building = new BuildingKreis();
+        writeBuildingProperties( building, values, new String[] { IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE,
+            IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y } );
+        break;
+      }
+      case IWspWinConstants.SPEZIALPROFIL_EI:
+      {
+        building = new BuildingEi();
 
+        writeBuildingProperties( building, values, new String[] { IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE,
+            IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y } );
+
+        break;
+      }
+      case IWspWinConstants.SPEZIALPROFIL_MAUL:
+      {
+        building = new BuildingMaul();
+
+        writeBuildingProperties( building, values, new String[] { IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE,
+            IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y } );
+        break;
+      }
+      default:
+        return;
     }
+    building.setValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, rauheit );
+    p.addProfileObjects( new IProfileObject[] { building } );
   }
 
-  private final boolean writeBuildingProperty( final IProfileBuilding building, final StringTokenizer sT, final String propertyID )
+  private void writeBuildingProperties( final IProfileBuilding building, final Double[] val, final String[] propertyIDs )
   {
-    if( building == null )
-      return false;
-
-    final IComponent component = building.getObjectProperty( propertyID );
-    if( sT.hasMoreTokens() )
+    if( building == null || val.length != propertyIDs.length )
+      return;
+    for( int i = 0; i < val.length; i++ )
+    {
+      final IComponent component = building.getObjectProperty( propertyIDs[i] );
+      final QName typeName = component.getValueTypeName();
       try
-    {
-        building.setValue( component, Double.parseDouble( sT.nextToken() ) );
-        return true;
+      {
+        if( typeName.equals( XmlTypes.XS_DECIMAL ) )
+          building.setValue( component, new BigDecimal( val[i] ) );
+        else
+          building.setValue( component, val[i] );
+      }
+      catch( final IllegalArgumentException e )
+      {
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, e.getMessage(), e ) );
+      }
     }
-    catch( final IllegalArgumentException e )
-    {
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, e.getMessage(), e ) );
-      return false;
-    }
-    else
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.16" ) + component.getName(), null ) ); //$NON-NLS-1$
-
-    return false;
   }
 
   private boolean readBridge( final IProfil p, final PrfReader pr )
@@ -346,10 +341,10 @@ public class PrfSource implements IProfilSource
     if( sT.countTokens() > 4 )
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.20" ), null ) ); //$NON-NLS-1$
 
-    writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER );
-    writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
-    writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
-    writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+    final Double[] values = new Double[] { Double.parseDouble( sT.nextToken() ), Double.parseDouble( sT.nextToken() ), Double.parseDouble( sT.nextToken() ), Double.parseDouble( sT.nextToken() ) };
+    final String[] ids = new String[] { IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT,
+        IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT };
+    writeBuildingProperties( bridge, values, ids );
 
     p.addProfileObjects( new IProfileObject[] { bridge } );
     final IComponent okb = p.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
@@ -463,7 +458,7 @@ public class PrfSource implements IProfilSource
     }
     if( pCount > 2 )
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.29", p.getStation() ) //$NON-NLS-1$
-          , null ) ); //$NON-NLS-1$
+      , null ) ); //$NON-NLS-1$
 
     if( p1 != null )
     {
@@ -497,7 +492,7 @@ public class PrfSource implements IProfilSource
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
     if( pCount > 2 )
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.32", p.getStation() ) //$NON-NLS-1$
-          , null ) ); //$NON-NLS-1$
+      , null ) ); //$NON-NLS-1$
 
     if( p1 != null )
     {
@@ -623,7 +618,7 @@ public class PrfSource implements IProfilSource
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
     if( pCount > 2 )
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.43", p.getStation() ) //$NON-NLS-1$
-          , null ) ); //$NON-NLS-1$
+      , null ) ); //$NON-NLS-1$
 
     if( p1 != null )
     {

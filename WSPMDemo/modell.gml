@@ -11070,6 +11070,73 @@ an, um ein externes Bild zu referenzieren.</gml:description>
      </prof:profileLocation>
     </prof:Profile>
    </wspm:profileMember>
+   <wspm:profileMember>
+    <prof:Profile gml:id="Profile1285921526088599">
+     <gml:name>Import</gml:name>
+     <om:time xmlns:om="http://www.opengis.net/om"/>
+     <om:procedure xmlns:om="http://www.opengis.net/om"/>
+     <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
+     <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
+     <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+      <swe:RecordDefinition gml:id="RecordDefinition1285921526088622">
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RAUHEIT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+      </swe:RecordDefinition>
+     </om:resultDefinition>
+     <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[0.0 1.514 true none 0.3 5974875.585 3536484.441
+9.1939 0.832 false none 0.3 5974884.137 3536487.816
+10.0536 0.406 false none 0.3 5974884.911 3536488.196
+10.5555 -0.823 false low 0.15 5974885.359 3536488.427
+13.0196 -1.4 false none 0.15 5974887.506 3536489.668
+15.4837 -1.977 false none 0.15 5974889.653 3536490.909
+16.935 -2.045 false none 0.15 5974891.1545 3536491.0895
+18.386 -2.113 false none 0.15 5974892.656 3536491.27
+19.3792 -2.04 false none 0.15 5974893.4657 3536491.8998
+20.3721 -1.967 false none 0.15 5974894.2755 3536492.5295
+22.358 -1.821 false none 0.15 5974895.895 3536493.789
+23.8711 -1.2635 false none 0.15 5974897.37 3536494.1975
+25.3841 -0.706 false low 0.3 5974898.845 3536494.606
+25.7753 -0.1405 false none 0.3 5974899.2055 3536494.758
+26.1665 0.425 false none 0.3 5974899.566 3536494.91
+27.2767 1.001 false none 0.3 5974900.6 3536495.316
+30.4649 1.128 true none 0.3 5974903.429 3536496.803
+33.4895 0.358 false none 0.3 5974905.962 3536498.54
+]]></om:result>
+     <prof:station>0.5200</prof:station>
+     <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+     <prof:srsName>EPSG:31467</prof:srsName>
+     <prof:profileLocation>
+      <gml:LineString srsName="EPSG:31467" srsDimension="3">
+       <gml:posList srsDimension="3">3536484.441 5974875.585 1.514 3536487.816 5974884.137 0.832 3536488.196 5974884.911 0.406 3536488.427 5974885.359 -0.823 3536489.668 5974887.506 -1.4 3536490.909 5974889.653 -1.977 3536491.0895 5974891.1545 -2.045 3536491.27 5974892.656 -2.113 3536491.8998 5974893.4657 -2.04 3536492.5295 5974894.2755 -1.967 3536493.789 5974895.895 -1.821 3536494.1975 5974897.37 -1.2635 3536494.606 5974898.845 -0.706 3536494.758 5974899.2055 -0.1405 3536494.91 5974899.566 0.425 3536495.316 5974900.6 1.001 3536496.803 5974903.429 1.128 3536498.54 5974905.962 0.358 </gml:posList>
+      </gml:LineString>
+     </prof:profileLocation>
+     <prof:member>
+      <om:Observation xmlns:om="http://www.opengis.net/om" gml:id="Observation1285921526306363">
+       <gml:description>Sinuosität</gml:description>
+       <gml:name>urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUSITAET</gml:name>
+       <om:time/>
+       <om:procedure/>
+       <om:observedProperty/>
+       <om:featureOfInterest/>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1285921526306560">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#KENNUNG"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#SN"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#GERINNE_ART"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#LF"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result><![CDATA[4.0 2.11 2.0 1.85
+]]></om:result>
+      </om:Observation>
+     </prof:member>
+    </prof:Profile>
+   </wspm:profileMember>
    <wspm:reachMember>
     <tuhh:ReachWspmTuhhSteadyState gml:id="ReachWspmTuhhSteadyState1283765594305411">
      <gml:name>Wehr Durchlass</gml:name>

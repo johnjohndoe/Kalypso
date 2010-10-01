@@ -61,13 +61,6 @@ public class DataBlockHeader
 
   private final List<Integer> m_specifications = new ArrayList<Integer>();
 
-  public void printToPrinter( final PrintWriter pw )
-  {
-    pw.println( m_firstLine );
-    pw.println( m_secondLine );
-    pw.println( m_thirdLine );
-  }
-
   public DataBlockHeader( final BufferedReader br ) throws IOException
   {
     m_firstLine = br.readLine();
@@ -80,17 +73,17 @@ public class DataBlockHeader
     this( firstLine, "" ); //$NON-NLS-1$
   }
 
-  public DataBlockHeader( final String firstLine, final String secondLine )
-  {
-    this( firstLine, secondLine, 0 );
-  }
-
   /**
    * Same as {@link #DataBlockHeader(String, "", int)}
    */
   public DataBlockHeader( final String firstLine, final int specialId )
   {
     this( firstLine, "", specialId );
+  }
+
+  public DataBlockHeader( final String firstLine, final String secondLine )
+  {
+    this( firstLine, secondLine, 0 );
   }
 
   /**
@@ -111,19 +104,9 @@ public class DataBlockHeader
     return m_firstLine;
   }
 
-  public void setFirstLine( final String firstLine )
-  {
-    m_firstLine = firstLine;
-  }
-
   public String getSecondLine( )
   {
     return m_secondLine;
-  }
-
-  public void setSecondLine( final String secondLine )
-  {
-    m_secondLine = secondLine;
   }
 
   public Integer getSpecification( final int index )
@@ -131,21 +114,9 @@ public class DataBlockHeader
     return (index < m_specifications.size() ? m_specifications.get( index ) : -1);
   }
 
-  public void setSpecifications( final Integer[] specification )
-  {
-    m_specifications.clear();
-    m_specifications.addAll( Arrays.asList( specification ) );
-  }
-
   public String getThirdLine( )
   {
     return m_thirdLine;
-  }
-
-  public void setThirdLine( final String thirdLine )
-  {
-    m_thirdLine = thirdLine;
-    parseThirdLine();
   }
 
   private void parseThirdLine( )
@@ -168,6 +139,35 @@ public class DataBlockHeader
       }
     }
 
+  }
+
+  public void printToPrinter( final PrintWriter pw )
+  {
+    pw.println( m_firstLine );
+    pw.println( m_secondLine );
+    pw.println( m_thirdLine );
+  }
+
+  public void setFirstLine( final String firstLine )
+  {
+    m_firstLine = firstLine;
+  }
+
+  public void setSecondLine( final String secondLine )
+  {
+    m_secondLine = secondLine;
+  }
+
+  public void setSpecifications( final Integer[] specification )
+  {
+    m_specifications.clear();
+    m_specifications.addAll( Arrays.asList( specification ) );
+  }
+
+  public void setThirdLine( final String thirdLine )
+  {
+    m_thirdLine = thirdLine;
+    parseThirdLine();
   }
 
 }
