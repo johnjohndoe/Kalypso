@@ -220,11 +220,11 @@ public class WspWinExporter
         throw new IllegalArgumentException( error );
       }
 
-      write1DTuhhRunOff( runOffEvent, isDirectionUpstreams, qwtFile );
+      write1DTuhhRunOff( runOffEvent, qwtFile );
     }
   }
 
-  private static void write1DTuhhRunOff( final IRunOffEvent runOffEvent, final boolean isDirectionUpstreams, final File qwtFile ) throws IOException
+  private static void write1DTuhhRunOff( final IRunOffEvent runOffEvent, final File qwtFile ) throws IOException
   {
     final SortedMap<BigDecimal, BigDecimal> values = runOffEvent.getDischargeTable();
 
@@ -448,7 +448,7 @@ public class WspWinExporter
 
       if( fileCount == 0 )
       {
-        final String error = String.format( "Es wurden keine Profile an den Rechenkern übergeben. Bitte prüfen Sie Ihre Rechenkerneinstellungen." );
+        final String error = String.format( "Es wurden keine Profile an den Rechenkern übergeben. Bitte prüfen Sie Ihre Berechnungseinstellungen." );
         throw new IllegalArgumentException( error );
       }
 
