@@ -10,6 +10,9 @@
 	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents" uri="dict_profile_building.gml" />
 
 	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents" uri="dict_qintervall_points.gml" />
+
+    <catalog:system systemId="urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes" uri="dict_sinuositaet_types.gml" />
 	
+	<catalog:system systemId="urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents" uri="dict_sinuositaet_components.gml" />
 </catalog:catalog>
 

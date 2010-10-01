@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
 
+
 /**
  * @author Dirk Kuch
  */
@@ -60,5 +61,15 @@ public enum SINUOSITAET_KENNUNG
   public int toInteger( )
   {
     return m_value;
+  }
+  
+  public final static  SINUOSITAET_KENNUNG fromInteger (final int i)
+  {
+    for (final SINUOSITAET_KENNUNG sk : values())
+    {
+      if(sk.toInteger()==i)
+        return sk;
+    }
+    return null;
   }
 }

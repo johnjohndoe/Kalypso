@@ -103,11 +103,12 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
       return null;
 
     final int index = result.indexOf( PROPERTY_KENNUNG );
-
+    if( index < 0 )
+      return null;
     final IRecord record = result.get( 0 );
-    final String name = (String) record.getValue( index );
+    final int intKennung = ((Number) record.getValue( index )).intValue();
 
-    return SINUOSITAET_KENNUNG.valueOf( name );
+    return SINUOSITAET_KENNUNG.fromInteger( intKennung );
   }
 
   /**
@@ -141,9 +142,9 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
     final int index = result.indexOf( PROPERTY_GERINNE_ART );
 
     final IRecord record = result.get( 0 );
-    final String name = (String) record.getValue( index );
+    final int intGerinne = ((Number) record.getValue( index )).intValue();
 
-    return SINUOSITAET_GERINNE_ART.valueOf( name );
+    return SINUOSITAET_GERINNE_ART.fromInteger( intGerinne );
   }
 
   /**

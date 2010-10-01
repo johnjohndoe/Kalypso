@@ -47,7 +47,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
  */
 public interface ISinuositaetProfileObject extends IProfileObject
 {
-  public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUSITAET"; //$NON-NLS-1$
+  public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUOSITAET"; //$NON-NLS-1$
 
   public static final String PROPERTY_KENNUNG = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#KENNUNG"; //$NON-NLS-1$
 

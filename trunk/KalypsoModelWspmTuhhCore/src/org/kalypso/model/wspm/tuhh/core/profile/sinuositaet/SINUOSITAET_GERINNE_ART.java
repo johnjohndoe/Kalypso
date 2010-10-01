@@ -59,4 +59,14 @@ public enum SINUOSITAET_GERINNE_ART
   {
     return m_value;
   }
+
+  public final static SINUOSITAET_GERINNE_ART fromInteger( final int i )
+  {
+    for( final SINUOSITAET_GERINNE_ART sg : values() )
+    {
+      if( sg.toInteger() == i )
+        return sg;
+    }
+    return null;
+  }
 }

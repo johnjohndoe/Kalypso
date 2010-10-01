@@ -72,7 +72,9 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
       @Override
       public String replace( final String text, final IProfil profile )
       {
-        return text.replaceAll( getToken(), profile.getName().substring( 0, 11 ) );
+        String name = profile.getName();
+        int length = Math.min(  name.length(), 11 );
+        return text.replaceAll( getToken(), name.substring( 0, length ) );
       }
         } );
 

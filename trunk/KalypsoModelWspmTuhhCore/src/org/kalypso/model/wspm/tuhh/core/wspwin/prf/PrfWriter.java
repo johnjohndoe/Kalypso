@@ -390,7 +390,7 @@ public class PrfWriter implements IPrfConstants
       return new DataBlockHeader( "OK-WEHR" ); //$NON-NLS-1$
     if( ISinuositaetProfileObject.ID.equals( key ) )
 
-      return new DataBlockHeader( "SINOUSITAET", "[-]", IWspWinConstants.SPEZIALPROFIL_SINOUSITAET );//$NON-NLS-1$
+      return new DataBlockHeader( "SINUOSITAET", "[-]", IWspWinConstants.SPEZIALPROFIL_SINUOSITAET );//$NON-NLS-1$
     return new DataBlockHeader( key );
   }
 
@@ -649,7 +649,7 @@ public class PrfWriter implements IPrfConstants
     {
       final ISinuositaetProfileObject sinuosity = (ISinuositaetProfileObject) profileObject;
 
-      final DataBlockHeader header = createHeader( sinuosity.getId() ); //$NON-NLS-1$
+      final DataBlockHeader header = createHeader( sinuosity.getId() ); 
       final DoubleDataBlock dataBlock = new DoubleDataBlock( header );
       final SINUOSITAET_KENNUNG kennung = sinuosity.getKennung();
       final double sinus = sinuosity.getSinuositaet();
