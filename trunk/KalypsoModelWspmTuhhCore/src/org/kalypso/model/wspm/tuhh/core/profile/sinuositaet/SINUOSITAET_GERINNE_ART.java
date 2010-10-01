@@ -45,21 +45,32 @@ package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
  */
 public enum SINUOSITAET_GERINNE_ART
 {
-  eKompakt(1),
-  eGegliedert(2);
+  eKompakt(1, "Kompakt"),
+  eGegliedert(2, "Gegliedert");
+
+  /**
+   * @see java.lang.Enum#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return m_label;
+  }
 
   private final int m_value;
+  private final String m_label;
 
-  SINUOSITAET_GERINNE_ART( final int value )
+  SINUOSITAET_GERINNE_ART( final int value, String label )
   {
     m_value = value;
+    m_label = label;
   }
 
   public int toInteger( )
   {
     return m_value;
   }
-
+ 
   public final static SINUOSITAET_GERINNE_ART fromInteger( final int i )
   {
     for( final SINUOSITAET_GERINNE_ART sg : values() )

@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -120,7 +121,7 @@ public class TrennerPanel extends AbstractProfilView
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
-  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
+  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit, ScrolledForm form )
   {
     final IProfil profil = getProfil();
     final Display display = parent.getDisplay();

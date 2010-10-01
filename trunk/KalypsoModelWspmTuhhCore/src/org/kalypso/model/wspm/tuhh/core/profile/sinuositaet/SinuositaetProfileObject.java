@@ -102,7 +102,7 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
     if( result.isEmpty() )
       return null;
 
-    final int index = result.indexOf( PROPERTY_KENNUNG );
+    final int index = result.indexOfComponent( PROPERTY_KENNUNG );
     if( index < 0 )
       return null;
     final IRecord record = result.get( 0 );
@@ -122,7 +122,7 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
     if( result.isEmpty() )
       return null;
 
-    final int index = result.indexOf( PROPERTY_SN );
+    final int index = result.indexOfComponent( PROPERTY_SN );
 
     final IRecord record = result.get( 0 );
     return (Double) record.getValue( index );
@@ -139,7 +139,7 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
     if( result.isEmpty() )
       return null;
 
-    final int index = result.indexOf( PROPERTY_GERINNE_ART );
+    final int index = result.indexOfComponent( PROPERTY_GERINNE_ART );
 
     final IRecord record = result.get( 0 );
     final int intGerinne = ((Number) record.getValue( index )).intValue();
@@ -158,7 +158,7 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
     if( result.isEmpty() )
       return null;
 
-    final int index = result.indexOf( PROPERTY_LF );
+    final int index = result.indexOfComponent( PROPERTY_LF );
 
     final IRecord record = result.get( 0 );
     return (Double) record.getValue( index );

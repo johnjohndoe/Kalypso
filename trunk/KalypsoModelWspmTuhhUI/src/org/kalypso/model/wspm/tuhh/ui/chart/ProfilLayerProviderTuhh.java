@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBui
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -280,6 +281,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
     if( layerID.equals( IWspmTuhhConstants.LAYER_TUBES ) )
       return new BuildingTubesTheme( profil, new IProfilChartLayer[] { new CulvertLayer( profil, m_lsp ) }, cmLeft );
+    if( layerID.equals( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
+      return new SinuositaetLayer( profil );
 
     if( layerID.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
     {
@@ -314,7 +317,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
     // TODO IProfileObjects now returned as list from IProfile, but we can only handle one IProfileObject (WSPM can't
     // handle more!)
-    final IProfileObject[] buildings = profil.getProfileObjects();
+    final IProfileObject[] buildings = profil.getProfileObjects( AbstractObservationBuilding.class );
 
     if( buildings.length > 0 )
     {
@@ -356,6 +359,12 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       layerToAdd.add( createLayer( profil, IWspmConstants.LAYER_GELAENDE ) );
 
     layerToAdd.add( createLayer( profil, IWspmTuhhConstants.LAYER_DEVIDER ) );
+
+    final ISinuositaetProfileObject[] sinObj = profil.getProfileObjects( ISinuositaetProfileObject.class );
+    if( sinObj.length > 0 )
+    {
+      layerToAdd.add( createLayer( profil, IWspmTuhhConstants.LAYER_SINUOSITAET ) );
+    }
 
     /* Prune 'null's returned from createLayer-subroutines */
     layerToAdd.removeAll( Collections.singleton( null ) );

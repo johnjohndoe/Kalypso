@@ -189,6 +189,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static String LAYER_EI = PROFILE_LAYER + "EI"; //$NON-NLS-1$
 
   public static String LAYER_TUBES = PROFILE_LAYER + "TUBES"; //$NON-NLS-1$
+  
+  public static String LAYER_SINUOSITAET = PROFILE_LAYER + "SINUOSITAET"; //$NON-NLS-1$
 
 //  public static String LAYER_WASSERSPIEGEL2D = PROFILE_LAYER + "WASSERPIEGEL2D"; //$NON-NLS-1$
 
