@@ -48,7 +48,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -681,9 +681,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   private void createJunctionTriangles2( final INodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance ) throws GM_Exception
   {
     final String crs = nodeCurve1d.getCoordinateSystem();
-    GM_Surface<GM_SurfacePatch> lSurface0 = GeometryFactory.createGM_Surface( nodeCurve1d.getAsLineString().getPositions(), null, crs );
-    GM_Surface<GM_SurfacePatch> lSurface1 = GeometryFactory.createGM_Surface( boundaryCurve.getAsLineString().getPositions(), null, crs );
-    GM_MultiSurface lMultiSurface = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { lSurface0, lSurface1 }, crs );
+    final GM_Surface<GM_SurfacePatch> lSurface0 = GeometryFactory.createGM_Surface( nodeCurve1d.getAsLineString().getPositions(), null, crs );
+    final GM_Surface<GM_SurfacePatch> lSurface1 = GeometryFactory.createGM_Surface( boundaryCurve.getAsLineString().getPositions(), null, crs );
+    final GM_MultiSurface lMultiSurface = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { lSurface0, lSurface1 }, crs );
     final GM_Triangle[] elements2 = ConstraintDelaunayHelper.convertToTriangles( lMultiSurface, crs, false );
 
     for( final GM_Triangle element : elements2 )
@@ -699,7 +699,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
-    PrintWriter pwSimuLog;
+    PrintStream pwSimuLog;
 
     final String crs = nodeCurve1d.getCoordinateSystem();
 
@@ -707,7 +707,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     breaklines.add( nodeCurve1d );
     breaklines.add( boundaryCurve );
 
-    pwSimuLog = new PrintWriter( System.out );
+    pwSimuLog = System.out;
 
     final File tempDir = FileUtilities.createNewTempDir( "Triangle" ); //$NON-NLS-1$
     final File polyfile = new File( tempDir, "input.poly" ); //$NON-NLS-1$
@@ -774,14 +774,13 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
-    PrintWriter pwSimuLog;
+    final PrintStream pwSimuLog = System.out;
 
     final GM_Curve[] curves = curveList.toArray( new GM_Curve[curveList.size()] );
     final INodeResult[] nodeResults = nodeList.toArray( new INodeResult[nodeList.size()] );
 
     final String crs = curveList.get( 0 ).getCoordinateSystem();
 
-    pwSimuLog = new PrintWriter( System.out );
 
     final File tempDir = FileUtilities.createNewTempDir( "Triangle" ); //$NON-NLS-1$
     final File polyfile = new File( tempDir, "input.poly" ); //$NON-NLS-1$
@@ -1091,7 +1090,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         splitIntoTwoTriangles( nodesInserted.toArray( new INodeResult[nodesInserted.size()] ), splitArcs.get( 0 ) );
         break;
 
-      /* case2: two arcs were split */
+        /* case2: two arcs were split */
       case 2:
         splitIntoThreeTriangles( nodesInserted.toArray( new INodeResult[nodesInserted.size()] ), splitArcs.get( 0 ), splitArcs.get( 1 ) );
         break;
@@ -1534,7 +1533,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       // if swan results found.
       if( m_mapSWANResults != null )
       { 
-        GM_Position lPositionKey = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( easting, SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( northing, SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
+        final GM_Position lPositionKey = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( easting, SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( northing, SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
         try
         { 
           result.setWaveDirection( m_mapWAVEDir.get( lPositionKey ) );
@@ -1542,7 +1541,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
           result.setWavePeriod( m_mapWAVEPeriod.get( lPositionKey ) );
           m_resultMinMaxCatcher.addNodeResult( result );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           // //middle nodes that cannot be found in output of swan, will be ignored here
           // e.printStackTrace();
@@ -1560,7 +1559,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   }
 
-  private IFE1D2DNode< ? > getResultNodeFromPoint( GM_Point point )
+  private IFE1D2DNode< ? > getResultNodeFromPoint( final GM_Point point )
   {
     final Feature feature = GeometryUtilities.findNearestFeature( point, DEFAULT_SEARCH_DISTANCE, m_discModel.getNodes().getWrappedList(), IFE1D2DNode.PROP_GEOMETRY );
     if( feature == null )
@@ -1600,10 +1599,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       return;
     }
-    Set<String> lKeysSet = m_mapSWANResults.keySet();
-    for( Object element : lKeysSet )
+    final Set<String> lKeysSet = m_mapSWANResults.keySet();
+    for( final Object element : lKeysSet )
     {
-      String strKey = (String) element;
+      final String strKey = (String) element;
       if( strKey.toLowerCase().contains( ISimulation1D2DConstants.SIM_SWAN_HSIG_OUT_PARAM.toLowerCase() ) )
       {
         m_mapWAVEHsig = m_mapSWANResults.get( strKey );
@@ -1668,9 +1667,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         System.out.println( "normally the handleResult function can be called without water stage information! The 2D-file may be 'broken'" );
         break;
 
-      // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
-      // stage information!
-      // Normally this shouldn't happen, because otherwise the 2D-file is 'broken'
+        // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
+        // stage information!
+        // Normally this shouldn't happen, because otherwise the 2D-file is 'broken'
 
     }
   }
