@@ -172,7 +172,7 @@ public class Catchment extends AbstractNaModelElement
   {
     if( m_grundwasserAbflussCollection == null )
       m_grundwasserAbflussCollection = new FeatureBindingCollection<Feature>( this, Feature.class, PROPLIST_GRUNDWASSERABFLUSS_MEMBER, true );
-    return m_bodenKorrekturCollection;
+    return m_grundwasserAbflussCollection;
   }
 
   public Feature[] getgrundwasserAbflussFeatures( )
