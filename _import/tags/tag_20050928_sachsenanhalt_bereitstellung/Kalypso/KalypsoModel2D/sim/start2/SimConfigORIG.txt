@@ -1,4 +1,0 @@
-bcORIG.txt
-modelORIG.2d
-2d
-0

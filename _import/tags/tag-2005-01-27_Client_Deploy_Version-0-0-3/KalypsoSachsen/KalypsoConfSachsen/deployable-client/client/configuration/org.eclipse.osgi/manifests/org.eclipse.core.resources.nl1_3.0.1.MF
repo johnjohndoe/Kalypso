@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Generated-from: 1092667444000;type=4
-Bundle-Name: Core Resource Management NL Support
-Bundle-SymbolicName: org.eclipse.core.resources.nl1
-Bundle-Version: 3.0.1
-Bundle-ClassPath: nl1.jar
-Fragment-Host: org.eclipse.core.resources;bundle-version="[3.0.1,4.0.0)"
-Bundle-Localization: plugin

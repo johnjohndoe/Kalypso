@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Generated-from: 1092667448000;type=4
-Bundle-Name: JFace NL Support
-Bundle-SymbolicName: org.eclipse.jface.nl1
-Bundle-Version: 3.0.0
-Bundle-ClassPath: nl1.jar
-Fragment-Host: org.eclipse.jface;bundle-version="[3.0.0,4.0.0)"
-Bundle-Localization: plugin

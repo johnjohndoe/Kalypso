@@ -1,7 +1,0 @@
-1000	1	VirtualChannel40
-1800	1	KMChannel1800
-1700	2	Catchment1700
-1800	2	Catchment1800
-1000	3	Node1800
-9001	3	dummy
-10000	3	dummy

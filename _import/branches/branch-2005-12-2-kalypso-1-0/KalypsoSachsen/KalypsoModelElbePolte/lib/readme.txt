@@ -1,1 +1,0 @@
-Dummy file so the building process (build.xml) will not complain.

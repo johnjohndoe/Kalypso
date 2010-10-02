@@ -1,4 +1,0 @@
-#!/bin/bash
-# rm *class de/tuhh/wb/javagis/*/*class
-CLASSPATH=.:../../classes
-javac Test.java 2>out.txt;less out.txt

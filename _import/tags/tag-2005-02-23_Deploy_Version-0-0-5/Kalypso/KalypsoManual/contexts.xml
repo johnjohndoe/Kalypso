@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-    
-<contexts>
-    <context id="menu_modell">
-        <description>Grundfunktionen</description>
-        <topic href="ch03s03.html" label="Menu Modell"/>
-    </context>
-</contexts>

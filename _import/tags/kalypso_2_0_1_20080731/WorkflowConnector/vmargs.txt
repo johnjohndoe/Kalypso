@@ -1,1 +1,0 @@
--Dde.renew.simdb.driver=org.hsqldb.jdbcDriver -Dde.renew.access.adaptor=de.renew.workflow.DatabaseAdaptor -Dde.renew.simdb.url=jdbc:hsqldb:file:model1D2Ddb/model1D2D -Dde.renew.remote.enable=true -Dde.renew.gui.autostart=true

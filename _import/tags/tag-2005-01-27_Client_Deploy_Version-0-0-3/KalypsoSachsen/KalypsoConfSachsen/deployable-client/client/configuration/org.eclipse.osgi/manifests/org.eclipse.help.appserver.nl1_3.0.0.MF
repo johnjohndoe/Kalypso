@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Generated-from: 1092667446000;type=4
-Bundle-Name: Help Application Server NL Support
-Bundle-SymbolicName: org.eclipse.help.appserver.nl1
-Bundle-Version: 3.0.0
-Bundle-ClassPath: nl1.jar
-Fragment-Host: org.eclipse.help.appserver;bundle-version="[3.0.0,4.0.0)"
-Bundle-Localization: plugin

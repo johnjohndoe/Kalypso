@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<modellist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="modellist.simulation.kalypso.org">
-	<mainImage imageUrl="sachsenlogo.gif"/> 
-	<logoImage imageUrl="bceLogo.png" linkUrl="http://www.bjoernsen.de"/> 
-    <model name="Spree" icon="spree_icon.gif" image="EZG_Spree.jpg" label="Spree"/>
-    <model name="WeisseElster" icon="we_icon.gif" image="EZG_W_E.jpg" label="Weisse Elster"/>
-</modellist>

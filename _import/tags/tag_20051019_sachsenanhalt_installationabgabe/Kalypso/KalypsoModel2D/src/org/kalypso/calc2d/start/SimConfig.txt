@@ -1,4 +1,0 @@
-bc_2204.txt
-model_tmp.2d
-2d
-0

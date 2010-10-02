@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--Created on Thu Nov 18 18:41:56 CET 2004-->
-<config version="3.0" date="1100799716635" transient="false">
-<site url="platform:/base/" enabled="true" updateable="true" policy="USER-EXCLUDE">
-<feature id="org.eclipse.platform" primary="true" version="3.0.1" application="org.eclipse.ui.ide.workbench" url="features/org.eclipse.platform_3.0.1/"/>
-<feature id="org.eclipse.platform.nls1" version="3.0.1" url="features/org.eclipse.platform.nls1_3.0.1/"/>
-<feature id="org.kalypso.enterprise" primary="true" version="0.0.1" plugin-identifier="org.kalypso.ui" application="org.kalypso.ui.application" url="features/org.kalypso.enterprise_0.0.1/"/>
-</site>
-</config>

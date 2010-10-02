@@ -1,1 +1,0 @@
-lib Verzeichnis, bitte nicht löschen

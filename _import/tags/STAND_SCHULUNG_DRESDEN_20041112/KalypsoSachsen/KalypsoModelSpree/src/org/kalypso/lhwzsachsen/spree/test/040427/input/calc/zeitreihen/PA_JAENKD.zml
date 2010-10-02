@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<observation editable="false" xmlns="zml.kalypso.org"><name>PA_JAENKD</name><metadataList><metadata name="StartZeit" value="27.4.2005 12:00"/><metadata name="Name" value="PA_JAENKD"/></metadataList><axis datatype="TYPE=xs:double" key="false" name="Wert" type="N" unit=""><valueArray separator=";">0.0;0.0;0.0;0.0;5.0;5.0;7.5;7.5</valueArray></axis><axis datatype="TYPE=xs:date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit=""><valueArray separator=";">2004-04-27T04:00:00;2004-04-27T07:00:00;2004-04-27T10:00:00;2004-04-27T13:00:00;2004-04-27T16:00:00;2004-04-27T19:00:00;2004-04-27T22:00:00;2004-04-28T01:00:00</valueArray></axis></observation>
-
