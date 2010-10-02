@@ -212,10 +212,8 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 
     if( m_selectedModule != null )
     {
-
       final DefaultContentArea footerBackContent = new DefaultContentArea()
       {
-
         @Override
         public Point getContentAreaAnchorPoint( )
         {
