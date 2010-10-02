@@ -152,7 +152,6 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 
     m_contentClient.addPaintListener( new PaintListener()
     {
-
       private org.eclipse.swt.graphics.Point m_size;
 
       @Override
