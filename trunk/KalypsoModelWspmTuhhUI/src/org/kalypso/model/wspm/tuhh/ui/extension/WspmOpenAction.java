@@ -42,25 +42,25 @@ package org.kalypso.model.wspm.tuhh.ui.extension;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
+import org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction;
 
 /**
  * @author kuch
  */
-public class WspmOpenAction implements IKalypsoModuleProjectOpenAction
+public class WspmOpenAction extends AbstractModuleProjectOpenAction
 {
   /**
-   * @see org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction#open(org.eclipse.ui.IWorkbenchPage,
+   * @see org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction#doOpen(org.eclipse.ui.IWorkbenchPage,
    *      org.eclipse.core.resources.IProject)
    */
   @Override
-  public IStatus open( final IWorkbenchPage page, final IProject project ) throws PartInitException
+  protected IStatus doOpen( final IWorkbenchPage page, final IProject project ) throws CoreException
   {
     final IFile iFile = project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
     IDE.openEditor( page, iFile );

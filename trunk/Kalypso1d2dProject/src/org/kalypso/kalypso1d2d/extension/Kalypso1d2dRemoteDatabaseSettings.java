@@ -58,7 +58,6 @@ import org.kalypso.project.database.client.extension.project.SzenarioProjectOpen
  */
 public class Kalypso1d2dRemoteDatabaseSettings implements IKalypsoModuleDatabaseSettings
 {
-
   /**
    * @see org.kalypso.project.database.client.extension.database.IKalypsoRemoteDatabaseSettings#getModuleCommitType()
    */
@@ -98,21 +97,17 @@ public class Kalypso1d2dRemoteDatabaseSettings implements IKalypsoModuleDatabase
           if( getModuleCommitType().equals( projectType ) )
             return true;
         }
-          
-
 
         return false;
       }
     };
   }
-  
 
   @Override
   public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
   {
     return new SzenarioProjectOpenAction();
   }
-
   
   /**
    * @see org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings#hasManagedDirtyState()
