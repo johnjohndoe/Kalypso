@@ -47,6 +47,7 @@ import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.wizards.KalypsoNAConvertProjectWizard;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
 
 /**
@@ -98,19 +99,20 @@ public class KalypsoRrmModulePage extends AbstractKalypsoModulePage
   @Override
   public boolean hasImportWizard( )
   {
-    return false;
+    return true;
   }
 
   @Override
   public IWizard getImportWizard( )
   {
-    return null;
+    // FIXME: we need a more flexible means to add new icons to the bottom of the project list
+    return new KalypsoNAConvertProjectWizard();
   }
 
   @Override
   public String getImportWizardLabel( )
   {
-    return null;
+    return "Altprojekte importieren";
   }
 
   @Override

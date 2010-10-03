@@ -67,6 +67,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -136,19 +137,17 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   public static final String CATEGORY_TEMPLATE = "org.kalypso.model.rrm.templateProjects";//$NON-NLS-1$
 
-  static final String CATCHMENT_PAGE = "page_type:catchment"; //$NON-NLS-1$
+  private static final String CATCHMENT_PAGE = "page_type:catchment"; //$NON-NLS-1$
 
-  static final String HYDROTOP_PAGE = "page_type:hydrotop"; //$NON-NLS-1$
+  private static final String HYDROTOP_PAGE = "page_type:hydrotop"; //$NON-NLS-1$
 
-  static final String NODE_PAGE = "page_type:node"; //$NON-NLS-1$
+  private static final String NODE_PAGE = "page_type:node"; //$NON-NLS-1$
 
-  static final String RIVER_PAGE = "page_type:river"; //$NON-NLS-1$
+  private static final String RIVER_PAGE = "page_type:river"; //$NON-NLS-1$
 
-  static final String PROJECT_PAGE = "page_type:createNewProject"; //$NON-NLS-1$
+  private static final String PREFERENCE_PAGE = "page_type:preferences"; //$NON-NLS-1$
 
-  static final String PREFERENCE_PAGE = "page_type:preferences"; //$NON-NLS-1$
-
-  final HashMap<String, Feature> m_IDMap = new HashMap<String, Feature>();
+  private final Map<String, Feature> m_IDMap = new HashMap<String, Feature>();
 
   private KalypsoNAProjectWizardPage m_createMappingCatchmentPage;
 
@@ -166,7 +165,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   public KalypsoNAProjectWizard( )
   {
-    super( CATEGORY_TEMPLATE, true );
+    super( new ProjectTemplatePage( "Projektvorlage", "Wie wählen Sie, welche Projektvorlage verwendet werden soll", CATEGORY_TEMPLATE ), true );
 
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "KalypsoNAProjectWizard.9" ) ); //$NON-NLS-1$
