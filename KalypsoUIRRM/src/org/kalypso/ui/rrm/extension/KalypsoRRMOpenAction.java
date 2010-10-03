@@ -44,19 +44,20 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbenchPage;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
+import org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction;
 import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
 /**
  * @author kuch
  */
-public class KalypsoRRMOpenAction implements IKalypsoModuleProjectOpenAction
+public class KalypsoRRMOpenAction extends AbstractModuleProjectOpenAction
 {
   /**
-   * @see org.kalypso.afgui.extension.IKalypsoProjectOpenAction#open(java.util.Properties)
+   * @see org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction#doOpen(org.eclipse.ui.IWorkbenchPage,
+   *      org.eclipse.core.resources.IProject)
    */
   @Override
-  public IStatus open( final IWorkbenchPage page, final IProject project )
+  protected IStatus doOpen( final IWorkbenchPage page, final IProject project )
   {
     return Status.OK_STATUS;
   }
