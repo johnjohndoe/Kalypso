@@ -47,8 +47,8 @@ import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.wizards.KalypsoNAConvertProjectWizard;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
+import org.kalypso.ui.rrm.wizards.conversion.KalypsoNAConvertProjectWizard;
 
 /**
  * @author kuch

@@ -54,7 +54,6 @@ import org.kalypso.project.database.client.extension.project.IKalypsoModuleProje
  */
 public class KalypsoRrmRemoteDatabaseSettings implements IKalypsoModuleDatabaseSettings
 {
-
   /**
    * @see org.kalypso.project.database.client.extension.database.IKalypsoRemoteDatabaseSettings#getModuleCommitType()
    */
@@ -63,6 +62,7 @@ public class KalypsoRrmRemoteDatabaseSettings implements IKalypsoModuleDatabaseS
   {
     return KalypsoModuleRRM.ID;
   }
+
   @Override
   public IProjectDatabaseFilter getFilter( )
   {
@@ -79,6 +79,8 @@ public class KalypsoRrmRemoteDatabaseSettings implements IKalypsoModuleDatabaseS
 
           return file.exists();
         }
+        // FIXME: this check does not belong here! first check all remote projects; then let the module check the local
+        // one
         else if( handler instanceof IRemoteProject )
         {
           final IRemoteProject remote = (IRemoteProject) handler;
@@ -86,7 +88,7 @@ public class KalypsoRrmRemoteDatabaseSettings implements IKalypsoModuleDatabaseS
           if( getModuleCommitType().equals( projectType ) )
             return true;
         }
-        
+
         return false;
       }
     };
@@ -97,7 +99,7 @@ public class KalypsoRrmRemoteDatabaseSettings implements IKalypsoModuleDatabaseS
   {
     return new KalypsoRRMOpenAction();
   }
-  
+
   /**
    * @see org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings#hasManagedDirtyState()
    */
