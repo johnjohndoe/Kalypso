@@ -14,9 +14,9 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.IObservationConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -101,7 +101,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   @Override
   public IRepositoryItem[] getChildren( )
   {
-    return IRepositoryItem.EMPTY_ARRAY;
+    return new IRepositoryItem[] {};
   }
 
   /**
