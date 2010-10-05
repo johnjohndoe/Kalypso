@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.RepositoryException;
 
 import com.bce.datacenter.db.timeseries.Channel;
 import com.bce.datacenter.db.timeseries.Timeserie;
@@ -121,6 +122,15 @@ public class DataCenterChannelItem implements IRepositoryItem
    */
   @Override
   public boolean hasAdapter( final Class< ? > adapter )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#isMultipleSourceItem()
+   */
+  @Override
+  public boolean isMultipleSourceItem( )
   {
     return false;
   }
