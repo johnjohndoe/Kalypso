@@ -185,10 +185,10 @@ public final class NAZMLGenerator
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axis, axisValueType );
 
     final ITupleModel values = observation.getValues( null );
-    for( int i = 0; i < values.getCount(); i++ )
+    for( int i = 0; i < values.size(); i++ )
     {
-      final Date date = (Date) values.getElement( i, dateAxis );
-      final double value = (Double) values.getElement( i, valueAxis );
+      final Date date = (Date) values.get( i, dateAxis );
+      final double value = (Double) values.get( i, valueAxis );
 
       if( i == 0 )
         writeGrapHeader( writer, date );
@@ -207,11 +207,11 @@ public final class NAZMLGenerator
 
     final ITupleModel values = observation.getValues( null );
     final SortedMap<Date, Double> valuesMap = new TreeMap<Date, Double>();
-    final long interpolationStep = (simulationEnd.getTime() - simulationStart.getTime()) / (values.getCount() - 1);
-    for( int i = 0; i < values.getCount(); i++ )
+    final long interpolationStep = (simulationEnd.getTime() - simulationStart.getTime()) / (values.size() - 1);
+    for( int i = 0; i < values.size(); i++ )
     {
       final Date date = new Date( simulationStart.getTime() + i * interpolationStep );
-      final Double value = (Double) values.getElement( i, valueAxis );
+      final Double value = (Double) values.get( i, valueAxis );
       valuesMap.put( date, value );
     }
 

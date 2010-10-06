@@ -136,11 +136,11 @@ public class NutzungManager
     final IAxis wtAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_WT );
     final IAxis laiAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_LAI );
     final ITupleModel values = observation.getValues( null );
-    final int count = values.getCount();
+    final int count = values.size();
     final int yearOffset = 2001;
     for( int row = 0; row < count; row++ )
     {// TODO: hier evtl. noch Zeitzone berücksichtigen - außerdem mit Fortran abgleichen!!!
-      final Date date = (Date) values.getElement( row, idleDateAxis );
+      final Date date = (Date) values.get( row, idleDateAxis );
       final Calendar calendar = NATimeSettings.getInstance().getCalendar( date );
 
       final int year = calendar.get( Calendar.YEAR ) - yearOffset;
@@ -152,9 +152,9 @@ public class NutzungManager
       zmlWriter.write( "." ); //$NON-NLS-1$
       zmlWriter.write( FortranFormatHelper.printf( year, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-      final Double kc = (Double) values.getElement( row, kcAxis );
-      final Double wt = (Double) values.getElement( row, wtAxis );
-      final Double lai = (Double) values.getElement( row, laiAxis );
+      final Double kc = (Double) values.get( row, kcAxis );
+      final Double wt = (Double) values.get( row, wtAxis );
+      final Double lai = (Double) values.get( row, laiAxis );
 
       zmlWriter.write( FortranFormatHelper.printf( kc, "f8.2" ) ); //$NON-NLS-1$
       zmlWriter.write( FortranFormatHelper.printf( wt, "f8.2" ) ); //$NON-NLS-1$

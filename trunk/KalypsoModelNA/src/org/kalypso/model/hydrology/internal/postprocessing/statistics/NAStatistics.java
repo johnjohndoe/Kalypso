@@ -238,11 +238,11 @@ public class NAStatistics
     {
       streamCSV = new FileOutputStream( reportFileCSV );
       writerCSV = new OutputStreamWriter( streamCSV, "UTF-8" ); //$NON-NLS-1$
-      for( int i = 0; i < values.getCount(); i++ )
+      for( int i = 0; i < values.size(); i++ )
       {
         for( int j = 0; j < 6; j++ )
         {
-          final Object currentElement = values.getElement( i, resultAxisList[j] );
+          final Object currentElement = values.get( i, resultAxisList[j] );
 
           final String asText = asText( currentElement, j );
           writerCSV.write( asText );

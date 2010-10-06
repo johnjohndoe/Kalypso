@@ -449,7 +449,7 @@ public class NaPostProcessor
     final Date startForecast = metaControl.getStartForecast();
     final Date endForecast = metaControl.getSimulationEnd();
 
-    final IAxisRange rangeFor = resultValues.getRangeFor( resultDateAxis );
+    final IAxisRange rangeFor = resultValues.getRange( resultDateAxis );
     final Date endPrediction = (Date) rangeFor.getUpper();
 
     final NATimeSettings timeSettings = NATimeSettings.getInstance();

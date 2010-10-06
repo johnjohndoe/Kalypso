@@ -314,10 +314,10 @@ public class NAOptimizingJob implements IOptimizingJob
       final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_DATE );
       final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_RUNOFF );
       final ITupleModel values = observation.getValues( null );
-      for( int i = 0; i < values.getCount(); i++ )
+      for( int i = 0; i < values.size(); i++ )
       {
-        final Date date = (Date) values.getElement( i, dateAxis );
-        final Double value = (Double) values.getElement( i, qAxis );
+        final Date date = (Date) values.get( i, dateAxis );
+        final Double value = (Double) values.get( i, qAxis );
         result.put( date, value );
       }
       m_measuredTS = result;
@@ -343,10 +343,10 @@ public class NAOptimizingJob implements IOptimizingJob
     final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_DATE );
     final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_RUNOFF );
     final ITupleModel values = observation.getValues( null );
-    for( int i = 0; i < values.getCount(); i++ )
+    for( int i = 0; i < values.size(); i++ )
     {
-      final Date date = (Date) values.getElement( i, dateAxis );
-      final Double value = (Double) values.getElement( i, qAxis );
+      final Date date = (Date) values.get( i, dateAxis );
+      final Double value = (Double) values.get( i, qAxis );
       result.put( date, value );
     }
     return result;

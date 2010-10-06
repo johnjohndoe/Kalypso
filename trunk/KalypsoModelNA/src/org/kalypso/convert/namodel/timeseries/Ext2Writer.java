@@ -72,8 +72,8 @@ public class Ext2Writer
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class );
     final ITupleModel values = observation.getValues( null );
     int obsOffset = 0;
-    final int maxOffset = values.getCount();
-    Date obsDate = (Date) values.getElement( obsOffset, dateAxis );
+    final int maxOffset = values.size();
+    Date obsDate = (Date) values.get( obsOffset, dateAxis );
 
     // TimeserieUtils.
     writer.append( "EX2\n" ); // header //$NON-NLS-1$
@@ -92,12 +92,12 @@ public class Ext2Writer
       while( date.getTime() - obsDate.getTime() > twelveHinMillis && obsOffset + 1 < maxOffset )
       {
         obsOffset++;
-        obsDate = (Date) values.getElement( obsOffset, dateAxis );
+        obsDate = (Date) values.get( obsOffset, dateAxis );
       }
       writer.append( m_dateFormat.format( date ) );
       if( Math.abs( obsDate.getTime() - date.getTime() ) <= twelveHinMillis )
       {
-        final Double value = (Double) values.getElement( obsOffset, valueAxis );
+        final Double value = (Double) values.get( obsOffset, valueAxis );
         writer.append( value.toString() );
       }
       else

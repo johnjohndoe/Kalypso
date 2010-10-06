@@ -373,18 +373,18 @@ public class NetElement
                 final IAxis precipitationAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RAINFALL );
                 buffer.append( FortranFormatHelper.printf( annualityKey, "f6.3" ) + " " + "1" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                 final ITupleModel values = observation.getValues( null );
-                final int count = values.getCount();
+                final int count = values.size();
                 // if( count > 20 )
                 // throw new Exception( "Fehler!!! NA-Modell: Anzahl Wertepaare synth Niederschlag > maximale Anzahl
                 // (20) \n Niederschlag:" + synthNKey + "\n Wiederkehrwahrscheinlichkeit: "
                 // + annualityKey );
                 for( int row = 0; row < count; row++ )
                 {
-                  final Double minutesValue = (Double) values.getElement( row, minutesAxis );
+                  final Double minutesValue = (Double) values.get( row, minutesAxis );
                   final Double hoursValue = minutesValue / 60d;
                   if( hoursValue.equals( metaControl.getDurationHours() ) )
                   {
-                    final Double precipitationValue = (Double) values.getElement( row, precipitationAxis );
+                    final Double precipitationValue = (Double) values.get( row, precipitationAxis );
                     buffer.append( FortranFormatHelper.printf( hoursValue, "f9.3" ) + " " + FortranFormatHelper.printf( precipitationValue, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                   }
                 }

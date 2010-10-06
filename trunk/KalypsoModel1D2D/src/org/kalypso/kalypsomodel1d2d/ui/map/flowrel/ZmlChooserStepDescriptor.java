@@ -153,14 +153,14 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
       final Date fromDate = m_wizardPageZmlChooser.getFromDate();
       final Date toDate = m_wizardPageZmlChooser.getToDate();
 
-      for( int cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
+      for( int cntFrom = 0; cntFrom < model.size(); cntFrom++ )
       {
-        final Date date = (Date) model.getElement( cntFrom, dateAxis );
+        final Date date = (Date) model.get( cntFrom, dateAxis );
 
         // date must be inside the interval [fromDate, toDate]
         if( !date.before( fromDate ) && !date.after( toDate ) )
         {
-          final Double doubleValue = (Double) model.getElement( cntFrom, valueAxis );
+          final Double doubleValue = (Double) model.get( cntFrom, valueAxis );
           final BigDecimal value = BigDecimal.valueOf( doubleValue );
 
           final IRecord record = result.createRecord();

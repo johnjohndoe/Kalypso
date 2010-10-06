@@ -468,8 +468,8 @@ public class NetFileManager
           final ITupleModel values = observation.getValues( null );
           final IAxis[] axis = observation.getAxisList();
           final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeseriesConstants.TYPE_DATE );
-          final long simulationStartDateMillis = ((Date) values.getElement( 0, dateAxis )).getTime();
-          final long simulationEndDateMillis = ((Date) values.getElement( values.getCount() - 1, dateAxis )).getTime();
+          final long simulationStartDateMillis = ((Date) values.get( 0, dateAxis )).getTime();
+          final long simulationEndDateMillis = ((Date) values.get( values.size() - 1, dateAxis )).getTime();
           final Date simulationStartDate = new Date( 100, 0, 1 );
           final Date simulationEndDate = new Date( simulationStartDate.getTime() + simulationEndDateMillis - simulationStartDateMillis );
 
@@ -555,14 +555,14 @@ public class NetFileManager
     final IAxis q1Axis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF );
     final IAxis q2Axis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF_RHB );
     final ITupleModel values = observation.getValues( null );
-    final int count = values.getCount();
+    final int count = values.size();
     if( count < 1 )
       return;
     buffer.append( String.format( "%5d %6s\n", count, relatedNodeID ) ); //$NON-NLS-1$
     for( int row = 0; row < count; row++ )
     {
-      final double q1 = (Double) values.getElement( row, q1Axis );
-      final double q2 = (Double) values.getElement( row, q2Axis );
+      final double q1 = (Double) values.get( row, q1Axis );
+      final double q2 = (Double) values.get( row, q2Axis );
       buffer.append( String.format( Locale.ENGLISH, "%8.3f %8.3f\n", q1, q2 ) ); //$NON-NLS-1$
     }
   }
