@@ -81,10 +81,10 @@ public class NAStatisticsData
 
     m_timestepSeconds = findTimestep( dateAxis, tuppleModel );
 
-    for( int i = 0; i < tuppleModel.getCount(); i++ )
+    for( int i = 0; i < tuppleModel.size(); i++ )
     {
-      final Date date = (Date) tuppleModel.getElement( i, dateAxis );
-      final double value = (Double) tuppleModel.getElement( i, valueAxis );
+      final Date date = (Date) tuppleModel.get( i, dateAxis );
+      final double value = (Double) tuppleModel.get( i, valueAxis );
       addVolume( value );
       calcMaxValue( date, value );
     }
@@ -108,11 +108,11 @@ public class NAStatisticsData
   private static double findTimestep( final IAxis dateAxis, final ITupleModel tuppleModel ) throws SensorException
   {
     // here we assume constant timestep in the whole timeseries data
-    if( tuppleModel.getCount() < 2 )
+    if( tuppleModel.size() < 2 )
       return 0.0;
 
-    final Date date0 = (Date) tuppleModel.getElement( 0, dateAxis );
-    final Date date1 = (Date) tuppleModel.getElement( 1, dateAxis );
+    final Date date0 = (Date) tuppleModel.get( 0, dateAxis );
+    final Date date1 = (Date) tuppleModel.get( 1, dateAxis );
     if( date0 != null && date1 != null )
     {
       final double millisDifference = Math.abs( date1.getTime() - date0.getTime() );

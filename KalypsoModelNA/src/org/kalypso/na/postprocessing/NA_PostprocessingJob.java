@@ -209,32 +209,32 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
       final ITupleModel values1 = obs1.getValues( null );
       final ITupleModel values2 = obs2.getValues( null );
-      final int cnt1 = values1.getCount();
-      final int cnt2 = values2.getCount();
+      final int cnt1 = values1.size();
+      final int cnt2 = values2.size();
       if( cnt1 != cnt2 )
         Logger.getAnonymousLogger().log( Level.WARNING, "Compared NA results are not of the same size; check calculation config!" ); //$NON-NLS-1$
 
       for( int i = 0; i < Math.max( cnt1, cnt2 ); i++ )
       {
-        if( i < values1.getCount() )
+        if( i < values1.size() )
         {
-          final String id1 = values1.getElement( i, idAxis1 ).toString();
-          final double val1 = (Double) values1.getElement( i, valueAxis1 );
-          final double vol1 = (Double) values1.getElement( i, volumeAxis1 );
-          final Date date1 = (Date) values1.getElement( i, dateAxis1 );
+          final String id1 = values1.get( i, idAxis1 ).toString();
+          final double val1 = (Double) values1.get( i, valueAxis1 );
+          final double vol1 = (Double) values1.get( i, volumeAxis1 );
+          final Date date1 = (Date) values1.get( i, dateAxis1 );
           izNodesMaxData.put( id1, new DischargeData( val1, date1, vol1 ) );
-          final String path = values1.getElement( i, pathAxis1 ).toString();
+          final String path = values1.get( i, pathAxis1 ).toString();
           if( !useOnlyResult )
             izNodesPath.put( id1, path );
         }
-        if( i < values2.getCount() )
+        if( i < values2.size() )
         {
-          final String id2 = values2.getElement( i, idAxis2 ).toString();
-          final double val2 = (Double) values2.getElement( i, valueAxis2 );
-          final double vol2 = (Double) values2.getElement( i, volumeAxis2 );
-          final Date date2 = (Date) values2.getElement( i, dateAxis2 );
+          final String id2 = values2.get( i, idAxis2 ).toString();
+          final double val2 = (Double) values2.get( i, valueAxis2 );
+          final double vol2 = (Double) values2.get( i, volumeAxis2 );
+          final Date date2 = (Date) values2.get( i, dateAxis2 );
           calcNodesMaxData.put( id2, new DischargeData( val2, date2, vol2 ) );
-          final String path = values2.getElement( i, pathAxis2 ).toString();
+          final String path = values2.get( i, pathAxis2 ).toString();
           calculatedNodesPath.put( id2, path );
           if( useOnlyResult )
             izNodesPath.put( id2, path );

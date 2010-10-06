@@ -50,7 +50,7 @@ public class DataCenterTuppleModel implements ITupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
   @Override
-  public int getCount( )
+  public int size( )
   {
     return m_tupples.length;
   }
@@ -59,12 +59,12 @@ public class DataCenterTuppleModel implements ITupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getRangeFor(org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public IAxisRange getRangeFor( IAxis axis ) throws SensorException
+  public IAxisRange getRange( IAxis axis ) throws SensorException
   {
     if( m_tupples.length == 0 )
       return null;
     
-    switch( getPositionFor( axis ) )
+    switch( getPosition( axis ) )
     {
       case 0:
         return new DefaultAxisRange( m_tupples[0].getDate(), m_tupples[m_tupples.length - 1 ].getDate() );
@@ -78,9 +78,9 @@ public class DataCenterTuppleModel implements ITupleModel
    *      org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public Object getElement( int index, IAxis axis ) throws SensorException
+  public Object get( int index, IAxis axis ) throws SensorException
   {
-    switch( getPositionFor( axis ) )
+    switch( getPosition( axis ) )
     {
       case 0:
         return m_tupples[index].getDate();
@@ -98,10 +98,10 @@ public class DataCenterTuppleModel implements ITupleModel
    *      org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public void setElement( int index, Object element, IAxis axis )
+  public void set( int index, IAxis axis, Object element )
       throws SensorException
   {
-    switch( getPositionFor( axis ) )
+    switch( getPosition( axis ) )
     {
       case 0:
         m_tupples[index].setDate( (Date) element );
@@ -141,12 +141,12 @@ public class DataCenterTuppleModel implements ITupleModel
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
     final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( axes, Double.class, true );
     
-    final TimeserieTupple[] tupples = new TimeserieTupple[ model.getCount()];
+    final TimeserieTupple[] tupples = new TimeserieTupple[ model.size()];
     
-    for( int i = 0; i < model.getCount(); i++ )
+    for( int i = 0; i < model.size(); i++ )
     {
-      tupples[i].setDate( (Date) model.getElement(i, dateAxis) );
-      tupples[i].setValue( (Double) model.getElement(i, valueAxis) );
+      tupples[i].setDate( (Date) model.get(i, dateAxis) );
+      tupples[i].setValue( (Double) model.get(i, valueAxis) );
       // TODO tupples[i].setStatus( (Double) model.getElement(i, valueAxis) );
     }
     
@@ -157,7 +157,7 @@ public class DataCenterTuppleModel implements ITupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getPositionFor(org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public int getPositionFor( IAxis axis ) throws SensorException
+  public int getPosition( IAxis axis ) throws SensorException
   {
     if( m_axesPos.containsKey( axis ) )
       return m_axesPos.get( axis ).intValue();

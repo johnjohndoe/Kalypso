@@ -222,7 +222,7 @@ public class OmbrometerUtils
     final ITupleModel values = observation.getValues( null );
 
     final int goods = countStatus( values, axis );
-    final int count = values.getCount();
+    final int count = values.size();
     return String.format( "%3d / %3d", goods, count );
   }
 
@@ -235,9 +235,9 @@ public class OmbrometerUtils
   {
     final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values.getAxisList(), axis );
     int count = 0;
-    for( int i = 0; i < values.getCount(); i++ )
+    for( int i = 0; i < values.size(); i++ )
     {
-      final int status = ((Number) values.getElement( i, statusAxis )).intValue();
+      final int status = ((Number) values.get( i, statusAxis )).intValue();
       if( !KalypsoStatusUtils.checkMask( status, KalypsoStati.BIT_CHECK ) || KalypsoStatusUtils.checkMask( status, KalypsoStati.BIT_USER_MODIFIED ) )
         count++;
     }

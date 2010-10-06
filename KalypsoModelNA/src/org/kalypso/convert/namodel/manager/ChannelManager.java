@@ -153,7 +153,7 @@ public class ChannelManager
       final Object wvqProp = channel.getProperty( NaModelConstants.STORAGE_CHANNEL_HVVSQD_PROP );
       if( wvqProp instanceof IObservation )
       {
-        final int size = (((IObservation) wvqProp).getValues( null )).getCount();
+        final int size = (((IObservation) wvqProp).getValues( null )).size();
         rhbBuffer.append( FortranFormatHelper.printf( size, "i4" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         if( size > 24 )
           throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.ChannelManager.33", FeatureHelper.getAsString( channel, "name" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -186,12 +186,12 @@ public class ChannelManager
     final IAxis volumeAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_VOLUME );
     final IAxis dischargeAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF );
     final ITupleModel values = observation.getValues( null );
-    final int count = values.getCount();
+    final int count = values.size();
     for( int row = 0; row < count; row++ )
     {
-      final Double w = (Double) values.getElement( row, waterTableAxis );
-      final Double v = ((Double) values.getElement( row, volumeAxis )) / 1000000;
-      final Double q = (Double) values.getElement( row, dischargeAxis );
+      final Double w = (Double) values.get( row, waterTableAxis );
+      final Double v = ((Double) values.get( row, volumeAxis )) / 1000000;
+      final Double q = (Double) values.get( row, dischargeAxis );
       rhbBuffer.append( "    " + FortranFormatHelper.printf( w, "f8.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       rhbBuffer.append( "        " + FortranFormatHelper.printf( v, "f9.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       rhbBuffer.append( "      " + FortranFormatHelper.printf( q, "f8.3" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

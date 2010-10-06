@@ -148,10 +148,10 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
           final NaModell naModel = (NaModell) workspaceNA.getRootFeature();
           final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
 
-          for( int i = 0; i < tuppleModel.getCount(); i++ )
+          for( int i = 0; i < tuppleModel.size(); i++ )
           {
-            final String nodeNr = tuppleModel.getElement( i, axisNodeNr ).toString();
-            final Double maxDischarge = Double.parseDouble( tuppleModel.getElement( i, axisMaxDischarge ).toString() );
+            final String nodeNr = tuppleModel.get( i, axisNodeNr ).toString();
+            final Double maxDischarge = Double.parseDouble( tuppleModel.get( i, axisMaxDischarge ).toString() );
             for( final Node node : nodes )
             {
               if( node.getName().equals( nodeNr ) )

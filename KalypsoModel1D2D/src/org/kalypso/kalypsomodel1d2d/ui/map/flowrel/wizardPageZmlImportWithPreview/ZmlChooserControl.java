@@ -345,8 +345,8 @@ public abstract class ZmlChooserControl
             final ITupleModel values = m_observation.getValues( null );
             final IAxis[] axisList = values.getAxisList();
             final IAxis axis = ObservationUtilities.findAxisByType( axisList, "date" ); //$NON-NLS-1$
-            m_dateFrom = (Date) values.getElement( 0, axis );
-            m_dateTo = (Date) values.getElement( values.getCount() - 1, axis );
+            m_dateFrom = (Date) values.get( 0, axis );
+            m_dateTo = (Date) values.get( values.size() - 1, axis );
             dateRange = new DateRange( m_dateFrom, m_dateTo );
           }
           catch( final SensorException e )
