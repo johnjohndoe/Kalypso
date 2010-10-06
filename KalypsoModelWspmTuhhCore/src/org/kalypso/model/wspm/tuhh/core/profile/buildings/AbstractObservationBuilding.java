@@ -112,7 +112,7 @@ public abstract class AbstractObservationBuilding extends AbstractProfileObject 
     final TupleResult result = getObservation().getResult();
     if( result.size() > 1 )
       throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.1" ) ); //$NON-NLS-1$
-    final int index = result.indexOf( component );
+    final int index = result.indexOfComponent( component );
     if( index < 0 )
       throw new IllegalArgumentException( component.getName() );
 

@@ -40,34 +40,45 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
 
-
 /**
  * @author Dirk Kuch
  */
 public enum SINUOSITAET_KENNUNG
 {
-  eKeineBeruecksichtigun(1),
-  eNurCmFaktor(2),
-  eNurFliesswegVerlaengerung(3),
-  eBeides(4);
+  eKeineBeruecksichtigung(1, "keine Berücksichtigung"),
+  eNurCmFaktor(2, "nur CM-Faktor"),
+  eNurFliesswegVerlaengerung(3, "nur Fließwegverlängerung"),
+  eBeides(4, "beides");
 
   private final int m_value;
 
-  SINUOSITAET_KENNUNG( final int value )
+  private final String m_label;
+
+  SINUOSITAET_KENNUNG( final int value, final String label )
   {
     m_value = value;
+    m_label = label;
+  }
+
+  /**
+   * @see java.lang.Enum#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return m_label;
   }
 
   public int toInteger( )
   {
     return m_value;
   }
-  
-  public final static  SINUOSITAET_KENNUNG fromInteger (final int i)
+
+  public final static SINUOSITAET_KENNUNG fromInteger( final int i )
   {
-    for (final SINUOSITAET_KENNUNG sk : values())
+    for( final SINUOSITAET_KENNUNG sk : values() )
     {
-      if(sk.toInteger()==i)
+      if( sk.toInteger() == i )
         return sk;
     }
     return null;

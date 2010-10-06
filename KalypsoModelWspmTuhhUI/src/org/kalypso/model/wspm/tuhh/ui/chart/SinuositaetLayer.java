@@ -43,9 +43,12 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
-import org.kalypso.model.wspm.tuhh.ui.panel.SinousitaetPanel;
+import org.kalypso.model.wspm.tuhh.ui.panel.SinuositaetPanel;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
 
@@ -57,6 +60,18 @@ import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
  */
 public class SinuositaetLayer extends ComponentLayer
 {
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
+   */
+  @Override
+  public void removeYourself( )
+  {
+    final ISinuositaetProfileObject[] sin = getProfil().getProfileObjects( ISinuositaetProfileObject.class );
+    final ProfilOperation operation = new ProfilOperation( "Sinuositaet loeschen" , getProfil(), true ); 
+    operation.addChange( new ProfileObjectRemove( getProfil(), sin ) );
+    new ProfilOperationJob( operation ).schedule();
+  }
 
   public SinuositaetLayer( IProfil profil )
   {
@@ -70,7 +85,7 @@ public class SinuositaetLayer extends ComponentLayer
   @Override
   public IProfilView createLayerPanel( )
   {
-    return new SinousitaetPanel( getProfil() );
+    return new SinuositaetPanel( getProfil() );
   }
 
   /**

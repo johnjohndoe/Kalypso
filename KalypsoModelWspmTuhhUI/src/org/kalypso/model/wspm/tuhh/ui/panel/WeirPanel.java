@@ -64,7 +64,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -99,12 +98,12 @@ public class WeirPanel extends AbstractProfilView
     protected final IProfilPointMarker m_devider;
 
     protected final Text m_position;
-    
-    protected Composite m_composite; 
+
+    protected Composite m_composite;
 
     public DeviderLine( final Composite parent, final IProfilPointMarker devider )
     {
-     
+
       m_devider = devider;
       m_composite = m_toolkit.createComposite( parent );
       final GridLayout layout2 = new GridLayout( 4, true );
@@ -351,15 +350,15 @@ public class WeirPanel extends AbstractProfilView
   private class ParameterLine
   {
     protected final IProfilPointMarker m_devider;
-    
+
     protected final Composite m_composite;
 
     protected final Text m_value;
 
     public ParameterLine( final Composite parent, final IProfilPointMarker devider, final boolean canDelete )
     {
-      m_composite=m_toolkit.createComposite( parent );
-  
+      m_composite = m_toolkit.createComposite( parent );
+
       final GridLayout layout3 = new GridLayout( 4, true );
       layout3.marginWidth = 0;
       layout3.marginHeight = 0;
@@ -470,6 +469,7 @@ public class WeirPanel extends AbstractProfilView
 // }
 // } );
     }
+
     public void dispose( )
     {
       m_composite.dispose();
@@ -518,7 +518,7 @@ public class WeirPanel extends AbstractProfilView
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
-  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit, ScrolledForm form )
+  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
     m_toolkit = toolkit;
     final IProfil profile = getProfil();

@@ -23,9 +23,15 @@
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
-    <swe:Number>
-     <gml:unitOfMeasure uom="dict_uom.xml#"/>
-    </swe:Number>
+   <swe:Word>
+     <swe:restriction>
+      <xst:enumeration value="eKeineBeruecksichtigung"/>
+      <xst:enumeration value="eNurCmFaktor"/>
+      <xst:enumeration value="eNurFliesswegVerlaengerung"/>
+      <xst:enumeration value="eBeides"/>
+     </swe:restriction>
+     <swe:classification/>
+    </swe:Word>
    </swe:representation>
   </swe:ItemDefinition>
  </gml:dictionaryEntry>
@@ -68,15 +74,19 @@
   <swe:ItemDefinition gml:id="GERINNE_ART">
    <gml:name>%gerinne_art.name</gml:name>
    <swe:property>
-    <swe:Phenomenon gml:id="Phenomenon_BEZUGSPUNKT_X">
+    <swe:Phenomenon gml:id="Phenomenon_Gerinne_Art">
      <gml:description>%gerinne_art.description</gml:description>
      <gml:name>%gerinne_art.name</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
-    <swe:Number>
-     <gml:unitOfMeasure uom="dict_uom.xml#"/>
-    </swe:Number>
+    <swe:Word>
+     <swe:restriction>
+      <xst:enumeration value="eKompakt"/>
+      <xst:enumeration value="eGegliedert"/>
+     </swe:restriction>
+     <swe:classification/>
+    </swe:Word>
    </swe:representation>
   </swe:ItemDefinition>
  </gml:dictionaryEntry>

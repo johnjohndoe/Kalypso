@@ -63,7 +63,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -101,7 +100,6 @@ public class RauheitenPanel extends AbstractProfilView
 
   protected final HashMap<String, IComponent> m_RauheitTypes = new HashMap<String, IComponent>();
 
-
   public RauheitenPanel( final IProfil profile )
   {
     super( profile );
@@ -124,7 +122,7 @@ public class RauheitenPanel extends AbstractProfilView
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
-  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit, ScrolledForm form )
+  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
     // das panel
     final Composite panel = toolkit.createComposite( parent, SWT.NONE );

@@ -74,6 +74,8 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKrei
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
+import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_GERINNE_ART;
+import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_KENNUNG;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -236,9 +238,9 @@ public class PrfSource implements IProfilSource
     final int indexLinearFaktor = result.indexOfComponent( ISinuositaetProfileObject.PROPERTY_LF );
 
     final IRecord record = result.createRecord();
-    record.setValue( indexKennung, sin[0] );
+    record.setValue( indexKennung, SINUOSITAET_KENNUNG.fromInteger( sin[0].intValue() ).name() );
     record.setValue( indexSinuositaet, sin[1] );
-    record.setValue( indexGerinneArt, sin[2] );
+    record.setValue( indexGerinneArt, SINUOSITAET_GERINNE_ART.fromInteger( sin[2].intValue() ).name() );
     record.setValue( indexLinearFaktor, sin[3] );
 
     result.add( record );
