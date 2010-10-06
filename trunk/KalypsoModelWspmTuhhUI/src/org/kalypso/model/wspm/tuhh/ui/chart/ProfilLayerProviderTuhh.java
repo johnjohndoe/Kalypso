@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruec
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
+import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -206,6 +207,19 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.6" ), profil, changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
     }
+    if( layerId.equals( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
+    {
+      final IProfilChange[] changes = new IProfilChange[1];
+      
+      final SinuositaetProfileObject sinObj = new SinuositaetProfileObject();
+      final IRecord record = sinObj.getObservation().getResult().createRecord();
+      sinObj.getObservation().getResult().add( record );
+    
+      changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] {sinObj} );
+      final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.4" ), profil, changes, true ); //$NON-NLS-1$
+      new ProfilOperationJob( operation ).schedule();
+    }
+
   }
 
   private final void setInitialValues( final BuildingWehr building, final IProfil profil )
@@ -433,6 +447,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       addableLayer.add( new LayerDescriptor( CrossSectionTheme.TITLE, IWspmConstants.LAYER_GELAENDE ) );
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) == null && !existingLayers.contains( IWspmConstants.LAYER_GEOKOORDINATEN ) )
       addableLayer.add( new LayerDescriptor( GeoCoordinateTheme.TITLE, IWspmConstants.LAYER_GEOKOORDINATEN ) );
+
+    final ISinuositaetProfileObject[] sinObj = profile.getProfileObjects( ISinuositaetProfileObject.class );
+    if( sinObj.length < 1 && !(existingLayers.contains( IWspmTuhhConstants.LAYER_SINUOSITAET )) )
+      addableLayer.add( new LayerDescriptor( "Sinuositaet", IWspmTuhhConstants.LAYER_SINUOSITAET ) );
 
     return addableLayer.toArray( new LayerDescriptor[addableLayer.size()] );
   }

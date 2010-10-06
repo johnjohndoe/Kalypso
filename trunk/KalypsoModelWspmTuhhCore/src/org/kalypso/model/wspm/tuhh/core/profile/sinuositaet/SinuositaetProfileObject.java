@@ -106,9 +106,7 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
     if( index < 0 )
       return null;
     final IRecord record = result.get( 0 );
-    final int intKennung = ((Number) record.getValue( index )).intValue();
-
-    return SINUOSITAET_KENNUNG.fromInteger( intKennung );
+    return SINUOSITAET_KENNUNG.valueOf( record.getValue( index ).toString() );
   }
 
   /**
@@ -142,9 +140,7 @@ public class SinuositaetProfileObject extends AbstractProfileObject implements I
     final int index = result.indexOfComponent( PROPERTY_GERINNE_ART );
 
     final IRecord record = result.get( 0 );
-    final int intGerinne = ((Number) record.getValue( index )).intValue();
-
-    return SINUOSITAET_GERINNE_ART.fromInteger( intGerinne );
+    return SINUOSITAET_GERINNE_ART.valueOf( record.getValue( index ).toString() );
   }
 
   /**
