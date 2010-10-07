@@ -91,7 +91,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author ig
  * 
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings( {"rawtypes", "unchecked"} )
 public class WindDataDWDVectorReader implements IWindDataCollectionReader
 {
   // next data is available in source DWD file, but is still unused in actual implementation case
@@ -310,7 +310,7 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
       }
       else
       {
-        m_pairsActTimeStepWindData[m_intReadSecondElements++ + actBlockDescriptor.m_intActBlockColumnStart][m_intNumberRows - actBlockDescriptor.m_intActBlockLine].second = -Double.parseDouble( lStringTokenizer.nextToken() );
+        m_pairsActTimeStepWindData[m_intReadSecondElements++ + actBlockDescriptor.m_intActBlockColumnStart][m_intNumberRows - actBlockDescriptor.m_intActBlockLine].second = Double.parseDouble( lStringTokenizer.nextToken() );
       }
     }
   }
@@ -474,6 +474,7 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
 
     public int m_intActBlockColumnStart = 0;
 
+    @SuppressWarnings("unused")
     public int m_intActBlockColumnEnd = 0;
 
     public int m_intActBlockAmount = 0;
