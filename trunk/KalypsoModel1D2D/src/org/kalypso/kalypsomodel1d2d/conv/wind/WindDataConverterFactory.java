@@ -54,7 +54,9 @@ public class WindDataConverterFactory
   {
     DAT("dwd.dat"),
     // ASC("asc"),
-    DAT_GZ("dwd.dat.gz");
+    DAT_GZ("dwd.dat.gz"),
+    // ASC("asc"),
+    CSV_POINT_EXTRAPOLATION("point.xtrp.csv");
 
     private final String value;
 
@@ -74,7 +76,7 @@ public class WindDataConverterFactory
     {
       for( final EWindFileTypes c : EWindFileTypes.values() )
       {
-        if( v != null && (c.value.equals( v ) || v.endsWith( c.value )) )
+        if( v != null && (c.value.equals( v.toLowerCase() ) || v.toLowerCase().endsWith( c.value )) )
         {
           return c;
         }
@@ -103,6 +105,9 @@ public class WindDataConverterFactory
       case DAT:
       case DAT_GZ:
         return new WindDataDWDVectorReader( pUrlInputFileName, pUrlOuputDir, pStrFileNameSuffix, pSelectedCoordinateSystem );
+
+      case CSV_POINT_EXTRAPOLATION:
+        return new WindPointDataCsvReader( pUrlInputFileName, pUrlOuputDir, pStrFileNameSuffix, pSelectedCoordinateSystem );
 
       default:
         break;
