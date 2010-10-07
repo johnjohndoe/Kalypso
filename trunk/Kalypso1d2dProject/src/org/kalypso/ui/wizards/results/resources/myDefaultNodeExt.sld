@@ -21,7 +21,7 @@
 					<ogc:Filter xmlns:ogc='http://www.opengis.net/ogc'>
 						<ogc:PropertyIsGreaterThanOrEqualTo>
 							<ogc:PropertyName>res1d2d:depth</ogc:PropertyName>
-							<ogc:Literal>0.01</ogc:Literal>
+							<ogc:Literal>0.001</ogc:Literal>
 						</ogc:PropertyIsGreaterThanOrEqualTo>
 					</ogc:Filter>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
