@@ -53,12 +53,12 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
  * @author ig
  * 
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class WindDataGenericGridConverter implements IWindDataWrapper// IWindDataReader
 {
-  public static String STR_INTERNAL_DATA_FILE_NAME_PREFIX = "windDataInternal_";
+  public static String STR_INTERNAL_DATA_FILE_NAME_PREFIX = "windDataInternal_"; //$NON-NLS-1$
 
-  public static String STR_INTERNAL_DATA_FILE_EXT = ".bin";
+  public static String STR_INTERNAL_DATA_FILE_EXT = ".bin"; //$NON-NLS-1$
 
   private boolean m_boolIsRegular = true;
 
