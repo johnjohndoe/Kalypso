@@ -105,6 +105,7 @@ abstract public class AbstractWindDataWriter implements IWindDataWriter
     List<IWindDataModelSystem> lListSystems = m_windDataModel.getWindDataModelSystems();
     Collections.sort( lListSystems, new Comparator<IWindDataModelSystem>()
     {
+      @Override
       public int compare( IWindDataModelSystem o1, IWindDataModelSystem o2 )
       {
         try
