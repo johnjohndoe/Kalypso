@@ -28,11 +28,11 @@
 							</ogc:Not>
 							<ogc:PropertyIsGreaterThanOrEqualTo>
 								<ogc:PropertyName>res1d2d:velocityNorm</ogc:PropertyName>
-								<ogc:Literal>0.01</ogc:Literal>
+								<ogc:Literal>0.000000001</ogc:Literal>
 							</ogc:PropertyIsGreaterThanOrEqualTo>
 							<ogc:PropertyIsGreaterThanOrEqualTo>
 								<ogc:PropertyName>res1d2d:depth</ogc:PropertyName>
-								<ogc:Literal>0.01</ogc:Literal>
+								<ogc:Literal>0.000000010</ogc:Literal>
 							</ogc:PropertyIsGreaterThanOrEqualTo>
 						</ogc:And>
 					</ogc:Filter>
