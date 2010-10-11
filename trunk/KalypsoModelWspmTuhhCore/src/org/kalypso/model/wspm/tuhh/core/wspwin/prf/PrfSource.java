@@ -81,7 +81,7 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.wspwin.core.prf.IWspWinConstants;
 import org.kalypso.wspwin.core.prf.PrfReader;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
@@ -143,7 +143,7 @@ public class PrfSource implements IProfilSource
     {
       final Object value = point.getValue( rwIndex );
       if( value instanceof Number )
-        return TimeserieUtils.getCoordinateSystemNameForGkr( value.toString() );
+        return TimeseriesUtils.getCoordinateSystemNameForGkr( value.toString() );
     }
 
     return null;
