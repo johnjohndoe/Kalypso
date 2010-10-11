@@ -382,8 +382,8 @@
 					<!--Zeitflächenfunktion-->
 					<element name="zft" type="zmlinline:ZmlInlineTAType"/>
 					<!--               Optimierung              -->
-					<element name="faktorAigw" type="double" minOccurs="0"/>
-					<element name="faktorRetobRetint" type="double" minOccurs="0"/>
+					<element name="faktorAigw" type="double" minOccurs="1"/>
+					<element name="faktorRetobRetint" type="double" minOccurs="1"/>
 					<element name="synthZR" type="string"/>
 					<!-- Korrekturfaktoren (zur Kalibrierung) der Retentionskonstanten       -->
 					<element name="faktorRetvs" type="double" minOccurs="0"/>
@@ -459,8 +459,8 @@
 					<element name="endkm" type="double" minOccurs="0"/>
 					<element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5"/>
 					<!--    Optimierung   -->
-					<element name="faktorRkf" type="double" minOccurs="0"/>
-					<element name="faktorRnf" type="double" minOccurs="0"/>
+					<element name="faktorRkf" type="double" minOccurs="1"/>
+					<element name="faktorRnf" type="double" minOccurs="1"/>
 				</sequence>
 			</extension>
 		</complexContent>
