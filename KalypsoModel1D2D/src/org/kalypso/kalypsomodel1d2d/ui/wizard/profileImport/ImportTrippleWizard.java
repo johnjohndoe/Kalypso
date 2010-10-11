@@ -43,39 +43,19 @@ package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
-import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfilePage;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * A wizard to import profile data (right now just as trippel) into a 1D2D Terrain Model.
@@ -84,35 +64,27 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
  */
 public class ImportTrippleWizard extends Wizard implements IWizard
 {
-  private static final DateFormat DF = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
+  static final DateFormat DF = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
 
   private final List<Feature> m_terrainModelAdds = new ArrayList<Feature>();
 
   private final IRiverProfileNetworkCollection m_networkModel;
 
-  protected ImportProfilePage m_ProfilePage;
+  protected ImportProfilePage m_profilePage;
 
   private IRiverProfileNetwork m_network;
 
   public ImportTrippleWizard( final IRiverProfileNetworkCollection networkModel )
   {
-
     m_networkModel = networkModel;
     setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
-  }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
-  @Override
-  public void addPages( )
-  {
     /* Choose profile data */
-    m_ProfilePage = new ImportProfilePage( "chooseProfileData", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_ProfilePage.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.3" ) ); //$NON-NLS-1$
+    m_profilePage = new ImportProfilePage( "chooseProfileData", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_profilePage.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.3" ) ); //$NON-NLS-1$
 
-    addPage( m_ProfilePage );
+    addPage( m_profilePage );
   }
 
   /**
@@ -125,95 +97,23 @@ public class ImportTrippleWizard extends Wizard implements IWizard
     final IRiverProfileNetworkCollection profNetworkColl = m_networkModel;
     final List<Feature> terrainModelAdds = m_terrainModelAdds;
 
+    /* get file name from wizard */
+    final File trippelFile = m_profilePage.getFile();
+    final String separator = m_profilePage.getSeparator();
+    final String crs = m_profilePage.getCoordinateSystem();
+
     /* Do import */
-    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
-    {
-      @Override
-      public IStatus execute( final IProgressMonitor monitor )
-      {
-        monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.13" ), 2 ); //$NON-NLS-1$
-
-        try
-        {
-          /* Import Trippel Data */
-          monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.14" ) ); //$NON-NLS-1$
-
-          /* get file name from wizard */
-          final File trippelFile = m_ProfilePage.getFile();
-          final String separator = m_ProfilePage.getSeparator();
-
-          List<IProfil> profiles = ImportTrippleHelper.importTrippelData( trippelFile, separator, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-
-          monitor.worked( 1 );
-
-          /* Convert Trippel Data */
-          monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.16" ) ); //$NON-NLS-1$
-
-          final IStatus status = doImportNetwork( profNetworkColl, terrainModelAdds, profiles );
-
-          monitor.worked( 1 );
-
-          return status;
-        }
-        catch( final Exception e )
-        {
-          return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.15" ) ); //$NON-NLS-1$
-        }
-
-        finally
-        {
-          monitor.done();
-        }
-      }
-    };
+    final TrippleImportOperation op = new TrippleImportOperation( trippelFile, separator, crs, profNetworkColl, terrainModelAdds );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+
+    m_network = op.getNetwork();
+
     ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.17" ), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
-  }
-
-  /**
-   * Converts the profiles in GML (-> terrain model).
-   * 
-   * @param networkCollection
-   *          the GML river network, in which the profiles will be stored
-   * @param addedFeatures
-   */
-  protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures, final List<IProfil> profiles ) throws Exception
-  {
-    final IRiverProfileNetwork network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
-    final Feature networkFeature = network.getFeature();
-    addedFeatures.add( networkFeature );
-
-    /* Set user friendly name and description */
-    final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.19", m_ProfilePage.getFileName(), ImportTrippleWizard.DF.format( new Date() ), m_ProfilePage.getFilePath() ); //$NON-NLS-1$
-    network.setName( FileUtilities.nameWithoutExtension( m_ProfilePage.getFileName() ) );
-    network.setDescription( desc );
-    final String crs = m_ProfilePage.getCoordinateSystem();
-
-    final GMLWorkspace workspace = networkFeature.getWorkspace();
-
-    final String coordinatesSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    workspace.accept( new TransformVisitor( coordinatesSystem ), networkFeature, FeatureVisitor.DEPTH_INFINITE );
-
-    for( final IProfil profile : profiles )
-    {
-      final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.addFeature( network.getFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, "Profile"  ) ); //$NON-NLS-1$ //$NON-NLS-1$
-      profileFeature.invalidEnvelope();
-      ProfileFeatureFactory.toFeature( profile, profileFeature );
-      profileFeature.setSrsName( crs );
-      addedFeatures.add( profileFeature );
-    }
-
-    final GMLWorkspace workspace2 = network.getFeature().getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace2, network.getFeature(), networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
-    m_network = network;
-
-    return Status.OK_STATUS;
   }
 
   public Feature[] getTerrainModelAdds( )
