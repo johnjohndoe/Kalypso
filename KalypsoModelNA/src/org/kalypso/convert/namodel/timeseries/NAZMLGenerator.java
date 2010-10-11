@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 
@@ -155,16 +155,16 @@ public final class NAZMLGenerator
     buffer.append( "      </metadataList>" ); //$NON-NLS-1$
 
     // axis1
-    buffer.append( "<axis name=\"" + TimeserieUtils.getName( axis1Type ) + "\" " //$NON-NLS-1$ //$NON-NLS-2$
-        + " type=\"" + axis1Type + "\" unit=\"" + TimeserieUtils.getUnit( axis1Type ) + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    buffer.append( "<axis name=\"" + TimeseriesUtils.getName( axis1Type ) + "\" " //$NON-NLS-1$ //$NON-NLS-2$
+        + " type=\"" + axis1Type + "\" unit=\"" + TimeseriesUtils.getUnit( axis1Type ) + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     buffer.append( " >" ); //$NON-NLS-1$
     buffer.append( "<valueLink separator=\",\" column=\"1\" line=\"4\" " ); //$NON-NLS-1$
     buffer.append( " xlink:href=\"" + location + "\"/>" ); //$NON-NLS-1$ //$NON-NLS-2$
     buffer.append( "</axis>" ); //$NON-NLS-1$
     // axis2
-    buffer.append( "<axis name=\"" + TimeserieUtils.getName( axis2Type ) + "\" " //$NON-NLS-1$ //$NON-NLS-2$
-        + " type=\"" + axis2Type + "\" unit=\"" + TimeserieUtils.getUnit( axis2Type ) + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    buffer.append( "<axis name=\"" + TimeseriesUtils.getName( axis2Type ) + "\" " //$NON-NLS-1$ //$NON-NLS-2$
+        + " type=\"" + axis2Type + "\" unit=\"" + TimeseriesUtils.getUnit( axis2Type ) + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     buffer.append( "<valueLink separator=\",\" column=\"2\" line=\"4\" " ); //$NON-NLS-1$
     buffer.append( " xlink:href=\"" + location + "\"/>" ); //$NON-NLS-1$ //$NON-NLS-2$

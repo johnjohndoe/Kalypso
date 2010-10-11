@@ -61,7 +61,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.TuppleModelsLinearAdd;
 import org.kalypso.ogc.sensor.timeseries.datasource.AddDataSourceObservationHandler;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -170,8 +170,8 @@ public final class RainfallGeneratorUtilities
 
     final IObservation firstObservation = observations[0];
     final MetadataList firstMetadataList = firstObservation.getMetadataList();
-    final String firstStart = firstMetadataList.getProperty( TimeserieUtils.MD_VORHERSAGE_START );
-    final String firstEnde = firstMetadataList.getProperty( TimeserieUtils.MD_VORHERSAGE_ENDE );
+    final String firstStart = firstMetadataList.getProperty( TimeseriesUtils.MD_VORHERSAGE_START );
+    final String firstEnde = firstMetadataList.getProperty( TimeseriesUtils.MD_VORHERSAGE_ENDE );
 
     final List<ITupleModel> observationValues = new ArrayList<ITupleModel>();
     for( final IObservation observation : observations )
@@ -196,9 +196,9 @@ public final class RainfallGeneratorUtilities
     final SimpleObservation combinedObservation = new SimpleObservation( "", "", new MetadataList(), combinedTuppleModel );
     combinedObservation.setName( "Generierte Zeitreihe" );
     if( firstStart != null )
-      combinedObservation.getMetadataList().setProperty( TimeserieUtils.MD_VORHERSAGE_START, firstStart );
+      combinedObservation.getMetadataList().setProperty( TimeseriesUtils.MD_VORHERSAGE_START, firstStart );
     if( firstEnde != null )
-      combinedObservation.getMetadataList().setProperty( TimeserieUtils.MD_VORHERSAGE_ENDE, firstEnde );
+      combinedObservation.getMetadataList().setProperty( TimeseriesUtils.MD_VORHERSAGE_ENDE, firstEnde );
 
     /**
      * ignore original data sources because rainfall generator combines different data sources
