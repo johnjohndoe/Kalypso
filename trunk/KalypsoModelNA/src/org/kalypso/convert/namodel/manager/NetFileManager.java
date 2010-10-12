@@ -262,11 +262,11 @@ public class NetFileManager
       }
 
       final NetElement upStreamElement = netElements.get( upstreamChannel.getId() );
-      
+
       final Node overflowNode = catchment.getOverflowNode();
       if( overflowNode != null )
         upStreamElement.setOverflowNode( overflowNode );
-      
+
       // downstream
       final IRelationType rt1 = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.GRUNDWASSERABFLUSS_MEMBER );
       final Feature[] abflussFEs = workspace.resolveLinks( catchment, rt1 );
@@ -285,6 +285,7 @@ public class NetFileManager
           logWarning( "%s is not connected to network.", downStreamCatchmentFE );
           continue;
         }
+
         final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
         if( downStreamElement == null )
         {

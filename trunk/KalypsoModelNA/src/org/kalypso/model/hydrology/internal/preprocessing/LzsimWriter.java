@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -163,33 +162,41 @@ public class LzsimWriter
       final File lzsFile = new File( lzsimDir, fileName );
 
       final IniHyd[] iniHyds = getIniHyds( naCatchment, iniCatchment );
-      writeLzsFile( lzsFile, iniCatchment, iniDate, iniHyds );
+      if( iniHyds != null )
+        writeLzsFile( lzsFile, iniCatchment, iniDate, iniHyds );
     }
   }
 
   private Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> buildCatchmentHash( ) throws SimulationException
   {
     final List<Feature> allNACatchmentFeatures = m_idManager.getAllFeaturesFromType( IDManager.CATCHMENT );
-    final Map<String, org.kalypso.model.hydrology.binding.model.Catchment> naCatchmentHash = new HashMap<String, org.kalypso.model.hydrology.binding.model.Catchment>();
-    for( final Feature feature : allNACatchmentFeatures )
-      naCatchmentHash.put( feature.getId(), (org.kalypso.model.hydrology.binding.model.Catchment) feature );
 
-    // for all catchments in the calculation - in the hydrohash(catchmentsIDs, list of hydrotopesIDs)
-    final IFeatureBindingCollection<Catchment> catchments = m_initialValues.getCatchments();
-    final Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> iniCatchmentHash = new HashMap<org.kalypso.model.hydrology.binding.model.Catchment, Catchment>();
-    for( final Catchment iniCatchment : catchments )
+    /* Hash ini catchments for quicker access */
+    final IFeatureBindingCollection<Catchment> iniCatchments = m_initialValues.getCatchments();
+    final Map<String, Catchment> iniCatchmentHash = new HashMap<String, Catchment>();
+    for( final Catchment iniCatchment : iniCatchments )
     {
       final String naCatchmentID = iniCatchment.getNaCatchmentID();
-      final org.kalypso.model.hydrology.binding.model.Catchment naCatchment = naCatchmentHash.get( naCatchmentID );
-      if( naCatchment == null )
+      iniCatchmentHash.put( naCatchmentID, iniCatchment );
+    }
+
+    /* build the result mapping */
+    final Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> result = new HashMap<org.kalypso.model.hydrology.binding.model.Catchment, Catchment>();
+    for( final Feature catchment : allNACatchmentFeatures )
+    {
+      final String catchmentID = catchment.getId();
+      final Catchment iniCatchment = iniCatchmentHash.get( catchmentID );
+      if( iniCatchment == null )
       {
-        final String msg = String.format( "Initial values contain unknown catchment reference: %s", naCatchmentID );
+        // FIXME: better? only log...
+        final String msg = String.format( "Missing start condition for catchment: %s", catchmentID );
         throw new SimulationException( msg );
       }
-
-      iniCatchmentHash.put( naCatchment, iniCatchment );
+      else
+        result.put( (org.kalypso.model.hydrology.binding.model.Catchment) catchment, iniCatchment );
     }
-    return iniCatchmentHash;
+
+    return result;
   }
 
   private static void writeLzsFile( final File lzsFile, final Catchment iniCatchment, final String iniDate, final IniHyd[] iniHyds ) throws SimulationException
@@ -239,32 +246,60 @@ public class LzsimWriter
     }
   }
 
-  private IniHyd[] getIniHyds( final org.kalypso.model.hydrology.binding.model.Catchment naCatchment, final Catchment iniCatchment ) throws SimulationException
+  private IniHyd[] getIniHyds( final org.kalypso.model.hydrology.binding.model.Catchment naCatchment, final Catchment iniCatchment )
   {
-    final IFeatureBindingCollection<IniHyd> iniHyds = iniCatchment.getIniHyds();
-
-    /* naFeatureID -> localID */
-    final Map<String, Integer> naHydrotopeHash = new HashMap<String, Integer>();
+    /*
+     * Special case: if the hydro hash does not know this catchment, it was actually never written. This happens e.g.
+     * for catchments that are targets of groundwater flow, but which are not part of the currently written sub-net. We
+     * ignore this case silently for now.
+     */
     final List<HydrotopeInfo> hydrotops = m_hydroHash.getHydrotops( naCatchment );
-    for( final HydrotopeInfo hydrotopeInfo : hydrotops )
-    {
-      final IHydrotope hydrotop = hydrotopeInfo.getHydrotop();
-      naHydrotopeHash.put( hydrotop.getId(), hydrotopeInfo.getLocalID() );
-    }
+    if( hydrotops.size() == 0 )
+      return null;
 
-    final Map<Integer, IniHyd> iniHydMap = new TreeMap<Integer, IniHyd>();
+    /* Hash ini hydrotopes for quicker access */
+    final IFeatureBindingCollection<IniHyd> iniHyds = iniCatchment.getIniHyds();
+    final Map<String, IniHyd> iniHydHash = new HashMap<String, IniHyd>();
     for( final IniHyd iniHyd : iniHyds )
     {
       final String naHydrotopID = iniHyd.getNaHydrotopID();
-      final Integer localID = naHydrotopeHash.get( naHydrotopID );
-      if( localID == null )
-        throw new SimulationException( String.format( "Start conditions contains link to unknown hydrotope: %s", naHydrotopID ) );
+      iniHydHash.put( naHydrotopID, iniHyd );
+    }
+
+    /* Build result map */
+    final Map<Integer, IniHyd> iniHydMap = new TreeMap<Integer, IniHyd>();
+    for( final HydrotopeInfo hydrotopeInfo : hydrotops )
+    {
+      final IHydrotope hydrotop = hydrotopeInfo.getHydrotop();
+      final Integer localID = hydrotopeInfo.getLocalID();
+      final String naHydrotopID = hydrotop.getId();
+
+      final IniHyd iniHyd = iniHydHash.get( naHydrotopID );
 
       iniHydMap.put( localID, iniHyd );
     }
 
-    final Collection<IniHyd> values = iniHydMap.values();
-    return values.toArray( new IniHyd[values.size()] );
+// /* naFeatureID -> localID */
+// final Map<String, Integer> naHydrotopeHash = new HashMap<String, Integer>();
+// final List<HydrotopeInfo> hydrotops = m_hydroHash.getHydrotops( naCatchment );
+// for( final HydrotopeInfo hydrotopeInfo : hydrotops )
+// {
+// final IHydrotope hydrotop = hydrotopeInfo.getHydrotop();
+// naHydrotopeHash.put( hydrotop.getId(), hydrotopeInfo.getLocalID() );
+// }
+//
+// for( final IniHyd iniHyd : iniHyds )
+// {
+// final String naHydrotopID = iniHyd.getNaHydrotopID();
+// final Integer localID = naHydrotopeHash.get( naHydrotopID );
+// if( localID == null )
+// throw new SimulationException( String.format( "Start conditions contains link to unknown hydrotope: %s", naHydrotopID
+// ) );
+//
+// iniHydMap.put( localID, iniHyd );
+// }
+
+    return iniHydMap.values().toArray( new IniHyd[iniHydMap.size()] );
   }
 
 }
