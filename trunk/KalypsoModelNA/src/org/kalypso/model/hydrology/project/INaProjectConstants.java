@@ -62,4 +62,12 @@ public interface INaProjectConstants
 
   String GML_PEDOLOGIE_PATH = "pedologie.gml";
 
+  String FOLDER_ZEITREIHEN_MANAGEMENT = "ZeitreihenManagement";
+
+  String FOLDER_ZEITREIHEN = "Zeitreihen";
+
+  String FOLDER_MODEL = ".model";
+
+  String FOLDER_OBSERVATION_CONF = FOLDER_MODEL + "/observationConf";
+
 }
