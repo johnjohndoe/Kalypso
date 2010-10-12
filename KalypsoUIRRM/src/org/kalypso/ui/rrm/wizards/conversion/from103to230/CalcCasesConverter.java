@@ -58,6 +58,9 @@ public class CalcCasesConverter
   {
     // TODO Auto-generated method stub
 
+    // TODO: .template folder
+
+
   }
 
 }
