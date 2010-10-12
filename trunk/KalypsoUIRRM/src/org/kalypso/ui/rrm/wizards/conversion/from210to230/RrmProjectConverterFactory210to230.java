@@ -38,46 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion;
+package org.kalypso.ui.rrm.wizards.conversion.from210to230;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.kalypso.ui.rrm.wizards.conversion.IProjectConverter;
+import org.kalypso.ui.rrm.wizards.conversion.IProjectConverterInPlaceFactory;
 
 /**
  * @author Gernot
  *
  */
-public class RrmProjectConverter210to230 implements IProjectConverter
+public class RrmProjectConverterFactory210to230 implements IProjectConverterInPlaceFactory
 {
-  private final File m_projectDir;
-
-  public RrmProjectConverter210to230( final File projectDir )
-  {
-    m_projectDir = projectDir;
-  }
-
   /**
-   * @see org.kalypso.ui.rrm.wizards.conversion.IProjectConverter#getLabel()
+   * @see org.kalypso.ui.rrm.wizards.conversion.IProjectConverterInPlaceFactory#createConverter(java.io.File)
    */
   @Override
-  public String getLabel( )
+  public IProjectConverter createConverter( final File projectDir )
   {
-    return "2.1.0 - 2.3.0";
+    return new RrmProjectConverter210to230( projectDir );
   }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
-  {
-    // TODO Auto-generated method stub
-    return Status.OK_STATUS;
-  }
-
 }

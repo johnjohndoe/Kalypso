@@ -55,6 +55,8 @@ import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
+import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverterFactory103to230;
+import org.kalypso.ui.rrm.wizards.conversion.from210to230.RrmProjectConverterFactory210to230;
 import org.kalypso.util.swt.StatusDialog;
 
 /**
@@ -121,6 +123,8 @@ public class KalypsoNAConvertProjectWizard extends NewProjectWizard
     try
     {
       final File targetDir = targetProject.getLocation().toFile();
+
+      // FIXME: let user choose converters on project page; or: determine correct converter via project-version-number
 
       final IProjectConverterFactory[] factories = new IProjectConverterFactory[] { new RrmProjectConverterFactory103to230(), new RrmProjectConverterFactory210to230() };
       final IProjectConverter[] converters = ConverterUtils.createConverters( factories, sourceDir, targetDir );

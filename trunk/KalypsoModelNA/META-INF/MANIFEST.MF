@@ -22,4 +22,5 @@ Export-Package: org.kalypso.convert.namodel,
  org.kalypso.model.hydrology.binding.initialValues,
  org.kalypso.model.hydrology.binding.model,
  org.kalypso.model.hydrology.binding.parameter,
- org.kalypso.model.hydrology.binding.suds
+ org.kalypso.model.hydrology.binding.suds,
+ org.kalypso.model.hydrology.project
