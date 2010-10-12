@@ -152,25 +152,25 @@ public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfa
   @Override
   public IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final String sourceFilter, final IProgressMonitor monitor ) throws CoreException
   {
-    /* Update the log. */
-    LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde gestartet.", null ) );
-
-    /* Get the needed properties. */
-    final XLinkedFeature_Impl ombrometerCollectionLink = getProperty( QNAME_PROP_ombrometerCollection, XLinkedFeature_Impl.class );
-    final IOmbrometerCollection ombrometerCollection = (IOmbrometerCollection) ombrometerCollectionLink.getFeature();
-    final String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
-    final String areaPath = getProperty( QNAME_PROP_areaPath, String.class );
-    final String linkPath = getProperty( QNAME_PROP_timeseriesLinkPath, String.class );
-    final String catchmentAreaPath = getProperty( QNAME_PROP_catchmentAreaPath, String.class );
-
-    /* Create the paths. */
-    final GMLXPath collectionXPath = new GMLXPath( collectionPath, getWorkspace().getNamespaceContext() );
-    final GMLXPath areaXPath = new GMLXPath( areaPath, getWorkspace().getNamespaceContext() );
-    final GMLXPath linkXPath = new GMLXPath( linkPath, getWorkspace().getNamespaceContext() );
-    final GMLXPath catchmentAreaXPath = new GMLXPath( catchmentAreaPath, getWorkspace().getNamespaceContext() );
-
     try
     {
+      /* Update the log. */
+      LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde gestartet.", null ) );
+      
+      /* Get the needed properties. */
+      final XLinkedFeature_Impl ombrometerCollectionLink = getProperty( QNAME_PROP_ombrometerCollection, XLinkedFeature_Impl.class );
+      final IOmbrometerCollection ombrometerCollection = (IOmbrometerCollection) ombrometerCollectionLink.getFeature();
+      final String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
+      final String areaPath = getProperty( QNAME_PROP_areaPath, String.class );
+      final String linkPath = getProperty( QNAME_PROP_timeseriesLinkPath, String.class );
+      final String catchmentAreaPath = getProperty( QNAME_PROP_catchmentAreaPath, String.class );
+      
+      /* Create the paths. */
+      final GMLXPath collectionXPath = new GMLXPath( collectionPath, getWorkspace().getNamespaceContext() );
+      final GMLXPath areaXPath = new GMLXPath( areaPath, getWorkspace().getNamespaceContext() );
+      final GMLXPath linkXPath = new GMLXPath( linkPath, getWorkspace().getNamespaceContext() );
+      final GMLXPath catchmentAreaXPath = new GMLXPath( catchmentAreaPath, getWorkspace().getNamespaceContext() );
+      
       /* Get the ombrometers. */
       final FeatureList ombrometerList = (FeatureList) GMLXPathUtilities.query( collectionXPath, ombrometerCollection );
 
