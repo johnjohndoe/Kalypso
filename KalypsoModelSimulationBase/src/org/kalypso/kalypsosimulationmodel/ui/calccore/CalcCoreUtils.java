@@ -124,6 +124,14 @@ public final class CalcCoreUtils
     // REMARK: This is OS dependent; we use should use a pattern according to OS
     final String exeName = String.format( pattern, version );
     final File exeFile = new File( getExecutablesDirectory(), exeName );
+
+    if( !exeFile.exists() )
+    {
+      final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.6", exeFile.getAbsolutePath() ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
+      throw new CoreException( status );
+    }
+
     if( !exeFile.isFile() )
     {
       final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.2", exeFile.getAbsolutePath() ); //$NON-NLS-1$
@@ -133,7 +141,7 @@ public final class CalcCoreUtils
 
     if( !exeFile.canExecute() )
     {
-      final String msg = Messages.getString( "The selected executeable is not a file.", exeFile.getAbsolutePath() ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.5", exeFile.getAbsolutePath() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelSimulationBase.ID, msg );
       throw new CoreException( status );
     }
