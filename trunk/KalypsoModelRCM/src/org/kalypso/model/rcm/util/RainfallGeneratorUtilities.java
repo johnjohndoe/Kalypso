@@ -111,7 +111,7 @@ public final class RainfallGeneratorUtilities
       else if( object instanceof GM_MultiSurface )
         areas[i] = (GM_MultiSurface) object;
       else if( object == null )
-        catchmentFeatures[i] = null; // does not make sense to process
+        areas[i] = null; // does not make sense to process
       else
         throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface.", object, catchmentAreaXPath ), null ) );
     }
