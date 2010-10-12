@@ -41,9 +41,7 @@
 package org.kalypso.convert.namodel.optimize;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
@@ -60,7 +58,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
@@ -178,7 +175,7 @@ public class NAOptimizingJob implements IOptimizingJob
     optimizeRunDir.mkdirs();
 
     final CalcDataProviderDecorater newDataProvider = new CalcDataProviderDecorater( m_dataProvider );
-    newDataProvider.addURL( NaModelConstants.IN_CONTROL_ID, m_lastOptimizedFile.toURL() );
+    newDataProvider.addURL( NaModelConstants.IN_CONTROL_ID, m_lastOptimizedFile.toURI().toURL() );
 
     // some generated files from best run can be recycled to increase
     // performance
@@ -186,7 +183,7 @@ public class NAOptimizingJob implements IOptimizingJob
     {
       try
       {
-        newDataProvider.addURL( IN_BestOptimizedRunDir_ID, m_bestOptimizeRunDir.toURL() );
+        newDataProvider.addURL( IN_BestOptimizedRunDir_ID, m_bestOptimizeRunDir.toURI().toURL() );
       }
       catch( final MalformedURLException e1 )
       {
@@ -272,18 +269,19 @@ public class NAOptimizingJob implements IOptimizingJob
 
     t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
     t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
+    
+    String encoding = dom.getInputEncoding();
+    t.setOutputProperty( OutputKeys.ENCODING, encoding );
 
     final File file = File.createTempFile( "optimizedBean", ".xml", m_tmpDir ); //$NON-NLS-1$//$NON-NLS-2$
-    final Writer writer = new FileWriter( file );
     try
     {
-      t.transform( new DOMSource( dom ), new StreamResult( writer ) );
+      t.transform( new DOMSource( dom ), new StreamResult( file ) );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
-    IOUtils.closeQuietly( writer );
 
     m_lastOptimizedFile = file;
 
