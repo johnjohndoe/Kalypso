@@ -107,7 +107,7 @@ public class KalypsoNaProcessor
     catch( final CoreException e )
     {
       final IStatus status = e.getStatus();
-      final String msg = String.format( "No Kalypso-NA.exe version configured: %s", status.getMessage() );
+      final String msg = status.getMessage();
       throw new SimulationException( msg, e );
     }
     catch( final IOException e )
