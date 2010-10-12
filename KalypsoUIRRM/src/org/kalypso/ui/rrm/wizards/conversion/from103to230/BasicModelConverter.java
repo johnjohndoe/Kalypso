@@ -38,23 +38,61 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion;
+package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 
 import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.model.hydrology.project.INaProjectConstants;
 
 /**
- * @author Gernot
- *
+ * @author Gernot Belger
  */
-public class RrmProjectConverterFactory210to230 implements IProjectConverterInPlaceFactory
+public class BasicModelConverter
 {
-  /**
-   * @see org.kalypso.ui.rrm.wizards.conversion.IProjectConverterInPlaceFactory#createConverter(java.io.File)
-   */
-  @Override
-  public IProjectConverter createConverter( final File projectDir )
+  private final File m_sourceDir;
+
+  private final File m_targetDir;
+
+  public BasicModelConverter( final File sourceDir, final File targetDir )
   {
-    return new RrmProjectConverter210to230( projectDir );
+    m_sourceDir = sourceDir;
+    m_targetDir = targetDir;
+  }
+
+  public void execute( final IProgressMonitor monitor ) throws IOException
+  {
+    try
+    {
+      /* Copy basic .gml files */
+      copyFile( INaProjectConstants.GML_MODELL_PATH );
+      copyFile( INaProjectConstants.GML_HYDROTOP_PATH );
+      copyFile( INaProjectConstants.GML_PARAMETER_PATH );
+      copyFile( "synthN.gml", INaProjectConstants.GML_SYNTH_N_PATH );
+
+      /* TODO: observatrionConf anpassen (andere Pfade) */
+
+
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+
+  private void copyFile( final String path ) throws IOException
+  {
+    copyFile( path, path );
+  }
+
+  private void copyFile( final String sourcePath, final String targetPath ) throws IOException
+  {
+    final File modelSourceFile = new File( m_sourceDir, sourcePath );
+    final File modelTargetFile = new File( m_targetDir, targetPath );
+
+    FileUtils.copyFile( modelSourceFile, modelTargetFile, true );
   }
 
 }

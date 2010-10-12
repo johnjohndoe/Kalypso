@@ -38,23 +38,68 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion;
+package org.kalypso.ui.rrm.wizards.conversion.from210to230;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.ui.rrm.wizards.conversion.IProjectConverter;
 
 /**
- * @author Gernot
- *
+ * @author Gernot Belger
  */
-public class RrmProjectConverterFactory103to230 implements IProject2ProjectConverterFactory
+public class RrmProjectConverter210to230 implements IProjectConverter
 {
+  private final File m_projectDir;
+
+  public RrmProjectConverter210to230( final File projectDir )
+  {
+    m_projectDir = projectDir;
+  }
+
   /**
-   * @see org.kalypso.ui.rrm.wizards.IProject2ProjectConverterFactory#createConverter(java.io.File, java.io.File)
+   * @see org.kalypso.ui.rrm.wizards.conversion.IProjectConverter#getLabel()
    */
   @Override
-  public IProject2ProjectConverter createConverter( final File sourceDir, final File targetDir )
+  public String getLabel( )
   {
-    return new RrmProjectConverter103to230( sourceDir, targetDir );
+    return "2.1.0 - 2.3.0";
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  {
+    convertBasicModel();
+
+    convertCalcCases();
+
+    return Status.OK_STATUS;
+  }
+
+  private void convertBasicModel( )
+  {
+    /* TODO: Convert gml files */
+
+
+    /* TODO: Convert timeseries */
+
+    /* TODO: Optional: Copy+Convert user data */
+  }
+
+  private void convertCalcCases( )
+  {
+    /* TODO: Convert gml files */
+
+    /* TODO: Convert timeseries */
+
+    /* TODO: Optional: Copy+Convert user data */
   }
 
 }

@@ -38,15 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion;
+package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.ui.rrm.wizards.conversion.IProject2ProjectConverter;
 
 
 /**
@@ -77,10 +80,30 @@ public class RrmProjectConverter103to230 implements IProject2ProjectConverter
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    // TODO Auto-generated method stub
-    return Status.OK_STATUS;
+    monitor.beginTask( String.format( "Projekt '%s'", m_sourceDir.getName() ), 100 );
+
+    try
+    {
+      final BasicModelConverter basicModelConverter = new BasicModelConverter( m_sourceDir, m_targetDir );
+      monitor.subTask( "konvertiere Basisdaten..." );
+      basicModelConverter.execute( new SubProgressMonitor( monitor, 33 ) );
+
+      monitor.subTask( "konvertiere Rechenvarianten..." );
+      final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir );
+      casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
+
+      return Status.OK_STATUS;
+    }
+    catch( final IOException e )
+    {
+      throw new InvocationTargetException( e );
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 
 
