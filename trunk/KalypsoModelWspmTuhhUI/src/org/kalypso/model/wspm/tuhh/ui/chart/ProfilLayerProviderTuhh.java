@@ -210,12 +210,12 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( layerId.equals( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
     {
       final IProfilChange[] changes = new IProfilChange[1];
-      
+
       final SinuositaetProfileObject sinObj = new SinuositaetProfileObject();
       final IRecord record = sinObj.getObservation().getResult().createRecord();
       sinObj.getObservation().getResult().add( record );
-    
-      changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] {sinObj} );
+
+      changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { sinObj } );
       final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.4" ), profil, changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
     }
