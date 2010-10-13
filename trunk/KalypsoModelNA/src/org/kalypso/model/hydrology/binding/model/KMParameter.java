@@ -84,5 +84,4 @@ public class KMParameter extends AbstractNaModelElement
   {
     setProperty( PROP_RNF, rnf );
   }
-
 }

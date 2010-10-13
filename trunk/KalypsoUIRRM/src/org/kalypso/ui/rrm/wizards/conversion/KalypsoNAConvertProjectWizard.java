@@ -48,8 +48,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
@@ -98,24 +98,26 @@ public class KalypsoNAConvertProjectWizard extends NewProjectWizard
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void postCreateProject( final IProject project, final IProgressMonitor monitor )
+  public void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
     final File inputDir = m_conversionPage.getProjectDir();
     final IStatus result = doConvertProject( inputDir, project, monitor );
-    if( !result.isOK() )
-    {
-      try
-      {
-        /* remove project from workspace, its probably broken */
-        project.delete( true, new NullProgressMonitor() );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
 
-      new StatusDialog( getShell(), result, getWindowTitle() ).open();
+    final Shell shell = getShell();
+    if( result.isMultiStatus() )
+    {
+      shell.getDisplay().syncExec( new Runnable()
+      {
+        @Override
+        public void run( )
+        {
+          new StatusDialog( shell, result, "Konvertierung von Altprojekten" ).open();
+        }
+      } );
     }
+
+    if( !result.isOK() )
+      throw new CoreException( result );
   }
 
   private IStatus doConvertProject( final File sourceDir, final IProject targetProject, final IProgressMonitor monitor )
@@ -138,11 +140,6 @@ public class KalypsoNAConvertProjectWizard extends NewProjectWizard
       return e.getStatus();
     }
     catch( final InvocationTargetException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Unexpected error during project conversion", e );
-    }
-    catch( final InterruptedException e )
     {
       e.printStackTrace();
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Unexpected error during project conversion", e );

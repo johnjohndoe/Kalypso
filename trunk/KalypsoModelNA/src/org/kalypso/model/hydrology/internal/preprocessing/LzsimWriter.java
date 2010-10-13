@@ -279,26 +279,6 @@ public class LzsimWriter
       iniHydMap.put( localID, iniHyd );
     }
 
-// /* naFeatureID -> localID */
-// final Map<String, Integer> naHydrotopeHash = new HashMap<String, Integer>();
-// final List<HydrotopeInfo> hydrotops = m_hydroHash.getHydrotops( naCatchment );
-// for( final HydrotopeInfo hydrotopeInfo : hydrotops )
-// {
-// final IHydrotope hydrotop = hydrotopeInfo.getHydrotop();
-// naHydrotopeHash.put( hydrotop.getId(), hydrotopeInfo.getLocalID() );
-// }
-//
-// for( final IniHyd iniHyd : iniHyds )
-// {
-// final String naHydrotopID = iniHyd.getNaHydrotopID();
-// final Integer localID = naHydrotopeHash.get( naHydrotopID );
-// if( localID == null )
-// throw new SimulationException( String.format( "Start conditions contains link to unknown hydrotope: %s", naHydrotopID
-// ) );
-//
-// iniHydMap.put( localID, iniHyd );
-// }
-
     return iniHydMap.values().toArray( new IniHyd[iniHydMap.size()] );
   }
 

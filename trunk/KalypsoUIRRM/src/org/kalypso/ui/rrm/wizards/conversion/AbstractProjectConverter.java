@@ -38,55 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.from210to230;
+package org.kalypso.ui.rrm.wizards.conversion;
 
-import java.io.File;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.ui.rrm.wizards.conversion.AbstractProjectConverter;
 
 /**
  * @author Gernot Belger
  */
-public class RrmProjectConverter210to230 extends AbstractProjectConverter
+public abstract class AbstractProjectConverter extends AbstractLoggingOperation implements IProjectConverter
 {
-  private final File m_projectDir;
-
-  public RrmProjectConverter210to230( final File projectDir )
+  protected AbstractProjectConverter( final String label )
   {
-    super( String.format( "Konvertierung von '%s' Version 2.1.0 nach 2.3.0", projectDir.getName() ) );
-
-    m_projectDir = projectDir;
-  }
-
-  /**
-   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Throwable
-  {
-    convertBasicModel();
-
-    convertCalcCases();
-  }
-
-  private void convertBasicModel( )
-  {
-    /* TODO: Convert gml files */
-
-
-    /* TODO: Convert timeseries */
-
-    /* TODO: Optional: Copy+Convert user data */
-  }
-
-  private void convertCalcCases( )
-  {
-    /* TODO: Convert gml files */
-
-    /* TODO: Convert timeseries */
-
-    /* TODO: Optional: Copy+Convert user data */
+    super( label );
   }
 
 }

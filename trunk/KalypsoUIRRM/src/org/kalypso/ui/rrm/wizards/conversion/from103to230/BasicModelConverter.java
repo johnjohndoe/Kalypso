@@ -53,9 +53,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.io.visitor.FileFilterVisitor;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -63,7 +66,7 @@ import org.xml.sax.SAXException;
 /**
  * @author Gernot Belger
  */
-public class BasicModelConverter
+public class BasicModelConverter extends AbstractLoggingOperation
 {
   private static final Pattern PATTERN_LINK_MODEL_ZEITREIHEN = Pattern.compile( "project:/.model/(?i)Zeitreihen/" );
 
@@ -71,13 +74,21 @@ public class BasicModelConverter
 
   private final File m_targetDir;
 
+  private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
   public BasicModelConverter( final File sourceDir, final File targetDir )
   {
+    super( "Basisdaten" );
+
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
   }
 
-  public void execute( final IProgressMonitor monitor ) throws IOException, CoreException
+  /**
+   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  protected void doExecute( final IProgressMonitor monitor ) throws IOException, CoreException
   {
     try
     {
@@ -97,9 +108,12 @@ public class BasicModelConverter
     }
   }
 
+  /**
+   * Copy observationConf and changes the timeseries links inside.
+   */
   private void copyObservationConf( ) throws IOException
   {
-    /* TODO: observationConfig anpassen (andere Pfade) */
+    /* copy observationConfig */
     final File sourceDir = new File( m_sourceDir, INaProjectConstants.FOLDER_OBSERVATION_CONF );
     final File targetDir = new File( m_targetDir, INaProjectConstants.FOLDER_OBSERVATION_CONF );
     FileUtils.copyDirectory( sourceDir, targetDir, true );
@@ -115,21 +129,25 @@ public class BasicModelConverter
     {
       try
       {
-        // FIXME: we read the whole document only to find the encoding; isn't there another way?
-        final Document document = XMLTools.parse( file );
-        final String encoding = document.getInputEncoding();
-        final String fileContents = FileUtils.readFileToString( file, encoding );
-
-        final String newFileContents = PATTERN_LINK_MODEL_ZEITREIHEN.matcher( fileContents ).replaceAll( "project:/Zeitreihen/" );
-
-        FileUtils.writeStringToFile( file, newFileContents, encoding );
+        fixObservationConfTimeseriesLinks( file );
       }
       catch( final SAXException e )
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        m_log.addError( "Fehler beim Konvertieren von '%s'. Die Datei ist kein gültiges XML", e, file.getName() );
       }
     }
+  }
+
+  private void fixObservationConfTimeseriesLinks( final File observationConfFile ) throws SAXException, IOException
+  {
+    // FIXME: we read the whole document only to find the encoding; is there no other way?
+    final Document document = XMLTools.parse( observationConfFile );
+    final String encoding = document.getInputEncoding();
+    final String fileContents = FileUtils.readFileToString( observationConfFile, encoding );
+
+    final String newFileContents = PATTERN_LINK_MODEL_ZEITREIHEN.matcher( fileContents ).replaceAll( "project:/Zeitreihen/" );
+
+    FileUtils.writeStringToFile( observationConfFile, newFileContents, encoding );
   }
 
   private void copyBasicTimeseries( ) throws CoreException, IOException

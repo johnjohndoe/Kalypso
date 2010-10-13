@@ -41,21 +41,17 @@
 package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.ui.rrm.wizards.conversion.IProject2ProjectConverter;
+import org.kalypso.ui.rrm.wizards.conversion.AbstractProjectConverter;
 
 
 /**
  * @author Gernot Belger
  */
-public class RrmProjectConverter103to230 implements IProject2ProjectConverter
+public class RrmProjectConverter103to230 extends AbstractProjectConverter
 {
   private final File m_sourceDir;
 
@@ -63,42 +59,32 @@ public class RrmProjectConverter103to230 implements IProject2ProjectConverter
 
   public RrmProjectConverter103to230( final File sourceDir, final File targetDir )
   {
+    super( String.format( "Konvertierung von '%s' Version 1.0.3 nach 2.2.0", sourceDir.getName() ) );
+
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
   }
 
   /**
-   * @see org.kalypso.ui.rrm.wizards.conversion.IProjectConverter#getLabel()
+   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public String getLabel( )
+  protected void doExecute( final IProgressMonitor monitor ) throws Throwable
   {
-    return "1.0.3 - 2.2.0";
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
-  {
-    monitor.beginTask( String.format( "Projekt '%s'", m_sourceDir.getName() ), 100 );
+    final String projectName = m_sourceDir.getName();
+    monitor.beginTask( String.format( "Projekt '%s'", projectName ), 100 );
 
     try
     {
       final BasicModelConverter basicModelConverter = new BasicModelConverter( m_sourceDir, m_targetDir );
       monitor.subTask( "konvertiere Basisdaten..." );
-      basicModelConverter.execute( new SubProgressMonitor( monitor, 33 ) );
+      final IStatus basicStatus = basicModelConverter.execute( new SubProgressMonitor( monitor, 33 ) );
+      getLog().addStatus( basicStatus );
 
       monitor.subTask( "konvertiere Rechenvarianten..." );
       final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir );
-      casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
-
-      return Status.OK_STATUS;
-    }
-    catch( final IOException e )
-    {
-      throw new InvocationTargetException( e );
+      final IStatus calcCaseStatus = casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
+      getLog().addStatus( calcCaseStatus );
     }
     finally
     {
@@ -106,5 +92,9 @@ public class RrmProjectConverter103to230 implements IProject2ProjectConverter
     }
   }
 
+  public IStatus getStatus( )
+  {
+    return getLog().asMultiStatusOrOK( "Probleme beim Konvertieren des Basismodells" );
+  }
 
 }

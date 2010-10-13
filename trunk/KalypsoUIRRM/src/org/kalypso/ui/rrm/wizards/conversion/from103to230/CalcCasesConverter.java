@@ -41,26 +41,97 @@
 package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation;
 
 /**
  * @author Gernot Belger
  */
-public class CalcCasesConverter
+public class CalcCasesConverter extends AbstractLoggingOperation
 {
+  private final File m_sourceDir;
+
+  private final File m_targetDir;
+
   public CalcCasesConverter( final File sourceDir, final File targetDir )
   {
-    // TODO Auto-generated constructor stub
+    super( "Rechenvarianten" );
+    m_sourceDir = sourceDir;
+    m_targetDir = targetDir;
   }
 
-  public void execute( final IProgressMonitor monitor )
+  /**
+   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  protected void doExecute( final IProgressMonitor monitor ) throws CoreException
   {
-    // TODO Auto-generated method stub
+    try
+    {
+      final SubMonitor progress = SubMonitor.convert( monitor, "Konvertiere Rechenvarianten", 101 );
 
-    // TODO: .template folder
+      final CalcCaseConvertWalker walker = new CalcCaseConvertWalker( m_sourceDir );
+      final File[] calcCases = walker.execute();
+      ProgressUtilities.worked( progress, 1 );
 
+      progress.setWorkRemaining( calcCases.length );
 
+      for( int i = 0; i < calcCases.length; i++ )
+      {
+        final File sourceDir = calcCases[i];
+        final String calcCaseName = sourceDir.getName();
+
+        progress.subTask( String.format( "Rechenvariante %s (%d/%d)...", calcCaseName, i + 1, calcCases.length ) );
+        final File targetDir = determineTargetDir( sourceDir );
+
+        try
+        {
+          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir );
+          calcCaseConverter.doExecute( progress.newChild( 1 ) );
+        }
+        catch( final CoreException ce )
+        {
+          final IStatus status = ce.getStatus();
+          getLog().add( status );
+        }
+        catch( final Throwable e )
+        {
+          getLog().addError( "Unerwarteter Fehler beim Konvertieren von Rechenvariante '%s'", e, calcCaseName );
+        }
+      }
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      getLog().addError( "Fehler beim Zugriff auf die Rechenvarianten", e );
+    }
+  }
+
+  private File determineTargetDir( final File directory )
+  {
+    final IPath basePath = Path.fromOSString( m_sourceDir.getAbsolutePath() );
+    final IPath calcCaseSourcePath = basePath.append( INaProjectConstants.FOLDER_RECHENVARIANTEN );
+    final IPath currentPath = Path.fromOSString( directory.getAbsolutePath() );
+
+    // If we are inside the 'Rechenvarianten', keep this relative order.
+    // If we are outside, we move it into 'rechenvariante/Andere' in the target.
+    IPath targetRelativePath;
+    if( calcCaseSourcePath.isPrefixOf( currentPath ) )
+      targetRelativePath = currentPath.makeRelativeTo( calcCaseSourcePath );
+    else
+      targetRelativePath = new Path( "Andere" ).append( calcCaseSourcePath.makeRelativeTo( basePath ) );
+
+    final IPath calcCaseTargetPath = new Path( m_targetDir.getAbsolutePath() ).append( INaProjectConstants.FOLDER_RECHENVARIANTEN );
+    return calcCaseTargetPath.append( targetRelativePath ).toFile();
   }
 
 }
