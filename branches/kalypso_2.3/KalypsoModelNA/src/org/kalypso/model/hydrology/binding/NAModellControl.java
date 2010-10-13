@@ -183,14 +183,6 @@ public class NAModellControl extends Feature_Impl
     return getProperty( PROP_NACONTROL_ROOTNODE, String.class );
   }
 
-  private boolean getBoolean( final QName property, final boolean defaultValue )
-  {
-    final Boolean value = getProperty( property, Boolean.class );
-    if( value == null )
-      return defaultValue;
-
-    return value;
-  }
 
   public boolean doGenerateTMP( )
   {

@@ -61,10 +61,10 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.convert.namodel.DefaultPathGenerator;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.timeseries.Block;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -98,7 +98,6 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -254,19 +253,12 @@ public class NaPostProcessor
   private void loadTSResults( final File outWeNatDir, final File resultDir, final TSResultDescriptor descriptor ) throws MalformedURLException, SensorException
   {
     final IFeatureType resultFT = m_modelWorkspace.getGMLSchema().getFeatureType( descriptor.getFeatureType() );
-    final String suffix = descriptor.name();
-    final double resultFactor = descriptor.getResultFactor();
-    final String resultType = descriptor.getAxisType();
-
     final String titlePropName = "name";
+
+    final String suffix = descriptor.name();
+
     final String metadataTSLink = descriptor.getMetadataTSLink();
     final String targetTSLink = descriptor.getTargetTSLink();
-
-    final IFeatureType FT_NODE = m_modelWorkspace.getGMLSchema().getFeatureType( Node.FEATURE_NODE );
-    final IFeatureType FT_CATCHMENT = m_modelWorkspace.getGMLSchema().getFeatureType( Catchment.FEATURE_CATCHMENT );
-    final IFeatureType FT_STORAGE_CHANNEL = m_modelWorkspace.getGMLSchema().getFeatureType( StorageChannel.FEATURE_STORAGE_CHANNEL );
-
-    final boolean isConsiderableFeatureType = FT_NODE.equals( resultFT ) || FT_CATCHMENT.equals( resultFT ) || FT_STORAGE_CHANNEL.equals( resultFT );
 
     final IDManager idManager = m_conf.getIdManager();
     // ASCII-Files
@@ -285,37 +277,25 @@ public class NaPostProcessor
       final Feature[] resultFeatures = m_modelWorkspace.getFeatures( resultFT );
       for( final Feature resultFeature : resultFeatures )
       {
-        if( isConsiderableFeatureType && !FeatureHelper.booleanIsTrue( resultFeature, NaModelConstants.GENERATE_RESULT_PROP, false ) )
-          continue; // should not generate results
+        if( resultFeature instanceof Node && !((Node) resultFeature).isGenerateResults() )
+          continue;
+
+        if( resultFeature instanceof Catchment && !((Catchment) resultFeature).isGenerateResults() )
+          continue;
+
+        if( resultFeature instanceof StorageChannel && !((StorageChannel) resultFeature).isGenerateResults() )
+          continue;
 
         final String key = Integer.toString( idManager.getAsciiID( resultFeature ) );
 
-
-        if( !ts.dataExistsForKey( key ) )
-          continue; // no results available
-        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-        // transform data to tuppelmodel
-        final SortedMap<Date, String> data = ts.getTimeSerie( key );
-        final Object[][] tupelData = new Object[data.size()][3];
-        final Set<Entry<Date, String>> dataSet = data.entrySet();
-        final Iterator<Entry<Date, String>> iter = dataSet.iterator();
-        int pos = 0;
-        while( iter.hasNext() )
+        final ITupleModel qTuppelModel = readBlockDataForKey( ts, key, descriptor );
+        if( qTuppelModel == null )
         {
-          final Map.Entry<Date, String> entry = iter.next();
-          tupelData[pos][0] = entry.getKey();
-          tupelData[pos][1] = new Double( Double.parseDouble( entry.getValue().toString() ) * resultFactor );
-          tupelData[pos][2] = new Integer( KalypsoStati.BIT_OK );
-          pos++;
+          m_logger.info( String.format( "Missing result data for element: %s", key ) ); //$NON-NLS-1$
+          continue;
         }
 
-        final String axisTitle = TSResultDescriptor.getAxisTitleForSuffix( suffix );
-        final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.4" ), ITimeseriesConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
-        final IAxis qAxis = new DefaultAxis( axisTitle, resultType, TimeserieUtils.getUnit( resultType ), Double.class, false );
-        final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( qAxis, true );
-        final IAxis[] axis = new IAxis[] { dateAxis, qAxis, statusAxis };
-        final ITupleModel qTuppelModel = new SimpleTupleModel( axis, tupelData );
+        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final MetadataList metadataList = new MetadataList();
 
@@ -343,11 +323,12 @@ public class NaPostProcessor
             final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL ); //$NON-NLS-1$
 
             copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { ITimeseriesConstants.MD_ALARM_1, ITimeseriesConstants.MD_ALARM_2, ITimeseriesConstants.MD_ALARM_3,
-              ITimeseriesConstants.MD_ALARM_4, ITimeseriesConstants.MD_GEWAESSER, ITimeseriesConstants.MD_FLUSSGEBIET, ITimeseriesConstants.MD_GKH, ITimeseriesConstants.MD_GKR,
-              ITimeseriesConstants.MD_HOEHENANGABEART, ITimeseriesConstants.MD_PEGELNULLPUNKT, ITimeseriesConstants.MD_WQWECHMANN, ITimeseriesConstants.MD_WQTABLE, ITimeseriesConstants.MD_TIMEZONE,
-              ITimeseriesConstants.MD_VORHERSAGE_START, ITimeseriesConstants.MD_VORHERSAGE_ENDE } );
+                ITimeseriesConstants.MD_ALARM_4, ITimeseriesConstants.MD_GEWAESSER, ITimeseriesConstants.MD_FLUSSGEBIET, ITimeseriesConstants.MD_GKH, ITimeseriesConstants.MD_GKR,
+                ITimeseriesConstants.MD_HOEHENANGABEART, ITimeseriesConstants.MD_PEGELNULLPUNKT, ITimeseriesConstants.MD_WQWECHMANN, ITimeseriesConstants.MD_WQTABLE, ITimeseriesConstants.MD_TIMEZONE,
+                ITimeseriesConstants.MD_VORHERSAGE_START, ITimeseriesConstants.MD_VORHERSAGE_ENDE } );
           }
         }
+
         // lese ergebnis-link um target fuer zml zu finden
         String resultPathRelative = ""; //$NON-NLS-1$
         if( targetTSLink != null )
@@ -400,6 +381,48 @@ public class NaPostProcessor
     }
   }
 
+  private ITupleModel readBlockDataForKey( BlockTimeSeries ts, String key, TSResultDescriptor descriptor )
+  {
+    if( !ts.dataExistsForKey( key ) )
+      return null;
+
+    final String suffix = descriptor.name();
+    final double resultFactor = descriptor.getResultFactor();
+    final String resultType = descriptor.getAxisType();
+
+    // transform data to tuppelmodel
+    final Block block = ts.getTimeSerie( key );
+
+    Date[] dates = block.getDates();
+
+    final Object[][] tupelData = new Object[dates.length][3];
+    int pos = 0;
+    for( Date date : dates )
+    {
+      Double value = block.getValue(date);
+      tupelData[pos][0] = date;
+
+      if( value.isNaN() )
+      {
+        tupelData[pos][1] = 0.0;
+        tupelData[pos][2] = new Integer( KalypsoStati.BIT_CHECK );
+      }
+      else
+      {
+        tupelData[pos][1] = value * resultFactor;
+        tupelData[pos][2] = new Integer( KalypsoStati.BIT_OK );
+      }
+
+      pos++;
+    }
+
+    final String axisTitle = TSResultDescriptor.getAxisTitleForSuffix( suffix );
+    final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.4" ), ITimeseriesConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxis qAxis = new DefaultAxis( axisTitle, resultType, TimeserieUtils.getUnit( resultType ), Double.class, false );
+    final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( qAxis, true );
+    final IAxis[] axis = new IAxis[] { dateAxis, qAxis, statusAxis };
+    return new SimpleTupleModel( axis, tupelData );
+  }
 
   private static void copyMetaData( final MetadataList srcMeta, final MetadataList destMeta, final String[] mdKeys )
   {
