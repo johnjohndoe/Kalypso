@@ -38,55 +38,59 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.from210to230;
+package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.ui.rrm.wizards.conversion.AbstractProjectConverter;
+import org.apache.commons.io.DirectoryWalker;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
+ * Searches for calc case folders.
+ * 
  * @author Gernot Belger
  */
-public class RrmProjectConverter210to230 extends AbstractProjectConverter
+public class CalcCaseConvertWalker extends DirectoryWalker
 {
-  private final File m_projectDir;
+  private final File m_sourceDir;
 
-  public RrmProjectConverter210to230( final File projectDir )
+  public CalcCaseConvertWalker( final File sourceDir )
   {
-    super( String.format( "Konvertierung von '%s' Version 2.1.0 nach 2.3.0", projectDir.getName() ) );
+    super( FileFilterUtils.directoryFileFilter(), -1 );
 
-    m_projectDir = projectDir;
+    m_sourceDir = sourceDir;
   }
 
-  /**
-   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-   */
+  public File[] execute( ) throws IOException
+  {
+    final Collection<File> collector = new ArrayList<File>();
+    walk( m_sourceDir, collector );
+    return collector.toArray( new File[collector.size()] );
+  }
+
+  @SuppressWarnings("unchecked")
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Throwable
+  protected boolean handleDirectory( final File directory, final int depth, @SuppressWarnings("rawtypes") final Collection results )
   {
-    convertBasicModel();
+    /* Just ignore non calculation dirs. Needs to return true, as we may come from further up. */
+    if( !isCalculationDirectory( directory ) )
+      return true;
 
-    convertCalcCases();
+// System.out.print( StringUtils.repeat( " ", depth ) );
+// System.out.print( directory.getName() );
+// System.out.println( " (CalcCase)" );
+
+    results.add( directory );
+    return false;
   }
 
-  private void convertBasicModel( )
+  private boolean isCalculationDirectory( final File directory )
   {
-    /* TODO: Convert gml files */
-
-
-    /* TODO: Convert timeseries */
-
-    /* TODO: Optional: Copy+Convert user data */
-  }
-
-  private void convertCalcCases( )
-  {
-    /* TODO: Convert gml files */
-
-    /* TODO: Convert timeseries */
-
-    /* TODO: Optional: Copy+Convert user data */
+    return new File( directory, ModelNature.CONTROL_NAME ).isFile();
   }
 
 }

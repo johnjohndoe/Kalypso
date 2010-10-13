@@ -40,13 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.wizards.conversion;
 
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
- * A {@link IProjectConverter} that converts from an input project to an output project.
- * 
  * @author Gernot Belger
  */
-public interface IProject2ProjectConverter extends IProjectConverter
+public interface ILoggingOperation extends ICoreRunnableWithProgress
 {
 
 }

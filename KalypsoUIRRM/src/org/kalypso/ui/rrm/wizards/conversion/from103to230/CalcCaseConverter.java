@@ -38,25 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.from210to230;
+package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 
 import java.io.File;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.ui.rrm.wizards.conversion.AbstractProjectConverter;
+import org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation;
 
 /**
+ * Converts one calc case.
+ * 
  * @author Gernot Belger
  */
-public class RrmProjectConverter210to230 extends AbstractProjectConverter
+public class CalcCaseConverter extends AbstractLoggingOperation
 {
-  private final File m_projectDir;
+  private final File m_targetDir;
 
-  public RrmProjectConverter210to230( final File projectDir )
+  private final File m_sourceDir;
+
+  public CalcCaseConverter( final File sourceDir, final File targetDir )
   {
-    super( String.format( "Konvertierung von '%s' Version 2.1.0 nach 2.3.0", projectDir.getName() ) );
+    super( sourceDir.getName() );
 
-    m_projectDir = projectDir;
+    m_sourceDir = sourceDir;
+    m_targetDir = targetDir;
   }
 
   /**
@@ -65,28 +70,11 @@ public class RrmProjectConverter210to230 extends AbstractProjectConverter
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Throwable
   {
-    convertBasicModel();
+    Thread.sleep( 250 );
 
-    convertCalcCases();
-  }
-
-  private void convertBasicModel( )
-  {
-    /* TODO: Convert gml files */
-
-
-    /* TODO: Convert timeseries */
-
-    /* TODO: Optional: Copy+Convert user data */
-  }
-
-  private void convertCalcCases( )
-  {
-    /* TODO: Convert gml files */
-
-    /* TODO: Convert timeseries */
-
-    /* TODO: Optional: Copy+Convert user data */
+    m_targetDir.mkdirs();
+// FileUtils.copyDirectory( m_sourceDir, m_targetDir, true );
+    // TODO Auto-generated method stub
   }
 
 }

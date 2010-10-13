@@ -38,55 +38,60 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.from210to230;
+package org.kalypso.ui.rrm.wizards.conversion;
 
-import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.ui.rrm.wizards.conversion.AbstractProjectConverter;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 
 /**
  * @author Gernot Belger
  */
-public class RrmProjectConverter210to230 extends AbstractProjectConverter
+public abstract class AbstractLoggingOperation implements ILoggingOperation
 {
-  private final File m_projectDir;
+  private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-  public RrmProjectConverter210to230( final File projectDir )
+  private final String m_label;
+
+  public AbstractLoggingOperation( final String label )
   {
-    super( String.format( "Konvertierung von '%s' Version 2.1.0 nach 2.3.0", projectDir.getName() ) );
-
-    m_projectDir = projectDir;
+    m_label = label;
   }
 
-  /**
-   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-   */
+  public final String getLabel( )
+  {
+    return m_label;
+  }
+
+  protected final IStatusCollector getLog( )
+  {
+    return m_log;
+  }
+
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Throwable
+  public final IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    convertBasicModel();
+    try
+    {
+      doExecute( monitor );
+    }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
+    catch( final Throwable e )
+    {
+      throw new InvocationTargetException( e );
+    }
 
-    convertCalcCases();
+    final String msg = String.format( "Konvertierung abgeschlossen (Schritt %s)", m_label );
+    return m_log.asMultiStatus( msg );
   }
 
-  private void convertBasicModel( )
-  {
-    /* TODO: Convert gml files */
-
-
-    /* TODO: Convert timeseries */
-
-    /* TODO: Optional: Copy+Convert user data */
-  }
-
-  private void convertCalcCases( )
-  {
-    /* TODO: Convert gml files */
-
-    /* TODO: Convert timeseries */
-
-    /* TODO: Optional: Copy+Convert user data */
-  }
-
+  protected abstract void doExecute( final IProgressMonitor monitor ) throws Throwable;
 }

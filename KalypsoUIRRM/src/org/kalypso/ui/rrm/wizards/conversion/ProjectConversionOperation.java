@@ -40,21 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.wizards.conversion;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * @author Gernot Belger
  */
-public class ProjectConversionOperation implements ICoreRunnableWithProgress
+public class ProjectConversionOperation extends AbstractLoggingOperation
 {
   private final IProjectConverter[] m_converters;
 
@@ -62,15 +57,17 @@ public class ProjectConversionOperation implements ICoreRunnableWithProgress
 
   public ProjectConversionOperation( final IProject project, final IProjectConverter[] converters )
   {
+    super( "Projektkonvertierung" );
+
     m_project = project;
     m_converters = converters;
   }
 
   /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  protected void doExecute( final IProgressMonitor monitor ) throws Throwable
   {
     final String taskName = String.format( "Converting project '%s'", m_project.getName() );
     monitor.beginTask( taskName, m_converters.length + 1 );
@@ -81,20 +78,17 @@ public class ProjectConversionOperation implements ICoreRunnableWithProgress
       {
         monitor.subTask( String.format( "Step '%s'", converter.getLabel() ) );
 
-        // REMARK: error handling: at the moment, we halt on any error; later we might to ask the user if he wishes to
-        // continue
-
-        final IStatus success = converter.execute( new SubProgressMonitor( monitor, 1 ) );
-        if( !success.isOK() )
-          throw new CoreException( success );
+        // REMARK: we halt on real errors; later we might to ask the user if he wishes to continue
+        final IStatus status = converter.execute( new SubProgressMonitor( monitor, 1 ) );
+        getLog().add( status );
+        if( status.matches( IStatus.ERROR ) )
+          return;
       }
     }
     finally
     {
       m_project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1 ) );
     }
-
-    return Status.OK_STATUS;
   }
 
 }

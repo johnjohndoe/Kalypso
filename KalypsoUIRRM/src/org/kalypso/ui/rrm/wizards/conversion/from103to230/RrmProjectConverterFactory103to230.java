@@ -42,20 +42,16 @@ package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 
 import java.io.File;
 
-import org.kalypso.ui.rrm.wizards.conversion.IProject2ProjectConverter;
 import org.kalypso.ui.rrm.wizards.conversion.IProject2ProjectConverterFactory;
+import org.kalypso.ui.rrm.wizards.conversion.IProjectConverter;
 
 /**
- * @author Gernot
- *
+ * @author Gernot Belger
  */
 public class RrmProjectConverterFactory103to230 implements IProject2ProjectConverterFactory
 {
-  /**
-   * @see org.kalypso.ui.rrm.wizards.IProject2ProjectConverterFactory#createConverter(java.io.File, java.io.File)
-   */
   @Override
-  public IProject2ProjectConverter createConverter( final File sourceDir, final File targetDir )
+  public IProjectConverter createConverter( final File sourceDir, final File targetDir )
   {
     return new RrmProjectConverter103to230( sourceDir, targetDir );
   }

@@ -70,4 +70,6 @@ public interface INaProjectConstants
 
   String FOLDER_OBSERVATION_CONF = FOLDER_MODEL + "/observationConf";
 
+  String FOLDER_RECHENVARIANTEN = "Rechenvarianten";
+
 }

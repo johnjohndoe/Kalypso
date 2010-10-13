@@ -49,5 +49,5 @@ import java.io.File;
  */
 public interface IProject2ProjectConverterFactory extends IProjectConverterFactory
 {
-  IProject2ProjectConverter createConverter( final File sourceDir, final File targetDir );
+  IProjectConverter createConverter( final File sourceDir, final File targetDir );
 }
