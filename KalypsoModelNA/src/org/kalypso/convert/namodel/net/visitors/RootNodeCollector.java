@@ -44,10 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.convert.namodel.net.NetElement;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class RootNodeCollector
 {
@@ -82,12 +80,12 @@ public class RootNodeCollector
 
     if( m_singleResultNode == null )
     {
-      if( FeatureHelper.booleanIsTrue( node, NaModelConstants.GENERATE_RESULT_PROP, false ) )
+      if( node.isGenerateResults() )
         m_rootNetElements.add( netElement );
     }
     else
     {
-      node.setProperty( NaModelConstants.GENERATE_RESULT_PROP, new Boolean( node == m_singleResultNode ) );
+      node.setGenerateResults( node == m_singleResultNode );
       if( m_singleResultNode == node )
         m_rootNetElements.add( netElement );
     }

@@ -119,6 +119,8 @@ public class Catchment extends AbstractNaModelElement
 
   private static final QName PROP_KLUPOR = new QName( NS_NAMODELL, "klupor" ); //$NON-NLS-1$
 
+  private static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
+
   private IFeatureBindingCollection<Feature> m_bodenKorrekturCollection = null;
 
   private IFeatureBindingCollection<Feature> m_grundwasserAbflussCollection = null;
@@ -313,6 +315,16 @@ public class Catchment extends AbstractNaModelElement
   public double getKlupor( )
   {
     return getDoubleProperty( PROP_KLUPOR, 1.0 );
+  }
+
+  public boolean isGenerateResults( )
+  {
+    return getBoolean( GENERATE_RESULT_PROP, false );
+  }
+
+  public void setGenerateResults( boolean value )
+  {
+    setProperty( GENERATE_RESULT_PROP, value );
   }
 
 }

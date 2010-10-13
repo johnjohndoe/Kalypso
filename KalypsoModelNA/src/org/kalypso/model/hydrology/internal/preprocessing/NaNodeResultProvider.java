@@ -47,14 +47,12 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import org.kalypso.commons.java.net.UrlUtilities;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author doemming
@@ -84,7 +82,7 @@ public class NaNodeResultProvider
       final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
       for( final Node node : nodes )
       {
-        if( FeatureHelper.booleanIsTrue( node, NaModelConstants.GENERATE_RESULT_PROP, false ) )
+        if( node.isGenerateResults() )
           removeResult( node );
       }
     }

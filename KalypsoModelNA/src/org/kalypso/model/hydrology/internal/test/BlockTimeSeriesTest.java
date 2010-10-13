@@ -7,14 +7,12 @@ import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.SortedMap;
 import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.convert.namodel.timeseries.Block;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 
@@ -25,11 +23,12 @@ public class BlockTimeSeriesTest extends TestCase
 {
   public void testBlocktimeSeries( ) throws IOException
   {
-    final SortedMap<Date, String> map3 = load( "resources/WinterSommerTest.dat", "103" ); //$NON-NLS-1$ //$NON-NLS-2$
-    check( map3, 28 );
+//    final Block block = load( "resources/timeseries.dat", "4500" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final Block block = load( "resources/WinterSommerTest.dat", "103" ); //$NON-NLS-1$ //$NON-NLS-2$
+    check( block );
   }
 
-  private void check( final SortedMap<Date, String> map, final int max )
+  private void check( final Block block )
   {
     final String[] timeZones = new String[] { "UTC", "GMT", "CET", "GMT+1" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
@@ -39,14 +38,13 @@ public class BlockTimeSeriesTest extends TestCase
 
     final DateFormat naFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat() );
 
-    final Set<Date> set = map.keySet();
-    final Iterator<Date> iterator = set.iterator();
+    final Date[] dates = block.getDates();
+    
     Date last = null;
     int i = 0;
-    while( iterator.hasNext() && i < max )
+    for( Date date : dates )
     {
-      final Date date = iterator.next();
-      System.out.println( "\n" + i + " value:" + map.get( date ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( "\n" + i + " value:" + block.getValue( date ) ); //$NON-NLS-1$ //$NON-NLS-2$
       for( final String timeZone : timeZones )
       {
         final TimeZone tz = TimeZone.getTimeZone( timeZone );
@@ -63,21 +61,21 @@ public class BlockTimeSeriesTest extends TestCase
     }
   }
 
-  private SortedMap<Date, String> load( final String resource, final String key ) throws IOException
+  private Block load( final String resource, final String key ) throws IOException
   {
     final TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
-    final BlockTimeSeries block = new BlockTimeSeries( timeZone );
+    final BlockTimeSeries blockTimeseries = new BlockTimeSeries( timeZone );
     final File tmpFile = File.createTempFile( "block", "txt" ); //$NON-NLS-1$ //$NON-NLS-2$
     tmpFile.deleteOnExit();
     final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
     final FileWriter fileWriter = new FileWriter( tmpFile );
     IOUtils.copy( resourceAsStream, fileWriter );
     IOUtils.closeQuietly( fileWriter );
-    block.importBlockFile( tmpFile );
-    final SortedMap<Date, String> map = block.getTimeSerie( key );
-    assertNotNull( map );
-    System.out.println( " von " + map.firstKey() ); //$NON-NLS-1$
-    System.out.println( " bis " + map.lastKey() ); //$NON-NLS-1$
-    return map;
+    blockTimeseries.importBlockFile( tmpFile );
+    final Block block = blockTimeseries.getTimeSerie( key );
+    assertNotNull( block );
+//    System.out.println( " von " + map.firstKey() ); //$NON-NLS-1$
+//    System.out.println( " bis " + map.lastKey() ); //$NON-NLS-1$
+    return block;
   }
 }

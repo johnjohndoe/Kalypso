@@ -75,6 +75,8 @@ public class Node extends AbstractNaModelElement
 
   private static final QName LINK_DOWNSTREAMCHANNEL = new QName( NS_NAMODELL, "downStreamChannelMember" ); //$NON-NLS-1$
 
+  private static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
+
   public Node( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -149,6 +151,16 @@ public class Node extends AbstractNaModelElement
   public Channel getDownstreamChannel( )
   {
     return (Channel) FeatureHelper.resolveLink( this, LINK_DOWNSTREAMCHANNEL, true );
+  }
+
+  public boolean isGenerateResults( )
+  {
+    return getBoolean( GENERATE_RESULT_PROP, false );
+  }
+
+  public void setGenerateResults( boolean value )
+  {
+    setProperty( GENERATE_RESULT_PROP, value );
   }
 
 }

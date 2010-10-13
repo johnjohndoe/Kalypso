@@ -65,7 +65,6 @@ import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class NAControlConverter
 {
@@ -274,7 +273,7 @@ public class NAControlConverter
         // fuer root node immer ein ergebnis generieren
         writer.append( idManager.getAsciiID( node ) + "\n" ); //$NON-NLS-1$
       }
-      else if( rootNodeID == null && FeatureHelper.booleanIsTrue( node, NaModelConstants.GENERATE_RESULT_PROP, false ) )
+      else if( rootNodeID == null && node.isGenerateResults() )
       {
         // fuer nicht root node nur ergebnisse generieren wenn gewuenscht
         writer.append( idManager.getAsciiID( node ) + "\n" ); //$NON-NLS-1$
@@ -286,7 +285,7 @@ public class NAControlConverter
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
     for( final Catchment catchment : catchments )
     {
-      if( FeatureHelper.booleanIsTrue( catchment, NaModelConstants.GENERATE_RESULT_PROP, false ) )
+      if( catchment.isGenerateResults() )
         writer.append( idManager.getAsciiID( catchment ) + "\n" ); //$NON-NLS-1$
     }
     writer.append( "99999\n" ); //$NON-NLS-1$

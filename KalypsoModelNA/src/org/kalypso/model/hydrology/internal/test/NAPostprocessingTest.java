@@ -58,6 +58,8 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
@@ -74,6 +76,8 @@ public class NAPostprocessingTest
   @Test
   public void testDemoModel( ) throws Exception
   {
+    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
+    
     testPostprocessing( "naDemoModel", "resources/demoModel_Langzeit" );
   }
 
