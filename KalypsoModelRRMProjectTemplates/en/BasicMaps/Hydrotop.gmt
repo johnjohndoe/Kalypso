@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns1="obstableview.template.kalypso.org">
-    <mapv:extent srs="EPSG:31467" bottom="5943990.163371586" top="5947173.193420588" right="3563190.607781434" left="3559838.7262512767"/>
     <mapv:layers active="ID_0">
         <mapv:layer visible="true" name="Nodes" featurePath="NodeCollectionMember/nodeMember" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
             <templ:legendicon>urn:kalypso:map:theme:swtimage:style:fts_node:rule:rule_Ort</templ:legendicon>
