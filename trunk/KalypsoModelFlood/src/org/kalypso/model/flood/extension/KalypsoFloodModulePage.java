@@ -44,6 +44,7 @@ import java.net.URL;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard;
 import org.kalypso.model.flood.ui.wizards.NewProjectWizard;
@@ -73,9 +74,16 @@ public class KalypsoFloodModulePage extends AbstractKalypsoModulePage
   }
 
   @Override
-  public INewProjectWizard getDemoProjectWizard( )
+  public INewProjectWizardProvider getDemoProjectWizard( )
   {
-    return new NewDemoProjectWizard();
+    return new INewProjectWizardProvider()
+    {
+      @Override
+      public INewProjectWizard createWizard( )
+      {
+        return new NewDemoProjectWizard();
+      }
+    };
   }
 
   /**
@@ -88,9 +96,16 @@ public class KalypsoFloodModulePage extends AbstractKalypsoModulePage
   }
 
   @Override
-  public INewProjectWizard getProjectWizard( )
+  public INewProjectWizardProvider getProjectWizard( )
   {
-    return new NewProjectWizard();
+    return new INewProjectWizardProvider()
+    {
+      @Override
+      public INewProjectWizard createWizard( )
+      {
+        return new NewProjectWizard();
+      }
+    };
   }
 
   @Override

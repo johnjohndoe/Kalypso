@@ -45,6 +45,7 @@ import java.net.URL;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
@@ -76,12 +77,16 @@ public class KalypsoWspmModulePage extends AbstractKalypsoModulePage
   }
 
   @Override
-  public INewProjectWizard getDemoProjectWizard( )
+  public INewProjectWizardProvider getDemoProjectWizard( )
   {
-    final DemoProjectWizard wizard = new DemoProjectWizard();
-    wizard.init( PlatformUI.getWorkbench(), null );
-
-    return wizard;
+    return new INewProjectWizardProvider()
+    {
+      @Override
+      public INewProjectWizard createWizard( )
+      {
+        return new DemoProjectWizard();
+      }
+    };
   }
 
   /**
@@ -94,12 +99,16 @@ public class KalypsoWspmModulePage extends AbstractKalypsoModulePage
   }
 
   @Override
-  public INewProjectWizard getProjectWizard( )
+  public INewProjectWizardProvider getProjectWizard( )
   {
-    final NewWspmProjectWizard wizard = new NewWspmProjectWizard();
-    wizard.init( PlatformUI.getWorkbench(), null );
-
-    return wizard;
+    return new INewProjectWizardProvider()
+    {
+      @Override
+      public INewProjectWizard createWizard( )
+      {
+        return new NewWspmProjectWizard();
+      }
+    };
   }
 
   /**
