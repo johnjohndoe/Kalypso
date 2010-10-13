@@ -112,6 +112,10 @@ public class NAModelPreprocessor
     {
       doProcess( monitor );
     }
+    catch( final NAPreprocessorException e )
+    {
+      throw e;
+    }
     catch( final Exception e )
     {
       // Handle only unexpected exceptions here. Everything else should be handling deeper down!
@@ -228,7 +232,8 @@ public class NAModelPreprocessor
     }
     catch( final Exception e )
     {
-      throw new NAPreprocessorException( "Failed to write start condition", e );
+      final String msg = String.format("Failed to write Kalypso-NA ASCII start condition: %s", e.getLocalizedMessage());
+      throw new NAPreprocessorException( msg, e );
     }
   }
 
