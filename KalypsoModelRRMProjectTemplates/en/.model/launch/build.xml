@@ -20,20 +20,12 @@
           target: create			Rechenvariante erzeugen
          ================================= 
     -->
-
 	<target name="create" description="Erzeugt eine Rechenvariante">
 		<echo message="Rechenvariante anlegen: ${calc.dir}" />
 		<!-- copy modell -->
 		<copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml" />
-		<!--
         <copy file="${project.dir}/hydrotop.gml" tofile="${calc.dir}/calcHydrotop.gml" />
-        -->
 		<copy file="${project.dir}/parameter.gml" tofile="${calc.dir}/calcParameter.gml" />
-		<copy file="${project.dir}/.model/observationConf/ombrometer.gml" tofile="${calc.dir}/ombrometer.gml" />
-		<copy file="${project.dir}/.model/observationConf/ObsQMapping.gml" tofile="${calc.dir}/.obsQMapping.gml" />
-		<copy file="${project.dir}/.model/observationConf/ObsQZuMapping.gml" tofile="${calc.dir}/.obsQZuMapping.gml" />
-		<copy file="${project.dir}/.model/observationConf/ObsTMapping.gml" tofile="${calc.dir}/.obsTMapping.gml" />
-		<copy file="${project.dir}/.model/observationConf/ObsEMapping.gml" tofile="${calc.dir}/.obsEMapping.gml" />
 		<!-- copy others -->
 		<copy todir="${calc.dir}">
 			<fileset dir="${project.dir}/.templates/calcCase/copy" includes="*/**" excludes="**/CVS/**" />
@@ -198,8 +190,8 @@
 		<!-- copy basic modell -->
 		<copy file="${calc.dir}/calcCase.gml" tofile="${project.dir}/modell.gml" />
 		<!--
-	        <copy file="${calc.dir}/calcHydrotop.gml" tofile="${project.dir}/hydrotop.gml" />
-	        -->
+        <copy file="${calc.dir}/calcHydrotop.gml" tofile="${project.dir}/hydrotop.gml" />
+        -->
 		<copy file="${calc.dir}/calcParameter.gml" tofile="${project.dir}/parameter.gml" />
 	</target>
 
