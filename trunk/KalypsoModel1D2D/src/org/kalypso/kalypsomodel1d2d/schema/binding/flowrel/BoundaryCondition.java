@@ -45,6 +45,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -174,6 +175,9 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     {
 //      return ((Double) property).doubleValue();
       return "" + ((Double) property).doubleValue();
+    }
+    else if( property instanceof String ){
+      return "" + NumberUtils.parseQuietDouble( (String) property );
     }
     else
     {
