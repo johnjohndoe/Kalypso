@@ -345,7 +345,7 @@ public class NetElement
     final List<Feature> statNList = new ArrayList<Feature>();
     final StringBuffer buffer = new StringBuffer();
     final Double annualityKey = metaControl.getAnnuality();
-    // Kostra-Kachel/ synth. N gebietsabhängig
+    // Kostra-Kachel/ synth. N gebietsabhï¿½ngig
     final String synthNKey = (String) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_SYNTH );
     statNList.addAll( Arrays.asList( m_synthNWorkspace.getFeatures( m_conf.getstatNFT() ) ) );
     final Iterator<Feature> iter = statNList.iterator();

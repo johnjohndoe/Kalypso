@@ -281,9 +281,6 @@ public interface NaModelConstants
   // default values
   public static final QName DEFAULT_MRS_SOIL_PROFIL_PROP = new QName( NS_NAMODELL, "mrsp" ); //$NON-NLS-1$
 
-  // misc
-  public static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
-
   public static final QName NA_MODEL_FLAECH_PROP = new QName( NS_NAMODELL, "flaech" ); //$NON-NLS-1$
 
   public static final QName NA_MODEL_ROOT_FT = new QName( NS_NAMODELL, "NaModell" ); //$NON-NLS-1$

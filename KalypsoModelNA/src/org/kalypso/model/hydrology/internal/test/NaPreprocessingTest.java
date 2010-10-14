@@ -60,6 +60,8 @@ import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.simulation.core.NullSimulationMonitor;
@@ -71,6 +73,11 @@ import org.kalypso.simulation.core.NullSimulationMonitor;
  */
 public class NaPreprocessingTest
 {
+  public NaPreprocessingTest( )
+  {
+    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
+  }
+
   @Test
   public void testDemoModel( ) throws Exception
   {

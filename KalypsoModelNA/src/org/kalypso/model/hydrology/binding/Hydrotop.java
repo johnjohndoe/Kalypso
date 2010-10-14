@@ -95,6 +95,9 @@ public class Hydrotop extends Feature_Impl implements IHydrotope
   @Override
   public Feature[] getSuds( )
   {
+    if( m_suds == null )
+      return getSudCollection().toArray( new Feature[] {} );
+    // if not null, avoid synchronized method
     return m_suds.toArray( new Feature[] {} );
   }
 
