@@ -42,7 +42,6 @@ package org.kalypso.convert.namodel.timeseries.diff;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 import org.kalypso.commons.diff.IDiffComparator;
@@ -66,13 +65,12 @@ public class BlockTimeSeriesDiffObject implements IDiffObject
     series.importBlockFile( file );
     m_blockTimeSeries = series;
     final String name = file.getName();
-    final Enumeration<String> keys = m_blockTimeSeries.getKeys();
+    final String[] keys = m_blockTimeSeries.getKeys();
+
     final List<String> list = new ArrayList<String>();
-    while( keys.hasMoreElements() )
-    {
-      final String element = keys.nextElement();
-      list.add( name + SEPERATOR + element );
-    }
+    for( String key : keys )
+      list.add( name + SEPERATOR + key );
+
     m_pathes = list;
   }
 

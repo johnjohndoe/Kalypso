@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,39 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.model;
+package org.kalypso.convert.namodel.timeseries;
 
-import javax.xml.namespace.QName;
+import java.util.Calendar;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
+import javax.xml.datatype.Duration;
 
 /**
- * Binding class for {http://www.tuhh.de/kalypsoNA}StorageChannel.
- * 
  * @author Gernot Belger
+ *
  */
-public class StorageChannel extends Channel
+public class BlockTimeStep
 {
-  public static final QName FEATURE_STORAGE_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "StorageChannel" ); //$NON-NLS-1$
+  private final Calendar m_start;
+  private final Duration m_timestep;
 
-  private static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
-
-  public StorageChannel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public BlockTimeStep( Calendar start, Duration timestep )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    m_start = start;
+    m_timestep = timestep;
   }
   
-  public boolean isGenerateResults( )
+  public Calendar getStart( )
   {
-    return getBoolean( GENERATE_RESULT_PROP, false );
+    return (Calendar) m_start.clone();
   }
 
-  public void setGenerateResults( boolean value )
+  public void step( Calendar date )
   {
-    setProperty( GENERATE_RESULT_PROP, value );
+    m_timestep.addTo( date );
   }
-
 
 }

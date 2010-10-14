@@ -46,7 +46,6 @@ import java.net.URL;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -58,6 +57,8 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
@@ -71,6 +72,11 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NAPostprocessingTest
 {
+  public NAPostprocessingTest( )
+  {
+    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
+  }
+
   @Test
   public void testDemoModel( ) throws Exception
   {
@@ -90,7 +96,7 @@ public class NAPostprocessingTest
     final File expectedResultsDir = new File( outputDir, "expectedResults" );
     checkResult( resultsDir, expectedResultsDir );
 
-    FileUtils.forceDelete( outputDir );
+// FileUtils.forceDelete( outputDir );
   }
 
   private File doPostprocessing( final String baseResourceLocation, final File outputDir, final File asciiBaseDir ) throws Exception
