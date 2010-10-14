@@ -124,6 +124,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
     if( value instanceof String )
     {
+      // REMARK: backport from trunc; no need to merge...
       if( Number.class.isAssignableFrom( type ) )
       {
         final BigDecimal decimal = new BigDecimal( (String) value );
