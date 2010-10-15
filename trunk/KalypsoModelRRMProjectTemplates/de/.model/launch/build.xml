@@ -51,6 +51,7 @@
 		<echo message="bis           ${stopsim}" />
 
 		<!-- correct times for filters -->
+		
 		<script language="javascript">
 			intervalAmount = java.lang.Integer.parseInt(project.getProperty("interval.amount"));
 			startsimTime = javax.xml.bind.DatatypeConverter.parseDateTime( startsim );
@@ -62,7 +63,7 @@
 			project.setProperty("startforecast", javax.xml.bind.DatatypeConverter.printDateTime( startforecastTime ));
 			
 			stopsimTime = javax.xml.bind.DatatypeConverter.parseDateTime( stopsim );
-			stopsimTime.add(java.util.Calendar.MINUTE, -intervalAmount);
+			stopsimTime.add(java.util.Calendar.MINUTE, 3*intervalAmount);
 			project.setProperty("stopsim", javax.xml.bind.DatatypeConverter.printDateTime( stopsimTime ));
 		</script>
 		
