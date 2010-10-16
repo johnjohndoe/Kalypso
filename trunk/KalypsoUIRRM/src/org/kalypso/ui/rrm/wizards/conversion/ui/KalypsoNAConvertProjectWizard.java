@@ -39,7 +39,7 @@
  *
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.ui.rrm.wizards.conversion;
+package org.kalypso.ui.rrm.wizards.conversion.ui;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -55,6 +55,10 @@ import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
+import org.kalypso.ui.rrm.wizards.conversion.ConverterUtils;
+import org.kalypso.ui.rrm.wizards.conversion.IProjectConverter;
+import org.kalypso.ui.rrm.wizards.conversion.IProjectConverterFactory;
+import org.kalypso.ui.rrm.wizards.conversion.ProjectConversionOperation;
 import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverterFactory103to230;
 import org.kalypso.ui.rrm.wizards.conversion.from210to230.RrmProjectConverterFactory210to230;
 import org.kalypso.util.swt.StatusDialog;
@@ -88,7 +92,6 @@ public class KalypsoNAConvertProjectWizard extends NewProjectWizard
     addPage( m_conversionPage ); //$NON-NLS-1$
 
     // TODO: conversion pages:
-    // - choose archive/directory with old project
     // - choose conversion parameters?
     // - choose old version (if not known)
   }
