@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 public class NewWspmProjectWizard extends org.kalypso.afgui.wizards.NewProjectWizard
@@ -62,7 +63,7 @@ public class NewWspmProjectWizard extends org.kalypso.afgui.wizards.NewProjectWi
 
   public NewWspmProjectWizard( final String categoryId, final boolean showTemplatePage )
   {
-    super( categoryId, showTemplatePage );
+    super( categoryId, showTemplatePage, KalypsoWspmTuhhModule.ID );
   }
 
   /**

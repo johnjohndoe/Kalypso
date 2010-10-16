@@ -52,6 +52,11 @@ import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
  */
 public class KalypsoRRMOpenAction extends AbstractModuleProjectOpenAction
 {
+  public KalypsoRRMOpenAction( )
+  {
+    super( KalypsoModuleRRM.ID );
+  }
+
   /**
    * @see org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction#doOpen(org.eclipse.ui.IWorkbenchPage,
    *      org.eclipse.core.resources.IProject)

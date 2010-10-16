@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.extension.KalypsoModuleRRM;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
 import org.kalypso.ui.rrm.wizards.conversion.ConverterUtils;
@@ -75,7 +76,7 @@ public class KalypsoNAConvertProjectWizard extends NewProjectWizard
 
   public KalypsoNAConvertProjectWizard( )
   {
-    super( new ProjectTemplatePage( "Projektvorlage", "Wie wählen Sie, welche Projektvorlage verwendet werden soll", KalypsoNAProjectWizard.CATEGORY_TEMPLATE ), true );
+    super( new ProjectTemplatePage( "Projektvorlage", "Wie wählen Sie, welche Projektvorlage verwendet werden soll", KalypsoNAProjectWizard.CATEGORY_TEMPLATE ), true, KalypsoModuleRRM.ID );
 
     setHelpAvailable( false );
     setNeedsProgressMonitor( true );

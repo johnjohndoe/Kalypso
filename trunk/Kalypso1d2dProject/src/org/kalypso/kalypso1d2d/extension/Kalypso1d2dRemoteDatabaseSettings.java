@@ -49,12 +49,9 @@ import org.kalypso.project.database.client.extension.database.IProjectDatabaseFi
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
-import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
 
 /**
  * @author kuch
- *
  */
 public class Kalypso1d2dRemoteDatabaseSettings implements IKalypsoModuleDatabaseSettings
 {
@@ -103,12 +100,6 @@ public class Kalypso1d2dRemoteDatabaseSettings implements IKalypsoModuleDatabase
     };
   }
 
-  @Override
-  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
-  {
-    return new SzenarioProjectOpenAction();
-  }
-  
   /**
    * @see org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings#hasManagedDirtyState()
    */

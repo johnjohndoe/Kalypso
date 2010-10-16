@@ -55,6 +55,10 @@ import org.kalypso.project.database.client.extension.project.AbstractModuleProje
  */
 public class WspmOpenAction extends AbstractModuleProjectOpenAction
 {
+  public WspmOpenAction( )
+  {
+    super( KalypsoWspmTuhhModule.ID );
+  }
   /**
    * @see org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction#doOpen(org.eclipse.ui.IWorkbenchPage,
    *      org.eclipse.core.resources.IProject)

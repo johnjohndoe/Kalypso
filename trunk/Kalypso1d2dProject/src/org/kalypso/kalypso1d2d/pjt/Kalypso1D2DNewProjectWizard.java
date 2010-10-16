@@ -1,6 +1,7 @@
 package org.kalypso.kalypso1d2d.pjt;
 
 import org.kalypso.afgui.wizards.NewProjectWizard;
+import org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule;
 
 /**
  * Creates a new Kalypso 1d 2d Project
@@ -13,6 +14,6 @@ public class Kalypso1D2DNewProjectWizard extends NewProjectWizard
 
   public Kalypso1D2DNewProjectWizard( )
   {
-    super( "org.kalypso.kalypso1d2d.pjt.projectTemplate", false );//$NON-NLS-1$
+    super( "org.kalypso.kalypso1d2d.pjt.projectTemplate", false, Kalypso1d2dModule.ID );//$NON-NLS-1$
   }
 }

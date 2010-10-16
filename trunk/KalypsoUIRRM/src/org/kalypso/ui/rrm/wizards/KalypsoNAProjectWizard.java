@@ -96,6 +96,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.extension.KalypsoModuleRRM;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -165,7 +166,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   public KalypsoNAProjectWizard( )
   {
-    super( new ProjectTemplatePage( "Projektvorlage", "Wie wählen Sie, welche Projektvorlage verwendet werden soll", CATEGORY_TEMPLATE ), true );
+    super( new ProjectTemplatePage( "Projektvorlage", "Wie wählen Sie, welche Projektvorlage verwendet werden soll", CATEGORY_TEMPLATE ), true, KalypsoModuleRRM.ID );
 
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "KalypsoNAProjectWizard.9" ) ); //$NON-NLS-1$

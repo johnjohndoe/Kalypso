@@ -47,8 +47,6 @@ import org.kalypso.project.database.client.extension.database.IProjectDatabaseFi
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
-import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 
 import de.renew.workflow.base.IWorkflow;
@@ -108,13 +106,6 @@ public class KalypsoRiskRemoteDatabaseSettings implements IKalypsoModuleDatabase
       }
     };
   }
-
-  @Override
-  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
-  {
-    return new SzenarioProjectOpenAction();
-  }
-
 
   /**
    * @see org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings#hasManagedDirtyState()

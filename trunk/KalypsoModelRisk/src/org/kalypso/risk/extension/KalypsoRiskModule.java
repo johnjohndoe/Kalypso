@@ -1,17 +1,37 @@
 package org.kalypso.risk.extension;
 
-import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
-import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import java.net.URL;
 
-public class KalypsoRiskModule implements IKalypsoModule
+import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.afgui.wizards.INewProjectWizardProvider;
+import org.kalypso.project.database.client.extension.AbstractKalypsoModule;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
+import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
+import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
+import org.kalypso.risk.project.KalypsoRiskDemoProjectWizard;
+import org.kalypso.risk.project.KalypsoRiskProjectWizard;
+
+public class KalypsoRiskModule extends AbstractKalypsoModule
 {
   public static final String ID = "KalypsoRiskModel"; //$NON-NLS-1$
-  
+
   // public constructor, needed because of extension point and java class loader
   public KalypsoRiskModule( )
   {
+  }
+
+  @Override
+  public String getHeader( )
+  {
+    return "KalypsoRisk"; //$NON-NLS-1$
+  }
+
+  @Override
+  public URL getInfoURL( )
+  {
+    return getInfoURL( getClass(), KalypsoRiskPlugin.getDefault() );
   }
 
   @Override
@@ -20,13 +40,10 @@ public class KalypsoRiskModule implements IKalypsoModule
     return new KalypsoRiskWelcomePageFrame();
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule#getModuleEnteringPage()
-   */
   @Override
-  public IKalypsoModulePage getModulePage( )
+  public Integer getPriority( )
   {
-    return new KalypsoRiskModulePage( this );
+    return 5;
   }
 
   /**
@@ -43,4 +60,43 @@ public class KalypsoRiskModule implements IKalypsoModule
   {
     return ID;
   }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.AbstractKalypsoModule#getNewProjectWizard()
+   */
+  @Override
+  protected INewProjectWizardProvider getNewProjectWizard( )
+  {
+    return new INewProjectWizardProvider()
+    {
+      @Override
+      public INewProjectWizard createWizard( )
+      {
+        return new KalypsoRiskProjectWizard();
+      }
+    };
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.AbstractKalypsoModule#getDemoProjectWizard()
+   */
+  @Override
+  protected INewProjectWizardProvider getDemoProjectWizard( )
+  {
+    return new INewProjectWizardProvider()
+    {
+      @Override
+      public INewProjectWizard createWizard( )
+      {
+        return new KalypsoRiskDemoProjectWizard();
+      }
+    };
+  }
+
+  @Override
+  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
+  {
+    return new SzenarioProjectOpenAction( ID );
+  }
+
 }

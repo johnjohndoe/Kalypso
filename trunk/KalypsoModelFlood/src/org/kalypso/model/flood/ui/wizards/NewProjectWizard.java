@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.ui.wizards;
 
+import org.kalypso.model.flood.extension.KalypsoModelFloodModule;
+
 public class NewProjectWizard extends org.kalypso.afgui.wizards.NewProjectWizard
 {
   public NewProjectWizard( )
   {
-    super( "org.kalypso.model.flood.projectTemplate", false ); //$NON-NLS-1$
+    super( "org.kalypso.model.flood.projectTemplate", false, KalypsoModelFloodModule.ID ); //$NON-NLS-1$
   }
 }

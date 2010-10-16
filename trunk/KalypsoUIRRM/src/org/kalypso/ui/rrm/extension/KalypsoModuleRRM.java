@@ -1,16 +1,45 @@
 package org.kalypso.ui.rrm.extension;
 
-import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
-import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import java.net.URL;
+import java.util.Collection;
 
-public class KalypsoModuleRRM implements IKalypsoModule
+import org.eclipse.jface.action.IAction;
+import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.afgui.wizards.INewProjectWizardProvider;
+import org.kalypso.project.database.client.extension.AbstractKalypsoModule;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
+import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
+import org.kalypso.project.database.client.ui.composites.SpecialImportProjectAction;
+import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
+import org.kalypso.ui.rrm.wizards.conversion.ui.KalypsoNAConvertProjectWizard;
+
+public class KalypsoModuleRRM extends AbstractKalypsoModule
 {
   public static final String ID = "KalypsRrmModel"; //$NON-NLS-1$
+
   // public constructor, needed because of declared extension point and java class loader
   public KalypsoModuleRRM( )
   {
+  }
+
+  @Override
+  public String getHeader( )
+  {
+    return "KalypsoHydrology"; //$NON-NLS-1$
+  }
+
+  @Override
+  public URL getInfoURL( )
+  {
+    return getInfoURL( getClass(), KalypsoUIRRMPlugin.getDefault() );
+  }
+
+  @Override
+  public Integer getPriority( )
+  {
+    return 1;
   }
 
   @Override
@@ -19,19 +48,6 @@ public class KalypsoModuleRRM implements IKalypsoModule
     return new KalypsoRrmWelcomePageFrame();
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule#getModuleEnteringPage()
-   */
-  @Override
-  public IKalypsoModulePage getModulePage( )
-  {
-    // FIXME: this is called too often! Why all these different interfaces at all?
-    // Most of the information should be put into an extension-point as parameters. No need for this much
-    // (often repeated) code.
-    return new KalypsoRrmModulePage( this );
-  }
-
-  
   /**
    * @see org.kalypso.project.database.client.extension.IKalypsoModule#getRemoteDatabaseSettings()
    */
@@ -46,4 +62,54 @@ public class KalypsoModuleRRM implements IKalypsoModule
   {
     return ID;
   }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.AbstractKalypsoModule#getNewProjectWizard()
+   */
+  @Override
+  protected INewProjectWizardProvider getNewProjectWizard( )
+  {
+    return new INewProjectWizardProvider()
+    {
+      @Override
+      public INewProjectWizard createWizard( )
+      {
+        return new KalypsoNAProjectWizard();
+      }
+    };
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.AbstractKalypsoModule#getDemoProjectWizard()
+   */
+  @Override
+  protected INewProjectWizardProvider getDemoProjectWizard( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.AbstractKalypsoModule#addProjectActions(java.util.Collection)
+   */
+  @Override
+  protected void addProjectActions( final Collection<IAction> actions )
+  {
+    final INewProjectWizardProvider provider = new INewProjectWizardProvider()
+    {
+      @Override
+      public INewProjectWizard createWizard( )
+      {
+        return new KalypsoNAConvertProjectWizard();
+      }
+    };
+
+    actions.add( new SpecialImportProjectAction( "Altprojekte importieren", provider ) );
+  }
+
+  @Override
+  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
+  {
+    return new KalypsoRRMOpenAction();
+  }
+
 }
