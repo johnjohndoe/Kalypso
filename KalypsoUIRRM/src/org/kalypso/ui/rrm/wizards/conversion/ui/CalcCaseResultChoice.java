@@ -38,48 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.from103to230;
-
-import java.io.File;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation;
+package org.kalypso.ui.rrm.wizards.conversion.ui;
 
 /**
- * Converts one calc case.
- * 
  * @author Gernot Belger
  */
-public class CalcCaseConverter extends AbstractLoggingOperation
+public enum CalcCaseResultChoice
 {
-  private final File m_targetDir;
+  NONE("Keine"),
+  ALL("Alle"),
+  CURRENT("Nur 'Aktuell'e");
 
-  private final File m_sourceDir;
+  private String m_label;
 
-  public CalcCaseConverter( final File sourceDir, final File targetDir )
+  CalcCaseResultChoice(final String label)
   {
-    super( sourceDir.getName() );
-
-    m_sourceDir = sourceDir;
-    m_targetDir = targetDir;
+    m_label = label;
   }
 
   /**
-   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
+   * @see java.lang.Enum#toString()
    */
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Throwable
+  public String toString( )
   {
-    Thread.sleep( 250 );
-
-    m_targetDir.mkdirs();
-
-    // Benutzer entscheiden lassen:
-    // - ergebnisse übernehmen?
-    // - nur 'aktuell' oder alle ergebnisse?
-
-// FileUtils.copyDirectory( m_sourceDir, m_targetDir, true );
-    // TODO Auto-generated method stub
+    return m_label;
   }
 
 }

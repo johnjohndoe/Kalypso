@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion;
+package org.kalypso.ui.rrm.wizards.conversion.ui;
 
 import java.io.File;
 
@@ -50,9 +50,13 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.forms.widgets.ColumnLayout;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
@@ -68,7 +72,7 @@ public class ProjectConversionPage extends WizardPage
 {
   private FileChooserGroup m_projectChooserGroup;
 
-  private IProjectDescription m_projectDescription;
+  private ProjectInfoComposite m_infoGroup;
 
   protected ProjectConversionPage( final String pageName )
   {
@@ -76,6 +80,8 @@ public class ProjectConversionPage extends WizardPage
 
     setTitle( "Daten konvertieren" );
     setDescription( "Bitte wählen Sie das Projekt aus, dessen Daten Sie in das aktuelle Kalypso Format übernehmen möchten." );
+
+    setPageComplete( false );
   }
 
   /**
@@ -86,17 +92,36 @@ public class ProjectConversionPage extends WizardPage
   {
     initializeDialogUnits( parent );
 
-    final Group panel = new Group( parent, SWT.NONE );
-    panel.setLayout( new GridLayout( 3, false ) );
-    setControl( panel );
+    final ScrolledForm form = new ScrolledForm( parent, SWT.V_SCROLL | SWT.H_SCROLL );
+    form.setExpandHorizontal( true );
+    form.setExpandVertical( true );
 
-    panel.setText( "Projekt" );
+    final ColumnLayout layout = new ColumnLayout();
+    layout.maxNumColumns = 1;
+    final Composite body = form.getBody();
+    body.setLayout( layout );
+    setControl( form );
+
+    createProjectFileGroup( body );
+    createProjectInfoGroup( body );
+
+    final File file = m_projectChooserGroup.getFile();
+    if( file != null )
+      handleFileChanged( file );
+  }
+
+  private Composite createProjectFileGroup( final Composite panel )
+  {
+    final Group group = new Group( panel, SWT.NONE );
+    group.setLayout( new GridLayout( 3, false ) );
+    group.setText( "Projekt" );
 
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
     m_projectChooserGroup = new FileChooserGroup( dirDelegate );
+    m_projectChooserGroup.setDialogSettings( getDialogSettings() );
     m_projectChooserGroup.setShowLabel( false );
 
-    m_projectChooserGroup.createControlsInGrid( panel );
+    m_projectChooserGroup.createControlsInGrid( group );
     m_projectChooserGroup.addFileChangedListener( new FileChangedListener()
     {
       @Override
@@ -105,7 +130,21 @@ public class ProjectConversionPage extends WizardPage
         handleFileChanged( file );
       }
     } );
+
+    return group;
   }
+
+  private Control createProjectInfoGroup( final Composite parent )
+  {
+    final Group group = new Group( parent, SWT.NONE );
+    group.setLayout( new FillLayout() );
+    group.setText( "Projekt Info" );
+
+    m_infoGroup = new ProjectInfoComposite( group );
+
+    return group;
+  }
+
 
   protected void handleFileChanged( final File file )
   {
@@ -117,32 +156,30 @@ public class ProjectConversionPage extends WizardPage
 
   private void updateProjectInfo( final File file )
   {
-    // TODO: reset info
-    m_projectDescription = null;
+    final IProjectDescription projectDescription = readProjectDescription( file );
+    m_infoGroup.setProject( projectDescription );
+    return;
+  }
 
+  private IProjectDescription readProjectDescription( final File file )
+  {
     if( file == null )
-      return;
+      return null;
 
     if( !file.isDirectory() )
-      return;
+      return null;
 
     try
     {
       final IPath projectPath = new Path( file.getPath() );
       final IPath projectFilePath = projectPath.append( IProjectDescription.DESCRIPTION_FILE_NAME );
-      m_projectDescription = ResourcesPlugin.getWorkspace().loadProjectDescription( projectFilePath );
-      // actually, what will we do with it?
-
-      // TODO: read project name
-      // TODO: check if we have the right natue (model-nature) and also read the version of that project
-
-      return;
+      return ResourcesPlugin.getWorkspace().loadProjectDescription( projectFilePath );
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
+      return null;
     }
-
   }
 
   private IMessageProvider validatePage( )
@@ -151,7 +188,8 @@ public class ProjectConversionPage extends WizardPage
     if( groupMessage != null )
       return groupMessage;
 
-    if( m_projectDescription == null )
+    final IProjectDescription projectDescription = m_infoGroup.getProject();
+    if( projectDescription == null )
     {
       final String message = String.format( "Chosen directory does not contain a project ('%s' file not present)", IProjectDescription.DESCRIPTION_FILE_NAME );
       return new MessageProvider( message, IMessageProvider.ERROR );
@@ -162,6 +200,8 @@ public class ProjectConversionPage extends WizardPage
 
   private void setMessage( final IMessageProvider message )
   {
+    setPageComplete( message == null || message.getMessageType() != IMessageProvider.ERROR );
+
     if( message == null )
       setMessage( (String) null );
     else

@@ -38,48 +38,58 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.from103to230;
+package org.kalypso.ui.rrm.wizards.conversion.ui;
 
-import java.io.File;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 
 /**
- * Converts one calc case.
- * 
- * @author Gernot Belger
+ * @author Gernot
+ *
  */
-public class CalcCaseConverter extends AbstractLoggingOperation
+public class CalcCaseChoiceComponent extends Composite
 {
-  private final File m_targetDir;
+  private CalcCaseResultChoice m_selection;
 
-  private final File m_sourceDir;
-
-  public CalcCaseConverter( final File sourceDir, final File targetDir )
+  public CalcCaseChoiceComponent( final Composite parent, final int style, final CalcCaseResultChoice selected )
   {
-    super( sourceDir.getName() );
+    super( parent, style );
 
-    m_sourceDir = sourceDir;
-    m_targetDir = targetDir;
+    final GridLayout layout = new GridLayout( 0, false );
+    setLayout( layout );
+
+    m_selection = selected;
+
+    for( final CalcCaseResultChoice choice : CalcCaseResultChoice.values() )
+    {
+      final Button radio = new Button( this, SWT.RADIO );
+      radio.setText( choice.toString() );
+      radio.setSelection( choice == selected );
+      layout.numColumns++;
+
+      radio.addSelectionListener( new SelectionAdapter()
+      {
+        /**
+         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+         */
+        @Override
+        public void widgetSelected( final SelectionEvent e )
+        {
+          handleRadioSelected( choice );
+        }
+      } );
+    }
   }
 
-  /**
-   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Throwable
+  protected void handleRadioSelected( final CalcCaseResultChoice choice )
   {
-    Thread.sleep( 250 );
+    m_selection = choice;
 
-    m_targetDir.mkdirs();
-
-    // Benutzer entscheiden lassen:
-    // - ergebnisse übernehmen?
-    // - nur 'aktuell' oder alle ergebnisse?
-
-// FileUtils.copyDirectory( m_sourceDir, m_targetDir, true );
-    // TODO Auto-generated method stub
+    // TODO: re-validate wizard
   }
 
 }
