@@ -1,6 +1,7 @@
 package org.kalypso.risk.project;
 
 import org.kalypso.afgui.wizards.NewProjectWizard;
+import org.kalypso.risk.extension.KalypsoRiskModule;
 
 public class KalypsoRiskProjectWizard extends NewProjectWizard
 {
@@ -8,6 +9,6 @@ public class KalypsoRiskProjectWizard extends NewProjectWizard
 
   public KalypsoRiskProjectWizard( )
   {
-    super( "org.kalypso.risk.projectTemplate", false ); //$NON-NLS-1$
+    super( "org.kalypso.risk.projectTemplate", false, KalypsoRiskModule.ID ); //$NON-NLS-1$
   }
 }

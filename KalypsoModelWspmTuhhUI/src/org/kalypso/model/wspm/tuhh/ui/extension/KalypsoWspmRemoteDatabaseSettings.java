@@ -47,7 +47,6 @@ import org.kalypso.project.database.client.extension.database.IProjectDatabaseFi
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 /**
  * @author Dirk Kuch
@@ -91,12 +90,6 @@ public class KalypsoWspmRemoteDatabaseSettings implements IKalypsoModuleDatabase
         return false;
       }
     };
-  }
-
-  @Override
-  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
-  {
-    return new WspmOpenAction();
   }
 
   /**

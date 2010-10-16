@@ -1,33 +1,49 @@
 package org.kalypso.kalypso1d2d.extension;
 
-import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
-import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import java.net.URL;
 
-public class Kalypso1d2dModule implements IKalypsoModule
+import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.afgui.wizards.INewProjectWizardProvider;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.project.database.client.extension.AbstractKalypsoModule;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
+import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
+import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
+
+public class Kalypso1d2dModule extends AbstractKalypsoModule
 {
   public static final String ID = "Kalypso1d2dModel"; //$NON-NLS-1$
-  
+
   // public constructor, needed because of declared extension point and java class loader
   public Kalypso1d2dModule( )
   {
   }
 
   @Override
+  public String getHeader( )
+  {
+    return "Kalypso1D2D"; //$NON-NLS-1$
+  }
+
+  @Override
+  public URL getInfoURL( )
+  {
+    return getInfoURL( getClass(), Kalypso1d2dProjectPlugin.getDefault() );
+  }
+
+  @Override
+  public Integer getPriority( )
+  {
+    return 3;
+  }
+
+  @Override
   public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( )
   {
     return new Kalypso1d2dWelcomePageFrame();
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule#getModuleEnteringPage()
-   */
-  @Override
-  public IKalypsoModulePage getModulePage( )
-  {
-    return new Kalypso1d2dModulePage( this );
-
   }
 
   /**
@@ -44,4 +60,40 @@ public class Kalypso1d2dModule implements IKalypsoModule
   {
     return ID;
   }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.AbstractKalypsoModule#getNewProjectWizard()
+   */
+  @Override
+  protected INewProjectWizardProvider getNewProjectWizard( )
+  {
+    return new INewProjectWizardProvider()
+    {
+      @Override
+      public INewProjectWizard createWizard( )
+      {
+        return new Kalypso1D2DNewProjectWizard();
+      }
+    };
+  }
+
+  @Override
+  protected INewProjectWizardProvider getDemoProjectWizard( )
+  {
+    return new INewProjectWizardProvider()
+    {
+      @Override
+      public INewProjectWizard createWizard( )
+      {
+        return new Kalypso1D2DDemoProjectWizard();
+      }
+    };
+  }
+
+  @Override
+  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
+  {
+    return new SzenarioProjectOpenAction( ID );
+  }
+
 }

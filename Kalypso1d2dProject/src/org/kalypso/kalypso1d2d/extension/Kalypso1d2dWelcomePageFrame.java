@@ -48,6 +48,7 @@ import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalyp
  */
 public class Kalypso1d2dWelcomePageFrame extends AbstractKalypsoModuleWelcomePageFrame
 {
+  // FIXME: images never get disposed!
   protected static final Image IMG = new Image( null, Kalypso1d2dWelcomePageFrame.class.getResourceAsStream( "icons/1d_2d_no.gif" ) ); //$NON-NLS-1$
 
   protected static final Image IMG_HOVER = new Image( null, Kalypso1d2dWelcomePageFrame.class.getResourceAsStream( "icons/1d_2d_hover.gif" ) ); //$NON-NLS-1$
