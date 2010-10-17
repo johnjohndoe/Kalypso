@@ -14,12 +14,8 @@
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
 		<mapv:layer visible="true" name="%fenet.mapv.layer.2D-Netzparameter" id="ID_14" featurePath="#fid#root/flowRelationshipMember[_FlowRelation2D]" linktype="gml" xlink:type="simple" xlink:href="../models/flowrelations.gml" xlink:actuate="onRequest">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:_FlowRelationship:rule:no_direction</templ:legendicon>
             <templ:property name="deleteable">false</templ:property>
-            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:_FlowRelationship:rule:polynome</templ:legendicon>
-        </mapv:layer>
-		<mapv:layer visible="true" name="%fenet.mapv.layer.2D-Netzparameter" id="ID_14" featurePath="#fid#root/flowRelationshipMember[_FlowRelation2D]" linktype="gml" xlink:type="simple" xlink:href="../models/flowrelations.gml" xlink:actuate="onRequest">
-            <templ:property name="deleteable">false</templ:property>
-            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:_FlowRelationship:rule:polynome</templ:legendicon>
         </mapv:layer>
         <mapv:layer visible="true" name="%fenet.mapv.layer.Randbedingungen" id="ID_4" featurePath="#fid#root/flowRelationshipMember[BoundaryCondition]" linktype="gml" xlink:type="simple" xlink:href="../models/flowrelations.gml" xlink:actuate="onRequest">
             <templ:legendicon>urn:kalypso:map:theme:swtimage:style:_FlowRelationship:rule:no_direction</templ:legendicon>
@@ -42,7 +38,7 @@
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
         <mapv:layer visible="true" name="%fenet.mapv.layer.Rauheiten" id="ID_9" featurePath="#fid#root/element[PolyElement]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
-            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:Roughness style:rule:undefinierterStilID</templ:legendicon>
+            <!-- <templ:legendicon>urn:kalypso:map:theme:swtimage:style:Roughness style:rule:undefinierterStilID</templ:legendicon> -->
             <templ:style style="Roughness style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
             <templ:style style="Label style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
