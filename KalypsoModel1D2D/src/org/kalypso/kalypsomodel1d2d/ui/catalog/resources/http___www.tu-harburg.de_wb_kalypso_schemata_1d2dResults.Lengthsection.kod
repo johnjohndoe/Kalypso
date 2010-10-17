@@ -4,7 +4,7 @@
  xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
 
 	<Chart id="runoffChart">
-		<Title>Längsschnitt</Title>
+		<Title>LÃ¤ngsschnitt</Title> 
 		<Description>Berechnungsergebnisse</Description>
 		<Layers>
 			<Layer visible="true" id="gridLayer">
@@ -38,8 +38,8 @@
 						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" />
 					</Parameters>
 				</Provider>
-				<Title>Sohlhöhe</Title>
-				<Description>Sohlhöhe</Description>
+				<Title>SohlhÃ¶he</Title>
+				<Description>SohlhÃ¶he</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="Station_Axis" />
 					<TargetAxisRef ref="nnAxis" />
@@ -196,7 +196,7 @@
 			</Axis>
 			<Axis id="m3sAxis">
 				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Abfluss [m³/s]</Label>
+				<Label>Abfluss [mÂ³/s]</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>RIGHT</Position>
 				<NumberRange>
