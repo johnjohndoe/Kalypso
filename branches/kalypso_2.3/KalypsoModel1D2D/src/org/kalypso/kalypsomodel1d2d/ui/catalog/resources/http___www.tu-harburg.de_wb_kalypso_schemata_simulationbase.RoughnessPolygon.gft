@@ -54,7 +54,7 @@
 				verticalAlignment="GridData.FILL"
 				grabExcessHorizontalSpace="true"
 				grabExcessVerticalSpace="false" />
-			<gft:gridLayout numColumns="3" horizontalSpacing="10" verticalSpacing="10" />
+			<gft:gridLayout numColumns="2" horizontalSpacing="10" verticalSpacing="10" />
 
         <gft:label property="simBase:correction_ks" visible="true" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
@@ -64,30 +64,33 @@
                           horizontalAlignment="GridData.FILL"
                           grabExcessHorizontalSpace="true"/>
         </gft:text>
+        <!--
         <gft:validatorlabel property="simBase:correction_ks" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-
+		-->
         <gft:label property="simBase:correction_axay" visible="true" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:text editable="true" property="simBase:correction_axay" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
+        <!--
         <gft:validatorlabel property="simBase:correction_axay" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-
+		-->
         <gft:label property="simBase:correction_dp" visible="true" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:text editable="true" property="simBase:correction_dp" style="SWT.BORDER">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:text>
+        <!--
         <gft:validatorlabel property="simBase:correction_dp" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-
+		-->
         </gft:group>
 
 </gft:featureview>
