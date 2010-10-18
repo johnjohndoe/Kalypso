@@ -241,7 +241,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
         nodePoint = MapUtilities.transform( mapPanel, p );
 
       final IWindDataProvider windProvider = m_dataModel.getWindDataModel();
-      if( windProvider != null )
+      if( windProvider != null && nodePoint != null )
       {
         Pair<Double, Double> wind1 = windProvider.getWindAsVector( nodePoint );
 

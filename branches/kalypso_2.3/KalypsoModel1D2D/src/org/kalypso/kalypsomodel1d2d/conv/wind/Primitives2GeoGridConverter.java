@@ -41,18 +41,15 @@
 package org.kalypso.kalypsomodel1d2d.conv.wind;
 
 import java.io.File;
-import java.io.RandomAccessFile;
+//import java.io.RandomAccessFile;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.deegree.framework.util.Pair;
+import org.kalypso.grid.BinaryGeoGridWriter;
 import org.kalypso.grid.IGeoGrid;
-import org.kalypso.kalypsosimulationmodel.core.wind.BinaryGeoGridWrapperForPairsModel;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
-
-import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author ig
@@ -61,7 +58,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * and saving it to given directory.
  *   
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class Primitives2GeoGridConverter
 {
   private Pair[][] m_arrayData = null;
@@ -75,6 +72,8 @@ public class Primitives2GeoGridConverter
   private URL m_urlOutputGridDirectory = null; 
 
   private int m_intScale = 2;
+  
+  private static final Logger logger = Logger.getLogger( WindDataDWDVectorReader.class.getName() );
 
   public Primitives2GeoGridConverter( final RectifiedGridDomain gridDescriptor, final Pair[][] data, URL urlOutputGridDirectory, final String fileName )
   {
@@ -82,6 +81,7 @@ public class Primitives2GeoGridConverter
    m_gridDescriptor = gridDescriptor;
    m_strFileName = fileName;
    m_urlOutputGridDirectory = urlOutputGridDirectory;
+   
   }
 
   public IGeoGrid createGeoGrid( ) throws Exception
@@ -91,26 +91,38 @@ public class Primitives2GeoGridConverter
       return null;
     }
     final File lNewFile = new File( lOutputDir, m_strFileName );
-    if( lNewFile.exists() )
-      return null;
+    if( lNewFile.exists() ){
+      logger.warning( "File with this name was found on disk: " + lNewFile.getAbsolutePath() + "; this file will be overwritten." );
+//      return null;
+    }
     lNewFile.createNewFile();
-    m_urlGeoGridDataFile = lNewFile.toURI().toURL();
+    /*
+     * use BinaryGeoGridWriter for better performance by writing the output files 
+     * 
+     * 
     RandomAccessFile lRandomAccessFile = new RandomAccessFile( lNewFile, "rw" ); 
     String lStrCoordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     GM_Point lPointOrigin = m_gridDescriptor.getOrigin( lStrCoordinateSystem );
     Coordinate lCoordinateOrigin = new Coordinate( lPointOrigin.getX(), lPointOrigin.getY(), lPointOrigin.getZ() );
     Coordinate lCoordinateOffsetX = new Coordinate( m_gridDescriptor.getOffsetX().getGeoX(), m_gridDescriptor.getOffsetX().getGeoY() );
     Coordinate lCoordinateOffsetY = new Coordinate( m_gridDescriptor.getOffsetY().getGeoX(), m_gridDescriptor.getOffsetY().getGeoY() );
+
     BinaryGeoGridWrapperForPairsModel lGrid = new BinaryGeoGridWrapperForPairsModel( lRandomAccessFile, m_gridDescriptor.getNumColumns(), m_gridDescriptor.getNumRows(), m_intScale , lCoordinateOrigin, lCoordinateOffsetX, lCoordinateOffsetY, lStrCoordinateSystem, true );
-   
-    for( int j = 0; j < m_gridDescriptor.getNumRows(); ++j ){
-      for( int i = 0; i < m_gridDescriptor.getNumColumns(); ++i ){
-        lGrid.setPairValue( i, j, m_arrayData[ i ][ j ] );
+    */
+    int xSize = m_gridDescriptor.getNumColumns() * 2;
+    int ySize = m_gridDescriptor.getNumRows();
+    BinaryGeoGridWriter lGrid = new BinaryGeoGridWriter( lNewFile.getAbsolutePath(), xSize, ySize, m_intScale );
+    m_urlGeoGridDataFile = lNewFile.toURI().toURL();
+    
+    for( int j = 0; j < ySize; ++j ){
+      for( int i = 0; i < xSize; i += 2 ){
+        lGrid.setValue( i, j, ( Double )m_arrayData[ i / 2 ][ j ].first );
+        lGrid.setValue( i + 1, j, ( Double )m_arrayData[ i / 2 ][ j ].second );
       }
     }
-    lGrid.saveStatistically();
+    lGrid.saveStatistically(); 
     lGrid.dispose();
-    return lGrid;
+    return lGrid; 
   }
 
   public final URL getUrlGeoGridDataFile( )

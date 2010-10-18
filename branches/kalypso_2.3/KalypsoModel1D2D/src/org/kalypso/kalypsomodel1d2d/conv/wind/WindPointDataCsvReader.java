@@ -59,6 +59,7 @@ import java.util.zip.GZIPInputStream;
 
 import org.deegree.framework.util.Pair;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataWrapper;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -69,19 +70,20 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * <p>
- * Reader for DWD-Files, thus are ASCII container files with wind data for some regular grid and many time steps.
+ * Reader for SCV-Files, thus are ASCII container files with wind data for some point and many time steps.
  * </p>
  * <p>
  * the header of the file contains the description of following wind data, the lines of the header are parsed according
  * to the standard order
  * </p>
  * <p>
- * the data will be separated in time-step parts with key word "termin" and inside of this steps by the key word "line"
- * for corresponding part of the grid.
+ * the data will be separated in time-step parts (each line) with date in first position and wind speed and wind
+ * direction(deg) in next two positions separated by ";" this point data value will be set to all grid nodes of this
+ * time step
  * </p>
  * 
- * One source DWD-file will be read and for each time step one binary grid of type {@link BinaryGeoGridPairsValues} will
- * be written in the target directory.
+ * One source file will be read and for each time step one binary grid of type {@link BinaryGeoGridPairsValues} will be
+ * written in the target directory.
  * 
  * according to {@link IWindDataCollectionReader} interface this class provides the collection of read and written data
  * steps
@@ -91,29 +93,22 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author ig
  * 
  */
-@SuppressWarnings( {"rawtypes", "unchecked"} )
-public class WindDataDWDVectorReader implements IWindDataCollectionReader
+@SuppressWarnings("rawtypes")
+public class WindPointDataCsvReader implements IWindDataCollectionReader
 {
-  // next data is available in source DWD file, but is still unused in actual implementation case
   private GM_Point m_gmGridStartPoint;
-
-  @SuppressWarnings("unused")
-  private String m_strFileTypeDWDLine = ""; //$NON-NLS-1$
 
   @SuppressWarnings("unused")
   private int m_nodeIdDWD;
 
   @SuppressWarnings("unused")
-  private String m_strStationNameDWD;
+  private String m_strStationName;
 
-  private int m_intNumberOfElementProperties;
-
-  /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
   private Pair<Double, Double> m_pairsActTimeStepWindData[][];
 
-  private double m_doubleCellSizeX;
+  private double m_doubleCellSizeX = 450.;
 
-  private double m_doubleCellSizeY;
+  private double m_doubleCellSizeY = 450.;
 
   private RectifiedGridDomain m_gridDescriptor;
 
@@ -139,34 +134,26 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
 
   private String m_strSourceCrs = "";
 
-  private List<Integer> m_listElementPropId;
-
   private List<String> m_listTimeAdditionalInfo;
 
   private Date m_dateActStep;
 
-  private int m_intReadFirstElements = 0;
+  private static final Logger logger = Logger.getLogger( WindPointDataCsvReader.class.getName() );
 
-  private int m_intReadSecondElements = 0;
-
-  private static final Logger logger = Logger.getLogger( WindDataDWDVectorReader.class.getName() );
-
-  private static final String STR_PREFIX_TIME_STEP = "termin"; //$NON-NLS-1$
+  private static final String STR_PREFIX_TIME_STEP = "datum_zeit"; //$NON-NLS-1$
 
   private static final String STR_PREFIX_COMMENT = "c"; //$NON-NLS-1$
 
   private static final String STR_PREFIX_DWD_TYPE = "#"; //$NON-NLS-1$
 
-  private static final String STR_PREFIX_LINE = "line"; //$NON-NLS-1$
-
   private static final Object STR_END_FILE = "-1"; //$NON-NLS-1$
 
-  public WindDataDWDVectorReader( )
+  public WindPointDataCsvReader( )
   {
-    logger.info( "WindDataReaderDWDVectorGeneric::default constructor" ); //$NON-NLS-1$
+    logger.info( "WindDataReaderFakeSCV::default constructor" ); //$NON-NLS-1$
   }
 
-  public WindDataDWDVectorReader( final URL urlInputFileName, final URL urlOutputDir, final String strFileNameSuffix, final String pSelectedCoordinateSystem )
+  public WindPointDataCsvReader( final URL urlInputFileName, final URL urlOutputDir, final String strFileNameSuffix, final String pSelectedCoordinateSystem )
   {
     m_urlInputFile = urlInputFileName;
     m_urlOutputDir = urlOutputDir;
@@ -235,9 +222,7 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
     if( m_strTimeStepLine.equals( "" ) ) { //$NON-NLS-1$
       return false;
     }
-    m_dateActStep = parseDateLine();
     String lStrActLine = ""; //$NON-NLS-1$
-    ActTimeStepLineDescriptor lActBlockDescriptor = null;
     try
     {
       lStrActLine = m_inputReader.readLine().trim().toLowerCase();
@@ -249,42 +234,20 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
     }
     while( true )
     {
-      if( lStrActLine.startsWith( STR_PREFIX_TIME_STEP ) )
+      m_dateActStep = parseDateDataLine( lStrActLine );
+      m_mapAllSteps.put( m_dateActStep, m_pairsActTimeStepWindData );
+      WindDataGenericGridConverter lActWindDataProvider = new WindDataGenericGridConverter( m_dateActStep, m_pairsActTimeStepWindData, m_gridDescriptor, m_urlOutputDir, m_strFileNameSuffix );
+      if( !lActWindDataProvider.convert() )
       {
-        m_mapAllSteps.put( m_dateActStep, m_pairsActTimeStepWindData );
-        WindDataGenericGridConverter lActWindDataProvider = new WindDataGenericGridConverter( m_dateActStep, m_pairsActTimeStepWindData, m_gridDescriptor, m_urlOutputDir, m_strFileNameSuffix );
-        if( !lActWindDataProvider.convert() )
-        {
-          throw new IOException( "Cannot convert actual data!" );
-        }
-        m_listWindDataProviders.add( lActWindDataProvider );
-        initializePairsArray();
-        m_strTimeStepLine = lStrActLine;
-        m_dateActStep = parseDateLine();
+        throw new IOException( "Cannot convert actual data!" );
       }
-      else if( lStrActLine.startsWith( STR_PREFIX_LINE ) )
+      m_listWindDataProviders.add( lActWindDataProvider );
+      initializePairsArray();
+      m_strTimeStepLine = lStrActLine;
+
+      if( lStrActLine.equals( STR_END_FILE ) || !m_inputReader.ready() )
       {
-        lActBlockDescriptor = new ActTimeStepLineDescriptor( lStrActLine );
-        m_intReadFirstElements = 0;
-        m_intReadSecondElements = 0;
-      }
-      else if( m_intReadFirstElements == lActBlockDescriptor.m_intActBlockAmount && m_intReadSecondElements == lActBlockDescriptor.m_intActBlockAmount )
-      {
-        if( lStrActLine.length() == 0 )
-        {
-          continue;
-        }
-        else
-        {
-          if( lStrActLine.equals( STR_END_FILE ) || !m_inputReader.ready() )
-          {
-            break;
-          }
-        }
-      }
-      else
-      {
-        parseDataLine( lStrActLine, lActBlockDescriptor );
+        break;
       }
       try
       {
@@ -299,32 +262,47 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
     return lBoolRes;
   }
 
-  private void parseDataLine( String strActLine, ActTimeStepLineDescriptor actBlockDescriptor )
-  {
-    StringTokenizer lStringTokenizer = new StringTokenizer( strActLine, " " ); //$NON-NLS-1$
-    while( lStringTokenizer.hasMoreTokens() && (m_intReadFirstElements < actBlockDescriptor.m_intActBlockAmount || m_intReadSecondElements < actBlockDescriptor.m_intActBlockAmount) )
-    {
-      if( m_intReadFirstElements < actBlockDescriptor.m_intActBlockAmount )
-      {
-        m_pairsActTimeStepWindData[m_intReadFirstElements++ + actBlockDescriptor.m_intActBlockColumnStart][m_intNumberRows - actBlockDescriptor.m_intActBlockLine].first = Double.parseDouble( lStringTokenizer.nextToken() );
-      }
-      else
-      {
-        m_pairsActTimeStepWindData[m_intReadSecondElements++ + actBlockDescriptor.m_intActBlockColumnStart][m_intNumberRows - actBlockDescriptor.m_intActBlockLine].second = Double.parseDouble( lStringTokenizer.nextToken() );
-      }
-    }
-  }
-
-  private Date parseDateLine( )
+  private Date parseDateDataLine( final String strActLine )
   {
     SimpleDateFormat lDateFormatter;
-    lDateFormatter = new SimpleDateFormat( "dd.MM.yyyy HH mm ss" ); //$NON-NLS-1$
-    StringTokenizer lStringTokenizer = new StringTokenizer( m_strTimeStepLine, "=" ); //$NON-NLS-1$
-    lStringTokenizer.nextToken();
+    lDateFormatter = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
+    StringTokenizer lStringTokenizer = new StringTokenizer( strActLine, ";" ); //$NON-NLS-1$
     Date lDateRes = null;
     try
     {
       lDateRes = lDateFormatter.parse( lStringTokenizer.nextToken() );
+
+      Double lDoubleFirst = 0.;
+      Double lDoubleSecond = 0.;
+      String lStrToken = "";
+      try
+      {
+        lStrToken = lStringTokenizer.nextToken();
+        lDoubleFirst = NumberUtils.parseQuietDouble( lStrToken );
+
+        lStrToken = lStringTokenizer.nextToken();
+        lDoubleSecond = NumberUtils.parseQuietDouble( lStrToken );
+      }
+      catch( Exception e )
+      {
+        logger.warning( "Not valid line! zero values will be set for this time step: " + strActLine );
+      }
+      // Nautical to Cartesian...
+      double lAng = 360 - lDoubleSecond - 90;
+      if( lAng < 0 )
+      {
+        lAng = 360 + lAng;
+      }
+      double xComp = lDoubleFirst * Math.cos( lAng / 360 * 2 * Math.PI );
+      double yComp = lDoubleFirst * Math.sin( lAng / 360 * 2 * Math.PI );
+      for( int i = 0; i < m_intNumberColumns; ++i )
+      {
+        for( int j = 0; j < m_intNumberRows; ++j )
+        {
+          m_pairsActTimeStepWindData[i][j].first = xComp;
+          m_pairsActTimeStepWindData[i][j].second = yComp;
+        }
+      }
     }
     catch( ParseException e )
     {
@@ -333,17 +311,17 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
     return lDateRes;
   }
 
+  @SuppressWarnings("unchecked")
   private boolean readHeader( )
   {
     boolean lBoolRes = true;
 
-    m_listElementPropId = new ArrayList<Integer>();
     m_listTimeAdditionalInfo = new ArrayList<String>();
     m_listComments = new ArrayList<String>();
     int lIntDataInputsCounter = 0;
     while( true )
     {
-      String lStrActLine = ""; //$NON-NLS-1$
+      String lStrActLine = ""; //$NON-NLS-1$ 
       try
       {
         lStrActLine = m_inputReader.readLine().trim().toLowerCase();
@@ -351,11 +329,10 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
         {
           m_listComments.add( lStrActLine );
         }
-        else if( lStrActLine.startsWith( STR_PREFIX_TIME_STEP ) )
+        else if( lStrActLine.toLowerCase().startsWith( STR_PREFIX_TIME_STEP ) )
         {
           m_strTimeStepLine = lStrActLine;
           break;
-          // lBoolContinue = false;
         }
         else if( lStrActLine.startsWith( STR_PREFIX_DWD_TYPE ) )
         {
@@ -369,7 +346,7 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
               m_nodeIdDWD = Integer.parseInt( lStrActLine );
               break;
             case 1:
-              m_strStationNameDWD = lStrActLine;
+              m_strStationName = lStrActLine;
               break;
             case 2:
               StringTokenizer lStrTokenizerPositions = new StringTokenizer( lStrActLine, " \t" ); //$NON-NLS-1$
@@ -382,33 +359,17 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
               m_doubleCellSizeX = Double.parseDouble( lStrTokenizerGridData.nextToken() );
               m_doubleCellSizeY = Double.parseDouble( lStrTokenizerGridData.nextToken() );
               break;
-            case 4:
-              StringTokenizer lStrTokenizerElementDataAsStrings = new StringTokenizer( lStrActLine, " \t" ); //$NON-NLS-1$
-              // TODO: specification of wind-DWD format - is it possible to have here more then 2 characteristics for
-              // wind?
-              m_intNumberOfElementProperties = Integer.parseInt( lStrTokenizerElementDataAsStrings.nextToken() );
-              for( int i = 0; i < m_intNumberOfElementProperties; ++i )
-                m_listElementPropId.add( Integer.parseInt( lStrTokenizerElementDataAsStrings.nextToken() ) );
-              break;
-            case 5:
-              StringTokenizer lStrTokenizerTimeAdditionlInfoAsStrings = new StringTokenizer( lStrActLine, " \t" ); //$NON-NLS-1$
-              int lIntCountTokens = lStrTokenizerTimeAdditionlInfoAsStrings.countTokens();
-              // TODO: specification of wind-DWD format - what additional factors can be set to start time?
-              for( int i = 0; i < lIntCountTokens; ++i )
-                m_listTimeAdditionalInfo.add( lStrTokenizerTimeAdditionlInfoAsStrings.nextToken() );
-              break;
+
             default:
               logger.warning( "format error, line ignored: " + lStrActLine ); //$NON-NLS-1$
 
           }
           lIntDataInputsCounter++;
         }
-
       }
       catch( IOException e )
       {
         e.printStackTrace();
-        // lBoolContinue = false;
         lBoolRes = false;
       }
     }
@@ -421,7 +382,6 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
     final double[] high = { m_intNumberColumns, m_intNumberRows };
     final GridRange gridRange = new GridRange_Impl( low, high );
 
-    // important! DWD grid starts in left upper corner and kalypso grid starts with lower left corner.
     setGmGridStartPoint( GeometryFactory.createGM_Point( m_gmGridStartPoint.getX(), m_gmGridStartPoint.getY() - m_doubleCellSizeY * m_intNumberRows, m_strSourceCrs ) );
 
     try
@@ -445,17 +405,11 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
         m_pairsActTimeStepWindData[i][j] = new Pair<Double, Double>( Double.NaN, Double.NaN );
       }
     }
-
   }
 
   public final List<String> getListComments( )
   {
     return m_listComments;
-  }
-
-  public final List<Integer> getListElementPropId( )
-  {
-    return m_listElementPropId;
   }
 
   public final List<String> getListTimeAdditionalInfo( )
@@ -466,37 +420,6 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
   private void setGmGridStartPoint( GM_Point gmGridStartPoint )
   {
     m_gmGridStartPoint = gmGridStartPoint;
-  }
-
-  private class ActTimeStepLineDescriptor
-  {
-    public int m_intActBlockLine = 0;
-
-    public int m_intActBlockColumnStart = 0;
-
-    @SuppressWarnings("unused")
-    public int m_intActBlockColumnEnd = 0;
-
-    public int m_intActBlockAmount = 0;
-
-//    public ActTimeStepLineDescriptor( )
-//    {
-//    }
-
-    public ActTimeStepLineDescriptor( final String pStrRawLine )
-    {
-      StringTokenizer lStringTokenizer = new StringTokenizer( pStrRawLine, " =\t" ); //$NON-NLS-1$
-      lStringTokenizer.nextToken();
-      m_intActBlockLine = Integer.parseInt( lStringTokenizer.nextToken() );
-      lStringTokenizer.nextToken();
-      lStringTokenizer.nextToken();
-      lStringTokenizer.nextToken();
-      m_intActBlockAmount = Integer.parseInt( lStringTokenizer.nextToken() );
-      lStringTokenizer.nextToken();
-      m_intActBlockColumnStart = Integer.parseInt( lStringTokenizer.nextToken() );
-      lStringTokenizer.nextToken();
-      m_intActBlockColumnEnd = Integer.parseInt( lStringTokenizer.nextToken() );
-    }
   }
 
   /**
