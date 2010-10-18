@@ -41,37 +41,30 @@
 package org.kalypso.model.hydrology.project;
 
 /**
- * Constants relevant for the project structure of an na model.<br/>
- * Most pathes are relative to the project root.
+ * Constants relevant for the structure of a na model calc case.<br/>
+ * Most pathes are relative to the calc case.
  * 
  * @author Gernot Belger
  */
-public interface INaProjectConstants
+public interface INaCalcCaseConstants
 {
-  String GML_MODELL_PATH = "modell.gml"; //$NON-NLS-1$
+  String CALC_CASE = "calcCase.gml"; //$NON-NLS-1$
 
-  String GML_HYDROTOP_PATH = "hydrotop.gml";//$NON-NLS-1$
+  String CALC_HYDROTOP = "calcHydrotop.gml"; //$NON-NLS-1$
 
-  String GML_SYNTH_N_PATH = "calcSynthN.gml";//$NON-NLS-1$
+  String CALC_PARAMETER = "calcParameter.gml"; //$NON-NLS-1$
 
-  String GML_GEOLOGIE_PATH = "geologie.gml";//$NON-NLS-1$
+  String EXPERT_CONTROL = "expertControl.gml"; //$NON-NLS-1$
 
-  String GML_LANDUSE_PATH = "landuse.gml";//$NON-NLS-1$
+  String DOT_CALCULATION = ".calculation"; //$NON-NLS-1$
 
-  String GML_PARAMETER_PATH = "parameter.gml";//$NON-NLS-1$
+  String ANFANGSWERTE_DIR = "Anfangswerte"; //$NON-NLS-1$
 
-  String GML_PEDOLOGIE_PATH = "pedologie.gml";//$NON-NLS-1$
+  String KLIMA_DIR = "Klima"; //$NON-NLS-1$
 
-  String FOLDER_ZEITREIHEN_MANAGEMENT = "ZeitreihenManagement";//$NON-NLS-1$
+  String NIEDERSCHLAG_DIR = "Niederschlag"; //$NON-NLS-1$
 
-  String FOLDER_ZEITREIHEN = "Zeitreihen";//$NON-NLS-1$
+  String PEGEL_DIR = "Pegel"; //$NON-NLS-1$
 
-  String FOLDER_MODEL = ".model";//$NON-NLS-1$
-
-  String FOLDER_OBSERVATION_CONF = FOLDER_MODEL + "/observationConf";//$NON-NLS-1$
-
-  String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
-
-  String CALC_CASE_TEMPLATE_DIR = ".templates/calcCase/copy"; //$NON-NLS-1$
-
+  String ERGEBNISSE_DIR = "Ergebnisse"; //$NON-NLS-1$
 }
