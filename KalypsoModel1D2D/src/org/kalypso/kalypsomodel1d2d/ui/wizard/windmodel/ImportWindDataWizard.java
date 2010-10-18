@@ -193,9 +193,9 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
             // TODO check why saving thow pool does not work
             final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
 
-            caseDataProvider.postCommand( IWindModel.class, new AddWindDataModelCmd() );
+            caseDataProvider.postCommand( IWindModel.class.getName(), new AddWindDataModelCmd() );
 
-            caseDataProvider.saveModel( IWindModel.class, null );
+            caseDataProvider.saveModel( IWindModel.class.getName(), null );
 
           }
 
