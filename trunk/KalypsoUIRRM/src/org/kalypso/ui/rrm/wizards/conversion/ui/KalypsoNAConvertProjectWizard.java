@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
@@ -62,7 +61,6 @@ import org.kalypso.ui.rrm.wizards.conversion.IProjectConverterFactory;
 import org.kalypso.ui.rrm.wizards.conversion.ProjectConversionOperation;
 import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverterFactory103to230;
 import org.kalypso.ui.rrm.wizards.conversion.from210to230.RrmProjectConverterFactory210to230;
-import org.kalypso.util.swt.StatusDialog;
 
 /**
  * This wizard converts project of old KalypsoHydrology versions into the current Kalypso version by creating a new
@@ -106,20 +104,6 @@ public class KalypsoNAConvertProjectWizard extends NewProjectWizard
   {
     final File inputDir = m_conversionPage.getProjectDir();
     final IStatus result = doConvertProject( inputDir, project, monitor );
-
-    final Shell shell = getShell();
-    if( result.isMultiStatus() )
-    {
-      shell.getDisplay().syncExec( new Runnable()
-      {
-        @Override
-        public void run( )
-        {
-          new StatusDialog( shell, result, "Konvertierung von Altprojekten" ).open();
-        }
-      } );
-    }
-
     if( !result.isOK() )
       throw new CoreException( result );
   }
@@ -147,6 +131,10 @@ public class KalypsoNAConvertProjectWizard extends NewProjectWizard
     {
       e.printStackTrace();
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Unexpected error during project conversion", e );
+    }
+    catch( final InterruptedException e )
+    {
+      return Status.CANCEL_STATUS;
     }
   }
 }

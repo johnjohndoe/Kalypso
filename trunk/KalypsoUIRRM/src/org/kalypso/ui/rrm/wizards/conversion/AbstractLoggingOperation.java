@@ -45,6 +45,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
@@ -74,13 +75,21 @@ public abstract class AbstractLoggingOperation implements ILoggingOperation
   }
 
   @Override
-  public final IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  public final IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
     try
     {
       doExecute( monitor );
     }
     catch( final CoreException e )
+    {
+      throw e;
+    }
+    catch( final OperationCanceledException e )
+    {
+      throw new InterruptedException();
+    }
+    catch( final InterruptedException e )
     {
       throw e;
     }

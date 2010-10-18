@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -73,7 +74,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
    * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws CoreException
+  protected void doExecute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
   {
     try
     {
@@ -95,12 +96,17 @@ public class CalcCasesConverter extends AbstractLoggingOperation
 
         try
         {
+          prepareCalcCase( targetDir );
+
           final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir );
           calcCaseConverter.doExecute( progress.newChild( 1 ) );
         }
         catch( final CoreException ce )
         {
           final IStatus status = ce.getStatus();
+          if( status.matches( IStatus.CANCEL ) )
+            throw new InterruptedException( "Abbruch durch Benutzer" );
+
           getLog().add( status );
         }
         catch( final Throwable e )
@@ -114,6 +120,13 @@ public class CalcCasesConverter extends AbstractLoggingOperation
       e.printStackTrace();
       getLog().addError( "Fehler beim Zugriff auf die Rechenvarianten", e );
     }
+  }
+
+  /** Copy calc-case template of target */
+  private void prepareCalcCase( final File calcCaseDir ) throws IOException
+  {
+    final File calcCaseTemplateDir = new File( m_targetDir, INaProjectConstants.CALC_CASE_TEMPLATE_DIR );
+    FileUtils.copyDirectory( calcCaseTemplateDir, calcCaseDir );
   }
 
   private File determineTargetDir( final File directory )

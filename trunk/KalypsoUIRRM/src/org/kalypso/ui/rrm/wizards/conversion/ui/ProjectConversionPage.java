@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.module.utils.projectinfo.ProjectInfoComposite;
 
 /**
  * Lets the user choose which project to import and convert (only external projects supported now). <br/>

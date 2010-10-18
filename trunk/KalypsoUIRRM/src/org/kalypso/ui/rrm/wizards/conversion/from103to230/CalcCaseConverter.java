@@ -41,8 +41,12 @@
 package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation;
 
 /**
@@ -70,16 +74,67 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Throwable
   {
-    Thread.sleep( 250 );
+    try
+    {
+      copyData();
+    }
+    finally
+    {
+      ProgressUtilities.done( monitor );
+    }
+  }
 
+  private void copyData( ) throws IOException
+  {
     m_targetDir.mkdirs();
 
-    // Benutzer entscheiden lassen:
+    /* Copy top level gml files (everything else in this path will be ignored) */
+    copyFile( INaCalcCaseConstants.CALC_CASE );
+    copyFile( INaCalcCaseConstants.CALC_HYDROTOP );
+    copyFile( INaCalcCaseConstants.CALC_PARAMETER );
+    copyFile( INaCalcCaseConstants.EXPERT_CONTROL );
+    copyFile( INaCalcCaseConstants.DOT_CALCULATION );
+
+    /* Copy special directories */
+    copyDir( INaCalcCaseConstants.ANFANGSWERTE_DIR );
+    copyDir( INaCalcCaseConstants.KLIMA_DIR );
+    copyDir( INaCalcCaseConstants.NIEDERSCHLAG_DIR );
+    copyDir( INaCalcCaseConstants.PEGEL_DIR );
+
+    // TODO: Benutzer entscheiden lassen:
     // - ergebnisse übernehmen?
     // - nur 'aktuell' oder alle ergebnisse?
+    // Momentan: es wird immer alles kopiert
+    copyDir( INaCalcCaseConstants.ERGEBNISSE_DIR );
 
-// FileUtils.copyDirectory( m_sourceDir, m_targetDir, true );
-    // TODO Auto-generated method stub
+    /* Copy additional files */
+    // TODO: wir könnten alles 'unbekannte' z.B. alles Vorlagentypen grundsätzlich mitkopieren...
+  }
+
+  private void copyFile( final String path ) throws IOException
+  {
+    copyFile( path, path );
+  }
+
+  private void copyFile( final String sourcePath, final String targetPath ) throws IOException
+  {
+    final File modelSourceFile = new File( m_sourceDir, sourcePath );
+    final File modelTargetFile = new File( m_targetDir, targetPath );
+
+    FileUtils.copyFile( modelSourceFile, modelTargetFile, true );
+  }
+
+  private void copyDir( final String path ) throws IOException
+  {
+    copyDir( path, path );
+  }
+
+  private void copyDir( final String sourcePath, final String targetPath ) throws IOException
+  {
+    final File modelSourceDir = new File( m_sourceDir, sourcePath );
+    final File modelTargetDir = new File( m_targetDir, targetPath );
+
+    FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
   }
 
 }
