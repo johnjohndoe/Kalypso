@@ -44,10 +44,10 @@ import java.io.File;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
-import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
