@@ -42,11 +42,6 @@ package org.kalypso.ui.rrm.wizards.conversion.ui;
 
 import java.io.File;
 
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -60,7 +55,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
-import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.module.utils.projectinfo.ProjectInfoComposite;
 
 /**
@@ -157,30 +151,7 @@ public class ProjectConversionPage extends WizardPage
 
   private void updateProjectInfo( final File file )
   {
-    final IProjectDescription projectDescription = readProjectDescription( file );
-    m_infoGroup.setProject( projectDescription );
-    return;
-  }
-
-  private IProjectDescription readProjectDescription( final File file )
-  {
-    if( file == null )
-      return null;
-
-    if( !file.isDirectory() )
-      return null;
-
-    try
-    {
-      final IPath projectPath = new Path( file.getPath() );
-      final IPath projectFilePath = projectPath.append( IProjectDescription.DESCRIPTION_FILE_NAME );
-      return ResourcesPlugin.getWorkspace().loadProjectDescription( projectFilePath );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    m_infoGroup.setProject( file );
   }
 
   private IMessageProvider validatePage( )
@@ -189,14 +160,7 @@ public class ProjectConversionPage extends WizardPage
     if( groupMessage != null )
       return groupMessage;
 
-    final IProjectDescription projectDescription = m_infoGroup.getProject();
-    if( projectDescription == null )
-    {
-      final String message = String.format( "Chosen directory does not contain a project ('%s' file not present)", IProjectDescription.DESCRIPTION_FILE_NAME );
-      return new MessageProvider( message, IMessageProvider.ERROR );
-    }
-
-    return null;
+    return m_infoGroup.validate();
   }
 
   private void setMessage( final IMessageProvider message )
