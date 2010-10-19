@@ -63,7 +63,7 @@ public class RrmProjectConverter210to230 extends AbstractProjectConverter
    * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Throwable
+  protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
     convertBasicModel();
 

@@ -59,6 +59,7 @@ public class OptimizeMonitor implements ISimulationMonitor
   /**
    * @see org.kalypso.simulation.core.ISimulationMonitor#getFinishStatus()
    */
+  @Override
   public int getFinishStatus( )
   {
     return m_monitor.getFinishStatus();
@@ -67,6 +68,7 @@ public class OptimizeMonitor implements ISimulationMonitor
   /**
    * @see org.kalypso.simulation.core.ISimulationMonitor#getFinishText()
    */
+  @Override
   public String getFinishText( )
   {
     return m_monitor.getFinishText();
@@ -75,17 +77,19 @@ public class OptimizeMonitor implements ISimulationMonitor
   /**
    * @see org.kalypso.simulation.core.ISimulationMonitor#getMessage()
    */
+  @Override
   public String getMessage( )
   {
     if( m_message == null )
       return m_monitor.getMessage();
 
-    return m_monitor + " - " + m_message;
+    return m_monitor.getMessage() + " - " + m_message;
   }
 
   /**
    * @see org.kalypso.simulation.core.ISimulationMonitor#getProgress()
    */
+  @Override
   public int getProgress( )
   {
     return m_monitor.getProgress();
@@ -94,6 +98,7 @@ public class OptimizeMonitor implements ISimulationMonitor
   /**
    * @see org.kalypso.simulation.core.ISimulationMonitor#setFinishInfo(int, java.lang.String)
    */
+  @Override
   public void setFinishInfo( final int status, final String text )
   {
     m_monitor.setFinishInfo( status, text );
@@ -102,6 +107,7 @@ public class OptimizeMonitor implements ISimulationMonitor
   /**
    * @see org.kalypso.simulation.core.ISimulationMonitor#setMessage(java.lang.String)
    */
+  @Override
   public void setMessage( final String message )
   {
     m_message = message;
@@ -110,6 +116,7 @@ public class OptimizeMonitor implements ISimulationMonitor
   /**
    * @see org.kalypso.simulation.core.ISimulationMonitor#setProgress(int)
    */
+  @Override
   public void setProgress( final int progress )
   {
 // ignore, do not disturb outer monitor
@@ -118,6 +125,7 @@ public class OptimizeMonitor implements ISimulationMonitor
   /**
    * @see org.kalypso.contribs.java.lang.ICancelable#cancel()
    */
+  @Override
   public void cancel( )
   {
     m_monitor.cancel();
@@ -126,6 +134,7 @@ public class OptimizeMonitor implements ISimulationMonitor
   /**
    * @see org.kalypso.contribs.java.lang.ICancelable#isCanceled()
    */
+  @Override
   public boolean isCanceled( )
   {
     return m_monitor.isCanceled();

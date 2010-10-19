@@ -157,6 +157,11 @@ public class NAControl extends Feature_Impl
     return getProperty( PROP_VERSION_KALYPSONA, String.class );
   }
 
+  public void setExeVersion( final String version )
+  {
+    setProperty( PROP_VERSION_KALYPSONA, version );
+  }
+
   public Integer getReturnPeriod( )
   {
     return getProperty( PROP_RETURN_PERIOD, Integer.class );

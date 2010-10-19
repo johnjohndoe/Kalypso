@@ -69,7 +69,7 @@ public class RrmProjectConverter103to230 extends AbstractProjectConverter
    * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Throwable
+  protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
     final String projectName = m_sourceDir.getName();
     monitor.beginTask( String.format( "Projekt '%s'", projectName ), 100 );
