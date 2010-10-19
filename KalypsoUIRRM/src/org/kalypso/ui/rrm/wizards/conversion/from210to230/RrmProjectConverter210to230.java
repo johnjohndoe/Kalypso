@@ -43,7 +43,7 @@ package org.kalypso.ui.rrm.wizards.conversion.from210to230;
 import java.io.File;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.ui.rrm.wizards.conversion.AbstractProjectConverter;
+import org.kalypso.module.conversion.AbstractProjectConverter;
 
 /**
  * @author Gernot Belger

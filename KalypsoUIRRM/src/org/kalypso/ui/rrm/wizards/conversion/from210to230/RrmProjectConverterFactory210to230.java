@@ -42,8 +42,8 @@ package org.kalypso.ui.rrm.wizards.conversion.from210to230;
 
 import java.io.File;
 
-import org.kalypso.ui.rrm.wizards.conversion.IProjectConverter;
-import org.kalypso.ui.rrm.wizards.conversion.IProjectConverterInPlaceFactory;
+import org.kalypso.module.conversion.IProjectConverter;
+import org.kalypso.module.conversion.IProjectConverterInPlaceFactory;
 
 /**
  * @author Gernot

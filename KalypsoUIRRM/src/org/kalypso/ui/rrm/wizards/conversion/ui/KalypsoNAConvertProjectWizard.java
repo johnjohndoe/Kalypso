@@ -51,14 +51,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
+import org.kalypso.module.conversion.ConverterUtils;
+import org.kalypso.module.conversion.IProjectConverter;
+import org.kalypso.module.conversion.IProjectConverterFactory;
+import org.kalypso.module.conversion.ProjectConversionOperation;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.extension.KalypsoModuleRRM;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
-import org.kalypso.ui.rrm.wizards.conversion.ConverterUtils;
-import org.kalypso.ui.rrm.wizards.conversion.IProjectConverter;
-import org.kalypso.ui.rrm.wizards.conversion.IProjectConverterFactory;
-import org.kalypso.ui.rrm.wizards.conversion.ProjectConversionOperation;
 import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverterFactory103to230;
 import org.kalypso.ui.rrm.wizards.conversion.from210to230.RrmProjectConverterFactory210to230;
 
