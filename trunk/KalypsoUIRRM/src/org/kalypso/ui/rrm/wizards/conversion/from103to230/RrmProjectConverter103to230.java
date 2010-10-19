@@ -45,7 +45,7 @@ import java.io.File;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.ui.rrm.wizards.conversion.AbstractProjectConverter;
+import org.kalypso.module.conversion.AbstractProjectConverter;
 
 
 /**

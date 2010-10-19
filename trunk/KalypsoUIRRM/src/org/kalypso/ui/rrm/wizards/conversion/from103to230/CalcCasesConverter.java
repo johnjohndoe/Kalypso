@@ -52,7 +52,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
-import org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation;
+import org.kalypso.module.conversion.AbstractLoggingOperation;
 
 /**
  * @author Gernot Belger

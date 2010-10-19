@@ -47,7 +47,7 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
-import org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation;
+import org.kalypso.module.conversion.AbstractLoggingOperation;
 
 /**
  * Converts one calc case.
