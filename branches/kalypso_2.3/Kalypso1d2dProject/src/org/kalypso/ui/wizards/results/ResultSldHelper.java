@@ -269,8 +269,11 @@ public class ResultSldHelper
     final BigDecimal maxDecimal = maxValue.setScale( 1, BigDecimal.ROUND_CEILING );
 
     final BigDecimal polygonStepWidth = new BigDecimal( stepWidth ).setScale( stepWidthScale, BigDecimal.ROUND_FLOOR );
-    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth )).intValue();
-
+    int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth )).intValue();
+    // set to provide more them 1 or 0 classes. in such cases the color map will not be created, that results error.  
+    if( numOfClasses < 2 ){
+      numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth.divide( new BigDecimal( 4 ) ) ) ).intValue();
+    }
     for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
     {
       final double fromValue = minDecimal.doubleValue() + currentClass * polygonStepWidth.doubleValue();
