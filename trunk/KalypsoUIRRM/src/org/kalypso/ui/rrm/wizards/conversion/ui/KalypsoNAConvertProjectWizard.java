@@ -55,12 +55,11 @@ import org.kalypso.module.conversion.ConverterUtils;
 import org.kalypso.module.conversion.IProjectConverter;
 import org.kalypso.module.conversion.IProjectConverterFactory;
 import org.kalypso.module.conversion.ProjectConversionOperation;
+import org.kalypso.module.conversion.ProjectConversionPage;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.extension.KalypsoModuleRRM;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
-import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverterFactory103to230;
-import org.kalypso.ui.rrm.wizards.conversion.from210to230.RrmProjectConverterFactory210to230;
 
 /**
  * This wizard converts project of old KalypsoHydrology versions into the current Kalypso version by creating a new
@@ -86,7 +85,7 @@ public class KalypsoNAConvertProjectWizard extends NewProjectWizard
   {
     super.addPages();
 
-    m_conversionPage = new ProjectConversionPage( "conversionPage" );
+    m_conversionPage = new ProjectConversionPage( "conversionPage", KalypsoModuleRRM.ID );
 
     addPage( m_conversionPage ); //$NON-NLS-1$
 
@@ -114,9 +113,7 @@ public class KalypsoNAConvertProjectWizard extends NewProjectWizard
     {
       final File targetDir = targetProject.getLocation().toFile();
 
-      // FIXME: let user choose converters on project page; or: determine correct converter via project-version-number
-
-      final IProjectConverterFactory[] factories = new IProjectConverterFactory[] { new RrmProjectConverterFactory103to230(), new RrmProjectConverterFactory210to230() };
+      final IProjectConverterFactory[] factories = m_conversionPage.getConverters();
       final IProjectConverter[] converters = ConverterUtils.createConverters( factories, sourceDir, targetDir );
 
       final ProjectConversionOperation operation = new ProjectConversionOperation( targetProject, converters );

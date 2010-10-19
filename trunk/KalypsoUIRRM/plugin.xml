@@ -259,5 +259,16 @@
             icon="icons/logview/problems_view.gif"
             id="org.kalypso.ui.rrm.logviewer.LogViewer"
             name="%org.kalypso.ui.rrm.logviewer.LogViewer.name"/>
-   </extension> 
+   </extension>
+ <extension
+       point="org.kalypso.module.conversion">
+    <projectconversion
+          class="org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverterFactory103to230"
+          module="KalypsRrmModel">
+    </projectconversion>
+    <projectconversion
+          class="org.kalypso.ui.rrm.wizards.conversion.from210to230.RrmProjectConverterFactory210to230"
+          module="KalypsRrmModel">
+    </projectconversion>
+ </extension> 
 </plugin>
