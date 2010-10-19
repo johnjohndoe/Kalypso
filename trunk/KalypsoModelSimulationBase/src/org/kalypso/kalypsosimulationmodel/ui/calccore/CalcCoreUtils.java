@@ -60,6 +60,10 @@ import org.kalypso.kalypsosimulationmodel.i18n.Messages;
  */
 public final class CalcCoreUtils
 {
+  public static final String VERSION_LATEST = "latest"; //$NON-NLS-1$
+
+  public static final String VERSION_NEUESTE = "neueste"; //$NON-NLS-1$
+
   private CalcCoreUtils( )
   {
     throw new UnsupportedOperationException( "Helper class, do not instantiate" );//$NON-NLS-1$
@@ -109,7 +113,7 @@ public final class CalcCoreUtils
         /*
          * for backward compatibility, strings "neueste" or "latest" will be considered as well
          */
-        if( "neueste".equals( version ) || "latest".equals( version ) )
+        if( VERSION_NEUESTE.equals( version ) || VERSION_LATEST.equals( version ) )
           return getLatestExecutable( searchPattern );
         break;
       case NONE:

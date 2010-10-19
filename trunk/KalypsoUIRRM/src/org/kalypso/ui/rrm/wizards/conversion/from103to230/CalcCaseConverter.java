@@ -46,8 +46,12 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Converts one calc case.
@@ -56,6 +60,8 @@ import org.kalypso.module.conversion.AbstractLoggingOperation;
  */
 public class CalcCaseConverter extends AbstractLoggingOperation
 {
+  private static final String EXE_2_0_6 = "2.0.6"; //$NON-NLS-1$
+
   private final File m_targetDir;
 
   private final File m_sourceDir;
@@ -72,7 +78,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Throwable
+  protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
     try
     {
@@ -84,7 +90,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     }
   }
 
-  private void copyData( ) throws IOException
+  private void copyData( ) throws Exception
   {
     m_targetDir.mkdirs();
 
@@ -109,6 +115,10 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     /* Copy additional files */
     // TODO: wir könnten alles 'unbekannte' z.B. alles Vorlagentypen grundsätzlich mitkopieren...
+
+    /* Tweak model data */
+    tweakCalculation();
+
   }
 
   private void copyFile( final String path ) throws IOException
@@ -135,6 +145,21 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final File modelTargetDir = new File( m_targetDir, targetPath );
 
     FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
+  }
+
+  private void tweakCalculation( ) throws Exception
+  {
+    final File calculationFile = new File( m_targetDir, INaCalcCaseConstants.DOT_CALCULATION );
+    final GMLWorkspace calculationWorkspace = GmlSerializer.createGMLWorkspace( calculationFile, null );
+    final NAControl naControl = (NAControl) calculationWorkspace.getRootFeature();
+    final String exeVersion = naControl.getExeVersion();
+    if( CalcCoreUtils.VERSION_LATEST.equals( exeVersion ) || CalcCoreUtils.VERSION_NEUESTE.equals( exeVersion ) )
+    {
+      // 2.0.6 is the version known to work with kalypso 1.0.3
+      naControl.setExeVersion( EXE_2_0_6 );
+      // FIXME: we should write in the same encoding as we read the file
+      GmlSerializer.serializeWorkspace( calculationFile, calculationWorkspace, "UTF-8" );
+    }
   }
 
 }
