@@ -89,7 +89,7 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
         final double valueMeasured = getMeasuredTS().get( dateKey ).doubleValue();
         try
         {
-          // TODO: Fehler: Ausruck wird nie war, wenn m_min != UNBOUND (2.Zeile)
+          // TODO: Fehler: Ausruck wird nie wahr, wenn m_min != UNBOUND (2.Zeile)
           if( ( m_min == UNBOUND && valueMeasured <= m_max ) || ( m_max == UNBOUND && valueMeasured >= m_min )
               || (m_max != UNBOUND && m_min != UNBOUND && m_min <= valueMeasured && valueMeasured <= m_max) )
           {
@@ -112,7 +112,7 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
         catch( final Exception e )
         {
           status = STATUS_OUTSIDE_INTERVALL;
-          e.printStackTrace();
+//          e.printStackTrace();
         }
       }
     }

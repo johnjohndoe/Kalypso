@@ -68,9 +68,13 @@ public class FunctionVolumeError extends IErrorFunktion
         try
         {
           final double valueCalced = entry.getValue().doubleValue();
-          final double valueMeasured = getMeasuredTS().get( dateKey ).doubleValue();
-          error += valueCalced - valueMeasured;
-          c++;
+          final Double doubleMeasured = getMeasuredTS().get( dateKey );
+          if( doubleMeasured != null )
+          {
+            final double valueMeasured = doubleMeasured.doubleValue();
+            error += valueCalced - valueMeasured;
+            c++;
+          }
         }
         catch( final Exception e )
         {
