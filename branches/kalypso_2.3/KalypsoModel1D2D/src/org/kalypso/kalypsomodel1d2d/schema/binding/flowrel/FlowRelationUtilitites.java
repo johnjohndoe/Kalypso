@@ -41,7 +41,9 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -227,6 +229,43 @@ public class FlowRelationUtilitites
       return (IBuildingFlowRelation) flowRel;
 
     return null;
+  }
+  
+  private static List< IFlowRelationship > findFlowrelationshipsForPosition( final GM_Position pPosition, final IFlowRelationshipModel model ){
+    List< IFlowRelationship > lListRes = new ArrayList<IFlowRelationship>();
+    
+    final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IFlowRelationship.class };
+    
+    final IFlowRelationship[] flowRels = model.findFlowrelationships( pPosition, 0.01 );
+    for( final IFlowRelationship flowRel: flowRels ){
+      if( flowRel instanceof IFlowRelationship )
+        lListRes.add( ( IFlowRelationship) flowRel );
+    }
+    
+    return lListRes;
+  }
+  
+  /**
+   * Checks if a 1D-Element has an associated Buildings-Flow-Relation. returns set with found buildings
+   */
+  public static Set< IFlowRelationship > findBuildingElements1D( final IElement1D element, final IFlowRelationshipModel model )
+  {
+    Set< IFlowRelationship > lSetRes = new HashSet<IFlowRelationship>();
+    List< GM_Position > lListPositions = new ArrayList<GM_Position>();
+    final List nodes = element.getNodes();
+    
+    if( nodes.size() < 2 ){
+      lListPositions.add( getFlowPositionFromElement( element ) );
+    }
+    else{
+      lListPositions.add( ( ( IFE1D2DNode )nodes.get( 0 ) ).getPoint().getPosition() );
+      lListPositions.add( ( ( IFE1D2DNode) nodes.get( 1 ) ).getPoint().getPosition() );
+    }
+    
+    for( final GM_Position lPos: lListPositions ){
+      lSetRes.addAll( findFlowrelationshipsForPosition( lPos, model ) );
+    }
+    return lSetRes;
   }
   
   /**
