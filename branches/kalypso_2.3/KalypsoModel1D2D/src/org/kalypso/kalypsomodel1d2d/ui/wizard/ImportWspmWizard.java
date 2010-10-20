@@ -612,6 +612,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     // calculationUnit1D.setDescription( "Dieses Teilmodell wurde durch den Import automatisch angelegt." );
     /* add nodes to model */
     final List<IFE1D2DEdge> edgeList = new ArrayList<IFE1D2DEdge>( segments.length - 1 );
+    final List<IFE1D2DNode> nodesList = new ArrayList<IFE1D2DNode>();
 
     /* add elements to model and sort by station in flow direction */
     // IMPORTANT: the right ordering (in flow direction) is later used by the building parameter stuff, so do not change
@@ -688,7 +689,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           }
         }
 
-        if( !found )
+        if( !found && ( nodesList.size() == 0 || !( node.getPoint().getX() == nodesList.get( 0 ).getPoint().getX() && node.getPoint().getY() == nodesList.get( 0 ).getPoint().getY() ) ) ) 
         {
           /* Create an edge between lastNode and node */
           final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
@@ -712,6 +713,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           element1d.setEdge( edge );
         }
       }
+      nodesList.add( node );
       lastNode = node;
 
       final BigDecimal stationDecimal = ProfilUtil.stationToBigDecimal( station );
