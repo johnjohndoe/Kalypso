@@ -369,7 +369,8 @@ public class ResultManager implements ISimulation1D2DConstants
           }
           catch( Exception e )
           {
-            e.printStackTrace();
+            m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.15" ), resultFileName ); //$NON-NLS-1$
+
           }
         }
       }
