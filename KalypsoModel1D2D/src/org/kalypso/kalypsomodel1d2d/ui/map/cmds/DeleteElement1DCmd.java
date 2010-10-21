@@ -114,7 +114,7 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
       IElement1D lElement = (IElement1D) lFeature.getAdapter( IElement1D.class );
       final String elementID = lElement.getGmlID();
       lSet1DElements.add( lFeature );
-
+      m_listAffectedFeatures.add( lFeature );
       complexElements = lElement.getContainers();
       for( final IFE1D2DComplexElement complexElement : complexElements )
       { 
@@ -135,12 +135,13 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
         m_listAffectedFeatures.add( wrappedFeature );
       }
       
-      m_listAffectedFeatures.add( edge.getFeature() );
       if( !isRemoved )
       {
         throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.1") ); //$NON-NLS-1$
       }
       lSetEdges.add( edge.getFeature() );
+     
+      m_listAffectedFeatures.add( edge.getFeature() );
       
       lCmdEdgeRemove.addEdgeToRemove( edge );
     }
