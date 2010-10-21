@@ -308,7 +308,7 @@ public class Control1D2DConverterSWAN
         "$********************MODEL INPUT*************************\n" + //$NON-NLS-1$
         "$\n" + //$NON-NLS-1$
         "SET LEVEL %f\n" + //$NON-NLS-1$
-        "SET NAUTICAL\n" + //$NON-NLS-1$
+//        "SET NAUTICAL\n" + //$NON-NLS-1$
         "set maxerr=3\n" + //$NON-NLS-1$
         "$\n" + //$NON-NLS-1$
         "MODE %s TWOD\n" + //$NON-NLS-1$
@@ -389,7 +389,7 @@ public class Control1D2DConverterSWAN
           formatter.format( "INPGRID WIND REG %d %d 0 %d %d %.1f %.1f %s %s %s %s %s\n", //$NON-NLS-1$ 
               ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getX() - m_doubleShiftX)).intValue(), ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getY() - m_doubleShiftY)).intValue(), m_gridDescriptor.getNumColumns() - 1, m_gridDescriptor.getNumRows() - 1, Math.abs( m_gridDescriptor.getOffsetX( lStrCRS ) ), Math.abs( m_gridDescriptor.getOffsetY( lStrCRS ) ), m_strStationary, lStrStartTimeWind, lStrTimeStepLen, m_strStepLengthUnit, lStrEndTimeWind );
         }
-        formatter.format( "READINP WIND 1. SERIES '%s' 1 0 FREE\n$\n", //$NON-NLS-1$ 
+        formatter.format( "READINP WIND 1. SERIES '%s' 3 0 FREE\n$\n", //$NON-NLS-1$ 
         ISimulation1D2DConstants.SIM_SWAN_WIND_FILE + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT );
       }
     }
