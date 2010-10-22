@@ -42,16 +42,21 @@ package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * Converts one calc case.
@@ -65,6 +70,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   private final File m_targetDir;
 
   private final File m_sourceDir;
+
+  private NaSimulationData m_data;
 
   public CalcCaseConverter( final File sourceDir, final File targetDir )
   {
@@ -82,12 +89,28 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   {
     try
     {
+      readData();
+
       copyData();
     }
     finally
     {
       ProgressUtilities.done( monitor );
+
+      if( m_data != null )
+        m_data.dispose();
     }
+  }
+
+  private void readData( ) throws Exception
+  {
+    final File naModelFile = new File( m_sourceDir, INaCalcCaseConstants.CALC_CASE );
+    final File naControlFile = new File( m_sourceDir, INaCalcCaseConstants.DOT_CALCULATION );
+
+    final URL naModelLocation = naModelFile.toURI().toURL();
+    final URL naControlLocation = naControlFile.toURI().toURL();
+
+    m_data = new NaSimulationData( naModelLocation, naControlLocation, null, null, null, null, null, null );
   }
 
   private void copyData( ) throws Exception
@@ -119,6 +142,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     /* Tweak model data */
     tweakCalculation();
 
+    /* Make sure that all timeseries are long enough */
+    extendTimeseries();
   }
 
   private void copyFile( final String path ) throws IOException
@@ -149,17 +174,40 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void tweakCalculation( ) throws Exception
   {
-    final File calculationFile = new File( m_targetDir, INaCalcCaseConstants.DOT_CALCULATION );
-    final GMLWorkspace calculationWorkspace = GmlSerializer.createGMLWorkspace( calculationFile, null );
-    final NAControl naControl = (NAControl) calculationWorkspace.getRootFeature();
+    final NAControl naControl = m_data.getMetaControl();
     final String exeVersion = naControl.getExeVersion();
     if( CalcCoreUtils.VERSION_LATEST.equals( exeVersion ) || CalcCoreUtils.VERSION_NEUESTE.equals( exeVersion ) )
     {
       // 2.0.6 is the version known to work with kalypso 1.0.3
       naControl.setExeVersion( EXE_2_0_6 );
       // FIXME: we should write in the same encoding as we read the file
-      GmlSerializer.serializeWorkspace( calculationFile, calculationWorkspace, "UTF-8" );
+      final File naControlFile = new File( m_targetDir, INaCalcCaseConstants.DOT_CALCULATION );
+      GmlSerializer.serializeWorkspace( naControlFile, naControl.getWorkspace(), "UTF-8" );
     }
+    naControl.getWorkspace().dispose();
+  }
+
+
+  /**
+   * Extends all timeseries, so they cover the calculatin span.<br/>
+   * This is necessary, as the newer calculatin core versions throw a severe error, if the calculatin span is not
+   * completely covered.
+   */
+  private void extendTimeseries( ) throws Exception
+  {
+    /* Read calculation time span */
+    final NAControl metaControl = m_data.getMetaControl();
+    final Date simulationStart = metaControl.getSimulationStart();
+    final Date simulationEnd = metaControl.getSimulationEnd();
+
+    /* Read gml-model */
+    final NaModell naModel = m_data.getNaModel();
+
+    /* recurse through all net elements for timeseries links */
+    final TimeseriesExtender visitor = new TimeseriesExtender( simulationStart, simulationEnd );
+    naModel.getWorkspace().accept( visitor, naModel, FeatureVisitor.DEPTH_INFINITE );
+    final IStatus log = visitor.getStatus();
+    getLog().add( log );
   }
 
 }
