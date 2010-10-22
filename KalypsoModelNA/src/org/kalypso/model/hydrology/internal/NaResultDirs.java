@@ -59,12 +59,15 @@ public class NaResultDirs
 
   public final File reportDir;
 
+  public final File exe_logs_zip;
+
   public NaResultDirs( final File resultDir )
   {
     currentResultDir = resultDir;
     anfangswertDir = new File( currentResultDir, "Anfangswerte" );//$NON-NLS-1$
     bilanzDir = new File( currentResultDir, "Bilanz" );//$NON-NLS-1$
     logDir = new File( currentResultDir, "Log" );//$NON-NLS-1$
+    exe_logs_zip = new File( logDir, "output.zip" );//$NON-NLS-1$
     reportDir = new File( currentResultDir, "Report" );//$NON-NLS-1$
   }
 }
