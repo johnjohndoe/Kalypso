@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.convert.namodel.manager.IDManager;
@@ -171,11 +172,17 @@ public class NaFortranLogTranslater
 
   private void writeLog( final File resultFile )
   {
-    if( m_workspace == null )
-      return;
-
     try
     {
+      if( m_workspace == null )
+      {
+        final String msg = String.format( "Corrupt log-file is copied back to Kalypso. Element IDs are NOT translated." );
+        m_logger.warning( msg );
+        FileUtils.copyFile( m_logFile, resultFile );
+
+        return;
+      }
+
       GmlSerializer.serializeWorkspace( resultFile, m_workspace, "UTF-8" ); //$NON-NLS-1$
     }
     catch( final Exception e )
@@ -185,5 +192,4 @@ public class NaFortranLogTranslater
       m_logger.severe( msg );
     }
   }
-
 }

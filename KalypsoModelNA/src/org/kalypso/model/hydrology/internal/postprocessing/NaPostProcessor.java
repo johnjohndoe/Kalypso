@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.postprocessing;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,8 +50,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -134,7 +139,9 @@ public class NaPostProcessor
   public void process( final NaAsciiDirs asciiDirs, final NaSimulationDirs simDirs ) throws Exception
   {
     final NaResultDirs currentResultDirs = simDirs.currentResultDirs;
-    translateLogs( asciiDirs, currentResultDirs );
+    translateErrorGml( asciiDirs, currentResultDirs );
+
+    copyNaExeLogs( asciiDirs, currentResultDirs );
 
     m_isSucceeded = checkSuccess( asciiDirs );
 
@@ -162,10 +169,34 @@ public class NaPostProcessor
     m_naStatistics.writeStatistics( simDirs.currentResultDir, currentResultDirs.reportDir );
   }
 
+  private void copyNaExeLogs( final NaAsciiDirs asciiDirs, final NaResultDirs currentResultDirs )
+  {
+    ZipOutputStream zos = null;
+    try
+    {
+      zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( currentResultDirs.exe_logs_zip ) ) );
+      // REMARK: We rename the files in the zip, else the windoes explorer will show an empty zip by default (unknown
+      // extensions)
+      ZipUtilities.writeZipEntry( zos, asciiDirs.output_res, "output.txt" );
+      ZipUtilities.writeZipEntry( zos, asciiDirs.output_err, "error.txt" );
+      zos.close();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      final String msg = String.format( "Failed to copy Kalypso-NA log files.", e.getLocalizedMessage() );
+      m_logger.severe( msg );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( zos );
+    }
+  }
+
   /**
    * Translates the id inside the KalypsoNA log to KalypsoHydrology id's.
    */
-  private void translateLogs( final NaAsciiDirs asciiDirs, final NaResultDirs resultDirs )
+  private void translateErrorGml( final NaAsciiDirs asciiDirs, final NaResultDirs resultDirs )
   {
     final IDManager idManager = m_conf.getIdManager();
     final NaFortranLogTranslater logTranslater = new NaFortranLogTranslater( asciiDirs.asciiDir, idManager, m_logger );
