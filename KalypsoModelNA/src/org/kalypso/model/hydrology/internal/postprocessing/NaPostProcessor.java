@@ -281,6 +281,8 @@ public class NaPostProcessor
         if( resultFeature instanceof StorageChannel && !((StorageChannel) resultFeature).isGenerateResults() )
           continue;
 
+        // FIXME: wrong: we must consider the element type here: else we might read a catchment node for a result result
+        
         final String key = Integer.toString( idManager.getAsciiID( resultFeature ) );
 
         final ITupleModel qTuppelModel = readBlockDataForKey( ts, key, descriptor );
