@@ -88,19 +88,16 @@ public class NaSimulationData
 
   public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl ) throws Exception
   {
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlURL, null );
-    m_naModellControl = (NAModellControl) controlWorkspace.getRootFeature();
+    m_naModellControl = readModel( controlURL, NAModellControl.class );
+    m_metaControl = readModel( metaUrl, NAControl.class );
 
     m_modelWorkspace = loadModelWorkspace( modelUrl );
     m_naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaUrl, null );
-    m_metaControl = (NAControl) metaWorkspace.getRootFeature();
+    m_parameterWorkspace = readWorkspaceOrNull( parameterUrl );
 
-    m_parameterWorkspace = GmlSerializer.createGMLWorkspace( parameterUrl, null );
     // FIXME: do not load hydrotopes, if preprocessed files exist
-    final GMLWorkspace hydrotopWorkspace = GmlSerializer.createGMLWorkspace( hydrotopUrl, null );
-    m_hydrotopeCollection = (NAHydrotop) hydrotopWorkspace.getRootFeature();
+    m_hydrotopeCollection = readModel( hydrotopUrl, NAHydrotop.class );
 
     m_sudsWorkspace = loadAndCheckForFile( sudsUrl );
     m_lzsimWorkspace = loadAndCheckForFile( lzsimUrl );
@@ -113,6 +110,53 @@ public class NaSimulationData
       m_synthNWorkspace = null;
 
     transformModelToHydrotopeCrs();
+  }
+
+  private <T> T readModel( final URL location, final Class<T> type ) throws Exception
+  {
+    final GMLWorkspace workspace = readWorkspaceOrNull( location );
+    if( workspace == null )
+      return null;
+
+    return type.cast( workspace.getRootFeature() );
+  }
+
+  private GMLWorkspace readWorkspaceOrNull( final URL location ) throws Exception
+  {
+    if( location == null )
+      return null;
+
+    return GmlSerializer.createGMLWorkspace( location, null );
+  }
+
+  public void dispose( )
+  {
+    if( m_naModellControl != null )
+      m_naModellControl.getWorkspace().dispose();
+
+    if( m_parameterWorkspace != null )
+      m_parameterWorkspace.dispose();
+
+    if( m_sudsWorkspace != null )
+      m_sudsWorkspace.dispose();
+
+    if( m_synthNWorkspace != null )
+      m_synthNWorkspace.dispose();
+
+    if( m_modelWorkspace != null )
+      m_modelWorkspace.dispose();
+
+    if( m_lzsimWorkspace != null )
+      m_lzsimWorkspace.dispose();
+
+    if( m_naModellControl != null )
+      m_naModellControl.getWorkspace().dispose();
+
+    if( m_metaControl != null )
+      m_metaControl.getWorkspace().dispose();
+
+    if( m_hydrotopeCollection != null )
+      m_hydrotopeCollection.getWorkspace().dispose();
   }
 
   private void transformModelToHydrotopeCrs( )
@@ -143,7 +187,7 @@ public class NaSimulationData
   private GMLWorkspace loadModelWorkspace( final URL modelUrl ) throws SimulationException
   {
     // Apply optimization parameters
-    // TODO: does not really belong here, shouldn't the optimize job do this?
+    // TODO: does not really belong here, shouldn't the preprocessing do this?
     final CalibrationConfig config = new CalibrationConfig( m_naModellControl );
     final ParameterOptimizeContext[] calContexts = config.getCalContexts();
 

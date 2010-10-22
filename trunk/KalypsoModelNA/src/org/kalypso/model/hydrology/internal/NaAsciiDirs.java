@@ -69,10 +69,18 @@ public class NaAsciiDirs
 
   public final File zuflussDir;
 
+  public final File output_res;
+
+  public final File output_err;
+
   public NaAsciiDirs( @SuppressWarnings("hiding") final File asciiDir )
   {
     this.asciiDir = asciiDir;
+
     startDir = new File( asciiDir, "start" ); //$NON-NLS-1$
+    output_res = new File( startDir, "output.res" ); //$NON-NLS-1$ 
+    output_err = new File( startDir, "output.err" ); //$NON-NLS-1$ 
+
     klimaDatDir = new File( asciiDir, DIR_KLIMA_DAT );
     hydroTopDir = new File( asciiDir, DIR_HYDRO_TOP );
     zuflussDir = new File( asciiDir, DIR_ZUFLUSS );
