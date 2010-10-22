@@ -119,7 +119,7 @@ public class KalypsoNaProcessor
 
   private void runExe( final File kalypsoNaExe, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final String commandString = kalypsoNaExe.getAbsolutePath();
+    final String[] commandString = new String[] { kalypsoNaExe.getAbsolutePath() };
 
     final long timeOut = 0l; // no timeout control
 
@@ -129,7 +129,7 @@ public class KalypsoNaProcessor
     {
       logOS = new FileOutputStream( new File( m_asciiDirs.asciiDir, FILENAME_EXE_LOG ) );
       errorOS = new FileOutputStream( new File( m_asciiDirs.asciiDir, FILENAME_EXE_ERR ) );
-      ProcessHelper.startProcess( commandString, new String[0], m_asciiDirs.startDir, monitor, timeOut, logOS, errorOS, null );
+      ProcessHelper.startProcess( commandString, null, m_asciiDirs.startDir, monitor, timeOut, logOS, errorOS, null );
     }
     catch( final Exception e )
     {
