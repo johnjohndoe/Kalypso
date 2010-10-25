@@ -313,7 +313,7 @@ public class NaPostProcessor
           continue;
 
         // FIXME: wrong: we must consider the element type here: else we might read a catchment node for a result result
-        
+
         final String key = Integer.toString( idManager.getAsciiID( resultFeature ) );
 
         final ITupleModel qTuppelModel = readBlockDataForKey( ts, key, descriptor );
@@ -427,7 +427,7 @@ public class NaPostProcessor
     int pos = 0;
     for( final Date date : dates )
     {
-      final Double value = block.getValue(date);
+      final Double value = block.getValue( date );
       tupelData[pos][0] = date;
 
       if( value.isNaN() )
@@ -484,6 +484,9 @@ public class NaPostProcessor
   {
     // Load the calculated prediction
     final IObservation resultObservation = loadPredictedResult( resultDir );
+    if( resultObservation == null )
+      return;
+
     final IAxis[] axisList = resultObservation.getAxisList();
     final String axisType = determineTranpolinAxis( resultObservation );
 
@@ -579,11 +582,15 @@ public class NaPostProcessor
   private IObservation loadPredictedResult( final File resultDir ) throws MalformedURLException, SensorException
   {
     final TimeseriesLinkType resultLink = m_naControl.getResultLink();
+    if( resultLink != null )
+    {
+      // from predicted timeseries
+      final UrlResolver urlResolver = new UrlResolver();
+      final URL resultURL = urlResolver.resolveURL( resultDir.toURI().toURL(), resultLink.getHref() );
+      return ZmlFactory.parseXML( resultURL ); //$NON-NLS-1$
+    }
 
-    // from predicted timeseries
-    final UrlResolver urlResolver = new UrlResolver();
-    final URL resultURL = urlResolver.resolveURL( resultDir.toURI().toURL(), resultLink.getHref() );
-    return ZmlFactory.parseXML( resultURL ); //$NON-NLS-1$
+    return null;
   }
 
   /**
