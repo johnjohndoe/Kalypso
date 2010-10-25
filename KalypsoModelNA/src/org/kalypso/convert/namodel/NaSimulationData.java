@@ -109,7 +109,8 @@ public class NaSimulationData
     else
       m_synthNWorkspace = null;
 
-    transformModelToHydrotopeCrs();
+    if( m_hydrotopeCollection != null && m_modelWorkspace != null )
+      transformModelToHydrotopeCrs();
   }
 
   private <T> T readModel( final URL location, final Class<T> type ) throws Exception
@@ -186,16 +187,18 @@ public class NaSimulationData
 
   private GMLWorkspace loadModelWorkspace( final URL modelUrl ) throws SimulationException
   {
-    // Apply optimization parameters
-    // TODO: does not really belong here, shouldn't the preprocessing do this?
-    final CalibrationConfig config = new CalibrationConfig( m_naModellControl );
-    final ParameterOptimizeContext[] calContexts = config.getCalContexts();
-
     try
     {
       final Document modelDoc = XMLHelper.getAsDOM( modelUrl, true );
 
-      OptimizeModelUtils.initializeModel( modelDoc, calContexts );
+      // Apply optimization parameters
+      if( m_naModellControl != null )
+      {
+        // TODO: does not really belong here, shouldn't the preprocessing do this?
+        final CalibrationConfig config = new CalibrationConfig( m_naModellControl );
+        final ParameterOptimizeContext[] calContexts = config.getCalContexts();
+        OptimizeModelUtils.initializeModel( modelDoc, calContexts );
+      }
 
       return GmlSerializer.createGMLWorkspace( modelDoc, modelUrl, null );
     }
