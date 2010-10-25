@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -120,6 +121,14 @@ public class Catchment extends AbstractNaModelElement
   private static final QName PROP_KLUPOR = new QName( NS_NAMODELL, "klupor" ); //$NON-NLS-1$
 
   private static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
+
+  public static final QName PROP_PRECIPITATION_LINK = new QName( NS_NAMODELL, "niederschlagZR" ); //$NON-NLS-1$
+
+  public static final QName PROP_TEMPERATURE_LINK = new QName( NS_NAMODELL, "temperaturZR" ); //$NON-NLS-1$
+
+  public static final QName PROP_EVAPORATION_LINK = new QName( NS_NAMODELL, "verdunstungZR" ); //$NON-NLS-1$
+
+  private static final QName PROP_ZR_SYNTH = new QName( NS_NAMODELL, "synthZR" ); //$NON-NLS-1$
 
   private IFeatureBindingCollection<Feature> m_bodenKorrekturCollection = null;
 
@@ -325,6 +334,26 @@ public class Catchment extends AbstractNaModelElement
   public void setGenerateResults( final boolean value )
   {
     setProperty( GENERATE_RESULT_PROP, value );
+  }
+
+  public TimeseriesLinkType getPrecipitationLink( )
+  {
+    return getProperty( PROP_PRECIPITATION_LINK, TimeseriesLinkType.class );
+  }
+
+  public TimeseriesLinkType getTemperatureLink( )
+  {
+    return getProperty( PROP_TEMPERATURE_LINK, TimeseriesLinkType.class );
+  }
+
+  public TimeseriesLinkType getEvaporationLink( )
+  {
+    return getProperty( PROP_EVAPORATION_LINK, TimeseriesLinkType.class );
+  }
+
+  public String getSynthZR()
+  {
+    return getProperty( PROP_ZR_SYNTH, String.class );
   }
 
 }

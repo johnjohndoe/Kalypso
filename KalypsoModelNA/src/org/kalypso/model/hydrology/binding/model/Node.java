@@ -65,6 +65,8 @@ public class Node extends AbstractNaModelElement
   @Deprecated
   public static final QName PROP_ZUFLUSS_ZR = new QName( NS_NAMODELL, "zuflussZR" ); //$NON-NLS-1$
 
+  private static final QName PROP_PEGEL_ZR = new QName( NS_NAMODELL, "pegelZR" ); //$NON-NLS-1$
+
   /** @deprecated Do not use directly, use accessor methods instead. */
   @Deprecated
   public static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NAMODELL, "qberechnetZR" ); //$NON-NLS-1$
@@ -80,6 +82,11 @@ public class Node extends AbstractNaModelElement
   public Node( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public TimeseriesLinkType getPegelLink( )
+  {
+    return getProperty( PROP_PEGEL_ZR, TimeseriesLinkType.class );
   }
 
   public TimeseriesLinkType getZuflussLink( )
@@ -158,7 +165,7 @@ public class Node extends AbstractNaModelElement
     return getBoolean( GENERATE_RESULT_PROP, false );
   }
 
-  public void setGenerateResults( boolean value )
+  public void setGenerateResults( final boolean value )
   {
     setProperty( GENERATE_RESULT_PROP, value );
   }

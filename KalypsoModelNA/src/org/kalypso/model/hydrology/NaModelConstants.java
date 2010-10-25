@@ -184,8 +184,6 @@ public interface NaModelConstants
 
   public static final QName NODE_ZUFLUSS_ZR_REPOSITORY_PROP = new QName( NS_NAMODELL, "zuflussZRRepository" ); //$NON-NLS-1$
 
-  public static final QName NODE_PEGEL_ZR_PROP = new QName( NS_NAMODELL, "pegelZR" ); //$NON-NLS-1$
-
   public static final QName NODE_RIVER_CODE_PROP = new QName( NS_NAMODELL, "riverCode" ); //$NON-NLS-1$
 
   public static final QName NODE_RIVER_KILOMETER_PROP = new QName( NS_NAMODELL, "riverKilometer" ); //$NON-NLS-1$
@@ -233,14 +231,6 @@ public interface NaModelConstants
   public static final QName CATCHMENT_PROP_IZKN_VERS = new QName( NS_NAMODELL, "izkn_vers" ); //$NON-NLS-1$
 
   public static final QName CATCHMENT_PROP_IZKN = new QName( NS_NAMODELL, "izkn" ); //$NON-NLS-1$
-
-  public static final QName CATCHMENT_PROP_ZR_NIEDERSCHLAG = new QName( NS_NAMODELL, "niederschlagZR" ); //$NON-NLS-1$
-
-  public static final QName CATCHMENT_PROP_ZR_TEMPERATUR = new QName( NS_NAMODELL, "temperaturZR" ); //$NON-NLS-1$
-
-  public static final QName CATCHMENT_PROP_ZR_VERDUNSTUNG = new QName( NS_NAMODELL, "verdunstungZR" ); //$NON-NLS-1$
-
-  public static final QName CATCHMENT_PROP_ZR_SYNTH = new QName( NS_NAMODELL, "synthZR" ); //$NON-NLS-1$
 
   // swale and trench
 

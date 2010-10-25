@@ -126,7 +126,7 @@ public class CatchmentManager
     catchmentBuffer.append( String.format( Locale.US, "%1$c %2$s %2$s %3$5.2f\n", m_conf.getMetaControl().isUsePrecipitationForm() ? 's' : 'n', getNiederschlagEingabeDateiString( catchment, m_conf ), catchment.getFaktn() ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // 4-6
-    catchmentBuffer.append( String.format( Locale.US, "%s %s\n", getTemperaturEingabeDateiString( catchment, m_conf ), getVerdunstungEingabeDateiString( catchment, m_conf ) ) ); //$NON-NLS-1$
+    catchmentBuffer.append( String.format( Locale.US, "%s %s\n", getTemperaturEingabeDateiString( catchment, m_conf ), getVerdunstungEingabeFilename( catchment, m_conf ) ) ); //$NON-NLS-1$
 
     // Zeitfl�chenfunktion
     final Object zftProp = catchment.getProperty( NaModelConstants.CATCHMENT_PROP_ZFT );
@@ -274,18 +274,15 @@ public class CatchmentManager
     }
   }
 
-  public static String getEingabeDateiString( final Feature feature, final NAConfiguration conf, final String propName, final String axisType )
+  public static String getEingabeFilename( final Feature feature, final NAConfiguration conf, final String propName, final String axisType )
   {
-    final String key;
-    if( propName.equals( "synthZR" ) ) //$NON-NLS-1$
-    {
-      key = (String) feature.getProperty( new QName( NaModelConstants.NS_NAMODELL, propName ) );
-    }
-    else
-    {
-      final TimeseriesLinkType link = (TimeseriesLinkType) feature.getProperty( new QName( NaModelConstants.NS_NAMODELL, propName ) );
-      key = propName + link.getHref();
-    }
+    final TimeseriesLinkType link = (TimeseriesLinkType) feature.getProperty( new QName( NaModelConstants.NS_NAMODELL, propName ) );
+    final String key = propName + link.getHref();
+    return getFilename( feature, conf, axisType, key );
+  }
+
+  private static String getFilename( final Feature feature, final NAConfiguration conf, final String axisType, final String key )
+  {
     if( !m_fileMap.containsKey( key ) )
     {
       final int asciiID = conf.getIdManager().getAsciiID( feature );
@@ -295,52 +292,49 @@ public class CatchmentManager
     return m_fileMap.get( key );
   }
 
-  public static String getNiederschlagEingabeDateiString( final Feature feature, final NAConfiguration conf )
+  public static String getNiederschlagEingabeDateiString( final Catchment catchment, final NAConfiguration conf )
   {
     final NAControl metaControl = conf.getMetaControl();
     if( metaControl.isUsePrecipitationForm() )
-      return getEingabeDateiString( feature, conf, "synthZR", ITimeseriesConstants.TYPE_RAINFALL ); //$NON-NLS-1$
+    {
+      final String key = catchment.getSynthZR();
+      return getFilename( catchment, conf, ITimeseriesConstants.TYPE_RAINFALL, key );
+    }
 
-    return getEingabeDateiString( feature, conf, "niederschlagZR", ITimeseriesConstants.TYPE_RAINFALL ); //$NON-NLS-1$
-
+    return getEingabeFilename( catchment, conf, "niederschlagZR", ITimeseriesConstants.TYPE_RAINFALL ); //$NON-NLS-1$
   }
 
-  public static String getTemperaturEingabeDateiString( final Feature feature, final NAConfiguration conf )
+  public static String getTemperaturEingabeDateiString( final Catchment catchment, final NAConfiguration conf )
   {
-    if( feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_TEMPERATUR ) != null )
-      return getEingabeDateiString( feature, conf, "temperaturZR", ITimeseriesConstants.TYPE_TEMPERATURE ); //$NON-NLS-1$
+    final TimeseriesLinkType temperatureLink = catchment.getTemperatureLink();
+    if( temperatureLink != null )
+      return getEingabeFilename( catchment, conf, "temperaturZR", ITimeseriesConstants.TYPE_TEMPERATURE ); //$NON-NLS-1$
+
     return STD_TEMP_FILENAME;
-
   }
 
-  /**
-   * @param feature
-   * @param dir
-   */
-  public static File getTemperaturEingabeDatei( final Feature feature, final File dir, final NAConfiguration conf )
+  public static File getTemperaturEingabeDatei( final Catchment catchment, final File dir, final NAConfiguration conf )
   {
-    final String name = getTemperaturEingabeDateiString( feature, conf );
+    final String name = getTemperaturEingabeDateiString( catchment, conf );
     return new File( dir, name );
   }
 
-  /**
-   * @param feature
-   */
-  public static File getNiederschlagEingabeDatei( final Feature feature, final File dir, final NAConfiguration conf )
+  public static File getNiederschlagEingabeDatei( final Catchment catchment, final File dir, final NAConfiguration conf )
   {
-    return new File( dir, getNiederschlagEingabeDateiString( feature, conf ) );
+    return new File( dir, getNiederschlagEingabeDateiString( catchment, conf ) );
   }
 
-  public static File getVerdunstungEingabeDatei( final Feature feature, final File dir, final NAConfiguration conf )
+  public static File getVerdunstungEingabeDatei( final Catchment catchment, final File dir, final NAConfiguration conf )
   {
-    final String name = getVerdunstungEingabeDateiString( feature, conf );
+    final String name = getVerdunstungEingabeFilename( catchment, conf );
     return new File( dir, name );
   }
 
-  private static String getVerdunstungEingabeDateiString( final Feature feature, final NAConfiguration conf )
+  private static String getVerdunstungEingabeFilename( final Catchment catchment, final NAConfiguration conf )
   {
-    if( feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_VERDUNSTUNG ) != null )
-      return getEingabeDateiString( feature, conf, "verdunstungZR", ITimeseriesConstants.TYPE_EVAPORATION ); //$NON-NLS-1$
+    final TimeseriesLinkType evaporationLink = catchment.getEvaporationLink();
+    if( evaporationLink != null )
+      return getEingabeFilename( catchment, conf, "verdunstungZR", ITimeseriesConstants.TYPE_EVAPORATION ); //$NON-NLS-1$
     return STD_VERD_FILENAME;
 
     // int asciiID = conf.getIdManager().getAsciiID( feature );
