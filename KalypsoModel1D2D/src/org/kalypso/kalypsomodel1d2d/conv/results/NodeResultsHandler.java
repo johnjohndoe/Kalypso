@@ -770,6 +770,33 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
+  private void create1dJunctionTriangles2( final List<INodeResult> nodeList, final List<GM_Curve> curveList ) throws FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
+  {
+    final GM_Curve[] curves = curveList.toArray( new GM_Curve[curveList.size()] );
+    final INodeResult[] nodeResults = nodeList.toArray( new INodeResult[nodeList.size()] );
+
+    final String crs = curveList.get( 0 ).getCoordinateSystem();
+
+    Set< GM_Position > lSetPositions = new HashSet<GM_Position>();
+    for( final GM_Curve lCurve: curveList ){
+      
+      GM_Position[] lPositions = lCurve.getAsLineString().getPositions();
+      for( int i = 0; i < lPositions.length; ++i )
+        lSetPositions.add( lPositions[ i ] );
+    }
+    List< GM_Position > lListPos = new ArrayList<GM_Position>();
+    lListPos.addAll( lSetPositions );
+    if( !lListPos.get( 0 ).equals( lListPos.get( lListPos.size() - 1 ) ) ){
+      lListPos.add( lListPos.get( 0 ) );
+    }
+    final GM_Triangle[] elements2 = ConstraintDelaunayHelper.convertToTriangles( lListPos.toArray( new GM_Position[ lListPos.size() ] ), crs );
+
+    for( final GM_Triangle element : elements2 )
+    {
+      final GM_Position[] ring = element.getExteriorRing();
+      feedTriangleEaterWith1dResults( nodeResults, curves, 1.0, crs, Arrays.copyOf( ring, 3 ) );
+    }
+  }
   private void create1dJunctionTriangles( final List<INodeResult> nodeList, final List<GM_Curve> curveList ) throws FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
   {
     BufferedReader nodeReader = null;
@@ -1854,7 +1881,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       /* now we have all curves and use Triangle in order to get the triangles */
 
       if( nodeList.size() > 1 )
-        create1dJunctionTriangles( nodeList, profileCurveList );
+        create1dJunctionTriangles2( nodeList, profileCurveList );
     }
     catch( final Exception e )
     {
