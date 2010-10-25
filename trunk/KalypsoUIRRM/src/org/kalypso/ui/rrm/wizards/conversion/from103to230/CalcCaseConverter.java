@@ -48,6 +48,8 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
@@ -200,11 +202,13 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final Date simulationStart = metaControl.getSimulationStart();
     final Date simulationEnd = metaControl.getSimulationEnd();
 
+    final Interval simulationRange = new Interval( new DateTime( simulationStart ), new DateTime( simulationEnd ) );
+
     /* Read gml-model */
     final NaModell naModel = m_data.getNaModel();
 
     /* recurse through all net elements for timeseries links */
-    final TimeseriesExtender visitor = new TimeseriesExtender( simulationStart, simulationEnd );
+    final TimeseriesExtendVisitor visitor = new TimeseriesExtendVisitor( simulationRange );
     naModel.getWorkspace().accept( visitor, naModel, FeatureVisitor.DEPTH_INFINITE );
     final IStatus log = visitor.getStatus();
     getLog().add( log );

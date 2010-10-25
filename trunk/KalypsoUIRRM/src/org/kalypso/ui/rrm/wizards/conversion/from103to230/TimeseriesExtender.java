@@ -42,73 +42,176 @@ package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.Channel;
-import org.kalypso.model.hydrology.binding.model.Node;
+import org.eclipse.core.runtime.Status;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.Period;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * Checks each timeserie if it is long enough. Extend instantaneous values (same value as start/end)
- * 
  * @author Gernot Belger
  */
-public class TimeseriesExtender implements FeatureVisitor
+public class TimeseriesExtender
 {
-  private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+  private final ITupleModel m_sourceValues;
 
-  private final Date m_simulationStart;
+  private final IAxis[] m_axisList;
 
-  private final Date m_simulationEnd;
+  private final String m_href;
 
-  public TimeseriesExtender( final Date simulationStart, final Date simulationEnd )
+  private final IAxis m_dateAxis;
+
+  private final int m_dateIndex;
+
+  private SimpleTupleModel m_targetValues;
+
+  private Period m_stepping;
+
+  private Interval m_sourceRange;
+
+  public TimeseriesExtender( final ITupleModel sourceValues, final String href ) throws CoreException, SensorException
   {
-    m_simulationStart = simulationStart;
-    m_simulationEnd = simulationEnd;
+    m_sourceValues = sourceValues;
+    m_href = href;
+
+    m_axisList = m_sourceValues.getAxisList();
+    m_dateAxis = AxisUtils.findDateAxis( m_axisList );
+    if( m_dateAxis == null )
+    {
+      final String msg = String.format( "Not a timeseries: %s", href );
+      final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
+      throw new CoreException( status );
+    }
+    m_dateIndex = m_sourceValues.getPosition( m_dateAxis );
+  }
+
+  public void checkSize( ) throws CoreException, SensorException
+  {
+    final int size = m_sourceValues.size();
+    if( size == 0 )
+      return;
+
+    if( size == 1 )
+    {
+      final String msg = String.format( "Zeitreihe %s enthält nur einen Wert. Automatische Verlängerung nicht möglich.", m_href );
+      final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
+      throw new CoreException( status );
+    }
+  }
+
+  public boolean checkRange( final Interval simulationRange ) throws SensorException
+  {
+    final int size = m_sourceValues.size();
+    final Date startDate = (Date) m_sourceValues.get( 0, m_dateAxis );
+    final Date endDate = (Date) m_sourceValues.get( size - 1, m_dateAxis );
+
+    final DateTime startDateTime = new DateTime( startDate );
+    final DateTime endDateTime = new DateTime( endDate );
+
+    m_sourceRange = new Interval( startDateTime, endDateTime );
+    return !m_sourceRange.contains( simulationRange );
+  }
+
+  public void extend( final Interval simulationRange ) throws SensorException, CoreException
+  {
+    m_targetValues = new SimpleTupleModel( m_axisList );
+    m_stepping = findStepping();
+
+    final DateTime startSimulation = simulationRange.getStart();
+    extendStart( startSimulation );
+
+    copyValues();
+
+    final DateTime endSimulation = simulationRange.getEnd();
+    extendEnd( endSimulation );
+  }
+
+  private Period findStepping( ) throws SensorException
+  {
+    // REMARK: we determine the stepping solely on the first two dates. This is a bit dangerous....
+    final Date firstDate = (Date) m_sourceValues.get( 0, m_dateAxis );
+    final Date secondDate = (Date) m_sourceValues.get( 1, m_dateAxis );
+
+    final DateTime firstDateTime = new DateTime( firstDate );
+    final DateTime secondDateTime = new DateTime( secondDate );
+
+    // FIXME: we probably need to sometimes round values?
+
+    return new Period( firstDateTime, secondDateTime );
+  }
+
+  private void extendStart( final DateTime startSimulation ) throws SensorException, CoreException
+  {
+    addValues( 0, startSimulation, m_sourceRange.getStart() );
+  }
+
+  private void extendEnd( final DateTime endSimulation ) throws SensorException, CoreException
+  {
+    final int valueIndex = m_sourceValues.size() - 1;
+    addValues( valueIndex, m_sourceRange.getEnd(), endSimulation );
+  }
+
+  private Object[] getSourceValuesAt( final int index ) throws SensorException
+  {
+    final Object[] startValues = new Object[m_axisList.length];
+    for( int i = 0; i < m_axisList.length; i++ )
+      startValues[i] = m_sourceValues.get( index, m_axisList[i] );
+    return startValues;
+  }
+
+  private void copyValues( ) throws SensorException
+  {
+    final int size = m_sourceValues.size();
+    final IAxis[] axisList = m_sourceValues.getAxisList();
+    for( int i = 0; i < size; i++ )
+    {
+      final Object[] values = new Object[axisList.length];
+      for( int j = 0; j < axisList.length; j++ )
+        values[j] = m_sourceValues.get( i, axisList[j] );
+
+      m_targetValues.addTuple( values );
+    }
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+   * Adds values into the target timeseries starting by <code>start</code> until the end-date (<code>until</code>) is
+   * reached.<br/>
+   * The values are copied from the source timeseries at the given <code>valueIndex</code>.
    */
-  @Override
-  public boolean visit( final Feature f )
+  private void addValues( final int valueIndex, final DateTime start, final DateTime until ) throws SensorException, CoreException
   {
-    if( f instanceof Node )
-      return visitNode( (Node) f );
+    final Object[] startValues = getSourceValuesAt( valueIndex );
 
-    if( f instanceof Catchment )
-      return visitCatchment( (Catchment) f );
+    int timeout = 0;
+    DateTime timePointer = start;
+    while( timePointer.isBefore( until ) )
+    {
+      final Object[] newTupple = startValues.clone();
+      newTupple[m_dateIndex] = timePointer.toDate();
+      m_targetValues.addTuple( newTupple );
 
-    if( f instanceof Channel )
-      return visitChannel( (Channel) f );
+      timePointer = timePointer.plus( m_stepping );
 
-    return true;
+      // REMARK: in order to avoid an endless loop here, we stop after 10 (which would already be quite suspicious).
+      timeout++;
+      if( timeout == 10 )
+      {
+        final String msg = String.format( "Zeitreihe %s: mehr als 10 Werte müssten ergänzt werden. Abbruch, Zeitreihe wurde nicht verlängert." );
+        final IStatus error = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
+        throw new CoreException( error );
+      }
+    }
   }
 
-  private boolean visitNode( final Node f )
+  public ITupleModel getExtendedValues( )
   {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  private boolean visitCatchment( final Catchment f )
-  {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  private boolean visitChannel( final Channel f )
-  {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public IStatus getStatus( )
-  {
-    return m_log.asMultiStatus( "Zeitreihenlänge prüfen" );
+    return m_targetValues;
   }
 }
