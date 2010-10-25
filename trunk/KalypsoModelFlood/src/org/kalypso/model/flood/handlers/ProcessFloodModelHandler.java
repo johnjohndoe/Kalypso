@@ -68,6 +68,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
@@ -84,7 +85,6 @@ import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypso.util.swt.StatusDialog;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 

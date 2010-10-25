@@ -43,9 +43,9 @@ package org.kalypso.model.km.internal.ui.kmupdate;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.util.swt.StatusDialog;
 
 
 /**

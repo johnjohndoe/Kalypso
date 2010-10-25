@@ -51,10 +51,10 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
-import org.kalypso.util.swt.StatusDialog;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

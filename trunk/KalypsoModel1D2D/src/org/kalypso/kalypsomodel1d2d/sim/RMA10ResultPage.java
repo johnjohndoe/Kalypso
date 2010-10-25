@@ -85,11 +85,11 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.core.status.StatusComposite;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
-import org.kalypso.util.swt.StatusComposite;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
