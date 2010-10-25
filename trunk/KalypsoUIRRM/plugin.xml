@@ -28,13 +28,21 @@
          </description>
       </wizard>
    </extension>
+   
+   <!-- 
    <extension
          point="org.kalypso.module.kalypsoModule">
     <module
             class="org.kalypso.ui.rrm.extension.KalypsoModuleRRM">
       </module>
    </extension>
+   -->
    
+   <extension
+         point="org.kalypso.project.database.client.kalypsoModule">
+    <module module="org.kalypso.ui.rrm.extension.KalypsoModuleRRM">
+      </module>
+   </extension>
    
   <!-- Commands for the map outline -->
 	<extension point="org.eclipse.ui.commands">
@@ -259,11 +267,6 @@
             icon="icons/logview/problems_view.gif"
             id="org.kalypso.ui.rrm.logviewer.LogViewer"
             name="%org.kalypso.ui.rrm.logviewer.LogViewer.name"/>
-   </extension>
-   <extension
-         point="org.kalypso.project.database.client.kalypsoModule">
-    <module module="KalypsRrmModel">
-      </module>
    </extension>
    
   <extension
