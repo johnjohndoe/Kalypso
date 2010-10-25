@@ -201,7 +201,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
     final IPath modelPath = project.getLocation().append( "/modell.gml" ); //$NON-NLS-1$
     final IPath hydPath = project.getLocation().append( "/hydrotop.gml" ); //$NON-NLS-1$
@@ -262,6 +262,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
       hydrotopWriter.close();
 
       project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+      return Status.OK_STATUS;
     }
     catch( final IOException e )
     {
