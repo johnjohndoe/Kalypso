@@ -43,11 +43,8 @@ package org.kalypso.ui.rrm.wizards.conversion;
 import java.io.File;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.module.conversion.AbstractProjectConverter;
-import org.kalypso.ui.rrm.wizards.conversion.from103to230.BasicModelConverter;
-import org.kalypso.ui.rrm.wizards.conversion.from103to230.CalcCasesConverter;
+import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverter103to230;
 
 /**
  * {@link org.kalypso.module.conversion.IProjectConverter} implementation for KalypsoHydrology projects.
@@ -74,32 +71,8 @@ public class RrmProjectConverter extends AbstractProjectConverter
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
-    // FIXME: decide which converter to use
-
-    final String projectName = m_sourceDir.getName();
-    monitor.beginTask( String.format( "Projekt '%s'", projectName ), 100 );
-
-    try
-    {
-      final BasicModelConverter basicModelConverter = new BasicModelConverter( m_sourceDir, m_targetDir );
-      monitor.subTask( "konvertiere Basisdaten..." );
-      final IStatus basicStatus = basicModelConverter.execute( new SubProgressMonitor( monitor, 33 ) );
-      getLog().addStatus( basicStatus );
-
-      monitor.subTask( "konvertiere Rechenvarianten..." );
-      final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir );
-      final IStatus calcCaseStatus = casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
-      getLog().addStatus( calcCaseStatus );
-    }
-    finally
-    {
-      monitor.done();
-    }
+    // FIXME: decide which converter to use, depending on version of source
+    final RrmProjectConverter103to230 converter103to230 = new RrmProjectConverter103to230( m_sourceDir, m_targetDir );
+    converter103to230.execute( monitor );
   }
-
-  public IStatus getStatus( )
-  {
-    return getLog().asMultiStatusOrOK( "Probleme beim Konvertieren des Basismodells" );
-  }
-
 }

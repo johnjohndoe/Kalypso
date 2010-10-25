@@ -91,10 +91,4 @@ public class RrmProjectConverter103to230 extends AbstractProjectConverter
       monitor.done();
     }
   }
-
-  public IStatus getStatus( )
-  {
-    return getLog().asMultiStatusOrOK( "Probleme beim Konvertieren des Basismodells" );
-  }
-
 }
