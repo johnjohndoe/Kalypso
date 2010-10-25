@@ -81,6 +81,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.FCVArrayDelegate;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
@@ -233,10 +234,6 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
         if( m_sourceFile != null )
         {
           m_textFileSource.setText( m_sourceFile.getPath() );
-          // TODO: use IResource-Api to create suhc pathes! (i.e. m_project.getFile() and such! )
-          final IFile targetFile = m_targetFolder.getFile( m_sourceFile.getName() + ".zml" ); //$NON-NLS-1$
-          // TODO: use IFile instead of file, we are inside of Eclipse!
-          m_targetFile = targetFile.getLocation().toFile();
           validate();
         }
       }
@@ -329,6 +326,15 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     new Label( group, SWT.NONE );
   }
 
+  /**
+   *  resolves the type value of selected observation adapter. 
+   */
+  private String getInputTypeFromSelection(){
+    ISelection lSelection = m_formatCombo.getSelection();
+    INativeObservationAdapter lNativeObservationAdapter = (INativeObservationAdapter) ( ( StructuredSelection )lSelection ).getFirstElement();
+    return lNativeObservationAdapter.getAxisTypeValue();
+  }
+  
   protected void updateTimeZone( final IStructuredSelection selection )
   {
     final Object element = selection.getFirstElement();
@@ -521,6 +527,10 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
           return true;
         }
       };
+    // TODO: use IResource-Api to create suhc pathes! (i.e. m_project.getFile() and such! )
+    final IFile targetFile = m_targetFolder.getFile( FileUtilities.nameWithoutExtension( m_sourceFile.getName() ) + "." + getInputTypeFromSelection() + ".zml" ); //$NON-NLS-1$
+    // TODO: use IFile instead of file, we are inside of Eclipse!
+    m_targetFile = targetFile.getLocation().toFile();
     return new ObservationImportSelection( m_sourceFile, m_targetFile, (INativeObservationAdapter) formatSelection.getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection() );
   }
 
