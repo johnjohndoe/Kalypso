@@ -99,12 +99,10 @@ public class KalypsoNAConvertProjectWizard extends NewProjectWizard
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor )
   {
     final File inputDir = m_conversionPage.getProjectDir();
-    final IStatus result = doConvertProject( inputDir, project, monitor );
-    if( !result.isOK() )
-      throw new CoreException( result );
+    return doConvertProject( inputDir, project, monitor );
   }
 
   private IStatus doConvertProject( final File sourceDir, final IProject targetProject, final IProgressMonitor monitor )

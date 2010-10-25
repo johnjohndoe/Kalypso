@@ -48,6 +48,7 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -58,6 +59,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -112,13 +114,27 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final URL naModelLocation = naModelFile.toURI().toURL();
     final URL naControlLocation = naControlFile.toURI().toURL();
 
-    m_data = new NaSimulationData( naModelLocation, naControlLocation, null, null, null, null, null, null );
+    m_data = new NaSimulationData( naModelLocation, null, naControlLocation, null, null, null, null, null );
   }
 
   private void copyData( ) throws Exception
   {
     m_targetDir.mkdirs();
 
+    copyBasicData();
+
+    /* Copy additional files */
+    // TODO: wir könnten alles 'unbekannte' z.B. alles Vorlagentypen grundsätzlich mitkopieren...
+
+    /* Tweak model data */
+    tweakCalculation();
+
+    /* Make sure that all timeseries are long enough */
+    extendTimeseries();
+  }
+
+  private void copyBasicData( ) throws IOException
+  {
     /* Copy top level gml files (everything else in this path will be ignored) */
     copyFile( INaCalcCaseConstants.CALC_CASE );
     copyFile( INaCalcCaseConstants.CALC_HYDROTOP );
@@ -138,14 +154,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     // Momentan: es wird immer alles kopiert
     copyDir( INaCalcCaseConstants.ERGEBNISSE_DIR );
 
-    /* Copy additional files */
-    // TODO: wir könnten alles 'unbekannte' z.B. alles Vorlagentypen grundsätzlich mitkopieren...
-
-    /* Tweak model data */
-    tweakCalculation();
-
-    /* Make sure that all timeseries are long enough */
-    extendTimeseries();
+    getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Kopie der Daten" ) );
   }
 
   private void copyFile( final String path ) throws IOException
@@ -181,14 +190,23 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     if( CalcCoreUtils.VERSION_LATEST.equals( exeVersion ) || CalcCoreUtils.VERSION_NEUESTE.equals( exeVersion ) )
     {
       // 2.0.6 is the version known to work with kalypso 1.0.3
-      naControl.setExeVersion( EXE_2_0_6 );
+      final String newExeVersion = EXE_2_0_6;
+      naControl.setExeVersion( newExeVersion );
       // FIXME: we should write in the same encoding as we read the file
       final File naControlFile = new File( m_targetDir, INaCalcCaseConstants.DOT_CALCULATION );
       GmlSerializer.serializeWorkspace( naControlFile, naControl.getWorkspace(), "UTF-8" );
+
+      final String statusMsg = String.format( "Eingestellte Version von Kalypso-NA.exe war 'neueste'. Automatisch geändert auf: %s", newExeVersion );
+      getLog().add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), statusMsg ) );
     }
+    else
+    {
+      final String statusMsg = String.format( "Version von Kalypso-NA.exe war voreingestellt auf: %s", exeVersion );
+      getLog().add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), statusMsg ) );
+    }
+
     naControl.getWorkspace().dispose();
   }
-
 
   /**
    * Extends all timeseries, so they cover the calculatin span.<br/>

@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.wizards.conversion.from103to230;
 
+import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
@@ -65,6 +69,8 @@ public class TimeseriesExtendVisitor implements FeatureVisitor
   private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
   private final Interval m_simulationRange;
+
+  private final Set<URL> m_extendedTimeseries = new HashSet<URL>();
 
   public TimeseriesExtendVisitor( final Interval simulationRange )
   {
@@ -101,6 +107,8 @@ public class TimeseriesExtendVisitor implements FeatureVisitor
 
   private boolean visitCatchment( final Catchment catchment )
   {
+    // FIXME: by syntetischem Niederschlag sind diese Verknüpfungen nicht relevant und können ignoriert werden
+
     extendTimeseries( catchment, Catchment.PROP_PRECIPITATION_LINK );
     extendTimeseries( catchment, Catchment.PROP_TEMPERATURE_LINK );
     extendTimeseries( catchment, Catchment.PROP_EVAPORATION_LINK );
@@ -119,12 +127,22 @@ public class TimeseriesExtendVisitor implements FeatureVisitor
 
   public IStatus getStatus( )
   {
-    return m_log.asMultiStatus( "Zeitreihenlänge prüfen" );
+    return m_log.asMultiStatus( "Prüfung der Zeitreihenlänge" );
   }
 
   private void extendTimeseries( final Feature feature, final QName linkProperty )
   {
+    /*
+     * Performance: extend every timeserie only once. KalypsoHydrology often reuses the same .zml for several
+     * catchments...
+     */
     final ZmlLink zmlLink = new ZmlLink( feature, linkProperty );
+    final URL location = zmlLink.getLocation();
+    if( m_extendedTimeseries.contains( location ) )
+      return;
+    m_extendedTimeseries.add( location );
+
+    /* Check, if this timeseries needs to be extended */
     final TimeseriesExtendOperation operation = new TimeseriesExtendOperation( zmlLink, m_simulationRange );
     final IStatus status = operation.execute( new NullProgressMonitor() );
     if( !status.isOK() )

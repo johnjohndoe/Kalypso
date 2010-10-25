@@ -65,7 +65,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
 
   public CalcCasesConverter( final File sourceDir, final File targetDir )
   {
-    super( "Rechenvarianten" );
+    super( "Übernahme Rechenvarianten" );
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
   }
@@ -99,7 +99,8 @@ public class CalcCasesConverter extends AbstractLoggingOperation
           prepareCalcCase( targetDir );
 
           final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir );
-          calcCaseConverter.doExecute( progress.newChild( 1 ) );
+          final IStatus status = calcCaseConverter.execute( progress.newChild( 1 ) );
+          getLog().add( status );
         }
         catch( final CoreException ce )
         {

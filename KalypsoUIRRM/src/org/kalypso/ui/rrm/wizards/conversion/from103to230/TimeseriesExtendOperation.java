@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.Interval;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -53,6 +54,8 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -64,8 +67,6 @@ public class TimeseriesExtendOperation implements ICoreRunnableWithProgress
   private final Interval m_simulationRange;
 
   private IObservation m_observation;
-
-  private final int m_addCounter = 0;
 
   public TimeseriesExtendOperation( final ZmlLink link, final Interval simulationRange )
   {
@@ -83,9 +84,11 @@ public class TimeseriesExtendOperation implements ICoreRunnableWithProgress
       return Status.OK_STATUS;
 
     final String href = m_link.getHref();
+    final Feature feature = m_link.getFeature();
     if( !m_link.isLinkExisting() )
     {
-      final String msg = String.format( "Broken link: %s", href );
+      final String featureLabel = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+      final String msg = String.format( "Modell enthält ungültige Zeitreihenverknüpfung: %s (Element '%s')", href, featureLabel );
       return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
     }
 
@@ -100,12 +103,14 @@ public class TimeseriesExtendOperation implements ICoreRunnableWithProgress
       if( !extender.checkRange( m_simulationRange ) )
         return Status.OK_STATUS;
 
-      extender.extend( m_simulationRange );
+      final IStatus extendStatus = extender.extend( m_simulationRange );
+      if( !extendStatus.matches( IStatus.ERROR ) )
+      {
+        final ITupleModel extendedValues = extender.getExtendedValues();
+        writeTimeseries( extendedValues );
+      }
 
-      final ITupleModel extendedValues = extender.getExtendedValues();
-      writeTimeseries( extendedValues );
-
-      return createAddedStatus( href );
+      return extendStatus;
     }
     catch( final CoreException e )
     {
@@ -115,27 +120,6 @@ public class TimeseriesExtendOperation implements ICoreRunnableWithProgress
     {
       final String msg = String.format( "Failed to load timeseries: %s", href );
       return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
-    }
-  }
-
-  private IStatus createAddedStatus( final String href )
-  {
-    switch( m_addCounter )
-    {
-      case 0:
-        return Status.OK_STATUS;
-
-      case 1:
-      {
-        final String msg = String.format( "Zeitreihe %s wurde automatisch verlängert (1 Zeitschritt)", href );
-        return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), msg );
-      }
-
-      default:
-      {
-        final String msg = String.format( "Zeitreihe %s wurde um %d Zeitschritte automatisch verlängert. Die Zeitschritte sind mit dem Warnsymbol markiert. Bitte prüfen Sie die Zeitreihe.", href, m_addCounter );
-        return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), msg );
-      }
     }
   }
 
