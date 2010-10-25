@@ -42,7 +42,10 @@ package org.kalypso.ui.wizards.results;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
@@ -282,8 +285,13 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                 // this is where the name of the result folder is actually set
                 final ICalcUnitResultMeta calcUnitMeta = processingOperation.getCalcUnitMeta();
                 final String calcUnitId = calcUnitMeta.getCalcUnit();
-                String[] lResultsToRemove = processingOperation.getOriginalStepsToDelete();
-                // lResultsToRemove = removeOriginalResultsFromList( lResultsToRemove, calcUnitMeta );
+                List< String > lListResultsToRemove = new ArrayList<String>();
+                lListResultsToRemove.addAll( Arrays.asList( processingOperation.getOriginalStepsToDelete() ) );
+                
+                lListResultsToRemove = removeAllOthersStepWithDate( lListResultsToRemove, stepResult.getGmlID() );
+                  
+                String[] lResultsToRemove = lListResultsToRemove.toArray( new String[ lListResultsToRemove.size() ] );
+
                 final Path unitFolderRelativePath = new Path( "results/" + calcUnitId ); //$NON-NLS-1$
                 // remove temporary unzipped swan data
                 try
@@ -308,6 +316,18 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
             }
           }
           return resultStatus;
+        }
+
+        private List< String > removeAllOthersStepWithDate( List<String> lListResultsToRemove, final String stepId )
+        {
+          List< String > lListRes = new ArrayList<String>();
+          for( final String lId: lListResultsToRemove ){
+            if( lId.equals( stepId ) ){
+              lListRes.add( lId );
+              break;
+            }
+          }
+          return lListRes;
         }
 
         @Override
