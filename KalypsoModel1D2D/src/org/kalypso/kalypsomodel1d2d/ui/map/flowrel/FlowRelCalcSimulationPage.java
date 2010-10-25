@@ -91,6 +91,9 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.status.StatusComposite;
+import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusLabelProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
@@ -101,9 +104,6 @@ import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
-import org.kalypso.util.swt.StatusComposite;
-import org.kalypso.util.swt.StatusDialog;
-import org.kalypso.util.swt.StatusLabelProvider;
 
 /**
  * @author Gernot Belger

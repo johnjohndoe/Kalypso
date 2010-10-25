@@ -64,9 +64,9 @@ import org.eclipse.swt.widgets.Group;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.status.StatusComposite;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.util.swt.StatusComposite;
 
 /**
  * @author Gernot Belger
