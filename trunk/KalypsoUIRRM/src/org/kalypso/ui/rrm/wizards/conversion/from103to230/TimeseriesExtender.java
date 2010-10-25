@@ -76,6 +76,8 @@ public class TimeseriesExtender
 
   private Interval m_sourceRange;
 
+  private int m_addCounter;
+
   public TimeseriesExtender( final ITupleModel sourceValues, final String href ) throws CoreException, SensorException
   {
     m_sourceValues = sourceValues;
@@ -119,7 +121,7 @@ public class TimeseriesExtender
     return !m_sourceRange.contains( simulationRange );
   }
 
-  public void extend( final Interval simulationRange ) throws SensorException, CoreException
+  public IStatus extend( final Interval simulationRange ) throws SensorException, CoreException
   {
     m_targetValues = new SimpleTupleModel( m_axisList );
     m_stepping = findStepping();
@@ -131,6 +133,29 @@ public class TimeseriesExtender
 
     final DateTime endSimulation = simulationRange.getEnd();
     extendEnd( endSimulation );
+
+    return createAddedStatus();
+  }
+
+  private IStatus createAddedStatus(  )
+  {
+    switch( m_addCounter )
+    {
+      case 0:
+        return Status.OK_STATUS;
+
+      case 1:
+      {
+        final String msg = String.format( "Zeitreihe %s wurde automatisch verlängert (1 Zeitschritt)", m_href );
+        return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), msg );
+      }
+
+      default:
+      {
+        final String msg = String.format( "Zeitreihe %s wurde um %d Zeitschritte automatisch verlängert. Die Zeitschritte sind mit dem Warnsymbol markiert. Bitte prüfen Sie die Zeitreihe.", m_href, m_addCounter );
+        return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), msg );
+      }
+    }
   }
 
   private Period findStepping( ) throws SensorException
@@ -149,7 +174,19 @@ public class TimeseriesExtender
 
   private void extendStart( final DateTime startSimulation ) throws SensorException, CoreException
   {
-    addValues( 0, startSimulation, m_sourceRange.getStart() );
+    final DateTime sourceValuesStart = m_sourceRange.getStart();
+    final DateTime startDate = findStartDate( sourceValuesStart, startSimulation );
+    addValues( 0, startDate, sourceValuesStart );
+  }
+
+  /* Reverse search for suitable start date. */
+  private DateTime findStartDate( final DateTime sourceValuesStart, final DateTime startSimulation )
+  {
+    DateTime currentTime = sourceValuesStart;
+    while( currentTime.isAfter( startSimulation ) )
+      currentTime = currentTime.minus( m_stepping );
+
+    return currentTime;
   }
 
   private void extendEnd( final DateTime endSimulation ) throws SensorException, CoreException
@@ -196,6 +233,7 @@ public class TimeseriesExtender
       final Object[] newTupple = startValues.clone();
       newTupple[m_dateIndex] = timePointer.toDate();
       m_targetValues.addTuple( newTupple );
+      m_addCounter++;
 
       timePointer = timePointer.plus( m_stepping );
 

@@ -78,7 +78,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   public BasicModelConverter( final File sourceDir, final File targetDir )
   {
-    super( "Basisdaten" );
+    super( "Übernahme Basisdaten" );
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
