@@ -114,7 +114,7 @@ public class NetElement
   private boolean m_calculated = false;
 
   private final List<NetElement> m_upStreamDepends = new ArrayList<NetElement>();
-  
+
   private final List<NetElement> m_downStreamDepends = new ArrayList<NetElement>();
 
   private final Channel m_channel;
@@ -132,7 +132,7 @@ public class NetElement
   private final NAConfiguration m_conf;
 
   private final Logger m_logger;
-  
+
   private Node m_overflowNode;
 
   public NetElement( final GMLWorkspace modellWorkspace, final GMLWorkspace synthNWorkspace, final Channel channel, final NAConfiguration conf, final Logger logger )
@@ -164,30 +164,30 @@ public class NetElement
     final Date simulationStart = metaControl.getSimulationStart();
     final Date simulationEnd = metaControl.getSimulationEnd();
 
-    final Catchment[] catchmentFeatures = m_channel.findCatchments();
+    final Catchment[] catchments = m_channel.findCatchments();
 
-    for( final Feature feature : catchmentFeatures )
+    for( final Catchment catchment : catchments )
     {
-      final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( feature, klimaDir, m_conf ); //$NON-NLS-1$
-      final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( feature, klimaDir, m_conf ); //$NON-NLS-1$
-      final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( feature, klimaDir, m_conf ); //$NON-NLS-1$
+      final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
+      final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
+      final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
       final File parent = targetFileN.getParentFile();
       parent.mkdirs();
 
       if( metaControl.isUsePrecipitationForm() )
       {
         if( !targetFileN.exists() )
-          writeSynthNFile( targetFileN, feature );
+          writeSynthNFile( targetFileN, catchment );
       }
       else
       {
-        final TimeseriesLinkType linkN = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_NIEDERSCHLAG );
+        final TimeseriesLinkType linkN = catchment.getPrecipitationLink();
         writeTimeseries( targetFileN, linkN, ITimeseriesConstants.TYPE_RAINFALL, null, null, null, null );
 
-        final TimeseriesLinkType linkT = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_TEMPERATUR );
+        final TimeseriesLinkType linkT = catchment.getTemperatureLink();
         writeTimeseries( targetFileT, linkT, ITimeseriesConstants.TYPE_TEMPERATURE, FILTER_T, "1.0", simulationStart, simulationEnd );
 
-        final TimeseriesLinkType linkV = (TimeseriesLinkType) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_VERDUNSTUNG );
+        final TimeseriesLinkType linkV = catchment.getEvaporationLink();
         writeTimeseries( targetFileV, linkV, ITimeseriesConstants.TYPE_EVAPORATION, FILTER_V, "0.5", simulationStart, simulationEnd );
       }
     }
@@ -313,7 +313,7 @@ public class NetElement
       final int chatchmentID = idManager.getAsciiID( catchmentFE );
       netBuffer.append( String.format( "%8d\n", chatchmentID ) ); //$NON-NLS-1$
     }
-    
+
     // TODO: SIDE-EFFECT! Move 'nodeList.add(...)' code to the list owner object!
     if( upstreamNode != null && !nodeList.contains( upstreamNode ) )
       nodeList.add( upstreamNode );
@@ -338,15 +338,15 @@ public class NetElement
     return "FID:" + channel.getId() + " AsciiID: " + m_conf.getIdManager().getAsciiID( channel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public void writeSynthNFile( final File targetFileN, final Feature feature ) throws Exception
+  public void writeSynthNFile( final File targetFileN, final Catchment catchment ) throws Exception
   {
     final NAControl metaControl = m_conf.getMetaControl();
 
     final List<Feature> statNList = new ArrayList<Feature>();
     final StringBuffer buffer = new StringBuffer();
     final Double annualityKey = metaControl.getAnnuality();
-    // Kostra-Kachel/ synth. N gebietsabhï¿½ngig
-    final String synthNKey = (String) feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZR_SYNTH );
+    // Kostra-Kachel/ synth. N gebietsabängig
+    final String synthNKey = catchment.getSynthZR();
     statNList.addAll( Arrays.asList( m_synthNWorkspace.getFeatures( m_conf.getstatNFT() ) ) );
     final Iterator<Feature> iter = statNList.iterator();
     while( iter.hasNext() )
