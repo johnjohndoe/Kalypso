@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.afgui.wizards.INewProjectWizardProvider;
+import org.kalypso.afgui.wizards.ProjectConversionWizard;
 import org.kalypso.project.database.client.extension.AbstractKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
@@ -13,7 +14,6 @@ import org.kalypso.project.database.client.extension.project.IKalypsoModuleProje
 import org.kalypso.project.database.client.ui.composites.SpecialImportProjectAction;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
-import org.kalypso.ui.rrm.wizards.conversion.ui.KalypsoNAConvertProjectWizard;
 
 public class KalypsoModuleRRM extends AbstractKalypsoModule
 {
@@ -99,7 +99,7 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
       @Override
       public INewProjectWizard createWizard( )
       {
-        return new KalypsoNAConvertProjectWizard();
+        return new ProjectConversionWizard( ID, KalypsoNAProjectWizard.CATEGORY_TEMPLATE );
       }
     };
 
