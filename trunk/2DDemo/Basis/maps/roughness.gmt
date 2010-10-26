@@ -5,13 +5,11 @@
         <mapv:layer visible="true" name="Korrekturrauheiten" id="ID_0" featurePath="#fid#RoughnessLayer11876158294061/roughnessLayerMember[RoughnessPolygon]" linktype="gml" xlink:type="simple" xlink:href="../models/terrain.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Roughness style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
-            <templ:style style="Label style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
         <mapv:layer visible="true" name="Basisrauheiten" id="ID_1" featurePath="#fid#RoughnessLayer11876158257812/roughnessLayerMember[RoughnessPolygon]" linktype="gml" xlink:type="simple" xlink:href="../models/terrain.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="Roughness style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
-            <templ:style style="Label style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
     </mapv:layers>

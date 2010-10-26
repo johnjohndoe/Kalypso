@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -52,6 +54,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.kalypso.afgui.model.ICommandPoster;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -109,12 +113,18 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, wizard );
       if( wizardDialog2.open() == Window.OK )
       {
-        modelProvider.saveModel( IScenarioResultMeta.class, new NullProgressMonitor() );
+        ((ICommandPoster) modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
+        modelProvider.saveModel( IScenarioResultMeta.class.getName(), new NullProgressMonitor() );
+//        modelProvider.saveModel( IScenarioResultMeta.class, new NullProgressMonitor() );
 
         return Status.OK_STATUS;
       }
     }
     catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
+    catch( InvocationTargetException e )
     {
       e.printStackTrace();
     }

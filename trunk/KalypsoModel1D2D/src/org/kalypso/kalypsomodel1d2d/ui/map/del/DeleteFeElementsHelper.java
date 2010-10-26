@@ -169,12 +169,12 @@ public class DeleteFeElementsHelper
 
       final IDiscrModel1d2dChangeCommand deleteCmd1dElement = DeleteCmdFactory.createDeleteCmd1dElement( discretisationModel );
       final IDiscrModel1d2dChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( discretisationModel );
-      
+
       final IKalypsoFeatureTheme lFlowTheme = UtilMap.findEditableTheme( mapPanel, IFlowRelationship.QNAME );
       final FeatureList lFeatureList = lFlowTheme.getFeatureList();
       final Feature lParentFeature = lFeatureList.getParentFeature();
       final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) lParentFeature.getAdapter( IFlowRelationshipModel.class );
-      
+
       for( final EasyFeatureWrapper easyFeatureWrapper : selected )
       {
         final Feature feature = easyFeatureWrapper.getFeature();
@@ -187,20 +187,20 @@ public class DeleteFeElementsHelper
             deleteParameter( mapPanel, easyFeatureWrapper, lFlowTheme, lFeatureList, lParentFeature, lFlowRelCollection );
           }
           else if( TypeInfo.isElement1DFeature( feature ) )
-          {    
+          {
             ((DeleteElement1DCmd) deleteCmd1dElement).addElementToRemove( feature );
             deleteParameter( mapPanel, easyFeatureWrapper, lFlowTheme, lFeatureList, lParentFeature, lFlowRelCollection );
           }
         }
       }
-      
+
       final CommandableWorkspace workspace = featureTheme.getWorkspace();
       workspace.postCommand( deleteCmdPolyElement );
       workspace.postCommand( deleteCmd1dElement );
-      
+
       changedFeatureList.addAll( ((DeletePolyElementCmd) deleteCmdPolyElement).getChangedFeatureList() );
       changedFeatureList.addAll( ((DeleteElement1DCmd) deleteCmd1dElement).getChangedFeatureList() );
-      
+
       final Feature distFeature = discretisationModel.getFeature();
 
       final Feature[] deletedFeatures = changedFeatureList.toArray( new Feature[changedFeatureList.size()] );
@@ -218,38 +218,41 @@ public class DeleteFeElementsHelper
 
   private static void deleteParameter( final IMapPanel pMapPanel, final EasyFeatureWrapper pParentToRemoveFrom, IKalypsoFeatureTheme lFlowTheme, FeatureList lFeatureList, Feature lParentFeature, IFlowRelationshipModel lFlowRelCollection ) throws Exception
   {
-//    final IKalypsoFeatureTheme lFlowTheme = UtilMap.findEditableTheme( pMapPanel, IFlowRelationship.QNAME );
-//    final FeatureList lFeatureList = lFlowTheme.getFeatureList();
-//    final Feature lParentFeature = lFeatureList.getParentFeature();
-//    final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) lParentFeature.getAdapter( IFlowRelationshipModel.class );
-//    
+    // final IKalypsoFeatureTheme lFlowTheme = UtilMap.findEditableTheme( pMapPanel, IFlowRelationship.QNAME );
+    // final FeatureList lFeatureList = lFlowTheme.getFeatureList();
+    // final Feature lParentFeature = lFeatureList.getParentFeature();
+    // final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) lParentFeature.getAdapter(
+    // IFlowRelationshipModel.class );
+    //
     final IFE1D2DElement lElement = (IFE1D2DElement) pParentToRemoveFrom.getFeature().getAdapter( IFE1D2DElement.class );
-    IFeatureWrapper2 lBuildingElement = null;
+    List<IFeatureWrapper2> lBuildingElements = new ArrayList<IFeatureWrapper2>();
     if( lElement instanceof IPolyElement )
-      lBuildingElement = FlowRelationUtilitites.findBuildingElement2D( ( IPolyElement ) lElement, lFlowRelCollection );
+      lBuildingElements.add( FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) lElement, lFlowRelCollection ) );
     else if( lElement instanceof IElement1D )
-      lBuildingElement = FlowRelationUtilitites.findBuildingElement1D( ( IElement1D )lElement, lFlowRelCollection );
-    
-    Feature lBuildingFeature = null;
-    if( lBuildingElement != null ){
+      lBuildingElements.addAll( FlowRelationUtilitites.findBuildingElements1D( (IElement1D) lElement, lFlowRelCollection ) );
+
+    for( final IFeatureWrapper2 lBuildingElement : lBuildingElements )
+    {
+      Feature lBuildingFeature = null;
+      if( lBuildingElement != null )
+      {
         final IFeatureSelectionManager selectionManager = pMapPanel.getSelectionManager();
-        selectionManager.clear(); 
-        
-        final CompositeCommand compositeCommand = new CompositeCommand(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.14")) ;  //$NON-NLS-1$
+        selectionManager.clear();
+
+        final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.14" ) ); //$NON-NLS-1$
         {
           lBuildingFeature = lBuildingElement.getFeature();
           selectionManager.changeSelection( new Feature[] { lBuildingFeature }, new EasyFeatureWrapper[] {} );
-    
+
           final DeleteFeatureCommand command = new DeleteFeatureCommand( lBuildingFeature );
           compositeCommand.addCommand( command );
         }
         lFlowTheme.getWorkspace().postCommand( compositeCommand );
         final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( lFlowTheme.getWorkspace(), lBuildingFeature.getParent(), lBuildingFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
         lFlowTheme.getWorkspace().fireModellEvent( event );
+      }
     }
-    
   }
-
 
   public static IStatus deleteSelectedFeContiLines( final IMapPanel mapPanel )
   {

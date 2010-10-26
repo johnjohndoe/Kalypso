@@ -560,7 +560,7 @@ public class RMA10S2GmlConv
       init();
       m_charSeparator = pCharSeparator;
       m_intPositionsAsArray = new int[m_intStrLen];
-      Arrays.fill( m_intPositionsAsArray, m_intStrLen - 1 );
+      Arrays.fill( m_intPositionsAsArray, m_intStrLen );
       parseLine();
     }
 
