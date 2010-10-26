@@ -62,8 +62,6 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.core.KalypsoCoreDebug;
-import org.kalypso.core.KalypsoCorePlugin;
 
 public class BlockTimeSeries
 {
@@ -254,7 +252,7 @@ public class BlockTimeSeries
   private Duration getDurationAsDays( float hours )
   {
     final float days = hours / 24.0f;
-    int daysRounded = (int) days;
+    final int daysRounded = Math.round( days );
 
     if( days == daysRounded )
       return DATATYPE_FACTORY.newDuration( true, 0, 0, daysRounded, 0, 0, 0 );
@@ -264,8 +262,7 @@ public class BlockTimeSeries
 
   private Duration getDurationAsHours( float hours )
   {
-    int hoursRounded = (int) hours;
-
+    final int hoursRounded = Math.round( hours );
     if( hours == hoursRounded )
       return DATATYPE_FACTORY.newDuration( true, 0, 0, 0, hoursRounded, 0, 0 );
 
@@ -279,7 +276,7 @@ public class BlockTimeSeries
   private Duration getDurationAsMinutes( float hours )
   {
     final float minutes = hours * 60.0f;
-    int minutesRounded = (int) minutes;
+    final int minutesRounded = Math.round( minutes );
 
 // if( minutes == daysRounded )
     return DATATYPE_FACTORY.newDuration( true, 0, 0, 0, 0, minutesRounded, 0 );
