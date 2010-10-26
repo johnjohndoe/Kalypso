@@ -117,7 +117,7 @@ public class NetFileManager
 
     public final int m_ivzwg;
 
-    public final double m_value;
+    public final Number m_value;
 
     public final Node m_branchNode;
 
@@ -387,7 +387,9 @@ public class NetFileManager
     /* First collect info and potentially add branching nodes */
     for( final Node node : nodes )
     {
-      final ZuflussBean zuflussBean = appendZuflussStuff( node, workspace, idManager );
+      // QQ have the priority over "Verzweigung", and all of them are mutually exclusive so this is safe
+      final ZuflussBean qqRelation = getQQRelationZuflussBean( node, idManager );
+      final ZuflussBean zuflussBean = qqRelation != null ? qqRelation : appendZuflussStuff( node, workspace, idManager );
       nodeInfos.put( node, zuflussBean );
 
       if( zuflussBean.m_branchNode != null )
@@ -417,7 +419,6 @@ public class NetFileManager
       netBuffer.append( zuflussBean.m_specialBuffer.toString() );
 
       /* TODO: we should also consider the additional nodes by QQ rleations; but as QQ rleations do not work..... */
-      writeQQRelation( node, netBuffer );
     }
 
     // ENDKNOTEN
@@ -497,7 +498,11 @@ public class NetFileManager
   private ZuflussBean appendBranching( final Branching branching, final IDManager idManager )
   {
     final ZuflussBean bean = getZuflussBean( branching );
-    bean.m_specialBuffer.append( FortranFormatHelper.printf( bean.m_value, "f10.3" ) ); //$NON-NLS-1$
+    if( bean.m_value instanceof Double )
+      bean.m_specialBuffer.append( String.format( "%10.3f", bean.m_value ) ); //$NON-NLS-1$
+    else if( bean.m_value instanceof Integer )
+      bean.m_specialBuffer.append( String.format( "%4d", bean.m_value ) ); //$NON-NLS-1$
+    // else throw an exception...
 
     if( bean.m_branchNode != null )
     {
@@ -543,29 +548,32 @@ public class NetFileManager
     throw new IllegalArgumentException( "Illegal branching type: " + branching.getClass() );
   }
 
-  private void writeQQRelation( final Feature node, final StringBuffer buffer ) throws SensorException
+  private ZuflussBean getQQRelationZuflussBean( final Feature node, final IDManager idManager ) throws SensorException
   {
-    final String relatedNodeID = (String) node.getProperty( NaModelConstants.NODE_QQRELATED_NODE_PROP );
-
-    // FIXME: EEEEEEK: relatedNodeID is directly written!!! Must be translated to ASCII-ID!
-
+    final Node relatedNode = (Node) FeatureHelper.resolveLink( node, NaModelConstants.NODE_QQRELATED_NODE_PROP, true );
+    if( relatedNode == null )
+      return null;
     final IObservation observation = (IObservation) node.getProperty( NaModelConstants.NODE_QQRELATION_PROP );
-    if( relatedNodeID == null || observation == null || relatedNodeID.length() == 0 )
-      return;
+    if( observation == null )
+      return null;
+    final StringBuffer buffer = new StringBuffer();
     final IAxis[] axisList = observation.getAxisList();
     final IAxis q1Axis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF );
     final IAxis q2Axis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF_RHB );
     final ITupleModel values = observation.getValues( null );
     final int count = values.size();
     if( count < 1 )
-      return;
-    buffer.append( String.format( "%5d %6s\n", count, relatedNodeID ) ); //$NON-NLS-1$
+      return null;
+    buffer.append( String.format( "%5d %6s\n", count, idManager.getAsciiID( relatedNode ) ) ); //$NON-NLS-1$
     for( int row = 0; row < count; row++ )
     {
       final double q1 = (Double) values.get( row, q1Axis );
       final double q2 = (Double) values.get( row, q2Axis );
       buffer.append( String.format( Locale.ENGLISH, "%8.3f %8.3f\n", q1, q2 ) ); //$NON-NLS-1$
     }
+    final ZuflussBean bean = new ZuflussBean( 0, 0, 0, 0, 2, count, relatedNode );
+    bean.m_specialBuffer.append( buffer );
+    return bean;
   }
 
   private String getZuflussEingabeDateiString( final Feature nodeFE, final NAConfiguration conf )

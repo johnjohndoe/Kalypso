@@ -94,7 +94,7 @@
 						</simpleType>
 					</element>
 					<element name="qqRelation" type="zmlinline:ZmlInlineQQType"/>
-					<element name="qqRelatedNode" type="string" minOccurs="0" default=""/>
+					<element name="qqRelatedNode" type="na:NodeLinkType" minOccurs="0" />
 				</sequence>
 			</extension>
 		</complexContent>
@@ -130,7 +130,7 @@
 		</complexContent>
 	</complexType>
   
-    <element name="_BranchingWithNode" type="na:AbstractBranchingWithNodeType" substitutionGroup="na:_Branching"/>
+    <element abstract="true" name="_BranchingWithNode" type="na:AbstractBranchingWithNodeType" substitutionGroup="na:_Branching"/>
     <complexType name="AbstractBranchingWithNodeType">
       <complexContent>
         <extension base="na:AbstractBranchingType">
