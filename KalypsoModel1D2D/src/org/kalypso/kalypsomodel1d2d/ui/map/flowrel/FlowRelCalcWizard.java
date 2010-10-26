@@ -44,12 +44,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.PageChangingEvent;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
@@ -62,15 +65,15 @@ import org.kalypso.util.swt.ListSelectionWizardPage;
 /**
  * @author Gernot Belger
  */
-public class FlowRelCalcWizard extends Wizard implements IWizard
+public class FlowRelCalcWizard extends Wizard implements INewWizard
 {
   private final IFlowRelationship[] m_flowRels;
 
-  private final ListSelectionWizardPage m_chooseFlowsRelPage;
+  private ListSelectionWizardPage m_chooseFlowsRelPage;
 
-  private final FlowRelCalcControlPage m_controlPage;
+  private FlowRelCalcControlPage m_controlPage;
 
-  private final FlowRelCalcSimulationPage m_simulationPage;
+  private FlowRelCalcSimulationPage m_simulationPage;
 
   private final IFlowRelationshipModel m_flowModel;
 
@@ -85,12 +88,31 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
     }
   };
 
-  public FlowRelCalcWizard( final IFlowRelationship[] flowRels, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel )
-  {
-    m_flowRels = flowRels;
-    m_flowModel = flowModel;
-    m_discModel = discModel;
+  private IWorkbench m_workbench;
 
+  private IStructuredSelection m_selection;
+  
+  @Override
+  public void createPageControls( Composite pageContainer ){
+    super.createPageControls( pageContainer );
+    
+    m_chooseFlowsRelPage.setInput( m_flowRels );
+//    m_chooseFlowsRelPage.setCheckedElements( m_flowRels );
+    m_chooseFlowsRelPage.setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.1" ) ); //$NON-NLS-1$
+    m_chooseFlowsRelPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.2" ) ); //$NON-NLS-1$
+    m_chooseFlowsRelPage.setAllowNextIfEmpty( false );
+
+    m_controlPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.5" ) ); //$NON-NLS-1$
+
+    m_simulationPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.8" ) ); //$NON-NLS-1$
+
+    setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.9" ) ); //$NON-NLS-1$
+
+  }
+
+  @Override
+  public void addPages(){
+    super.addPages();
     m_chooseFlowsRelPage = new ListSelectionWizardPage( "selectFLowRelsPage", new LabelProvider() //$NON-NLS-1$
     {
       /**
@@ -104,24 +126,22 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
       }
     } );
 
-    m_chooseFlowsRelPage.setInput( m_flowRels );
-    m_chooseFlowsRelPage.setCheckedElements( m_flowRels );
-    m_chooseFlowsRelPage.setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.1" ) ); //$NON-NLS-1$
-    m_chooseFlowsRelPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.2" ) ); //$NON-NLS-1$
-    m_chooseFlowsRelPage.setAllowNextIfEmpty( false );
-
     m_controlPage = new FlowRelCalcControlPage( "controlPage", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.4" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_controlPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.5" ) ); //$NON-NLS-1$
 
     m_simulationPage = new FlowRelCalcSimulationPage( "simulationPage", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.7" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_simulationPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.8" ) ); //$NON-NLS-1$
 
     addPage( m_chooseFlowsRelPage );
     addPage( m_controlPage );
     addPage( m_simulationPage );
 
-    setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.9" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
+  }
+  
+  public FlowRelCalcWizard( final IFlowRelationship[] flowRels, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel )
+  {
+    m_flowRels = flowRels;
+    m_flowModel = flowModel;
+    m_discModel = discModel;
   }
 
   protected void handlePageChanging( final PageChangingEvent event )
@@ -204,6 +224,17 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
         button.setText( IDialogConstants.OK_LABEL );
     }
     return false;
+  }
+
+  /**
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
+   */
+  @Override
+  public void init( IWorkbench workbench, IStructuredSelection selection )
+  {
+    m_workbench = workbench;
+    m_selection = selection;
+    
   }
 
 }

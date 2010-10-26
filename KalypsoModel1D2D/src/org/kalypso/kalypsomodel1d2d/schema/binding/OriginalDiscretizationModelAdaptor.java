@@ -278,7 +278,24 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     }
     catch( final Exception e )
     {
+      
+      statusList.add( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.loader.GmlLoader.12" ) ) );
       statusList.add( StatusUtilities.statusFromThrowable( e ) );
+      
+//       update the gml version even in failure case, to avoid the dead-lock recursion 
+      final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>( 1 );
+      final IPropertyType versionProperty = modelFeatureType.getProperty( VersionedModel.SIM_BASE_PROP_VERSION );
+      featureChanges.add( new FeatureChange( model, versionProperty, VERSION_1_0 ) );
+      final ChangeFeaturesCommand changeFeaturesCommand = new ChangeFeaturesCommand( workspace, featureChanges.toArray( new FeatureChange[featureChanges.size()] ) );
+      try
+      {
+        changeFeaturesCommand.process();
+      }
+      catch( Exception e1 )
+      {
+        // ... well, FIXME?
+      }
+
     }
     finally
     {
@@ -358,16 +375,23 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
 
   private boolean check1dElement( final Feature element, final Map<String, Feature> collectEdges, final Map<String, Feature> collectNodes )
   {
-    final IFeatureType elementFeatureType = element.getFeatureType();
-    final IRelationType edgeProperty = (IRelationType) elementFeatureType.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
-    final String edgeInElementLink = (String) element.getProperty( edgeProperty );
-    final Feature edge = FeatureHelper.getFeature( element.getWorkspace(), edgeInElementLink );
-    final FeatureList nodeList = (FeatureList) edge.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
-    checkNodes( getFeatures( nodeList ), collectNodes );
+    try
+    {
+      final IFeatureType elementFeatureType = element.getFeatureType();
+      final IRelationType edgeProperty = (IRelationType) elementFeatureType.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
+      final String edgeInElementLink = (String) element.getProperty( edgeProperty );
+      final Feature edge = FeatureHelper.getFeature( element.getWorkspace(), edgeInElementLink );
+      final FeatureList nodeList = (FeatureList) edge.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
+      checkNodes( getFeatures( nodeList ), collectNodes );
 
-    final String id = edge.getId();
-    if( !collectEdges.containsKey( id ) )
-      collectEdges.put( id, edge );
+      final String id = edge.getId();
+      if( !collectEdges.containsKey( id ) )
+        collectEdges.put( id, edge );
+    }
+    catch( Exception e )
+    {
+      return false;
+    } 
     return true;
   }
 

@@ -139,7 +139,12 @@ public class ResultSldHelper
 
       if( NodeResultHelper.LINE_TYPE.equals( type ) || NodeResultHelper.POLYGON_TYPE.equals( type ) )
       {
-        processTinStyle( type, minValue, maxValue, sld );
+        //resolve the problem with initial creation of style files in case with min equals max
+        BigDecimal lMax = maxValue;
+        if( minValue.equals( maxValue ) ){
+          lMax = maxValue.add( new BigDecimal( 1 ) );
+        }
+        processTinStyle( type, minValue, lMax, sld );
         /* Write SLD back to file */
         if( sld != null )
         {
@@ -187,7 +192,7 @@ public class ResultSldHelper
     final String layerName = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
     final String featureTypeStyleName = "tinFeatureTypeStyle"; //$NON-NLS-1$
     final String ruleName = "tinRule"; //$NON-NLS-1$
-
+ 
     final NamedLayer namedLayer = sld.getNamedLayer( "tinStyles" ); //$NON-NLS-1$
     if( namedLayer == null )
       return;
@@ -219,6 +224,10 @@ public class ResultSldHelper
         }
       }
       catch( final FilterEvaluationException e )
+      {
+        e.printStackTrace();
+      }
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -260,8 +269,11 @@ public class ResultSldHelper
     final BigDecimal maxDecimal = maxValue.setScale( 1, BigDecimal.ROUND_CEILING );
 
     final BigDecimal polygonStepWidth = new BigDecimal( stepWidth ).setScale( stepWidthScale, BigDecimal.ROUND_FLOOR );
-    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth )).intValue();
-
+    int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth )).intValue();
+    // set to provide more them 1 or 0 classes. in such cases the color map will not be created, that results error.  
+    if( numOfClasses < 2 ){
+      numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth.divide( new BigDecimal( 4 ) ) ) ).intValue();
+    }
     for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
     {
       final double fromValue = minDecimal.doubleValue() + currentClass * polygonStepWidth.doubleValue();

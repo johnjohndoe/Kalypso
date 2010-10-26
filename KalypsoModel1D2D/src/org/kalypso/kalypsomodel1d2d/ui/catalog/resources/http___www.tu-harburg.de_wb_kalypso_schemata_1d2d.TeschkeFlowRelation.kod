@@ -25,7 +25,7 @@
 					</Parameters>
 				</Provider>
 				<Title>Abfluss</Title>
-				<Description>Abfluss abhängig vom Wasserspiegel</Description>
+				<Description>Abfluss abhÃ¤ngig vom Wasserspiegel</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="wsp_Axis" />
 					<TargetAxisRef ref="runoff_Axis" />
@@ -59,7 +59,7 @@
 					</Parameters>
 				</Provider>
 				<Title>Abflusspolynome</Title>
-				<Description>Abflusspolynome abhängig vom Wasserspiegel</Description>
+				<Description>Abflusspolynome abhÃ¤ngig vom Wasserspiegel</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="wsp_Axis" />
 					<TargetAxisRef ref="runoff_Axis" />
@@ -116,7 +116,7 @@
 			</Axis>
 			<Axis id="runoff_Axis">
 				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Abfluss [m³/s]</Label>
+				<Label>Abfluss [mÂ³/s]</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>LEFT</Position>
 				<NumberRange>
@@ -149,8 +149,8 @@
 
 
 	<Chart id="areaChart">
-		<Title>Fläche</Title>
-		<Description>Flächenwerte der Berechnung</Description>
+		<Title>Flã¢¨e</Title>
+		<Description>Flã¢¨enwerte der Berechnung</Description>
 		<Layers>
 			<Layer visible="true" id="areaLayer">
 				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" >
@@ -165,8 +165,8 @@
 							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
 					</Parameters>
 				</Provider>
-				<Title>Fläche</Title>
-				<Description>Fläche abhängig vom Wasserspiegel</Description>
+				<Title>Flã¢¨e</Title>
+				<Description>Flã¢¨e abhã­§ig vom Wasserspiegel</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="wsp_Axis_Area" />
 					<TargetAxisRef ref="area_Axis" />
@@ -199,8 +199,8 @@
 							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonArea" />
 					</Parameters>
 				</Provider>
-				<Title>Flächenpolynome</Title>
-				<Description>Flächenpolynome abhängig vom Wasserspiegel</Description>
+				<Title>Flã¢¨enpolynome</Title>
+				<Description>Flã¢¨enpolynome abhã­§ig vom Wasserspiegel</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="wsp_Axis_Area" />
 					<TargetAxisRef ref="area_Axis" />
@@ -229,8 +229,8 @@
 							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaArea" />
 					</Parameters>
 				</Provider>
-				<Title>Flächen-Delta</Title>
-				<Description>Flächen Differenzen bei der Polynomerstellung</Description>
+				<Title>Flã¢¨en-Delta</Title>
+				<Description>Flã¢¨en Differenzen bei der Polynomerstellung</Description>
 				
 				
 				<Mapper>
@@ -247,7 +247,7 @@
 		<Mappers>
 			<Axis id="area_Axis">
 				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Fläche [m²]</Label>
+				<Label>Flã¢¨e [mÂ²]</Label>
 				
 				<Direction>POSITIVE</Direction>
 				<Position>LEFT</Position>
@@ -303,7 +303,7 @@
 					</Parameters>
 				</Provider>
 				<Title>Alpha</Title>
-				<Description>Alpha abhängig vom Wasserspiegel</Description>
+				<Description>Alpha abhã­§ig vom Wasserspiegel</Description>
 				
 				<MapperRefs>
 					<DomainAxisRef ref="wsp_Axis" />
@@ -338,7 +338,7 @@
 					</Parameters>
 				</Provider>
 				<Title>Alpha-Polynome</Title>
-				<Description>Alpha-Polynome abhängig vom Wasserspiegel</Description>
+				<Description>Alpha-Polynome abhã­§ig vom Wasserspiegel</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="wsp_Axis" />
 					<TargetAxisRef ref="alpha_Axis" />
@@ -426,7 +426,7 @@
 	
 	<Axis id="runoffDelta_Axis">
 	<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-	<Label>Abfluss-Delta [m³/s]</Label>
+	<Label>Abfluss-Delta [mÂ³/s]</Label>
 	<Direction>POSITIVE</Direction>
 	<Position>LEFT</Position>
 	<MinVal>5.0</MinVal>
