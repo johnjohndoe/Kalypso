@@ -9,9 +9,14 @@
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:combo property="tuhh:exeVersion" style="SWT.DROP_DOWN | SWT.READ_ONLY">
-		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
-	</gft:combo>
+    <gft:extensioncontrol style="SWT.BEGINNING" property="tuhh:exeVersion" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
+        <gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL"/>
+        <gft:param name="dir" value="bin" />
+        <gft:param name="label" value="1D·Kalypso" />
+        <gft:param name="exePattern" value="Kalypso-1D(.*).exe" />
+        <gft:param name="alignment" value="SWT.LEFT" />
+        <gft:param name="displayFormat" value="Kalypso-1D%s.exe" />
+    </gft:extensioncontrol>
 	<gft:label visible="false" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
@@ -24,9 +29,7 @@
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:combo property="tuhh:wspIteration"
-		
-		style="SWT.DROP_DOWN | SWT.READ_ONLY">
+	<gft:combo property="tuhh:wspIteration" style="SWT.DROP_DOWN | SWT.READ_ONLY">
 		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 	</gft:combo>
 	<gft:label visible="false" style="SWT.NONE">
