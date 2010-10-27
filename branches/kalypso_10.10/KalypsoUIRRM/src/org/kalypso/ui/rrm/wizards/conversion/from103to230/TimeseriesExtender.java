@@ -52,7 +52,10 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 
 /**
@@ -224,13 +227,16 @@ public class TimeseriesExtender
    */
   private void addValues( final int valueIndex, final DateTime start, final DateTime until ) throws SensorException, CoreException
   {
-    final Object[] startValues = getSourceValuesAt( valueIndex );
+    final Object[] templateValues = getTemplateValues( valueIndex );
 
     int timeout = 0;
     DateTime timePointer = start;
     while( timePointer.isBefore( until ) )
     {
-      final Object[] newTupple = startValues.clone();
+      // FIXME: we should set BIT_CHECK here, but we might not have an status axis...
+
+      final Object[] newTupple = templateValues.clone();
+
       newTupple[m_dateIndex] = timePointer.toDate();
       m_targetValues.addTuple( newTupple );
       m_addCounter++;
@@ -246,6 +252,33 @@ public class TimeseriesExtender
         throw new CoreException( error );
       }
     }
+  }
+
+  private Object[] getTemplateValues( final int valueIndex ) throws SensorException
+  {
+    final Object[] templateValues = getSourceValuesAt( valueIndex ).clone();
+    /* Set axis value */
+    for( int i = 0; i < templateValues.length; i++ )
+    {
+      final IAxis axis = m_axisList[i];
+      if( axis.isPersistable() )
+      {
+        if( KalypsoStatusUtils.isStatusAxis( axis ) )
+          templateValues[i] = KalypsoStati.BIT_CHECK;
+        else if( !axis.isKey() )
+        {
+          /* If we have sum-values (like precipitation), do not extend with the last/first value but just set to 0.0 */
+          if( isSumValue( axis.getType() ) )
+            templateValues[i] = 0.0;
+        }
+      }
+    }
+    return templateValues;
+  }
+
+  private boolean isSumValue( final String type )
+  {
+    return type == TimeseriesUtils.TYPE_RAINFALL || type == TimeseriesUtils.TYPE_EVAPORATION;
   }
 
   public ITupleModel getExtendedValues( )
