@@ -358,7 +358,12 @@ public class ResultManager implements ISimulation1D2DConstants
       if( filename != null && filename.endsWith( ".2d.zip" ) ) //$NON-NLS-1$
       {
         resultFileName = filename;
-        stepDate = ResultMeta1d2dHelper.resolveDateFromResultStep( file );
+        if( file.toString().contains( "steady" ) ){ //$NON-NLS-1$
+          stepDate = STEADY_DATE;
+        }
+        else{
+          stepDate = ResultMeta1d2dHelper.resolveDateFromResultStep( file );
+        }
         if( lFileObjectSWANResult == null )
         {
           IPath lPath = ResultMeta1d2dHelper.getSavedSWANRawResultData( calcUnitResultMeta );
@@ -392,7 +397,7 @@ public class ResultManager implements ISimulation1D2DConstants
       else if( stepDate == MAXI_DATE )
         outDirName = "maxi"; //$NON-NLS-1$
       else
-        outDirName = String.format( ResultMeta1d2dHelper.TIME_STEP_PREFIX + "%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ", stepDate ); //$NON-NLS-1$
+        outDirName = String.format( ResultMeta1d2dHelper.TIME_STEP_PREFIX + "%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tS_%1$tm_%1$tZ", stepDate ); //$NON-NLS-1$
 
       final File resultOutputDir = new File( m_outputDir, outDirName );
       resultOutputDir.mkdirs();
@@ -517,7 +522,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public FileObject[] getStepsToProcess( )
   {
-    return m_stepsToProcess;
+    return m_stepsToProcess; 
   }
 
   private void fillStepMap( final IControlModel1D2D controlModel ) throws IOException

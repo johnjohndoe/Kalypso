@@ -88,16 +88,13 @@ public class FlowRelCalcWizard extends Wizard implements INewWizard
     }
   };
 
-  private IWorkbench m_workbench;
-
-  private IStructuredSelection m_selection;
-  
   @Override
-  public void createPageControls( Composite pageContainer ){
+  public void createPageControls( Composite pageContainer )
+  {
     super.createPageControls( pageContainer );
-    
+
     m_chooseFlowsRelPage.setInput( m_flowRels );
-//    m_chooseFlowsRelPage.setCheckedElements( m_flowRels );
+    // m_chooseFlowsRelPage.setCheckedElements( m_flowRels );
     m_chooseFlowsRelPage.setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.1" ) ); //$NON-NLS-1$
     m_chooseFlowsRelPage.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.2" ) ); //$NON-NLS-1$
     m_chooseFlowsRelPage.setAllowNextIfEmpty( false );
@@ -111,7 +108,8 @@ public class FlowRelCalcWizard extends Wizard implements INewWizard
   }
 
   @Override
-  public void addPages(){
+  public void addPages( )
+  {
     super.addPages();
     m_chooseFlowsRelPage = new ListSelectionWizardPage( "selectFLowRelsPage", new LabelProvider() //$NON-NLS-1$
     {
@@ -136,7 +134,7 @@ public class FlowRelCalcWizard extends Wizard implements INewWizard
 
     setNeedsProgressMonitor( true );
   }
-  
+
   public FlowRelCalcWizard( final IFlowRelationship[] flowRels, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel )
   {
     m_flowRels = flowRels;
@@ -227,14 +225,12 @@ public class FlowRelCalcWizard extends Wizard implements INewWizard
   }
 
   /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
    */
   @Override
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    m_workbench = workbench;
-    m_selection = selection;
-    
   }
 
 }
