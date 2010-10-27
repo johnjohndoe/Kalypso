@@ -216,6 +216,13 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    */
   private void extendTimeseries( ) throws Exception
   {
+    if( m_data.getMetaControl().isUsePrecipitationForm() )
+    {
+      final String okMsg = "Syntetisches Ereignis, Zeitreihenverlängerung nicht notwendig";
+      getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), okMsg ) );
+      return;
+    }
+
     final Interval simulationRange = getSimulationRange();
 
     /* Read gml-model */
