@@ -119,7 +119,7 @@ public class CsvSource implements IProfilSource
 
         for( int i = 0; i < values.length; i++ )
         {
-          final int index = result.indexOf( getComponent( m_columns[i] ) );
+          final int index = result.indexOfComponent( getComponent( m_columns[i] ) );
           if( index < 0 )
             continue;
           final Double dbl = NumberUtils.parseQuietDouble( values[i] );
