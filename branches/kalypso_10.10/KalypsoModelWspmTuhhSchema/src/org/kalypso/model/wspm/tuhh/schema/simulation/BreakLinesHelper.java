@@ -198,7 +198,11 @@ public class BreakLinesHelper implements IWspmConstants
 
     final Map<Double, Double> wspMap = new TreeMap<Double, Double>();
     for( final IRecord record : result )
-      wspMap.put( ((BigDecimal) record.getValue( result.indexOf( statComponent ) )).doubleValue(), ((BigDecimal) record.getValue( result.indexOf( wspComp ) )).doubleValue() );
+    {
+      final int statIndex = result.indexOfComponent( statComponent );
+      final int wpsIndex = result.indexOfComponent( wspComp );
+      wspMap.put( ((BigDecimal) record.getValue( statIndex )).doubleValue(), ((BigDecimal) record.getValue( wpsIndex )).doubleValue() );
+    }
     return wspMap;
   }
 
@@ -261,7 +265,7 @@ public class BreakLinesHelper implements IWspmConstants
         if( useWsp )
         {
           if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
-          // simulation does not concern the whole reach.
+            // simulation does not concern the whole reach.
           {
             points = WspmProfileHelper.calculateWspPoints( profil, wsp.doubleValue() );
           }
