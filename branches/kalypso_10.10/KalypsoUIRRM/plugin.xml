@@ -50,7 +50,9 @@
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportPedology" name="%command.name.1"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportGeology" name="%command.name.2"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" name="%command.name.3"/>
+		<!--
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.model.rrm.ui.map.outline.command.FixHydrotopes" name="Fix Hydrotopes" description="Fixes old hydrotope files (i.e. sets links to catchments)"/>
+		-->
 	</extension>
 
 	 <extension  point="org.eclipse.ui.commandImages">
@@ -81,11 +83,13 @@
 				<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>
 			</activeWhen>
 		</handler>
+		<!--
 		<handler commandId="org.kalypso.model.rrm.ui.map.outline.command.FixHydrotopes" class="org.kalypso.ui.rrm.action.FixHydrotopesHandler">
 			<activeWhen>
 				<reference definitionId="org.kalypso.ui.rrm.definition.oneHydrotopeThemeSelected"/>
 			</activeWhen>
 		</handler>
+		-->
 	</extension>
 
 	<extension point="org.eclipse.ui.menus">
@@ -110,9 +114,11 @@
 					<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>
 				</visibleWhen>
 			</command>
+			<!--
 			<command commandId="org.kalypso.model.rrm.ui.map.outline.command.FixHydrotopes" style="push">
 				<visibleWhen checkEnabled="true"/>
 			</command>
+			-->
 		</menuContribution>
 	</extension>
 
