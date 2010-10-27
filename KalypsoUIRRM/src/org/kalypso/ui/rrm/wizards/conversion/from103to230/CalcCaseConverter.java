@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
@@ -215,12 +216,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    */
   private void extendTimeseries( ) throws Exception
   {
-    /* Read calculation time span */
-    final NAControl metaControl = m_data.getMetaControl();
-    final Date simulationStart = metaControl.getSimulationStart();
-    final Date simulationEnd = metaControl.getSimulationEnd();
-
-    final Interval simulationRange = new Interval( new DateTime( simulationStart ), new DateTime( simulationEnd ) );
+    final Interval simulationRange = getSimulationRange();
 
     /* Read gml-model */
     final NaModell naModel = m_data.getNaModel();
@@ -232,4 +228,47 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     getLog().add( log );
   }
 
+  private Interval getSimulationRange( )
+  {
+    /* Read calculation time span */
+    final NAControl metaControl = m_data.getMetaControl();
+
+    final Date simulationStart = metaControl.getSimulationStart();
+    final Date simulationEnd = metaControl.getSimulationEnd();
+    final Integer minutesOfTimestep = metaControl.getMinutesOfTimestep();
+    final Period step = findPeriod( minutesOfTimestep );
+
+    DateTime start = new DateTime( simulationStart );
+    DateTime end = new DateTime( simulationEnd );
+
+    /*
+     * HACK: really hacky: the newer calc core versions need bigger timeseries than their actual simulation range (1
+     * steps backwards, 3 forwards)
+     */
+    start = start.minus( step );
+    end = end.plus( step );
+    end = end.plus( step );
+    end = end.plus( step );
+
+    return new Interval( start, end );
+  }
+
+  // FIXME: move to na utils
+  /**
+   * Hacky: we need a period depending on the actual meaning of the timestep (is it days, hours, or minutes)?<br/>
+   * If we just use minutes, we get problems with step years/minutes and so on....
+   */
+  private Period findPeriod( final Integer minutes )
+  {
+    /* Days */
+    if( minutes % (60 * 24) == 0 )
+      return new Period( 0, 0, 0, minutes / (60 * 24), 0, 0, 0, 0 );
+
+    /* Hours */
+    if( minutes % 60 == 0 )
+      return new Period( minutes / 60, 0, 0, 0 );
+
+    /* Minutes */
+    return new Period( 0, minutes, 0, 0 );
+  }
 }
