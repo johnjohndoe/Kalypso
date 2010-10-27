@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="featureview.template.kalypso.org featureview.xsd">
+	<layer id="foo" featurePath="/" linktype="gml" xlink:href="../../expertControl.gml"/>
+	
+	<view typename="NAModellControl" style="0" tooltip="">
+		<gridData grabExcessHorizontalSpace="true"
+		 grabExcessVerticalSpace="true" 
+		 />
+		
+		<gridLayout numColumns="2" makeColumnsEqualWidth="true" horizontalSpacing="10"/>
+<!--
+  
+Beschreibung:
+ 
+
+-->
+<!--
+		<group text="Beschreibung" style="0">
+		<gridData verticalSpan="2" horizontalAlignment="4" verticalAlignment="4" grabExcessHorizontalSpace="true"/>	grabExcessVerticalSpace="true"/>
+		<gridLayout numColumns = "2" horizontalSpacing="10"/>
+		<label property="description" style="0">
+			<gridData verticalAlignment="1" horizontalAlignment="1"/>
+		</label>
+		<text property="description" style="2050">
+			<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+		</text>
+		</group>
+-->
+
+<!--
+  
+  Ausgabedateien:
+ 
+-->
+		<group text="Verfügbare Ausgabedateien eines Teilgebietes" style="SWT.NONE">
+		<gridData verticalSpan="2" horizontalAlignment="GridData.FILL" 
+		verticalAlignment="GridData.FILL"
+		grabExcessHorizontalSpace="true"
+		grabExcessVerticalSpace="true"/>
+		<gridLayout numColumns = "2" horizontalSpacing="10"/>
+			<label property="tmp" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="tmp" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="pre" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="pre" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="sch" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="sch" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="qgg" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="qgg" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="qna" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="qna" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="qvs" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="qvs" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="qif" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="qif" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="qbs" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="qbs" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="qgw" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="qgw" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="gws" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="gws" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="vet" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="vet" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+<!--			
+			<label property="qt1" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="qt1" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="qtg" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="qtg" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+-->			
+		</group>
+
+		<group text="Verfügbare Ausgabedateien an einem Knoten" style="SWT.NONE">
+		<gridData verticalSpan="2" horizontalAlignment="GridData.FILL" 
+		verticalAlignment="GridData.FILL"
+		grabExcessHorizontalSpace="true"
+		grabExcessVerticalSpace="true"/>
+		<gridLayout numColumns = "2" horizontalSpacing="10"/>
+			<label property="qgs" style="0">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="qgs" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="useResults" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START" />
+			</label>
+			<checkbox property="useResults" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+		</group>
+		
+		
+
+		<group text="Verfügbare Ausgabedateien eines Speicherstranges" style="SWT.NONE">
+		<gridData verticalSpan="2" horizontalAlignment="GridData.FILL" 
+		verticalAlignment="GridData.FILL"
+		grabExcessHorizontalSpace="true"
+		grabExcessVerticalSpace="true"/>
+		<gridLayout numColumns = "2" horizontalSpacing="10"/>
+			<label property="spi" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="spi" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+
+			<label property="sup" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="sup" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+		</group>
+
+		<group text="Bilanzdateien" style="SWT.NONE">
+		<gridData verticalSpan="2" horizontalAlignment="GridData.FILL" 
+		verticalAlignment="GridData.FILL"
+		grabExcessHorizontalSpace="true"
+		grabExcessVerticalSpace="true"/>
+		<gridLayout numColumns = "2" horizontalSpacing="10"/>
+			<label property="bil" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START" />
+			</label>
+			<checkbox property="bil" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			
+<!--			
+			<label property="nmq" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START" />
+			</label>
+			<checkbox property="nmq" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="hyd" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="hyd" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="bof" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="bof" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+			<label property="bsp" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="bsp" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+-->			
+		</group>
+<!--
+  
+  Optimierung
+ 
+-->
+<!--
+		<group text="Optimierungsparameter (optional)" style="SWT.NONE">
+		<gridData verticalSpan="2" horizontalAlignment="GridData.FILL" 
+		verticalAlignment="GridData.FILL"
+		grabExcessHorizontalSpace="true"
+		grabExcessVerticalSpace="true"/>
+		<gridLayout numColumns = "2" horizontalSpacing="10"/>
+			<label property="automaticCallibration" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<checkbox property="automaticCallibration" style="0">
+				<gridData grabExcessHorizontalSpace="true" horizontalAlignment = "GridData.END"/>
+			</checkbox>
+
+			<label property="Catchments" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="Catchments" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="CatchmentsFaktn" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="CatchmentsFaktn" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="CatchmentsBianf" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="CatchmentsBianf" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="CatchmentsFaktorRetobTetint" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="CatchmentsFaktorRetobTetint" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="CatchmentsFaktorAigw" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="CatchmentsFaktorAigw" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="KMChannels" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="KMChannels" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="KMChannelsFaktorRkf" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="KMChannelsFaktorRkf" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="KMChannelsFaktorRnf" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="KMChannelsFaktorRnf" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="rootNode" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="rootNode" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="pegelZR" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="pegelZR" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+			<label property="qberechnetZR" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.START"/>
+			</label>
+			<text property="qberechnetZR" style="2050">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+		</group>
+-->		
+	</view>
+</featuretemplate>
