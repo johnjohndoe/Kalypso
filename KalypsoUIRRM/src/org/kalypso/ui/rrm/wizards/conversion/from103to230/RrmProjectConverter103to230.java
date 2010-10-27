@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.module.conversion.AbstractProjectConverter;
+import org.kalypso.ui.rrm.i18n.Messages;
 
 
 /**
@@ -59,7 +60,7 @@ public class RrmProjectConverter103to230 extends AbstractProjectConverter
 
   public RrmProjectConverter103to230( final File sourceDir, final File targetDir )
   {
-    super( String.format( "Konvertierung von '%s' Version 1.0.3 nach 2.2.0", sourceDir.getName() ) );
+    super( String.format( Messages.getString("RrmProjectConverter103to230_0"), sourceDir.getName() ) ); //$NON-NLS-1$
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
@@ -72,16 +73,16 @@ public class RrmProjectConverter103to230 extends AbstractProjectConverter
   protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
     final String projectName = m_sourceDir.getName();
-    monitor.beginTask( String.format( "Projekt '%s'", projectName ), 100 );
+    monitor.beginTask( String.format( Messages.getString("RrmProjectConverter103to230_1"), projectName ), 100 ); //$NON-NLS-1$
 
     try
     {
       final BasicModelConverter basicModelConverter = new BasicModelConverter( m_sourceDir, m_targetDir );
-      monitor.subTask( "konvertiere Basisdaten..." );
+      monitor.subTask( Messages.getString("RrmProjectConverter103to230_2") ); //$NON-NLS-1$
       final IStatus basicStatus = basicModelConverter.execute( new SubProgressMonitor( monitor, 33 ) );
       getLog().addStatus( basicStatus );
 
-      monitor.subTask( "konvertiere Rechenvarianten..." );
+      monitor.subTask( Messages.getString("RrmProjectConverter103to230_3") ); //$NON-NLS-1$
       final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir );
       final IStatus calcCaseStatus = casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
       getLog().addStatus( calcCaseStatus );

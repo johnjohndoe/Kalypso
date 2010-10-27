@@ -61,6 +61,7 @@ import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -155,7 +156,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     // Momentan: es wird immer alles kopiert
     copyDir( INaCalcCaseConstants.ERGEBNISSE_DIR );
 
-    getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Kopie der Daten" ) );
+    getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CalcCaseConverter_0") ) ); //$NON-NLS-1$
   }
 
   private void copyFile( final String path ) throws IOException
@@ -195,14 +196,14 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       naControl.setExeVersion( newExeVersion );
       // FIXME: we should write in the same encoding as we read the file
       final File naControlFile = new File( m_targetDir, INaCalcCaseConstants.DOT_CALCULATION );
-      GmlSerializer.serializeWorkspace( naControlFile, naControl.getWorkspace(), "UTF-8" );
+      GmlSerializer.serializeWorkspace( naControlFile, naControl.getWorkspace(), "UTF-8" ); //$NON-NLS-1$
 
-      final String statusMsg = String.format( "Eingestellte Version von Kalypso-NA.exe war 'neueste'. Automatisch geändert auf: %s", newExeVersion );
+      final String statusMsg = String.format( Messages.getString("CalcCaseConverter_2"), newExeVersion ); //$NON-NLS-1$
       getLog().add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), statusMsg ) );
     }
     else
     {
-      final String statusMsg = String.format( "Version von Kalypso-NA.exe war voreingestellt auf: %s", exeVersion );
+      final String statusMsg = String.format( Messages.getString("CalcCaseConverter_3"), exeVersion ); //$NON-NLS-1$
       getLog().add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), statusMsg ) );
     }
 
@@ -218,7 +219,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   {
     if( m_data.getMetaControl().isUsePrecipitationForm() )
     {
-      final String okMsg = "Syntetisches Ereignis, Zeitreihenverlängerung nicht notwendig";
+      final String okMsg = Messages.getString("CalcCaseConverter_4"); //$NON-NLS-1$
       getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), okMsg ) );
       return;
     }
