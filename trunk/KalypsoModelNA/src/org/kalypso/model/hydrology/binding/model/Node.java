@@ -79,6 +79,8 @@ public class Node extends AbstractNaModelElement
 
   private static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
 
+  private static final QName NODE_QQRELATED_NODE_PROP = new QName( NS_NAMODELL, "qqRelatedNode" ); //$NON-NLS-1$
+
   public Node( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -168,6 +170,11 @@ public class Node extends AbstractNaModelElement
   public void setGenerateResults( final boolean value )
   {
     setProperty( GENERATE_RESULT_PROP, value );
+  }
+
+  public Node getQQRelatedNode( )
+  {
+    return (Node) FeatureHelper.resolveLink( this, NODE_QQRELATED_NODE_PROP, true );
   }
 
 }

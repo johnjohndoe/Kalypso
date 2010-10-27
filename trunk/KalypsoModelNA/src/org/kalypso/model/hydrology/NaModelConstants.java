@@ -188,8 +188,6 @@ public interface NaModelConstants
 
   public static final QName NODE_QQRELATION_PROP = new QName( NS_NAMODELL, "qqRelation" ); //$NON-NLS-1$
 
-  public static final QName NODE_QQRELATED_NODE_PROP = new QName( NS_NAMODELL, "qqRelatedNode" ); //$NON-NLS-1$
-
   // catchments
 
   public static final QName BODENKORREKTUR_MEMBER = new QName( NS_NAMODELL, "bodenkorrekturmember" ); //$NON-NLS-1$
