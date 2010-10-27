@@ -128,7 +128,7 @@ public class CatchmentManager
     // 4-6
     catchmentBuffer.append( String.format( Locale.US, "%s %s\n", getTemperaturEingabeDateiString( catchment, m_conf ), getVerdunstungEingabeFilename( catchment, m_conf ) ) ); //$NON-NLS-1$
 
-    // Zeitflï¿½chenfunktion
+    // Zeitflächenfunktion
     final Object zftProp = catchment.getProperty( NaModelConstants.CATCHMENT_PROP_ZFT );
     if( zftProp instanceof IObservation )
     {

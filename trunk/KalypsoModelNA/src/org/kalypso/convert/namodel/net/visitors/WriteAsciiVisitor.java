@@ -56,8 +56,6 @@ public class WriteAsciiVisitor extends NetElementVisitor
 
   private final List<Node> m_nodeCollector = new ArrayList<Node>();
 
-  private final List<NetElement> m_visitedElements = new ArrayList<NetElement>();
-
   public WriteAsciiVisitor( final AsciiBuffer asciiBuffer )
   {
     m_asciiBuffer = asciiBuffer;
@@ -82,13 +80,7 @@ public class WriteAsciiVisitor extends NetElementVisitor
       e.printStackTrace();
       log( e.getLocalizedMessage() );
     }
-    m_visitedElements.add( netElement );
     return true;
-  }
-
-  public List<NetElement> getVisitedElements( )
-  {
-    return m_visitedElements;
   }
 
   public Node[] getNodes( )

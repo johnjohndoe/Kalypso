@@ -156,8 +156,6 @@ public interface NaModelConstants
 
   public static final QName KM_CHANNEL_KMEND = new QName( NS_NAMODELL, "endkm" ); //$NON-NLS-1$
 
-  public static final QName IKNOT_MEMBER_PROP = new QName( NS_NAMODELL, "iknotNodeMember" ); //$NON-NLS-1$
-
   // nodes
   public static final QName NODE_GEOM_PROP = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 

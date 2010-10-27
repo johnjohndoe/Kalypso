@@ -57,20 +57,26 @@ public class StorageChannel extends Channel
 
   private static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
 
+  private static final QName IKNOT_MEMBER = new QName( NS_NAMODELL, "iknotNodeMember" ); //$NON-NLS-1$
+
   public StorageChannel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
-  
+
   public boolean isGenerateResults( )
   {
     return getBoolean( GENERATE_RESULT_PROP, false );
   }
 
-  public void setGenerateResults( boolean value )
+  public void setGenerateResults( final boolean value )
   {
     setProperty( GENERATE_RESULT_PROP, value );
   }
 
+  public Node getOverflowNode( )
+  {
+    return getProperty( IKNOT_MEMBER, Node.class );
+  }
 
 }

@@ -74,6 +74,7 @@ import org.kalypso.model.hydrology.binding.model.KontEntnahme;
 import org.kalypso.model.hydrology.binding.model.KontZufluss;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.Ueberlauf;
 import org.kalypso.model.hydrology.binding.model.Verzweigung;
 import org.kalypso.ogc.sensor.IAxis;
@@ -245,10 +246,25 @@ public class NetFileManager
       final NetElement upStreamElement = netElements.get( channel.getId() );
       final NetElement downStreamElement = netElements.get( downStreamChannel.getId() );
 
-      downStreamElement.addUpStream( upStreamElement );
+      downStreamElement.addUpStream ( upStreamElement );
     }
 
-    // TODO check dependency storagechannel -> overflownode
+    /* storage channel -> overflow node */
+    for( final Channel channel : channels )
+    {
+      if( channel instanceof StorageChannel )
+      {
+        final Node overflowNode = ((StorageChannel)channel).getOverflowNode();
+        if( overflowNode != null )
+        {
+          final Channel downstreamChannel = overflowNode.getDownstreamChannel();
+          final NetElement channelElement = netElements.get( channel.getId() );
+          final NetElement downstreamElement = netElements.get( downstreamChannel.getId() );
+          downstreamElement.addUpStream( channelElement );
+        }
+      }
+    }
+
     // dependency: catchment -> catchment
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
     for( final Catchment catchment : catchments )
@@ -265,7 +281,17 @@ public class NetFileManager
 
       final Node overflowNode = catchment.getOverflowNode();
       if( overflowNode != null )
+      {
+        /* If we have an overflow node, we need to set the current catchment as upstream of its downstream channel */
+        final Channel overflowChannel = overflowNode.getDownstreamChannel();
+        if( overflowChannel != null )
+        {
+          final NetElement overflowElement = netElements.get( overflowChannel.getId() );
+          overflowElement.addUpStream( upStreamElement );
+        }
+
         upStreamElement.setOverflowNode( overflowNode );
+      }
 
       // downstream
       final IRelationType rt1 = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.GRUNDWASSERABFLUSS_MEMBER );

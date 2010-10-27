@@ -223,6 +223,10 @@ public class NAControlConverter
     writer.append( "n" + "       Kapil.Aufstieg/Perkolation .kap\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     writer.append( getBoolean( controlFE.doGenerateVET() ) + "       Evapotranspiration         .vet\n" ); //$NON-NLS-1$
 
+    // FIXME: depending on the calc core, the next line must be present or not.... grrrr...
+    // We leave that for now.... (it is not clear when exactly this was changed, probably Summer 2009)
+    // writer.append( "n       Ausgabe MRS                .qmr\n" ); //$NON-NLS-1$
+
     writer.append( getBoolean( controlFE.doGenerateHYD() ) + "       Ausgabe Hydrotope          .hyd\n" ); //$NON-NLS-1$
     // if "2": output of *.txt and *.bil
     if( controlFE.doGenerateBIL() )

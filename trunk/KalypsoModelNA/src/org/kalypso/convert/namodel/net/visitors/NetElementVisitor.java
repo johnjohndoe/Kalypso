@@ -1,9 +1,3 @@
-package org.kalypso.convert.namodel.net.visitors;
-
-import java.util.logging.Logger;
-
-import org.kalypso.convert.namodel.net.NetElement;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -44,6 +38,11 @@ import org.kalypso.convert.namodel.net.NetElement;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.convert.namodel.net.visitors;
+
+import java.util.logging.Logger;
+
+import org.kalypso.convert.namodel.net.NetElement;
 
 public abstract class NetElementVisitor
 {
@@ -51,7 +50,7 @@ public abstract class NetElementVisitor
 
   public abstract boolean visit( NetElement netElement ) throws Exception;
 
-  public void log( String info )
+  public void log( final String info )
   {
     if( m_logger != null )
       m_logger.info( info );
@@ -62,7 +61,7 @@ public abstract class NetElementVisitor
     return m_logger;
   }
 
-  public void setLogger( Logger logger )
+  public void setLogger( final Logger logger )
   {
     m_logger = logger;
   }
