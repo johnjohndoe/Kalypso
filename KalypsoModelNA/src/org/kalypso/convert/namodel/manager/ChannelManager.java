@@ -44,12 +44,12 @@ import java.util.Arrays;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.VirtualChannel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -97,11 +97,11 @@ public class ChannelManager
     for( final Channel channel : allChannels )
     {
       if( asciiBuffer.isFeatureMarkedForWrite( channel ) )
-        writeFeature( asciiBuffer, channel, workspace );
+        writeFeature( asciiBuffer, channel );
     }
   }
 
-  private void writeFeature( final AsciiBuffer asciiBuffer, final Channel channel, final GMLWorkspace workspace ) throws Exception
+  private void writeFeature( final AsciiBuffer asciiBuffer, final Channel channel ) throws Exception
   {
     final IDManager idManager = m_conf.getIdManager();
 
@@ -130,13 +130,12 @@ public class ChannelManager
 
       rhbBuffer.append( "SPEICHER" + FortranFormatHelper.printf( idManager.getAsciiID( channel ), "i8" ) ); //$NON-NLS-1$//$NON-NLS-2$
       // Ueberlaufknoten optional
-      final IRelationType rt2 = (IRelationType) channel.getFeatureType().getProperty( NaModelConstants.IKNOT_MEMBER_PROP );
-      final Feature nodeFE = workspace.resolveLink( channel, rt2 );
+      final Node overflowNode = ((StorageChannel) channel).getOverflowNode();
       final Feature dwonstreamNode = channel.getDownstreamNode();
-      if( nodeFE == null || nodeFE == dwonstreamNode )
+      if( overflowNode == null || overflowNode == dwonstreamNode )
         rhbBuffer.append( "       0" ); //$NON-NLS-1$
       else
-        rhbBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i8" ) ); //$NON-NLS-1$
+        rhbBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( overflowNode ), "i8" ) ); //$NON-NLS-1$
       rhbBuffer.append( "  0.00" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       // (itext,a80)
       // RHB 8

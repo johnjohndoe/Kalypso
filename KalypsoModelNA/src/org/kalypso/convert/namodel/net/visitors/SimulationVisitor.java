@@ -54,15 +54,15 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
  */
 public class SimulationVisitor extends NetElementVisitor
 {
-  private final NetElementVisitor m_innerVisitor;
+  private final WriteAsciiVisitor m_elementWriter;
 
   private final List<NetElement> m_simulated = new ArrayList<NetElement>();
 
   private final Set<NetElement> m_cycleTest = new HashSet<NetElement>();
 
-  public SimulationVisitor( final NetElementVisitor innerVisitor )
+  public SimulationVisitor( final WriteAsciiVisitor elementWriter )
   {
-    m_innerVisitor = innerVisitor;
+    m_elementWriter = elementWriter;
   }
 
   /**
@@ -74,11 +74,13 @@ public class SimulationVisitor extends NetElementVisitor
   {
     if( m_simulated.contains( netElement ) )
       return false;
+
     // check cycle
     if( m_cycleTest.contains( netElement ) )
     {
-      final StringBuffer b = new StringBuffer( Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.0" ) ); //$NON-NLS-1$
-      System.out.println( Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.1" ) + netElement ); //$NON-NLS-1$
+      final String warning = Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.0" ); //$NON-NLS-1$
+      final StringBuffer b = new StringBuffer( warning );
+      System.out.println( warning + netElement ); //$NON-NLS-1$
 
       // check circle (shortest connection)
       // TODO: Better output handling, in this way it is not easy to find the circle
@@ -104,8 +106,9 @@ public class SimulationVisitor extends NetElementVisitor
       final NetElement element = netElement2;
       visit( element );
     }
+
     // then calculate current
-    m_innerVisitor.visit( netElement );
+    m_elementWriter.visit( netElement );
     m_simulated.add( netElement );
     return true;
   }

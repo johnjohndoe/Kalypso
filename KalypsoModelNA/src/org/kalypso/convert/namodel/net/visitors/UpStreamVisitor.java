@@ -1,9 +1,3 @@
-package org.kalypso.convert.namodel.net.visitors;
-
-import java.util.List;
-
-import org.kalypso.convert.namodel.net.NetElement;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -44,15 +38,19 @@ import org.kalypso.convert.namodel.net.NetElement;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.convert.namodel.net.visitors;
 
+import java.util.List;
+
+import org.kalypso.convert.namodel.net.NetElement;
+
+/**
+ * @author doemming
+ */
 public class UpStreamVisitor extends NetElementVisitor
 {
-
   private final NetElementVisitor m_innerVisitor;
 
-  /*
-   * @author doemming
-   */
   public UpStreamVisitor( final NetElementVisitor innerVisitor )
   {
     m_innerVisitor = innerVisitor;

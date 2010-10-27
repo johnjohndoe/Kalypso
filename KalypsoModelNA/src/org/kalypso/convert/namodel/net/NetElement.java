@@ -133,7 +133,7 @@ public class NetElement
 
   private final Logger m_logger;
 
-  private Node m_overflowNode;
+  private Node m_overflowNode = null;
 
   public NetElement( final GMLWorkspace modellWorkspace, final GMLWorkspace synthNWorkspace, final Channel channel, final NAConfiguration conf, final Logger logger )
   {
@@ -142,7 +142,6 @@ public class NetElement
     m_workspace = modellWorkspace;
     m_conf = conf;
     m_logger = logger;
-    setOverflowNode( null );
   }
 
   public Channel getChannel( )
@@ -226,6 +225,8 @@ public class NetElement
 
   private void addDownStream( final NetElement downStreamElement )
   {
+    // FIXME: should also add myself as upstream to downstream: but we need to avoid endless loop
+
     if( !m_downStreamDepends.contains( downStreamElement ) )
       m_downStreamDepends.add( downStreamElement );
   }
@@ -402,7 +403,6 @@ public class NetElement
         }
       }
     }
-
   }
 
   public void setOverflowNode( final Node overflowNode )
@@ -413,5 +413,10 @@ public class NetElement
   public Node getOverflowNode( )
   {
     return m_overflowNode;
+  }
+
+  public int getAsciiID( )
+  {
+    return m_conf.getIdManager().getAsciiID( getChannel() );
   }
 }
