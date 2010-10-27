@@ -42,6 +42,7 @@ package org.kalypso.convert.namodel.manager;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -150,7 +151,9 @@ public class NetFileManager
   }
 
   /**
-   * generate NetElements for rrm model
+   * Generate NetElements for rrm model: also defines the relation between channels (upstream/downstream). This defines
+   * in what order the net is written later.<br/>
+   * IMPORTANT: if any relation in the gml-model is changed/added, this methods needs to be updated as well.
    * 
    * @param workspace
    *          the rrm workspace
@@ -184,39 +187,34 @@ public class NetFileManager
     for( final Node upStreamNode : nodes )
     {
       final Channel upStreamChannel = upStreamNode.getDownstreamChannel();
-      final Branching branching = upStreamNode.getBranching();
-      if( branching != null )
+      final Node[] relatedNode = findRelatedNodes( upStreamNode );
+      for( final Node downStreamNode : relatedNode )
       {
-        if( branching instanceof BranchingWithNode )
+        final Channel downStreamChannelFE = downStreamNode.getDownstreamChannel();
+
+        if( upStreamChannel == null )
         {
-          final Node downStreamNode = ((BranchingWithNode) branching).getNode();
-
-          final Channel downStreamChannelFE = downStreamNode.getDownstreamChannel();
-
-          if( upStreamChannel == null )
-          {
-            final String message = String.format( "Inconsistent net: Node '%s' with branch has no upstream channel.", upStreamNode.getName() );
-            throw new SimulationException( message );
-          }
-
-          if( downStreamChannelFE == null )
-          {
-            final String message = String.format( "Inconsistent net: Node '%s' with branch has no downstream channel.", upStreamNode.getName() );
-            throw new SimulationException( message );
-          }
-
-          if( upStreamChannel == downStreamChannelFE )
-          {
-            logWarning( "Impossible net at %s: Node-Node relation to itself", upStreamChannel );
-            // FIXME: shouldn't we throw an exception here?
-            continue;
-          }
-
-          // set dependency
-          final NetElement upStreamElement = netElements.get( upStreamChannel.getId() );
-          final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
-          downStreamElement.addUpStream( upStreamElement );
+          final String message = String.format( "Inconsistent net: Node '%s' with branch has no upstream channel.", upStreamNode.getName() );
+          throw new SimulationException( message );
         }
+
+        if( downStreamChannelFE == null )
+        {
+          final String message = String.format( "Inconsistent net: Node '%s' with branch has no downstream channel.", upStreamNode.getName() );
+          throw new SimulationException( message );
+        }
+
+        if( upStreamChannel == downStreamChannelFE )
+        {
+          logWarning( "Impossible net at %s: Node-Node relation to itself", upStreamChannel );
+          // FIXME: shouldn't we throw an exception here?
+          continue;
+        }
+
+        // set dependency
+        final NetElement upStreamElement = netElements.get( upStreamChannel.getId() );
+        final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
+        downStreamElement.addUpStream( upStreamElement );
       }
     }
 
@@ -331,6 +329,28 @@ public class NetFileManager
 
     final Collection<NetElement> values = netElements.values();
     return values.toArray( new NetElement[values.size()] );
+  }
+
+  private Node[] findRelatedNodes( final Node upStreamNode )
+  {
+    final Collection<Node> relatedNodes = new ArrayList<Node>( 2 );
+
+    final Branching branching = upStreamNode.getBranching();
+    if( branching != null )
+    {
+      if( branching instanceof BranchingWithNode )
+      {
+        final Node branchRelatedNode = ((BranchingWithNode) branching).getNode();
+        if( branchRelatedNode != null )
+          relatedNodes.add( branchRelatedNode );
+      }
+    }
+
+    final Node qqRelatedNode = upStreamNode.getQQRelatedNode();
+    if( qqRelatedNode != null )
+      relatedNodes.add( qqRelatedNode );
+
+    return relatedNodes.toArray( new Node[relatedNodes.size()] );
   }
 
   private void logWarning( final String format, final Feature... netElements )
@@ -574,9 +594,9 @@ public class NetFileManager
     throw new IllegalArgumentException( "Illegal branching type: " + branching.getClass() );
   }
 
-  private ZuflussBean getQQRelationZuflussBean( final Feature node, final IDManager idManager ) throws SensorException
+  private ZuflussBean getQQRelationZuflussBean( final Node node, final IDManager idManager ) throws SensorException
   {
-    final Node relatedNode = (Node) FeatureHelper.resolveLink( node, NaModelConstants.NODE_QQRELATED_NODE_PROP, true );
+    final Node relatedNode = node.getQQRelatedNode();
     if( relatedNode == null )
       return null;
     final IObservation observation = (IObservation) node.getProperty( NaModelConstants.NODE_QQRELATION_PROP );
