@@ -41,9 +41,12 @@
 package org.kalypso.ui.rrm.wizards.conversion;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.module.conversion.AbstractProjectConverter;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.module.conversion.IProjectConverter;
 import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverter103to230;
 
 /**
@@ -51,7 +54,7 @@ import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverter103
  * 
  * @author Gernot Belger
  */
-public class RrmProjectConverter extends AbstractProjectConverter
+public class RrmProjectConverter implements IProjectConverter
 {
   private final File m_sourceDir;
 
@@ -59,20 +62,27 @@ public class RrmProjectConverter extends AbstractProjectConverter
 
   public RrmProjectConverter( final File sourceDir, final File targetDir )
   {
-    super( String.format( "Konvertierung von '%s'", sourceDir.getName() ) );
-
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
   }
 
   /**
-   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.module.conversion.IProjectConverter#getLabel()
    */
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Exception
+  public String getLabel( )
+  {
+    return String.format( "Konvertierung von '%s'", m_sourceDir.getName() );
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
     // FIXME: decide which converter to use, depending on version of source
     final RrmProjectConverter103to230 converter103to230 = new RrmProjectConverter103to230( m_sourceDir, m_targetDir );
-    converter103to230.execute( monitor );
+    return converter103to230.execute( monitor );
   }
 }
