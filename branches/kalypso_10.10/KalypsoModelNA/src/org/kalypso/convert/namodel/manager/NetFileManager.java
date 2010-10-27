@@ -545,7 +545,7 @@ public class NetFileManager
   {
     final ZuflussBean bean = getZuflussBean( branching );
     if( bean.m_value instanceof Double )
-      bean.m_specialBuffer.append( String.format( "%10.3f", bean.m_value ) ); //$NON-NLS-1$
+      bean.m_specialBuffer.append( String.format( Locale.US, "%10.3f", bean.m_value ) ); //$NON-NLS-1$
     else if( bean.m_value instanceof Integer )
       bean.m_specialBuffer.append( String.format( "%4d", bean.m_value ) ); //$NON-NLS-1$
     // else throw an exception...
