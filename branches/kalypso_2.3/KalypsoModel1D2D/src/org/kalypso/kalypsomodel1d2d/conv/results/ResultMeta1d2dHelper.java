@@ -50,16 +50,24 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.FalseFileFilter;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.eclipse.core.expressions.IEvaluationContext;
@@ -86,9 +94,9 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -165,7 +173,15 @@ public class ResultMeta1d2dHelper
             }
             else
             {
-              resource.delete( true, new NullProgressMonitor() );
+              if( resource instanceof IFolder )
+              {
+                removeResourceFolder( resource, removeOriginalRawRes );
+              }
+              else
+              {
+                resource.delete( true, new NullProgressMonitor() );
+              }
+              // resource.delete( true, new NullProgressMonitor() );
             }
           }
           else if( resource instanceof IFolder )
@@ -180,8 +196,8 @@ public class ResultMeta1d2dHelper
         }
         catch( final CoreException e )
         {
-//          e.printStackTrace();
-           return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.0" ) ); //$NON-NLS-1$
+          // e.printStackTrace();
+          return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.0" ) ); //$NON-NLS-1$
         }
       }
     }
@@ -196,7 +212,36 @@ public class ResultMeta1d2dHelper
     {
       if( children.length == 0 || removeOriginalRawRes )
       {
-        resource.delete( true, new NullProgressMonitor() );
+        try
+        {
+          resource.delete( true, new NullProgressMonitor() );
+        }
+        catch( Exception e )
+        {
+          IOFileFilter lNoDirFilter = FalseFileFilter.INSTANCE;
+          WildcardFileFilter lFilter = new WildcardFileFilter( new String[] { "*" } );
+          final Collection< ? > files = FileUtils.listFiles( resource.getLocation().toFile(), lFilter, lNoDirFilter );
+          for( final Object lFile : files )
+          {
+            if( lFile instanceof File )
+              FileUtils.deleteQuietly( (File) lFile );
+          }
+
+          IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
+          final Collection< ? > dirs = FileUtils.listFiles( resource.getLocation().toFile(), lFilter, lDirFilter );
+          for( final Object lDir : dirs )
+          {
+            if( lDir instanceof File )
+              try
+              {
+                FileUtils.deleteDirectory( (File) lDir );
+              }
+              catch( IOException e1 )
+              {
+                e1.printStackTrace();
+              }
+          }
+        }
       }
       else
       {
@@ -329,7 +374,7 @@ public class ResultMeta1d2dHelper
 
     return document;
   }
-  
+
   /**
    * adds a specified {@link IDocumentResultMeta} to the specified {@link IResultMeta}
    * 
@@ -355,7 +400,7 @@ public class ResultMeta1d2dHelper
   {
     if( resultMeta == null )
       return null;
-    
+
     final IDocumentResultMeta document = resultMeta.getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
     document.setName( name );
     document.setDescription( description );
@@ -364,7 +409,7 @@ public class ResultMeta1d2dHelper
     document.setStatus( status );
     if( minMaxCatcher != null )
       document.setMinMaxValues( minMaxCatcher );
-    
+
     return document;
   }
 
@@ -557,7 +602,7 @@ public class ResultMeta1d2dHelper
         final IDocumentResultMeta document = (IDocumentResultMeta) child;
         if( document.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.log )
         {
-//          System.out.println( "log to delete: " + document );
+          // System.out.println( "log to delete: " + document );
           // continue;
         }
       }
@@ -612,12 +657,15 @@ public class ResultMeta1d2dHelper
 
   public static String getNodeResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta, final String strType )
   {
-    return docResult.getName() + STR_THEME_NAME_SEPARATOR + strType + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + stepResult.getFeature().getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
+    return docResult.getName() + STR_THEME_NAME_SEPARATOR + strType + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR
+        + stepResult.getFeature().getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
   }
 
   public static String getIsolineResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
   {
-    return docResult.getName() + STR_THEME_NAME_SEPARATOR + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.8" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$ //$NON-NLS-2$
+    return docResult.getName()
+        + STR_THEME_NAME_SEPARATOR
+        + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.8" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   // /**
@@ -633,7 +681,9 @@ public class ResultMeta1d2dHelper
 
   public static String getIsoareaResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
   {
-    return docResult.getName() + STR_THEME_NAME_SEPARATOR + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.11" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$ //$NON-NLS-2$
+    return docResult.getName()
+        + STR_THEME_NAME_SEPARATOR
+        + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.11" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -669,9 +719,22 @@ public class ResultMeta1d2dHelper
     try
     {
       String lStrTimeFormat = "dd.MM.yyyy_HH_mm"; //$NON-NLS-1$
+      String lStrTimeFormatFull = "dd.MM.yyyy_HH_mm_ss_SS"; //$NON-NLS-1$
       SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
+      SimpleDateFormat lSimpleDateFormatFull = new SimpleDateFormat( lStrTimeFormatFull );
       int indexOfStepDate = url.toExternalForm().indexOf( TIME_STEP_PREFIX ) + TIME_STEP_PREFIX.length();
-      Date lDateRes = lSimpleDateFormat.parse( url.toExternalForm().substring( indexOfStepDate, indexOfStepDate + lStrTimeFormat.length() ) );
+      // Date lDateRes = lSimpleDateFormat.parse( url.toExternalForm().substring( indexOfStepDate, indexOfStepDate +
+      // lStrTimeFormat.length() ) );
+      Date lDateRes = null;
+      String dateString = url.toExternalForm().substring( indexOfStepDate );
+      try
+      {
+        lDateRes = lSimpleDateFormatFull.parse( dateString );
+      }
+      catch( Exception e )
+      {
+        lDateRes = lSimpleDateFormat.parse( dateString );
+      }
       return lDateRes;
     }
     catch( Exception e )

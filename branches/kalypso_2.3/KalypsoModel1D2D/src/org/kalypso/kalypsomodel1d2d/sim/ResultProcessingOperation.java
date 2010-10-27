@@ -169,7 +169,12 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     final SortedSet<Date> allCalculatedDates = new TreeSet<Date>();
 
     /* Always delete all calculated steps */
-    allCalculatedDates.addAll( Arrays.asList( processBean.userCalculatedSteps ) );
+//    allCalculatedDates.addAll( Arrays.asList( processBean.userCalculatedSteps ) );
+    for( final Date dateTest: processBean.userCalculatedSteps ){
+      if( dateTest != null ){
+        allCalculatedDates.add( dateTest );
+      }
+    }
 
     List<String> ids = new ArrayList<String>();
 
