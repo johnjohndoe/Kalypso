@@ -116,7 +116,7 @@ import org.kalypsodeegree_impl.tools.GMLConstants;
  */
 public class KalypsoNAProjectWizard extends NewProjectWizard
 {
-  private static final QName QNAME_STRANGART = new QName( "wizard.kalypso.na", "StrangArt" );
+  private static final QName QNAME_STRANGART = new QName( "wizard.kalypso.na", "StrangArt" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   /** Mapping option for geometry properties: do nothing, geometry is not changed. */
   private static final int GEO_MAPPING_NONE = 0;
@@ -166,7 +166,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   public KalypsoNAProjectWizard( )
   {
-    super( new ProjectTemplatePage( "Projektvorlage", "Wie wählen Sie, welche Projektvorlage verwendet werden soll", CATEGORY_TEMPLATE ), true, KalypsoModuleRRM.ID );
+    super( new ProjectTemplatePage( Messages.getString("KalypsoNAProjectWizard_2"), Messages.getString("KalypsoNAProjectWizard_3"), CATEGORY_TEMPLATE ), true, KalypsoModuleRRM.ID ); //$NON-NLS-1$ //$NON-NLS-2$
 
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "KalypsoNAProjectWizard.9" ) ); //$NON-NLS-1$
@@ -214,7 +214,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     }
     catch( final Exception e1 )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to create model files", e1 );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAProjectWizard_4"), e1 ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
@@ -266,12 +266,12 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     }
     catch( final IOException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to write model files", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAProjectWizard_5"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     catch( final GmlSerializeException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to write model files", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAProjectWizard_6"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
@@ -427,7 +427,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
         throw new NotImplementedException( Messages.getString( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
 
       default:
-        throw new IllegalArgumentException( String.format( "Unuknown channel type: %d. Valid values are 0,1 or 2.", channelType ) );
+        throw new IllegalArgumentException( String.format( Messages.getString("KalypsoNAProjectWizard_7"), channelType ) ); //$NON-NLS-1$
     }
   }
 
@@ -457,7 +457,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
     final IGMLSchema schema = targetFT.getGMLSchema();
     final String gmlVersion = schema.getGMLVersion();
-    if( gmlVersion.startsWith( "3" ) && Feature.QN_NAME.equals( targetPT.getQName() ) )
+    if( gmlVersion.startsWith( "3" ) && Feature.QN_NAME.equals( targetPT.getQName() ) ) //$NON-NLS-1$
     {
       final List<String> nameList = new ArrayList<String>();
       nameList.add( ObjectUtils.toString( sourceValue, StringUtils.EMPTY ) );
@@ -506,7 +506,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     catch( final Exception e )
     {
       // we do not print the stack trace!
-      final String msg = String.format( "Unable to map value '%s', to property '%s' of type %s.", ObjectUtils.toString( sourceValue ), vpt.getQName(), vpt.getValueQName() );
+      final String msg = String.format( Messages.getString("KalypsoNAProjectWizard_9"), ObjectUtils.toString( sourceValue ), vpt.getQName(), vpt.getValueQName() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
       KalypsoUIRRMPlugin.getDefault().getLog().log( status );
     }

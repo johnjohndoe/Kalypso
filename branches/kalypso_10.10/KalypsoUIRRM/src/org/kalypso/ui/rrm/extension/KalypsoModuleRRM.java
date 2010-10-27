@@ -13,6 +13,7 @@ import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModul
 import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.ui.composites.SpecialImportProjectAction;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
 
 public class KalypsoModuleRRM extends AbstractKalypsoModule
@@ -103,7 +104,7 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
       }
     };
 
-    actions.add( new SpecialImportProjectAction( "Altprojekte importieren", provider ) );
+    actions.add( new SpecialImportProjectAction( Messages.getString("KalypsoModuleRRM_0"), provider ) ); //$NON-NLS-1$
   }
 
   @Override

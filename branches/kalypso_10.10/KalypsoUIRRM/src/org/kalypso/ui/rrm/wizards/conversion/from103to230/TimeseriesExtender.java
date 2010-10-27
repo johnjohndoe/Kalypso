@@ -57,6 +57,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -90,7 +91,7 @@ public class TimeseriesExtender
     m_dateAxis = AxisUtils.findDateAxis( m_axisList );
     if( m_dateAxis == null )
     {
-      final String msg = String.format( "Not a timeseries: %s", href );
+      final String msg = String.format( Messages.getString("TimeseriesExtender_0"), href ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
       throw new CoreException( status );
     }
@@ -105,7 +106,7 @@ public class TimeseriesExtender
 
     if( size == 1 )
     {
-      final String msg = String.format( "Zeitreihe %s enthält nur einen Wert. Automatische Verlängerung nicht möglich.", m_href );
+      final String msg = String.format( Messages.getString("TimeseriesExtender_1"), m_href ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
       throw new CoreException( status );
     }
@@ -149,13 +150,13 @@ public class TimeseriesExtender
 
       case 1:
       {
-        final String msg = String.format( "Zeitreihe %s wurde automatisch verlängert (1 Zeitschritt)", m_href );
+        final String msg = String.format( Messages.getString("TimeseriesExtender_2"), m_href ); //$NON-NLS-1$
         return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), msg );
       }
 
       default:
       {
-        final String msg = String.format( "Zeitreihe %s wurde um %d Zeitschritte automatisch verlängert. Die Zeitschritte sind mit dem Warnsymbol markiert. Bitte prüfen Sie die Zeitreihe.", m_href, m_addCounter );
+        final String msg = String.format( Messages.getString("TimeseriesExtender_3"), m_href, m_addCounter ); //$NON-NLS-1$
         return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), msg );
       }
     }
@@ -247,7 +248,7 @@ public class TimeseriesExtender
       timeout++;
       if( timeout == 10 )
       {
-        final String msg = String.format( "Zeitreihe %s: mehr als 10 Werte müssten ergänzt werden. Abbruch, Zeitreihe wurde nicht verlängert." );
+        final String msg = String.format( Messages.getString("TimeseriesExtender_4") ); //$NON-NLS-1$
         final IStatus error = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
         throw new CoreException( error );
       }

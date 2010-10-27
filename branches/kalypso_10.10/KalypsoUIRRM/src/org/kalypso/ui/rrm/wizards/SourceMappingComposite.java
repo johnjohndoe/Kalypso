@@ -68,6 +68,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -122,7 +123,7 @@ public class SourceMappingComposite extends Composite
     }
   }
 
-  private static final String EMPTY_KEY = "-Kein Shape geladen-";
+  private static final String EMPTY_KEY = Messages.getString("SourceMappingComposite_0"); //$NON-NLS-1$
 
   private static final String NULL_KEY = "-NULL-"; //$NON-NLS-1$
 

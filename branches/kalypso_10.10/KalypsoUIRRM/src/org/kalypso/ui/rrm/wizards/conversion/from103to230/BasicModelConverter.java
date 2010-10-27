@@ -59,6 +59,7 @@ import org.kalypso.contribs.java.io.visitor.FileFilterVisitor;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -78,7 +79,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   public BasicModelConverter( final File sourceDir, final File targetDir )
   {
-    super( "Übernahme Basisdaten" );
+    super( Messages.getString("BasicModelConverter_1") ); //$NON-NLS-1$
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
@@ -96,7 +97,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
       copyFile( INaProjectConstants.GML_MODELL_PATH );
       copyFile( INaProjectConstants.GML_HYDROTOP_PATH );
       copyFile( INaProjectConstants.GML_PARAMETER_PATH );
-      copyFile( "synthN.gml", INaProjectConstants.GML_SYNTH_N_PATH );
+      copyFile( "synthN.gml", INaProjectConstants.GML_SYNTH_N_PATH ); //$NON-NLS-1$
 
       copyBasicTimeseries();
 
@@ -119,7 +120,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     FileUtils.copyDirectory( sourceDir, targetDir, true );
 
     /* Find all gml files here */
-    final FileFilter gmlFileFilter = new SuffixFileFilter( ".gml", IOCase.INSENSITIVE );
+    final FileFilter gmlFileFilter = new SuffixFileFilter( ".gml", IOCase.INSENSITIVE ); //$NON-NLS-1$
     final FileFilterVisitor gmlFileFinder = new FileFilterVisitor( gmlFileFilter, true, true );
     FileUtilities.accept( targetDir, gmlFileFinder, true );
 
@@ -133,7 +134,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
       }
       catch( final SAXException e )
       {
-        m_log.addError( "Fehler beim Konvertieren von '%s'. Die Datei ist kein gültiges XML", e, file.getName() );
+        m_log.addError( Messages.getString("BasicModelConverter_4"), e, file.getName() ); //$NON-NLS-1$
       }
     }
   }
@@ -152,7 +153,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   private void copyBasicTimeseries( ) throws CoreException, IOException
   {
-    final File sourceModelDir = new File( m_sourceDir, ".model" );
+    final File sourceModelDir = new File( m_sourceDir, ".model" ); //$NON-NLS-1$
     final File sourceTimeseriesDir = new File( sourceModelDir, "Zeitreihen" );
     final File targetTimeseriesDir = new File( m_targetDir, INaProjectConstants.FOLDER_ZEITREIHEN );
 

@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.module.conversion.IProjectConverter;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverter103to230;
 
 /**
@@ -72,7 +73,7 @@ public class RrmProjectConverter implements IProjectConverter
   @Override
   public String getLabel( )
   {
-    return String.format( "Konvertierung von '%s'", m_sourceDir.getName() );
+    return String.format( Messages.getString("RrmProjectConverter_0"), m_sourceDir.getName() ); //$NON-NLS-1$
   }
 
   /**

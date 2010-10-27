@@ -56,6 +56,7 @@ import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -127,7 +128,7 @@ public class TimeseriesExtendVisitor implements FeatureVisitor
 
   public IStatus getStatus( )
   {
-    return m_log.asMultiStatus( "Prüfung der Zeitreihenlänge" );
+    return m_log.asMultiStatus( Messages.getString("TimeseriesExtendVisitor_0") ); //$NON-NLS-1$
   }
 
   private void extendTimeseries( final Feature feature, final QName linkProperty )

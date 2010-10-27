@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
+import org.kalypso.ui.rrm.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,7 +66,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
 
   public CalcCasesConverter( final File sourceDir, final File targetDir )
   {
-    super( "Übernahme Rechenvarianten" );
+    super( Messages.getString("CalcCasesConverter_0") ); //$NON-NLS-1$
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
   }
@@ -78,7 +79,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
   {
     try
     {
-      final SubMonitor progress = SubMonitor.convert( monitor, "Konvertiere Rechenvarianten", 101 );
+      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("CalcCasesConverter_1"), 101 ); //$NON-NLS-1$
 
       final CalcCaseConvertWalker walker = new CalcCaseConvertWalker( m_sourceDir );
       final File[] calcCases = walker.execute();
@@ -91,7 +92,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         final File sourceDir = calcCases[i];
         final String calcCaseName = sourceDir.getName();
 
-        progress.subTask( String.format( "Rechenvariante %s (%d/%d)...", calcCaseName, i + 1, calcCases.length ) );
+        progress.subTask( String.format( Messages.getString("CalcCasesConverter_2"), calcCaseName, i + 1, calcCases.length ) ); //$NON-NLS-1$
         final File targetDir = determineTargetDir( sourceDir );
 
         try
@@ -106,20 +107,20 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         {
           final IStatus status = ce.getStatus();
           if( status.matches( IStatus.CANCEL ) )
-            throw new InterruptedException( "Abbruch durch Benutzer" );
+            throw new InterruptedException( Messages.getString("CalcCasesConverter_3") ); //$NON-NLS-1$
 
           getLog().add( status );
         }
         catch( final Throwable e )
         {
-          getLog().addError( "Unerwarteter Fehler beim Konvertieren von Rechenvariante '%s'", e, calcCaseName );
+          getLog().addError( Messages.getString("CalcCasesConverter_4"), e, calcCaseName ); //$NON-NLS-1$
         }
       }
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      getLog().addError( "Fehler beim Zugriff auf die Rechenvarianten", e );
+      getLog().addError( Messages.getString("CalcCasesConverter_5"), e ); //$NON-NLS-1$
     }
   }
 
@@ -142,7 +143,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
     if( calcCaseSourcePath.isPrefixOf( currentPath ) )
       targetRelativePath = currentPath.makeRelativeTo( calcCaseSourcePath );
     else
-      targetRelativePath = new Path( "Andere" ).append( calcCaseSourcePath.makeRelativeTo( basePath ) );
+      targetRelativePath = new Path( Messages.getString("CalcCasesConverter_6") ).append( calcCaseSourcePath.makeRelativeTo( basePath ) ); //$NON-NLS-1$
 
     final IPath calcCaseTargetPath = new Path( m_targetDir.getAbsolutePath() ).append( INaProjectConstants.FOLDER_RECHENVARIANTEN );
     return calcCaseTargetPath.append( targetRelativePath ).toFile();
