@@ -54,7 +54,6 @@ import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.NaSimulationData;
-import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
@@ -71,20 +70,21 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  */
 public class CalcCaseConverter extends AbstractLoggingOperation
 {
-  private static final String EXE_2_0_6 = "2.0.6"; //$NON-NLS-1$
-
   private final File m_targetDir;
 
   private final File m_sourceDir;
 
   private NaSimulationData m_data;
 
-  public CalcCaseConverter( final File sourceDir, final File targetDir )
+  private final String m_chosenExe;
+
+  public CalcCaseConverter( final File sourceDir, final File targetDir, final String chosenExe )
   {
     super( sourceDir.getName() );
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
+    m_chosenExe = chosenExe;
   }
 
   /**
@@ -189,22 +189,20 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   {
     final NAControl naControl = m_data.getMetaControl();
     final String exeVersion = naControl.getExeVersion();
-    if( CalcCoreUtils.VERSION_LATEST.equals( exeVersion ) || CalcCoreUtils.VERSION_NEUESTE.equals( exeVersion ) )
+    if( m_chosenExe != null )
     {
-      // 2.0.6 is the version known to work with kalypso 1.0.3
-      final String newExeVersion = EXE_2_0_6;
-      naControl.setExeVersion( newExeVersion );
+      naControl.setExeVersion( m_chosenExe );
       // FIXME: we should write in the same encoding as we read the file
       final File naControlFile = new File( m_targetDir, INaCalcCaseConstants.DOT_CALCULATION );
       GmlSerializer.serializeWorkspace( naControlFile, naControl.getWorkspace(), "UTF-8" ); //$NON-NLS-1$
 
-      final String statusMsg = String.format( Messages.getString("CalcCaseConverter_2"), newExeVersion ); //$NON-NLS-1$
-      getLog().add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), statusMsg ) );
+      final String statusMsg = String.format( Messages.getString( "CalcCaseConverter_2" ), m_chosenExe, exeVersion ); //$NON-NLS-1$
+      getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), statusMsg ) );
     }
     else
     {
       final String statusMsg = String.format( Messages.getString("CalcCaseConverter_3"), exeVersion ); //$NON-NLS-1$
-      getLog().add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), statusMsg ) );
+      getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), statusMsg ) );
     }
 
     naControl.getWorkspace().dispose();
