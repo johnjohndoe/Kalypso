@@ -47,7 +47,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -85,19 +84,13 @@ public class ChooseAdditionalFileControl extends AbstractFeatureControl implemen
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  public void addModifyListener( final ModifyListener l )
-  {
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
+  @Override
   public Control createControl( final Composite parent, final int style )
   {
     final Button button = new Button( parent, style );
-    button.setText( Messages.getString("org.kalypso.ogc.gml.featureview.control.ChooseExeControl.0") ); //$NON-NLS-1$
+    button.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.0" ) ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -118,7 +111,7 @@ public class ChooseAdditionalFileControl extends AbstractFeatureControl implemen
    */
   public IPath getSourceLocation( )
   {
-    final String text = m_file == null? "": m_file.getAbsoluteFile().toString(); //$NON-NLS-1$
+    final String text = m_file == null ? "" : m_file.getAbsoluteFile().toString(); //$NON-NLS-1$
     if( text.length() == 0 )
       return null;
     final IPath path = new Path( text );
@@ -127,7 +120,7 @@ public class ChooseAdditionalFileControl extends AbstractFeatureControl implemen
     else
       return path;
   }
-  
+
   /**
    * Open a file browser dialog to locate a source file
    */
@@ -147,7 +140,7 @@ public class ChooseAdditionalFileControl extends AbstractFeatureControl implemen
   private IPath browse( final Shell shell, final IPath path )
   {
     final FileDialog dialog = new FileDialog( shell, SWT.OPEN );
-    dialog.setFilterExtensions( new String[]{ m_fileExt } );
+    dialog.setFilterExtensions( new String[] { m_fileExt } );
     if( path != null )
     {
       if( path.segmentCount() > 1 )
@@ -161,11 +154,11 @@ public class ChooseAdditionalFileControl extends AbstractFeatureControl implemen
     return new Path( result );
   }
 
-  
   protected void handleButtonPressed( final SelectionEvent e )
   {
-    boolean selectDone = browseForSourceFile( e );
-    if( !selectDone ){
+    final boolean selectDone = browseForSourceFile( e );
+    if( !selectDone )
+    {
       return;
     }
     String newFile = null;
@@ -173,10 +166,10 @@ public class ChooseAdditionalFileControl extends AbstractFeatureControl implemen
     {
       newFile = m_file.toURI().toURL().toExternalForm();
     }
-    catch( MalformedURLException e1 )
+    catch( final MalformedURLException e1 )
     {
       e1.printStackTrace();
-    } 
+    }
 
     final ChangeFeatureCommand command = new ChangeFeatureCommand( getFeature(), getFeatureTypeProperty(), newFile );
     fireFeatureChange( command );
@@ -185,21 +178,16 @@ public class ChooseAdditionalFileControl extends AbstractFeatureControl implemen
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
    */
+  @Override
   public boolean isValid( )
   {
     return true;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  public void removeModifyListener( final ModifyListener l )
-  {
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
    */
+  @Override
   public void updateControl( )
   {
   }

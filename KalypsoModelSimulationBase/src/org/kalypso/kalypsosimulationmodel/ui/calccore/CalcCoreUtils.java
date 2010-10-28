@@ -52,6 +52,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.service.datalocation.Location;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsosimulationmodel.KalypsoModelSimulationBase;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 
@@ -195,6 +197,20 @@ public final class CalcCoreUtils
       }
     } );
     return executables;
+  }
+
+  public static File[] checkExecutablesAvailable( final Shell shell, final String exePattern, final String dialogTitle )
+  {
+    try
+    {
+      return CalcCoreUtils.getAvailableExecuteablesChecked( exePattern );
+    }
+    catch( final CoreException e )
+    {
+      final StatusDialog statusDialog = new StatusDialog( shell, e.getStatus(), dialogTitle );
+      statusDialog.open();
+      return null;
+    }
   }
 
 }
