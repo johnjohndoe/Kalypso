@@ -110,6 +110,10 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class ResultMeta1d2dHelper
 {
+  public static final String SHORT_DATE_TIME_FORMAT_RESULT_STEP = "dd.MM.yyyy_HH_mm_z";
+
+  public static final String FULL_DATE_TIME_FORMAT_RESULT_STEP = "dd.MM.yyyy_HH_mm_ss_SSS_z";
+
   public static final String STR_THEME_NAME_SEPARATOR = ", ";
 
   public static final String ORIGINAL_2D_FILE_NAME = "original.2d"; //$NON-NLS-1$
@@ -718,8 +722,8 @@ public class ResultMeta1d2dHelper
   {
     try
     {
-      String lStrTimeFormat = "dd.MM.yyyy_HH_mm"; //$NON-NLS-1$
-      String lStrTimeFormatFull = "dd.MM.yyyy_HH_mm_ss_SS"; //$NON-NLS-1$
+      String lStrTimeFormat = SHORT_DATE_TIME_FORMAT_RESULT_STEP; //$NON-NLS-1$
+      String lStrTimeFormatFull = FULL_DATE_TIME_FORMAT_RESULT_STEP; //$NON-NLS-1$
       SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
       SimpleDateFormat lSimpleDateFormatFull = new SimpleDateFormat( lStrTimeFormatFull );
       int indexOfStepDate = url.toExternalForm().indexOf( TIME_STEP_PREFIX ) + TIME_STEP_PREFIX.length();
