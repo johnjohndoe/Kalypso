@@ -149,8 +149,11 @@ public class TimeseriesExtender
         return Status.OK_STATUS;
 
       case 1:
+      case 2:
+      case 3:
+      case 4:
       {
-        final String msg = String.format( Messages.getString("TimeseriesExtender_2"), m_href ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "TimeseriesExtender_2" ), m_href, m_addCounter ); //$NON-NLS-1$
         return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), msg );
       }
 
@@ -248,7 +251,7 @@ public class TimeseriesExtender
       timeout++;
       if( timeout == 10 )
       {
-        final String msg = String.format( Messages.getString("TimeseriesExtender_4") ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "TimeseriesExtender_4" ), m_href ); //$NON-NLS-1$
         final IStatus error = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
         throw new CoreException( error );
       }

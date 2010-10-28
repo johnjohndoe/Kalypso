@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.wizards.conversion.to10_10;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -110,6 +111,11 @@ public class CalcCasesConverter extends AbstractLoggingOperation
             throw new InterruptedException( Messages.getString("CalcCasesConverter_3") ); //$NON-NLS-1$
 
           getLog().add( status );
+        }
+        catch( final InvocationTargetException e )
+        {
+          final Throwable targetException = e.getTargetException();
+          getLog().addError( Messages.getString( "CalcCasesConverter_4" ), targetException, calcCaseName ); //$NON-NLS-1$
         }
         catch( final Throwable e )
         {
