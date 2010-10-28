@@ -138,12 +138,12 @@ public class RrmProjectConverterXto10_10 extends AbstractProjectConverter
       final BasicModelConverter basicModelConverter = new BasicModelConverter( m_sourceDir, m_targetDir );
       monitor.subTask( Messages.getString("RrmProjectConverter103to230_2") ); //$NON-NLS-1$
       final IStatus basicStatus = basicModelConverter.execute( new SubProgressMonitor( monitor, 33 ) );
-      getLog().addStatus( basicStatus );
+      getLog().add( basicStatus );
 
       monitor.subTask( Messages.getString("RrmProjectConverter103to230_3") ); //$NON-NLS-1$
       final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir, m_chosenExe );
       final IStatus calcCaseStatus = casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
-      getLog().addStatus( calcCaseStatus );
+      getLog().add( calcCaseStatus );
     }
     finally
     {
