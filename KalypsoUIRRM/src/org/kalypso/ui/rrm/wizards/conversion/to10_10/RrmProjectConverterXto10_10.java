@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.from103to230;
+package org.kalypso.ui.rrm.wizards.conversion.to10_10;
 
 import java.io.File;
 
@@ -47,20 +47,21 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.module.conversion.AbstractProjectConverter;
 import org.kalypso.ui.rrm.i18n.Messages;
+import org.osgi.framework.Version;
 
 
 /**
  * @author Gernot Belger
  */
-public class RrmProjectConverter103to230 extends AbstractProjectConverter
+public class RrmProjectConverterXto10_10 extends AbstractProjectConverter
 {
   private final File m_sourceDir;
 
   private final File m_targetDir;
 
-  public RrmProjectConverter103to230( final File sourceDir, final File targetDir )
+  public RrmProjectConverterXto10_10( final File sourceDir, final File targetDir, final Version targetVersion )
   {
-    super( String.format( Messages.getString("RrmProjectConverter103to230_0"), sourceDir.getName() ) ); //$NON-NLS-1$
+    super( String.format( Messages.getString( "RrmProjectConverter103to230_0" ), sourceDir.getName(), targetVersion ) ); //$NON-NLS-1$
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;

@@ -46,9 +46,15 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.ModuleExtensions;
 import org.kalypso.module.conversion.IProjectConverter;
+import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.extension.KalypsoModuleRRM;
 import org.kalypso.ui.rrm.i18n.Messages;
-import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverter103to230;
+import org.kalypso.ui.rrm.wizards.conversion.to10_10.RrmProjectConverterXto10_10;
+import org.osgi.framework.Version;
 
 /**
  * {@link org.kalypso.module.conversion.IProjectConverter} implementation for KalypsoHydrology projects.
@@ -57,12 +63,17 @@ import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverter103
  */
 public class RrmProjectConverter implements IProjectConverter
 {
+  private final static Version V_10_10 = new Version( 10, 10, 0 );
+
   private final File m_sourceDir;
 
   private final File m_targetDir;
 
-  public RrmProjectConverter( final File sourceDir, final File targetDir )
+  private final Version m_sourceVersion;
+
+  public RrmProjectConverter( final Version sourceVersion, final File sourceDir, final File targetDir )
   {
+    m_sourceVersion = sourceVersion;
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
   }
@@ -82,8 +93,24 @@ public class RrmProjectConverter implements IProjectConverter
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
-    // FIXME: decide which converter to use, depending on version of source
-    final RrmProjectConverter103to230 converter103to230 = new RrmProjectConverter103to230( m_sourceDir, m_targetDir );
-    return converter103to230.execute( monitor );
+    final IKalypsoModule rrmModule = ModuleExtensions.getKalypsoModule( KalypsoModuleRRM.ID );
+    final Version rrmVersion = rrmModule.getVersion();
+    final IProjectConverter converter = createConverter( rrmVersion );
+    if( converter == null )
+    {
+      final String msg = String.format( "Es existiert kein Konverter, welcher Projekte mit Versionsnummer '%s' in die aktuelle Version ('%s') umwandeln kann.", m_sourceVersion, rrmVersion );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg );
+    }
+
+    return converter.execute( monitor );
+  }
+
+  private IProjectConverter createConverter( final Version targetVersion )
+  {
+    /* everything that is below 10.10 */
+    if( m_sourceVersion == null || targetVersion.compareTo( V_10_10 ) < 0 )
+      return new RrmProjectConverterXto10_10( m_sourceDir, m_targetDir, targetVersion );
+
+    return null;
   }
 }
