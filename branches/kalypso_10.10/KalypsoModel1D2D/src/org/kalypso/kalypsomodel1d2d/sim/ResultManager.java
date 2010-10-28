@@ -399,7 +399,7 @@ public class ResultManager implements ISimulation1D2DConstants
         outDirName = "maxi"; //$NON-NLS-1$
       else{
         SimpleDateFormat timeFormatter = new SimpleDateFormat( ResultMeta1d2dHelper.FULL_DATE_TIME_FORMAT_RESULT_STEP );
-        outDirName = timeFormatter.format( stepDate );
+        outDirName = ResultMeta1d2dHelper.TIME_STEP_PREFIX + timeFormatter.format( stepDate );
 //        outDirName = String.format( ResultMeta1d2dHelper.TIME_STEP_PREFIX + "%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tS_%1$ts_%1$tZ", stepDate ); //$NON-NLS-1$
       }
       final File resultOutputDir = new File( m_outputDir, outDirName );
