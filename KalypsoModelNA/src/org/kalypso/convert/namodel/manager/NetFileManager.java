@@ -244,7 +244,7 @@ public class NetFileManager
       final NetElement upStreamElement = netElements.get( channel.getId() );
       final NetElement downStreamElement = netElements.get( downStreamChannel.getId() );
 
-      downStreamElement.addUpStream ( upStreamElement );
+      downStreamElement.addUpStream( upStreamElement );
     }
 
     /* storage channel -> overflow node */
@@ -252,13 +252,17 @@ public class NetFileManager
     {
       if( channel instanceof StorageChannel )
       {
-        final Node overflowNode = ((StorageChannel)channel).getOverflowNode();
+        final Node overflowNode = ((StorageChannel) channel).getOverflowNode();
         if( overflowNode != null )
         {
           final Channel downstreamChannel = overflowNode.getDownstreamChannel();
           final NetElement channelElement = netElements.get( channel.getId() );
-          final NetElement downstreamElement = netElements.get( downstreamChannel.getId() );
-          downstreamElement.addUpStream( channelElement );
+          // Hmmm: tricky, what to do, if the node has no downstream channel?
+          if( downstreamChannel != null )
+          {
+            final NetElement downstreamElement = netElements.get( downstreamChannel.getId() );
+            downstreamElement.addUpStream( channelElement );
+          }
         }
       }
     }
