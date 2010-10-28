@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.ModuleExtensions;
 import org.kalypso.module.conversion.IProjectConverter;
@@ -71,6 +72,8 @@ public class RrmProjectConverter implements IProjectConverter
 
   private final Version m_sourceVersion;
 
+  private IProjectConverter m_converter;
+
   public RrmProjectConverter( final Version sourceVersion, final File sourceDir, final File targetDir )
   {
     m_sourceVersion = sourceVersion;
@@ -88,21 +91,30 @@ public class RrmProjectConverter implements IProjectConverter
   }
 
   /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.module.conversion.IProjectConverter#preConversion(org.eclipse.swt.widgets.Shell)
    */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus preConversion( final Shell shell )
   {
     final IKalypsoModule rrmModule = ModuleExtensions.getKalypsoModule( KalypsoModuleRRM.ID );
     final Version rrmVersion = rrmModule.getVersion();
-    final IProjectConverter converter = createConverter( rrmVersion );
-    if( converter == null )
+    m_converter = createConverter( rrmVersion );
+    if( m_converter == null )
     {
       final String msg = String.format( "Es existiert kein Konverter, welcher Projekte mit Versionsnummer '%s' in die aktuelle Version ('%s') umwandeln kann.", m_sourceVersion, rrmVersion );
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg );
     }
 
-    return converter.execute( monitor );
+    return m_converter.preConversion( shell );
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  {
+    return m_converter.execute( monitor );
   }
 
   private IProjectConverter createConverter( final Version targetVersion )

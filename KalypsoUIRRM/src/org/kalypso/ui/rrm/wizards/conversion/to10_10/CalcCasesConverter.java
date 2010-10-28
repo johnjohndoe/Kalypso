@@ -65,11 +65,14 @@ public class CalcCasesConverter extends AbstractLoggingOperation
 
   private final File m_targetDir;
 
-  public CalcCasesConverter( final File sourceDir, final File targetDir )
+  private final String m_chosenExe;
+
+  public CalcCasesConverter( final File sourceDir, final File targetDir, final String chosenExe )
   {
     super( Messages.getString("CalcCasesConverter_0") ); //$NON-NLS-1$
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
+    m_chosenExe = chosenExe;
   }
 
   /**
@@ -100,7 +103,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         {
           prepareCalcCase( targetDir );
 
-          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir );
+          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir, m_chosenExe );
           final IStatus status = calcCaseConverter.execute( progress.newChild( 1 ) );
           getLog().add( status );
         }

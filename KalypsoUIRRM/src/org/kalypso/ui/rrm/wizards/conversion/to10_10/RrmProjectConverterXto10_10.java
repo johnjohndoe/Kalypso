@@ -41,10 +41,19 @@
 package org.kalypso.ui.rrm.wizards.conversion.to10_10;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.kalypsosimulationmodel.ui.calccore.CalcCoreUtils;
+import org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeDialog;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.module.conversion.AbstractProjectConverter;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.osgi.framework.Version;
@@ -55,9 +64,15 @@ import org.osgi.framework.Version;
  */
 public class RrmProjectConverterXto10_10 extends AbstractProjectConverter
 {
+  private static File NEUESTE = new File( "<automatisch die 'Neueste' Version benutzen>" );
+
+  private static File EXE_DO_NOT_CHANGE = new File( "<eingestelle Version beibehalten>" );
+
   private final File m_sourceDir;
 
   private final File m_targetDir;
+
+  private String m_chosenExe;
 
   public RrmProjectConverterXto10_10( final File sourceDir, final File targetDir, final Version targetVersion )
   {
@@ -65,6 +80,48 @@ public class RrmProjectConverterXto10_10 extends AbstractProjectConverter
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
+  }
+
+  /**
+   * @see org.kalypso.module.conversion.IProjectConverter#preConversion(org.eclipse.swt.widgets.Shell)
+   */
+  @Override
+  public IStatus preConversion( final Shell shell )
+  {
+    final String title = "KalypsoHydrology Rechenkern auswählen";
+
+    /* Always call this in order to provoke the download error message */
+    File[] availableExeFiles = CalcCoreUtils.checkExecutablesAvailable( shell, NaModelConstants.EXE_PATTERN, title );
+    availableExeFiles = (File[]) ArrayUtils.add( availableExeFiles, NEUESTE );
+    availableExeFiles = (File[]) ArrayUtils.add( availableExeFiles, EXE_DO_NOT_CHANGE );
+
+    final ChooseExeDialog dialog = new ChooseExeDialog( shell, availableExeFiles );
+    dialog.setTitle( title );
+    if( dialog.open() != Window.OK )
+      return Status.CANCEL_STATUS;
+
+    final Object[] result = dialog.getResult();
+    if( result.length == 0 )
+      return Status.CANCEL_STATUS;
+
+    final File chosenExe = (File) result[0];
+    m_chosenExe = findChosenExe( chosenExe );
+
+    return Status.OK_STATUS;
+  }
+
+  private String findChosenExe( final File chosenExe )
+  {
+    if( chosenExe == NEUESTE )
+      return CalcCoreUtils.VERSION_NEUESTE;
+
+    if( chosenExe == EXE_DO_NOT_CHANGE )
+      return null;
+
+    final Matcher exeMatcher = Pattern.compile( NaModelConstants.EXE_PATTERN ).matcher( chosenExe.getName() );
+    exeMatcher.matches();
+
+    return exeMatcher.group( 1 );
   }
 
   /**
@@ -84,7 +141,7 @@ public class RrmProjectConverterXto10_10 extends AbstractProjectConverter
       getLog().addStatus( basicStatus );
 
       monitor.subTask( Messages.getString("RrmProjectConverter103to230_3") ); //$NON-NLS-1$
-      final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir );
+      final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir, m_chosenExe );
       final IStatus calcCaseStatus = casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
       getLog().addStatus( calcCaseStatus );
     }
