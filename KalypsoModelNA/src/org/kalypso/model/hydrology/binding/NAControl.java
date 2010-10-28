@@ -91,6 +91,11 @@ public class NAControl extends Feature_Impl
     return DateUtilities.toDate( getProperty( PROP_STARTSIMULATION, XMLGregorianCalendar.class ) );
   }
 
+  public void setSimulationStart( final Date simulationStart )
+  {
+    setProperty( PROP_STARTSIMULATION, DateUtilities.toXMLGregorianCalendar( simulationStart ) );
+  }
+
   public Date getStartForecast( )
   {
     return DateUtilities.toDate( getProperty( PROP_FORECAST, XMLGregorianCalendar.class ) );
@@ -166,5 +171,4 @@ public class NAControl extends Feature_Impl
   {
     return getProperty( PROP_RETURN_PERIOD, Integer.class );
   }
-
 }
