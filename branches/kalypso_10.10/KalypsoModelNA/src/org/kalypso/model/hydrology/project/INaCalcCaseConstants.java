@@ -60,6 +60,8 @@ public interface INaCalcCaseConstants
 
   String ANFANGSWERTE_DIR = "Anfangswerte"; //$NON-NLS-1$
 
+  String ANFANGSWERTE_FILE = "lzsim.gml"; //$NON-NLS-1$
+
   String KLIMA_DIR = "Klima"; //$NON-NLS-1$
 
   String NIEDERSCHLAG_DIR = "Niederschlag"; //$NON-NLS-1$
