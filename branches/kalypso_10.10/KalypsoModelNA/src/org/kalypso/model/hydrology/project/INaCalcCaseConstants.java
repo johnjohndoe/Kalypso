@@ -69,4 +69,6 @@ public interface INaCalcCaseConstants
   String PEGEL_DIR = "Pegel"; //$NON-NLS-1$
 
   String ERGEBNISSE_DIR = "Ergebnisse"; //$NON-NLS-1$
+
+  String AKTUELL_DIR = ERGEBNISSE_DIR + '/' + "Aktuell";
 }
