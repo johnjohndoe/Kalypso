@@ -108,8 +108,6 @@ public class TimeseriesExtendVisitor implements FeatureVisitor
 
   private boolean visitCatchment( final Catchment catchment )
   {
-    // FIXME: by syntetischem Niederschlag sind diese Verknüpfungen nicht relevant und können ignoriert werden
-
     extendTimeseries( catchment, Catchment.PROP_PRECIPITATION_LINK );
     extendTimeseries( catchment, Catchment.PROP_TEMPERATURE_LINK );
     extendTimeseries( catchment, Catchment.PROP_EVAPORATION_LINK );

@@ -135,6 +135,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     copyBasicData();
 
+    renameOldResults();
+
     /* Copy additional files */
     // TODO: wir könnten alles 'unbekannte' z.B. alles Vorlagentypen grundsätzlich mitkopieren...
 
@@ -143,6 +145,20 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     /* Make sure that all timeseries are long enough */
     extendTimeseries();
+  }
+
+  private void renameOldResults( )
+  {
+    final File resultDir = new File( m_targetDir, INaCalcCaseConstants.ERGEBNISSE_DIR );
+    final File aktuellDir = new File( resultDir, INaCalcCaseConstants.AKTUELL_DIR );
+    final File origCurrentResultDir = new File( resultDir, "Aktuell_Original" );
+    if( aktuellDir.isDirectory() )
+    {
+      aktuellDir.renameTo( origCurrentResultDir );
+      final String msg = String.format( "Vorhande Ergebnisse ('Aktuell') wurden nach '%s' umgenannt.", origCurrentResultDir.getName() );
+      getLog().add( IStatus.INFO, msg );
+      return;
+    }
   }
 
   private void copyBasicData( ) throws IOException
@@ -204,11 +220,15 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void tweakStartTime( ) throws IOException, GmlSerializeException
   {
+    final NAControl metaControl = m_data.getMetaControl();
+    /* The simulation time is irrelevant for syntetic events -> no need for correction */
+    if( m_data.getMetaControl().isUsePrecipitationForm() )
+      return;
+
     /* We are going to set the hours to 0 in the current time zone */
     final DateFormat displayDateTimeFormat = KalypsoGisPlugin.getDefault().getDisplayDateTimeFormat();
 
     /* Tweak simulation start */
-    final NAControl metaControl = m_data.getMetaControl();
     final Date simulationStart = metaControl.getSimulationStart();
     final Date newSimulationStart = tweakStartDate( simulationStart );
     if( newSimulationStart != null )
