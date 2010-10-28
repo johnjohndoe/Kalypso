@@ -43,7 +43,10 @@ package org.kalypso.ui.rrm.wizards.conversion.to10_10;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,13 +57,18 @@ import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.NaSimulationData;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -112,11 +120,13 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   {
     final File naModelFile = new File( m_sourceDir, INaCalcCaseConstants.CALC_CASE );
     final File naControlFile = new File( m_sourceDir, INaCalcCaseConstants.DOT_CALCULATION );
+    final File naLzsimFile = new File( m_sourceDir, INaCalcCaseConstants.ANFANGSWERTE_FILE );
 
     final URL naModelLocation = naModelFile.toURI().toURL();
     final URL naControlLocation = naControlFile.toURI().toURL();
+    final URL naLzsimLocation = naLzsimFile.toURI().toURL();
 
-    m_data = new NaSimulationData( naModelLocation, null, naControlLocation, null, null, null, null, null );
+    m_data = new NaSimulationData( naModelLocation, null, naControlLocation, null, null, null, null, naLzsimLocation );
   }
 
   private void copyData( ) throws Exception
@@ -187,17 +197,77 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void tweakCalculation( ) throws Exception
   {
-    final NAControl naControl = m_data.getMetaControl();
-    final String exeVersion = naControl.getExeVersion();
+    tweakStartTime();
+
+    tweakExeVersion();
+  }
+
+  private void tweakStartTime( ) throws IOException, GmlSerializeException
+  {
+    /* We are going to set the hours to 0 in the current time zone */
+    final DateFormat displayDateTimeFormat = KalypsoGisPlugin.getDefault().getDisplayDateTimeFormat();
+
+    /* Tweak simulation start */
+    final NAControl metaControl = m_data.getMetaControl();
+    final Date simulationStart = metaControl.getSimulationStart();
+    final Date newSimulationStart = tweakStartDate( simulationStart );
+    if( newSimulationStart != null )
+    {
+      metaControl.setSimulationStart( newSimulationStart );
+      final String simulationStartText = displayDateTimeFormat.format( simulationStart );
+      final String statusMsg = String.format( "Startzeit der Rechenvariante muss 00:00 Uhr sein. Alte Startzeit (%s) wurde automatisch angepasst", simulationStartText );
+      final int severity = IStatus.WARNING;
+      saveModel( metaControl, INaCalcCaseConstants.DOT_CALCULATION, severity, statusMsg );
+    }
+
+    /* Tweak start condition */
+    final InitialValues initialValues = m_data.getInitialValues();
+    if( initialValues == null )
+      return;
+
+    final Date initialDate = initialValues.getInitialDate();
+    final Date newInitialDate = tweakStartDate( initialDate );
+    if( newInitialDate != null )
+    {
+      initialValues.setInitialDate( newInitialDate );
+      final String initialValuesText = displayDateTimeFormat.format( initialDate );
+      final String statusMsg = String.format( "Startzeit der Anfangswerte muss 00:00 Uhr sein. Alte Startzeit (%s) wurde automatisch angepasst", initialValuesText );
+      final int severity = IStatus.WARNING;
+      saveModel( initialValues, INaCalcCaseConstants.ANFANGSWERTE_FILE, severity, statusMsg );
+    }
+  }
+
+  private Date tweakStartDate( final Date oldDate )
+  {
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    final Calendar cal = Calendar.getInstance( timeZone );
+    cal.setTime( oldDate );
+
+    final int oldHour = cal.get( Calendar.HOUR_OF_DAY );
+    if( oldHour == 0 )
+      return null;
+
+    cal.set( Calendar.HOUR_OF_DAY, 0 );
+
+    if( oldHour > 12 )
+    {
+      // should we round up in this case (i.e. add one day)?
+    }
+
+    return cal.getTime();
+  }
+
+  private void tweakExeVersion( ) throws IOException, GmlSerializeException
+  {
+    final NAControl metaControl = m_data.getMetaControl();
+    final String exeVersion = metaControl.getExeVersion();
     if( m_chosenExe != null )
     {
-      naControl.setExeVersion( m_chosenExe );
+      metaControl.setExeVersion( m_chosenExe );
       // FIXME: we should write in the same encoding as we read the file
-      final File naControlFile = new File( m_targetDir, INaCalcCaseConstants.DOT_CALCULATION );
-      GmlSerializer.serializeWorkspace( naControlFile, naControl.getWorkspace(), "UTF-8" ); //$NON-NLS-1$
-
-      final String statusMsg = String.format( Messages.getString( "CalcCaseConverter_2" ), m_chosenExe, exeVersion ); //$NON-NLS-1$
-      getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), statusMsg ) );
+      final String statusMsg = Messages.getString( "CalcCaseConverter_2", m_chosenExe, exeVersion ); //$NON-NLS-1$
+      final int severity = IStatus.OK;
+      saveModel( metaControl, INaCalcCaseConstants.DOT_CALCULATION, severity, statusMsg );
     }
     else
     {
@@ -205,7 +275,14 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), statusMsg ) );
     }
 
-    naControl.getWorkspace().dispose();
+    metaControl.getWorkspace().dispose();
+  }
+
+  private void saveModel( final Feature model, final String path, final int severity, final String statusMsg ) throws IOException, GmlSerializeException
+  {
+    final File naControlFile = new File( m_targetDir, path );
+    GmlSerializer.serializeWorkspace( naControlFile, model.getWorkspace(), "UTF-8" ); //$NON-NLS-1$
+    getLog().add( new Status( severity, KalypsoUIRRMPlugin.getID(), statusMsg ) );
   }
 
   /**
