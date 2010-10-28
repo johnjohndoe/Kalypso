@@ -118,18 +118,18 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         catch( final InvocationTargetException e )
         {
           final Throwable targetException = e.getTargetException();
-          getLog().addError( Messages.getString( "CalcCasesConverter_4" ), targetException, calcCaseName ); //$NON-NLS-1$
+          getLog().add( IStatus.ERROR, Messages.getString( "CalcCasesConverter_4" ), targetException, calcCaseName ); //$NON-NLS-1$
         }
         catch( final Throwable e )
         {
-          getLog().addError( Messages.getString("CalcCasesConverter_4"), e, calcCaseName ); //$NON-NLS-1$
+          getLog().add( IStatus.ERROR, Messages.getString( "CalcCasesConverter_4" ), e, calcCaseName ); //$NON-NLS-1$
         }
       }
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      getLog().addError( Messages.getString("CalcCasesConverter_5"), e ); //$NON-NLS-1$
+      getLog().add( IStatus.ERROR, Messages.getString( "CalcCasesConverter_5" ), e ); //$NON-NLS-1$
     }
   }
 
