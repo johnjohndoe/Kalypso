@@ -360,9 +360,9 @@
          </reparator>
       </extension>
        <extension
-         point="org.kalypso.project.database.client.kalypsoModule">
+         point="org.kalypso.module.kalypsoModule">
          <module
-               module="org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule">
+               class="org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule">
          </module>
       </extension>
 

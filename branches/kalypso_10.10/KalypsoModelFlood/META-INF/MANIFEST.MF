@@ -18,7 +18,8 @@ Require-Bundle: org.kalypso.ui,
  org.kalypso.contribs.ogc31;bundle-version="1.0.0",
  org.kalypso.model.flood.project.demo;resolution:=optional,
  org.kalypso.model.flood.project.demo1d2d;resolution:=optional,
- org.kalypso.model.flood.project.template
+ org.kalypso.model.flood.project.template,
+ org.kalypso.module;bundle-version="2.3.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.model.flood.binding,

@@ -71,7 +71,7 @@ import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
 import org.kalypso.model.product.i18n.Messages;
-import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoWelcomePage;
 import org.kalypso.project.database.client.ui.composites.ModulePageComposite;
 import org.kalypso.project.database.client.ui.composites.WelcomePageComposite;

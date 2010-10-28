@@ -27,7 +27,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.project.database.client;bundle-version="1.0.0",
  org.kalypso.model.1d2d.project.1d2d_demo;resolution:=optional,
  org.kalypso.model.1d2d.project.2d_demo;resolution:=optional,
- org.kalypso.model.1d2d.project.template
+ org.kalypso.model.1d2d.project.template,
+ org.kalypso.module;bundle-version="2.3.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.ui.wizards.imports.baseMap,
  org.kalypso.ui.wizards.imports.elevationmodel,
