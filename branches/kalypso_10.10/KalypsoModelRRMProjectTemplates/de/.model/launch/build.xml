@@ -23,21 +23,12 @@
 	<target name="create" description="Erzeugt eine Rechenvariante">
 		<echo message="Rechenvariante anlegen: ${calc.dir}" />
 		<!-- copy modell -->
-	<copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml" />
+		<copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml" />
         <copy file="${project.dir}/hydrotop.gml" tofile="${calc.dir}/calcHydrotop.gml" />
-	<copy file="${project.dir}/parameter.gml" tofile="${calc.dir}/calcParameter.gml" />
-        <copy file="${project.dir}/.model/observationConf/ombrometer.gml" tofile="${calc.dir}/ombrometer.gml" />
-        <copy file="${project.dir}/.model/observationConf/ObsQMapping.gml"
-              tofile="${calc.dir}/.obsQMapping.gml" />
-        <copy file="${project.dir}/.model/observationConf/ObsQZuMapping.gml"
-              tofile="${calc.dir}/.obsQZuMapping.gml" />
-        <copy file="${project.dir}/.model/observationConf/ObsTMapping.gml"
-              tofile="${calc.dir}/.obsTMapping.gml" />
-        <copy file="${project.dir}/.model/observationConf/ObsEMapping.gml"
-              tofile="${calc.dir}/.obsEMapping.gml" />    	
+		<copy file="${project.dir}/parameter.gml" tofile="${calc.dir}/calcParameter.gml" />
 		<!-- copy others -->
 		<copy todir="${calc.dir}">
-			<fileset dir="${project.dir}/.templates/calcCase/copy" includes="*/**" excludes="**/.svn/**" />
+			<fileset dir="${project.dir}/.templates/calcCase/copy" includes="*/**" excludes="**/CVS/**" />
 		</copy>
 	</target>
 
@@ -126,7 +117,7 @@
 		<echo message="aktualisiere Ombrometer Zeitreihen im Rechenfall" />
 		<delete dir="${calc.dir}/Niederschlag" />
 		<mkdir dir="${calc.dir}/Niederschlag" />
-		<kalypso.copyObservation gml="${calc.url}/ombrometer.gml" featurePath="ombrometerMember" context="${calc.url}" targetobservationdir="${calc.dir}/Niederschlag" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ombrometer.gml" featurePath="ombrometerMember" context="${calc.url}" targetobservationdir="${calc.dir}/Niederschlag" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="NRepository" from="${startsim}" to="${startforecast}" />
 		</kalypso.copyObservation>
 	</target>
