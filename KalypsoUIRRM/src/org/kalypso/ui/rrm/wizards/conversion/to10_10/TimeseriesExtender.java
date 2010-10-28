@@ -154,7 +154,7 @@ public class TimeseriesExtender
       case 4:
       {
         final String msg = String.format( Messages.getString( "TimeseriesExtender_2" ), m_href, m_addCounter ); //$NON-NLS-1$
-        return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), msg );
+        return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), msg );
       }
 
       default:
@@ -249,7 +249,7 @@ public class TimeseriesExtender
 
       // REMARK: in order to avoid an endless loop here, we stop after 10 (which would already be quite suspicious).
       timeout++;
-      if( timeout == 10 )
+      if( timeout == 1000 )
       {
         final String msg = String.format( Messages.getString( "TimeseriesExtender_4" ), m_href ); //$NON-NLS-1$
         final IStatus error = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
