@@ -45,6 +45,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -52,6 +54,10 @@ import org.deegree.framework.util.Pair;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -64,7 +70,9 @@ import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.kalypsosimulationmodel.core.wind.NativeWindDataModelHelper;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -72,6 +80,8 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.outline.MapOutline;
+import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -83,6 +93,16 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IWidgetWithOptions
 {
+  private static final String FENET_CONTEXT = "fenet"; //$NON-NLS-1$
+
+  private static final String WIND_GML_SOURCE_FILE = "../models/wind.gml"; //$NON-NLS-1$
+
+  private static final String FEATURE_PATH_WIND_DATA_MODEL = "#fid#root/windDataModelSystem"; //$NON-NLS-1$
+
+  private static final String GML_TYPE_STR = "gml"; //$NON-NLS-1$
+
+  private static final String WIND_THEME_NAME = "Wind"; //$NON-NLS-1$
+
   private final WindDataWidgetDataModel m_dataModel = new WindDataWidgetDataModel();
 
   private final WindDataShowWidgetFace m_widgetFace = new WindDataShowWidgetFace( m_dataModel );
@@ -97,12 +117,78 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
 
   public ShowEditWindDataWidget( )
   {
-//    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { IFE1D2DNode.QNAME, KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$  
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$  
     m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.2" ) );//$NON-NLS-1$  
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
+  }
+
+  private void checkWindTheme( final ICommandTarget pCommandPoster )
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+    final IWorkbenchPage page = window.getActivePage();
+    final MapOutline outlineView = (MapOutline) page.findView( MapOutline.ID );
+    
+    IMapPanel mapPanel = outlineView.getMapPanel();
+    IKalypsoTheme lTheme = findTheme( mapPanel, WIND_THEME_NAME );
+    if( lTheme != null ){
+      return;
+    }
+    final IKalypsoLayerModell mapModell = (IKalypsoLayerModell) mapPanel.getMapModell();
+    
+    final AddThemeCommand command = new AddThemeCommand( mapModell, WIND_THEME_NAME, GML_TYPE_STR, FEATURE_PATH_WIND_DATA_MODEL, WIND_GML_SOURCE_FILE ); //$NON-NLS-1$
+    pCommandPoster.postCommand( command, null );
+   
+  }
+
+  private IKalypsoTheme findTheme( final IMapPanel mapPanel, final String pThemeName )
+  {
+    try
+    {
+      String lThemeName = pThemeName.toLowerCase();
+      List<IKalypsoTheme> themesAct = Arrays.asList( mapPanel.getMapModell().getAllThemes() );
+      if( themesAct != null )
+      {
+        for( final IKalypsoTheme lTheme : themesAct )
+        {
+          String lThemeContext = lTheme.getContext().toExternalForm().toLowerCase();
+          if( !lThemeContext.contains( FENET_CONTEXT ) ){
+            continue;
+          }
+          if( lTheme instanceof IKalypsoCascadingTheme )
+          {
+            final IKalypsoCascadingTheme lThemes = (IKalypsoCascadingTheme) lTheme;
+            for( int i = 0; i < lThemes.getAllThemes().length; i++ )
+            {
+              try
+              {
+                if( lTheme.getName().getKey().toLowerCase().contains( lThemeName ) )
+                { 
+                  return lTheme;
+                }
+              }
+              catch( final Exception e )
+              {
+              }
+            }
+          }
+          else
+          {
+            if( lTheme.getName().getKey().toLowerCase().contains( lThemeName ) )
+            { 
+              return lTheme;
+            }
+          }
+        }
+      }
+    }
+    catch( Exception e )
+    {
+
+    }
+    return null;
   }
 
   /**
@@ -113,7 +199,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
-
+    checkWindTheme( commandPoster );
     /* set data to data model */
     if( mapPanel == null )
       return;
@@ -169,6 +255,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     return m_widgetFace.createControl( parent );
@@ -177,6 +264,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
+  @Override
   public void disposeControl( )
   {
     if( m_widgetFace != null )
