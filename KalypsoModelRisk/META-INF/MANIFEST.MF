@@ -13,8 +13,9 @@ Require-Bundle: org.kalypso.ui.addlayer,
  org.kalypso.gml.ui,
  org.junit;resolution:=optional,
  org.kalypso.simulation.core,
- org.kalypso.simulation.ui, 
- org.kalypso.project.database.client
+ org.kalypso.simulation.ui,
+ org.kalypso.project.database.client,
+ org.kalypso.module;bundle-version="2.3.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.risk.extension,
  org.kalypso.risk.model.actions.dataImport.waterdepth,

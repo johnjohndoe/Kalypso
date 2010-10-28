@@ -11,10 +11,10 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewWspmProjectWizard;
+import org.kalypso.module.IKalypsoModuleProjectOpenAction;
+import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
 import org.kalypso.project.database.client.extension.AbstractKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.ui.composites.SpecialImportProjectAction;
 
 /**

@@ -261,9 +261,9 @@
                </simulation>
             </extension>
             <extension
-                  point="org.kalypso.project.database.client.kalypsoModule">
+                  point="org.kalypso.module.kalypsoModule">
                <module
-                     module="org.kalypso.risk.extension.KalypsoRiskModule">
+                     class="org.kalypso.risk.extension.KalypsoRiskModule">
                </module>
             </extension>
    <extension

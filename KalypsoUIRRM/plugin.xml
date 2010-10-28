@@ -38,10 +38,8 @@
    </extension>
    -->
    
-   <extension
-         point="org.kalypso.project.database.client.kalypsoModule">
-    <module module="org.kalypso.ui.rrm.extension.KalypsoModuleRRM">
-      </module>
+   <extension point="org.kalypso.module.kalypsoModule">
+      <module class="org.kalypso.ui.rrm.extension.KalypsoModuleRRM"/>
    </extension>
    
   <!-- Commands for the map outline -->

@@ -332,9 +332,9 @@
       </provider>
    </extension>
      <extension
-         point="org.kalypso.project.database.client.kalypsoModule">
+         point="org.kalypso.module.kalypsoModule">
       <module
-            module="org.kalypso.model.flood.extension.KalypsoModelFloodModule">
+            class="org.kalypso.model.flood.extension.KalypsoModelFloodModule">
       </module>
    </extension>
      <extension point="org.eclipse.ui.commandImages">

@@ -7,10 +7,10 @@ import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.module.IKalypsoModuleProjectOpenAction;
+import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
 import org.kalypso.project.database.client.extension.AbstractKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
 
 public class Kalypso1d2dModule extends AbstractKalypsoModule
