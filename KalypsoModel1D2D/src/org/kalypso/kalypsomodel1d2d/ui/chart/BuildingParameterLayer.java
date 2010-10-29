@@ -53,7 +53,6 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 public class BuildingParameterLayer extends AbstractChartLayer implements IEditableChartLayer
 {
-  
 
   private final static GeometryFactory GF = new GeometryFactory();
 
@@ -187,7 +186,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
       final Point pos = new Point( x, y );
 
       // Edit info
-      final String msg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.5" ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.5" ); //$NON-NLS-1$
       final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
       final EditInfo info = new EditInfo( null, createHoverPaintable( shape ), null, null, msg, pos );
       editInfos.put( shape, info );
@@ -196,10 +195,10 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     return editInfos;
   }
 
-  private IPaintable createHoverPaintable( Rectangle shape )
+  private IPaintable createHoverPaintable( final Rectangle shape )
   {
-    ILineStyle dls = StyleUtils.getDefaultLineStyle();
-    EmptyRectangleFigure r = new EmptyRectangleFigure();
+    final ILineStyle dls = StyleUtils.getDefaultLineStyle();
+    final EmptyRectangleFigure r = new EmptyRectangleFigure();
     r.setStyle( dls );
     r.setRectangle( shape );
     return r;
@@ -235,7 +234,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> range )
   {
     return rangeForComponent( m_valueComponent );
   }
@@ -362,7 +361,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    */
   public void saveData( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.6"), 3 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.6" ), 3 ); //$NON-NLS-1$
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( m_obsFeature );
     final TupleResult result = obs.getResult();
@@ -460,7 +459,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public EditInfo commitDrag( Point point, EditInfo dragStartData )
+  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
     // TODO Auto-generated method stub
     return null;
@@ -471,7 +470,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public EditInfo drag( Point newPos, EditInfo dragStartData )
+  public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
     // TODO Auto-generated method stub
     return null;
@@ -481,11 +480,12 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     // TODO Auto-generated method stub
     return null;
   }
+
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#isLocked()
    */
@@ -500,13 +500,10 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
    */
   @Override
-  public void lockLayer( boolean isLocked )
+  public void lockLayer( final boolean isLocked )
   {
     // TODO Auto-generated method stub
-    
-  }
- 
 
- 
+  }
 
 }

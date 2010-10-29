@@ -161,7 +161,7 @@ public class KingLayer extends AbstractChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> range )
   {
     // TODO Auto-generated method stub
     return null;
