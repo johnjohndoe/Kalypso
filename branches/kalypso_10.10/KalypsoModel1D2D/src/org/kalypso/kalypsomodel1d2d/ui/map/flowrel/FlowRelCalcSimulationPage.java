@@ -207,7 +207,11 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
 
     m_resultTableViewer = new DefaultTableViewer( tableComposite, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL );
     m_resultTableViewer.setContentProvider( new ArrayContentProvider() );
-    StatusLabelProvider.configureTableViewer( m_resultTableViewer );
+
+    StatusLabelProvider.addSeverityColumn( m_resultTableViewer );
+    StatusLabelProvider.addMessageColumn( m_resultTableViewer );
+    StatusLabelProvider.addTimeColumn( m_resultTableViewer );
+
     m_resultTableViewer.setInput( m_operations );
     final GridData tableData = new GridData( SWT.FILL, SWT.FILL, true, true );
     tableData.widthHint = 250;
