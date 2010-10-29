@@ -271,6 +271,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
         }
       }
 
+      result.add( newRecord );
       final int recordSize = newRecord.getOwner().getComponents().length;
       for( int i = 1; i < recordSize - 1; i++ )
       {

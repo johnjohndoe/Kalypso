@@ -352,7 +352,8 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
           }
         }
       }
-
+      
+      result.add( newRecord );
       final int recordSize = newRecord.getOwner().getComponents().length;
       for( int i = 1; i < recordSize - 1; i++ )
       {
