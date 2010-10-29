@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -87,7 +88,7 @@ public class DuplicateComponentRule extends AbstractValidatorRule
   {
     // TODO: we need a list of components that allow duplicates.
     final String componentLabel = ComponentUtilities.getComponentLabel( component );
-    final String msg = String.format( "Komponente '%s' kommt mehrfach vor.", componentLabel );
+    final String msg = String.format( Messages.getString("DuplicateComponentRule_0"), componentLabel ); //$NON-NLS-1$
 
     final IProfilMarkerResolution resolution = new RemovePropertyResolution( componentIndex );
     collector.createProfilMarker( IMarker.SEVERITY_ERROR, msg, profil, resolution );

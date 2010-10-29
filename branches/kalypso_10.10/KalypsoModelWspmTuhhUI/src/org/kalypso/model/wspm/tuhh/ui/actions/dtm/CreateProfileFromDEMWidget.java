@@ -13,6 +13,7 @@ import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -36,9 +37,9 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  */
 public class CreateProfileFromDEMWidget extends AbstractWidget
 {
-  private static final String STR_DEFAULT_TOOLTIP = "CLICK-LEFT: add a new point\n" + "DOUBLE-CLICK: finish\n" + "BACKSPACE: remove last point\nSPACE: switch mode\nCurrent mode: ";
+  private static final String STR_DEFAULT_TOOLTIP = Messages.getString("CreateProfileFromDEMWidget_0") + Messages.getString("CreateProfileFromDEMWidget_1") + Messages.getString("CreateProfileFromDEMWidget_2"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-  private static final String SETTINGS_MODE = "mode";
+  private static final String SETTINGS_MODE = "mode"; //$NON-NLS-1$
 
   private final ToolTipRenderer m_standardTooltip = ToolTipRenderer.createStandardTooltip();
 
@@ -92,7 +93,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     final IMapModell model = mapPanel == null ? null : mapPanel.getMapModell();
     if( model == null )
     {
-      m_errorTooltip.setTooltip( "Unable to find map." );
+      m_errorTooltip.setTooltip( "Unable to find map." ); //$NON-NLS-1$
       m_tooltip = m_errorTooltip;
       return;
     }
@@ -100,7 +101,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     final ICoverageCollection coverages = initCoverages( model );
     if( coverages == null )
     {
-      m_errorTooltip.setTooltip( "No coverages available. Please add a coverage theme to the map." );
+      m_errorTooltip.setTooltip( Messages.getString("CreateProfileFromDEMWidget_5") ); //$NON-NLS-1$
       m_tooltip = m_errorTooltip;
       return;
     }
@@ -109,7 +110,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     m_strategy = initStrategy( model, coverages, mapPanel );
     if( m_strategy == null )
     {
-      m_errorTooltip.setTooltip( "Unable to find a theme containing profiles." );
+      m_errorTooltip.setTooltip( Messages.getString("CreateProfileFromDEMWidget_6") ); //$NON-NLS-1$
       m_tooltip = m_errorTooltip;
       return;
     }

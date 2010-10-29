@@ -50,6 +50,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.process.StreamStreamer;
+import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * Helper code to access WspWin-Plotter
@@ -60,9 +61,9 @@ public class Plotter
 {
   private static final String WSPWIN_PLOTTER = "org.kalypso.model.wspwin.plotter"; //$NON-NLS-1$
 
-  private static final String WSPWIN_PLOTTER_PATH = WSPWIN_PLOTTER + ".path";
+  private static final String WSPWIN_PLOTTER_PATH = WSPWIN_PLOTTER + ".path"; //$NON-NLS-1$
 
-  private static final String STR_BASIC_PLOTTER_MESSAGE = "Bitte wählen Sie im folgenden Dialog die 'Plotter.exe' aus.";
+  private static final String STR_BASIC_PLOTTER_MESSAGE = Messages.getString("Plotter_1"); //$NON-NLS-1$
 
   /**
    * Check if the plotter exe is available. If not the user is asked to choose it in a file dialog.
@@ -74,13 +75,13 @@ public class Plotter
       return true;
 
     final String message = getPlotterDialogMessage( plotterExe == null );
-    MessageDialog.openWarning( shell, "WspWin Plotter", message );
+    MessageDialog.openWarning( shell, Messages.getString("Plotter_2"), message ); //$NON-NLS-1$
 
     final FileDialog dlg = new FileDialog( shell );
-    dlg.setFilterNames( new String[] { "Alle Dateien (*.*)", "Ausführbare Dateien (*.exe)" } );
-    dlg.setFilterExtensions( new String[] { "*.*", "*.exe" } );
+    dlg.setFilterNames( new String[] { Messages.getString("Plotter_3"), Messages.getString("Plotter_4") } ); //$NON-NLS-1$ //$NON-NLS-2$
+    dlg.setFilterExtensions( new String[] { "*.*", "*.exe" } ); //$NON-NLS-1$ //$NON-NLS-2$
     dlg.setFilterIndex( 1 );
-    dlg.setText( "WspWin Plotter auswählen" );
+    dlg.setText( Messages.getString("Plotter_7") ); //$NON-NLS-1$
 
     final String newPlotterPath = dlg.open();
     if( newPlotterPath == null )
@@ -127,9 +128,9 @@ public class Plotter
   private static String getPlotterDialogMessage( final boolean firstTime )
   {
     if( firstTime )
-      return "Der Pfad zur 'Plotter.exe' wurde noch nicht konfiguriert. " + STR_BASIC_PLOTTER_MESSAGE;
+      return Messages.getString("Plotter_8") + STR_BASIC_PLOTTER_MESSAGE; //$NON-NLS-1$
 
-    return "Der Pfad zur Plotter.exe ist nicht mehr gültig. " + STR_BASIC_PLOTTER_MESSAGE;
+    return Messages.getString("Plotter_9") + STR_BASIC_PLOTTER_MESSAGE; //$NON-NLS-1$
   }
 
   /**
@@ -147,7 +148,7 @@ public class Plotter
     final Collection<String> commands = new ArrayList<String>();
     commands.add( plotterExe.getAbsolutePath() );
     if( doPrint )
-      commands.add( "-p" );
+      commands.add( "-p" ); //$NON-NLS-1$
     commands.add( file.getName() );
 
     final String[] cmdArray = commands.toArray( new String[commands.size()] );

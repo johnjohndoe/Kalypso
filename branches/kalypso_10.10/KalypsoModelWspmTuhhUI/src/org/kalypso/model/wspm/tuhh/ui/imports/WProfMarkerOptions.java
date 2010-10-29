@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -80,12 +81,12 @@ public class WProfMarkerOptions
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout( 2, false ) );
     final Label label = new Label( panel, SWT.NONE );
-    label.setText( "Please choose the Point-Atributes that generate profile markers (use ',' to spearate multiple values)." );
+    label.setText( Messages.getString("WProfMarkerOptions_0") ); //$NON-NLS-1$
     label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
-    createMarkerRow( panel, "Trennflächen", IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, false );
-    createMarkerRow( panel, "Bordvollhöhe", IWspmTuhhConstants.MARKER_TYP_BORDVOLL, true );
-    createMarkerRow( panel, "Durchströmte Bereiche", IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, true );
+    createMarkerRow( panel, Messages.getString("WProfMarkerOptions_1"), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, false ); //$NON-NLS-1$
+    createMarkerRow( panel, Messages.getString("WProfMarkerOptions_2"), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, true ); //$NON-NLS-1$
+    createMarkerRow( panel, Messages.getString("WProfMarkerOptions_3"), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, true ); //$NON-NLS-1$
 
     return panel;
   }
@@ -154,7 +155,7 @@ public class WProfMarkerOptions
       if( values.length == 0 )
       {
         if( !isOptional )
-          return new MessageProvider( String.format( "'%s' must be set", label ), IMessageProvider.ERROR );
+          return new MessageProvider( String.format( Messages.getString("WProfMarkerOptions_4"), label ), IMessageProvider.ERROR ); //$NON-NLS-1$
 
         return null;
       }
@@ -164,7 +165,7 @@ public class WProfMarkerOptions
     }
     catch( final NumberFormatException e )
     {
-      return new MessageProvider( String.format( "Invalid input: %s (%s)", currentText, e.getLocalizedMessage() ), IMessageProvider.ERROR );
+      return new MessageProvider( String.format( Messages.getString("WProfMarkerOptions_5"), currentText, e.getLocalizedMessage() ), IMessageProvider.ERROR ); //$NON-NLS-1$
     }
   }
 

@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -49,7 +50,7 @@ public class EmptyProfileCreator extends AbstractProfileCreator
 {
   public EmptyProfileCreator( final ProfileData data )
   {
-    super( "Keine Daten", data );
+    super( Messages.getString("EmptyProfileCreator_0"), data ); //$NON-NLS-1$
   }
 
   /**

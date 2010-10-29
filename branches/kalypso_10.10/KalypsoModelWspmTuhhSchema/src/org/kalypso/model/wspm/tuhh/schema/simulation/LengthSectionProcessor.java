@@ -126,7 +126,7 @@ public class LengthSectionProcessor
 
   private final File m_dataDir;
 
-  private String m_titlePattern = "Längsschnitt - <runoff> (<calcname>)";
+  private String m_titlePattern = Messages.getString("LengthSectionProcessor.0"); //$NON-NLS-1$
 
   private String m_gmlFilePattern = "lengthSection_<runoff>.gml"; //$NON-NLS-1$
 
@@ -206,7 +206,7 @@ public class LengthSectionProcessor
     final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhSchemaPlugin.getDefault() ), -1, "", null ); //$NON-NLS-1$
 
     final String title = getTitle( runoff );
-    final String description = String.format( "Längsschnitt: %s", title );
+    final String description = String.format( Messages.getString("LengthSectionProcessor.1"), title ); //$NON-NLS-1$
     final IObservation<TupleResult> lengthSectionObs = createLengthSection( title, description );
     final TupleResult result = lengthSectionObs.getResult();
     if( !gmlFile.exists() )
@@ -405,7 +405,7 @@ public class LengthSectionProcessor
     // only use first chart - there should only be one
     final ChartType chart = charts[0];
 
-    chart.setTitle( String.format( "Längsschnitt - %s", title ) );
+    chart.setTitle( String.format( Messages.getString("LengthSectionProcessor.2"), title ) ); //$NON-NLS-1$
 
     final AxisType[] axes = chart.getMappers().getAxisArray();
     for( final AxisType axis : axes )

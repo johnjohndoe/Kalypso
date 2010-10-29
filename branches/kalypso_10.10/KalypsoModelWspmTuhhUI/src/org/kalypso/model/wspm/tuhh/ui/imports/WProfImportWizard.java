@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.SoilOnlyProfileCr
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.TuhhProfileWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.WProfImportOperation;
 import org.kalypso.model.wspm.tuhh.core.wprof.BCEShapeWPRofContentProviderFactory;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
@@ -82,11 +83,11 @@ public class WProfImportWizard extends Wizard
     m_workspace = workspace;
     m_targetProject = targetProject;
 
-    m_wprofFilePage = new WProfImportFilePage( "wprofFilePage", "WProf File Selection", null ); //$NON-NLS-1$
-    m_wprofFilePage.setDescription( "Select a file to import WProf data from." );
+    m_wprofFilePage = new WProfImportFilePage( "wprofFilePage", Messages.getString("WProfImportWizard_0"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_wprofFilePage.setDescription( Messages.getString("WProfImportWizard_1") ); //$NON-NLS-1$
 
-    m_wprofMarkerPage = new WProfOptionsPage( "wprofMarkerPage", "WProf Import Options", null ); //$NON-NLS-1$
-    m_wprofMarkerPage.setDescription( "Please configure your WProf Import" );
+    m_wprofMarkerPage = new WProfOptionsPage( "wprofMarkerPage", Messages.getString("WProfImportWizard_2"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_wprofMarkerPage.setDescription( Messages.getString("WProfImportWizard_3") ); //$NON-NLS-1$
 
     final WProfProfileStrategyOptions profileStrategyOptions = m_wprofMarkerPage.getProfileStrategyOptions();
     profileStrategyOptions.addStrategy( new ProfileCreatorStrategy() );
@@ -96,7 +97,7 @@ public class WProfImportWizard extends Wizard
     final Properties defaultSpecification = m_pointFactory.getDefaultSpecification();
     m_wprofPropertyPage = new WProfPropertyPage( "wprofPropertyPage", defaultSpecification ); //$NON-NLS-1$
 
-    setWindowTitle( "WProf Import" );
+    setWindowTitle( Messages.getString("WProfImportWizard_4") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
 
     addPage( m_wprofFilePage );
@@ -144,7 +145,7 @@ public class WProfImportWizard extends Wizard
 
     final IWizardContainer container = getContainer();
     final IStatus result = RunnableContextHelper.execute( container, true, true, op );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to import WProf data", result );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("WProfImportWizard_5"), result ); //$NON-NLS-1$
 
     return !result.matches( IStatus.ERROR );
   }

@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -141,7 +142,7 @@ public class CsvSink
 
   private final void writeHeader( final Formatter formatter, final IComponent[] comps )
   {
-    formatter.format( "Station\tName\tBeschreibung\tKommentar" );
+    formatter.format( Messages.getString("CsvSink_0") ); //$NON-NLS-1$
 
     for( final IComponent comp : comps )
       formatter.format( "\t'%s'", comp.getName() ); //$NON-NLS-1$
@@ -175,7 +176,7 @@ public class CsvSink
     }
     catch( final IOException e )
     {
-      final String message = String.format( "Failed to write profiles" );
+      final String message = String.format( Messages.getString("CsvSink_1") ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }
@@ -189,7 +190,7 @@ public class CsvSink
 
   public boolean write( final IProfileFeature[] profiles, final OutputStream writer, final IProgressMonitor monitor ) throws IOException, CoreException
   {
-    monitor.beginTask( "Profile exportieren", profiles.length );
+    monitor.beginTask( Messages.getString("CsvSink_2"), profiles.length ); //$NON-NLS-1$
 
     // get all components of the profiles in order to create table header that fits
     final IComponent[] comps = getComponents( profiles );
@@ -202,7 +203,7 @@ public class CsvSink
     // write table header including all components
     for( final IProfileFeature profileFeature : profiles )
     {
-      monitor.subTask( String.format( "%s (km %s)", profileFeature.getName(), profileFeature.getBigStation() ) );
+      monitor.subTask( String.format( "%s (km %s)", profileFeature.getName(), profileFeature.getBigStation() ) ); //$NON-NLS-1$
       final IProfil profil = profileFeature.getProfil();
       writeData( formatter, comps, profil );
       ProgressUtilities.worked( monitor, 1 );

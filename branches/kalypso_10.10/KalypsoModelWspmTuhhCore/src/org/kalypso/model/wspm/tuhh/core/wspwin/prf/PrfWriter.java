@@ -103,7 +103,7 @@ public class PrfWriter implements IPrfConstants
 
   public PrfWriter( final IProfil profil, final IWaterlevel[] waterlevels )
   {
-    this( profil, waterlevels, "" );
+    this( profil, waterlevels, "" ); //$NON-NLS-1$
   }
 
   public PrfWriter( final IProfil profil, final IWaterlevel[] waterlevels, final String defaultRoughnessType )
@@ -375,22 +375,22 @@ public class PrfWriter implements IPrfConstants
       return new DataBlockHeader( "DP   m" ); //$NON-NLS-1$
 
     if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( key ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "EI", "", IWspWinConstants.SPEZIALPROFIL_EI ); //$NON-NLS-1$
+      return new DataBlockHeader( "EI", "", IWspWinConstants.SPEZIALPROFIL_EI ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( key ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "KREIS", "", IWspWinConstants.SPEZIALPROFIL_KREIS ); //$NON-NLS-1$
+      return new DataBlockHeader( "KREIS", "", IWspWinConstants.SPEZIALPROFIL_KREIS ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( key ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "TRAPEZ", "", IWspWinConstants.SPEZIALPROFIL_TRAPEZ ); //$NON-NLS-1$
+      return new DataBlockHeader( "TRAPEZ", "", IWspWinConstants.SPEZIALPROFIL_TRAPEZ ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( key ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "MAULPROFIL", "", IWspWinConstants.SPEZIALPROFIL_MAUL ); //$NON-NLS-1$
+      return new DataBlockHeader( "MAULPROFIL", "", IWspWinConstants.SPEZIALPROFIL_MAUL ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "OK-WEHR" ); //$NON-NLS-1$
     if( ISinuositaetProfileObject.ID.equals( key ) )
 
-      return new DataBlockHeader( "SINUOSITAET", "[-]", IWspWinConstants.SPEZIALPROFIL_SINUOSITAET );//$NON-NLS-1$
+      return new DataBlockHeader( "SINUOSITAET", "[-]", IWspWinConstants.SPEZIALPROFIL_SINUOSITAET );//$NON-NLS-1$ //$NON-NLS-2$
     return new DataBlockHeader( key );
   }
 

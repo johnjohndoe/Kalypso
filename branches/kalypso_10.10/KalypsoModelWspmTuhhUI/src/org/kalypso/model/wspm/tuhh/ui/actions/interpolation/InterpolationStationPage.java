@@ -67,12 +67,15 @@ import org.kalypso.commons.validation.RuleValidator;
 import org.kalypso.commons.validation.TooMuchDecimalsIgnoredWarning;
 import org.kalypso.commons.validation.ValidatingModifyListener;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
 public class InterpolationStationPage extends WizardPage
 {
+  private static final String STR_NOT_FOUND = Messages.getString("InterpolationStationPage_0"); //$NON-NLS-1$
+
   private final IProfileFeature[] m_profiles;
 
   private BigDecimal m_station;
@@ -92,8 +95,8 @@ public class InterpolationStationPage extends WizardPage
 
     m_neighbourRule = new NoTwoNeighbouringStationsError( m_profiles );
 
-    setTitle( "Enter new station" );
-    setDescription( "Please choose the station for which to interpolate a new profile." );
+    setTitle( Messages.getString("InterpolationStationPage_1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("InterpolationStationPage_2") ); //$NON-NLS-1$
   }
 
   /**
@@ -127,20 +130,20 @@ public class InterpolationStationPage extends WizardPage
     final GridLayout groupLayout = new GridLayout( 3, true );
     groupLayout.horizontalSpacing = 10;
     group.setLayout( groupLayout );
-    group.setText( "Station" );
+    group.setText( Messages.getString("InterpolationStationPage_3") ); //$NON-NLS-1$
 
     // 1st line
 
     final Label prevLabel = new Label( group, SWT.NONE );
-    prevLabel.setText( "Previous profile [km]" );
+    prevLabel.setText( Messages.getString("InterpolationStationPage_4") ); //$NON-NLS-1$
     prevLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
 
     final Label kmLabel = new Label( group, SWT.NONE );
-    kmLabel.setText( "Interpolated Station [km]" );
+    kmLabel.setText( Messages.getString("InterpolationStationPage_5") ); //$NON-NLS-1$
     kmLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
 
     final Label nextLabel = new Label( group, SWT.NONE );
-    nextLabel.setText( "Next profile [km]" );
+    nextLabel.setText( Messages.getString("InterpolationStationPage_6") ); //$NON-NLS-1$
     nextLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
 
     // // 2nd line
@@ -160,7 +163,7 @@ public class InterpolationStationPage extends WizardPage
 
     final Button onlyChannelCheck = new Button( group, SWT.CHECK );
     onlyChannelCheck.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
-    onlyChannelCheck.setText( "Restrict interpolation to river channel (recommanded)" );
+    onlyChannelCheck.setText( Messages.getString("InterpolationStationPage_7") ); //$NON-NLS-1$
     onlyChannelCheck.setSelection( m_onlyRiverChannel );
 
     // / Rules
@@ -212,12 +215,12 @@ public class InterpolationStationPage extends WizardPage
     m_nextProfile = m_neighbourRule.getNextProfile( station );
 
     if( m_prevProfile == null )
-      prevLabel.setText( "Not Found" );
+      prevLabel.setText( STR_NOT_FOUND );
     else
       prevLabel.setText( m_prevProfile.getBigStation().toString() );
 
     if( m_nextProfile == null )
-      nextLabel.setText( "Not Found" );
+      nextLabel.setText( STR_NOT_FOUND );
     else
       nextLabel.setText( m_nextProfile.getBigStation().toString() );
 

@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -78,7 +79,7 @@ public class SinkExporter
     }
     catch( final IOException e )
     {
-      final String message = String.format( "Failed to write profiles" );
+      final String message = String.format( Messages.getString("SinkExporter_0") ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }
@@ -105,7 +106,7 @@ public class SinkExporter
 
   private void writeProfiles( final IProfileFeature[] profileFeatures, final OutputStream os, final IProgressMonitor monitor ) throws IOException, CoreException
   {
-    monitor.beginTask( "Profile exportieren", profileFeatures.length );
+    monitor.beginTask( Messages.getString("SinkExporter_1"), profileFeatures.length ); //$NON-NLS-1$
 
     final IProfil[] profiles = new IProfil[profileFeatures.length];
     for( int i = 0; i < profiles.length; i++ )

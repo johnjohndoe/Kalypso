@@ -40,19 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wprof;
 
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+
 /**
  * @author Gernot Belger
  */
 public enum WProfProfileType
 {
-  Gewässerprofil(2, "Gewässerprofil"),
-  Brückenprofil(3, "Brückenprofil"),
-  Absturzprofil(4, "Absturzprofil"),
-  Wehrprofil(5, "Wehrprofil"),
-  Verdohlungsprofil(6, "Verdohlungsprofil"),
-  LängsbegleitendeStruktur(7, "Längsbegleitende Struktur"),
-  EinzelpunkteAusserhalbVonBauwerken(9, "Einzelpunkte außerhalb Von Bauwerken"),
-  SonstigesProfil(0, "Sonstiges Profil");
+  Gewässerprofil(2, Messages.getString("WProfProfileType_0")), //$NON-NLS-1$
+  Brückenprofil(3, Messages.getString("WProfProfileType_1")), //$NON-NLS-1$
+  Absturzprofil(4, Messages.getString("WProfProfileType_2")), //$NON-NLS-1$
+  Wehrprofil(5, Messages.getString("WProfProfileType_3")), //$NON-NLS-1$
+  Verdohlungsprofil(6, Messages.getString("WProfProfileType_4")), //$NON-NLS-1$
+  LängsbegleitendeStruktur(7, Messages.getString("WProfProfileType_5")), //$NON-NLS-1$
+  EinzelpunkteAusserhalbVonBauwerken(9, Messages.getString("WProfProfileType_6")), //$NON-NLS-1$
+  SonstigesProfil(0, Messages.getString("WProfProfileType_7")); //$NON-NLS-1$
 
   private final int m_wspmId;
 

@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypso.model.wspm.tuhh.core.wprof.WProfProfileType;
 
@@ -66,8 +67,8 @@ public class SoilOnlyProfileCreatorStrategy implements IProfileCreatorStrategy
   @Override
   public String toString( )
   {
-    final String commentString = m_createComment ? "mit Kommentaren" : "ohne Kommentare";
-    return String.format( "Nur Gelände (%s)", commentString );
+    final String commentString = m_createComment ? Messages.getString("SoilOnlyProfileCreatorStrategy_0") : Messages.getString("SoilOnlyProfileCreatorStrategy_1"); //$NON-NLS-1$ //$NON-NLS-2$
+    return String.format( Messages.getString("SoilOnlyProfileCreatorStrategy_2"), commentString ); //$NON-NLS-1$
   }
 
   @Override
@@ -86,23 +87,23 @@ public class SoilOnlyProfileCreatorStrategy implements IProfileCreatorStrategy
 
     final IWProfPoint anyPoint = polygones.getAnyPoint();
     final WProfProfileType profileType = anyPoint.getProfileType();
-    final String profileLabel = profileType == null ? "Unbekannter Typ" : profileType.getLabel();
+    final String profileLabel = profileType == null ? Messages.getString("SoilOnlyProfileCreatorStrategy_3") : profileType.getLabel(); //$NON-NLS-1$
 
     if( polygones.hasPoints( "D01" ) ) //$NON-NLS-1$
-      return new GelaendeProfileCreator( profileLabel + " (Einlauf, nur Gelände)", data, "D01" ); //$NON-NLS-2$
+      return new GelaendeProfileCreator( profileLabel + Messages.getString("SoilOnlyProfileCreatorStrategy_4"), data, "D01" );  //$NON-NLS-1$//$NON-NLS-2$
 
     if( polygones.hasPoints( "D91" ) ) //$NON-NLS-1$
-      return new GelaendeProfileCreator( profileLabel + " (Auslauf, nur Gelände)", data, "D91" ); //$NON-NLS-2$
+      return new GelaendeProfileCreator( profileLabel + Messages.getString("SoilOnlyProfileCreatorStrategy_5"), data, "D91" );  //$NON-NLS-1$//$NON-NLS-2$
 
     // Rarer Fall, nur V01er (z.B. mit V08)
     if( polygones.hasPoints( "V01" ) ) //$NON-NLS-1$
-      return new GelaendeProfileCreator( profileLabel + " (V01)", data, "V01" ); //$NON-NLS-2$
+      return new GelaendeProfileCreator( profileLabel + " (V01)", data, "V01" );  //$NON-NLS-1$//$NON-NLS-2$
 
     if( polygones.hasPoints( "21" ) ) //$NON-NLS-1$
       return new GelaendeProfileCreator( profileLabel, data, "21" ); //$NON-NLS-1$
 
     if( polygones.hasPoints( "2314" ) ) //$NON-NLS-1$
-      return new GelaendeProfileCreator( profileLabel, data, "2314" ); //$NON-NLS-2$
+      return new GelaendeProfileCreator( profileLabel, data, "2314" ); //$NON-NLS-2$ //$NON-NLS-1$
 
     return new EmptyProfileCreator( data );
   }

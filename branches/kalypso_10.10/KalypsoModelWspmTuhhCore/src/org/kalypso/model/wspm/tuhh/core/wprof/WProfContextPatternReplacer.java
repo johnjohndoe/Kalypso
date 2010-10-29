@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.wprof;
 
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -57,7 +58,7 @@ public class WProfContextPatternReplacer extends PatternInputReplacer<IWProfPoin
 
   private WProfContextPatternReplacer( )
   {
-    addReplacer( new AbstractPatternInput<IWProfPoint>( "<Gew-ID>", "Gewässer-ID" )
+    addReplacer( new AbstractPatternInput<IWProfPoint>( Messages.getString("WProfContextPatternReplacer_0"), Messages.getString("WProfContextPatternReplacer_1") ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       /**
        * @see org.kalypso.model.wspm.tuhh.core.wprof.WProfContextToken#replace(java.lang.String,

@@ -101,13 +101,13 @@ public class SobekFrictionZone
     switch( m_type )
     {
       case Strickler_Ks:
-        return String.format( "%.1f", m_friction );
+        return String.format( "%.1f", m_friction ); //$NON-NLS-1$
 
       case White_Colebrook:
-        return String.format( "%.3f", m_friction );
+        return String.format( "%.3f", m_friction ); //$NON-NLS-1$
 
       default:
-        return String.format( "%.2f", m_friction );
+        return String.format( "%.2f", m_friction ); //$NON-NLS-1$
     }
   }
 

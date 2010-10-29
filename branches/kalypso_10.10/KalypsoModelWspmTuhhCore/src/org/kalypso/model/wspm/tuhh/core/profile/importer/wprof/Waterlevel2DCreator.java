@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.phenomenon.IPhenomenon;
@@ -108,7 +109,7 @@ public class Waterlevel2DCreator
       {
         final QName qName = pt.getQName();
         final String propertyName = qName.getLocalPart();
-        if( propertyName.startsWith( "HQ" ) )
+        if( propertyName.startsWith( Messages.getString("Waterlevel2DCreator_0") ) ) //$NON-NLS-1$
         {
           final Object waterLevel = feature.getProperty( qName );
           if( waterLevel instanceof Number )
@@ -167,7 +168,7 @@ public class Waterlevel2DCreator
   private IComponent createWaterlevelComponent( final String name )
   {
     final String id = "steiermark.waterlevel." + name; //$NON-NLS-1$
-    final String description = "Waterlevel";
+    final String description = Messages.getString("Waterlevel2DCreator_1"); //$NON-NLS-1$
     final String unit = "m"; //$NON-NLS-1$
 
     final IPhenomenon phenomenon = new DictionaryPhenomenon( IWspmConstants.PHENOMENON_WATERLEVEL_2D );

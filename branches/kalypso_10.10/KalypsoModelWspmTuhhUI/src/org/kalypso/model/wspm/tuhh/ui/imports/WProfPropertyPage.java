@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -82,8 +83,8 @@ public class WProfPropertyPage extends WizardPage
     m_defaultSpecification = defaultSpecification;
     m_specification = new Properties( defaultSpecification );
 
-    setTitle( "WProf Shape Properties" );
-    setDescription( "Please choose how to read the properties from the shape file." );
+    setTitle( Messages.getString("WProfPropertyPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("WProfPropertyPage_1") ); //$NON-NLS-1$
   }
 
   /**
@@ -95,7 +96,7 @@ public class WProfPropertyPage extends WizardPage
     initSpecification();
 
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( "Property Assignment" );
+    group.setText( Messages.getString("WProfPropertyPage_2") ); //$NON-NLS-1$
     group.setLayout( new FillLayout() );
 
     final ScrolledForm scrolledForm = new ScrolledForm( group, SWT.V_SCROLL );
@@ -108,15 +109,15 @@ public class WProfPropertyPage extends WizardPage
     /* Header */
     final Label keyLabel = new Label( body, SWT.NONE );
     keyLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    keyLabel.setText( "Key" );
+    keyLabel.setText( Messages.getString("WProfPropertyPage_3") ); //$NON-NLS-1$
 
     final Label defaultLabel = new Label( body, SWT.NONE );
     defaultLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    defaultLabel.setText( "Default Attribute" );
+    defaultLabel.setText( Messages.getString("WProfPropertyPage_4") ); //$NON-NLS-1$
 
     final Label valueLabel = new Label( body, SWT.NONE );
     valueLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    valueLabel.setText( "User Defined Attribute" );
+    valueLabel.setText( Messages.getString("WProfPropertyPage_5") ); //$NON-NLS-1$
 
     final Set<Object> keySet = m_defaultSpecification.keySet();
     for( final Object key : keySet )
@@ -133,7 +134,7 @@ public class WProfPropertyPage extends WizardPage
   {
     /* Label filler = */new Label( parent, SWT.NONE );
     final Button button = new Button( parent, SWT.PUSH );
-    button.setText( "Reset Defaults" );
+    button.setText( Messages.getString("WProfPropertyPage_6") ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
       /**

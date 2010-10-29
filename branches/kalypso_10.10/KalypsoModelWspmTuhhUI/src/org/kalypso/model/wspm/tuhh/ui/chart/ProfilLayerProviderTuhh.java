@@ -280,15 +280,15 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( layerID.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
     {
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] {
-          new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_lsp ),
-          new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, m_lsp ) };
+          new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_lsp ), //$NON-NLS-1$
+          new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, m_lsp ) }; //$NON-NLS-1$
       return new BuildingBridgeTheme( profil, subLayers, cmLeft );
     }
 
     if( layerID.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] {
-          new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, m_lsp ),
+          new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, m_lsp ), //$NON-NLS-1$
           new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_WEHR, m_lsp, 30, false ) };
       return new BuildingWeirTheme( profil, subLayers, cmLeft );
     }
@@ -450,7 +450,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
     final ISinuositaetProfileObject[] sinObj = profile.getProfileObjects( ISinuositaetProfileObject.class );
     if( sinObj.length < 1 && !(existingLayers.contains( IWspmTuhhConstants.LAYER_SINUOSITAET )) )
-      addableLayer.add( new LayerDescriptor( "Sinuositaet", IWspmTuhhConstants.LAYER_SINUOSITAET ) );
+      addableLayer.add( new LayerDescriptor( Messages.getString("ProfilLayerProviderTuhh.3"), IWspmTuhhConstants.LAYER_SINUOSITAET ) ); //$NON-NLS-1$
 
     return addableLayer.toArray( new LayerDescriptor[addableLayer.size()] );
   }

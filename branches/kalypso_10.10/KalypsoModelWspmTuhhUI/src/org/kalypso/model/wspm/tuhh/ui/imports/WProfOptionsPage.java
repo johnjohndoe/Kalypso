@@ -48,6 +48,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -89,12 +90,12 @@ public class WProfOptionsPage extends WizardPage
 
     final Group markerGroup = new Group( panel, SWT.NONE );
     markerGroup.setLayout( new FillLayout() );
-    markerGroup.setText( "Profile Segmentation" );
+    markerGroup.setText( Messages.getString("WProfOptionsPage_0") ); //$NON-NLS-1$
     m_markerOptions.createControl( markerGroup );
 
     final Group creatorGroup = new Group( panel, SWT.NONE );
     creatorGroup.setLayout( new FillLayout() );
-    creatorGroup.setText( "Creation Mode" );
+    creatorGroup.setText( Messages.getString("WProfOptionsPage_1") ); //$NON-NLS-1$
     m_profileCreatorOptions.createControl( creatorGroup );
 
     setControl( panel );
