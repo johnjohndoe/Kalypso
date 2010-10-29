@@ -80,7 +80,6 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.MapOutline;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.Feature;
@@ -129,9 +128,9 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
     final IWorkbenchPage page = window.getActivePage();
-    final MapOutline outlineView = (MapOutline) page.findView( MapOutline.ID );
+//    final MapOutline outlineView = (MapOutline) page.findView( MapOutline.ID );
     
-    IMapPanel mapPanel = outlineView.getMapPanel();
+    IMapPanel mapPanel = getMapPanel();//outlineView.getMapPanel();
     IKalypsoTheme lTheme = findTheme( mapPanel, WIND_THEME_NAME );
     if( lTheme != null ){
       return;
