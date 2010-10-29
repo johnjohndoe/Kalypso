@@ -103,7 +103,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   {
     return null;
   }

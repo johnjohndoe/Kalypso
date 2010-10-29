@@ -36,7 +36,7 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
    * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange(final IDataRange<Number> domainIntervall )
   {
     final IObservation<TupleResult> obs = m_data.getObservation();
     return getDataRange( obs == null ? null : obs.getResult(), IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_GROUND );
@@ -47,8 +47,8 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     final IRecord[] record = tupleResult == null ? new IRecord[] {} : tupleResult.toArray( new IRecord[] {} );
     final IComponent[] components = tupleResult == null ? null : tupleResult.getComponents();
     final IComponent component = ProfilUtil.getComponentForID( components, id );
-    Double min = ProfilUtil.getSectionMinValueFor( record, component );
-    Double max = ProfilUtil.getSectionMaxValueFor( record, component );
+    final Double min = ProfilUtil.getSectionMinValueFor( record, component );
+    final Double max = ProfilUtil.getSectionMaxValueFor( record, component );
     return new DataRange<Number>( min, max );
   }
 
@@ -86,7 +86,7 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   }
 
   @Override
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     if( !isVisible() )
       return null;

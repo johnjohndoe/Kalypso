@@ -199,7 +199,7 @@ public class VegetationTheme extends AbstractProfilTheme
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange(de.openali.odysseus.chart.framework.model.mapper.IAxis)
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange(final IDataRange<Number> domainIntervall  )
   {
     // don't calculate axis size and ticks
     return null;
