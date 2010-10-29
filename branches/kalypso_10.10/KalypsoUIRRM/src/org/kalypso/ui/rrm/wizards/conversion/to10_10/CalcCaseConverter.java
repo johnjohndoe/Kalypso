@@ -149,13 +149,13 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void renameOldResults( )
   {
+    final File aktuellDir = new File( m_targetDir, INaCalcCaseConstants.AKTUELL_DIR );
     final File resultDir = new File( m_targetDir, INaCalcCaseConstants.ERGEBNISSE_DIR );
-    final File aktuellDir = new File( resultDir, INaCalcCaseConstants.AKTUELL_DIR );
     final File origCurrentResultDir = new File( resultDir, "Aktuell_Original" );
     if( aktuellDir.isDirectory() )
     {
       aktuellDir.renameTo( origCurrentResultDir );
-      final String msg = String.format( "Vorhande Ergebnisse ('Aktuell') wurden nach '%s' umgenannt.", origCurrentResultDir.getName() );
+      final String msg = String.format( "Vorhande Ergebnisse ('Aktuell') wurden nach '%s' umbenannt.", origCurrentResultDir.getName() );
       getLog().add( IStatus.INFO, msg );
       return;
     }
