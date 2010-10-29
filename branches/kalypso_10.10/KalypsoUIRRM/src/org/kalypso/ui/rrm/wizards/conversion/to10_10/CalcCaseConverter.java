@@ -151,11 +151,11 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   {
     final File aktuellDir = new File( m_targetDir, INaCalcCaseConstants.AKTUELL_DIR );
     final File resultDir = new File( m_targetDir, INaCalcCaseConstants.ERGEBNISSE_DIR );
-    final File origCurrentResultDir = new File( resultDir, "Aktuell_Original" );
+    final File origCurrentResultDir = new File( resultDir, Messages.getString("CalcCaseConverter.0") ); //$NON-NLS-1$
     if( aktuellDir.isDirectory() )
     {
       aktuellDir.renameTo( origCurrentResultDir );
-      final String msg = String.format( "Vorhande Ergebnisse ('Aktuell') wurden nach '%s' umbenannt.", origCurrentResultDir.getName() );
+      final String msg = String.format( Messages.getString("CalcCaseConverter.1"), origCurrentResultDir.getName() ); //$NON-NLS-1$
       getLog().add( IStatus.INFO, msg );
       return;
     }
@@ -235,7 +235,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     {
       metaControl.setSimulationStart( newSimulationStart );
       final String simulationStartText = displayDateTimeFormat.format( simulationStart );
-      final String statusMsg = String.format( "Startzeit der Rechenvariante muss 00:00 Uhr sein. Alte Startzeit (%s) wurde automatisch angepasst", simulationStartText );
+      final String statusMsg = String.format( Messages.getString("CalcCaseConverter.2"), simulationStartText ); //$NON-NLS-1$
       final int severity = IStatus.WARNING;
       saveModel( metaControl, INaCalcCaseConstants.DOT_CALCULATION, severity, statusMsg );
     }
@@ -251,7 +251,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     {
       initialValues.setInitialDate( newInitialDate );
       final String initialValuesText = displayDateTimeFormat.format( initialDate );
-      final String statusMsg = String.format( "Startzeit der Anfangswerte muss 00:00 Uhr sein. Alte Startzeit (%s) wurde automatisch angepasst", initialValuesText );
+      final String statusMsg = String.format( Messages.getString("CalcCaseConverter.3"), initialValuesText ); //$NON-NLS-1$
       final int severity = IStatus.WARNING;
       saveModel( initialValues, INaCalcCaseConstants.ANFANGSWERTE_FILE, severity, statusMsg );
     }
