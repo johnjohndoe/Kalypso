@@ -87,7 +87,7 @@ public class RrmProjectConverter implements IProjectConverter
   @Override
   public String getLabel( )
   {
-    return String.format( Messages.getString("RrmProjectConverter_0"), m_sourceDir.getName() ); //$NON-NLS-1$
+    return String.format( "Konvertierung von '%s'", m_sourceDir.getName() );
   }
 
   /**
@@ -120,7 +120,7 @@ public class RrmProjectConverter implements IProjectConverter
   private IProjectConverter createConverter( final Version targetVersion )
   {
     /* everything that is below 10.10 */
-    if( m_sourceVersion == null || targetVersion.compareTo( V_10_10 ) < 0 )
+    if( m_sourceVersion == null || m_sourceVersion.compareTo( V_10_10 ) < 0 )
       return new RrmProjectConverterXto10_10( m_sourceDir, m_targetDir, targetVersion );
 
     return null;
