@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="2.3.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="10.10.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
@@ -524,7 +524,7 @@ Library.
    </plugins>
 
    <features>
-      <feature id="org.kalypso.model.product" version="2.3.0.qualifier"/>
+      <feature id="org.kalypso.model.product"/>
    </features>
 
    <configurations>
