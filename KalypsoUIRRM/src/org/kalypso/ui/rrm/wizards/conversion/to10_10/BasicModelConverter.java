@@ -115,7 +115,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
    */
   private void copySynthFile( ) throws IOException
   {
-    final File synthSourceFile = new File( m_sourceDir, "synthN.gml" );
+    final File synthSourceFile = new File( m_sourceDir, "synthN.gml" ); //$NON-NLS-1$
     if( synthSourceFile.exists() )
     {
       copyFile( "synthN.gml", INaProjectConstants.GML_SYNTH_N_PATH ); //$NON-NLS-1$
@@ -130,7 +130,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     }
 
     /* Some versions/project did not have any synth-file: just show warning */
-    getLog().add( IStatus.WARNING, "Projekt enthält keine Datei für die syntetischen Niederschläge. Es wird die Standardvorlage verwendet." );
+    getLog().add( IStatus.WARNING, Messages.getString("BasicModelConverter_2") ); //$NON-NLS-1$
   }
 
   /**
@@ -182,7 +182,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     if( !sourceTimeseriesDir.isDirectory() )
     {
       final String relativePath = FileUtilities.getRelativePathTo( m_sourceDir, sourceTimeseriesDir );
-      final String msg = String.format( "Verzeichnis '%s' fehlt in Projekt.", relativePath );
+      final String msg = String.format( Messages.getString("BasicModelConverter_4"), relativePath ); //$NON-NLS-1$
       final IStatus error = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg );
       throw new CoreException( error );
       // final File sourceOtherTimeseriesDir = new File( m_sourceDir, INaProjectConstants.FOLDER_ZEITREIHEN );

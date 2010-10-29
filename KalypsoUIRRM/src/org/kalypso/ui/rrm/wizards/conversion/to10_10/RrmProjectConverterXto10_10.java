@@ -64,9 +64,9 @@ import org.osgi.framework.Version;
  */
 public class RrmProjectConverterXto10_10 extends AbstractProjectConverter
 {
-  private static File NEUESTE = new File( "<automatisch die 'Neueste' Version benutzen>" );
+  private static File NEUESTE = new File( Messages.getString("RrmProjectConverterXto10.10.0") ); //$NON-NLS-1$
 
-  private static File EXE_DO_NOT_CHANGE = new File( "<eingestelle Version beibehalten>" );
+  private static File EXE_DO_NOT_CHANGE = new File( Messages.getString("RrmProjectConverterXto10.10.1") ); //$NON-NLS-1$
 
   private final File m_sourceDir;
 
@@ -88,7 +88,7 @@ public class RrmProjectConverterXto10_10 extends AbstractProjectConverter
   @Override
   public IStatus preConversion( final Shell shell )
   {
-    final String title = "KalypsoHydrology Rechenkern auswählen";
+    final String title = Messages.getString("RrmProjectConverterXto10.10.2"); //$NON-NLS-1$
 
     /* Always call this in order to provoke the download error message */
     File[] availableExeFiles = CalcCoreUtils.checkExecutablesAvailable( shell, NaModelConstants.EXE_PATTERN, title );

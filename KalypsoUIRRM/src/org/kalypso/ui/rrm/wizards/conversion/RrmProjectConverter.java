@@ -101,7 +101,7 @@ public class RrmProjectConverter implements IProjectConverter
     m_converter = createConverter( rrmVersion );
     if( m_converter == null )
     {
-      final String msg = String.format( "Es existiert kein Konverter, welcher Projekte mit Versionsnummer '%s' in die aktuelle Version ('%s') umwandeln kann.", m_sourceVersion, rrmVersion );
+      final String msg = String.format( Messages.getString("RrmProjectConverter_0"), m_sourceVersion, rrmVersion ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg );
     }
 
