@@ -614,7 +614,7 @@ public class NetFileManager
     final int count = values.size();
     if( count < 1 )
       return null;
-    buffer.append( String.format( "%5d %6s\n", count, idManager.getAsciiID( relatedNode ) ) ); //$NON-NLS-1$
+    buffer.append( String.format( "%4d %6s\n", count, idManager.getAsciiID( relatedNode ) ) ); //$NON-NLS-1$
     for( int row = 0; row < count; row++ )
     {
       final double q1 = (Double) values.get( row, q1Axis );
