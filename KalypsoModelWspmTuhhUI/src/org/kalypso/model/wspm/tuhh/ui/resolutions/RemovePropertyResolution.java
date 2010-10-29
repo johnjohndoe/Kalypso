@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -52,9 +53,9 @@ import org.kalypso.observation.result.IComponent;
  */
 public class RemovePropertyResolution extends AbstractProfilMarkerResolution
 {
-  private static final String STR_REMOVE_COMPONENT = "Komponente löschen";
+  private static final String STR_REMOVE_COMPONENT = Messages.getString("RemovePropertyResolution_0"); //$NON-NLS-1$
 
-  private static final String STR_REMOVE_COMPONENT_DESCRIPTION = "Löscht eine Komponente aus dem Profil";
+  private static final String STR_REMOVE_COMPONENT_DESCRIPTION = Messages.getString("RemovePropertyResolution_1"); //$NON-NLS-1$
 
   private int m_componentIndex;
 
@@ -77,7 +78,7 @@ public class RemovePropertyResolution extends AbstractProfilMarkerResolution
   {
     final IComponent component = profile.getResult().getComponent( m_componentIndex );
     final String componentLabel = ComponentUtilities.getComponentLabel( component );
-    final String opMsg = String.format( "Komponente '%s' wird gelöscht", componentLabel );
+    final String opMsg = String.format( Messages.getString("RemovePropertyResolution_2"), componentLabel ); //$NON-NLS-1$
 
     final ProfilOperation operation = new ProfilOperation( opMsg, profile, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyRemove( profile, component ) );

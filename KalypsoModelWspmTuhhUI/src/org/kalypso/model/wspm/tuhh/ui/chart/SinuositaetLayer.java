@@ -46,6 +46,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.SinuositaetPanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -68,14 +69,14 @@ public class SinuositaetLayer extends ComponentLayer
   public void removeYourself( )
   {
     final ISinuositaetProfileObject[] sin = getProfil().getProfileObjects( ISinuositaetProfileObject.class );
-    final ProfilOperation operation = new ProfilOperation( "Sinuositaet loeschen" , getProfil(), true ); 
+    final ProfilOperation operation = new ProfilOperation( Messages.getString("SinuositaetLayer_0") , getProfil(), true );  //$NON-NLS-1$
     operation.addChange( new ProfileObjectRemove( getProfil(), sin ) );
     new ProfilOperationJob( operation ).schedule();
   }
 
   public SinuositaetLayer( IProfil profil )
   {
-    super( profil, "NullComponent" );
+    super( profil, "NullComponent" ); //$NON-NLS-1$
 
   }
 
@@ -94,7 +95,7 @@ public class SinuositaetLayer extends ComponentLayer
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    final LegendEntry le = new LegendEntry( this, "NullComponent" )
+    final LegendEntry le = new LegendEntry( this, "NullComponent" ) //$NON-NLS-1$
     {
 
       @Override

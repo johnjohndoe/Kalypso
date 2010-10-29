@@ -53,6 +53,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypsodeegree.model.feature.Feature;
@@ -62,24 +63,24 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class ExportProfilesWizard extends Wizard
 {
-  protected static final String STR_CHOOSE_EXPORT_FILE_TITLE = "Exportdatei wählen";
+  protected static final String STR_CHOOSE_EXPORT_FILE_TITLE = Messages.getString("ExportProfilesWizard_0"); //$NON-NLS-1$
 
-  protected static final String STR_CHOOSE_EXPORT_FILE_MESSAGE = "Bitte wählen Sie die Exportdatei aus.";
+  protected static final String STR_CHOOSE_EXPORT_FILE_MESSAGE = Messages.getString("ExportProfilesWizard_1"); //$NON-NLS-1$
 
-  protected static final String STR_EXPORT_FILE_GROUP_TEXT = "Target File";
+  protected static final String STR_EXPORT_FILE_GROUP_TEXT = Messages.getString("ExportProfilesWizard_2"); //$NON-NLS-1$
 
   private final ArrayChooserPage m_profileChooserPage;
 
   public ExportProfilesWizard( final ProfileSelection selection )
   {
     setNeedsProgressMonitor( true );
-    setWindowTitle( "Profilexport" );
+    setWindowTitle( Messages.getString("ExportProfilesWizard_3") ); //$NON-NLS-1$
 
     final Feature[] profiles = selection.getProfiles();
 
     final Feature[] selectedProfiles = selection.getSelectedProfiles();
 
-    final String pageMessage = "Bitte wählen Sie die Profile aus, die exportiert werden sollen.";
+    final String pageMessage = Messages.getString("ExportProfilesWizard_4"); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( pageMessage, profiles, new Object[0], selectedProfiles, 1, false );
 
     addPage( m_profileChooserPage );
@@ -117,7 +118,7 @@ public abstract class ExportProfilesWizard extends Wizard
       {
         try
         {
-          monitor.beginTask( "Profile exportieren", profilFeatures.length );
+          monitor.beginTask( Messages.getString("ExportProfilesWizard_5"), profilFeatures.length ); //$NON-NLS-1$
 
           exportProfiles( chosenProfiles, monitor );
 

@@ -127,7 +127,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
 
   public PointMarkerLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider, final int offset, final boolean close )
   {
-    super( IWspmTuhhConstants.LAYER_DEVIDER + "_" + targetRangeProperty, profil, targetRangeProperty, styleProvider );
+    super( IWspmTuhhConstants.LAYER_DEVIDER + "_" + targetRangeProperty, profil, targetRangeProperty, styleProvider ); //$NON-NLS-1$
 
     m_offset = offset;
 

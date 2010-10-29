@@ -123,7 +123,7 @@ public class ProfileFromDEMWizardPage extends WizardPage
 
     /* name */
     final Label lName = new Label( container, SWT.NONE );
-    lName.setText( "Name" );
+    lName.setText( Messages.getString("ProfileFromDEMWizardPage.0") ); //$NON-NLS-1$
 
     final Text tName = new Text( container, SWT.BORDER );
     tName.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -139,7 +139,7 @@ public class ProfileFromDEMWizardPage extends WizardPage
 
     /* station */
     final Label lStation = new Label( container, SWT.NONE );
-    lStation.setText( "Station" );
+    lStation.setText( Messages.getString("ProfileFromDEMWizardPage.1") ); //$NON-NLS-1$
 
     final Text tStation = new Text( container, SWT.BORDER );
     tStation.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

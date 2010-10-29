@@ -57,6 +57,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -128,7 +129,7 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode
   {
     final IWspmResultNode[] childResults = getChildResults();
     if( ArrayUtils.isEmpty( childResults ) )
-      return String.format( "%s (Ergebnis liegt nicht vor)", m_calculation.getName() );
+      return String.format( Messages.getString("WspmResultCalculationNode_0"), m_calculation.getName() ); //$NON-NLS-1$
 
     return m_calculation.getName();
   }

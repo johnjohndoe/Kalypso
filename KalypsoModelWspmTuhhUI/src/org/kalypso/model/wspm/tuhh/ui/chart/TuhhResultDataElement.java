@@ -70,7 +70,7 @@ public class TuhhResultDataElement implements IWspLayerDataElement
     if( m_resultNode instanceof IWspmResult )
     {
       final IWspmResultNode parent = m_resultNode.getParent();
-      return String.format( "%s (%s)", parent.getLabel(), m_resultNode.getLabel() );
+      return String.format( "%s (%s)", parent.getLabel(), m_resultNode.getLabel() ); //$NON-NLS-1$
     }
 
     if( m_resultNode == null )
@@ -78,7 +78,7 @@ public class TuhhResultDataElement implements IWspLayerDataElement
 
     final IWspmResultNode[] childResults = m_resultNode.getChildResults();
     if( childResults.length > 0 )
-      return String.format( "%s (%s)", m_resultNode.getLabel(), childResults[0].getLabel() );
+      return String.format( "%s (%s)", m_resultNode.getLabel(), childResults[0].getLabel() ); //$NON-NLS-1$
 
     return m_resultNode.getLabel();
   }
@@ -86,7 +86,7 @@ public class TuhhResultDataElement implements IWspLayerDataElement
   public String getId( )
   {
     if( m_resultNode == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return m_resultNode.getName();
   }
@@ -115,7 +115,7 @@ public class TuhhResultDataElement implements IWspLayerDataElement
   public int hashCode( )
   {
     if( m_resultNode == null )
-      return "".hashCode();
+      return "".hashCode(); //$NON-NLS-1$
 
     return m_resultNode.hashCode();
   }
@@ -126,7 +126,7 @@ public class TuhhResultDataElement implements IWspLayerDataElement
   @Override
   public String toString( )
   {
-    return String.format( "%s: %s", getClass().getSimpleName(), m_resultNode );
+    return String.format( "%s: %s", getClass().getSimpleName(), m_resultNode ); //$NON-NLS-1$
   }
 
   private static double searchValue( final IWspmResultNode resultNode, final BigDecimal station )

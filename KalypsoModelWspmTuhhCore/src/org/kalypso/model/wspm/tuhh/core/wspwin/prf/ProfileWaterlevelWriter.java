@@ -47,6 +47,7 @@ import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -92,7 +93,7 @@ public class ProfileWaterlevelWriter
       return null;
 
     final String componentName = property.getName();
-    final String strandName = "unknown";
+    final String strandName = Messages.getString("ProfileWaterlevelWriter_0"); //$NON-NLS-1$
     final String secondLine = String.format( "%100s%s@%s", " ", componentName, strandName ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final CoordDataBlockCreator creator = new CoordDataBlockCreator( IDataBlockNames.WSP_HOEHE, secondLine );

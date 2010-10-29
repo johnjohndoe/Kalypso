@@ -162,7 +162,7 @@ public class BewuchsRule extends AbstractValidatorRule
           continue;
 
         hasErrors = true;
-        final String stationFormatted = String.format( "km %.4f", profil.getStation() );
+        final String stationFormatted = String.format( Messages.getString("BewuchsRule.0"), profil.getStation() ); //$NON-NLS-1$
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.7" ), stationFormatted, profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else

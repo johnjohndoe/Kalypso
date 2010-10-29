@@ -54,6 +54,7 @@ import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -101,7 +102,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     if( propertyType == null )
     {
       final String property = m_specifiction.getProperty( propertySpecificationName );
-      final String msg = String.format( "Missing property '%s' in input shapefile.", property );
+      final String msg = String.format( Messages.getString("BCEShapeWPRofContentProvider_0"), property ); //$NON-NLS-1$
       throw new IllegalArgumentException( msg );
     }
   }
@@ -178,7 +179,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public String getRiverName( )
   {
-    return "" + getProperty( "GEWAESSER_NAME", Object.class, "Unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return "" + getProperty( "GEWAESSER_NAME", Object.class, Messages.getString("BCEShapeWPRofContentProvider_1") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   @Override

@@ -58,7 +58,7 @@ public final class LengthSectionMapping
 {
   private static LengthSectionMapping INSTANCE;
 
-  public final static String blanc200 = StringUtils.repeat( " ", 200 );
+  public final static String blanc200 = StringUtils.repeat( " ", 200 ); //$NON-NLS-1$
 
   private final Map<String, DataBlockDescription> m_propertyMap = new HashMap<String, DataBlockDescription>();
 
@@ -73,7 +73,7 @@ public final class LengthSectionMapping
     m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, DataBlockDescription.DECKENUNTERK );
     m_propertyMap.put( IWspmConstants.POINT_PROPERTY_COMMENT, DataBlockDescription.TEXT );
     m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT, DataBlockDescription.TEXT );
-    m_propertyMap.put( "TEXT", DataBlockDescription.TEXT );
+    m_propertyMap.put( "TEXT", DataBlockDescription.TEXT ); //$NON-NLS-1$
     m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, DataBlockDescription.WASSERSPIEGEL );
   }
 

@@ -163,7 +163,7 @@ public class WspmTuhhCalcJob implements ISimulation
     }
     catch( final Exception e )
     {
-      final String msg = String.format( "Fehler bei der Berechnung: %s", e.getLocalizedMessage() );
+      final String msg = String.format( Messages.getString("WspmTuhhCalcJob.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
       final SimulationException simulationException = new SimulationException( msg, e );
       printLog( pwSimuLog, simulationException );
       throw simulationException;

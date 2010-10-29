@@ -185,7 +185,7 @@ public class PrfReader
   public String createFirstLine( final String key )
   {
     if( key == null )
-      return "Unbekannt";
+      return "Unbekannt"; //$NON-NLS-1$
 
     if( key.startsWith( "GEL" ) ) //$NON-NLS-1$
       return "GELAENDE-"; //$NON-NLS-1$

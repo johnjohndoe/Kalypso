@@ -220,7 +220,7 @@
         </rule>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.DuplicateComponentRule"
-              description="Doppelte Komponenten"
+              description="%rule.description"
               id="general.duplicateComponent"
               type="org.kalypso.model.wspm.tuhh.profiletype">
         </rule>
@@ -566,9 +566,9 @@
           name="%command.name.9">
     </command>
    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-        description="Simplify profile by removing unimportant points"
+        description="%command.description.7"
         id="org.kalypso.model.wspm.tuhh.ui.command.profile.simplify"
-        name="Simplify">
+        name="%command.name">
    </command>
   </extension>
   <extension

@@ -55,7 +55,7 @@ public class PrfSink implements IProfilSink
   private final String m_defaultRoughnessType;
   public PrfSink()
   {
-    m_defaultRoughnessType = "";
+    m_defaultRoughnessType = ""; //$NON-NLS-1$
   }
   public PrfSink(final String defaultRoughnessType )
   {

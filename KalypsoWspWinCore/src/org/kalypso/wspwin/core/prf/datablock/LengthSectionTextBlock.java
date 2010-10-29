@@ -99,7 +99,7 @@ public class LengthSectionTextBlock extends AbstractDataBlock
   {
     getDataBlockHeader().printToPrinter( pw );
 
-    pw.write( "1 " + getCoordCount() + " 0.0000" );
+    pw.write( "1 " + getCoordCount() + " 0.0000" ); //$NON-NLS-1$ //$NON-NLS-2$
     pw.println();
     writeTextBlock( pw );
   }
@@ -108,7 +108,7 @@ public class LengthSectionTextBlock extends AbstractDataBlock
   {
     for( int i = 0; i < m_xs.length; i++ )
     {
-      pw.write( String.format( "1 0 2 2 %.0f 2", m_xs[i] ) );
+      pw.write( String.format( "1 0 2 2 %.0f 2", m_xs[i] ) ); //$NON-NLS-1$
       pw.println();
       pw.print( m_texts[i].toString() );
       pw.println();

@@ -177,7 +177,7 @@ public class DoubleDataBlock extends AbstractDataBlock
   {
     for( int i = 0; i < dbls.length; i++ )
     {
-      pw.write( String.format(Locale.US, "%13.4f", dbls[i] == null ? Double.NaN : dbls[i] ) );
+      pw.write( String.format(Locale.US, "%13.4f", dbls[i] == null ? Double.NaN : dbls[i] ) ); //$NON-NLS-1$
 
       if( (i + 1) % 8 == 0 & i != dbls.length - 1 )
         pw.println();

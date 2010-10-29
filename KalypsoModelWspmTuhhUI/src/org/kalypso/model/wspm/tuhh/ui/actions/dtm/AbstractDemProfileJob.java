@@ -12,6 +12,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.grid.RichCoverageCollection;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -79,7 +80,7 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to create profile from terrain model." );
+      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("AbstractDemProfileJob_0") ); //$NON-NLS-1$
     }
   }
 

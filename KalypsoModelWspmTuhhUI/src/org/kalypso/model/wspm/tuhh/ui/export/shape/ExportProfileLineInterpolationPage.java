@@ -49,15 +49,16 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author belger
  */
 public class ExportProfileLineInterpolationPage extends WizardPage
 {
-  private static final String SETTINGS_DO_INTERPOLATION = "doInterpolation";
+  private static final String SETTINGS_DO_INTERPOLATION = "doInterpolation"; //$NON-NLS-1$
 
-  private static final String SETTINGS_DO_FORELAND = "doForeland";
+  private static final String SETTINGS_DO_FORELAND = "doForeland"; //$NON-NLS-1$
 
   private boolean m_doInterpolation = true;
 
@@ -67,8 +68,8 @@ public class ExportProfileLineInterpolationPage extends WizardPage
   {
     super( pageName );
 
-    setTitle( "Interpolation options" );
-    setDescription( "Choose options for interpolated profiles on this page" );
+    setTitle( Messages.getString("ExportProfileLineInterpolationPage_2") ); //$NON-NLS-1$
+    setDescription( Messages.getString("ExportProfileLineInterpolationPage_3") ); //$NON-NLS-1$
   }
 
   /**
@@ -82,17 +83,17 @@ public class ExportProfileLineInterpolationPage extends WizardPage
     final Group group = new Group( parent, SWT.NONE );
     setControl( group );
 
-    group.setText( "Interpolation Parameters" );
+    group.setText( Messages.getString("ExportProfileLineInterpolationPage_4") ); //$NON-NLS-1$
     group.setLayout( new GridLayout() );
 
     final Button doInterpolationButton = new Button( group, SWT.CHECK );
-    doInterpolationButton.setText( "Add Interpolated Profiles" );
-    doInterpolationButton.setToolTipText( "Interpolates profiles for interpolated stations during the calculation to the output." );
+    doInterpolationButton.setText( Messages.getString("ExportProfileLineInterpolationPage_5") ); //$NON-NLS-1$
+    doInterpolationButton.setToolTipText( Messages.getString("ExportProfileLineInterpolationPage_6") ); //$NON-NLS-1$
     doInterpolationButton.setSelection( m_doInterpolation );
 
     final Button interpolationForelandButton = new Button( group, SWT.CHECK );
-    interpolationForelandButton.setText( "Interpolate Forland" );
-    interpolationForelandButton.setToolTipText( "If checked, the profile will also be interpolated on the foreland. Else, only the main channel will be interpolated and exported." );
+    interpolationForelandButton.setText( Messages.getString("ExportProfileLineInterpolationPage_7") ); //$NON-NLS-1$
+    interpolationForelandButton.setToolTipText( Messages.getString("ExportProfileLineInterpolationPage_8") ); //$NON-NLS-1$
     interpolationForelandButton.setSelection( m_doForelandInterpolation );
     interpolationForelandButton.setEnabled( m_doInterpolation );
 

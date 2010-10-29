@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -90,20 +91,20 @@ public class WProfImporter
 
   public void importW80Shape( final IProgressMonitor monitor ) throws GmlSerializeException, CoreException, MalformedURLException
   {
-    monitor.beginTask( String.format( "Importing %s", m_shapePath ), 1000 );
+    monitor.beginTask( String.format( Messages.getString("WProfImporter_0"), m_shapePath ), 1000 ); //$NON-NLS-1$
 
     /* Load Shape */
     final File prjFile = new File( m_shapePath + ".prj" ); //$NON-NLS-1$
     final String shapeSrs = ShapeSerializer.loadCrs( prjFile.toURI().toURL(), m_shapeDefaultSrs );
 
-    monitor.subTask( "reading shape file..." );
+    monitor.subTask( Messages.getString("WProfImporter_1") ); //$NON-NLS-1$
     final GMLWorkspace w80shapeWorkspace = ShapeSerializer.deserialize( m_shapePath, shapeSrs, m_shapeCharset, new SubProgressMonitor( monitor, 500 ) );
 
     final FeatureList w80features = (FeatureList) w80shapeWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    System.out.println( String.format( "Read %d points", w80features.size() ) );
+    System.out.println( String.format( Messages.getString("WProfImporter_2"), w80features.size() ) ); //$NON-NLS-1$
 
     /* Data */
-    monitor.subTask( "converting data..." );
+    monitor.subTask( Messages.getString("WProfImporter_3") ); //$NON-NLS-1$
     importW80Data( w80features, new SubProgressMonitor( monitor, 500 ) );
   }
 

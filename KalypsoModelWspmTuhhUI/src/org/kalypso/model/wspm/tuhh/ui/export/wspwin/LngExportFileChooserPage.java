@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.wspwin.core.Plotter;
 
 public class LngExportFileChooserPage extends ExportFileChooserPage
@@ -84,11 +85,11 @@ public class LngExportFileChooserPage extends ExportFileChooserPage
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout() );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    group.setText( "Options" );
+    group.setText( Messages.getString("LngExportFileChooserPage_0") ); //$NON-NLS-1$
 
     final Button openPlotterCheckbox = new Button( group, SWT.CHECK );
-    openPlotterCheckbox.setText( "Open with WspWin Plotter" );
-    openPlotterCheckbox.setToolTipText( "Open the exported length section with WspWin Plotter" );
+    openPlotterCheckbox.setText( Messages.getString("LngExportFileChooserPage_1") ); //$NON-NLS-1$
+    openPlotterCheckbox.setToolTipText( Messages.getString("LngExportFileChooserPage_2") ); //$NON-NLS-1$
     openPlotterCheckbox.setSelection( m_doOpenPlotter );
     openPlotterCheckbox.addSelectionListener( new SelectionAdapter()
     {

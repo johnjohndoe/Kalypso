@@ -118,8 +118,8 @@ public class BreakLinesHelper implements IWspmConstants
     final Feature triangleFeature = triangleWorkspace.getRootFeature();
     triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "triangulatedSurfaceMember" ), surface ); //$NON-NLS-1$
     // TODO: set tin name
-    NamedFeatureHelper.setDescription( triangleFeature, "Wasserspiegel-Tin: " );
-    NamedFeatureHelper.setName( triangleFeature, "Triangulierter Wasserpiegel der Berechnung" );
+    NamedFeatureHelper.setDescription( triangleFeature, Messages.getString("BreakLinesHelper.0") ); //$NON-NLS-1$
+    NamedFeatureHelper.setName( triangleFeature, Messages.getString("BreakLinesHelper.1") ); //$NON-NLS-1$
     triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "unit" ), "NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
     triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "parameter" ), "h" ); //$NON-NLS-1$ //$NON-NLS-2$
     triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "date" ), DateUtilities.toXMLGregorianCalendar( new Date() ) ); //$NON-NLS-1$

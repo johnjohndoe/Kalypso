@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekFrictionZone.FrictionTyp
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.FlowZone;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.IFlowZoneType;
 import org.kalypso.model.wspm.tuhh.ui.export.wspwin.ProfilePatternInputReplacer;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -78,7 +79,7 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
   @Override
   public String getLabel( )
   {
-    return ".dat Datei";
+    return Messages.getString("SobekFricExportOperation_0"); //$NON-NLS-1$
   }
 
   /**
@@ -91,42 +92,42 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
     final SobekFrictionZone[] frictionZones = findZones( profil );
 
     final String crdef = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_idPattern, profil );
-    final String fricid = String.format( "Rau_%s", crdef );
+    final String fricid = String.format( "Rau_%s", crdef ); //$NON-NLS-1$
 
     final String name = profil.getName();
-    formatter.format( "CRFR id '%s' nm '%s' cs '%s'%n", fricid, name, crdef );
+    formatter.format( "CRFR id '%s' nm '%s' cs '%s'%n", fricid, name, crdef ); //$NON-NLS-1$
     writeTables( formatter, frictionZones );
-    formatter.format( "crfr%n" );
+    formatter.format( "crfr%n" ); //$NON-NLS-1$
   }
 
   private void writeTables( final Formatter formatter, final SobekFrictionZone[] frictionZones )
   {
     writeZoneTable( formatter, frictionZones );
 
-    writeFrictionTable( formatter, frictionZones, "ft" );
-    writeFrictionTable( formatter, frictionZones, "fr" );
+    writeFrictionTable( formatter, frictionZones, "ft" ); //$NON-NLS-1$
+    writeFrictionTable( formatter, frictionZones, "fr" ); //$NON-NLS-1$
   }
 
   private void writeZoneTable( final Formatter formatter, final SobekFrictionZone[] frictionZones )
   {
-    formatter.format( "lt ys%n" );
-    formatter.format( "TBLE%n" );
+    formatter.format( "lt ys%n" ); //$NON-NLS-1$
+    formatter.format( "TBLE%n" ); //$NON-NLS-1$
 
     for( final SobekFrictionZone zone : frictionZones )
-      formatter.format( "%.4f %.4f <%n", zone.getFrom(), zone.getTo() );
+      formatter.format( "%.4f %.4f <%n", zone.getFrom(), zone.getTo() ); //$NON-NLS-1$
 
-    formatter.format( "tble%n" );
+    formatter.format( "tble%n" ); //$NON-NLS-1$
   }
 
   private void writeFrictionTable( final Formatter formatter, final SobekFrictionZone[] frictionZones, final String tableKey )
   {
-    formatter.format( "%s ys%n", tableKey );
-    formatter.format( "TBLE%n" );
+    formatter.format( "%s ys%n", tableKey ); //$NON-NLS-1$
+    formatter.format( "TBLE%n" ); //$NON-NLS-1$
 
     for( final SobekFrictionZone zone : frictionZones )
-      formatter.format( "%d %s <%n", zone.getFrictionType(), zone.getFrictionString() );
+      formatter.format( "%d %s <%n", zone.getFrictionType(), zone.getFrictionString() ); //$NON-NLS-1$
 
-    formatter.format( "tble%n" );
+    formatter.format( "tble%n" ); //$NON-NLS-1$
   }
 
   private SobekFrictionZone[] findZones( final IProfil profil )
@@ -142,7 +143,7 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
     final FlowZone flowZone = zoneType.createFlowZone( profil );
     if( flowZone == null )
     {
-      final String comment = String.format( "Zone '%s' fehlt in WSPM profil", zoneType.getLabel() );
+      final String comment = String.format( Messages.getString("SobekFricExportOperation_14"), zoneType.getLabel() ); //$NON-NLS-1$
       return new SobekFrictionZone( 0.0, 0.0, FrictionType.Chezy, 0.0, comment );
     }
 

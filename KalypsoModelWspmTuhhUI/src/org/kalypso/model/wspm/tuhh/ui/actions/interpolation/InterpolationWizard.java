@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -59,7 +60,7 @@ public class InterpolationWizard extends Wizard
 
     setNeedsProgressMonitor( false );
     setHelpAvailable( false );
-    setWindowTitle( "Profile Interpolation" );
+    setWindowTitle( Messages.getString("InterpolationWizard_0") ); //$NON-NLS-1$
   }
 
   public IProfileFeature getPreviousProfile( )

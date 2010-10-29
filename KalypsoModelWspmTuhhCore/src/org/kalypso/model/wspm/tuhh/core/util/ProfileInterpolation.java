@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -107,7 +108,7 @@ public class ProfileInterpolation
     catch( final IllegalProfileOperationException e )
     {
       e.printStackTrace();
-      profile.setDescription( "Simplifikation failed: " + e.getMessage() );
+      profile.setDescription( Messages.getString("ProfileInterpolation_0") + e.getMessage() ); //$NON-NLS-1$
     }
 
     /* update profile: add durchstroemte bereiche, trennflaechen */
@@ -134,17 +135,17 @@ public class ProfileInterpolation
     {
       if( m_previousProfile == null )
       {
-        profile.setDescription( String.format( "Interpolation not possible: downstream profile %s not found.", profile.getStation() ) );
+        profile.setDescription( String.format( Messages.getString("ProfileInterpolation_1"), profile.getStation() ) ); //$NON-NLS-1$
         return null;
       }
 
       if( m_nextProfile == null )
       {
-        profile.setDescription( String.format( "Interpolation not possible: upstream profile %s not found.", profile.getStation() ) );
+        profile.setDescription( String.format( Messages.getString("ProfileInterpolation_2"), profile.getStation() ) ); //$NON-NLS-1$
         return null;
       }
 
-      final String description = String.format( "Interpolated profile %s - %s", m_previousProfile.getStation(), m_nextProfile.getStation() );
+      final String description = String.format( Messages.getString("ProfileInterpolation_3"), m_previousProfile.getStation(), m_nextProfile.getStation() ); //$NON-NLS-1$
       profile.setName( description );
 
       return doInterpolation( profile );
@@ -152,7 +153,7 @@ public class ProfileInterpolation
     catch( final SameXValuesException e )
     {
       e.printStackTrace();
-      profile.setDescription( String.format( "Interpolation failed: %s", e.toString() ) );
+      profile.setDescription( String.format( Messages.getString("ProfileInterpolation_4"), e.toString() ) ); //$NON-NLS-1$
       return null;
     }
   }
@@ -178,12 +179,12 @@ public class ProfileInterpolation
     final Double[] nextWidths = getWidths( m_nextProfile );
     if( prevWidths.length < 2 )
     {
-      profil.setComment( "Interpolation not possible: downstream profile doesn not contain enough points." );
+      profil.setComment( Messages.getString("ProfileInterpolation_5") ); //$NON-NLS-1$
       return;
     }
     if( nextWidths.length < 2 )
     {
-      profil.setComment( "Interpolation not possible: upstream profile does not contain enough points." );
+      profil.setComment( Messages.getString("ProfileInterpolation_6") ); //$NON-NLS-1$
       return;
     }
 

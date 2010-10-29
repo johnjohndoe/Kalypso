@@ -152,7 +152,7 @@ public class CreateLengthSectionWizard extends Wizard
     }
     catch( final Throwable t )
     {
-      final String message = String.format( "Failed to export length section", t.getLocalizedMessage() );
+      final String message = String.format( Messages.getString("CreateLengthSectionWizard.0"), t.getLocalizedMessage() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message, t );
       KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( status );
       new StatusDialog( getShell(), status, getWindowTitle() ).open();
@@ -177,7 +177,7 @@ public class CreateLengthSectionWizard extends Wizard
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final IGMLSchema schema = schemaCatalog.getSchema( new QName( "http://www.opengis.net/om", "Observation" ).getNamespaceURI(), gmlVersion ); //$NON-NLS-1$ //$NON-NLS-2$
     final IFeatureType rootFeatureType = schema.getFeatureType( new QName( "http://www.opengis.net/om", "Observation" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final Feature rootFeature = FeatureFactory.createFeature( null, null, "LengthSectionResult", rootFeatureType, true );
+    final Feature rootFeature = FeatureFactory.createFeature( null, null, Messages.getString("CreateLengthSectionWizard.1"), rootFeatureType, true ); //$NON-NLS-1$
     final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, null, new GmlSerializerFeatureProviderFactory(), null );
 
     final IProfil[] profiles = extractProfiles( profilFeatures );
@@ -202,7 +202,7 @@ public class CreateLengthSectionWizard extends Wizard
       return;
 
     final URL resourceLocation = getClass().getResource( resource );
-    String kod = FileUtilities.toString( resourceLocation, "UTF-8" );
+    String kod = FileUtilities.toString( resourceLocation, "UTF-8" ); //$NON-NLS-1$
     kod = kod.replaceAll( "%GMLFILENAME%", fName + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$
     kod = kod.replaceAll( "%TITLE%", fName ); //$NON-NLS-1$
     kod = kod.replaceAll( "%DESCRIPTION%", fName ); //$NON-NLS-1$

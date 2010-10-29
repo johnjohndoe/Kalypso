@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
@@ -70,9 +71,9 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
 
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
     m_profileFileChooserPage = new PlotterExportPage( dirDelegate );
-    m_profileFileChooserPage.setTitle( "Temporäres Ablageverzeichnis wählen" );
-    m_profileFileChooserPage.setDescription( "Bitte wählen Sie das Verzeichnis für die temporär exportierten .prf Dateien aus." );
-    m_profileFileChooserPage.setFileGroupText( "Temporäres Ablageverzeichnis" );
+    m_profileFileChooserPage.setTitle( Messages.getString("PlotterExportProfilesWizard_0") ); //$NON-NLS-1$
+    m_profileFileChooserPage.setDescription( Messages.getString("PlotterExportProfilesWizard_1") ); //$NON-NLS-1$
+    m_profileFileChooserPage.setFileGroupText( Messages.getString("PlotterExportProfilesWizard_2") ); //$NON-NLS-1$
     addPage( m_profileFileChooserPage );
 
     final IWspmResultNode results = WspmResultFactory.createResultNode( null, selection.getContainer() );

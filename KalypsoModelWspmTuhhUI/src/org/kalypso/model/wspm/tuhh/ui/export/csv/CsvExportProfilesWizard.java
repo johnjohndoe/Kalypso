@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
@@ -62,7 +63,7 @@ import org.kalypso.model.wspm.ui.action.ProfileSelection;
  */
 public class CsvExportProfilesWizard extends ExportProfilesWizard
 {
-  private static final String FILTER_LABEL = "Comma Separated File";
+  private static final String FILTER_LABEL = Messages.getString("CsvExportProfilesWizard_0"); //$NON-NLS-1$
 
   private static final String EXTENSION = "csv"; //$NON-NLS-1$
 
