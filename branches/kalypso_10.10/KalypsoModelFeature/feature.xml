@@ -18,7 +18,7 @@
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://dev.bjoernsen.de/updatesites/kalypso_2.3"/>
+      <update label="%updateSiteName" url="http://master.dl.sourceforge.net/project/kalypso/Kalypso/10.10/update-site"/>
    </url>
 
    <includes
