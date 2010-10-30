@@ -49,6 +49,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -64,6 +65,7 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.util.BufferedAndOtherOutputStream;
 import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -121,60 +123,42 @@ public class WspmTuhhCalcJob implements ISimulation
     final File simulogFile = new File( tmpDir, "simulation.log" ); //$NON-NLS-1$
     resultEater.addResult( OUTPUT_SIMULATION_LOG, simulogFile );
 
-    PrintStream pwSimuLog = null;
+    OutputStream osSimuLog = null;
     try
     {
-      final PrintStream calcOutConsumer = m_calcOutConsumer;
-      final OutputStream osSimuLog = new BufferedOutputStream( new FileOutputStream( simulogFile ) )
+      osSimuLog = new BufferedAndOtherOutputStream( new FileOutputStream( simulogFile ), m_calcOutConsumer );
+      final LogHelper log = new LogHelper( osSimuLog, monitor );
+      try
       {
-        // REMARK: also stream stuff into System.out in order to have a log in the console.view
-        /**
-         * @see java.io.BufferedOutputStream#write(byte[], int, int)
-         */
-        @Override
-        public synchronized void write( final byte[] b, final int off, final int len ) throws IOException
-        {
-          super.write( b, off, len );
-
-          calcOutConsumer.write( b, off, len );
-        }
-
-        /**
-         * @see java.io.BufferedOutputStream#write(int)
-         */
-        @Override
-        public synchronized void write( final int b ) throws IOException
-        {
-          super.write( b );
-
-          calcOutConsumer.write( b );
-        }
-      };
-      pwSimuLog = new PrintStream( osSimuLog, true, "CP1252" ); //$NON-NLS-1$
-
-      final LogHelper log = new LogHelper( pwSimuLog, monitor, calcOutConsumer );
-
-      doRun( tmpDir, inputProvider, resultEater, monitor, osSimuLog, log );
+        doRun( tmpDir, inputProvider, resultEater, monitor, log );
+      }
+      catch( final SimulationException e )
+      {
+        log.log( e, null );
+        throw e;
+      }
+      catch( final Exception e )
+      {
+        final String msg = String.format( Messages.getString( "WspmTuhhCalcJob.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+        final SimulationException simulationException = new SimulationException( msg, e );
+        log.log( simulationException, null );
+        throw simulationException;
+      }
+      finally
+      {
+      }
     }
-    catch( final SimulationException e )
+    catch( final FileNotFoundException e )
     {
-      printLog( pwSimuLog, e );
-      throw e;
-    }
-    catch( final Exception e )
-    {
-      final String msg = String.format( Messages.getString("WspmTuhhCalcJob.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
-      final SimulationException simulationException = new SimulationException( msg, e );
-      printLog( pwSimuLog, simulationException );
-      throw simulationException;
+      e.printStackTrace();
     }
     finally
     {
-      IOUtils.closeQuietly( pwSimuLog );
+      IOUtils.closeQuietly( osSimuLog );
     }
   }
 
-  private void doRun( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor, final OutputStream osSimuLog, final LogHelper log ) throws SimulationException, Exception, GMLXPathException, IOException, FileNotFoundException, ProcessTimeoutException
+  private void doRun( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor, final LogHelper log ) throws SimulationException, Exception, GMLXPathException, IOException, FileNotFoundException, ProcessTimeoutException
   {
     OutputStream strmKernelErr = null;
 
@@ -227,11 +211,13 @@ public class WspmTuhhCalcJob implements ISimulation
       if( log.checkCanceled() )
         return;
 
-      final File exeFile = getExecuteable( calculation, KALYPSO_1D_EXE_FORMAT, KALYPSO_1D_EXE_PATTERN, monitor );
+      final File exeFile = getExecuteable( calculation, tmpDir, KALYPSO_1D_EXE_FORMAT, KALYPSO_1D_EXE_PATTERN, monitor );
       if( exeFile == null )
         return;
 
       final String sCmd = "\"" + exeFile.getAbsolutePath() + "\" n \"" + iniFile.getAbsolutePath() + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+      final OutputStream osSimuLog = log.getOutputStream();
       ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, 0, osSimuLog, strmKernelErr, null );
 
       if( log.checkCanceled() )
@@ -246,13 +232,6 @@ public class WspmTuhhCalcJob implements ISimulation
     }
   }
 
-  private void printLog( final PrintStream ps, final SimulationException e )
-  {
-    final PrintStream outStream = ps == null ? System.out : ps;
-    outStream.println( e.getLocalizedMessage() );
-    e.printStackTrace( outStream );
-  }
-
   private URL findOvwMapUrl( final ISimulationDataProvider inputProvider ) throws SimulationException
   {
     if( inputProvider.hasID( INPUT_OVW_MAP_GENERAL ) )
@@ -264,7 +243,7 @@ public class WspmTuhhCalcJob implements ISimulation
     return null;
   }
 
-  public final static File getExecuteable( final TuhhCalculation calculation, final String exeFormat, final String exePattern, final ISimulationMonitor monitor )
+  public final static File getExecuteable( final TuhhCalculation calculation, final File tmpDir, final String exeFormat, final String exePattern, final ISimulationMonitor monitor )
   {
     try
     {
@@ -272,12 +251,21 @@ public class WspmTuhhCalcJob implements ISimulation
       final File exeFile = CalcCoreUtils.findExecutable( version, exeFormat, exePattern );
       if( exeFile == null )
         return null;
-      return exeFile;
+
+      // BUGFIX #491: we copy the executable to the tmpDir, as it is not clear if it can be executed where it is stored
+      FileUtils.copyFileToDirectory( exeFile, tmpDir );
+      return new File( tmpDir, exeFile.getName() );
     }
     catch( final CoreException e )
     {
       final IStatus status = e.getStatus();
       monitor.setFinishInfo( status.getSeverity(), status.getMessage() );
+      return null;
+    }
+    catch( final IOException e )
+    {
+      final String errorMsg = String.format( "Failed to copy Kalypso-1D.exe to temporary directory: %s", e.getLocalizedMessage() );
+      monitor.setFinishInfo( IStatus.ERROR, errorMsg );
       return null;
     }
   }
