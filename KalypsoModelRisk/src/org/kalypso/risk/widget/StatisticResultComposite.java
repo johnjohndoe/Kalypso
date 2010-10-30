@@ -94,6 +94,8 @@ public class StatisticResultComposite extends Composite
 
         final IComponent[] components = tupleResult.getComponents();
 
+        final String NUMBER_FORMAT = "%,.02f ";
+
         int count = 0;
         for( final IComponent component : components )
         {
@@ -105,50 +107,49 @@ public class StatisticResultComposite extends Composite
           // Total Damage
           if( phenName.equals( "TotalDamage" ) )//$NON-NLS-1$
           {
-            // TODO: externalize this string
-            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.1" ) + compNameStrings[1] + " [€]"; //$NON-NLS-1$//$NON-NLS-2$
+            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.1", compNameStrings[1] ); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
-              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%,.02f €", "", "%.00f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, NUMBER_FORMAT
+                  + Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.9" ), "", "%.00f" ) ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
           // Flooded Area
           if( phenName.equals( "FloodedArea" ) )//$NON-NLS-1$
           {
-            // TODO: externalize this string
-            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.2" ) + compNameStrings[1] + " [m²]"; //$NON-NLS-1$//$NON-NLS-2$
+            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.2", compNameStrings[1] ); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
-              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%,.02f €²", "", "%.00f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, NUMBER_FORMAT
+                  + Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.10" ), "", "%.00f" ) ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
           // Averaged Damage
           if( phenName.equals( "AveragedDamage" ) )//$NON-NLS-1$
           {
-            // TODO: externalize this string
-            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.3" ) + compNameStrings[1] + " [€/m²]"; //$NON-NLS-1$//$NON-NLS-2$
+            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.3", compNameStrings[1] ); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
-              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%,.02f €/m²", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, NUMBER_FORMAT
+                  + Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.11" ), "", "%.02f" ) ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
           if( phenName.equals( "AnnualValue" ) )//$NON-NLS-1$
           {
-            // TODO: externalize this string
-            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.4" ) + " [€/m²/a]"; //$NON-NLS-1$//$NON-NLS-2$
+            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.4" ); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DOUBLE ) )
-              myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, headerName, SWT.RIGHT, 190, 10, "%,.02f €/²/a", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, headerName, SWT.RIGHT, 190, 10, NUMBER_FORMAT
+                  + Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.12" ), "", "%.02f" ) ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
           if( phenName.equals( "Landuse" ) )//$NON-NLS-1$
           {
-            // TODO: externalize this string
-            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.5"); //$NON-NLS-1$
+            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.5" ); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_STRING ) )
