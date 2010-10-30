@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -59,12 +58,17 @@ public class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
    * @see org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh#createLayers(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
   @Override
-  public IProfilChartLayer[] createLayers( final IProfil profil, Object result )
+  public IProfilChartLayer[] createLayers( final IProfil profil, final Object result )
   {
     final List<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
 
     final IProfilChartLayer[] superLayers = super.createLayers( profil, result );
-    layers.addAll( Arrays.asList( superLayers ) );
+    for( final IProfilChartLayer layer : superLayers )
+    {
+      /* Suppress editing for all layers excpet my own */
+      layer.lockLayer( true );
+      layers.add( layer );
+    }
 
     final ProfilOverlayLayer overlay = new ProfilOverlayLayer( profil, m_lsp );
     overlay.setCoordinateMapper( new CoordinateMapper( m_domainAxis, m_targetAxisLeft ) );

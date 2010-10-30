@@ -168,7 +168,6 @@ public class LineGeometryEditor
     return list;
   }
 
-  @SuppressWarnings("unchecked")
   public void paint( final Graphics g )
   {
     if( m_curve != null )
@@ -259,6 +258,9 @@ public class LineGeometryEditor
     {
       /* Store the start point. */
       m_startPoint = p;
+
+      if( m_handles == null )
+        return;
 
       /* Check, if the mouse cursor is near some handles. */
       for( final IHandle handle : m_handles )
