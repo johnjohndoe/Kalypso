@@ -125,7 +125,6 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizard.gml.GmlFileImportPage;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -228,6 +227,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
   @Override
   public boolean performFinish( )
   {
+    // FIXME: move into separate class
+
     final TuhhCalculation calculation = m_importPage.getCalculation();
     final TuhhReach reach = calculation.getReach();
     final TuhhReachProfileSegment[] segments = m_importPage.getReachProfileSegments();
@@ -600,8 +601,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     /* Get some common variables */
     final IFeatureWrapperCollection<IFE1D2DElement> discElements = discretisationModel.getElements();
-    final FeatureList discElementsList = discElements.getWrappedList();
-    final QName discElementsMemberQName = discElementsList.getParentFeatureTypeProperty().getQName();
     final IFeatureWrapperCollection<IFE1D2DEdge> discEdges = discretisationModel.getEdges();
 
     /* add complex-element to model: Automatically create a calculation unit 1d */
@@ -629,9 +628,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
     for( final TuhhReachProfileSegment segment : segments )
     {
       final IProfileFeature profileMember = segment.getProfileMember();
-      if( profileMember == null )
-        continue;
-
       if( profileMember == null )
         continue;
 

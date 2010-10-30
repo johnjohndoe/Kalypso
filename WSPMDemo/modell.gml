@@ -12525,13 +12525,6 @@ an, um ein externes Bild zu referenzieren.</gml:description>
       </tuhh:ProfileReachSegmentWspmTuhhSteadyState>
      </tuhh:reachSegmentMember>
      <tuhh:reachSegmentMember>
-      <tuhh:ProfileReachSegmentWspmTuhhSteadyState gml:id="ProfileReachSegmentWspmTuhhSteadyState1211993901407181">
-       <tuhh:station/>
-       <tuhh:profileMember/>
-       <tuhh:profileLocation/>
-      </tuhh:ProfileReachSegmentWspmTuhhSteadyState>
-     </tuhh:reachSegmentMember>
-     <tuhh:reachSegmentMember>
       <tuhh:ProfileReachSegmentWspmTuhhSteadyState gml:id="ProfileReachSegmentWspmTuhhSteadyState1271236289111216">
        <tuhh:station>41.7400</tuhh:station>
        <tuhh:profileMember xlink:href="#Profile12119938275033"/>
