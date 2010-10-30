@@ -1,8 +1,8 @@
 Notes:
-kalypso_10.10.0.qualifier
-===============================
+kalypso_10.10.0.20101030
+========================
 
-This is Version 10.10.0.qualifier of Kalypso
+This is Version 10.10.0.20101030 of Kalypso
 
 For further information, visit http://kalypso.sourceforge.net
 
@@ -15,4 +15,4 @@ Please see:
 
 Changes:
 For Changes & Bugfixes please see
-http://sourceforge.net/apps/mediawiki/kalypso/index.php?title=Change_Log_Kalypso_2.2.0
+http://sourceforge.net/apps/mediawiki/kalypso/index.php?title=Change_Log_Kalypso_10.10.0
