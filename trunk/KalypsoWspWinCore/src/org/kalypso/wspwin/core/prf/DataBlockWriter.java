@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.kalypso.wspwin.core.i18n.Messages;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 
 public class DataBlockWriter
@@ -86,7 +87,7 @@ public class DataBlockWriter
       catch( final IOException e )
       {
         e.printStackTrace();
-        throw new IOException( "error while writing: " + db.getFirstLine(), e );
+        throw new IOException( Messages.getString("DataBlockWriter_0") + db.getFirstLine(), e ); //$NON-NLS-1$
       }
     }
   }
@@ -110,9 +111,9 @@ public class DataBlockWriter
   {
     for( int i = 1; i < 14; i++ )
     {
-      final String[] line = m_metaMap.get( i ) == null ? new String[] { "", "" } : m_metaMap.get( i );
+      final String[] line = m_metaMap.get( i ) == null ? new String[] { "", "" } : m_metaMap.get( i ); //$NON-NLS-1$ //$NON-NLS-2$
       final StringBuffer buffer = new StringBuffer( "#" ); //$NON-NLS-1$
-      buffer.append( line.length > 0 ? line[0] : "" );
+      buffer.append( line.length > 0 ? line[0] : "" ); //$NON-NLS-1$
 
       if( buffer.length() > 41 )
         buffer.setLength( 41 );
@@ -124,7 +125,7 @@ public class DataBlockWriter
 
         buffer.append( space );
       }
-      buffer.append( line.length > 1 ? line[1] : "" );
+      buffer.append( line.length > 1 ? line[1] : "" ); //$NON-NLS-1$
       pw.println( buffer.toString().trim().substring( 1 ) );
     }
   }

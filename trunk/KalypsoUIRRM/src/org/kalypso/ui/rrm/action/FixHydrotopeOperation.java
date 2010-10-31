@@ -85,7 +85,7 @@ public class FixHydrotopeOperation implements ICoreRunnableWithProgress
     for( final Catchment catchment : catchments )
     {
 // if( (count % 10) == 0 )
-      monitor.subTask( String.format( "%d/%d", count++, catchments.size() ) );
+      monitor.subTask( String.format( "%d/%d", count++, catchments.size() ) ); //$NON-NLS-1$
 
       Thread.sleep( 100 );
 

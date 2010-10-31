@@ -160,8 +160,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage
     m_fileGroup.setText( Messages.getString( "KalypsoNAProjectWizardPage.FileGroupText" ) ); //$NON-NLS-1$
 
     final FileChooserDelegateOpen openFileDelegate = new FileChooserDelegateOpen();
-    openFileDelegate.addFilter( "Shape Files (*.shp)", ".shp" );
-    openFileDelegate.addFilter( "All Files (*.*)", "*.*" );
+    openFileDelegate.addFilter( Messages.getString("KalypsoNAProjectWizardPage_0"), ".shp" ); //$NON-NLS-1$ //$NON-NLS-2$
+    openFileDelegate.addFilter( Messages.getString("KalypsoNAProjectWizardPage_2"), "*.*" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final FileChooserGroup fileChooserGroup = new FileChooserGroup( openFileDelegate );
     fileChooserGroup.createControlsInGrid( m_fileGroup );
@@ -333,7 +333,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage
     catch( final GmlSerializeException e )
     {
       e.printStackTrace();
-      final String msg = String.format( "Failed to load shape file: %s", e.getLocalizedMessage() );
+      final String msg = String.format( Messages.getString("KalypsoNAProjectWizardPage_1"), e.getLocalizedMessage() ); //$NON-NLS-1$
       setMessage( msg, IMessageProvider.ERROR );
       setPageComplete( false );
 

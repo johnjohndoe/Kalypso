@@ -44,6 +44,7 @@ import java.io.File;
 
 import org.kalypso.module.conversion.IProject2ProjectConverterFactory;
 import org.kalypso.module.conversion.IProjectConverter;
+import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
@@ -51,9 +52,9 @@ import org.kalypso.module.conversion.IProjectConverter;
 public class RrmProjectConverterFactory implements IProject2ProjectConverterFactory
 {
   @Override
-  public IProjectConverter createConverter( final File sourceDir, final File targetDir )
+  public IProjectConverter createConverter( final Version sourceVersion, final File sourceDir, final File targetDir )
   {
-    return new RrmProjectConverter( sourceDir, targetDir );
+    return new RrmProjectConverter( sourceVersion, sourceDir, targetDir );
   }
 
 }

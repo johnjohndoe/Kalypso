@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.from103to230;
+package org.kalypso.ui.rrm.wizards.conversion.to10_10;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -59,6 +59,7 @@ import org.kalypso.contribs.java.io.visitor.FileFilterVisitor;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -78,7 +79,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   public BasicModelConverter( final File sourceDir, final File targetDir )
   {
-    super( "Übernahme Basisdaten" );
+    super( Messages.getString("BasicModelConverter_1") ); //$NON-NLS-1$
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
@@ -96,7 +97,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
       copyFile( INaProjectConstants.GML_MODELL_PATH );
       copyFile( INaProjectConstants.GML_HYDROTOP_PATH );
       copyFile( INaProjectConstants.GML_PARAMETER_PATH );
-      copyFile( "synthN.gml", INaProjectConstants.GML_SYNTH_N_PATH );
+      copySynthFile();
 
       copyBasicTimeseries();
 
@@ -106,6 +107,30 @@ public class BasicModelConverter extends AbstractLoggingOperation
     {
       monitor.done();
     }
+  }
+
+  /**
+   * Copies the synth.gml file. Different kalypso version had different names for that file or even ignored it
+   * completely.
+   */
+  private void copySynthFile( ) throws IOException
+  {
+    final File synthSourceFile = new File( m_sourceDir, "synthN.gml" ); //$NON-NLS-1$
+    if( synthSourceFile.exists() )
+    {
+      copyFile( "synthN.gml", INaProjectConstants.GML_SYNTH_N_PATH ); //$NON-NLS-1$
+      return;
+    }
+
+    final File calcSynthSourceFile = new File( m_sourceDir, INaProjectConstants.GML_SYNTH_N_PATH );
+    if( calcSynthSourceFile.exists() )
+    {
+      copyFile( INaProjectConstants.GML_SYNTH_N_PATH );
+      return;
+    }
+
+    /* Some versions/project did not have any synth-file: just show warning */
+    getLog().add( IStatus.WARNING, Messages.getString("BasicModelConverter_2") ); //$NON-NLS-1$
   }
 
   /**
@@ -119,7 +144,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     FileUtils.copyDirectory( sourceDir, targetDir, true );
 
     /* Find all gml files here */
-    final FileFilter gmlFileFilter = new SuffixFileFilter( ".gml", IOCase.INSENSITIVE );
+    final FileFilter gmlFileFilter = new SuffixFileFilter( ".gml", IOCase.INSENSITIVE ); //$NON-NLS-1$
     final FileFilterVisitor gmlFileFinder = new FileFilterVisitor( gmlFileFilter, true, true );
     FileUtilities.accept( targetDir, gmlFileFinder, true );
 
@@ -133,7 +158,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
       }
       catch( final SAXException e )
       {
-        m_log.addError( "Fehler beim Konvertieren von '%s'. Die Datei ist kein gültiges XML", e, file.getName() );
+        m_log.add( IStatus.ERROR, Messages.getString( "BasicModelConverter_4" ), e, file.getName() ); //$NON-NLS-1$
       }
     }
   }
@@ -152,19 +177,32 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   private void copyBasicTimeseries( ) throws CoreException, IOException
   {
-    final File sourceModelDir = new File( m_sourceDir, ".model" );
-    final File sourceTimeseriesDir = new File( sourceModelDir, "Zeitreihen" );
+    final File sourceTimeseriesDir = findSourceTimeseriesDir();
     final File targetTimeseriesDir = new File( m_targetDir, INaProjectConstants.FOLDER_ZEITREIHEN );
-
     if( !sourceTimeseriesDir.isDirectory() )
     {
-      final IStatus error = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Verzeichnis '.model/Zeitreihen' fehlt in Projekt." );
+      final String relativePath = FileUtilities.getRelativePathTo( m_sourceDir, sourceTimeseriesDir );
+      final String msg = String.format( Messages.getString("BasicModelConverter_4"), relativePath ); //$NON-NLS-1$
+      final IStatus error = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg );
       throw new CoreException( error );
       // final File sourceOtherTimeseriesDir = new File( m_sourceDir, INaProjectConstants.FOLDER_ZEITREIHEN );
       // TODO: vielleicht stattdessen nur log-warnung und noch mal prüfen, ob es der User nicht selbst verschoben hat.
     }
 
     FileUtils.copyDirectory( sourceTimeseriesDir, targetTimeseriesDir, true );
+  }
+
+  /**
+   * Different model version have this directory hat different places.
+   */
+  private File findSourceTimeseriesDir( )
+  {
+    final File sourceModelDir = new File( m_sourceDir, ".model" ); //$NON-NLS-1$
+    final File sourceTimeseriesDir = new File( sourceModelDir, "Zeitreihen" );
+    if( sourceTimeseriesDir.isDirectory() )
+      return sourceTimeseriesDir;
+
+    return new File( m_sourceDir, INaProjectConstants.FOLDER_ZEITREIHEN );
   }
 
   private void copyFile( final String path ) throws IOException
