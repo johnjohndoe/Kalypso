@@ -195,7 +195,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     return editInfos;
   }
 
-  private IPaintable createHoverPaintable( final Rectangle shape )
+  private IPaintable createHoverPaintable( Rectangle shape )
   {
     final ILineStyle dls = StyleUtils.getDefaultLineStyle();
     final EmptyRectangleFigure r = new EmptyRectangleFigure();
@@ -234,7 +234,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> range )
+  public IDataRange<Number> getTargetRange( IDataRange<Number> domainIntervall )
   {
     return rangeForComponent( m_valueComponent );
   }
@@ -361,7 +361,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    */
   public void saveData( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.6" ), 3 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.6"), 3 ); //$NON-NLS-1$
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( m_obsFeature );
     final TupleResult result = obs.getResult();
