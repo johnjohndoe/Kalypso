@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.actions;
 
 import org.eclipse.jface.wizard.IWizard;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.wizards.CreateLengthSectionWizard;
 import org.kalypso.model.wspm.ui.action.AbstractProfilesHandler;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
@@ -65,7 +66,7 @@ public class CreateLengthSectionHandler extends AbstractProfilesHandler
   @Override
   protected String getTitle( )
   {
-    return "Length Section";
+    return Messages.getString("CreateLengthSectionHandler_0"); //$NON-NLS-1$
   }
 
 }

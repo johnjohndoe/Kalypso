@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.Image;
@@ -208,7 +209,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     final int numPoints = profilePolygones.getNumPoints();
     final String[] objTypes = profilePolygones.getAllIDs();
     final String objTypesString = Arrays.toString( objTypes, ", " ); //$NON-NLS-1$
-    final String profileComment = comment + "\nVorhandene Datenarten: " + objTypesString + "\nPunkte insgesammt: " + numPoints;
+    final String profileComment = comment + Messages.getString("AbstractProfileCreator_0") + objTypesString + Messages.getString("AbstractProfileCreator_1") + numPoints; //$NON-NLS-1$ //$NON-NLS-2$
     if( m_createProfileComment )
       profile.setComment( profileComment );
 

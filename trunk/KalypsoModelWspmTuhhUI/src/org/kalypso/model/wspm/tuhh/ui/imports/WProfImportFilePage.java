@@ -69,6 +69,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedLis
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.gml.ui.jface.ShapeCharsetUI;
 import org.kalypso.model.wspm.tuhh.core.wprof.WProfContextPatternReplacer;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 
@@ -121,10 +122,10 @@ public class WProfImportFilePage extends WizardPage
     charsetControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     m_imageChooser = createContextControl( "imageContext" ); //$NON-NLS-1$
-    createChooserControl( panel, m_imageChooser, "Image Folder (Optional)", new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    createChooserControl( panel, m_imageChooser, Messages.getString("WProfImportFilePage_0"), new GridData( SWT.FILL, SWT.CENTER, true, false ) ); //$NON-NLS-1$
 
     m_pdfChooser = createContextControl( "pdfContext" ); //$NON-NLS-1$
-    createChooserControl( panel, m_pdfChooser, "PDF Folder (Optional)", new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    createChooserControl( panel, m_pdfChooser, Messages.getString("WProfImportFilePage_1"), new GridData( SWT.FILL, SWT.CENTER, true, false ) ); //$NON-NLS-1$
 
     setControl( panel );
     setMessage( null, IMessageProvider.NONE );
@@ -133,7 +134,7 @@ public class WProfImportFilePage extends WizardPage
   private Control createCharsetControl( final Composite panel )
   {
     final Group group = new Group( panel, SWT.NONE );
-    group.setText( "Character Encoding" );
+    group.setText( Messages.getString("WProfImportFilePage_2") ); //$NON-NLS-1$
     group.setLayout( new GridLayout() );
 
     final IDialogSettings dialogSettings = getDialogSettings();
@@ -203,11 +204,11 @@ public class WProfImportFilePage extends WizardPage
 
     final Hyperlink hyperlink = new Hyperlink( parent, SWT.NONE );
     hyperlink.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
-    hyperlink.setText( "Hints" );
+    hyperlink.setText( Messages.getString("WProfImportFilePage_3") ); //$NON-NLS-1$
     hyperlink.setUnderlined( true );
 
     final ToolTip tip = new ToolTip( hyperlink.getShell(), SWT.ICON_INFORMATION );
-    tip.setText( "Available Tokens" );
+    tip.setText( Messages.getString("WProfImportFilePage_4") ); //$NON-NLS-1$
     final String tipMessage = WProfContextPatternReplacer.getInstance().getMessage();
     tip.setMessage( tipMessage );
     tip.setVisible( false );
@@ -242,8 +243,8 @@ public class WProfImportFilePage extends WizardPage
   private Control createFileControl( final Composite panel )
   {
     final FileChooserDelegateOpen openDelegate = new FileChooserDelegateOpen();
-    openDelegate.addFilter( "All Files (*.*)", "*.*" ); //$NON-NLS-2$
-    openDelegate.addFilter( "ESRI Shape File (*.shp)", "*.shp" ); //$NON-NLS-2$
+    openDelegate.addFilter( Messages.getString("WProfImportFilePage_5"), "*.*" );  //$NON-NLS-1$//$NON-NLS-2$
+    openDelegate.addFilter( Messages.getString("WProfImportFilePage_6"), "*.shp" );  //$NON-NLS-1$//$NON-NLS-2$
 
     m_shapeChooser = new FileChooserGroup( openDelegate );
     m_shapeChooser.setShowLabel( false );
@@ -261,7 +262,7 @@ public class WProfImportFilePage extends WizardPage
     } );
 
     final Group chooserGroup = m_shapeChooser.createGroup( panel, SWT.NONE );
-    chooserGroup.setText( "WProf Import File" );
+    chooserGroup.setText( Messages.getString("WProfImportFilePage_7") ); //$NON-NLS-1$
     return chooserGroup;
   }
 
@@ -277,14 +278,14 @@ public class WProfImportFilePage extends WizardPage
   {
     final File wprofFile = m_shapeChooser.getFile();
     if( wprofFile == null )
-      return new MessageProvider( "Please choose a WProf file", IMessageProvider.ERROR );
+      return new MessageProvider( Messages.getString("WProfImportFilePage_8"), IMessageProvider.ERROR ); //$NON-NLS-1$
 
     if( !wprofFile.exists() )
-      return new MessageProvider( "WProf file does not exist", IMessageProvider.ERROR );
+      return new MessageProvider( Messages.getString("WProfImportFilePage_9"), IMessageProvider.ERROR ); //$NON-NLS-1$
 
     final String selectedCRS = m_crsPanel == null ? null : m_crsPanel.getSelectedCRS();
     if( selectedCRS == null )
-      return new MessageProvider( "Please choose the coordinate system of the WProf file", IMessageProvider.ERROR );
+      return new MessageProvider( Messages.getString("WProfImportFilePage_10"), IMessageProvider.ERROR ); //$NON-NLS-1$
 
     return new MessageProvider( null, IMessageProvider.NONE );
   }

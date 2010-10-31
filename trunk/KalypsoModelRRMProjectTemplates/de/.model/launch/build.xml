@@ -126,7 +126,7 @@
 		<echo message="aktualisiere Ombrometer Zeitreihen im Rechenfall" />
 		<delete dir="${calc.dir}/Niederschlag" />
 		<mkdir dir="${calc.dir}/Niederschlag" />
-		<kalypso.copyObservation gml="${calc.url}/ombrometer.gml" featurePath="ombrometerMember" context="${calc.url}" targetobservationdir="${calc.dir}/Niederschlag" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ombrometer.gml" featurePath="ombrometerMember" context="${calc.url}" targetobservationdir="${calc.dir}/Niederschlag" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="NRepository" from="${startsim}" to="${startforecast}" />
 		</kalypso.copyObservation>
 	</target>

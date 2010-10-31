@@ -52,6 +52,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
@@ -70,7 +71,7 @@ public class ImportWProfHandler extends AbstractHandler
     final WspmTuhhProjectSelection projectSelection = new WspmTuhhProjectSelection( selection );
     if( !projectSelection.hasProject() )
     {
-      MessageDialog.openError( shell, "WProf Import", "Please select the 'Water bodies' section of a KalypsoWSPM project." );
+      MessageDialog.openError( shell, Messages.getString("ImportWProfHandler_0"), Messages.getString("ImportWProfHandler_1") ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 

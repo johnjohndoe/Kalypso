@@ -644,7 +644,7 @@ public class PrfSource implements IProfilSource
     final IProfil profil = ProfilFactory.createProfil( profileTyp );
 
     if( profil == null )
-      throw new IOException( "unknown Profile Typ: " + profileTyp );
+      throw new IOException( Messages.getString("PrfSource.0") + profileTyp ); //$NON-NLS-1$
 
     final PrfReader prfReader = new PrfReader();
     prfReader.readFromReader( new BufferedReader( reader ) );

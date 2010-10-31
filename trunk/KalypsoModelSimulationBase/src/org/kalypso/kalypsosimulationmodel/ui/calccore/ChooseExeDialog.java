@@ -38,49 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.wprof;
+package org.kalypso.kalypsosimulationmodel.ui.calccore;
 
-import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+import java.io.File;
+
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 
 /**
+ * Choose one from a list of files.
+ * 
  * @author Gernot Belger
  */
-public enum WProfProfileType
+public class ChooseExeDialog extends ElementListSelectionDialog
 {
-  Gewässerprofil(2, Messages.getString("WProfProfileType_0")), //$NON-NLS-1$
-  Brückenprofil(3, Messages.getString("WProfProfileType_1")), //$NON-NLS-1$
-  Absturzprofil(4, Messages.getString("WProfProfileType_2")), //$NON-NLS-1$
-  Wehrprofil(5, Messages.getString("WProfProfileType_3")), //$NON-NLS-1$
-  Verdohlungsprofil(6, Messages.getString("WProfProfileType_4")), //$NON-NLS-1$
-  LängsbegleitendeStruktur(7, Messages.getString("WProfProfileType_5")), //$NON-NLS-1$
-  EinzelpunkteAusserhalbVonBauwerken(9, Messages.getString("WProfProfileType_6")), //$NON-NLS-1$
-  SonstigesProfil(0, Messages.getString("WProfProfileType_7")); //$NON-NLS-1$
-
-  private final int m_wspmId;
-
-  private final String m_label;
-
-  private WProfProfileType( final int wspmId, final String label )
+  private static LabelProvider RENDERER = new LabelProvider()
   {
-    m_wspmId = wspmId;
-    m_label = label;
-  }
-
-  public String getLabel( )
-  {
-    return m_label;
-  }
-
-  public static WProfProfileType valueOf( final int type )
-  {
-    final WProfProfileType[] values = WProfProfileType.values();
-    for( final WProfProfileType wprofType : values )
+    /**
+     * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+     */
+    @Override
+    public String getText( final Object element )
     {
-      if( wprofType.m_wspmId == type )
-        return wprofType;
+      return ((File) element).getName();
     }
+  };
 
-    return null;
+  public ChooseExeDialog( final Shell parent, final File[] exeFiles )
+  {
+    super( parent, RENDERER );
+
+    setMultipleSelection( false );
+    setAllowDuplicates( false );
+    setElements( exeFiles );
+    setMessage( String.format( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.3" ) ) ); //$NON-NLS-1$
+
   }
+
 
 }

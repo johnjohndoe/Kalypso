@@ -64,7 +64,7 @@ public class StationPointLayer extends PointsLineLayer
   {
     final String tp = super.getTooltipInfo( point );
     final String s = getProfil().getComment();
-    return s == "" ? tp : tp + "\n" + s;
+    return s == "" ? tp : tp + "\n" + s; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 }

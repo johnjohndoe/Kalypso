@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -85,12 +86,12 @@ public class PlotterExportPage extends ExportPrfFileChooserPage
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout() );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    group.setText( "Options" );
+    group.setText( Messages.getString("PlotterExportPage_0") ); //$NON-NLS-1$
 
     final Button button = new Button( group, SWT.CHECK );
     button.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    button.setText( "Print" );
-    button.setToolTipText( "Directly print the plot to the standard printer and closes WspWin Plotter." );
+    button.setText( Messages.getString("PlotterExportPage_1") ); //$NON-NLS-1$
+    button.setToolTipText( Messages.getString("PlotterExportPage_2") ); //$NON-NLS-1$
     button.setSelection( m_doPrint );
     button.addSelectionListener( new SelectionAdapter()
     {

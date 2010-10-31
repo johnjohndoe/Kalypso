@@ -143,7 +143,7 @@ public class LengthSectionParser
         /* Introduce space around 'NaN' and '***' values to make it parseable */
 
         if( nextLine.contains( "NaN" ) ) //$NON-NLS-1$
-          log.log( false, "WARNING: Results contain NaN values, calculation result is probably not correct." );
+          log.log( false, Messages.getString("LengthSectionParser.0") ); //$NON-NLS-1$
 
         // TODO: handle NaN-values to keep information alive (unfortunally BigDecimal throws a NumberFormatException)
         final String cleanLine1 = nextLine.replaceAll( "-NaN", " null " ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -199,7 +199,7 @@ public class LengthSectionParser
       return Status.OK_STATUS;
 
     final IStatus[] children = result.toArray( new IStatus[result.size()] );
-    final String msg = String.format( "Some problems occured during length section processing" );
+    final String msg = String.format( Messages.getString("LengthSectionParser.1") ); //$NON-NLS-1$
     return new MultiStatus( KalypsoModelWspmTuhhSchemaPlugin.getID(), 0, children, msg, null );
   }
 

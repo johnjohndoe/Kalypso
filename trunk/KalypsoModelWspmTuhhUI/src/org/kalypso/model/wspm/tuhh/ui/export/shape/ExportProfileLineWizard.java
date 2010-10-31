@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.shape.deegree.IShapeDataFactory;
 
@@ -92,7 +93,7 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     m_exportShapePage = new ExportShapePage( "exportShapePage", fileName ); //$NON-NLS-1$
     addPage( m_exportShapePage );
 
-    m_interpolationPage = new ExportProfileLineInterpolationPage( "interpolationPage" );
+    m_interpolationPage = new ExportProfileLineInterpolationPage( "interpolationPage" ); //$NON-NLS-1$
     addPage( m_interpolationPage );
 
     setNeedsProgressMonitor( true );
@@ -124,7 +125,7 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     }
     catch( final InvocationTargetException e )
     {
-      final String msg = "Failed to export profiles";
+      final String msg = Messages.getString("ExportProfileLineWizard_1"); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), msg, e.getTargetException() );
       throw new CoreException( status );
     }

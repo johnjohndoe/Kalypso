@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
@@ -83,7 +84,7 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
     final ISobekProfileExportOperation[] operations = m_profileFileChooserPage.getOperations( profiles );
     final Collection<IStatus> problems = new ArrayList<IStatus>( operations.length );
 
-    monitor.beginTask( "SOBEK Export", operations.length );
+    monitor.beginTask( Messages.getString("SobekExportProfilesWizard_0"), operations.length ); //$NON-NLS-1$
 
     for( final ISobekProfileExportOperation operation : operations )
     {
@@ -97,7 +98,7 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
     final IStatus[] problemChildren = problems.toArray( new IStatus[problems.size()] );
     if( problemChildren.length > 0 )
     {
-      final String message = "Beim SOBEK Export traten Probleme auf";
+      final String message = Messages.getString("SobekExportProfilesWizard_1"); //$NON-NLS-1$
       final IStatus status = new MultiStatus( KalypsoModelWspmTuhhUIPlugin.getID(), 0, problemChildren, message, null );
       throw new CoreException( status );
     }

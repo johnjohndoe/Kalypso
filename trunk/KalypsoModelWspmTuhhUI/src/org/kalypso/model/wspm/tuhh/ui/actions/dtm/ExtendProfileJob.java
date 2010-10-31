@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
@@ -95,12 +96,12 @@ public class ExtendProfileJob extends AbstractDemProfileJob
 
   public ExtendProfileJob( final CreateProfileFromDEMWidget widget, final CommandableWorkspace commandableWorkspace, final IMapPanel mapPanel, final ICoverageCollection coverages, final FeatureList profileFeatures, final TuhhReach reach, final double simplifyDistance )
   {
-    super( "Extend Profile", widget, commandableWorkspace, mapPanel, reach, coverages, simplifyDistance );
+    super( Messages.getString("ExtendProfileJob_0"), widget, commandableWorkspace, mapPanel, reach, coverages, simplifyDistance ); //$NON-NLS-1$
 
     m_profileFeatures = profileFeatures;
 
-    m_profileLinePainter = new SLDPainter2( new URL[] { getClass().getResource( "resources/selected.profile.sld" ) } );
-    m_grabPointPainter = new SLDPainter2( new URL[] { getClass().getResource( "resources/selected.point.sld" ) } );
+    m_profileLinePainter = new SLDPainter2( new URL[] { getClass().getResource( "resources/selected.profile.sld" ) } ); //$NON-NLS-1$
+    m_grabPointPainter = new SLDPainter2( new URL[] { getClass().getResource( "resources/selected.point.sld" ) } ); //$NON-NLS-1$
   }
 
   /**
@@ -139,7 +140,7 @@ public class ExtendProfileJob extends AbstractDemProfileJob
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reach, (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     }
 
-    getWorkspace().postCommand( new EmptyCommand( "", false ) );
+    getWorkspace().postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
@@ -150,7 +151,7 @@ public class ExtendProfileJob extends AbstractDemProfileJob
   @Override
   public String getLabel( )
   {
-    return "Extend profile";
+    return Messages.getString("ExtendProfileJob_4"); //$NON-NLS-1$
   }
 
   private GM_Point grabProfileEnd( final GM_Point pos )

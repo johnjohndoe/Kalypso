@@ -201,7 +201,7 @@ public class PolynomeHelper
       errStream = new BufferedOutputStream( new FileOutputStream( errFile ) );
 
       /* Start the polynome1d process */
-      final File exeFile = WspmTuhhCalcJob.getExecuteable( calculation, POLYNOME_1D_EXE_FORMAT, POLYNOME_1D_EXE_PATTERN, monitor );
+      final File exeFile = WspmTuhhCalcJob.getExecuteable( calculation, tmpDir, POLYNOME_1D_EXE_FORMAT, POLYNOME_1D_EXE_PATTERN, monitor );
       if( exeFile == null )
         return;
 

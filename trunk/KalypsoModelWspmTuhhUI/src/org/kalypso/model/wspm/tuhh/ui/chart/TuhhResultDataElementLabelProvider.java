@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -71,7 +72,7 @@ public class TuhhResultDataElementLabelProvider extends LabelProvider
   {
     final IWspmResultNode node = TuhhResultDataElementContentProvider.asResultNode( element );
     if( node == null )
-      return "No results available...";
+      return Messages.getString("TuhhResultDataElementLabelProvider_0"); //$NON-NLS-1$
 
     return m_delegate.getText( node );
   }

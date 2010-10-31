@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IPrfConstants;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfWriter;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
 /**
@@ -73,9 +74,9 @@ public class PrfExporter
   public IStatus export( final IProfileFeature[] profiles, final IProgressMonitor monitor )
   {
     final String id = PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() );
-    final MultiStatus resultStatus = new MultiStatus( id, 1, "Several profiles could not be written.", null );
+    final MultiStatus resultStatus = new MultiStatus( id, 1, Messages.getString("PrfExporter_0"), null ); //$NON-NLS-1$
 
-    monitor.beginTask( "Profiles are being saved", profiles.length );
+    monitor.beginTask( Messages.getString("PrfExporter_1"), profiles.length ); //$NON-NLS-1$
 
     for( final IProfileFeature feature : profiles )
     {
@@ -84,12 +85,12 @@ public class PrfExporter
       final double station = profil.getStation();
       final WspmWaterBody water = feature.getWater();
 
-      monitor.subTask( String.format( "%s (km %.4f)", profileName, station ) );
+      monitor.subTask( String.format( Messages.getString("PrfExporter_2"), profileName, station ) ); //$NON-NLS-1$
 
       final File file = m_callback.getExportFile( profil );
       if( file.exists() )
       {
-        System.out.println( "File already exists: " + file );
+        System.out.println( Messages.getString("PrfExporter_3") + file ); //$NON-NLS-1$
       }
 
       try

@@ -40,15 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
 
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+
 /**
  * @author Dirk Kuch
  */
 public enum SINUOSITAET_KENNUNG
 {
-  eKeineBeruecksichtigung(1, "keine Berücksichtigung"),
-  eNurCmFaktor(2, "nur CM-Faktor"),
-  eNurFliesswegVerlaengerung(3, "nur Fließwegverlängerung"),
-  eBeides(4, "beides");
+  eKeineBeruecksichtigung(1, Messages.getString("SINUOSITAET_KENNUNG_0")), //$NON-NLS-1$
+  eNurCmFaktor(2, Messages.getString("SINUOSITAET_KENNUNG_1")), //$NON-NLS-1$
+  eNurFliesswegVerlaengerung(3, Messages.getString("SINUOSITAET_KENNUNG_2")), //$NON-NLS-1$
+  eBeides(4, Messages.getString("SINUOSITAET_KENNUNG_3")); //$NON-NLS-1$
 
   private final int m_value;
 

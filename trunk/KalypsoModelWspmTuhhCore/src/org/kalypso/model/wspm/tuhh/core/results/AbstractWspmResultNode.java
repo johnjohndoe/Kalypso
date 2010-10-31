@@ -73,7 +73,7 @@ public abstract class AbstractWspmResultNode implements IWspmResultNode
     if( parent == null )
       return id;
 
-    return String.format( "%s/%s", parent.getName(), id );
+    return String.format( "%s/%s", parent.getName(), id ); //$NON-NLS-1$
   }
 
   protected abstract String getInternalName( );

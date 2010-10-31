@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -65,6 +66,8 @@ import org.kalypso.observation.result.IComponent;
  */
 public class ProfileResultExportPage extends ValidatingWizardPage
 {
+  private final String STR_AVAILABLE_RESULTS = Messages.getString("ProfileResultExportPage_0"); //$NON-NLS-1$
+
   private final ProfileExportResultChooser m_resultChooser;
 
   private ProfileExportComponentChooser m_componentChooser;
@@ -75,8 +78,8 @@ public class ProfileResultExportPage extends ValidatingWizardPage
   {
     super( pageName );
 
-    setTitle( "Available Results" );
-    setDescription( "Please choose the result data that will be joined to the profiles." );
+    setTitle( STR_AVAILABLE_RESULTS );
+    setDescription( Messages.getString("ProfileResultExportPage_1") ); //$NON-NLS-1$
 
     m_resultChooser = new ProfileExportResultChooser( results );
     m_resultChooser.addCheckStateListener( new ICheckStateListener()
@@ -106,7 +109,7 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     final Group group = new Group( parent, SWT.NONE );
     final GridLayout layout = new GridLayout( 1, false );
     group.setLayout( layout );
-    group.setText( "Available Results" );
+    group.setText( STR_AVAILABLE_RESULTS );
 
     final SashForm sashForm = new SashForm( group, SWT.HORIZONTAL );
     sashForm.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -200,7 +203,7 @@ public class ProfileResultExportPage extends ValidatingWizardPage
   protected IMessageProvider validatePage( )
   {
     if( ArrayUtils.isEmpty( getSelectedResults() ) )
-      return new MessageProvider( "No results have been selected.", INFORMATION );
+      return new MessageProvider( Messages.getString("ProfileResultExportPage_2"), INFORMATION ); //$NON-NLS-1$
 
     return null;
   }

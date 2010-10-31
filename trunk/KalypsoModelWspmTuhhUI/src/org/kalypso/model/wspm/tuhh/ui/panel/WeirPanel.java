@@ -196,7 +196,7 @@ public class WeirPanel extends AbstractProfilView
 
     public void refresh( )
     {
-      m_position.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_devider.getPoint() ) ) );
+      m_position.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_devider.getPoint() ) ) ); //$NON-NLS-1$
 
     }
   }

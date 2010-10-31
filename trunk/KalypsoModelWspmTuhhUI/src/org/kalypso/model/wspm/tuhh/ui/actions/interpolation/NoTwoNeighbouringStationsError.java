@@ -48,6 +48,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.kalypso.commons.validation.AbstractNumberRule;
 import org.kalypso.commons.validation.IMessageCollector;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -81,7 +82,7 @@ public class NoTwoNeighbouringStationsError extends AbstractNumberRule
     final IProfileFeature nextProfile = getNextProfile( station );
 
     if( prevProfile == null || nextProfile == null )
-      collector.addMessage( "Station must lie within the existing profiles.", IMessageProvider.ERROR );
+      collector.addMessage( Messages.getString("NoTwoNeighbouringStationsError_0"), IMessageProvider.ERROR ); //$NON-NLS-1$
   }
 
   public IProfileFeature getPreviousProfile( final BigDecimal station )

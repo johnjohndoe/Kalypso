@@ -76,9 +76,9 @@ import org.kalypso.observation.result.IComponent;
  */
 public class SobekFricFileChooser extends SobekFileChooser
 {
-  private static final String SETTING_ROUGHNESS = "roughnessId";
+  private static final String SETTING_ROUGHNESS = "roughnessId"; //$NON-NLS-1$
 
-  private static final String SETTING_ZONES = "zones";
+  private static final String SETTING_ZONES = "zones"; //$NON-NLS-1$
 
   private final static LabelProvider LABELPROVIDER = new LabelProvider()
   {

@@ -165,7 +165,7 @@ public class WspWinExporter
       }
       catch( final Throwable t )
       {
-        final String message = String.format( "Fehler beim Export der Kalypso-1D Dateien: %s", t.getLocalizedMessage() );
+        final String message = String.format( Messages.getString("WspWinExporter.0"), t.getLocalizedMessage() ); //$NON-NLS-1$
         return new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message, t );
       }
       finally
@@ -201,7 +201,7 @@ public class WspWinExporter
 
     final TuhhReachProfileSegment[] profileSegments = reach.getReachProfileSegments();
     if( profileSegments.length == 0 )
-      throw new IllegalArgumentException( "Strang enthält keine Profile. Export/Berechnug nicht möglich." );
+      throw new IllegalArgumentException( Messages.getString("WspWinExporter.1") ); //$NON-NLS-1$
 
     final boolean isDirectionUpstreams = reach.isDirectionUpstreams();
 
@@ -216,7 +216,7 @@ public class WspWinExporter
       final WspmWaterBody runoffWater = runOffEvent.getParent();
       if( runoffWater != reachWater )
       {
-        final String error = String.format( "Abflussereigniss '%s' (Gewässer '%s') und Zustand '%s' (Gewässer '%s') sind in unterschiedlichen Gewässer definiert. Bitte prüfen Sie die Berechnungseinstellungen.", runOffEvent.getName(), runoffWater.getName(), reach.getName(), reachWater.getName() );
+        final String error = String.format( Messages.getString("WspWinExporter.2"), runOffEvent.getName(), runoffWater.getName(), reach.getName(), reachWater.getName() ); //$NON-NLS-1$
         throw new IllegalArgumentException( error );
       }
 
@@ -386,7 +386,7 @@ public class WspWinExporter
     else if( FLIESSGESETZ.MANNING_STRICKLER.equals( fg ) )
       return (IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST);
     else
-      return "";
+      return ""; //$NON-NLS-1$
   }
 
   private static void write1DTuhhZustand( final TuhhCalculation calculation, final boolean isDirectionUpstreams, final File zustFile, final File psiFile ) throws IOException
@@ -448,7 +448,7 @@ public class WspWinExporter
 
       if( fileCount == 0 )
       {
-        final String error = String.format( "Es wurden keine Profile an den Rechenkern übergeben. Bitte prüfen Sie Ihre Berechnungseinstellungen." );
+        final String error = String.format( Messages.getString("WspWinExporter.4") ); //$NON-NLS-1$
         throw new IllegalArgumentException( error );
       }
 

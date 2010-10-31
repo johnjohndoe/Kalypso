@@ -38,7 +38,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
 
   public CreateNewProfileJob( final CreateProfileFromDEMWidget widget, final CommandableWorkspace commandableWorkspace, final IMapPanel mapPanel, final WspmWaterBody waterBody, final TuhhReach reach, final ICoverageCollection coverages, final double simplifyDistance )
   {
-    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ), widget, commandableWorkspace, mapPanel, reach, coverages, simplifyDistance );
+    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ), widget, commandableWorkspace, mapPanel, reach, coverages, simplifyDistance ); //$NON-NLS-1$
 
     m_waterBody = waterBody;
   }
@@ -64,7 +64,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
 
     final IProfileFeature profileFeature = ProfileUiUtils.addNewProfileAndFireEvents( profile, m_waterBody, getReach() );
     final CommandableWorkspace workspace = getWorkspace();
-    workspace.postCommand( new EmptyCommand( "", false ) );
+    workspace.postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$
 
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     selectionManager.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( workspace, profileFeature ) } );
@@ -95,7 +95,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
   @Override
   public String getLabel( )
   {
-    return "New profile";
+    return Messages.getString("CreateNewProfileJob.2"); //$NON-NLS-1$
   }
 
   /**

@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.LngSink;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.wspwin.core.Plotter;
@@ -103,7 +104,7 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
     }
     catch( final IOException e )
     {
-      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to open file in WspWin Plotter", e );
+      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("LngExportProfilesWizard_0"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

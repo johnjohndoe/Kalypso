@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.ui; singleton:=true
-Bundle-Version: 2.3.0.qualifier
+Bundle-Version: 10.10.0.qualifier
 Bundle-Activator: org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
@@ -23,6 +23,7 @@ Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.ModelSimulationBase;bundle-version="0.0.0",
  org.kalypso.afgui;bundle-version="0.0.0",
  org.kalypso.project.database.client;bundle-version="1.0.0",
- org.kalypso.gml.ui;bundle-version="2.2.0"
+ org.kalypso.gml.ui;bundle-version="2.2.0",
+ org.kalypso.module;bundle-version="2.3.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

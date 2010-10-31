@@ -40,13 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.sinuositaet;
 
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+
 /**
  * @author Dirk Kuch
  */
 public enum SINUOSITAET_GERINNE_ART
 {
-  eKompakt(1, "Kompakt"),
-  eGegliedert(2, "Gegliedert");
+  eKompakt(1, Messages.getString("SINUOSITAET_GERINNE_ART_0")), //$NON-NLS-1$
+  eGegliedert(2, Messages.getString("SINUOSITAET_GERINNE_ART_1")); //$NON-NLS-1$
 
   /**
    * @see java.lang.Enum#toString()

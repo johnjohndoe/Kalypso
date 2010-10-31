@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractExpandableLayer;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
@@ -79,7 +80,7 @@ public class LengthSectionBuildingTheme extends AbstractExpandableLayer implemen
   @Override
   public String getTitle( )
   {
-    return "Bauwerke";
+    return Messages.getString("LengthSectionBuildingTheme_0"); //$NON-NLS-1$
   }
 
   public LengthSectionBuildingTheme( final IChartLayer[] layers )

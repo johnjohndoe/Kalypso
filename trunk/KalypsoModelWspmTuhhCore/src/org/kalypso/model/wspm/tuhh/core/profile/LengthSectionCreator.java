@@ -93,7 +93,7 @@ public class LengthSectionCreator
     for( final IProfil profil : m_profiles )
       addProfile( profil, lsResult, precision );
 
-    return new Observation<TupleResult>( "LengthSectionResult", "Profiles Length Section", lsResult );
+    return new Observation<TupleResult>( "LengthSectionResult", "Profiles Length Section", lsResult ); //$NON-NLS-1$
   }
 
   private void addProfile( final IProfil profil, final TupleResult lsResult, final Double precision )

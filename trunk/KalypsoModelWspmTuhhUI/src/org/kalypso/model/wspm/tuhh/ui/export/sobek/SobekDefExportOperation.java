@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.wspwin.ProfilePatternInputReplacer;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -75,7 +76,7 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
   @Override
   public String getLabel( )
   {
-    return ".def Datei";
+    return Messages.getString("SobekDefExportOperation_0"); //$NON-NLS-1$
   }
 
   @Override
@@ -109,7 +110,7 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
     // TODO: let user choose get marker type
     final String pointMarkerId = IWspmTuhhConstants.MARKER_TYP_BORDVOLL;
     // TODO: get from some registry
-    final String markerLabel = "Bordvollpunkte";
+    final String markerLabel = Messages.getString("SobekDefExportOperation_1"); //$NON-NLS-1$
 
     if( pointMarkerId == null )
       return profil.getPoints();
@@ -117,7 +118,7 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
     final IProfilPointMarker[] markers = profil.getPointMarkerFor( pointMarkerId );
     if( markers.length < 2 )
     {
-      final String message = String.format( "Gewählte Markierung (%s) bei Profil %.4f (%s) nicht gesetzt. Es wurden alle Profilpunkte exportiert.", markerLabel, profil.getStation(), profil.getName() );
+      final String message = String.format( Messages.getString("SobekDefExportOperation_2"), markerLabel, profil.getStation(), profil.getName() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
       add( status );
       return profil.getPoints();

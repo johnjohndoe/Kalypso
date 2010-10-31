@@ -621,8 +621,8 @@ public class WspWinImporter
     {
       final IRecord record = result.createRecord();
       result.add( record );
-      record.setValue( result.indexOf( stationComp ), entry.getKey() );
-      record.setValue( result.indexOf( valueComp ), entry.getValue() );
+      record.setValue( result.indexOfComponent( stationComp ), entry.getKey() );
+      record.setValue( result.indexOfComponent( valueComp ), entry.getValue() );
     }
 
     // TODO: WSP Fixierung nur schreiben, wenn Anzahl größer 0
