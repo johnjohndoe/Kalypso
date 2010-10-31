@@ -22,18 +22,6 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-		<mapv:layer visible="false" name="Landnutzung" featurePath="landuseMember" id="ID_5" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcLanduse.gml" xlink:type="simple">
-            <templ:showChildren>true</templ:showChildren>
-            <templ:property name="deleteable">true</templ:property>
-        </mapv:layer>
-        <mapv:layer visible="false" name="Pedologie" featurePath="soiltypeMember" id="ID_6" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcPedologie.gml" xlink:type="simple">
-            <templ:showChildren>true</templ:showChildren>
-            <templ:property name="deleteable">true</templ:property>
-        </mapv:layer>
-        <mapv:layer visible="false" name="Geologie" featurePath="geologieMember" id="ID_7" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcGeologie.gml" xlink:type="simple">
-            <templ:showChildren>true</templ:showChildren>
-            <templ:property name="deleteable">true</templ:property>
-        </mapv:layer>
         <mapv:layer visible="true" name="Hydrotope" featurePath="hydrotopMember" id="ID_8" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcHydrotop.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">false</templ:property>

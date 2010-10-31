@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.commons.patternreplace.PatternInputReplacer;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -58,7 +59,7 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
 
   private ProfilePatternInputReplacer( )
   {
-    addReplacer( new AbstractPatternInput<IProfil>( "<Name>", "Name" ) //$NON-NLS-1$
+    addReplacer( new AbstractPatternInput<IProfil>( "<Name>", Messages.getString("ProfilePatternInputReplacer_0") ) //$NON-NLS-1$ //$NON-NLS-2$
         {
       @Override
       public String replace( final String text, final IProfil profile )
@@ -67,7 +68,7 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
       }
         } );
 
-    addReplacer( new AbstractPatternInput<IProfil>( "<Name11>", "Name (11 Zeichen)" ) //$NON-NLS-1$
+    addReplacer( new AbstractPatternInput<IProfil>( "<Name11>", Messages.getString("ProfilePatternInputReplacer_1") ) //$NON-NLS-1$ //$NON-NLS-2$
         {
       @Override
       public String replace( final String text, final IProfil profile )
@@ -78,7 +79,7 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
       }
         } );
 
-    addReplacer( new AbstractPatternInput<IProfil>( "<Description>", "Beschreibung" ) //$NON-NLS-1$
+    addReplacer( new AbstractPatternInput<IProfil>( "<Description>", Messages.getString("ProfilePatternInputReplacer_2") ) //$NON-NLS-1$ //$NON-NLS-2$
         {
       @Override
       public String replace( final String text, final IProfil profile )
@@ -87,7 +88,7 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
       }
         } );
 
-    addReplacer( new AbstractPatternInput<IProfil>( "<Station>", "Station" ) //$NON-NLS-1$
+    addReplacer( new AbstractPatternInput<IProfil>( "<Station>", Messages.getString("ProfilePatternInputReplacer_3") ) //$NON-NLS-1$ //$NON-NLS-2$
         {
       @Override
       public String replace( final String text, final IProfil profile )
@@ -97,7 +98,7 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
       }
         } );
 
-    addReplacer( new AbstractPatternInput<IProfil>( "<WspWin>", "WspWin conform filename" ) //$NON-NLS-1$
+    addReplacer( new AbstractPatternInput<IProfil>( "<WspWin>", Messages.getString("ProfilePatternInputReplacer_4") ) //$NON-NLS-1$ //$NON-NLS-2$
         {
       @Override
       public String replace( final String text, final IProfil profile )

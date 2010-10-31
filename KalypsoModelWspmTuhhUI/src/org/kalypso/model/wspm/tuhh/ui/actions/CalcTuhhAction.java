@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -62,6 +63,8 @@ import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
@@ -73,6 +76,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.util.command.CommandJob;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -92,6 +96,20 @@ public class CalcTuhhAction implements IActionDelegate
 
     /* Save the workspace first: we assume that all features are from the same workspace */
     final Shell activeShell = Display.getCurrent().getActiveShell();
+
+    // FIXED: wait for all feature changes to be commited, else the gml workspace might still being changed.
+    final ICoreRunnableWithProgress commandWaiter = new ICoreRunnableWithProgress()
+    {
+      @Override
+      public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
+      {
+        final IJobManager manager = Job.getJobManager();
+        manager.join( CommandJob.FAMILY, monitor );
+        return Status.OK_STATUS;
+      }
+    };
+    ProgressUtilities.busyCursorWhile( commandWaiter );
+
     if( !saveFeatures( activeShell, features ).isOK() )
       return;
 

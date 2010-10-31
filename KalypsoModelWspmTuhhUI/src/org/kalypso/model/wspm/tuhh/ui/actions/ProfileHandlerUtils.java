@@ -79,7 +79,7 @@ public final class ProfileHandlerUtils
     if( profileSelection.hasProfiles() )
       return profileSelection;
 
-    final String title = "Export";
+    final String title = Messages.getString("ProfileHandlerUtils.0"); //$NON-NLS-1$
     final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler.0" ); //$NON-NLS-1$
     MessageDialog.openWarning( shell, title, message );
     return null;

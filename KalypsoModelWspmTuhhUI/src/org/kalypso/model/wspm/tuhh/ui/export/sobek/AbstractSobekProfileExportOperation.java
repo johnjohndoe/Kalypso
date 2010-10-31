@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -84,13 +85,13 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
   {
     try
     {
-      monitor.beginTask( "Profile schreiben", m_profiles.length );
+      monitor.beginTask( Messages.getString("AbstractSobekProfileExportOperation_0"), m_profiles.length ); //$NON-NLS-1$
 
       m_formatter = new Formatter( m_targetFile );
 
       for( final IProfileFeature profil : m_profiles )
       {
-        monitor.subTask( String.format( "%s (%s)", profil.getName(), profil.getBigStation() ) );
+        monitor.subTask( String.format( "%s (%s)", profil.getName(), profil.getBigStation() ) ); //$NON-NLS-1$
 
         writeProfile( m_formatter, profil.getProfil() );
         ProgressUtilities.worked( monitor, 1 );
@@ -101,7 +102,7 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
     }
     catch( final IOException e )
     {
-      final String message = String.format( "Failed to write profiles" );
+      final String message = String.format( Messages.getString("AbstractSobekProfileExportOperation_2") ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }
@@ -139,7 +140,7 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
   {
     final IStatus[] children = m_stati.toArray( new IStatus[m_stati.size()] );
     if( children.length > 0 )
-      return new MultiStatus( KalypsoModelWspmTuhhUIPlugin.getID(), -1, children, "Es sind Probleme beim SOBEK-Export aufgetreten", null );
+      return new MultiStatus( KalypsoModelWspmTuhhUIPlugin.getID(), -1, children, Messages.getString("AbstractSobekProfileExportOperation_3"), null ); //$NON-NLS-1$
     return Status.OK_STATUS;
   }
 

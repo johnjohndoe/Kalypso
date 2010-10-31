@@ -59,20 +59,21 @@ import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.ui.export.ValidatingWizardPage;
 import org.kalypso.model.wspm.tuhh.ui.export.wspwin.ProfilePatternInputReplacer;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
 public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
 {
-  private static final String DEF_GROUP_LABEL = "'profile.def' Datei";
+  private static final String DEF_GROUP_LABEL = Messages.getString("SobekProfileExportFileChooserPage_0"); //$NON-NLS-1$
 
-  private static final String DEF_FILTER_LABEL = "SOBEK Profile.def File";
+  private static final String DEF_FILTER_LABEL = Messages.getString("SobekProfileExportFileChooserPage_1"); //$NON-NLS-1$
 
   // FIXME
-  private static final String FRIC_GROUP_LABEL = "'friction.dat' Datei";
+  private static final String FRIC_GROUP_LABEL = Messages.getString("SobekProfileExportFileChooserPage_2"); //$NON-NLS-1$
 
-  private static final String FRIC_FILTER_LABEL = "SOBEK friction.dat File";
+  private static final String FRIC_FILTER_LABEL = Messages.getString("SobekProfileExportFileChooserPage_3"); //$NON-NLS-1$
 
   private static final String DEF_EXTENSION = "def"; //$NON-NLS-1$
 
@@ -84,14 +85,14 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
 
   private SobekFileChooser m_fricFileChooser;
 
-  private String m_idPattern = "<Name>";
+  private String m_idPattern = "<Name>"; //$NON-NLS-1$
 
   public SobekProfileExportFileChooserPage( )
   {
     super( "sobekProfileExportFileChooserPage" ); //$NON-NLS-1$
 
-    setTitle( "Exportdateien auswählen" );
-    setDescription( "Bitte wählen Sie Dateien aus, die exportiert werden sollen." );
+    setTitle( Messages.getString("SobekProfileExportFileChooserPage_5") ); //$NON-NLS-1$
+    setDescription( Messages.getString("SobekProfileExportFileChooserPage_6") ); //$NON-NLS-1$
   }
 
   /**
@@ -105,8 +106,8 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
 
     createPatternControl( comp );
 
-    final IDialogSettings defSettings = PluginUtilities.getSection( getDialogSettings(), "def" );
-    final IDialogSettings fricSettings = PluginUtilities.getSection( getDialogSettings(), "dat" );
+    final IDialogSettings defSettings = PluginUtilities.getSection( getDialogSettings(), "def" ); //$NON-NLS-1$
+    final IDialogSettings fricSettings = PluginUtilities.getSection( getDialogSettings(), "dat" ); //$NON-NLS-1$
     m_defFileChooser = new SobekFileChooser( this, defSettings, DEF_FILTER_LABEL, DEF_EXTENSION );
     m_defFileChooser.createControl( comp, DEF_GROUP_LABEL );
     m_fricFileChooser = new SobekFricFileChooser( this, fricSettings, FRIC_FILTER_LABEL, FRIC_EXTENSION );
@@ -123,7 +124,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
     panel.setLayout( new GridLayout( 3, false ) );
     panel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    new Label( panel, SWT.NONE ).setText( "ID-Pattern:" );
+    new Label( panel, SWT.NONE ).setText( Messages.getString("SobekProfileExportFileChooserPage_9") ); //$NON-NLS-1$
 
     final Text text = new Text( panel, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -173,7 +174,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   protected IMessageProvider validatePage( )
   {
     if( StringUtils.isBlank( m_idPattern ) )
-      return new MessageProvider( "Bitte geben Sie ein das ID-Pattern ein", WARNING );
+      return new MessageProvider( Messages.getString("SobekProfileExportFileChooserPage_10"), WARNING ); //$NON-NLS-1$
 
     if( m_defFileChooser != null )
     {

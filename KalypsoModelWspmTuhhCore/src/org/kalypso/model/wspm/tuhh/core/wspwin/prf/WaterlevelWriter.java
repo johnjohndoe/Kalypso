@@ -45,6 +45,7 @@ import java.util.Collection;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlockNames;
 
@@ -81,11 +82,11 @@ public class WaterlevelWriter
   private IDataBlock createDataBlock( final IWaterlevel waterlevel )
   {
     final String calcName = waterlevel.getLabel();
-    final String riverName = "Unknown";
+    final String riverName = Messages.getString("WaterlevelWriter_0"); //$NON-NLS-1$
     final double discharge = waterlevel.getDischarge();
     // TODO: enforce 3 significant digits
 // final BigDecimal bigDischarge = new BigDecimal( discharge, new MathContext( 3 ) );
-    final String dischargeText = String.format( "%.3f m3/s", discharge );
+    final String dischargeText = String.format( "%.3f m3/s", discharge ); //$NON-NLS-1$
 
     final String secondLine = String.format( "%-100s%s@%s", dischargeText, calcName, riverName ); //$NON-NLS-1$ //$NON-NLS-2$
 

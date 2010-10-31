@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -119,7 +120,7 @@ public class CsvSource implements IProfilSource
 
         for( int i = 0; i < values.length; i++ )
         {
-          final int index = result.indexOf( getComponent( m_columns[i] ) );
+          final int index = result.indexOfComponent( getComponent( m_columns[i] ) );
           if( index < 0 )
             continue;
           final Double dbl = NumberUtils.parseQuietDouble( values[i] );
@@ -148,7 +149,7 @@ public class CsvSource implements IProfilSource
     {
       final IProfil profil = ProfilFactory.createProfil( profileTyp );
       if( profil == null )
-        throw new IOException( "unbekannter Profil Typ" );
+        throw new IOException( Messages.getString("CsvSource_0") ); //$NON-NLS-1$
 
       final TupleResult result = m_ProfilesTable.get( key );
       profil.setStation( NumberUtils.parseQuietDouble( key ) );

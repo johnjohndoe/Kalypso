@@ -60,6 +60,7 @@ import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.wspwin.LengthSectionExporter;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -100,7 +101,7 @@ public class LengthSectionExportHandler extends AbstractHandler
       e.printStackTrace();
 
       final IStatus error = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( shell, "LengthSection Export", "Failed to export length section", error );
+      ErrorDialog.openError( shell, Messages.getString("LengthSectionExportHandler_0"), Messages.getString("LengthSectionExportHandler_1"), error ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return null;
@@ -115,7 +116,7 @@ public class LengthSectionExportHandler extends AbstractHandler
     try
     {
       if( !lngExp.write( obs, writer ) )
-        throw new IOException( "Internal error occured while writing length section" );
+        throw new IOException( Messages.getString("LengthSectionExportHandler_2") ); //$NON-NLS-1$
     }
     finally
     {

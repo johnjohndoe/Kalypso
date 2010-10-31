@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.actions.simplify;
 
 
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
@@ -54,7 +55,7 @@ public class SimplifyProfileWizard extends ManipulateProfileWizard
 
   public SimplifyProfileWizard( final ProfileSelection profileSelection )
   {
-    super( profileSelection, "Please select the profiles that will simplified." );
+    super( profileSelection, Messages.getString("SimplifyProfileWizard_0") ); //$NON-NLS-1$
 
     m_simplifyPage = new SimplifyProfilePage( "simplifyPage" ); //$NON-NLS-1$
 

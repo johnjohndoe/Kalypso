@@ -41,13 +41,13 @@
 package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.wspwin.core.Plotter;
 
 public final class PlotterExportWizardCallback extends PrfExportWizardCallback
@@ -72,14 +72,9 @@ public final class PlotterExportWizardCallback extends PrfExportWizardCallback
 
       Thread.sleep( 500 );
     }
-    catch( final IOException e )
+    catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to start plotter.exe", e );
-      throw new CoreException( status );
-    }
-    catch( final InterruptedException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Failed to start plotter.exe", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("PlotterExportWizardCallback_0"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

@@ -111,7 +111,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 
     final ILineStyle ls = getStyleFor(  IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_WEHR + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( col );
-    addStyle( IWspmTuhhConstants.LAYER_WEHR + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + LINE, ls.copy() );
+    addStyle( IWspmTuhhConstants.LAYER_WEHR + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + LINE, ls.copy() ); //$NON-NLS-1$
   }
 
   private void createCrossSectionStyles( )

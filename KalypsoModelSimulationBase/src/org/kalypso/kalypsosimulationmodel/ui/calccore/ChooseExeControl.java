@@ -46,8 +46,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
@@ -57,8 +55,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.dialogs.ElementListSelectionDialog;
-import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
@@ -141,7 +137,7 @@ public class ChooseExeControl extends AbstractFeatureControl implements IFeature
     final Pattern pattern = Pattern.compile( m_exePattern, Pattern.CASE_INSENSITIVE );
 
     /* Always call this in order to provoke the download error message */
-    final File[] exeFiles = checkExecutablesAvailable( shell );
+    final File[] exeFiles = CalcCoreUtils.checkExecutablesAvailable( shell, m_exePattern, m_displayFormat );
     if( exeFiles == null )
       return;
 
@@ -159,21 +155,7 @@ public class ChooseExeControl extends AbstractFeatureControl implements IFeature
     }
 
     // let user choose a new version/file
-    final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell, new LabelProvider()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
-      @Override
-      public String getText( final Object element )
-      {
-        return ((File) element).getName();
-      }
-    } );
-    dialog.setMultipleSelection( false );
-    dialog.setAllowDuplicates( false );
-    dialog.setElements( exeFiles );
-    dialog.setMessage( String.format( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.3" ) ) ); //$NON-NLS-1$
+    final ChooseExeDialog dialog = new ChooseExeDialog( shell, exeFiles );
     dialog.setTitle( m_displayName );
     if( selectedFile != null )
       dialog.setInitialSelections( new File[] { selectedFile } );
@@ -189,20 +171,6 @@ public class ChooseExeControl extends AbstractFeatureControl implements IFeature
 
     final ChangeFeatureCommand command = new ChangeFeatureCommand( getFeature(), getFeatureTypeProperty(), newVersion );
     fireFeatureChange( command );
-  }
-
-  private File[] checkExecutablesAvailable( final Shell shell )
-  {
-    try
-    {
-      return CalcCoreUtils.getAvailableExecuteablesChecked( m_exePattern );
-    }
-    catch( final CoreException e )
-    {
-      final StatusDialog statusDialog = new StatusDialog( shell, e.getStatus(), m_displayName );
-      statusDialog.open();
-      return null;
-    }
   }
 
   protected String versionFromFile( final Pattern pattern, final File file )

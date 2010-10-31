@@ -178,7 +178,7 @@ public class TuhhProfil extends AbstractProfil
       return null;
 
     final String id = component.getId();
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( id ) && "none".equals( value ) )
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( id ) && "none".equals( value ) ) //$NON-NLS-1$
       return null;
 
     if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( id ) && Boolean.FALSE.equals( value ) )

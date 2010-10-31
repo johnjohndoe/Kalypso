@@ -66,7 +66,7 @@ public class MonitoredInformationText
     final FormToolkit toolkit = managedForm.getToolkit();
     m_messageManager = managedForm.getMessageManager();
 
-    m_text = toolkit.createText( parent, "" );
+    m_text = toolkit.createText( parent, "" ); //$NON-NLS-1$
 
     m_modifyListener = new ValidatingModifyListener( m_text, new BigDecimalParser( true, IProfileFeature.STATION_SCALE ), m_messageManager );
     m_modifyListener.setValueReceiver( m_receiver );

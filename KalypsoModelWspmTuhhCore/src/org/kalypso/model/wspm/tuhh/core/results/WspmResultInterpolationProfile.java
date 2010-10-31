@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.util.ProfileInterpolation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -78,7 +79,7 @@ public class WspmResultInterpolationProfile
 
     final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile.getProfil(), nextProfile.getProfil(), onlyRiverChannel );
     final IProfil newProfile = interpolation.interpolate( m_interpolatedStation, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    final String name = String.format( "Interpolation %s - %s", m_previousStation, m_nextStation );
+    final String name = String.format( Messages.getString("WspmResultInterpolationProfile_0"), m_previousStation, m_nextStation ); //$NON-NLS-1$
     newProfile.setName( name );
 
     final IProfileFeature profileFeature = createProfileFeature();

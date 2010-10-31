@@ -23,6 +23,7 @@ import org.kalypso.model.wspm.tuhh.core.util.ProfileInterpolation;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.actions.ProfileHandlerUtils;
 import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -39,7 +40,7 @@ public class InterpolateProfileHandler extends AbstractHandler
 
     final WspmWaterBody waterBody = ProfileUiUtils.findWaterbody( container );
     if( waterBody == null )
-      throw new ExecutionException( "Unable to insert profile into selection. Please select either a water body or a reach." );
+      throw new ExecutionException( Messages.getString("InterpolateProfileHandler_0") ); //$NON-NLS-1$
 
     final TuhhReach reach = ProfileUiUtils.findReach( container );
 
@@ -53,7 +54,7 @@ public class InterpolateProfileHandler extends AbstractHandler
     {
       doInterpolation( waterBody, reach, wizard );
       final CommandableWorkspace workspace = profileSelection.getWorkspace();
-      workspace.postCommand( new EmptyCommand( "", false ) );
+      workspace.postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -86,7 +87,7 @@ public class InterpolateProfileHandler extends AbstractHandler
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Profile interpolation failed.", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("InterpolateProfileHandler_2"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

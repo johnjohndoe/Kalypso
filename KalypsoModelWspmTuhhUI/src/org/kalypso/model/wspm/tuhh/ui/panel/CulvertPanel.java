@@ -178,7 +178,7 @@ public class CulvertPanel extends AbstractProfilView
         return;
 
       final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
-      m_text.setText( String.format( "%.4f", val ) );
+      m_text.setText( String.format( "%.4f", val ) ); //$NON-NLS-1$
       if( m_text.isFocusControl() )
         m_text.selectAll();
     }

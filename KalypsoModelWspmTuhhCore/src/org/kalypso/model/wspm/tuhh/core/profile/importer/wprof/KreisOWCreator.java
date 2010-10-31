@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -124,7 +125,7 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
     
     final double offset = Math.max( 0.0, kreisOwSoil - kreisSoil );
 
-    final GelaendeProfileCreator kreisOWCreator = new GelaendeProfileCreator( "Kreis OW", kreisData, "V01" ); //$NON-NLS-2$
+    final GelaendeProfileCreator kreisOWCreator = new GelaendeProfileCreator( Messages.getString("KreisOWCreator_0"), kreisData, "V01" );  //$NON-NLS-1$//$NON-NLS-2$
 
     kreisOWCreator.setSoilOffset( offset );
     kreisOWCreator.setOverwriteStation( new BigDecimal( kreisOwStation ).setScale( STATION_SCALE, BigDecimal.ROUND_HALF_UP ) );

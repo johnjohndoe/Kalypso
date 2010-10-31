@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileO
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_GERINNE_ART;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_KENNUNG;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -112,7 +113,7 @@ public class SinuositaetPanel extends AbstractProfilView
     m_propPanel = m_toolkit.createComposite( parent );
     m_propPanel.setLayout( new GridLayout( 2, false ) );
     if( m_propPanel == null )
-      m_toolkit.createText( m_propPanel, "missing Sinuositaet" );
+      m_toolkit.createText( m_propPanel, Messages.getString("SinuositaetPanel_0") ); //$NON-NLS-1$
     else
       createPropertyPanel();
     updateControls();
@@ -182,7 +183,7 @@ public class SinuositaetPanel extends AbstractProfilView
 
     final IComponent cmpLF = m_sinuositaet.getObjectProperty( ISinuositaetProfileObject.PROPERTY_LF );
     m_toolkit.createLabel( m_propPanel, cmpLF.getName() );
-    m_LFText = m_toolkit.createText( m_propPanel, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    m_LFText = m_toolkit.createText( m_propPanel, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_LFText.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
     m_LFText.addModifyListener( doubleModifyListener );
     m_LFText.addFocusListener( new FocusListener()
@@ -209,7 +210,7 @@ public class SinuositaetPanel extends AbstractProfilView
 
     final IComponent cmpSN = m_sinuositaet.getObjectProperty( ISinuositaetProfileObject.PROPERTY_SN );
     m_toolkit.createLabel( m_propPanel, cmpSN.getName() );
-    m_SNText = m_toolkit.createText( m_propPanel, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    m_SNText = m_toolkit.createText( m_propPanel, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_SNText.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
     m_SNText.addModifyListener( doubleModifyListener );
     m_SNText.addFocusListener( new FocusListener()
@@ -240,8 +241,8 @@ public class SinuositaetPanel extends AbstractProfilView
   {
     m_GerinneCombo.setSelection( new StructuredSelection( m_sinuositaet.getGerinneArt() ) );
     m_KennungCombo.setSelection( new StructuredSelection( m_sinuositaet.getKennung() ) );
-    m_SNText.setText( String.format( "%.4f", m_sinuositaet.getSinuositaet() ) );
-    m_LFText.setText( String.format( "%.4f", m_sinuositaet.getLf() ) );
+    m_SNText.setText( String.format( "%.4f", m_sinuositaet.getSinuositaet() ) ); //$NON-NLS-1$
+    m_LFText.setText( String.format( "%.4f", m_sinuositaet.getLf() ) ); //$NON-NLS-1$
   }
 
   @Override

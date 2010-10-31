@@ -44,6 +44,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -56,7 +57,7 @@ public class RightBank extends AbstractFlowZoneType
   @Override
   public String getLabel( )
   {
-    return "rechte Böschung";
+    return Messages.getString("RightBank_0"); //$NON-NLS-1$
   }
 
   /**

@@ -125,7 +125,7 @@
 		<echo message="update ombrometer (precipitation gauge - measurement)" />
 		<delete dir="${calc.dir}/Precipitation" />
 		<mkdir dir="${calc.dir}/Precipitation" />
-		<kalypso.copyObservation gml="${calc.url}/ombrometer.gml" featurePath="ombrometerMember" context="${calc.url}" targetobservationdir="${calc.dir}/Precipitation" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ombrometer.gml" featurePath="ombrometerMember" context="${calc.url}" targetobservationdir="${calc.dir}/Precipitation" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="NRepository" from="${startsim}" to="${startforecast}" />
 		</kalypso.copyObservation>
 	</target>

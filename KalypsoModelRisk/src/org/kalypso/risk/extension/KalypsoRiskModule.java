@@ -4,10 +4,10 @@ import java.net.URL;
 
 import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.afgui.wizards.INewProjectWizardProvider;
+import org.kalypso.module.IKalypsoModuleProjectOpenAction;
+import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
 import org.kalypso.project.database.client.extension.AbstractKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.project.KalypsoRiskDemoProjectWizard;
