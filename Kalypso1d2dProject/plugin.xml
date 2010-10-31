@@ -403,9 +403,9 @@
 	    </themeInfo>
    </extension>
    <extension
-         point="org.kalypso.project.database.client.kalypsoModule"> 
+         point="org.kalypso.module.kalypsoModule"> 
       <module
-            module="org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule">
+            class="org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule">
       </module>
    </extension>
 </plugin>
