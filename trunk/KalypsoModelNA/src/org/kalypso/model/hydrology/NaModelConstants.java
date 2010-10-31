@@ -47,6 +47,8 @@ import javax.xml.namespace.QName;
  */
 public interface NaModelConstants
 {
+  String EXE_PATTERN = "Kalypso-NA_(.*).exe"; //$NON-NLS-1$
+
   /** namespaces */
   public static final String NS_NAMETA = "org.kalypso.na.control"; //$NON-NLS-1$
 

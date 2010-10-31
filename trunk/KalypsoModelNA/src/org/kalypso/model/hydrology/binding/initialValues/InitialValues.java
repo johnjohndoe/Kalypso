@@ -81,6 +81,11 @@ public class InitialValues extends Feature_Impl
     return DateUtilities.toDate( getProperty( PROP_INI_DATE ) ); 
   }
 
+  public void setInitialDate( final Date newInitialDate )
+  {
+    setProperty( PROP_INI_DATE, DateUtilities.toXMLGregorianCalendar( newInitialDate ) );
+  }
+
   public synchronized IFeatureBindingCollection<Catchment> getCatchments( )
   {
     if( m_catchments == null )
@@ -96,5 +101,6 @@ public class InitialValues extends Feature_Impl
 
     return m_channels;
   }
+
 
 }
