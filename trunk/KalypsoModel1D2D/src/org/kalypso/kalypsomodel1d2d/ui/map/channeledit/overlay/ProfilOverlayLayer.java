@@ -194,6 +194,9 @@ public class ProfilOverlayLayer extends PointsLineLayer
      * get Screen and logical Points
      */
     final Point2D curserPoint = toNumeric( point );
+    if( curserPoint == null )
+      return;
+
     final IRecord profilePoint = ProfilUtil.findNearestPoint( origProfil, curserPoint.getX() );
     final IRecord fePoint = ProfilUtil.findNearestPoint( profil, curserPoint.getX() );
     final Point profilePointScreen = toScreen( profilePoint );
@@ -560,11 +563,14 @@ public class ProfilOverlayLayer extends PointsLineLayer
       profNeighbour = CreateChannelData.PROF.DOWN;
 
     for( final SegmentData segment : neighbourSegments )
+    {
       // check if the changed profile is in the neighbour segment, if not, do nothing.
       if( segment != currentSegment )
+      {
         if( segment.getProfilDownOrg().getStation() == profil.getStation() || segment.getProfilUpOrg().getStation() == profil.getStation() )
         {
           if( widthorder1 != null && widthorder2 != null )
+          {
             try
             {
               segment.setIntersPoint( point1, profNeighbour, widthorder1, width1 );
@@ -575,9 +581,12 @@ public class ProfilOverlayLayer extends PointsLineLayer
               // TODO Auto-generated catch block
               e.printStackTrace();
             }
-          segment.setNewIntersectedProfile( profil, profNeighbour );
-          // segment.updateProfileIntersection();
+            segment.setNewIntersectedProfile( profil, profNeighbour );
+            // segment.updateProfileIntersection();
+          }
         }
+      }
+    }
   }
 
   /**
@@ -607,22 +616,26 @@ public class ProfilOverlayLayer extends PointsLineLayer
       profNeighbour = CreateChannelData.PROF.DOWN;
 
     for( final SegmentData segment : neighbourSegments )
+    {
       // check if the changed profile is in the neighbour segment, if not, do nothing.
       if( segment != currentSegment )
+      {
         if( segment.getProfilDownOrg().getStation() == profil.getStation() || segment.getProfilUpOrg().getStation() == profil.getStation() )
         {
           if( widthorder != null )
             try
-            {
+          {
               segment.setIntersPoint( point, profNeighbour, widthorder, width );
-            }
-            catch( final Exception e )
-            {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
+          }
+          catch( final Exception e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
           segment.setNewIntersectedProfile( profil, profNeighbour );
         }
+      }
+    }
   }
 
   /**

@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Formatter;
@@ -396,9 +397,11 @@ public class ResultManager implements ISimulation1D2DConstants
         outDirName = "steady"; //$NON-NLS-1$
       else if( stepDate == MAXI_DATE )
         outDirName = "maxi"; //$NON-NLS-1$
-      else
-        outDirName = String.format( ResultMeta1d2dHelper.TIME_STEP_PREFIX + "%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tS_%1$tm_%1$tZ", stepDate ); //$NON-NLS-1$
-
+      else{
+        SimpleDateFormat timeFormatter = new SimpleDateFormat( ResultMeta1d2dHelper.FULL_DATE_TIME_FORMAT_RESULT_STEP );
+        outDirName = ResultMeta1d2dHelper.TIME_STEP_PREFIX + timeFormatter.format( stepDate );
+//        outDirName = String.format( ResultMeta1d2dHelper.TIME_STEP_PREFIX + "%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tS_%1$ts_%1$tZ", stepDate ); //$NON-NLS-1$
+      }
       final File resultOutputDir = new File( m_outputDir, outDirName );
       resultOutputDir.mkdirs();
       final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, lFileObjectSWANResult, resultOutputDir, flowModel, controlModel, discModel, m_parameters, stepDate, calcUnitResultMeta, doFullEvaluate );
