@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.from103to230;
+package org.kalypso.ui.rrm.wizards.conversion.to10_10;
 
 import java.net.URL;
 import java.util.HashSet;
@@ -56,6 +56,7 @@ import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -107,8 +108,6 @@ public class TimeseriesExtendVisitor implements FeatureVisitor
 
   private boolean visitCatchment( final Catchment catchment )
   {
-    // FIXME: by syntetischem Niederschlag sind diese Verknüpfungen nicht relevant und können ignoriert werden
-
     extendTimeseries( catchment, Catchment.PROP_PRECIPITATION_LINK );
     extendTimeseries( catchment, Catchment.PROP_TEMPERATURE_LINK );
     extendTimeseries( catchment, Catchment.PROP_EVAPORATION_LINK );
@@ -127,7 +126,7 @@ public class TimeseriesExtendVisitor implements FeatureVisitor
 
   public IStatus getStatus( )
   {
-    return m_log.asMultiStatus( "Prüfung der Zeitreihenlänge" );
+    return m_log.asMultiStatus( Messages.getString("TimeseriesExtendVisitor_0") ); //$NON-NLS-1$
   }
 
   private void extendTimeseries( final Feature feature, final QName linkProperty )

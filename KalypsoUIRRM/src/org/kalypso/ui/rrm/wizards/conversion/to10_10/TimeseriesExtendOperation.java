@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.from103to230;
+package org.kalypso.ui.rrm.wizards.conversion.to10_10;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,6 +54,7 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -88,7 +89,7 @@ public class TimeseriesExtendOperation implements ICoreRunnableWithProgress
     if( !m_link.isLinkExisting() )
     {
       final String featureLabel = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-      final String msg = String.format( "Modell enthält ungültige Zeitreihenverknüpfung: %s (Element '%s')", href, featureLabel );
+      final String msg = String.format( Messages.getString("TimeseriesExtendOperation_0"), href, featureLabel ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
     }
 
@@ -118,7 +119,7 @@ public class TimeseriesExtendOperation implements ICoreRunnableWithProgress
     }
     catch( final SensorException e )
     {
-      final String msg = String.format( "Failed to load timeseries: %s", href );
+      final String msg = String.format( Messages.getString("TimeseriesExtendOperation_1"), href ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
     }
   }

@@ -41,38 +41,88 @@
 package org.kalypso.ui.rrm.wizards.conversion;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.module.conversion.AbstractProjectConverter;
-import org.kalypso.ui.rrm.wizards.conversion.from103to230.RrmProjectConverter103to230;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.ModuleExtensions;
+import org.kalypso.module.conversion.IProjectConverter;
+import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.extension.KalypsoModuleRRM;
+import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.ui.rrm.wizards.conversion.to10_10.RrmProjectConverterXto10_10;
+import org.osgi.framework.Version;
 
 /**
  * {@link org.kalypso.module.conversion.IProjectConverter} implementation for KalypsoHydrology projects.
  * 
  * @author Gernot Belger
  */
-public class RrmProjectConverter extends AbstractProjectConverter
+public class RrmProjectConverter implements IProjectConverter
 {
+  private final static Version V_10_10 = new Version( 10, 10, 0 );
+
   private final File m_sourceDir;
 
   private final File m_targetDir;
 
-  public RrmProjectConverter( final File sourceDir, final File targetDir )
-  {
-    super( String.format( "Konvertierung von '%s'", sourceDir.getName() ) );
+  private final Version m_sourceVersion;
 
+  private IProjectConverter m_converter;
+
+  public RrmProjectConverter( final Version sourceVersion, final File sourceDir, final File targetDir )
+  {
+    m_sourceVersion = sourceVersion;
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
   }
 
   /**
-   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.module.conversion.IProjectConverter#getLabel()
    */
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Exception
+  public String getLabel( )
   {
-    // FIXME: decide which converter to use, depending on version of source
-    final RrmProjectConverter103to230 converter103to230 = new RrmProjectConverter103to230( m_sourceDir, m_targetDir );
-    converter103to230.execute( monitor );
+    return String.format( "Konvertierung von '%s'", m_sourceDir.getName() );
+  }
+
+  /**
+   * @see org.kalypso.module.conversion.IProjectConverter#preConversion(org.eclipse.swt.widgets.Shell)
+   */
+  @Override
+  public IStatus preConversion( final Shell shell )
+  {
+    final IKalypsoModule rrmModule = ModuleExtensions.getKalypsoModule( KalypsoModuleRRM.ID );
+    final Version rrmVersion = rrmModule.getVersion();
+    m_converter = createConverter( rrmVersion );
+    if( m_converter == null )
+    {
+      final String msg = String.format( Messages.getString("RrmProjectConverter_0"), m_sourceVersion, rrmVersion ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg );
+    }
+
+    return m_converter.preConversion( shell );
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  {
+    return m_converter.execute( monitor );
+  }
+
+  private IProjectConverter createConverter( final Version targetVersion )
+  {
+    /* everything that is below 10.10 */
+    if( m_sourceVersion == null || m_sourceVersion.compareTo( V_10_10 ) < 0 )
+      return new RrmProjectConverterXto10_10( m_sourceDir, m_targetDir, targetVersion );
+
+    return null;
   }
 }

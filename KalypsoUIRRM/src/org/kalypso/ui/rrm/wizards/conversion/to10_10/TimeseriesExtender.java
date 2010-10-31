@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.from103to230;
+package org.kalypso.ui.rrm.wizards.conversion.to10_10;
 
 import java.util.Date;
 
@@ -52,8 +52,12 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -87,7 +91,7 @@ public class TimeseriesExtender
     m_dateAxis = AxisUtils.findDateAxis( m_axisList );
     if( m_dateAxis == null )
     {
-      final String msg = String.format( "Not a timeseries: %s", href );
+      final String msg = String.format( Messages.getString("TimeseriesExtender_0"), href ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
       throw new CoreException( status );
     }
@@ -102,7 +106,7 @@ public class TimeseriesExtender
 
     if( size == 1 )
     {
-      final String msg = String.format( "Zeitreihe %s enthält nur einen Wert. Automatische Verlängerung nicht möglich.", m_href );
+      final String msg = String.format( Messages.getString("TimeseriesExtender_1"), m_href ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
       throw new CoreException( status );
     }
@@ -145,14 +149,17 @@ public class TimeseriesExtender
         return Status.OK_STATUS;
 
       case 1:
+      case 2:
+      case 3:
+      case 4:
       {
-        final String msg = String.format( "Zeitreihe %s wurde automatisch verlängert (1 Zeitschritt)", m_href );
-        return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), msg );
+        final String msg = String.format( Messages.getString( "TimeseriesExtender_2" ), m_href, m_addCounter ); //$NON-NLS-1$
+        return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), msg );
       }
 
       default:
       {
-        final String msg = String.format( "Zeitreihe %s wurde um %d Zeitschritte automatisch verlängert. Die Zeitschritte sind mit dem Warnsymbol markiert. Bitte prüfen Sie die Zeitreihe.", m_href, m_addCounter );
+        final String msg = String.format( Messages.getString("TimeseriesExtender_3"), m_href, m_addCounter ); //$NON-NLS-1$
         return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), msg );
       }
     }
@@ -224,13 +231,16 @@ public class TimeseriesExtender
    */
   private void addValues( final int valueIndex, final DateTime start, final DateTime until ) throws SensorException, CoreException
   {
-    final Object[] startValues = getSourceValuesAt( valueIndex );
+    final Object[] templateValues = getTemplateValues( valueIndex );
 
     int timeout = 0;
     DateTime timePointer = start;
     while( timePointer.isBefore( until ) )
     {
-      final Object[] newTupple = startValues.clone();
+      // FIXME: we should set BIT_CHECK here, but we might not have an status axis...
+
+      final Object[] newTupple = templateValues.clone();
+
       newTupple[m_dateIndex] = timePointer.toDate();
       m_targetValues.addTuple( newTupple );
       m_addCounter++;
@@ -239,13 +249,40 @@ public class TimeseriesExtender
 
       // REMARK: in order to avoid an endless loop here, we stop after 10 (which would already be quite suspicious).
       timeout++;
-      if( timeout == 10 )
+      if( timeout == 1000 )
       {
-        final String msg = String.format( "Zeitreihe %s: mehr als 10 Werte müssten ergänzt werden. Abbruch, Zeitreihe wurde nicht verlängert." );
+        final String msg = String.format( Messages.getString( "TimeseriesExtender_4" ), m_href ); //$NON-NLS-1$
         final IStatus error = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
         throw new CoreException( error );
       }
     }
+  }
+
+  private Object[] getTemplateValues( final int valueIndex ) throws SensorException
+  {
+    final Object[] templateValues = getSourceValuesAt( valueIndex ).clone();
+    /* Set axis value */
+    for( int i = 0; i < templateValues.length; i++ )
+    {
+      final IAxis axis = m_axisList[i];
+      if( axis.isPersistable() )
+      {
+        if( KalypsoStatusUtils.isStatusAxis( axis ) )
+          templateValues[i] = KalypsoStati.BIT_CHECK;
+        else if( !axis.isKey() )
+        {
+          /* If we have sum-values (like precipitation), do not extend with the last/first value but just set to 0.0 */
+          if( isSumValue( axis.getType() ) )
+            templateValues[i] = 0.0;
+        }
+      }
+    }
+    return templateValues;
+  }
+
+  private boolean isSumValue( final String type )
+  {
+    return type == TimeseriesUtils.TYPE_RAINFALL || type == TimeseriesUtils.TYPE_EVAPORATION;
   }
 
   public ITupleModel getExtendedValues( )

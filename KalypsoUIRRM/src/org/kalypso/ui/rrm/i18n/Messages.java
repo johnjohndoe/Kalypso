@@ -40,10 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.i18n;
 
-import java.util.IllegalFormatException;
-import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
+import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
  * @author kimwerner
@@ -70,23 +69,6 @@ public class Messages
 
   public static String getString( final String key, final Object... args )
   {
-    String formatStr = ""; //$NON-NLS-1$
-    try
-    {
-      formatStr = RESOURCE_BUNDLE.getString( key );
-      if( args.length == 0 )
-        return formatStr;
-
-      return String.format( Locale.US, formatStr, args );
-    }
-    catch( final MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
-    catch( final IllegalFormatException e )
-    {
-      e.printStackTrace();
-      return '!' + formatStr + '!';
-    }
+    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
   }
 }

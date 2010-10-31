@@ -78,7 +78,7 @@ public class DataBlockHeader
    */
   public DataBlockHeader( final String firstLine, final int specialId )
   {
-    this( firstLine, "", specialId );
+    this( firstLine, "", specialId ); //$NON-NLS-1$
   }
 
   public DataBlockHeader( final String firstLine, final String secondLine )
