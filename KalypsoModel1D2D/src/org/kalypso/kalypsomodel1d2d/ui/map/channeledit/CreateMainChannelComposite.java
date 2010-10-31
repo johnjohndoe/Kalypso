@@ -173,7 +173,10 @@ public class CreateMainChannelComposite extends Composite
     final IKalypsoFeatureTheme[] profileThemes = m_data.getProfileThemes();
     final IKalypsoFeatureTheme[] bankThemes = KalypsoFeatureThemeHelper.getLineThemes( m_widget.getPanel() );
     /* Create gui */
-    this.setLayout( new GridLayout( 1, false ) );
+    final GridLayout myLayout = new GridLayout( 1, false );
+    myLayout.marginWidth = 0;
+    myLayout.marginHeight = 0;
+    setLayout( myLayout );
 
     final ScrolledCompositeCreator creator = new ScrolledCompositeCreator( null )
     {
@@ -182,7 +185,10 @@ public class CreateMainChannelComposite extends Composite
       protected Control createContents( final Composite parent, final int style )
       {
         final Composite contentCompo = m_toolkit.createComposite( parent, style );
-        contentCompo.setLayout( new GridLayout( 1, false ) );
+        final GridLayout layout = myLayout;
+        layout.marginWidth = 0;
+        layout.marginHeight = 0;
+        contentCompo.setLayout( layout );
 
         /* Create Profile control */
         final Control profileSection = createProfileSelectionSection( contentCompo, profileThemes );
@@ -887,10 +893,10 @@ public class CreateMainChannelComposite extends Composite
   /**
    * updates the data for a specific segments
    */
-// private void updateSegmentData( final boolean edit, final SegmentData segment )
-// {
-// m_data.updateSegment( edit, segment );
-// }
+  // private void updateSegmentData( final boolean edit, final SegmentData segment )
+  // {
+  // m_data.updateSegment( edit, segment );
+  // }
   /**
    * displays the selected cross sections -> data filling for the profil section
    */
@@ -903,7 +909,7 @@ public class CreateMainChannelComposite extends Composite
     final Composite sectionClient = m_toolkit.createComposite( m_profilSection, SWT.NONE );
     final GridLayout clientLayout = new GridLayout( 1, false );
     clientLayout.marginHeight = 0;
-    clientLayout.verticalSpacing = 0;
+    clientLayout.marginWidth = 0;
     sectionClient.setLayout( clientLayout );
 
     m_profilSection.setClient( sectionClient );
@@ -943,21 +949,14 @@ public class CreateMainChannelComposite extends Composite
       label.setBackground( label.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
 
       final Control profilControl = profilChartView.createControl( sectionClient );
- 
+
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
       final ILayerManager mngr = profilChartView.getChart().getChartModel().getLayerManager();
-//
-//      for( final String layerId : layerProvider.getRequiredLayer( profilChartView ) )
-//      {
-//        mngr.addLayer( layerProvider.createLayer( layerId, profilChartView ) );
-//      }
-
       final IChartLayer overlayLayer = mngr.getLayerById( IWspmOverlayConstants.LAYER_OVERLAY );
 
       if( overlayLayer instanceof ProfilOverlayLayer )
       {
-        // currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
         if( currentSegment != null )
         {
           final IProfil layerData;
@@ -967,7 +966,7 @@ public class CreateMainChannelComposite extends Composite
             layerData = currentSegment.getProfDownIntersProfile();
 
           ((ProfilOverlayLayer) overlayLayer).setProfile( layerData, m_data, m_widget );
-          ((ProfilOverlayLayer) overlayLayer).lockLayer( false );
+          // ((ProfilOverlayLayer) overlayLayer).lockLayer( false );
           m_widget.getPanel().repaintMap();
         }
       }

@@ -126,7 +126,10 @@ public class CalculationUnitLogComponent
     final GridData tableGridData = new GridData( SWT.FILL, SWT.END, true, true );
     table.setLayoutData( tableGridData );
 
-    StatusLabelProvider.configureTableViewer( logTableViewer );
+    StatusLabelProvider.addSeverityColumn( logTableViewer );
+    StatusLabelProvider.addMessageColumn( logTableViewer );
+    StatusLabelProvider.addTimeColumn( logTableViewer );
+
     logTableViewer.setContentProvider( new ArrayContentProvider() );
     logTableViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
