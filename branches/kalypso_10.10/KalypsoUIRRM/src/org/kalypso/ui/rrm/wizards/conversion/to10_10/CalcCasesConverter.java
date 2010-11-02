@@ -103,7 +103,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         {
           prepareCalcCase( targetDir );
 
-          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir, m_chosenExe );
+          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, m_targetDir, targetDir, m_chosenExe );
           final IStatus status = calcCaseConverter.execute( progress.newChild( 1 ) );
           getLog().add( status );
         }
