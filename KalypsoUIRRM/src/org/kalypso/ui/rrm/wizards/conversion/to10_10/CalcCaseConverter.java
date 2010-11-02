@@ -62,6 +62,7 @@ import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
+import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -78,7 +79,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  */
 public class CalcCaseConverter extends AbstractLoggingOperation
 {
-  private final File m_targetDir;
+  private final File m_targetCalcCaseDir;
 
   private final File m_sourceDir;
 
@@ -86,12 +87,15 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private final String m_chosenExe;
 
-  public CalcCaseConverter( final File sourceDir, final File targetDir, final String chosenExe )
+  private final File m_targetProjectDir;
+
+  public CalcCaseConverter( final File sourceDir, final File targetProjectDir, final File targetcalcCaseDir, final String chosenExe )
   {
     super( sourceDir.getName() );
 
     m_sourceDir = sourceDir;
-    m_targetDir = targetDir;
+    m_targetProjectDir = targetProjectDir;
+    m_targetCalcCaseDir = targetcalcCaseDir;
     m_chosenExe = chosenExe;
   }
 
@@ -131,7 +135,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void copyData( ) throws Exception
   {
-    m_targetDir.mkdirs();
+    m_targetCalcCaseDir.mkdirs();
 
     copyBasicData();
 
@@ -149,8 +153,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void renameOldResults( )
   {
-    final File aktuellDir = new File( m_targetDir, INaCalcCaseConstants.AKTUELL_DIR );
-    final File resultDir = new File( m_targetDir, INaCalcCaseConstants.ERGEBNISSE_DIR );
+    final File aktuellDir = new File( m_targetCalcCaseDir, INaCalcCaseConstants.AKTUELL_DIR );
+    final File resultDir = new File( m_targetCalcCaseDir, INaCalcCaseConstants.ERGEBNISSE_DIR );
     final File origCurrentResultDir = new File( resultDir, Messages.getString("CalcCaseConverter.0") ); //$NON-NLS-1$
     if( aktuellDir.isDirectory() )
     {
@@ -165,7 +169,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   {
     /* Copy top level gml files (everything else in this path will be ignored) */
     copyFile( INaCalcCaseConstants.CALC_CASE );
-    copyFile( INaCalcCaseConstants.CALC_HYDROTOP );
+    copyHydrotopeFile();
+
     copyFile( INaCalcCaseConstants.CALC_PARAMETER );
     copyFile( INaCalcCaseConstants.EXPERT_CONTROL );
     copyFile( INaCalcCaseConstants.DOT_CALCULATION );
@@ -185,6 +190,24 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CalcCaseConverter_0") ) ); //$NON-NLS-1$
   }
 
+  /**
+   * Special case: the hydrotope file may not exists in al calc cases (mainly in 2.2 versions).
+   */
+  private void copyHydrotopeFile( ) throws IOException
+  {
+    final File hydrotopeSourceFile = new File( m_sourceDir, INaCalcCaseConstants.CALC_HYDROTOP );
+    if( hydrotopeSourceFile.isFile() )
+      copyFile( INaCalcCaseConstants.CALC_HYDROTOP );
+    else
+    {
+      final File basicHydrotopeFile = new File( m_targetProjectDir, INaProjectConstants.GML_HYDROTOP_PATH );
+      final File targetHydrotopeFile = new File( m_targetCalcCaseDir, INaCalcCaseConstants.CALC_HYDROTOP );
+      FileUtils.copyFile( basicHydrotopeFile, targetHydrotopeFile, false );
+
+      getLog().add( IStatus.WARNING, "Hydrotopdatei fehlt in Rechenvariante. Es wird die Hydrotopdatei des Basismodells kopiert." );
+    }
+  }
+
   private void copyFile( final String path ) throws IOException
   {
     copyFile( path, path );
@@ -193,7 +216,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   private void copyFile( final String sourcePath, final String targetPath ) throws IOException
   {
     final File modelSourceFile = new File( m_sourceDir, sourcePath );
-    final File modelTargetFile = new File( m_targetDir, targetPath );
+    final File modelTargetFile = new File( m_targetCalcCaseDir, targetPath );
 
     FileUtils.copyFile( modelSourceFile, modelTargetFile, true );
   }
@@ -206,7 +229,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   private void copyDir( final String sourcePath, final String targetPath ) throws IOException
   {
     final File modelSourceDir = new File( m_sourceDir, sourcePath );
-    final File modelTargetDir = new File( m_targetDir, targetPath );
+    final File modelTargetDir = new File( m_targetCalcCaseDir, targetPath );
 
     FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
   }
@@ -300,7 +323,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void saveModel( final Feature model, final String path, final int severity, final String statusMsg ) throws IOException, GmlSerializeException
   {
-    final File naControlFile = new File( m_targetDir, path );
+    final File naControlFile = new File( m_targetCalcCaseDir, path );
     GmlSerializer.serializeWorkspace( naControlFile, model.getWorkspace(), "UTF-8" ); //$NON-NLS-1$
     getLog().add( new Status( severity, KalypsoUIRRMPlugin.getID(), statusMsg ) );
   }
