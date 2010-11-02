@@ -457,7 +457,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     if( m_profile == null )
     {
       ((GridData) (m_chartComposite.getLayoutData())).exclude = true;
-      m_chartComposite.getChartModel().setTitle( new String[] { "<No Profile Selected>" } ); //$NON-NLS-1$
+      m_chartComposite.getChartModel().setTitle( "<No Profile Selected>" ); //$NON-NLS-1$
 
     }
     else
@@ -466,7 +466,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       {
         m_profile.addProfilListener( this );
 
-        m_chartComposite.getChartModel().setTitle( new String[] { String.format( "Station km %10.4f", m_profile.getStation() ) } );
+        m_chartComposite.getChartModel().setTitle( String.format( "Station km %10.4f", m_profile.getStation() ) );
         ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
         updateLayer();
       }
