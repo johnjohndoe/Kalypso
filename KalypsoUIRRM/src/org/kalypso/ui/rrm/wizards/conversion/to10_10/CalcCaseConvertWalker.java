@@ -47,6 +47,7 @@ import java.util.Collection;
 
 import org.apache.commons.io.DirectoryWalker;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
@@ -58,11 +59,14 @@ public class CalcCaseConvertWalker extends DirectoryWalker
 {
   private final File m_sourceDir;
 
+  private final File m_templateDir;
+
   public CalcCaseConvertWalker( final File sourceDir )
   {
     super( FileFilterUtils.directoryFileFilter(), -1 );
 
     m_sourceDir = sourceDir;
+    m_templateDir = new File( m_sourceDir, INaProjectConstants.CALC_CASE_TEMPLATE_DIR );
   }
 
   public File[] execute( ) throws IOException
@@ -90,6 +94,9 @@ public class CalcCaseConvertWalker extends DirectoryWalker
 
   private boolean isCalculationDirectory( final File directory )
   {
+    if( directory.equals( m_templateDir ) )
+      return false;
+
     return new File( directory, ModelNature.CONTROL_NAME ).isFile();
   }
 
