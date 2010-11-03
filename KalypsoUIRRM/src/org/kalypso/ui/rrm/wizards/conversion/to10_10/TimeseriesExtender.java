@@ -64,6 +64,8 @@ import org.kalypso.ui.rrm.i18n.Messages;
  */
 public class TimeseriesExtender
 {
+  private static final int MAX_TIMESTEPS = 100000;
+
   private final ITupleModel m_sourceValues;
 
   private final IAxis[] m_axisList;
@@ -249,9 +251,9 @@ public class TimeseriesExtender
 
       // REMARK: in order to avoid an endless loop here, we stop after 10 (which would already be quite suspicious).
       timeout++;
-      if( timeout == 1000 )
+      if( timeout == MAX_TIMESTEPS )
       {
-        final String msg = String.format( Messages.getString( "TimeseriesExtender_4" ), m_href ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "TimeseriesExtender_4" ), m_href, MAX_TIMESTEPS ); //$NON-NLS-1$
         final IStatus error = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
         throw new CoreException( error );
       }
