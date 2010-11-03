@@ -107,8 +107,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   {
     try
     {
-      readData();
-
       copyData();
     }
     finally
@@ -120,11 +118,11 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     }
   }
 
-  private void readData( ) throws Exception
+  private void readBasicData( ) throws Exception
   {
-    final File naModelFile = new File( m_sourceDir, INaCalcCaseConstants.CALC_CASE );
-    final File naControlFile = new File( m_sourceDir, INaCalcCaseConstants.DOT_CALCULATION );
-    final File naLzsimFile = new File( m_sourceDir, INaCalcCaseConstants.ANFANGSWERTE_FILE );
+    final File naModelFile = new File( m_targetCalcCaseDir, INaCalcCaseConstants.CALC_CASE );
+    final File naControlFile = new File( m_targetCalcCaseDir, INaCalcCaseConstants.DOT_CALCULATION );
+    final File naLzsimFile = new File( m_targetCalcCaseDir, INaCalcCaseConstants.ANFANGSWERTE_FILE );
 
     final URL naModelLocation = naModelFile.toURI().toURL();
     final URL naControlLocation = naControlFile.toURI().toURL();
@@ -138,6 +136,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     m_targetCalcCaseDir.mkdirs();
 
     copyBasicData();
+
+    readBasicData();
 
     renameOldResults();
 
@@ -180,6 +180,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyDir( INaCalcCaseConstants.KLIMA_DIR );
     copyDir( INaCalcCaseConstants.NIEDERSCHLAG_DIR );
     copyDir( INaCalcCaseConstants.PEGEL_DIR );
+    copyZufluss();
 
     // TODO: Benutzer entscheiden lassen:
     // - ergebnisse übernehmen?
@@ -188,6 +189,16 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyDir( INaCalcCaseConstants.ERGEBNISSE_DIR );
 
     getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CalcCaseConverter_0") ) ); //$NON-NLS-1$
+  }
+
+  private void copyZufluss( ) throws IOException
+  {
+    final File modelSourceDir = new File( m_sourceDir, "Zufluss" );
+    final File modelTargetDir = new File( m_targetCalcCaseDir, "Zufluss" );
+    if( modelSourceDir.isDirectory() )
+      FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
+    else
+      getLog().add( IStatus.INFO, "Rechenvariante enthält kein 'Zufluss' Verzeichnis. Es wird ein leeres Verzeichnis angelegt." );
   }
 
   /**
