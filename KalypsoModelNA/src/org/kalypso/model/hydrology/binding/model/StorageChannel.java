@@ -45,7 +45,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}StorageChannel.
@@ -77,6 +76,7 @@ public class StorageChannel extends Channel
 
   public Node getOverflowNode( )
   {
-    return (Node) FeatureHelper.resolveLink( this, IKNOT_MEMBER, true );
+    return getProperty( IKNOT_MEMBER, Node.class );
   }
+
 }

@@ -244,7 +244,7 @@ public class NetFileManager
       final NetElement upStreamElement = netElements.get( channel.getId() );
       final NetElement downStreamElement = netElements.get( downStreamChannel.getId() );
 
-      downStreamElement.addUpStream( upStreamElement );
+      downStreamElement.addUpStream ( upStreamElement );
     }
 
     /* storage channel -> overflow node */
@@ -252,17 +252,13 @@ public class NetFileManager
     {
       if( channel instanceof StorageChannel )
       {
-        final Node overflowNode = ((StorageChannel) channel).getOverflowNode();
+        final Node overflowNode = ((StorageChannel)channel).getOverflowNode();
         if( overflowNode != null )
         {
           final Channel downstreamChannel = overflowNode.getDownstreamChannel();
           final NetElement channelElement = netElements.get( channel.getId() );
-          // Hmmm: tricky, what to do, if the node has no downstream channel?
-          if( downstreamChannel != null )
-          {
-            final NetElement downstreamElement = netElements.get( downstreamChannel.getId() );
-            downstreamElement.addUpStream( channelElement );
-          }
+          final NetElement downstreamElement = netElements.get( downstreamChannel.getId() );
+          downstreamElement.addUpStream( channelElement );
         }
       }
     }
@@ -549,7 +545,7 @@ public class NetFileManager
   {
     final ZuflussBean bean = getZuflussBean( branching );
     if( bean.m_value instanceof Double )
-      bean.m_specialBuffer.append( String.format( Locale.US, "%10.3f", bean.m_value ) ); //$NON-NLS-1$
+      bean.m_specialBuffer.append( String.format( "%10.3f", bean.m_value ) ); //$NON-NLS-1$
     else if( bean.m_value instanceof Integer )
       bean.m_specialBuffer.append( String.format( "%4d", bean.m_value ) ); //$NON-NLS-1$
     // else throw an exception...
@@ -614,7 +610,7 @@ public class NetFileManager
     final int count = values.size();
     if( count < 1 )
       return null;
-    buffer.append( String.format( "%4d %6s\n", count, idManager.getAsciiID( relatedNode ) ) ); //$NON-NLS-1$
+    buffer.append( String.format( "%5d %6s\n", count, idManager.getAsciiID( relatedNode ) ) ); //$NON-NLS-1$
     for( int row = 0; row < count; row++ )
     {
       final double q1 = (Double) values.get( row, q1Axis );
