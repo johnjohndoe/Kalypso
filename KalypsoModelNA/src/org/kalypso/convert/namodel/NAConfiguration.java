@@ -108,6 +108,8 @@ public class NAConfiguration
 
   private final File m_swaleAndTrenchFile;
 
+  private final File m_hrbFile;
+
   private final IDManager m_idManager = new IDManager();
 
   private URL m_zmlContext;
@@ -129,7 +131,7 @@ public class NAConfiguration
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final GMLSchema schema = getSchema( schemaCatalog, NaModelConstants.NS_NAMODELL );
     final GMLSchema paraSchema = getSchema( schemaCatalog, NaModelConstants.NS_NAPARAMETER );
-    final GMLSchema synthNSchema = getSchema( schemaCatalog,  NaModelConstants.NS_SYNTHN );
+    final GMLSchema synthNSchema = getSchema( schemaCatalog, NaModelConstants.NS_SYNTHN );
 
     // featuretypes
     m_nodeFT = schema.getFeatureType( Node.FEATURE_NODE );
@@ -150,6 +152,7 @@ public class NAConfiguration
     m_netFile = new File( asciiBaseDir, "inp.dat/we_nat.ntz" ); //$NON-NLS-1$
     m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" ); //$NON-NLS-1$
     m_nutzungDir = new File( asciiBaseDir, "hydro.top" ); //$NON-NLS-1$
+    m_hrbFile = new File( asciiBaseDir, "inp.dat/we_nat.hrb" ); //$NON-NLS-1$
     m_hydrotopFile = new File( asciiBaseDir, "inp.dat/we.hyd" ); //$NON-NLS-1$
     m_hydrotopMappingFile = new File( asciiBaseDir, "inp.dat/mapping.txt" ); //$NON-NLS-1$
     m_bodentypFile = new File( asciiBaseDir, "hydro.top/boden.dat" ); //$NON-NLS-1$
@@ -200,6 +203,11 @@ public class NAConfiguration
   public File getRHBFile( )
   {
     return m_rhbFile;
+  }
+
+  public File getHRBFile( )
+  {
+    return m_hrbFile;
   }
 
   public File getAsciiBaseDir( )

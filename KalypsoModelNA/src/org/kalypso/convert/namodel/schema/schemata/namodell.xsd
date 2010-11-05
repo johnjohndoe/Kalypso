@@ -477,6 +477,10 @@
 					<element name="vmin" type="double"/>
 					<element name="hvvsqd" type="zmlinline:ZmlInlineWVQType"/>
 					<element name="generateResult" type="boolean"/>
+					<element name="downStreamNodeMember_2nd" type="na:NodeLinkType" minOccurs="0"/>
+					<element name="downStreamNodeMember_3rd" type="na:NodeLinkType" minOccurs="0"/>
+					<element name="zmlLinkSeaEvaporation" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="faktorSeaEvaporation" type="double" default="1.0"/>
 				</sequence>
 			</extension>
 		</complexContent>

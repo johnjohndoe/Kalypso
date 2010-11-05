@@ -50,31 +50,26 @@ import org.apache.commons.io.IOUtils;
 /**
  * @author Dejan Antanaskovic
  */
-public abstract class AbstractCoreFileWriter implements ICoreFileWriter
+public abstract class AbstractCoreFileWriter
 {
+  private final File m_file;
+
   private final Logger m_logger;
 
-  public AbstractCoreFileWriter( final Logger logger )
+  public AbstractCoreFileWriter( final File file, final Logger logger )
   {
+    m_file = file;
     m_logger = logger;
   }
 
-  /**
-   * @see org.kalypso.convert.gml2core.ICoreFileWriter#write()
-   */
-  @Override
-  public final void writeFile( final File file )
+  public final void write( ) throws IOException
   {
-    PrintWriter printWriter = null;
+    PrintWriter writer = null;
     try
     {
-      printWriter = new PrintWriter( file );
-      write( printWriter );
-      printWriter.close();
-    }
-    catch( final IOException e )
-    {
-      handleError( e );
+      writer = new PrintWriter( m_file );
+      writeContent( writer );
+      writer.close();
     }
     catch( final Exception e )
     {
@@ -82,15 +77,17 @@ public abstract class AbstractCoreFileWriter implements ICoreFileWriter
     }
     finally
     {
-      IOUtils.closeQuietly( printWriter );
+      if( writer != null )
+        IOUtils.closeQuietly( writer );
     }
   }
 
-  protected abstract void write( PrintWriter printWriter ) throws Exception;
+  protected abstract void writeContent( final PrintWriter printWriter ) throws Exception;
 
-  private void handleError( final Exception e )
+  private void handleError( final Exception e ) throws IOException
   {
-    // FIXME: why only log? Probably this is a real problem. So we should just throw an exception?!
-    m_logger.warning( e.getLocalizedMessage() );
+    final String message = e.getMessage();
+    m_logger.severe( message );
+    throw new IOException( message, e );
   }
 }
