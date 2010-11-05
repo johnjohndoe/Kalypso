@@ -48,6 +48,7 @@ import org.kalypso.convert.namodel.manager.BodenartManager;
 import org.kalypso.convert.namodel.manager.BodentypManager;
 import org.kalypso.convert.namodel.manager.CatchmentManager;
 import org.kalypso.convert.namodel.manager.ChannelManager;
+import org.kalypso.convert.namodel.manager.HRBFileWriter;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.manager.NetFileManager;
 import org.kalypso.convert.namodel.manager.NutzungManager;
@@ -144,8 +145,11 @@ public class NAModellConverter
     final NutzungManager nutzungManager = new NutzungManager( m_conf.getNutzungDir() );
     nutzungManager.writeFile( parameter, m_hydroHash );
 
-    final SudsFileWriter sudsFileWriter = new SudsFileWriter( naModel, hydrotopeCollection, sudsWorkspace, m_logger );
-    sudsFileWriter.writeFile( m_conf.getSwaleAndTrenchFile() );
+    final SudsFileWriter sudsFileWriter = new SudsFileWriter( naModel, hydrotopeCollection, sudsWorkspace, m_conf.getSwaleAndTrenchFile(), m_logger );
+    sudsFileWriter.write();
+
+    final HRBFileWriter hrbFileWriter = new HRBFileWriter( naModel.getStorageChannels(), m_conf, m_logger );
+    hrbFileWriter.write();
   }
 
   private HydroHash initHydroHash( final Parameter parameter, final NaModell naModel, final NAHydrotop hydrotopeCollection, final AsciiBuffer asciiBuffer ) throws GM_Exception, SimulationException

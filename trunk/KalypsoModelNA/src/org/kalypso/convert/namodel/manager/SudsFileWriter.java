@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,7 @@ import org.kalypso.model.hydrology.binding.suds.Greenroof;
 import org.kalypso.model.hydrology.binding.suds.Swale;
 import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.preprocessing.AbstractCoreFileWriter;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -77,9 +79,9 @@ public class SudsFileWriter extends AbstractCoreFileWriter
 
   private final GMLWorkspace m_sudsWorkspace;
 
-  public SudsFileWriter( final NaModell naModel, final NAHydrotop hydrotopeCollection, final GMLWorkspace sudsWorkspace, final Logger logger )
+  public SudsFileWriter( final NaModell naModel, final NAHydrotop hydrotopeCollection, final GMLWorkspace sudsWorkspace, final File outputFile, final Logger logger )
   {
-    super( logger );
+    super( outputFile, logger );
     m_naModel = naModel;
     m_hydrotopeCollection = hydrotopeCollection;
     m_sudsWorkspace = sudsWorkspace;
@@ -89,8 +91,9 @@ public class SudsFileWriter extends AbstractCoreFileWriter
    * @see org.kalypso.convert.gml2core.AbstractCoreFileWriter#write(java.io.PrintWriter)
    */
   @Override
-  protected void write( final PrintWriter printWriter ) throws Exception
+  protected void writeContent( final PrintWriter printWriter ) throws Exception
   {
+    final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     if( m_naModel != null && m_hydrotopeCollection != null && m_sudsWorkspace != null )
     {
       final SortedMap<String, TreeMap<String, List<String>>> sudsMap = new TreeMap<String, TreeMap<String, List<String>>>();
@@ -107,7 +110,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
         {
           final GM_Object hydrotopGeometryProperty = hydrotop.getDefaultGeometryPropertyValue();
           final Geometry hydrotopGeometry = JTSAdapter.export( hydrotopGeometryProperty );
-          final GM_Object hydrotopInteriorPoint = JTSAdapter.wrap( hydrotopGeometry.getInteriorPoint() );
+          final GM_Object hydrotopInteriorPoint = JTSAdapter.wrap( hydrotopGeometry.getInteriorPoint(), coordinateSystem );
           final List<Catchment> list = catchments.query( hydrotopGeometryProperty.getEnvelope() );
           for( final Catchment catchment : list )
           {

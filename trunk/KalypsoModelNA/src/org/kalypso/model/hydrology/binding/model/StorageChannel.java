@@ -45,6 +45,8 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -56,13 +58,28 @@ public class StorageChannel extends Channel
 {
   public static final QName FEATURE_STORAGE_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "StorageChannel" ); //$NON-NLS-1$
 
+  private static final QName PROP_HVVSQD = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
+
   private static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
 
-  private static final QName IKNOT_MEMBER = new QName( NS_NAMODELL, "iknotNodeMember" ); //$NON-NLS-1$
+  private static final QName PROP_DOWNSTREAM_NODE = new QName( NS_NAMODELL, "iknotNodeMember" ); //$NON-NLS-1$
+
+  private static final QName PROP_DOWNSTREAM_NODE_2 = new QName( NS_NAMODELL, "downStreamNodeMember_2nd" ); //$NON-NLS-1$
+
+  private static final QName PROP_DOWNSTREAM_NODE_3 = new QName( NS_NAMODELL, "downStreamNodeMember_3rd" ); //$NON-NLS-1$
+
+  private static final QName PROP_SEA_EVAPORATION_ZMLLINK = new QName( NS_NAMODELL, "zmlLinkSeaEvaporation" ); //$NON-NLS-1$
+
+  private static final QName PROP_SEA_EVAPORATION_FACTOR = new QName( NS_NAMODELL, "faktorSeaEvaporation" ); //$NON-NLS-1$
 
   public StorageChannel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public IObservation getWVQObservation( )
+  {
+    return (IObservation) getProperty( PROP_HVVSQD );
   }
 
   public boolean isGenerateResults( )
@@ -77,6 +94,27 @@ public class StorageChannel extends Channel
 
   public Node getOverflowNode( )
   {
-    return (Node) FeatureHelper.resolveLink( this, IKNOT_MEMBER, true );
+    return (Node) FeatureHelper.resolveLink( this, PROP_DOWNSTREAM_NODE, true );
   }
+
+  public Node getOverflowNode2( )
+  {
+    return (Node) FeatureHelper.resolveLink( this, PROP_DOWNSTREAM_NODE_2, true );
+  }
+
+  public Node getOverflowNode3( )
+  {
+    return (Node) FeatureHelper.resolveLink( this, PROP_DOWNSTREAM_NODE_3, true );
+  }
+
+  public TimeseriesLinkType getSeaEvaporationTimeseriesLink( )
+  {
+    return getProperty( PROP_SEA_EVAPORATION_ZMLLINK, TimeseriesLinkType.class );
+  }
+
+  public double getSeaEvaporationFactor( )
+  {
+    return getDoubleProperty( PROP_SEA_EVAPORATION_FACTOR, 1.0 );
+  }
+
 }

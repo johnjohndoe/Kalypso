@@ -123,8 +123,6 @@ public class NetElement
 
   private static final String ENDKNOTEN = "   10000"; //$NON-NLS-1$
 
-  private final UrlUtilities m_urlUtils = new UrlUtilities();
-
   private final GMLWorkspace m_synthNWorkspace;
 
   private final GMLWorkspace m_workspace;
@@ -180,19 +178,21 @@ public class NetElement
       }
       else
       {
+        final URL zmlContext = m_conf.getZMLContext();
+
         final TimeseriesLinkType linkN = catchment.getPrecipitationLink();
-        writeTimeseries( targetFileN, linkN, ITimeseriesConstants.TYPE_RAINFALL, null, null, null, null );
+        writeTimeseries( targetFileN, linkN, zmlContext, ITimeseriesConstants.TYPE_RAINFALL, null, null, null, null );
 
         final TimeseriesLinkType linkT = catchment.getTemperatureLink();
-        writeTimeseries( targetFileT, linkT, ITimeseriesConstants.TYPE_TEMPERATURE, FILTER_T, "1.0", simulationStart, simulationEnd );
+        writeTimeseries( targetFileT, linkT, zmlContext, ITimeseriesConstants.TYPE_TEMPERATURE, FILTER_T, "1.0", simulationStart, simulationEnd );
 
         final TimeseriesLinkType linkV = catchment.getEvaporationLink();
-        writeTimeseries( targetFileV, linkV, ITimeseriesConstants.TYPE_EVAPORATION, FILTER_V, "0.5", simulationStart, simulationEnd );
+        writeTimeseries( targetFileV, linkV, zmlContext, ITimeseriesConstants.TYPE_EVAPORATION, FILTER_V, "0.5", simulationStart, simulationEnd );
       }
     }
   }
 
-  private void writeTimeseries( final File targetFile, final TimeseriesLinkType link, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws Exception
+  public static final void writeTimeseries( final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws Exception
   {
     if( link == null )
       return;
@@ -200,13 +200,10 @@ public class NetElement
     if( targetFile.exists() )
       return;
 
-    // TODO: remove
-    // System.out.println( "Writing " + targetFile.getName() );
-
     final String href = link.getHref();
     final String hrefWithFilter = filter == null ? href : ZmlURL.insertFilter( href, filter );
 
-    final URL location = m_urlUtils.resolveURL( m_conf.getZMLContext(), hrefWithFilter );
+    final URL location = new UrlUtilities().resolveURL( zmlContext, hrefWithFilter );
 
     // TODO: maybe we could cache the read observations, this would give quite some performance improvement, if the same
     // observation is used more than once

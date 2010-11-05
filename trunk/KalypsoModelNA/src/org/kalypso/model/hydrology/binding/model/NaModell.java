@@ -78,7 +78,6 @@ public class NaModell extends Feature_Impl
   // */
   private static final QName MEMBER_CHANNEL = new QName( NS_NAMODELL, "channelMember" ); //$NON-NLS-1$
 
-
   private static final QName MEMBER_NODE_COLLECTION = new QName( NS_NAMODELL, "NodeCollectionMember" ); //$NON-NLS-1$
 
   private static final QName MEMBER_NODE = new QName( NS_NAMODELL, "nodeMember" ); //$NON-NLS-1$
@@ -129,6 +128,19 @@ public class NaModell extends Feature_Impl
     }
 
     return result.toArray( new KMChannel[result.size()] );
+  }
+
+  public StorageChannel[] getStorageChannels( )
+  {
+    final List<StorageChannel> result = new ArrayList<StorageChannel>();
+    final IFeatureBindingCollection<Channel> channels = getChannels();
+    for( final Channel channel : channels )
+    {
+      if( channel instanceof StorageChannel )
+        result.add( (StorageChannel) channel );
+    }
+
+    return result.toArray( new StorageChannel[result.size()] );
   }
 
   public synchronized IFeatureBindingCollection<Node> getNodes( )
