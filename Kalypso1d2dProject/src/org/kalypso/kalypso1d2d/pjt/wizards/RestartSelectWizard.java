@@ -145,7 +145,11 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     final List<IRestartInfo> restartInfos = m_controlModel.getRestartInfos();
     for( final IRestartInfo restartInfo : restartInfos )
     {
-      final ICalcUnitResultMeta calcUnitMetaResult = m_resultModel.findCalcUnitMetaResult( restartInfo.getCalculationUnitID() );
+      final String restartUnitID = restartInfo.getCalculationUnitID();
+      final ICalcUnitResultMeta calcUnitMetaResult = m_resultModel.findCalcUnitMetaResult( restartUnitID );
+      if( calcUnitMetaResult == null )
+        continue;
+
       final String stepResultFilePath = restartInfo.getRestartFilePath().toString();
       final IFeatureWrapperCollection<IResultMeta> calcUnitChildren = calcUnitMetaResult.getChildren();
       for( final IResultMeta calcUnitChild : calcUnitChildren )
