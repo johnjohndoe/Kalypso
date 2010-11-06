@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -63,6 +64,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -101,11 +103,10 @@ public class WeirPanel extends AbstractProfilView
 
     public DeviderLine( final Composite parent, final IProfilPointMarker devider, final boolean canAdd )
     {
-
       m_devider = devider;
       m_composite = m_toolkit.createComposite( parent );
       m_composite.setLayout( new GridLayout( 3, false ) );
-      final GridData gD =new GridData( SWT.FILL, SWT.TOP, true, false, 2, 1 );
+      final GridData gD = new GridData( SWT.FILL, SWT.TOP, true, false, 2, 1 );
       gD.horizontalSpan = 2;
       m_composite.setLayoutData( gD );
 
@@ -117,6 +118,7 @@ public class WeirPanel extends AbstractProfilView
       m_toolkit.createLabel( m_composite, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.0" ) ); //$NON-NLS-1$
       m_position = m_toolkit.createText( m_composite, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
       m_position.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false ) );
+      m_position.setEnabled( m_devider != null );
 
 // final Label spacer = m_toolkit.createSeparator( m_composite, SWT.SEPARATOR | SWT.HORIZONTAL );
 // spacer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
@@ -125,13 +127,12 @@ public class WeirPanel extends AbstractProfilView
       btnAdd.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
       btnAdd.setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.7" ) ); //$NON-NLS-1$
       btnAdd.setImage( m_addImg );
-      btnAdd.setEnabled( canAdd );
+      btnAdd.setEnabled( canAdd && m_devider != null );
       btnAdd.addSelectionListener( new SelectionAdapter()
       {
         @Override
         public void widgetSelected( final SelectionEvent e )
         {
-
           final IProfilPointMarker marker = m_devider;
           final IProfil profil = getProfil();
           final IRecord point = profil.getPoint( getProfil().indexOfPoint( marker.getPoint() ) + 1 );
@@ -189,15 +190,15 @@ public class WeirPanel extends AbstractProfilView
       } );
     }
 
-    public void dispose( )
-    {
-      m_composite.dispose();
-    }
-
     public void refresh( )
     {
-      m_position.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_devider.getPoint() ) ) ); //$NON-NLS-1$
-
+      if( m_devider == null )
+        m_position.setText( StringUtils.EMPTY );
+      else
+      {
+        final IRecord point = m_devider.getPoint();
+        m_position.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) ) ); //$NON-NLS-1$
+      }
     }
   }
 
@@ -207,21 +208,22 @@ public class WeirPanel extends AbstractProfilView
 
     protected final Composite m_composite;
 
-    protected final Text m_value;
-
     public ParameterLine( final Composite parent, final IProfilPointMarker devider, final boolean canDelete )
     {
       m_composite = m_toolkit.createComposite( parent );
       m_composite.setLayout( new GridLayout( 3, false ) );
-      final GridData gD =new GridData( SWT.CENTER, SWT.CENTER, true, false, 2, 1 );
-      gD.horizontalSpan=2;
-      m_composite.setLayoutData( gD );
+      m_composite.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false, 2, 1 ) );
 
       m_devider = devider;
 
       m_toolkit.createLabel( m_composite, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.9" ) ); //$NON-NLS-1$
-      m_value = m_toolkit.createText( m_composite, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
+
+      final Text valueText = m_toolkit.createText( m_composite, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
+      valueText.setEnabled( m_devider != null );
+      // FIXME: this is never ever used!! -> editing the weir parameter cannot work!
+
       final Button btnDel = m_toolkit.createButton( m_composite, "", SWT.NONE ); //$NON-NLS-1$
+      btnDel.setEnabled( m_devider != null );
       btnDel.setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.4" ) ); //$NON-NLS-1$
       btnDel.setImage( m_deleteImg );
       btnDel.setEnabled( canDelete );
@@ -230,7 +232,6 @@ public class WeirPanel extends AbstractProfilView
         @Override
         public void widgetSelected( final SelectionEvent e )
         {
-
           final IProfilChange change = new PointMarkerEdit( m_devider, null );
           final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.5" ), getProfil(), change, true ); //$NON-NLS-1$
           new ProfilOperationJob( operation ).schedule();
@@ -238,11 +239,6 @@ public class WeirPanel extends AbstractProfilView
       } );
 
       m_composite.layout();
-    }
-
-    public void dispose( )
-    {
-      m_composite.dispose();
     }
   }
 
@@ -294,14 +290,12 @@ public class WeirPanel extends AbstractProfilView
     m_toolkit = toolkit;
     final IProfil profile = getProfil();
     final Composite panel = toolkit.createComposite( parent );
-    panel.setLayout( new GridLayout(1, false ) );
-    panel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    panel.setLayout( new GridLayout( 1, false ) );
 
     // Wehrart ComboBox
- 
 
     final Label label = toolkit.createLabel( panel, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.31" ), SWT.NONE ); //$NON-NLS-1$
-    label.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false) );//new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
+    label.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
 
     m_wehrart = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER );
     m_wehrart.getCombo().setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false ) );
@@ -312,7 +306,6 @@ public class WeirPanel extends AbstractProfilView
     m_wehrart.setInput( m_labelProvider.getTypes() );
     m_wehrart.addSelectionChangedListener( new ISelectionChangedListener()
     {
-
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -336,15 +329,18 @@ public class WeirPanel extends AbstractProfilView
     } );
 
     final IProfilPointMarker[] devider = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker leftTF = devider.length < 1 ? null : devider[0];
+    final IProfilPointMarker rightTF = devider.length < 2 ? null : devider[1];
 
-    m_wehrStart = new DeviderLine( panel, devider.length < 1 ? null : devider[0],true );
-    new ParameterLine( panel, devider[0], false );
+    m_wehrStart = new DeviderLine( panel, leftTF, true );
+    new ParameterLine( panel, leftTF, false );
+
     // Wehrparameter Group
     m_deviderGroup = toolkit.createComposite( panel );
     m_deviderGroup.setLayout( new GridLayout( 1, false ) );
     m_deviderGroup.setLayoutData( m_deviderGroupData );
 
-    m_wehrEnd = new DeviderLine( panel, devider.length < 2 ? null : devider[1],false );
+    m_wehrEnd = new DeviderLine( panel, rightTF, false );
     updateControls();
     panel.layout( true, true );
     return panel;
@@ -358,6 +354,9 @@ public class WeirPanel extends AbstractProfilView
     final BuildingWehr building = WspmProfileHelper.getBuilding( getProfil(), BuildingWehr.class );
     if( building == null )
       return;
+
+    // FIXME: this is too weak! Maybe a marker has been added/removed -> we need to re-create the DeviderLine's in that
+    // case!
 
     final IComponent objProp = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
     final String id = (String) building.getValue( objProp );
@@ -375,20 +374,18 @@ public class WeirPanel extends AbstractProfilView
         if( ctrl != null && !ctrl.isDisposed() )
           ctrl.dispose();
       }
-      // m_deviderGroupData.exclude = deviders.length == 0;
+
       for( final IProfilPointMarker devider : deviders )
       {
-        new DeviderLine( m_deviderGroup, devider,true );
+        new DeviderLine( m_deviderGroup, devider, true );
         new ParameterLine( m_deviderGroup, devider, true );
       }
     }
-    for( final Control ctrl : m_deviderGroup.getChildren() )
-    {
-      if( ctrl != null && !ctrl.isDisposed() )
-      {
 
-      }
-    }
+    // FIXME: all this layout makes no real sense. However, we would like to reflow the ScrolledForm this panel is
+    // contained in
+    // ergo -> we need to be able to fire an event in order to reflow/relayout the From.
+
     m_deviderGroup.getParent().layout();
   }
 
@@ -397,16 +394,14 @@ public class WeirPanel extends AbstractProfilView
   {
     if( hint.isObjectDataChanged() || hint.isProfilPropertyChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() )
     {
-      final Control control = getControl();
-      if( control != null && !control.isDisposed() )
-        control.getDisplay().asyncExec( new Runnable()
+      ControlUtils.asyncExec( getControl(), new Runnable()
+      {
+        @Override
+        public void run( )
         {
-          @Override
-          public void run( )
-          {
-            updateControls();
-          }
-        } );
+          updateControls();
+        }
+      } );
     }
   }
 }
