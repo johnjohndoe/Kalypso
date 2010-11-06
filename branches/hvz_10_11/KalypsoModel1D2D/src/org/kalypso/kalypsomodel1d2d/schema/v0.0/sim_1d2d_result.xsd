@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResultMeta"
+	xmlns:resultMeta1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResultMeta"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:resultMeta="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase/result/meta"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:documentation><![CDATA[
+Provide schema for the result model metadata of 1d2d simulations.
+@author Gernot Belger
+@author Thomas Jung]]>
+		</xs:documentation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase/result/meta" />
+
+	<xs:element name="ScenarioResultMeta"
+		type="resultMeta:ResultMetaType" />
+
+	<xs:element name="CalculationUnitResultMeta"
+		type="resultMeta1d2d:CalculationUnitResultMetaType"
+		substitutionGroup="resultMeta:ResultMeta" />
+
+	<xs:complexType name="CalculationUnitResultMetaType">
+		<xs:complexContent>
+			<xs:extension base="resultMeta:ResultMetaType">
+				<xs:sequence>
+					<xs:element name="simulationStartTime"
+						type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation><![CDATA[Time simulation took place (start time).]]></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="simulationEndTime"
+						type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation><![CDATA[Time simulation took place (end time).]]></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="calcUnitID" type="xs:string">
+						<xs:annotation>
+							<xs:documentation><![CDATA[id of the corresponding calculation unit.]]></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="StepResultMeta"
+		type="resultMeta1d2d:StepResultMetaType"
+		substitutionGroup="resultMeta:ResultMeta" />
+
+	<xs:complexType name="StepResultMetaType">
+		<xs:complexContent>
+			<xs:extension base="resultMeta:ResultMetaType">
+				<xs:sequence>
+					<xs:element name="stepTime" type="xs:dateTime"
+						nillable="true">
+						<xs:annotation>
+							<xs:documentation><![CDATA[Time of simulated timestep, may be null for 'steady' or 'max' steps.]]></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="stepNumber" type="xs:int">
+						<xs:annotation>
+							<xs:documentation><![CDATA[Number of simulated timestep, may be null for 'steady' or 'max' steps.]]></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="isRestart" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation><![CDATA[true, if this step was used to restart the simulation.]]></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="type">
+						<xs:annotation>
+							<xs:documentation><![CDATA[Type of this step.]]></xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="steady"></xs:enumeration>
+								<xs:enumeration value="qSteady"></xs:enumeration>
+								<xs:enumeration value="unsteady"></xs:enumeration>
+								<xs:enumeration value="maximum"></xs:enumeration>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="DocumentResultMeta"
+		type="resultMeta1d2d:DocumentResultMetaType"
+		substitutionGroup="resultMeta:ResultMeta" />
+
+	<xs:complexType name="DocumentResultMetaType">
+		<xs:complexContent>
+			<xs:extension base="resultMeta:ResultMetaType">
+				<xs:sequence>
+					<xs:element name="type">
+						<xs:annotation>
+							<xs:documentation><![CDATA[Type of this document.]]></xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="nodes"></xs:enumeration>
+								<xs:enumeration value="tinTerrain"></xs:enumeration>
+								<xs:enumeration value="tinWsp"></xs:enumeration>
+								<xs:enumeration value="tinVelo"></xs:enumeration>
+								<xs:enumeration value="tinDepth"></xs:enumeration>
+								<xs:enumeration
+									value="tinShearStress">
+								</xs:enumeration>
+								<xs:enumeration value="tinDifference"></xs:enumeration>
+								<xs:enumeration value="hydrograph"></xs:enumeration>
+								<xs:enumeration value="lengthSection"></xs:enumeration>
+								<xs:enumeration value="log"></xs:enumeration>
+								<xs:enumeration value="coreDataZip"></xs:enumeration>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="minValue" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								kleinster Wert
+							</xs:documentation>
+							<xs:documentation >
+								minimum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="maxValue" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								größter Wert
+							</xs:documentation>
+							<xs:documentation >
+								maximum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="minValueVelo" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								kleinster Wert
+							</xs:documentation>
+							<xs:documentation >
+								minimum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="maxValueVelo" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								größter Wert
+							</xs:documentation>
+							<xs:documentation >
+								maximum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="minValueDepth" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								kleinster Wert
+							</xs:documentation>
+							<xs:documentation >
+								minimum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="maxValueDepth" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								größter Wert
+							</xs:documentation>
+							<xs:documentation >
+								maximum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="minValueWaterlevel" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								kleinster Wert
+							</xs:documentation>
+							<xs:documentation >
+								minimum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="maxValueWaterlevel" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								größter Wert
+							</xs:documentation>
+							<xs:documentation >
+								maximum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="minValueWaveHsig" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								kleinster Wert
+							</xs:documentation>
+							<xs:documentation >
+								minimum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="maxValueWaveHsig" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								größter Wert
+							</xs:documentation>
+							<xs:documentation >
+								maximum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="minValueWavePeriod" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								kleinster Wert
+							</xs:documentation>
+							<xs:documentation >
+								minimum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="maxValueWavePeriod" type="xs:decimal"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation >
+								größter Wert
+							</xs:documentation>
+							<xs:documentation >
+								maximum value
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>

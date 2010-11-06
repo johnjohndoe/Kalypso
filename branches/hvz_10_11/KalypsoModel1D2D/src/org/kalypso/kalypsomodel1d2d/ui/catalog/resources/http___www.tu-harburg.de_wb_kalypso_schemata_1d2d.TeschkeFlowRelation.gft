@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="wb1d2d:TeschkeFlowRelation" style="SWT.NONE"
+	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:gft="featureview.template.kalypso.org"
+	xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml">
+	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
+		grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="4" />
+	<gft:label property="gml:name"  visible="true"  style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:name" style="SWT.BORDER">
+		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:validatorlabel property="gml:name" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+	<gft:label property="gml:description"  visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2" horizontalAlignment="GridData.FILL"
+			heightHint="30" grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:validatorlabel property="gml:description" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+	<gft:label property="wb1d2d:station" visible="true"
+		style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="wb1d2d:station" style="SWT.BORDER">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2" horizontalAlignment="GridData.FILL"
+			grabExcessHorizontalSpace="true" />
+		<gft:format>%.4f</gft:format>
+	</gft:text>
+	<gft:validatorlabel property="wb1d2d:station" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+
+	<gft:label property="wb1d2d:profileMember" visible="true"  style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:extensioncontrol style="SWT.NONE" property="wb1d2d:profileMember"
+		extension-id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControlFactory">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2" horizontalAlignment="GridData.FILL"
+			grabExcessHorizontalSpace="true" />
+	</gft:extensioncontrol>
+	<gft:validatorlabel property="wb1d2d:profileMember" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+
+	<gft:label property="wb1d2d:slope" visible="true"  style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="wb1d2d:slope" style="SWT.BORDER">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2" horizontalAlignment="GridData.FILL"
+			grabExcessHorizontalSpace="true" />
+		<gft:format>%.4f</gft:format>
+	</gft:text>
+	<gft:validatorlabel property="wb1d2d:slope" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+
+	<gft:tabFolder style="SWT.NONE">
+		<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
+			verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+		<gft:tabItem>
+			<gft:tabLabel>Flow Off</gft:tabLabel><!-- Abfluss -->
+			<gft:extensioncontrol property="gml:name"
+				extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+				<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
+					verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+				<gft:param name="configuration"
+					value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:default" />
+				<gft:param name="chart" value="runoffChart" />
+				<gft:param name="featureKeyName" value="theResultFeatureKey" />
+				<gft:param name="commands"
+					value="org.kalypso.chart.ui.commands.zoomIn;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+				<gft:param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+			</gft:extensioncontrol>
+		</gft:tabItem>
+		<gft:tabItem>
+			<gft:tabLabel>Area</gft:tabLabel><!-- Fläche -->
+			<gft:extensioncontrol property="gml:name"
+				extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+				<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
+					verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+				<gft:param name="configuration"
+					value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:default" />
+				<gft:param name="chart" value="areaChart" />
+				<gft:param name="featureKeyName" value="theResultFeatureKey" />
+				<gft:param name="commands"
+					value="org.kalypso.chart.ui.commands.zoomIn;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+				<gft:param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+			</gft:extensioncontrol>
+		</gft:tabItem>
+		<gft:tabItem>
+			<gft:tabLabel>Alpha</gft:tabLabel>
+			<gft:extensioncontrol property="gml:name"
+				extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+				<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
+					verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+				<gft:param name="configuration"
+					value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:default" />
+				<gft:param name="chart" value="alphaChart" />
+				<gft:param name="featureKeyName" value="theResultFeatureKey" />
+				<gft:param name="commands"
+					value="org.kalypso.chart.ui.commands.zoomIn;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize" />
+				<gft:param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH" />
+			</gft:extensioncontrol>
+		</gft:tabItem>
+		<!-- 
+			<gft:tabItem>
+			<gft:tabLabel>Tabelle</gft:tabLabel>
+			<gft:tupleResult property="wb1d2d:pointsMember" tooltip="Zeitreihe" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL"
+			xmlns:gml="http://www.opengis.net/gml">
+			<gft:recordsFixed>true</gft:recordsFixed>
+			<gft:toolbar/>
+			</gft:tupleResult>
+			</gft:tabItem>
+		-->
+	</gft:tabFolder>
+
+
+</gft:featureview>
+
