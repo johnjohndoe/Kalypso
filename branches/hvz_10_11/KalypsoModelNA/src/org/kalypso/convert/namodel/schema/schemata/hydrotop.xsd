@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
+<schema xmlns:hyd="http://www.tuhh.de/hydrotop" targetNamespace="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
+  xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:naModel="http://www.tuhh.de/kalypsoNA" elementFormDefault="qualified" version="0.9">
+
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="http://www.tuhh.de/kalypsoNA" schemaLocation="namodell.xsd" />
+  <import namespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" schemaLocation="suds.xsd"/>
+
+  <element name="NAHydrotop" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="hydrotopMember" type="hyd:HydrotopAssociationType" minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <complexType name="HydrotopAssociationType">
+    <sequence>
+      <element ref="hyd:Hydrotop" />
+    </sequence>
+  </complexType>
+
+  <element name="Hydrotop" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="position" type="gml:MultiPolygonPropertyType" />
+            <!-- DEPRECATED: not used any more -->
+            <element name="area" type="double" />
+            <element name="landuse" type="string" />
+            <!--TODO: Link zu Parameter.xsd Bodentyp -> text6 -->
+            <element name="soiltype" type="string" />
+            <element ref="hyd:corrSealing" />
+            <!-- DEPRECATED: not used any more -->
+            <element ref="hyd:drainageType" minOccurs="0" />
+            <element ref="hyd:m_perkm" />
+            <element ref="hyd:m_f1gws" />
+            <!-- DEPRECATED: not used any more -->
+            <element name="hydType" type="hyd:hydTypeEnumerationType" minOccurs="0" />
+            <element ref="suds:sudLinkMember" minOccurs="0" maxOccurs="unbounded" />
+            <!-- minOccurs="0" for backward compatibility -->
+            <element ref="naModel:catchmentLinkMember" minOccurs="0" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="corrSealing" default="1.0">
+    <simpleType>
+      <restriction base="double">
+        <minInclusive value="0.0" />
+        <maxInclusive value="100.0" />
+      </restriction>
+    </simpleType>
+  </element>
+  
+  <element name="drainageType" type="string" />
+
+  <element name="m_perkm" type="double" />
+
+  <element name="m_f1gws" default="1.0">
+    <simpleType>
+      <restriction base="double">
+        <minInclusive value="0.0" />
+        <maxInclusive value="1.0" />
+      </restriction>
+    </simpleType>
+  </element>
+
+  <!-- Deprecated: probably this is not used any more. -->
+  <simpleType name="hydTypeEnumerationType">
+    <restriction base="string">
+      <enumeration value="Bodenspeicher" />
+      <enumeration value="MuldenRigole" />
+      <enumeration value="Dachbegruenung" />
+    </restriction>
+  </simpleType>
+
+</schema>
