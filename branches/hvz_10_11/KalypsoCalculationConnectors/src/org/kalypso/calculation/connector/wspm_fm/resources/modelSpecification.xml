@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" typeID="KalypsoModelConnector_WSPM_FM">
+	<input id="WSPM_Model" description="WSPM model absolute path"/>
+	<input id="WSPM_RunoffEventID" type="xs:string" description="GML ID of RunoffEvent used" />
+	<input id="FM_Model" description="FM model relative path"/>
+	<input id="WSPM_TinFile" description="WSPM tin file, given by platform resource path"/>
+	<input id="OPT_DeleteExistingRunoffEvents" type="xs:string" optional="true" description="Instruction either to delete existing events from flood model or to keep them; if ommited, events will not be deleted, i.e. default is 'false'" />
+	<input id="FM_EventsFolder" description="FM model events folder"/>
+	<output id="FM_Model" description="FM model relative path"/>
+<!-- <output id="FM_EventsFolder" description="FM model events folder"/>  -->
+</modelspec>
