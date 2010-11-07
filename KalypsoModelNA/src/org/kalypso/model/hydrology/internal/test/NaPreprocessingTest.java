@@ -171,16 +171,23 @@ public class NaPreprocessingTest
     asciiExpectedDir.mkdir();
     ZipUtilities.unzip( getClass().getResource( baseResourceLocation + "/expectedAscii.zip" ), asciiExpectedDir );
 
+    checkkDifferences( asciiExpectedDir, asciiDir );
+
+  }
+
+  // FIXME: move into helper
+  static void checkkDifferences( final File expectedDir, final File actualDir )
+  {
     /* compare with expected results */
-    final FileStructureComparator actualComparator = new FileStructureComparator( asciiDir );
-    final FileStructureComparator expectedComparator = new FileStructureComparator( asciiExpectedDir );
+    final FileStructureComparator actualComparator = new FileStructureComparator( actualDir );
+    final FileStructureComparator expectedComparator = new FileStructureComparator( expectedDir );
 
     final Differencer differencer = new Differencer();
     final Object differences = differencer.findDifferences( false, new NullProgressMonitor(), null, null, expectedComparator, actualComparator );
     dumpDifferences( differences );
   }
 
-  private static void dumpDifferences( final Object differences )
+  static void dumpDifferences( final Object differences )
   {
     final FileContentAssertDumper elementDumper = new FileContentAssertDumper();
     final DifferenceDumper differenceDumper = new DifferenceDumper( differences, elementDumper );

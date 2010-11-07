@@ -82,15 +82,15 @@ public class OptimizeTest
     dataDir.mkdirs();
     final File simulationDir = new File( tmpDir, "simulation" );
     simulationDir.mkdirs();
+    final File expectedResultsDir = new File( dataDir, "Ergebnisse/Aktuell_Soll" );
 
     final ISimulationDataProvider dataProvider = prepareData( dataDir );
     final DefaultSimulationResultEater results = doOptimizeRun( simulationDir, dataProvider );
-    checkResults( results );
+    checkResults( results, expectedResultsDir );
   }
 
   private ISimulationDataProvider prepareData( final File dataDir ) throws SimulationException, IOException
   {
-    // TODO: - a ready to use calculation case
     final URL dataLocation = getClass().getResource( "resources/weisseElster_optimize/gmlInput.zip" );
     ZipUtilities.unzip( dataLocation, dataDir );
 
@@ -105,10 +105,12 @@ public class OptimizeTest
   {
     final Collection<SimulationDataPath> pathes = new ArrayList<SimulationDataPath>();
 
+    final String controlFile = ".nacontrol_17.gml"; // Goessnitz
+
     // Hm, copied from the build.xml.... must be updated if something changes there....
     pathes.add( new SimulationDataPath( "MetaSteuerdaten", ".calculation" ) );
     pathes.add( new SimulationDataPath( "Modell", "modell.gml" ) );
-    pathes.add( new SimulationDataPath( "Control", "${controlFile}" ) );
+    pathes.add( new SimulationDataPath( "Control", controlFile ) );
     pathes.add( new SimulationDataPath( "Hydrotop", "hydrotop.gml" ) );
     pathes.add( new SimulationDataPath( "Parameter", "parameter.gml" ) );
     pathes.add( new SimulationDataPath( "SceConf", ".sce.xml" ) );
@@ -150,18 +152,18 @@ public class OptimizeTest
     }
   }
 
-  private void checkResults( final DefaultSimulationResultEater results )
+  private void checkResults( final DefaultSimulationResultEater results, final File expectedResultsDir )
   {
-    // compare results
-    // - optimization parameters as expected?
-    // - calculation results still the same?
+    final File resultsDir = (File) results.getResult( "OUT_ZML" );
+    final File optimizeFile = (File) results.getResult( "OUT_OPTIMIZEFILE" );
 
-    // <!-- Output -->
-    // <output id="OUT_ZML", "Ergebnisse" relativeToCalcCase="true" />
-    // <output id="OUT_OPTIMIZEFILE", "${controlFile}" relativeToCalcCase="true" />
-    // <!-- <clearAfterCalc path="Ergebnisse/*.log" relativeToCalcCase="true"/> -->
+    final File actualResultsDir = new File( resultsDir, "Aktuell" );
 
-    // TODO Auto-generated method stub
+    /* Remove files that connot be compared (change each time) */
+    new File( actualResultsDir, "Log/calculation.log" ).delete();
+    new File( actualResultsDir, "Log/output.zip" ).delete();
+
+    NaPreprocessingTest.checkkDifferences( expectedResultsDir, actualResultsDir );
   }
 
   private Logger createLogger( final File logFile ) throws SecurityException, IOException
