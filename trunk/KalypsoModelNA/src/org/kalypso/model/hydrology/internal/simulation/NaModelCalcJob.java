@@ -77,6 +77,7 @@ public class NaModelCalcJob implements ISimulation
   {
     try
     {
+      // FIXME: replace with other loggin framework, in preference eclipse's
       final Logger logger = Logger.getAnonymousLogger();
 
       final ISimulation calcJob = createCalcJob( dataProvider, logger, tmpdir, monitor );
@@ -106,6 +107,7 @@ public class NaModelCalcJob implements ISimulation
     // FIXME: do we really need to load this workspace twice (also in inner calc job)
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlLocation, null );
     final NAModellControl naControl = (NAModellControl) controlWorkspace.getRootFeature();
+    // FIXME: dispose controlWorkspace
     if( naControl.doOptimize() )
     {
       final IOptimizingJob optimizeJob = new NAOptimizingJob( tmpdir, dataProvider, new OptimizeMonitor( monitor ) );
