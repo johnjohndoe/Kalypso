@@ -146,7 +146,11 @@ public class HRBFileWriter extends AbstractCoreFileWriter
         else
         {
           final WVQInfo wvqInfo = getWVQInfo( wvqObservation );
-          writer.format( Locale.ENGLISH, "%s %10.6f %9.6f %9.6f %d\n", channel.getName(), 0.0, wvqInfo.getMaxVolume(), wvqInfo.getMinVolume(), wvqInfo.getNumberOfEntries() ); //$NON-NLS-1$
+          // to discuss: shall we use the user-defined max and min, or those calculated from wvqInfo?
+          final double initialCapacity = channel.getInitialCapacity() / 100000.0;
+          final double volumeMax = channel.getVolumeMax() / 100000.0; // wvqInfo.getMaxVolume()
+          final double volumeMin = channel.getVolumeMin() / 100000.0; // wvqInfo.getMinVolume()
+          writer.format( Locale.ENGLISH, "%s %10.6f %9.6f %9.6f %d\n", channel.getName(), initialCapacity, volumeMax, volumeMin, wvqInfo.getNumberOfEntries() ); //$NON-NLS-1$
           writer.write( wvqInfo.getFormattedObservation() );
         }
       }
