@@ -104,9 +104,16 @@ public class BridgePanel extends AbstractProfilView
       final Color badColor = display.getSystemColor( SWT.COLOR_RED );
       final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
+      final String labelText = ComponentUtilities.getComponentLabel( m_property );
+      final IPhenomenon phenomenon = m_property.getPhenomenon();
+      final String description = phenomenon.getDescription();
+
       m_label = toolkit.createLabel( parent, "" ); //$NON-NLS-1$
+      m_label.setText( labelText );
+      m_label.setToolTipText( description );
 
       m_text = toolkit.createText( parent, null, SWT.FILL | SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+      m_text.setToolTipText( description );
       m_text.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
       m_text.addModifyListener( doubleModifyListener );
       m_text.addFocusListener( new FocusAdapter()
@@ -149,14 +156,6 @@ public class BridgePanel extends AbstractProfilView
       if( m_text == null || m_text.isDisposed() || m_label == null || m_label.isDisposed() )
         return;
 
-      final String labelText = ComponentUtilities.getComponentLabel( m_property );
-
-      final IPhenomenon phenomenon = m_property.getPhenomenon();
-      final String description = phenomenon.getDescription();
-
-      m_label.setText( labelText );
-      m_label.setToolTipText( description );
-
       final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
       if( building == null )
         return;
@@ -164,7 +163,6 @@ public class BridgePanel extends AbstractProfilView
       final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
       final String textText = String.format( "%.3f", val ); //$NON-NLS-1$
       m_text.setText( textText );
-      m_text.setToolTipText( description );
       if( m_text.isFocusControl() )
         m_text.selectAll();
     }
@@ -195,9 +193,7 @@ public class BridgePanel extends AbstractProfilView
   protected void createPropertyPanel( )
   {
     for( final PropertyLine line : m_lines )
-    {
       line.dispose();
-    }
 
     m_lines = new ArrayList<PropertyLine>( 8 );
 
