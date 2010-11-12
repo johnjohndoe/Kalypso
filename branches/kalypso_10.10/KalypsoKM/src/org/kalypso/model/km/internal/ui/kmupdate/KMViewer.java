@@ -139,19 +139,19 @@ public class KMViewer
 
     final TableViewerColumn labelColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
     labelColumn.setLabelProvider( new ProfileNameLabelProvider() );
-    labelColumn.getColumn().setText( "File" );
+    labelColumn.getColumn().setText( Messages.getString("KMViewer_0") ); //$NON-NLS-1$
     labelColumn.getColumn().setWidth( 100 );
     ColumnViewerSorter.registerSorter( labelColumn, new ProfileNameSorter() );
 
     final TableViewerColumn stationColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
     stationColumn.setLabelProvider( new ProfileStationLabelProvider() );
-    stationColumn.getColumn().setText( "Station" );
+    stationColumn.getColumn().setText( Messages.getString("KMViewer_1") ); //$NON-NLS-1$
     stationColumn.getColumn().setWidth( 100 );
     ColumnViewerSorter.registerSorter( stationColumn, new ProfileStationSorter() );
 
     final TableViewerColumn validColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
     validColumn.setLabelProvider( new ProfileValidLabelProvider( this ) );
-    validColumn.getColumn().setText( "Message" );
+    validColumn.getColumn().setText( Messages.getString("KMViewer_2") ); //$NON-NLS-1$
     validColumn.getColumn().setWidth( 200 );
 
     m_textKmStart.addFocusListener( new FocusAdapter()
@@ -301,14 +301,14 @@ public class KMViewer
     if( input == null )
     {
       // TODO: title + label
-      m_textLabel.setText( "<Kein Strang selektiert>" );
+      m_textLabel.setText( Messages.getString("KMViewer_3") ); //$NON-NLS-1$
 
       m_dirField.setSelection( StructuredSelection.EMPTY );
 
       m_dirField.setEnabled( false );
-      m_textKmStart.setText( "" );
+      m_textKmStart.setText( "" ); //$NON-NLS-1$
       m_textKmStart.setEnabled( false );
-      m_textKmEnd.setText( "" );
+      m_textKmEnd.setText( "" ); //$NON-NLS-1$
       m_textKmEnd.setEnabled( false );
       m_profileListViewer.getControl().setEnabled( false );
     }
@@ -321,12 +321,12 @@ public class KMViewer
       m_dirField.setSelection( new StructuredSelection( path ) );
 
       if( kmStart != null )
-        m_textKmStart.setText( String.format( "%.4f", kmStart ) );
+        m_textKmStart.setText( String.format( "%.4f", kmStart ) ); //$NON-NLS-1$
       else
         m_textKmStart.setText( "" ); //$NON-NLS-1$
 
       if( kmEnd != null )
-        m_textKmEnd.setText( String.format( "%.4f", kmEnd ) );
+        m_textKmEnd.setText( String.format( "%.4f", kmEnd ) ); //$NON-NLS-1$
       else
         m_textKmEnd.setText( "" ); //$NON-NLS-1$
 

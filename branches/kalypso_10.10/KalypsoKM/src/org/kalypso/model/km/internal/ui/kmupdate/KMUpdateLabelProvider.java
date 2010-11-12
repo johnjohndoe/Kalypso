@@ -62,6 +62,6 @@ public class KMUpdateLabelProvider extends LabelProvider
     final KMChannel channel = (KMChannel) element;
     final String label = FeatureHelper.getAnnotationValue( channel, IAnnotation.ANNO_LABEL );
 
-    return String.format( "%s (ID=#%s)", label, channel.getId() );
+    return String.format( "%s (ID=#%s)", label, channel.getId() ); //$NON-NLS-1$
   }
 }
