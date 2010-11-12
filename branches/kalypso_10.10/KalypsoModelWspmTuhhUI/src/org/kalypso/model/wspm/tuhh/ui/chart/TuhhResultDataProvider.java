@@ -2,8 +2,6 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -11,7 +9,6 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.ui.view.chart.layer.IWspLayerData;
@@ -56,34 +53,19 @@ public final class TuhhResultDataProvider implements IWspLayerData
     return m_results;
   }
 
-  private IWspmResult[] initResults( final IWspmResultNode node )
+  private void initResults( final IWspmResultNode node )
   {
     if( node == null )
-      return new IWspmResult[] {};
-    final Collection<IWspmResult> results = new ArrayList<IWspmResult>();
+      return;
 
-    if( node instanceof IWspmResult )
-    {
-      final IWspmResult resultNode = (IWspmResult) node;
-      initActive( resultNode );
-      results.add( resultNode );
-    }
+    initActive( node );
 
     final IWspmResultNode[] childNodes = node.getChildResults();
     for( final IWspmResultNode child : childNodes )
-    {
-      final IWspmResult[] childResults = initResults( child );
-      for( final IWspmResult resultNode : childResults )
-      {
-        results.add( resultNode );
-        initActive( resultNode );
-      }
-    }
-
-    return results.toArray( new IWspmResult[results.size()] );
+      initResults( child );
   }
 
-  private void initActive( final IWspmResult resultNode )
+  private void initActive( final IWspmResultNode resultNode )
   {
     final String id = resultNode.getName();
     final String settingsName = getSettingsName();
