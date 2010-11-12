@@ -57,7 +57,7 @@ public class ProfileStationLabelProvider extends CellLabelProvider
   public void update( final ViewerCell cell )
   {
     final Double station = ((Profile) cell.getElement()).getPositionKM();
-    cell.setText( String.format( "%.4f", station / 1000.0 ) );
+    cell.setText( String.format( "%.4f", station / 1000.0 ) ); //$NON-NLS-1$
   }
 
   @Override

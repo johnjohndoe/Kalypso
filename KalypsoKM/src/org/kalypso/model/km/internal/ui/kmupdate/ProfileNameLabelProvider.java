@@ -60,7 +60,7 @@ public class ProfileNameLabelProvider extends CellLabelProvider
   {
     final String file = ((Profile) cell.getElement()).getFile();
     if( StringUtils.isBlank( file ) )
-      cell.setText( "-" );
+      cell.setText( "-" ); //$NON-NLS-1$
     else
       cell.setText( new Path( file ).lastSegment() );
   }
