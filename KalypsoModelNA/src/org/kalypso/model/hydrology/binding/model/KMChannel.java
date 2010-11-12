@@ -102,4 +102,14 @@ public class KMChannel extends Channel
   {
     return getProperty( PROP_KMEND, Double.class );
   }
+
+  public void setFaktorRkf( double  faktorRkf )
+  {
+    setProperty( PROP_FAKTOR_RKF, faktorRkf );
+  }
+
+  public void setFaktorRnf( double  faktorRnf )
+  {
+    setProperty( PROP_FAKTOR_RNF, faktorRnf );    
+  }
 }

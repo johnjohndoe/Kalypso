@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing;
 
+import java.io.File;
+
 import org.kalypso.model.hydrology.binding.model.Branching;
 import org.kalypso.model.hydrology.binding.model.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -50,6 +52,7 @@ import org.kalypso.model.hydrology.binding.model.KontZufluss;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.VirtualChannel;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -297,6 +300,8 @@ public class NaModelTweaker
       final double _rkf = rkfFactor * kmParameter.getRkf();
       kmParameter.setRkf( _rkf );
     }
+    kmChanneFE.setFaktorRkf(1);
+    kmChanneFE.setFaktorRnf(1);
   }
 
   /**
