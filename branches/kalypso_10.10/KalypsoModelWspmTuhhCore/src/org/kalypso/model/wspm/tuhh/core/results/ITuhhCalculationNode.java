@@ -40,45 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.tuhh.core.gml.CalculationReibConstWspmTuhhSteadyState;
-import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public final class WspmResultFactory
+public interface ITuhhCalculationNode extends IWspmResultNode
 {
-  private WspmResultFactory( )
-  {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
-  }
-
-  public static final IWspmResultNode createResultNode( final IWspmResultNode parent, final Feature feature )
-  {
-    if( feature instanceof TuhhReach )
-      return new WspmResultReachNode( parent, (TuhhReach) feature );
-
-    if( feature instanceof WspmWaterBody )
-      return new WspmResultWaterNode( parent, (WspmWaterBody) feature );
-
-    if( feature instanceof TuhhCalculation )
-      return createCalculationNode( parent, (TuhhCalculation) feature );
-
-    return null;
-  }
-
-  public static final IWspmResultNode createCalculationNode( final IWspmResultNode parent, final TuhhCalculation calculation )
-  {
-    if( calculation instanceof CalculationWspmTuhhSteadyState )
-      return new WspmResultCalculationNode( parent, (CalculationWspmTuhhSteadyState) calculation );
-    if( calculation instanceof CalculationReibConstWspmTuhhSteadyState )
-      return new WspmResultPolynomeCalculationNode( parent, (CalculationReibConstWspmTuhhSteadyState) calculation );
-
-    return null;
-  }
-
+  TuhhCalculation getCalculation( );
 }
