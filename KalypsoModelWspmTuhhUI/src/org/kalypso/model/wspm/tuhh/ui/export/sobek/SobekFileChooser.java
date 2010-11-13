@@ -93,7 +93,7 @@ public class SobekFileChooser
       }
     } );
 
-    m_fileChooserGroup.setShowLabel( false );
+    m_fileChooserGroup.setLabel( null );
 
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( 3, false ) );

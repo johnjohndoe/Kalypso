@@ -179,7 +179,7 @@ public class WProfImportFilePage extends WizardPage
   {
     final FileChooserDelegateDirectory directoryDelegate = new FileChooserDelegateDirectory();
     final FileChooserGroup contextChooser = new FileChooserGroup( directoryDelegate );
-    contextChooser.setShowLabel( false );
+    contextChooser.setLabel( null );
 
     final IDialogSettings dialogSettings = getDialogSettings();
     final IDialogSettings shapeSection = PluginUtilities.getSection( dialogSettings, settings );
@@ -247,7 +247,7 @@ public class WProfImportFilePage extends WizardPage
     openDelegate.addFilter( Messages.getString("WProfImportFilePage_6"), "*.shp" );  //$NON-NLS-1$//$NON-NLS-2$
 
     m_shapeChooser = new FileChooserGroup( openDelegate );
-    m_shapeChooser.setShowLabel( false );
+    m_shapeChooser.setLabel( null );
 
     final IDialogSettings dialogSettings = getDialogSettings();
     final IDialogSettings shapeSection = PluginUtilities.getSection( dialogSettings, "shapeFile" ); //$NON-NLS-1$

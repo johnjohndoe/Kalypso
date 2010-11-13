@@ -122,7 +122,7 @@ public class ExportFileChooserPage extends ValidatingWizardPage
       }
     } );
 
-    m_fileChooserGroup.setShowLabel( false );
+    m_fileChooserGroup.setLabel( null );
     final Group group = m_fileChooserGroup.createGroup( comp, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     group.setText( m_fileGroupText );
