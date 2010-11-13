@@ -40,28 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.resources.FileFilterVisitor;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypso.observation.IObservation;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
+ * Represents one result folder like '_aktuell'
+ * 
  * @author Gernot Belger
  */
-public class WspmResultContainer extends AbstractWspmResultNode implements IWspmResult
+public class WspmResultFolderNode extends AbstractWspmResultNode implements ITuhhCalculationNode
 {
-  private WspmResultLengthSection m_lengthSection;
+  private final IFolder m_folder;
 
-  private final IFile m_lsFile;
-
-  private final String m_label;
-
-  public WspmResultContainer( final ITuhhCalculationNode parent, final IFile lsFile, final String label )
+  public WspmResultFolderNode( final ITuhhCalculationNode parentNode, final IFolder folder )
   {
-    super( parent );
+    super( parentNode );
 
-    m_lsFile = lsFile;
-    m_label = label;
+    m_folder = folder;
   }
 
   /**
@@ -70,7 +76,33 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   @Override
   public IWspmResultNode[] getChildResults( )
   {
-    return new IWspmResultNode[0];
+    final Collection<IWspmResultNode> result = new ArrayList<IWspmResultNode>();
+
+    try
+    {
+      final Pattern lsPattern = Pattern.compile( IWspmTuhhConstants.FILE_PATTERN_POLYNOME_LENGTH_SECTIONS_GML );
+      final WildcardFileFilter fileFilter = new WildcardFileFilter( IWspmTuhhConstants.FILE_RESULT_POLYNOME_LENGTH_SECTIONS_GML );
+      final FileFilterVisitor visitor = new FileFilterVisitor( fileFilter );
+      m_folder.accept( visitor );
+      final IFile[] files = visitor.getFiles();
+      for( final IFile lsFile : files )
+      {
+        final Matcher matcher = lsPattern.matcher( lsFile.getName() );
+        if( matcher.matches() )
+        {
+          final String label = matcher.group( 1 );
+
+          final IWspmResultNode node = new WspmResultContainer( this, lsFile, label );
+          result.add( node );
+        }
+      }
+    }
+    catch( final CoreException e )
+    {
+      KalypsoModelWspmTuhhCorePlugin.getDefault().getLog().log( e.getStatus() );
+    }
+
+    return result.toArray( new IWspmResultNode[result.size()] );
   }
 
   /**
@@ -79,37 +111,13 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   @Override
   public String getLabel( )
   {
-    return m_label;
+    return m_folder.getName();
   }
 
   @Override
   protected String getInternalName( )
   {
-    return m_label;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResult#getLengthSection()
-   */
-  @Override
-  public WspmResultLengthSection getLengthSection( )
-  {
-    checkLengthSection();
-
-    return m_lengthSection;
-  }
-
-  private void checkLengthSection( )
-  {
-    // Maybe we should check, if the file was modified since...
-    if( m_lengthSection == null )
-    {
-      final TuhhCalculation calculation = getCalculation();
-      if( calculation == null )
-        return;
-
-      m_lengthSection = WspmResultLengthSection.create( m_lsFile, new GMLXPath( IObservation.QNAME_OBSERVATION ) );
-    }
+    return m_folder.getName();
   }
 
   /**
@@ -118,19 +126,13 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   @Override
   public Object getObject( )
   {
-    return m_lsFile;
+    return m_folder;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResult#getCalculation()
-   */
   @Override
   public TuhhCalculation getCalculation( )
   {
-    final IWspmResultNode parent = getParent();
-    if( parent instanceof ITuhhCalculationNode )
-      return ((ITuhhCalculationNode) parent).getCalculation();
-
-    return null;
+    return ((ITuhhCalculationNode) getParent()).getCalculation();
   }
+
 }

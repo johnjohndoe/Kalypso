@@ -75,7 +75,11 @@ public class WspmResultProjectNode extends AbstractWspmResultNode
 
     final TuhhCalculation[] calculations = m_project.getCalculations();
     for( final TuhhCalculation calculation : calculations )
-      results.add( new WspmResultCalculationNode( this, calculation ) );
+    {
+      final IWspmResultNode node = WspmResultFactory.createCalculationNode( this, calculation );
+      if( node != null )
+        results.add( node );
+    }
 
     return results.toArray( new IWspmResultNode[results.size()] );
   }

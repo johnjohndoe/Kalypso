@@ -70,7 +70,11 @@ public class WspmResultReachNode extends AbstractWspmResultNode
 
     final TuhhCalculation[] calculations = m_reach.findCalculations();
     for( final TuhhCalculation calculation : calculations )
-      results.add( new WspmResultCalculationNode( this, calculation ) );
+    {
+      final IWspmResultNode node = WspmResultFactory.createCalculationNode( this, calculation );
+      if( node != null )
+        results.add( node );
+    }
 
     return results.toArray( new IWspmResultNode[results.size()] );
   }

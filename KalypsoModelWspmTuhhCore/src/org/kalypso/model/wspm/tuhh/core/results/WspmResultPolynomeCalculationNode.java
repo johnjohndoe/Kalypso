@@ -40,22 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
-import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.kalypso.contribs.eclipse.core.resources.FileFilterVisitor;
+import org.kalypso.contribs.eclipse.core.resources.CollectFolderVisitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
-import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
+import org.kalypso.model.wspm.tuhh.core.gml.CalculationReibConstWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -63,11 +60,11 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Gernot Belger
  */
-public class WspmResultCalculationNode extends AbstractWspmResultNode implements ITuhhCalculationNode
+public class WspmResultPolynomeCalculationNode extends AbstractWspmResultNode implements ITuhhCalculationNode
 {
-  private final CalculationWspmTuhhSteadyState m_calculation;
+  private final CalculationReibConstWspmTuhhSteadyState m_calculation;
 
-  public WspmResultCalculationNode( final IWspmResultNode parent, final CalculationWspmTuhhSteadyState calculation )
+  public WspmResultPolynomeCalculationNode( final IWspmResultNode parent, final CalculationReibConstWspmTuhhSteadyState calculation )
   {
     super( parent );
 
@@ -82,19 +79,18 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
   {
     final Collection<IWspmResultNode> result = new ArrayList<IWspmResultNode>();
 
-    final IFolder resultFolder = findResultFolder( m_calculation );
+    final IFolder resultFolder = findResultFolder();
     if( resultFolder != null )
     {
       try
       {
-        final FileFilter filter = new NameFileFilter( IWspmTuhhConstants.FILE_RESULT_LENGTH_SECTION_GML );
-        final FileFilterVisitor visitor = new FileFilterVisitor( filter );
-        resultFolder.accept( visitor );
-        final IFile[] files = visitor.getFiles();
-        for( final IFile file : files )
+        final CollectFolderVisitor dirVisitor = new CollectFolderVisitor( new IFolder[] { resultFolder.getFolder( ".svn" ) } );
+        resultFolder.accept( dirVisitor, IResource.DEPTH_ONE, false );
+        final IFolder[] folders = dirVisitor.getFolders();
+        for( final IFolder folder : folders )
         {
-          final String label = file.getParent().getParent().getName();
-          result.add( new WspmResultContainer( this, file, label ) );
+          if( !resultFolder.equals( folder ) )
+            result.add( new WspmResultFolderNode( this, folder ) );
         }
       }
       catch( final CoreException e )
@@ -106,9 +102,9 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
     return result.toArray( new IWspmResultNode[result.size()] );
   }
 
-  public static IFolder findResultFolder( final TuhhCalculation calculation )
+  private IFolder findResultFolder( )
   {
-    final GMLWorkspace workspace = calculation.getWorkspace();
+    final GMLWorkspace workspace = m_calculation.getWorkspace();
     if( workspace == null )
       return null;
 
@@ -116,7 +112,7 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
     if( project == null )
       return null;
 
-    final IPath resultPath = calculation.getResultFolder();
+    final IPath resultPath = m_calculation.getResultFolder();
     return project.getFolder( resultPath );
   }
 
@@ -149,7 +145,7 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
   }
 
   @Override
-  public CalculationWspmTuhhSteadyState getCalculation( )
+  public TuhhCalculation getCalculation( )
   {
     return m_calculation;
   }
