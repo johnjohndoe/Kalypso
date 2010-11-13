@@ -40,17 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.hydrotope;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -62,6 +59,7 @@ import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.suds.AbstractSud;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -137,7 +135,8 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
     final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) ); //$NON-NLS-1$
     final IRelationType pt = (IRelationType) schema.getFeatureType( Landuse.QNAME ).getProperty( Landuse.QNAME_PROP_LANDUSE );
 
-    final List<IStatus> log = new ArrayList<IStatus>();
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
     // traverse input workspace and import all single input landuses, if the landuse class exists
     for( int i = 0; i < size; i++ )
     {
@@ -158,7 +157,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
         if( geometry == null )
         {
           final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.3", label ); //$NON-NLS-1$
-          log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+          log.add( IStatus.WARNING, message );
         }
         else
         {
@@ -210,12 +209,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
       ProgressUtilities.worked( progess, 1 );
     }
 
-    if( !log.isEmpty() )
-    {
-      return new MultiStatus( "org.kalypso.NACalcJob", -1, log.toArray( new IStatus[] {} ), Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    return Status.OK_STATUS;
+    return log.asMultiStatusOrOK( Messages.getString( "ImportOperation.0" ), Messages.getString( "ImportOperation.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 }

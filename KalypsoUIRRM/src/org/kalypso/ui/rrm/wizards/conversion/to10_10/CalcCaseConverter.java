@@ -193,12 +193,12 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void copyZufluss( ) throws IOException
   {
-    final File modelSourceDir = new File( m_sourceDir, "Zufluss" );
-    final File modelTargetDir = new File( m_targetCalcCaseDir, "Zufluss" );
+    final File modelSourceDir = new File( m_sourceDir, "Zufluss" ); //$NON-NLS-1$
+    final File modelTargetDir = new File( m_targetCalcCaseDir, "Zufluss" ); //$NON-NLS-1$
     if( modelSourceDir.isDirectory() )
       FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
     else
-      getLog().add( IStatus.INFO, "Rechenvariante enthält kein 'Zufluss' Verzeichnis. Es wird ein leeres Verzeichnis angelegt." );
+      getLog().add( IStatus.INFO, Messages.getString("CalcCaseConverter.6") ); //$NON-NLS-1$
   }
 
   /**
@@ -215,7 +215,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       final File targetHydrotopeFile = new File( m_targetCalcCaseDir, INaCalcCaseConstants.CALC_HYDROTOP );
       FileUtils.copyFile( basicHydrotopeFile, targetHydrotopeFile, false );
 
-      getLog().add( IStatus.WARNING, "Hydrotopdatei fehlt in Rechenvariante. Es wird die Hydrotopdatei des Basismodells kopiert." );
+      getLog().add( IStatus.WARNING, Messages.getString("CalcCaseConverter.7") ); //$NON-NLS-1$
     }
   }
 

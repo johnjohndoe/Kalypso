@@ -40,20 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.hydrotope;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -108,12 +106,13 @@ public class GeologyImportOperation implements ICoreRunnableWithProgress
     final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.0" ), size + 10 ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<Geology> geologies = m_output.getGeologies();
+    // FIXME: we need to ask the user for the import type
     if( m_importType == ImportType.CLEAR_OUTPUT )
       geologies.clear();
 
     ProgressUtilities.worked( progess, 10 );
 
-    final List<IStatus> log = new ArrayList<IStatus>();
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
     // traverse input workspace and import all single input geologies, if the geology class exists
     for( int i = 0; i < size; i++ )
     {
@@ -125,7 +124,7 @@ public class GeologyImportOperation implements ICoreRunnableWithProgress
         if( geometry == null )
         {
           final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.1", label ); //$NON-NLS-1$
-          log.add( StatusUtilities.createStatus( IStatus.ERROR, message, null ) );
+          log.add( IStatus.ERROR, message );
         }
         else
         {
@@ -152,7 +151,7 @@ public class GeologyImportOperation implements ICoreRunnableWithProgress
       ProgressUtilities.worked( progess, 1 );
     }
 
-    return Status.OK_STATUS;
+    return log.asMultiStatusOrOK( Messages.getString( "ImportOperation.0" ), Messages.getString( "ImportOperation.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 }

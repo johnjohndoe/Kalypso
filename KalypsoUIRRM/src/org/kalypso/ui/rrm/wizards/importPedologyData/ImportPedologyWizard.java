@@ -50,25 +50,24 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.convert.namodel.hydrotope.PedologyImportOperation;
 import org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.InputDescriptor;
 import org.kalypso.convert.namodel.hydrotope.PedologyShapeInputDescriptor;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
+import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.ui.rrm.wizards.ImportShapeWizardPage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -76,42 +75,27 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Dejan Antanaskovic
  */
-public class ImportPedologyWizard extends Wizard implements INewWizard
+public class ImportPedologyWizard extends Wizard
 {
-  private IStructuredSelection m_initialSelection;
+  private final static String PROPERTY_SOIL_TYPE = Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.12" ); //$NON-NLS-1$
 
-  protected ImportPedologyWizardPage m_wizardPage;
+  protected ImportShapeWizardPage m_wizardPage;
 
   private final FeatureList m_featureList;
 
   public ImportPedologyWizard( final FeatureList featureList )
   {
     m_featureList = featureList;
-  }
 
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    m_initialSelection = selection;
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.0" ) ); //$NON-NLS-1$
-  }
 
-  @Override
-  public void addPages( )
-  {
-    m_wizardPage = new ImportPedologyWizardPage();
-    m_wizardPage.init( m_initialSelection );
+    final String[] properties = new String[] { PROPERTY_SOIL_TYPE };
+    m_wizardPage = new ImportShapeWizardPage( "shapePage", properties ); //$NON-NLS-1$
+
+    m_wizardPage.setDescription( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizardPage.3" ) ); //$NON-NLS-1$
+
     addPage( m_wizardPage );
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#canFinish()
-   */
-  @Override
-  public boolean canFinish( )
-  {
-    return m_wizardPage.isPageComplete();
   }
 
   /**
@@ -120,10 +104,9 @@ public class ImportPedologyWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
-    final String soilTypeProperty = m_wizardPage.getSoilTypeProperty();
-    final String sourceShapeFilePath = m_wizardPage.getSourceLocation().removeFileExtension().toPortableString();
+    final String soilTypeProperty = m_wizardPage.getProperty( PROPERTY_SOIL_TYPE );
+    final File shapeFile = m_wizardPage.getShapeFile();
 
-    final File shapeFile = new File( sourceShapeFilePath );
     final InputDescriptor inputDescriptor = new PedologyShapeInputDescriptor( shapeFile, soilTypeProperty );
     final Feature parentFeature = m_featureList.getParentFeature();
     final SoilTypeCollection lc = (SoilTypeCollection) parentFeature;
@@ -131,48 +114,64 @@ public class ImportPedologyWizard extends Wizard implements INewWizard
     final GMLWorkspace pedologyWorkspace = lc.getWorkspace();
 
     final IFile pedologyFile = ResourceUtilities.findFileFromURL( pedologyWorkspace.getContext() );
+
+    // FIXME: should be checked beforehand
     final IFile parameterFile = pedologyFile.getParent().getFile( new Path( "parameter.gml" ) ); //$NON-NLS-1$
-    if( parameterFile.exists() )
+    if( !parameterFile.exists() )
     {
-      try
-      {
-        final GMLWorkspace pedologyClassesWorkspace = GmlSerializer.createGMLWorkspace( parameterFile.getContents(), null, null );
-
-        final SoilTypeCollection output = (SoilTypeCollection) pedologyWorkspace.getRootFeature();
-
-        final Map<String, String> pedologyClasses = new HashMap<String, String>();
-        final List< ? > pedologyClassesFeatures = (List< ? >) pedologyClassesWorkspace.getRootFeature().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, "soiltypeMember" ) ); //$NON-NLS-1$
-        for( final Object object : pedologyClassesFeatures )
-        {
-          final Feature f = (Feature) object;
-          final String name = f.getName();
-          final String id = f.getId();
-
-          pedologyClasses.put( name, id );
-        }
-
-        // call importer
-        final PedologyImportOperation op = new PedologyImportOperation( inputDescriptor, output, pedologyClasses, ImportType.CLEAR_OUTPUT );
-        final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
-        ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
-
-        final File outputFile = pedologyFile.getLocation().toFile();
-        GmlSerializer.serializeWorkspace( outputFile, pedologyWorkspace, "UTF-8" ); //$NON-NLS-1$
-        pedologyFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
-      }
-      catch( final Exception e )
-      {
-        MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-        return false;
-      }
-    }
-    else
-    {
-      MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.2" ), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return true;
     }
+
+    try
+    {
+      final SoilTypeCollection output = (SoilTypeCollection) pedologyWorkspace.getRootFeature();
+
+      final Map<String, String> pedologyClasses = hashSoiltypeClasses( parameterFile );
+      if( pedologyClasses.size() == 0 )
+      {
+        MessageDialog.openWarning( getShell(), getWindowTitle(), Messages.getString("ImportPedologyWizard.0") ); //$NON-NLS-1$
+        return false;
+      }
+
+      // call importer
+      final PedologyImportOperation op = new PedologyImportOperation( inputDescriptor, output, pedologyClasses, ImportType.CLEAR_OUTPUT );
+      final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
+      new StatusDialog( getShell(), execute, getWindowTitle() ).open();
+      if( execute.matches( IStatus.ERROR ) )
+        return false;
+
+      final File outputFile = pedologyFile.getLocation().toFile();
+      GmlSerializer.serializeWorkspace( outputFile, pedologyWorkspace, "UTF-8" ); //$NON-NLS-1$
+      pedologyFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
+    }
+    catch( final Exception e )
+    {
+      MessageDialog.openError( getShell(), getWindowTitle(), e.getLocalizedMessage() ); //$NON-NLS-1$
+      return false;
+    }
+
     return true;
 
+  }
+
+  private Map<String, String> hashSoiltypeClasses( final IFile parameterFile ) throws Exception, CoreException
+  {
+    final GMLWorkspace pedologyClassesWorkspace = GmlSerializer.createGMLWorkspace( parameterFile.getContents(), null, null );
+    final Map<String, String> pedologyClasses = new HashMap<String, String>();
+    final List< ? > pedologyClassesFeatures = (List< ? >) pedologyClassesWorkspace.getRootFeature().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, "soiltypeMember" ) ); //$NON-NLS-1$
+    for( final Object object : pedologyClassesFeatures )
+    {
+      final Feature f = (Feature) object;
+      final String name = f.getName();
+      final String id = f.getId();
+
+      pedologyClasses.put( name, id );
+    }
+
+    pedologyClassesWorkspace.dispose();
+
+    return pedologyClasses;
   }
 
 }

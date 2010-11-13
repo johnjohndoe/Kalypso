@@ -87,7 +87,7 @@ public class RrmProjectConverter implements IProjectConverter
   @Override
   public String getLabel( )
   {
-    return String.format( "Konvertierung von '%s'", m_sourceDir.getName() );
+    return String.format( Messages.getString("RrmProjectConverter.0"), m_sourceDir.getName() ); //$NON-NLS-1$
   }
 
   /**
