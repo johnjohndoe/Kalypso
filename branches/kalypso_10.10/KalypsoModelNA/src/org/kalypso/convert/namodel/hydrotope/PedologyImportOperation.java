@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.hydrotope;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -49,8 +47,9 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -61,12 +60,15 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
+ * FIXME: this import is essentially the same for landuse, pedology and geology. also is is almost the same code for
+ * importing catchment etc. during the project creation. We MUST reuse code. Copy/paste like this is the devil...<br/>
  * Imports pedology into a 'pedology.gml' file from another gml-workspace (probably a shape-file).
  * 
  * @author Gernot Belger, Dejan Antanaskovic
@@ -126,7 +128,8 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
     final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "soilType" ) ); //$NON-NLS-1$
     final IRelationType pt = (IRelationType) schema.getFeatureType( SoilType.QNAME ).getProperty( SoilType.QNAME_PROP_SOILTYPE );
 
-    final List<IStatus> log = new ArrayList<IStatus>();
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
+
     // traverse input workspace and import all single input soilTypes, if the soilType class exists
     for( int i = 0; i < size; i++ )
     {
@@ -147,15 +150,13 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
         if( geometry == null )
         {
           final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.3", label ); //$NON-NLS-1$
-          log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+          log.add( IStatus.WARNING, message );
         }
         else
         {
           final IStatus isValidTop = TopologyChecker.checkTopology( geometry, label );
           if( !isValidTop.isOK() )
-          {
             log.add( isValidTop );
-          }
         }
 
         final SoilType soilType = m_output.importSoilType( label, geometry, m_importType, log );
@@ -179,7 +180,7 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
       ProgressUtilities.worked( progess, 1 );
     }
 
-    return Status.OK_STATUS;
+    return log.asMultiStatusOrOK( Messages.getString( "ImportOperation.0" ), Messages.getString( "ImportOperation.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 }

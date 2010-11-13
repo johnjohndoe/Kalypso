@@ -47,21 +47,19 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.convert.namodel.hydrotope.GeologyImportOperation;
 import org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.InputDescriptor;
 import org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.ui.rrm.wizards.ImportShapeWizardPage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -69,42 +67,29 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Dejan Antanaskovic
  */
-public class ImportGeologyWizard extends Wizard implements INewWizard
+public class ImportGeologyWizard extends Wizard
 {
-  private IStructuredSelection m_initialSelection;
+  private final static String PROPERTY_MAX_PERC_RATE = Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.12" ); //$NON-NLS-1$
 
-  protected ImportGeologyWizardPage m_wizardPage;
+  private final static String PROPERTY_GW_FACTOR = Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.14" ); //$NON-NLS-1$
+
+  private final ImportShapeWizardPage m_wizardPage;
 
   private final FeatureList m_featureList;
 
   public ImportGeologyWizard( final FeatureList featureList )
   {
     m_featureList = featureList;
-  }
 
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    m_initialSelection = selection;
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyDataImportGeologyWizard.0" ) ); //$NON-NLS-1$
-  }
 
-  @Override
-  public void addPages( )
-  {
-    m_wizardPage = new ImportGeologyWizardPage();
-    m_wizardPage.init( m_initialSelection );
+    final String[] properties = new String[] { PROPERTY_MAX_PERC_RATE, PROPERTY_GW_FACTOR };
+    m_wizardPage = new ImportShapeWizardPage( "shapePage", properties ); //$NON-NLS-1$
+
+    m_wizardPage.setDescription( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.3" ) ); //$NON-NLS-1$
+
     addPage( m_wizardPage );
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#canFinish()
-   */
-  @Override
-  public boolean canFinish( )
-  {
-    return m_wizardPage.isPageComplete();
   }
 
   /**
@@ -113,11 +98,10 @@ public class ImportGeologyWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
-    final String maxPerculationsRateProperty = m_wizardPage.getMaxPerculationsRateProperty();
-    final String gwFactorProperty = m_wizardPage.getGWFactorProperty();
-    final String sourceShapeFilePath = m_wizardPage.getSourceLocation().removeFileExtension().toPortableString();
+    final String maxPerculationsRateProperty = m_wizardPage.getProperty( PROPERTY_MAX_PERC_RATE );
+    final String gwFactorProperty = m_wizardPage.getProperty( PROPERTY_GW_FACTOR );
 
-    final File shapeFile = new File( sourceShapeFilePath );
+    final File shapeFile = m_wizardPage.getShapeFile();
     final InputDescriptor inputDescriptor = new GeologyShapeInputDescriptor( shapeFile, maxPerculationsRateProperty, gwFactorProperty );
 
     final Feature parentFeature = m_featureList.getParentFeature();
@@ -130,7 +114,9 @@ public class ImportGeologyWizard extends Wizard implements INewWizard
       // call importer
       final GeologyImportOperation op = new GeologyImportOperation( inputDescriptor, output, ImportType.CLEAR_OUTPUT );
       final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
-      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyDataImportGeologyWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
+      new StatusDialog( getShell(), execute, getWindowTitle() ).open();
+      if( execute.matches( IStatus.ERROR ) )
+        return false;
 
       final File outputFile = geologyFile.getLocation().toFile();
       GmlSerializer.serializeWorkspace( outputFile, workspace, "UTF-8" ); //$NON-NLS-1$

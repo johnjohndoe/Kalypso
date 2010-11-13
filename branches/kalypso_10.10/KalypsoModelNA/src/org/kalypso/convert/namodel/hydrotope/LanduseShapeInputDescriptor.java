@@ -41,40 +41,31 @@
 package org.kalypso.convert.namodel.hydrotope;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor;
 import org.kalypso.model.hydrology.binding.suds.AbstractSud;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree_impl.io.shpapi.DBaseException;
-import org.kalypsodeegree_impl.io.shpapi.HasNoDBaseFileException;
-import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 
 public class LanduseShapeInputDescriptor implements InputDescriptor
 {
-  private final Map<String, Integer> m_propHash = new HashMap<String, Integer>();
-
-  private final File m_shapeFile;
-
   private final String m_landuseclassColumn;
 
   private final String m_drainageTypeColumn;
 
   private final String m_corrSealingColumn;
 
-  private ShapeFile m_shape;
+  private final ShapeWithHash m_shapeWithHash;
 
   public LanduseShapeInputDescriptor( final File shapeFile, final String landuseclassColumn, final String corrSealingColumn, final String drainageTypeColumn )
   {
-    m_shapeFile = shapeFile;
+    // TODO: important: let user enter crs of shape and transform read geometry to kalypso crs.
+    final String crs = null;
+
+    m_shapeWithHash = new ShapeWithHash( shapeFile, crs );
     m_landuseclassColumn = landuseclassColumn;
     m_corrSealingColumn = corrSealingColumn;
     m_drainageTypeColumn = drainageTypeColumn;
@@ -95,7 +86,7 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
   @Override
   public String getDescription( final int index )
   {
-    return Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
+    return m_shapeWithHash.getDescription();
   }
 
   /**
@@ -104,25 +95,7 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
   @Override
   public GM_MultiSurface getGeometry( final int index ) throws CoreException
   {
-    try
-    {
-      // TODO: important: let user enter crs of shape and transform read geometry to kalypso crs.
-      final String crs = null;
-      final Object property = getShapeFile().getGM_ObjectByRecNo( index + 1, crs );
-
-      /* allow for null geometries */
-      if( property == null )
-        return null;
-
-      if( property instanceof GM_MultiSurface )
-        return (GM_MultiSurface) property;
-
-      throw new NotImplementedException( Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor.2" ) ); //$NON-NLS-1$
-    }
-    catch( final IOException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-    }
+    return m_shapeWithHash.getGeometry( index );
   }
 
   /**
@@ -163,64 +136,14 @@ public class LanduseShapeInputDescriptor implements InputDescriptor
    * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getSize()
    */
   @Override
-  public int size( )
+  public int size( ) throws CoreException
   {
-    return getShapeFile().getRecordNum();
-  }
-
-  private ShapeFile getShapeFile( )
-  {
-    // lazy load shape
-    if( m_shape == null )
-    {
-      try
-      {
-        final String shapeBase = FileUtilities.nameWithoutExtension( m_shapeFile.getAbsolutePath() );
-        m_shape = new ShapeFile( shapeBase );
-        final String[] properties = m_shape.getProperties();
-        for( int i = 0; i < properties.length; i++ )
-          m_propHash.put( properties[i], i );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-      catch( final HasNoDBaseFileException e )
-      {
-        e.printStackTrace();
-      }
-      catch( final DBaseException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    return m_shape;
+    return m_shapeWithHash.size();
   }
 
   private Object getProperty( final int index, final String property ) throws CoreException
   {
-    final ShapeFile shape = getShapeFile();
-
-    final Integer column = m_propHash.get( property );
-    if( column == null )
-    {
-      final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor.3", property ); //$NON-NLS-1$
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, message, null ) );
-    }
-
-    try
-    {
-      return shape.getRow( index + 1 )[column.intValue()];
-    }
-    catch( final HasNoDBaseFileException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-    }
-    catch( final DBaseException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-    }
+    return m_shapeWithHash.getProperty( index, property );
   }
 
   /**

@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.simulation.ui;bundle-version="0.0.1",
  org.kalypso.model.rrm.project.template;bundle-version="0.0.1",
  org.kalypso.module;bundle-version="2.3.0",
- org.kalypso.ModelSimulationBase;bundle-version="2.3.0"
+ org.kalypso.ModelSimulationBase;bundle-version="2.3.0",
+ org.kalypso.gml.ui;bundle-version="10.10.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.ui.rrm.extension
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
