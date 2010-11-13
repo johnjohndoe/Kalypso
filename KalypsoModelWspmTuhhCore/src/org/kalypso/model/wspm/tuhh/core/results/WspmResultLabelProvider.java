@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultContentProvider.Property;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 
@@ -55,6 +56,8 @@ public class WspmResultLabelProvider extends LabelProvider implements ITableLabe
   private final ColumnViewer m_viewer;
 
   private final GMLLabelProvider m_gmlLabelProvider = new GMLLabelProvider();
+
+  private final WorkbenchLabelProvider m_workbenchLabelProvider = new WorkbenchLabelProvider();
 
   public WspmResultLabelProvider( final ColumnViewer viewer )
   {
@@ -68,6 +71,7 @@ public class WspmResultLabelProvider extends LabelProvider implements ITableLabe
   public void dispose( )
   {
     m_gmlLabelProvider.dispose();
+    m_workbenchLabelProvider.dispose();
 
     super.dispose();
   }
@@ -93,11 +97,15 @@ public class WspmResultLabelProvider extends LabelProvider implements ITableLabe
     if( element instanceof IWspmResultNode )
     {
       final IWspmResultNode node = (IWspmResultNode) element;
-      final Object featureObject = node.getObject();
-      return m_gmlLabelProvider.getImage( featureObject );
+      final Object object = node.getObject();
+      final Image image = m_gmlLabelProvider.getImage( object );
+      if( image != null )
+        return image;
+
+      return m_workbenchLabelProvider.getImage( object );
     }
 
-    return super.getImage( element );
+    return m_workbenchLabelProvider.getImage( element );
   }
 
   /**
@@ -106,17 +114,17 @@ public class WspmResultLabelProvider extends LabelProvider implements ITableLabe
   @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
-    if( element instanceof IWspmResultNode )
     {
       final Property property = getProperty( columnIndex );
       switch( property )
       {
         case LABEL:
           return getImage( element );
+
+        default:
+          return null;
       }
     }
-
-    return null;
   }
 
   /**
@@ -125,18 +133,15 @@ public class WspmResultLabelProvider extends LabelProvider implements ITableLabe
   @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
-    if( element instanceof IWspmResultNode )
+    final Property property = getProperty( columnIndex );
+    switch( property )
     {
-      final IWspmResultNode node = (IWspmResultNode) element;
-      final Property property = getProperty( columnIndex );
-      switch( property )
-      {
-        case LABEL:
-          return node.getLabel();
-      }
-    }
+      case LABEL:
+        return getText( element );
 
-    return null;
+      default:
+        return null;
+    }
   }
 
   private Property getProperty( final int columnIndex )
