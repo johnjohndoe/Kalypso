@@ -102,7 +102,7 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     monitor.beginTask( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.21" ), m_channels.size() + 10 ); //$NON-NLS-1$
 
     final IStatus calculationStatus = calculateKM( monitor );
-    if( !calculationStatus.isOK() )
+    if( calculationStatus.matches( IStatus.ERROR ) )
       return calculationStatus;
 
     final FeatureChange[] change = m_featureChanges.toArray( new FeatureChange[m_featureChanges.size()] );
