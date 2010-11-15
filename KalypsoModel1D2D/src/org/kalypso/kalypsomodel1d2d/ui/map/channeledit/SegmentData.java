@@ -817,7 +817,7 @@ public class SegmentData
     /* extract the LineStringSegment of the profile lying between the two corresponding intersection points */
     if( point1 != null & point2 != null )
     {
-      intersProfile = JTSUtilities.createLineSegment( lsProfile, point1, point2 );
+      intersProfile = JTSUtilities.createLineString( lsProfile, point1, point2 );
       return intersProfile;
     }
     else
@@ -935,12 +935,12 @@ public class SegmentData
           {
             case LEFT:
               if( m_bankLeftOrg == null )
-                m_bankLeftOrg = JTSUtilities.createLineSegment( bankLine, point1, point2 );
+                m_bankLeftOrg = JTSUtilities.createLineString( bankLine, point1, point2 );
               break;
 
             case RIGHT:
               if( m_bankRightOrg == null )
-                m_bankRightOrg = JTSUtilities.createLineSegment( bankLine, point1, point2 );
+                m_bankRightOrg = JTSUtilities.createLineString( bankLine, point1, point2 );
               break;
 
             default:
