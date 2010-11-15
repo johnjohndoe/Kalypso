@@ -96,7 +96,17 @@
 					</element>
 -->
 					<element name="sup" type="boolean"/>
+
+                    <element name="InitialValueDate" minOccurs="0" maxOccurs="100">
+                        <complexType>
+                            <sequence>
+                                <element ref="na:initialValues"/>
+                            </sequence>
+                        </complexType>
+                    </element>
+          
 					<!-- parameter fuer den prognose-kallibrierung -->
+                    <!-- DEPRECATED: moved into naopti.xsd; should be removed eventually -->
 					<element name="automaticCallibration" type="boolean"/>
 					<element name="Catchments" type="string"/>
 					<element name="CatchmentsBianf" type="double"/>
@@ -119,13 +129,7 @@
 					<element name="qAblageSpurOberer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 					<element name="qAblageSpurUnterer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 					<element name="useResults" type="boolean" minOccurs="0"/>
-					<element name="InitialValueDate" minOccurs="0" maxOccurs="100">
-                    	<complexType>
-                    		<sequence>
-                    			<element ref="na:initialValues"/>
-                    		</sequence>
-                    	</complexType>
-                    </element>
+                    <!-- DEPRECATED: END -->
 				</sequence>
 			</extension>
 		</complexContent>
