@@ -305,4 +305,12 @@
               qname="{http://www.tuhh.de/initialValues}IniHyd">
         </feature>
      </extension>
+     <extension
+           point="org.eclipse.wst.xml.core.catalogContributions">
+        <catalogContribution>
+           <nextCatalog
+                 catalog="src/org/kalypso/convert/namodel/schema/catalog.xml">
+           </nextCatalog>
+        </catalogContribution>
+     </extension>
 </plugin>
