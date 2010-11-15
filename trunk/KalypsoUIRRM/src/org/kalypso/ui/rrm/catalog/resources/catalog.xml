@@ -23,5 +23,7 @@
 
   <catalog:system uri="Hydrotope.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_hydrotop:Hydrotop:sld:default" />
 
+  <catalog:system uri="NAModellControl.gft" systemId="urn:ogc:gml:featuretype:org.kalypso.namodell.control:NAModellControl:featureview:default" />
+
 </catalog:catalog>
 
