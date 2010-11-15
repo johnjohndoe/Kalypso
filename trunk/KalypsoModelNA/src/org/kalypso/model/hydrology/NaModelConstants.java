@@ -78,6 +78,8 @@ public interface NaModelConstants
 
   public static final String NS_NASUDS = "http://sourceforge.kalypso.org/schemata/hydrology/suds"; //$NON-NLS-1$
 
+  final String NS_NAOPTIMIZE = "http://kalypso.sorgeforge.net/schemata/hydrology/optimize"; //$NON-NLS-1$
+
   /** server client bean constants */
   // input
   public static final String IN_META_ID = "MetaSteuerdaten"; //$NON-NLS-1$
@@ -95,6 +97,8 @@ public interface NaModelConstants
   public static final String IN_SUDS_ID = "Suds"; //$NON-NLS-1$
 
   public static final String IN_CONTROL_ID = "Control"; //$NON-NLS-1$
+
+  public static final String IN_OPTIMIZE_ID = "Optimize"; //$NON-NLS-1$
 
   public static final String IN_SYNTHN_ID = "synthNiederschlag"; //$NON-NLS-1$
 
