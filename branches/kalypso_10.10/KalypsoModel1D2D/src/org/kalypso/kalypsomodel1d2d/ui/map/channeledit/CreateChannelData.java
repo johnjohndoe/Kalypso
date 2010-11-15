@@ -92,6 +92,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
@@ -228,7 +229,6 @@ public class CreateChannelData
     return goodThemes.toArray( new IKalypsoFeatureTheme[goodThemes.size()] );
   }
 
-  
   /* --------------------- selection handling ---------------------------------- */
 
   public void changeSelectedProfiles( final IProfileFeature[] profileFeaturesToRemove, final IProfileFeature[] profileFeaturesToAdd )
@@ -774,13 +774,38 @@ public class CreateChannelData
 
     final Set<GM_Curve> curves = m_selectedBanks.keySet();
 
-    for( final GM_Curve curve : curves )
+    for( final GM_Curve curve : curves ) 
     {
-      if( !curve.intersects( profile.getLine() ) )
-      {
-        check = false;
-        break;
-      }
+      GM_LineString asLineString = null;
+      GM_Curve lCurve = curve;
+//      if( !lCurve.intersects( profile.getLine() ) && lCurve.intersection( profile.getLine() ) == null )
+//      {
+//        try
+//        {
+//          asLineString = curve.getAsLineString();
+//        }
+//        catch( GM_Exception e )
+//        {
+//          e.printStackTrace();
+//        }
+//        if( asLineString != null && asLineString.getNumberOfPoints() > 2
+//            && asLineString.getPositions()[asLineString.getNumberOfPoints() - 1].equals( asLineString.getPositions()[asLineString.getNumberOfPoints() - 2] ) )
+//        {
+//          try
+//          {
+//            lCurve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( Arrays.copyOf( asLineString.getPositions(), asLineString.getNumberOfPoints() - 1 ), curve.getCoordinateSystem() );
+//          }
+//          catch( GM_Exception e )
+//          {
+//            e.printStackTrace();
+//          }
+//        }
+        if( !lCurve.intersects( profile.getLine() ) && lCurve.intersection( profile.getLine() ) == null )
+        {
+          check = false;
+          break;
+        }
+//      }
     }
     return check;
   }
@@ -1013,7 +1038,7 @@ public class CreateChannelData
       return null;
 
     if( m_segmentList.size() < selection )
-      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.11") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.11" ) ); //$NON-NLS-1$
 
     return m_segmentList.get( selection );
   }
