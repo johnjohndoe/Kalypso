@@ -47,7 +47,7 @@ import java.util.logging.Logger;
 import org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.IOptimizingJob;
@@ -77,10 +77,7 @@ public class NaModelCalcJob implements ISimulation
   {
     try
     {
-      // FIXME: replace with other loggin framework, in preference eclipse's
-      final Logger logger = Logger.getAnonymousLogger();
-
-      final ISimulation calcJob = createCalcJob( dataProvider, logger, tmpdir, monitor );
+      final ISimulation calcJob = createCalcJob( dataProvider, tmpdir, monitor );
       if( calcJob != null )
         calcJob.run( tmpdir, dataProvider, resultEater, monitor );
     }
@@ -95,26 +92,39 @@ public class NaModelCalcJob implements ISimulation
     }
   }
 
-  private ISimulation createCalcJob( final ISimulationDataProvider dataProvider, final Logger logger, final File tmpdir, final ISimulationMonitor monitor ) throws Exception
+  private ISimulation createCalcJob( final ISimulationDataProvider dataProvider, final File tmpdir, final ISimulationMonitor monitor ) throws Exception
   {
+    // FIXME: replace with other loggin framework, in preference eclipse's
+    final Logger logger = Logger.getAnonymousLogger();
+
     // FIXME: check: is the analyse job actually still used?
     // why not declare a seaprate top-level job?
     if( dataProvider.hasID( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID ) )
       return new NaModelParameterAnalyseSimulation( logger );
 
-    // testen ob calcjob optimization hat
-    final URL controlLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
-    // FIXME: do we really need to load this workspace twice (also in inner calc job)
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlLocation, null );
-    final NAModellControl naControl = (NAModellControl) controlWorkspace.getRootFeature();
-    // FIXME: dispose controlWorkspace
-    if( naControl.doOptimize() )
+    final boolean doOptimize = isOptimize( dataProvider );
+    if( doOptimize )
     {
       final IOptimizingJob optimizeJob = new NAOptimizingJob( tmpdir, dataProvider, new OptimizeMonitor( monitor ) );
       return new OptimizerCalJob( logger, optimizeJob );
     }
 
     return new NaModelInnerCalcJob();
+  }
+
+  private boolean isOptimize( final ISimulationDataProvider dataProvider ) throws SimulationException, Exception
+  {
+    if( !dataProvider.hasID( NaModelConstants.IN_OPTIMIZE_ID ) )
+      return false;
+
+    // testen ob calcjob optimization hat
+    final URL optimizeLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_ID );
+    // FIXME: do we really need to load this workspace twice (also in inner calc job)
+    final GMLWorkspace optimizeWorkspace = GmlSerializer.createGMLWorkspace( optimizeLocation, null );
+    final NAOptimize optimize = (NAOptimize) optimizeWorkspace.getRootFeature();
+    final boolean doOptimize = optimize.doOptimize();
+    optimizeWorkspace.dispose();
+    return doOptimize;
   }
 
   /**

@@ -92,9 +92,8 @@ public class NaModelInnerCalcJob implements ISimulation
 
     final Logger logger = naCalculationLogger.getLogger();
 
-    final NAModelSimulation simulation = new NAModelSimulation( simDirs, inputProvider, logger );
-
     final File resultDir = simDirs.resultDir;
+    final NAModelSimulation simulation = new NAModelSimulation( simDirs, inputProvider, logger );
 
     try
     {

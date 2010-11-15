@@ -67,6 +67,7 @@ import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
@@ -124,14 +125,18 @@ public class NaPostProcessor
 
   private final NAModellControl m_naControl;
 
+  // FIXME: move postprocessing regarding optimize elsewhere (into hwv client)
+  private final NAOptimize m_naOptimize;
+
   private final HydroHash m_hydroHash;
 
-  public NaPostProcessor( final NAConfiguration conf, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final HydroHash hydroHash )
+  public NaPostProcessor( final NAConfiguration conf, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final NAOptimize optimize, final HydroHash hydroHash )
   {
     m_conf = conf;
     m_logger = logger;
     m_modelWorkspace = modelWorkspace;
     m_naControl = naControl;
+    m_naOptimize = optimize;
     m_hydroHash = hydroHash;
     m_naStatistics = new NAStatistics( logger );
   }
@@ -482,6 +487,9 @@ public class NaPostProcessor
   // FIXME: this is hwv specific. Should be done in a separate task after the real calculation
   private void loadTesultTSPredictionIntervals( final File resultDir ) throws Exception
   {
+    if( m_naOptimize == null )
+      return;
+
     // Load the calculated prediction
     final IObservation resultObservation = loadPredictedResult( resultDir );
     if( resultObservation == null )
@@ -490,9 +498,9 @@ public class NaPostProcessor
     final IAxis[] axisList = resultObservation.getAxisList();
     final String axisType = determineTranpolinAxis( resultObservation );
 
-    final File fileMitte = getAblageFileFor( resultDir, m_naControl.getQAblageMittlererLink() );
-    final File fileUnten = getAblageFileFor( resultDir, m_naControl.getQAblageUntererLink() );
-    final File fileOben = getAblageFileFor( resultDir, m_naControl.getQAblageObererLink() );
+    final File fileMitte = getAblageFileFor( resultDir, m_naOptimize.getQAblageMittlererLink() );
+    final File fileUnten = getAblageFileFor( resultDir, m_naOptimize.getQAblageUntererLink() );
+    final File fileOben = getAblageFileFor( resultDir, m_naOptimize.getQAblageObererLink() );
 
     // Initalize some commen variables
     final ITupleModel resultValues = resultObservation.getValues( null );
@@ -539,12 +547,12 @@ public class NaPostProcessor
     final double offsetStartPrediction;
     final double offsetEndPrediction;
 
-    if( m_naControl.doUseOffsetStartPred() )
+    if( m_naOptimize.doUseOffsetStartPred() )
       offsetStartPrediction = deltaMeasureCalculation;
     else
       offsetStartPrediction = 0;
 
-    if( m_naControl.doUseOffsetEndPred() )
+    if( m_naOptimize.doUseOffsetEndPred() )
       offsetEndPrediction = deltaMeasureCalculation;
     else
       offsetEndPrediction = 0;
@@ -561,8 +569,9 @@ public class NaPostProcessor
     //
     // Second, we build the umhüllenden for the adapted result
     //
+
     double accuracyPrediction = LhwzHelper.getDefaultUmhuellendeAccuracy();
-    final Double featureAccuracy = m_naControl.getPredictionAccuracy();
+    final Double featureAccuracy = m_naOptimize.getPredictionAccuracy();
     if( featureAccuracy == null )
       m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.44", accuracyPrediction ) ); //$NON-NLS-1$ 
     else
@@ -581,16 +590,17 @@ public class NaPostProcessor
 
   private IObservation loadPredictedResult( final File resultDir ) throws MalformedURLException, SensorException
   {
-    final TimeseriesLinkType resultLink = m_naControl.getResultLink();
-    if( resultLink != null )
-    {
-      // from predicted timeseries
-      final UrlResolver urlResolver = new UrlResolver();
-      final URL resultURL = urlResolver.resolveURL( resultDir.toURI().toURL(), resultLink.getHref() );
-      return ZmlFactory.parseXML( resultURL ); //$NON-NLS-1$
-    }
+    if( m_naOptimize == null )
+      return null;
 
-    return null;
+    final TimeseriesLinkType resultLink = m_naOptimize.getResultLink();
+    if( resultLink == null )
+      return null;
+
+    // from predicted timeseries
+    final UrlResolver urlResolver = new UrlResolver();
+    final URL resultURL = urlResolver.resolveURL( resultDir.toURI().toURL(), resultLink.getHref() );
+    return ZmlFactory.parseXML( resultURL ); //$NON-NLS-1$
   }
 
   /**
@@ -628,7 +638,10 @@ public class NaPostProcessor
   // FIXME: does not belong into this class
   public URL getMeasuredURL( ) throws MalformedURLException
   {
-    final TimeseriesLinkType link = m_naControl.getPegelZRLink();
+    if( m_naOptimize == null )
+      return null;
+
+    final TimeseriesLinkType link = m_naOptimize.getPegelZRLink();
     if( link == null )
       return null;
 

@@ -54,6 +54,7 @@ import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
@@ -128,13 +129,14 @@ public class NAModelPreprocessor
   private void doProcess( final ISimulationMonitor monitor ) throws Exception
   {
     final NAModellControl naControl = m_simulationData.getNaControl();
+    final NAOptimize naOptimize = m_simulationData.getNaOptimize();
     final GMLWorkspace modelWorkspace = m_simulationData.getModelWorkspace();
     final NAControl metaControl = m_simulationData.getMetaControl();
     final GMLWorkspace sudsWorkspace = m_simulationData.getSudsWorkspace();
     final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
 
-    final String rootNodeID = naControl.getRootNodeID();
-    final boolean useResults = naControl.isUseResults();
+    final String rootNodeID = naOptimize == null ? null : naOptimize.getRootNodeID();
+    final boolean useResults = naOptimize == null ? false : naOptimize.isUseResults();
 
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.15" ) ); //$NON-NLS-1$
     checkCancel( monitor );
@@ -149,7 +151,7 @@ public class NAModelPreprocessor
     monitor.setMessage( "Writing control files for Kalypso-NA" );
     final NAControlConverter naControlConverter = new NAControlConverter( metaControl, m_asciiDirs.startDir );
     naControlConverter.writeFalstart();
-    naControlConverter.writeStartFile( naControl, naModel, sudsWorkspace, m_idManager );
+    naControlConverter.writeStartFile( naControl, rootNodeID, naModel, sudsWorkspace, m_idManager );
     checkCancel( monitor );
 
     // write net and so on....

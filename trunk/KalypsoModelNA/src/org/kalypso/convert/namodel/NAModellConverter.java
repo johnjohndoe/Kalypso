@@ -122,7 +122,7 @@ public class NAModellConverter
     {
       // REMARK: initHydroHash must be called after nodeManager.write file has been called, as this marks
       // the features in the ascii buffer to be relevant.
-      // TODO: change this bad design: We should jsut pass a list of catchments to the hydroHash
+      // TODO: change this bad design: We should just pass a list of catchments to the hydroHash
       final HydroHash hydroHash = initHydroHash( parameter, naModel, hydrotopeCollection, asciiBuffer );
 
       final HydrotopeWriter hydrotopManager = new HydrotopeWriter( parameter, idManager, hydroHash, m_logger );

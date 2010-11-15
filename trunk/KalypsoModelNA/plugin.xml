@@ -306,6 +306,13 @@
         </feature>
      </extension>
      <extension
+           point="org.kalypso.deegree.featureBinding">
+        <feature
+              class="org.kalypso.model.hydrology.binding.NAOptimize"
+              qname="{http://kalypso.sorgeforge.net/schemata/hydrology/optimize}NaOptimizeConfig">
+        </feature>
+     </extension>
+     <extension
            point="org.eclipse.wst.xml.core.catalogContributions">
         <catalogContribution>
            <nextCatalog
