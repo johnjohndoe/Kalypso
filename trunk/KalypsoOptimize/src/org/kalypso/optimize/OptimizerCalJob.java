@@ -75,6 +75,7 @@ public class OptimizerCalJob implements ISimulation
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
+  @Override
   public URL getSpezifikation()
   {
     return null;
@@ -85,6 +86,7 @@ public class OptimizerCalJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
+  @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater,
       final ISimulationMonitor monitor )
   {
@@ -107,8 +109,6 @@ public class OptimizerCalJob implements ISimulation
     }
   }
 
-  /**
-   */
   public boolean isSucceeded()
   {
     return m_optimizingJob.isSucceeded();
