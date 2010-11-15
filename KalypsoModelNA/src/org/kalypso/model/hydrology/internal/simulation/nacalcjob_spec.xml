@@ -9,8 +9,11 @@
 	<input id="Landuse" optional="true"/>
 	<input id="Suds" optional="true"/>
 	<input id="Control" description="Steuerdaten - Ausgabe" />
-	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
 	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="false"/>
+
+    <!-- Autokalibrierung -->
+	<input id="Optimize" description="Steuerdaten - Optimierung (optional)" optional="true" />
+	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
 
 	<!-- Zeitreihen als Verzeichnisse -->
     <input id="NiederschlagDir" description="description" optional="true"/>

@@ -46,6 +46,7 @@ import java.net.URL;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -96,7 +97,7 @@ public class NAPostprocessingTest
     final File expectedResultsDir = new File( outputDir, "expectedResults" );
     checkResult( resultsDir, expectedResultsDir );
 
-// FileUtils.forceDelete( outputDir );
+    FileUtils.forceDelete( outputDir );
   }
 
   private File doPostprocessing( final String baseResourceLocation, final File outputDir, final File asciiBaseDir ) throws Exception
@@ -125,7 +126,7 @@ public class NAPostprocessingTest
 
     final HydroHash hydroHash = new HydroHash( null );
 
-    final NaPostProcessor postProcessor = new NaPostProcessor( conf, logger, modelWorkspace, naControl, hydroHash );
+    final NaPostProcessor postProcessor = new NaPostProcessor( conf, logger, modelWorkspace, naControl, null, hydroHash );
     postProcessor.process( naAsciiDirs, naSimulationDirs );
 
     return resultsDir;

@@ -78,6 +78,8 @@ public class Catchment extends AbstractNaModelElement
 
   private static final QName PROP_RETINT = new QName( NS_NAMODELL, "retint" ); //$NON-NLS-1$
 
+  private static final QName PROP_FAKTOR_RETOB_RETINT = new QName( NS_NAMODELL, "faktorRetobRetint" ); //$NON-NLS-1$
+
   private static final QName PROP_FAKTOR_RETINT = new QName( NS_NAMODELL, "faktorRetint" ); //$NON-NLS-1$
 
   private static final QName PROP_AIGW = new QName( NS_NAMODELL, "aigw" ); //$NON-NLS-1$
@@ -356,4 +358,23 @@ public class Catchment extends AbstractNaModelElement
     return getProperty( PROP_ZR_SYNTH, String.class );
   }
 
+  public void setBianf( final Double bianf )
+  {
+    setProperty( PROP_BIANF, bianf );
+  }
+
+  public void setFaktorRetobRetint( final Double faktorRetobTetint )
+  {
+    setProperty( PROP_FAKTOR_RETOB_RETINT, faktorRetobTetint );
+  }
+
+  public void setFaktn( final Double faktn )
+  {
+    setProperty( PROP_FAKTN, faktn );
+  }
+
+  public void setFaktorAigw( final Double faktorAigw )
+  {
+    setProperty( PROP_FAKTOR_AIGW, faktorAigw );
+  }
 }

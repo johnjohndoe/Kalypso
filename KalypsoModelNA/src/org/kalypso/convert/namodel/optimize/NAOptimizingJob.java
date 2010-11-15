@@ -41,7 +41,6 @@
 package org.kalypso.convert.namodel.optimize;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
@@ -58,11 +57,12 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.xpath.XPathAPI;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
-import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.internal.simulation.NaModelInnerCalcJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -84,8 +84,11 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * encapsulates an NAModellCalculation job to optimize it
@@ -94,13 +97,15 @@ import org.w3c.dom.Document;
  */
 public class NAOptimizingJob implements IOptimizingJob
 {
+  public static final String IN_BestOptimizedRunDir_ID = "BestOptimizedRunDir_so_far"; //$NON-NLS-1$
+
   private final File m_tmpDir;
 
   private SortedMap<Date, Double> m_measuredTS;
 
-  private final TimeseriesLinkType m_linkMeasuredTS;
+  private TimeseriesLinkType m_linkMeasuredTS;
 
-  private final TimeseriesLinkType m_linkCalcedTS;
+  private TimeseriesLinkType m_linkCalcedTS;
 
   private final AutoCalibration m_autoCalibration;
 
@@ -120,8 +125,6 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private OptimizeCalcResultEater m_bestResultEater = null;
 
-  public static final String IN_BestOptimizedRunDir_ID = "BestOptimizedRunDir_so_far"; //$NON-NLS-1$
-
   private int m_counter = 0;
 
   private int m_bestNumber = 0;
@@ -130,17 +133,15 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private boolean m_bestSucceeded = false;
 
+  private Node m_optimizeDom;
+
   public NAOptimizingJob( final File tmpDir, final ISimulationDataProvider dataProvider, final ISimulationMonitor monitor ) throws Exception
   {
     m_tmpDir = tmpDir;
     m_dataProvider = dataProvider;
     m_monitor = monitor;
 
-    // FIXME: already loaded in main job, will also be loaded in inner jobs; can we avoid this?
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), null );
-    final NAModellControl naControl = (NAModellControl) controlWorkspace.getRootFeature();
-    m_linkMeasuredTS = naControl.getPegelZRLink();
-    m_linkCalcedTS = naControl.getResultLink();
+    loadNaOptimize();
 
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
     final NAControl metaControl = (NAControl) metaWorkspace.getRootFeature();
@@ -163,6 +164,51 @@ public class NAOptimizingJob implements IOptimizingJob
     pegel.setEndDate( calendarEnd );
   }
 
+  private void loadNaOptimize( ) throws SimulationException, Exception
+  {
+    if( !m_dataProvider.hasID( NaModelConstants.IN_OPTIMIZE_ID ) )
+    {
+      final String message = String.format( "Input '%s' must be specified for optimization.", NaModelConstants.IN_OPTIMIZE_ID );
+      throw new SimulationException( message );
+    }
+
+    final URL optimizeDataLocation = (URL) m_dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_ID );
+
+    final String optimizePath = getOptimizePath();
+    final Document dom = XMLHelper.getAsDOM( optimizeDataLocation, true );
+    final NodeList rootNodes = XPathAPI.selectNodeList( dom, optimizePath, dom );
+    if( rootNodes.getLength() == 0 )
+      throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", optimizePath ) );
+
+    // REMARK: we remember this node: it will be later changed by the optimized code (via xpathes)
+    // and then written again and again...
+    m_optimizeDom = rootNodes.item( 0 );
+
+    final GMLWorkspace optimizeWorkspace = GmlSerializer.createGMLWorkspace( m_optimizeDom, optimizeDataLocation, null );
+    final Feature feature = optimizeWorkspace.getRootFeature();
+    if( !(feature instanceof NAOptimize) )
+    {
+      final String message = String.format( "Failed to get optimize feature from optimize-gml for path '%s'. Got '%s'", optimizePath, feature );
+      throw new SimulationException( message );
+    }
+
+    /* At the moment, we are only interested in the result-links */
+    final NAOptimize naOptimize = (NAOptimize) optimizeWorkspace.getRootFeature();
+    m_linkMeasuredTS = naOptimize.getPegelZRLink();
+    m_linkCalcedTS = naOptimize.getResultLink();
+
+    optimizeWorkspace.dispose();
+  }
+
+  private String getOptimizePath( ) throws SimulationException
+  {
+    if( m_dataProvider.hasID( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID ) )
+      return (String) m_dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID );
+
+    // If not specified, we use the root feature
+    return ".";
+  }
+
   /**
    * @throws MalformedURLException
    * @see org.kalypso.optimize.IOptimizingJob#calculate()
@@ -175,7 +221,8 @@ public class NAOptimizingJob implements IOptimizingJob
     optimizeRunDir.mkdirs();
 
     final CalcDataProviderDecorater newDataProvider = new CalcDataProviderDecorater( m_dataProvider );
-    newDataProvider.addURL( NaModelConstants.IN_CONTROL_ID, m_lastOptimizedFile.toURI().toURL() );
+    newDataProvider.addURL( NaModelConstants.IN_OPTIMIZE_ID, m_lastOptimizedFile.toURI().toURL() );
+    newDataProvider.addURL( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, null );
 
     // some generated files from best run can be recycled to increase
     // performance
@@ -230,18 +277,10 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private void clear( final File dir )
   {
-    if( dir != null )
-    {
-      // System.out.println( "remove " + dir.toString() );
-      try
-      {
-        FileUtils.deleteDirectory( dir );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
+    if( dir == null )
+      return;
+
+    FileUtils.deleteQuietly( dir );
   }
 
   /**
@@ -250,14 +289,14 @@ public class NAOptimizingJob implements IOptimizingJob
   @Override
   public void optimize( final Parameter[] parameterConf, final double values[] ) throws Exception
   {
-    final Document dom = XMLHelper.getAsDOM( FileUtils.toFile( (URL) m_dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID )), true );
-
     final ParameterOptimizeContext[] calcContexts = new ParameterOptimizeContext[parameterConf.length];
     for( int i = 0; i < parameterConf.length; i++ )
-      calcContexts[i] = new ParameterOptimizeContext( parameterConf[i] );
+      // FIXME: either use or remove prefix path
+      calcContexts[i] = new ParameterOptimizeContext( parameterConf[i], "" );
+
     try
     {
-      OptimizeModelUtils.transformModel( dom, values, calcContexts );
+      OptimizeModelUtils.transformModel( m_optimizeDom, values, calcContexts );
     }
     catch( final TransformerException e )
     {
@@ -269,14 +308,14 @@ public class NAOptimizingJob implements IOptimizingJob
 
     t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
     t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
-    
-    String encoding = dom.getInputEncoding();
-    t.setOutputProperty( OutputKeys.ENCODING, encoding );
+
+// final String encoding = m_optimizeDom.getOwnerDocument().getInputEncoding();
+    t.setOutputProperty( OutputKeys.ENCODING, "UTF-8" );
 
     final File file = File.createTempFile( "optimizedBean", ".xml", m_tmpDir ); //$NON-NLS-1$//$NON-NLS-2$
     try
     {
-      t.transform( new DOMSource( dom ), new StreamResult( file ) );
+      t.transform( new DOMSource( m_optimizeDom ), new StreamResult( file ) );
     }
     catch( final Exception e )
     {
@@ -337,7 +376,7 @@ public class NAOptimizingJob implements IOptimizingJob
     final String calcHref = m_linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final File tsFile = new File( optimizeResultDir, calcHref );
-    final IObservation observation = ZmlFactory.parseXML( tsFile.toURL() ); //$NON-NLS-1$
+    final IObservation observation = ZmlFactory.parseXML( tsFile.toURI().toURL() ); //$NON-NLS-1$
     final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_DATE );
     final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_RUNOFF );
     final ITupleModel values = observation.getValues( null );
@@ -359,6 +398,7 @@ public class NAOptimizingJob implements IOptimizingJob
   {
     if( m_bestResultEater == null )
       return;
+
     for( final Object element : m_bestResultEater.keySet() )
     {
       final String id = (String) element;

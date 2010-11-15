@@ -154,7 +154,7 @@ public class NaPreprocessingTest
     final URL syntNUrl = null;
     final URL lzsimUrl = checkUrlExists( new URL( base, "Anfangswerte/lzsim.gml" ) );
 
-    return new NaSimulationData( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
+    return new NaSimulationData( modelUrl, controlUrl, metaUrl, null, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
   }
 
   private URL checkUrlExists( final URL url )
@@ -171,12 +171,12 @@ public class NaPreprocessingTest
     asciiExpectedDir.mkdir();
     ZipUtilities.unzip( getClass().getResource( baseResourceLocation + "/expectedAscii.zip" ), asciiExpectedDir );
 
-    checkkDifferences( asciiExpectedDir, asciiDir );
+    checkDifferences( asciiExpectedDir, asciiDir );
 
   }
 
   // FIXME: move into helper
-  static void checkkDifferences( final File expectedDir, final File actualDir )
+  static void checkDifferences( final File expectedDir, final File actualDir )
   {
     /* compare with expected results */
     final FileStructureComparator actualComparator = new FileStructureComparator( actualDir );

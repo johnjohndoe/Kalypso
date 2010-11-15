@@ -50,10 +50,15 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.simulation.NaModelCalcJob;
 import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizeMonitor;
@@ -74,6 +79,11 @@ import org.kalypso.simulation.core.util.DefaultSimulationResultEater;
  */
 public class OptimizeTest
 {
+  public OptimizeTest( )
+  {
+    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
+  }
+
   @Test
   public void testOptimize( ) throws Exception
   {
@@ -105,21 +115,21 @@ public class OptimizeTest
   {
     final Collection<SimulationDataPath> pathes = new ArrayList<SimulationDataPath>();
 
-    final String controlFile = ".nacontrol_17.gml"; // Goessnitz
-
     // Hm, copied from the build.xml.... must be updated if something changes there....
-    pathes.add( new SimulationDataPath( "MetaSteuerdaten", ".calculation" ) );
-    pathes.add( new SimulationDataPath( "Modell", "modell.gml" ) );
-    pathes.add( new SimulationDataPath( "Control", controlFile ) );
-    pathes.add( new SimulationDataPath( "Hydrotop", "hydrotop.gml" ) );
-    pathes.add( new SimulationDataPath( "Parameter", "parameter.gml" ) );
-    pathes.add( new SimulationDataPath( "SceConf", ".sce.xml" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_META_ID, ".calculation" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_MODELL_ID, "modell.gml" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_CONTROL_ID, ".expertControl_optimize.gml" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_HYDROTOP_ID, "hydrotop.gml" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_PARAMETER_ID, "parameter.gml" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_OPTIMIZECONF_ID, ".sce.xml" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_OPTIMIZE_ID, "optimize.gml" ) );
+// pathes.add( new SimulationDataPath( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, "id( 'root' )" ) );
 
-    pathes.add( new SimulationDataPath( "NiederschlagDir", "Niederschlag" ) );
-    pathes.add( new SimulationDataPath( "KlimaDir", "Klima" ) );
-    pathes.add( new SimulationDataPath( "PegelDir", "Pegel" ) );
-    pathes.add( new SimulationDataPath( "ErgebnisDir", "Ergebnisse" ) );
-    pathes.add( new SimulationDataPath( "LZSIM_IN", "Anfangswerte" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_RAINFALL_ID, "Niederschlag" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_KLIMA_DIR_ID, "Klima" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_PEGEL_DIR, "Pegel" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_RESULTS_DIR_ID, "Ergebnisse" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_LZSIM_IN_ID, "Anfangswerte" ) );
 
     return pathes.toArray( new SimulationDataPath[pathes.size()] );
   }
@@ -144,6 +154,9 @@ public class OptimizeTest
 
       disconnectLogger( logger );
 
+      if( !optimizeSimulation.isSucceeded() )
+        Assert.fail( "Optimization failed" );
+
       return resultEater;
     }
     finally
@@ -156,6 +169,7 @@ public class OptimizeTest
   {
     final File resultsDir = (File) results.getResult( "OUT_ZML" );
     final File optimizeFile = (File) results.getResult( "OUT_OPTIMIZEFILE" );
+    final File expectedOptimizeFile = new File( expectedResultsDir.getParent(), "optimizedBean.xml" );
 
     final File actualResultsDir = new File( resultsDir, "Aktuell" );
 
@@ -163,7 +177,8 @@ public class OptimizeTest
     new File( actualResultsDir, "Log/calculation.log" ).delete();
     new File( actualResultsDir, "Log/output.zip" ).delete();
 
-    NaPreprocessingTest.checkkDifferences( expectedResultsDir, actualResultsDir );
+    NaPreprocessingTest.checkDifferences( expectedOptimizeFile, optimizeFile );
+    NaPreprocessingTest.checkDifferences( expectedResultsDir, actualResultsDir );
   }
 
   private Logger createLogger( final File logFile ) throws SecurityException, IOException

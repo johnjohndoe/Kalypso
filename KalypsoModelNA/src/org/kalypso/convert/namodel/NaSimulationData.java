@@ -44,30 +44,31 @@ import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
-import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.optimize.CalibrationConfig;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.optimize.transform.OptimizeModelUtils;
-import org.kalypso.optimize.transform.ParameterOptimizeContext;
-import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.ogc.gml.serialize.FeatureProviderWithCacheFactory;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.w3c.dom.Document;
 
 /**
  * @author Gernot Belger
  */
 public class NaSimulationData
 {
+  // REMARK:: in order to support references between the models, we use this factory that makes sure, that no workspace
+  // gets loaded twice.
+  private final FeatureProviderWithCacheFactory m_factory = new FeatureProviderWithCacheFactory();
+
   private final GMLWorkspace m_parameterWorkspace;
 
   private final GMLWorkspace m_sudsWorkspace;
@@ -86,17 +87,24 @@ public class NaSimulationData
 
   private final NaModell m_naModel;
 
-  public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl ) throws Exception
+  private final NAOptimize m_naOptimize;
+
+  public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL optimizeURL, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl ) throws Exception
   {
+    /*
+     * Loading model workspace first, it is used as context for all other models (i.e. we assume they all live in the
+     * same directory)
+     */
+    m_modelWorkspace = readWorkspaceOrNull( modelUrl );
+
     m_naModellControl = readModel( controlURL, NAModellControl.class );
     m_metaControl = readModel( metaUrl, NAControl.class );
+    m_naOptimize = readModel( optimizeURL, NAOptimize.class );
 
-    m_modelWorkspace = loadModelWorkspace( modelUrl );
     m_naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
     m_parameterWorkspace = readWorkspaceOrNull( parameterUrl );
 
-    // FIXME: do not load hydrotopes, if preprocessed files exist
     m_hydrotopeCollection = readModel( hydrotopUrl, NAHydrotop.class );
 
     m_sudsWorkspace = loadAndCheckForFile( sudsUrl );
@@ -104,13 +112,17 @@ public class NaSimulationData
 
     final String syntNpath = syntNUrl == null ? null : syntNUrl.getFile();
     final File syntNGML = syntNpath == null ? null : new File( syntNpath, "calcSynthN.gml" ); //$NON-NLS-1$
-    if( syntNGML != null && syntNGML.exists() )
-      m_synthNWorkspace = GmlSerializer.createGMLWorkspace( syntNGML, null );
-    else
-      m_synthNWorkspace = null;
+    m_synthNWorkspace = loadAndCheckForFile( syntNGML );
 
     if( m_hydrotopeCollection != null && m_modelWorkspace != null )
       transformModelToHydrotopeCrs();
+
+    // TODO: does not really belong here, shouldn't the preprocessing do this?
+    if( m_naOptimize != null )
+    {
+      final CalibrationConfig config = new CalibrationConfig( m_naOptimize );
+      config.applyCalibrationFactors();
+    }
   }
 
   private <T> T readModel( final URL location, final Class<T> type ) throws Exception
@@ -127,7 +139,8 @@ public class NaSimulationData
     if( location == null )
       return null;
 
-    return GmlSerializer.createGMLWorkspace( location, null );
+    final IFeatureProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, location.toURI().toString() );
+    return provider.getWorkspace();
   }
 
   public void dispose( )
@@ -158,6 +171,8 @@ public class NaSimulationData
 
     if( m_hydrotopeCollection != null )
       m_hydrotopeCollection.getWorkspace().dispose();
+
+    m_factory.dispose();
   }
 
   private void transformModelToHydrotopeCrs( )
@@ -185,44 +200,30 @@ public class NaSimulationData
     return null;
   }
 
-  private GMLWorkspace loadModelWorkspace( final URL modelUrl ) throws SimulationException
-  {
-    try
-    {
-      final Document modelDoc = XMLHelper.getAsDOM( modelUrl, true );
-
-      // Apply optimization parameters
-      if( m_naModellControl != null )
-      {
-        // TODO: does not really belong here, shouldn't the preprocessing do this?
-        final CalibrationConfig config = new CalibrationConfig( m_naModellControl );
-        final ParameterOptimizeContext[] calContexts = config.getCalContexts();
-        OptimizeModelUtils.initializeModel( modelDoc, calContexts );
-      }
-
-      return GmlSerializer.createGMLWorkspace( modelDoc, modelUrl, null );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( "Failed to initialize model workspace", e );
-    }
-  }
-
-  private static GMLWorkspace loadAndCheckForFile( final URL location ) throws Exception
+  private GMLWorkspace loadAndCheckForFile( final URL location ) throws Exception
   {
     if( location == null )
       return null;
 
-    final File sudsFile = FileUtils.toFile( location );
-    if( sudsFile == null )
-      return GmlSerializer.createGMLWorkspace( location, null );
-
+    final File file = FileUtils.toFile( location );
     /* Silently ignore if file does not exists */
-    if( !sudsFile.exists() )
+    if( file != null && !file.exists() )
       return null;
 
-    return GmlSerializer.createGMLWorkspace( location, null );
+    final IFeatureProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, location.toURI().toString() );
+    return provider.getWorkspace();
+  }
+
+  private GMLWorkspace loadAndCheckForFile( final File file ) throws Exception
+  {
+    if( file != null && file.exists() )
+    {
+      final String uri = file.toURI().toString();
+      final IFeatureProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, uri );
+      return provider.getWorkspace();
+    }
+
+    return null;
   }
 
   public NAModellControl getNaControl( )
@@ -271,6 +272,11 @@ public class NaSimulationData
       return null;
 
     return (InitialValues) m_lzsimWorkspace.getRootFeature();
+  }
+
+  public NAOptimize getNaOptimize( )
+  {
+    return m_naOptimize;
   }
 
 }

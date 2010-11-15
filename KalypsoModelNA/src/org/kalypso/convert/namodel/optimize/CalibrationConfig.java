@@ -40,87 +40,38 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.optimize;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.convert.namodel.schema.UrlCatalogNA;
-import org.kalypso.model.hydrology.binding.NAModellControl;
-import org.kalypso.optimize.transform.ParameterOptimizeContext;
+import org.kalypso.model.hydrology.binding.NAOptimize;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.KMChannel;
 
 /**
  * @author doemming
  */
 public class CalibrationConfig
 {
-  private final List<ParameterOptimizeContext> m_contexts = new ArrayList<ParameterOptimizeContext>();
+  private final NAOptimize m_naOptimize;
 
-  private final NAModellControl m_naControl;
-
-  public CalibrationConfig( final NAModellControl naModellControl )
+  public CalibrationConfig( final NAOptimize naOptimize )
   {
-    m_naControl = naModellControl;
-
-    generateContexts();
+    m_naOptimize = naOptimize;
   }
 
-  public ParameterOptimizeContext[] getCalContexts( )
+  public void applyCalibrationFactors( )
   {
-    return m_contexts.toArray( new ParameterOptimizeContext[m_contexts.size()] );
-  }
-
-  // FIXME: use binding class to access all properties!
-  private void generateContexts( )
-  {
-    // REMARK: this code relies heavily on the fixed prefix of the rrm-namespace.
-    final String prefix = "/" + UrlCatalogNA.PREFIX_RRM + ":";
-
-    // Catchments
-    final String catchmentsProp = m_naControl.getCatchments();
-    final String queryBaseCatchment = catchmentsProp + prefix; //$NON-NLS-1$
-
-    final QName[] optimizeCatchmentProperties = NAModellControl.getOptimizeCatchmentsProperties();
-
-    final String[] xpathModel = new String[] { queryBaseCatchment + "bianf", //$NON-NLS-1$
-        queryBaseCatchment + "faktorRetobRetint", //$NON-NLS-1$
-        queryBaseCatchment + "faktn", //$NON-NLS-1$
-        queryBaseCatchment + "faktorAigw" }; //$NON-NLS-1$
-
-    generateAndAddContexts( xpathModel, optimizeCatchmentProperties );
-
-    // KMChannels
-    final String asString = m_naControl.getKMChannels();
-    final String queryBaseKMChannel = asString + prefix; //$NON-NLS-1$
-
-    final QName[] optimizeChannelsProperties = NAModellControl.getOptimizeChannelsProperties();
-
-    final String[] queryKMChannels = new String[] { queryBaseKMChannel + "faktorRkf", //$NON-NLS-1$
-        queryBaseKMChannel + "faktorRnf" }; //$NON-NLS-1$
-
-    generateAndAddContexts( queryKMChannels, optimizeChannelsProperties );
-  }
-
-  private void generateAndAddContexts( final String[] xpathModel, final QName[] xpathControl )
-  {
-    final int n = xpathControl.length;
-    for( int i = 0; i < n; i++ )
+    final Catchment[] catchments = m_naOptimize.getCatchments();
+    for( final Catchment catchment : catchments )
     {
-      final Object value = m_naControl.getProperty( xpathControl[i] );
-      if( !(value instanceof Double) )
-        return;
+      catchment.setBianf( m_naOptimize.getBianf() );
+      catchment.setFaktorRetobRetint( m_naOptimize.getFaktorRetobTetint() );
+      catchment.setFaktn( m_naOptimize.getFaktn() );
+      catchment.setFaktorAigw( m_naOptimize.getFaktorAigw() );
+    }
 
-      final double initialValue = (Double) value;
-
-      final String xPaths = xpathModel[i];
-      final ParameterOptimizeContext context = new ParameterOptimizeContext( initialValue, 1, 0, 2, ParameterOptimizeContext.MODE_DIRECT, new String[] { xPaths } );
-      addContext( context );
+    final KMChannel[] kmChannels = m_naOptimize.getKMChannels();
+    for( final KMChannel kmChannel : kmChannels )
+    {
+      kmChannel.setFaktorRkf( m_naOptimize.getFactorRkf() );
+      kmChannel.setFaktorRnf( m_naOptimize.getFactorRnf() );
     }
   }
-
-  private void addContext( final ParameterOptimizeContext context )
-  {
-    m_contexts.add( context );
-  }
-
 }

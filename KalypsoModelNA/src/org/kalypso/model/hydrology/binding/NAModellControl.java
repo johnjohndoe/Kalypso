@@ -50,7 +50,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -110,79 +109,10 @@ public class NAModellControl extends Feature_Impl
   private static final QName PROP_SUP = new QName( NS_NACONTROL, "sup" ); //$NON-NLS-1$
 
 
-  private static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NACONTROL, "qberechnetZR" ); //$NON-NLS-1$
-
-  private static final QName PROP_NACONTROL_ROOTNODE = new QName( NS_NACONTROL, "rootNode" ); //$NON-NLS-1$
-
-  private static final QName PROP_AUTOCALI = new QName( NS_NACONTROL, "automaticCallibration" ); //$NON-NLS-1$
-
-  private static final QName PROP_ACCPRED = new QName( NS_NACONTROL, "accuracyPrediction" ); //$NON-NLS-1$
-
-  private static final QName PROP_USEOFFSTARTPRED = new QName( NS_NACONTROL, "useOffsetStartPrediction" ); //$NON-NLS-1$
-
-  private static final QName PROP_USEOFFENDPRED = new QName( NS_NACONTROL, "useOffsetEndPrediction" ); //$NON-NLS-1$
-
-  private static final QName PROP_USE_RESULTS = new QName( NS_NACONTROL, "useResults" ); //$NON-NLS-1$
-
-  private static final QName PROP_PEGEL_ZR_PROP = new QName( NS_NACONTROL, "pegelZR" ); //$NON-NLS-1$
-
-  private static final QName PROP_CATCHMENTS = new QName( NS_NACONTROL, "Catchments" ); //$NON-NLS-1$
-
-  private static final QName PROP_CATCHMENTS_BIANF = new QName( NS_NACONTROL, "CatchmentsBianf" ); //$NON-NLS-1$
-
-  private static final QName PROP_CATCHMENTS_FAKTOR_RETOB_TETINT = new QName( NS_NACONTROL, "CatchmentsFaktorRetobTetint" ); //$NON-NLS-1$
-
-  private static final QName PROP_CATCHMENTS_FAKTN = new QName( NS_NACONTROL, "CatchmentsFaktn" ); //$NON-NLS-1$
-
-  private static final QName PROP_CATCHMENTS_FAKTOR_AIGW = new QName( NS_NACONTROL, "CatchmentsFaktorAigw" ); //$NON-NLS-1$
-
-  private static final QName PROP_KMCHANNELS = new QName( NS_NACONTROL, "KMChannels" ); //$NON-NLS-1$
-
-  private static final QName PROP_KMCHANNELS_FAKTOR_RKF = new QName( NS_NACONTROL, "KMChannelsFaktorRkf" ); //$NON-NLS-1$
-
-  private static final QName PROP_KMCHANNELS_FAKTOR_RNF = new QName( NS_NACONTROL, "KMChannelsFaktorRnf" ); //$NON-NLS-1$
-
-  private static final QName PROP_LINK_QABLAGE_SPUR_MITTLERER = new QName( NS_NACONTROL, "qAblageSpurMittlerer" ); //$NON-NLS-1$
-
-  private static final QName PROP_LINK_QABLAGE_SPUR_OBERER = new QName( NS_NACONTROL, "qAblageSpurOberer" ); //$NON-NLS-1$
-
-  private static final QName PROP_LINK_QABLAGE_SPUR_UNTERER = new QName( NS_NACONTROL, "qAblageSpurUnterer" ); //$NON-NLS-1$
-
   public NAModellControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
-
-  public String getCatchments( )
-  {
-    return getProperty( PROP_CATCHMENTS, String.class );
-  }
-
-  public static QName[] getOptimizeCatchmentsProperties( )
-  {
-    return new QName[] { PROP_CATCHMENTS_BIANF, PROP_CATCHMENTS_FAKTOR_RETOB_TETINT, PROP_CATCHMENTS_FAKTN, PROP_CATCHMENTS_FAKTOR_AIGW };
-  }
-
-  public String getKMChannels( )
-  {
-    return getProperty( PROP_KMCHANNELS, String.class );
-  }
-
-  public static QName[] getOptimizeChannelsProperties( )
-  {
-    return new QName[] { PROP_KMCHANNELS_FAKTOR_RKF, PROP_KMCHANNELS_FAKTOR_RNF };
-  }
-
-  public boolean isUseResults( )
-  {
-    return getBoolean( PROP_USE_RESULTS, true );
-  }
-
-  public String getRootNodeID( )
-  {
-    return getProperty( PROP_NACONTROL_ROOTNODE, String.class );
-  }
-
 
   public boolean doGenerateTMP( )
   {
@@ -288,51 +218,6 @@ public class NAModellControl extends Feature_Impl
     return getBoolean( PROP_SUP, false );
   }
 
-  public TimeseriesLinkType getResultLink( )
-  {
-    return getProperty( PROP_RESULT_TIMESERIESLINK, TimeseriesLinkType.class );
-  }
-
-  public TimeseriesLinkType getQAblageMittlererLink( )
-  {
-    return getProperty( PROP_LINK_QABLAGE_SPUR_MITTLERER, TimeseriesLinkType.class );
-  }
-
-  public TimeseriesLinkType getQAblageObererLink( )
-  {
-    return getProperty( PROP_LINK_QABLAGE_SPUR_OBERER, TimeseriesLinkType.class );
-  }
-
-  public TimeseriesLinkType getQAblageUntererLink( )
-  {
-    return getProperty( PROP_LINK_QABLAGE_SPUR_UNTERER, TimeseriesLinkType.class );
-  }
-
-  public TimeseriesLinkType getPegelZRLink( )
-  {
-    return getProperty( PROP_PEGEL_ZR_PROP, TimeseriesLinkType.class );
-  }
-
-  public boolean doUseOffsetStartPred( )
-  {
-    return getBoolean( PROP_USEOFFSTARTPRED, false );
-  }
-
-  public boolean doUseOffsetEndPred( )
-  {
-    return getBoolean( PROP_USEOFFENDPRED, false );
-  }
-
-  public Double getPredictionAccuracy( )
-  {
-    return getProperty( PROP_ACCPRED, Double.class );
-  }
-
-  public boolean doOptimize( )
-  {
-    return getBoolean( PROP_AUTOCALI, false );
-  }
-
   /**
    * Get initial dates that should be written.<br/>The dates will be returned sorted.
    */
@@ -355,5 +240,4 @@ public class NAModellControl extends Feature_Impl
 
     return dateWriteSet.toArray( new Date[dateWriteSet.size()] );
   }
-
 }

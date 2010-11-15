@@ -58,6 +58,7 @@ import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
@@ -123,6 +124,7 @@ public class NAModelSimulation
   {
     final URL modelUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
     final URL controlURL = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
+    final URL optimizeURL = getOptionalLocation( NaModelConstants.IN_OPTIMIZE_ID );
     final URL metaUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_META_ID );
     final URL parameterUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
     final URL hydrotopUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
@@ -131,7 +133,15 @@ public class NAModelSimulation
 
     final URL sudsUrl = getInputOrNull( NaModelConstants.IN_SUDS_ID );
 
-    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
+    return new NaSimulationData( modelUrl, controlURL, metaUrl, optimizeURL, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
+  }
+
+  private URL getOptionalLocation( final String id ) throws SimulationException
+  {
+    if( m_inputProvider.hasID( id ) )
+      return (URL) m_inputProvider.getInputForID( id );
+
+    return null;
   }
 
   private URL getInputOrNull( final String id ) throws SimulationException
@@ -165,10 +175,10 @@ public class NAModelSimulation
 
   private URL getStartConditionFile( ) throws SimulationException
   {
-    if( !m_inputProvider.hasID( NaModelConstants.LZSIM_IN_ID ) )
+    if( !m_inputProvider.hasID( NaModelConstants.IN_LZSIM_IN_ID ) )
       return null;
 
-    final URL iniValuesFolderURL = (URL) m_inputProvider.getInputForID( NaModelConstants.LZSIM_IN_ID );
+    final URL iniValuesFolderURL = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_LZSIM_IN_ID );
     try
     {
       // TODO: crude way to create the new URL, necessary as probably we do not have a '/' at the end of the path
@@ -226,8 +236,9 @@ public class NAModelSimulation
 
     final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
     final NAModellControl naControl = simulationData.getNaControl();
+    final NAOptimize naOptimize = simulationData.getNaOptimize();
 
-    final NaPostProcessor postProcessor = new NaPostProcessor( m_conf, m_logger, modelWorkspace, naControl, hydroHash );
+    final NaPostProcessor postProcessor = new NaPostProcessor( m_conf, m_logger, modelWorkspace, naControl, naOptimize, hydroHash );
     postProcessor.process( m_simDirs.asciiDirs, m_simDirs );
     return postProcessor.isSucceeded();
   }
