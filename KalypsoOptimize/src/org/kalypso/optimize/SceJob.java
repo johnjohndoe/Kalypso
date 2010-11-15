@@ -41,11 +41,7 @@
 package org.kalypso.optimize;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -62,12 +58,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessControlThread;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
-import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
@@ -81,71 +77,59 @@ import org.xml.sax.SAXException;
  */
 public class SceJob
 {
-  private final URL XML2SCE_URL;
-
-  private final File m_sceExe;
+  private final URL XML2SCE_URL = getClass().getResource( "resource/xml2sceInput.xsl" );
 
   private final File m_sceTmpDir;
 
   private final AutoCalibration m_autoCalibration;
 
+  private final File m_sceDir;
+
+  private final File m_sceExe;
+
   public SceJob( final AutoCalibration autoCalibration, final File sceTmpDir )
   {
     m_autoCalibration = autoCalibration;
     m_sceTmpDir = sceTmpDir;
-    XML2SCE_URL = getClass().getResource( "resource/xml2sceInput.xsl" );
-    m_sceExe = prepareSCE();
+    m_sceDir = FileUtilities.createNewTempDir( "sce", m_sceTmpDir );
+    m_sceExe = new File( m_sceDir, "sce.exe" );
   }
 
   public void optimize( final SceIOHandler sceIO, final ISimulationMonitor monitor ) throws Exception
   {
-    makeinputFiles();
-    // Parameter
+    prepareExe();
+
+    writeSceIn();
+
     startSCEOptimization( sceIO, monitor );
   }
 
-  private File prepareSCE( )
+  private void prepareExe( ) throws IOException
   {
-    final InputStream sceStream = getClass().getResourceAsStream( "resource/sce.exe_" );
-    final File tmpDir = FileUtilities.createNewTempDir( "sce", m_sceTmpDir );
-    final File sceExe = new File( tmpDir, "sce.exe" );
-    try
-    {
-      StreamUtilities.streamCopy( sceStream, new FileOutputStream( sceExe ) );
-    }
-    catch( final FileNotFoundException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-    return sceExe;
+    final URL sceExeLocation = getClass().getResource( "resource/sce.exe_" );
+    FileUtils.copyURLToFile( sceExeLocation, m_sceExe );
   }
 
   /**
    * prepare SCE configuration file "scein.dat"
    */
-  private void makeinputFiles( ) throws TransformerException, ParserConfigurationException, SAXException, IOException, JAXBException
+  private void writeSceIn( ) throws TransformerException, ParserConfigurationException, SAXException, IOException, JAXBException
   {
+    final File outputFile = new File( m_sceDir, "scein.dat" );
+
     // prepare scein.dat
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware( true );
     final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
-
     final Marshaller marshaller = JaxbUtilities.createMarshaller( OptimizeJaxb.JC );
-
     final Document xmlDOM = docuBuilder.newDocument();
     marshaller.marshal( m_autoCalibration, xmlDOM );
 
-    final File outputFile = new File( m_sceExe.getParent(), "scein.dat" );
-    final FileWriter writer = new FileWriter( outputFile );
+    // FIXME: stream never closed
     final Document xslDOM = docuBuilder.parse( XML2SCE_URL.openStream() );
     final TransformerFactory transformerFactory = TransformerFactory.newInstance();
     final Transformer transformer = transformerFactory.newTransformer( new DOMSource( xslDOM ) );
-    transformer.transform( new DOMSource( xmlDOM ), new StreamResult( writer ) );
-    writer.close();
+    transformer.transform( new DOMSource( xmlDOM ), new StreamResult( outputFile ) );
   }
 
   private void startSCEOptimization( final SceIOHandler sceIO, final ISimulationMonitor monitor ) throws SimulationException
@@ -156,10 +140,9 @@ public class SceJob
     ProcessControlThread procCtrlThread = null;
     try
     {
-      final File exeDir = m_sceExe.getParentFile();
-      final String commandString = m_sceExe.getAbsolutePath();
+      final String[] commands = new String[] { m_sceExe.getAbsolutePath() };
 
-      final Process process = Runtime.getRuntime().exec( commandString, null, exeDir );
+      final Process process = Runtime.getRuntime().exec( commands, null, m_sceDir );
       final long lTimeOut = 1000l * 60l * 15l;// 15 minutes
       if( lTimeOut > 0 )
       {
@@ -179,9 +162,18 @@ public class SceJob
 
       while( true )
       {
-        final String monitorMsg = String.format( "Optimierungsrechnung %d von %d", sceIO.getStep(), stepMax );
-        monitor.setMessage( monitorMsg );
-        monitor.setProgress( 100 * sceIO.getStep() / stepMax );
+        final int step = sceIO.getStep();
+        monitor.setProgress( 100 * step / (stepMax + 1) );
+        if( step > stepMax )
+        {
+          final String monitorMsg = String.format( "Optimierungsrechnung abgeschlossen, Ergebnisauswertung", step + 1, stepMax + 1 );
+          monitor.setMessage( monitorMsg );
+        }
+        else
+        {
+          final String monitorMsg = String.format( "Optimierungsrechnung %d von %d", step + 1, stepMax + 1 );
+          monitor.setMessage( monitorMsg );
+        }
 
         if( inStream.ready() )
         {

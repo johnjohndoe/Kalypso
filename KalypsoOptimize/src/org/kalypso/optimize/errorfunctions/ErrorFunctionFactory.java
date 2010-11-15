@@ -65,7 +65,7 @@ public class ErrorFunctionFactory
     // do not instantiate
   }
 
-  public static IErrorFunktion createErrorFunktion( final SortedMap<Date, Double> measuredTS, final AutoCalibration autocalibration )
+  public static IErrorFunktion createErrorFunction( final SortedMap<Date, Double> measuredTS, final AutoCalibration autocalibration )
   {
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();

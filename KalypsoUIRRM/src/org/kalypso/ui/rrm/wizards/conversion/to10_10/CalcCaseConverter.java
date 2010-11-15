@@ -126,7 +126,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final URL naControlLocation = naControlFile.toURI().toURL();
     final URL naLzsimLocation = naLzsimFile.toURI().toURL();
 
-    m_data = new NaSimulationData( naModelLocation, null, naControlLocation, null, null, null, null, naLzsimLocation );
+    m_data = new NaSimulationData( naModelLocation, null, naControlLocation, null, null, null, null, null, naLzsimLocation );
   }
 
   private void copyData( ) throws Exception

@@ -81,7 +81,7 @@ public class ParameterOptimizeContext
     m_xPaths = xPaths;
   }
 
-  public ParameterOptimizeContext( final Parameter parameter )
+  public ParameterOptimizeContext( final Parameter parameter, final String prefixPath )
   {
     m_initialValue = parameter.getInitialValue();
     m_synteticValue = parameter.getSynteticValue();
@@ -89,7 +89,10 @@ public class ParameterOptimizeContext
     m_upperBound = parameter.getUpperBound();
     m_mode = parameter.getMode();
 
-    m_xPaths = parameter.getXpath().toArray( new String[parameter.getXpath().size()] );
+    final String[] pathes = parameter.getXpath().toArray( new String[parameter.getXpath().size()] );
+    m_xPaths = new String[pathes.length];
+    for( int i = 0; i < pathes.length; i++ )
+      m_xPaths[i] = prefixPath + "/" + pathes[i];
   }
 
   public double getUpperBound()

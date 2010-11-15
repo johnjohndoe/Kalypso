@@ -73,76 +73,73 @@ public final class OptimizeModelUtils
     setParameter( calContext.getxPaths(), value, doc );
   }
 
-  public static void transformModel( final Document doc, final double[] values, final ParameterOptimizeContext[] contexts ) throws TransformerException
+  public static void transformModel( final Node node, final double[] values, final ParameterOptimizeContext[] contexts ) throws TransformerException
   {
     for( int i = 0; i < contexts.length; i++ )
-      transformModel( doc, values[i], contexts[i] );
+      transformModel( node, values[i], contexts[i] );
   }
 
-  private static void transformModel( final Document doc, final double value, final ParameterOptimizeContext calContext ) throws TransformerException
+  private static void transformModel( final Node node, final double value, final ParameterOptimizeContext calContext ) throws TransformerException
   {
     final String mode = calContext.getMode();
     if( ParameterOptimizeContext.MODE_FACTOR.equals( mode ) )
-      setParameter_Factor( calContext.getxPaths(), value, doc );
+      setParameter_Factor( calContext.getxPaths(), value, node );
     else if( ParameterOptimizeContext.MODE_OFFSET.equals( mode ) )
-      setParameter_Offset( calContext.getxPaths(), value, doc );
+      setParameter_Offset( calContext.getxPaths(), value, node );
     else // mode direct
-      setParameter( calContext.getxPaths(), (new Double( value )).toString(), doc );
+      setParameter( calContext.getxPaths(), (new Double( value )).toString(), node );
   }
 
-  private static void setParameter( final String[] querys, final String value, final Document myDom ) throws TransformerException
+  private static void setParameter( final String[] querys, final String value, final Node node ) throws TransformerException
   {
     for( final String query : querys )
     {
-      final NodeList nl = getXPath( query, myDom );
+      final NodeList nl = getXPath( query, node );
       if( nl.getLength() == 0 )
         System.out.println( "Empty result for xpath: " + query );
 
       for( int i = 0; i < nl.getLength(); i++ )
-      {
-        final Node node = nl.item( i );
-        XMLUtilities.setTextNode( myDom, node, value );
-      }
+        XMLUtilities.setTextNode( nl.item( i ), value );
     }
   }
 
-  private static void setParameter_Factor( final String[] querys, final double value, final Document myDom ) throws TransformerException
+  private static void setParameter_Factor( final String[] querys, final double value, final Node node ) throws TransformerException
   {
     for( final String query : querys )
     {
-      final NodeList nl = getXPath( query, myDom );
+      final NodeList nl = getXPath( query, node );
 
       for( int i = 0; i < nl.getLength(); i++ )
       {
         final String nodeValue = XMLTools.getStringValue( nl.item( i ) );
         final double setValue = value * Double.parseDouble( nodeValue );
-        XMLUtilities.setTextNode( myDom, nl.item( i ), Double.toString( setValue ) );
+        XMLUtilities.setTextNode( nl.item( i ), Double.toString( setValue ) );
       }
     }
   }
 
-  private static void setParameter_Offset( final String[] querys, final double value, final Document myDom ) throws TransformerException
+  private static void setParameter_Offset( final String[] querys, final double value, final Node node ) throws TransformerException
   {
     for( final String query : querys )
     {
-      final NodeList nl = getXPath( query, myDom );
+      final NodeList nl = getXPath( query, node );
 
       for( int i = 0; i < nl.getLength(); i++ )
       {
         final String nodeValue = XMLTools.getStringValue( nl.item( i ) );
         final double setValue = value + Double.parseDouble( nodeValue );
-        XMLUtilities.setTextNode( myDom, nl.item( i ), Double.toString( setValue ) );
+        XMLUtilities.setTextNode( nl.item( i ), Double.toString( setValue ) );
       }
     }
   }
 
   // method returns nodeList to a given query
-  private static NodeList getXPath( final String xPathQuery, final Document domNode ) throws TransformerException
+  private static NodeList getXPath( final String xPathQuery, final Node node ) throws TransformerException
   {
     final String newXPathQuery = null;
     try
     {
-      return XPathAPI.selectNodeList( domNode, xPathQuery, domNode );
+      return XPathAPI.selectNodeList( node, xPathQuery, node );
     }
     catch( final TransformerException e )
     {

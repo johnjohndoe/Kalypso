@@ -65,24 +65,26 @@ public interface IOptimizingJob
    * @param values
    *          the values
    */
-  public void optimize( Parameter[] parameterConf, double[] values ) throws Exception;
+  void optimize( Parameter[] parameterConf, double[] values ) throws Exception;
 
   /**
    * start calculation
    * 
    * @throws MalformedURLException
    */
-  public void calculate( ) throws Exception;
+  void calculate( ) throws Exception;
 
+  // FIXME: optimize job should not return measure/calculated timeseries but directly return the error-value as this is
+  // implementation specific
   /**
    * @return timeseries of measured values
    */
-  public SortedMap<Date, Double> getMeasuredTimeSeries( ) throws MalformedURLException, SensorException;
+  SortedMap<Date, Double> getMeasuredTimeSeries( ) throws MalformedURLException, SensorException;
 
   /**
    * @return calculated timeseries from last calculation run
    */
-  public SortedMap<Date, Double> getCalcedTimeSeries( ) throws MalformedURLException, SensorException;
+  SortedMap<Date, Double> getCalcedTimeSeries( ) throws MalformedURLException, SensorException;
 
   /**
    * inform job, if last calculation got the best results (till last run)</br> e.g. to implement: keep best results and
@@ -90,11 +92,11 @@ public interface IOptimizingJob
    * 
    * @param wasBest
    */
-  public void setBestEvaluation( boolean wasBest );
+  void setBestEvaluation( boolean wasBest );
 
-  public AutoCalibration getOptimizeConfiguration( );
+  AutoCalibration getOptimizeConfiguration( );
 
-  public void publishResults( ISimulationResultEater resultEater ) throws SimulationException;
+  void publishResults( ISimulationResultEater resultEater ) throws SimulationException;
 
-  public boolean isSucceeded();
+  boolean isSucceeded( );
 }
