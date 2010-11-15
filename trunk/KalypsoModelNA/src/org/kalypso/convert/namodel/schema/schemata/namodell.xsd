@@ -209,13 +209,13 @@
 	</complexType>
 	
 	<!-- Element created to reference catchments -->
-	<element name="catchmentLinkMember" type="na:CatchmentPropertyType" />
-	<complexType name="CatchmentPropertyType">
-		<sequence minOccurs="0" maxOccurs="0">
-			<element ref="na:Catchment" />
-		</sequence>
-		<attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
-	</complexType>
+	<element name="catchmentLinkMember" type="na:CatchmentLinkPropertyType"/>
+    <complexType name="CatchmentLinkPropertyType">
+  		<sequence minOccurs="0" maxOccurs="0">
+  			<element ref="na:Catchment" />
+  		</sequence>
+  		<attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+  	</complexType>
 	
 	<element name="Catchment" type="na:CatchmentFeatureType" substitutionGroup="gml:_Feature"/>
 	<complexType name="CatchmentFeatureType">
@@ -428,7 +428,14 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	
+
+    <complexType name="KMChannelLinkPropertyType">
+        <sequence minOccurs="0" maxOccurs="0">
+            <element ref="na:KMChannel" />
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+    </complexType>
+  
     <element name="_Channel" type="na:AbstractChannelType" abstract="true" substitutionGroup="gml:_Feature"/>
 	<!-- Channel super type -->
 	<complexType name="AbstractChannelType">
@@ -689,7 +696,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="ngwzu" type="na:CatchmentLinkType"/>
+					<element name="ngwzu" type="na:CatchmentMemberPropertyType"/>
 					<element name="gwwi">
 						<simpleType>
 							<restriction base="double">
@@ -702,7 +709,7 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="CatchmentLinkType">
+	<complexType name="CatchmentMemberPropertyType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>

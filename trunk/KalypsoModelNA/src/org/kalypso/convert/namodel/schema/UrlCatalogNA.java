@@ -71,6 +71,7 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     catalog.put( NaModelConstants.NS_SYNTHN, myClass.getResource( "schemata/synthN.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_INIVALUES, myClass.getResource( "schemata/initialValues.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAFORTRANLOG, myClass.getResource( "schemata/NAFortranLog.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAOPTIMIZE, myClass.getResource( "schemata/naoptimize.xsd" ) ); //$NON-NLS-1$
 
     catalog.put( NaModelConstants.NS_NALANDUSE, myClass.getResource( "schemata/landuse.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAPEDOLOGIE, myClass.getResource( "schemata/pedologie.xsd" ) ); //$NON-NLS-1$
@@ -88,6 +89,7 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     prefixes.put( NaModelConstants.NS_SYNTHN, "syn" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_INIVALUES, "ini" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_NAFORTRANLOG, "naLog" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NAOPTIMIZE, "rrmOpti" ); //$NON-NLS-1$
 
     prefixes.put( NaModelConstants.NS_NALANDUSE, "rrmLanduse" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_NAPEDOLOGIE, "rrmPedo" ); //$NON-NLS-1$
