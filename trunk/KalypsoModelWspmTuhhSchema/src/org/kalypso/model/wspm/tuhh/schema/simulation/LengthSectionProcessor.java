@@ -89,6 +89,7 @@ import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.AxisType.Direction;
 import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.TitleType;
 
 public class LengthSectionProcessor
 {
@@ -405,7 +406,9 @@ public class LengthSectionProcessor
     // only use first chart - there should only be one
     final ChartType chart = charts[0];
 
-    chart.setTitleArray( new String[] { String.format( Messages.getString( "LengthSectionProcessor.2" ), title ) } ); //$NON-NLS-1$
+    final TitleType t1 = TitleType.Factory.newInstance();
+    t1.setStringValue( String.format( Messages.getString( "LengthSectionProcessor.2" ), title ) );
+    chart.setTitleArray( new TitleType[] { t1 } ); //$NON-NLS-1$
 
     final AxisType[] axes = chart.getMappers().getAxisArray();
     for( final AxisType axis : axes )
