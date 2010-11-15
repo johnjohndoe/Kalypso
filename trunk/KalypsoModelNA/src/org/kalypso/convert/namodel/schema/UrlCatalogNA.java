@@ -89,7 +89,7 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     prefixes.put( NaModelConstants.NS_SYNTHN, "syn" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_INIVALUES, "ini" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_NAFORTRANLOG, "naLog" ); //$NON-NLS-1$
-    prefixes.put( NaModelConstants.NS_NAOPTIMIZE, "rrmOpti" ); //$NON-NLS-1$
+    prefixes.put( NaModelConstants.NS_NAOPTIMIZE, "rrmOptimize" ); //$NON-NLS-1$
 
     prefixes.put( NaModelConstants.NS_NALANDUSE, "rrmLanduse" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_NAPEDOLOGIE, "rrmPedo" ); //$NON-NLS-1$
