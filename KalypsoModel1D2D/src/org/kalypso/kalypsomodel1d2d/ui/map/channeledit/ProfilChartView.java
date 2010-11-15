@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,10 +77,12 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -457,7 +460,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     if( m_profile == null )
     {
       ((GridData) (m_chartComposite.getLayoutData())).exclude = true;
-      m_chartComposite.getChartModel().setTitle( "<No Profile Selected>" ); //$NON-NLS-1$
+      m_chartComposite.getChartModel().setTitle( "<No Profile Selected>", ALIGNMENT.TICK_CENTERED, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
 
     }
     else
@@ -466,7 +469,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       {
         m_profile.addProfilListener( this );
 
-        m_chartComposite.getChartModel().setTitle( String.format( "Station km %10.4f", m_profile.getStation() ) );
+        m_chartComposite.getChartModel().setTitle( String.format( "Station km %10.4f", m_profile.getStation() ), ALIGNMENT.TICK_CENTERED, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) );
         ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
         updateLayer();
       }
