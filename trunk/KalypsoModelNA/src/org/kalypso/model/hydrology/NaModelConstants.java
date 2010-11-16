@@ -50,287 +50,289 @@ public interface NaModelConstants
   String EXE_PATTERN = "Kalypso-NA_(.*).exe"; //$NON-NLS-1$
 
   /** namespaces */
-  public static final String NS_NAMETA = "org.kalypso.na.control"; //$NON-NLS-1$
+  String NS_NAMETA = "org.kalypso.na.control"; //$NON-NLS-1$
 
-  public static final String NS_NAMODELL = "http://www.tuhh.de/kalypsoNA"; //$NON-NLS-1$
+  String NS_NAMODELL = "http://www.tuhh.de/kalypsoNA"; //$NON-NLS-1$
 
-  public static final String NS_NACONTROL = "org.kalypso.namodell.control"; //$NON-NLS-1$
+  String NS_NACONTROL = "org.kalypso.namodell.control"; //$NON-NLS-1$
 
-  public static final String NS_NAHYDROTOP = "http://www.tuhh.de/hydrotop"; //$NON-NLS-1$
+  String NS_NAHYDROTOP = "http://www.tuhh.de/hydrotop"; //$NON-NLS-1$
 
-  public static final String NS_NAPARAMETER = "http://www.tuhh.de/parameter"; //$NON-NLS-1$
+  String NS_NAPARAMETER = "http://www.tuhh.de/parameter"; //$NON-NLS-1$
 
-  public static final String NS_OMBROMETER = "http://org.kalypso.ombrometer"; //$NON-NLS-1$
+  String NS_OMBROMETER = "http://org.kalypso.ombrometer"; //$NON-NLS-1$
 
-  public static final String NS_SYNTHN = "http://www.tuhh.de/synthN"; //$NON-NLS-1$
+  String NS_SYNTHN = "http://www.tuhh.de/synthN"; //$NON-NLS-1$
 
-  public static final String NS_INIVALUES = "http://www.tuhh.de/initialValues"; //$NON-NLS-1$
+  String NS_INIVALUES = "http://www.tuhh.de/initialValues"; //$NON-NLS-1$
 
-  public static final String NS_NAFORTRANLOG = "http://www.tuhh.de/NAFortranLog"; //$NON-NLS-1$
+  String NS_NAFORTRANLOG = "http://www.tuhh.de/NAFortranLog"; //$NON-NLS-1$
 
-  public static final String NS_NALANDUSE = "http://sourceforge.kalypso.org/schemata/hydrology/landuse"; //$NON-NLS-1$
+  String NS_NALANDUSE = "http://sourceforge.kalypso.org/schemata/hydrology/landuse"; //$NON-NLS-1$
 
-  public static final String NS_NAPEDOLOGIE = "http://sourceforge.kalypso.org/schemata/hydrology/pedologie"; //$NON-NLS-1$
+  String NS_NAPEDOLOGIE = "http://sourceforge.kalypso.org/schemata/hydrology/pedologie"; //$NON-NLS-1$
 
-  public static final String NS_NAGEOLOGIE = "http://sourceforge.kalypso.org/schemata/hydrology/geologie"; //$NON-NLS-1$
+  String NS_NAGEOLOGIE = "http://sourceforge.kalypso.org/schemata/hydrology/geologie"; //$NON-NLS-1$
 
-  public static final String NS_NASIMPLESHAPECATCHMENT = "http://sourceforge.kalypso.org/schemata/hydrology/simpleShapeCatchment"; //$NON-NLS-1$
+  String NS_NASIMPLESHAPECATCHMENT = "http://sourceforge.kalypso.org/schemata/hydrology/simpleShapeCatchment"; //$NON-NLS-1$
 
-  public static final String NS_NASUDS = "http://sourceforge.kalypso.org/schemata/hydrology/suds"; //$NON-NLS-1$
+  String NS_NASUDS = "http://sourceforge.kalypso.org/schemata/hydrology/suds"; //$NON-NLS-1$
 
   final String NS_NAOPTIMIZE = "http://kalypso.sorgeforge.net/schemata/hydrology/optimize"; //$NON-NLS-1$
 
   /** server client bean constants */
   // input
-  public static final String IN_META_ID = "MetaSteuerdaten"; //$NON-NLS-1$
+  String IN_META_ID = "MetaSteuerdaten"; //$NON-NLS-1$
 
-  public static final String IN_ANALYSE_MODELL_XSD_ID = "AnalyseModellXSD"; //$NON-NLS-1$
+  String IN_ANALYSE_MODELL_XSD_ID = "AnalyseModellXSD"; //$NON-NLS-1$
 
-  public static final String IN_MODELL_ID = "Modell"; //$NON-NLS-1$
+  String IN_MODELL_ID = "Modell"; //$NON-NLS-1$
 
-  public static final String IN_HYDROTOP_ID = "Hydrotop"; //$NON-NLS-1$
+  String IN_HYDROTOP_ID = "Hydrotop"; //$NON-NLS-1$
 
-  public static final String IN_PARAMETER_ID = "Parameter"; //$NON-NLS-1$
+  String IN_PARAMETER_ID = "Parameter"; //$NON-NLS-1$
 
-  public static final String IN_LANDUSE_ID = "Landuse"; //$NON-NLS-1$
+  String IN_LANDUSE_ID = "Landuse"; //$NON-NLS-1$
 
-  public static final String IN_SUDS_ID = "Suds"; //$NON-NLS-1$
+  String IN_SUDS_ID = "Suds"; //$NON-NLS-1$
 
-  public static final String IN_CONTROL_ID = "Control"; //$NON-NLS-1$
+  String IN_CONTROL_ID = "Control"; //$NON-NLS-1$
 
-  public static final String IN_OPTIMIZE_ID = "Optimize"; //$NON-NLS-1$
+  String IN_OPTIMIZE_ID = "Optimize"; //$NON-NLS-1$
 
-  public static final String IN_SYNTHN_ID = "synthNiederschlag"; //$NON-NLS-1$
+  String IN_OPTIMIZE_FEATURE_PATH_ID = "OptimizeFeaturePath";
 
-  public static final String IN_OPTIMIZECONF_ID = "SceConf"; //$NON-NLS-1$
+  String IN_SYNTHN_ID = "synthNiederschlag"; //$NON-NLS-1$
 
-  public static final String IN_KLIMA_DIR_ID = "KlimaDir"; //$NON-NLS-1$
+  String IN_OPTIMIZECONF_ID = "SceConf"; //$NON-NLS-1$
 
-  public static final String IN_RAINFALL_ID = "NiederschlagDir"; //$NON-NLS-1$
+  String IN_KLIMA_DIR_ID = "KlimaDir"; //$NON-NLS-1$
 
-  public static final String IN_GAUGING_STATION_ID = "PegelDir"; //$NON-NLS-1$
+  String IN_RAINFALL_ID = "NiederschlagDir"; //$NON-NLS-1$
 
-  public static final String IN_RESULTS_DIR_ID = "ErgebnisDir"; //$NON-NLS-1$
+  String IN_PEGEL_DIR = "PegelDir"; //$NON-NLS-1$
 
-  public static final String LZSIM_IN_ID = "LZSIM_IN"; //$NON-NLS-1$
+  String IN_RESULTS_DIR_ID = "ErgebnisDir"; //$NON-NLS-1$
+
+  String IN_LZSIM_IN_ID = "LZSIM_IN"; //$NON-NLS-1$
 
   // output
-  public static final String OUT_ZML = "OUT_ZML"; //$NON-NLS-1$
+  String OUT_ZML = "OUT_ZML"; //$NON-NLS-1$
 
-  public static final String OUT_OPTIMIZEFILE = "OUT_OPTIMIZEFILE"; //$NON-NLS-1$
+  String OUT_OPTIMIZEFILE = "OUT_OPTIMIZEFILE"; //$NON-NLS-1$
 
-  public static final String OUTPUT_DIR_NAME = "results"; //$NON-NLS-1$
+  String OUTPUT_DIR_NAME = "results"; //$NON-NLS-1$
 
-  public static final String ASCII_DIR_NAME = "ascii"; //$NON-NLS-1$
+  String ASCII_DIR_NAME = "ascii"; //$NON-NLS-1$
 
-  public static final String RESULT_DIR_NAME = "Ergebnisse"; //$NON-NLS-1$
+  String RESULT_DIR_NAME = "Ergebnisse"; //$NON-NLS-1$
 
-  public static final String LZSIM_OUT_ID = "LZSIM_OUT"; //$NON-NLS-1$
+  String LZSIM_OUT_ID = "LZSIM_OUT"; //$NON-NLS-1$
 
-  public static final String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT"; //$NON-NLS-1$
+  String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT"; //$NON-NLS-1$
 
-  public static final String LOG_EXE_ERROUT_ID = "LOG_EXE_ERROUT"; //$NON-NLS-1$
+  String LOG_EXE_ERROUT_ID = "LOG_EXE_ERROUT"; //$NON-NLS-1$
 
-  public static final String LOG_OUTRES_ID = "LOG_OUTRES"; //$NON-NLS-1$
+  String LOG_OUTRES_ID = "LOG_OUTRES"; //$NON-NLS-1$
 
-  public static final String LOG_OUTERR_ID = "LOG_OUTERR"; //$NON-NLS-1$
+  String LOG_OUTERR_ID = "LOG_OUTERR"; //$NON-NLS-1$
 
-  public static final String LOG_INFO_ID = "LOG_INFO"; //$NON-NLS-1$
+  String LOG_INFO_ID = "LOG_INFO"; //$NON-NLS-1$
 
   /** namodell.xsd */
 
   // channels
-  public static final QName STORAGE_CHANNEL_ZMLINLINE_PROP = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
+  QName STORAGE_CHANNEL_ZMLINLINE_PROP = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
 
-  public static final QName STORAGE_CHANNEL_VMAX_PROP = new QName( NS_NAMODELL, "vmax" ); //$NON-NLS-1$
+  QName STORAGE_CHANNEL_VMAX_PROP = new QName( NS_NAMODELL, "vmax" ); //$NON-NLS-1$
 
-  public static final QName STORAGE_CHANNEL_VMIN_PROP = new QName( NS_NAMODELL, "vmin" ); //$NON-NLS-1$
+  QName STORAGE_CHANNEL_VMIN_PROP = new QName( NS_NAMODELL, "vmin" ); //$NON-NLS-1$
 
-  public static final QName STORAGE_CHANNEL_SV_PROP = new QName( NS_NAMODELL, "sv" ); //$NON-NLS-1$
+  QName STORAGE_CHANNEL_SV_PROP = new QName( NS_NAMODELL, "sv" ); //$NON-NLS-1$
 
-  public static final QName STORAGE_CHANNEL_HVVSQD_PROP = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
+  QName STORAGE_CHANNEL_HVVSQD_PROP = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
 
-  public static final QName KM_CHANNEL_QRK_PROP = new QName( NS_NAMODELL, "qrk" ); //$NON-NLS-1$
+  QName KM_CHANNEL_QRK_PROP = new QName( NS_NAMODELL, "qrk" ); //$NON-NLS-1$
 
-  public static final QName KM_CHANNEL_RKV_PROP = new QName( NS_NAMODELL, "rkv" ); //$NON-NLS-1$
+  QName KM_CHANNEL_RKV_PROP = new QName( NS_NAMODELL, "rkv" ); //$NON-NLS-1$
 
-  public static final QName KM_CHANNEL_C_PROP = new QName( NS_NAMODELL, "c" ); //$NON-NLS-1$
+  QName KM_CHANNEL_C_PROP = new QName( NS_NAMODELL, "c" ); //$NON-NLS-1$
 
-  public static final QName KM_CHANNEL_RNV_PROP = new QName( NS_NAMODELL, "rnv" ); //$NON-NLS-1$
+  QName KM_CHANNEL_RNV_PROP = new QName( NS_NAMODELL, "rnv" ); //$NON-NLS-1$
 
-  public static final QName KM_CHANNEL_KMSTART = new QName( NS_NAMODELL, "startkm" ); //$NON-NLS-1$
+  QName KM_CHANNEL_KMSTART = new QName( NS_NAMODELL, "startkm" ); //$NON-NLS-1$
 
-  public static final QName KM_CHANNEL_KMEND = new QName( NS_NAMODELL, "endkm" ); //$NON-NLS-1$
+  QName KM_CHANNEL_KMEND = new QName( NS_NAMODELL, "endkm" ); //$NON-NLS-1$
 
   // nodes
-  public static final QName NODE_GEOM_PROP = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
+  QName NODE_GEOM_PROP = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 
-  public static final QName NODE_VERZW_MEMBER_PROP = new QName( NS_NAMODELL, "verzweigungNodeMember" ); //$NON-NLS-1$
+  QName NODE_VERZW_MEMBER_PROP = new QName( NS_NAMODELL, "verzweigungNodeMember" ); //$NON-NLS-1$
 
-  public static final QName NODE_VERZW_ENTNAHME = new QName( NS_NAMODELL, "KontEntnahme" ); //$NON-NLS-1$
+  QName NODE_VERZW_ENTNAHME = new QName( NS_NAMODELL, "KontEntnahme" ); //$NON-NLS-1$
 
-  public static final QName NODE_VERZW_ZUFLUSS = new QName( NS_NAMODELL, "KontZufluss" ); //$NON-NLS-1$
+  QName NODE_VERZW_ZUFLUSS = new QName( NS_NAMODELL, "KontZufluss" ); //$NON-NLS-1$
 
-  public static final QName NODE_VERZW_UEBERLAUF = new QName( NS_NAMODELL, "Ueberlauf" ); //$NON-NLS-1$
+  QName NODE_VERZW_UEBERLAUF = new QName( NS_NAMODELL, "Ueberlauf" ); //$NON-NLS-1$
 
-  public static final QName NODE_VERZW_VERZWEIGUNG = new QName( NS_NAMODELL, "Verzweigung" ); //$NON-NLS-1$
+  QName NODE_VERZW_VERZWEIGUNG = new QName( NS_NAMODELL, "Verzweigung" ); //$NON-NLS-1$
 
-  public static final QName NODE_VERZW_QZUG_PROP = new QName( NS_NAMODELL, "qzug" ); //$NON-NLS-1$
+  QName NODE_VERZW_QZUG_PROP = new QName( NS_NAMODELL, "qzug" ); //$NON-NLS-1$
 
-  public static final QName NODE_VERZW_ZPROZ_PROP = new QName( NS_NAMODELL, "zproz" ); //$NON-NLS-1$
+  QName NODE_VERZW_ZPROZ_PROP = new QName( NS_NAMODELL, "zproz" ); //$NON-NLS-1$
 
-  public static final QName NODE_VERZW_QABG_PROP = new QName( NS_NAMODELL, "qabg" ); //$NON-NLS-1$
+  QName NODE_VERZW_QABG_PROP = new QName( NS_NAMODELL, "qabg" ); //$NON-NLS-1$
 
-  public static final QName NODE_VERZW_QUEB_PROP = new QName( NS_NAMODELL, "queb" ); //$NON-NLS-1$
+  QName NODE_VERZW_QUEB_PROP = new QName( NS_NAMODELL, "queb" ); //$NON-NLS-1$
 
-  public static final QName NODE_COLLECTION_FT = new QName( NS_NAMODELL, "NodeCollection" ); //$NON-NLS-1$
+  QName NODE_COLLECTION_FT = new QName( NS_NAMODELL, "NodeCollection" ); //$NON-NLS-1$
 
 
-  public static final QName NODE_ZUFLUSS_ZR_REPOSITORY_PROP = new QName( NS_NAMODELL, "zuflussZRRepository" ); //$NON-NLS-1$
+  QName NODE_ZUFLUSS_ZR_REPOSITORY_PROP = new QName( NS_NAMODELL, "zuflussZRRepository" ); //$NON-NLS-1$
 
-  public static final QName NODE_RIVER_CODE_PROP = new QName( NS_NAMODELL, "riverCode" ); //$NON-NLS-1$
+  QName NODE_RIVER_CODE_PROP = new QName( NS_NAMODELL, "riverCode" ); //$NON-NLS-1$
 
-  public static final QName NODE_RIVER_KILOMETER_PROP = new QName( NS_NAMODELL, "riverKilometer" ); //$NON-NLS-1$
+  QName NODE_RIVER_KILOMETER_PROP = new QName( NS_NAMODELL, "riverKilometer" ); //$NON-NLS-1$
 
-  public static final QName NODE_QQRELATION_PROP = new QName( NS_NAMODELL, "qqRelation" ); //$NON-NLS-1$
+  QName NODE_QQRELATION_PROP = new QName( NS_NAMODELL, "qqRelation" ); //$NON-NLS-1$
 
   // catchments
 
-  public static final QName BODENKORREKTUR_MEMBER = new QName( NS_NAMODELL, "bodenkorrekturmember" ); //$NON-NLS-1$
+  QName BODENKORREKTUR_MEMBER = new QName( NS_NAMODELL, "bodenkorrekturmember" ); //$NON-NLS-1$
 
-  public static final QName GRUNDWASSERABFLUSS_MEMBER = new QName( NS_NAMODELL, "grundwasserabflussMember" ); //$NON-NLS-1$
+  QName GRUNDWASSERABFLUSS_MEMBER = new QName( NS_NAMODELL, "grundwasserabflussMember" ); //$NON-NLS-1$
 
-  public static final QName STATNPARA_MEMBER = new QName( NS_SYNTHN, "statNParameterMember" ); //$NON-NLS-1$
+  QName STATNPARA_MEMBER = new QName( NS_SYNTHN, "statNParameterMember" ); //$NON-NLS-1$
 
-  public static final QName STATN_PROP_XJAH = new QName( NS_SYNTHN, "xjah" ); //$NON-NLS-1$
+  QName STATN_PROP_XJAH = new QName( NS_SYNTHN, "xjah" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_NGWZU = new QName( NS_NAMODELL, "ngwzu" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_NGWZU = new QName( NS_NAMODELL, "ngwzu" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_GWWI = new QName( NS_NAMODELL, "gwwi" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_GWWI = new QName( NS_NAMODELL, "gwwi" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_ZFT = new QName( NS_NAMODELL, "zft" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_ZFT = new QName( NS_NAMODELL, "zft" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_STATN_DIAG = new QName( NS_SYNTHN, "statNDiag" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_STATN_DIAG = new QName( NS_SYNTHN, "statNDiag" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_RETBAS = new QName( NS_NAMODELL, "retbas" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_RETBAS = new QName( NS_NAMODELL, "retbas" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_RETVS = new QName( NS_NAMODELL, "retvs" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_RETVS = new QName( NS_NAMODELL, "retvs" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_RETGW = new QName( NS_NAMODELL, "retgw" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_RETGW = new QName( NS_NAMODELL, "retgw" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_RETKLU = new QName( NS_NAMODELL, "retklu" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_RETKLU = new QName( NS_NAMODELL, "retklu" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_XJAH = new QName( NS_NAMODELL, "xjah" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_XJAH = new QName( NS_NAMODELL, "xjah" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_FAKTOR_RETBAS = new QName( NS_NAMODELL, "faktorRetbas" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_FAKTOR_RETBAS = new QName( NS_NAMODELL, "faktorRetbas" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_FAKTOR_RETVS = new QName( NS_NAMODELL, "faktorRetvs" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_FAKTOR_RETVS = new QName( NS_NAMODELL, "faktorRetvs" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_FAKTOR_RETGW = new QName( NS_NAMODELL, "faktorRetgw" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_FAKTOR_RETGW = new QName( NS_NAMODELL, "faktorRetgw" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_FAKTOR_RETKLU = new QName( NS_NAMODELL, "faktorRetklu" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_FAKTOR_RETKLU = new QName( NS_NAMODELL, "faktorRetklu" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_IZKN_VERS = new QName( NS_NAMODELL, "izkn_vers" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_IZKN_VERS = new QName( NS_NAMODELL, "izkn_vers" ); //$NON-NLS-1$
 
-  public static final QName CATCHMENT_PROP_IZKN = new QName( NS_NAMODELL, "izkn" ); //$NON-NLS-1$
+  QName CATCHMENT_PROP_IZKN = new QName( NS_NAMODELL, "izkn" ); //$NON-NLS-1$
 
   // swale and trench
 
-  public static final QName MRS_FT = new QName( NS_NAMODELL, "SwaleAndTrench" ); //$NON-NLS-1$
+  QName MRS_FT = new QName( NS_NAMODELL, "SwaleAndTrench" ); //$NON-NLS-1$
 
-  public static final QName MRS_COLLECTION_FT = new QName( NS_NAMODELL, "SwaleAndTrenchCollection" ); //$NON-NLS-1$
+  QName MRS_COLLECTION_FT = new QName( NS_NAMODELL, "SwaleAndTrenchCollection" ); //$NON-NLS-1$
 
-  public static final QName MRS_COLLECTION_MEMBER_PROP = new QName( NS_NAMODELL, "SwaleAndTrenchCollectionMember" ); //$NON-NLS-1$
+  QName MRS_COLLECTION_MEMBER_PROP = new QName( NS_NAMODELL, "SwaleAndTrenchCollectionMember" ); //$NON-NLS-1$
 
-  public static final QName MRS_MEMBER_PROP = new QName( NS_NAMODELL, "swaleTrenchMember" ); //$NON-NLS-1$
+  QName MRS_MEMBER_PROP = new QName( NS_NAMODELL, "swaleTrenchMember" ); //$NON-NLS-1$
 
-  public static final QName MRS_GEOM_PROP = new QName( NS_NAMODELL, "position" ); //$NON-NLS-1$
+  QName MRS_GEOM_PROP = new QName( NS_NAMODELL, "position" ); //$NON-NLS-1$
 
-  public static final QName MRS_LENGTH_PROP = new QName( NS_NAMODELL, "length" ); //$NON-NLS-1$
+  QName MRS_LENGTH_PROP = new QName( NS_NAMODELL, "length" ); //$NON-NLS-1$
 
-  public static final QName MRS_WIDTH_PROP = new QName( NS_NAMODELL, "widthTrench" ); //$NON-NLS-1$
+  QName MRS_WIDTH_PROP = new QName( NS_NAMODELL, "widthTrench" ); //$NON-NLS-1$
 
-  public static final QName MRS_SLOPE_PROP = new QName( NS_NAMODELL, "drainPipeSlope" ); //$NON-NLS-1$
+  QName MRS_SLOPE_PROP = new QName( NS_NAMODELL, "drainPipeSlope" ); //$NON-NLS-1$
 
-  public static final QName MRS_KF_PIPE_PROP = new QName( NS_NAMODELL, "kfPipe" ); //$NON-NLS-1$
+  QName MRS_KF_PIPE_PROP = new QName( NS_NAMODELL, "kfPipe" ); //$NON-NLS-1$
 
-  public static final QName MRS_DIAMETER_PIPE_PROP = new QName( NS_NAMODELL, "diameterPipe" ); //$NON-NLS-1$
+  QName MRS_DIAMETER_PIPE_PROP = new QName( NS_NAMODELL, "diameterPipe" ); //$NON-NLS-1$
 
-  public static final QName MRS_ROUGHNESS_PIPE_PROP = new QName( NS_NAMODELL, "roughnessPipe" ); //$NON-NLS-1$
+  QName MRS_ROUGHNESS_PIPE_PROP = new QName( NS_NAMODELL, "roughnessPipe" ); //$NON-NLS-1$
 
-  public static final QName MRS_LANDUSE_TYPE_PROP = new QName( NS_NAMODELL, "nutzung" ); //$NON-NLS-1$
+  QName MRS_LANDUSE_TYPE_PROP = new QName( NS_NAMODELL, "nutzung" ); //$NON-NLS-1$
 
-  public static final QName MRS_SOIL_PROFIL_TYPE_PROP = new QName( NS_NAMODELL, "boden" ); //$NON-NLS-1$
+  QName MRS_SOIL_PROFIL_TYPE_PROP = new QName( NS_NAMODELL, "boden" ); //$NON-NLS-1$
 
-  public static final QName MRS_MAX_PERK_PROP = new QName( NS_NAMODELL, "maxPerk" ); //$NON-NLS-1$
+  QName MRS_MAX_PERK_PROP = new QName( NS_NAMODELL, "maxPerk" ); //$NON-NLS-1$
 
-  public static final QName MRS_INFLOW_GW_PROP = new QName( NS_NAMODELL, "InflowGW" ); //$NON-NLS-1$
+  QName MRS_INFLOW_GW_PROP = new QName( NS_NAMODELL, "InflowGW" ); //$NON-NLS-1$
 
   // link Properties
 
-  public static final QName LINK_MRS_DISCHARGE_NODE_PROP = new QName( NS_NAMODELL, "dischargeNode" ); //$NON-NLS-1$
+  QName LINK_MRS_DISCHARGE_NODE_PROP = new QName( NS_NAMODELL, "dischargeNode" ); //$NON-NLS-1$
 
   // default values
-  public static final QName DEFAULT_MRS_SOIL_PROFIL_PROP = new QName( NS_NAMODELL, "mrsp" ); //$NON-NLS-1$
+  QName DEFAULT_MRS_SOIL_PROFIL_PROP = new QName( NS_NAMODELL, "mrsp" ); //$NON-NLS-1$
 
-  public static final QName NA_MODEL_FLAECH_PROP = new QName( NS_NAMODELL, "flaech" ); //$NON-NLS-1$
+  QName NA_MODEL_FLAECH_PROP = new QName( NS_NAMODELL, "flaech" ); //$NON-NLS-1$
 
-  public static final QName NA_MODEL_ROOT_FT = new QName( NS_NAMODELL, "NaModell" ); //$NON-NLS-1$
+  QName NA_MODEL_ROOT_FT = new QName( NS_NAMODELL, "NaModell" ); //$NON-NLS-1$
 
   /** parameter.xsd */
-  public static final QName PARA_LANDUSE_FT = new QName( NS_NAPARAMETER, "LanduseType" ); //$NON-NLS-1$
+  QName PARA_LANDUSE_FT = new QName( NS_NAPARAMETER, "LanduseType" ); //$NON-NLS-1$
 
-  public static final QName PARA_LANDUSE = new QName( NS_NAPARAMETER, "Landuse" ); //$NON-NLS-1$
+  QName PARA_LANDUSE = new QName( NS_NAPARAMETER, "Landuse" ); //$NON-NLS-1$
 
-  public static final QName PARA_SEALING = new QName( NS_NAPARAMETER, "Sealing" ); //$NON-NLS-1$
+  QName PARA_SEALING = new QName( NS_NAPARAMETER, "Sealing" ); //$NON-NLS-1$
 
-  public static final QName PARA_SoilLayerParameter_FT = new QName( NS_NAPARAMETER, "SoilLayerParameter" ); //$NON-NLS-1$
+  QName PARA_SoilLayerParameter_FT = new QName( NS_NAPARAMETER, "SoilLayerParameter" ); //$NON-NLS-1$
 
-  public static final QName PARA_SOIL_LAYER_PARAMETER_MEMBER = new QName( NS_NAPARAMETER, "soilLayerParameterMember" ); //$NON-NLS-1$
+  QName PARA_SOIL_LAYER_PARAMETER_MEMBER = new QName( NS_NAPARAMETER, "soilLayerParameterMember" ); //$NON-NLS-1$
 
-  public static final QName PARA_LANDUSE_NAME = new QName( NS_NAPARAMETER, "Landuse" ); //$NON-NLS-1$
+  QName PARA_LANDUSE_NAME = new QName( NS_NAPARAMETER, "Landuse" ); //$NON-NLS-1$
 
-  public static final QName PARA_SNOW_NAME = new QName( NS_NAPARAMETER, "Snow" ); //$NON-NLS-1$
+  QName PARA_SNOW_NAME = new QName( NS_NAPARAMETER, "Snow" ); //$NON-NLS-1$
 
-  public static final QName PARA_SoilLayer_FT = new QName( NS_NAPARAMETER, "SoilLayer" ); //$NON-NLS-1$
+  QName PARA_SoilLayer_FT = new QName( NS_NAPARAMETER, "SoilLayer" ); //$NON-NLS-1$
 
-  public static final QName PARA_PROP_SEALING_MEMBER = new QName( NS_NAPARAMETER, "sealingMember" ); //$NON-NLS-1$
+  QName PARA_PROP_SEALING_MEMBER = new QName( NS_NAPARAMETER, "sealingMember" ); //$NON-NLS-1$
 
-  public static final QName PARA_PROP_LANDUSE_MEMBER = new QName( NS_NAPARAMETER, "landuseMember" ); //$NON-NLS-1$
+  QName PARA_PROP_LANDUSE_MEMBER = new QName( NS_NAPARAMETER, "landuseMember" ); //$NON-NLS-1$
 
-  public static final QName PARA_PROP_SNOW_MEMBER = new QName( NS_NAPARAMETER, "snowMember" ); //$NON-NLS-1$
+  QName PARA_PROP_SNOW_MEMBER = new QName( NS_NAPARAMETER, "snowMember" ); //$NON-NLS-1$
 
-  public static final QName PARA_IDEAL_LANDUSE_MEMBER = new QName( NS_NAPARAMETER, "idealLandUseMember" ); //$NON-NLS-1$
+  QName PARA_IDEAL_LANDUSE_MEMBER = new QName( NS_NAPARAMETER, "idealLandUseMember" ); //$NON-NLS-1$
 
-  public static final QName PARA_IDEAL_LANDUSE = new QName( NS_NAPARAMETER, "IdealLandUse" ); //$NON-NLS-1$
+  QName PARA_IDEAL_LANDUSE = new QName( NS_NAPARAMETER, "IdealLandUse" ); //$NON-NLS-1$
 
-  public static final QName PARA_IDEAL_LANDUSE_ZML = new QName( NS_NAPARAMETER, "idealLandUseZML" ); //$NON-NLS-1$
+  QName PARA_IDEAL_LANDUSE_ZML = new QName( NS_NAPARAMETER, "idealLandUseZML" ); //$NON-NLS-1$
 
-  public static final QName PARA_LANDUSE_PROP_SEALING = new QName( NS_NAPARAMETER, "m_vers" ); //$NON-NLS-1$
+  QName PARA_LANDUSE_PROP_SEALING = new QName( NS_NAPARAMETER, "m_vers" ); //$NON-NLS-1$
 
-  public static final QName PARA_LANDUSE_PROP_SEALING_LINK = new QName( NS_NAPARAMETER, "sealingLink" ); //$NON-NLS-1$
+  QName PARA_LANDUSE_PROP_SEALING_LINK = new QName( NS_NAPARAMETER, "sealingLink" ); //$NON-NLS-1$
 
-  public static final QName PARA_LANDUSE_PROP_LANDUSE_LINK = new QName( NS_NAPARAMETER, "idealLandUsePeriodLink" ); //$NON-NLS-1$
+  QName PARA_LANDUSE_PROP_LANDUSE_LINK = new QName( NS_NAPARAMETER, "idealLandUsePeriodLink" ); //$NON-NLS-1$
 
-  public static final QName PARA_SOIL_LAYER_MEMBER = new QName( NS_NAPARAMETER, "soilLayerMember" ); //$NON-NLS-1$
+  QName PARA_SOIL_LAYER_MEMBER = new QName( NS_NAPARAMETER, "soilLayerMember" ); //$NON-NLS-1$
 
-  public static final QName PARA_SOIL_LAYER_LINK = new QName( NS_NAPARAMETER, "soilLayerLink" ); //$NON-NLS-1$
+  QName PARA_SOIL_LAYER_LINK = new QName( NS_NAPARAMETER, "soilLayerLink" ); //$NON-NLS-1$
 
-  public static final QName PARA_PROP_XTIEF = new QName( NS_NAPARAMETER, "xtief" ); //$NON-NLS-1$
+  QName PARA_PROP_XTIEF = new QName( NS_NAPARAMETER, "xtief" ); //$NON-NLS-1$
 
-  public static final QName PARA_PROP_XRET = new QName( NS_NAPARAMETER, "xret" ); //$NON-NLS-1$
+  QName PARA_PROP_XRET = new QName( NS_NAPARAMETER, "xret" ); //$NON-NLS-1$
 
   // default values
-  public static final QName DEFAULT_MRS_LANDUSE_PROP = new QName( NS_NAPARAMETER, "15" ); // Nutzung Grünland //$NON-NLS-1$
+  QName DEFAULT_MRS_LANDUSE_PROP = new QName( NS_NAPARAMETER, "15" ); // Nutzung Grünland //$NON-NLS-1$
 
   /** initalValues.xsd */
-  public static final QName INI_HYD_MEMBER_PROP = new QName( NS_INIVALUES, "IniHyd" ); //$NON-NLS-1$
+  QName INI_HYD_MEMBER_PROP = new QName( NS_INIVALUES, "IniHyd" ); //$NON-NLS-1$
 
-  public static final QName INI_CATCHMENT_LINK_HYD_PROP = new QName( NS_INIVALUES, "hyd" ); //$NON-NLS-1$
+  QName INI_CATCHMENT_LINK_HYD_PROP = new QName( NS_INIVALUES, "hyd" ); //$NON-NLS-1$
 
   /** synthN.xsd */
-  public static final QName SYNTHN_STATN_FT = new QName( NS_SYNTHN, "StatN" );
+  QName SYNTHN_STATN_FT = new QName( NS_SYNTHN, "StatN" );
 
   /** Suds */
-  public static final QName SUDS_PROP_SUDS_MEMBER = new QName( NS_NASUDS, "sudMember" ); //$NON-NLS-1$
+  QName SUDS_PROP_SUDS_MEMBER = new QName( NS_NASUDS, "sudMember" ); //$NON-NLS-1$
 }
