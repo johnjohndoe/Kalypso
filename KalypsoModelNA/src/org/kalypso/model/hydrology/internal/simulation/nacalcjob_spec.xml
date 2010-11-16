@@ -13,6 +13,7 @@
 
     <!-- Autokalibrierung -->
 	<input id="Optimize" description="Steuerdaten - Optimierung (optional)" optional="true" />
+	<input id="OptimizeFeaturePath" description="XPath innerhalb der Steuerdaten - Optimierung (optional)" optional="true" />
 	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
 
 	<!-- Zeitreihen als Verzeichnisse -->
