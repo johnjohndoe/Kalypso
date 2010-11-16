@@ -312,7 +312,9 @@ public class NAOptimizingJob implements IOptimizingJob
 // final String encoding = m_optimizeDom.getOwnerDocument().getInputEncoding();
     t.setOutputProperty( OutputKeys.ENCODING, "UTF-8" );
 
-    final File file = File.createTempFile( "optimizedBean", ".xml", m_tmpDir ); //$NON-NLS-1$//$NON-NLS-2$
+    final String optimizeBeanName = String.format( "optimizedBean_%d.xml", m_counter ); //$NON-NLS-1$
+    final File file = new File( m_tmpDir, optimizeBeanName );
+
     try
     {
       t.transform( new DOMSource( m_optimizeDom ), new StreamResult( file ) );

@@ -47,9 +47,11 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -61,7 +63,7 @@ public class NAOptimize extends Feature_Impl
 
   private static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NS_NAOPTIMIZE, "qberechnetZR" ); //$NON-NLS-1$
 
-  private static final QName PROP_ROOTNODE = new QName( NS_NS_NAOPTIMIZE, "rootNode" ); //$NON-NLS-1$
+  private static final QName LINK_ROOTNODE = new QName( NS_NS_NAOPTIMIZE, "rootNodeLink" ); //$NON-NLS-1$
 
   private static final QName PROP_AUTOCALI = new QName( NS_NS_NAOPTIMIZE, "automaticCallibration" ); //$NON-NLS-1$
 
@@ -124,9 +126,9 @@ public class NAOptimize extends Feature_Impl
     return getBoolean( PROP_USE_RESULTS, false );
   }
 
-  public String getRootNodeID( )
+  public Node getRootNode( )
   {
-    return getProperty( PROP_ROOTNODE, String.class );
+    return (Node) FeatureHelper.resolveLink( this, LINK_ROOTNODE, true );
   }
 
 

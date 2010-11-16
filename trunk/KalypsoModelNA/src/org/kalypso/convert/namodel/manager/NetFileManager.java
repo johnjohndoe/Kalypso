@@ -139,14 +139,14 @@ public class NetFileManager
 
   private final NAConfiguration m_conf;
 
-  private final String m_rootNodeId;
+  private final Node m_rootNode;
 
   private final Logger m_logger;
 
-  public NetFileManager( final NAConfiguration conf, final String rootNodeId, final Logger logger )
+  public NetFileManager( final NAConfiguration conf, final Node rootNode, final Logger logger )
   {
     m_conf = conf;
-    m_rootNodeId = rootNodeId;
+    m_rootNode = rootNode;
     m_logger = logger;
   }
 
@@ -405,8 +405,7 @@ public class NetFileManager
     final NetElement[] netElements = generateNetElements( modelWorkspace, synthNWorkspace );
 
     // collect netelements that are direct upstream of result nodes
-    final Feature rootNodeFE = modelWorkspace.getFeature( m_rootNodeId );
-    final RootNodeCollector rootNodeVisitor = new RootNodeCollector( netElements, rootNodeFE );
+    final RootNodeCollector rootNodeVisitor = new RootNodeCollector( netElements, m_rootNode );
     final NetElement[] rootNetElements = rootNodeVisitor.getRootNodeElements();
 
     // write asciifiles: upstream-network of root nodes

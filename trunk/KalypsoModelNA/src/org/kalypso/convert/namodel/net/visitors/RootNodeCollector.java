@@ -45,13 +45,12 @@ import java.util.List;
 
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.binding.model.Node;
-import org.kalypsodeegree.model.feature.Feature;
 
 public class RootNodeCollector
 {
   private final List<NetElement> m_rootNetElements = new ArrayList<NetElement>();
 
-  private final Feature m_singleResultNode;
+  private final Node m_singleResultNode;
 
   private final NetElement[] m_allNetElements;
 
@@ -63,7 +62,7 @@ public class RootNodeCollector
    * 
    * @author doemming
    */
-  public RootNodeCollector( final NetElement[] netElements, final Feature singleResultNode )
+  public RootNodeCollector( final NetElement[] netElements, final Node singleResultNode )
   {
     m_allNetElements = netElements;
     m_singleResultNode = singleResultNode;

@@ -56,6 +56,7 @@ import org.kalypso.convert.namodel.manager.SchneeManager;
 import org.kalypso.convert.namodel.manager.SudsFileWriter;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeWriter;
@@ -84,19 +85,20 @@ public class NAModellConverter
 
   private final Logger m_logger;
 
-  public NAModellConverter( final NAConfiguration conf, final String rootNodeID, final Logger logger ) throws Exception
+  public NAModellConverter( final NAConfiguration conf, final Node rootNode, final Logger logger ) throws Exception
   {
     m_conf = conf;
     m_logger = logger;
 
     m_catchmentManager = new CatchmentManager( m_conf, logger );
     m_gerinneManager = new ChannelManager( m_conf );
-    m_nodeManager = new NetFileManager( m_conf, rootNodeID, logger );
+    m_nodeManager = new NetFileManager( m_conf, rootNode, logger );
   }
 
   public void write( ) throws Exception
   {
-    // TODO replace this AsciiBuffer with some no-memory-consuming structure (regular StringBuffer)
+    // TODO replace this AsciiBuffer with some no-memory-consuming structure (regular StringBuffer), or
+    // better: directly write into the files
     final AsciiBuffer asciiBuffer = new AsciiBuffer();
 
     final GMLWorkspace modelWorkspace = m_conf.getModelWorkspace();
@@ -109,12 +111,16 @@ public class NAModellConverter
     final IDManager idManager = m_conf.getIdManager();
 
     m_nodeManager.writeFile( asciiBuffer, modelWorkspace, synthNWorkspace );
+    // FIXME: write catchment manager separately
     m_catchmentManager.writeFile( asciiBuffer, modelWorkspace );
     m_gerinneManager.writeFile( asciiBuffer, modelWorkspace );
 
     FileUtils.writeStringToFile( m_conf.getNetFile(), asciiBuffer.getNetBuffer().toString(), null );
+
+    // FIXME: write channel and catchment file spearately
     FileUtils.writeStringToFile( m_conf.getCatchmentFile(), asciiBuffer.getCatchmentBuffer().toString(), null );
     FileUtils.writeStringToFile( m_conf.getChannelFile(), asciiBuffer.getChannelBuffer().toString(), null );
+
     FileUtils.writeStringToFile( m_conf.getRHBFile(), asciiBuffer.getRhbBuffer().toString(), null );
     FileUtils.writeStringToFile( m_conf.getZFTFile(), asciiBuffer.getZFTBuffer().toString(), null );
 

@@ -50,7 +50,6 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -61,19 +60,19 @@ public class NaNodeResultProvider
 {
   private final URL m_context;
 
-  private final Collection<Feature> m_removedResults = new LinkedHashSet<Feature>();
+  private final Collection<Node> m_removedResults = new LinkedHashSet<Node>();
 
   private final boolean m_useResults;
 
-  public NaNodeResultProvider( final GMLWorkspace modellWorkspace, final boolean useResults, final String rootNodeID, final URL zmlContext )
+  public NaNodeResultProvider( final GMLWorkspace modellWorkspace, final boolean useResults, final Node rootNode, final URL zmlContext )
   {
     m_context = zmlContext;
     m_useResults = useResults;
 
-    if( rootNodeID != null )
+    if( rootNode != null )
     {
       // The root node may never be used as results
-      removeResult( modellWorkspace.getFeature( rootNodeID ) );
+      removeResult( rootNode );
     }
     else
     {
@@ -88,9 +87,9 @@ public class NaNodeResultProvider
     }
   }
 
-  private void removeResult( final Feature nodeFE )
+  private void removeResult( final Node node )
   {
-    m_removedResults.add( nodeFE );
+    m_removedResults.add( node );
   }
 
   public boolean checkResultExists( final Node nodeFE )
