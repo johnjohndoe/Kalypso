@@ -163,13 +163,13 @@ public class NAControlConverter
     return 0;
   }
 
-  public void writeStartFile( final NAModellControl naControl, final String rootNodeID, final NaModell naModel, final GMLWorkspace sudsWorkspace, final IDManager idManager ) throws IOException
+  public void writeStartFile( final NAModellControl naControl, final Node rootNode, final NaModell naModel, final GMLWorkspace sudsWorkspace, final IDManager idManager ) throws IOException
   {
     PrintWriter writer = null;
     try
     {
       writer = new PrintWriter( m_startFile );
-      writeStartFile( writer, naControl, rootNodeID, naModel, sudsWorkspace, idManager );
+      writeStartFile( writer, naControl, rootNode, naModel, sudsWorkspace, idManager );
       writer.close();
     }
     finally
@@ -178,10 +178,10 @@ public class NAControlConverter
     }
   }
 
-  private void writeStartFile( final PrintWriter writer, final NAModellControl naControl, final String rootNodeID, final NaModell naModel, final GMLWorkspace sudsWorkspace, final IDManager idManager )
+  private void writeStartFile( final PrintWriter writer, final NAModellControl naControl, final Node rootNode, final NaModell naModel, final GMLWorkspace sudsWorkspace, final IDManager idManager )
   {
     writeResultsToGenerate( naControl, sudsWorkspace, writer );
-    writeResultInformation( naModel, rootNodeID, idManager, writer );
+    writeResultInformation( naModel, rootNode, idManager, writer );
     writeInitialDates( naControl, writer );
   }
 
@@ -260,17 +260,17 @@ public class NAControlConverter
     writer.append( String.format( Locale.US, "%-8s%-27s%s\n", hasSwales ? "j" : "n", "Überlauf Mulden", ".mul" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
   }
 
-  private static void writeResultInformation( final NaModell naModel, final String rootNodeID, final IDManager idManager, final PrintWriter writer )
+  private static void writeResultInformation( final NaModell naModel, final Node rootNode, final IDManager idManager, final PrintWriter writer )
   {
     final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
     for( final Node node : nodes )
     {
-      if( rootNodeID != null && rootNodeID.equals( node.getId() ) )
+      if( rootNode != null && rootNode.equals( node ) )
       {
         // fuer root node immer ein ergebnis generieren
         writer.append( idManager.getAsciiID( node ) + "\n" ); //$NON-NLS-1$
       }
-      else if( rootNodeID == null && node.isGenerateResults() )
+      else if( rootNode == null && node.isGenerateResults() )
       {
         // fuer nicht root node nur ergebnisse generieren wenn gewuenscht
         writer.append( idManager.getAsciiID( node ) + "\n" ); //$NON-NLS-1$

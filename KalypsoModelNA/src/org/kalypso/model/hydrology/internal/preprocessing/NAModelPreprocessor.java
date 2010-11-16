@@ -57,6 +57,7 @@ import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
@@ -135,7 +136,7 @@ public class NAModelPreprocessor
     final GMLWorkspace sudsWorkspace = m_simulationData.getSudsWorkspace();
     final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
 
-    final String rootNodeID = naOptimize == null ? null : naOptimize.getRootNodeID();
+    final Node rootNode = naOptimize == null ? null : naOptimize.getRootNode();
     final boolean useResults = naOptimize == null ? false : naOptimize.isUseResults();
 
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.15" ) ); //$NON-NLS-1$
@@ -145,18 +146,18 @@ public class NAModelPreprocessor
     checkCancel( monitor );
 
     monitor.setMessage( "Adding additional virtual channels" );
-    tweakGmlModel( modelWorkspace, rootNodeID, useResults );
+    tweakGmlModel( modelWorkspace, rootNode, useResults );
     checkCancel( monitor );
 
     monitor.setMessage( "Writing control files for Kalypso-NA" );
     final NAControlConverter naControlConverter = new NAControlConverter( metaControl, m_asciiDirs.startDir );
     naControlConverter.writeFalstart();
-    naControlConverter.writeStartFile( naControl, rootNodeID, naModel, sudsWorkspace, m_idManager );
+    naControlConverter.writeStartFile( naControl, rootNode, naModel, sudsWorkspace, m_idManager );
     checkCancel( monitor );
 
     // write net and so on....
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.23" ) ); //$NON-NLS-1$
-    final NAModellConverter naModellConverter = new NAModellConverter( m_conf, rootNodeID, m_logger );
+    final NAModellConverter naModellConverter = new NAModellConverter( m_conf, rootNode, m_logger );
     naModellConverter.write();
     m_hydroHash = naModellConverter.getHydroHash();
     checkCancel( monitor );
@@ -172,11 +173,11 @@ public class NAModelPreprocessor
   /**
    * Changes the modell-workspace before it is really written into ascii files.
    */
-  private void tweakGmlModel( final GMLWorkspace modelWorkspace, final String rootNodeID, final boolean useResults ) throws Exception
+  private void tweakGmlModel( final GMLWorkspace modelWorkspace, final Node rootNode, final boolean useResults ) throws Exception
   {
     final URL zmlContext = m_conf.getZMLContext();
 
-    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modelWorkspace, useResults, rootNodeID, zmlContext );
+    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modelWorkspace, useResults, rootNode, zmlContext );
     final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
     final NaModelTweaker naModelTweaker = new NaModelTweaker( naModel, nodeResultProvider );
     naModelTweaker.tweakModel();
