@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.kalypso.convert.namodel.manager.ChannelTypeComparator;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
@@ -96,9 +95,11 @@ public class RelevantNetElements
     return channels;
   }
 
-  public Catchment[] getCatchments( )
+  public Catchment[] getCatchments( final IDManager idManager )
   {
-    return m_catchments.toArray( new Catchment[m_catchments.size()] );
+    final Catchment[] catchments = m_catchments.toArray( new Catchment[m_catchments.size()] );
+    Arrays.sort( catchments, new CatchmentIDComparator( idManager ) );
+    return catchments;
   }
 
   public void addRootChannel( final int virtualChannelId )

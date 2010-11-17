@@ -40,28 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.net.visitors;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
 
 /**
  * @author doemming
  */
 public class WriteAsciiVisitor extends NetElementVisitor
 {
-  private final StringBuffer m_netBuffer;
+  private final PrintWriter m_netBuffer;
 
   private final RelevantNetElements m_relevantNetElements;
 
   private final List<Node> m_nodeCollector = new ArrayList<Node>();
 
-  public WriteAsciiVisitor( final RelevantNetElements relevantElements, final StringBuffer netBuffer )
+  private final TimeseriesFileManager m_tsFileManager;
+
+  public WriteAsciiVisitor( final RelevantNetElements relevantElements, final PrintWriter netBuffer, final TimeseriesFileManager tsFileManager )
   {
     m_relevantNetElements = relevantElements;
     m_netBuffer = netBuffer;
+    m_tsFileManager = tsFileManager;
   }
 
   /**
@@ -76,7 +81,7 @@ public class WriteAsciiVisitor extends NetElementVisitor
       m_nodeCollector.add( overflowNode );
     try
     {
-      netElement.generateTimeSeries();
+      netElement.generateTimeSeries( m_tsFileManager );
     }
     catch( final Exception e )
     {
