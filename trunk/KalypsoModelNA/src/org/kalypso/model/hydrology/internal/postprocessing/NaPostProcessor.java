@@ -162,7 +162,7 @@ public class NaPostProcessor
     }
     catch( final Exception e )
     {
-      m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.83", e.getLocalizedMessage() ) ); //$NON-NLS-1$
+      m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.83", e.getLocalizedMessage() ) );
     }
 
     copyStatisticResultFile( asciiDirs, currentResultDirs );
@@ -182,8 +182,8 @@ public class NaPostProcessor
       zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( currentResultDirs.exe_logs_zip ) ) );
       // REMARK: We rename the files in the zip, else the windoes explorer will show an empty zip by default (unknown
       // extensions)
-      ZipUtilities.writeZipEntry( zos, asciiDirs.output_res, "output.txt" );
-      ZipUtilities.writeZipEntry( zos, asciiDirs.output_err, "error.txt" );
+      ZipUtilities.writeZipEntry( zos, asciiDirs.output_res, "output.txt" ); //$NON-NLS-1$
+      ZipUtilities.writeZipEntry( zos, asciiDirs.output_err, "error.txt" ); //$NON-NLS-1$
       zos.close();
     }
     catch( final IOException e )
@@ -259,7 +259,7 @@ public class NaPostProcessor
     {
       try
       {
-        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.220", bilFile.getName() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.220", bilFile.getName() ) );
         final File resultFile = new File( resultDirs.bilanzDir, "Bilanz.txt" ); //$NON-NLS-1$ 
         FileUtils.copyFile( bilFile, resultFile );
       }
@@ -268,7 +268,7 @@ public class NaPostProcessor
         final String inputPath = outWeNatDir.getName() + bilFile.getName();
         e.printStackTrace();
 
-        final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.224", inputPath, e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.224", inputPath, e.getLocalizedMessage() );
         m_logger.severe( msg );
       }
     }
@@ -299,7 +299,7 @@ public class NaPostProcessor
     if( qgsFiles.length != 0 )
     {
       // read ascii result file
-      m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" ); //$NON-NLS-2$
       final BlockTimeSeries ts = new BlockTimeSeries();
       ts.importBlockFile( qgsFiles[0] );
 
@@ -318,7 +318,6 @@ public class NaPostProcessor
           continue;
 
         // FIXME: wrong: we must consider the element type here: else we might read a catchment node for a result result
-
         final String key = Integer.toString( idManager.getAsciiID( resultFeature ) );
 
         final ITupleModel qTuppelModel = readBlockDataForKey( ts, key, descriptor );
@@ -328,9 +327,9 @@ public class NaPostProcessor
           continue;
         }
 
-        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" ); //$NON-NLS-2$
 
-        final MetadataList metadataList = new MetadataList();
+        MetadataList metadataList = new MetadataList();
 
         // if pegel exists, copy metadata (inclusive wq-function)
         TimeseriesLinkType pegelLink = null;
@@ -352,13 +351,10 @@ public class NaPostProcessor
           }
           if( itExists )
           {
-            m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.132" ) ); //$NON-NLS-1$
-            final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL ); //$NON-NLS-1$
+            m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.132" ) );
+            final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL );
 
-            copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[] { ITimeseriesConstants.MD_ALARM_1, ITimeseriesConstants.MD_ALARM_2, ITimeseriesConstants.MD_ALARM_3,
-              ITimeseriesConstants.MD_ALARM_4, ITimeseriesConstants.MD_GEWAESSER, ITimeseriesConstants.MD_FLUSSGEBIET, ITimeseriesConstants.MD_GKH, ITimeseriesConstants.MD_GKR,
-              ITimeseriesConstants.MD_HOEHENANGABEART, ITimeseriesConstants.MD_PEGELNULLPUNKT, ITimeseriesConstants.MD_WQWECHMANN, ITimeseriesConstants.MD_WQTABLE, ITimeseriesConstants.MD_TIMEZONE,
-              ITimeseriesConstants.MD_VORHERSAGE_START, ITimeseriesConstants.MD_VORHERSAGE_ENDE } );
+            metadataList = (MetadataList) pegelObservation.getMetadataList().clone();
           }
         }
 
