@@ -137,5 +137,4 @@ public class StorageChannel extends Channel
   {
     return getDoubleProperty( PROP_VOLUME_MIN, 0.0 );
   }
-
 }

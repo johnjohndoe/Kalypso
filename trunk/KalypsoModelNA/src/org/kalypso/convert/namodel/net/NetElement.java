@@ -59,7 +59,6 @@ import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.manager.CatchmentManager;
-import org.kalypso.convert.namodel.manager.ChannelManager;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.net.visitors.NetElementVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
@@ -70,6 +69,7 @@ import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.GerWriter;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -252,6 +252,7 @@ public class NetElement
     upStreamElement.addDownStream( this );
   }
 
+  // FIXME: move into GerWriter
   public void writeRootChannel( final AsciiBuffer asciiBuffer, final int virtualChannelId )
   {
     final StringBuffer netBuffer = asciiBuffer.getNetBuffer();
@@ -269,7 +270,7 @@ public class NetElement
     netBuffer.append( " 0\n" ); //$NON-NLS-1$
 
     channelBuffer.append( virtualChannelId + "\n" ); //$NON-NLS-1$
-    channelBuffer.append( ChannelManager.VIRTUALCHANNEL + "\n" ); //$NON-NLS-1$
+    channelBuffer.append( GerWriter.VIRTUALCHANNEL + "\n" ); //$NON-NLS-1$
   }
 
   /**

@@ -41,8 +41,11 @@
 package org.kalypso.model.hydrology.internal.preprocessing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.kalypso.convert.namodel.manager.ChannelTypeComparator;
+import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypsodeegree.model.feature.Feature;
@@ -54,29 +57,45 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class RelevantNetElements
 {
-  private final List<Feature> m_markedChannels = new ArrayList<Feature>();
+  private final List<Feature> m_channels = new ArrayList<Feature>();
 
-  private final List<Feature> m_markedCatchments = new ArrayList<Feature>();
+  private final List<Feature> m_catchments = new ArrayList<Feature>();
 
   public void addChannel( final Channel channel )
   {
-    if( !m_markedChannels.contains( channel ) )
-      m_markedChannels.add( channel );
+    if( !m_channels.contains( channel ) )
+      m_channels.add( channel );
   }
 
   public void addCatchment( final Catchment channel )
   {
-    if( !m_markedCatchments.contains( channel ) )
-      m_markedCatchments.add( channel );
+    if( !m_catchments.contains( channel ) )
+      m_catchments.add( channel );
   }
 
   public boolean containsChannel( final Channel channel )
   {
-    return m_markedChannels.contains( channel );
+    return m_channels.contains( channel );
   }
 
   public boolean containsCatchment( final Catchment catchment )
   {
-    return m_markedCatchments.contains( catchment );
+    return m_catchments.contains( catchment );
+  }
+
+  /**
+   * Returns all relevant channels sorted by type and id, so all files will be always written in the same order <br/>
+   * Makes comparison of results etc. easier.
+   */
+  public Channel[] getChannels( final IDManager idManager )
+  {
+    final Channel[] channels = m_channels.toArray( new Channel[m_channels.size()] );
+    Arrays.sort( channels, new ChannelTypeComparator( idManager ) );
+    return channels;
+  }
+
+  public Catchment[] getCatchments( )
+  {
+    return m_catchments.toArray( new Catchment[m_catchments.size()] );
   }
 }
