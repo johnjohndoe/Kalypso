@@ -40,9 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
-import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.manager.ASCIIHelper;
-import org.kalypso.convert.namodel.manager.AsciiBuffer;
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.Locale;
+
+import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
@@ -56,51 +58,78 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class GerWriter
 {
-  public static final int VIRTUALCHANNEL = 0;
+  private static final int VIRTUALCHANNEL = 0;
 
   private static final int KMCHANNEL = 1;
 
   private static final int STORAGECHANNEL = 2;
 
-  private final NAConfiguration m_conf;
+  private final IDManager m_idManager;
 
-  private final ASCIIHelper m_asciiHelper = new ASCIIHelper( getClass().getResource( "/org/kalypso/convert/namodel/manager/resources/formats/gerinne.txt" ) );
+  private final Integer[] m_rootChannels;
 
-  public GerWriter( final NAConfiguration conf )
+  private final Channel[] m_channels;
+
+  public GerWriter( final IDManager idManager, final Integer[] rootChannels, final Channel[] channels )
   {
-    m_conf = conf;
+    m_idManager = idManager;
+    m_rootChannels = rootChannels;
+    m_channels = channels;
   }
 
-  public void writeFile( final Channel[] channels, final AsciiBuffer asciiBuffer ) throws Exception
+  public void writeFile( final File outputFile ) throws Exception
   {
-    for( final Channel channel : channels )
-      writeFeature( asciiBuffer, channel );
+    final PrintWriter writer = new PrintWriter( outputFile );
+
+    try
+    {
+      for( final Integer rootChannelID : m_rootChannels )
+      {
+        writer.println( rootChannelID );
+        writer.println( GerWriter.VIRTUALCHANNEL );
+      }
+
+      for( final Channel channel : m_channels )
+        writeChannel( writer, channel );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
   }
 
-  private void writeFeature( final AsciiBuffer asciiBuffer, final Channel channel ) throws Exception
+  private void writeChannel( final PrintWriter writer, final Channel channel ) throws Exception
   {
-    final IDManager idManager = m_conf.getIdManager();
-
-    final StringBuffer channelBuffer = asciiBuffer.getChannelBuffer();
-
-    channelBuffer.append( idManager.getAsciiID( channel ) + "\n" ); //$NON-NLS-1$
+    final int channelID = m_idManager.getAsciiID( channel );
+    writer.format( "%d\n", channelID ); //$NON-NLS-1$
 
     if( channel instanceof VirtualChannel ) //$NON-NLS-1$
-      channelBuffer.append( VIRTUALCHANNEL + "\n" ); //$NON-NLS-1$
+      writer.println( VIRTUALCHANNEL ); //$NON-NLS-1$
     else if( channel instanceof KMChannel ) //$NON-NLS-1$
     {
-      channelBuffer.append( KMCHANNEL + "\n" ); //$NON-NLS-1$
+      writer.println( KMCHANNEL ); //$NON-NLS-1$
 
       final KMChannel kmChannel = (KMChannel) channel;
       final IFeatureBindingCollection<KMParameter> parameters = kmChannel.getParameters();
       for( final KMParameter kmParameter : parameters )
-        channelBuffer.append( m_asciiHelper.toAscii( kmParameter, 3 ) + "\n" ); //$NON-NLS-1$
+        writeParameter( writer, kmParameter );
     }
     else if( channel instanceof StorageChannel ) //$NON-NLS-1$
-    {
-      channelBuffer.append( STORAGECHANNEL + "\n" ); //$NON-NLS-1$
-    }
+      writer.println( STORAGECHANNEL ); //$NON-NLS-1$
     else
       throw new UnsupportedOperationException( "can not write Feature to ascii" + channel.toString() ); //$NON-NLS-1$
+  }
+
+  private void writeParameter( final PrintWriter writer, final KMParameter kmParameter )
+  {
+    final double qrk = kmParameter.getQrk();
+    final double rnf = kmParameter.getRnf();
+    final double rkf = kmParameter.getRkf();
+    final double rkv = kmParameter.getRkv();
+    final double rnv = kmParameter.getRnv();
+    final double c = kmParameter.getC();
+
+    // (qrk,*)_(rkf,*)_(rnf,*)_(rkv,*)_(rnv,*)_(c,*)_(IGNORE,f11.6)(IGNORE,f12.6)
+    writer.format( Locale.US, "%.8f %.8f %.8f %.8f %.8f %.8f%n", qrk, rkf, rnf, rkv, rnv, c ); //$NON-NLS-1$
   }
 }

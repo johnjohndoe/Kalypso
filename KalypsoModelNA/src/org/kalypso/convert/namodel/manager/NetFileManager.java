@@ -419,7 +419,7 @@ public class NetFileManager
       simulationVisitor.visit( element );
 
     // write ascii: complete network below root nodes
-    final CompleteDownstreamNetAsciiWriterVisitor completeNetVisitor = new CompleteDownstreamNetAsciiWriterVisitor( asciiBuffer );
+    final CompleteDownstreamNetAsciiWriterVisitor completeNetVisitor = new CompleteDownstreamNetAsciiWriterVisitor( relevantElements, asciiBuffer );
     for( final NetElement netElement : netElements )
       netElement.accept( completeNetVisitor );
 

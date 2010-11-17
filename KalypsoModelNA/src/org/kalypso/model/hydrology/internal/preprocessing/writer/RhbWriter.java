@@ -42,8 +42,9 @@ package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Locale;
 
-import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
@@ -76,10 +77,17 @@ public class RhbWriter
   {
     final PrintWriter writer = new PrintWriter( outputFile );
 
-    for( final Channel channel : m_channels )
-      writeFeature( channel, writer );
+    try
+    {
+      for( final Channel channel : m_channels )
+        writeFeature( channel, writer );
 
-    writer.close();
+      writer.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
   }
 
   // FIXME: better error handling!
@@ -97,11 +105,11 @@ public class RhbWriter
 
       // (txt,a8)(inum,i8)(iknot,i8)(c,f6.2-dummy)
       // RHB 5-7
-      writer.format( "SPEICHER%8d%8d  0.00\n", channelID, overflowNodeID ); //$NON-NLS-1$//$NON-NLS-2$
+      writer.format( Locale.US, "SPEICHER%8d%8d  0.00\n", channelID, overflowNodeID ); //$NON-NLS-1$//$NON-NLS-2$
 
       // (itext,a80)
       // RHB 8
-      writer.format( "%-80s\n", channel.getName() ); //$NON-NLS-1$
+      writer.format( Locale.US, "%-80s\n", channel.getName() ); //$NON-NLS-1$
 
       // (lfs,i4)_(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
       // RHB 9-10
@@ -110,7 +118,7 @@ public class RhbWriter
       final Double vmax = storageChannel.getVolumeMax() / 1000000;
       final Double vmin = storageChannel.getVolumeMin() / 1000000;
 
-      writer.format( "%4d  FUNKTION %9.6f %9.6f %9.6f", downstreamNodeID, sv, vmax, vmin ); //$NON-NLS-1$
+      writer.format( Locale.US, "%4d  FUNKTION %9.6f %9.6f %9.6f", downstreamNodeID, sv, vmax, vmin ); //$NON-NLS-1$
 
       writeWVQ( storageChannel, writer );
 
@@ -146,12 +154,11 @@ public class RhbWriter
 
     final ITupleModel values = observation.getValues( null );
     final int size = values.size();
-    writer.append( FortranFormatHelper.printf( size, "i4" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     if( size > 24 )
-    {
       throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.manager.ChannelManager.33", channelName ) );
-    } //$NON-NLS-1$ //$NON-NLS-2$
-    // ____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
+
+    writer.format( Locale.US, "%4d\n", size ); //$NON-NLS-1$
+
 
     final int count = values.size();
 
@@ -164,9 +171,8 @@ public class RhbWriter
       final Double w = (Double) values.get( row, waterTableAxis );
       final Double v = ((Double) values.get( row, volumeAxis )) / 1000000;
       final Double q = (Double) values.get( row, dischargeAxis );
-      writer.append( "    " + FortranFormatHelper.printf( w, "f8.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      writer.append( "        " + FortranFormatHelper.printf( v, "f9.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      writer.append( "      " + FortranFormatHelper.printf( q, "f8.3" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      // ____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
+      writer.format( Locale.US, "    %8.2f        %9.6f      %8.3f\n", w, v, q ); //$NON-NLS-1$ 
     }
   }
 }

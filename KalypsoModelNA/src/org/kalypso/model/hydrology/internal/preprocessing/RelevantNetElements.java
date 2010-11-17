@@ -61,6 +61,8 @@ public class RelevantNetElements
 
   private final List<Feature> m_catchments = new ArrayList<Feature>();
 
+  private final List<Integer> m_rootChannels = new ArrayList<Integer>();
+
   public void addChannel( final Channel channel )
   {
     if( !m_channels.contains( channel ) )
@@ -97,5 +99,15 @@ public class RelevantNetElements
   public Catchment[] getCatchments( )
   {
     return m_catchments.toArray( new Catchment[m_catchments.size()] );
+  }
+
+  public void addRootChannel( final int virtualChannelId )
+  {
+    m_rootChannels.add( virtualChannelId );
+  }
+
+  public Integer[] getRootChannels( )
+  {
+    return m_rootChannels.toArray( new Integer[m_rootChannels.size()] );
   }
 }

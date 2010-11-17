@@ -142,14 +142,6 @@ public interface NaModelConstants
   /** namodell.xsd */
 
   // channels
-  QName KM_CHANNEL_QRK_PROP = new QName( NS_NAMODELL, "qrk" ); //$NON-NLS-1$
-
-  QName KM_CHANNEL_RKV_PROP = new QName( NS_NAMODELL, "rkv" ); //$NON-NLS-1$
-
-  QName KM_CHANNEL_C_PROP = new QName( NS_NAMODELL, "c" ); //$NON-NLS-1$
-
-  QName KM_CHANNEL_RNV_PROP = new QName( NS_NAMODELL, "rnv" ); //$NON-NLS-1$
-
   QName KM_CHANNEL_KMSTART = new QName( NS_NAMODELL, "startkm" ); //$NON-NLS-1$
 
   QName KM_CHANNEL_KMEND = new QName( NS_NAMODELL, "endkm" ); //$NON-NLS-1$
