@@ -82,6 +82,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
@@ -160,12 +161,12 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private void loadNaOptimize( ) throws SimulationException, Exception
   {
-    NaOptimizeLoader loader = new NaOptimizeLoader(m_dataProvider);
-    loader.load();
+    final NaOptimizeLoader loader = new NaOptimizeLoader(m_dataProvider);
+    loader.load( null, null );
 
     m_optimizeDom = loader.getOptimizeDom();
     
-    NAOptimize naOptimize = loader.getNaOptimize();
+    final NAOptimize naOptimize = loader.getNaOptimize();
     m_linkMeasuredTS = naOptimize.getPegelZRLink();
     m_linkCalcedTS = naOptimize.getResultLink();
     naOptimize.getWorkspace().dispose();
@@ -186,7 +187,6 @@ public class NAOptimizingJob implements IOptimizingJob
 
     final CalcDataProviderDecorater newDataProvider = new CalcDataProviderDecorater( m_dataProvider );
     newDataProvider.addURL( NaModelConstants.IN_OPTIMIZE_ID, m_lastOptimizedFile.toURI().toURL() );
-    newDataProvider.addURL( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, null );
 
     // some generated files from best run can be recycled to increase
     // performance
@@ -244,7 +244,7 @@ public class NAOptimizingJob implements IOptimizingJob
     if( dir == null )
       return;
 
-// FileUtils.deleteQuietly( dir );
+    FileUtils.deleteQuietly( dir );
   }
 
   /**
@@ -255,8 +255,7 @@ public class NAOptimizingJob implements IOptimizingJob
   {
     final ParameterOptimizeContext[] calcContexts = new ParameterOptimizeContext[parameterConf.length];
     for( int i = 0; i < parameterConf.length; i++ )
-      // FIXME: either use or remove prefix path
-      calcContexts[i] = new ParameterOptimizeContext( parameterConf[i], "" );
+      calcContexts[i] = new ParameterOptimizeContext( parameterConf[i] );
 
     try
     {
@@ -273,15 +272,16 @@ public class NAOptimizingJob implements IOptimizingJob
     t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
     t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
 
-// final String encoding = m_optimizeDom.getOwnerDocument().getInputEncoding();
-    t.setOutputProperty( OutputKeys.ENCODING, "UTF-8" );
+    final Document ownerDocument = m_optimizeDom.getOwnerDocument();
+    final String encoding = ownerDocument.getInputEncoding();
+    t.setOutputProperty( OutputKeys.ENCODING, encoding );
 
     final String optimizeBeanName = String.format( "optimizedBean_%d.xml", m_counter ); //$NON-NLS-1$
     final File file = new File( m_tmpDir, optimizeBeanName );
 
     try
     {
-      t.transform( new DOMSource( m_optimizeDom ), new StreamResult( file ) );
+      t.transform( new DOMSource( ownerDocument ), new StreamResult( file ) );
     }
     catch( final Exception e )
     {

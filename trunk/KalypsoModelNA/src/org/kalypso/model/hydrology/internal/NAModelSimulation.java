@@ -55,6 +55,7 @@ import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
+import org.kalypso.convert.namodel.optimize.NaOptimizeLoader;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
@@ -124,24 +125,16 @@ public class NAModelSimulation
   {
     final URL modelUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
     final URL controlURL = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
-    final URL optimizeURL = getOptionalLocation( NaModelConstants.IN_OPTIMIZE_ID );
     final URL metaUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_META_ID );
     final URL parameterUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
     final URL hydrotopUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
     final URL syntNUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID );
     final URL lzsimUrl = getStartConditionFile();
-
     final URL sudsUrl = getInputOrNull( NaModelConstants.IN_SUDS_ID );
 
-    return new NaSimulationData( modelUrl, controlURL, metaUrl, optimizeURL, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl );
-  }
+    final NaOptimizeLoader optimizeLoader = new NaOptimizeLoader( m_inputProvider );
 
-  private URL getOptionalLocation( final String id ) throws SimulationException
-  {
-    if( m_inputProvider.hasID( id ) )
-      return (URL) m_inputProvider.getInputForID( id );
-
-    return null;
+    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader );
   }
 
   private URL getInputOrNull( final String id ) throws SimulationException

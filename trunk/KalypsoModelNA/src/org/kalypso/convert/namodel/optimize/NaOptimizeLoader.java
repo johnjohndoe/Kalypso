@@ -51,6 +51,7 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -69,7 +70,7 @@ public class NaOptimizeLoader
     m_dataProvider = dataProvider;
   }
 
-  public void load( ) throws Exception
+  public void load(GMLWorkspace contextWorkspace, IFeatureProviderFactory factory ) throws Exception
   {
     if( !m_dataProvider.hasID( NaModelConstants.IN_OPTIMIZE_ID ) )
     {
@@ -81,6 +82,7 @@ public class NaOptimizeLoader
 
     final String optimizePath = getOptimizePath();
     final Document dom = XMLHelper.getAsDOM( optimizeDataLocation, true );
+
     final NodeList rootNodes = XPathAPI.selectNodeList( dom, optimizePath, dom );
     if( rootNodes.getLength() == 0 )
       throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", optimizePath ) );
@@ -89,7 +91,8 @@ public class NaOptimizeLoader
     // and then written again and again...
     m_optimizeDom = rootNodes.item( 0 );
 
-    final GMLWorkspace optimizeWorkspace = GmlSerializer.createGMLWorkspace( m_optimizeDom, optimizeDataLocation, null );
+    final URL context = contextWorkspace == null ? optimizeDataLocation: contextWorkspace.getContext();
+    final GMLWorkspace optimizeWorkspace = GmlSerializer.createGMLWorkspace( m_optimizeDom, context, factory );
     final Feature feature = optimizeWorkspace.getRootFeature();
     if( !(feature instanceof NAOptimize) )
     {
@@ -98,7 +101,7 @@ public class NaOptimizeLoader
     }
 
     /* At the moment, we are only interested in the result-links */
-    m_naOptimize = (NAOptimize) optimizeWorkspace.getRootFeature();
+    m_naOptimize = (NAOptimize) feature;
   }
   
   private String getOptimizePath( ) throws SimulationException

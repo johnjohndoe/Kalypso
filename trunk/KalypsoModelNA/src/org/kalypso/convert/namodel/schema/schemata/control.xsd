@@ -12,6 +12,12 @@
     					<element name="scenarioId" type="string" minOccurs="0"/>
     					<element name="startsimulation" type="dateTime"/>
     					<element name="startforecast" type="dateTime"/>
+              
+              
+                        <element name="hoursSimulationDuration" type="int" minOccurs="0"/>
+                        <element name="daysSimulationDuration" type="int" minOccurs="0"/>
+                        
+                        
     					<element name="hoursforecast" type="int" minOccurs="0"/>
     					<element name="minutesTimestep" type="int" minOccurs="0"/>
     					<element name="versionKalypsoNA" type="na:versionKalypsoNAType"/>
