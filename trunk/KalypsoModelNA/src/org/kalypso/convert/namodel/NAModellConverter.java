@@ -114,18 +114,18 @@ public class NAModellConverter
 
     final RelevantNetElements relevantElements = m_nodeManager.writeFile( asciiBuffer, modelWorkspace, synthNWorkspace );
 
-    final Channel[] channels = relevantElements.getChannels( m_conf.getIdManager() );
+    final Integer[] rootChannels = relevantElements.getRootChannels();
+    final Channel[] channels = relevantElements.getChannels( idManager );
 
     // FIXME: write catchment manager separately
     m_catchmentManager.writeFile( relevantElements, asciiBuffer, modelWorkspace );
 
-    final GerWriter gerWriter = new GerWriter( m_conf );
-    gerWriter.writeFile( channels, asciiBuffer );
-
     FileUtils.writeStringToFile( m_conf.getNetFile(), asciiBuffer.getNetBuffer().toString(), null );
 
     // FIXME: write channel and catchment file spearately
-    FileUtils.writeStringToFile( m_conf.getChannelFile(), asciiBuffer.getChannelBuffer().toString(), null );
+    // FIXME: write .ger and .geb file after optimization
+    final GerWriter gerWriter = new GerWriter( idManager, rootChannels, channels );
+    gerWriter.writeFile( m_conf.getChannelFile() );
 
     final RhbWriter rhbWriter = new RhbWriter( idManager, channels );
     rhbWriter.writeFile( m_conf.getRHBFile() );

@@ -69,7 +69,6 @@ import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
-import org.kalypso.model.hydrology.internal.preprocessing.writer.GerWriter;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -252,25 +251,24 @@ public class NetElement
     upStreamElement.addDownStream( this );
   }
 
-  // FIXME: move into GerWriter
-  public void writeRootChannel( final AsciiBuffer asciiBuffer, final int virtualChannelId )
+  public void writeRootChannel( final RelevantNetElements relevantElements, final AsciiBuffer asciiBuffer, final int virtualChannelId )
   {
+    relevantElements.addRootChannel( virtualChannelId );
+
     final StringBuffer netBuffer = asciiBuffer.getNetBuffer();
-    final StringBuffer channelBuffer = asciiBuffer.getChannelBuffer();
 
     final IDManager idManager = m_conf.getIdManager();
 
-    final Node knotu = m_channel.getDownstreamNode();
-    if( knotu == null )
+    final Node downstreamNode = m_channel.getDownstreamNode();
+    if( downstreamNode == null )
       System.out.println( "knotU=null" ); //$NON-NLS-1$
 
+    final int downstreamNodeID = idManager.getAsciiID( downstreamNode );
+
     netBuffer.append( "   " + virtualChannelId ); //$NON-NLS-1$
-    netBuffer.append( String.format( "%8d", idManager.getAsciiID( knotu ) ) ); //$NON-NLS-1$
+    netBuffer.append( String.format( "%8d", downstreamNodeID ) ); //$NON-NLS-1$
     netBuffer.append( ENDKNOTEN );
     netBuffer.append( " 0\n" ); //$NON-NLS-1$
-
-    channelBuffer.append( virtualChannelId + "\n" ); //$NON-NLS-1$
-    channelBuffer.append( GerWriter.VIRTUALCHANNEL + "\n" ); //$NON-NLS-1$
   }
 
   /**

@@ -57,7 +57,6 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
 import org.kalypso.model.km.internal.KMPlugin;
@@ -162,15 +161,9 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
   private IStatus[] calculateChannel( final KMChannel kmChannel, final KalininMiljukovType km ) throws Exception
   {
     final IFeatureType kmFT = m_workspace.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
-    final IFeatureType kmPaFT = m_workspace.getFeatureType( KMParameter.FEATURE_KM_PARAMETER );
 
     final IPropertyType kmKMStartPT = kmFT.getProperty( KMChannel.PROP_KMSTART );
     final IPropertyType kmKMEndPT = kmFT.getProperty( KMChannel.PROP_KMEND );
-
-    final IPropertyType qrkPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_QRK_PROP );
-    final IPropertyType rkvT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_RKV_PROP );
-    final IPropertyType rnvPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_RNV_PROP );
-    final IPropertyType cPT = kmPaFT.getProperty( NaModelConstants.KM_CHANNEL_C_PROP );
 
     final Double kmStart = km.getKmStart();
     final Double kmEnd = km.getKmEnd();
@@ -221,11 +214,11 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
       final BigDecimal alpha = new BigDecimal( value.getAlpha() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
 
       m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RKF, k.doubleValue() ) ); //$NON-NLS-1$
-      m_featureChanges.add( new FeatureChange( kmParameterFE, rkvT, kForeland.doubleValue() ) ); //$NON-NLS-1$
+      m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RKV, kForeland.doubleValue() ) ); //$NON-NLS-1$
       m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RNF, n.doubleValue() ) ); //$NON-NLS-1$
-      m_featureChanges.add( new FeatureChange( kmParameterFE, rnvPT, nForeland.doubleValue() ) ); //$NON-NLS-1$
-      m_featureChanges.add( new FeatureChange( kmParameterFE, qrkPT, qSum.doubleValue() ) ); //$NON-NLS-1$
-      m_featureChanges.add( new FeatureChange( kmParameterFE, cPT, alpha.doubleValue() ) ); //$NON-NLS-1$
+      m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RNV, nForeland.doubleValue() ) ); //$NON-NLS-1$
+      m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_QRK, qSum.doubleValue() ) ); //$NON-NLS-1$
+      m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_C, alpha.doubleValue() ) ); //$NON-NLS-1$
     }
 
     return paramLog;

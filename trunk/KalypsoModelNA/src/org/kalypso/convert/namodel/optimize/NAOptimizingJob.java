@@ -58,7 +58,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.xpath.XPathAPI;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
@@ -216,9 +215,11 @@ public class NAOptimizingJob implements IOptimizingJob
   @Override
   public void calculate( ) throws MalformedURLException
   {
-    m_counter++;
-    final File optimizeRunDir = FileUtilities.createNewTempDir( "optimizeRun", m_tmpDir ); //$NON-NLS-1$
+    final String optimizeDirName = String.format( "optimizeRun_%d", m_counter );
+    final File optimizeRunDir = new File( m_tmpDir, optimizeDirName );
     optimizeRunDir.mkdirs();
+
+    m_counter++;
 
     final CalcDataProviderDecorater newDataProvider = new CalcDataProviderDecorater( m_dataProvider );
     newDataProvider.addURL( NaModelConstants.IN_OPTIMIZE_ID, m_lastOptimizedFile.toURI().toURL() );
@@ -280,7 +281,7 @@ public class NAOptimizingJob implements IOptimizingJob
     if( dir == null )
       return;
 
-    FileUtils.deleteQuietly( dir );
+// FileUtils.deleteQuietly( dir );
   }
 
   /**

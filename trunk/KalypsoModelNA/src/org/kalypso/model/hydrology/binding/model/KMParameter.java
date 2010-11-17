@@ -54,19 +54,36 @@ public class KMParameter extends AbstractNaModelElement
 {
   public static final QName FEATURE_KM_PARAMETER = new QName( NS_NAMODELL, "KMParameter" ); //$NON-NLS-1$
 
+  public static final QName PROP_QRK = new QName( NS_NAMODELL, "qrk" ); //$NON-NLS-1$
+
   public static final QName PROP_RKF = new QName( NS_NAMODELL, "rkf" ); //$NON-NLS-1$
 
   public static final QName PROP_RNF = new QName( NS_NAMODELL, "rnf" ); //$NON-NLS-1$
+
+  public static final QName PROP_RKV = new QName( NS_NAMODELL, "rkv" ); //$NON-NLS-1$
+
+  public static final QName PROP_RNV = new QName( NS_NAMODELL, "rnv" ); //$NON-NLS-1$
+
+  public static final QName PROP_C = new QName( NS_NAMODELL, "c" ); //$NON-NLS-1$
 
   public KMParameter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  public double getQrk( )
+  {
+    return getDoubleProperty( PROP_QRK, 0.0 );
+  }
+
+  public void setQrk( final double Qrk )
+  {
+    setProperty( PROP_QRK, Qrk );
+  }
+
   public double getRkf( )
   {
-// TODO: check default value
-    return getDoubleProperty( PROP_RKF, 1.0 );
+    return getDoubleProperty( PROP_RKF, 0.0 );
   }
 
   public void setRkf( final double rkf )
@@ -76,12 +93,42 @@ public class KMParameter extends AbstractNaModelElement
 
   public double getRnf( )
   {
-// TODO: check default value
-    return getDoubleProperty( PROP_RNF, 1.0 );
+    return getDoubleProperty( PROP_RNF, 0.0 );
   }
 
   public void setRnf( final double rnf )
   {
     setProperty( PROP_RNF, rnf );
   }
+
+  public double getRkv( )
+  {
+    return getDoubleProperty( PROP_RKV, 0.0 );
+  }
+
+  public void setRkv( final double rkv )
+  {
+    setProperty( PROP_RKV, rkv );
+  }
+
+  public double getRnv( )
+  {
+    return getDoubleProperty( PROP_RNV, 0.0 );
+  }
+
+  public void setRnv( final double rnv )
+  {
+    setProperty( PROP_RNV, rnv );
+  }
+
+  public double getC( )
+  {
+    return getDoubleProperty( PROP_C, 0.0 );
+  }
+
+  public void setC( final double c )
+  {
+    setProperty( PROP_C, c );
+  }
+
 }

@@ -1,12 +1,3 @@
-package org.kalypso.convert.namodel.net.visitors;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypso.convert.namodel.manager.AsciiBuffer;
-import org.kalypso.convert.namodel.net.NetElement;
-import org.kalypsodeegree.model.feature.Feature;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -47,6 +38,15 @@ import org.kalypsodeegree.model.feature.Feature;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.convert.namodel.net.visitors;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.convert.namodel.manager.AsciiBuffer;
+import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author doemming
@@ -59,8 +59,11 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
 
   private final List<Feature> m_completedNodes = new ArrayList<Feature>();
 
-  public CompleteDownstreamNetAsciiWriterVisitor( final AsciiBuffer asciiBuffer )
+  private final RelevantNetElements m_relevantElements;
+
+  public CompleteDownstreamNetAsciiWriterVisitor( final RelevantNetElements relevantElements, final AsciiBuffer asciiBuffer )
   {
+    m_relevantElements = relevantElements;
     m_asciiBuffer = asciiBuffer;
   }
 
@@ -85,18 +88,18 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
     final Feature downStreamChannel = netElement.getChannelsBelowDownStreamNode();
     final List<NetElement> downStreamNetElements = netElement.getDownStreamNetElements();
     boolean needToComplete = true;
-    for( final NetElement name : downStreamNetElements )
+    for( final NetElement downstreamElement : downStreamNetElements )
     {
-      if( name.getChannel() == downStreamChannel && name.isCalculated() )
+      if( downstreamElement.getChannel() == downStreamChannel && downstreamElement.isCalculated() )
       {
-        visit( name );
+        visit( downstreamElement );
         needToComplete = false;
       }
     }
     if( needToComplete )
     {
       m_virtualChannelId++;
-      netElement.writeRootChannel( m_asciiBuffer, m_virtualChannelId );
+      netElement.writeRootChannel( m_relevantElements, m_asciiBuffer, m_virtualChannelId );
     }
     return false;
   }
