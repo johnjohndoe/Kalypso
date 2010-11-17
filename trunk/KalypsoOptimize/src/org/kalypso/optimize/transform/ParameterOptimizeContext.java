@@ -47,7 +47,6 @@ import org.kalypso.optimizer.Parameter;
  * 
  * @author doemming
  */
-
 public class ParameterOptimizeContext
 {
   public final static String MODE_FACTOR = "factor";
@@ -81,7 +80,7 @@ public class ParameterOptimizeContext
     m_xPaths = xPaths;
   }
 
-  public ParameterOptimizeContext( final Parameter parameter, final String prefixPath )
+  public ParameterOptimizeContext( final Parameter parameter )
   {
     m_initialValue = parameter.getInitialValue();
     m_synteticValue = parameter.getSynteticValue();
@@ -92,7 +91,7 @@ public class ParameterOptimizeContext
     final String[] pathes = parameter.getXpath().toArray( new String[parameter.getXpath().size()] );
     m_xPaths = new String[pathes.length];
     for( int i = 0; i < pathes.length; i++ )
-      m_xPaths[i] = prefixPath + "/" + pathes[i];
+      m_xPaths[i] = pathes[i];
   }
 
   public double getUpperBound()
