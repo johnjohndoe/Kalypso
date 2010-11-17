@@ -49,6 +49,7 @@ import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.internal.preprocessing.AbstractCoreFileWriter;
 import org.kalypso.ogc.sensor.IAxis;
@@ -130,9 +131,12 @@ public class HRBFileWriter extends AbstractCoreFileWriter
       {
         final IDManager idManager = m_conf.getIdManager();
         final int channelID = idManager.getAsciiID( channel );
-        final int overflowNode1ID = idManager.getAsciiID( channel.getOverflowNode() );
-        final int overflowNode2ID = idManager.getAsciiID( channel.getOverflowNode2() );
-        final int overflowNode3ID = idManager.getAsciiID( channel.getOverflowNode3() );
+        final Node overflowNode = channel.getOverflowNode();
+        final Node overflowNode2 = channel.getOverflowNode2();
+        final Node overflowNode3 = channel.getOverflowNode3();
+        final int overflowNode1ID = overflowNode == null ? 0 : idManager.getAsciiID( overflowNode );
+        final int overflowNode2ID = overflowNode2 == null ? 0 : idManager.getAsciiID( overflowNode2 );
+        final int overflowNode3ID = overflowNode3 == null ? 0 : idManager.getAsciiID( overflowNode3 );
         writer.format( Locale.ENGLISH, "SPEICHER %7d %7d %7d %7d %s\n", channelID, overflowNode1ID, overflowNode2ID, overflowNode3ID, asciiTS ); //$NON-NLS-1$
         writer.format( Locale.ENGLISH, "Fakt_SeeV %.2f\n", channel.getSeaEvaporationFactor() ); //$NON-NLS-1$
         writer.format( Locale.ENGLISH, "text;text\n" ); //$NON-NLS-1$
