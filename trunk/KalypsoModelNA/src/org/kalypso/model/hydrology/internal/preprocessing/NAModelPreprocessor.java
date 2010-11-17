@@ -43,7 +43,6 @@ package org.kalypso.model.hydrology.internal.preprocessing;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
@@ -51,18 +50,25 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.optimize.CalibrationConfig;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
-import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
-import org.kalypso.model.hydrology.internal.preprocessing.writer.LzsimWriter;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.LanduseHash;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.HydrotopeWriter;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
 import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * Converts KalypsoHydrology gml files to Kalypso-NA ascii files.
@@ -71,6 +77,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NAModelPreprocessor
 {
+  private RelevantNetElements m_relevantElements;
+
   private File m_preprocessedAsciiDir;
 
   private final IDManager m_idManager;
@@ -84,6 +92,8 @@ public class NAModelPreprocessor
   private final NaAsciiDirs m_asciiDirs;
 
   private HydroHash m_hydroHash;
+
+  private TimeseriesFileManager m_tsFileManager;
 
   public NAModelPreprocessor( final NAConfiguration conf, final NaAsciiDirs asciiDirs, final IDManager idManager, final NaSimulationData simulationData, final Logger logger )
   {
@@ -157,17 +167,73 @@ public class NAModelPreprocessor
 
     // write net and so on....
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.23" ) ); //$NON-NLS-1$
-    final NAModellConverter naModellConverter = new NAModellConverter( m_conf, rootNode, m_logger );
-    naModellConverter.write();
-    m_hydroHash = naModellConverter.getHydroHash();
-    checkCancel( monitor );
+    final NAModellConverter naModellConverter = new NAModellConverter( m_conf, m_simulationData, m_asciiDirs, m_logger );
+    initNetData( rootNode );
+    naModellConverter.writeUncalibratedFiles( m_relevantElements, m_tsFileManager, m_hydroHash );
 
-    // Write start conditions, shouldn't this go into the general ascii writer?
-    writeStartCondition( m_hydroHash );
+    final NAOptimize optimizeConfig = m_conf.getOptimizeConfig();
+    processCallibrationFiles( optimizeConfig );
+
     checkCancel( monitor );
 
     // Create "out_we.nat", else Kalypso-NA will not run
     m_asciiDirs.outWeNatDir.mkdirs();
+  }
+
+  public void processCallibrationFiles( final NAOptimize optimize ) throws Exception
+  {
+    final NAModellConverter naModellConverter = new NAModellConverter( m_conf, m_simulationData, m_asciiDirs, m_logger );
+
+    final NaModell naModel = (NaModell) m_conf.getModelWorkspace().getRootFeature();
+
+    final CalibrationConfig config = new CalibrationConfig( optimize, naModel );
+    config.applyCalibrationFactors();
+    config.applyKmCalibrationFactors();
+
+    naModellConverter.writeCalibratedFiles( m_relevantElements, m_tsFileManager );
+  }
+
+  private void initNetData( final Node rootNode ) throws SimulationException, Exception
+  {
+    final GMLWorkspace modelWorkspace = m_conf.getModelWorkspace();
+    final GMLWorkspace synthNWorkspace = m_conf.getSynthNWorkspace();
+    final NAHydrotop hydrotopeCollection = m_conf.getHydrotopeCollection();
+    final GMLWorkspace parameterWorkspace = m_conf.getParameterWorkspace();
+    final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
+    final IDManager idManager = m_conf.getIdManager();
+
+    final NetFileAnalyser m_nodeManager = new NetFileAnalyser( m_conf, rootNode, m_logger, modelWorkspace, synthNWorkspace );
+    m_relevantElements = m_nodeManager.analyseNet();
+
+    if( hydrotopeCollection != null )
+    {
+      final Catchment[] catchments = m_relevantElements.getCatchmentsSorted( idManager );
+
+      // REMARK: initHydroHash must be called after nodeManager.write file has been called, as this marks
+      // the features in the ascii buffer to be relevant.
+      // TODO: change this bad design: We should just pass a list of catchments to the hydroHash
+      final HydroHash hydroHash = initHydroHash( parameter, hydrotopeCollection, catchments );
+
+      final HydrotopeWriter hydrotopManager = new HydrotopeWriter( parameter, idManager, hydroHash, m_logger );
+      hydrotopManager.write( m_conf.getHydrotopFile() );
+      hydrotopManager.writeMapping( m_conf.getHydrotopMappingFile() );
+    }
+
+    final NAControl metaControl = m_conf.getMetaControl();
+    final boolean usePrecipitationForm = metaControl.isUsePrecipitationForm();
+    m_tsFileManager = new TimeseriesFileManager( idManager, usePrecipitationForm );
+  }
+
+  private HydroHash initHydroHash( final Parameter parameter, final NAHydrotop hydrotopeCollection, final Catchment[] catchments ) throws GM_Exception, SimulationException
+  {
+    if( m_hydroHash == null )
+    {
+      final LanduseHash landuseHash = new LanduseHash( parameter, m_logger );
+      m_hydroHash = new HydroHash( landuseHash );
+      m_hydroHash.initHydrotopes( hydrotopeCollection, catchments );
+    }
+
+    return m_hydroHash;
   }
 
   /**
@@ -214,29 +280,6 @@ public class NAModelPreprocessor
     {
       e.printStackTrace();
       throw new NAPreprocessorException( "Failed to copy preprocessed ascii files", e );
-    }
-  }
-
-  private void writeStartCondition( final HydroHash hydroHash ) throws NAPreprocessorException
-  {
-    final InitialValues initialValues = m_simulationData.getInitialValues();
-    if( initialValues == null )
-    {
-      final Date simulationStart = m_simulationData.getMetaControl().getSimulationStart();
-      final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.26", simulationStart ); //$NON-NLS-1$
-      m_logger.info( msg );
-      return;
-    }
-
-    try
-    {
-      final LzsimWriter lzsimWriter = new LzsimWriter( m_idManager, hydroHash, initialValues );
-      lzsimWriter.writeLzsimFiles( m_asciiDirs.lzsimDir );
-    }
-    catch( final Exception e )
-    {
-      final String msg = String.format("Failed to write Kalypso-NA ASCII start condition: %s", e.getLocalizedMessage());
-      throw new NAPreprocessorException( msg, e );
     }
   }
 

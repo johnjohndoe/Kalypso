@@ -251,10 +251,8 @@ public class NetElement
     upStreamElement.addDownStream( this );
   }
 
-  public void writeRootChannel( final RelevantNetElements relevantElements, final PrintWriter netBuffer, final int virtualChannelId )
+  public void writeRootChannel( final PrintWriter netBuffer, final int virtualChannelId )
   {
-    relevantElements.addRootChannel( virtualChannelId );
-
     final IDManager idManager = m_conf.getIdManager();
 
     final Node downstreamNode = m_channel.getDownstreamNode();
@@ -270,15 +268,35 @@ public class NetElement
   }
 
   /**
-   * writes part 1 of netfile
+   * Collects the relevant elements, that should be written to the net file.
    */
-  public void write( final RelevantNetElements relevantElements, final PrintWriter netBuffer )
+  public void collectRelevantElements( final RelevantNetElements relevantElements )
   {
-    final Channel channel = getChannel();
-    relevantElements.addChannel( channel );
+    relevantElements.addChannel( this );
 
     m_calculated = true;
 
+    // append channel:
+    final Node downstreamNode = m_channel.getDownstreamNode();
+    final Node upstreamNode = m_channel.findUpstreamNode();
+
+    // append catchments
+    final Catchment[] catchmentForThisChannel = m_channel.findCatchments();
+    for( final Catchment catchment : catchmentForThisChannel )
+      relevantElements.addCatchment( catchment );
+
+    if( upstreamNode != null )
+      relevantElements.addNode( upstreamNode );
+
+    if( downstreamNode != null )
+      relevantElements.addNode( downstreamNode );
+  }
+
+  /**
+   * writes part 1 of netfile
+   */
+  public void write( final PrintWriter netBuffer )
+  {
     final IDManager idManager = m_conf.getIdManager();
 
     // append channel:
@@ -302,16 +320,9 @@ public class NetElement
     netBuffer.append( " " + catchmentForThisChannel.length + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     for( final Catchment catchment : catchmentForThisChannel )
     {
-      relevantElements.addCatchment( catchment );
       final int chatchmentID = idManager.getAsciiID( catchment );
       netBuffer.append( String.format( "%8d\n", chatchmentID ) ); //$NON-NLS-1$
     }
-
-    if( upstreamNode != null )
-      relevantElements.addNode( upstreamNode );
-
-    if( downstreamNode != null )
-      relevantElements.addNode( downstreamNode );
   }
 
   public void accept( final NetElementVisitor visitor ) throws Exception

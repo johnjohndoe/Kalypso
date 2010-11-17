@@ -44,7 +44,6 @@ import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
-import org.kalypso.convert.namodel.optimize.CalibrationConfig;
 import org.kalypso.convert.namodel.optimize.NaOptimizeLoader;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAControl;
@@ -124,13 +123,6 @@ public class NaSimulationData
 
     if( m_hydrotopeCollection != null && m_modelWorkspace != null )
       transformModelToHydrotopeCrs();
-
-    // TODO: does not really belong here, shouldn't the preprocessing do this?
-    if( m_naOptimize != null )
-    {
-      final CalibrationConfig config = new CalibrationConfig( m_naOptimize );
-      config.applyCalibrationFactors();
-    }
   }
 
   private <T> T readModel( final URL location, final Class<T> type ) throws Exception

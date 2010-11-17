@@ -42,9 +42,11 @@ package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.PrintWriter;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
@@ -65,11 +67,11 @@ public class GerWriter extends AbstractCoreFileWriter
 
   private final IDManager m_idManager;
 
-  private final Integer[] m_rootChannels;
+  private final Entry<NetElement, Integer>[] m_rootChannels;
 
-  private final Channel[] m_channels;
+  private final NetElement[] m_channels;
 
-  public GerWriter( final IDManager idManager, final Integer[] rootChannels, final Channel[] channels, final Logger logger )
+  public GerWriter( final IDManager idManager, final Entry<NetElement, Integer>[] rootChannels, final NetElement[] channels, final Logger logger )
   {
     super( logger );
 
@@ -84,14 +86,14 @@ public class GerWriter extends AbstractCoreFileWriter
   @Override
   protected void writeContent( final PrintWriter writer ) throws Exception
   {
-    for( final Integer rootChannelID : m_rootChannels )
+    for( final Entry<NetElement, Integer> rootChannel : m_rootChannels )
     {
-      writer.println( rootChannelID );
+      writer.println( rootChannel.getValue() );
       writer.println( GerWriter.VIRTUALCHANNEL );
     }
 
-    for( final Channel channel : m_channels )
-      writeChannel( writer, channel );
+    for( final NetElement element : m_channels )
+      writeChannel( writer, element.getChannel() );
   }
 
   private void writeChannel( final PrintWriter writer, final Channel channel ) throws Exception

@@ -42,7 +42,11 @@ package org.kalypso.convert.namodel.optimize;
 
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
+import org.kalypso.model.hydrology.binding.model.KMParameter;
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author doemming
@@ -51,13 +55,19 @@ public class CalibrationConfig
 {
   private final NAOptimize m_naOptimize;
 
-  public CalibrationConfig( final NAOptimize naOptimize )
+  private final NaModell m_naModel;
+
+  public CalibrationConfig( final NAOptimize naOptimize, final NaModell naModel )
   {
     m_naOptimize = naOptimize;
+    m_naModel = naModel;
   }
 
   public void applyCalibrationFactors( )
   {
+    if( m_naOptimize == null )
+      return;
+
     final Catchment[] catchments = m_naOptimize.getCatchments();
     for( final Catchment catchment : catchments )
     {
@@ -74,4 +84,38 @@ public class CalibrationConfig
       kmChannel.setFaktorRnf( m_naOptimize.getFactorRnf() );
     }
   }
+
+  /**
+   * Updates model with factor values from control<br>
+   * some parameter have factors that must be processed before generating asciifiles, as these factors do not occur in
+   * ascci-format
+   * 
+   * @param modellWorkspace
+   */
+  public void applyKmCalibrationFactors( )
+  {
+    final IFeatureBindingCollection<Channel> channels = m_naModel.getChannels();
+    for( final Channel channel : channels )
+    {
+      if( channel instanceof KMChannel )
+        updateKMChannel( (KMChannel) channel );
+    }
+  }
+
+  private void updateKMChannel( final KMChannel channel )
+  {
+    final double rkfFactor = channel.getFaktorRkf();
+    final double rnfFactor = channel.getFaktorRnf();
+
+    final IFeatureBindingCollection<KMParameter> parameters = channel.getParameters();
+    for( final KMParameter kmParameter : parameters )
+    {
+      final double _rnf = rnfFactor * kmParameter.getRnf();
+      kmParameter.setRnf( _rnf );
+
+      final double _rkf = rkfFactor * kmParameter.getRkf();
+      kmParameter.setRkf( _rkf );
+    }
+  }
+
 }

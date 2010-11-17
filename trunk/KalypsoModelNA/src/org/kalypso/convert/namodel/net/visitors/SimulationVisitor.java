@@ -47,22 +47,24 @@ import java.util.Set;
 
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.NetElementCircleFinder;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 
 /**
  * @author doemming
  */
 public class SimulationVisitor extends NetElementVisitor
 {
-  private final WriteAsciiVisitor m_elementWriter;
+  private final RelevantNetElements m_relevantNetElements;
 
   private final List<NetElement> m_simulated = new ArrayList<NetElement>();
 
   private final Set<NetElement> m_cycleTest = new HashSet<NetElement>();
 
-  public SimulationVisitor( final WriteAsciiVisitor elementWriter )
+  public SimulationVisitor( final RelevantNetElements relevantElements )
   {
-    m_elementWriter = elementWriter;
+    m_relevantNetElements = relevantElements;
   }
 
   /**
@@ -108,8 +110,19 @@ public class SimulationVisitor extends NetElementVisitor
     }
 
     // then calculate current
-    m_elementWriter.visit( netElement );
+    visitElement( netElement );
     m_simulated.add( netElement );
+    return true;
+  }
+
+  private boolean visitElement( final NetElement netElement )
+  {
+    netElement.collectRelevantElements( m_relevantNetElements );
+
+    final Node overflowNode = netElement.getOverflowNode();
+    if( overflowNode != null )
+      m_relevantNetElements.addNode( overflowNode );
+
     return true;
   }
 }
