@@ -45,6 +45,7 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.convert.namodel.optimize.CalibrationConfig;
+import org.kalypso.convert.namodel.optimize.NaOptimizeLoader;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
@@ -65,7 +66,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
  */
 public class NaSimulationData
 {
-  // REMARK:: in order to support references between the models, we use this factory that makes sure, that no workspace
+  // REMARK: in order to support references between the models, we use this factory that makes sure, that no workspace
   // gets loaded twice.
   private final FeatureProviderWithCacheFactory m_factory = new FeatureProviderWithCacheFactory();
 
@@ -89,7 +90,7 @@ public class NaSimulationData
 
   private final NAOptimize m_naOptimize;
 
-  public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL optimizeURL, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl ) throws Exception
+  public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final NaOptimizeLoader optimizeLoader ) throws Exception
   {
     /*
      * Loading model workspace first, it is used as context for all other models (i.e. we assume they all live in the
@@ -99,7 +100,14 @@ public class NaSimulationData
 
     m_naModellControl = readModel( controlURL, NAModellControl.class );
     m_metaControl = readModel( metaUrl, NAControl.class );
-    m_naOptimize = readModel( optimizeURL, NAOptimize.class );
+
+    if( optimizeLoader != null )
+    {
+      optimizeLoader.load( m_modelWorkspace, m_factory );
+      m_naOptimize = optimizeLoader.getNaOptimize();
+    }
+    else
+      m_naOptimize = null;
 
     m_naModel = (NaModell) m_modelWorkspace.getRootFeature();
 

@@ -117,7 +117,7 @@ public class NaModelCalcJob implements ISimulation
       return false;
 
     final NaOptimizeLoader loader = new NaOptimizeLoader( dataProvider );
-    loader.load();
+    loader.load( null, null );
     final NAOptimize optimize = loader.getNaOptimize();
     final boolean doOptimize = optimize.doOptimize();
     optimize.getWorkspace().dispose();
