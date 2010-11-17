@@ -38,11 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.manager;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
+import org.kalypso.convert.namodel.manager.ASCIIHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
@@ -51,33 +54,40 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author huebsch
  */
-public class SchneeManager
+public class SchneeManager extends AbstractCoreFileWriter
 {
-  private final ASCIIHelper m_asciiHelper;
+  private final ASCIIHelper m_asciiHelper = new ASCIIHelper( getClass().getResource( "/org/kalypso/convert/namodel/manager/resources/formats/parameter.txt" ) ); //$NON-NLS-1$
 
-  public SchneeManager( )
+  private final GMLWorkspace m_parameterWorkspace;
+
+  public SchneeManager( final GMLWorkspace parameterWorkspace, final Logger logger )
   {
-    m_asciiHelper = new ASCIIHelper( getClass().getResource( "resources/formats/parameter.txt" ) ); //$NON-NLS-1$
+    super( logger );
+
+    m_parameterWorkspace = parameterWorkspace;
   }
 
-  public void writeFile( final StringBuffer snowBuffer, final GMLWorkspace paraWorkspace ) throws Exception
+  /**
+   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractWriter#writeContent(java.io.PrintWriter)
+   */
+  @Override
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
-    final Feature rootFeature = paraWorkspace.getRootFeature();
+    final Feature rootFeature = m_parameterWorkspace.getRootFeature();
     final List< ? > list = (List< ? >) rootFeature.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
-    snowBuffer.append( Messages.getString( "org.kalypso.convert.namodel.manager.SchneeManager.0" ) ); //$NON-NLS-1$
-    snowBuffer.append( "/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
-    snowBuffer.append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
+    writer.append( Messages.getString( "org.kalypso.convert.namodel.manager.SchneeManager.0" ) ); //$NON-NLS-1$
+    writer.append( "/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
+    writer.append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
     final Iterator< ? > iter = list.iterator();
     while( iter.hasNext() )
     {
       final Feature snowFE = (Feature) iter.next();
       // TODO: nur die schreiben, die auch in Gebietsdatei vorkommen
-      writeFeature( snowBuffer, snowFE );
+      writeFeature( writer, snowFE );
     }
-
   }
 
-  private void writeFeature( final StringBuffer snowBuffer, final Feature feature ) throws Exception
+  private void writeFeature( final PrintWriter snowBuffer, final Feature feature ) throws Exception
   {
     snowBuffer.append( m_asciiHelper.toAscii( feature, 13 ) + "\n" ); //$NON-NLS-1$
   }

@@ -48,41 +48,13 @@ package org.kalypso.convert.namodel.manager;
 @Deprecated
 public class AsciiBuffer
 {
-  private final StringBuffer m_netBuffer = new StringBuffer();
-
-  private final StringBuffer m_catchmentBuffer = new StringBuffer();
-
-  private final StringBuffer m_channelBuffer = new StringBuffer();
-
   private final StringBuffer m_hydBuffer = new StringBuffer();
 
-  private final StringBuffer m_zftBuffer= new StringBuffer();
-
   private final StringBuffer m_swaleTrenchBuffer= new StringBuffer();
-
-  public StringBuffer getNetBuffer()
-  {
-    return m_netBuffer;
-  }
-
-  public StringBuffer getChannelBuffer()
-  {
-    return m_channelBuffer;
-  }
-
-  public StringBuffer getCatchmentBuffer()
-  {
-    return m_catchmentBuffer;
-  }
 
   public StringBuffer getHydBuffer()
   {
     return m_hydBuffer;
-  }
-
-  public StringBuffer getZFTBuffer()
-  {
-    return m_zftBuffer;
   }
 
   public StringBuffer getSwaleTrenchBuffer( )

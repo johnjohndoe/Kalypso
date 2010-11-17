@@ -399,12 +399,10 @@ public class NetFileManager
    * @param synthNWorkspace
    *          workspace for synthetic precipitation
    */
-  public RelevantNetElements writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace modelWorkspace, final GMLWorkspace synthNWorkspace ) throws Exception
+  public RelevantNetElements writeFile( final StringBuffer netBuffer, final GMLWorkspace modelWorkspace, final GMLWorkspace synthNWorkspace ) throws Exception
   {
     // FIXME: this method should only collect the relevant elements; files should be written spearately
     final RelevantNetElements relevantElements = new RelevantNetElements();
-
-    final StringBuffer netBuffer = asciiBuffer.getNetBuffer();
 
     final NetElement[] netElements = generateNetElements( modelWorkspace, synthNWorkspace );
 
@@ -413,13 +411,13 @@ public class NetFileManager
     final NetElement[] rootNetElements = rootNodeVisitor.getRootNodeElements();
 
     // write asciifiles: upstream-network of root nodes
-    final WriteAsciiVisitor writeAsciiVisitor = new WriteAsciiVisitor( relevantElements, asciiBuffer );
+    final WriteAsciiVisitor writeAsciiVisitor = new WriteAsciiVisitor( relevantElements, netBuffer );
     final SimulationVisitor simulationVisitor = new SimulationVisitor( writeAsciiVisitor );
     for( final NetElement element : rootNetElements )
       simulationVisitor.visit( element );
 
     // write ascii: complete network below root nodes
-    final CompleteDownstreamNetAsciiWriterVisitor completeNetVisitor = new CompleteDownstreamNetAsciiWriterVisitor( relevantElements, asciiBuffer );
+    final CompleteDownstreamNetAsciiWriterVisitor completeNetVisitor = new CompleteDownstreamNetAsciiWriterVisitor( relevantElements, netBuffer );
     for( final NetElement netElement : netElements )
       netElement.accept( completeNetVisitor );
 

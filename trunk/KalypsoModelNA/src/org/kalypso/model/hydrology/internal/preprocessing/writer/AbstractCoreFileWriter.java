@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,24 +50,20 @@ import org.apache.commons.io.IOUtils;
 /**
  * @author Dejan Antanaskovic
  */
-public abstract class AbstractCoreFileWriter
+abstract class AbstractCoreFileWriter
 {
-  private final File m_file;
-
   private final Logger m_logger;
 
-  public AbstractCoreFileWriter( final File file, final Logger logger )
+  public AbstractCoreFileWriter( final Logger logger )
   {
-    m_file = file;
     m_logger = logger;
   }
 
-  public final void write( ) throws IOException
+  public final void write( final File outputFile ) throws IOException
   {
-    PrintWriter writer = null;
+    final PrintWriter writer = new PrintWriter( outputFile );
     try
     {
-      writer = new PrintWriter( m_file );
       writeContent( writer );
       writer.close();
     }
@@ -82,7 +78,7 @@ public abstract class AbstractCoreFileWriter
     }
   }
 
-  protected abstract void writeContent( final PrintWriter printWriter ) throws Exception;
+  protected abstract void writeContent( final PrintWriter writer ) throws Exception;
 
   private void handleError( final Exception e ) throws IOException
   {

@@ -57,8 +57,6 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.manager.AsciiBuffer;
-import org.kalypso.convert.namodel.manager.CatchmentManager;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.net.visitors.NetElementVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
@@ -69,6 +67,7 @@ import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.GebWriter;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -165,9 +164,9 @@ public class NetElement
 
     for( final Catchment catchment : catchments )
     {
-      final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
-      final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
-      final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
+      final File targetFileN = GebWriter.getNiederschlagEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
+      final File targetFileT = GebWriter.getTemperaturEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
+      final File targetFileV = GebWriter.getVerdunstungEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
       final File parent = targetFileN.getParentFile();
       parent.mkdirs();
 
@@ -251,11 +250,9 @@ public class NetElement
     upStreamElement.addDownStream( this );
   }
 
-  public void writeRootChannel( final RelevantNetElements relevantElements, final AsciiBuffer asciiBuffer, final int virtualChannelId )
+  public void writeRootChannel( final RelevantNetElements relevantElements, final StringBuffer netBuffer, final int virtualChannelId )
   {
     relevantElements.addRootChannel( virtualChannelId );
-
-    final StringBuffer netBuffer = asciiBuffer.getNetBuffer();
 
     final IDManager idManager = m_conf.getIdManager();
 
@@ -274,14 +271,12 @@ public class NetElement
   /**
    * writes part 1 of netfile
    */
-  public void write( final RelevantNetElements relevantElements, final AsciiBuffer asciiBuffer, final List<Node> nodeList )
+  public void write( final RelevantNetElements relevantElements, final StringBuffer netBuffer, final List<Node> nodeList )
   {
     final Channel channel = getChannel();
     relevantElements.addChannel( channel );
 
     m_calculated = true;
-
-    final StringBuffer netBuffer = asciiBuffer.getNetBuffer();
 
     final IDManager idManager = m_conf.getIdManager();
 

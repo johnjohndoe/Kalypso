@@ -40,11 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.util.Locale;
+import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
@@ -61,33 +60,28 @@ import org.kalypso.simulation.core.SimulationException;
 /**
  * @author doemming
  */
-public class RhbWriter
+public class RhbWriter extends AbstractCoreFileWriter
 {
   private final IDManager m_idManager;
 
   private final Channel[] m_channels;
 
-  public RhbWriter( final IDManager idManager, final Channel[] channels )
+  public RhbWriter( final IDManager idManager, final Channel[] channels, final Logger logger )
   {
+    super( logger );
+
     m_idManager = idManager;
     m_channels = channels;
   }
 
-  public void writeFile( final File outputFile ) throws Exception
+  /**
+   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractWriter#writeContent(java.io.PrintWriter)
+   */
+  @Override
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
-    final PrintWriter writer = new PrintWriter( outputFile );
-
-    try
-    {
-      for( final Channel channel : m_channels )
-        writeFeature( channel, writer );
-
-      writer.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
+    for( final Channel channel : m_channels )
+      writeFeature( channel, writer );
   }
 
   // FIXME: better error handling!
