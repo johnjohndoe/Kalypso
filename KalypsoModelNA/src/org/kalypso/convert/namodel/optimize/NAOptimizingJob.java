@@ -41,12 +41,15 @@
 package org.kalypso.convert.namodel.optimize;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.OutputKeys;
@@ -57,10 +60,15 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
-import org.kalypso.model.hydrology.internal.simulation.NaModelInnerCalcJob;
+import org.kalypso.model.hydrology.internal.NACalculationLogger;
+import org.kalypso.model.hydrology.internal.NAModelSimulation;
+import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -82,6 +90,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -106,19 +115,11 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private final ISimulationDataProvider m_dataProvider;
 
-  private File m_lastOptimizedFile;
-
-  private File m_bestOptimizedFile = null;
+  private final File m_bestOptimizedFile;
 
   private final ISimulationMonitor m_monitor;
 
-  private File m_lastOptimizeRunDir = null;
-
-  private File m_bestOptimizeRunDir = null;
-
-  private OptimizeCalcResultEater m_lastResultEater = null;
-
-  private OptimizeCalcResultEater m_bestResultEater = null;
+  private final File m_bestOptimizeRunDir;
 
   private int m_counter = 0;
 
@@ -130,11 +131,25 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private Node m_optimizeDom;
 
+  private final File m_optimizeRunDir;
+
+  private final File m_bestResultDir;
+
+  private NAModelSimulation m_simulation;
+
+  private final NaSimulationDirs m_simDirs;
+
   public NAOptimizingJob( final File tmpDir, final ISimulationDataProvider dataProvider, final ISimulationMonitor monitor ) throws Exception
   {
     m_tmpDir = tmpDir;
     m_dataProvider = dataProvider;
     m_monitor = monitor;
+
+    m_optimizeRunDir = new File( m_tmpDir, "optimizeRun" );
+    m_bestOptimizeRunDir = new File( m_tmpDir, "bestRun" );
+    m_bestResultDir = new File( m_tmpDir, "bestResult" );
+    m_bestOptimizedFile = new File( m_tmpDir, "bestOptimizeConfig.gml" );
+    m_simDirs = new NaSimulationDirs( m_optimizeRunDir );
 
     loadNaOptimize();
 
@@ -177,43 +192,58 @@ public class NAOptimizingJob implements IOptimizingJob
    * @see org.kalypso.optimize.IOptimizingJob#calculate()
    */
   @Override
-  public void calculate( ) throws MalformedURLException
+  public void calculate( ) throws Exception
   {
-    final String optimizeDirName = String.format( "optimizeRun_%d", m_counter );
-    final File optimizeRunDir = new File( m_tmpDir, optimizeDirName );
-    optimizeRunDir.mkdirs();
+    if( m_counter == 0 )
+      m_lastSucceeded = runFirst();
+    else
+      m_lastSucceeded = runAgain();
 
     m_counter++;
+  }
 
-    final CalcDataProviderDecorater newDataProvider = new CalcDataProviderDecorater( m_dataProvider );
-    newDataProvider.addURL( NaModelConstants.IN_OPTIMIZE_ID, m_lastOptimizedFile.toURI().toURL() );
+  private boolean runFirst( )
+  {
+    final NACalculationLogger naCalculationLogger = new NACalculationLogger( new File( m_tmpDir, "logRun_" + m_counter ) );
 
-    // some generated files from best run can be recycled to increase
-    // performance
-    if( m_bestOptimizeRunDir != null )
-    {
-      try
-      {
-        newDataProvider.addURL( IN_BestOptimizedRunDir_ID, m_bestOptimizeRunDir.toURI().toURL() );
-      }
-      catch( final MalformedURLException e1 )
-      {
-        // on exception it is simply not used.
-      }
-    }
-    final NaModelInnerCalcJob calcJob = new NaModelInnerCalcJob();
-    final OptimizeCalcResultEater optimizeResultEater = new OptimizeCalcResultEater();
+    final Logger logger = naCalculationLogger.getLogger();
+
     try
     {
-      calcJob.run( optimizeRunDir, newDataProvider, optimizeResultEater, m_monitor );
+      m_simulation = new NAModelSimulation( m_simDirs, m_dataProvider, logger );
+      return m_simulation.runSimulation( m_monitor );
     }
-    catch( final SimulationException e )
+    catch( final OperationCanceledException e )
     {
-      e.printStackTrace();
+      final String msg = "Simulation cancelled by user";
+      logger.log( Level.INFO, msg );
+      m_monitor.setFinishInfo( IStatus.CANCEL, msg );
+      return false;
     }
-    m_lastOptimizeRunDir = optimizeRunDir;
-    m_lastResultEater = optimizeResultEater;
-    m_lastSucceeded = calcJob.isSucceeded();
+    catch( final Exception e )
+    {
+      // FIXME: error handling
+      e.printStackTrace();
+// logger.log( Level.SEVERE, STRING_SIMULATION_FAILED, e );
+// throw new SimulationException( STRING_SIMULATION_FAILED, e );
+      return false;
+    }
+    finally
+    {
+      naCalculationLogger.stopLogging();
+// simulation.backupResults();
+    }
+  }
+
+  private boolean runAgain( ) throws Exception
+  {
+    final NaSimulationData simulationData = m_simulation.getSimulationData();
+    final GMLWorkspace contextWorkspace = simulationData.getModelWorkspace();
+    final URL context = contextWorkspace.getContext();
+    final IFeatureProviderFactory factory = contextWorkspace.getFeatureProviderFactory();
+
+    final NAOptimize optimize = NaOptimizeLoader.toOptimizeConfig( m_optimizeDom, context, factory );
+    return m_simulation.rerunForOptimization( optimize, m_monitor );
   }
 
   /**
@@ -224,19 +254,41 @@ public class NAOptimizingJob implements IOptimizingJob
   {
     if( lastWasBest )
     {
+      saveOptimizeConfig(  );
+
       clear( m_bestOptimizeRunDir );
-      m_bestOptimizeRunDir = m_lastOptimizeRunDir;
-      m_bestResultEater = m_lastResultEater;
-      m_bestOptimizedFile = m_lastOptimizedFile;
+      clear( m_bestResultDir );
+
+      try
+      {
+        final File resultDir = m_simDirs.resultDir;
+
+        FileUtils.copyDirectory( m_optimizeRunDir, m_bestOptimizeRunDir );
+        FileUtils.copyDirectory( resultDir, m_bestResultDir );
+      }
+      catch( final IOException e )
+      {
+        // FIXME: error handling
+        e.printStackTrace();
+      }
+
       m_bestNumber = m_counter;
       m_bestSucceeded = m_lastSucceeded;
     }
-    else
-    {
-      clear( m_lastOptimizeRunDir );
-    }
-    m_lastOptimizeRunDir = null;
-    m_lastResultEater = null;
+
+// // FIXME DEBUG: save last run
+// try
+// {
+// FileUtils.copyDirectory( m_optimizeRunDir, new File( m_tmpDir, "optimizeRun_" + m_counter ) );
+// }
+// catch( final IOException e )
+// {
+// // FIXME: error handling
+// e.printStackTrace();
+// }
+
+    /* clear last results */
+    clear( m_simDirs.resultDir );
   }
 
   private void clear( final File dir )
@@ -265,30 +317,27 @@ public class NAOptimizingJob implements IOptimizingJob
     {
       e.printStackTrace();
     }
+  }
 
-    final TransformerFactory factory = TransformerFactory.newInstance();
-    final Transformer t = factory.newTransformer();
-
-    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
-    t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
-
-    final Document ownerDocument = m_optimizeDom instanceof Document ? (Document) m_optimizeDom : m_optimizeDom.getOwnerDocument();
-    final String encoding = ownerDocument.getInputEncoding();
-    t.setOutputProperty( OutputKeys.ENCODING, encoding );
-
-    final String optimizeBeanName = String.format( "optimizedBean_%d.xml", m_counter ); //$NON-NLS-1$
-    final File file = new File( m_tmpDir, optimizeBeanName );
-
+  private void saveOptimizeConfig( )
+  {
     try
     {
-      t.transform( new DOMSource( ownerDocument ), new StreamResult( file ) );
+      final TransformerFactory factory = TransformerFactory.newInstance();
+      final Transformer t = factory.newTransformer();
+
+      t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
+      t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
+
+      final Document ownerDocument = m_optimizeDom instanceof Document ? (Document) m_optimizeDom : m_optimizeDom.getOwnerDocument();
+      final String encoding = ownerDocument.getInputEncoding();
+      t.setOutputProperty( OutputKeys.ENCODING, encoding );
+      t.transform( new DOMSource( ownerDocument ), new StreamResult( m_bestOptimizedFile ) );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
-
-    m_lastOptimizedFile = file;
   }
 
   /**
@@ -336,7 +385,7 @@ public class NAOptimizingJob implements IOptimizingJob
   public SortedMap<Date, Double> getCalcedTimeSeries( ) throws MalformedURLException, SensorException
   {
     final SortedMap<Date, Double> result = new TreeMap<Date, Double>();
-    final File optimizeResultDir = new File( m_lastOptimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
+    final File optimizeResultDir = new File( m_optimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
 
     final String calcHref = m_linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
@@ -361,15 +410,9 @@ public class NAOptimizingJob implements IOptimizingJob
   @Override
   public void publishResults( final ISimulationResultEater resultEater ) throws SimulationException
   {
-    if( m_bestResultEater == null )
-      return;
-
-    for( final Object element : m_bestResultEater.keySet() )
-    {
-      final String id = (String) element;
-      resultEater.addResult( id, m_bestResultEater.get( id ) );
-    }
+    resultEater.addResult( NaModelConstants.OUT_ZML, m_bestResultDir );
     resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, m_bestOptimizedFile );
+
     System.out.println( "best was #" + m_bestNumber ); //$NON-NLS-1$
   }
 

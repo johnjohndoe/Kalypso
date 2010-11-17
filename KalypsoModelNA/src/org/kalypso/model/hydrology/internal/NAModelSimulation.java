@@ -253,4 +253,9 @@ public class NAModelSimulation
     postProcessor.process( m_simDirs.asciiDirs, m_simDirs );
     return postProcessor.isSucceeded();
   }
+
+  public NaSimulationData getSimulationData( )
+  {
+    return m_simulationData;
+  }
 }
