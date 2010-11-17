@@ -95,6 +95,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
       return m_formattedObservation;
     }
 
+    // to discuss: usage of min/max from the timeserie, or those explicitly defined by user in user interface
     protected double getMaxVolume( )
     {
       return m_vMax;
@@ -157,8 +158,8 @@ public class HRBFileWriter extends AbstractCoreFileWriter
           writer.format( Locale.ENGLISH, "%s %10.6f %9.6f %9.6f %d\n", channel.getName(), initialCapacity, volumeMax, volumeMin, wvqInfo.getNumberOfEntries() ); //$NON-NLS-1$
           writer.write( wvqInfo.getFormattedObservation() );
         }
+        writer.format( Locale.ENGLISH, "ENDE\n" ); //$NON-NLS-1$
       }
-      writer.format( Locale.ENGLISH, "ENDE\n" ); //$NON-NLS-1$
     }
   }
 
