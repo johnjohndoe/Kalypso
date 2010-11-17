@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,18 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author doemming
+ * @deprecated TODO: Get rid of theses Stringbuffers
  */
+@Deprecated
 public class AsciiBuffer
 {
   private final StringBuffer m_netBuffer = new StringBuffer();
@@ -60,26 +58,9 @@ public class AsciiBuffer
 
   private final StringBuffer m_hydBuffer = new StringBuffer();
 
-  private final List<Feature> m_markedFeatures = new ArrayList<Feature>();
-
   private final StringBuffer m_zftBuffer= new StringBuffer();
+
   private final StringBuffer m_swaleTrenchBuffer= new StringBuffer();
-
-  public AsciiBuffer()
-  {
-  // nothing to do here
-  }
-
-  public void markFeatureForWrite( final Feature feature )
-  {
-    if( !m_markedFeatures.contains( feature ) )
-      m_markedFeatures.add( feature );
-  }
-
-  public boolean isFeatureMarkedForWrite( final Feature feature )
-  {
-    return m_markedFeatures.contains( feature );
-  }
 
   public StringBuffer getNetBuffer()
   {

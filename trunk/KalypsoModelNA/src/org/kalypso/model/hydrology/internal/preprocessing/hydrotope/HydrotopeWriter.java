@@ -52,7 +52,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -60,6 +59,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -93,13 +93,13 @@ public class HydrotopeWriter
       m_soilTypeNameHash.put( soiltype.getName(), soiltype );
   }
 
-  public void writeHydrotopFile( final File hydrotopFile, final GMLWorkspace modelWorkspace, final AsciiBuffer asciiBuffer ) throws FileNotFoundException, SimulationException
+  public void writeHydrotopFile( final File hydrotopFile, final GMLWorkspace modelWorkspace, final RelevantNetElements relevantElements ) throws FileNotFoundException, SimulationException
   {
     PrintWriter writer = null;
     try
     {
       writer = new PrintWriter( hydrotopFile );
-      doWriteHydrotopeFile( writer, modelWorkspace, asciiBuffer );
+      doWriteHydrotopeFile( writer, modelWorkspace, relevantElements );
       writer.close();
     }
     finally
@@ -108,7 +108,7 @@ public class HydrotopeWriter
     }
   }
 
-  private void doWriteHydrotopeFile( final PrintWriter writer, final GMLWorkspace modelWorkspace, final AsciiBuffer asciiBuffer ) throws SimulationException
+  private void doWriteHydrotopeFile( final PrintWriter writer, final GMLWorkspace modelWorkspace, final RelevantNetElements relevantElements ) throws SimulationException
   {
     final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
 
@@ -118,7 +118,7 @@ public class HydrotopeWriter
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
     for( final Catchment catchment : catchments )
     {
-      if( asciiBuffer.isFeatureMarkedForWrite( catchment ) ) // do it only for relevant catchments
+      if( relevantElements.containsCatchment( catchment ) )
       {
         final CatchmentInfo catchmentInfo = m_hydroHash.getHydrotopInfo( catchment );
         final String checkMsg = catchmentInfo.checkArea();

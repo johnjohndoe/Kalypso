@@ -78,6 +78,7 @@ import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.Ueberlauf;
 import org.kalypso.model.hydrology.binding.model.Verzweigung;
+import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -398,8 +399,11 @@ public class NetFileManager
    * @param synthNWorkspace
    *          workspace for synthetic precipitation
    */
-  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace modelWorkspace, final GMLWorkspace synthNWorkspace ) throws Exception
+  public RelevantNetElements writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace modelWorkspace, final GMLWorkspace synthNWorkspace ) throws Exception
   {
+    // FIXME: this method should only collect the relevant elements; files should be written spearately
+    final RelevantNetElements relevantElements = new RelevantNetElements();
+
     final StringBuffer netBuffer = asciiBuffer.getNetBuffer();
 
     final NetElement[] netElements = generateNetElements( modelWorkspace, synthNWorkspace );
@@ -409,7 +413,7 @@ public class NetFileManager
     final NetElement[] rootNetElements = rootNodeVisitor.getRootNodeElements();
 
     // write asciifiles: upstream-network of root nodes
-    final WriteAsciiVisitor writeAsciiVisitor = new WriteAsciiVisitor( asciiBuffer );
+    final WriteAsciiVisitor writeAsciiVisitor = new WriteAsciiVisitor( relevantElements, asciiBuffer );
     final SimulationVisitor simulationVisitor = new SimulationVisitor( writeAsciiVisitor );
     for( final NetElement element : rootNetElements )
       simulationVisitor.visit( element );
@@ -423,6 +427,8 @@ public class NetFileManager
     netBuffer.append( "99999\n" ); //$NON-NLS-1$
     appendNodeList( modelWorkspace, nodeCollector, netBuffer );
     netBuffer.append( "99999\n" ); //$NON-NLS-1$
+
+    return relevantElements;
   }
 
   public void appendNodeList( final GMLWorkspace workspace, final Node[] nodes, final StringBuffer netBuffer ) throws Exception, Exception
@@ -630,5 +636,4 @@ public class NetFileManager
     final int asciiID = conf.getIdManager().getAsciiID( nodeFE );
     return "Z_" + Integer.toString( asciiID ).trim() + ".zufluss"; //$NON-NLS-1$ //$NON-NLS-2$
   }
-
 }

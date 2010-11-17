@@ -57,6 +57,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -93,14 +94,14 @@ public class CatchmentManager
     m_logger = logger;
   }
 
-  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws Exception
+  public void writeFile( final RelevantNetElements relevantElements, final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws Exception
   {
     final NaModell naModel = (NaModell) workspace.getRootFeature();
 
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
     for( final Catchment catchment : catchments )
     {
-      if( asciiBuffer.isFeatureMarkedForWrite( catchment ) )
+      if( relevantElements.containsCatchment( catchment ) )
         writeFeature( asciiBuffer, workspace, catchment );
     }
   }

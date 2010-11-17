@@ -46,6 +46,7 @@ import java.util.List;
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 
 /**
  * @author doemming
@@ -54,10 +55,13 @@ public class WriteAsciiVisitor extends NetElementVisitor
 {
   private final AsciiBuffer m_asciiBuffer;
 
+  private final RelevantNetElements m_relevantNetElements;
+
   private final List<Node> m_nodeCollector = new ArrayList<Node>();
 
-  public WriteAsciiVisitor( final AsciiBuffer asciiBuffer )
+  public WriteAsciiVisitor( final RelevantNetElements relevantElements, final AsciiBuffer asciiBuffer )
   {
+    m_relevantNetElements = relevantElements;
     m_asciiBuffer = asciiBuffer;
   }
 
@@ -67,7 +71,7 @@ public class WriteAsciiVisitor extends NetElementVisitor
   @Override
   public boolean visit( final NetElement netElement )
   {
-    netElement.write( m_asciiBuffer, m_nodeCollector );
+    netElement.write( m_relevantNetElements, m_asciiBuffer, m_nodeCollector );
     final Node overflowNode = netElement.getOverflowNode();
     if( overflowNode != null && !m_nodeCollector.contains( overflowNode ) )
       m_nodeCollector.add( overflowNode );
