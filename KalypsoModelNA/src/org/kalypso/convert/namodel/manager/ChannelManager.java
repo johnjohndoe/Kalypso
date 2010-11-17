@@ -53,6 +53,7 @@ import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.VirtualChannel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -85,7 +86,7 @@ public class ChannelManager
     m_conf = conf;
   }
 
-  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws Exception
+  public void writeFile( final RelevantNetElements relevantElements, final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws Exception
   {
     final NaModell naModel = (NaModell) workspace.getRootFeature();
     final IFeatureBindingCollection<Channel> channels = naModel.getChannels();
@@ -96,7 +97,7 @@ public class ChannelManager
 
     for( final Channel channel : allChannels )
     {
-      if( asciiBuffer.isFeatureMarkedForWrite( channel ) )
+      if( relevantElements.containsChannel( channel ) )
         writeFeature( asciiBuffer, channel );
     }
   }

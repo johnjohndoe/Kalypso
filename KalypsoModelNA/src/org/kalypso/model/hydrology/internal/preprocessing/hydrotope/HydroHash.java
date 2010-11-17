@@ -35,11 +35,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -61,14 +61,14 @@ public class HydroHash
     m_landuseHash = landuseHash;
   }
 
-  public void initHydrotopes( final NaModell naModel, final NAHydrotop naHydrotop, final AsciiBuffer asciiBuffer ) throws GM_Exception, SimulationException
+  public void initHydrotopes( final NaModell naModel, final NAHydrotop naHydrotop, final RelevantNetElements relevantElements ) throws GM_Exception, SimulationException
   {
     final IFeatureBindingCollection<IHydrotope> hydrotopes = naHydrotop.getHydrotopes();
 
     final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
     for( final Catchment catchment : catchments )
     {
-      if( asciiBuffer.isFeatureMarkedForWrite( catchment ) ) // do it only for relevant catchments
+      if( relevantElements.containsCatchment( catchment ) )
       {
         final Geometry catchmentGeometry = JTSAdapter.export( catchment.getGeometry() );
 

@@ -69,6 +69,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -274,10 +275,10 @@ public class NetElement
   /**
    * writes part 1 of netfile
    */
-  public void write( final AsciiBuffer asciiBuffer, final List<Node> nodeList )
+  public void write( final RelevantNetElements relevantElements, final AsciiBuffer asciiBuffer, final List<Node> nodeList )
   {
     final Channel channel = getChannel();
-    asciiBuffer.markFeatureForWrite( channel );
+    relevantElements.addChannel( channel );
 
     m_calculated = true;
 
@@ -304,11 +305,10 @@ public class NetElement
 
     // append catchments
     netBuffer.append( " " + catchmentForThisChannel.length + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    for( final Object element : catchmentForThisChannel )
+    for( final Catchment catchment : catchmentForThisChannel )
     {
-      final Feature catchmentFE = (Feature) element;
-      asciiBuffer.markFeatureForWrite( catchmentFE );
-      final int chatchmentID = idManager.getAsciiID( catchmentFE );
+      relevantElements.addCatchment( catchment );
+      final int chatchmentID = idManager.getAsciiID( catchment );
       netBuffer.append( String.format( "%8d\n", chatchmentID ) ); //$NON-NLS-1$
     }
 
