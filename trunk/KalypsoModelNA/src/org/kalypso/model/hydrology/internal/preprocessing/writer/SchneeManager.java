@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class SchneeManager extends AbstractCoreFileWriter
 {
-  private final ASCIIHelper m_asciiHelper = new ASCIIHelper( getClass().getResource( "/org/kalypso/convert/namodel/manager/resources/formats/parameter.txt" ) ); //$NON-NLS-1$
+  private final ASCIIHelper m_asciiHelper = new ASCIIHelper( getClass().getResource( "resources/formats/parameter.txt" ) ); //$NON-NLS-1$
 
   private final GMLWorkspace m_parameterWorkspace;
 

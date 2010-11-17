@@ -38,57 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing.writer;
+package org.kalypso.model.hydrology.internal.preprocessing;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.logging.Logger;
+import java.util.Comparator;
 
-import org.apache.commons.io.IOUtils;
+import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 
 /**
- * @author Dejan Antanaskovic
+ * Compares catchments by its ascii id.
+ * 
+ * @author Gernot Belger
  */
-abstract class AbstractCoreFileWriter
+public class CatchmentIDComparator implements Comparator<Catchment>
 {
-  private final Logger m_logger;
+  private final IDManager m_idManager;
 
-  public AbstractCoreFileWriter( final Logger logger )
+  public CatchmentIDComparator( final IDManager idManager )
   {
-    m_logger = logger;
+    m_idManager = idManager;
   }
 
-  protected final Logger getLogger( )
+  /**
+   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+   */
+  @Override
+  public int compare( final Catchment c1, final Catchment c2 )
   {
-    return m_logger;
+    final int id1 = m_idManager.getAsciiID( c1 );
+    final int id2 = m_idManager.getAsciiID( c2 );
+    return id1 - id2;
   }
 
-  public final void write( final File outputFile ) throws IOException
-  {
-    final PrintWriter writer = new PrintWriter( outputFile );
-    try
-    {
-      writeContent( writer );
-      writer.close();
-    }
-    catch( final Exception e )
-    {
-      handleError( e );
-    }
-    finally
-    {
-      if( writer != null )
-        IOUtils.closeQuietly( writer );
-    }
-  }
-
-  protected abstract void writeContent( final PrintWriter writer ) throws Exception;
-
-  private void handleError( final Exception e ) throws IOException
-  {
-    final String message = e.getMessage();
-    m_logger.severe( message );
-    throw new IOException( message, e );
-  }
 }

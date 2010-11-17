@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.net.visitors;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +53,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
 {
-  private final StringBuffer m_netBuffer;
+  private final PrintWriter m_netBuffer;
 
   private int m_virtualChannelId = 10001;
 
@@ -60,7 +61,7 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
 
   private final RelevantNetElements m_relevantElements;
 
-  public CompleteDownstreamNetAsciiWriterVisitor( final RelevantNetElements relevantElements, final StringBuffer netBuffer )
+  public CompleteDownstreamNetAsciiWriterVisitor( final RelevantNetElements relevantElements, final PrintWriter netBuffer )
   {
     m_relevantElements = relevantElements;
     m_netBuffer = netBuffer;

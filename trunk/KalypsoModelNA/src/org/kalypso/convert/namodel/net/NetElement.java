@@ -43,6 +43,7 @@ package org.kalypso.convert.namodel.net;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +68,7 @@ import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
-import org.kalypso.model.hydrology.internal.preprocessing.writer.GebWriter;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -151,7 +152,7 @@ public class NetElement
     return m_calculated;
   }
 
-  public void generateTimeSeries( ) throws IOException, Exception
+  public void generateTimeSeries( final TimeseriesFileManager tsFileManager ) throws IOException, Exception
   {
     final File asciiBaseDir = m_conf.getAsciiBaseDir();
     final File klimaDir = new File( asciiBaseDir, "klima.dat" );
@@ -164,9 +165,9 @@ public class NetElement
 
     for( final Catchment catchment : catchments )
     {
-      final File targetFileN = GebWriter.getNiederschlagEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
-      final File targetFileT = GebWriter.getTemperaturEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
-      final File targetFileV = GebWriter.getVerdunstungEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
+      final File targetFileN = tsFileManager.getNiederschlagEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
+      final File targetFileT = tsFileManager.getTemperaturEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
+      final File targetFileV = tsFileManager.getVerdunstungEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
       final File parent = targetFileN.getParentFile();
       parent.mkdirs();
 
@@ -250,7 +251,7 @@ public class NetElement
     upStreamElement.addDownStream( this );
   }
 
-  public void writeRootChannel( final RelevantNetElements relevantElements, final StringBuffer netBuffer, final int virtualChannelId )
+  public void writeRootChannel( final RelevantNetElements relevantElements, final PrintWriter netBuffer, final int virtualChannelId )
   {
     relevantElements.addRootChannel( virtualChannelId );
 
@@ -271,7 +272,7 @@ public class NetElement
   /**
    * writes part 1 of netfile
    */
-  public void write( final RelevantNetElements relevantElements, final StringBuffer netBuffer, final List<Node> nodeList )
+  public void write( final RelevantNetElements relevantElements, final PrintWriter netBuffer, final List<Node> nodeList )
   {
     final Channel channel = getChannel();
     relevantElements.addChannel( channel );

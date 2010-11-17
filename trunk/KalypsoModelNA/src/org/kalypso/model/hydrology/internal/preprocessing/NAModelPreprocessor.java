@@ -49,7 +49,6 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NAModellConverter;
 import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.NAControl;

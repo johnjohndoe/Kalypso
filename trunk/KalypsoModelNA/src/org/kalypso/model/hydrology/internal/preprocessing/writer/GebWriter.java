@@ -40,36 +40,22 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
-import java.io.File;
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.ASCIIHelper;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -77,33 +63,27 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class GebWriter extends AbstractCoreFileWriter
 {
-  public static final String STD_TEMP_FILENAME = "std.tmp"; //$NON-NLS-1$
-
-  public static final String STD_VERD_FILENAME = "std.ver"; //$NON-NLS-1$
-
-  private static final HashMap<String, String> m_fileMap = new HashMap<String, String>();
-
-  private final ASCIIHelper m_asciiHelper = new ASCIIHelper( getClass().getResource( "/org/kalypso/convert/namodel/manager/resources/formats/WernerCatchment.txt" ) ); //$NON-NLS-1$
+  private final ASCIIHelper m_asciiHelper = new ASCIIHelper( getClass().getResource( "resources/formats/WernerCatchment.txt" ) ); //$NON-NLS-1$
 
   private final NAConfiguration m_conf;
 
   private final Logger m_logger;
 
-  private final RelevantNetElements m_relevantElements;
-
   private final NaModell m_naModel;
 
-  private final StringBuffer m_zftBuffer;
+  private final Catchment[] m_catchments;
 
-  public GebWriter( final NAConfiguration conf, final Logger logger, final RelevantNetElements relevantElements, final NaModell naModel, final StringBuffer zftBuffer )
+  private final TimeseriesFileManager m_fileManager;
+
+  public GebWriter( final NAConfiguration conf, final Logger logger, final Catchment[] catchments, final NaModell naModel, final TimeseriesFileManager fileManager )
   {
     super( logger );
 
     m_conf = conf;
     m_logger = logger;
-    m_relevantElements = relevantElements;
+    m_catchments = catchments;
     m_naModel = naModel;
-    m_zftBuffer = zftBuffer;
+    m_fileManager = fileManager;
   }
 
   /**
@@ -112,12 +92,8 @@ public class GebWriter extends AbstractCoreFileWriter
   @Override
   protected void writeContent( final PrintWriter writer ) throws Exception
   {
-    final IFeatureBindingCollection<Catchment> catchments = m_naModel.getCatchments();
-    for( final Catchment catchment : catchments )
-    {
-      if( m_relevantElements.containsCatchment( catchment ) )
-        writeFeature( writer, m_naModel, catchment );
-    }
+    for( final Catchment catchment : m_catchments )
+      writeFeature( writer, m_naModel, catchment );
   }
 
   private void writeFeature( final PrintWriter writer, final NaModell naModel, final Catchment catchment ) throws Exception
@@ -137,18 +113,18 @@ public class GebWriter extends AbstractCoreFileWriter
 
     // 3
     // TODO: getNiederschlagEingabeDateiString is written twice here, check if it is correct
-    writer.append( String.format( Locale.US, "%1$c %2$s %2$s %3$5.2f\n", m_conf.getMetaControl().isUsePrecipitationForm() ? 's' : 'n', getNiederschlagEingabeDateiString( catchment, m_conf ), catchment.getFaktn() ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final String niederschlagFile = m_fileManager.getNiederschlagEingabeDateiString( catchment );
+    writer.append( String.format( Locale.US, "%1$c %2$s %2$s %3$5.2f\n", m_conf.getMetaControl().isUsePrecipitationForm() ? 's' : 'n', niederschlagFile, catchment.getFaktn() ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // 4-6
-    writer.append( String.format( Locale.US, "%s %s\n", getTemperaturEingabeDateiString( catchment, m_conf ), getVerdunstungEingabeFilename( catchment, m_conf ) ) ); //$NON-NLS-1$
+    final String temperaturFile = m_fileManager.getTemperaturEingabeDateiString( catchment );
+    final String verdunstungFile = m_fileManager.getVerdunstungEingabeFilename( catchment );
+    writer.append( String.format( Locale.US, "%s %s\n", temperaturFile, verdunstungFile ) ); //$NON-NLS-1$
 
     // Zeitflächenfunktion
     final Object zftProp = catchment.getProperty( NaModelConstants.CATCHMENT_PROP_ZFT );
     if( zftProp instanceof IObservation )
-    {
       writer.append( "we_nat.zft\n" ); //$NON-NLS-1$
-      writeZML( (IObservation) zftProp, asciiID, m_zftBuffer );
-    }
     else
     {
       final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.0", asciiID ); //$NON-NLS-1$
@@ -259,100 +235,5 @@ public class GebWriter extends AbstractCoreFileWriter
     // KommentarZeile
     writer.append( "ende gebietsdatensatz\n" ); //$NON-NLS-1$//$NON-NLS-2$
 
-  }
-
-  /**
-   * @param observation
-   * @param asciiID
-   * @param zftBuffer
-   * @throws SensorException
-   */
-  private void writeZML( final IObservation observation, final int asciiID, final StringBuffer zftBuffer ) throws SensorException
-  {
-    zftBuffer.append( FortranFormatHelper.printf( asciiID, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IAxis[] axisList = observation.getAxisList();
-    final IAxis hoursAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_HOURS );
-    final IAxis normAreaAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_NORM );
-    final ITupleModel values = observation.getValues( null );
-    final int count = values.size();
-    final double t0 = ((Double) values.get( 0, hoursAxis )).doubleValue();
-    final double t1 = ((Double) values.get( 1, hoursAxis )).doubleValue();
-    final double dt = t1 - t0;
-    zftBuffer.append( FortranFormatHelper.printf( count, "*" ) + " " + FortranFormatHelper.printf( dt, "*" ) + " 2\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    for( int row = 0; row < count; row++ )
-    {
-      final Double hoursValue = (Double) values.get( row, hoursAxis );
-      final Double normAreaValue = (Double) values.get( row, normAreaAxis );
-      zftBuffer.append( FortranFormatHelper.printf( hoursValue, "*" ) + " " + FortranFormatHelper.printf( normAreaValue, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    }
-  }
-
-  public static String getEingabeFilename( final Feature feature, final NAConfiguration conf, final String propName, final String axisType )
-  {
-    final TimeseriesLinkType link = (TimeseriesLinkType) feature.getProperty( new QName( NaModelConstants.NS_NAMODELL, propName ) );
-    final String key = propName + link.getHref();
-    return getFilename( feature, conf, axisType, key );
-  }
-
-  private static String getFilename( final Feature feature, final NAConfiguration conf, final String axisType, final String key )
-  {
-    if( !m_fileMap.containsKey( key ) )
-    {
-      final int asciiID = conf.getIdManager().getAsciiID( feature );
-      final String name = "C_" + Integer.toString( asciiID ).trim() + "." + axisType; //$NON-NLS-1$//$NON-NLS-2$
-      m_fileMap.put( key, name );
-    }
-    return m_fileMap.get( key );
-  }
-
-  public static String getNiederschlagEingabeDateiString( final Catchment catchment, final NAConfiguration conf )
-  {
-    final NAControl metaControl = conf.getMetaControl();
-    if( metaControl.isUsePrecipitationForm() )
-    {
-      final String key = catchment.getSynthZR();
-      return getFilename( catchment, conf, ITimeseriesConstants.TYPE_RAINFALL, key );
-    }
-
-    return getEingabeFilename( catchment, conf, "niederschlagZR", ITimeseriesConstants.TYPE_RAINFALL ); //$NON-NLS-1$
-  }
-
-  public static String getTemperaturEingabeDateiString( final Catchment catchment, final NAConfiguration conf )
-  {
-    final TimeseriesLinkType temperatureLink = catchment.getTemperatureLink();
-    if( temperatureLink != null )
-      return getEingabeFilename( catchment, conf, "temperaturZR", ITimeseriesConstants.TYPE_TEMPERATURE ); //$NON-NLS-1$
-
-    return STD_TEMP_FILENAME;
-  }
-
-  public static File getTemperaturEingabeDatei( final Catchment catchment, final File dir, final NAConfiguration conf )
-  {
-    final String name = getTemperaturEingabeDateiString( catchment, conf );
-    return new File( dir, name );
-  }
-
-  public static File getNiederschlagEingabeDatei( final Catchment catchment, final File dir, final NAConfiguration conf )
-  {
-    return new File( dir, getNiederschlagEingabeDateiString( catchment, conf ) );
-  }
-
-  public static File getVerdunstungEingabeDatei( final Catchment catchment, final File dir, final NAConfiguration conf )
-  {
-    final String name = getVerdunstungEingabeFilename( catchment, conf );
-    return new File( dir, name );
-  }
-
-  private static String getVerdunstungEingabeFilename( final Catchment catchment, final NAConfiguration conf )
-  {
-    final TimeseriesLinkType evaporationLink = catchment.getEvaporationLink();
-    if( evaporationLink != null )
-      return getEingabeFilename( catchment, conf, "verdunstungZR", ITimeseriesConstants.TYPE_EVAPORATION ); //$NON-NLS-1$
-    return STD_VERD_FILENAME;
-
-    // int asciiID = conf.getIdManager().getAsciiID( feature );
-    // if( feature.getProperty( "verdunstungZR" ) != null )
-    // return "C_" + Integer.toString( asciiID ).trim() + ".ver";
   }
 }
