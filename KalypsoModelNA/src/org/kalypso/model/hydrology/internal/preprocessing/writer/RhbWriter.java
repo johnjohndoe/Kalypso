@@ -45,6 +45,7 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
@@ -64,9 +65,9 @@ public class RhbWriter extends AbstractCoreFileWriter
 {
   private final IDManager m_idManager;
 
-  private final Channel[] m_channels;
+  private final NetElement[] m_channels;
 
-  public RhbWriter( final IDManager idManager, final Channel[] channels, final Logger logger )
+  public RhbWriter( final IDManager idManager, final NetElement[] channels, final Logger logger )
   {
     super( logger );
 
@@ -80,8 +81,8 @@ public class RhbWriter extends AbstractCoreFileWriter
   @Override
   protected void writeContent( final PrintWriter writer ) throws Exception
   {
-    for( final Channel channel : m_channels )
-      writeFeature( channel, writer );
+    for( final NetElement element : m_channels )
+      writeFeature( element.getChannel(), writer );
   }
 
   // FIXME: better error handling!

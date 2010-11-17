@@ -43,6 +43,7 @@ package org.kalypso.model.hydrology.internal.preprocessing;
 import java.util.Comparator;
 
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
@@ -53,7 +54,7 @@ import org.kalypso.model.hydrology.binding.model.VirtualChannel;
  * 
  * @author Gernot Belger
  */
-public class ChannelTypeComparator implements Comparator<Channel>
+public class ChannelTypeComparator implements Comparator<NetElement>
 {
   private final IDManager m_idManager;
 
@@ -66,17 +67,20 @@ public class ChannelTypeComparator implements Comparator<Channel>
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
   @Override
-  public int compare( final Channel o1, final Channel o2 )
+  public int compare( final NetElement o1, final NetElement o2 )
   {
-    if( o1.getClass() == o2.getClass() )
-      return compareById( o1, o2 );
+    final Channel c1 = o1.getChannel();
+    final Channel c2 = o2.getChannel();
 
-    final int i1 = getSortOrdinal( o1 );
-    final int i2 = getSortOrdinal( o2 );
+    if( c1.getClass() == c2.getClass() )
+      return compareById( c1, c2 );
+
+    final int i1 = getSortOrdinal( c1 );
+    final int i2 = getSortOrdinal( c2 );
 
     final int diff = i1 - i2;
     if( diff == 0 )
-      return compareById( o1, o2 );
+      return compareById( c1, c2 );
 
     return diff;
   }

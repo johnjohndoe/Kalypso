@@ -165,7 +165,7 @@ public class NAOptimizingJob implements IOptimizingJob
     loader.load( null, null );
 
     m_optimizeDom = loader.getOptimizeDom();
-    
+
     final NAOptimize naOptimize = loader.getNaOptimize();
     m_linkMeasuredTS = naOptimize.getPegelZRLink();
     m_linkCalcedTS = naOptimize.getResultLink();
@@ -272,7 +272,7 @@ public class NAOptimizingJob implements IOptimizingJob
     t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
     t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
 
-    final Document ownerDocument = m_optimizeDom.getOwnerDocument();
+    final Document ownerDocument = m_optimizeDom instanceof Document ? (Document) m_optimizeDom : m_optimizeDom.getOwnerDocument();
     final String encoding = ownerDocument.getInputEncoding();
     t.setOutputProperty( OutputKeys.ENCODING, encoding );
 
@@ -289,7 +289,6 @@ public class NAOptimizingJob implements IOptimizingJob
     }
 
     m_lastOptimizedFile = file;
-
   }
 
   /**

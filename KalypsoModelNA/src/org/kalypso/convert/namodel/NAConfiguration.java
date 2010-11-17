@@ -56,6 +56,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.Node;
@@ -338,4 +339,8 @@ public class NAConfiguration
     return m_simulationData.getMetaControl();
   }
 
+  public NAOptimize getOptimizeConfig( )
+  {
+    return m_simulationData.getNaOptimize();
+  }
 }

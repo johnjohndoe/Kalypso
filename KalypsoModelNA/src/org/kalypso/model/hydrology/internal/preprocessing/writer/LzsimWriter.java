@@ -51,17 +51,20 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.model.hydrology.binding.IHydrotope;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.initialValues.Catchment;
 import org.kalypso.model.hydrology.binding.initialValues.Channel;
 import org.kalypso.model.hydrology.binding.initialValues.IniHyd;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
 import org.kalypso.simulation.core.SimulationException;
@@ -83,15 +86,42 @@ public class LzsimWriter
 
   private final IDManager m_idManager;
 
-  public LzsimWriter( final IDManager idManager, final HydroHash hydroHash, final InitialValues initialValues )
+  private final NAControl m_metaControl;
+
+  private final Logger m_logger;
+
+  public LzsimWriter( final IDManager idManager, final HydroHash hydroHash, final InitialValues initialValues, final NAControl metaControl, final Logger logger )
   {
     m_idManager = idManager;
     m_hydroHash = hydroHash;
     m_initialValues = initialValues;
+    m_metaControl = metaControl;
+    m_logger = logger;
   }
 
-  public void writeLzsimFiles( final File lzsimDir ) throws SimulationException
+  public void writeLzsimFiles( final File lzsimDir ) throws NAPreprocessorException
   {
+    try
+    {
+      doWriteLzsimFiles( lzsimDir );
+    }
+    catch( final Exception e )
+    {
+      final String msg = String.format( "Failed to write Kalypso-NA ASCII start condition: %s", e.getLocalizedMessage() );
+      throw new NAPreprocessorException( msg, e );
+    }
+  }
+
+  private void doWriteLzsimFiles( final File lzsimDir ) throws SimulationException
+  {
+    if( m_initialValues == null )
+    {
+      final Date simulationStart = m_metaControl.getSimulationStart();
+      final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.26", simulationStart ); //$NON-NLS-1$
+      m_logger.info( msg );
+      return;
+    }
+
     lzsimDir.mkdirs();
 
     // Initial value date

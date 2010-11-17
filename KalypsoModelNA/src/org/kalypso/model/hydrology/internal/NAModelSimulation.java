@@ -90,6 +90,10 @@ public class NAModelSimulation
 
   private final NaSimulationDirs m_simDirs;
 
+  private NAModelPreprocessor m_preprocessor;
+
+  private NaSimulationData m_simulationData;
+
   public NAModelSimulation( final NaSimulationDirs simDirs, final ISimulationDataProvider inputProvider, final Logger logger ) throws SimulationException
   {
     m_simDirs = simDirs;
@@ -106,19 +110,33 @@ public class NAModelSimulation
 
   public boolean runSimulation( final ISimulationMonitor monitor ) throws Exception
   {
-    final NaSimulationData simulationData = loadData();
-    m_conf.setSimulationData( simulationData );
+    m_simulationData = loadData();
+    m_conf.setSimulationData( m_simulationData );
 
-    final HydroHash hydroHash = preprocess( simulationData, monitor );
+    preprocess( m_simulationData, monitor );
     if( monitor.isCanceled() )
       return false;
 
-    process( monitor, simulationData );
+    process( monitor, m_simulationData );
 
     if( monitor.isCanceled() )
       return false;
 
-    return postProcess( simulationData, hydroHash, monitor );
+    return postProcess( m_simulationData, monitor );
+  }
+
+  public boolean rerunForOptimization( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
+  {
+    m_preprocessor.processCallibrationFiles( optimize );
+    if( monitor.isCanceled() )
+      return false;
+
+    process( monitor, m_simulationData );
+
+    if( monitor.isCanceled() )
+      return false;
+
+    return postProcess( m_simulationData, monitor );
   }
 
   private NaSimulationData loadData( ) throws Exception
@@ -145,18 +163,16 @@ public class NAModelSimulation
     return (URL) m_inputProvider.getInputForID( id );
   }
 
-  private HydroHash preprocess( final NaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
+  private void preprocess( final NaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
-      final NAModelPreprocessor preprocessor = new NAModelPreprocessor( m_conf, m_simDirs.asciiDirs, m_idManager, simulationData, m_logger );
-      preprocessor.setPreprocessedFilesDir( getPreprocessFilesDir() );
-      preprocessor.process( monitor );
+      m_preprocessor = new NAModelPreprocessor( m_conf, m_simDirs.asciiDirs, m_idManager, simulationData, m_logger );
+      m_preprocessor.setPreprocessedFilesDir( getPreprocessFilesDir() );
+      m_preprocessor.process( monitor );
 
       final File idMapFile = new File( m_simDirs.simulationDir, "IdMap.txt" ); //$NON-NLS-1$
       m_idManager.dump( idMapFile );
-
-      return preprocessor.getHydroHash();
     }
     catch( final NAPreprocessorException e )
     {
@@ -221,7 +237,7 @@ public class NAModelSimulation
     processor.run( monitor );
   }
 
-  private boolean postProcess( final NaSimulationData simulationData, final HydroHash hydroHash, final ISimulationMonitor monitor ) throws Exception
+  private boolean postProcess( final NaSimulationData simulationData, final ISimulationMonitor monitor ) throws Exception
   {
     final String messageStartPostprocess = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.28" ); //$NON-NLS-1$
     monitor.setMessage( messageStartPostprocess ); 
@@ -230,6 +246,8 @@ public class NAModelSimulation
     final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
     final NAModellControl naControl = simulationData.getNaControl();
     final NAOptimize naOptimize = simulationData.getNaOptimize();
+
+    final HydroHash hydroHash = m_preprocessor.getHydroHash();
 
     final NaPostProcessor postProcessor = new NaPostProcessor( m_conf, m_logger, modelWorkspace, naControl, naOptimize, hydroHash );
     postProcessor.process( m_simDirs.asciiDirs, m_simDirs );

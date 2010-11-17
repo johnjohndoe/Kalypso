@@ -44,8 +44,6 @@ import org.kalypso.model.hydrology.binding.model.Branching;
 import org.kalypso.model.hydrology.binding.model.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
-import org.kalypso.model.hydrology.binding.model.KMChannel;
-import org.kalypso.model.hydrology.binding.model.KMParameter;
 import org.kalypso.model.hydrology.binding.model.KontZufluss;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
@@ -83,9 +81,7 @@ public class NaModelTweaker
     updateNode2NodeNet();
     updateZuflussNet();
     updateResultAsZuflussNet();
-    updateFactorParameter();
   }
-
 
   /**
    * Updates workspace, so that interflow and channelflow dependencies gets optimized <br>
@@ -262,40 +258,6 @@ public class NaModelTweaker
         final Boolean isSyntetic = node.isSynteticZufluss();
         newNode.setIsSynteticZufluss( isSyntetic );
       }
-    }
-  }
-
-  /**
-   * FIXME: this is still obscur. The factors should be applied when the ascii files are written.<br/>
-   * Updates model with factor values from control<br>
-   * some parameter have factors that must be processed before generating asciifiles, as these factors do not occur in
-   * ascci-format
-   * 
-   * @param modellWorkspace
-   */
-  private void updateFactorParameter( )
-  {
-    final IFeatureBindingCollection<Channel> channels = m_naModel.getChannels();
-    for( final Channel channel : channels )
-    {
-      if( channel instanceof KMChannel )
-        updateKMChannel( (KMChannel) channel );
-    }
-  }
-
-  private void updateKMChannel( final KMChannel kmChanneFE )
-  {
-    final double rkfFactor = kmChanneFE.getFaktorRkf();
-    final double rnfFactor = kmChanneFE.getFaktorRnf();
-
-    final IFeatureBindingCollection<KMParameter> parameters = kmChanneFE.getParameters();
-    for( final KMParameter kmParameter : parameters )
-    {
-      final double _rnf = rnfFactor * kmParameter.getRnf();
-      kmParameter.setRnf( _rnf );
-
-      final double _rkf = rkfFactor * kmParameter.getRkf();
-      kmParameter.setRkf( _rkf );
     }
   }
 
