@@ -99,7 +99,12 @@ public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhCo
   //explicitly set scale fixes the bug #591
   public BigDecimal getStation( )
   {
-    return getProperty( PROPERTY_STATION, BigDecimal.class ).setScale( IProfileFeature.STATION_SCALE, RoundingMode.HALF_UP );
+    Object lStation = getProperty( PROPERTY_STATION, BigDecimal.class );
+    if( lStation instanceof BigDecimal ){
+      return ((BigDecimal) lStation).setScale( IProfileFeature.STATION_SCALE, RoundingMode.HALF_UP );
+    }
+    //return not valid BigDecimal value, unfortunally we have a lot of data with some invalid entries 
+    return getProperty( PROPERTY_STATION, BigDecimal.class );
   }
 
   public IProfileFeature getProfileMember( )
