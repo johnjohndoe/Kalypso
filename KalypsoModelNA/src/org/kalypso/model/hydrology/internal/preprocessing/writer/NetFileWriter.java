@@ -428,7 +428,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     for( final NetElement netElement : netElements )
       netElement.accept( completeNetVisitor );
 
-    final Node[] nodeCollector = writeAsciiVisitor.getNodes();
+    final Node[] nodeCollector = m_relevantElements.getNodes();
     netBuffer.append( "99999\n" ); //$NON-NLS-1$
     appendNodeList( nodeCollector, netBuffer );
     netBuffer.append( "99999\n" ); //$NON-NLS-1$

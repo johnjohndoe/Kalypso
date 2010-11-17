@@ -39,7 +39,7 @@
  *   
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.model.hydrology.internal.preprocessing.hydrotope;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,22 +55,21 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
+import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.Sealing;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Dejan Antanaskovic
  */
-public class HydrotopeWriter
+public class HydrotopeWriter extends AbstractCoreFileWriter
 {
-  private final Logger m_logger;
-
   private final HydroHash m_hydroHash;
 
   private final IDManager m_idManager;
@@ -81,7 +80,8 @@ public class HydrotopeWriter
 
   public HydrotopeWriter( final Parameter parameter, final IDManager idManager, final HydroHash hydroHash, final Logger logger )
   {
-    m_logger = logger;
+    super( logger );
+
     m_hydroHash = hydroHash;
     m_idManager = idManager;
     m_parameter = parameter;
@@ -93,40 +93,24 @@ public class HydrotopeWriter
       m_soilTypeNameHash.put( soiltype.getName(), soiltype );
   }
 
-  public void writeHydrotopFile( final File hydrotopFile, final GMLWorkspace modelWorkspace, final RelevantNetElements relevantElements ) throws FileNotFoundException, SimulationException
+  /**
+   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractCoreFileWriter#writeContent(java.io.PrintWriter)
+   */
+  @Override
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
-    PrintWriter writer = null;
-    try
-    {
-      writer = new PrintWriter( hydrotopFile );
-      doWriteHydrotopeFile( writer, modelWorkspace, relevantElements );
-      writer.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
-  }
-
-  private void doWriteHydrotopeFile( final PrintWriter writer, final GMLWorkspace modelWorkspace, final RelevantNetElements relevantElements ) throws SimulationException
-  {
-    final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
-
     final String hydrotopeFileTile = Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.2" ); //$NON-NLS-1$ 
     writer.append( hydrotopeFileTile ).append( '\n' );
 
-    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+    final Collection<Catchment> catchments = m_hydroHash.getCatchments();
     for( final Catchment catchment : catchments )
     {
-      if( relevantElements.containsCatchment( catchment ) )
-      {
-        final CatchmentInfo catchmentInfo = m_hydroHash.getHydrotopInfo( catchment );
-        final String checkMsg = catchmentInfo.checkArea();
-        if( checkMsg != null )
-          m_logger.warning( checkMsg );
+      final CatchmentInfo catchmentInfo = m_hydroHash.getHydrotopInfo( catchment );
+      final String checkMsg = catchmentInfo.checkArea();
+      if( checkMsg != null )
+        getLogger().warning( checkMsg );
 
-        writeCatchment( writer, catchmentInfo );
-      }
+      writeCatchment( writer, catchmentInfo );
     }
   }
 

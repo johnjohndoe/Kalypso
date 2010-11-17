@@ -47,6 +47,7 @@ import java.util.List;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -61,6 +62,8 @@ public class RelevantNetElements
   private final List<Feature> m_catchments = new ArrayList<Feature>();
 
   private final List<Integer> m_rootChannels = new ArrayList<Integer>();
+
+  private final List<Node> m_nodes = new ArrayList<Node>();
 
   public void addChannel( final Channel channel )
   {
@@ -111,4 +114,18 @@ public class RelevantNetElements
   {
     return m_rootChannels.toArray( new Integer[m_rootChannels.size()] );
   }
+
+  public void addNode( final Node node )
+  {
+    if( m_nodes.contains( node ) )
+      return;
+
+    m_nodes.add( node );
+  }
+
+  public Node[] getNodes( )
+  {
+    return m_nodes.toArray( new Node[m_nodes.size()] );
+  }
+
 }
