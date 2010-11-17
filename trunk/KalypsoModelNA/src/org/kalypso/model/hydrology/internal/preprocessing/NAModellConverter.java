@@ -51,13 +51,13 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
-import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.LanduseHash;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.BodenartWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.BodentypWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.GebWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.GerWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.HRBFileWriter;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.HydrotopeWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NetFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NutzungWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.RhbWriter;
@@ -103,6 +103,7 @@ public class NAModellConverter
     final GMLWorkspace sudsWorkspace = m_conf.getSudsWorkspace();
     final IDManager idManager = m_conf.getIdManager();
 
+    // FIXME: separation of concerns: separate writing and analysis of net
     final NetFileWriter m_nodeManager = new NetFileWriter( m_conf, m_rootNode, m_logger, modelWorkspace, synthNWorkspace );
     m_nodeManager.write( m_conf.getNetFile() );
 
@@ -113,25 +114,23 @@ public class NAModellConverter
     final Channel[] channels = relevantElements.getChannels( idManager );
     final Catchment[] catchments = relevantElements.getCatchments( idManager );
 
-    /* .geb file */
-    // FIXME: extract zft stuff
-    final GebWriter catchmentManager = new GebWriter( m_conf, m_logger, catchments, naModel, tsFileManager );
-    catchmentManager.write( m_conf.getCatchmentFile() );
-
-    final ZftWriter zftWriter = new ZftWriter( idManager, m_logger, catchments );
-    zftWriter.write( m_conf.getZFTFile() );
-
     if( hydrotopeCollection != null )
     {
       // REMARK: initHydroHash must be called after nodeManager.write file has been called, as this marks
       // the features in the ascii buffer to be relevant.
       // TODO: change this bad design: We should just pass a list of catchments to the hydroHash
-      final HydroHash hydroHash = initHydroHash( parameter, naModel, hydrotopeCollection, relevantElements );
+      final HydroHash hydroHash = initHydroHash( parameter, hydrotopeCollection, catchments );
 
       final HydrotopeWriter hydrotopManager = new HydrotopeWriter( parameter, idManager, hydroHash, m_logger );
-      hydrotopManager.writeHydrotopFile( m_conf.getHydrotopFile(), modelWorkspace, relevantElements );
+      hydrotopManager.write( m_conf.getHydrotopFile() );
       hydrotopManager.writeMapping( m_conf.getHydrotopMappingFile() );
     }
+
+    final GebWriter catchmentManager = new GebWriter( m_conf, m_logger, catchments, naModel, tsFileManager );
+    catchmentManager.write( m_conf.getCatchmentFile() );
+
+    final ZftWriter zftWriter = new ZftWriter( idManager, m_logger, catchments );
+    zftWriter.write( m_conf.getZFTFile() );
 
     // FIXME: write .ger and .geb file after optimization
     final GerWriter gerWriter = new GerWriter( idManager, rootChannels, channels, m_logger );
@@ -159,13 +158,13 @@ public class NAModellConverter
     hrbFileWriter.write( m_conf.getHRBFile() );
   }
 
-  private HydroHash initHydroHash( final Parameter parameter, final NaModell naModel, final NAHydrotop hydrotopeCollection, final RelevantNetElements relevantElements ) throws GM_Exception, SimulationException
+  private HydroHash initHydroHash( final Parameter parameter, final NAHydrotop hydrotopeCollection, final Catchment[] catchments ) throws GM_Exception, SimulationException
   {
     if( m_hydroHash == null )
     {
       final LanduseHash landuseHash = new LanduseHash( parameter, m_logger );
       m_hydroHash = new HydroHash( landuseHash );
-      m_hydroHash.initHydrotopes( naModel, hydrotopeCollection, relevantElements );
+      m_hydroHash.initHydrotopes( hydrotopeCollection, catchments );
     }
 
     return m_hydroHash;

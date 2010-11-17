@@ -52,7 +52,6 @@ import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -86,7 +85,7 @@ public class OptimizeTest
   }
 
   @Test
-  @Ignore
+// @Ignore
   public void testOptimize( ) throws Exception
   {
     final File tmpDir = FileUtilities.createNewTempDir( "optimizeTest" );

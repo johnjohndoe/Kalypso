@@ -272,7 +272,7 @@ public class NetElement
   /**
    * writes part 1 of netfile
    */
-  public void write( final RelevantNetElements relevantElements, final PrintWriter netBuffer, final List<Node> nodeList )
+  public void write( final RelevantNetElements relevantElements, final PrintWriter netBuffer )
   {
     final Channel channel = getChannel();
     relevantElements.addChannel( channel );
@@ -307,11 +307,11 @@ public class NetElement
       netBuffer.append( String.format( "%8d\n", chatchmentID ) ); //$NON-NLS-1$
     }
 
-    // TODO: SIDE-EFFECT! Move 'nodeList.add(...)' code to the list owner object!
-    if( upstreamNode != null && !nodeList.contains( upstreamNode ) )
-      nodeList.add( upstreamNode );
-    if( downstreamNode != null && !nodeList.contains( downstreamNode ) )
-      nodeList.add( downstreamNode );
+    if( upstreamNode != null )
+      relevantElements.addNode( upstreamNode );
+
+    if( downstreamNode != null )
+      relevantElements.addNode( downstreamNode );
   }
 
   public void accept( final NetElementVisitor visitor ) throws Exception
