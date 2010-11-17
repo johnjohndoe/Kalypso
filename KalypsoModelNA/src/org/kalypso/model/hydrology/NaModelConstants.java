@@ -142,16 +142,6 @@ public interface NaModelConstants
   /** namodell.xsd */
 
   // channels
-  QName STORAGE_CHANNEL_ZMLINLINE_PROP = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
-
-  QName STORAGE_CHANNEL_VMAX_PROP = new QName( NS_NAMODELL, "vmax" ); //$NON-NLS-1$
-
-  QName STORAGE_CHANNEL_VMIN_PROP = new QName( NS_NAMODELL, "vmin" ); //$NON-NLS-1$
-
-  QName STORAGE_CHANNEL_SV_PROP = new QName( NS_NAMODELL, "sv" ); //$NON-NLS-1$
-
-  QName STORAGE_CHANNEL_HVVSQD_PROP = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
-
   QName KM_CHANNEL_QRK_PROP = new QName( NS_NAMODELL, "qrk" ); //$NON-NLS-1$
 
   QName KM_CHANNEL_RKV_PROP = new QName( NS_NAMODELL, "rkv" ); //$NON-NLS-1$

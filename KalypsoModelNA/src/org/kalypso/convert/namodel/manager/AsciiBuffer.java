@@ -54,8 +54,6 @@ public class AsciiBuffer
 
   private final StringBuffer m_channelBuffer = new StringBuffer();
 
-  private final StringBuffer m_rhbBuffer = new StringBuffer();
-
   private final StringBuffer m_hydBuffer = new StringBuffer();
 
   private final StringBuffer m_zftBuffer= new StringBuffer();
@@ -75,11 +73,6 @@ public class AsciiBuffer
   public StringBuffer getCatchmentBuffer()
   {
     return m_catchmentBuffer;
-  }
-
-  public StringBuffer getRhbBuffer()
-  {
-    return m_rhbBuffer;
   }
 
   public StringBuffer getHydBuffer()

@@ -47,7 +47,6 @@ import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.manager.BodenartManager;
 import org.kalypso.convert.namodel.manager.BodentypManager;
 import org.kalypso.convert.namodel.manager.CatchmentManager;
-import org.kalypso.convert.namodel.manager.ChannelManager;
 import org.kalypso.convert.namodel.manager.HRBFileWriter;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.manager.NetFileManager;
@@ -55,6 +54,7 @@ import org.kalypso.convert.namodel.manager.NutzungManager;
 import org.kalypso.convert.namodel.manager.SchneeManager;
 import org.kalypso.convert.namodel.manager.SudsFileWriter;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
@@ -62,6 +62,8 @@ import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.LanduseHash;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.GerWriter;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.RhbWriter;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -78,8 +80,6 @@ public class NAModellConverter
 
   private final CatchmentManager m_catchmentManager;
 
-  private final ChannelManager m_gerinneManager;
-
   private final NAConfiguration m_conf;
 
   private final NetFileManager m_nodeManager;
@@ -92,7 +92,6 @@ public class NAModellConverter
     m_logger = logger;
 
     m_catchmentManager = new CatchmentManager( m_conf, logger );
-    m_gerinneManager = new ChannelManager( m_conf );
     m_nodeManager = new NetFileManager( m_conf, rootNode, logger );
   }
 
@@ -115,16 +114,22 @@ public class NAModellConverter
 
     final RelevantNetElements relevantElements = m_nodeManager.writeFile( asciiBuffer, modelWorkspace, synthNWorkspace );
 
+    final Channel[] channels = relevantElements.getChannels( m_conf.getIdManager() );
+
     // FIXME: write catchment manager separately
     m_catchmentManager.writeFile( relevantElements, asciiBuffer, modelWorkspace );
-    m_gerinneManager.writeFile( relevantElements, asciiBuffer, modelWorkspace );
+
+    final GerWriter gerWriter = new GerWriter( m_conf );
+    gerWriter.writeFile( channels, asciiBuffer );
 
     FileUtils.writeStringToFile( m_conf.getNetFile(), asciiBuffer.getNetBuffer().toString(), null );
 
     // FIXME: write channel and catchment file spearately
     FileUtils.writeStringToFile( m_conf.getChannelFile(), asciiBuffer.getChannelBuffer().toString(), null );
 
-    FileUtils.writeStringToFile( m_conf.getRHBFile(), asciiBuffer.getRhbBuffer().toString(), null );
+    final RhbWriter rhbWriter = new RhbWriter( idManager, channels );
+    rhbWriter.writeFile( m_conf.getRHBFile() );
+
     FileUtils.writeStringToFile( m_conf.getZFTFile(), asciiBuffer.getZFTBuffer().toString(), null );
 
     /* Catchment file */
