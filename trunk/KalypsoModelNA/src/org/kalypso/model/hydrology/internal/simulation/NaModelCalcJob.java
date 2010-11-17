@@ -46,10 +46,10 @@ import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
+import org.kalypso.convert.namodel.optimize.NaOptimizeLoader;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizeMonitor;
 import org.kalypso.optimize.OptimizerCalJob;
@@ -58,7 +58,6 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
@@ -117,13 +116,11 @@ public class NaModelCalcJob implements ISimulation
     if( !dataProvider.hasID( NaModelConstants.IN_OPTIMIZE_ID ) )
       return false;
 
-    // testen ob calcjob optimization hat
-    final URL optimizeLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_ID );
-    // FIXME: do we really need to load this workspace twice (also in inner calc job)
-    final GMLWorkspace optimizeWorkspace = GmlSerializer.createGMLWorkspace( optimizeLocation, null );
-    final NAOptimize optimize = (NAOptimize) optimizeWorkspace.getRootFeature();
+    final NaOptimizeLoader loader = new NaOptimizeLoader( dataProvider );
+    loader.load();
+    final NAOptimize optimize = loader.getNaOptimize();
     final boolean doOptimize = optimize.doOptimize();
-    optimizeWorkspace.dispose();
+    optimize.getWorkspace().dispose();
     return doOptimize;
   }
 

@@ -57,8 +57,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.xpath.XPathAPI;
-import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
@@ -83,11 +81,8 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * encapsulates an NAModellCalculation job to optimize it
@@ -165,47 +160,15 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private void loadNaOptimize( ) throws SimulationException, Exception
   {
-    if( !m_dataProvider.hasID( NaModelConstants.IN_OPTIMIZE_ID ) )
-    {
-      final String message = String.format( "Input '%s' must be specified for optimization.", NaModelConstants.IN_OPTIMIZE_ID );
-      throw new SimulationException( message );
-    }
+    NaOptimizeLoader loader = new NaOptimizeLoader(m_dataProvider);
+    loader.load();
 
-    final URL optimizeDataLocation = (URL) m_dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_ID );
-
-    final String optimizePath = getOptimizePath();
-    final Document dom = XMLHelper.getAsDOM( optimizeDataLocation, true );
-    final NodeList rootNodes = XPathAPI.selectNodeList( dom, optimizePath, dom );
-    if( rootNodes.getLength() == 0 )
-      throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", optimizePath ) );
-
-    // REMARK: we remember this node: it will be later changed by the optimized code (via xpathes)
-    // and then written again and again...
-    m_optimizeDom = rootNodes.item( 0 );
-
-    final GMLWorkspace optimizeWorkspace = GmlSerializer.createGMLWorkspace( m_optimizeDom, optimizeDataLocation, null );
-    final Feature feature = optimizeWorkspace.getRootFeature();
-    if( !(feature instanceof NAOptimize) )
-    {
-      final String message = String.format( "Failed to get optimize feature from optimize-gml for path '%s'. Got '%s'", optimizePath, feature );
-      throw new SimulationException( message );
-    }
-
-    /* At the moment, we are only interested in the result-links */
-    final NAOptimize naOptimize = (NAOptimize) optimizeWorkspace.getRootFeature();
+    m_optimizeDom = loader.getOptimizeDom();
+    
+    NAOptimize naOptimize = loader.getNaOptimize();
     m_linkMeasuredTS = naOptimize.getPegelZRLink();
     m_linkCalcedTS = naOptimize.getResultLink();
-
-    optimizeWorkspace.dispose();
-  }
-
-  private String getOptimizePath( ) throws SimulationException
-  {
-    if( m_dataProvider.hasID( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID ) )
-      return (String) m_dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID );
-
-    // If not specified, we use the root feature
-    return ".";
+    naOptimize.getWorkspace().dispose();
   }
 
   /**
