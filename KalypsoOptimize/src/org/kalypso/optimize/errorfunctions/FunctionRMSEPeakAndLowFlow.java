@@ -61,10 +61,9 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
 
   private final double m_max;
 
-  public FunctionRMSEPeakAndLowFlow( final SortedMap<Date, Double> measuredTS, final Date startCompare, final Date endCompare,
-      final double min, final double max )
+  public FunctionRMSEPeakAndLowFlow( final SortedMap<Date, Double> measuredTS, final Date startCompare, final Date endCompare, final double min, final double max )
   {
-    super( measuredTS, startCompare, endCompare);
+    super( measuredTS, startCompare, endCompare );
     m_min = min;
     m_max = max;
   }
@@ -72,6 +71,10 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
   @Override
   public double calculateError( final SortedMap<Date, Double> calced )
   {
+    final Date startCompare = getStartCompare();
+    final Date endCompare = getEndCompare();
+    final SortedMap<Date, Double> measured = getMeasuredTS();
+
     int status = STATUS_SEARCH_INTERVALL;
     double error = 0;
     int c = 0;
@@ -79,19 +82,26 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
     double errorAll = 0;
     int cAll = 0;
 
-    for( final Entry<Date, Double> entry : calced.entrySet() )
+    for( final Entry<Date, Double> entry : measured.entrySet() )
     {
       final Date dateKey = entry.getKey();
       // TODO: Fehler: 1. und letzter Wert werden nicht berücksichtigt
-      if( getStartCompare().before( dateKey ) && getEndCompare().after( dateKey ) )
+      if( startCompare.before( dateKey ) && endCompare.after( dateKey ) )
       {
-        final double valueCalced = entry.getValue().doubleValue();
-        final double valueMeasured = getMeasuredTS().get( dateKey ).doubleValue();
+        final Double measuredValue = entry.getValue();
+        final Double calcedValue = calced.get( dateKey );
+        if( measuredValue == null || calcedValue == null )
+        {
+          System.out.println( "Missing calced value for date: " + dateKey );
+          continue;
+        }
+
+        final double valueMeasured = measuredValue.doubleValue();
+        final double valueCalced = calcedValue.doubleValue();
         try
         {
           // TODO: Fehler: Ausruck wird nie wahr, wenn m_min != UNBOUND (2.Zeile)
-          if( ( m_min == UNBOUND && valueMeasured <= m_max ) || ( m_max == UNBOUND && valueMeasured >= m_min )
-              || (m_max != UNBOUND && m_min != UNBOUND && m_min <= valueMeasured && valueMeasured <= m_max) )
+          if( (m_min == UNBOUND && valueCalced <= m_max) || (m_max == UNBOUND && valueCalced >= m_min) || (m_max != UNBOUND && m_min != UNBOUND && m_min <= valueCalced && valueCalced <= m_max) )
           {
             // valid interval
             if( status == STATUS_OUTSIDE_INTERVALL && c != 0 )
@@ -102,7 +112,7 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
               error = 0;
               c = 0;
             }
-            error += Math.pow( valueCalced - valueMeasured, 2 );
+            error += Math.pow( valueMeasured - valueCalced, 2 );
             c++;
             status = STATUS_INSIDE_INTERVALL;
           }
@@ -112,7 +122,7 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
         catch( final Exception e )
         {
           status = STATUS_OUTSIDE_INTERVALL;
-//          e.printStackTrace();
+// e.printStackTrace();
         }
       }
     }

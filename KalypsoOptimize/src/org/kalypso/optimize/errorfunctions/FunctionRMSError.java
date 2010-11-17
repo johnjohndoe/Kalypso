@@ -51,26 +51,37 @@ public class FunctionRMSError extends IErrorFunktion
 {
   public FunctionRMSError( final SortedMap<Date, Double> measuredTS, final Date startCompare, final Date endCompare )
   {
-    super( measuredTS, startCompare, endCompare);
+    super( measuredTS, startCompare, endCompare );
   }
 
   @Override
   public double calculateError( final SortedMap<Date, Double> calced )
   {
+    final SortedMap<Date, Double> measured = getMeasuredTS();
+    final Date startCompare = getStartCompare();
+    final Date endCompare = getEndCompare();
+
     double error = 0;
     double c = 0;
 
-    for( final Entry<Date, Double> entry : calced.entrySet() )
+    for( final Entry<Date, Double> entry : measured.entrySet() )
     {
       final Date dateKey = entry.getKey();
-      if( getStartCompare().before( dateKey ) && getEndCompare().after( dateKey ) )
+      if( startCompare.before( dateKey ) && endCompare.after( dateKey ) )
       {
         try
         {
-          final double valueCalced = entry.getValue().doubleValue();
-          final double valueMeasured = getMeasuredTS().get( dateKey ).doubleValue();
-          error += Math.pow( valueCalced - valueMeasured, 2d );
-          c++;
+          Double measuredValue = entry.getValue();
+          Double calcedValue = calced.get( dateKey );
+          if( measuredValue != null && calcedValue != null )
+          {
+            final double valueMeasured = measuredValue.doubleValue();
+            final double valueCalced = calcedValue.doubleValue();
+            error += Math.pow( valueMeasured - valueCalced, 2d );
+            c++;
+          }
+          else
+            System.out.println("Missing calced value for date: " + dateKey);
         }
         catch( final Exception e )
         {
