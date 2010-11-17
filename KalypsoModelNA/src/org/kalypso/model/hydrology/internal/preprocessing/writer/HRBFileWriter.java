@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.manager;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -48,10 +48,10 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
-import org.kalypso.model.hydrology.internal.preprocessing.AbstractCoreFileWriter;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -76,17 +76,17 @@ public class HRBFileWriter extends AbstractCoreFileWriter
   {
     private final String m_formattedObservation;
 
-    private final double m_vMax;
-
-    private final double m_vMin;
+// private final double m_vMax;
+//
+// private final double m_vMin;
 
     private final int m_numberOfEntries;
 
-    protected WVQInfo( final String formattedObservation, final double vMax, final double vMin, final int numberOfEntries )
+    protected WVQInfo( final String formattedObservation, @SuppressWarnings("unused") final double vMax, @SuppressWarnings("unused") final double vMin, final int numberOfEntries )
     {
       m_formattedObservation = formattedObservation;
-      m_vMax = vMax;
-      m_vMin = vMin;
+// m_vMax = vMax;
+// m_vMin = vMin;
       m_numberOfEntries = numberOfEntries;
     }
 
@@ -95,16 +95,16 @@ public class HRBFileWriter extends AbstractCoreFileWriter
       return m_formattedObservation;
     }
 
-    // to discuss: usage of min/max from the timeserie, or those explicitly defined by user in user interface
-    protected double getMaxVolume( )
-    {
-      return m_vMax;
-    }
-
-    protected double getMinVolume( )
-    {
-      return m_vMin;
-    }
+// // TODO: to discuss: usage of min/max from the timeserie, or those explicitly defined by user in user interface
+// protected double getMaxVolume( )
+// {
+// return m_vMax;
+// }
+//
+// protected double getMinVolume( )
+// {
+// return m_vMin;
+// }
 
     protected int getNumberOfEntries( )
     {
@@ -114,7 +114,8 @@ public class HRBFileWriter extends AbstractCoreFileWriter
 
   public HRBFileWriter( final StorageChannel[] storageChannels, final NAConfiguration conf, final Logger logger )
   {
-    super( conf.getHRBFile(), logger );
+    super( logger );
+
     m_storageChannels = storageChannels;
     m_conf = conf;
   }

@@ -40,11 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.util.Locale;
+import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
@@ -56,7 +55,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 /**
  * @author doemming
  */
-public class GerWriter
+public class GerWriter extends AbstractCoreFileWriter
 {
   private static final int VIRTUALCHANNEL = 0;
 
@@ -70,32 +69,29 @@ public class GerWriter
 
   private final Channel[] m_channels;
 
-  public GerWriter( final IDManager idManager, final Integer[] rootChannels, final Channel[] channels )
+  public GerWriter( final IDManager idManager, final Integer[] rootChannels, final Channel[] channels, final Logger logger )
   {
+    super( logger );
+
     m_idManager = idManager;
     m_rootChannels = rootChannels;
     m_channels = channels;
   }
 
-  public void writeFile( final File outputFile ) throws Exception
+  /**
+   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractWriter#writeContent(java.io.PrintWriter)
+   */
+  @Override
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
-    final PrintWriter writer = new PrintWriter( outputFile );
-
-    try
+    for( final Integer rootChannelID : m_rootChannels )
     {
-      for( final Integer rootChannelID : m_rootChannels )
-      {
-        writer.println( rootChannelID );
-        writer.println( GerWriter.VIRTUALCHANNEL );
-      }
+      writer.println( rootChannelID );
+      writer.println( GerWriter.VIRTUALCHANNEL );
+    }
 
-      for( final Channel channel : m_channels )
-        writeChannel( writer, channel );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
+    for( final Channel channel : m_channels )
+      writeChannel( writer, channel );
   }
 
   private void writeChannel( final PrintWriter writer, final Channel channel ) throws Exception

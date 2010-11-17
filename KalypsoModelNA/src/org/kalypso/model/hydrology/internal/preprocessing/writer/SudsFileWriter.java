@@ -38,9 +38,8 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.manager;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +49,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import org.kalypso.convert.namodel.manager.MaxPercolationCalculator;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -57,7 +57,6 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.suds.Greenroof;
 import org.kalypso.model.hydrology.binding.suds.Swale;
 import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
-import org.kalypso.model.hydrology.internal.preprocessing.AbstractCoreFileWriter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -79,9 +78,10 @@ public class SudsFileWriter extends AbstractCoreFileWriter
 
   private final GMLWorkspace m_sudsWorkspace;
 
-  public SudsFileWriter( final NaModell naModel, final NAHydrotop hydrotopeCollection, final GMLWorkspace sudsWorkspace, final File outputFile, final Logger logger )
+  public SudsFileWriter( final NaModell naModel, final NAHydrotop hydrotopeCollection, final GMLWorkspace sudsWorkspace, final Logger logger )
   {
-    super( outputFile, logger );
+    super( logger );
+
     m_naModel = naModel;
     m_hydrotopeCollection = hydrotopeCollection;
     m_sudsWorkspace = sudsWorkspace;
@@ -138,7 +138,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   key = suds.getElementType();
 
                   final double maxPercRate = maxPercolationCalculator.getSudsAverageMaxPercRate( suds );
-                  value.add( String.format( Locale.US, "%s %s %.4g %.4g", suds.getIdealLanduseName(), BodentypManager.getSwaleSoiltypeName( suds ), maxPercRate, suds.getPercentToGroundwater() ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%s %s %.4g %.4g", suds.getIdealLanduseName(), BodentypWriter.getSwaleSoiltypeName( suds ), maxPercRate, suds.getPercentToGroundwater() ) ); //$NON-NLS-1$
                   value.add( String.format( Locale.US, "%.1f %.1f %.1f %.4g %.4g 0", (double) suds.getPipeDiameter(), (double) suds.getPipeKfValue(), suds.getPipeSlope() / 1000.0, suds.getPipeRoughness(), suds.getWidth() ) ); //$NON-NLS-1$
                 }
                 else if( f instanceof Swale )
@@ -149,7 +149,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   final Swale suds = (Swale) f;
                   key = suds.getElementType();
 
-                  value.add( String.format( Locale.US, "%s %s 2.5E-8 1.0", suds.getIdealLanduseName(), BodentypManager.getSwaleSoiltypeName( suds ) ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%s %s 2.5E-8 1.0", suds.getIdealLanduseName(), BodentypWriter.getSwaleSoiltypeName( suds ) ) ); //$NON-NLS-1$
                   value.add( String.format( Locale.US, "%.3f 0", suds.getWidth() ) ); //$NON-NLS-1$
                 }
                 else if( f instanceof Greenroof )

@@ -38,9 +38,10 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.manager;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -50,6 +51,8 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.manager.ASCIIHelper;
+import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
@@ -66,90 +69,100 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author doemming
  */
-public class CatchmentManager
+public class GebWriter extends AbstractCoreFileWriter
 {
-  private final NAConfiguration m_conf;
-
   public static final String STD_TEMP_FILENAME = "std.tmp"; //$NON-NLS-1$
 
   public static final String STD_VERD_FILENAME = "std.ver"; //$NON-NLS-1$
 
   private static final HashMap<String, String> m_fileMap = new HashMap<String, String>();
 
+  private final ASCIIHelper m_asciiHelper = new ASCIIHelper( getClass().getResource( "/org/kalypso/convert/namodel/manager/resources/formats/WernerCatchment.txt" ) ); //$NON-NLS-1$
+
+  private final NAConfiguration m_conf;
+
   private final Logger m_logger;
 
-  private final ASCIIHelper m_asciiHelper;
+  private final RelevantNetElements m_relevantElements;
 
-  public CatchmentManager( final NAConfiguration conf, final Logger logger )
+  private final NaModell m_naModel;
+
+  private final StringBuffer m_zftBuffer;
+
+  public GebWriter( final NAConfiguration conf, final Logger logger, final RelevantNetElements relevantElements, final NaModell naModel, final StringBuffer zftBuffer )
   {
-    m_asciiHelper = new ASCIIHelper( getClass().getResource( "resources/formats/WernerCatchment.txt" ) ); //$NON-NLS-1$
+    super( logger );
+
     m_conf = conf;
     m_logger = logger;
+    m_relevantElements = relevantElements;
+    m_naModel = naModel;
+    m_zftBuffer = zftBuffer;
   }
 
-  public void writeFile( final RelevantNetElements relevantElements, final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws Exception
+  /**
+   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractWriter#writeContent(java.io.PrintWriter)
+   */
+  @Override
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
-    final NaModell naModel = (NaModell) workspace.getRootFeature();
-
-    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+    final IFeatureBindingCollection<Catchment> catchments = m_naModel.getCatchments();
     for( final Catchment catchment : catchments )
     {
-      if( relevantElements.containsCatchment( catchment ) )
-        writeFeature( asciiBuffer, workspace, catchment );
+      if( m_relevantElements.containsCatchment( catchment ) )
+        writeFeature( writer, m_naModel, catchment );
     }
   }
 
-  private void writeFeature( final AsciiBuffer asciiBuffer, final GMLWorkspace workSpace, final Catchment catchment ) throws Exception
+  private void writeFeature( final PrintWriter writer, final NaModell naModel, final Catchment catchment ) throws Exception
   {
-    final StringBuffer catchmentBuffer = asciiBuffer.getCatchmentBuffer();
-
     // 0
     final IDManager idManager = m_conf.getIdManager();
     final int asciiID = idManager.getAsciiID( catchment );
-    catchmentBuffer.append( String.format( Locale.US, "%16d%7d\n", asciiID, 7 ) ); //$NON-NLS-1$
+    writer.append( String.format( Locale.US, "%16d%7d\n", asciiID, 7 ) ); //$NON-NLS-1$
 
     // 1 (empty line)
-    catchmentBuffer.append( "\n" ); //$NON-NLS-1$
+    writer.append( "\n" ); //$NON-NLS-1$
 
     // 2
     final long area = Math.round( catchment.getGeometry().getArea() );
-    catchmentBuffer.append( area ).append( "\n" ); //$NON-NLS-1$
+    writer.append( Long.toString( area ) );
+    writer.append( "\n" ); //$NON-NLS-1$
 
     // 3
     // TODO: getNiederschlagEingabeDateiString is written twice here, check if it is correct
-    catchmentBuffer.append( String.format( Locale.US, "%1$c %2$s %2$s %3$5.2f\n", m_conf.getMetaControl().isUsePrecipitationForm() ? 's' : 'n', getNiederschlagEingabeDateiString( catchment, m_conf ), catchment.getFaktn() ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    writer.append( String.format( Locale.US, "%1$c %2$s %2$s %3$5.2f\n", m_conf.getMetaControl().isUsePrecipitationForm() ? 's' : 'n', getNiederschlagEingabeDateiString( catchment, m_conf ), catchment.getFaktn() ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // 4-6
-    catchmentBuffer.append( String.format( Locale.US, "%s %s\n", getTemperaturEingabeDateiString( catchment, m_conf ), getVerdunstungEingabeFilename( catchment, m_conf ) ) ); //$NON-NLS-1$
+    writer.append( String.format( Locale.US, "%s %s\n", getTemperaturEingabeDateiString( catchment, m_conf ), getVerdunstungEingabeFilename( catchment, m_conf ) ) ); //$NON-NLS-1$
 
     // Zeitflächenfunktion
     final Object zftProp = catchment.getProperty( NaModelConstants.CATCHMENT_PROP_ZFT );
     if( zftProp instanceof IObservation )
     {
-      catchmentBuffer.append( "we_nat.zft\n" ); //$NON-NLS-1$
-      writeZML( (IObservation) zftProp, asciiID, asciiBuffer.getZFTBuffer() );
+      writer.append( "we_nat.zft\n" ); //$NON-NLS-1$
+      writeZML( (IObservation) zftProp, asciiID, m_zftBuffer );
     }
     else
     {
       final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.0", asciiID ); //$NON-NLS-1$
       m_logger.log( Level.WARNING, msg );
 
-      catchmentBuffer.append( "we999.zfl\n" ); //$NON-NLS-1$
+      writer.append( "we999.zfl\n" ); //$NON-NLS-1$
 
       // BUG: this can never work, as the we999 file is not available
       // TODO: copy the we999 into the inp.dat folder or stop calculation!
     }
-    catchmentBuffer.append( "we.hyd\n" ); //$NON-NLS-1$
+    writer.append( "we.hyd\n" ); //$NON-NLS-1$
 
     // 7
-    catchmentBuffer.append( m_asciiHelper.toAscii( catchment, 7 ) + "\n" ); //$NON-NLS-1$
+    writer.append( m_asciiHelper.toAscii( catchment, 7 ) + "\n" ); //$NON-NLS-1$
 
     // 8
     final Feature[] bodenKorrekturFeatures = catchment.getBodenKorrekturFeatures();
@@ -160,20 +173,20 @@ public class CatchmentManager
     final int overflowNodeID = overflowNode == null ? 0 : idManager.getAsciiID( overflowNode );
     final double bimax = 1.0;// JH: dummy for bimax, because it is not used in fortran!
 
-    catchmentBuffer.append( String.format( Locale.US, "%5.3f %4d %9.1f %9.1f %4d %4.1f %4.1f\n", 1.0, bodenKorrekturFeatures.length, bimax, catchment.getBianf(), overflowNodeID, catchment.getTint(), catchment.getRintmx() ) ); //$NON-NLS-1$
+    writer.append( String.format( Locale.US, "%5.3f %4d %9.1f %9.1f %4d %4.1f %4.1f\n", 1.0, bodenKorrekturFeatures.length, bimax, catchment.getBianf(), overflowNodeID, catchment.getTint(), catchment.getRintmx() ) ); //$NON-NLS-1$
 
     // 9 (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)
     // JH: + dummy for "evalay", because the parameter is not used in fortran code
     for( final Feature feature : bodenKorrekturFeatures )
     {
       // TODO: replace asciiHelper routine with java string formatting
-      catchmentBuffer.append( String.format( Locale.US, "%s %.1f\n", m_asciiHelper.toAscii( feature, 9 ), 1.0 ) ); //$NON-NLS-1$
+      writer.append( String.format( Locale.US, "%s %.1f\n", m_asciiHelper.toAscii( feature, 9 ), 1.0 ) ); //$NON-NLS-1$
     }
 
     // 10 (____(f_eva,f4.2)_(aint,f3.1)__(aigw,f6.2)____(fint,f4.2)____(ftra,f4.2))
     // JH: only "aigw" from gml. other parameters are not used by fortran program - dummys!
     final double aigw = catchment.getFaktorAigw() * catchment.getAigw();
-    catchmentBuffer.append( String.format( Locale.US, "%8.2f %3.1f %7.2f %7.2f %7.2f\n", 1.0, 0.0, aigw, 0.0, 0.0 ) ); //$NON-NLS-1$
+    writer.append( String.format( Locale.US, "%8.2f %3.1f %7.2f %7.2f %7.2f\n", 1.0, 0.0, aigw, 0.0, 0.0 ) ); //$NON-NLS-1$
 
     // 11 (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*))
     // if correction factors of retention constants are choosen, retention constants correction
@@ -187,18 +200,18 @@ public class CatchmentManager
     final double retgw = catchment.getRetgw() * catchment.getFaktorRetgw();
     final double retklu = catchment.getRetklu() * catchment.getFaktorRetklu();
 
-    catchmentBuffer.append( String.format( Locale.US, "%f %f %f %f %f %f\n", retvs, retob, retint, retbas, retgw, retklu ) ); //$NON-NLS-1$
+    writer.append( String.format( Locale.US, "%f %f %f %f %f %f\n", retvs, retob, retint, retbas, retgw, retklu ) ); //$NON-NLS-1$
 
     // 12-14
     final Feature[] getgrundwasserAbflussFeatures = catchment.getgrundwasserAbflussFeatures();
-    catchmentBuffer.append( String.format( Locale.US, "%d\n", getgrundwasserAbflussFeatures.length ) ); //$NON-NLS-1$
+    writer.append( String.format( Locale.US, "%d\n", getgrundwasserAbflussFeatures.length ) ); //$NON-NLS-1$
     final StringBuffer line13 = new StringBuffer();
     final StringBuffer line14 = new StringBuffer();
     double sumGwwi = 0.0;
     for( final Feature fe : getgrundwasserAbflussFeatures )
     {
       final IRelationType rt2 = (IRelationType) fe.getFeatureType().getProperty( NaModelConstants.CATCHMENT_PROP_NGWZU );
-      final Feature linkedFE = workSpace.resolveLink( fe, rt2 );
+      final Feature linkedFE = naModel.getWorkspace().resolveLink( fe, rt2 );
 
       if( linkedFE == null )
         throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", FeatureHelper.getAsString( fe, "ngwzu" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -228,23 +241,23 @@ public class CatchmentManager
 
     if( getgrundwasserAbflussFeatures.length > 0 )
     {
-      catchmentBuffer.append( line13 ).append( "\n" ); //$NON-NLS-1$
-      catchmentBuffer.append( line14 ).append( "\n" ); //$NON-NLS-1$
+      writer.append( line13 ).append( "\n" ); //$NON-NLS-1$
+      writer.append( line14 ).append( "\n" ); //$NON-NLS-1$
     }
 
     // 15
-    catchmentBuffer.append( String.format( Locale.US, "%f %f %f %f %f %f", catchment.getHgru(), catchment.getHgro(), catchment.getRtr(), catchment.getPors(), catchment.getGwsent(), catchment.getKlupor() ) ); //$NON-NLS-1$
+    writer.append( String.format( Locale.US, "%f %f %f %f %f %f", catchment.getHgru(), catchment.getHgro(), catchment.getRtr(), catchment.getPors(), catchment.getGwsent(), catchment.getKlupor() ) ); //$NON-NLS-1$
 
     // tiefengrundwasser
     final Node izknNode = catchment.getIzknNode();
 
     if( izknNode == null )
-      catchmentBuffer.append( " 0\n" ); //$NON-NLS-1$
+      writer.append( " 0\n" ); //$NON-NLS-1$
     else
-      catchmentBuffer.append( String.format( Locale.US, " %4d\n", idManager.getAsciiID( izknNode ) ) );
+      writer.append( String.format( Locale.US, " %4d\n", idManager.getAsciiID( izknNode ) ) );
 
     // KommentarZeile
-    catchmentBuffer.append( "ende gebietsdatensatz\n" ); //$NON-NLS-1$//$NON-NLS-2$
+    writer.append( "ende gebietsdatensatz\n" ); //$NON-NLS-1$//$NON-NLS-2$
 
   }
 

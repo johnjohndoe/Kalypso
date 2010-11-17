@@ -43,7 +43,6 @@ package org.kalypso.convert.namodel.net.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypsodeegree.model.feature.Feature;
@@ -53,7 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
 {
-  private final AsciiBuffer m_asciiBuffer;
+  private final StringBuffer m_netBuffer;
 
   private int m_virtualChannelId = 10001;
 
@@ -61,10 +60,10 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
 
   private final RelevantNetElements m_relevantElements;
 
-  public CompleteDownstreamNetAsciiWriterVisitor( final RelevantNetElements relevantElements, final AsciiBuffer asciiBuffer )
+  public CompleteDownstreamNetAsciiWriterVisitor( final RelevantNetElements relevantElements, final StringBuffer netBuffer )
   {
     m_relevantElements = relevantElements;
-    m_asciiBuffer = asciiBuffer;
+    m_netBuffer = netBuffer;
   }
 
   /**
@@ -99,7 +98,7 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
     if( needToComplete )
     {
       m_virtualChannelId++;
-      netElement.writeRootChannel( m_relevantElements, m_asciiBuffer, m_virtualChannelId );
+      netElement.writeRootChannel( m_relevantElements, m_netBuffer, m_virtualChannelId );
     }
     return false;
   }

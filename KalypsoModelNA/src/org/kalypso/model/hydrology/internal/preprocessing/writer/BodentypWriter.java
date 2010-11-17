@@ -39,8 +39,9 @@
  *   
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.convert.namodel.manager;
+package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -66,9 +67,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 /**
  * @author huebsch
  */
-public class BodentypManager
+public class BodentypWriter extends AbstractCoreFileWriter
 {
-  private final Map<String, List<Layer>> m_soilTypes = new LinkedHashMap<String, List<Layer>>();
+  private final GMLWorkspace m_parameterWorkspace;
 
   private final class Layer
   {
@@ -101,9 +102,19 @@ public class BodentypManager
     }
   }
 
-  public void writeFile( final StringBuffer buffer, final GMLWorkspace paraWorkspace ) throws Exception
+  private final Map<String, List<Layer>> m_soilTypes = new LinkedHashMap<String, List<Layer>>();
+
+  public BodentypWriter( final GMLWorkspace parameterWorkspace, final Logger logger )
   {
-    final Parameter parameter = (Parameter) paraWorkspace.getRootFeature();
+    super( logger );
+
+    m_parameterWorkspace = parameterWorkspace;
+  }
+
+  @Override
+  protected void writeContent( final PrintWriter buffer ) throws Exception
+  {
+    final Parameter parameter = (Parameter) m_parameterWorkspace.getRootFeature();
     final IFeatureBindingCollection<Soiltype> soiltypes = parameter.getSoiltypes();
     for( final Soiltype soiltype : soiltypes )
     {
@@ -111,7 +122,7 @@ public class BodentypManager
       final List<Layer> layers = new ArrayList<Layer>();
       for( final Feature fe : bodartList )
       {
-        final Feature bodArtLink = paraWorkspace.resolveLink( fe, (IRelationType) fe.getFeatureType().getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) );
+        final Feature bodArtLink = m_parameterWorkspace.resolveLink( fe, (IRelationType) fe.getFeatureType().getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) );
         if( bodArtLink != null )
         {
           Boolean xretProp = (Boolean) fe.getProperty( NaModelConstants.PARA_PROP_XRET );
