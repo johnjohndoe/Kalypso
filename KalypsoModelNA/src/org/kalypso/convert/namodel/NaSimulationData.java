@@ -41,10 +41,12 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.convert.namodel.optimize.NaOptimizeLoader;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
@@ -53,12 +55,15 @@ import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.serialize.FeatureProviderWithCacheFactory;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
+import org.w3c.dom.Node;
 
 /**
  * @author Gernot Belger
@@ -87,7 +92,48 @@ public class NaSimulationData
 
   private final NaModell m_naModel;
 
-  private final NAOptimize m_naOptimize;
+  private final NaOptimizeLoader m_optimizeLoader;
+
+  public static final NaSimulationData load( final ISimulationDataProvider inputProvider ) throws Exception
+  {
+    final URL modelUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
+    final URL controlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
+    final URL metaUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID );
+    final URL parameterUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
+    final URL hydrotopUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
+    final URL syntNUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID );
+    final URL lzsimUrl = getStartConditionFile( inputProvider );
+    final URL sudsUrl = getInputOrNull( inputProvider, NaModelConstants.IN_SUDS_ID );
+
+    final NaOptimizeLoader optimizeLoader = new NaOptimizeLoader( inputProvider );
+
+    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader );
+  }
+
+  public static URL getStartConditionFile( final ISimulationDataProvider inputProvider ) throws SimulationException
+  {
+    if( !inputProvider.hasID( NaModelConstants.IN_LZSIM_IN_ID ) )
+      return null;
+
+    final URL iniValuesFolderURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_LZSIM_IN_ID );
+    try
+    {
+      // TODO: crude way to create the new URL, necessary as probably we do not have a '/' at the end of the path
+      return new URL( iniValuesFolderURL.toExternalForm() + "/lzsim.gml" ); //$NON-NLS-1$
+    }
+    catch( final MalformedURLException e )
+    {
+      throw new SimulationException( "Failed to read start condition file", e );
+    }
+  }
+
+  private static URL getInputOrNull( final ISimulationDataProvider inputProvider, final String id ) throws SimulationException
+  {
+    if( !inputProvider.hasID( id ) )
+      return null;
+
+    return (URL) inputProvider.getInputForID( id );
+  }
 
   public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final NaOptimizeLoader optimizeLoader ) throws Exception
   {
@@ -100,13 +146,9 @@ public class NaSimulationData
     m_naModellControl = readModel( controlURL, NAModellControl.class );
     m_metaControl = readModel( metaUrl, NAControl.class );
 
-    if( optimizeLoader != null )
-    {
-      optimizeLoader.load( m_modelWorkspace, m_factory );
-      m_naOptimize = optimizeLoader.getNaOptimize();
-    }
-    else
-      m_naOptimize = null;
+    m_optimizeLoader = optimizeLoader;
+    if( m_optimizeLoader != null )
+      m_optimizeLoader.load( m_modelWorkspace, m_factory );
 
     m_naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
@@ -276,7 +318,18 @@ public class NaSimulationData
 
   public NAOptimize getNaOptimize( )
   {
-    return m_naOptimize;
+    if( m_optimizeLoader == null )
+      return null;
+
+    return m_optimizeLoader.getNaOptimize();
+  }
+
+  public Node getNaOptimizeDom( )
+  {
+    if( m_optimizeLoader == null )
+      return null;
+
+    return m_optimizeLoader.getOptimizeDom();
   }
 
 }

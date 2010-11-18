@@ -129,9 +129,10 @@ public class SceIOHandler
           final double sceValue = Double.parseDouble( group );
           final double realValue = scaleSCEtoRealValue( sceValue, m_parameter.size() );
           m_parameter.add( new Double( realValue ) );
-          
-          m_logger.info( String.format( "OptiParam: %s - %f", m_parameterConf[m_parameter.size() - 1].getID(), realValue ) );
-          
+
+
+// m_logger.info( String.format( "OptiParam: %s - %f", m_parameterConf[m_parameter.size() - 1].getID(), realValue ) );
+
           if( m_parameter.size() == m_parameterCount )
             status = STATUS_CALCULATE_AND_EVALUATE;
         }

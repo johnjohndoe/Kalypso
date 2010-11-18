@@ -101,15 +101,9 @@ import org.w3c.dom.Node;
  */
 public class NAOptimizingJob implements IOptimizingJob
 {
-  public static final String IN_BestOptimizedRunDir_ID = "BestOptimizedRunDir_so_far"; //$NON-NLS-1$
-
   private final File m_tmpDir;
 
   private SortedMap<Date, Double> m_measuredTS;
-
-  private TimeseriesLinkType m_linkMeasuredTS;
-
-  private TimeseriesLinkType m_linkCalcedTS;
 
   private final AutoCalibration m_autoCalibration;
 
@@ -129,8 +123,6 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private boolean m_bestSucceeded = false;
 
-  private Node m_optimizeDom;
-
   private final File m_optimizeRunDir;
 
   private final File m_bestResultDir;
@@ -138,6 +130,8 @@ public class NAOptimizingJob implements IOptimizingJob
   private NAModelSimulation m_simulation;
 
   private final NaSimulationDirs m_simDirs;
+
+  private final NaSimulationData m_data;
 
   public NAOptimizingJob( final File tmpDir, final ISimulationDataProvider dataProvider, final ISimulationMonitor monitor ) throws Exception
   {
@@ -151,7 +145,8 @@ public class NAOptimizingJob implements IOptimizingJob
     m_bestOptimizedFile = new File( m_tmpDir, "bestOptimizeConfig.gml" );
     m_simDirs = new NaSimulationDirs( m_optimizeRunDir );
 
-    loadNaOptimize();
+    monitor.setMessage( "Loading simulation data..." );
+    m_data = NaSimulationData.load( dataProvider );
 
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
     final NAControl metaControl = (NAControl) metaWorkspace.getRootFeature();
@@ -174,17 +169,10 @@ public class NAOptimizingJob implements IOptimizingJob
     pegel.setEndDate( calendarEnd );
   }
 
-  private void loadNaOptimize( ) throws SimulationException, Exception
+  @Override
+  public void dispose( )
   {
-    final NaOptimizeLoader loader = new NaOptimizeLoader( m_dataProvider );
-    loader.load( null, null );
-
-    m_optimizeDom = loader.getOptimizeDom();
-
-    final NAOptimize naOptimize = loader.getNaOptimize();
-    m_linkMeasuredTS = naOptimize.getPegelZRLink();
-    m_linkCalcedTS = naOptimize.getResultLink();
-    naOptimize.getWorkspace().dispose();
+    m_data.dispose();
   }
 
   /**
@@ -210,7 +198,7 @@ public class NAOptimizingJob implements IOptimizingJob
 
     try
     {
-      m_simulation = new NAModelSimulation( m_simDirs, m_dataProvider, logger );
+      m_simulation = new NAModelSimulation( m_simDirs, m_data, logger );
       return m_simulation.runSimulation( m_monitor );
     }
     catch( final OperationCanceledException e )
@@ -241,7 +229,8 @@ public class NAOptimizingJob implements IOptimizingJob
     final URL context = contextWorkspace.getContext();
     final IFeatureProviderFactory factory = contextWorkspace.getFeatureProviderFactory();
 
-    final NAOptimize optimize = NaOptimizeLoader.toOptimizeConfig( m_optimizeDom, context, factory );
+    final Node naOptimizeDom = m_data.getNaOptimizeDom();
+    final NAOptimize optimize = NaOptimizeLoader.toOptimizeConfig( naOptimizeDom, context, factory );
     return m_simulation.rerunForOptimization( optimize, m_monitor );
   }
 
@@ -276,16 +265,16 @@ public class NAOptimizingJob implements IOptimizingJob
     }
 
 // // FIXME DEBUG: save last run
-    try
-    {
-      FileUtils.copyDirectory( m_optimizeRunDir, new File( m_tmpDir, "optimizeRun_" + m_counter ) );
-      saveOptimizeConfig( new File( m_tmpDir, "optimizeBean_" + m_counter + ".gml" ) );
-    }
-    catch( final IOException e )
-    {
-      // FIXME: error handling
-      e.printStackTrace();
-    }
+// try
+// {
+// FileUtils.copyDirectory( m_optimizeRunDir, new File( m_tmpDir, "optimizeRun_" + m_counter ) );
+// saveOptimizeConfig( new File( m_tmpDir, "optimizeBean_" + m_counter + ".gml" ) );
+// }
+// catch( final IOException e )
+// {
+// // FIXME: error handling
+// e.printStackTrace();
+// }
 
     /* clear last results */
     clear( m_simDirs.resultDir );
@@ -311,7 +300,8 @@ public class NAOptimizingJob implements IOptimizingJob
 
     try
     {
-      OptimizeModelUtils.transformModel( m_optimizeDom, values, calcContexts );
+      final Node naOptimizeDom = m_data.getNaOptimizeDom();
+      OptimizeModelUtils.transformModel( naOptimizeDom, values, calcContexts );
     }
     catch( final TransformerException e )
     {
@@ -319,7 +309,7 @@ public class NAOptimizingJob implements IOptimizingJob
     }
   }
 
-  private void saveOptimizeConfig( File file )
+  private void saveOptimizeConfig( final File file )
   {
     try
     {
@@ -329,7 +319,8 @@ public class NAOptimizingJob implements IOptimizingJob
       t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
       t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
 
-      final Document ownerDocument = m_optimizeDom instanceof Document ? (Document) m_optimizeDom : m_optimizeDom.getOwnerDocument();
+      final Node naOptimizeDom = m_data.getNaOptimizeDom();
+      final Document ownerDocument = naOptimizeDom instanceof Document ? (Document) naOptimizeDom : naOptimizeDom.getOwnerDocument();
       final String encoding = ownerDocument.getInputEncoding();
       t.setOutputProperty( OutputKeys.ENCODING, encoding );
       t.transform( new DOMSource( ownerDocument ), new StreamResult( file ) );
@@ -353,7 +344,10 @@ public class NAOptimizingJob implements IOptimizingJob
       URL measuredURL = null;
       try
       {
-        measuredURL = new URL( (URL) m_dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), m_linkMeasuredTS.getHref() );
+        final NAOptimize naOptimize = m_data.getNaOptimize();
+        final TimeseriesLinkType linkMeasuredTS = naOptimize.getPegelZRLink();
+
+        measuredURL = new URL( (URL) m_dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), linkMeasuredTS.getHref() );
       }
       catch( final Exception e )
       {
@@ -387,7 +381,10 @@ public class NAOptimizingJob implements IOptimizingJob
     final SortedMap<Date, Double> result = new TreeMap<Date, Double>();
     final File optimizeResultDir = new File( m_optimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
 
-    final String calcHref = m_linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final NAOptimize naOptimize = m_data.getNaOptimize();
+    final TimeseriesLinkType linkCalcedTS = naOptimize.getResultLink();
+
+    final String calcHref = linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final File tsFile = new File( optimizeResultDir, calcHref );
     final IObservation observation = ZmlFactory.parseXML( tsFile.toURI().toURL() ); //$NON-NLS-1$
