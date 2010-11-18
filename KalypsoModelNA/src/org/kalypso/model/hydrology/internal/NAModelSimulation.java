@@ -110,6 +110,7 @@ public class NAModelSimulation
 
   public boolean runSimulation( final ISimulationMonitor monitor ) throws Exception
   {
+    // FIXME: never diposed...!
     m_simulationData = loadData();
     m_conf.setSimulationData( m_simulationData );
 

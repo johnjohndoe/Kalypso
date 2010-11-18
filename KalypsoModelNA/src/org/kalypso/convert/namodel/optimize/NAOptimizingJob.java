@@ -160,7 +160,7 @@ public class NAOptimizingJob implements IOptimizingJob
 
     final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
 
-    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( FileUtils.toFile((URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID ) ));
+    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( FileUtils.toFile( (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID ) ) );
 
     // correct in intervall autocalibration
     final Pegel pegel = m_autoCalibration.getPegel();
@@ -176,7 +176,7 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private void loadNaOptimize( ) throws SimulationException, Exception
   {
-    final NaOptimizeLoader loader = new NaOptimizeLoader(m_dataProvider);
+    final NaOptimizeLoader loader = new NaOptimizeLoader( m_dataProvider );
     loader.load( null, null );
 
     m_optimizeDom = loader.getOptimizeDom();
@@ -231,7 +231,6 @@ public class NAOptimizingJob implements IOptimizingJob
     finally
     {
       naCalculationLogger.stopLogging();
-// simulation.backupResults();
     }
   }
 
@@ -254,7 +253,7 @@ public class NAOptimizingJob implements IOptimizingJob
   {
     if( lastWasBest )
     {
-      saveOptimizeConfig(  );
+      saveOptimizeConfig( m_bestOptimizedFile );
 
       clear( m_bestOptimizeRunDir );
       clear( m_bestResultDir );
@@ -277,15 +276,16 @@ public class NAOptimizingJob implements IOptimizingJob
     }
 
 // // FIXME DEBUG: save last run
-// try
-// {
-// FileUtils.copyDirectory( m_optimizeRunDir, new File( m_tmpDir, "optimizeRun_" + m_counter ) );
-// }
-// catch( final IOException e )
-// {
-// // FIXME: error handling
-// e.printStackTrace();
-// }
+    try
+    {
+      FileUtils.copyDirectory( m_optimizeRunDir, new File( m_tmpDir, "optimizeRun_" + m_counter ) );
+      saveOptimizeConfig( new File( m_tmpDir, "optimizeBean_" + m_counter + ".gml" ) );
+    }
+    catch( final IOException e )
+    {
+      // FIXME: error handling
+      e.printStackTrace();
+    }
 
     /* clear last results */
     clear( m_simDirs.resultDir );
@@ -319,7 +319,7 @@ public class NAOptimizingJob implements IOptimizingJob
     }
   }
 
-  private void saveOptimizeConfig( )
+  private void saveOptimizeConfig( File file )
   {
     try
     {
@@ -332,7 +332,7 @@ public class NAOptimizingJob implements IOptimizingJob
       final Document ownerDocument = m_optimizeDom instanceof Document ? (Document) m_optimizeDom : m_optimizeDom.getOwnerDocument();
       final String encoding = ownerDocument.getInputEncoding();
       t.setOutputProperty( OutputKeys.ENCODING, encoding );
-      t.transform( new DOMSource( ownerDocument ), new StreamResult( m_bestOptimizedFile ) );
+      t.transform( new DOMSource( ownerDocument ), new StreamResult( file ) );
     }
     catch( final Exception e )
     {

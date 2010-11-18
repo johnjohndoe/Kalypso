@@ -184,11 +184,8 @@ public class NAModelPreprocessor
   {
     final NAModellConverter naModellConverter = new NAModellConverter( m_conf, m_simulationData, m_asciiDirs, m_logger );
 
-    final NaModell naModel = (NaModell) m_conf.getModelWorkspace().getRootFeature();
-
-    final CalibrationConfig config = new CalibrationConfig( optimize, naModel );
+    final CalibrationConfig config = new CalibrationConfig( optimize );
     config.applyCalibrationFactors();
-    config.applyKmCalibrationFactors();
 
     naModellConverter.writeCalibratedFiles( m_relevantElements, m_tsFileManager );
   }
