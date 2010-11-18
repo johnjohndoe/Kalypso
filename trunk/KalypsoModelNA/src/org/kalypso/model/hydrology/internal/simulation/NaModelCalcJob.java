@@ -42,6 +42,8 @@ package org.kalypso.model.hydrology.internal.simulation;
 
 import java.io.File;
 import java.net.URL;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation;
@@ -76,9 +78,17 @@ public class NaModelCalcJob implements ISimulation
   {
     try
     {
-      final ISimulation calcJob = createCalcJob( dataProvider, tmpdir, monitor );
+      // FIXME: replace with other logging framework, in preference eclipse's
+      final Logger logger = Logger.getLogger( "dooooooof"  );
+      FileHandler handler = new FileHandler("C:\\tempwin\\optimize2.log" );
+      handler.setLevel( Level.ALL );
+      logger.addHandler( handler );
+      
+      final ISimulation calcJob = createCalcJob( dataProvider, tmpdir, monitor, logger );
       if( calcJob != null )
         calcJob.run( tmpdir, dataProvider, resultEater, monitor );
+      
+      handler.close();
     }
     catch( final SimulationException e )
     {
@@ -91,11 +101,8 @@ public class NaModelCalcJob implements ISimulation
     }
   }
 
-  private ISimulation createCalcJob( final ISimulationDataProvider dataProvider, final File tmpdir, final ISimulationMonitor monitor ) throws Exception
+  private ISimulation createCalcJob( final ISimulationDataProvider dataProvider, final File tmpdir, final ISimulationMonitor monitor, Logger logger ) throws Exception
   {
-    // FIXME: replace with other loggin framework, in preference eclipse's
-    final Logger logger = Logger.getAnonymousLogger();
-
     // FIXME: check: is the analyse job actually still used?
     // why not declare a seaprate top-level job?
     if( dataProvider.hasID( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID ) )
