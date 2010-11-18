@@ -42,7 +42,6 @@ package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -54,9 +53,6 @@ import org.apache.commons.io.FileUtils;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
-import org.kalypso.convert.namodel.optimize.NaOptimizeLoader;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
@@ -66,7 +62,6 @@ import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.processing.KalypsoNaProcessor;
-import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -80,8 +75,6 @@ public class NAModelSimulation
 
   private final String m_startDateText = START_DATE_FORMAT.format( new Date() );
 
-  private final ISimulationDataProvider m_inputProvider;
-
   private final Logger m_logger;
 
   private final NAConfiguration m_conf;
@@ -92,28 +85,26 @@ public class NAModelSimulation
 
   private NAModelPreprocessor m_preprocessor;
 
-  private NaSimulationData m_simulationData;
+  private final NaSimulationData m_simulationData;
 
-  public NAModelSimulation( final NaSimulationDirs simDirs, final ISimulationDataProvider inputProvider, final Logger logger ) throws SimulationException
+  public NAModelSimulation( final NaSimulationDirs simDirs, final NaSimulationData data, final Logger logger )
   {
     m_simDirs = simDirs;
-    m_inputProvider = inputProvider;
+    m_simulationData = data;
     m_logger = logger;
 
     m_logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.13", m_startDateText ) ); //$NON-NLS-1$ 
 
     m_conf = new NAConfiguration( simDirs.asciiDir );
-    m_conf.setZMLContext( (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID ) );
+    m_conf.setSimulationData( m_simulationData );
+    final URL context = m_simulationData.getModelWorkspace().getContext();
+    m_conf.setZMLContext( context );
 
     m_idManager = m_conf.getIdManager();
   }
 
   public boolean runSimulation( final ISimulationMonitor monitor ) throws Exception
   {
-    // FIXME: never diposed...!
-    m_simulationData = loadData();
-    m_conf.setSimulationData( m_simulationData );
-
     preprocess( m_simulationData, monitor );
     if( monitor.isCanceled() )
       return false;
@@ -140,36 +131,12 @@ public class NAModelSimulation
     return postProcess( m_simulationData, monitor );
   }
 
-  private NaSimulationData loadData( ) throws Exception
-  {
-    final URL modelUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
-    final URL controlURL = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
-    final URL metaUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_META_ID );
-    final URL parameterUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
-    final URL hydrotopUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
-    final URL syntNUrl = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID );
-    final URL lzsimUrl = getStartConditionFile();
-    final URL sudsUrl = getInputOrNull( NaModelConstants.IN_SUDS_ID );
-
-    final NaOptimizeLoader optimizeLoader = new NaOptimizeLoader( m_inputProvider );
-
-    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader );
-  }
-
-  private URL getInputOrNull( final String id ) throws SimulationException
-  {
-    if( !m_inputProvider.hasID( id ) )
-      return null;
-
-    return (URL) m_inputProvider.getInputForID( id );
-  }
 
   private void preprocess( final NaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
       m_preprocessor = new NAModelPreprocessor( m_conf, m_simDirs.asciiDirs, m_idManager, simulationData, m_logger );
-      m_preprocessor.setPreprocessedFilesDir( getPreprocessFilesDir() );
       m_preprocessor.process( monitor );
 
       final File idMapFile = new File( m_simDirs.simulationDir, "IdMap.txt" ); //$NON-NLS-1$
@@ -181,33 +148,6 @@ public class NAModelSimulation
       m_logger.log( Level.SEVERE, msg, e );
       throw new SimulationException( msg );
     }
-  }
-
-  private URL getStartConditionFile( ) throws SimulationException
-  {
-    if( !m_inputProvider.hasID( NaModelConstants.IN_LZSIM_IN_ID ) )
-      return null;
-
-    final URL iniValuesFolderURL = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_LZSIM_IN_ID );
-    try
-    {
-      // TODO: crude way to create the new URL, necessary as probably we do not have a '/' at the end of the path
-      return new URL( iniValuesFolderURL.toExternalForm() + "/lzsim.gml" ); //$NON-NLS-1$
-    }
-    catch( final MalformedURLException e )
-    {
-      throw new SimulationException( "Failed to read start condition file", e );
-    }
-  }
-
-
-  private File getPreprocessFilesDir( ) throws SimulationException
-  {
-    if( !m_inputProvider.hasID( NAOptimizingJob.IN_BestOptimizedRunDir_ID ) )
-      return null;
-
-    final URL url = (URL) m_inputProvider.getInputForID( NAOptimizingJob.IN_BestOptimizedRunDir_ID );
-    return FileUtils.toFile( url );
   }
 
   public void backupResults( )

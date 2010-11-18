@@ -57,6 +57,8 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public interface IOptimizingJob
 {
+  void dispose( );
+
   /**
    * commits population for next calculation run
    * 

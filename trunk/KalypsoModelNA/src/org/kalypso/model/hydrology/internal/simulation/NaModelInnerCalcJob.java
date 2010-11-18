@@ -47,6 +47,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
@@ -92,11 +93,14 @@ public class NaModelInnerCalcJob implements ISimulation
 
     final Logger logger = naCalculationLogger.getLogger();
 
-    final File resultDir = simDirs.resultDir;
-    final NAModelSimulation simulation = new NAModelSimulation( simDirs, inputProvider, logger );
-
+    NaSimulationData data = null;
+    NAModelSimulation simulation = null;
     try
     {
+      monitor.setMessage( "Loading simulation data" );
+      data = NaSimulationData.load( inputProvider );
+      simulation = new NAModelSimulation( simDirs, data, logger );
+
       m_succeeded = simulation.runSimulation( monitor );
     }
     catch( final SimulationException se )
@@ -120,9 +124,15 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       naCalculationLogger.stopLogging();
 
-      simulation.backupResults();
+      if( data != null )
+        data.dispose();
+
+      // FIXME: does not belong here! Move into build.xml or at least into client code
+      if( simulation != null )
+        simulation.backupResults();
     }
 
+    final File resultDir = simDirs.resultDir;
     resultEater.addResult( NaModelConstants.OUT_ZML, resultDir );
   }
 
