@@ -97,7 +97,7 @@ public class ErrorFunctionFactory
       return createErrorFunction( (RootMeanSquareErrorPeakFlows) fXML, autocalibration, measuredTS );
 
     return null;
-  }
+  } 
 
   public static IErrorFunktion createErrorFunction( final RootMeanSquareErrorLowFlows error, final AutoCalibration autocalibration,
       final SortedMap<Date, Double> calcedTS )

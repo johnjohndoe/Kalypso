@@ -64,8 +64,8 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
   public FunctionRMSEPeakAndLowFlow( final SortedMap<Date, Double> measuredTS, final Date startCompare, final Date endCompare, final double min, final double max )
   {
     super( measuredTS, startCompare, endCompare );
-    m_min = min;
-    m_max = max;
+    m_min = min == UNBOUND ? Double.NEGATIVE_INFINITY : min;
+    m_max = max == UNBOUND ? Double.POSITIVE_INFINITY : max;
   }
 
   @Override
@@ -85,8 +85,7 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
     for( final Entry<Date, Double> entry : measured.entrySet() )
     {
       final Date dateKey = entry.getKey();
-      // TODO: Fehler: 1. und letzter Wert werden nicht berücksichtigt
-      if( startCompare.before( dateKey ) && endCompare.after( dateKey ) )
+      if( !dateKey.before(  startCompare ) && !dateKey.after(  endCompare ) )
       {
         final Double measuredValue = entry.getValue();
         final Double calcedValue = calced.get( dateKey );
@@ -100,8 +99,7 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
         final double valueCalced = calcedValue.doubleValue();
         try
         {
-          // TODO: Fehler: Ausruck wird nie wahr, wenn m_min != UNBOUND (2.Zeile)
-          if( (m_min == UNBOUND && valueCalced <= m_max) || (m_max == UNBOUND && valueCalced >= m_min) || (m_max != UNBOUND && m_min != UNBOUND && m_min <= valueCalced && valueCalced <= m_max) )
+          if( m_min <= valueCalced && valueCalced <= m_max )
           {
             // valid interval
             if( status == STATUS_OUTSIDE_INTERVALL && c != 0 )
