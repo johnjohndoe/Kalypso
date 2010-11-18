@@ -60,19 +60,26 @@ public class FunctionVolumeError extends IErrorFunktion
     double error = 0;
     double c = 0;
 
-    for( final Entry<Date, Double> entry : calced.entrySet() )
+    final Date startCompare = getStartCompare();
+    final Date endCompare = getEndCompare();
+    
+    final SortedMap<Date, Double> measured = getMeasuredTS();
+
+    for( final Entry<Date, Double> entry : measured.entrySet() )
     {
       final Date dateKey = entry.getKey();
-      if( getStartCompare().before( dateKey ) && getEndCompare().after( dateKey ) )
+      if( !dateKey.before( startCompare ) && !dateKey.after(  endCompare ) )
       {
         try
         {
-          final double valueCalced = entry.getValue().doubleValue();
-          final Double doubleMeasured = getMeasuredTS().get( dateKey );
-          if( doubleMeasured != null )
+          final Double doubleMeasured = entry.getValue();
+          final Double doubleCalced = calced.get( dateKey );
+
+          final double valueMeasured = doubleMeasured.doubleValue();
+          if( doubleCalced != null )
           {
-            final double valueMeasured = doubleMeasured.doubleValue();
-            error += valueCalced - valueMeasured;
+            final double valueCalced = doubleCalced.doubleValue();
+            error += Math.abs(  valueMeasured - valueCalced );
             c++;
           }
         }
@@ -82,6 +89,6 @@ public class FunctionVolumeError extends IErrorFunktion
         }
       }
     }
-    return Math.abs( error / c ) + getNormalizeOffset();
+    return ( error / c ) + getNormalizeOffset();
   }
 }

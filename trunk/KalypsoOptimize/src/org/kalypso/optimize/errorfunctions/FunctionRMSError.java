@@ -67,7 +67,7 @@ public class FunctionRMSError extends IErrorFunktion
     for( final Entry<Date, Double> entry : measured.entrySet() )
     {
       final Date dateKey = entry.getKey();
-      if( startCompare.before( dateKey ) && endCompare.after( dateKey ) )
+      if( !dateKey.before(  startCompare ) && !dateKey.after(  endCompare ) )
       {
         try
         {
