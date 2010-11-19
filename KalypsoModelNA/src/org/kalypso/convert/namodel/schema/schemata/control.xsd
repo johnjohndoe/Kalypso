@@ -8,6 +8,7 @@
           <sequence>
             <element name="scenarioId" type="string" minOccurs="0" />
             <element name="startsimulation" type="dateTime" />
+            <element name="startOptimization" type="dateTime" minOccurs="0"/>
             <element name="startforecast" type="dateTime" />
             <element name="daysSimulationDuration" type="int" minOccurs="0" />
             <element name="hoursforecast" type="int" minOccurs="0" />
