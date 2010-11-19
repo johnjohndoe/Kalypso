@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.xml.bind.JAXBException;
@@ -87,12 +88,34 @@ public class SceJob
 
   private final File m_sceExe;
 
+  private final DocumentBuilderFactory m_factory = DocumentBuilderFactory.newInstance();
+
+  private DocumentBuilder m_docuBuilder;
+
+  private Marshaller m_marshaller;
+
   public SceJob( final AutoCalibration autoCalibration, final File sceTmpDir )
   {
     m_autoCalibration = autoCalibration;
     m_sceTmpDir = sceTmpDir;
     m_sceDir = FileUtilities.createNewTempDir( "sce", m_sceTmpDir );
     m_sceExe = new File( m_sceDir, "sce.exe" );
+
+    m_factory.setNamespaceAware( true );
+
+    try
+    {
+      m_docuBuilder = m_factory.newDocumentBuilder();
+      m_marshaller = JaxbUtilities.createMarshaller( OptimizeJaxb.JC );
+    }
+    catch( final ParserConfigurationException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   public void optimize( final SceIOHandler sceIO, final ISimulationMonitor monitor ) throws Exception
@@ -113,20 +136,15 @@ public class SceJob
   /**
    * prepare SCE configuration file "scein.dat"
    */
-  private void writeSceIn( ) throws TransformerException, ParserConfigurationException, SAXException, IOException, JAXBException
+  private void writeSceIn( ) throws TransformerException, SAXException, IOException, JAXBException, URISyntaxException
   {
     final File outputFile = new File( m_sceDir, "scein.dat" );
 
     // prepare scein.dat
-    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setNamespaceAware( true );
-    final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( OptimizeJaxb.JC );
-    final Document xmlDOM = docuBuilder.newDocument();
-    marshaller.marshal( m_autoCalibration, xmlDOM );
+    final Document xmlDOM = m_docuBuilder.newDocument();
+    m_marshaller.marshal( m_autoCalibration, xmlDOM );
 
-    // FIXME: stream never closed
-    final Document xslDOM = docuBuilder.parse( XML2SCE_URL.openStream() );
+    final Document xslDOM = m_docuBuilder.parse( XML2SCE_URL.toURI().toASCIIString() );
     final TransformerFactory transformerFactory = TransformerFactory.newInstance();
     final Transformer transformer = transformerFactory.newTransformer( new DOMSource( xslDOM ) );
     transformer.transform( new DOMSource( xmlDOM ), new StreamResult( outputFile ) );
