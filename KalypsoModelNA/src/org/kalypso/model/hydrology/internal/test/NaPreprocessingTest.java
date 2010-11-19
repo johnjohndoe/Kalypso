@@ -58,10 +58,11 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.model.hydrology.INaSimulationData;
+import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
 import org.kalypso.simulation.core.NullSimulationMonitor;
@@ -131,7 +132,7 @@ public class NaPreprocessingTest
     final URL gmlInputZipLocation = getClass().getResource( baseResourceLocation + "/gmlInput.zip" );
     final URL baseURL = new URL( String.format( "jar:%s!/", gmlInputZipLocation.toExternalForm() ) );
 
-    final NaSimulationData simulationData = createDemoModelsimulationData( baseURL );
+    final INaSimulationData simulationData = createDemoModelsimulationData( baseURL );
 
     conf.setSimulationData( simulationData );
 
@@ -143,7 +144,7 @@ public class NaPreprocessingTest
     return preprocessor;
   }
 
-  private NaSimulationData createDemoModelsimulationData( final URL base ) throws Exception
+  private INaSimulationData createDemoModelsimulationData( final URL base ) throws Exception
   {
     final URL modelUrl = new URL( base, "calcCase.gml" );
     final URL controlUrl = new URL( base, "expertControl.gml" );
@@ -154,7 +155,7 @@ public class NaPreprocessingTest
     final URL syntNUrl = null;
     final URL lzsimUrl = checkUrlExists( new URL( base, "Anfangswerte/lzsim.gml" ) );
 
-    return new NaSimulationData( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, null );
+    return NaSimulationDataFactory.load( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, null );
   }
 
   private URL checkUrlExists( final URL url )

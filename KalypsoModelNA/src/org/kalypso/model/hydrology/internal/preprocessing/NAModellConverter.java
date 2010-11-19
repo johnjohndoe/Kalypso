@@ -44,9 +44,9 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
@@ -82,11 +82,11 @@ public class NAModellConverter
 
   private final Logger m_logger;
 
-  private final NaSimulationData m_data;
+  private final INaSimulationData m_data;
 
   private final NaAsciiDirs m_asciiDirs;
 
-  public NAModellConverter( final NAConfiguration conf, final NaSimulationData data, final NaAsciiDirs asciiDirs, final Logger logger ) throws Exception
+  public NAModellConverter( final NAConfiguration conf, final INaSimulationData data, final NaAsciiDirs asciiDirs, final Logger logger ) throws Exception
   {
     m_conf = conf;
     m_data = data;

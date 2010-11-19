@@ -38,45 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal;
+package org.kalypso.model.hydrology;
 
-import java.io.File;
-
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAOptimize;
+import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.w3c.dom.Node;
 
 /**
- * Helper class that holds all the various directories used by the NA simulation.
- * 
  * @author Gernot Belger
+ *
  */
-public class NaSimulationDirs
+public interface INaSimulationData
 {
-  public final File simulationDir;
 
-  public final File outputDir;
+  public abstract void dispose( );
 
-  public final File asciiDir;
+  public abstract NAModellControl getNaControl( );
 
-  public final File resultDir;
+  public abstract GMLWorkspace getModelWorkspace( );
 
-  public final File currentResultDir;
+  public abstract NaModell getNaModel( );
 
-  public final NaResultDirs currentResultDirs;
+  public abstract NAControl getMetaControl( );
 
-  public NaAsciiDirs asciiDirs;
+  public abstract GMLWorkspace getParameterWorkspace( );
 
-  public NaSimulationDirs( final File simDir )
-  {
-    simulationDir = simDir;
+  public abstract GMLWorkspace getSudsWorkspace( );
 
-    asciiDir = new File( simulationDir, NaModelConstants.ASCII_DIR_NAME );
-    asciiDirs = new NaAsciiDirs( asciiDir );
+  public abstract GMLWorkspace getSynthNWorkspace( );
 
-    outputDir = new File( simulationDir, NaModelConstants.OUTPUT_DIR_NAME );
+  public abstract NAHydrotop getHydrotopCollection( );
 
-    resultDir = new File( outputDir, NaModelConstants.RESULT_DIR_NAME );
+  public abstract InitialValues getInitialValues( );
 
-    currentResultDir = new File( resultDir, "Aktuell" ); //$NON-NLS-1$
-    currentResultDirs = new NaResultDirs( currentResultDir );
-  }
+  public abstract NAOptimize getNaOptimize( );
+
+  public abstract Node getNaOptimizeDom( );
+
 }

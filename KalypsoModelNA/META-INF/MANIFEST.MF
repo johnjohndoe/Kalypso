@@ -9,7 +9,7 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.core;visibility:=reexport,
  org.kalypso.optimize;visibility:=reexport,
  org.junit;resolution:=optional,
- org.kalypso.simulation.core,
+ org.kalypso.simulation.core;visibility:=reexport,
  org.kalypso.ui,
  org.kalypso.ModelSimulationBase;bundle-version="0.0.0",
  org.eclipse.wst.xml.core;bundle-version="1.1.500";resolution:=optional

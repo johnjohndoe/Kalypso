@@ -84,8 +84,6 @@ public interface NaModelConstants
   // input
   String IN_META_ID = "MetaSteuerdaten"; //$NON-NLS-1$
 
-  String IN_ANALYSE_MODELL_XSD_ID = "AnalyseModellXSD"; //$NON-NLS-1$
-
   String IN_MODELL_ID = "Modell"; //$NON-NLS-1$
 
   String IN_HYDROTOP_ID = "Hydrotop"; //$NON-NLS-1$

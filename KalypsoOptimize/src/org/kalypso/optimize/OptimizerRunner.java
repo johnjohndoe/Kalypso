@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,81 +36,60 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize;
 
 import java.io.File;
-import java.net.URL;
 import java.util.logging.Logger;
 
 import org.kalypso.optimizer.AutoCalibration;
-import org.kalypso.simulation.core.ISimulation;
-import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
-import org.kalypso.simulation.core.ISimulationResultEater;
 
 /**
  * calcjob that optimizes parameters of an encapsulated caljob
  * 
  * @author doemming
  */
-public class OptimizerCalJob implements ISimulation
+public class OptimizerRunner
 {
   private final IOptimizingJob m_optimizingJob;
 
   private final Logger m_logger;
+
+  private final File m_tmpdir;
 
   /**
    * @param logger
    * @param job
    *          encapsulated job to optimize
    */
-  public OptimizerCalJob( final Logger logger, final IOptimizingJob job )
+  public OptimizerRunner( final File tmpdir, final Logger logger, final IOptimizingJob job )
   {
+    m_tmpdir = tmpdir;
     m_logger = logger;
     m_optimizingJob = job;
   }
 
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
-   */
-  @Override
-  public URL getSpezifikation()
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
-   *      org.kalypso.services.calculation.job.ICalcMonitor)
-   */
-  @Override
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater,
-      final ISimulationMonitor monitor )
+  public boolean run( final ISimulationMonitor monitor )
   {
     try
     {
       final AutoCalibration autoCalibration = m_optimizingJob.getOptimizeConfiguration();
-      final SceJob sceJob = new SceJob( autoCalibration, tmpdir );
+      final SceJob sceJob = new SceJob( autoCalibration, m_tmpdir );
 
       final SceIOHandler sceIO = new SceIOHandler( m_logger, autoCalibration, m_optimizingJob );
 
       if( monitor.isCanceled() )
-        return;
+        return false;
       sceJob.optimize( sceIO, monitor );
 
-      m_optimizingJob.publishResults( resultEater );
+      return m_optimizingJob.isSucceeded();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
+      return false;
     }
-  }
-
-  public boolean isSucceeded()
-  {
-    return m_optimizingJob.isSucceeded();
   }
 }
