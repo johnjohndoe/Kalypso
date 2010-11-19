@@ -44,7 +44,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.NaSimulationDataFactory;
