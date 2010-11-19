@@ -41,67 +41,49 @@
 package org.kalypso.model.hydrology.internal.simulation;
 
 import java.io.File;
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.kalypso.convert.namodel.NaSimulationData;
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.simulation.core.ISimulation;
-import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
-import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 
 /**
  * @author doemming, huebsch
  */
-public class NaModelInnerCalcJob implements ISimulation
+public class NaModelInnerCalcJob implements INaSimulationRunnable
 {
   private static final String STRING_SIMULATION_FAILED = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.36" ); //$NON-NLS-1$
 
-  private boolean m_succeeded = false;
+  private final boolean m_succeeded = false;
 
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
-   */
-  @Override
-  public URL getSpezifikation( )
+  private final INaSimulationData m_data;
+
+  private final NaSimulationDirs m_simDirs;
+
+  public NaModelInnerCalcJob( final INaSimulationData data, final File simulationDir )
   {
-    // this is just an inner job, so need not return this
-    return null;
+    m_data = data;
+    m_simDirs = new NaSimulationDirs( simulationDir );
   }
 
-  /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
-   *      org.kalypso.services.calculation.job.ICalcMonitor)
-   */
   @Override
-  public void run( final File simulationDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
+  public boolean run( final ISimulationMonitor monitor ) throws SimulationException
   {
-    final NaSimulationDirs simDirs = new NaSimulationDirs( simulationDir );
-
-    final NACalculationLogger naCalculationLogger = new NACalculationLogger( simDirs.currentResultDirs.logDir );
-
+    final NACalculationLogger naCalculationLogger = new NACalculationLogger( m_simDirs.currentResultDirs.logDir );
     final Logger logger = naCalculationLogger.getLogger();
 
-    NaSimulationData data = null;
     NAModelSimulation simulation = null;
     try
     {
-      monitor.setMessage( "Loading simulation data" );
-      data = NaSimulationData.load( inputProvider );
-      simulation = new NAModelSimulation( simDirs, data, logger );
-
-      m_succeeded = simulation.runSimulation( monitor );
+      simulation = new NAModelSimulation( m_simDirs, m_data, logger );
+      return simulation.runSimulation( monitor );
     }
     catch( final SimulationException se )
     {
@@ -112,7 +94,7 @@ public class NaModelInnerCalcJob implements ISimulation
       final String msg = "Simulation cancelled by user";
       logger.log( Level.INFO, msg );
       monitor.setFinishInfo( IStatus.CANCEL, msg );
-      return;
+      return false;
     }
     catch( final Exception e )
     {
@@ -124,20 +106,33 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       naCalculationLogger.stopLogging();
 
-      if( data != null )
-        data.dispose();
-
       // FIXME: does not belong here! Move into build.xml or at least into client code
       if( simulation != null )
         simulation.backupResults();
     }
 
-    final File resultDir = simDirs.resultDir;
-    resultEater.addResult( NaModelConstants.OUT_ZML, resultDir );
   }
 
   public boolean isSucceeded( )
   {
     return m_succeeded;
+  }
+
+  /**
+   * @see org.kalypso.model.hydrology.internal.simulation.INaSimulation#getResultDir()
+   */
+  @Override
+  public File getResultDir( )
+  {
+    return m_simDirs.currentResultDir;
+  }
+
+  /**
+   * @see org.kalypso.model.hydrology.internal.simulation.INaSimulationRunnable#getOptimizeResult()
+   */
+  @Override
+  public File getOptimizeResult( )
+  {
+    return null;
   }
 }

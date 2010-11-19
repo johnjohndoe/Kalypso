@@ -62,14 +62,15 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.kalypso.convert.namodel.NaSimulationData;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
+import org.kalypso.model.hydrology.internal.NaOptimizeLoader;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.model.hydrology.internal.simulation.INaSimulationRunnable;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -79,12 +80,12 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizeJaxb;
+import org.kalypso.optimize.OptimizerRunner;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.optimize.transform.ParameterOptimizeContext;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.Parameter;
 import org.kalypso.optimizer.Pegel;
-import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
@@ -99,15 +100,13 @@ import org.w3c.dom.Node;
  * 
  * @author doemming
  */
-public class NAOptimizingJob implements IOptimizingJob
+public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 {
   private final File m_tmpDir;
 
   private SortedMap<Date, Double> m_measuredTS;
 
   private final AutoCalibration m_autoCalibration;
-
-  private final ISimulationDataProvider m_dataProvider;
 
   private final File m_bestOptimizedFile;
 
@@ -131,13 +130,16 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private final NaSimulationDirs m_simDirs;
 
-  private final NaSimulationData m_data;
+  private final INaSimulationData m_data;
 
-  public NAOptimizingJob( final File tmpDir, final ISimulationDataProvider dataProvider, final ISimulationMonitor monitor ) throws Exception
+  private final Logger m_logger;
+
+  public NAOptimizingJob( final File tmpDir, final INaSimulationData data, final URL autocalibrationLocation, final ISimulationMonitor monitor, final Logger logger ) throws Exception
   {
     m_tmpDir = tmpDir;
-    m_dataProvider = dataProvider;
+    m_data = data;
     m_monitor = monitor;
+    m_logger = logger;
 
     m_optimizeRunDir = new File( m_tmpDir, "optimizeRun" );
     m_bestOptimizeRunDir = new File( m_tmpDir, "bestRun" );
@@ -146,16 +148,13 @@ public class NAOptimizingJob implements IOptimizingJob
     m_simDirs = new NaSimulationDirs( m_optimizeRunDir );
 
     monitor.setMessage( "Loading simulation data..." );
-    m_data = NaSimulationData.load( dataProvider );
 
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
-    final NAControl metaControl = (NAControl) metaWorkspace.getRootFeature();
+    final NAControl metaControl = data.getMetaControl();
     final Date optimizationStartDate = metaControl.getOptimizationStart();
     final Date measuredEndDate = metaControl.getStartForecast();
 
     final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
-
-    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( FileUtils.toFile( (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID ) ) );
+    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( autocalibrationLocation );
 
     // correct in intervall autocalibration
     final Pegel pegel = m_autoCalibration.getPegel();
@@ -173,6 +172,18 @@ public class NAOptimizingJob implements IOptimizingJob
   public void dispose( )
   {
     m_data.dispose();
+  }
+
+  /**
+   * Run myself in the {@link OptimizerRunner}.
+   * 
+   * @see org.kalypso.simulation.core.ISimulationRunnable#run(org.kalypso.simulation.core.ISimulationMonitor)
+   */
+  @Override
+  public boolean run( final ISimulationMonitor monitor )
+  {
+    final OptimizerRunner runner = new OptimizerRunner( m_tmpDir, m_logger, this );
+    return runner.run( monitor );
   }
 
   /**
@@ -224,7 +235,7 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private boolean runAgain( ) throws Exception
   {
-    final NaSimulationData simulationData = m_simulation.getSimulationData();
+    final INaSimulationData simulationData = m_simulation.getSimulationData();
     final GMLWorkspace contextWorkspace = simulationData.getModelWorkspace();
     final URL context = contextWorkspace.getContext();
     final IFeatureProviderFactory factory = contextWorkspace.getFeatureProviderFactory();
@@ -347,7 +358,8 @@ public class NAOptimizingJob implements IOptimizingJob
         final NAOptimize naOptimize = m_data.getNaOptimize();
         final TimeseriesLinkType linkMeasuredTS = naOptimize.getPegelZRLink();
 
-        measuredURL = new URL( (URL) m_dataProvider.getInputForID( NaModelConstants.IN_CONTROL_ID ), linkMeasuredTS.getHref() );
+        final URL context = m_data.getModelWorkspace().getContext();
+        measuredURL = new URL( context, linkMeasuredTS.getHref() );
       }
       catch( final Exception e )
       {
@@ -408,7 +420,6 @@ public class NAOptimizingJob implements IOptimizingJob
   public void publishResults( final ISimulationResultEater resultEater ) throws SimulationException
   {
     resultEater.addResult( NaModelConstants.OUT_ZML, m_bestResultDir );
-    resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, m_bestOptimizedFile );
 
     System.out.println( "best was #" + m_bestNumber ); //$NON-NLS-1$
   }
@@ -426,6 +437,29 @@ public class NAOptimizingJob implements IOptimizingJob
   public boolean isSucceeded( )
   {
     return m_bestSucceeded;
+  }
+
+  /**
+   * @see org.kalypso.optimize.IOptimizingJob#getResultDir()
+   */
+  @Override
+  public File getResultDir( )
+  {
+    return m_bestResultDir;
+  }
+
+  public File getBestOptimizeFile( )
+  {
+    return m_bestOptimizedFile;
+  }
+
+  /**
+   * @see org.kalypso.model.hydrology.internal.simulation.INaSimulationRunnable#getOptimizeResult()
+   */
+  @Override
+  public File getOptimizeResult( )
+  {
+    return m_bestOptimizedFile;
   }
 
 }

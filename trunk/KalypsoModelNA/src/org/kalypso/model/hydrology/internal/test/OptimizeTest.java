@@ -58,11 +58,11 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.internal.simulation.NaModelCalcJob;
-import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizeMonitor;
-import org.kalypso.optimize.OptimizerCalJob;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationDataPath;
@@ -70,7 +70,6 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.TestSimulationMonitor;
 import org.kalypso.simulation.core.internal.queued.ModelspecData;
 import org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider;
-import org.kalypso.simulation.core.util.DefaultSimulationResultEater;
 
 /**
  * Test the optimization run of the na model.
@@ -96,8 +95,8 @@ public class OptimizeTest
     final File expectedResultsDir = new File( dataDir, "Ergebnisse/Aktuell_Soll" );
 
     final ISimulationDataProvider dataProvider = prepareData( dataDir );
-    final DefaultSimulationResultEater results = doOptimizeRun( simulationDir, dataProvider );
-    checkResults( results, expectedResultsDir );
+    final NAOptimizingJob optimizeJob = doOptimizeRun( simulationDir, dataProvider );
+    checkResults( optimizeJob, expectedResultsDir );
   }
 
   private ISimulationDataProvider prepareData( final File dataDir ) throws SimulationException, IOException
@@ -135,7 +134,7 @@ public class OptimizeTest
     return pathes.toArray( new SimulationDataPath[pathes.size()] );
   }
 
-  private DefaultSimulationResultEater doOptimizeRun( final File tmpDir, final ISimulationDataProvider dataProvider ) throws Exception
+  private NAOptimizingJob doOptimizeRun( final File tmpDir, final ISimulationDataProvider dataProvider ) throws Exception
   {
     final File monitorFile = new File( tmpDir, "monitor.out" );
     final PrintStream monitorOut = new PrintStream( monitorFile );
@@ -146,19 +145,19 @@ public class OptimizeTest
       final File logFile = new File( tmpDir, "optimizeTest.log" );
       final Logger logger = createLogger( logFile );
 
-      final DefaultSimulationResultEater resultEater = new DefaultSimulationResultEater();
+      final INaSimulationData data = NaSimulationDataFactory.load( dataProvider );
 
-      final IOptimizingJob optimizeJob = new NAOptimizingJob( tmpDir, dataProvider, new OptimizeMonitor( monitor ) );
-      final OptimizerCalJob optimizeSimulation = new OptimizerCalJob( logger, optimizeJob );
-
-      optimizeSimulation.run( tmpDir, dataProvider, resultEater, monitor );
+      final URL autoCalibrationLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID );
+      final NAOptimizingJob optimizeJob = new NAOptimizingJob( tmpDir, data, autoCalibrationLocation, new OptimizeMonitor( monitor ), logger );
+      final boolean succeeded = optimizeJob.run( monitor );
 
       disconnectLogger( logger );
+      data.dispose();
 
-      if( !optimizeSimulation.isSucceeded() )
+      if( !succeeded )
         Assert.fail( "Optimization failed" );
 
-      return resultEater;
+      return optimizeJob;
     }
     finally
     {
@@ -166,10 +165,10 @@ public class OptimizeTest
     }
   }
 
-  private void checkResults( final DefaultSimulationResultEater results, final File expectedResultsDir )
+  private void checkResults( final NAOptimizingJob optimizeJob, final File expectedResultsDir )
   {
-    final File resultsDir = (File) results.getResult( "OUT_ZML" );
-    final File optimizeFile = (File) results.getResult( "OUT_OPTIMIZEFILE" );
+    final File resultsDir = optimizeJob.getResultDir();
+    final File optimizeFile = optimizeJob.getOptimizeResult();
     final File expectedOptimizeFile = new File( expectedResultsDir.getParent(), "optimizedBean.xml" );
 
     final File actualResultsDir = new File( resultsDir, "Aktuell" );

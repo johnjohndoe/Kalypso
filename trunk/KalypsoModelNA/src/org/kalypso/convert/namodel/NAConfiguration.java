@@ -53,6 +53,7 @@ import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
@@ -117,7 +118,7 @@ public class NAConfiguration
 
   private final File m_hydrotopMappingFile;
 
-  private NaSimulationData m_simulationData = null;
+  private INaSimulationData m_simulationData = null;
 
   public NAConfiguration( final File asciiBaseDir )
   {
@@ -162,7 +163,7 @@ public class NAConfiguration
     m_swaleAndTrenchFile = new File( asciiBaseDir, "inp.dat/we_nat.mr" ); //$NON-NLS-1$
   }
 
-  public void setSimulationData( final NaSimulationData simulationData )
+  public void setSimulationData( final INaSimulationData simulationData )
   {
     m_simulationData = simulationData;
   }

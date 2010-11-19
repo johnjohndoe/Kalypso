@@ -56,8 +56,9 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.model.hydrology.INaSimulationData;
+import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -82,7 +83,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private final File m_sourceDir;
 
-  private NaSimulationData m_data;
+  private INaSimulationData m_data;
 
   private final String m_chosenExe;
 
@@ -126,7 +127,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final URL naControlLocation = naControlFile.toURI().toURL();
     final URL naLzsimLocation = naLzsimFile.toURI().toURL();
 
-    m_data = new NaSimulationData( naModelLocation, null, naControlLocation, null, null, null, null, naLzsimLocation, null );
+    m_data = NaSimulationDataFactory.load( naModelLocation, null, naControlLocation, null, null, null, null, naLzsimLocation, null );
   }
 
   private void copyData( ) throws Exception

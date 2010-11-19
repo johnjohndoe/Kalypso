@@ -38,45 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal;
+package org.kalypso.model.hydrology.internal.simulation;
 
 import java.io.File;
 
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
- * Helper class that holds all the various directories used by the NA simulation.
+ * REMARK: only for backwards compatibility of some former {@link ISimulation}'s. Should not be used otherwise.
  * 
  * @author Gernot Belger
  */
-public class NaSimulationDirs
+public interface INaSimulationRunnable
 {
-  public final File simulationDir;
+  File getResultDir( );
 
-  public final File outputDir;
+  // FIXME: change interface to ICoreRunnable
+  boolean run( ISimulationMonitor monitor ) throws SimulationException;
 
-  public final File asciiDir;
-
-  public final File resultDir;
-
-  public final File currentResultDir;
-
-  public final NaResultDirs currentResultDirs;
-
-  public NaAsciiDirs asciiDirs;
-
-  public NaSimulationDirs( final File simDir )
-  {
-    simulationDir = simDir;
-
-    asciiDir = new File( simulationDir, NaModelConstants.ASCII_DIR_NAME );
-    asciiDirs = new NaAsciiDirs( asciiDir );
-
-    outputDir = new File( simulationDir, NaModelConstants.OUTPUT_DIR_NAME );
-
-    resultDir = new File( outputDir, NaModelConstants.RESULT_DIR_NAME );
-
-    currentResultDir = new File( resultDir, "Aktuell" ); //$NON-NLS-1$
-    currentResultDirs = new NaResultDirs( currentResultDir );
-  }
+  File getOptimizeResult( );
 }

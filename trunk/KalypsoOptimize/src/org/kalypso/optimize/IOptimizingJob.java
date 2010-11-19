@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.SortedMap;
@@ -101,4 +102,6 @@ public interface IOptimizingJob
   void publishResults( ISimulationResultEater resultEater ) throws SimulationException;
 
   boolean isSucceeded( );
+
+  File getResultDir( );
 }

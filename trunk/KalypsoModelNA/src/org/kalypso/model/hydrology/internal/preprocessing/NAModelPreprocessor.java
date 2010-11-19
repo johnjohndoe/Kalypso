@@ -48,9 +48,8 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaSimulationData;
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.convert.namodel.optimize.CalibrationConfig;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.NAModellControl;
@@ -83,7 +82,7 @@ public class NAModelPreprocessor
 
   private final IDManager m_idManager;
 
-  private final NaSimulationData m_simulationData;
+  private final INaSimulationData m_simulationData;
 
   private final NAConfiguration m_conf;
 
@@ -95,7 +94,7 @@ public class NAModelPreprocessor
 
   private TimeseriesFileManager m_tsFileManager;
 
-  public NAModelPreprocessor( final NAConfiguration conf, final NaAsciiDirs asciiDirs, final IDManager idManager, final NaSimulationData simulationData, final Logger logger )
+  public NAModelPreprocessor( final NAConfiguration conf, final NaAsciiDirs asciiDirs, final IDManager idManager, final INaSimulationData simulationData, final Logger logger )
   {
     m_conf = conf;
     m_asciiDirs = asciiDirs;

@@ -42,19 +42,15 @@ package org.kalypso.model.hydrology.internal.simulation;
 
 import java.io.File;
 import java.net.URL;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
-import org.kalypso.convert.namodel.optimize.NaOptimizeLoader;
+import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizeMonitor;
-import org.kalypso.optimize.OptimizerCalJob;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -76,19 +72,17 @@ public class NaModelCalcJob implements ISimulation
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
+    INaSimulationData data = null;
+    INaSimulationRunnable runnable = null;
+
     try
     {
-      // FIXME: replace with other logging framework, in preference eclipse's
-      final Logger logger = Logger.getLogger( "dooooooof"  );
-      FileHandler handler = new FileHandler("C:\\tempwin\\optimize2.log" );
-      handler.setLevel( Level.ALL );
-      logger.addHandler( handler );
-      
-      final ISimulation calcJob = createCalcJob( dataProvider, tmpdir, monitor, logger );
-      if( calcJob != null )
-        calcJob.run( tmpdir, dataProvider, resultEater, monitor );
-      
-      handler.close();
+      monitor.setMessage( "Loading simulation data" );
+      data = NaSimulationDataFactory.load( dataProvider );
+
+      runnable = createRunnable( data, dataProvider, tmpdir, monitor );
+      /* final boolean success = */runnable.run( monitor );
+      // FIXME: what to do of not succeeded?
     }
     catch( final SimulationException e )
     {
@@ -99,36 +93,48 @@ public class NaModelCalcJob implements ISimulation
       final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelCalcJob.0", e.getLocalizedMessage() ); //$NON-NLS-1$
       throw new SimulationException( msg, e );
     }
+    finally
+    {
+      publishResults( resultEater, runnable );
+
+      if( data != null )
+        data.dispose();
+    }
   }
 
-  private ISimulation createCalcJob( final ISimulationDataProvider dataProvider, final File tmpdir, final ISimulationMonitor monitor, Logger logger ) throws Exception
+  private void publishResults( final ISimulationResultEater resultEater, final INaSimulationRunnable runnable ) throws SimulationException
   {
-    // FIXME: check: is the analyse job actually still used?
-    // why not declare a seaprate top-level job?
-    if( dataProvider.hasID( NaModelConstants.IN_ANALYSE_MODELL_XSD_ID ) )
-      return new NaModelParameterAnalyseSimulation( logger );
+    if( runnable == null )
+      return;
 
-    final boolean doOptimize = isOptimize( dataProvider );
+    final File resultDir = runnable.getResultDir();
+    final File optimizeResult = runnable.getOptimizeResult();
+    resultEater.addResult( NaModelConstants.OUT_ZML, resultDir );
+    if( optimizeResult != null )
+      resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, optimizeResult );
+  }
+
+  private INaSimulationRunnable createRunnable( final INaSimulationData data, final ISimulationDataProvider dataProvider, final File tmpdir, final ISimulationMonitor monitor ) throws Exception
+  {
+    final boolean doOptimize = isOptimize( data );
     if( doOptimize )
     {
-      final IOptimizingJob optimizeJob = new NAOptimizingJob( tmpdir, dataProvider, new OptimizeMonitor( monitor ) );
-      return new OptimizerCalJob( logger, optimizeJob );
+      final URL autoCalibrationLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID );
+      // FIXME: replace with other logging framework, in preference eclipse's
+      final Logger logger = Logger.getAnonymousLogger();
+      return new NAOptimizingJob( tmpdir, data, autoCalibrationLocation, new OptimizeMonitor( monitor ), logger );
     }
 
-    return new NaModelInnerCalcJob();
+    return new NaModelInnerCalcJob( data, tmpdir );
   }
 
-  private boolean isOptimize( final ISimulationDataProvider dataProvider ) throws SimulationException, Exception
+  private boolean isOptimize( final INaSimulationData data )
   {
-    if( !dataProvider.hasID( NaModelConstants.IN_OPTIMIZE_ID ) )
+    final NAOptimize optimize = data.getNaOptimize();
+    if( optimize == null )
       return false;
 
-    final NaOptimizeLoader loader = new NaOptimizeLoader( dataProvider );
-    loader.load( null, null );
-    final NAOptimize optimize = loader.getNaOptimize();
-    final boolean doOptimize = optimize.doOptimize();
-    optimize.getWorkspace().dispose();
-    return doOptimize;
+    return optimize.doOptimize();
   }
 
   /**

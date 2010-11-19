@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.optimize;
+package org.kalypso.model.hydrology.internal;
 
 import java.net.URL;
 
@@ -60,7 +60,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * @author thuel2
+ * @author Gernot Belger
  */
 public class NaOptimizeLoader
 {
