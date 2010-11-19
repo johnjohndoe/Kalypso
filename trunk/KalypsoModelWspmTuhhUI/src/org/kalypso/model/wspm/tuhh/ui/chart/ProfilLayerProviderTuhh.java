@@ -86,6 +86,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
+import de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
@@ -111,6 +112,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   protected final IAxis m_targetAxisLeft = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_LEFT", POSITION.LEFT, Number.class );//$NON-NLS-1$
 
   protected final IAxis m_targetAxisRight = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_RIGHT", POSITION.RIGHT, Number.class );//$NON-NLS-1$
+
+  protected final IAxis m_screenAxisVertical = new ScreenCoordinateAxis( "ProfilLayerProviderTuhh_AXIS_RIGHT", POSITION.RIGHT );//$NON-NLS-1$
 
   private final static String m_AxisLabel = "[%s]"; //$NON-NLS-1$
 
@@ -248,6 +251,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( layerID == null || profil == null )
       return null;
     final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
+    final CoordinateMapper cmScreen = new CoordinateMapper( m_domainAxis, new ScreenCoordinateAxis( "kufku", POSITION.LEFT ) );
 
     if( layerID.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
     {
@@ -304,7 +308,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       final RiverChannelLayer tfLayer = new RiverChannelLayer( profil, m_lsp, 15, false );
       final PointMarkerLayer bvLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_lsp, 25, false );
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { dbLayer, tfLayer, bvLayer };
-      return new DeviderTheme( profil, subLayers, cmLeft );
+      return new DeviderTheme( profil, subLayers, cmScreen );
     }
 
     return null;
@@ -450,7 +454,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
     final ISinuositaetProfileObject[] sinObj = profile.getProfileObjects( ISinuositaetProfileObject.class );
     if( sinObj.length < 1 && !(existingLayers.contains( IWspmTuhhConstants.LAYER_SINUOSITAET )) )
-      addableLayer.add( new LayerDescriptor( Messages.getString("ProfilLayerProviderTuhh.3"), IWspmTuhhConstants.LAYER_SINUOSITAET ) ); //$NON-NLS-1$
+      addableLayer.add( new LayerDescriptor( Messages.getString( "ProfilLayerProviderTuhh.3" ), IWspmTuhhConstants.LAYER_SINUOSITAET ) ); //$NON-NLS-1$
 
     return addableLayer.toArray( new LayerDescriptor[addableLayer.size()] );
   }
@@ -483,13 +487,16 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
     m_targetAxisRight.setPreferredAdjustment( aaRight );
     m_targetAxisRight.setRenderer( aRendLR );
+
+    m_screenAxisVertical.setPreferredAdjustment( new AxisAdjustment( 0, 1, 0 ) );
     mapperRegistry.addMapper( m_domainAxis );
     mapperRegistry.addMapper( m_targetAxisLeft );
     mapperRegistry.addMapper( m_targetAxisRight );
+    mapperRegistry.addMapper( m_screenAxisVertical );
 
     // setAxisLabel()
 
-    return new IAxis[] { m_domainAxis, m_targetAxisLeft, m_targetAxisRight };
+    return new IAxis[] { m_domainAxis, m_targetAxisLeft, m_targetAxisRight, m_screenAxisVertical };
   }
 
   /**
