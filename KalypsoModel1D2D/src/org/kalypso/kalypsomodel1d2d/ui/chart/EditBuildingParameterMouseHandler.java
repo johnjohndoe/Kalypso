@@ -46,26 +46,25 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author Gernot Belger
  */
 public class EditBuildingParameterMouseHandler implements IChartDragHandler
 {
-  private final ChartComposite m_chartComposite;
+  private final IChartComposite m_chartComposite;
 
   private EditInfo m_info;
 
-  public EditBuildingParameterMouseHandler( final ChartComposite chartComposite )
+  public EditBuildingParameterMouseHandler( final IChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
   }

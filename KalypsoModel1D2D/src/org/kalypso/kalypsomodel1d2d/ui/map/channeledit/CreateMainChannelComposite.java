@@ -75,7 +75,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.chart.ui.editor.commandhandler.ExportHandler;
 import org.kalypso.chart.ui.editor.commandhandler.MaximizeHandler;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragZoomInHandler;
 import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
 import org.kalypso.chart.ui.editor.mousehandler.DragPanHandler;
 import org.kalypso.chart.ui.editor.mousehandler.DragZoomInHandler;
@@ -105,7 +104,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author Thomas Jung
@@ -937,7 +936,7 @@ public class CreateMainChannelComposite extends Composite
       final SegmentData currentSegment = m_data.getSelectedSegment();
       final ProfilChartView profilChartView = new ProfilChartView();
       final IProfilLayerProvider layerProvider = new ProfilOverlayLayerProvider();
-      profilChartView.setProfil( profil,null );
+      profilChartView.setProfil( profil, null );
       profilChartView.setLayerProvider( layerProvider );
 
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
@@ -975,9 +974,15 @@ public class CreateMainChannelComposite extends Composite
       if( zOrder < last )
         mngr.moveLayerToPosition( overlayLayer, last );
 
-      final ChartComposite chartComposite = profilChartView.getChartComposite();
+      final IChartComposite chartComposite = profilChartView.getChartComposite();
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT, new DragZoomOutHandler( chartComposite ), null ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN, new DragZoomInHandler( chartComposite ), new AxisDragZoomInHandler( chartComposite ) ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN, new DragZoomInHandler( chartComposite ), null/*
+                                                                                                                                                       * new
+                                                                                                                                                       * AxisDragZoomInHandler
+                                                                                                                                                       * (
+                                                                                                                                                       * chartComposite
+                                                                                                                                                       * )
+                                                                                                                                                       */) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN, new DragPanHandler( chartComposite ), null ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EDIT, new DragEditHandler( chartComposite ), null ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE, new MaximizeHandler() ) );

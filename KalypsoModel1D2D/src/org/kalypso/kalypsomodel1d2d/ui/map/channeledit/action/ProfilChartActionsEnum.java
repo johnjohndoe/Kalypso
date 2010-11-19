@@ -174,14 +174,14 @@ public enum ProfilChartActionsEnum
         final EvaluationContext context = new EvaluationContext( null, this );
         context.addVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME, profilView );
         if( profilView != null && profilView.getChart() != null )
-          context.addVariable( ISources.ACTIVE_SHELL_NAME, profilView.getChart().getDisplay().getActiveShell() );
+          context.addVariable( ISources.ACTIVE_SHELL_NAME, profilView.getChart().getPlot().getDisplay().getActiveShell() );
         final ExecutionEvent event = new ExecutionEvent( null, Collections.EMPTY_MAP, null, context );
 
         try
         {
           chartHandler.execute( event );
         }
-        catch( ExecutionException e )
+        catch( final ExecutionException e )
         {
           throw new RuntimeException( e );
         }
