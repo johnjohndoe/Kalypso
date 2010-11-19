@@ -51,7 +51,6 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -78,7 +77,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.optimize.IOptimizingJob;
-import org.kalypso.optimize.OptimizeJaxb;
 import org.kalypso.optimize.OptimizerRunner;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.optimize.transform.ParameterOptimizeContext;
@@ -104,8 +102,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
   private final File m_tmpDir;
 
   private SortedMap<Date, Double> m_measuredTS;
-
-  private final AutoCalibration m_autoCalibration;
 
   private final File m_bestOptimizedFile;
 
@@ -133,7 +129,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
   private final Logger m_logger;
 
-  public NAOptimizingJob( final File tmpDir, final INaSimulationData data, final URL autocalibrationLocation, final ISimulationMonitor monitor, final Logger logger ) throws Exception
+  public NAOptimizingJob( final File tmpDir, final INaSimulationData data, final ISimulationMonitor monitor, final Logger logger ) throws Exception
   {
     m_tmpDir = tmpDir;
     m_data = data;
@@ -152,11 +148,10 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     final Date optimizationStartDate = metaControl.getOptimizationStart();
     final Date measuredEndDate = metaControl.getStartForecast();
 
-    final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
-    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( autocalibrationLocation );
-
+    final NaOptimizeLoader optimizeData = data.getOptimizeData();
+    final AutoCalibration autoCalibration = optimizeData.getAutoCalibration();
     // correct in intervall autocalibration
-    final Pegel pegel = m_autoCalibration.getPegel();
+    final Pegel pegel = autoCalibration.getPegel();
 
     final Calendar calendarStart = Calendar.getInstance();
     calendarStart.setTime( optimizationStartDate );
@@ -239,7 +234,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     final URL context = contextWorkspace.getContext();
     final IFeatureProviderFactory factory = contextWorkspace.getFeatureProviderFactory();
 
-    final Node naOptimizeDom = m_data.getNaOptimizeDom();
+    final Node naOptimizeDom = m_data.getOptimizeData().getOptimizeDom();
     final NAOptimize optimize = NaOptimizeLoader.toOptimizeConfig( naOptimizeDom, context, factory );
     return m_simulation.rerunForOptimization( optimize, m_monitor );
   }
@@ -310,7 +305,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
     try
     {
-      final Node naOptimizeDom = m_data.getNaOptimizeDom();
+      final Node naOptimizeDom = m_data.getOptimizeData().getOptimizeDom();
       OptimizeModelUtils.transformModel( naOptimizeDom, values, calcContexts );
     }
     catch( final TransformerException e )
@@ -329,7 +324,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
       t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
       t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
 
-      final Node naOptimizeDom = m_data.getNaOptimizeDom();
+      final Node naOptimizeDom = m_data.getOptimizeData().getOptimizeDom();
       final Document ownerDocument = naOptimizeDom instanceof Document ? (Document) naOptimizeDom : naOptimizeDom.getOwnerDocument();
       final String encoding = ownerDocument.getInputEncoding();
       t.setOutputProperty( OutputKeys.ENCODING, encoding );
@@ -354,7 +349,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
       URL measuredURL = null;
       try
       {
-        final NAOptimize naOptimize = m_data.getNaOptimize();
+        final NAOptimize naOptimize = m_data.getOptimizeData().getNaOptimize();
         final TimeseriesLinkType linkMeasuredTS = naOptimize.getPegelZRLink();
 
         final URL context = m_data.getModelWorkspace().getContext();
@@ -392,7 +387,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     final SortedMap<Date, Double> result = new TreeMap<Date, Double>();
     final File optimizeResultDir = new File( m_optimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
 
-    final NAOptimize naOptimize = m_data.getNaOptimize();
+    final NAOptimize naOptimize = m_data.getOptimizeData().getNaOptimize();
     final TimeseriesLinkType linkCalcedTS = naOptimize.getResultLink();
 
     final String calcHref = linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -429,7 +424,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
   @Override
   public AutoCalibration getOptimizeConfiguration( )
   {
-    return m_autoCalibration;
+    return m_data.getOptimizeData().getAutoCalibration();
   }
 
   @Override

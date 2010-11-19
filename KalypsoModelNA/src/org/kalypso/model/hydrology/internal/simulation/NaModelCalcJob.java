@@ -118,10 +118,9 @@ public class NaModelCalcJob implements ISimulation
     final boolean doOptimize = isOptimize( data );
     if( doOptimize )
     {
-      final URL autoCalibrationLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID );
       // FIXME: replace with other logging framework, in preference eclipse's
       final Logger logger = Logger.getAnonymousLogger();
-      return new NAOptimizingJob( tmpdir, data, autoCalibrationLocation, new OptimizeMonitor( monitor ), logger );
+      return new NAOptimizingJob( tmpdir, data, new OptimizeMonitor( monitor ), logger );
     }
 
     return new NaModelInnerCalcJob( data, tmpdir );
@@ -129,7 +128,7 @@ public class NaModelCalcJob implements ISimulation
 
   private boolean isOptimize( final INaSimulationData data )
   {
-    final NAOptimize optimize = data.getNaOptimize();
+    final NAOptimize optimize = data.getOptimizeData().getNaOptimize();
     if( optimize == null )
       return false;
 

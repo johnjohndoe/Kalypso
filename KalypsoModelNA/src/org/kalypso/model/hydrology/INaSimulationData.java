@@ -43,11 +43,10 @@ package org.kalypso.model.hydrology;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.NAModellControl;
-import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.internal.NaOptimizeLoader;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.w3c.dom.Node;
 
 /**
  * @author Gernot Belger
@@ -55,29 +54,25 @@ import org.w3c.dom.Node;
  */
 public interface INaSimulationData
 {
+  void dispose( );
 
-  public abstract void dispose( );
+  NAModellControl getNaControl( );
 
-  public abstract NAModellControl getNaControl( );
+  GMLWorkspace getModelWorkspace( );
 
-  public abstract GMLWorkspace getModelWorkspace( );
+  NaModell getNaModel( );
 
-  public abstract NaModell getNaModel( );
+  NAControl getMetaControl( );
 
-  public abstract NAControl getMetaControl( );
+  GMLWorkspace getParameterWorkspace( );
 
-  public abstract GMLWorkspace getParameterWorkspace( );
+  GMLWorkspace getSudsWorkspace( );
 
-  public abstract GMLWorkspace getSudsWorkspace( );
+  GMLWorkspace getSynthNWorkspace( );
 
-  public abstract GMLWorkspace getSynthNWorkspace( );
+  NAHydrotop getHydrotopCollection( );
 
-  public abstract NAHydrotop getHydrotopCollection( );
+  InitialValues getInitialValues( );
 
-  public abstract InitialValues getInitialValues( );
-
-  public abstract NAOptimize getNaOptimize( );
-
-  public abstract Node getNaOptimizeDom( );
-
+  NaOptimizeLoader getOptimizeData( );
 }

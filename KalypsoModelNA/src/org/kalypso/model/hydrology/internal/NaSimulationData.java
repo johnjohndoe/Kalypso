@@ -49,7 +49,6 @@ import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.NAModellControl;
-import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.serialize.FeatureProviderWithCacheFactory;
@@ -59,7 +58,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.w3c.dom.Node;
 
 /**
  * @author Gernot Belger
@@ -281,22 +279,12 @@ public class NaSimulationData implements INaSimulationData
     return (InitialValues) m_lzsimWorkspace.getRootFeature();
   }
 
+  /**
+   * @see org.kalypso.model.hydrology.INaSimulationData#getOptimizeData()
+   */
   @Override
-  public NAOptimize getNaOptimize( )
+  public NaOptimizeLoader getOptimizeData( )
   {
-    if( m_optimizeLoader == null )
-      return null;
-
-    return m_optimizeLoader.getNaOptimize();
+    return m_optimizeLoader;
   }
-
-  @Override
-  public Node getNaOptimizeDom( )
-  {
-    if( m_optimizeLoader == null )
-      return null;
-
-    return m_optimizeLoader.getOptimizeDom();
-  }
-
 }
