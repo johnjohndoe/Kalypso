@@ -147,8 +147,7 @@ public class OptimizeTest
 
       final INaSimulationData data = NaSimulationDataFactory.load( dataProvider );
 
-      final URL autoCalibrationLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID );
-      final NAOptimizingJob optimizeJob = new NAOptimizingJob( tmpDir, data, autoCalibrationLocation, new OptimizeMonitor( monitor ), logger );
+      final NAOptimizingJob optimizeJob = new NAOptimizingJob( tmpDir, data, new OptimizeMonitor( monitor ), logger );
       final boolean succeeded = optimizeJob.run( monitor );
 
       disconnectLogger( logger );

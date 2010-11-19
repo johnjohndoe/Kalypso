@@ -42,6 +42,8 @@ package org.kalypso.model.hydrology.internal;
 
 import java.net.URL;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.TransformerException;
 
 import org.apache.xpath.XPathAPI;
@@ -50,6 +52,8 @@ import org.kalypso.gml.GMLException;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.optimize.OptimizeJaxb;
+import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -72,22 +76,34 @@ public class NaOptimizeLoader
 
   private NAOptimize m_naOptimize;
 
+  private AutoCalibration m_autoCalibration;
+
   public NaOptimizeLoader( final URL optimizeDataLocation, final String optimizePath )
   {
     m_optimizeDataLocation = optimizeDataLocation;
     m_optimizePath = optimizePath;
   }
 
-  public NaOptimizeLoader( final ISimulationDataProvider dataProvider ) throws SimulationException
+  public NaOptimizeLoader( final ISimulationDataProvider dataProvider ) throws SimulationException, JAXBException
   {
-    if( !dataProvider.hasID( NaModelConstants.IN_OPTIMIZE_ID ) )
-    {
-      final String message = String.format( "Input '%s' must be specified for optimization.", NaModelConstants.IN_OPTIMIZE_ID );
-      throw new SimulationException( message );
-    }
+    checkInput( dataProvider, NaModelConstants.IN_OPTIMIZE_ID );
+
+    final URL autocalibrationLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID );
+
+    final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
+    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( autocalibrationLocation );
 
     m_optimizeDataLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_ID );
     m_optimizePath = getOptimizePath( dataProvider );
+  }
+
+  private void checkInput( final ISimulationDataProvider dataProvider, final String id ) throws SimulationException
+  {
+    if( !dataProvider.hasID( id ) )
+    {
+      final String message = String.format( "Input '%s' must be specified for optimization.", id );
+      throw new SimulationException( message );
+    }
   }
 
   public void load( final GMLWorkspace contextWorkspace, final IFeatureProviderFactory factory ) throws Exception
@@ -141,5 +157,10 @@ public class NaOptimizeLoader
   public String getOptimizePath( )
   {
     return m_optimizePath;
+  }
+
+  public AutoCalibration getAutoCalibration( )
+  {
+    return m_autoCalibration;
   }
 }

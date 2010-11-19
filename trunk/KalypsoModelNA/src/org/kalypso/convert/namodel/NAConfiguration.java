@@ -342,6 +342,6 @@ public class NAConfiguration
 
   public NAOptimize getOptimizeConfig( )
   {
-    return m_simulationData.getNaOptimize();
+    return m_simulationData.getOptimizeData().getNaOptimize();
   }
 }

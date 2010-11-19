@@ -187,7 +187,7 @@ public class NAModelSimulation
 
     final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
     final NAModellControl naControl = simulationData.getNaControl();
-    final NAOptimize naOptimize = simulationData.getNaOptimize();
+    final NAOptimize naOptimize = simulationData.getOptimizeData().getNaOptimize();
 
     final HydroHash hydroHash = m_preprocessor.getHydroHash();
 
