@@ -81,6 +81,8 @@ public class NAControl extends Feature_Impl
 
   private static final QName PROP_RETURN_PERIOD = new QName( NS_NAMETA, "returnPeriod" ); //$NON-NLS-1$
 
+  private static final QName PROP_OPTIMIZATION_START = new QName( NS_NAMETA, "startOptimization" ); //$NON-NLS-1$;
+
   public NAControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -147,7 +149,7 @@ public class NAControl extends Feature_Impl
     return (Double) getProperty( PROP_XWAHL2 );
   }
 
-  public Double getDurationHours()
+  public Double getDurationHours( )
   {
     return getDurationMinutes() / 60d;
   }
@@ -170,5 +172,13 @@ public class NAControl extends Feature_Impl
   public Integer getReturnPeriod( )
   {
     return getProperty( PROP_RETURN_PERIOD, Integer.class );
+  }
+
+  public Date getOptimizationStart( )
+  {
+    final XMLGregorianCalendar optimizationStartProperty = getProperty( PROP_OPTIMIZATION_START, XMLGregorianCalendar.class );
+    if( optimizationStartProperty != null )
+      return DateUtilities.toDate( optimizationStartProperty );
+    return getSimulationStart();
   }
 }

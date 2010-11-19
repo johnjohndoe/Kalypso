@@ -150,7 +150,7 @@ public class NAOptimizingJob implements IOptimizingJob
 
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
     final NAControl metaControl = (NAControl) metaWorkspace.getRootFeature();
-    final Date measuredStartDate = metaControl.getSimulationStart();
+    final Date optimizationStartDate = metaControl.getOptimizationStart();
     final Date measuredEndDate = metaControl.getStartForecast();
 
     final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
@@ -161,7 +161,7 @@ public class NAOptimizingJob implements IOptimizingJob
     final Pegel pegel = m_autoCalibration.getPegel();
 
     final Calendar calendarStart = Calendar.getInstance();
-    calendarStart.setTime( measuredStartDate );
+    calendarStart.setTime( optimizationStartDate );
     pegel.setStartDate( calendarStart );
 
     final Calendar calendarEnd = Calendar.getInstance();
