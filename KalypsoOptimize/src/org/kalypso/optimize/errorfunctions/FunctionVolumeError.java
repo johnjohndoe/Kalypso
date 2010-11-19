@@ -62,13 +62,13 @@ public class FunctionVolumeError extends IErrorFunktion
 
     final Date startCompare = getStartCompare();
     final Date endCompare = getEndCompare();
-    
+
     final SortedMap<Date, Double> measured = getMeasuredTS();
 
     for( final Entry<Date, Double> entry : measured.entrySet() )
     {
       final Date dateKey = entry.getKey();
-      if( !dateKey.before( startCompare ) && !dateKey.after(  endCompare ) )
+      if( !dateKey.before( startCompare ) && !dateKey.after( endCompare ) )
       {
         try
         {
@@ -79,7 +79,7 @@ public class FunctionVolumeError extends IErrorFunktion
           if( doubleCalced != null )
           {
             final double valueCalced = doubleCalced.doubleValue();
-            error += Math.abs(  valueMeasured - valueCalced );
+            error += valueMeasured - valueCalced;
             c++;
           }
         }
@@ -89,6 +89,6 @@ public class FunctionVolumeError extends IErrorFunktion
         }
       }
     }
-    return ( error / c ) + getNormalizeOffset();
+    return (error / c) + getNormalizeOffset();
   }
 }
