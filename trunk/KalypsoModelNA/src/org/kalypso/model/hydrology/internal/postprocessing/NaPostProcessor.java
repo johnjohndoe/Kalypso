@@ -44,22 +44,16 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.logging.Logger;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
-import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaResultDirs;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
@@ -80,8 +74,6 @@ public class NaPostProcessor
 
   private static final String FILENAME_OUTPUT_RES = "output.res"; //$NON-NLS-1$
 
-  private final NAConfiguration m_conf;
-
   private final Logger m_logger;
 
   private final GMLWorkspace m_modelWorkspace;
@@ -90,18 +82,16 @@ public class NaPostProcessor
 
   private final NAModellControl m_naControl;
 
-  // FIXME: move postprocessing regarding optimize elsewhere (into hwv client)
-  private final NAOptimize m_naOptimize;
-
   private final HydroHash m_hydroHash;
 
-  public NaPostProcessor( final NAConfiguration conf, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final NAOptimize optimize, final HydroHash hydroHash )
+  private final IDManager m_idManager;
+
+  public NaPostProcessor( final IDManager idManager, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final HydroHash hydroHash )
   {
-    m_conf = conf;
+    m_idManager = idManager;
     m_logger = logger;
     m_modelWorkspace = modelWorkspace;
     m_naControl = naControl;
-    m_naOptimize = optimize;
     m_hydroHash = hydroHash;
   }
 
@@ -121,35 +111,11 @@ public class NaPostProcessor
     final NAStatistics statistics = loadTSResults( asciiDirs.outWeNatDir, simDirs.currentResultDir );
     statistics.writeStatistics( simDirs.currentResultDir, currentResultDirs.reportDir );
 
-    // FIXME: remove this from here
-    loadTesultTSPredictionIntervals( simDirs.outputDir );
-
     copyStatisticResultFile( asciiDirs, currentResultDirs );
 
     final Date[] initialDates = m_naControl.getInitialDatesToBeWritten();
     final LzsimReader lzsimManager = new LzsimReader( initialDates, currentResultDirs.anfangswertDir );
-    lzsimManager.readInitialValues( m_conf.getIdManager(), m_hydroHash, asciiDirs.lzsimDir, m_logger );
-  }
-
-  private void loadTesultTSPredictionIntervals( final File resultDir )
-  {
-    try
-    {
-      if( m_naOptimize == null )
-        return;
-
-      final NAControl metaControl = m_conf.getMetaControl();
-      final NaUmhuellendeOperation naUmhuellendeOperation = new NaUmhuellendeOperation( m_naOptimize, metaControl, resultDir );
-      naUmhuellendeOperation.execute( new NullProgressMonitor() );
-    }
-    catch( final InvocationTargetException e )
-    {
-      m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.83", e.getTargetException() ) );
-    }
-    catch( final CoreException e )
-    {
-      m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.83", e ) );
-    }
+    lzsimManager.readInitialValues( m_idManager, m_hydroHash, asciiDirs.lzsimDir, m_logger );
   }
 
   private void copyNaExeLogs( final NaAsciiDirs asciiDirs, final NaResultDirs currentResultDirs )
@@ -181,8 +147,7 @@ public class NaPostProcessor
    */
   private void translateErrorGml( final NaAsciiDirs asciiDirs, final NaResultDirs resultDirs )
   {
-    final IDManager idManager = m_conf.getIdManager();
-    final NaFortranLogTranslater logTranslater = new NaFortranLogTranslater( asciiDirs.asciiDir, idManager, m_logger );
+    final NaFortranLogTranslater logTranslater = new NaFortranLogTranslater( asciiDirs.asciiDir, m_idManager, m_logger );
 
     final File resultFile = new File( resultDirs.logDir, "error.gml" ); //$NON-NLS-1$
     resultFile.getParentFile().mkdirs();
@@ -254,9 +219,7 @@ public class NaPostProcessor
 
   private NAStatistics loadTSResults( final File outWeNatDir, final File resultDir ) throws SensorException
   {
-    final IDManager idManager = m_conf.getIdManager();
-
-    final ResultTimeseriesLoader resultProcessor = new ResultTimeseriesLoader( outWeNatDir, resultDir, m_modelWorkspace, idManager, m_logger );
+    final ResultTimeseriesLoader resultProcessor = new ResultTimeseriesLoader( outWeNatDir, resultDir, m_modelWorkspace, m_idManager, m_logger );
     resultProcessor.processResults();
     return resultProcessor.getStatistics();
   }

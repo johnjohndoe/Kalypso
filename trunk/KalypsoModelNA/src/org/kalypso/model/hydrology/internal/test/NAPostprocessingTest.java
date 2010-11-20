@@ -57,7 +57,7 @@ import org.kalypso.commons.compare.IElementDumper;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
-import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.model.hydrology.binding.NAModellControl;
@@ -107,7 +107,6 @@ public class NAPostprocessingTest
     final URL gmlInputZipLocation = getClass().getResource( baseResourceLocation + "/gmlInput.zip" );
     final URL baseURL = new URL( String.format( "jar:%s!/", gmlInputZipLocation.toExternalForm() ) );
 
-    final NAConfiguration conf = new NAConfiguration( asciiBaseDir );
     final Logger logger = Logger.getAnonymousLogger();
     logger.setUseParentHandlers( false );
     final Handler[] handlers = logger.getHandlers();
@@ -126,7 +125,7 @@ public class NAPostprocessingTest
 
     final HydroHash hydroHash = new HydroHash( null );
 
-    final NaPostProcessor postProcessor = new NaPostProcessor( conf, logger, modelWorkspace, naControl, null, hydroHash );
+    final NaPostProcessor postProcessor = new NaPostProcessor( new IDManager(), logger, modelWorkspace, naControl, hydroHash );
     postProcessor.process( naAsciiDirs, naSimulationDirs );
 
     return resultsDir;

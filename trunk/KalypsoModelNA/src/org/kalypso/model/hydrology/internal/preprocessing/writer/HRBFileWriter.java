@@ -42,12 +42,12 @@ package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.binding.model.Node;
@@ -70,54 +70,17 @@ public class HRBFileWriter extends AbstractCoreFileWriter
   // maps timeseries link path to its ascii file name
   private final Map<String, String> m_timseriesMap = new HashMap<String, String>();
 
-  private final NAConfiguration m_conf;
+  private final File m_klimaDir;
 
-  private class WVQInfo
-  {
-    private final String m_formattedObservation;
+  private final IDManager m_idManager;
 
-// private final double m_vMax;
-//
-// private final double m_vMin;
-
-    private final int m_numberOfEntries;
-
-    protected WVQInfo( final String formattedObservation, @SuppressWarnings("unused") final double vMax, @SuppressWarnings("unused") final double vMin, final int numberOfEntries )
-    {
-      m_formattedObservation = formattedObservation;
-// m_vMax = vMax;
-// m_vMin = vMin;
-      m_numberOfEntries = numberOfEntries;
-    }
-
-    protected String getFormattedObservation( )
-    {
-      return m_formattedObservation;
-    }
-
-// // TODO: to discuss: usage of min/max from the timeserie, or those explicitly defined by user in user interface
-// protected double getMaxVolume( )
-// {
-// return m_vMax;
-// }
-//
-// protected double getMinVolume( )
-// {
-// return m_vMin;
-// }
-
-    protected int getNumberOfEntries( )
-    {
-      return m_numberOfEntries;
-    }
-  }
-
-  public HRBFileWriter( final StorageChannel[] storageChannels, final NAConfiguration conf, final Logger logger )
+  public HRBFileWriter( final StorageChannel[] storageChannels, final IDManager idManager, final File klimaDir, final Logger logger )
   {
     super( logger );
 
     m_storageChannels = storageChannels;
-    m_conf = conf;
+    m_klimaDir = klimaDir;
+    m_idManager = idManager;
   }
 
   /**
@@ -131,14 +94,13 @@ public class HRBFileWriter extends AbstractCoreFileWriter
       final String asciiTS = processTimeserieFile( channel );
       if( asciiTS != null )
       {
-        final IDManager idManager = m_conf.getIdManager();
-        final int channelID = idManager.getAsciiID( channel );
+        final int channelID = m_idManager.getAsciiID( channel );
         final Node overflowNode = channel.getOverflowNode();
         final Node overflowNode2 = channel.getOverflowNode2();
         final Node overflowNode3 = channel.getOverflowNode3();
-        final int overflowNode1ID = overflowNode == null ? 0 : idManager.getAsciiID( overflowNode );
-        final int overflowNode2ID = overflowNode2 == null ? 0 : idManager.getAsciiID( overflowNode2 );
-        final int overflowNode3ID = overflowNode3 == null ? 0 : idManager.getAsciiID( overflowNode3 );
+        final int overflowNode1ID = overflowNode == null ? 0 : m_idManager.getAsciiID( overflowNode );
+        final int overflowNode2ID = overflowNode2 == null ? 0 : m_idManager.getAsciiID( overflowNode2 );
+        final int overflowNode3ID = overflowNode3 == null ? 0 : m_idManager.getAsciiID( overflowNode3 );
         writer.format( Locale.ENGLISH, "SPEICHER %7d %7d %7d %7d %s\n", channelID, overflowNode1ID, overflowNode2ID, overflowNode3ID, asciiTS ); //$NON-NLS-1$
         writer.format( Locale.ENGLISH, "Fakt_SeeV %.2f\n", channel.getSeaEvaporationFactor() ); //$NON-NLS-1$
         writer.format( Locale.ENGLISH, "text;text\n" ); //$NON-NLS-1$
@@ -175,13 +137,13 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     final String zmlHref = seaEvaporationTimeseriesLink.getHref();
     if( !m_timseriesMap.containsKey( zmlHref ) )
     {
-      final int asciiID = m_conf.getIdManager().getAsciiID( channel );
+      final int asciiID = m_idManager.getAsciiID( channel );
       final String name = String.format( "SE_%d.%s", asciiID, ITimeseriesConstants.TYPE_EVAPORATION );//$NON-NLS-1$
-      final File klimaDir = new File( m_conf.getAsciiBaseDir(), "klima.dat" );//$NON-NLS-1$
-      final File asciiTimeseriesFile = new File( klimaDir, name );
+      final File asciiTimeseriesFile = new File( m_klimaDir, name );
       try
       {
-        NetElement.writeTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, m_conf.getZMLContext(), ITimeseriesConstants.TYPE_EVAPORATION, null, null, null, null );
+        final URL context = channel.getWorkspace().getContext();
+        NetElement.writeTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null, null, null, null );
       }
       catch( final Exception e )
       {

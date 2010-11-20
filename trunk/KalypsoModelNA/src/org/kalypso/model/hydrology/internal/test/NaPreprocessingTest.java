@@ -57,8 +57,6 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
-import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.model.hydrology.INaSimulationData;
@@ -110,21 +108,19 @@ public class NaPreprocessingTest
     final File asciiDir = new File( outputDir, "ascii" );
     final File asciiExpectedDir = new File( outputDir, "asciiExpected" );
 
-    final NAConfiguration conf = new NAConfiguration( asciiDir );
-
-    final NAModelPreprocessor preprocessor = initPreprocessor( baseResourceLocation, asciiDir, conf );
+    final NAModelPreprocessor preprocessor = initPreprocessor( baseResourceLocation, asciiDir );
 
     preprocessor.process( new NullSimulationMonitor() );
 
     final File idMapFile = new File( outputDir, "IdMap.txt" ); //$NON-NLS-1$
-    conf.getIdManager().dump( idMapFile );
+    preprocessor.getIdManager().dump( idMapFile );
 
     checkResult( baseResourceLocation, asciiDir, asciiExpectedDir );
 
     FileUtils.forceDelete( outputDir );
   }
 
-  private NAModelPreprocessor initPreprocessor( final String baseResourceLocation, final File asciiDir, final NAConfiguration conf ) throws Exception
+  private NAModelPreprocessor initPreprocessor( final String baseResourceLocation, final File asciiDir ) throws Exception
   {
     final NaAsciiDirs outputDirs = new NaAsciiDirs( asciiDir );
     final Logger logger = Logger.getAnonymousLogger();
@@ -134,14 +130,7 @@ public class NaPreprocessingTest
 
     final INaSimulationData simulationData = createDemoModelsimulationData( baseURL );
 
-    conf.setSimulationData( simulationData );
-
-    final URL context = simulationData.getModelWorkspace().getContext();
-    conf.setZMLContext( context );
-
-    final IDManager idManager = conf.getIdManager();
-    final NAModelPreprocessor preprocessor = new NAModelPreprocessor( conf, outputDirs, idManager, simulationData, logger );
-    return preprocessor;
+    return new NAModelPreprocessor( outputDirs, simulationData, logger );
   }
 
   private INaSimulationData createDemoModelsimulationData( final URL base ) throws Exception

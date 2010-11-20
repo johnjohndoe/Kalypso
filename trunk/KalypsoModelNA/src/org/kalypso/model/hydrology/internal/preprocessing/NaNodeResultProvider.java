@@ -58,16 +58,16 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class NaNodeResultProvider
 {
-  private final URL m_context;
-
   private final Collection<Node> m_removedResults = new LinkedHashSet<Node>();
 
   private final boolean m_useResults;
 
-  public NaNodeResultProvider( final GMLWorkspace modellWorkspace, final boolean useResults, final Node rootNode, final URL zmlContext )
+  private final URL m_zmlContext;
+
+  public NaNodeResultProvider( final GMLWorkspace modellWorkspace, final boolean useResults, final Node rootNode )
   {
-    m_context = zmlContext;
     m_useResults = useResults;
+    m_zmlContext = modellWorkspace.getContext();
 
     if( rootNode != null )
     {
@@ -124,6 +124,6 @@ public class NaNodeResultProvider
 
     // delete query part
     final String location = href.replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    return new URL( m_context, location );
+    return new URL( m_zmlContext, location );
   }
 }

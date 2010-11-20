@@ -50,20 +50,20 @@ public class ModelNA extends Plugin
 {
   public static final String PLUGIN_ID = "org.kalypso.NACalcJob"; //$NON-NLS-1$
 
-  private static ModelNA sharedInstance;
+  private static ModelNA SHARED_INSTANCE;
 
   @Override
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
 
-    sharedInstance = this;
+    SHARED_INSTANCE = this;
   }
 
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
-    sharedInstance = null;
+    SHARED_INSTANCE = null;
 
     super.stop( context );
   }
@@ -75,6 +75,6 @@ public class ModelNA extends Plugin
    */
   public static ModelNA getDefault( )
   {
-    return sharedInstance;
+    return SHARED_INSTANCE;
   }
 }

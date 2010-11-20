@@ -57,10 +57,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.net.visitors.NetElementVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -127,19 +127,22 @@ public class NetElement
 
   private final GMLWorkspace m_workspace;
 
-  private final NAConfiguration m_conf;
-
   private final Logger m_logger;
 
   private Node m_overflowNode = null;
 
-  public NetElement( final GMLWorkspace modellWorkspace, final GMLWorkspace synthNWorkspace, final Channel channel, final NAConfiguration conf, final Logger logger )
+  private final NAControl m_metaControl;
+
+  private final IDManager m_idManager;
+
+  public NetElement( final GMLWorkspace modellWorkspace, final GMLWorkspace synthNWorkspace, final Channel channel, final NAControl naControl, final IDManager idManager, final Logger logger )
   {
     m_synthNWorkspace = synthNWorkspace;
     m_channel = channel;
     m_workspace = modellWorkspace;
-    m_conf = conf;
+    m_metaControl = naControl;
     m_logger = logger;
+    m_idManager = idManager;
   }
 
   public Channel getChannel( )
@@ -152,14 +155,10 @@ public class NetElement
     return m_calculated;
   }
 
-  public void generateTimeSeries( final TimeseriesFileManager tsFileManager ) throws IOException, Exception
+  public void generateTimeSeries( final File klimaDir, final TimeseriesFileManager tsFileManager, final URL zmlContext ) throws IOException, Exception
   {
-    final File asciiBaseDir = m_conf.getAsciiBaseDir();
-    final File klimaDir = new File( asciiBaseDir, "klima.dat" );
-
-    final NAControl metaControl = m_conf.getMetaControl();
-    final Date simulationStart = metaControl.getSimulationStart();
-    final Date simulationEnd = metaControl.getSimulationEnd();
+    final Date simulationStart = m_metaControl.getSimulationStart();
+    final Date simulationEnd = m_metaControl.getSimulationEnd();
 
     final Catchment[] catchments = m_channel.findCatchments();
 
@@ -168,18 +167,14 @@ public class NetElement
       final File targetFileN = tsFileManager.getNiederschlagEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
       final File targetFileT = tsFileManager.getTemperaturEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
       final File targetFileV = tsFileManager.getVerdunstungEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-      final File parent = targetFileN.getParentFile();
-      parent.mkdirs();
 
-      if( metaControl.isUsePrecipitationForm() )
+      if( m_metaControl.isUsePrecipitationForm() )
       {
         if( !targetFileN.exists() )
           writeSynthNFile( targetFileN, catchment );
       }
       else
       {
-        final URL zmlContext = m_conf.getZMLContext();
-
         final TimeseriesLinkType linkN = catchment.getPrecipitationLink();
         writeTimeseries( targetFileN, linkN, zmlContext, ITimeseriesConstants.TYPE_RAINFALL, null, null, null, null );
 
@@ -253,13 +248,11 @@ public class NetElement
 
   public void writeRootChannel( final PrintWriter netBuffer, final int virtualChannelId )
   {
-    final IDManager idManager = m_conf.getIdManager();
-
     final Node downstreamNode = m_channel.getDownstreamNode();
     if( downstreamNode == null )
       System.out.println( "knotU=null" ); //$NON-NLS-1$
 
-    final int downstreamNodeID = idManager.getAsciiID( downstreamNode );
+    final int downstreamNodeID = m_idManager.getAsciiID( downstreamNode );
 
     netBuffer.append( "   " + virtualChannelId ); //$NON-NLS-1$
     netBuffer.append( String.format( "%8d", downstreamNodeID ) ); //$NON-NLS-1$
@@ -297,10 +290,8 @@ public class NetElement
    */
   public void write( final PrintWriter netBuffer )
   {
-    final IDManager idManager = m_conf.getIdManager();
-
     // append channel:
-    final int channelID = idManager.getAsciiID( m_channel );
+    final int channelID = m_idManager.getAsciiID( m_channel );
     netBuffer.append( String.format( "%8d", channelID ) ); //$NON-NLS-1$
 
     final Node downstreamNode = m_channel.getDownstreamNode();
@@ -309,18 +300,18 @@ public class NetElement
     final Catchment[] catchmentForThisChannel = m_channel.findCatchments();
 
     // append upstream node:
-    final int upstreamNodeID = upstreamNode == null ? ANFANGSKNOTEN : idManager.getAsciiID( upstreamNode );
+    final int upstreamNodeID = upstreamNode == null ? ANFANGSKNOTEN : m_idManager.getAsciiID( upstreamNode );
     netBuffer.append( String.format( "%8d", upstreamNodeID ) );
 
     // append downstream node:
-    final int downstreamNodeID = idManager.getAsciiID( downstreamNode );
+    final int downstreamNodeID = m_idManager.getAsciiID( downstreamNode );
     netBuffer.append( String.format( "%8d", downstreamNodeID ) ); //$NON-NLS-1$
 
     // append catchments
     netBuffer.append( " " + catchmentForThisChannel.length + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     for( final Catchment catchment : catchmentForThisChannel )
     {
-      final int chatchmentID = idManager.getAsciiID( catchment );
+      final int chatchmentID = m_idManager.getAsciiID( catchment );
       netBuffer.append( String.format( "%8d\n", chatchmentID ) ); //$NON-NLS-1$
     }
   }
@@ -339,19 +330,20 @@ public class NetElement
   public String toString( )
   {
     final Feature channel = getChannel();
-    return "FID:" + channel.getId() + " AsciiID: " + m_conf.getIdManager().getAsciiID( channel ); //$NON-NLS-1$ //$NON-NLS-2$
+    return "FID:" + channel.getId() + " AsciiID: " + m_idManager.getAsciiID( channel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void writeSynthNFile( final File targetFileN, final Catchment catchment ) throws Exception
   {
-    final NAControl metaControl = m_conf.getMetaControl();
-
     final List<Feature> statNList = new ArrayList<Feature>();
     final StringBuffer buffer = new StringBuffer();
-    final Double annualityKey = metaControl.getAnnuality();
+    final Double annualityKey = m_metaControl.getAnnuality();
     // Kostra-Kachel/ synth. N gebietsabängig
     final String synthNKey = catchment.getSynthZR();
-    statNList.addAll( Arrays.asList( m_synthNWorkspace.getFeatures( m_conf.getstatNFT() ) ) );
+
+    final IFeatureType syntNft = m_synthNWorkspace.getGMLSchema().getFeatureType( NaModelConstants.SYNTHN_STATN_FT );
+    statNList.addAll( Arrays.asList( m_synthNWorkspace.getFeatures( syntNft ) ) );
+
     final Iterator<Feature> iter = statNList.iterator();
     while( iter.hasNext() )
     {
@@ -386,7 +378,7 @@ public class NetElement
                 {
                   final Double minutesValue = (Double) values.get( row, minutesAxis );
                   final Double hoursValue = minutesValue / 60d;
-                  if( hoursValue.equals( metaControl.getDurationHours() ) )
+                  if( hoursValue.equals( m_metaControl.getDurationHours() ) )
                   {
                     final Double precipitationValue = (Double) values.get( row, precipitationAxis );
                     buffer.append( FortranFormatHelper.printf( hoursValue, "f9.3" ) + " " + FortranFormatHelper.printf( precipitationValue, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -420,6 +412,6 @@ public class NetElement
 
   public int getAsciiID( )
   {
-    return m_conf.getIdManager().getAsciiID( getChannel() );
+    return m_idManager.getAsciiID( getChannel() );
   }
 }
