@@ -43,7 +43,6 @@ package org.kalypso.model.hydrology.internal.preprocessing;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.INaSimulationData;
@@ -78,17 +77,17 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NAModellConverter
 {
-  private final NAConfiguration m_conf;
-
   private final Logger m_logger;
 
   private final INaSimulationData m_data;
 
   private final NaAsciiDirs m_asciiDirs;
 
-  public NAModellConverter( final NAConfiguration conf, final INaSimulationData data, final NaAsciiDirs asciiDirs, final Logger logger ) throws Exception
+  private final IDManager m_idManager;
+
+  public NAModellConverter( final IDManager idManager, final INaSimulationData data, final NaAsciiDirs asciiDirs, final Logger logger ) throws Exception
   {
-    m_conf = conf;
+    m_idManager = idManager;
     m_data = data;
     m_asciiDirs = asciiDirs;
     m_logger = logger;
@@ -100,61 +99,60 @@ public class NAModellConverter
     final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
     final NAHydrotop hydrotopeCollection = m_data.getHydrotopCollection();
     final GMLWorkspace sudsWorkspace = m_data.getSudsWorkspace();
-    final IDManager idManager = m_conf.getIdManager();
+    final NAControl metaControl = m_data.getMetaControl();
     final GMLWorkspace parameterWorkspace = m_data.getParameterWorkspace();
     final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
 
-    final NetElement[] channels = relevantElements.getChannelsSorted( idManager );
-    final Catchment[] catchments = relevantElements.getCatchmentsSorted( idManager );
+    final NetElement[] channels = relevantElements.getChannelsSorted( m_idManager );
+    final Catchment[] catchments = relevantElements.getCatchmentsSorted( m_idManager );
 
-    final NetFileWriter netWriter = new NetFileWriter( m_conf, relevantElements, tsFileManager, idManager, modelWorkspace, m_logger );
-    netWriter.write( m_conf.getNetFile() );
+    final NetFileWriter netWriter = new NetFileWriter( m_asciiDirs, relevantElements, tsFileManager, m_idManager, modelWorkspace, metaControl, m_logger );
+    netWriter.write( m_asciiDirs.netFile );
 
-    final ZftWriter zftWriter = new ZftWriter( idManager, m_logger, catchments );
-    zftWriter.write( m_conf.getZFTFile() );
+    final ZftWriter zftWriter = new ZftWriter( m_idManager, m_logger, catchments );
+    zftWriter.write( m_asciiDirs.zftFile );
 
-    final RhbWriter rhbWriter = new RhbWriter( idManager, channels, m_logger );
-    rhbWriter.write( m_conf.getRHBFile() );
+    final RhbWriter rhbWriter = new RhbWriter( m_idManager, channels, m_logger );
+    rhbWriter.write( m_asciiDirs.rhbFile );
 
     final BodenartWriter bodenartManager = new BodenartWriter( parameterWorkspace, m_logger );
-    bodenartManager.write( m_conf.getBodenartFile() );
+    bodenartManager.write( m_asciiDirs.bodenartFile );
 
     final BodentypWriter bodentypManager = new BodentypWriter( parameterWorkspace, m_logger );
-    bodentypManager.write( m_conf.getBodentypFile() );
+    bodentypManager.write( m_asciiDirs.bodentypFile );
 
     final SchneeManager schneeManager = new SchneeManager( parameterWorkspace, m_logger );
-    schneeManager.write( m_conf.getSchneeFile() );
+    schneeManager.write( m_asciiDirs.schneeFile );
 
-    final NutzungWriter nutzungManager = new NutzungWriter( m_conf.getNutzungDir() );
+    final NutzungWriter nutzungManager = new NutzungWriter( m_asciiDirs.hydroTopDir );
     nutzungManager.writeFile( parameter, hydroHash );
 
     final SudsFileWriter sudsFileWriter = new SudsFileWriter( naModel, hydrotopeCollection, sudsWorkspace, m_logger );
-    sudsFileWriter.write( m_conf.getSwaleAndTrenchFile() );
+    sudsFileWriter.write( m_asciiDirs.swaleAndTrenchFile );
 
-    final HRBFileWriter hrbFileWriter = new HRBFileWriter( naModel.getStorageChannels(), m_conf, m_logger );
-    hrbFileWriter.write( m_conf.getHRBFile() );
+    final HRBFileWriter hrbFileWriter = new HRBFileWriter( naModel.getStorageChannels(), m_idManager, m_asciiDirs.klimaDatDir, m_logger );
+    hrbFileWriter.write( m_asciiDirs.hrbFile );
 
-    final NAControl metaControl = m_data.getMetaControl();
     final InitialValues initialValues = m_data.getInitialValues();
-    final LzsimWriter lzsimWriter = new LzsimWriter( idManager, hydroHash, initialValues, metaControl, m_logger );
+    final LzsimWriter lzsimWriter = new LzsimWriter( m_idManager, hydroHash, initialValues, metaControl, m_logger );
     lzsimWriter.writeLzsimFiles( m_asciiDirs.lzsimDir );
   }
 
   public void writeCalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager ) throws Exception
   {
-    final GMLWorkspace modelWorkspace = m_conf.getModelWorkspace();
+    final GMLWorkspace modelWorkspace = m_data.getModelWorkspace();
+    final NAControl naControl = m_data.getMetaControl();
     final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
-    final IDManager idManager = m_conf.getIdManager();
 
     final Entry<NetElement, Integer>[] rootChannels = relevantElements.getRootChannels();
-    final NetElement[] channels = relevantElements.getChannelsSorted( idManager );
-    final Catchment[] catchments = relevantElements.getCatchmentsSorted( idManager );
+    final NetElement[] channels = relevantElements.getChannelsSorted( m_idManager );
+    final Catchment[] catchments = relevantElements.getCatchmentsSorted( m_idManager );
 
     /* Write files that are changed by calibration factors */
-    final GerWriter gerWriter = new GerWriter( idManager, rootChannels, channels, m_logger );
-    gerWriter.write( m_conf.getChannelFile() );
+    final GerWriter gerWriter = new GerWriter( m_idManager, rootChannels, channels, m_logger );
+    gerWriter.write( m_asciiDirs.channelFile );
 
-    final GebWriter catchmentManager = new GebWriter( m_conf, m_logger, catchments, naModel, tsFileManager );
-    catchmentManager.write( m_conf.getCatchmentFile() );
+    final GebWriter catchmentManager = new GebWriter( m_logger, catchments, naModel, naControl, tsFileManager, m_idManager );
+    catchmentManager.write( m_asciiDirs.catchmentFile );
   }
 }

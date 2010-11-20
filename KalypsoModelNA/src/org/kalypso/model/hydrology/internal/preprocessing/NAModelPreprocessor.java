@@ -40,14 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAControl;
@@ -78,13 +73,9 @@ public class NAModelPreprocessor
 {
   private RelevantNetElements m_relevantElements;
 
-  private File m_preprocessedAsciiDir;
-
-  private final IDManager m_idManager;
+  private final IDManager m_idManager = new IDManager();
 
   private final INaSimulationData m_simulationData;
-
-  private final NAConfiguration m_conf;
 
   private final Logger m_logger;
 
@@ -94,27 +85,16 @@ public class NAModelPreprocessor
 
   private TimeseriesFileManager m_tsFileManager;
 
-  public NAModelPreprocessor( final NAConfiguration conf, final NaAsciiDirs asciiDirs, final IDManager idManager, final INaSimulationData simulationData, final Logger logger )
+  public NAModelPreprocessor( final NaAsciiDirs asciiDirs, final INaSimulationData simulationData, final Logger logger )
   {
-    m_conf = conf;
     m_asciiDirs = asciiDirs;
-    m_idManager = idManager;
     m_simulationData = simulationData;
     m_logger = logger;
   }
 
-  /**
-   * Sets the directory of preprocessed ASCII files.<br>
-   * Optional: must be called before {@link #process(ISimulationMonitor)}.<br/>
-   * If this directory is set, ASCII files in this directory will be used instead of recreating them from gml.<br/>
-   * Original comment:<br>
-   * While optimization, you can recycle files from a former run. implement here to copy the files to your tmp dir and
-   * while generating files you should check if files already exist, and on your option do not generate them.<br/>
-   * WARNING: never use result files or files that vary during optimization.<br/>
-   */
-  public void setPreprocessedFilesDir( final File preprocessedAsciiDir )
+  public IDManager getIdManager( )
   {
-    m_preprocessedAsciiDir = preprocessedAsciiDir;
+    return m_idManager;
   }
 
   public void process( final ISimulationMonitor monitor ) throws NAPreprocessorException, OperationCanceledException
@@ -151,7 +131,12 @@ public class NAModelPreprocessor
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.15" ) ); //$NON-NLS-1$
     checkCancel( monitor );
 
-    copyPreprocessedDirs();
+    m_asciiDirs.inpDir.mkdirs();
+    m_asciiDirs.klimaDatDir.mkdirs();
+    m_asciiDirs.hydroTopDir.mkdirs();
+    m_asciiDirs.zuflussDir.mkdirs();
+    m_asciiDirs.outWeNatDir.mkdirs();
+
     checkCancel( monitor );
 
     monitor.setMessage( "Adding additional virtual channels" );
@@ -166,22 +151,19 @@ public class NAModelPreprocessor
 
     // write net and so on....
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.23" ) ); //$NON-NLS-1$
-    final NAModellConverter naModellConverter = new NAModellConverter( m_conf, m_simulationData, m_asciiDirs, m_logger );
+    final NAModellConverter naModellConverter = new NAModellConverter( m_idManager, m_simulationData, m_asciiDirs, m_logger );
     initNetData( rootNode );
     naModellConverter.writeUncalibratedFiles( m_relevantElements, m_tsFileManager, m_hydroHash );
 
-    final NAOptimize optimizeConfig = m_conf.getOptimizeConfig();
+    final NAOptimize optimizeConfig = m_simulationData.getNaOptimize();
     processCallibrationFiles( optimizeConfig );
 
     checkCancel( monitor );
-
-    // Create "out_we.nat", else Kalypso-NA will not run
-    m_asciiDirs.outWeNatDir.mkdirs();
   }
 
   public void processCallibrationFiles( final NAOptimize optimize ) throws Exception
   {
-    final NAModellConverter naModellConverter = new NAModellConverter( m_conf, m_simulationData, m_asciiDirs, m_logger );
+    final NAModellConverter naModellConverter = new NAModellConverter( m_idManager, m_simulationData, m_asciiDirs, m_logger );
 
     final CalibrationConfig config = new CalibrationConfig( optimize );
     config.applyCalibrationFactors();
@@ -191,33 +173,32 @@ public class NAModelPreprocessor
 
   private void initNetData( final Node rootNode ) throws SimulationException, Exception
   {
-    final GMLWorkspace modelWorkspace = m_conf.getModelWorkspace();
-    final GMLWorkspace synthNWorkspace = m_conf.getSynthNWorkspace();
-    final NAHydrotop hydrotopeCollection = m_conf.getHydrotopeCollection();
-    final GMLWorkspace parameterWorkspace = m_conf.getParameterWorkspace();
+    final GMLWorkspace modelWorkspace = m_simulationData.getModelWorkspace();
+    final GMLWorkspace synthNWorkspace = m_simulationData.getSynthNWorkspace();
+    final NAHydrotop hydrotopeCollection = m_simulationData.getHydrotopCollection();
+    final GMLWorkspace parameterWorkspace = m_simulationData.getParameterWorkspace();
+    final NAControl metaControl = m_simulationData.getMetaControl();
     final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
-    final IDManager idManager = m_conf.getIdManager();
 
-    final NetFileAnalyser m_nodeManager = new NetFileAnalyser( m_conf, rootNode, m_logger, modelWorkspace, synthNWorkspace );
+    final NetFileAnalyser m_nodeManager = new NetFileAnalyser( rootNode, m_logger, modelWorkspace, synthNWorkspace, metaControl, m_idManager );
     m_relevantElements = m_nodeManager.analyseNet();
 
     if( hydrotopeCollection != null )
     {
-      final Catchment[] catchments = m_relevantElements.getCatchmentsSorted( idManager );
+      final Catchment[] catchments = m_relevantElements.getCatchmentsSorted( m_idManager );
 
       // REMARK: initHydroHash must be called after nodeManager.write file has been called, as this marks
       // the features in the ascii buffer to be relevant.
       // TODO: change this bad design: We should just pass a list of catchments to the hydroHash
       final HydroHash hydroHash = initHydroHash( parameter, hydrotopeCollection, catchments );
 
-      final HydrotopeWriter hydrotopManager = new HydrotopeWriter( parameter, idManager, hydroHash, m_logger );
-      hydrotopManager.write( m_conf.getHydrotopFile() );
-      hydrotopManager.writeMapping( m_conf.getHydrotopMappingFile() );
+      final HydrotopeWriter hydrotopManager = new HydrotopeWriter( parameter, m_idManager, hydroHash, m_logger );
+      hydrotopManager.write( m_asciiDirs.hydrotopFile );
+      hydrotopManager.writeMapping( m_asciiDirs.hydrotopMappingFile );
     }
 
-    final NAControl metaControl = m_conf.getMetaControl();
     final boolean usePrecipitationForm = metaControl.isUsePrecipitationForm();
-    m_tsFileManager = new TimeseriesFileManager( idManager, usePrecipitationForm );
+    m_tsFileManager = new TimeseriesFileManager( m_idManager, usePrecipitationForm );
   }
 
   private HydroHash initHydroHash( final Parameter parameter, final NAHydrotop hydrotopeCollection, final Catchment[] catchments ) throws GM_Exception, SimulationException
@@ -237,9 +218,7 @@ public class NAModelPreprocessor
    */
   private void tweakGmlModel( final GMLWorkspace modelWorkspace, final Node rootNode, final boolean useResults ) throws Exception
   {
-    final URL zmlContext = m_conf.getZMLContext();
-
-    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modelWorkspace, useResults, rootNode, zmlContext );
+    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modelWorkspace, useResults, rootNode );
     final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
     final NaModelTweaker naModelTweaker = new NaModelTweaker( naModel, nodeResultProvider );
     naModelTweaker.tweakModel();
@@ -249,34 +228,6 @@ public class NAModelPreprocessor
   {
     if( monitor.isCanceled() )
       throw new OperationCanceledException();
-  }
-
-  /* During optimization, use previously processed files to improve performance */
-  // TODO: check if we can replace this by a more general caching mechanism based on the file-date of the input gml
-  // file.
-  private void copyPreprocessedDirs( ) throws NAPreprocessorException
-  {
-    try
-    {
-      if( m_preprocessedAsciiDir == null )
-        return;
-
-      final NaAsciiDirs inputAsciiDirs = new NaAsciiDirs( m_preprocessedAsciiDir );
-
-      if( inputAsciiDirs.klimaDatDir.exists() )
-        FileUtils.copyDirectory( inputAsciiDirs.klimaDatDir, m_asciiDirs.asciiDir );
-
-      if( inputAsciiDirs.zuflussDir.exists() )
-        FileUtils.copyDirectory( inputAsciiDirs.zuflussDir, m_asciiDirs.asciiDir );
-
-      if( inputAsciiDirs.hydroTopDir.exists() )
-        FileUtils.copyDirectory( inputAsciiDirs.hydroTopDir, m_asciiDirs.asciiDir );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      throw new NAPreprocessorException( "Failed to copy preprocessed ascii files", e );
-    }
   }
 
   public HydroHash getHydroHash( )

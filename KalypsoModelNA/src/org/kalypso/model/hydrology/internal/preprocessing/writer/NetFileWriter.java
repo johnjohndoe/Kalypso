@@ -54,7 +54,6 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
@@ -67,6 +66,7 @@ import org.kalypso.model.hydrology.binding.model.KontZufluss;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.Ueberlauf;
 import org.kalypso.model.hydrology.binding.model.Verzweigung;
+import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -128,17 +128,21 @@ public class NetFileWriter extends AbstractCoreFileWriter
 
   private final GMLWorkspace m_modelWorkspace;
 
-  private final NAConfiguration m_conf;
+  private final NAControl m_metaControl;
 
-  public NetFileWriter( final NAConfiguration conf, final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager, final IDManager idManager, final GMLWorkspace modelWorkspace, final Logger logger )
+  private final NaAsciiDirs m_asciiDirs;
+
+  public NetFileWriter( final NaAsciiDirs asciiDirs, final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager, final IDManager idManager, final GMLWorkspace modelWorkspace, final NAControl metaControl, final Logger logger )
   {
     super( logger );
 
-    m_conf = conf;
+    m_asciiDirs = asciiDirs;
+
     m_relevantElements = relevantElements;
     m_tsFileManager = tsFileManager;
     m_idManager = idManager;
     m_modelWorkspace = modelWorkspace;
+    m_metaControl = metaControl;
   }
 
   /**
@@ -155,7 +159,8 @@ public class NetFileWriter extends AbstractCoreFileWriter
       try
       {
         // FIXME: move into different writer
-        netElement.generateTimeSeries( m_tsFileManager );
+        final URL zmlContext = m_modelWorkspace.getContext();
+        netElement.generateTimeSeries( m_asciiDirs.klimaDatDir, m_tsFileManager, zmlContext );
       }
       catch( final Exception e )
       {
@@ -273,12 +278,9 @@ public class NetFileWriter extends AbstractCoreFileWriter
   {
     final ZuflussBean bean = new ZuflussBean( 0, 0, 0, 5, 0, Double.NaN, null );
 
-    // FIXME: awful: this code does too much at once!
-    final String zuflussFileName = getZuflussEingabeDateiString( node, m_conf );
-    final File targetFile = new File( m_conf.getAsciiBaseDir(), "zufluss/" + zuflussFileName ); //$NON-NLS-1$
-    final File parent = targetFile.getParentFile();
-    if( !parent.exists() )
-      parent.mkdirs();
+    final String zuflussFileName = getZuflussEingabeDateiString( node );
+    final File targetFile = new File( m_asciiDirs.zuflussDir, zuflussFileName );
+
     final String zuflussFile = ZmlURL.getIdentifierPart( zuflussLink.getHref() );
     final URL linkURL = m_urlUtilities.resolveURL( m_modelWorkspace.getContext(), zuflussFile );
     if( !targetFile.exists() )
@@ -290,10 +292,9 @@ public class NetFileWriter extends AbstractCoreFileWriter
 
       if( isSynteticZufluss != null && isSynteticZufluss )
       {
-        final NAControl metaControl = m_conf.getMetaControl();
-        final Integer minutesOfTimestep = metaControl.getMinutesOfTimestep();
+        final Integer minutesOfTimestep = m_metaControl.getMinutesOfTimestep();
 
-        if( metaControl.isUsePrecipitationForm() )
+        if( m_metaControl.isUsePrecipitationForm() )
         {
           final ITupleModel values = observation.getValues( null );
           final IAxis[] axis = observation.getAxisList();
@@ -307,8 +308,8 @@ public class NetFileWriter extends AbstractCoreFileWriter
         }
         else
         {
-          final Date simulationStart = metaControl.getSimulationStart();
-          final Date simulationEnd = metaControl.getSimulationEnd();
+          final Date simulationStart = m_metaControl.getSimulationStart();
+          final Date simulationEnd = m_metaControl.getSimulationEnd();
           NAZMLGenerator.createSyntheticFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation, simulationStart, simulationEnd, minutesOfTimestep );
         }
       }
@@ -376,9 +377,9 @@ public class NetFileWriter extends AbstractCoreFileWriter
     throw new IllegalArgumentException( "Illegal branching type: " + branching.getClass() );
   }
 
-  private String getZuflussEingabeDateiString( final Feature nodeFE, final NAConfiguration conf )
+  private String getZuflussEingabeDateiString( final Feature nodeFE )
   {
-    final int asciiID = conf.getIdManager().getAsciiID( nodeFE );
+    final int asciiID = m_idManager.getAsciiID( nodeFE );
     return "Z_" + Integer.toString( asciiID ).trim() + ".zufluss"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 

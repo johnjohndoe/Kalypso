@@ -45,11 +45,11 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.ASCIIHelper;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
@@ -65,8 +65,6 @@ public class GebWriter extends AbstractCoreFileWriter
 {
   private final ASCIIHelper m_asciiHelper = new ASCIIHelper( getClass().getResource( "resources/formats/WernerCatchment.txt" ) ); //$NON-NLS-1$
 
-  private final NAConfiguration m_conf;
-
   private final Logger m_logger;
 
   private final NaModell m_naModel;
@@ -75,11 +73,17 @@ public class GebWriter extends AbstractCoreFileWriter
 
   private final TimeseriesFileManager m_fileManager;
 
-  public GebWriter( final NAConfiguration conf, final Logger logger, final Catchment[] catchments, final NaModell naModel, final TimeseriesFileManager fileManager )
+  private final NAControl m_metaControl;
+
+  private final IDManager m_idManager;
+
+  public GebWriter( final Logger logger, final Catchment[] catchments, final NaModell naModel, final NAControl naControl, final TimeseriesFileManager fileManager, final IDManager idManager )
   {
     super( logger );
 
-    m_conf = conf;
+    m_idManager = idManager;
+
+    m_metaControl = naControl;
     m_logger = logger;
     m_catchments = catchments;
     m_naModel = naModel;
@@ -99,8 +103,7 @@ public class GebWriter extends AbstractCoreFileWriter
   private void writeFeature( final PrintWriter writer, final NaModell naModel, final Catchment catchment ) throws Exception
   {
     // 0
-    final IDManager idManager = m_conf.getIdManager();
-    final int asciiID = idManager.getAsciiID( catchment );
+    final int asciiID = m_idManager.getAsciiID( catchment );
     writer.append( String.format( Locale.US, "%16d%7d\n", asciiID, 7 ) ); //$NON-NLS-1$
 
     // 1 (empty line)
@@ -114,7 +117,7 @@ public class GebWriter extends AbstractCoreFileWriter
     // 3
     // TODO: getNiederschlagEingabeDateiString is written twice here, check if it is correct
     final String niederschlagFile = m_fileManager.getNiederschlagEingabeDateiString( catchment );
-    writer.append( String.format( Locale.US, "%1$c %2$s %2$s %3$5.2f\n", m_conf.getMetaControl().isUsePrecipitationForm() ? 's' : 'n', niederschlagFile, catchment.getFaktn() ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    writer.append( String.format( Locale.US, "%1$c %2$s %2$s %3$5.2f\n", m_metaControl.isUsePrecipitationForm() ? 's' : 'n', niederschlagFile, catchment.getFaktn() ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // 4-6
     final String temperaturFile = m_fileManager.getTemperaturEingabeDateiString( catchment );
@@ -146,7 +149,7 @@ public class GebWriter extends AbstractCoreFileWriter
     // Der Versiegelungsgrad vsg wird gesetzt, da er im Rechenkern aus der Hydrotopdatei übernommen wird und somit in
     // der Gebietsdatei uninteressant ist.
     final Node overflowNode = catchment.getOverflowNode();
-    final int overflowNodeID = overflowNode == null ? 0 : idManager.getAsciiID( overflowNode );
+    final int overflowNodeID = overflowNode == null ? 0 : m_idManager.getAsciiID( overflowNode );
     final double bimax = 1.0;// JH: dummy for bimax, because it is not used in fortran!
 
     writer.append( String.format( Locale.US, "%5.3f %4d %9.1f %9.1f %4d %4.1f %4.1f\n", 1.0, bodenKorrekturFeatures.length, bimax, catchment.getBianf(), overflowNodeID, catchment.getTint(), catchment.getRintmx() ) ); //$NON-NLS-1$
@@ -192,7 +195,7 @@ public class GebWriter extends AbstractCoreFileWriter
       if( linkedFE == null )
         throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", FeatureHelper.getAsString( fe, "ngwzu" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      line13.append( String.format( Locale.US, "%d ", idManager.getAsciiID( linkedFE ) ) ); //$NON-NLS-1$
+      line13.append( String.format( Locale.US, "%d ", m_idManager.getAsciiID( linkedFE ) ) ); //$NON-NLS-1$
       line14.append( String.format( Locale.US, "%s ", m_asciiHelper.toAscii( fe, 14 ) ) ); //$NON-NLS-1$
 
       final Double gwwiValue = (Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_GWWI );
@@ -230,7 +233,7 @@ public class GebWriter extends AbstractCoreFileWriter
     if( izknNode == null )
       writer.append( " 0\n" ); //$NON-NLS-1$
     else
-      writer.append( String.format( Locale.US, " %4d\n", idManager.getAsciiID( izknNode ) ) );
+      writer.append( String.format( Locale.US, " %4d\n", m_idManager.getAsciiID( izknNode ) ) );
 
     // KommentarZeile
     writer.append( "ende gebietsdatensatz\n" ); //$NON-NLS-1$//$NON-NLS-2$

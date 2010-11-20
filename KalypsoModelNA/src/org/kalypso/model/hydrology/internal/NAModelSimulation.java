@@ -42,7 +42,6 @@ package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,7 +49,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAControl;
@@ -77,10 +75,6 @@ public class NAModelSimulation
 
   private final Logger m_logger;
 
-  private final NAConfiguration m_conf;
-
-  private final IDManager m_idManager;
-
   private final NaSimulationDirs m_simDirs;
 
   private NAModelPreprocessor m_preprocessor;
@@ -97,13 +91,6 @@ public class NAModelSimulation
     m_logger = logger;
 
     m_logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.13", m_startDateText ) ); //$NON-NLS-1$ 
-
-    m_conf = new NAConfiguration( m_simDirs.asciiDir );
-    m_conf.setSimulationData( m_simulationData );
-    final URL context = m_simulationData.getModelWorkspace().getContext();
-    m_conf.setZMLContext( context );
-
-    m_idManager = m_conf.getIdManager();
   }
 
   public boolean runSimulation( final ISimulationMonitor monitor ) throws Exception
@@ -145,11 +132,11 @@ public class NAModelSimulation
   {
     try
     {
-      m_preprocessor = new NAModelPreprocessor( m_conf, m_simDirs.asciiDirs, m_idManager, simulationData, m_logger );
+      m_preprocessor = new NAModelPreprocessor( m_simDirs.asciiDirs, simulationData, m_logger );
       m_preprocessor.process( monitor );
 
       final File idMapFile = new File( m_simDirs.simulationDir, "IdMap.txt" ); //$NON-NLS-1$
-      m_idManager.dump( idMapFile );
+      m_preprocessor.getIdManager().dump( idMapFile );
     }
     catch( final NAPreprocessorException e )
     {
@@ -185,11 +172,11 @@ public class NAModelSimulation
 
     final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
     final NAModellControl naControl = simulationData.getNaControl();
-    final NAOptimize naOptimize = simulationData.getNaOptimize();
 
     final HydroHash hydroHash = m_preprocessor.getHydroHash();
+    final IDManager idManager = m_preprocessor.getIdManager();
 
-    final NaPostProcessor postProcessor = new NaPostProcessor( m_conf, m_logger, modelWorkspace, naControl, naOptimize, hydroHash );
+    final NaPostProcessor postProcessor = new NaPostProcessor( idManager, m_logger, modelWorkspace, naControl, hydroHash );
     postProcessor.process( m_simDirs.asciiDirs, m_simDirs );
     return postProcessor.isSucceeded();
   }

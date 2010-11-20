@@ -48,13 +48,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
-import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.visitors.CompleteDownstreamNetAsciiWriterVisitor;
 import org.kalypso.convert.namodel.net.visitors.RootNodeCollector;
 import org.kalypso.convert.namodel.net.visitors.SimulationVisitor;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Branching;
 import org.kalypso.model.hydrology.binding.model.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -79,8 +80,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class NetFileAnalyser
 {
-  private final NAConfiguration m_conf;
-
   private final Node m_rootNode;
 
   private final GMLWorkspace m_modelWorkspace;
@@ -89,13 +88,18 @@ public class NetFileAnalyser
 
   private final Logger m_logger;
 
-  public NetFileAnalyser( final NAConfiguration conf, final Node rootNode, final Logger logger, final GMLWorkspace modelWorkspace, final GMLWorkspace synthNWorkspace )
+  private final NAControl m_naControl;
+
+  private final IDManager m_idManager;
+
+  public NetFileAnalyser( final Node rootNode, final Logger logger, final GMLWorkspace modelWorkspace, final GMLWorkspace synthNWorkspace, final NAControl naControl, final IDManager idManager )
   {
-    m_conf = conf;
     m_rootNode = rootNode;
     m_logger = logger;
     m_modelWorkspace = modelWorkspace;
     m_synthNWorkspace = synthNWorkspace;
+    m_naControl = naControl;
+    m_idManager = idManager;
   }
 
   /**
@@ -126,7 +130,7 @@ public class NetFileAnalyser
     // generate net elements, each channel represents a netelement
     for( final Channel channelFE : channels )
     {
-      final NetElement netElement = new NetElement( m_modelWorkspace, m_synthNWorkspace, channelFE, m_conf, m_logger );
+      final NetElement netElement = new NetElement( m_modelWorkspace, m_synthNWorkspace, channelFE, m_naControl, m_idManager, m_logger );
       netElements.put( channelFE.getId(), netElement );
     }
 
