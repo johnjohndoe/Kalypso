@@ -75,6 +75,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizerRunner;
@@ -86,7 +87,6 @@ import org.kalypso.optimizer.Pegel;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.w3c.dom.Document;
@@ -346,22 +346,11 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     if( m_measuredTS == null )
     {
       final SortedMap<Date, Double> result = new TreeMap<Date, Double>();
-      URL measuredURL = null;
-      try
-      {
-        final NAOptimize naOptimize = m_data.getOptimizeData().getNaOptimize();
-        final TimeseriesLinkType linkMeasuredTS = naOptimize.getPegelZRLink();
+      final NAOptimize naOptimize = m_data.getOptimizeData().getNaOptimize();
+      final ZmlLink linkMeasuredTS = naOptimize.getPegelZRLink();
 
-        final URL context = m_data.getModelWorkspace().getContext();
-        measuredURL = new URL( context, linkMeasuredTS.getHref() );
-      }
-      catch( final Exception e )
-      {
-        // TODO exeption werfen die dem user sagt dass die optimierung nicht
-        // möglich ist ohne gemessene zeitreihe
-        e.printStackTrace();
-      }
-      final IObservation observation = ZmlFactory.parseXML( measuredURL ); //$NON-NLS-1$
+      final IObservation observation = linkMeasuredTS.loadObservation();
+
       final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_DATE );
       final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_RUNOFF );
       final ITupleModel values = observation.getValues( null );
@@ -388,7 +377,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     final File optimizeResultDir = new File( m_optimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
 
     final NAOptimize naOptimize = m_data.getOptimizeData().getNaOptimize();
-    final TimeseriesLinkType linkCalcedTS = naOptimize.getResultLink();
+    final ZmlLink linkCalcedTS = naOptimize.getResultLink();
 
     final String calcHref = linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
