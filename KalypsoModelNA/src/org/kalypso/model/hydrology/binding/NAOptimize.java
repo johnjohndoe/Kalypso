@@ -48,7 +48,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.Node;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -61,7 +61,7 @@ public class NAOptimize extends Feature_Impl
 {
   public static final String NS_NS_NAOPTIMIZE = NaModelConstants.NS_NAOPTIMIZE;
 
-  private static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NS_NAOPTIMIZE, "qberechnetZR" ); //$NON-NLS-1$
+  public static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NS_NAOPTIMIZE, "qberechnetZR" ); //$NON-NLS-1$
 
   private static final QName LINK_ROOTNODE = new QName( NS_NS_NAOPTIMIZE, "rootNodeLink" ); //$NON-NLS-1$
 
@@ -132,29 +132,29 @@ public class NAOptimize extends Feature_Impl
   }
 
 
-  public TimeseriesLinkType getResultLink( )
+  public ZmlLink getResultLink( )
   {
-    return getProperty( PROP_RESULT_TIMESERIESLINK, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROP_RESULT_TIMESERIESLINK );
   }
 
-  public TimeseriesLinkType getQAblageMittlererLink( )
+  public ZmlLink getQAblageMittlererLink( )
   {
-    return getProperty( PROP_LINK_QABLAGE_SPUR_MITTLERER, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROP_LINK_QABLAGE_SPUR_MITTLERER );
   }
 
-  public TimeseriesLinkType getQAblageObererLink( )
+  public ZmlLink getQAblageObererLink( )
   {
-    return getProperty( PROP_LINK_QABLAGE_SPUR_OBERER, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROP_LINK_QABLAGE_SPUR_OBERER );
   }
 
-  public TimeseriesLinkType getQAblageUntererLink( )
+  public ZmlLink getQAblageUntererLink( )
   {
-    return getProperty( PROP_LINK_QABLAGE_SPUR_UNTERER, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROP_LINK_QABLAGE_SPUR_UNTERER );
   }
 
-  public TimeseriesLinkType getPegelZRLink( )
+  public ZmlLink getPegelZRLink( )
   {
-    return getProperty( PROP_PEGEL_ZR_PROP, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROP_PEGEL_ZR_PROP );
   }
 
   public boolean doUseOffsetStartPred( )

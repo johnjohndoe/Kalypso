@@ -44,26 +44,24 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.convert.namodel.DefaultPathGenerator;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.timeseries.Block;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
-import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
@@ -78,24 +76,18 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -153,17 +145,12 @@ public class NaPostProcessor
     if( !m_isSucceeded )
       return;
 
-    // FIXME: (much) better error handling! and error recovery...
+    // FIXME: we need (much) better error handling! and error recovery...
 
     loadTSResults( asciiDirs.outWeNatDir, simDirs.currentResultDir );
-    try
-    {
-      loadTesultTSPredictionIntervals( simDirs.outputDir );
-    }
-    catch( final Exception e )
-    {
-      m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.83", e.getLocalizedMessage() ) );
-    }
+
+    // FIXME: remove this from here
+    loadTesultTSPredictionIntervals( simDirs.outputDir );
 
     copyStatisticResultFile( asciiDirs, currentResultDirs );
 
@@ -172,6 +159,27 @@ public class NaPostProcessor
     lzsimManager.readInitialValues( m_conf.getIdManager(), m_hydroHash, asciiDirs.lzsimDir, m_logger );
 
     m_naStatistics.writeStatistics( simDirs.currentResultDir, currentResultDirs.reportDir );
+  }
+
+  private void loadTesultTSPredictionIntervals( final File resultDir )
+  {
+    try
+    {
+      if( m_naOptimize == null )
+        return;
+
+      final NAControl metaControl = m_conf.getMetaControl();
+      final NaUmhuellendeOperation naUmhuellendeOperation = new NaUmhuellendeOperation( m_naOptimize, metaControl, resultDir );
+      naUmhuellendeOperation.execute( new NullProgressMonitor() );
+    }
+    catch( final InvocationTargetException e )
+    {
+      m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.83", e.getTargetException() ) );
+    }
+    catch( final CoreException e )
+    {
+      m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.83", e ) );
+    }
   }
 
   private void copyNaExeLogs( final NaAsciiDirs asciiDirs, final NaResultDirs currentResultDirs )
@@ -453,15 +461,6 @@ public class NaPostProcessor
     return new SimpleTupleModel( axis, tupelData );
   }
 
-  private static void copyMetaData( final MetadataList srcMeta, final MetadataList destMeta, final String[] mdKeys )
-  {
-    for( final String key : mdKeys )
-    {
-      final String property = srcMeta.getProperty( key );
-      if( property != null )
-        destMeta.put( key, property );
-    }
-  }
 
   private File tweakResultPath( final File resultDir, final String resultPathRelative, final Feature resultFeature, final String titlePropName, final String suffix )
   {
@@ -478,172 +477,5 @@ public class NaPostProcessor
     m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.140", resultPath ) ); //$NON-NLS-1$
 
     return new File( resultDir, resultPath ); //$NON-NLS-1$
-  }
-
-  // FIXME: this is hwv specific. Should be done in a separate task after the real calculation
-  private void loadTesultTSPredictionIntervals( final File resultDir ) throws Exception
-  {
-    if( m_naOptimize == null )
-      return;
-
-    // Load the calculated prediction
-    final IObservation resultObservation = loadPredictedResult( resultDir );
-    if( resultObservation == null )
-      return;
-
-    final IAxis[] axisList = resultObservation.getAxisList();
-    final String axisType = determineTranpolinAxis( resultObservation );
-
-    final File fileMitte = getAblageFileFor( resultDir, m_naOptimize.getQAblageMittlererLink() );
-    final File fileUnten = getAblageFileFor( resultDir, m_naOptimize.getQAblageUntererLink() );
-    final File fileOben = getAblageFileFor( resultDir, m_naOptimize.getQAblageObererLink() );
-
-    // Initalize some commen variables
-    final ITupleModel resultValues = resultObservation.getValues( null );
-    final IAxis resultDateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class );
-    final IAxis resultValueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
-
-    final NAControl metaControl = m_conf.getMetaControl();
-    final Date startForecast = metaControl.getStartForecast();
-    final Date endForecast = metaControl.getSimulationEnd();
-
-    final IAxisRange rangeFor = resultValues.getRange( resultDateAxis );
-    final Date endPrediction = (Date) rangeFor.getUpper();
-
-    final NATimeSettings timeSettings = NATimeSettings.getInstance();
-    final Calendar calBegin = timeSettings.getCalendar( startForecast );
-    // REMARK: using endPrediction instead of endForecast, as they are not equals (but they should...)
-    final Calendar calEnd = timeSettings.getCalendar( endPrediction );
-
-    final double calcStartValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis, startForecast );
-    final double calcEndValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis, endForecast );
-
-    //
-    // First, we adapt the result: correction at start and/or end of the calculated timeserie
-    //
-
-    double deltaMeasureCalculation;
-    try
-    {
-      final URL pegelURL = getMeasuredURL();
-
-      // from measuered timeseries
-      final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL ); //$NON-NLS-1$
-      final ITupleModel pegelValues = pegelObservation.getValues( null );
-      final IAxis pegelDateAxis = ObservationUtilities.findAxisByClass( pegelObservation.getAxisList(), Date.class );
-      final IAxis pegelValueAxis = ObservationUtilities.findAxisByType( pegelObservation.getAxisList(), axisType );
-      final double measureValue = ObservationUtilities.getInterpolatedValueAt( pegelValues, pegelDateAxis, pegelValueAxis, startForecast );
-      deltaMeasureCalculation = measureValue - calcStartValue;
-    }
-    catch( final Exception e )
-    {
-      deltaMeasureCalculation = 0;
-    }
-
-    final double offsetStartPrediction;
-    final double offsetEndPrediction;
-
-    if( m_naOptimize.doUseOffsetStartPred() )
-      offsetStartPrediction = deltaMeasureCalculation;
-    else
-      offsetStartPrediction = 0;
-
-    if( m_naOptimize.doUseOffsetEndPred() )
-      offsetEndPrediction = deltaMeasureCalculation;
-    else
-      offsetEndPrediction = 0;
-
-    final Calendar tranpolinEnd = timeSettings.getCalendar( startForecast );
-    tranpolinEnd.add( Calendar.HOUR, 24 );
-
-    final IRequest request = new ObservationRequest( calBegin.getTime(), calEnd.getTime() );
-    TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, tranpolinEnd, offsetStartPrediction, offsetEndPrediction, "+", axisType, KalypsoStati.BIT_DERIVATED, fileMitte, " - Spur Mitte", request ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    // read the freshly created file into a new observation, we are going to umhüll it
-    final IObservation adaptedResultObservation = ZmlFactory.parseXML( fileMitte.toURI().toURL() ); //$NON-NLS-1$
-
-    //
-    // Second, we build the umhüllenden for the adapted result
-    //
-
-    double accuracyPrediction = LhwzHelper.getDefaultUmhuellendeAccuracy();
-    final Double featureAccuracy = m_naOptimize.getPredictionAccuracy();
-    if( featureAccuracy == null )
-      m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.44", accuracyPrediction ) ); //$NON-NLS-1$ 
-    else
-      accuracyPrediction = featureAccuracy.doubleValue();
-
-    // accuracyPrediction // %/60h
-    final long millisOf60hours = 1000 * 60 * 60 * 60;
-    // endAccuracy: %/simulationRange
-    final double endAccuracy = accuracyPrediction * (((double) (endForecast.getTime() - startForecast.getTime())) / ((double) millisOf60hours));
-
-    final double endOffset = calcEndValue * (endAccuracy / 100);
-
-    TranProLinFilterUtilities.transformAndWrite( adaptedResultObservation, calBegin, calEnd, 0, endOffset, "-", axisType, KalypsoStati.BIT_DERIVATED, fileUnten, " - spur Unten", request ); //$NON-NLS-1$ //$NON-NLS-2$
-    TranProLinFilterUtilities.transformAndWrite( adaptedResultObservation, calBegin, calEnd, 0, endOffset, "+", axisType, KalypsoStati.BIT_DERIVATED, fileOben, " - spur Oben", request ); //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  private IObservation loadPredictedResult( final File resultDir ) throws MalformedURLException, SensorException
-  {
-    if( m_naOptimize == null )
-      return null;
-
-    final TimeseriesLinkType resultLink = m_naOptimize.getResultLink();
-    if( resultLink == null )
-      return null;
-
-    // from predicted timeseries
-    final UrlResolver urlResolver = new UrlResolver();
-    final URL resultURL = urlResolver.resolveURL( resultDir.toURI().toURL(), resultLink.getHref() );
-    return ZmlFactory.parseXML( resultURL ); //$NON-NLS-1$
-  }
-
-  /**
-   * Return with which axis we are going to transform the umhüllenden. Q or W, depending on what is present)
-   */
-  private String determineTranpolinAxis( final IObservation observation ) throws SimulationException
-  {
-    final IAxis[] axisList = observation.getAxisList();
-
-    if( ObservationUtilities.hasAxisOfType( axisList, ITimeseriesConstants.TYPE_RUNOFF ) )
-      return ITimeseriesConstants.TYPE_RUNOFF;
-
-    if( ObservationUtilities.hasAxisOfType( axisList, ITimeseriesConstants.TYPE_WATERLEVEL ) )
-      return ITimeseriesConstants.TYPE_WATERLEVEL;
-
-    throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.50" ), null ); //$NON-NLS-1$
-  }
-
-  private File getAblageFileFor( final File resultDir, final TimeseriesLinkType trackLink )
-  {
-    try
-    {
-      final String href = trackLink.getHref();
-      final File resultFile = new File( resultDir, href );
-      resultFile.getParentFile().mkdirs();
-      return resultFile;
-    }
-    catch( final Exception e )
-    {
-      Logger.getAnonymousLogger().log( Level.WARNING, e.getLocalizedMessage() );
-      return null; // no track available
-    }
-  }
-
-  // FIXME: does not belong into this class
-  public URL getMeasuredURL( ) throws MalformedURLException
-  {
-    if( m_naOptimize == null )
-      return null;
-
-    final TimeseriesLinkType link = m_naOptimize.getPegelZRLink();
-    if( link == null )
-      return null;
-
-    // optionen loeschen
-    final String href = link.getHref().replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final URL zmlContext = m_conf.getZMLContext();
-    return new URL( zmlContext, href );
   }
 }
