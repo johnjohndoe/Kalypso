@@ -50,6 +50,7 @@ import org.kalypso.convert.namodel.net.NetElementCircleFinder;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * @author doemming
@@ -72,12 +73,30 @@ public class SimulationVisitor extends NetElementVisitor
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
   @Override
-  public boolean visit( final NetElement netElement ) throws Exception
+  public boolean visit( final NetElement netElement ) throws SimulationException
   {
     if( m_simulated.contains( netElement ) )
       return false;
 
-    // check cycle
+    checkCycle( netElement );
+
+    // first calculate upstream
+    final List<NetElement> upStreamNetElements = netElement.getUpStreamNetElements();
+    for( final NetElement netElement2 : upStreamNetElements )
+    {
+      final NetElement element = netElement2;
+      visit( element );
+    }
+
+    // then calculate current
+    visitElement( netElement );
+    m_simulated.add( netElement );
+
+    return true;
+  }
+
+  private void checkCycle( final NetElement netElement ) throws SimulationException
+  {
     if( m_cycleTest.contains( netElement ) )
     {
       final String warning = Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.0" ); //$NON-NLS-1$
@@ -91,28 +110,13 @@ public class SimulationVisitor extends NetElementVisitor
       b.append( Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.2", netElement ) + ":\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       for( final List<NetElement> element : circleList )
-      {
         b.append( Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.4", element ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
+
       log( b.toString() );
-      throw new Exception( b.toString() );
+      throw new SimulationException( b.toString() );
     }
 
     m_cycleTest.add( netElement );
-
-    // first calculate upstream
-
-    final List<NetElement> upStreamNetElements = netElement.getUpStreamNetElements();
-    for( final NetElement netElement2 : upStreamNetElements )
-    {
-      final NetElement element = netElement2;
-      visit( element );
-    }
-
-    // then calculate current
-    visitElement( netElement );
-    m_simulated.add( netElement );
-    return true;
   }
 
   private boolean visitElement( final NetElement netElement )

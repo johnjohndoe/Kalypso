@@ -40,12 +40,8 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
  */
 public class NetElementCircleFinder
 {
-
   private final NetElement m_testNetElement;
 
-  /**
-   *  
-   */
   public NetElementCircleFinder( final NetElement testNetElement )
   {
     m_testNetElement = testNetElement;
