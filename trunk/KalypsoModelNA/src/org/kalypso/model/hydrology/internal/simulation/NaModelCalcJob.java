@@ -79,7 +79,7 @@ public class NaModelCalcJob implements ISimulation
       monitor.setMessage( "Loading simulation data" );
       data = NaSimulationDataFactory.load( dataProvider );
 
-      runnable = createRunnable( data, dataProvider, tmpdir, monitor );
+      runnable = createRunnable( data, tmpdir, monitor );
       /* final boolean success = */runnable.run( monitor );
       // FIXME: what to do of not succeeded?
     }
@@ -113,7 +113,7 @@ public class NaModelCalcJob implements ISimulation
       resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, optimizeResult );
   }
 
-  private INaSimulationRunnable createRunnable( final INaSimulationData data, final ISimulationDataProvider dataProvider, final File tmpdir, final ISimulationMonitor monitor ) throws Exception
+  private INaSimulationRunnable createRunnable( final INaSimulationData data, final File tmpdir, final ISimulationMonitor monitor ) throws Exception
   {
     final boolean doOptimize = isOptimize( data );
     if( doOptimize )
@@ -128,7 +128,7 @@ public class NaModelCalcJob implements ISimulation
 
   private boolean isOptimize( final INaSimulationData data )
   {
-    final NAOptimize optimize = data.getOptimizeData().getNaOptimize();
+    final NAOptimize optimize = data.getNaOptimize();
     if( optimize == null )
       return false;
 

@@ -48,6 +48,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -65,7 +66,7 @@ public class Node extends AbstractNaModelElement
   @Deprecated
   public static final QName PROP_ZUFLUSS_ZR = new QName( NS_NAMODELL, "zuflussZR" ); //$NON-NLS-1$
 
-  private static final QName PROP_PEGEL_ZR = new QName( NS_NAMODELL, "pegelZR" ); //$NON-NLS-1$
+  public static final QName PROP_PEGEL_ZR = new QName( NS_NAMODELL, "pegelZR" ); //$NON-NLS-1$
 
   /** @deprecated Do not use directly, use accessor methods instead. */
   @Deprecated
@@ -86,9 +87,9 @@ public class Node extends AbstractNaModelElement
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public TimeseriesLinkType getPegelLink( )
+  public ZmlLink getPegelLink( )
   {
-    return getProperty( PROP_PEGEL_ZR, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROP_PEGEL_ZR );
   }
 
   public TimeseriesLinkType getZuflussLink( )
@@ -101,9 +102,9 @@ public class Node extends AbstractNaModelElement
     setProperty( PROP_ZUFLUSS_ZR, zuflussLink );
   }
 
-  public TimeseriesLinkType getResultLink( )
+  public ZmlLink getResultLink( )
   {
-    return getProperty( PROP_RESULT_TIMESERIESLINK, TimeseriesLinkType.class );
+    return new ZmlLink( this, PROP_RESULT_TIMESERIESLINK );
   }
 
   public void setResultLink( final TimeseriesLinkType zuflussLink )

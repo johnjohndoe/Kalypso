@@ -49,6 +49,7 @@ import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.ogc.gml.serialize.FeatureProviderWithCacheFactory;
@@ -286,5 +287,16 @@ public class NaSimulationData implements INaSimulationData
   public NaOptimizeLoader getOptimizeData( )
   {
     return m_optimizeLoader;
+  }
+
+  /**
+   * @see org.kalypso.model.hydrology.INaSimulationData#getNaOptimize()
+   */
+  @Override
+  public NAOptimize getNaOptimize( )
+  {
+    if( m_optimizeLoader == null )
+      return null;
+    return m_optimizeLoader.getNaOptimize();
   }
 }

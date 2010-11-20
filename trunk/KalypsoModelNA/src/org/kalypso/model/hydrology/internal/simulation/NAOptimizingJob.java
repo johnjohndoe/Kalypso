@@ -346,7 +346,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     if( m_measuredTS == null )
     {
       final SortedMap<Date, Double> result = new TreeMap<Date, Double>();
-      final NAOptimize naOptimize = m_data.getOptimizeData().getNaOptimize();
+      final NAOptimize naOptimize = m_data.getNaOptimize();
       final ZmlLink linkMeasuredTS = naOptimize.getPegelZRLink();
 
       final IObservation observation = linkMeasuredTS.loadObservation();
@@ -376,7 +376,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     final SortedMap<Date, Double> result = new TreeMap<Date, Double>();
     final File optimizeResultDir = new File( m_optimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
 
-    final NAOptimize naOptimize = m_data.getOptimizeData().getNaOptimize();
+    final NAOptimize naOptimize = m_data.getNaOptimize();
     final ZmlLink linkCalcedTS = naOptimize.getResultLink();
 
     final String calcHref = linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
