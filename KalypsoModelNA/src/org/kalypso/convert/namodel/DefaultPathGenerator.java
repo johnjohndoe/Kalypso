@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
@@ -49,14 +50,14 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class DefaultPathGenerator
 {
-  public static String generateResultPathFor( final Feature feature, final String titleProperty, final String suffix, final String extra )
+  public static String generateResultPathFor( final Feature feature, final String suffix, final String extra )
   {
     final String extraString;
     if( extra == null )
       extraString = ""; //$NON-NLS-1$
     else
       extraString = extra;
-    final String observationTitle = getObservationTitle( feature, titleProperty );
+    final String observationTitle = getObservationTitle( feature );
 
     final String annotationName = getAnnotationName( feature );
     final String result = annotationName + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -70,18 +71,18 @@ public class DefaultPathGenerator
     return annotation.getValue( IAnnotation.ANNO_NAME );
   }
 
-  private static String getObservationTitle( final Feature feature, final String titleProperty )
+  private static String getObservationTitle( final Feature feature )
   {
-    final String feName = (String) feature.getProperty( titleProperty );
-    if( feName != null && feName.length() > 0 )
-      return feName;
-    else
+    final String feName = feature.getName();
+    if( StringUtils.isBlank( feName ) )
       return feature.getId();
+
+    return feName;
   }
 
-  public static String generateTitleForObservation( final Feature feature, final String titleProperty, final String suffix )
+  public static String generateTitleForObservation( final Feature feature, final String suffix )
   {
-    final String observationTitle = getObservationTitle( feature, titleProperty );
+    final String observationTitle = getObservationTitle( feature );
     final String annotationName = getAnnotationName( feature );
     return observationTitle + " - " + DefaultPathGenerator.getTitleForSuffix( suffix ) + " " + annotationName; //$NON-NLS-1$ //$NON-NLS-2$
   }

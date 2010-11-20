@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.postprocessing.statistics;
 
+import java.io.File;
 import java.util.Date;
 
 import org.kalypso.ogc.sensor.IAxis;
@@ -64,9 +65,17 @@ public class NAStatisticsData
 
   private double m_volume = 0.0;
 
-  public NAStatisticsData( final IObservation observation )
+  private final File m_resultFile;
+
+  public NAStatisticsData( final IObservation observation, final File resultFile )
   {
     m_observation = observation;
+    m_resultFile = resultFile;
+  }
+
+  public File getResultFile( )
+  {
+    return m_resultFile;
   }
 
   public void calculateStatistics( ) throws SensorException

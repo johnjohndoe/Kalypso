@@ -87,6 +87,8 @@ public class NAModelSimulation
 
   private final INaSimulationData m_simulationData;
 
+  private KalypsoNaProcessor m_processor;
+
   public NAModelSimulation( final NaSimulationDirs simDirs, final INaSimulationData data, final Logger logger )
   {
     m_simDirs = simDirs;
@@ -110,7 +112,11 @@ public class NAModelSimulation
     if( monitor.isCanceled() )
       return false;
 
-    process( monitor, m_simulationData );
+    final NAControl metaControl = m_simulationData.getMetaControl();
+    final String exeVersion = metaControl.getExeVersion();
+    m_processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, exeVersion );
+    m_processor.prepare();
+    m_processor.run( monitor );
 
     if( monitor.isCanceled() )
       return false;
@@ -120,11 +126,13 @@ public class NAModelSimulation
 
   public boolean rerunForOptimization( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
   {
+    // FIXME: clear old result file (we_nat_out etc.)
+
     m_preprocessor.processCallibrationFiles( optimize );
     if( monitor.isCanceled() )
       return false;
 
-    process( monitor, m_simulationData );
+    m_processor.run( monitor );
 
     if( monitor.isCanceled() )
       return false;
@@ -169,16 +177,6 @@ public class NAModelSimulation
     }
   }
 
-  private void process( final ISimulationMonitor monitor, final INaSimulationData simulationData ) throws SimulationException
-  {
-    monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.27" ) ); //$NON-NLS-1$
-
-    final NAControl metaControl = simulationData.getMetaControl();
-    final String exeVersion = metaControl.getExeVersion();
-    final KalypsoNaProcessor processor = new KalypsoNaProcessor( m_simDirs.asciiDirs, exeVersion );
-    processor.run( monitor );
-  }
-
   private boolean postProcess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws Exception
   {
     final String messageStartPostprocess = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.28" ); //$NON-NLS-1$
@@ -187,7 +185,7 @@ public class NAModelSimulation
 
     final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
     final NAModellControl naControl = simulationData.getNaControl();
-    final NAOptimize naOptimize = simulationData.getOptimizeData().getNaOptimize();
+    final NAOptimize naOptimize = simulationData.getNaOptimize();
 
     final HydroHash hydroHash = m_preprocessor.getHydroHash();
 

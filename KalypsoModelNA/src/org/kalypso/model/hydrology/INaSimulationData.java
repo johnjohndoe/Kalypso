@@ -43,6 +43,7 @@ package org.kalypso.model.hydrology;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.internal.NaOptimizeLoader;
@@ -75,4 +76,6 @@ public interface INaSimulationData
   InitialValues getInitialValues( );
 
   NaOptimizeLoader getOptimizeData( );
+
+  NAOptimize getNaOptimize( );
 }

@@ -139,7 +139,7 @@ public class NAModelPreprocessor
   private void doProcess( final ISimulationMonitor monitor ) throws Exception
   {
     final NAModellControl naControl = m_simulationData.getNaControl();
-    final NAOptimize naOptimize = m_simulationData.getOptimizeData().getNaOptimize();
+    final NAOptimize naOptimize = m_simulationData.getNaOptimize();
     final GMLWorkspace modelWorkspace = m_simulationData.getModelWorkspace();
     final NAControl metaControl = m_simulationData.getMetaControl();
     final GMLWorkspace sudsWorkspace = m_simulationData.getSudsWorkspace();

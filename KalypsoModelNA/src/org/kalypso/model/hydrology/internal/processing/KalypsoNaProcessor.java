@@ -75,19 +75,19 @@ public class KalypsoNaProcessor
 
   private final String m_exeVersion;
 
+  private File m_kalypsoNaExe;
+
   public KalypsoNaProcessor( final NaAsciiDirs asciiDirs, final String exeVersion )
   {
     m_asciiDirs = asciiDirs;
     m_exeVersion = exeVersion;
   }
 
-  public void run( final ISimulationMonitor monitor ) throws SimulationException
+  public void prepare( ) throws SimulationException
   {
-    final File kalypsoNaExe = copyExecutable();
-    if( kalypsoNaExe == null )
+    m_kalypsoNaExe = copyExecutable();
+    if( m_kalypsoNaExe == null )
       return;
-
-    runExe( kalypsoNaExe, monitor );
   }
 
   private File copyExecutable( ) throws SimulationException
@@ -117,9 +117,11 @@ public class KalypsoNaProcessor
     }
   }
 
-  private void runExe( final File kalypsoNaExe, final ISimulationMonitor monitor ) throws SimulationException
+  public void run( final ISimulationMonitor monitor ) throws SimulationException
   {
-    final String[] commandString = new String[] { kalypsoNaExe.getAbsolutePath() };
+    monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.27" ) ); //$NON-NLS-1$
+
+    final String[] commandString = new String[] { m_kalypsoNaExe.getAbsolutePath() };
 
     final long timeOut = 0l; // no timeout control
 

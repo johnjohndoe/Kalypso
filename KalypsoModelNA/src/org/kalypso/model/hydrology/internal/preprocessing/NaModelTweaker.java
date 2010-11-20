@@ -48,6 +48,7 @@ import org.kalypso.model.hydrology.binding.model.KontZufluss;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.VirtualChannel;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -240,7 +241,7 @@ public class NaModelTweaker
     {
       if( m_nodeResultProvider.checkResultExists( node ) )
       {
-        final TimeseriesLinkType resultLink = node.getResultLink();
+        final ZmlLink resultLink = node.getResultLink();
         // disconnect everything upstream (channel -> node)
         final Channel[] upstreamChannels = node.findUpstreamChannels();
         for( final Channel channel : upstreamChannels )
@@ -253,7 +254,7 @@ public class NaModelTweaker
 
         // add as zufluss
         final Node newNode = buildVChannelNet( node );
-        newNode.setZuflussLink( resultLink );
+        newNode.setZuflussLink( resultLink.getTimeseriesLink() );
 
         final Boolean isSyntetic = node.isSynteticZufluss();
         newNode.setIsSynteticZufluss( isSyntetic );

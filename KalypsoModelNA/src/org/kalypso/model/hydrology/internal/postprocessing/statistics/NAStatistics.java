@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -61,7 +60,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -106,7 +104,7 @@ public class NAStatistics
 
   private static final String SEPARATOR_CSV = ","; //$NON-NLS-1$
 
-  private final Map<Feature, File> m_resultMap = new TreeMap<Feature, File>( new NAStatisticComparator() );
+  private final Map<Feature, NAStatisticsData> m_resultMap = new TreeMap<Feature, NAStatisticsData>( new NAStatisticComparator() );
 
   private final Logger m_logger;
 
@@ -143,25 +141,20 @@ public class NAStatistics
     return new SimpleObservation( FILENAME_ZML, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), new MetadataList(), resultTuppleModel );
   }
 
-  private Object[][] gatherData( final File inputDir ) throws MalformedURLException, SensorException
+  private Object[][] gatherData( final File inputDir ) throws SensorException
   {
     final List<Object[]> resultValuesList = new ArrayList<Object[]>();
 
-    for( final Entry<Feature, File> entry : m_resultMap.entrySet() )
+    for( final Entry<Feature, NAStatisticsData> entry : m_resultMap.entrySet() )
     {
       final Feature feature = entry.getKey();
-      final File resultFile = entry.getValue();
+      final NAStatisticsData data = entry.getValue();
+      data.calculateStatistics();
 
-      if( !(feature instanceof Node) )
-        continue;
+      final File resultFile = data.getResultFile();
 
       final String nodeTitle = getNodeTitle( feature );
       final String nodeDescription = getNodeDescription( feature );
-
-      final IObservation observation = ZmlFactory.parseXML( resultFile.toURI().toURL() );
-
-      final NAStatisticsData data = new NAStatisticsData( observation );
-      data.calculateStatistics();
 
       final Double maxValue = data.getMaxValue();
       final Date maxValueDate = data.getMaxValueDate();
@@ -311,8 +304,8 @@ public class NAStatistics
     return null;
   }
 
-  public void add( final Feature resultFeature, final File resultFile )
+  public void add( final Feature resultFeature, final NAStatisticsData data )
   {
-    m_resultMap.put( resultFeature, resultFile );
+    m_resultMap.put( resultFeature, data );
   }
 }

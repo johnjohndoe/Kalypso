@@ -49,7 +49,7 @@ import java.util.LinkedHashSet;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -117,12 +117,13 @@ public class NaNodeResultProvider
 
   private URL getResultURL( final Node node ) throws MalformedURLException
   {
-    final TimeseriesLinkType link = node.getResultLink();
-    if( link == null )
+    final ZmlLink link = node.getResultLink();
+    final String href = link.getHref();
+    if( href == null )
       return null;
 
     // delete query part
-    final String href = link.getHref().replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    return new URL( m_context, href );
+    final String location = href.replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new URL( m_context, location );
   }
 }
