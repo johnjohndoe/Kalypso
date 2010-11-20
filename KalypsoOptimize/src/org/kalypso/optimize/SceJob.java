@@ -62,7 +62,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessControlThread;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.optimizer.AutoCalibration;
@@ -98,7 +97,7 @@ public class SceJob
   {
     m_autoCalibration = autoCalibration;
     m_sceTmpDir = sceTmpDir;
-    m_sceDir = FileUtilities.createNewTempDir( "sce", m_sceTmpDir );
+    m_sceDir = new File( m_sceTmpDir, "sce" );
     m_sceExe = new File( m_sceDir, "sce.exe" );
 
     m_factory.setNamespaceAware( true );

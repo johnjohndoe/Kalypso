@@ -92,6 +92,8 @@ public class SceIOHandler
 
   private double m_bestEvaluation = -1;
 
+  private int m_bestCalculation;
+
   public SceIOHandler( final Logger logger, final AutoCalibration calibration, final IOptimizingJob job ) throws MalformedURLException, SensorException
   {
     m_logger = logger;
@@ -129,9 +131,6 @@ public class SceIOHandler
           final double sceValue = Double.parseDouble( group );
           final double realValue = scaleSCEtoRealValue( sceValue, m_parameter.size() );
           m_parameter.add( new Double( realValue ) );
-
-
-// m_logger.info( String.format( "OptiParam: %s - %f", m_parameterConf[m_parameter.size() - 1].getID(), realValue ) );
 
           if( m_parameter.size() == m_parameterCount )
             status = STATUS_CALCULATE_AND_EVALUATE;
@@ -174,9 +173,13 @@ public class SceIOHandler
       m_job.setBestEvaluation( isBest );
 
       if( isBest )
+      {
         m_bestEvaluation = evaluation;
+        m_bestCalculation = m_calculationCounter;
+      }
 
-      m_logger.info( "evaluation of " + m_calculationCounter + ". calculation is " + evaluation + " (best is " + m_bestEvaluation + ")" );
+      final String info = String.format( "Calculation #%d evaluated to %f. Best is #%d with %f.", m_calculationCounter, evaluation, m_bestCalculation, m_bestEvaluation );
+      m_logger.info( info );
 
       return Double.toString( evaluation ) + "\n";
     }
