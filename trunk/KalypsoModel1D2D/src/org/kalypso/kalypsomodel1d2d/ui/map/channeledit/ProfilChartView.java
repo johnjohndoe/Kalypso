@@ -82,9 +82,9 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
  * @author belger
@@ -164,7 +164,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
    */
   public Control createControl( final Composite parent )
   {
-    m_chartComposite = new ChartComposite( parent, parent.getStyle(), new ChartModel(), new RGB( 255, 255, 255 ) );
+    m_chartComposite = new ChartImageComposite( parent, parent.getStyle(), new ChartModel(), new RGB( 255, 255, 255 ) );
     final GridData gD = new GridData( SWT.FILL, SWT.FILL, true, true );
     // gD.exclude = true;
     m_chartComposite.getPlot().setLayoutData( gD );
