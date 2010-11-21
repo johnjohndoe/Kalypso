@@ -89,12 +89,10 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 /**
  * @author belger
  * @author kimwerner
+ * 
+ * @deprecated use ProfilChartViewPart or ProfilChartComposite instead
  */
-
 @Deprecated
-/**
- * use ProfilChartViewPart or ProfilChartComposite instead
- */
 public class ProfilChartView implements IChartPart, IProfilListener, IProfilChart
 {
   private AxisDragHandlerDelegate m_axisDragHandler;
