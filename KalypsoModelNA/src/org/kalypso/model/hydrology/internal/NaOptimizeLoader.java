@@ -89,7 +89,7 @@ public class NaOptimizeLoader
 
   public void load( final GMLWorkspace contextWorkspace, final IFeatureProviderFactory factory ) throws Exception
   {
-    if( m_autoCalibration != null )
+    if( m_autocalibrationLocation != null )
     {
       final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
       m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( m_autocalibrationLocation );
