@@ -46,6 +46,7 @@ import java.net.URL;
 import org.kalypso.model.hydrology.internal.NaOptimizeLoader;
 import org.kalypso.model.hydrology.internal.NaSimulationData;
 import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationDataUtils;
 import org.kalypso.simulation.core.SimulationException;
 
 /**
@@ -67,7 +68,7 @@ public class NaSimulationDataFactory
     final URL hydrotopUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
     final URL syntNUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID );
     final URL lzsimUrl = getStartConditionFile( inputProvider );
-    final URL sudsUrl = getInputOrNull( inputProvider, NaModelConstants.IN_SUDS_ID );
+    final URL sudsUrl = (URL) SimulationDataUtils.getInputOrNull( inputProvider, NaModelConstants.IN_SUDS_ID );
 
     final NaOptimizeLoader optimizeLoader = new NaOptimizeLoader( inputProvider );
 
@@ -89,13 +90,5 @@ public class NaSimulationDataFactory
     {
       throw new SimulationException( "Failed to read start condition file", e );
     }
-  }
-
-  private static URL getInputOrNull( final ISimulationDataProvider inputProvider, final String id ) throws SimulationException
-  {
-    if( !inputProvider.hasID( id ) )
-      return null;
-
-    return (URL) inputProvider.getInputForID( id );
   }
 }

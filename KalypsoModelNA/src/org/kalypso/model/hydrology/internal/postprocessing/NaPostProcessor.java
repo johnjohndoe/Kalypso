@@ -104,7 +104,6 @@ public class NaPostProcessor
     copyNaExeLogs( asciiDirs, currentResultDirs );
 
     m_isSucceeded = checkSuccess( asciiDirs );
-
     if( !m_isSucceeded )
       return;
 
