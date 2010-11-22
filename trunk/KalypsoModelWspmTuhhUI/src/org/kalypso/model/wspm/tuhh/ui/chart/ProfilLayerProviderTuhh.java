@@ -308,7 +308,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       final RiverChannelLayer tfLayer = new RiverChannelLayer( profil, m_lsp, 15, false );
       final PointMarkerLayer bvLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_lsp, 25, false );
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { dbLayer, tfLayer, bvLayer };
-      return new DeviderTheme( profil, subLayers, cmScreen );
+      return new DeviderTheme( profil, subLayers, cmLeft );
     }
 
     return null;
