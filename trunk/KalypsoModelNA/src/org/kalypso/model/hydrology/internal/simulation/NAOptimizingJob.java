@@ -149,6 +149,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     final Date measuredEndDate = metaControl.getStartForecast();
 
     final NaOptimizeLoader optimizeData = data.getOptimizeData();
+
     final AutoCalibration autoCalibration = optimizeData.getAutoCalibration();
     // correct in intervall autocalibration
     final Pegel pegel = autoCalibration.getPegel();
