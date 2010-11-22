@@ -42,7 +42,6 @@ package org.kalypso.model.hydrology.internal;
 
 import java.net.URL;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.TransformerException;
 
@@ -55,6 +54,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.OptimizeJaxb;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationDataUtils;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -78,49 +78,39 @@ public class NaOptimizeLoader
 
   private AutoCalibration m_autoCalibration;
 
-  public NaOptimizeLoader( final URL optimizeDataLocation, final String optimizePath )
+  private final URL m_autocalibrationLocation;
+
+  public NaOptimizeLoader( final ISimulationDataProvider dataProvider ) throws SimulationException
   {
-    m_optimizeDataLocation = optimizeDataLocation;
-    m_optimizePath = optimizePath;
-  }
-
-  public NaOptimizeLoader( final ISimulationDataProvider dataProvider ) throws SimulationException, JAXBException
-  {
-    checkInput( dataProvider, NaModelConstants.IN_OPTIMIZE_ID );
-
-    final URL autocalibrationLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZECONF_ID );
-
-    final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
-    m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( autocalibrationLocation );
-
-    m_optimizeDataLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_ID );
-    m_optimizePath = getOptimizePath( dataProvider );
-  }
-
-  private void checkInput( final ISimulationDataProvider dataProvider, final String id ) throws SimulationException
-  {
-    if( !dataProvider.hasID( id ) )
-    {
-      final String message = String.format( "Input '%s' must be specified for optimization.", id );
-      throw new SimulationException( message );
-    }
+    m_autocalibrationLocation = (URL) SimulationDataUtils.getInputOrNull( dataProvider, NaModelConstants.IN_OPTIMIZECONF_ID );
+    m_optimizeDataLocation = SimulationDataUtils.getInputOrNull( dataProvider, NaModelConstants.IN_OPTIMIZE_ID );
+    m_optimizePath = SimulationDataUtils.getInputOrDefault( dataProvider, NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, "." );
   }
 
   public void load( final GMLWorkspace contextWorkspace, final IFeatureProviderFactory factory ) throws Exception
   {
-    final Document dom = XMLHelper.getAsDOM( m_optimizeDataLocation, true );
+    if( m_autoCalibration != null )
+    {
+      final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
+      m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( m_autocalibrationLocation );
+    }
 
-    final NodeList rootNodes = XPathAPI.selectNodeList( dom, m_optimizePath, dom );
-    if( rootNodes.getLength() == 0 )
-      throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", m_optimizePath ) );
+    if( m_optimizeDataLocation != null )
+    {
+      final Document dom = XMLHelper.getAsDOM( m_optimizeDataLocation, true );
 
-    // REMARK: we remember this node: it will be later changed by the optimized code (via xpathes)
-    // and then written again and again...
-    m_optimizeDom = rootNodes.item( 0 );
+      final NodeList rootNodes = XPathAPI.selectNodeList( dom, m_optimizePath, dom );
+      if( rootNodes.getLength() == 0 )
+        throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", m_optimizePath ) );
 
-    /* At the moment, we are only interested in the result-links */
-    final URL context = contextWorkspace == null ? m_optimizeDataLocation : contextWorkspace.getContext();
-    m_naOptimize = toOptimizeConfig( m_optimizeDom, context, factory );
+      // REMARK: we remember this node: it will be later changed by the optimized code (via xpathes)
+      // and then written again and again...
+      m_optimizeDom = rootNodes.item( 0 );
+
+      /* At the moment, we are only interested in the result-links */
+      final URL context = contextWorkspace == null ? m_optimizeDataLocation : contextWorkspace.getContext();
+      m_naOptimize = toOptimizeConfig( m_optimizeDom, context, factory );
+    }
   }
 
   public static NAOptimize toOptimizeConfig( final Node optimizeDom, final URL context, final IFeatureProviderFactory factory ) throws TransformerException, GMLException, SimulationException
@@ -133,16 +123,6 @@ public class NaOptimizeLoader
     final String message = String.format( "Failed to get optimize feature from optimize-gml for node '%s'. Got '%s'", optimizeDom, feature );
     throw new SimulationException( message );
   }
-
-  private String getOptimizePath( final ISimulationDataProvider dataProvider ) throws SimulationException
-  {
-    if( dataProvider.hasID( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID ) )
-      return (String) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID );
-
-    // If not specified, we use the root feature
-    return ".";
-  }
-
 
   public NAOptimize getNaOptimize( )
   {

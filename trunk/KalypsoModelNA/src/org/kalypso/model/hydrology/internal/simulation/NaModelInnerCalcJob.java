@@ -124,7 +124,7 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
   @Override
   public File getResultDir( )
   {
-    return m_simDirs.currentResultDir;
+    return m_simDirs.resultDir;
   }
 
   /**
