@@ -975,16 +975,10 @@ public class CreateMainChannelComposite extends Composite
         mngr.moveLayerToPosition( overlayLayer, last );
 
       final IChartComposite chartComposite = profilChartView.getChartComposite();
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT, new DragZoomOutHandler( chartComposite ), null ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN, new DragZoomInHandler( chartComposite ), null/*
-                                                                                                                                                       * new
-                                                                                                                                                       * AxisDragZoomInHandler
-                                                                                                                                                       * (
-                                                                                                                                                       * chartComposite
-                                                                                                                                                       * )
-                                                                                                                                                       */) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN, new DragPanHandler( chartComposite ), null ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EDIT, new DragEditHandler( chartComposite ), null ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT, new DragZoomOutHandler( chartComposite ) ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN, new DragZoomInHandler( chartComposite ) ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN, new DragPanHandler( chartComposite ) ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EDIT, new DragEditHandler( chartComposite ) ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE, new MaximizeHandler() ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE, new ExportHandler() ) );
       ChartUtilities.maximize( profilChartView.getChart().getChartModel() );

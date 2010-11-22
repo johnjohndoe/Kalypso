@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -95,7 +94,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 @Deprecated
 public class ProfilChartView implements IChartPart, IProfilListener, IProfilChart
 {
-  private AxisDragHandlerDelegate m_axisDragHandler;
 
   private IChartComposite m_chartComposite = null;
 
@@ -316,12 +314,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
    * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
    */
 
-  @Override
-  public AxisDragHandlerDelegate getAxisDragHandler( )
-  {
-    return m_axisDragHandler;
-  }
-
+ 
   @Override
   public IChartComposite getChart( )
   {
