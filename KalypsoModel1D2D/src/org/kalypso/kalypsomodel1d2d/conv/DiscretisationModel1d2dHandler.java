@@ -65,6 +65,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -165,8 +166,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       e.printStackTrace();
     }
     
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), elementsToRemove, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
     m_model.getElements().removeAllAtOnce( Arrays.asList( elementsToRemove ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), elementsToRemove, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
   
   private Feature[] getElementsWithoutGeometry( )
@@ -244,6 +245,30 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   private final void maybeAddEdgeToElement( final int rmaID, final IFE1D2DEdge edge )
   {
     final String edgeId = edge.getGmlID();
+    
+    IFeatureWrapperCollection lContainers = edge.getContainers();
+    int iCountPolyElements = 0;
+    for( int i = 0; i < lContainers.size(); ++i )
+    {
+      Object lFeature = lContainers.get( i );
+      if( lFeature instanceof IPolyElement )
+      {
+        iCountPolyElements++;
+        if( rmaID != 0 )
+        {
+          final String gmlID = m_elementsNameConversionMap.get( rmaID );
+
+          if( gmlID == null && !m_elementsNameConversionMap.values().contains( ((IPolyElement) lFeature).getGmlID() ) )
+          {
+            m_elementsNameConversionMap.put( rmaID, ((IPolyElement) lFeature).getGmlID() );
+          }
+        }
+      }
+      if( iCountPolyElements == 2 )
+      {
+        return;
+      }
+    }
     final IPolyElement element;
     if( rmaID == 0 )
     {
