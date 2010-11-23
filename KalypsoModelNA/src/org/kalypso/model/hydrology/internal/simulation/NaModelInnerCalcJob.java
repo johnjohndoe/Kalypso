@@ -105,12 +105,7 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
     finally
     {
       naCalculationLogger.stopLogging();
-
-      // FIXME: does not belong here! Move into build.xml or at least into client code
-      if( simulation != null )
-        simulation.backupResults();
     }
-
   }
 
   public boolean isSucceeded( )
