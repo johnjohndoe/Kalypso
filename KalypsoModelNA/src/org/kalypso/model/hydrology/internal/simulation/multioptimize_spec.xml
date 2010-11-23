@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" typeID="KalypsoNA">
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" typeID="KalypsoNaMultiOptimize">
+    <!-- Copy paste from KalypsoNA simulation -> should be updated if KalypsoNA changes -->
 	<input id="MetaSteuerdaten" description="Steuerdaten - Allgemein"/>
 	<input id="Modell" description="Modelldaten"/>
 	
@@ -14,6 +15,9 @@
 	<input id="Optimize" description="Steuerdaten - Optimierung (optional)" optional="true" />
 	<input id="OptimizeFeaturePath"  type="xs:string" description="XPath innerhalb der Steuerdaten - Optimierung (optional)" optional="true" />
 	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
+  
+    <!-- Special parameter for multi optimization -->
+	<input id="OptimizeStart" description="Startelement der Multioptimierung" optional="true"/>
 
 	<!-- Zeitreihen als Verzeichnisse -->
     <input id="NiederschlagDir" description="description" optional="true"/>

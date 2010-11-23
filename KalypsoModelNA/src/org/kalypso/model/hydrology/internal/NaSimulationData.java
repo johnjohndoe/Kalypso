@@ -87,7 +87,7 @@ public class NaSimulationData implements INaSimulationData
 
   private final NaModell m_naModel;
 
-  private final NaOptimizeLoader m_optimizeLoader;
+  private NaOptimizeData m_optimizeData;
 
   public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final NaOptimizeLoader optimizeLoader ) throws Exception
   {
@@ -100,9 +100,10 @@ public class NaSimulationData implements INaSimulationData
     m_naModellControl = readModel( controlURL, NAModellControl.class );
     m_metaControl = readModel( metaUrl, NAControl.class );
 
-    m_optimizeLoader = optimizeLoader;
-    if( m_optimizeLoader != null )
-      m_optimizeLoader.load( m_modelWorkspace, m_factory );
+    if( optimizeLoader == null )
+      m_optimizeData = null;
+    else
+      m_optimizeData = optimizeLoader.load( m_modelWorkspace, m_factory );
 
     m_naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
@@ -284,9 +285,9 @@ public class NaSimulationData implements INaSimulationData
    * @see org.kalypso.model.hydrology.INaSimulationData#getOptimizeData()
    */
   @Override
-  public NaOptimizeLoader getOptimizeData( )
+  public NaOptimizeData getOptimizeData( )
   {
-    return m_optimizeLoader;
+    return m_optimizeData;
   }
 
   /**
@@ -295,8 +296,9 @@ public class NaSimulationData implements INaSimulationData
   @Override
   public NAOptimize getNaOptimize( )
   {
-    if( m_optimizeLoader == null )
+    if( m_optimizeData == null )
       return null;
-    return m_optimizeLoader.getNaOptimize();
+
+    return m_optimizeData.getNaOptimize();
   }
 }

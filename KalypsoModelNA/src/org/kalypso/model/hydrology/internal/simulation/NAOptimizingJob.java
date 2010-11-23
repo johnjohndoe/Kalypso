@@ -67,6 +67,7 @@ import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
+import org.kalypso.model.hydrology.internal.NaOptimizeData;
 import org.kalypso.model.hydrology.internal.NaOptimizeLoader;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.ogc.sensor.IAxis;
@@ -148,7 +149,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     final Date optimizationStartDate = metaControl.getOptimizationStart();
     final Date measuredEndDate = metaControl.getStartForecast();
 
-    final NaOptimizeLoader optimizeData = data.getOptimizeData();
+    final NaOptimizeData optimizeData = data.getOptimizeData();
 
     final AutoCalibration autoCalibration = optimizeData.getAutoCalibration();
     // correct in intervall autocalibration

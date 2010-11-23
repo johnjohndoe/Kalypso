@@ -48,7 +48,6 @@ import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.NAOptimize;
-import org.kalypso.model.hydrology.internal.NaOptimizeLoader;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.optimize.OptimizeMonitor;
 import org.kalypso.simulation.core.ISimulation;
@@ -77,7 +76,7 @@ public class NaModelCalcJob implements ISimulation
 
     try
     {
-      monitor.setMessage( "Loading simulation data" );
+      monitor.setMessage( "Loading simulation data..." );
       data = NaSimulationDataFactory.load( dataProvider );
 
       runnable = createRunnable( data, tmpdir, monitor );
@@ -116,21 +115,13 @@ public class NaModelCalcJob implements ISimulation
     if( optimizeResult != null )
     {
       resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, optimizeResult );
-      if( !resultDir.exists() || !optimizeResult.exists() )
+      if( !optimizeResult.exists() )
         throw new SimulationException( "Fehler bei der Optimierung, Optimierungsergebnis nicht vorhanden." );
     }
   }
 
   private INaSimulationRunnable createRunnable( final INaSimulationData data, final File tmpdir, final ISimulationMonitor monitor ) throws Exception
   {
-    final boolean isMultiOptimize = isMultiOptimize( data );
-    if( isMultiOptimize )
-    {
-      // FIXME: replace with other logging framework, in preference eclipse's
-      final Logger logger = Logger.getAnonymousLogger();
-      return new NAMultiOptimizingJob( tmpdir, data, new OptimizeMonitor( monitor ), logger );
-    }
-
     final boolean doOptimize = isOptimize( data );
     if( doOptimize )
     {
@@ -140,15 +131,6 @@ public class NaModelCalcJob implements ISimulation
     }
 
     return new NaModelInnerCalcJob( data, tmpdir );
-  }
-
-  private boolean isMultiOptimize( final INaSimulationData data )
-  {
-    final NaOptimizeLoader optimizeData = data.getOptimizeData();
-    if( optimizeData == null )
-      return false;
-
-    return optimizeData.isMultiOptimize();
   }
 
   private boolean isOptimize( final INaSimulationData data )
