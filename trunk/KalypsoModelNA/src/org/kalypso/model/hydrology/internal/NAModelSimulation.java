@@ -41,14 +41,12 @@
 package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAControl;
@@ -143,24 +141,6 @@ public class NAModelSimulation
       final String msg = String.format( "Failed to convert data in Kalypso-NA.exe format files: %s", e.getLocalizedMessage() );
       m_logger.log( Level.SEVERE, msg, e );
       throw new SimulationException( msg );
-    }
-  }
-
-  public void backupResults( )
-  {
-    final File resultDirTo = new File( m_simDirs.resultDir, m_startDateText ); //$NON-NLS-1$
-
-    try
-    {
-      // Copy results to restore the actual results in the dateDir as well... .
-      // FIXME: probably this should be done by the ant task instead
-      FileUtils.copyDirectory( m_simDirs.currentResultDir, resultDirTo );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      final String msg = String.format( "Failed to backup results to directory: %s (%s)", resultDirTo.getAbsoluteFile(), e.getLocalizedMessage() );
-      m_logger.warning( msg );
     }
   }
 
