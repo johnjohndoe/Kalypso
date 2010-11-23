@@ -38,44 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology;
+package org.kalypso.model.hydrology.internal;
 
-import org.kalypso.model.hydrology.binding.NAControl;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
-import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
-import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
-import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.internal.NaOptimizeData;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypso.optimizer.AutoCalibration;
+import org.w3c.dom.Node;
 
 /**
  * @author Gernot Belger
- *
  */
-public interface INaSimulationData
+public class NaOptimizeData
 {
-  void dispose( );
+  private final Node m_optimizeDom;
 
-  NAModellControl getNaControl( );
+  private final NAOptimize m_naOptimize;
 
-  GMLWorkspace getModelWorkspace( );
+  private final AutoCalibration m_autoCalibration;
 
-  NaModell getNaModel( );
+  public NaOptimizeData( final AutoCalibration calibration, final Node optimizeDom, final NAOptimize optimize )
+  {
+    m_autoCalibration = calibration;
+    m_optimizeDom = optimizeDom;
+    m_naOptimize = optimize;
+  }
 
-  NAControl getMetaControl( );
+  public AutoCalibration getAutoCalibration( )
+  {
+    return m_autoCalibration;
+  }
 
-  GMLWorkspace getParameterWorkspace( );
+  public NAOptimize getNaOptimize( )
+  {
+    return m_naOptimize;
+  }
 
-  GMLWorkspace getSudsWorkspace( );
-
-  GMLWorkspace getSynthNWorkspace( );
-
-  NAHydrotop getHydrotopCollection( );
-
-  InitialValues getInitialValues( );
-
-  NaOptimizeData getOptimizeData( );
-
-  NAOptimize getNaOptimize( );
+  public Node getOptimizeDom( )
+  {
+    return m_optimizeDom;
+  }
 }

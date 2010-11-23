@@ -38,44 +38,64 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology;
+package org.kalypso.model.hydrology.internal.simulation;
 
-import org.kalypso.model.hydrology.binding.NAControl;
-import org.kalypso.model.hydrology.binding.NAHydrotop;
-import org.kalypso.model.hydrology.binding.NAModellControl;
-import org.kalypso.model.hydrology.binding.NAOptimize;
-import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
-import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.internal.NaOptimizeData;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * @author Gernot Belger
  *
  */
-public interface INaSimulationData
+public class OptimizeDataProvider implements ISimulationDataProvider
 {
-  void dispose( );
+  private final Map<String, Object> m_inputs = new HashMap<String, Object>();
 
-  NAModellControl getNaControl( );
+  private final ISimulationDataProvider m_delegate;
 
-  GMLWorkspace getModelWorkspace( );
+  public OptimizeDataProvider( final ISimulationDataProvider delegate )
+  {
+    m_delegate = delegate;
+  }
 
-  NaModell getNaModel( );
+  /**
+   * @see org.kalypso.simulation.core.ISimulationDataProvider#getInputForID(java.lang.String)
+   */
+  @Override
+  public Object getInputForID( final String id ) throws SimulationException
+  {
+    if( m_inputs.containsKey( id ) )
+      return m_inputs.get( id );
 
-  NAControl getMetaControl( );
+    return m_delegate.getInputForID( id );
+  }
 
-  GMLWorkspace getParameterWorkspace( );
+  /**
+   * @see org.kalypso.simulation.core.ISimulationDataProvider#hasID(java.lang.String)
+   */
+  @Override
+  public boolean hasID( final String id )
+  {
+    if( m_inputs.containsKey( id ) )
+      return true;
 
-  GMLWorkspace getSudsWorkspace( );
+    return m_delegate.hasID( id );
+  }
 
-  GMLWorkspace getSynthNWorkspace( );
+  /**
+   * @see org.kalypso.simulation.core.ISimulationDataProvider#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    m_inputs.clear();
+  }
 
-  NAHydrotop getHydrotopCollection( );
-
-  InitialValues getInitialValues( );
-
-  NaOptimizeData getOptimizeData( );
-
-  NAOptimize getNaOptimize( );
+  public void setInput( final String id, final Object input )
+  {
+    m_inputs.put( id, input );
+  }
 }

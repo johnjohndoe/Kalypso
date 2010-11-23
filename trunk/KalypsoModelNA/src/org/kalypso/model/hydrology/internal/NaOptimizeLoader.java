@@ -42,6 +42,7 @@ package org.kalypso.model.hydrology.internal;
 
 import java.net.URL;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.TransformerException;
 
@@ -72,19 +73,10 @@ public class NaOptimizeLoader
 
   private final String m_optimizePath;
 
-  private Node m_optimizeDom;
-
-  private NAOptimize m_naOptimize;
-
-  private AutoCalibration m_autoCalibration;
-
   private final URL m_autocalibrationLocation;
 
-  private NodeList m_optimizeNodes;
 
-  private GMLWorkspace m_contextWorkspace;
-
-  private IFeatureProviderFactory m_factory;
+  private NaOptimizeData m_optimizeData;
 
   public NaOptimizeLoader( final ISimulationDataProvider dataProvider ) throws SimulationException
   {
@@ -93,27 +85,61 @@ public class NaOptimizeLoader
     m_optimizePath = SimulationDataUtils.getInputOrDefault( dataProvider, NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, "." );
   }
 
-  public void load( final GMLWorkspace contextWorkspace, final IFeatureProviderFactory factory ) throws Exception
+  public NaOptimizeData load( final GMLWorkspace contextWorkspace, final IFeatureProviderFactory factory ) throws Exception
   {
-    m_contextWorkspace = contextWorkspace;
-    m_factory = factory;
+    if( m_optimizeData == null )
+      m_optimizeData = loadOptimizeData( contextWorkspace, factory );
 
-    if( m_autocalibrationLocation != null )
+    return m_optimizeData;
+  }
+
+  private NaOptimizeData loadOptimizeData( final GMLWorkspace contextWorkspace, final IFeatureProviderFactory factory ) throws SimulationException
+  {
+    try
     {
-      final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
-      m_autoCalibration = (AutoCalibration) unmarshaller.unmarshal( m_autocalibrationLocation );
-    }
+      final AutoCalibration calibration = loadCalibration();
 
-    if( m_optimizeDataLocation != null )
-    {
-      final Document dom = XMLHelper.getAsDOM( m_optimizeDataLocation, true );
+      final NodeList optimizeNodes = loadOptimizeNodes();
+      if( optimizeNodes == null )
+        return new NaOptimizeData( calibration, null, null );
 
-      m_optimizeNodes = XPathAPI.selectNodeList( dom, m_optimizePath, dom );
-      if( m_optimizeNodes.getLength() == 0 )
+      if( optimizeNodes.getLength() == 0 )
         throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", m_optimizePath ) );
 
-      setCurrentOptimize( 0 );
+      final Node optimizeDom = optimizeNodes.item( 0 );
+
+      /* At the moment, we are only interested in the result-links */
+      final URL context = contextWorkspace == null ? m_optimizeDataLocation : contextWorkspace.getContext();
+      final NAOptimize naOptimize = toOptimizeConfig( optimizeDom, context, factory );
+      return new NaOptimizeData( calibration, optimizeDom, naOptimize );
     }
+    catch( final SimulationException e )
+    {
+      throw e;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new SimulationException( "Fehler bei Lesen der Optimierungskonfiguration" );
+    }
+  }
+
+  public NodeList loadOptimizeNodes( ) throws Exception
+  {
+    if( m_optimizeDataLocation == null )
+      return null;
+
+    final Document dom = XMLHelper.getAsDOM( m_optimizeDataLocation, true );
+    return XPathAPI.selectNodeList( dom, m_optimizePath, dom );
+  }
+
+  private AutoCalibration loadCalibration( ) throws JAXBException
+  {
+    if( m_autocalibrationLocation == null )
+      return null;
+
+    final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
+    return (AutoCalibration) unmarshaller.unmarshal( m_autocalibrationLocation );
   }
 
   public static NAOptimize toOptimizeConfig( final Node optimizeDom, final URL context, final IFeatureProviderFactory factory ) throws TransformerException, GMLException, SimulationException
@@ -127,54 +153,20 @@ public class NaOptimizeLoader
     throw new SimulationException( message );
   }
 
-  public NAOptimize getNaOptimize( )
-  {
-    return m_naOptimize;
-  }
-
-  public Node getOptimizeDom( )
-  {
-    return m_optimizeDom;
-  }
-
   public String getOptimizePath( )
   {
     return m_optimizePath;
   }
 
-  public AutoCalibration getAutoCalibration( )
-  {
-    return m_autoCalibration;
-  }
-
-  public boolean isMultiOptimize( )
-  {
-    return getOptimizeCount() > 1;
-  }
-
-  public int getOptimizeCount( )
-  {
-    if( m_optimizeNodes == null )
-      return 0;
-
-    return m_optimizeNodes.getLength();
-  }
-
-  public void setCurrentOptimize( final int i ) throws SimulationException
+  public NodeList loadOptimizeNodesForMulti( ) throws SimulationException
   {
     try
     {
-      // REMARK: we remember this node: it will be later changed by the optimized code (via xpathes)
-      // and then written again and again...
-      m_optimizeDom = m_optimizeNodes.item( i );
+      final NodeList optimizeNodes = loadOptimizeNodes();
+      if( optimizeNodes == null || optimizeNodes.getLength() == 0 )
+        throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", m_optimizePath ) );
 
-      /* At the moment, we are only interested in the result-links */
-      final URL context = m_contextWorkspace == null ? m_optimizeDataLocation : m_contextWorkspace.getContext();
-      m_naOptimize = toOptimizeConfig( m_optimizeDom, context, m_factory );
-    }
-    catch( final SimulationException e )
-    {
-      throw e;
+      return optimizeNodes;
     }
     catch( final Exception e )
     {

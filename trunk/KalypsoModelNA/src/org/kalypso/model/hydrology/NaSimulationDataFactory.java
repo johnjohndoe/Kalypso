@@ -59,20 +59,31 @@ public class NaSimulationDataFactory
     return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader );
   }
 
-  public static final INaSimulationData load( final ISimulationDataProvider inputProvider ) throws Exception
+  public static final INaSimulationData load( final ISimulationDataProvider inputProvider ) throws SimulationException
   {
-    final URL modelUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
-    final URL controlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
-    final URL metaUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID );
-    final URL parameterUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
-    final URL hydrotopUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
-    final URL syntNUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID );
-    final URL lzsimUrl = getStartConditionFile( inputProvider );
-    final URL sudsUrl = (URL) SimulationDataUtils.getInputOrNull( inputProvider, NaModelConstants.IN_SUDS_ID );
+    try
+    {
+      final URL modelUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
+      final URL controlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
+      final URL metaUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID );
+      final URL parameterUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
+      final URL hydrotopUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
+      final URL syntNUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID );
+      final URL lzsimUrl = getStartConditionFile( inputProvider );
+      final URL sudsUrl = (URL) SimulationDataUtils.getInputOrNull( inputProvider, NaModelConstants.IN_SUDS_ID );
 
-    final NaOptimizeLoader optimizeLoader = new NaOptimizeLoader( inputProvider );
+      final NaOptimizeLoader optimizeLoader = new NaOptimizeLoader( inputProvider );
 
-    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader );
+      return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader );
+    }
+    catch( final SimulationException e )
+    {
+      throw e;
+    }
+    catch( final Exception e )
+    {
+      throw new SimulationException( "Failed to load simulation data", e );
+    }
   }
 
   public static URL getStartConditionFile( final ISimulationDataProvider inputProvider ) throws SimulationException
