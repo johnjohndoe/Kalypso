@@ -172,9 +172,12 @@ public class GebWriter extends AbstractCoreFileWriter
 
     // ATTENTION: the three faktors retob, retin and aigw have been (probably by mistake) applied twice to the real
     // value. We still do this here now in order to keep backwards compatibility.
+
+    final double faktorRetobRetint = catchment.getFactorRetobRetint();
+
     final double retvs = catchment.getRetvs() * catchment.getFaktorRetvs();
-    final double retob = catchment.getRetob() * catchment.getFaktorRetob();
-    final double retint = catchment.getRetint() * catchment.getFaktorRetint();
+    final double retob = catchment.getRetob() * catchment.getFaktorRetob() * faktorRetobRetint;
+    final double retint = catchment.getRetint() * catchment.getFaktorRetint() * faktorRetobRetint;
     final double retbas = catchment.getRetbas() * catchment.getFaktorRetbas();
     final double retgw = catchment.getRetgw() * catchment.getFaktorRetgw();
     final double retklu = catchment.getRetklu() * catchment.getFaktorRetklu();

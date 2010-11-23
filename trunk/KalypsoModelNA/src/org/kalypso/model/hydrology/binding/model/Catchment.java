@@ -377,4 +377,13 @@ public class Catchment extends AbstractNaModelElement
   {
     setProperty( PROP_FAKTOR_AIGW, faktorAigw );
   }
+
+  public double getFactorRetobRetint( )
+  {
+    final Double factor = getProperty( PROP_FAKTOR_RETOB_RETINT, Double.class );
+    if( factor == null )
+      return 1.0;
+
+    return factor;
+  }
 }
