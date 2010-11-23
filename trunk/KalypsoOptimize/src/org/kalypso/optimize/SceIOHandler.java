@@ -40,9 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize;
 
-import java.io.IOException;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,11 +49,11 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.optimize.errorfunctions.ErrorFunctionFactory;
 import org.kalypso.optimize.errorfunctions.IErrorFunktion;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.Parameter;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * this class handles the comunication between optimizer routine (SCE) and calcjob routine
@@ -94,17 +92,24 @@ public class SceIOHandler
 
   private int m_bestCalculation;
 
-  public SceIOHandler( final Logger logger, final AutoCalibration calibration, final IOptimizingJob job ) throws MalformedURLException, SensorException
+  public SceIOHandler( final Logger logger, final AutoCalibration calibration, final IOptimizingJob job ) throws SimulationException
   {
-    m_logger = logger;
+    try
+    {
+      m_logger = logger;
 
-    final SortedMap<Date, Double> measuersTS = job.getMeasuredTimeSeries();
+      final SortedMap<Date, Double> measuersTS = job.getMeasuredTimeSeries();
 
-    m_errorFunction = ErrorFunctionFactory.createErrorFunction( measuersTS, calibration );
+      m_errorFunction = ErrorFunctionFactory.createErrorFunction( measuersTS, calibration );
 
-    final List<Parameter> parameterList = calibration.getParameterlist().getParameter();
-    m_parameterConf = parameterList.toArray( new Parameter[parameterList.size()] );
-    m_job = job;
+      final List<Parameter> parameterList = calibration.getParameterlist().getParameter();
+      m_parameterConf = parameterList.toArray( new Parameter[parameterList.size()] );
+      m_job = job;
+    }
+    catch( final Exception e )
+    {
+      throw new SimulationException( "Fehler beim Initialisieren der Optimierung", e );
+    }
   }
 
   private void readLine( final String line )
@@ -147,7 +152,7 @@ public class SceIOHandler
     return m_parameterConf[index].getLowerBound() + sceValue * (m_parameterConf[index].getUpperBound() - m_parameterConf[index].getLowerBound());
   }
 
-  private void handle( final Writer inputWriter ) throws IOException
+  private void handle( final Writer inputWriter ) throws Exception
   {
     if( !(status == STATUS_CALCULATE_AND_EVALUATE) )
       return;
@@ -163,32 +168,23 @@ public class SceIOHandler
     status = STATUS_READ_PARAMETER_COUNT;
   }
 
-  private String doRecalculate( )
+  private String doRecalculate( ) throws Exception
   {
-    try
+    final double evaluation = recalculate();
+
+    final boolean isBest = m_calculationCounter == 0 || evaluation < m_bestEvaluation;
+    m_job.setBestEvaluation( isBest );
+
+    if( isBest )
     {
-      final double evaluation = recalculate();
-
-      final boolean isBest = m_calculationCounter == 0 || evaluation < m_bestEvaluation;
-      m_job.setBestEvaluation( isBest );
-
-      if( isBest )
-      {
-        m_bestEvaluation = evaluation;
-        m_bestCalculation = m_calculationCounter;
-      }
-
-      final String info = String.format( "Calculation #%d evaluated to %f. Best is #%d with %f.", m_calculationCounter, evaluation, m_bestCalculation, m_bestEvaluation );
-      m_logger.info( info );
-
-      return Double.toString( evaluation ) + "\n";
+      m_bestEvaluation = evaluation;
+      m_bestCalculation = m_calculationCounter;
     }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      m_job.setBestEvaluation( false );
-      return Double.toString( m_bestEvaluation + 999d );
-    }
+
+    final String info = String.format( "Calculation #%d evaluated to %f. Best is #%d with %f.", m_calculationCounter, evaluation, m_bestCalculation, m_bestEvaluation );
+    m_logger.info( info );
+
+    return Double.toString( evaluation ) + "\n";
   }
 
   private double recalculate( ) throws Exception
@@ -205,19 +201,30 @@ public class SceIOHandler
     return m_errorFunction.calculateError( calcedTS );
   }
 
-  public void handleStreams( final StringBuffer outBuffer, final StringBuffer errBuffer, final Writer inputWriter ) throws IOException
+  public void handleStreams( final StringBuffer outBuffer, final StringBuffer errBuffer, final Writer inputWriter ) throws SimulationException
   {
-    // REMARK: do not inline: getLines() deletes read data from the buffer
-    final String[] outLines = getLines( outBuffer );
-    final String[] errLines = getLines( errBuffer );
+    try
+    {
+      // REMARK: do not inline: getLines() deletes read data from the buffer
+      final String[] outLines = getLines( outBuffer );
+      final String[] errLines = getLines( errBuffer );
 
-    printlines( "OUT: ", outLines );
-    printlines( "ERR: ", errLines );
+      printlines( "OUT: ", outLines );
+      printlines( "ERR: ", errLines );
 
-    for( final String element : outLines )
-      readLine( element );
+      for( final String element : outLines )
+        readLine( element );
 
-    handle( inputWriter );
+      handle( inputWriter );
+    }
+    catch( final SimulationException e )
+    {
+      throw e;
+    }
+    catch( final Exception e )
+    {
+      throw new SimulationException( "Fehler bei der Optimierung", e );
+    }
   }
 
   private void printlines( final String prefix, final String[] lines )

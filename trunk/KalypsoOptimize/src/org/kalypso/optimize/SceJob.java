@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.xml.bind.JAXBException;
@@ -54,7 +53,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -68,7 +66,6 @@ import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  * this class encapsulates the optimizing fortran SCE optimizing tool
@@ -117,7 +114,7 @@ public class SceJob
     }
   }
 
-  public void optimize( final SceIOHandler sceIO, final ISimulationMonitor monitor ) throws Exception
+  public void optimize( final SceIOHandler sceIO, final ISimulationMonitor monitor ) throws SimulationException
   {
     prepareExe();
 
@@ -126,27 +123,42 @@ public class SceJob
     startSCEOptimization( sceIO, monitor );
   }
 
-  private void prepareExe( ) throws IOException
+  private void prepareExe( ) throws SimulationException
   {
-    final URL sceExeLocation = getClass().getResource( "resource/sce.exe_" );
-    FileUtils.copyURLToFile( sceExeLocation, m_sceExe );
+    try
+    {
+      final URL sceExeLocation = getClass().getResource( "resource/sce.exe_" );
+      FileUtils.copyURLToFile( sceExeLocation, m_sceExe );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      throw new SimulationException( "sce.exe konnte nicht entpackt werden", e );
+    }
   }
 
   /**
    * prepare SCE configuration file "scein.dat"
    */
-  private void writeSceIn( ) throws TransformerException, SAXException, IOException, JAXBException, URISyntaxException
+  private void writeSceIn( ) throws SimulationException
   {
-    final File outputFile = new File( m_sceDir, "scein.dat" );
+    try
+    {
+      final File outputFile = new File( m_sceDir, "scein.dat" );
 
-    // prepare scein.dat
-    final Document xmlDOM = m_docuBuilder.newDocument();
-    m_marshaller.marshal( m_autoCalibration, xmlDOM );
+      // prepare scein.dat
+      final Document xmlDOM = m_docuBuilder.newDocument();
+      m_marshaller.marshal( m_autoCalibration, xmlDOM );
 
-    final Document xslDOM = m_docuBuilder.parse( XML2SCE_URL.toURI().toASCIIString() );
-    final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-    final Transformer transformer = transformerFactory.newTransformer( new DOMSource( xslDOM ) );
-    transformer.transform( new DOMSource( xmlDOM ), new StreamResult( outputFile ) );
+      final Document xslDOM = m_docuBuilder.parse( XML2SCE_URL.toURI().toASCIIString() );
+      final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      final Transformer transformer = transformerFactory.newTransformer( new DOMSource( xslDOM ) );
+      transformer.transform( new DOMSource( xmlDOM ), new StreamResult( outputFile ) );
+    }
+    catch( final Exception e )
+    {
+      throw new SimulationException( "Fehler beim Schreiben der sce Konfiguration", e );
+    }
   }
 
   private void startSCEOptimization( final SceIOHandler sceIO, final ISimulationMonitor monitor ) throws SimulationException

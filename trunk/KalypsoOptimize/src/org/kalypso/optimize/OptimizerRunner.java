@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * calcjob that optimizes parameters of an encapsulated caljob
@@ -71,25 +72,17 @@ public class OptimizerRunner
     m_optimizingJob = job;
   }
 
-  public boolean run( final ISimulationMonitor monitor )
+  public boolean run( final ISimulationMonitor monitor ) throws SimulationException
   {
-    try
-    {
-      final AutoCalibration autoCalibration = m_optimizingJob.getOptimizeConfiguration();
-      final SceJob sceJob = new SceJob( autoCalibration, m_tmpdir );
+    final AutoCalibration autoCalibration = m_optimizingJob.getOptimizeConfiguration();
+    final SceJob sceJob = new SceJob( autoCalibration, m_tmpdir );
 
-      final SceIOHandler sceIO = new SceIOHandler( m_logger, autoCalibration, m_optimizingJob );
+    final SceIOHandler sceIO = new SceIOHandler( m_logger, autoCalibration, m_optimizingJob );
 
-      if( monitor.isCanceled() )
-        return false;
-      sceJob.optimize( sceIO, monitor );
-
-      return m_optimizingJob.isSucceeded();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
+    if( monitor.isCanceled() )
       return false;
-    }
+    sceJob.optimize( sceIO, monitor );
+
+    return m_optimizingJob.isSucceeded();
   }
 }
