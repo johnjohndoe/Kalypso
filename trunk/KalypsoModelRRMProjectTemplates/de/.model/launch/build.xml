@@ -54,13 +54,12 @@
 		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="stopsim" featurepath="/" featureProperty="startforecast" dateoffset="${hoursofforecast}" dateoffsetfield="HOUR_OF_DAY" />
 		</kalypso.gmlProperty>
-		
+
 		<echo message="von           ${startsim}" />
 		<echo message="vorhersage ab ${startforecast}" />
 		<echo message="bis           ${stopsim}" />
 
 		<!-- correct times for filters -->
-		
 		<script language="javascript">
 			intervalAmount = java.lang.Integer.parseInt(project.getProperty("interval.amount"));
 			startsimTime = javax.xml.bind.DatatypeConverter.parseDateTime( startsim );
@@ -75,7 +74,7 @@
 			stopsimTime.add(java.util.Calendar.MINUTE, 3*intervalAmount);
 			project.setProperty("stopsim", javax.xml.bind.DatatypeConverter.printDateTime( stopsimTime ));
 		</script>
-		
+
 		<echo message="Hole Zeitreihen ab ${startsim} bis ${startforecast}" />
 
 		<property name="interval.field" value="MINUTE" />
@@ -112,7 +111,7 @@
 				<interpolationFilter amount="1" calendarField="HOUR_OF_DAY" defaultStatus="2" defaultValue="0.0" forceFill="true" xmlns="filters.zml.kalypso.org"/>
 			</filter>
 		 -->
-		
+
 		<!--        <echo message="Filter Niederschlag: ${filterN}" />
         <echo message="Filter Temperatur: ${filterT}" />
         <echo message="Filter Pegel/Zufluss: ${filterWQ}" />-->
@@ -189,9 +188,6 @@
 		<echo message="aktualisiere Zeitreihen: ${calc.dir}" />
 	</target>
 
-	<target name="afterCalc" description="Kopiert die Modelldaten nach der Rechnnung">
-	</target>
-
 	<target name="setBasicModel" depends="updateBasicModel,updateIniValues" description="Ersetzt das Basismodell durch das Modell in der Rechenvariante plus Anfangswerte">
 	</target>
 
@@ -213,4 +209,54 @@
 		</copy>
 	</target>
 
+	<!--
+	    =================================
+	    target: runCalculation
+	    =================================
+	  -->
+    <target name="runCalculation" depends="setProperties" description="Führt die eigentliche Simulationsrechnung durch">
+        <echo message="Berechnung wird durchgeführt: ${calc.path}" />
+    	<kalypso.runCalculation calcCaseFolder="${calc.path}" typeid="KalypsoNA">
+            <input id="MetaSteuerdaten" path=".calculation" relativeToCalcCase="true"/>
+            <input id="Modell" path="calcCase.gml" relativeToCalcCase="true"/>
+            <input id="Control" path="expertControl.gml" relativeToCalcCase="true"/>
+            <input id="Hydrotop" path="calcHydrotop.gml" relativeToCalcCase="true"/>
+            <input id="Parameter" path="calcParameter.gml" relativeToCalcCase="true"/>
+
+            <input id="NiederschlagDir" path="Niederschlag" relativeToCalcCase="true"/>
+            <input id="KlimaDir" path="Klima" relativeToCalcCase="true"/>
+            <input id="ZuflussDir" path="Zufluss" relativeToCalcCase="true"/>
+            <input id="PegelDir" path="Pegel" relativeToCalcCase="true"/>
+            <input id="ErgebnisDir" path="Ergebnisse" relativeToCalcCase="true"/>
+            <input id="LZSIM_IN" path="Anfangswerte" relativeToCalcCase="true"/>   
+            
+            <output id="OUT_ZML" path="Ergebnisse" relativeToCalcCase="true"/>
+
+            <clearAfterCalc path="Ergebnisse/Aktuell" relativeToCalcCase="true" />
+        </kalypso.runCalculation>
+        <antcall target="copyResults" />
+    </target>
+        	
+    <!-- ================================= 
+          target: copyResults   copy results to timestamped dir             
+         ================================= -->
+    <target name="copyResults" description="Copies the results into a time-stamped folder.">
+        <tstamp>
+            <format property="now" pattern="yyyy.MM.dd_(HH_mm_ss)" />
+        </tstamp>
+        	
+        <property name="result.path" value="${calc.path}/Ergebnisse" />
+        <property name="result.dir" value="${calc.dir}/Ergebnisse" />
+        	
+        <property name="result.path.aktuell" value="${result.path}/Aktuell" />
+        <property name="result.dir.aktuell" value="${result.dir}/Aktuell" />
+
+        	<property name="result.dir.time" value="${result.dir}/${now}" />
+        <property name="result.path.time" value="${result.path}/${now}" />
+
+        <echo message="Writing copy of results to: ${result.path.time}" />
+        <copy todir="${result.dir.time}">
+            <fileset dir="${result.dir.aktuell}" includes="**/*" />
+        </copy>
+    </target>        	
 </project>
