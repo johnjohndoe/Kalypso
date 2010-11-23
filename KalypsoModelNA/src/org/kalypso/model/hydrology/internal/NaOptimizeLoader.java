@@ -80,6 +80,12 @@ public class NaOptimizeLoader
 
   private final URL m_autocalibrationLocation;
 
+  private NodeList m_optimizeNodes;
+
+  private GMLWorkspace m_contextWorkspace;
+
+  private IFeatureProviderFactory m_factory;
+
   public NaOptimizeLoader( final ISimulationDataProvider dataProvider ) throws SimulationException
   {
     m_autocalibrationLocation = (URL) SimulationDataUtils.getInputOrNull( dataProvider, NaModelConstants.IN_OPTIMIZECONF_ID );
@@ -89,6 +95,9 @@ public class NaOptimizeLoader
 
   public void load( final GMLWorkspace contextWorkspace, final IFeatureProviderFactory factory ) throws Exception
   {
+    m_contextWorkspace = contextWorkspace;
+    m_factory = factory;
+
     if( m_autocalibrationLocation != null )
     {
       final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
@@ -99,17 +108,11 @@ public class NaOptimizeLoader
     {
       final Document dom = XMLHelper.getAsDOM( m_optimizeDataLocation, true );
 
-      final NodeList rootNodes = XPathAPI.selectNodeList( dom, m_optimizePath, dom );
-      if( rootNodes.getLength() == 0 )
+      m_optimizeNodes = XPathAPI.selectNodeList( dom, m_optimizePath, dom );
+      if( m_optimizeNodes.getLength() == 0 )
         throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", m_optimizePath ) );
 
-      // REMARK: we remember this node: it will be later changed by the optimized code (via xpathes)
-      // and then written again and again...
-      m_optimizeDom = rootNodes.item( 0 );
-
-      /* At the moment, we are only interested in the result-links */
-      final URL context = contextWorkspace == null ? m_optimizeDataLocation : contextWorkspace.getContext();
-      m_naOptimize = toOptimizeConfig( m_optimizeDom, context, factory );
+      setCurrentOptimize( 0 );
     }
   }
 
@@ -142,5 +145,41 @@ public class NaOptimizeLoader
   public AutoCalibration getAutoCalibration( )
   {
     return m_autoCalibration;
+  }
+
+  public boolean isMultiOptimize( )
+  {
+    return getOptimizeCount() > 1;
+  }
+
+  public int getOptimizeCount( )
+  {
+    if( m_optimizeNodes == null )
+      return 0;
+
+    return m_optimizeNodes.getLength();
+  }
+
+  public void setCurrentOptimize( final int i ) throws SimulationException
+  {
+    try
+    {
+      // REMARK: we remember this node: it will be later changed by the optimized code (via xpathes)
+      // and then written again and again...
+      m_optimizeDom = m_optimizeNodes.item( i );
+
+      /* At the moment, we are only interested in the result-links */
+      final URL context = m_contextWorkspace == null ? m_optimizeDataLocation : m_contextWorkspace.getContext();
+      m_naOptimize = toOptimizeConfig( m_optimizeDom, context, m_factory );
+    }
+    catch( final SimulationException e )
+    {
+      throw e;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new SimulationException( "Fehler bei Lesen der Optimierungskonfiguration" );
+    }
   }
 }

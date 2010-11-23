@@ -129,7 +129,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
   private final Logger m_logger;
 
-  public NAOptimizingJob( final File tmpDir, final INaSimulationData data, final ISimulationMonitor monitor, final Logger logger ) throws Exception
+  public NAOptimizingJob( final File tmpDir, final INaSimulationData data, final ISimulationMonitor monitor, final Logger logger )
   {
     m_tmpDir = tmpDir;
     m_data = data;
@@ -175,7 +175,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
    * @see org.kalypso.simulation.core.ISimulationRunnable#run(org.kalypso.simulation.core.ISimulationMonitor)
    */
   @Override
-  public boolean run( final ISimulationMonitor monitor )
+  public boolean run( final ISimulationMonitor monitor ) throws SimulationException
   {
     final OptimizerRunner runner = new OptimizerRunner( m_tmpDir, m_logger, this );
     return runner.run( monitor );
@@ -196,7 +196,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     m_counter++;
   }
 
-  private boolean runFirst( )
+  private boolean runFirst( ) throws Exception
   {
     final NACalculationLogger naCalculationLogger = new NACalculationLogger( new File( m_tmpDir, "logRun_" + m_counter ) );
 
@@ -212,14 +212,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
       final String msg = "Simulation cancelled by user";
       logger.log( Level.INFO, msg );
       m_monitor.setFinishInfo( IStatus.CANCEL, msg );
-      return false;
-    }
-    catch( final Exception e )
-    {
-      // FIXME: error handling
-      e.printStackTrace();
-// logger.log( Level.SEVERE, STRING_SIMULATION_FAILED, e );
-// throw new SimulationException( STRING_SIMULATION_FAILED, e );
       return false;
     }
     finally
