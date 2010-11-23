@@ -101,7 +101,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
         final int overflowNode1ID = overflowNode == null ? 0 : m_idManager.getAsciiID( overflowNode );
         final int overflowNode2ID = overflowNode2 == null ? 0 : m_idManager.getAsciiID( overflowNode2 );
         final int overflowNode3ID = overflowNode3 == null ? 0 : m_idManager.getAsciiID( overflowNode3 );
-        writer.format( Locale.ENGLISH, "SPEICHER %7d %7d %7d %7d %s\n", channelID, overflowNode1ID, overflowNode2ID, overflowNode3ID, asciiTS ); //$NON-NLS-1$
+        writer.format( Locale.ENGLISH, "SPEICHER %7d %7d %7d %7d  %s\n", channelID, overflowNode1ID, overflowNode2ID, overflowNode3ID, asciiTS ); //$NON-NLS-1$
         writer.format( Locale.ENGLISH, "Fakt_SeeV %.2f\n", channel.getSeaEvaporationFactor() ); //$NON-NLS-1$
         writer.format( Locale.ENGLISH, "text;text\n" ); //$NON-NLS-1$
 
@@ -118,7 +118,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
           final double initialCapacity = channel.getInitialCapacity() / 1000000.0;
           final double volumeMax = channel.getVolumeMax() / 1000000.0; // wvqInfo.getMaxVolume()
           final double volumeMin = channel.getVolumeMin() / 1000000.0; // wvqInfo.getMinVolume()
-          writer.format( Locale.ENGLISH, "%s %10.6f %9.6f %9.6f %d\n", channel.getName(), initialCapacity, volumeMax, volumeMin, wvqInfo.getNumberOfEntries() ); //$NON-NLS-1$
+          writer.format( Locale.ENGLISH, "%s %10.6f %9.6f %9.6f %d\n", channel.getName().length() > 10 ? channel.getName().substring( 0, 10 ) : channel.getName(), initialCapacity, volumeMax, volumeMin, wvqInfo.getNumberOfEntries() ); //$NON-NLS-1$
           writer.write( wvqInfo.getFormattedObservation() );
         }
         writer.format( Locale.ENGLISH, "ENDE\n" ); //$NON-NLS-1$
