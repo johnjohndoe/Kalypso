@@ -78,11 +78,19 @@ public class NaOptimizeLoader
 
   private NaOptimizeData m_optimizeData;
 
+  private final int m_optimizeStep;
+
   public NaOptimizeLoader( final ISimulationDataProvider dataProvider ) throws SimulationException
+  {
+    this( dataProvider, 0 );
+  }
+
+  public NaOptimizeLoader( final ISimulationDataProvider dataProvider, final int optimizeStep ) throws SimulationException
   {
     m_autocalibrationLocation = (URL) SimulationDataUtils.getInputOrNull( dataProvider, NaModelConstants.IN_OPTIMIZECONF_ID );
     m_optimizeDataLocation = SimulationDataUtils.getInputOrNull( dataProvider, NaModelConstants.IN_OPTIMIZE_ID );
     m_optimizePath = SimulationDataUtils.getInputOrDefault( dataProvider, NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, "." );
+    m_optimizeStep = optimizeStep;
   }
 
   public NaOptimizeData load( final GMLWorkspace contextWorkspace, final IFeatureProviderFactory factory ) throws Exception
@@ -163,7 +171,7 @@ public class NaOptimizeLoader
     try
     {
       final NodeList optimizeNodes = loadOptimizeNodes();
-      if( optimizeNodes == null || optimizeNodes.getLength() == 0 )
+      if( optimizeNodes == null || optimizeNodes.getLength() == m_optimizeStep )
         throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", m_optimizePath ) );
 
       return optimizeNodes;

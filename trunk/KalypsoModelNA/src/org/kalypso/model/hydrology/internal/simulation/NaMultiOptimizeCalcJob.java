@@ -41,9 +41,11 @@
 package org.kalypso.model.hydrology.internal.simulation;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.NaSimulationDataFactory;
@@ -55,7 +57,6 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
@@ -63,6 +64,8 @@ import org.w3c.dom.NodeList;
  */
 public class NaMultiOptimizeCalcJob implements ISimulation
 {
+  public static final String SEPC_IN_OPTIMIZE_START = "OptimizeStartStep";
+
   public static final String SPEC_XML_LOCATION = "multioptimize_spec.xml"; //$NON-NLS-1$
 
   private File m_optimizeResultFile;
@@ -88,21 +91,27 @@ public class NaMultiOptimizeCalcJob implements ISimulation
       final NaOptimizeLoader optimizeLoader = new NaOptimizeLoader( dataProvider );
       final NodeList optimizeNodes = optimizeLoader.loadOptimizeNodesForMulti();
 
-      m_commonResultsDir = new File( tmpdir, "commonResultDir" );
+      final URL inputResultDirLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_RESULTS_DIR_ID );
+      m_commonResultsDir = FileUtils.toFile( inputResultDirLocation );
+
       m_optimizeResultFile = new File( m_commonResultsDir, "fullOptimizeResult.gml" );
 
-      // TODO: copy first optimize bean to optimizeResultFile
+      /* copy first optimize bean to optimizeResultFile */
+      final URL optimizeConfLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_ID );
+      FileUtils.copyURLToFile( optimizeConfLocation, m_optimizeResultFile );
 
-      // TODO: prepare common resultDir: copy from data provider result into this dir
+      final Integer startStep = (Integer) dataProvider.getInputForID( SEPC_IN_OPTIMIZE_START );
 
-      for( int i = 0; i < optimizeNodes.getLength(); i++ )
+      final int maxStep = optimizeNodes.getLength();
+      for( int i = startStep; i < maxStep; i++ )
       {
-        final Node optimizeNode = optimizeNodes.item( i );
-
         final String optimizeRunDirname = String.format( "optimizeRun_%d", i );
         final File optimizeRunDir = new File( tmpdir, optimizeRunDirname );
 
-        runOptimize( optimizeRunDir, dataProvider, monitor, logger );
+        final String message = String.format( "Schritt %d/%d", i + 1, maxStep );
+        monitor.setMessage( message );
+
+        runOptimize( optimizeRunDir, dataProvider, monitor, logger, i );
       }
 
       publishResults( resultEater );
@@ -123,28 +132,34 @@ public class NaMultiOptimizeCalcJob implements ISimulation
     }
   }
 
-  private void runOptimize( final File optimizeRunDir, final ISimulationDataProvider dataProvider, final ISimulationMonitor monitor, final Logger logger ) throws SimulationException
+  private void runOptimize( final File optimizeRunDir, final ISimulationDataProvider dataProvider, final ISimulationMonitor monitor, final Logger logger, final int step ) throws SimulationException, IOException
   {
-    // FIXME: tweak data provider in order to fetch results from common result dir
-    // FIXME: tweak data provider in order to use the right optimize bean
-
+    /* OVerwrite input in order to tweak data provider */
     final OptimizeDataProvider optimizeDataProvider = new OptimizeDataProvider( dataProvider );
-    optimizeDataProvider.setInput( NaModelConstants.IN_OPTIMIZE_ID, m_optimizeResultFile );
-    final Object optimizePath = "";
+    optimizeDataProvider.setInput( NaModelConstants.IN_OPTIMIZE_ID, m_optimizeResultFile.toURI().toURL() );
+
+    /* Select the i'th member of the list of elements */
+    final String originalOptimizePath = (String) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID );
+    // REMARK: xpath indices start at 1
+    final String optimizePath = String.format( "(%s)[%d]", originalOptimizePath, step + 1 );
+
     optimizeDataProvider.setInput( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, optimizePath );
-    optimizeDataProvider.setInput( NaModelConstants.IN_RESULTS_DIR_ID, m_commonResultsDir );
 
-    final INaSimulationData data = NaSimulationDataFactory.load( dataProvider );
+    /* Load teqeaked data and run a optimized simulation on the current node */
+    final INaSimulationData data = NaSimulationDataFactory.load( optimizeDataProvider );
 
-    final NAOptimizingJob job = new NAOptimizingJob( optimizeRunDir, data, new OptimizeMonitor( monitor ), logger );
-    job.run( monitor );
+    final NAOptimizingJob job = new NAOptimizingJob( optimizeRunDir, data, logger );
+    final OptimizeMonitor subMonitor = new OptimizeMonitor( monitor );
+    job.run( subMonitor );
 
-    // FIXME: copy best results into common resultsDir
+    final File resultDir = job.getResultDir();
 
-    // FIXME: copy best result bean to common results dir
+    // XXXX
 
-    // FIXME: reload best result bean and step to next
+    FileUtils.copyDirectory( resultDir, m_commonResultsDir );
 
+    final File optimizeResult = job.getOptimizeResult();
+    FileUtils.copyFile( optimizeResult, m_optimizeResultFile );
   }
 
   private void publishResults( final ISimulationResultEater resultEater ) throws SimulationException

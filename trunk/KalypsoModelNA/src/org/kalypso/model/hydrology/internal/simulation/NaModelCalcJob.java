@@ -49,7 +49,6 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.optimize.OptimizeMonitor;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -79,7 +78,7 @@ public class NaModelCalcJob implements ISimulation
       monitor.setMessage( "Loading simulation data..." );
       data = NaSimulationDataFactory.load( dataProvider );
 
-      runnable = createRunnable( data, tmpdir, monitor );
+      runnable = createRunnable( data, tmpdir );
       /* final boolean success = */runnable.run( monitor );
       // FIXME: what to do of not succeeded?
       publishResults( resultEater, runnable );
@@ -120,14 +119,14 @@ public class NaModelCalcJob implements ISimulation
     }
   }
 
-  private INaSimulationRunnable createRunnable( final INaSimulationData data, final File tmpdir, final ISimulationMonitor monitor ) throws Exception
+  private INaSimulationRunnable createRunnable( final INaSimulationData data, final File tmpdir ) throws Exception
   {
     final boolean doOptimize = isOptimize( data );
     if( doOptimize )
     {
       // FIXME: replace with other logging framework, in preference eclipse's
       final Logger logger = Logger.getAnonymousLogger();
-      return new NAOptimizingJob( tmpdir, data, new OptimizeMonitor( monitor ), logger );
+      return new NAOptimizingJob( tmpdir, data, logger );
     }
 
     return new NaModelInnerCalcJob( data, tmpdir );

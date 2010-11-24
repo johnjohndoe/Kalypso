@@ -43,17 +43,20 @@ package org.kalypso.optimize;
 import org.kalypso.simulation.core.ISimulationMonitor;
 
 /**
+ * FIXME: actually some kind ob SubMonitor -> should be renamed
+ * 
  * @author Gernot Belger
  */
 public class OptimizeMonitor implements ISimulationMonitor
 {
   private final ISimulationMonitor m_monitor;
 
-  private String m_message;
+  private final String m_prefix;
 
   public OptimizeMonitor( final ISimulationMonitor monitor )
   {
     m_monitor = monitor;
+    m_prefix = monitor.getMessage();
   }
 
   /**
@@ -80,10 +83,7 @@ public class OptimizeMonitor implements ISimulationMonitor
   @Override
   public String getMessage( )
   {
-    if( m_message == null )
-      return m_monitor.getMessage();
-
-    return m_monitor.getMessage() + " - " + m_message;
+    return m_monitor.getMessage();
   }
 
   /**
@@ -110,7 +110,16 @@ public class OptimizeMonitor implements ISimulationMonitor
   @Override
   public void setMessage( final String message )
   {
-    m_message = message;
+    final String prefixedMessage = String.format( "%s - %s", m_prefix, message );
+    setMessageInternal( prefixedMessage );
+  }
+
+  private void setMessageInternal( final String message )
+  {
+    if( m_monitor instanceof OptimizeMonitor )
+      ((OptimizeMonitor) m_monitor).setMessageInternal( message );
+    else
+      m_monitor.setMessage( message );
   }
 
   /**

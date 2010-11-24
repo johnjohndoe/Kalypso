@@ -232,7 +232,8 @@ public class SceJob
         }
         catch( final IllegalThreadStateException e )
         {
-          sceIO.handleStreams( outBuffer, errBuffer, inputWriter );
+          final OptimizeMonitor subMonitor = new OptimizeMonitor( monitor );
+          sceIO.handleStreams( outBuffer, errBuffer, inputWriter, subMonitor );
         }
         Thread.sleep( 100 );
       }

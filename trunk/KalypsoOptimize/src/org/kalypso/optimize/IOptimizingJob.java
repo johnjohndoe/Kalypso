@@ -48,6 +48,7 @@ import java.util.SortedMap;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.Parameter;
+import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 
@@ -75,7 +76,7 @@ public interface IOptimizingJob
    * 
    * @throws MalformedURLException
    */
-  void calculate( ) throws Exception;
+  void calculate( ISimulationMonitor monitor ) throws Exception;
 
   // FIXME: optimize job should not return measure/calculated timeseries but directly return the error-value as this is
   // implementation specific
