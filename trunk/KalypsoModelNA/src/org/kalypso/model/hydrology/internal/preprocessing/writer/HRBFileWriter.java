@@ -118,7 +118,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
           final double initialCapacity = channel.getInitialCapacity() / 1000000.0;
           final double volumeMax = channel.getVolumeMax() / 1000000.0; // wvqInfo.getMaxVolume()
           final double volumeMin = channel.getVolumeMin() / 1000000.0; // wvqInfo.getMinVolume()
-          writer.format( Locale.ENGLISH, "%s %10.6f %9.6f %9.6f %d\n", channel.getName().length() > 10 ? channel.getName().substring( 0, 10 ) : channel.getName(), initialCapacity, volumeMax, volumeMin, wvqInfo.getNumberOfEntries() ); //$NON-NLS-1$
+          writer.format( Locale.ENGLISH, "%-10s%10.6f%10.6f%10.6f %d\n", channel.getName().length() > 10 ? channel.getName().substring( 0, 10 ) : channel.getName(), initialCapacity, volumeMax, volumeMin, wvqInfo.getNumberOfEntries() ); //$NON-NLS-1$
           writer.write( wvqInfo.getFormattedObservation() );
         }
         writer.format( Locale.ENGLISH, "ENDE\n" ); //$NON-NLS-1$
