@@ -62,7 +62,6 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.internal.simulation.NAOptimizingJob;
 import org.kalypso.model.hydrology.internal.simulation.NaModelCalcJob;
-import org.kalypso.optimize.OptimizeMonitor;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationDataPath;
@@ -147,7 +146,7 @@ public class OptimizeTest
 
       final INaSimulationData data = NaSimulationDataFactory.load( dataProvider );
 
-      final NAOptimizingJob optimizeJob = new NAOptimizingJob( tmpDir, data, new OptimizeMonitor( monitor ), logger );
+      final NAOptimizingJob optimizeJob = new NAOptimizingJob( tmpDir, data, logger );
       final boolean succeeded = optimizeJob.run( monitor );
 
       disconnectLogger( logger );

@@ -17,7 +17,7 @@
 	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
   
     <!-- Special parameter for multi optimization -->
-	<input id="OptimizeStart" description="Startelement der Multioptimierung" optional="true"/>
+	<input id="OptimizeStartStep" type="xs:int" description="Startelement der Multioptimierung" optional="true"/>
 
 	<!-- Zeitreihen als Verzeichnisse -->
     <input id="NiederschlagDir" description="description" optional="true"/>

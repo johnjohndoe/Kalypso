@@ -106,8 +106,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
   private final File m_bestOptimizedFile;
 
-  private final ISimulationMonitor m_monitor;
-
   private final File m_bestOptimizeRunDir;
 
   private int m_counter = 0;
@@ -130,11 +128,10 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
   private final Logger m_logger;
 
-  public NAOptimizingJob( final File tmpDir, final INaSimulationData data, final ISimulationMonitor monitor, final Logger logger )
+  public NAOptimizingJob( final File tmpDir, final INaSimulationData data, final Logger logger )
   {
     m_tmpDir = tmpDir;
     m_data = data;
-    m_monitor = monitor;
     m_logger = logger;
 
     m_optimizeRunDir = new File( m_tmpDir, "optimizeRun" );
@@ -142,26 +139,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     m_bestResultDir = new File( m_tmpDir, "bestResult" );
     m_bestOptimizedFile = new File( m_tmpDir, "bestOptimizeConfig.gml" );
     m_simDirs = new NaSimulationDirs( m_optimizeRunDir );
-
-    monitor.setMessage( "Loading simulation data..." );
-
-    final NAControl metaControl = data.getMetaControl();
-    final Date optimizationStartDate = metaControl.getOptimizationStart();
-    final Date measuredEndDate = metaControl.getStartForecast();
-
-    final NaOptimizeData optimizeData = data.getOptimizeData();
-
-    final AutoCalibration autoCalibration = optimizeData.getAutoCalibration();
-    // correct in intervall autocalibration
-    final Pegel pegel = autoCalibration.getPegel();
-
-    final Calendar calendarStart = Calendar.getInstance();
-    calendarStart.setTime( optimizationStartDate );
-    pegel.setStartDate( calendarStart );
-
-    final Calendar calendarEnd = Calendar.getInstance();
-    calendarEnd.setTime( measuredEndDate );
-    pegel.setEndDate( calendarEnd );
   }
 
   @Override
@@ -178,6 +155,26 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
   @Override
   public boolean run( final ISimulationMonitor monitor ) throws SimulationException
   {
+    monitor.setMessage( "Loading simulation data..." );
+
+    final NAControl metaControl = m_data.getMetaControl();
+    final Date optimizationStartDate = metaControl.getOptimizationStart();
+    final Date measuredEndDate = metaControl.getStartForecast();
+
+    final NaOptimizeData optimizeData = m_data.getOptimizeData();
+
+    final AutoCalibration autoCalibration = optimizeData.getAutoCalibration();
+    // correct in intervall autocalibration
+    final Pegel pegel = autoCalibration.getPegel();
+
+    final Calendar calendarStart = Calendar.getInstance();
+    calendarStart.setTime( optimizationStartDate );
+    pegel.setStartDate( calendarStart );
+
+    final Calendar calendarEnd = Calendar.getInstance();
+    calendarEnd.setTime( measuredEndDate );
+    pegel.setEndDate( calendarEnd );
+
     final OptimizerRunner runner = new OptimizerRunner( m_tmpDir, m_logger, this );
     return runner.run( monitor );
   }
@@ -187,17 +184,17 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
    * @see org.kalypso.optimize.IOptimizingJob#calculate()
    */
   @Override
-  public void calculate( ) throws Exception
+  public void calculate( final ISimulationMonitor monitor ) throws Exception
   {
     if( m_counter == 0 )
-      m_lastSucceeded = runFirst();
+      m_lastSucceeded = runFirst( monitor );
     else
-      m_lastSucceeded = runAgain();
+      m_lastSucceeded = runAgain( monitor );
 
     m_counter++;
   }
 
-  private boolean runFirst( ) throws Exception
+  private boolean runFirst( final ISimulationMonitor monitor ) throws Exception
   {
     final NACalculationLogger naCalculationLogger = new NACalculationLogger( new File( m_tmpDir, "logRun_" + m_counter ) );
 
@@ -206,13 +203,13 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     try
     {
       m_simulation = new NAModelSimulation( m_simDirs, m_data, logger );
-      return m_simulation.runSimulation( m_monitor );
+      return m_simulation.runSimulation( monitor );
     }
     catch( final OperationCanceledException e )
     {
-      final String msg = "Simulation cancelled by user";
+      final String msg = "Simulation canceled by user";
       logger.log( Level.INFO, msg );
-      m_monitor.setFinishInfo( IStatus.CANCEL, msg );
+      monitor.setFinishInfo( IStatus.CANCEL, msg );
       return false;
     }
     finally
@@ -221,7 +218,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     }
   }
 
-  private boolean runAgain( ) throws Exception
+  private boolean runAgain( final ISimulationMonitor monitor ) throws Exception
   {
     final INaSimulationData simulationData = m_simulation.getSimulationData();
     final GMLWorkspace contextWorkspace = simulationData.getModelWorkspace();
@@ -230,7 +227,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
     final Node naOptimizeDom = m_data.getOptimizeData().getOptimizeDom();
     final NAOptimize optimize = NaOptimizeLoader.toOptimizeConfig( naOptimizeDom, context, factory );
-    return m_simulation.rerunForOptimization( optimize, m_monitor );
+    return m_simulation.rerunForOptimization( optimize, monitor );
   }
 
   /**

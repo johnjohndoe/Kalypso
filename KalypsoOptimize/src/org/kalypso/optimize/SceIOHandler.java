@@ -53,6 +53,7 @@ import org.kalypso.optimize.errorfunctions.ErrorFunctionFactory;
 import org.kalypso.optimize.errorfunctions.IErrorFunktion;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.Parameter;
+import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 
 /**
@@ -152,12 +153,12 @@ public class SceIOHandler
     return m_parameterConf[index].getLowerBound() + sceValue * (m_parameterConf[index].getUpperBound() - m_parameterConf[index].getLowerBound());
   }
 
-  private void handle( final Writer inputWriter ) throws Exception
+  private void handle( final Writer inputWriter, final ISimulationMonitor monitor ) throws Exception
   {
     if( !(status == STATUS_CALCULATE_AND_EVALUATE) )
       return;
 
-    final String answer = doRecalculate();
+    final String answer = doRecalculate( monitor );
 
     m_calculationCounter++;
 
@@ -168,9 +169,9 @@ public class SceIOHandler
     status = STATUS_READ_PARAMETER_COUNT;
   }
 
-  private String doRecalculate( ) throws Exception
+  private String doRecalculate( final ISimulationMonitor monitor ) throws Exception
   {
-    final double evaluation = recalculate();
+    final double evaluation = recalculate( monitor );
 
     final boolean isBest = m_calculationCounter == 0 || evaluation < m_bestEvaluation;
     m_job.setBestEvaluation( isBest );
@@ -187,7 +188,7 @@ public class SceIOHandler
     return Double.toString( evaluation ) + "\n";
   }
 
-  private double recalculate( ) throws Exception
+  private double recalculate( final ISimulationMonitor monitor ) throws Exception
   {
     KalypsoOptimizeDebug.DEBUG.printf( "%n%nrecalculation step %d...", m_calculationCounter );
     final double[] newValues = new double[m_parameter.size()];
@@ -195,13 +196,13 @@ public class SceIOHandler
       newValues[i] = m_parameter.get( i ).doubleValue();
 
     m_job.optimize( m_parameterConf, newValues );
-    m_job.calculate();
+    m_job.calculate( monitor );
 
     final SortedMap<Date, Double> calcedTS = m_job.getCalcedTimeSeries();
     return m_errorFunction.calculateError( calcedTS );
   }
 
-  public void handleStreams( final StringBuffer outBuffer, final StringBuffer errBuffer, final Writer inputWriter ) throws SimulationException
+  public void handleStreams( final StringBuffer outBuffer, final StringBuffer errBuffer, final Writer inputWriter, final ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
@@ -215,7 +216,7 @@ public class SceIOHandler
       for( final String element : outLines )
         readLine( element );
 
-      handle( inputWriter );
+      handle( inputWriter, monitor );
     }
     catch( final SimulationException e )
     {
