@@ -56,9 +56,8 @@ public class NetElementCircleFinder
   {
     final List<List<NetElement>> result = new ArrayList<List<NetElement>>();
     listToHere.add( netElement );
-    final List<NetElement> downStreamNetElements = netElement.getDownStreamNetElements();
-    final NetElement[] downStreamElements = downStreamNetElements.toArray( new NetElement[downStreamNetElements.size()] );
-    for( final NetElement linkNetElement : downStreamElements )
+    final NetElement[] downStreamNetElements = netElement.getDownStreamNetElements();
+    for( final NetElement linkNetElement : downStreamNetElements )
     {
       final List<NetElement> copyOfListToHere = new ArrayList<NetElement>();
       // make copy

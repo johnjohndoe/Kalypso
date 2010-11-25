@@ -138,13 +138,13 @@ public class NetFileAnalyser
     final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
     for( final Node upStreamNode : nodes )
     {
-      final Channel upStreamChannel = upStreamNode.getDownstreamChannel();
+      final Channel upstreamNodeChannel = upStreamNode.getDownstreamChannel();
       final Node[] relatedNode = findRelatedNodes( upStreamNode );
       for( final Node downStreamNode : relatedNode )
       {
         final Channel downStreamChannelFE = downStreamNode.getDownstreamChannel();
 
-        if( upStreamChannel == null )
+        if( upstreamNodeChannel == null )
         {
           final String message = String.format( "Inconsistent net: Node '%s' with branch has no upstream channel.", upStreamNode.getName() );
           throw new SimulationException( message );
@@ -156,15 +156,15 @@ public class NetFileAnalyser
           throw new SimulationException( message );
         }
 
-        if( upStreamChannel == downStreamChannelFE )
+        if( upstreamNodeChannel == downStreamChannelFE )
         {
-          logWarning( "Impossible net at %s: Node-Node relation to itself", upStreamChannel );
+          logWarning( "Impossible net at %s: Node-Node relation to itself", upstreamNodeChannel );
           // FIXME: shouldn't we throw an exception here?
           continue;
         }
 
         // set dependency
-        final NetElement upStreamElement = netElements.get( upStreamChannel.getId() );
+        final NetElement upStreamElement = netElements.get( upstreamNodeChannel.getId() );
         final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
         downStreamElement.addUpStream( upStreamElement );
       }
@@ -249,6 +249,7 @@ public class NetFileAnalyser
 
       // downstream
       final IRelationType rt1 = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.GRUNDWASSERABFLUSS_MEMBER );
+// final Feature[] abflussFEs = new Feature[0];
       final Feature[] abflussFEs = m_modelWorkspace.resolveLinks( catchment, rt1 );
       for( final Feature abflussFE : abflussFEs )
       {

@@ -81,10 +81,10 @@ public class SimulationVisitor extends NetElementVisitor
     checkCycle( netElement );
 
     // first calculate upstream
-    final List<NetElement> upStreamNetElements = netElement.getUpStreamNetElements();
-    for( final NetElement netElement2 : upStreamNetElements )
+    final NetElement[] upStreamNetElements = netElement.getUpStreamNetElements();
+    for( final NetElement upStreamElement : upStreamNetElements )
     {
-      final NetElement element = netElement2;
+      final NetElement element = upStreamElement;
       visit( element );
     }
 

@@ -82,7 +82,7 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
     // check donwstream
 
     final Feature downStreamChannel = netElement.getChannelsBelowDownStreamNode();
-    final List<NetElement> downStreamNetElements = netElement.getDownStreamNetElements();
+    final NetElement[] downStreamNetElements = netElement.getDownStreamNetElements();
     boolean needToComplete = true;
     for( final NetElement downstreamElement : downStreamNetElements )
     {
