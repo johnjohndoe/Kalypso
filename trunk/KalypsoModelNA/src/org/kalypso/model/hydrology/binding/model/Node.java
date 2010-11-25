@@ -62,15 +62,11 @@ public class Node extends AbstractNaModelElement
 {
   public static final QName FEATURE_NODE = new QName( NaModelConstants.NS_NAMODELL, "Node" ); //$NON-NLS-1$
 
-  /** @deprecated Do not use directly, use accessor methods instead. */
-  @Deprecated
-  public static final QName PROP_ZUFLUSS_ZR = new QName( NS_NAMODELL, "zuflussZR" ); //$NON-NLS-1$
+  private static final QName PROP_ZUFLUSS_ZR = new QName( NS_NAMODELL, "zuflussZR" ); //$NON-NLS-1$
 
-  public static final QName PROP_PEGEL_ZR = new QName( NS_NAMODELL, "pegelZR" ); //$NON-NLS-1$
+  private static final QName PROP_PEGEL_ZR = new QName( NS_NAMODELL, "pegelZR" ); //$NON-NLS-1$
 
-  /** @deprecated Do not use directly, use accessor methods instead. */
-  @Deprecated
-  public static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NAMODELL, "qberechnetZR" ); //$NON-NLS-1$
+  private static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NAMODELL, "qberechnetZR" ); //$NON-NLS-1$
 
   private static final QName PROP_SYNTHETIC_ZUFLUSS_ZR = new QName( NS_NAMODELL, "syntheticZuflussZR" ); //$NON-NLS-1$
 
@@ -105,11 +101,6 @@ public class Node extends AbstractNaModelElement
   public ZmlLink getResultLink( )
   {
     return new ZmlLink( this, PROP_RESULT_TIMESERIESLINK );
-  }
-
-  public void setResultLink( final TimeseriesLinkType zuflussLink )
-  {
-    setProperty( PROP_RESULT_TIMESERIESLINK, zuflussLink );
   }
 
   /**
