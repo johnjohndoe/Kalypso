@@ -25,7 +25,7 @@ import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.SIMULATION_K
 import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.simulation.ui.calccase.simulation.SimulationFactory;
 import org.kalypso.ui.views.map.MapView;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -70,7 +70,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
             try
             {
               final Modeldata modeldata = SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.SPECIFIC_DAMAGE_CALCULATION );
-              ModelNature.runCalculation( scenarioFolder, monitor, modeldata );
+              SimulationFactory.runCalculation( scenarioFolder, monitor, modeldata );
             }
             catch( final CoreException e )
             {
