@@ -43,7 +43,6 @@ package org.kalypso.model.hydrology.internal.simulation;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.SortedMap;
@@ -68,7 +67,6 @@ import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
-import org.kalypso.model.hydrology.internal.NaOptimizeLoader;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -80,16 +78,13 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizerRunner;
-import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.optimize.transform.ParameterOptimizeContext;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.Parameter;
 import org.kalypso.optimizer.Pegel;
 import org.kalypso.simulation.core.ISimulationMonitor;
-import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -139,12 +134,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     m_bestResultDir = new File( m_tmpDir, "bestResult" );
     m_bestOptimizedFile = new File( m_tmpDir, "bestOptimizeConfig.gml" );
     m_simDirs = new NaSimulationDirs( m_optimizeRunDir );
-  }
-
-  @Override
-  public void dispose( )
-  {
-    m_data.dispose();
   }
 
   /**
@@ -220,13 +209,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
   private boolean runAgain( final ISimulationMonitor monitor ) throws Exception
   {
-    final INaSimulationData simulationData = m_simulation.getSimulationData();
-    final GMLWorkspace contextWorkspace = simulationData.getModelWorkspace();
-    final URL context = contextWorkspace.getContext();
-    final IFeatureProviderFactory factory = contextWorkspace.getFeatureProviderFactory();
-
-    final Node naOptimizeDom = m_data.getOptimizeData().getOptimizeDom();
-    final NAOptimize optimize = NaOptimizeLoader.toOptimizeConfig( naOptimizeDom, context, factory );
+    final NAOptimize optimize = m_data.getNaOptimize();
     return m_simulation.rerunForOptimization( optimize, monitor );
   }
 
@@ -296,8 +279,9 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
     try
     {
-      final Node naOptimizeDom = m_data.getOptimizeData().getOptimizeDom();
-      OptimizeModelUtils.transformModel( naOptimizeDom, values, calcContexts );
+      final GMLWorkspace contextWorkspace = m_data.getModelWorkspace();
+      final NaOptimizeData optimizeData = m_data.getOptimizeData();
+      optimizeData.applyCalibration( values, calcContexts, contextWorkspace );
     }
     catch( final TransformerException e )
     {
@@ -384,18 +368,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
       result.put( date, value );
     }
     return result;
-  }
-
-  /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.optimize.IOptimizingJob#publishResults(org.kalypso.services.calculation.job.ICalcResultEater)
-   */
-  @Override
-  public void publishResults( final ISimulationResultEater resultEater ) throws SimulationException
-  {
-    resultEater.addResult( NaModelConstants.OUT_ZML, m_bestResultDir );
-
-    System.out.println( "best was #" + m_bestNumber ); //$NON-NLS-1$
   }
 
   /**

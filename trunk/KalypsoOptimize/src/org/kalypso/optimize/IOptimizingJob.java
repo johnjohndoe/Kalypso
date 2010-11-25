@@ -49,8 +49,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.Parameter;
 import org.kalypso.simulation.core.ISimulationMonitor;
-import org.kalypso.simulation.core.ISimulationResultEater;
-import org.kalypso.simulation.core.SimulationException;
 
 /**
  * IOptimizingJob
@@ -59,8 +57,6 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public interface IOptimizingJob
 {
-  void dispose( );
-
   /**
    * commits population for next calculation run
    * 
@@ -99,8 +95,6 @@ public interface IOptimizingJob
   void setBestEvaluation( boolean wasBest );
 
   AutoCalibration getOptimizeConfiguration( );
-
-  void publishResults( ISimulationResultEater resultEater ) throws SimulationException;
 
   boolean isSucceeded( );
 

@@ -156,13 +156,15 @@ public class NAModelPreprocessor
     naModellConverter.writeUncalibratedFiles( m_relevantElements, m_tsFileManager, m_hydroHash );
 
     final NAOptimize optimizeConfig = m_simulationData.getNaOptimize();
-    processCallibrationFiles( optimizeConfig );
+    processCallibrationFiles( optimizeConfig, monitor );
 
     checkCancel( monitor );
   }
 
-  public void processCallibrationFiles( final NAOptimize optimize ) throws Exception
+  public void processCallibrationFiles( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
   {
+    monitor.setMessage( "Wende Kalibrierungsfaktoren an..." );
+
     final NAModellConverter naModellConverter = new NAModellConverter( m_idManager, m_simulationData, m_asciiDirs, m_logger );
 
     final CalibrationConfig config = new CalibrationConfig( optimize );

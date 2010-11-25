@@ -44,20 +44,15 @@ import java.net.URL;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.TransformerException;
 
 import org.apache.xpath.XPathAPI;
 import org.kalypso.contribs.java.xml.XMLHelper;
-import org.kalypso.gml.GMLException;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.NAOptimize;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.OptimizeJaxb;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataUtils;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.w3c.dom.Document;
@@ -109,7 +104,7 @@ public class NaOptimizeLoader
 
       final NodeList optimizeNodes = loadOptimizeNodes();
       if( optimizeNodes == null )
-        return new NaOptimizeData( calibration, null, null );
+        return new NaOptimizeData( calibration, null );
 
       if( optimizeNodes.getLength() == 0 )
         throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", m_optimizePath ) );
@@ -117,9 +112,10 @@ public class NaOptimizeLoader
       final Node optimizeDom = optimizeNodes.item( 0 );
 
       /* At the moment, we are only interested in the result-links */
+      final NaOptimizeData naOptimizeData = new NaOptimizeData( calibration, optimizeDom );
       final URL context = contextWorkspace == null ? m_optimizeDataLocation : contextWorkspace.getContext();
-      final NAOptimize naOptimize = toOptimizeConfig( optimizeDom, context, factory );
-      return new NaOptimizeData( calibration, optimizeDom, naOptimize );
+      naOptimizeData.initNaOptimize( context, factory );
+      return naOptimizeData;
     }
     catch( final SimulationException e )
     {
@@ -148,17 +144,6 @@ public class NaOptimizeLoader
 
     final Unmarshaller unmarshaller = OptimizeJaxb.JC.createUnmarshaller();
     return (AutoCalibration) unmarshaller.unmarshal( m_autocalibrationLocation );
-  }
-
-  public static NAOptimize toOptimizeConfig( final Node optimizeDom, final URL context, final IFeatureProviderFactory factory ) throws TransformerException, GMLException, SimulationException
-  {
-    final GMLWorkspace optimizeWorkspace = GmlSerializer.createGMLWorkspace( optimizeDom, context, factory );
-    final Feature feature = optimizeWorkspace.getRootFeature();
-    if( feature instanceof NAOptimize )
-      return (NAOptimize) feature;
-
-    final String message = String.format( "Failed to get optimize feature from optimize-gml for node '%s'. Got '%s'", optimizeDom, feature );
-    throw new SimulationException( message );
   }
 
   public String getOptimizePath( )

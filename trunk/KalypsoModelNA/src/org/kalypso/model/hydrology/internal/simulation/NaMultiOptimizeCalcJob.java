@@ -70,7 +70,11 @@ public class NaMultiOptimizeCalcJob implements ISimulation
 
   private File m_optimizeResultFile;
 
-  private File m_commonResultsDir;
+  private File m_commonResultDir;
+
+  private File m_commonInputResultDir;
+
+  private File m_multiTmpDir;
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
@@ -92,9 +96,15 @@ public class NaMultiOptimizeCalcJob implements ISimulation
       final NodeList optimizeNodes = optimizeLoader.loadOptimizeNodesForMulti();
 
       final URL inputResultDirLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_RESULTS_DIR_ID );
-      m_commonResultsDir = FileUtils.toFile( inputResultDirLocation );
 
-      m_optimizeResultFile = new File( m_commonResultsDir, "fullOptimizeResult.gml" );
+      m_multiTmpDir = new File( tmpdir, "multiOptimize" );
+
+      // HACKY: all the optimize processes will get their input from the original result dir, as changing this
+      // would need to copy everything into another place (due to relative links between gml and zml).
+      m_commonInputResultDir = FileUtils.toFile( inputResultDirLocation );
+      m_commonResultDir = new File( m_multiTmpDir, "commonResultDir" );
+
+      m_optimizeResultFile = new File( m_commonResultDir, "fullOptimizeResult.gml" );
 
       /* copy first optimize bean to optimizeResultFile */
       final URL optimizeConfLocation = (URL) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_ID );
@@ -134,37 +144,50 @@ public class NaMultiOptimizeCalcJob implements ISimulation
 
   private void runOptimize( final File optimizeRunDir, final ISimulationDataProvider dataProvider, final ISimulationMonitor monitor, final Logger logger, final int step ) throws SimulationException, IOException
   {
-    /* OVerwrite input in order to tweak data provider */
-    final OptimizeDataProvider optimizeDataProvider = new OptimizeDataProvider( dataProvider );
-    optimizeDataProvider.setInput( NaModelConstants.IN_OPTIMIZE_ID, m_optimizeResultFile.toURI().toURL() );
+    INaSimulationData data = null;
 
-    /* Select the i'th member of the list of elements */
-    final String originalOptimizePath = (String) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID );
-    // REMARK: xpath indices start at 1
-    final String optimizePath = String.format( "(%s)[%d]", originalOptimizePath, step + 1 );
+    try
+    {
+      /* OVerwrite input in order to tweak data provider */
+      final OptimizeDataProvider optimizeDataProvider = new OptimizeDataProvider( dataProvider );
+      optimizeDataProvider.setInput( NaModelConstants.IN_OPTIMIZE_ID, m_optimizeResultFile.toURI().toURL() );
 
-    optimizeDataProvider.setInput( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, optimizePath );
+      /* Select the i'th member of the list of elements */
+      final String originalOptimizePath = (String) dataProvider.getInputForID( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID );
+      // REMARK: xpath indices start at 1
+      final String optimizePath = String.format( "(%s)[%d]", originalOptimizePath, step + 1 );
 
-    /* Load teqeaked data and run a optimized simulation on the current node */
-    final INaSimulationData data = NaSimulationDataFactory.load( optimizeDataProvider );
+      optimizeDataProvider.setInput( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, optimizePath );
 
-    final NAOptimizingJob job = new NAOptimizingJob( optimizeRunDir, data, logger );
-    final OptimizeMonitor subMonitor = new OptimizeMonitor( monitor );
-    job.run( subMonitor );
+      /* Load teqeaked data and run a optimized simulation on the current node */
+      data = NaSimulationDataFactory.load( optimizeDataProvider );
 
-    final File resultDir = job.getResultDir();
+      final NAOptimizingJob job = new NAOptimizingJob( optimizeRunDir, data, logger );
+      final OptimizeMonitor subMonitor = new OptimizeMonitor( monitor );
+      job.run( subMonitor );
 
-    // XXXX
+      data.dispose();
 
-    FileUtils.copyDirectory( resultDir, m_commonResultsDir );
+      final File resultDir = job.getResultDir();
 
-    final File optimizeResult = job.getOptimizeResult();
-    FileUtils.copyFile( optimizeResult, m_optimizeResultFile );
+      // HACKY: see above, copy everything twice: 1) as input for the optimize processes
+      // 2) as result of this process
+      FileUtils.copyDirectory( resultDir, m_commonInputResultDir );
+      FileUtils.copyDirectory( resultDir, m_commonResultDir );
+
+      final File optimizeResult = job.getOptimizeResult();
+      FileUtils.copyFile( optimizeResult, m_optimizeResultFile );
+    }
+    finally
+    {
+      if( data != null )
+        data.dispose();
+    }
   }
 
   private void publishResults( final ISimulationResultEater resultEater ) throws SimulationException
   {
-    resultEater.addResult( NaModelConstants.OUT_ZML, m_commonResultsDir );
+    resultEater.addResult( NaModelConstants.OUT_ZML, m_commonResultDir );
     resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, m_optimizeResultFile );
   }
 
