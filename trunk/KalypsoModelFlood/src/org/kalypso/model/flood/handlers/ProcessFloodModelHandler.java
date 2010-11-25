@@ -83,7 +83,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
-import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.simulation.ui.calccase.simulation.SimulationFactory;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -266,7 +266,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
         final IStatus status;
         try
         {
-          status = ModelNature.runCalculation( scenarioFolder, monitor, getModeldata() );
+          status = SimulationFactory.runCalculation( scenarioFolder, monitor, getModeldata() );
           if( status.isOK() )
           {
             // handle results if job is successful
