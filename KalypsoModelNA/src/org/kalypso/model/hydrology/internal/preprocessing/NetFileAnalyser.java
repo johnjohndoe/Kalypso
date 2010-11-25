@@ -249,7 +249,6 @@ public class NetFileAnalyser
 
       // downstream
       final IRelationType rt1 = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.GRUNDWASSERABFLUSS_MEMBER );
-// final Feature[] abflussFEs = new Feature[0];
       final Feature[] abflussFEs = m_modelWorkspace.resolveLinks( catchment, rt1 );
       for( final Feature abflussFE : abflussFEs )
       {

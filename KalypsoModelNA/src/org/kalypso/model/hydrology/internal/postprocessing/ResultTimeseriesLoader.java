@@ -198,6 +198,7 @@ public class ResultTimeseriesLoader
         return DefaultPathGenerator.generateResultPathFor( resultFeature, suffix, null );
       }
 
+      // FIXME: warum?! we should just use the link provided!
       return "Pegel" + href.substring( href.lastIndexOf( "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final Exception e )

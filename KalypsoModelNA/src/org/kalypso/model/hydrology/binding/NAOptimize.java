@@ -61,7 +61,7 @@ public class NAOptimize extends Feature_Impl
 {
   public static final String NS_NS_NAOPTIMIZE = NaModelConstants.NS_NAOPTIMIZE;
 
-  public static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NS_NAOPTIMIZE, "qberechnetZR" ); //$NON-NLS-1$
+  private static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NS_NAOPTIMIZE, "qberechnetZR" ); //$NON-NLS-1$
 
   private static final QName LINK_ROOTNODE = new QName( NS_NS_NAOPTIMIZE, "rootNodeLink" ); //$NON-NLS-1$
 

@@ -61,7 +61,6 @@ public class DefaultPathGenerator
 
     final String annotationName = getAnnotationName( feature );
     final String result = annotationName + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-// return result.replaceAll( "Node", "Knoten" );
     return result;
   }
 
