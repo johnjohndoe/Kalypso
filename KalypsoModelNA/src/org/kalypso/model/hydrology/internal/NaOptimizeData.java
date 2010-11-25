@@ -40,8 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal;
 
+import java.net.URL;
+
+import javax.xml.transform.TransformerException;
+
+import org.kalypso.gml.GMLException;
 import org.kalypso.model.hydrology.binding.NAOptimize;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.optimize.transform.OptimizeModelUtils;
+import org.kalypso.optimize.transform.ParameterOptimizeContext;
 import org.kalypso.optimizer.AutoCalibration;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.w3c.dom.Node;
 
 /**
@@ -51,15 +63,14 @@ public class NaOptimizeData
 {
   private final Node m_optimizeDom;
 
-  private final NAOptimize m_naOptimize;
-
   private final AutoCalibration m_autoCalibration;
 
-  public NaOptimizeData( final AutoCalibration calibration, final Node optimizeDom, final NAOptimize optimize )
+  private NAOptimize m_naOptimize;
+
+  public NaOptimizeData( final AutoCalibration calibration, final Node optimizeDom )
   {
     m_autoCalibration = calibration;
     m_optimizeDom = optimizeDom;
-    m_naOptimize = optimize;
   }
 
   public AutoCalibration getAutoCalibration( )
@@ -76,4 +87,32 @@ public class NaOptimizeData
   {
     return m_optimizeDom;
   }
+
+  public void initNaOptimize( final URL context, final IFeatureProviderFactory factory ) throws TransformerException, GMLException, SimulationException
+  {
+    m_naOptimize = toOptimizeConfig( m_optimizeDom, context, factory );
+  }
+
+  public void applyCalibration( final double[] values, final ParameterOptimizeContext[] calcContexts, final GMLWorkspace contextWorkspace ) throws TransformerException, GMLException, SimulationException
+  {
+    final Node naOptimizeDom = getOptimizeDom();
+    OptimizeModelUtils.transformModel( naOptimizeDom, values, calcContexts );
+
+    final URL context = contextWorkspace.getContext();
+    final IFeatureProviderFactory factory = contextWorkspace.getFeatureProviderFactory();
+
+    m_naOptimize = toOptimizeConfig( naOptimizeDom, context, factory );
+  }
+
+  private static NAOptimize toOptimizeConfig( final Node optimizeDom, final URL context, final IFeatureProviderFactory factory ) throws TransformerException, GMLException, SimulationException
+  {
+    final GMLWorkspace optimizeWorkspace = GmlSerializer.createGMLWorkspace( optimizeDom, context, factory );
+    final Feature feature = optimizeWorkspace.getRootFeature();
+    if( feature instanceof NAOptimize )
+      return (NAOptimize) feature;
+
+    final String message = String.format( "Failed to get optimize feature from optimize-gml for node '%s'. Got '%s'", optimizeDom, feature );
+    throw new SimulationException( message );
+  }
+
 }

@@ -93,6 +93,7 @@ public class NAModelSimulation
 
   public boolean runSimulation( final ISimulationMonitor monitor ) throws Exception
   {
+    monitor.setMessage( "Simulation wird gestartet..." );
     preprocess( m_simulationData, monitor );
     if( monitor.isCanceled() )
       return false;
@@ -112,8 +113,7 @@ public class NAModelSimulation
   public boolean rerunForOptimization( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
   {
     // FIXME: clear old result file (we_nat_out etc.)
-
-    m_preprocessor.processCallibrationFiles( optimize );
+    m_preprocessor.processCallibrationFiles( optimize, monitor );
     if( monitor.isCanceled() )
       return false;
 

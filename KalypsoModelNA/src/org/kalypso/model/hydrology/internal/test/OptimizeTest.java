@@ -137,6 +137,7 @@ public class OptimizeTest
   {
     final File monitorFile = new File( tmpDir, "monitor.out" );
     final PrintStream monitorOut = new PrintStream( monitorFile );
+    INaSimulationData data = null;
 
     try
     {
@@ -144,7 +145,7 @@ public class OptimizeTest
       final File logFile = new File( tmpDir, "optimizeTest.log" );
       final Logger logger = createLogger( logFile );
 
-      final INaSimulationData data = NaSimulationDataFactory.load( dataProvider );
+      data = NaSimulationDataFactory.load( dataProvider );
 
       final NAOptimizingJob optimizeJob = new NAOptimizingJob( tmpDir, data, logger );
       final boolean succeeded = optimizeJob.run( monitor );
@@ -159,6 +160,9 @@ public class OptimizeTest
     }
     finally
     {
+      if( data != null )
+        data.dispose();
+
       monitorOut.close();
     }
   }
