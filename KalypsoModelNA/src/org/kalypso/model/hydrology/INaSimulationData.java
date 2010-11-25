@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology;
 
+import java.net.URL;
+
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.NAModellControl;
@@ -78,4 +80,6 @@ public interface INaSimulationData
   NaOptimizeData getOptimizeData( );
 
   NAOptimize getNaOptimize( );
+
+  URL getPreprocessedASCII( );
 }

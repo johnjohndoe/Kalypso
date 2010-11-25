@@ -54,9 +54,9 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class NaSimulationDataFactory
 {
-  public static final INaSimulationData load( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final NaOptimizeLoader optimizeLoader ) throws Exception
+  public static final INaSimulationData load( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessASCIIlocation ) throws Exception
   {
-    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader );
+    return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader, preprocessASCIIlocation );
   }
 
   public static final INaSimulationData load( final ISimulationDataProvider inputProvider ) throws SimulationException
@@ -67,14 +67,15 @@ public class NaSimulationDataFactory
       final URL controlURL = (URL) inputProvider.getInputForID( NaModelConstants.IN_CONTROL_ID );
       final URL metaUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_META_ID );
       final URL parameterUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID );
-      final URL hydrotopUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID );
+      final URL hydrotopUrl = (URL) SimulationDataUtils.getInputOrNull( inputProvider, NaModelConstants.IN_HYDROTOP_ID );
       final URL syntNUrl = (URL) inputProvider.getInputForID( NaModelConstants.IN_RAINFALL_ID );
       final URL lzsimUrl = getStartConditionFile( inputProvider );
       final URL sudsUrl = (URL) SimulationDataUtils.getInputOrNull( inputProvider, NaModelConstants.IN_SUDS_ID );
+      final URL preprocessedASCIIlocation = (URL) SimulationDataUtils.getInputOrNull( inputProvider, NaModelConstants.IN_PREPROCESSED_ASCII );
 
       final NaOptimizeLoader optimizeLoader = new NaOptimizeLoader( inputProvider );
 
-      return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader );
+      return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader, preprocessedASCIIlocation );
     }
     catch( final SimulationException e )
     {

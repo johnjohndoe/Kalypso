@@ -59,6 +59,7 @@ import org.kalypso.model.hydrology.internal.preprocessing.writer.BodentypWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.GebWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.GerWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.HRBFileWriter;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.HydrotopeWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.LzsimWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NetFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NutzungWriter;
@@ -109,8 +110,12 @@ public class NAModellConverter
     final NetFileWriter netWriter = new NetFileWriter( m_asciiDirs, relevantElements, tsFileManager, m_idManager, modelWorkspace, metaControl, m_logger );
     netWriter.write( m_asciiDirs.netFile );
 
-    final ZftWriter zftWriter = new ZftWriter( m_idManager, m_logger, catchments );
-    zftWriter.write( m_asciiDirs.zftFile );
+    // HACK: for performance optimisation: if the zft file already exists, we assume it is ok and just return
+    if( !m_asciiDirs.zftFile.exists() )
+    {
+      final ZftWriter zftWriter = new ZftWriter( m_idManager, m_logger, catchments );
+      zftWriter.write( m_asciiDirs.zftFile );
+    }
 
     final RhbWriter rhbWriter = new RhbWriter( m_idManager, channels, m_logger );
     rhbWriter.write( m_asciiDirs.rhbFile );
@@ -124,18 +129,26 @@ public class NAModellConverter
     final SchneeManager schneeManager = new SchneeManager( parameterWorkspace, m_logger );
     schneeManager.write( m_asciiDirs.schneeFile );
 
-    final NutzungWriter nutzungManager = new NutzungWriter( m_asciiDirs.hydroTopDir );
-    nutzungManager.writeFile( parameter, hydroHash );
-
     final SudsFileWriter sudsFileWriter = new SudsFileWriter( naModel, hydrotopeCollection, sudsWorkspace, m_logger );
     sudsFileWriter.write( m_asciiDirs.swaleAndTrenchFile );
 
     final HRBFileWriter hrbFileWriter = new HRBFileWriter( naModel.getStorageChannels(), m_idManager, m_asciiDirs.klimaDatDir, m_logger );
     hrbFileWriter.write( m_asciiDirs.hrbFile );
 
-    final InitialValues initialValues = m_data.getInitialValues();
-    final LzsimWriter lzsimWriter = new LzsimWriter( m_idManager, hydroHash, initialValues, metaControl, m_logger );
-    lzsimWriter.writeLzsimFiles( m_asciiDirs.lzsimDir );
+    if( hydroHash != null )
+    {
+      final NutzungWriter nutzungManager = new NutzungWriter( m_asciiDirs.hydroTopDir );
+      nutzungManager.writeFile( parameter, hydroHash );
+
+      final HydrotopeWriter hydrotopManager = new HydrotopeWriter( parameter, m_idManager, hydroHash, m_logger );
+      hydrotopManager.write( m_asciiDirs.hydrotopFile );
+      // CHECK: do we still need this mapping file, what is it good for?
+      // hydrotopManager.writeMapping( m_asciiDirs.hydrotopMappingFile );
+
+      final InitialValues initialValues = m_data.getInitialValues();
+      final LzsimWriter lzsimWriter = new LzsimWriter( m_idManager, hydroHash, initialValues, metaControl, m_logger );
+      lzsimWriter.writeLzsimFiles( m_asciiDirs.lzsimDir );
+    }
   }
 
   public void writeCalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager ) throws Exception

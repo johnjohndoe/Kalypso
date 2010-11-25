@@ -85,6 +85,9 @@ public class NutzungWriter
 
   public void writeFile( final Parameter parameter, final HydroHash hydroHash ) throws Exception
   {
+    if( hydroHash == null )
+      return;
+
     final LanduseHash landuseHash = hydroHash.getLanduseHash();
     final List<Feature> list = (List<Feature>) parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
     for( final Feature nutzungFE : list )

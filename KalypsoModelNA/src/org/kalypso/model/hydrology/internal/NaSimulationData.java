@@ -89,8 +89,11 @@ public class NaSimulationData implements INaSimulationData
 
   private NaOptimizeData m_optimizeData;
 
-  public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final NaOptimizeLoader optimizeLoader ) throws Exception
+  private final URL m_preprocessedASCIIlocation;
+
+  public NaSimulationData( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessedASCIIlocation ) throws Exception
   {
+    m_preprocessedASCIIlocation = preprocessedASCIIlocation;
     /*
      * Loading model workspace first, it is used as context for all other models (i.e. we assume they all live in the
      * same directory)
@@ -185,6 +188,9 @@ public class NaSimulationData implements INaSimulationData
 
   private String determineHydrotopeCrs( )
   {
+    if( m_hydrotopeCollection == null )
+      return null;
+
     // TODO: this is wrong: why transform the model to the hydrotope workspace?
     // Normally, we should transform both (better every loaded model) into the current kalypso crs
     final IFeatureBindingCollection<IHydrotope> hydrotopes = m_hydrotopeCollection.getHydrotopes();
@@ -300,5 +306,14 @@ public class NaSimulationData implements INaSimulationData
       return null;
 
     return m_optimizeData.getNaOptimize();
+  }
+
+  /**
+   * @see org.kalypso.model.hydrology.INaSimulationData#getPreprocessedASCII()
+   */
+  @Override
+  public URL getPreprocessedASCII( )
+  {
+    return m_preprocessedASCIIlocation;
   }
 }
