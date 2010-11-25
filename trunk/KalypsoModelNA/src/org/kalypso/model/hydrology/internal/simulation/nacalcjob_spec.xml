@@ -3,12 +3,14 @@
 	<input id="MetaSteuerdaten" description="Steuerdaten - Allgemein"/>
 	<input id="Modell" description="Modelldaten"/>
 	
-	<input id="Hydrotop" description="Modelldaten - Hydrotope" optional="false"/>
+	<input id="Hydrotop" description="Modelldaten - Hydrotope" optional="true"/>
 	<input id="Parameter" description="Modelldaten - Parameter" optional="false"/>
 	<input id="Landuse" optional="true"/>
 	<input id="Suds" optional="true"/>
 	<input id="Control" description="Steuerdaten - Ausgabe" />
 	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="false"/>
+
+	<input id="PreprocessedAscii" description="Präprozessierte ASCII-Dateien" optional="true"/>
 
     <!-- Autokalibrierung -->
 	<input id="Optimize" description="Steuerdaten - Optimierung (optional)" optional="true" />

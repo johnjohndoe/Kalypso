@@ -40,9 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.kalypso.commons.java.net.UrlUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAControl;
@@ -57,7 +62,6 @@ import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.LanduseHash;
-import org.kalypso.model.hydrology.internal.preprocessing.writer.HydrotopeWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
@@ -123,6 +127,7 @@ public class NAModelPreprocessor
     final GMLWorkspace modelWorkspace = m_simulationData.getModelWorkspace();
     final NAControl metaControl = m_simulationData.getMetaControl();
     final GMLWorkspace sudsWorkspace = m_simulationData.getSudsWorkspace();
+    final URL preprocesssedASCII = m_simulationData.getPreprocessedASCII();
     final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
 
     final Node rootNode = naOptimize == null ? null : naOptimize.getRootNode();
@@ -136,6 +141,8 @@ public class NAModelPreprocessor
     m_asciiDirs.hydroTopDir.mkdirs();
     m_asciiDirs.zuflussDir.mkdirs();
     m_asciiDirs.outWeNatDir.mkdirs();
+
+    handlePreprocessedAsciiFiles( preprocesssedASCII, m_asciiDirs.asciiDir );
 
     checkCancel( monitor );
 
@@ -159,6 +166,22 @@ public class NAModelPreprocessor
     processCallibrationFiles( optimizeConfig, monitor );
 
     checkCancel( monitor );
+  }
+
+  private void handlePreprocessedAsciiFiles( final URL preprocesssedASCII, final File asciiDir ) throws SimulationException
+  {
+    try
+    {
+      if( preprocesssedASCII == null || !UrlUtilities.checkIsAccessible( preprocesssedASCII ) )
+        return;
+
+      ZipUtilities.unzip( preprocesssedASCII, asciiDir );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      throw new SimulationException( "Fehler beim Entzippen der Vorprozessierten ASCII Dateien", e );
+    }
   }
 
   public void processCallibrationFiles( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
@@ -188,15 +211,7 @@ public class NAModelPreprocessor
     if( hydrotopeCollection != null )
     {
       final Catchment[] catchments = m_relevantElements.getCatchmentsSorted( m_idManager );
-
-      // REMARK: initHydroHash must be called after nodeManager.write file has been called, as this marks
-      // the features in the ascii buffer to be relevant.
-      // TODO: change this bad design: We should just pass a list of catchments to the hydroHash
-      final HydroHash hydroHash = initHydroHash( parameter, hydrotopeCollection, catchments );
-
-      final HydrotopeWriter hydrotopManager = new HydrotopeWriter( parameter, m_idManager, hydroHash, m_logger );
-      hydrotopManager.write( m_asciiDirs.hydrotopFile );
-      hydrotopManager.writeMapping( m_asciiDirs.hydrotopMappingFile );
+      initHydroHash( parameter, hydrotopeCollection, catchments );
     }
 
     final boolean usePrecipitationForm = metaControl.isUsePrecipitationForm();

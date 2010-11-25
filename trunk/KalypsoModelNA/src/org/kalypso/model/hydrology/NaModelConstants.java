@@ -114,6 +114,8 @@ public interface NaModelConstants
 
   String IN_LZSIM_IN_ID = "LZSIM_IN"; //$NON-NLS-1$
 
+  String IN_PREPROCESSED_ASCII = "PreprocessedAscii"; //$NON-NLS-1$
+
   // output
   String OUT_ZML = "OUT_ZML"; //$NON-NLS-1$
 

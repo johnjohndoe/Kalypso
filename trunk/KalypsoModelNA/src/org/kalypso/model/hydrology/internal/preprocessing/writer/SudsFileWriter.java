@@ -103,6 +103,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
       final IFeatureBindingCollection<IHydrotope> hydrotopes = m_hydrotopeCollection.getHydrotopes();
 
       // FIXME: separate hashing logic from writing logic
+      // FIXME: add the hashing logic into the HydroHash
       for( final IHydrotope hydrotop : hydrotopes )
       {
         if( hydrotop.getSudCollection().size() > 0 )
