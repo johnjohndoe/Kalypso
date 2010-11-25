@@ -229,14 +229,14 @@ public class NetElement
     return downStreamNode.getDownstreamChannel();
   }
 
-  public List<NetElement> getDownStreamNetElements( )
+  public NetElement[] getDownStreamNetElements( )
   {
-    return m_downStreamDepends;
+    return m_downStreamDepends.toArray( new NetElement[m_downStreamDepends.size()] );
   }
 
-  public List<NetElement> getUpStreamNetElements( )
+  public NetElement[] getUpStreamNetElements( )
   {
-    return m_upStreamDepends;
+    return m_upStreamDepends.toArray( new NetElement[m_upStreamDepends.size()] );
   }
 
   public void addUpStream( final NetElement upStreamElement )
@@ -333,6 +333,7 @@ public class NetElement
     return "FID:" + channel.getId() + " AsciiID: " + m_idManager.getAsciiID( channel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
+  // FIXME: does not belong here -> move into own writer
   public void writeSynthNFile( final File targetFileN, final Catchment catchment ) throws Exception
   {
     final List<Feature> statNList = new ArrayList<Feature>();
