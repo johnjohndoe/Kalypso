@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
 <schema xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/kalypsoNA" elementFormDefault="qualified" version="1.0">
-	<annotation>
-		<appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
-		</appinfo>
-	</annotation>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
 	<import namespace="http://www.w3.org/1999/xlink"/>
 	<import namespace="obslink.zml.kalypso.org"/>
@@ -28,13 +23,9 @@
   
 	<!-- __ Nodes _________________________________ -->
 	<complexType name="NodeCollectionAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:NodeCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="na:NodeCollection"/>
+		</sequence>
 	</complexType>
 
   <element name="NodeCollection" substitutionGroup="gml:_Feature">
@@ -50,23 +41,15 @@
   </element>
 
 	<complexType name="NodeMemberType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:Node" minOccurs="1" maxOccurs="1"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="na:Node" minOccurs="1" maxOccurs="1"/>
+		</sequence>
 	</complexType>
 	<complexType name="NodeLinkType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:Node" minOccurs="0" maxOccurs="0" />
-				</sequence>
-                <attributeGroup ref="xlink:simpleLink"/>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="na:Node" minOccurs="0" maxOccurs="0" />
+		</sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</complexType>
 	
   <element name="Node" type="na:NodeFeatureType" substitutionGroup="gml:_Feature"/>
@@ -76,11 +59,22 @@
 				<sequence>
 					<element name="Ort" type="gml:PointPropertyType"/>
 					<element name="generateResult" type="boolean"/>
-					<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0"/>
+					<element name="downStreamChannelMember" type="na:ChannelLinkType" minOccurs="0"/>
 					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<!-- ZR berechnet, hier wird das ergebnis gespeichert-->
+					<!-- ZR berechnet, hier wird das Ergebnis gespeichert -->
 					<element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<!-- ZR Zufluss falls zufluss vorhanden -->
+					<element name="useResultAsInflow" type="boolean" minOccurs="0">
+                        <annotation>
+                          <documentation>If this flag is set to true, and the link 'resultAsZuflussZR' points to an existing timeseries,
+                          the timeseries will be used as zufluss and the net will be cut at this point.</documentation>
+                        </annotation>
+                    </element>
+					<element name="resultAsInflowZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
+                        <annotation>
+                          <documentation>See 'useResultAsZufluss'.</documentation>
+                        </annotation>
+                    </element>
+					<!-- ZR Zufluss falls Zufluss vorhanden -->
 					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 					<element name="syntheticZuflussZR" type="boolean" default="false" />
 					<!-- branching ab hier aktivieren-->
@@ -101,15 +95,9 @@
 	</complexType>
   
 	<complexType name="BranchingAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:_Branching" minOccurs="1" maxOccurs="1" />
-				</sequence>
-                <!-- Actually we would like to mark this member as inline only, put this is not possible with kalypso's gml 2.2  parser -->
-                <attribute ref="xlink:href" use="prohibited" />
-			</restriction>
-  	</complexContent>
+		<sequence>
+			<element ref="na:_Branching" minOccurs="1" maxOccurs="1" />
+		</sequence>
 	</complexType>
 	<element name="_Branching" type="na:AbstractBranchingType" abstract="true" substitutionGroup="gml:_Feature"/>
 	<complexType name="AbstractBranchingType">
@@ -180,23 +168,15 @@
 	</complexType>
 	<!-- ________Catchments__________________ -->
 	<complexType name="CatchmentCollectionAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:CatchmentCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="na:CatchmentCollection"/>
+		</sequence>
 	</complexType>
 	<element name="CatchmentCollection" type="na:CatchmentCollectionType" substitutionGroup="gml:_Feature"/>
 	<complexType name="CatchmentAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:Catchment"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="na:Catchment"/>
+		</sequence>
 	</complexType>
 	<complexType name="CatchmentCollectionType">
 		<complexContent>
@@ -233,7 +213,7 @@
             (snowtype,a15)(ftem,*)_(fver,*)
           -->
 					<element name="Ort" type="gml:PolygonPropertyType"/>
-					<element name="entwaesserungsStrangMember" type="na:ChannelAssociationType"/>
+					<element name="entwaesserungsStrangMember" type="na:ChannelLinkType" minOccurs="0"/>
 					<element name="generateResult" type="boolean"/>
 					<!-- JH, Flaeche kann auch aus der Hydrotopdatei hierher übernommen werden (wird im Modell ohnehin aus Hydrotopdatei übernommen)-->
 					<element name="flaech" type="long"/>
@@ -281,7 +261,7 @@
             (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
             siehe bodenkorrekturmember...
           -->
-					<element name="bodenkorrekturmember" type="na:bodenschichtkorrekturAssociationType" maxOccurs="10"/>
+					<element name="bodenkorrekturmember" type="na:BodenschichtkorrekturMemberType" maxOccurs="10"/>
 					<!--
             (f_eva,f4.1)_(aint,f4.1)_(aigw,f6.2)_(fint,f4.2)_(ftra,f4.2)
             (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*)
@@ -340,7 +320,7 @@
 					<!-- (ngwzu,*)_...
             (gwwi,*)_...-->
 					<!--     Grundwasser       -->
-					<element name="grundwasserabflussMember" type="na:grundwasserabflussAssociationType" maxOccurs="6"/>
+					<element name="grundwasserabflussMember" type="na:GrundwasserabflussMemberType" maxOccurs="6"/>
 					<!--	<element name="ngwzu" type="string"/>
             <element name="gwwi" type="string"/>
           -->
@@ -398,13 +378,9 @@
 	</complexType>
 	<!-- ______________Channels_____________________ -->
 	<complexType name="ChannelCollectionAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:ChannelCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="na:ChannelCollection"/>
+		</sequence>
 	</complexType>
 	
   <element name="ChannelCollection" substitutionGroup="gml:_Feature">
@@ -412,21 +388,24 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="channelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="channelMember" type="na:ChannelMemberType" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
   </element>
   
-	<complexType name="ChannelAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:_Channel"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+	<complexType name="ChannelMemberType">
+		<sequence>
+			<element ref="na:_Channel" minOccurs="1" maxOccurs="1"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="ChannelLinkType">
+		<sequence>
+			<element ref="na:_Channel" minOccurs="0" maxOccurs="0"/>
+		</sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</complexType>
 
     <complexType name="KMChannelLinkPropertyType">
@@ -494,13 +473,9 @@
 	</complexType>
 	<!-- ________Muldenrigolen_______________ -->
 	<complexType name="SwaleAndTrenchCollectionAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:SwaleAndTrenchCollection"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="na:SwaleAndTrenchCollection"/>
+		</sequence>
 	</complexType>
 	<element name="SwaleAndTrenchCollection" type="na:SwaleAndTrenchCollectionType" substitutionGroup="gml:_Feature"/>
 	<complexType name="SwaleAndTrenchCollectionType">
@@ -513,13 +488,9 @@
 		</complexContent>
 	</complexType>
 	<complexType name="SwaleAndTrenchAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:SwaleAndTrench"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="na:SwaleAndTrench"/>
+		</sequence>
 	</complexType>
 	<element name="SwaleAndTrench" type="na:SwaleAndTrenchFeatureType" substitutionGroup="gml:_Feature"/>
 	<complexType name="SwaleAndTrenchFeatureType">
@@ -544,13 +515,9 @@
 	<!-- ________Sonstiges__________________ -->
 	<!--Kalinin-Miljukov Parameter -->
 	<complexType name="KMParameterAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:KMParameter"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="na:KMParameter"/>
+		</sequence>
 	</complexType>
 	<element name="KMParameter" type="na:KMParameterType"/>
 	<complexType name="KMParameterType">
@@ -611,14 +578,10 @@
 			<restriction base="gml:AbstractFeatureType"/>
 		</complexContent>
 	</complexType>
-	<complexType name="bodenschichtkorrekturAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:bodenschichtkorrektur"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+	<complexType name="BodenschichtkorrekturMemberType">
+		<sequence>
+			<element ref="na:bodenschichtkorrektur"/>
+		</sequence>
 	</complexType>
 	<element name="bodenschichtkorrektur" type="na:bodenschichtkorrekturType" substitutionGroup="gml:_Feature"/>
 	<!--
@@ -682,14 +645,10 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="grundwasserabflussAssociationType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:grundwasserabfluss"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+	<complexType name="GrundwasserabflussMemberType">
+		<sequence>
+			<element ref="na:grundwasserabfluss"/>
+		</sequence>
 	</complexType>
 	<element name="grundwasserabfluss" type="na:grundwasserabflussType" substitutionGroup="gml:_Feature"/>
 	<complexType name="grundwasserabflussType">
@@ -710,12 +669,8 @@
 		</complexContent>
 	</complexType>
 	<complexType name="CatchmentMemberPropertyType">
-		<complexContent>
-			<restriction base="gml:FeatureAssociationType">
-				<sequence>
-					<element ref="na:Catchment"/>
-				</sequence>
-			</restriction>
-		</complexContent>
+		<sequence>
+			<element ref="na:Catchment"/>
+		</sequence>
 	</complexType>
 </schema>

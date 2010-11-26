@@ -124,14 +124,12 @@ public class NAModelPreprocessor
   {
     final NAModellControl naControl = m_simulationData.getNaControl();
     final NAOptimize naOptimize = m_simulationData.getNaOptimize();
-    final GMLWorkspace modelWorkspace = m_simulationData.getModelWorkspace();
     final NAControl metaControl = m_simulationData.getMetaControl();
     final GMLWorkspace sudsWorkspace = m_simulationData.getSudsWorkspace();
     final URL preprocesssedASCII = m_simulationData.getPreprocessedASCII();
-    final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
+    final NaModell naModel = m_simulationData.getNaModel();
 
     final Node rootNode = naOptimize == null ? null : naOptimize.getRootNode();
-    final boolean useResults = naOptimize == null ? false : naOptimize.isUseResults();
 
     monitor.setMessage( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.15" ) ); //$NON-NLS-1$
     checkCancel( monitor );
@@ -147,7 +145,8 @@ public class NAModelPreprocessor
     checkCancel( monitor );
 
     monitor.setMessage( "Adding additional virtual channels" );
-    tweakGmlModel( modelWorkspace, rootNode, useResults );
+    final NaModelTweaker naModelTweaker = new NaModelTweaker( naModel, rootNode );
+    naModelTweaker.tweakModel();
     checkCancel( monitor );
 
     monitor.setMessage( "Writing control files for Kalypso-NA" );
@@ -228,17 +227,6 @@ public class NAModelPreprocessor
     }
 
     return m_hydroHash;
-  }
-
-  /**
-   * Changes the modell-workspace before it is really written into ascii files.
-   */
-  private void tweakGmlModel( final GMLWorkspace modelWorkspace, final Node rootNode, final boolean useResults ) throws Exception
-  {
-    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modelWorkspace, useResults, rootNode );
-    final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
-    final NaModelTweaker naModelTweaker = new NaModelTweaker( naModel, nodeResultProvider );
-    naModelTweaker.tweakModel();
   }
 
   private void checkCancel( final ISimulationMonitor monitor )

@@ -73,8 +73,6 @@ public class NAOptimize extends Feature_Impl
 
   private static final QName PROP_USEOFFENDPRED = new QName( NS_NS_NAOPTIMIZE, "useOffsetEndPrediction" ); //$NON-NLS-1$
 
-  private static final QName PROP_USE_RESULTS = new QName( NS_NS_NAOPTIMIZE, "useResults" ); //$NON-NLS-1$
-
   private static final QName PROP_PEGEL_ZR_PROP = new QName( NS_NS_NAOPTIMIZE, "pegelZR" ); //$NON-NLS-1$
 
   private static final QName PROP_CATCHMENT_LINK = new QName( NS_NS_NAOPTIMIZE, "catchmentLink" ); //$NON-NLS-1$
@@ -121,16 +119,10 @@ public class NAOptimize extends Feature_Impl
     return m_kmChannelMembers.toArray( new KMChannel[m_kmChannelMembers.size()] );
   }
 
-  public boolean isUseResults( )
-  {
-    return getBoolean( PROP_USE_RESULTS, false );
-  }
-
   public Node getRootNode( )
   {
     return (Node) FeatureHelper.resolveLink( this, LINK_ROOTNODE, true );
   }
-
 
   public ZmlLink getResultLink( )
   {

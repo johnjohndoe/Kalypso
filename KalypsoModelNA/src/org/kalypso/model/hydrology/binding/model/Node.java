@@ -76,7 +76,11 @@ public class Node extends AbstractNaModelElement
 
   private static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
 
-  private static final QName NODE_QQRELATED_NODE_PROP = new QName( NS_NAMODELL, "qqRelatedNode" ); //$NON-NLS-1$
+  private static final QName PROP_QQRELATED = new QName( NS_NAMODELL, "qqRelatedNode" ); //$NON-NLS-1$
+
+  private static final QName PROP_USE_RESULT_AS_INFLOW = new QName( NS_NAMODELL, "useResultAsInflow" ); //$NON-NLS-1$
+
+  private static final QName PROP_RESULT_AS_INFLOW_ZR = new QName( NS_NAMODELL, "resultAsInflowZR" ); //$NON-NLS-1$
 
   public Node( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -166,7 +170,39 @@ public class Node extends AbstractNaModelElement
 
   public Node getQQRelatedNode( )
   {
-    return (Node) FeatureHelper.resolveLink( this, NODE_QQRELATED_NODE_PROP, true );
+    return (Node) FeatureHelper.resolveLink( this, PROP_QQRELATED, true );
+  }
+
+  public boolean isUseResultAsInflow( )
+  {
+    return getBoolean( PROP_USE_RESULT_AS_INFLOW, false );
+  }
+
+  public ZmlLink getResultAsInflowLink( )
+  {
+    return new ZmlLink( this, PROP_RESULT_AS_INFLOW_ZR );
+  }
+
+  /**
+   * Returns the link that should be used as inflow. Checks if it really should be used, else <code>null</code> is
+   * returned.
+   */
+  public ZmlLink getResultAsInflowLinkChecked( final Node rootNode )
+  {
+    if( !isUseResultAsInflow() )
+      return null;
+
+    if( this == rootNode )
+      return null;
+
+    if( rootNode == null && isGenerateResults() )
+      return null;
+
+    final ZmlLink resultAsInflowLink = getResultAsInflowLink();
+    if( !resultAsInflowLink.isLinkExisting() )
+      return null;
+
+    return resultAsInflowLink;
   }
 
 }
