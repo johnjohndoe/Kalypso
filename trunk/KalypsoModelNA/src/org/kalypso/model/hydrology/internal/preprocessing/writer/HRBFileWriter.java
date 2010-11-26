@@ -143,7 +143,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
       try
       {
         final URL context = channel.getWorkspace().getContext();
-        NetElement.writeTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null, null, null, null );
+        NetElement.writeTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null, "-777", null, null );
       }
       catch( final Exception e )
       {
