@@ -52,6 +52,7 @@ import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.VirtualChannel;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -64,6 +65,8 @@ public class GerWriter extends AbstractCoreFileWriter
   private static final int KMCHANNEL = 1;
 
   private static final int STORAGECHANNEL = 2;
+
+  private static final int STORAGECHANNEL_HRB = 4;
 
   private final IDManager m_idManager;
 
@@ -101,11 +104,11 @@ public class GerWriter extends AbstractCoreFileWriter
     final int channelID = m_idManager.getAsciiID( channel );
     writer.format( "%d\n", channelID ); //$NON-NLS-1$
 
-    if( channel instanceof VirtualChannel ) //$NON-NLS-1$
-      writer.println( VIRTUALCHANNEL ); //$NON-NLS-1$
-    else if( channel instanceof KMChannel ) //$NON-NLS-1$
+    if( channel instanceof VirtualChannel )
+      writer.println( VIRTUALCHANNEL );
+    else if( channel instanceof KMChannel )
     {
-      writer.println( KMCHANNEL ); //$NON-NLS-1$
+      writer.println( KMCHANNEL );
 
       final KMChannel kmChannel = (KMChannel) channel;
       double faktorRkf = kmChannel.getFaktorRkf();
@@ -114,8 +117,11 @@ public class GerWriter extends AbstractCoreFileWriter
       for( final KMParameter kmParameter : parameters )
         writeParameter( writer, kmParameter, faktorRnf, faktorRkf );
     }
-    else if( channel instanceof StorageChannel ) //$NON-NLS-1$
-      writer.println( STORAGECHANNEL ); //$NON-NLS-1$
+    else if( channel instanceof StorageChannel )
+    {
+      final TimeseriesLinkType link = ((StorageChannel) channel).getSeaEvaporationTimeseriesLink();
+      writer.println( link == null ? STORAGECHANNEL : STORAGECHANNEL_HRB );
+    }
     else
       throw new UnsupportedOperationException( "can not write Feature to ascii" + channel.toString() ); //$NON-NLS-1$
   }
