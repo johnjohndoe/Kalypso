@@ -62,12 +62,12 @@ public class NaModelTweaker
 {
   private final NaModell m_naModel;
 
-  private final NaNodeResultProvider m_nodeResultProvider;
+  private final Node m_rootNode;
 
-  public NaModelTweaker( final NaModell naModel, final NaNodeResultProvider nodeResultProvider )
+  public NaModelTweaker( final NaModell naModel, final Node rootNode )
   {
     m_naModel = naModel;
-    m_nodeResultProvider = nodeResultProvider;
+    m_rootNode = rootNode;
   }
 
   /**
@@ -239,9 +239,9 @@ public class NaModelTweaker
     final Node[] nodeArray = nodes.toArray( new Node[nodes.size()] );
     for( final Node node : nodeArray )
     {
-      if( m_nodeResultProvider.checkResultExists( node ) )
+      final ZmlLink resultLink = node.getResultAsInflowLinkChecked( m_rootNode );
+      if( resultLink != null )
       {
-        final ZmlLink resultLink = node.getResultLink();
         // disconnect everything upstream (channel -> node)
         final Channel[] upstreamChannels = node.findUpstreamChannels();
         for( final Channel channel : upstreamChannels )
@@ -249,8 +249,6 @@ public class NaModelTweaker
           final Node newEndNode = nodes.addNew( Node.FEATURE_NODE );
           channel.setDownstreamNode( newEndNode );
         }
-
-        // TODO: check: why is the resultLink not removed from 'node'?
 
         // add as zufluss
         final Node newNode = buildVChannelNet( node );
