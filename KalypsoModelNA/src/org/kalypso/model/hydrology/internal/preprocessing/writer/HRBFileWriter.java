@@ -50,6 +50,7 @@ import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.ogc.sensor.IAxis;
@@ -74,11 +75,14 @@ public class HRBFileWriter extends AbstractCoreFileWriter
 
   private final IDManager m_idManager;
 
-  public HRBFileWriter( final StorageChannel[] storageChannels, final IDManager idManager, final File klimaDir, final Logger logger )
+  private final NAControl m_metaControl;
+
+  public HRBFileWriter( final StorageChannel[] storageChannels, final NAControl metaControl, final IDManager idManager, final File klimaDir, final Logger logger )
   {
     super( logger );
 
     m_storageChannels = storageChannels;
+    m_metaControl = metaControl;
     m_klimaDir = klimaDir;
     m_idManager = idManager;
   }
@@ -143,7 +147,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
       try
       {
         final URL context = channel.getWorkspace().getContext();
-        NetElement.writeTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null, "-777", null, null );
+        NetElement.writeTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null, "-777", m_metaControl.getSimulationStart(), m_metaControl.getSimulationEnd() );
       }
       catch( final Exception e )
       {
