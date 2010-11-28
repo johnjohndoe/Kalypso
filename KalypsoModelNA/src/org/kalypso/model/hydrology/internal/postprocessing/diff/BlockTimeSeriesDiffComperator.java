@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.timeseries.diff;
+package org.kalypso.model.hydrology.internal.postprocessing.diff;
 
 import java.util.Date;
 import java.util.Iterator;

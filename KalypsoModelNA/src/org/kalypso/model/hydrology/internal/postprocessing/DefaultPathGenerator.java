@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel;
+package org.kalypso.model.hydrology.internal.postprocessing;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.gmlschema.annotation.IAnnotation;

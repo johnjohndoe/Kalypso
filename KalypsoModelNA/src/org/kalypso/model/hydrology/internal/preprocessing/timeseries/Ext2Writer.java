@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.convert.namodel.timeseries;
+package org.kalypso.model.hydrology.internal.preprocessing.timeseries;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;

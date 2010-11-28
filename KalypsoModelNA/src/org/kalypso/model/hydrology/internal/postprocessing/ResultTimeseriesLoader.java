@@ -45,9 +45,6 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
-import org.kalypso.convert.namodel.DefaultPathGenerator;
-import org.kalypso.convert.namodel.timeseries.Block;
-import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Node;

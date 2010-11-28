@@ -38,44 +38,69 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.timeseries.diff;
+package org.kalypso.model.hydrology.internal.postprocessing.diff;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypso.commons.diff.IDiffComparator;
 import org.kalypso.commons.diff.IDiffObject;
+import org.kalypso.model.hydrology.internal.postprocessing.BlockTimeSeries;
 
 /**
  * @author kuepfer
  */
-public class BilFileDiffObject implements IDiffObject
+public class BlockTimeSeriesDiffObject implements IDiffObject
 {
+  private static final String SEPERATOR = "#"; //$NON-NLS-1$
+
+  private final BlockTimeSeries m_blockTimeSeries;
+
+  private final List<String> m_pathes;
+
+  public BlockTimeSeriesDiffObject( final File file )
+  {
+    final BlockTimeSeries series = new BlockTimeSeries();
+    series.importBlockFile( file );
+    m_blockTimeSeries = series;
+    final String name = file.getName();
+    final String[] keys = m_blockTimeSeries.getKeys();
+
+    final List<String> list = new ArrayList<String>();
+    for( String key : keys )
+      list.add( name + SEPERATOR + key );
+
+    m_pathes = list;
+  }
 
   /**
    * @see org.kalypso.commons.diff.IDiffObject#exists(java.lang.String)
    */
   @Override
-  public boolean exists( String path )
+  public boolean exists( final String path )
   {
-    // TODO Auto-generated method stub
-    return false;
+    return m_pathes.contains( path );
   }
 
   /**
    * @see org.kalypso.commons.diff.IDiffObject#getDiffComparator(java.lang.String)
    */
   @Override
-  public IDiffComparator getDiffComparator( String path )
+  public IDiffComparator getDiffComparator( final String path )
   {
-    return new BilFileDiffComperator();
+    return new BlockTimeSeriesDiffComperator();
   }
 
   /**
    * @see org.kalypso.commons.diff.IDiffObject#getContent(java.lang.String)
    */
   @Override
-  public Object getContent( String path ) 
+  public Object getContent( final String path )
   {
-    // TODO Auto-generated method stub
-    return null;
+    // returns TreeMap
+    final String key = path.substring( path.indexOf( SEPERATOR ) + SEPERATOR.length() );
+    return m_blockTimeSeries.getTimeSerie( key );
   }
 
   /**
@@ -84,8 +109,7 @@ public class BilFileDiffObject implements IDiffObject
   @Override
   public String[] getPathes( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_pathes.toArray( new String[m_pathes.size()] );
   }
 
 }
