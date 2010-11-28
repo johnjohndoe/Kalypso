@@ -45,29 +45,22 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.manager.ASCIIHelper;
-import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.Bodenschichtkorrektur;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.binding.model.Grundwasserabfluss;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * @author doemming
  */
 public class GebWriter extends AbstractCoreFileWriter
 {
-  private final ASCIIHelper m_asciiHelper = new ASCIIHelper( getClass().getResource( "resources/formats/WernerCatchment.txt" ) ); //$NON-NLS-1$
-
   private final Logger m_logger;
-
-  private final NaModell m_naModel;
 
   private final Catchment[] m_catchments;
 
@@ -77,7 +70,7 @@ public class GebWriter extends AbstractCoreFileWriter
 
   private final IDManager m_idManager;
 
-  public GebWriter( final Logger logger, final Catchment[] catchments, final NaModell naModel, final NAControl naControl, final TimeseriesFileManager fileManager, final IDManager idManager )
+  public GebWriter( final Logger logger, final Catchment[] catchments, final NAControl naControl, final TimeseriesFileManager fileManager, final IDManager idManager )
   {
     super( logger );
 
@@ -86,7 +79,6 @@ public class GebWriter extends AbstractCoreFileWriter
     m_metaControl = naControl;
     m_logger = logger;
     m_catchments = catchments;
-    m_naModel = naModel;
     m_fileManager = fileManager;
   }
 
@@ -97,10 +89,10 @@ public class GebWriter extends AbstractCoreFileWriter
   protected void writeContent( final PrintWriter writer ) throws Exception
   {
     for( final Catchment catchment : m_catchments )
-      writeFeature( writer, m_naModel, catchment );
+      writeFeature( writer, catchment );
   }
 
-  private void writeFeature( final PrintWriter writer, final NaModell naModel, final Catchment catchment ) throws Exception
+  private void writeFeature( final PrintWriter writer, final Catchment catchment ) throws Exception
   {
     // 0
     final int asciiID = m_idManager.getAsciiID( catchment );
@@ -125,10 +117,8 @@ public class GebWriter extends AbstractCoreFileWriter
     writer.append( String.format( Locale.US, "%s %s\n", temperaturFile, verdunstungFile ) ); //$NON-NLS-1$
 
     // Zeitflächenfunktion
-    final Object zftProp = catchment.getProperty( NaModelConstants.CATCHMENT_PROP_ZFT );
-    if( zftProp instanceof IObservation )
-      writer.append( "we_nat.zft\n" ); //$NON-NLS-1$
-    else
+    final IObservation zft = catchment.getZft();
+    if( zft == null )
     {
       final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.0", asciiID ); //$NON-NLS-1$
       m_logger.log( Level.WARNING, msg );
@@ -138,29 +128,17 @@ public class GebWriter extends AbstractCoreFileWriter
       // BUG: this can never work, as the we999 file is not available
       // TODO: copy the we999 into the inp.dat folder or stop calculation!
     }
+    else
+      writer.append( "we_nat.zft\n" );
+
     writer.append( "we.hyd\n" ); //$NON-NLS-1$
 
     // 7
-    writer.append( m_asciiHelper.toAscii( catchment, 7 ) + "\n" ); //$NON-NLS-1$
+    // (snowtype,a15)(ftem,*)_(fver,*)
+    writer.format( "%-15s%s %s\n", catchment.getSnowtype(), catchment.getFtem(), catchment.getFver() );
 
     // 8
-    final Feature[] bodenKorrekturFeatures = catchment.getBodenKorrekturFeatures();
-
-    // Der Versiegelungsgrad vsg wird gesetzt, da er im Rechenkern aus der Hydrotopdatei Ã¼bernommen wird und somit in
-    // der Gebietsdatei uninteressant ist.
-    final Node overflowNode = catchment.getOverflowNode();
-    final int overflowNodeID = overflowNode == null ? 0 : m_idManager.getAsciiID( overflowNode );
-    final double bimax = 1.0;// JH: dummy for bimax, because it is not used in fortran!
-
-    writer.append( String.format( Locale.US, "%5.3f %4d %9.1f %9.1f %4d %4.1f %4.1f\n", 1.0, bodenKorrekturFeatures.length, bimax, catchment.getBianf(), overflowNodeID, catchment.getTint(), catchment.getRintmx() ) ); //$NON-NLS-1$
-
-    // 9 (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)
-    // JH: + dummy for "evalay", because the parameter is not used in fortran code
-    for( final Feature feature : bodenKorrekturFeatures )
-    {
-      // TODO: replace asciiHelper routine with java string formatting
-      writer.append( String.format( Locale.US, "%s %.1f\n", m_asciiHelper.toAscii( feature, 9 ), 1.0 ) ); //$NON-NLS-1$
-    }
+    writeBodenKorrektur( writer, catchment );
 
     // 10 (____(f_eva,f4.2)_(aint,f3.1)__(aigw,f6.2)____(fint,f4.2)____(ftra,f4.2))
     // JH: only "aigw" from gml. other parameters are not used by fortran program - dummys!
@@ -185,47 +163,7 @@ public class GebWriter extends AbstractCoreFileWriter
     writer.append( String.format( Locale.US, "%f %f %f %f %f %f\n", retvs, retob, retint, retbas, retgw, retklu ) ); //$NON-NLS-1$
 
     // 12-14
-    final Feature[] getgrundwasserAbflussFeatures = catchment.getgrundwasserAbflussFeatures();
-    writer.append( String.format( Locale.US, "%d\n", getgrundwasserAbflussFeatures.length ) ); //$NON-NLS-1$
-    final StringBuffer line13 = new StringBuffer();
-    final StringBuffer line14 = new StringBuffer();
-    double sumGwwi = 0.0;
-    for( final Feature fe : getgrundwasserAbflussFeatures )
-    {
-      final IRelationType rt2 = (IRelationType) fe.getFeatureType().getProperty( NaModelConstants.CATCHMENT_PROP_NGWZU );
-      final Feature linkedFE = naModel.getWorkspace().resolveLink( fe, rt2 );
-
-      if( linkedFE == null )
-        throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", FeatureHelper.getAsString( fe, "ngwzu" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      line13.append( String.format( Locale.US, "%d ", m_idManager.getAsciiID( linkedFE ) ) ); //$NON-NLS-1$
-      line14.append( String.format( Locale.US, "%s ", m_asciiHelper.toAscii( fe, 14 ) ) ); //$NON-NLS-1$
-
-      final Double gwwiValue = (Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_GWWI );
-      if( gwwiValue == null )
-        throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.83", fe.getName() ) ); //$NON-NLS-1$
-
-      sumGwwi += gwwiValue.doubleValue();
-    }
-
-    if( sumGwwi > 1.001 )
-      throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.84", catchment.getName() ) //$NON-NLS-1$
-          + ", AsciiID: " + asciiID ); //$NON-NLS-1$
-    if( sumGwwi < 0.999 )
-    {
-      // Restanteil in virtuelles Teilgebiet auï¿½erhalb des Einzugsgebietes
-      final double delta = 1 - sumGwwi;
-      line13.append( "0 " ); //$NON-NLS-1$
-      line14.append( delta ).append( " " ); //$NON-NLS-1$
-      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Locale.US, Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88" ), catchment.getName(), Integer.toString( asciiID ), sumGwwi * 100.0 ) ); //$NON-NLS-1$
-      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Locale.US, Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.92" ), delta * 100.0 ) ); //$NON-NLS-1$
-    }
-
-    if( getgrundwasserAbflussFeatures.length > 0 )
-    {
-      writer.append( line13 ).append( "\n" ); //$NON-NLS-1$
-      writer.append( line14 ).append( "\n" ); //$NON-NLS-1$
-    }
+    writeGrundwasserabfluss( catchment, writer );
 
     // 15
     writer.append( String.format( Locale.US, "%f %f %f %f %f %f", catchment.getHgru(), catchment.getHgro(), catchment.getRtr(), catchment.getPors(), catchment.getGwsent(), catchment.getKlupor() ) ); //$NON-NLS-1$
@@ -241,5 +179,89 @@ public class GebWriter extends AbstractCoreFileWriter
     // KommentarZeile
     writer.append( "ende gebietsdatensatz\n" ); //$NON-NLS-1$//$NON-NLS-2$
 
+  }
+
+  private void writeGrundwasserabfluss( final Catchment catchment, final PrintWriter writer ) throws SimulationException
+  {
+    final Grundwasserabfluss[] grundwasserAbflussFeatures = catchment.getGrundwasserAbflussFeatures();
+    writer.format( Locale.US, "%d\n", grundwasserAbflussFeatures.length ); //$NON-NLS-1$
+    if( grundwasserAbflussFeatures.length == 0 )
+      return;
+
+    final double sumGwwi = catchment.getSumGwwi();
+    if( sumGwwi > 1.001 )
+      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.84", catchment.getName() ) ); //$NON-NLS-1$
+
+    if( sumGwwi < 0.999 )
+    {
+      final int asciiID = m_idManager.getAsciiID( catchment );
+      m_logger.log( Level.WARNING, String.format( Locale.US, Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88" ), catchment.getName(), asciiID, sumGwwi * 100.0 ) ); //$NON-NLS-1$
+      m_logger.log( Level.WARNING, String.format( Locale.US, Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.92" ), 1 - sumGwwi * 100.0 ) ); //$NON-NLS-1$
+    }
+
+    writeLine13( catchment, sumGwwi, writer );
+    writeLine14( catchment, sumGwwi, writer );
+  }
+
+  private void writeLine13( final Catchment catchment, final double sumGwwi, final PrintWriter writer ) throws SimulationException
+  {
+    final Grundwasserabfluss[] grundwasserAbflussFeatures = catchment.getGrundwasserAbflussFeatures();
+    for( final Grundwasserabfluss gwa : grundwasserAbflussFeatures )
+    {
+      final Catchment linkedFE = gwa.getNgwzu();
+      if( linkedFE == null )
+        throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", catchment.getName() ) ); //$NON-NLS-1$ 
+
+      writer.format( Locale.US, "%d ", m_idManager.getAsciiID( linkedFE ) ); //$NON-NLS-1$
+    }
+
+    // Restanteil in virtuelles Teilgebiet außerhalb des Einzugsgebietes
+    if( sumGwwi < 0.999 )
+      writer.append( "0 " ); //$NON-NLS-1$
+
+    writer.write( "\n" ); //$NON-NLS-1$
+  }
+
+  private void writeLine14( final Catchment catchment, final double sumGwwi, final PrintWriter writer )
+  {
+    final Grundwasserabfluss[] grundwasserAbflussFeatures = catchment.getGrundwasserAbflussFeatures();
+    for( final Grundwasserabfluss gwa : grundwasserAbflussFeatures )
+      writer.format( Locale.US, "%s ", gwa.getGwwi() ); //$NON-NLS-1$
+
+    // Restanteil in virtuelles Teilgebiet außerhalb des Einzugsgebietes
+    if( sumGwwi < 0.999 )
+      writer.format( "%s ", 1 - sumGwwi ); //$NON-NLS-1$
+
+    writer.append( "\n" ); //$NON-NLS-1$
+  }
+
+  private void writeBodenKorrektur( final PrintWriter writer, final Catchment catchment )
+  {
+    final Bodenschichtkorrektur[] bodenKorrekturFeatures = catchment.getBodenKorrekturFeatures();
+
+    // Der Versiegelungsgrad vsg wird gesetzt, da er im Rechenkern aus der Hydrotopdatei Übernommen wird und somit in
+    // der Gebietsdatei uninteressant ist.
+    final Node overflowNode = catchment.getOverflowNode();
+    final int overflowNodeID = overflowNode == null ? 0 : m_idManager.getAsciiID( overflowNode );
+    final double bimax = 1.0;// JH: dummy for bimax, because it is not used in fortran!
+
+    writer.format( Locale.US, "%5.3f %4d %9.1f %9.1f %4d %4.1f %4.1f\n", 1.0, bodenKorrekturFeatures.length, bimax, catchment.getBianf(), overflowNodeID, catchment.getTint(), catchment.getRintmx() ); //$NON-NLS-1$
+
+    // 9
+    for( final Bodenschichtkorrektur bodenKorrektur : bodenKorrekturFeatures )
+    {
+      // (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
+      final double cinh = bodenKorrektur.getCinh();
+      final double cind = bodenKorrektur.getCind();
+      final double cex = bodenKorrektur.getCex();
+      final double bmax = bodenKorrektur.getBmax();
+      final double banf = bodenKorrektur.getBanf();
+      final double fko = bodenKorrektur.getFko();
+      final double retlay = bodenKorrektur.getRetlay();
+      // Dummy for "evalay", because the parameter is not used in fortran code
+      final double evalay = 1.0;
+
+      writer.format( Locale.US, "%s %s %s %s %s %s %s %.1f\n", cinh, cind, cex, bmax, banf, fko, retlay, evalay ); //$NON-NLS-1$
+    }
   }
 }

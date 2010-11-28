@@ -44,8 +44,8 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
@@ -58,6 +58,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class Catchment extends AbstractNaModelElement
 {
+  private static final QName PROP_ZFT = new QName( NS_NAMODELL, "zft" ); //$NON-NLS-1$
+
   public static final QName FEATURE_CATCHMENT = new QName( NS_NAMODELL, "Catchment" ); //$NON-NLS-1$
 
   private static final QName LINK_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" ); //$NON-NLS-1$
@@ -122,7 +124,7 @@ public class Catchment extends AbstractNaModelElement
 
   private static final QName PROP_KLUPOR = new QName( NS_NAMODELL, "klupor" ); //$NON-NLS-1$
 
-  private static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
+  private static final QName PROP_GENERATE_RESULT = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
 
   public static final QName PROP_PRECIPITATION_LINK = new QName( NS_NAMODELL, "niederschlagZR" ); //$NON-NLS-1$
 
@@ -132,9 +134,15 @@ public class Catchment extends AbstractNaModelElement
 
   private static final QName PROP_ZR_SYNTH = new QName( NS_NAMODELL, "synthZR" ); //$NON-NLS-1$
 
-  private IFeatureBindingCollection<Feature> m_bodenKorrekturCollection = null;
+  private static final QName PROP_SNOWTYPE = new QName( NS_NAMODELL, "snowtype" ); //$NON-NLS-1$
 
-  private IFeatureBindingCollection<Feature> m_grundwasserAbflussCollection = null;
+  private static final QName PROP_FTEM = new QName( NS_NAMODELL, "ftem" ); //$NON-NLS-1$
+
+  private static final QName PROP_FVER = new QName( NS_NAMODELL, "fver" ); //$NON-NLS-1$
+
+  private IFeatureBindingCollection<Bodenschichtkorrektur> m_bodenKorrekturCollection = null;
+
+  private IFeatureBindingCollection<Grundwasserabfluss> m_grundwasserAbflussCollection = null;
 
   public Catchment( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -166,34 +174,30 @@ public class Catchment extends AbstractNaModelElement
     return getProperty( PROP_GEOM, GM_Surface.class );
   }
 
-  public synchronized IFeatureBindingCollection<Feature> getBodenKorrekturCollection( )
+  public synchronized IFeatureBindingCollection<Bodenschichtkorrektur> getBodenKorrekturCollection( )
   {
     if( m_bodenKorrekturCollection == null )
-      m_bodenKorrekturCollection = new FeatureBindingCollection<Feature>( this, Feature.class, PROPLIST_BODENKORREKTUR_MEMBER, true );
+      m_bodenKorrekturCollection = new FeatureBindingCollection<Bodenschichtkorrektur>( this, Bodenschichtkorrektur.class, PROPLIST_BODENKORREKTUR_MEMBER, true );
     return m_bodenKorrekturCollection;
   }
 
-  public Feature[] getBodenKorrekturFeatures( )
+  public Bodenschichtkorrektur[] getBodenKorrekturFeatures( )
   {
-    if( m_bodenKorrekturCollection == null )
-      return getBodenKorrekturCollection().toArray( new Feature[] {} );
-    // if not null, avoid synchronized method
-    return m_bodenKorrekturCollection.toArray( new Feature[] {} );
+    final IFeatureBindingCollection<Bodenschichtkorrektur> bodenKorrekturCollection = getBodenKorrekturCollection();
+    return bodenKorrekturCollection.toArray( new Bodenschichtkorrektur[] {} );
   }
 
-  public synchronized IFeatureBindingCollection<Feature> getgrundwasserAbflussCollection( )
+  public synchronized IFeatureBindingCollection<Grundwasserabfluss> getGrundwasserAbflussCollection( )
   {
     if( m_grundwasserAbflussCollection == null )
-      m_grundwasserAbflussCollection = new FeatureBindingCollection<Feature>( this, Feature.class, PROPLIST_GRUNDWASSERABFLUSS_MEMBER, true );
+      m_grundwasserAbflussCollection = new FeatureBindingCollection<Grundwasserabfluss>( this, Grundwasserabfluss.class, PROPLIST_GRUNDWASSERABFLUSS_MEMBER, true );
     return m_grundwasserAbflussCollection;
   }
 
-  public Feature[] getgrundwasserAbflussFeatures( )
+  public Grundwasserabfluss[] getGrundwasserAbflussFeatures( )
   {
-    if( m_grundwasserAbflussCollection == null )
-      return getgrundwasserAbflussCollection().toArray( new Feature[] {} );
-    // if not null, avoid synchronized method
-    return m_grundwasserAbflussCollection.toArray( new Feature[] {} );
+    final IFeatureBindingCollection<Grundwasserabfluss> grundwasserAbflussCollection = getGrundwasserAbflussCollection();
+    return grundwasserAbflussCollection.toArray( new Grundwasserabfluss[] {} );
   }
 
   public double getRetob( )
@@ -330,12 +334,12 @@ public class Catchment extends AbstractNaModelElement
 
   public boolean isGenerateResults( )
   {
-    return getBoolean( GENERATE_RESULT_PROP, false );
+    return getBoolean( PROP_GENERATE_RESULT, false );
   }
 
   public void setGenerateResults( final boolean value )
   {
-    setProperty( GENERATE_RESULT_PROP, value );
+    setProperty( PROP_GENERATE_RESULT, value );
   }
 
   public TimeseriesLinkType getPrecipitationLink( )
@@ -353,7 +357,7 @@ public class Catchment extends AbstractNaModelElement
     return getProperty( PROP_EVAPORATION_LINK, TimeseriesLinkType.class );
   }
 
-  public String getSynthZR()
+  public String getSynthZR( )
   {
     return getProperty( PROP_ZR_SYNTH, String.class );
   }
@@ -385,5 +389,37 @@ public class Catchment extends AbstractNaModelElement
       return 1.0;
 
     return factor;
+  }
+
+  public String getSnowtype( )
+  {
+    return getProperty( PROP_SNOWTYPE, String.class );
+  }
+
+  public double getFver( )
+  {
+    return getDoubleProperty( PROP_FVER, 0.0 );
+  }
+
+  public double getFtem( )
+  {
+    return getDoubleProperty( PROP_FTEM, 1.0 );
+  }
+
+  public IObservation getZft( )
+  {
+    return getProperty( PROP_ZFT, IObservation.class );
+  }
+
+  public double getSumGwwi( )
+  {
+    double sumGwwi = 0.0;
+    for( final Grundwasserabfluss gwa : getGrundwasserAbflussFeatures() )
+    {
+      final Catchment linkedFE = gwa.getNgwzu();
+      if( linkedFE != null )
+        sumGwwi += gwa.getGwwi();
+    }
+    return sumGwwi;
   }
 }

@@ -44,7 +44,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 
 /**

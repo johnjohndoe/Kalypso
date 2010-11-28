@@ -47,7 +47,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;

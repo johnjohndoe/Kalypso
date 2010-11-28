@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,36 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.preprocessing;
+package org.kalypso.model.hydrology.binding.model;
 
-import java.util.Comparator;
+import javax.xml.namespace.QName;
 
-import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * Compares catchments by its ascii id.
+ * Binding class for {http://www.tuhh.de/kalypsoNA}grundwasserabfluss.
  * 
  * @author Gernot Belger
  */
-public class CatchmentIDComparator implements Comparator<Catchment>
+public class Grundwasserabfluss extends AbstractNaModelElement
 {
-  private final IDManager m_idManager;
+  private static final QName LINK_NGWZU = new QName( NS_NAMODELL, "ngwzu" ); //$NON-NLS-1$
 
-  public CatchmentIDComparator( final IDManager idManager )
+  private static final QName PROP_GWWI = new QName( NS_NAMODELL, "gwwi" ); //$NON-NLS-1$
+
+  public Grundwasserabfluss( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    m_idManager = idManager;
+    super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
-  @Override
-  public int compare( final Catchment c1, final Catchment c2 )
+  public Catchment getNgwzu( )
   {
-    final int id1 = m_idManager.getAsciiID( c1 );
-    final int id2 = m_idManager.getAsciiID( c2 );
-    return id1 - id2;
+    return (Catchment) FeatureHelper.resolveLink( this, LINK_NGWZU, true );
   }
 
+  public double getGwwi( )
+  {
+    return getDoubleProperty( PROP_GWWI, 0.0 );
+  }
+
+  public Catchment getParrent( )
+  {
+    return (Catchment) super.getParent();
+  }
 }

@@ -278,6 +278,14 @@
               class="org.kalypso.model.hydrology.binding.model.KMParameter"
               qname="{http://www.tuhh.de/kalypsoNA}KMParameter">
         </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.model.Bodenschichtkorrektur"
+              qname="{http://www.tuhh.de/kalypsoNA}bodenschichtkorrektur">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.model.Grundwasserabfluss"
+              qname="{http://www.tuhh.de/kalypsoNA}grundwasserabfluss">
+        </feature>
      </extension>
      <extension
            point="org.kalypso.deegree.featureBinding">
@@ -288,6 +296,10 @@
         <feature
               class="org.kalypso.model.hydrology.binding.parameter.Soiltype"
               qname="{http://www.tuhh.de/parameter}Soiltype">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.parameter.Snow"
+              qname="{http://www.tuhh.de/parameter}Snow">
         </feature>
      </extension>
      <extension

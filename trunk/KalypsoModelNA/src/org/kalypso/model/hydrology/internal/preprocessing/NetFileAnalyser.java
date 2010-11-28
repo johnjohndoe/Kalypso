@@ -48,17 +48,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
-import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Branching;
 import org.kalypso.model.hydrology.binding.model.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
+import org.kalypso.model.hydrology.binding.model.Grundwasserabfluss;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.model.hydrology.internal.preprocessing.net.visitors.CompleteDownstreamNetAsciiWriterVisitor;
 import org.kalypso.model.hydrology.internal.preprocessing.net.visitors.RootNodeCollector;
@@ -248,12 +247,10 @@ public class NetFileAnalyser
       }
 
       // downstream
-      final IRelationType rt1 = (IRelationType) catchment.getFeatureType().getProperty( NaModelConstants.GRUNDWASSERABFLUSS_MEMBER );
-      final Feature[] abflussFEs = m_modelWorkspace.resolveLinks( catchment, rt1 );
-      for( final Feature abflussFE : abflussFEs )
+      final Grundwasserabfluss[] abflussFEs = catchment.getGrundwasserAbflussFeatures();
+      for( final Grundwasserabfluss abflussFE : abflussFEs )
       {
-        final IRelationType rt2 = (IRelationType) abflussFE.getFeatureType().getProperty( NaModelConstants.CATCHMENT_PROP_NGWZU );
-        final Catchment downStreamCatchmentFE = (Catchment) m_modelWorkspace.resolveLink( abflussFE, rt2 );
+        final Catchment downStreamCatchmentFE = abflussFE.getNgwzu();
         if( downStreamCatchmentFE == null )
         {
           logWarning( "Downstream catchment for %s cannot be resolved.", abflussFE );

@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.convert.namodel.manager;
+package org.kalypso.model.hydrology.internal;
 
 import java.io.File;
 import java.io.FileWriter;

@@ -43,7 +43,6 @@ package org.kalypso.model.hydrology.internal.preprocessing;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
@@ -51,6 +50,7 @@ import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
@@ -64,7 +64,7 @@ import org.kalypso.model.hydrology.internal.preprocessing.writer.LzsimWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NetFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NutzungWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.RhbWriter;
-import org.kalypso.model.hydrology.internal.preprocessing.writer.SchneeManager;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.SnowtypWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.SudsFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.ZftWriter;
@@ -126,7 +126,7 @@ public class NAModellConverter
     final BodentypWriter bodentypManager = new BodentypWriter( parameterWorkspace, m_logger );
     bodentypManager.write( m_asciiDirs.bodentypFile );
 
-    final SchneeManager schneeManager = new SchneeManager( parameterWorkspace, m_logger );
+    final SnowtypWriter schneeManager = new SnowtypWriter( parameter, m_logger );
     schneeManager.write( m_asciiDirs.schneeFile );
 
     final SudsFileWriter sudsFileWriter = new SudsFileWriter( naModel, hydrotopeCollection, sudsWorkspace, m_logger );
@@ -153,9 +153,7 @@ public class NAModellConverter
 
   public void writeCalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager ) throws Exception
   {
-    final GMLWorkspace modelWorkspace = m_data.getModelWorkspace();
     final NAControl naControl = m_data.getMetaControl();
-    final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
 
     final Entry<NetElement, Integer>[] rootChannels = relevantElements.getRootChannels();
     final NetElement[] channels = relevantElements.getChannelsSorted( m_idManager );
@@ -165,7 +163,7 @@ public class NAModellConverter
     final GerWriter gerWriter = new GerWriter( m_idManager, rootChannels, channels, m_logger );
     gerWriter.write( m_asciiDirs.channelFile );
 
-    final GebWriter catchmentManager = new GebWriter( m_logger, catchments, naModel, naControl, tsFileManager, m_idManager );
+    final GebWriter catchmentManager = new GebWriter( m_logger, catchments, naControl, tsFileManager, m_idManager );
     catchmentManager.write( m_asciiDirs.catchmentFile );
   }
 }

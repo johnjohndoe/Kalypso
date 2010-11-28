@@ -45,9 +45,9 @@ import java.util.HashMap;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;

@@ -188,35 +188,7 @@ public interface NaModelConstants
 
   QName STATN_PROP_XJAH = new QName( NS_SYNTHN, "xjah" ); //$NON-NLS-1$
 
-  QName CATCHMENT_PROP_NGWZU = new QName( NS_NAMODELL, "ngwzu" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_GWWI = new QName( NS_NAMODELL, "gwwi" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_ZFT = new QName( NS_NAMODELL, "zft" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_STATN_DIAG = new QName( NS_SYNTHN, "statNDiag" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_RETBAS = new QName( NS_NAMODELL, "retbas" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_RETVS = new QName( NS_NAMODELL, "retvs" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_RETGW = new QName( NS_NAMODELL, "retgw" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_RETKLU = new QName( NS_NAMODELL, "retklu" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_XJAH = new QName( NS_NAMODELL, "xjah" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_FAKTOR_RETBAS = new QName( NS_NAMODELL, "faktorRetbas" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_FAKTOR_RETVS = new QName( NS_NAMODELL, "faktorRetvs" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_FAKTOR_RETGW = new QName( NS_NAMODELL, "faktorRetgw" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_FAKTOR_RETKLU = new QName( NS_NAMODELL, "faktorRetklu" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_IZKN_VERS = new QName( NS_NAMODELL, "izkn_vers" ); //$NON-NLS-1$
-
-  QName CATCHMENT_PROP_IZKN = new QName( NS_NAMODELL, "izkn" ); //$NON-NLS-1$
+  QName STATN_PROP_STATN_DIAG = new QName( NS_SYNTHN, "statNDiag" ); //$NON-NLS-1$
 
   // swale and trench
 
@@ -274,15 +246,9 @@ public interface NaModelConstants
 
   QName PARA_LANDUSE_NAME = new QName( NS_NAPARAMETER, "Landuse" ); //$NON-NLS-1$
 
-  QName PARA_SNOW_NAME = new QName( NS_NAPARAMETER, "Snow" ); //$NON-NLS-1$
-
-  QName PARA_SoilLayer_FT = new QName( NS_NAPARAMETER, "SoilLayer" ); //$NON-NLS-1$
-
   QName PARA_PROP_SEALING_MEMBER = new QName( NS_NAPARAMETER, "sealingMember" ); //$NON-NLS-1$
 
   QName PARA_PROP_LANDUSE_MEMBER = new QName( NS_NAPARAMETER, "landuseMember" ); //$NON-NLS-1$
-
-  QName PARA_PROP_SNOW_MEMBER = new QName( NS_NAPARAMETER, "snowMember" ); //$NON-NLS-1$
 
   QName PARA_IDEAL_LANDUSE_MEMBER = new QName( NS_NAPARAMETER, "idealLandUseMember" ); //$NON-NLS-1$
 

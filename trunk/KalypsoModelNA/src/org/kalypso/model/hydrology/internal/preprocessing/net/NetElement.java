@@ -48,7 +48,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +56,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
@@ -65,6 +63,7 @@ import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.model.hydrology.internal.preprocessing.net.visitors.NetElementVisitor;
@@ -337,6 +336,7 @@ public class NetElement
   public void writeSynthNFile( final File targetFileN, final Catchment catchment ) throws Exception
   {
     final List<Feature> statNList = new ArrayList<Feature>();
+
     final StringBuffer buffer = new StringBuffer();
     final Double annualityKey = m_metaControl.getAnnuality();
     // Kostra-Kachel/ synth. N gebietsabängig
@@ -345,26 +345,23 @@ public class NetElement
     final IFeatureType syntNft = m_synthNWorkspace.getGMLSchema().getFeatureType( NaModelConstants.SYNTHN_STATN_FT );
     statNList.addAll( Arrays.asList( m_synthNWorkspace.getFeatures( syntNft ) ) );
 
-    final Iterator<Feature> iter = statNList.iterator();
-    while( iter.hasNext() )
+    for( final Feature statNFE : statNList )
     {
-      final Feature statNFE = iter.next();
       if( statNFE.getName() != null )
       {
         if( statNFE.getName().equals( synthNKey ) )
         {
           final List< ? > statNParameterList = (List< ? >) statNFE.getProperty( NaModelConstants.STATNPARA_MEMBER );
-          final Iterator< ? > iter1 = statNParameterList.iterator();
-          while( iter1.hasNext() )
+          for( final Object object : statNParameterList )
           {
-            final Feature fe = (Feature) iter1.next();
+            final Catchment fe = (Catchment) object;
             final String annuality = Double.toString( 1d / (Double) fe.getProperty( NaModelConstants.STATN_PROP_XJAH ) );
             if( annuality.equals( annualityKey.toString() ) )
             {
-              final Object tnProp = fe.getProperty( NaModelConstants.CATCHMENT_PROP_STATN_DIAG );
-              if( tnProp instanceof IObservation )
+              final IObservation tnProp = (IObservation) fe.getProperty( NaModelConstants.STATN_PROP_STATN_DIAG );
+              if( tnProp != null )
               {
-                final IObservation observation = (IObservation) tnProp;
+                final IObservation observation = tnProp;
                 final IAxis[] axisList = observation.getAxisList();
                 final IAxis minutesAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_MIN );
                 final IAxis precipitationAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RAINFALL );

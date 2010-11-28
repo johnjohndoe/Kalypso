@@ -46,13 +46,13 @@ import java.util.logging.Logger;
 
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.convert.namodel.DefaultPathGenerator;
-import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.timeseries.Block;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatisticsData;

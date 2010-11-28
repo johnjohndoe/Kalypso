@@ -41,30 +41,25 @@
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.PrintWriter;
-import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.manager.ASCIIHelper;
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.parameter.Parameter;
+import org.kalypso.model.hydrology.binding.parameter.Snow;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author huebsch
  */
-public class SchneeManager extends AbstractCoreFileWriter
+public class SnowtypWriter extends AbstractCoreFileWriter
 {
-  private final ASCIIHelper m_asciiHelper = new ASCIIHelper( getClass().getResource( "resources/formats/parameter.txt" ) ); //$NON-NLS-1$
+  private final Parameter m_parameter;
 
-  private final GMLWorkspace m_parameterWorkspace;
-
-  public SchneeManager( final GMLWorkspace parameterWorkspace, final Logger logger )
+  public SnowtypWriter( final Parameter parameter, final Logger logger )
   {
     super( logger );
 
-    m_parameterWorkspace = parameterWorkspace;
+    m_parameter = parameter;
   }
 
   /**
@@ -73,23 +68,29 @@ public class SchneeManager extends AbstractCoreFileWriter
   @Override
   protected void writeContent( final PrintWriter writer ) throws Exception
   {
-    final Feature rootFeature = m_parameterWorkspace.getRootFeature();
-    final List< ? > list = (List< ? >) rootFeature.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
     writer.append( Messages.getString( "org.kalypso.convert.namodel.manager.SchneeManager.0" ) ); //$NON-NLS-1$
     writer.append( "/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
     writer.append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
-    final Iterator< ? > iter = list.iterator();
-    while( iter.hasNext() )
+
+    final IFeatureBindingCollection<Snow> snowMembers = m_parameter.getSnow();
+    for( final Snow snow : snowMembers )
     {
-      final Feature snowFE = (Feature) iter.next();
       // TODO: nur die schreiben, die auch in Gebietsdatei vorkommen
-      writeFeature( writer, snowFE );
+      writeSnow( writer, snow );
     }
   }
 
-  private void writeFeature( final PrintWriter snowBuffer, final Feature feature ) throws Exception
+  private void writeSnow( final PrintWriter snowBuffer, final Snow snow ) throws Exception
   {
-    snowBuffer.append( m_asciiHelper.toAscii( feature, 13 ) + "\n" ); //$NON-NLS-1$
+    final String name = snow.getName();
+    final double xwwo = snow.getXwwo();
+    final double xwwmax = snow.getXwwmax();
+    final double xsnotem = snow.getXsnotem();
+    final double xsnorad = snow.getXsnorad();
+    final double xh0 = snow.getXh0();
+
+    // (name,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
+    snowBuffer.format( "%-20s%s %s %s %s %s\n", name, xwwo, xwwmax, xsnotem, xsnorad, xh0 ); //$NON-NLS-1$
   }
 
 }

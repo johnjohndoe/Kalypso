@@ -52,11 +52,11 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
