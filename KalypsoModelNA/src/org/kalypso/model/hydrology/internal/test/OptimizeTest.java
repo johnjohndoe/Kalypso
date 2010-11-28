@@ -118,8 +118,9 @@ public class OptimizeTest
     pathes.add( new SimulationDataPath( NaModelConstants.IN_META_ID, ".calculation" ) );
     pathes.add( new SimulationDataPath( NaModelConstants.IN_MODELL_ID, "modell.gml" ) );
     pathes.add( new SimulationDataPath( NaModelConstants.IN_CONTROL_ID, ".expertControl_optimize.gml" ) );
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_HYDROTOP_ID, "hydrotop.gml" ) );
+// pathes.add( new SimulationDataPath( NaModelConstants.IN_HYDROTOP_ID, "hydrotop.gml" ) );
     pathes.add( new SimulationDataPath( NaModelConstants.IN_PARAMETER_ID, "parameter.gml" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_PREPROCESSED_ASCII, "preprocessedAscii.zip" ) );
     pathes.add( new SimulationDataPath( NaModelConstants.IN_OPTIMIZECONF_ID, ".sce.xml" ) );
     pathes.add( new SimulationDataPath( NaModelConstants.IN_OPTIMIZE_ID, "optimize.gml" ) );
 // pathes.add( new SimulationDataPath( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, "id( 'root' )" ) );
