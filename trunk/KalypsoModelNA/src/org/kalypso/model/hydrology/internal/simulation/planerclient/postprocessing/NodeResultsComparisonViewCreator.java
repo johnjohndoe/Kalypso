@@ -1,4 +1,4 @@
-package org.kalypso.na.postprocessing;
+package org.kalypso.model.hydrology.internal.simulation.planerclient.postprocessing;
 
 import java.awt.Color;
 import java.util.HashMap;
