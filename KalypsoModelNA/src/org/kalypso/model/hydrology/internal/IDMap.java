@@ -38,11 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.manager;
+package org.kalypso.model.hydrology.internal;
 
 import java.util.Comparator;
 
-public class IDMap
+class IDMap
 {
   public static final Comparator< IDMap> COMPARATOR = new Comparator<IDMap>()
   {
@@ -58,7 +58,7 @@ public class IDMap
 
   private final int m_type;
 
-  private int m_asciiID;
+  private final int m_asciiID;
 
   public IDMap( final int asciiID, final int type )
   {

@@ -46,10 +46,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
 /**

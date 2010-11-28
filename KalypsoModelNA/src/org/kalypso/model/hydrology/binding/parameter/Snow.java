@@ -45,58 +45,56 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for {http://www.tuhh.de/parameter}Parameter
+ * Binding class for {http://www.tuhh.de/parameter}Snow
  * 
  * @author Gernot Belger
  */
-public class Parameter extends Feature_Impl
+public class Snow extends Feature_Impl
 {
   private static final String NS_NAPARAMETER = NaModelConstants.NS_NAPARAMETER;
 
-  public static final QName FEATURE_PARAMETER = new QName( NS_NAPARAMETER, "Parameter" ); //$NON-NLS-1$
+  public static final QName FEATURE_SNOW = new QName( NS_NAPARAMETER, "Snow" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_SOILTYPE = new QName( NS_NAPARAMETER, "soiltypeMember" ); //$NON-NLS-1$
+  private static final QName PROP_XWWO = new QName( NS_NAPARAMETER, "xwwo" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_SNOW = new QName( NS_NAPARAMETER, "snowMember" ); //$NON-NLS-1$
+  private static final QName PROP_XWWMAX = new QName( NS_NAPARAMETER, "xwwmax" ); //$NON-NLS-1$
 
-  private IFeatureBindingCollection<Soiltype> m_soiltypes;
+  private static final QName PROP_XSNOTEM = new QName( NS_NAPARAMETER, "xsnotem" ); //$NON-NLS-1$
 
-  private IFeatureBindingCollection<Snow> m_snow;
+  private static final QName PROP_XSNORAD = new QName( NS_NAPARAMETER, "xsnorad" ); //$NON-NLS-1$
 
-  public Parameter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  private static final QName PROP_XHO = new QName( NS_NAPARAMETER, "xh0" ); //$NON-NLS-1$
+
+  public Snow( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public synchronized IFeatureBindingCollection<Soiltype> getSoiltypes( )
+  public double getXwwo( )
   {
-    if( m_soiltypes == null )
-      m_soiltypes = new FeatureBindingCollection<Soiltype>( this, Soiltype.class, MEMBER_SOILTYPE );
-
-    return m_soiltypes;
+    return getDoubleProperty( PROP_XWWO, 0.2 );
   }
 
-  public synchronized IFeatureBindingCollection<Snow> getSnow( )
+  public double getXwwmax( )
   {
-    if( m_snow == null )
-      m_snow = new FeatureBindingCollection<Snow>( this, Snow.class, MEMBER_SNOW );
-
-    return m_snow;
+    return getDoubleProperty( PROP_XWWMAX, 0.45 );
   }
 
-  public Soiltype findSoiltypeByID( final String featureID )
+  public double getXsnotem( )
   {
-    final Feature feature = getWorkspace().getFeature( featureID );
-    if( feature instanceof Soiltype )
-      return (Soiltype) feature;
-
-    return null;
+    return getDoubleProperty( PROP_XSNOTEM, 0.25 );
   }
 
+  public double getXsnorad( )
+  {
+    return getDoubleProperty( PROP_XSNORAD, 0.35 );
+  }
+
+  public double getXh0( )
+  {
+    return getDoubleProperty( PROP_XHO, 0.0 );
+  }
 }

@@ -44,9 +44,8 @@ import java.io.PrintWriter;
 import java.util.logging.Logger;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -90,9 +89,9 @@ public class ZftWriter extends AbstractCoreFileWriter
     final int catchmentID = m_idManager.getAsciiID( catchment );
 
     // Zeitflächenfunktion
-    final Object zftProp = catchment.getProperty( NaModelConstants.CATCHMENT_PROP_ZFT );
-    if( zftProp instanceof IObservation )
-      writeZML( (IObservation) zftProp, catchmentID, zftBuffer );
+    final IObservation zftProp = catchment.getZft();
+    if( zftProp != null )
+      writeZML( zftProp, catchmentID, zftBuffer );
   }
 
   /**

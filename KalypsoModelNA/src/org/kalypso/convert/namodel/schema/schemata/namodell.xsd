@@ -655,7 +655,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="ngwzu" type="na:CatchmentMemberPropertyType"/>
+					<element name="ngwzu" type="na:CatchmentLinkPropertyType"/>
 					<element name="gwwi">
 						<simpleType>
 							<restriction base="double">
@@ -670,7 +670,8 @@
 	</complexType>
 	<complexType name="CatchmentMemberPropertyType">
 		<sequence>
-			<element ref="na:Catchment"/>
+			<element ref="na:Catchment" minOccurs="0" maxOccurs="0"/>
 		</sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
 	</complexType>
 </schema>
