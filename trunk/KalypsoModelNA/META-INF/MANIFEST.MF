@@ -16,13 +16,13 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.kalypso.convert.namodel,
- org.kalypso.convert.namodel.hydrotope,
+Export-Package: org.kalypso.convert.namodel.hydrotope,
  org.kalypso.model.hydrology,
  org.kalypso.model.hydrology.binding,
  org.kalypso.model.hydrology.binding.initialValues,
  org.kalypso.model.hydrology.binding.model,
  org.kalypso.model.hydrology.binding.parameter,
  org.kalypso.model.hydrology.binding.suds,
- org.kalypso.model.hydrology.project
+ org.kalypso.model.hydrology.project,
+ org.kalypso.model.hydrology.util
 Bundle-Activator: org.kalypso.model.hydrology.internal.ModelNA

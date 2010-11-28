@@ -52,7 +52,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -76,7 +75,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.simulation.ui.calccase.ModelNature;
-import org.kalypso.util.command.CommandJob;
+import org.kalypso.util.command.WaitForFeatureChanges;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -98,16 +97,7 @@ public class CalcTuhhAction implements IActionDelegate
     final Shell activeShell = Display.getCurrent().getActiveShell();
 
     // FIXED: wait for all feature changes to be commited, else the gml workspace might still being changed.
-    final ICoreRunnableWithProgress commandWaiter = new ICoreRunnableWithProgress()
-    {
-      @Override
-      public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
-      {
-        final IJobManager manager = Job.getJobManager();
-        manager.join( CommandJob.FAMILY, monitor );
-        return Status.OK_STATUS;
-      }
-    };
+    final ICoreRunnableWithProgress commandWaiter = new WaitForFeatureChanges();
     ProgressUtilities.busyCursorWhile( commandWaiter );
 
     if( !saveFeatures( activeShell, features ).isOK() )

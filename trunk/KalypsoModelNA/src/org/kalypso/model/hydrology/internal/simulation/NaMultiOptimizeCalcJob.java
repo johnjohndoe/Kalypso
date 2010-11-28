@@ -42,15 +42,23 @@ package org.kalypso.model.hydrology.internal.simulation;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.NaSimulationDataFactory;
+import org.kalypso.model.hydrology.binding.NAOptimize;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.NaOptimizeLoader;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.util.ModellStattMesswerteOperation;
 import org.kalypso.optimize.OptimizeMonitor;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -118,10 +126,7 @@ public class NaMultiOptimizeCalcJob implements ISimulation
         final String optimizeRunDirname = String.format( "optimizeRun_%d", i );
         final File optimizeRunDir = new File( tmpdir, optimizeRunDirname );
 
-        final String message = String.format( "Schritt %d/%d", i + 1, maxStep );
-        monitor.setMessage( message );
-
-        runOptimize( optimizeRunDir, dataProvider, monitor, logger, i );
+        runOptimize( optimizeRunDir, dataProvider, monitor, logger, i, maxStep );
       }
 
       publishResults( resultEater );
@@ -142,7 +147,7 @@ public class NaMultiOptimizeCalcJob implements ISimulation
     }
   }
 
-  private void runOptimize( final File optimizeRunDir, final ISimulationDataProvider dataProvider, final ISimulationMonitor monitor, final Logger logger, final int step ) throws SimulationException, IOException
+  private void runOptimize( final File optimizeRunDir, final ISimulationDataProvider dataProvider, final ISimulationMonitor monitor, final Logger logger, final int step, final int maxStep ) throws SimulationException, IOException, CoreException, InvocationTargetException
   {
     INaSimulationData data = null;
 
@@ -159,8 +164,12 @@ public class NaMultiOptimizeCalcJob implements ISimulation
 
       optimizeDataProvider.setInput( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, optimizePath );
 
-      /* Load teqeaked data and run a optimized simulation on the current node */
+      /* Load tweaked data and run a optimized simulation on the current node */
       data = NaSimulationDataFactory.load( optimizeDataProvider );
+      final NAOptimize naOptimize = data.getNaOptimize();
+
+      final String message = String.format( "Schritt %d/%d (%s)", step + 1, maxStep, naOptimize.getName() );
+      monitor.setMessage( message );
 
       final NAOptimizingJob job = new NAOptimizingJob( optimizeRunDir, data, logger );
       final OptimizeMonitor subMonitor = new OptimizeMonitor( monitor );
@@ -173,6 +182,9 @@ public class NaMultiOptimizeCalcJob implements ISimulation
       // HACKY: see above, copy everything twice: 1) as input for the optimize processes
       // 2) as result of this process
       FileUtils.copyDirectory( resultDir, m_commonInputResultDir );
+
+      handleResultAsInflow( naOptimize, m_commonInputResultDir );
+
       FileUtils.copyDirectory( resultDir, m_commonResultDir );
 
       final File optimizeResult = job.getOptimizeResult();
@@ -183,6 +195,16 @@ public class NaMultiOptimizeCalcJob implements ISimulation
       if( data != null )
         data.dispose();
     }
+  }
+
+  private void handleResultAsInflow( final NAOptimize naOptimize, final File resultDir ) throws CoreException, InvocationTargetException, MalformedURLException
+  {
+    final Node rootNode = naOptimize.getRootNode();
+    final URL context = resultDir.getParentFile().toURI().toURL();
+    final ModellStattMesswerteOperation msmOperation = new ModellStattMesswerteOperation( rootNode, context );
+    final IStatus msmStatus = msmOperation.execute( new NullProgressMonitor() );
+    if( !msmStatus.isOK() )
+      throw new CoreException( msmStatus );
   }
 
   private void publishResults( final ISimulationResultEater resultEater ) throws SimulationException
