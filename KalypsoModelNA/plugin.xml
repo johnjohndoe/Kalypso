@@ -12,15 +12,15 @@
               typeID="KalypsoNaMultiOptimize">
         </simulation>
       <simulation
-            simulationClass="org.kalypso.na.global_preprocessing.NA_GlobalPreprocessingJob"
+            simulationClass="org.kalypso.model.hydrology.internal.simulation.planerclient.global_preprocessing.NA_GlobalPreprocessingJob"
             typeID="KalypsoNA_GlobalPreprocessing">
       </simulation>
       <simulation
-            simulationClass="org.kalypso.na.preprocessing.NA_PreprocessingJob"
+            simulationClass="org.kalypso.model.hydrology.internal.simulation.planerclient.preprocessing.NA_PreprocessingJob"
             typeID="KalypsoNA_Preprocessing">
       </simulation>
       <simulation
-            simulationClass="org.kalypso.na.postprocessing.NA_PostprocessingJob"
+            simulationClass="org.kalypso.model.hydrology.internal.simulation.planerclient.postprocessing.NA_PostprocessingJob"
             typeID="KalypsoNA_Postprocessing">
       </simulation>
      </extension>

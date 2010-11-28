@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.na.global_preprocessing;
+package org.kalypso.model.hydrology.internal.simulation.planerclient.global_preprocessing;
 
 import java.io.File;
 import java.io.IOException;
