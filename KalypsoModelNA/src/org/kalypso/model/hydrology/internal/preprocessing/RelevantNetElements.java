@@ -47,10 +47,10 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
 /**
  * Collects the relevant net elements, that needs to be written to ascii files.

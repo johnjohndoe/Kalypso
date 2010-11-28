@@ -27,13 +27,14 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.convert.namodel.net;
+package org.kalypso.model.hydrology.internal.preprocessing.net.visitors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
 /**
  * @author doemming
@@ -72,7 +73,7 @@ public class NetElementCircleFinder
       else if( listToHere.contains( linkNetElement ) )
       {
         // an other circle
-        System.out.println( Messages.getString( "org.kalypso.convert.namodel.net.NetElementCircleFinder.0" ) + listToHere.toString() + " : " + linkNetElement ); //$NON-NLS-1$ //$NON-NLS-2$
+        System.out.println( Messages.getString( "org.kalypso.model.hydrology.internal.preprocessing.net.NetElementCircleFinder.0" ) + listToHere.toString() + " : " + linkNetElement ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else
       {

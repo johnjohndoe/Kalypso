@@ -44,7 +44,6 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
@@ -54,6 +53,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
+import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.BodenartWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.BodentypWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.GebWriter;

@@ -38,13 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.net.visitors;
+package org.kalypso.model.hydrology.internal.preprocessing.net.visitors;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
+import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -64,7 +64,7 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
   }
 
   /**
-   * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
+   * @see org.kalypso.model.hydrology.internal.preprocessing.net.visitors.NetElementVisitor#visit(org.kalypso.model.hydrology.internal.preprocessing.net.NetElement)
    */
   @Override
   public boolean visit( final NetElement netElement )
