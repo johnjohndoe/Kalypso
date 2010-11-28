@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.timeseries;
+package org.kalypso.model.hydrology.internal.postprocessing;
 
 import java.io.File;
 import java.io.FileReader;
@@ -62,6 +62,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.model.hydrology.internal.NATimeSettings;
 
 public class BlockTimeSeries
 {

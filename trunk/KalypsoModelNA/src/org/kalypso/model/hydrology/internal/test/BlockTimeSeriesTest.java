@@ -12,11 +12,11 @@ import java.util.TimeZone;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.convert.namodel.timeseries.Block;
-import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
-import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.model.hydrology.internal.NATimeSettings;
+import org.kalypso.model.hydrology.internal.postprocessing.Block;
+import org.kalypso.model.hydrology.internal.postprocessing.BlockTimeSeries;
 
 /**
  * @author flows

@@ -51,7 +51,6 @@ import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
@@ -62,6 +61,7 @@ import org.kalypso.model.hydrology.binding.suds.Greenroof;
 import org.kalypso.model.hydrology.binding.suds.Swale;
 import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;

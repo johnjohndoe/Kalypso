@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.timeseries;
+package org.kalypso.model.hydrology.internal.preprocessing.timeseries;
 
 import java.util.Date;
 import java.util.SortedMap;

@@ -55,7 +55,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.initialValues.Catchment;
@@ -63,6 +62,7 @@ import org.kalypso.model.hydrology.binding.initialValues.Channel;
 import org.kalypso.model.hydrology.binding.initialValues.IniHyd;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;

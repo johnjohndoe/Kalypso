@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.timeseries;
+package org.kalypso.model.hydrology.internal.preprocessing.timeseries;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +52,7 @@ import java.util.TreeMap;
 
 import org.kalypso.contribs.java.lang.DoubleToString;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;

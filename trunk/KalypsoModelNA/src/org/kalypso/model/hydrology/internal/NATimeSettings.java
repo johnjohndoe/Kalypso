@@ -27,7 +27,7 @@
  *
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.convert.namodel.timeseries;
+package org.kalypso.model.hydrology.internal;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
