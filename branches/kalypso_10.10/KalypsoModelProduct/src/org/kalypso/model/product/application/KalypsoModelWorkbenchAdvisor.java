@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.product.application;
 
+import java.util.Collections;
+
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.application.DelayedEventsProcessor;
@@ -85,5 +89,22 @@ public class KalypsoModelWorkbenchAdvisor extends KalypsoWorkbenchAdvisor
   public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor( final IWorkbenchWindowConfigurer configurer )
   {
     return new KalypsoModelWorkbenchWindowAdvisor( configurer, m_restrictedAccess );
+  }
+
+  /**
+   * @see org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor#postStartup()
+   */
+  @Override
+  public void postStartup( )
+  {
+    super.postStartup();
+
+    /*
+     * Enable the Kalypso team activity: needed in order to show some important ui-element. Is there a more elegant way
+     * to do it?
+     */
+    final IWorkbench workbench = getWorkbenchConfigurer().getWorkbench();
+    final IWorkbenchActivitySupport activitySupport = workbench.getActivitySupport();
+    activitySupport.setEnabledActivityIds( Collections.singleton( "org.kalypso.activities.activities.team-enabled" ) );
   }
 }
