@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.net;
+package org.kalypso.model.hydrology.internal.preprocessing.net;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -58,7 +58,6 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.convert.namodel.net.visitors.NetElementVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
@@ -68,6 +67,7 @@ import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
+import org.kalypso.model.hydrology.internal.preprocessing.net.visitors.NetElementVisitor;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;

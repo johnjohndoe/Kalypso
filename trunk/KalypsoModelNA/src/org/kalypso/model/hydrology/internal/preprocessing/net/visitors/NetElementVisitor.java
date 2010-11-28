@@ -38,11 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.net.visitors;
+package org.kalypso.model.hydrology.internal.preprocessing.net.visitors;
 
 import java.util.logging.Logger;
 
-import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
 public abstract class NetElementVisitor
 {

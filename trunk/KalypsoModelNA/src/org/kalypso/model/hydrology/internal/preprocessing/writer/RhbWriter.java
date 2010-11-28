@@ -45,11 +45,11 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 import org.kalypso.convert.namodel.manager.IDManager;
-import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;

@@ -124,7 +124,7 @@ public class NaOptimizeLoader
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Fehler bei Lesen der Optimierungskonfiguration" );
+      throw new SimulationException( "Fehler bei Lesen der Optimierungskonfiguration", e );
     }
   }
 
