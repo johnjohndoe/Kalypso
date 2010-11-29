@@ -43,8 +43,8 @@ package org.kalypso.model.hydrology;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.kalypso.model.hydrology.internal.NaOptimizeLoader;
 import org.kalypso.model.hydrology.internal.NaSimulationData;
+import org.kalypso.model.hydrology.util.optimize.NaOptimizeLoader;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataUtils;
 import org.kalypso.simulation.core.SimulationException;

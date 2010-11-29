@@ -108,18 +108,6 @@
           <element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
           <!-- link auf das simulationsergebnis -->
           <element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
-          <!-- TODO: nächster Block potentiell in eigene Datei -->
-          <element name="accuracyPrediction" type="double" minOccurs="0" />
-          <element name="useOffsetStartPrediction" type="boolean" minOccurs="0" />
-          <element name="useOffsetEndPrediction" type="boolean" minOccurs="0" />
-          <element name="qAblageSpurMittlerer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
-          <element name="qAblageSpurOberer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
-          <element name="qAblageSpurUnterer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
-          <!-- difference between the following two props:
-            "useResults" converts existing results into zufluss thus resulting in a smaller model
-            "useModelValuesInsteadOfMeasurements" describes which time series shall be used to generate the zufluss: normally the measured values are better than the simulation (modelValues) -->
-          <element name="useResults" type="boolean" default="false" />
-          <element name="useModelValuesInsteadOfMeasurements" type="boolean" default="false" />
         </sequence>
       </extension>
     </complexContent>
