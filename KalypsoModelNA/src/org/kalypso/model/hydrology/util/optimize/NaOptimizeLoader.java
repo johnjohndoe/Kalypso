@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal;
+package org.kalypso.model.hydrology.util.optimize;
 
 import java.net.URL;
 
@@ -48,6 +48,7 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.xpath.XPathAPI;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.internal.NaOptimizeData;
 import org.kalypso.optimize.OptimizeJaxb;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -69,7 +70,6 @@ public class NaOptimizeLoader
   private final String m_optimizePath;
 
   private final URL m_autocalibrationLocation;
-
 
   private NaOptimizeData m_optimizeData;
 

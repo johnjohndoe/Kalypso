@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.internal.simulation;
+package org.kalypso.model.hydrology.util.optimize;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,6 +68,7 @@ import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
+import org.kalypso.model.hydrology.internal.simulation.INaSimulationRunnable;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -104,8 +105,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
   private final File m_bestOptimizeRunDir;
 
   private int m_counter = 0;
-
-  private int m_bestNumber = 0;
 
   private boolean m_lastSucceeded = false;
 
@@ -239,7 +238,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
         e.printStackTrace();
       }
 
-      m_bestNumber = m_counter;
       m_bestSucceeded = m_lastSucceeded;
     }
 
