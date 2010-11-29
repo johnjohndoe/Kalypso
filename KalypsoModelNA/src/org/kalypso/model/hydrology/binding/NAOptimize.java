@@ -59,43 +59,31 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class NAOptimize extends Feature_Impl
 {
-  public static final String NS_NS_NAOPTIMIZE = NaModelConstants.NS_NAOPTIMIZE;
+  public static final String NS_NAOPTIMIZE = NaModelConstants.NS_NAOPTIMIZE;
 
-  private static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NS_NAOPTIMIZE, "qberechnetZR" ); //$NON-NLS-1$
+  private static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NAOPTIMIZE, "qberechnetZR" ); //$NON-NLS-1$
 
-  private static final QName LINK_ROOTNODE = new QName( NS_NS_NAOPTIMIZE, "rootNodeLink" ); //$NON-NLS-1$
+  private static final QName LINK_ROOTNODE = new QName( NS_NAOPTIMIZE, "rootNodeLink" ); //$NON-NLS-1$
 
-  private static final QName PROP_AUTOCALI = new QName( NS_NS_NAOPTIMIZE, "automaticCallibration" ); //$NON-NLS-1$
+  private static final QName PROP_AUTOCALI = new QName( NS_NAOPTIMIZE, "automaticCallibration" ); //$NON-NLS-1$
 
-  private static final QName PROP_ACCPRED = new QName( NS_NS_NAOPTIMIZE, "accuracyPrediction" ); //$NON-NLS-1$
+  private static final QName PROP_PEGEL_ZR_PROP = new QName( NS_NAOPTIMIZE, "pegelZR" ); //$NON-NLS-1$
 
-  private static final QName PROP_USEOFFSTARTPRED = new QName( NS_NS_NAOPTIMIZE, "useOffsetStartPrediction" ); //$NON-NLS-1$
+  private static final QName PROP_CATCHMENT_LINK = new QName( NS_NAOPTIMIZE, "catchmentLink" ); //$NON-NLS-1$
 
-  private static final QName PROP_USEOFFENDPRED = new QName( NS_NS_NAOPTIMIZE, "useOffsetEndPrediction" ); //$NON-NLS-1$
+  private static final QName PROP_CATCHMENTS_BIANF = new QName( NS_NAOPTIMIZE, "CatchmentsBianf" ); //$NON-NLS-1$
 
-  private static final QName PROP_PEGEL_ZR_PROP = new QName( NS_NS_NAOPTIMIZE, "pegelZR" ); //$NON-NLS-1$
+  private static final QName PROP_CATCHMENTS_FAKTOR_RETOB_TETINT = new QName( NS_NAOPTIMIZE, "CatchmentsFaktorRetobTetint" ); //$NON-NLS-1$
 
-  private static final QName PROP_CATCHMENT_LINK = new QName( NS_NS_NAOPTIMIZE, "catchmentLink" ); //$NON-NLS-1$
+  private static final QName PROP_CATCHMENTS_FAKTN = new QName( NS_NAOPTIMIZE, "CatchmentsFaktn" ); //$NON-NLS-1$
 
-  private static final QName PROP_CATCHMENTS_BIANF = new QName( NS_NS_NAOPTIMIZE, "CatchmentsBianf" ); //$NON-NLS-1$
+  private static final QName PROP_CATCHMENTS_FAKTOR_AIGW = new QName( NS_NAOPTIMIZE, "CatchmentsFaktorAigw" ); //$NON-NLS-1$
 
-  private static final QName PROP_CATCHMENTS_FAKTOR_RETOB_TETINT = new QName( NS_NS_NAOPTIMIZE, "CatchmentsFaktorRetobTetint" ); //$NON-NLS-1$
+  private static final QName PROP_KMCHANNEL_LINK = new QName( NS_NAOPTIMIZE, "kmChannelLink" ); //$NON-NLS-1$
 
-  private static final QName PROP_CATCHMENTS_FAKTN = new QName( NS_NS_NAOPTIMIZE, "CatchmentsFaktn" ); //$NON-NLS-1$
+  private static final QName PROP_KMCHANNELS_FAKTOR_RKF = new QName( NS_NAOPTIMIZE, "KMChannelsFaktorRkf" ); //$NON-NLS-1$
 
-  private static final QName PROP_CATCHMENTS_FAKTOR_AIGW = new QName( NS_NS_NAOPTIMIZE, "CatchmentsFaktorAigw" ); //$NON-NLS-1$
-
-  private static final QName PROP_KMCHANNEL_LINK = new QName( NS_NS_NAOPTIMIZE, "kmChannelLink" ); //$NON-NLS-1$
-
-  private static final QName PROP_KMCHANNELS_FAKTOR_RKF = new QName( NS_NS_NAOPTIMIZE, "KMChannelsFaktorRkf" ); //$NON-NLS-1$
-
-  private static final QName PROP_KMCHANNELS_FAKTOR_RNF = new QName( NS_NS_NAOPTIMIZE, "KMChannelsFaktorRnf" ); //$NON-NLS-1$
-
-  private static final QName PROP_LINK_QABLAGE_SPUR_MITTLERER = new QName( NS_NS_NAOPTIMIZE, "qAblageSpurMittlerer" ); //$NON-NLS-1$
-
-  private static final QName PROP_LINK_QABLAGE_SPUR_OBERER = new QName( NS_NS_NAOPTIMIZE, "qAblageSpurOberer" ); //$NON-NLS-1$
-
-  private static final QName PROP_LINK_QABLAGE_SPUR_UNTERER = new QName( NS_NS_NAOPTIMIZE, "qAblageSpurUnterer" ); //$NON-NLS-1$
+  private static final QName PROP_KMCHANNELS_FAKTOR_RNF = new QName( NS_NAOPTIMIZE, "KMChannelsFaktorRnf" ); //$NON-NLS-1$
 
   private final IFeatureBindingCollection<Catchment> m_catchmentMembers;
 
@@ -129,39 +117,9 @@ public class NAOptimize extends Feature_Impl
     return new ZmlLink( this, PROP_RESULT_TIMESERIESLINK );
   }
 
-  public ZmlLink getQAblageMittlererLink( )
-  {
-    return new ZmlLink( this, PROP_LINK_QABLAGE_SPUR_MITTLERER );
-  }
-
-  public ZmlLink getQAblageObererLink( )
-  {
-    return new ZmlLink( this, PROP_LINK_QABLAGE_SPUR_OBERER );
-  }
-
-  public ZmlLink getQAblageUntererLink( )
-  {
-    return new ZmlLink( this, PROP_LINK_QABLAGE_SPUR_UNTERER );
-  }
-
   public ZmlLink getPegelZRLink( )
   {
     return new ZmlLink( this, PROP_PEGEL_ZR_PROP );
-  }
-
-  public boolean doUseOffsetStartPred( )
-  {
-    return getBoolean( PROP_USEOFFSTARTPRED, false );
-  }
-
-  public boolean doUseOffsetEndPred( )
-  {
-    return getBoolean( PROP_USEOFFENDPRED, false );
-  }
-
-  public Double getPredictionAccuracy( )
-  {
-    return getProperty( PROP_ACCPRED, Double.class );
   }
 
   public boolean doOptimize( )
