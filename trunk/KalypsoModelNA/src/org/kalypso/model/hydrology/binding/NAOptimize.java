@@ -77,6 +77,8 @@ public class NAOptimize extends Feature_Impl
 
   private static final QName PROP_CATCHMENTS_FAKTN = new QName( NS_NAOPTIMIZE, "CatchmentsFaktn" ); //$NON-NLS-1$
 
+  private static final QName PROP_CATCHMENTS_FAKTN_PROGNOSE = new QName( NS_NAOPTIMIZE, "CatchmentsFaktnPrognose" ); //$NON-NLS-1$
+
   private static final QName PROP_CATCHMENTS_FAKTOR_AIGW = new QName( NS_NAOPTIMIZE, "CatchmentsFaktorAigw" ); //$NON-NLS-1$
 
   private static final QName PROP_KMCHANNEL_LINK = new QName( NS_NAOPTIMIZE, "kmChannelLink" ); //$NON-NLS-1$
@@ -95,6 +97,11 @@ public class NAOptimize extends Feature_Impl
 
     m_catchmentMembers = new FeatureBindingCollection<Catchment>( this, Catchment.class, PROP_CATCHMENT_LINK, true );
     m_kmChannelMembers = new FeatureBindingCollection<KMChannel>( this, KMChannel.class, PROP_KMCHANNEL_LINK, true );
+  }
+
+  public IFeatureBindingCollection<Catchment> getCatchmentCollection( )
+  {
+    return m_catchmentMembers;
   }
 
   public Catchment[] getCatchments( )
@@ -150,6 +157,11 @@ public class NAOptimize extends Feature_Impl
   public Double getFaktn( )
   {
     return getProperty( PROP_CATCHMENTS_FAKTN, Double.class );
+  }
+
+  public double getFaktnPrognose( )
+  {
+    return getDoubleProperty( PROP_CATCHMENTS_FAKTN_PROGNOSE, 1.0 );
   }
 
   public Double getFaktorAigw( )

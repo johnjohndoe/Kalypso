@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,29 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.model;
+package org.kalypso.model.hydrology.internal.preprocessing.timeseries;
 
-import javax.xml.namespace.QName;
+import java.util.Date;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.sensor.DateRange;
 
 /**
- * Binding class for {http://www.tuhh.de/kalypsoNA}KontZufluss.
- * 
  * @author Gernot Belger
  */
-public class KontZufluss extends Branching
+public class RangeFactor
 {
-  private static QName PROP_QZUG = new QName( NS_NAMODELL, "qzug" ); //$NON-NLS-1$
+  private final DateRange m_range;
 
-  public KontZufluss( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  private final double m_factor;
+
+  public RangeFactor( final DateRange range, final double factor )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    m_range = range;
+    m_factor = factor;
   }
 
-  public double getQZug( )
+  /**
+   * Applies this factor to the value. The factor is applied iff the date lies inside our range; else simply the
+   * original value is returned.
+   */
+  public double apply( final Date date, final double value )
   {
-    return getDoubleProperty( PROP_QZUG, 0.0 );
+    if( m_range != null && m_range.containsInclusive( date ) )
+      return value * m_factor;
+
+    return value;
   }
+
 }

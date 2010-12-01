@@ -52,7 +52,6 @@ import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -147,7 +146,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
       try
       {
         final URL context = channel.getWorkspace().getContext();
-        NetElement.writeTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null, "-777", m_metaControl.getSimulationStart(), m_metaControl.getSimulationEnd() );
+        TsFileWriter.writeTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null, "-777", m_metaControl.getSimulationStart(), m_metaControl.getSimulationEnd() );
       }
       catch( final Exception e )
       {

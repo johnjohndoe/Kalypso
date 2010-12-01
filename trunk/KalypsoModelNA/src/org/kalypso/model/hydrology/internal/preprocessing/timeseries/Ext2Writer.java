@@ -43,15 +43,11 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public class Ext2Writer
 {
   private final static long twelveHinMillis = 1000l * 60l * 60l * 12l;
-
-  // private final static TimeZone m_timeZone = new SimpleTimeZone( 0, "ausgedacht" );
 
   private final Date m_start;
 

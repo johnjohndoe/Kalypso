@@ -159,14 +159,6 @@ public interface NaModelConstants
 
   QName NODE_VERZW_VERZWEIGUNG = new QName( NS_NAMODELL, "Verzweigung" ); //$NON-NLS-1$
 
-  QName NODE_VERZW_QZUG_PROP = new QName( NS_NAMODELL, "qzug" ); //$NON-NLS-1$
-
-  QName NODE_VERZW_ZPROZ_PROP = new QName( NS_NAMODELL, "zproz" ); //$NON-NLS-1$
-
-  QName NODE_VERZW_QABG_PROP = new QName( NS_NAMODELL, "qabg" ); //$NON-NLS-1$
-
-  QName NODE_VERZW_QUEB_PROP = new QName( NS_NAMODELL, "queb" ); //$NON-NLS-1$
-
   QName NODE_COLLECTION_FT = new QName( NS_NAMODELL, "NodeCollection" ); //$NON-NLS-1$
 
 

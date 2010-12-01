@@ -98,7 +98,6 @@ public class ResultTimeseriesLoader
     m_logger = logger;
 
     m_naStatistics = new NAStatistics( logger );
-
   }
 
   public void processResults( ) throws SensorException

@@ -40,12 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing;
 
+import java.net.URL;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -67,6 +69,7 @@ import org.kalypso.model.hydrology.internal.preprocessing.writer.RhbWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.SnowtypWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.SudsFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.TsFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.ZftWriter;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -96,19 +99,25 @@ public class NAModellConverter
 
   public void writeUncalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager, final HydroHash hydroHash ) throws Exception
   {
-    final GMLWorkspace modelWorkspace = m_data.getModelWorkspace();
-    final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
+    final NaModell naModel = m_data.getNaModel();
     final NAHydrotop hydrotopeCollection = m_data.getHydrotopCollection();
     final GMLWorkspace sudsWorkspace = m_data.getSudsWorkspace();
     final NAControl metaControl = m_data.getMetaControl();
     final GMLWorkspace parameterWorkspace = m_data.getParameterWorkspace();
     final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
+    final GMLWorkspace synthNWorkspace = m_data.getSynthNWorkspace();
+    final NAOptimize naOptimize = m_data.getNaOptimize();
+
+    final URL zmlContext = naModel.getWorkspace().getContext();
 
     final NetElement[] channels = relevantElements.getChannelsSorted( m_idManager );
     final Catchment[] catchments = relevantElements.getCatchmentsSorted( m_idManager );
 
-    final NetFileWriter netWriter = new NetFileWriter( m_asciiDirs, relevantElements, tsFileManager, m_idManager, modelWorkspace, metaControl, m_logger );
+    final NetFileWriter netWriter = new NetFileWriter( m_asciiDirs, relevantElements, m_idManager, zmlContext, metaControl, m_logger );
     netWriter.write( m_asciiDirs.netFile );
+
+    final TsFileWriter tsWriter = new TsFileWriter( synthNWorkspace, metaControl, naOptimize, channels, zmlContext, tsFileManager, m_logger );
+    tsWriter.write( m_asciiDirs.klimaDatDir );
 
     // HACK: for performance optimisation: if the zft file already exists, we assume it is ok and just return
     if( !m_asciiDirs.zftFile.exists() )

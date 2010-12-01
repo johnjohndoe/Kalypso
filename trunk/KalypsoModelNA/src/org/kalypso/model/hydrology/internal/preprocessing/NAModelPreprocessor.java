@@ -197,14 +197,13 @@ public class NAModelPreprocessor
 
   private void initNetData( final Node rootNode ) throws SimulationException, Exception
   {
-    final GMLWorkspace modelWorkspace = m_simulationData.getModelWorkspace();
-    final GMLWorkspace synthNWorkspace = m_simulationData.getSynthNWorkspace();
+    final NaModell naModel = m_simulationData.getNaModel();
     final NAHydrotop hydrotopeCollection = m_simulationData.getHydrotopCollection();
     final GMLWorkspace parameterWorkspace = m_simulationData.getParameterWorkspace();
     final NAControl metaControl = m_simulationData.getMetaControl();
     final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
 
-    final NetFileAnalyser m_nodeManager = new NetFileAnalyser( rootNode, m_logger, modelWorkspace, synthNWorkspace, metaControl, m_idManager );
+    final NetFileAnalyser m_nodeManager = new NetFileAnalyser( rootNode, m_logger, naModel, m_idManager );
     m_relevantElements = m_nodeManager.analyseNet();
 
     if( hydrotopeCollection != null )
