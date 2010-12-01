@@ -14,7 +14,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.metadata.IObservationConstants;
+import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -132,9 +132,9 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     {
       m_metadataList = new MetadataList();
 
-      m_metadataList.put( IObservationConstants.MD_NAME, getName() );
-      m_metadataList.put( IObservationConstants.MD_DESCRIPTION, Messages.getString( "org.kalypso.dcadapter.DataCenterTimeserieItem.0" ) + m_ts.getDataTableName() ); //$NON-NLS-1$
-      m_metadataList.put( IObservationConstants.MD_ORIGIN, Messages.getString( "org.kalypso.dcadapter.DataCenterTimeserieItem.1" ) ); //$NON-NLS-1$
+      m_metadataList.put( IMetadataConstants.MD_NAME, getName() );
+      m_metadataList.put( IMetadataConstants.MD_DESCRIPTION, Messages.getString( "org.kalypso.dcadapter.DataCenterTimeserieItem.0" ) + m_ts.getDataTableName() ); //$NON-NLS-1$
+      m_metadataList.put( IMetadataConstants.MD_ORIGIN, Messages.getString( "org.kalypso.dcadapter.DataCenterTimeserieItem.1" ) ); //$NON-NLS-1$
 
       final java.sql.Date begin = m_ts.getRealBegin();
       if( begin != null )
