@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 
 import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
-import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -71,7 +70,7 @@ public abstract class AbstractObservationBuilding extends AbstractProfileObject 
     if( index < 0 )
       throw new IllegalArgumentException( component == null ? getObservation().getDescription() : component.getDescription() );
     if( result.size() > 1 )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.0" ) ); //$NON-NLS-1$
+      throw new IllegalStateException( "Building always consists of one IRecord-Set row" ); //$NON-NLS-1$
     else if( result.size() == 0 )
       result.add( result.createRecord() );
 
@@ -86,7 +85,7 @@ public abstract class AbstractObservationBuilding extends AbstractProfileObject 
       {
         this.setValue( cmp, building.getValue(cmp ) );
       }
-      catch( IllegalArgumentException e )
+      catch( final IllegalArgumentException e )
       {
         continue;
       }
@@ -111,7 +110,7 @@ public abstract class AbstractObservationBuilding extends AbstractProfileObject 
   {
     final TupleResult result = getObservation().getResult();
     if( result.size() > 1 )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.1" ) ); //$NON-NLS-1$
+      throw new IllegalStateException( "Building always consists of one IRecord-Set row" ); //$NON-NLS-1$
     final int index = result.indexOfComponent( component );
     if( index < 0 )
       throw new IllegalArgumentException( component.getName() );
