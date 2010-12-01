@@ -45,6 +45,16 @@
           <element name="CatchmentsFaktorRetobTetint" type="double" />
           <element name="CatchmentsFaktn" type="double" />
           <element name="CatchmentsFaktorAigw" type="double" />
+
+          <element name="CatchmentsFaktnPrognose" type="double" default="1.0">
+            <annotation>
+                <documentation>Special Case: factor for forecast precipitation: this factor will be applied to
+                ALL catchments  
+                 </documentation>
+            
+            </annotation>
+          </element>
+          
           <element name="kmChannelLink" minOccurs="0" maxOccurs="unbounded">
             <complexType>
               <!-- With minOccurs="0" and maxOccurs="0" no element can be defined here. -->
@@ -108,6 +118,7 @@
           <element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
           <!-- link auf das simulationsergebnis -->
           <element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+          
         </sequence>
       </extension>
     </complexContent>

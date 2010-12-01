@@ -67,7 +67,7 @@ import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
-import org.kalypso.model.hydrology.internal.preprocessing.timeseries.NAZMLGenerator;
+import org.kalypso.model.hydrology.internal.preprocessing.timeseries.GrapWriter;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -78,8 +78,6 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Writes the collected net elements etc. into the .ntz file.
@@ -122,26 +120,23 @@ public class NetFileWriter extends AbstractCoreFileWriter
 
   private final RelevantNetElements m_relevantElements;
 
-  private final TimeseriesFileManager m_tsFileManager;
-
   private final IDManager m_idManager;
-
-  private final GMLWorkspace m_modelWorkspace;
 
   private final NAControl m_metaControl;
 
   private final NaAsciiDirs m_asciiDirs;
 
-  public NetFileWriter( final NaAsciiDirs asciiDirs, final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager, final IDManager idManager, final GMLWorkspace modelWorkspace, final NAControl metaControl, final Logger logger )
+  private final URL m_zmlContext;
+
+  public NetFileWriter( final NaAsciiDirs asciiDirs, final RelevantNetElements relevantElements, final IDManager idManager, final URL zmlContext, final NAControl metaControl, final Logger logger )
   {
     super( logger );
 
     m_asciiDirs = asciiDirs;
 
     m_relevantElements = relevantElements;
-    m_tsFileManager = tsFileManager;
     m_idManager = idManager;
-    m_modelWorkspace = modelWorkspace;
+    m_zmlContext = zmlContext;
     m_metaControl = metaControl;
   }
 
@@ -153,21 +148,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
   {
     final NetElement[] channels = m_relevantElements.getChannels();
     for( final NetElement netElement : channels )
-    {
       netElement.write( writer );
-
-      try
-      {
-        // FIXME: move into different writer
-        final URL zmlContext = m_modelWorkspace.getContext();
-        netElement.generateTimeSeries( m_asciiDirs.klimaDatDir, m_tsFileManager, zmlContext );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-        getLogger().warning( e.getLocalizedMessage() );
-      }
-    }
 
     final Entry<NetElement, Integer>[] rootChannels = m_relevantElements.getRootChannels();
     for( final Entry<NetElement, Integer> entry : rootChannels )
@@ -282,7 +263,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     final File targetFile = new File( m_asciiDirs.zuflussDir, zuflussFileName );
 
     final String zuflussFile = ZmlURL.getIdentifierPart( zuflussLink.getHref() );
-    final URL linkURL = m_urlUtilities.resolveURL( m_modelWorkspace.getContext(), zuflussFile );
+    final URL linkURL = m_urlUtilities.resolveURL( m_zmlContext, zuflussFile );
     if( !targetFile.exists() )
     {
       final StringBuffer writer = new StringBuffer();
@@ -304,20 +285,26 @@ public class NetFileWriter extends AbstractCoreFileWriter
           final Date simulationStartDate = new Date( 100, 0, 1 );
           final Date simulationEndDate = new Date( simulationStartDate.getTime() + simulationEndDateMillis - simulationStartDateMillis );
 
-          NAZMLGenerator.createSyntheticFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation, simulationStartDate, simulationEndDate, minutesOfTimestep );
+          final GrapWriter grapWriter = new GrapWriter( ITimeseriesConstants.TYPE_RUNOFF, observation );
+          grapWriter.writeSyntheticFile( writer, simulationStartDate, simulationEndDate, minutesOfTimestep );
         }
         else
         {
           final Date simulationStart = m_metaControl.getSimulationStart();
           final Date simulationEnd = m_metaControl.getSimulationEnd();
-          NAZMLGenerator.createSyntheticFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation, simulationStart, simulationEnd, minutesOfTimestep );
+          final GrapWriter grapWriter = new GrapWriter( ITimeseriesConstants.TYPE_RUNOFF, observation );
+          grapWriter.writeSyntheticFile( writer, simulationStart, simulationEnd, minutesOfTimestep );
         }
       }
       else
-        NAZMLGenerator.createFile( writer, ITimeseriesConstants.TYPE_RUNOFF, observation );
+      {
+        final GrapWriter grapWriter = new GrapWriter( ITimeseriesConstants.TYPE_RUNOFF, observation );
+        grapWriter.write( writer );
+      }
 
       FileUtils.writeStringToFile( targetFile, writer.toString() );
     }
+
     bean.m_specialBuffer.append( "    1234\n" ); // dummyLine //$NON-NLS-1$
     bean.m_specialBuffer.append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
@@ -352,25 +339,25 @@ public class NetFileWriter extends AbstractCoreFileWriter
 
     if( branching instanceof KontZufluss )
     {
-      final double qzug = FeatureHelper.getAsDouble( branching, NaModelConstants.NODE_VERZW_QZUG_PROP, 0d );
+      final double qzug = ((KontZufluss) branching).getQZug();
       return new ZuflussBean( 1, 0, 0, 0, 0, qzug, branchNode );
     }
 
     if( branching instanceof Verzweigung )
     {
-      final double zproz = FeatureHelper.getAsDouble( branching, NaModelConstants.NODE_VERZW_ZPROZ_PROP, 0d );
+      final double zproz = ((Verzweigung) branching).getZProz();
       return new ZuflussBean( 0, 0, 0, 0, 1, zproz, branchNode );
     }
 
     if( branching instanceof KontEntnahme )
     {
-      final double qabg = FeatureHelper.getAsDouble( branching, NaModelConstants.NODE_VERZW_QABG_PROP, 0d );
+      final double qabg = ((KontEntnahme) branching).getQAbg();
       return new ZuflussBean( 0, 1, 0, 0, 0, qabg, branchNode );
     }
 
     if( branching instanceof Ueberlauf )
     {
-      final double queb = FeatureHelper.getAsDouble( branching, NaModelConstants.NODE_VERZW_QUEB_PROP, 0d );
+      final double queb = ((Ueberlauf) branching).getQUeb();
       return new ZuflussBean( 0, 0, 1, 0, 0, queb, branchNode );
     }
 

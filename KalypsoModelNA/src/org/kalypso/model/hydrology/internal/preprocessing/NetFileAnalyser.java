@@ -48,7 +48,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
-import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Branching;
 import org.kalypso.model.hydrology.binding.model.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -64,7 +63,6 @@ import org.kalypso.model.hydrology.internal.preprocessing.net.visitors.RootNodeC
 import org.kalypso.model.hydrology.internal.preprocessing.net.visitors.SimulationVisitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -81,23 +79,17 @@ public class NetFileAnalyser
 {
   private final Node m_rootNode;
 
-  private final GMLWorkspace m_modelWorkspace;
-
-  private final GMLWorkspace m_synthNWorkspace;
-
   private final Logger m_logger;
-
-  private final NAControl m_naControl;
 
   private final IDManager m_idManager;
 
-  public NetFileAnalyser( final Node rootNode, final Logger logger, final GMLWorkspace modelWorkspace, final GMLWorkspace synthNWorkspace, final NAControl naControl, final IDManager idManager )
+  private final NaModell m_model;
+
+  public NetFileAnalyser( final Node rootNode, final Logger logger, final NaModell model, final IDManager idManager )
   {
     m_rootNode = rootNode;
     m_logger = logger;
-    m_modelWorkspace = modelWorkspace;
-    m_synthNWorkspace = synthNWorkspace;
-    m_naControl = naControl;
+    m_model = model;
     m_idManager = idManager;
   }
 
@@ -120,8 +112,7 @@ public class NetFileAnalyser
     // |
     // x -> virtueller knoten generiert NR 10000
 
-    final NaModell naModel = (NaModell) m_modelWorkspace.getRootFeature();
-    final IFeatureBindingCollection<Channel> channels = naModel.getChannels();
+    final IFeatureBindingCollection<Channel> channels = m_model.getChannels();
 
     // REMARK: Fix: using LinkedHashMap, so net generation is independent of current gml-id of channel.
     // Else, the net was generated differently for every simulation (due to the fact that the gml-ids change....)
@@ -129,12 +120,12 @@ public class NetFileAnalyser
     // generate net elements, each channel represents a netelement
     for( final Channel channelFE : channels )
     {
-      final NetElement netElement = new NetElement( m_modelWorkspace, m_synthNWorkspace, channelFE, m_naControl, m_idManager, m_logger );
+      final NetElement netElement = new NetElement( channelFE, m_idManager );
       netElements.put( channelFE.getId(), netElement );
     }
 
     // find dependencies: node - node
-    final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+    final IFeatureBindingCollection<Node> nodes = m_model.getNodes();
     for( final Node upStreamNode : nodes )
     {
       final Channel upstreamNodeChannel = upStreamNode.getDownstreamChannel();
@@ -219,7 +210,7 @@ public class NetFileAnalyser
     }
 
     // dependency: catchment -> catchment
-    final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+    final IFeatureBindingCollection<Catchment> catchments = m_model.getCatchments();
     for( final Catchment catchment : catchments )
     {
       // upstream
@@ -356,7 +347,7 @@ public class NetFileAnalyser
     // collect netelements: complete network below root nodes
     final CompleteDownstreamNetAsciiWriterVisitor completeNetVisitor = new CompleteDownstreamNetAsciiWriterVisitor( relevantElements );
     for( final NetElement netElement : netElements )
-      netElement.accept( completeNetVisitor );
+      completeNetVisitor.visit( netElement );
 
     return relevantElements;
   }

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.model;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
@@ -50,8 +52,16 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  */
 public class Verzweigung extends BranchingWithNode
 {
+  private static final QName PROP_ZPROZ = new QName( NS_NAMODELL, "zproz" ); //$NON-NLS-1$
+
   public Verzweigung( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public double getZProz( )
+  {
+    // Default is 0.0 for backwards compatibility, schema defines 1.0
+    return getDoubleProperty( PROP_ZPROZ, 0.0 );
   }
 }

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.model;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
@@ -50,8 +52,15 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  */
 public class Ueberlauf extends BranchingWithNode
 {
+  private static final QName PROP_QUEB = new QName( NS_NAMODELL, "queb" ); //$NON-NLS-1$
+
   public Ueberlauf( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public double getQUeb( )
+  {
+    return getDoubleProperty( PROP_QUEB, 0.0 );
   }
 }
