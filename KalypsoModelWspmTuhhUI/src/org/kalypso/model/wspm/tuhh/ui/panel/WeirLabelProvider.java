@@ -64,6 +64,7 @@ public class WeirLabelProvider extends LabelProvider
       return super.getText( type );
   }
 
+  // FIXME: not used
   public final String getDescription( final String type )
   {
     if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( type ) )
@@ -83,6 +84,7 @@ public class WeirLabelProvider extends LabelProvider
     return new String[] { IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG, IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG, IWspmTuhhConstants.WEHR_TYP_BREITKRONIG, IWspmTuhhConstants.WEHR_TYP_BEIWERT };
   }
 
+  // FIXME: not used; broken and wrong strings
   public final String getTooltip( final String type )
   {
     if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( type ) )
