@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.hydrotope;
+package org.kalypso.model.hydrology.operation.hydrotope;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,8 +50,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.InputDescriptor;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.operation.hydrotope.GeologyImportOperation.InputDescriptor;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.HasNoDBaseFileException;
@@ -77,7 +77,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
   }
 
   /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getName(int)
+   * @see org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.InputDescriptor#getName(int)
    */
   @Override
   public String getName( final int index )
@@ -86,16 +86,16 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
   }
 
   /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getDescription(int)
+   * @see org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.InputDescriptor#getDescription(int)
    */
   @Override
   public String getDescription( final int index )
   {
-    return Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.GeologyShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
   }
 
   /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getGeometry(int)
+   * @see org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.InputDescriptor#getGeometry(int)
    */
   @Override
   public GM_MultiSurface getGeometry( final int index ) throws CoreException
@@ -113,7 +113,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
       if( property instanceof GM_MultiSurface )
         return (GM_MultiSurface) property;
 
-      throw new NotImplementedException( Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.2" ) ); //$NON-NLS-1$
+      throw new NotImplementedException( Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.GeologyShapeInputDescriptor.2" ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
@@ -136,7 +136,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
   }
 
   /**
-   * @see org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor#getSize()
+   * @see org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.InputDescriptor#getSize()
    */
   @Override
   public int size( )
@@ -181,7 +181,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
     final Integer column = m_propHash.get( property );
     if( column == null )
     {
-      final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.3", property ); //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.GeologyShapeInputDescriptor.3", property ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, message, null ) );
     }
 

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.hydrotope;
+package org.kalypso.model.hydrology.operation.hydrotope;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -79,7 +79,7 @@ public class TopologyChecker
         {
           featureLabel = geometry.toString();
         }
-        final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.TopologyChecker.0", featureLabel ); //$NON-NLS-1$
+        final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.TopologyChecker.0", featureLabel ); //$NON-NLS-1$
         return StatusUtilities.createStatus( Status.WARNING, message + validationError.getMessage(), null );
       }
     }

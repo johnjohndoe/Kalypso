@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.hydrotope;
+package org.kalypso.model.hydrology.operation.hydrotope;
 
 import java.util.HashMap;
 import java.util.List;

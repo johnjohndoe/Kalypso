@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.hydrotope;
+package org.kalypso.model.hydrology.operation.hydrotope;
 
 import java.util.Map;
 
@@ -58,7 +58,7 @@ public class DefaultLanduseClassDelegate implements ILanduseClassDelegate
   }
 
   /**
-   * @see org.kalypso.convert.namodel.hydrotope.ILanduseClassDelegate#getReference(java.lang.String)
+   * @see org.kalypso.model.hydrology.operation.hydrotope.ILanduseClassDelegate#getReference(java.lang.String)
    */
   @Override
   public String getReference( final String name )

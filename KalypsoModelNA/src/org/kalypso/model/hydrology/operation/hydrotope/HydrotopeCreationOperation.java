@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.hydrotope;
+package org.kalypso.model.hydrology.operation.hydrotope;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -166,16 +166,16 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
   @Override
   public void run( final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.0" ), 100 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.0" ), 100 ); //$NON-NLS-1$
 
     final FeatureListGeometryIntersector geometryIntersector = getIntersector();
     final List<Polygon> intersectionList;
     try
     {
-      progress.setTaskName( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.1" ) ); //$NON-NLS-1$
+      progress.setTaskName( Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.1" ) ); //$NON-NLS-1$
       intersectionList = geometryIntersector.intersect( progress.newChild( 80 ) );
 
-      progress.setTaskName( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.2" ) ); //$NON-NLS-1$
+      progress.setTaskName( Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.2" ) ); //$NON-NLS-1$
       progress.setWorkRemaining( intersectionList.size() );
 
       if( m_outputList.size() > 0 )
@@ -217,7 +217,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       {
         if( count % 100 == 0 )
         {
-          progress.subTask( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.3", count, intersectionList.size() ) ); //$NON-NLS-1$
+          progress.subTask( Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.3", count, intersectionList.size() ) ); //$NON-NLS-1$
           // TODO: belongs to the end of this loop, but there are just too many else's
           // Better: put into sub-method and 'return' instead of 'continue'
           ProgressUtilities.worked( monitor, 100 );
