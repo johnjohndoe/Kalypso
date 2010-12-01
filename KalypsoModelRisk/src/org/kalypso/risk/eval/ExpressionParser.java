@@ -72,7 +72,7 @@ public class ExpressionParser
     m_evalFunctionMembers.add( new EvalFunctionMember_Sub() );
     m_evalFunctionMembers.add( new EvalFunctionMember_Mul() );
     m_evalFunctionMembers.add( new EvalFunctionMember_Div() );
-    convertToPostfix( expression.replaceAll( "\\s", "" ) );
+    convertToPostfix( expression.replaceAll( "\\s", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private final void convertToPostfix( final String expression )
@@ -81,7 +81,7 @@ public class ExpressionParser
 
     String currentExpression = expression;
 
-    final Pattern patternNumber = Pattern.compile( "(\\d*[\\.,]{0,1}\\d+).*" );
+    final Pattern patternNumber = Pattern.compile( "(\\d*[\\.,]{0,1}\\d+).*" ); //$NON-NLS-1$
 
     while( currentExpression.length() > 0 )
     {
@@ -90,20 +90,20 @@ public class ExpressionParser
       {
         final String numberStr = numberMatcher.group(1);
         currentExpression = currentExpression.substring( numberStr.length() );
-        final Double number = Double.valueOf( numberStr.replaceFirst( ",", "." ) );
+        final Double number = Double.valueOf( numberStr.replaceFirst( ",", "." ) ); //$NON-NLS-1$ //$NON-NLS-2$
         m_postfixExpression.add( new RPNEntry( number ) );
       }
-      else if( currentExpression.substring( 0, 1 ).equalsIgnoreCase( "x" ) )
+      else if( currentExpression.substring( 0, 1 ).equalsIgnoreCase( "x" ) ) //$NON-NLS-1$
       {
         m_postfixExpression.add( new RPNEntry( EEntryType.PARAMETER ) );
         currentExpression = currentExpression.substring( 1 );
       }
-      else if( currentExpression.startsWith( "(" ) )
+      else if( currentExpression.startsWith( "(" ) ) //$NON-NLS-1$
       {
         stack.push( new RPNEntry( EEntryType.OPEN_BRACKET ) );
         currentExpression = currentExpression.substring( 1 );
       }
-      else if( currentExpression.startsWith( ")" ) )
+      else if( currentExpression.startsWith( ")" ) ) //$NON-NLS-1$
       {
         while( !stack.isEmpty() )
         {
@@ -193,15 +193,15 @@ public class ExpressionParser
           buffer.append( entry.getValue() );
           break;
         case PARAMETER:
-          buffer.append( "[P]" );
+          buffer.append( "[P]" ); //$NON-NLS-1$
           break;
         case OPERATOR:
           buffer.append( entry.getEvalFunctionMember().getOperator() );
           break;
         default:
-          buffer.append( "[ERROR: " ).append( entry.getEntryType().name() ).append( "]" );
+          buffer.append( "[ERROR: " ).append( entry.getEntryType().name() ).append( "]" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-      buffer.append( " " );
+      buffer.append( " " ); //$NON-NLS-1$
     }
     return buffer.toString();
   }

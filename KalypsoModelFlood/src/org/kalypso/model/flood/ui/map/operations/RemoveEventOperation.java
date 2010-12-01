@@ -17,6 +17,7 @@ import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.ui.map.EventManagementWidget;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
@@ -51,14 +52,14 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "Deleting Runoff Events / TINs", m_treeSelection.length + 10 );
+    monitor.beginTask( Messages.getString("RemoveEventOperation_0"), m_treeSelection.length + 10 ); //$NON-NLS-1$
     final Collection<IStatus> removeResults = new ArrayList<IStatus>();
     try
     {
       for( final Object element : m_treeSelection )
       {
         final Feature featureToRemove = (Feature) element;
-        monitor.subTask( String.format( String.format( "Deleting '%s'", featureToRemove.getName() ) ) );
+        monitor.subTask( String.format( String.format( Messages.getString("RemoveEventOperation_1"), featureToRemove.getName() ) ) ); //$NON-NLS-1$
 
         final IStatus removeResult = removeEvent( featureToRemove, new SubProgressMonitor( monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK ) );
         if( !removeResult.isOK() )
@@ -66,7 +67,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
       }
 
       /* Save model, as undo is not possible here and the user should not be able to revert the changes */
-      monitor.subTask( "Saving flood model" );
+      monitor.subTask( Messages.getString("RemoveEventOperation_2") ); //$NON-NLS-1$
       m_provider.saveModel( IFloodModel.class.getName(), new SubProgressMonitor( monitor, 10 ) );
     }
     catch( final Exception e )
@@ -81,36 +82,36 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
       return Status.OK_STATUS;
 
     final IStatus[] children = removeResults.toArray( new IStatus[removeResults.size()] );
-    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, 0, children, "Problem(s) occured during removal of runoff events", null );
+    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, 0, children, Messages.getString("RemoveEventOperation_3"), null ); //$NON-NLS-1$
   }
 
   private IStatus removeEvent( final Feature featureToRemove, final IProgressMonitor monitor ) throws CoreException, Exception
   {
-    final String msg = String.format( "Deleting %s - ", featureToRemove.getName() );
+    final String msg = String.format( Messages.getString("RemoveEventOperation_4"), featureToRemove.getName() ); //$NON-NLS-1$
     monitor.beginTask( msg, 100 );
 
     final IRunoffEvent runoffEvent = (IRunoffEvent) featureToRemove.getAdapter( IRunoffEvent.class );
     IStatus removeResult = null;
     if( runoffEvent != null )
     {
-      monitor.subTask( "removing themes from map" );
+      monitor.subTask( Messages.getString("RemoveEventOperation_5") ); //$NON-NLS-1$
       deleteThemes( m_wspThemes, runoffEvent );
       monitor.worked( 10 );
 
       /* Delete underlying tin files */
-      monitor.subTask( "removing underlying tin files" );
+      monitor.subTask( Messages.getString("RemoveEventOperation_6") ); //$NON-NLS-1$
       final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
       removeResult = FloodModelHelper.removeResultCoverages( m_provider, resultCoverages );
       monitor.worked( 60 );
 
       /* Delete event folder */
-      monitor.subTask( "removing tin folder" );
+      monitor.subTask( Messages.getString("RemoveEventOperation_7") ); //$NON-NLS-1$
       final IFolder eventFolder = EventManagementWidget.getEventFolder( runoffEvent );
       eventFolder.delete( true, new SubProgressMonitor( monitor, 20 ) );
     }
 
     /* Delete coverage from collection */
-    monitor.subTask( "removing runoff event from model" );
+    monitor.subTask( Messages.getString("RemoveEventOperation_8") ); //$NON-NLS-1$
     final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class.getName() );
     final DeleteFeatureCommand command = new DeleteFeatureCommand( featureToRemove );
     workspace.postCommand( command );

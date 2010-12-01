@@ -105,7 +105,7 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
     if( m_definitionsLoaded )
       return;
     final SortedMap<Double, String> map = RiskZonesThemeInfo.m_riskZonesMap;
-    final Job job = new Job( "Risikozonen info laden" )
+    final Job job = new Job( Messages.getString("RiskZonesThemeInfo.0") ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )

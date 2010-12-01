@@ -56,13 +56,13 @@ public final class TestFunctionParser
   {
 
     final List<String> functionsList = new ArrayList<String>();
-    functionsList.add( "2*x^3 - 8*x^2 + 13*x" );
-    functionsList.add( "2*x*x*x-8*x*x+13*x" );
-    functionsList.add( "(2*x*x*x) - (8*x*x) + (13*x)" );
-    functionsList.add( "2*x^3 - (8*x*x - 13*x)" );
+    functionsList.add( "2*x^3 - 8*x^2 + 13*x" ); //$NON-NLS-1$
+    functionsList.add( "2*x*x*x-8*x*x+13*x" ); //$NON-NLS-1$
+    functionsList.add( "(2*x*x*x) - (8*x*x) + (13*x)" ); //$NON-NLS-1$
+    functionsList.add( "2*x^3 - (8*x*x - 13*x)" ); //$NON-NLS-1$
 
     int cnt = 1;
-    System.out.println( "\n\n*** SYNTAX TEST ***" );
+    System.out.println( "\n\n*** SYNTAX TEST ***" ); //$NON-NLS-1$
     for( final String entry : functionsList )
     {
       final long tStart = System.currentTimeMillis();
@@ -71,17 +71,17 @@ public final class TestFunctionParser
       final double value2 = ep.evaluate( 2.0 );
       final double value3 = ep.evaluate( 3.0 );
       final long tEnd = System.currentTimeMillis();
-      System.out.println( "\n--- Test Nr. " + cnt++ + " -----------" );
-      System.out.println( "Function: " + entry );
-      System.out.println( "Postfix notation: " + ep.getPostfixExpression() );
-      System.out.println( "Result for x=1.0: " + value1 );
-      System.out.println( "Result for x=2.0: " + value2 );
-      System.out.println( "Result for x=3.0: " + value3 );
-      System.out.println( "Elapsed time [ms]: " + (tEnd - tStart) );
+      System.out.println( "\n--- Test Nr. " + cnt++ + " -----------" ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( "Function: " + entry ); //$NON-NLS-1$
+      System.out.println( "Postfix notation: " + ep.getPostfixExpression() ); //$NON-NLS-1$
+      System.out.println( "Result for x=1.0: " + value1 ); //$NON-NLS-1$
+      System.out.println( "Result for x=2.0: " + value2 ); //$NON-NLS-1$
+      System.out.println( "Result for x=3.0: " + value3 ); //$NON-NLS-1$
+      System.out.println( "Elapsed time [ms]: " + (tEnd - tStart) ); //$NON-NLS-1$
     }
     
     cnt = 1;
-    System.out.println( "\n\n*** PERFORMANCE TEST ***" );
+    System.out.println( "\n\n*** PERFORMANCE TEST ***" ); //$NON-NLS-1$
     final int NUMBER_OF_CALCULATIONS = 1000000;
     final double[] randoms = new double[NUMBER_OF_CALCULATIONS];
     for( int i = 0; i < NUMBER_OF_CALCULATIONS; i++ )
@@ -90,16 +90,16 @@ public final class TestFunctionParser
     for( final String entry : functionsList )
     {
       final ExpressionParser ep = new ExpressionParser( entry );
-      System.out.println( "\n--- Test Nr. " + cnt++ + " -----------" );
-      System.out.println( "Function: " + entry );
-      System.out.println( String.format( "Number of calculations: %d", NUMBER_OF_CALCULATIONS ));
+      System.out.println( "\n--- Test Nr. " + cnt++ + " -----------" ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( "Function: " + entry ); //$NON-NLS-1$
+      System.out.println( String.format( "Number of calculations: %d", NUMBER_OF_CALCULATIONS )); //$NON-NLS-1$
       final long tStart = System.currentTimeMillis();
       for( int i = 0; i < NUMBER_OF_CALCULATIONS; i++ )
         ep.evaluate( randoms[i] );
       final long tEnd = System.currentTimeMillis();
-      System.out.println( "Elapsed time [ms]: " + (tEnd - tStart) );
+      System.out.println( "Elapsed time [ms]: " + (tEnd - tStart) ); //$NON-NLS-1$
     }
-    System.out.println( "\n\n*** FINISHED ***\n" );
+    System.out.println( "\n\n*** FINISHED ***\n" ); //$NON-NLS-1$
   }
 
 }

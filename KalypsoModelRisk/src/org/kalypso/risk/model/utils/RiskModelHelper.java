@@ -775,7 +775,7 @@ public class RiskModelHelper
     /* The active scenario must have changed to the risk project. We can now access risk project data. */
     final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
 
-    final String failedToLoadRiskMsg = String.format( "Failed to load Risk-Model. Unable to import runoff events." );
+    final String failedToLoadRiskMsg = String.format( Messages.getString("RiskModelHelper.0") ); //$NON-NLS-1$
     final IStatus failedToLoadRiskStatus = new Status( IStatus.ERROR, PluginUtilities.id( KalypsoRiskPlugin.getDefault() ), failedToLoadRiskMsg );
     if( !riskDataProvider.waitForModelToLoad( IRasterDataModel.class.getName(), 5 * 1000 ) )
       throw new CoreException( failedToLoadRiskStatus );

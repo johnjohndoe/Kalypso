@@ -57,7 +57,7 @@ public class EvalFunctionMember_Pow extends AbstractEvalFunctionMember
   @Override
   public String getOperator( )
   {
-    return "^";
+    return "^"; //$NON-NLS-1$
   }
 
   /**

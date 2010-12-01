@@ -83,7 +83,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
 
   private final static String OUTPUT_RASTER_FOLDER = "OUTPUT_RASTER_FOLDER"; //$NON-NLS-1$
 
-  private final static String OUTPUT_PROPERTIES_FILE = "OUTPUT_PROPERTIES_FILE";
+  private final static String OUTPUT_PROPERTIES_FILE = "OUTPUT_PROPERTIES_FILE"; //$NON-NLS-1$
 
   private double m_totalDifference = 0.0;
 
@@ -124,11 +124,11 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
       final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
       GmlSerializer.serializeWorkspace( tmpRasterModel, ws_model_output, "UTF-8" ); //$NON-NLS-1$
 
-      final File propertiesFile = new File( tmpdir, "stats.txt" );
+      final File propertiesFile = new File( tmpdir, "stats.txt" ); //$NON-NLS-1$
       final Properties properties = new Properties();
-      properties.put( "TOTAL_DIFFERENCE", String.format( Locale.ENGLISH, "%.8f", m_totalDifference ) );
-      properties.put( "ANNUAL_COSTS", "n/a" );
-      properties.put( "VALUE_BENEFIT", "n/a" );
+      properties.put( "TOTAL_DIFFERENCE", String.format( Locale.ENGLISH, "%.8f", m_totalDifference ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      properties.put( "ANNUAL_COSTS", "n/a" ); //$NON-NLS-1$
+      properties.put( "VALUE_BENEFIT", "n/a" ); //$NON-NLS-1$
       final FileOutputStream propertiesStream = new FileOutputStream( propertiesFile );
       properties.store( propertiesStream, "Scenario statistics" );
       propertiesStream.flush();

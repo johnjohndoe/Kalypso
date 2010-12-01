@@ -213,7 +213,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       return Status.OK_STATUS;
 
     final IStatus[] children = results.toArray( new IStatus[results.size()] );
-    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, 0, children, "Failed to delete existing results", null );
+    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, 0, children, Messages.getString("ProcessFloodModelHandler.0"), null ); //$NON-NLS-1$
   }
 
   /** decision dialog for user, if he wants to overwrite existing data */

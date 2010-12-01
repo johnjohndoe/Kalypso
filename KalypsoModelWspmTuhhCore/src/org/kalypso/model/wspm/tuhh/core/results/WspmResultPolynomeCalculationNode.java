@@ -84,7 +84,7 @@ public class WspmResultPolynomeCalculationNode extends AbstractWspmResultNode im
     {
       try
       {
-        final CollectFolderVisitor dirVisitor = new CollectFolderVisitor( new IFolder[] { resultFolder.getFolder( ".svn" ) } );
+        final CollectFolderVisitor dirVisitor = new CollectFolderVisitor( new IFolder[] { resultFolder.getFolder( ".svn" ) } ); //$NON-NLS-1$
         resultFolder.accept( dirVisitor, IResource.DEPTH_ONE, false );
         final IFolder[] folders = dirVisitor.getFolders();
         for( final IFolder folder : folders )

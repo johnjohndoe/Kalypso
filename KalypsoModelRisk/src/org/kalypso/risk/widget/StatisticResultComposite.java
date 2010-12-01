@@ -94,7 +94,7 @@ public class StatisticResultComposite extends Composite
 
         final IComponent[] components = tupleResult.getComponents();
 
-        final String NUMBER_FORMAT = "%,.02f ";
+        final String NUMBER_FORMAT = "%,.02f "; //$NON-NLS-1$
 
         int count = 0;
         for( final IComponent component : components )
