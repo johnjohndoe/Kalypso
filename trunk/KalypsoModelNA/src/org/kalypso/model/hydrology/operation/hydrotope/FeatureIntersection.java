@@ -38,12 +38,58 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.hydrotope;
+package org.kalypso.model.hydrology.operation.hydrotope;
+
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Dirk Kuch
+ * Represents an (unordered) intersection of a list of features
+ * 
+ * @author kurzbach
  */
-public interface ILanduseClassDelegate
+public class FeatureIntersection
 {
-  String getReference( String name );
+  private final Feature[] m_features;
+
+  /**
+   * Create a new intersection from a feature list
+   */
+  public FeatureIntersection( Feature... features )
+  {
+    m_features = features;
+  }
+
+  /**
+   * Creates an intersection of intersected features by merging the lists
+   */
+  public FeatureIntersection( FeatureIntersection... features )
+  {
+    int size = 0;
+    for( final FeatureIntersection featureIntersection : features )
+    {
+      size += featureIntersection.size();
+    }
+    m_features = new Feature[size];
+    int count = 0;
+    for( final FeatureIntersection featureIntersection : features )
+    {
+      for( Feature feature : featureIntersection.getFeatures() )
+      {
+        m_features[count++] = feature;
+      }
+    }
+  }
+
+  /**
+   * The number of intersected features
+   */
+  public int size( )
+  {
+    return m_features.length;
+  }
+
+  public Feature[] getFeatures( )
+  {
+    return m_features;
+  }
 }

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.hydrotope;
+package org.kalypso.model.hydrology.operation.hydrotope;
 
 /**
  * @author Dejan Antanaskovic
