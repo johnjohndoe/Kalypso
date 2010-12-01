@@ -152,8 +152,8 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           final JAXBElement<StyledLayerType> jaxbLayer = layerObjectFactory.createLayer( layer );
           layersList.add( jaxbLayer );
         }
-        final File outMap = File.createTempFile( "tempMap", ".gml", tmpdir ); //$NON-NLS-1$
-        GisTemplateHelper.saveGisMapView( gisview, outMap, "UTF-8" );
+        final File outMap = File.createTempFile( "tempMap", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$
+        GisTemplateHelper.saveGisMapView( gisview, outMap, "UTF-8" ); //$NON-NLS-1$
         resultEater.addResult( MODELSPEC_KALYPSORISK.MAP_SPECIFIC_DAMAGE_POTENTIAL.toString(), outMap );
 
       }
