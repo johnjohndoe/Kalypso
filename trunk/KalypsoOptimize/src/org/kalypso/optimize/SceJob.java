@@ -74,6 +74,8 @@ import org.w3c.dom.Document;
  */
 public class SceJob
 {
+  private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
+
   private final URL XML2SCE_URL = getClass().getResource( "resource/xml2sceInput.xsl" );
 
   private final File m_sceTmpDir;
@@ -151,8 +153,7 @@ public class SceJob
       m_marshaller.marshal( m_autoCalibration, xmlDOM );
 
       final Document xslDOM = m_docuBuilder.parse( XML2SCE_URL.toURI().toASCIIString() );
-      final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      final Transformer transformer = transformerFactory.newTransformer( new DOMSource( xslDOM ) );
+      final Transformer transformer = TRANSFORMER_FACTORY.newTransformer( new DOMSource( xslDOM ) );
       transformer.transform( new DOMSource( xmlDOM ), new StreamResult( outputFile ) );
     }
     catch( final Exception e )
