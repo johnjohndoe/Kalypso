@@ -63,6 +63,7 @@ import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.model.hydrology.internal.preprocessing.timeseries.Ext2Writer;
 import org.kalypso.model.hydrology.internal.preprocessing.timeseries.GrapWriter;
@@ -83,7 +84,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
- *
  */
 public class TsFileWriter
 {
@@ -116,24 +116,16 @@ public class TsFileWriter
     m_logger = logger;
   }
 
-  public void write( final File targetDir )
+  public void write( final File targetDir ) throws NAPreprocessorException
   {
     for( final NetElement netElement : m_channels )
     {
-      try
-      {
-        final Channel channel = netElement.getChannel();
-        generateTimeSeries( channel, targetDir );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-        m_logger.warning( e.getLocalizedMessage() );
-      }
+      final Channel channel = netElement.getChannel();
+      generateTimeSeries( channel, targetDir );
     }
   }
 
-  private void generateTimeSeries( final Channel channel, final File klimaDir ) throws IOException, Exception
+  private void generateTimeSeries( final Channel channel, final File klimaDir ) throws NAPreprocessorException
   {
     final Date simulationStart = m_metaControl.getSimulationStart();
     final Date simulationEnd = m_metaControl.getSimulationEnd();
@@ -142,26 +134,40 @@ public class TsFileWriter
 
     for( final Catchment catchment : catchments )
     {
-      final File targetFileN = m_tsFileManager.getNiederschlagEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-
-      if( m_metaControl.isUsePrecipitationForm() )
+      try
       {
-        if( !targetFileN.exists() )
-          writeSynthNFile( targetFileN, catchment );
+        writeCatchmentTimeseries( klimaDir, simulationStart, simulationEnd, catchment );
       }
-      else
+      catch( final Exception e )
       {
-        if( !targetFileN.exists() )
-          writeNFile( targetFileN, catchment );
-
-        final TimeseriesLinkType linkT = catchment.getTemperatureLink();
-        final File targetFileT = m_tsFileManager.getTemperaturEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-        writeTimeseries( targetFileT, linkT, m_zmlContext, ITimeseriesConstants.TYPE_TEMPERATURE, FILTER_T, "1.0", simulationStart, simulationEnd );
-
-        final TimeseriesLinkType linkV = catchment.getEvaporationLink();
-        final File targetFileV = m_tsFileManager.getVerdunstungEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-        writeTimeseries( targetFileV, linkV, m_zmlContext, ITimeseriesConstants.TYPE_EVAPORATION, FILTER_V, "0.5", simulationStart, simulationEnd );
+        e.printStackTrace();
+        final String message = String.format( "Fehler beim Schreiben der Zeitreihen für Teilgebiet '%s'", catchment.getName() );
+        throw new NAPreprocessorException( message, e );
       }
+    }
+  }
+
+  private void writeCatchmentTimeseries( final File klimaDir, final Date simulationStart, final Date simulationEnd, final Catchment catchment ) throws SensorException, IOException
+  {
+    final File targetFileN = m_tsFileManager.getNiederschlagEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
+
+    if( m_metaControl.isUsePrecipitationForm() )
+    {
+      if( !targetFileN.exists() )
+        writeSynthNFile( targetFileN, catchment );
+    }
+    else
+    {
+      if( !targetFileN.exists() )
+        writeNFile( targetFileN, catchment );
+
+      final TimeseriesLinkType linkT = catchment.getTemperatureLink();
+      final File targetFileT = m_tsFileManager.getTemperaturEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
+      writeTimeseries( targetFileT, linkT, m_zmlContext, ITimeseriesConstants.TYPE_TEMPERATURE, FILTER_T, "1.0", simulationStart, simulationEnd );
+
+      final TimeseriesLinkType linkV = catchment.getEvaporationLink();
+      final File targetFileV = m_tsFileManager.getVerdunstungEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
+      writeTimeseries( targetFileV, linkV, m_zmlContext, ITimeseriesConstants.TYPE_EVAPORATION, FILTER_V, "0.5", simulationStart, simulationEnd );
     }
   }
 
@@ -217,8 +223,7 @@ public class TsFileWriter
     return new RangeFactor( forecastRange, forcastFactorN );
   }
 
-
-  public static final void writeTimeseries( final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws Exception
+  public static final void writeTimeseries( final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws SensorException, IOException
   {
     if( targetFile.exists() )
       return;
@@ -250,7 +255,7 @@ public class TsFileWriter
   }
 
   // FIXME: does not belong here -> move into own writer
-  private void writeSynthNFile( final File targetFileN, final Catchment catchment ) throws Exception
+  private void writeSynthNFile( final File targetFileN, final Catchment catchment ) throws SensorException, IOException
   {
     final List<Feature> statNList = new ArrayList<Feature>();
 
