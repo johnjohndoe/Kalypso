@@ -129,7 +129,8 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     m_logger = logger;
 
     m_optimizeRunDir = new File( m_tmpDir, "optimizeRun" );
-    m_bestOptimizeRunDir = new File( m_tmpDir, "bestRun" );
+    // Debug purpose only: copy of best ascii files
+    m_bestOptimizeRunDir = null; // new File( m_tmpDir, "bestRun" );
     m_bestResultDir = new File( m_tmpDir, "bestResult" );
     m_bestOptimizedFile = new File( m_tmpDir, "bestOptimizeConfig.gml" );
     m_simDirs = new NaSimulationDirs( m_optimizeRunDir );
@@ -229,7 +230,8 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
       {
         final File resultDir = m_simDirs.resultDir;
 
-        FileUtils.copyDirectory( m_optimizeRunDir, m_bestOptimizeRunDir );
+        if( m_bestOptimizeRunDir != null )
+          FileUtils.copyDirectory( m_optimizeRunDir, m_bestOptimizeRunDir );
         FileUtils.copyDirectory( resultDir, m_bestResultDir );
       }
       catch( final IOException e )
