@@ -113,7 +113,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
   protected final IAxis m_targetAxisRight = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_RIGHT", POSITION.RIGHT, Number.class );//$NON-NLS-1$
 
-  protected final IAxis m_screenAxisVertical = new ScreenCoordinateAxis( "ProfilLayerProviderTuhh_AXIS_RIGHT", POSITION.RIGHT );//$NON-NLS-1$
+  protected final IAxis m_screenAxisVertical = new ScreenCoordinateAxis( "ProfilLayerProviderTuhh_AXIS_VERTICAL_SCREEN", POSITION.RIGHT );//$NON-NLS-1$
 
   private final static String m_AxisLabel = "[%s]"; //$NON-NLS-1$
 
@@ -251,7 +251,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( layerID == null || profil == null )
       return null;
     final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
-    final CoordinateMapper cmScreen = new CoordinateMapper( m_domainAxis, new ScreenCoordinateAxis( "kufku", POSITION.LEFT ) );
+    final CoordinateMapper cmScreen = new CoordinateMapper( m_domainAxis, m_screenAxisVertical );
 
     if( layerID.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
     {
@@ -308,7 +308,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       final RiverChannelLayer tfLayer = new RiverChannelLayer( profil, m_lsp, 15, false );
       final PointMarkerLayer bvLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_lsp, 25, false );
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { dbLayer, tfLayer, bvLayer };
-      return new DeviderTheme( profil, subLayers, cmLeft );
+      return new DeviderTheme( profil, subLayers, cmScreen );
     }
 
     return null;
