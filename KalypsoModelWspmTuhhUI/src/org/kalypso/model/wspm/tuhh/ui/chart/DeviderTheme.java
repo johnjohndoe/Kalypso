@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.observation.result.IComponent;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
@@ -70,6 +71,16 @@ public class DeviderTheme extends AbstractProfilTheme
   public DeviderTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super( profil, IWspmTuhhConstants.LAYER_DEVIDER, TITLE, chartLayers, cm );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
+  @Override
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  {
+    // TODO Auto-generated method stub
+    return super.getTargetRange( domainIntervall );
   }
 
   /**

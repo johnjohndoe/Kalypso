@@ -66,11 +66,13 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
 /**
  * @author kimwerner
@@ -168,16 +170,16 @@ public class PointMarkerLayer extends AbstractProfilLayer
   public Rectangle getHoverRect( final IRecord profilPoint )
   {
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( profilPoint );
+    final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() );
+    final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() ) + m_offset;
     for( final IProfilPointMarker devider : deviders )
     {
       if( devider.getId().equals( getTargetComponent() ) )
       {
-        final Point start =getCoordinateMapper().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoint ), 0.5 );
-        final Point end =getCoordinateMapper().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoint ), 0.1);
-        return new Rectangle( start.x-5, start.y, 10, end.y-start.y );
-//        final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoint ) );
-//        final Rectangle rect = new Rectangle( x - 5, m_offset, 10, getTargetAxis().getScreenHeight() - m_offset );
-//        return rect;
+        final Double breite = ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoint );
+        final int screenX = getCoordinateMapper().getDomainAxis().numericToScreen( breite );
+
+        return new Rectangle( screenX - 5, top, 10, bottom - top );
       }
     }
     return null;
@@ -209,9 +211,9 @@ public class PointMarkerLayer extends AbstractProfilLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(final IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    return null;
+    return new DataRange<Number>( 0, 1 );
   }
 
   /**
@@ -278,26 +280,28 @@ public class PointMarkerLayer extends AbstractProfilLayer
       return;
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( target.getId() );
     final int len = deviders.length;
+    final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() );
+    final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() ) + m_offset;
 
-    final int baseLine = getCoordinateMapper().getTargetAxis().getScreenHeight();
     final PolylineFigure pf = new PolylineFigure();
     pf.setStyle( getLineStyle() );
     for( int i = 0; i < len; i++ )
     {
-      final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, deviders[i].getPoint() ) );
-      final Point p1 = new Point( x, m_offset );
-      final Point p2 = new Point( x, baseLine );
+      final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, deviders[i].getPoint() );
+      final int screenX = getCoordinateMapper().getDomainAxis().numericToScreen( breite );
+      final Point p1 = new Point( screenX, bottom );
+      final Point p2 = new Point( screenX, top );
+
       pf.setPoints( new Point[] { p1, p2 } );
       pf.paint( gc );
     }
 
     if( m_close && len > 1 )
     {
-      final int x1 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[0].getPoint() ) );
-      final int x2 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[len - 1].getPoint() ) );
-      final Point p1 = new Point( x1, m_offset );
-      final Point p2 = new Point( x2, m_offset );
-      pf.setPoints( new Point[] { p1, p2 } );
+      final int screenX1 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[0].getPoint() ) );
+      final int screenX2 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[len - 1].getPoint() ) );
+
+      pf.setPoints( new Point[] {new Point(screenX1, top  ),new Point( screenX2, top )} );
       pf.paint( gc );
     }
   }
