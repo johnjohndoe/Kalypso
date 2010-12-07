@@ -168,19 +168,35 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     return runner.run( monitor );
   }
 
-  /**
-   * @throws MalformedURLException
-   * @see org.kalypso.optimize.IOptimizingJob#calculate()
-   */
   @Override
-  public void calculate( final ISimulationMonitor monitor ) throws Exception
+  public boolean calculate( final ISimulationMonitor monitor )
   {
-    if( m_counter == 0 )
-      m_lastSucceeded = runFirst( monitor );
-    else
-      m_lastSucceeded = runAgain( monitor );
-
-    m_counter++;
+    try
+    {
+      if( m_counter == 0 )
+        m_lastSucceeded = runFirst( monitor );
+      else
+        m_lastSucceeded = runAgain( monitor );
+      
+      return m_lastSucceeded;
+    }
+    catch( final OperationCanceledException e )
+    {
+      final String msg = "Simulation canceled by user";
+      m_logger.log( Level.INFO, msg );
+      monitor.setFinishInfo( IStatus.CANCEL, msg );
+      return false;
+    }
+    catch( Exception exception )
+    {
+      final String msg = "Unexpected error during simulation";
+      m_logger.log( Level.SEVERE, msg, exception );
+      return false;
+    }
+    finally
+    {
+      m_counter++;
+    }
   }
 
   private boolean runFirst( final ISimulationMonitor monitor ) throws Exception
@@ -193,13 +209,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     {
       m_simulation = new NAModelSimulation( m_simDirs, m_data, logger );
       return m_simulation.runSimulation( monitor );
-    }
-    catch( final OperationCanceledException e )
-    {
-      final String msg = "Simulation canceled by user";
-      logger.log( Level.INFO, msg );
-      monitor.setFinishInfo( IStatus.CANCEL, msg );
-      return false;
     }
     finally
     {

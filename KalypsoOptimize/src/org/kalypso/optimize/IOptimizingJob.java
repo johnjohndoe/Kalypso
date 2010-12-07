@@ -72,7 +72,7 @@ public interface IOptimizingJob
    * 
    * @throws MalformedURLException
    */
-  void calculate( ISimulationMonitor monitor ) throws Exception;
+  boolean calculate( ISimulationMonitor monitor );
 
   // FIXME: optimize job should not return measure/calculated timeseries but directly return the error-value as this is
   // implementation specific

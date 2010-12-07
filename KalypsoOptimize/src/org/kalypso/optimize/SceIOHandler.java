@@ -196,10 +196,12 @@ public class SceIOHandler
       newValues[i] = m_parameter.get( i ).doubleValue();
 
     m_job.optimize( m_parameterConf, newValues );
-    m_job.calculate( monitor );
-
-    final SortedMap<Date, Double> calcedTS = m_job.getCalcedTimeSeries();
-    return m_errorFunction.calculateError( calcedTS );
+    if( m_job.calculate( monitor ) )
+    {
+      final SortedMap<Date, Double> calcedTS = m_job.getCalcedTimeSeries();
+      return m_errorFunction.calculateError( calcedTS );
+    }
+    return Double.MAX_VALUE;
   }
 
   public void handleStreams( final StringBuffer outBuffer, final StringBuffer errBuffer, final Writer inputWriter, final ISimulationMonitor monitor ) throws SimulationException
