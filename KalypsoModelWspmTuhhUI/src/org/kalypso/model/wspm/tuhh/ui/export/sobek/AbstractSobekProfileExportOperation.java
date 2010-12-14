@@ -42,9 +42,11 @@ package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -87,7 +89,7 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
     {
       monitor.beginTask( Messages.getString("AbstractSobekProfileExportOperation_0"), m_profiles.length ); //$NON-NLS-1$
 
-      m_formatter = new Formatter( m_targetFile );
+      m_formatter = new Formatter( m_targetFile, Charset.defaultCharset().name(), Locale.US );
 
       for( final IProfileFeature profil : m_profiles )
       {

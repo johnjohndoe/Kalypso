@@ -138,6 +138,10 @@ public class SobekFileChooser
 
   public ISobekProfileExportOperation createOperation( final IProfileFeature[] profiles, final String idPattern )
   {
-    return new SobekDefExportOperation( getFile(), profiles, idPattern );
+    final File file = getFile();
+    if( file == null )
+      return null;
+
+    return new SobekDefExportOperation( file, profiles, idPattern );
   }
 }

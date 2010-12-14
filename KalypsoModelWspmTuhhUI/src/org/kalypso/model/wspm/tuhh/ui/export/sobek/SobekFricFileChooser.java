@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -219,6 +220,10 @@ public class SobekFricFileChooser extends SobekFileChooser
   @Override
   public ISobekProfileExportOperation createOperation( final IProfileFeature[] profiles, final String idPattern )
   {
-    return new SobekFricExportOperation( getFile(), profiles, m_zoneTypes, m_roughnessId, idPattern );
+    final File file = getFile();
+    if( file == null )
+      return null;
+
+    return new SobekFricExportOperation( file, profiles, m_zoneTypes, m_roughnessId, idPattern );
   }
 }
