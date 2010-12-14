@@ -1,0 +1,26 @@
+Notes:
+kalypso_10.10.0.20101030
+========================
+
+This is Version 10.10.0.20101030 of Kalypso
+
+For further information, visit http://kalypso.sourceforge.net
+
+Unless otherwise indicated, all Content is provided to you under the terms and conditions of the GNU Lesser General Public License ("LGPL"). 
+A copy of the LGPL is provided with this Content and is also available at http://www.gnu.org/licenses/lgpl.html. 
+Please see:
+- lgpl-3.0.txt
+- http://kalypso.sourceforge.net/legal/kalypso_notice.html
+- http://kalypso.sourceforge.net/legal/libraries.html
+
+Changes
+-------
+Please visit http://sourceforge.net/apps/mediawiki/kalypso/index.php?title=Change_Log_Kalypso_10.10.0
+for a list of new and noteworthy changes of Kalypso.
+
+For a detailed list of changes and bug-fixes please visit
+http://sourceforge.net/apps/trac/kalypso/report/22
+
+Known-Issues
+------------
+Please see http://sourceforge.net/apps/trac/kalypso/report/23 for a list of known issues.
