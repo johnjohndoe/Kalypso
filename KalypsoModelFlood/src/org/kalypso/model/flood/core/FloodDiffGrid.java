@@ -80,14 +80,13 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
 {
   class FloodBean extends ParallelBinaryGridProcessorBean
   {
-
-    public FloodBean( int BLOCK_SIZE )
+    public FloodBean( final int blockSize )
     {
-      super( BLOCK_SIZE );
+      super( blockSize );
     }
 
     public GM_Triangle m_triangle = null;
-  };
+  }
 
   private final IFeatureWrapperCollection<ITinReference> m_tins;
 
@@ -111,7 +110,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     return new FloodBean( BLOCK_SIZE );
   }
 
-  public FloodDiffGrid( IGeoGrid inputGrid, URL pUrl, final IFeatureWrapperCollection<ITinReference> tins, final IFeatureWrapperCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException
+  public FloodDiffGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureWrapperCollection<ITinReference> tins, final IFeatureWrapperCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException
   {
     super( inputGrid, pUrl );
 
@@ -123,7 +122,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     {
       m_sizeX = getDelegate().getSizeX();
     }
-    catch( GeoGridException e )
+    catch( final GeoGridException e )
     {
       e.printStackTrace();
     }
@@ -132,7 +131,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
   }
 
-  private double getValueInternal( final int x, final int y, final int z, ParallelBinaryGridProcessorBean bean ) throws GeoGridException
+  private double getValueInternal( final int x, final int y, final int z, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
   {
     final BigDecimal decimal = new BigDecimal( BigInteger.valueOf( z ), m_scale );
     final double terrainValue = decimal.doubleValue();
@@ -158,8 +157,8 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     if( containsClipPolygons( polygons ) == true )
       return Double.NaN;
 
-//    if( !Double.isNaN( wspValue ) )
-//      return wspValue - terrainValue;
+    //    if( !Double.isNaN( wspValue ) )
+    //      return wspValue - terrainValue;
 
     /* - if extrapolation: getExtrapolationsvalue */
     final IFloodExtrapolationPolygon extrapolPolygon = getExtrapolPolygons( polygons );
@@ -185,7 +184,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     return wspValue - terrainValue;
   }
 
-  private double getWspValue( final Coordinate crd, FloodBean bean ) throws GeoGridException
+  private double getWspValue( final Coordinate crd, final FloodBean bean ) throws GeoGridException
   {
     final GM_Position pos = JTSAdapter.wrap( crd );
 
@@ -228,7 +227,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     }
   }
 
-  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon, ParallelBinaryGridProcessorBean bean ) throws GeoGridException
+  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
   {
     // REMARK: hash for each polygon its wsp, to we do not need to recalculate it each time
     if( m_polygonWsps.containsKey( polygon ) )
@@ -351,7 +350,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
         return Double.NaN;
       value = getValueInternal( x, y, z, bean );
     }
-    catch( GeoGridException e )
+    catch( final GeoGridException e )
     {
       e.printStackTrace();
       return Double.NaN;
