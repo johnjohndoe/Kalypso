@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoNA">
+<modeldata xmlns="simspec.core.simulation.kalypso.org" typeID="KalypsoNA">
     <input id="MetaSteuerdaten" path=".calculation" relativeToCalcCase="true"/>
     <input id="Modell" path="calcCase.gml" relativeToCalcCase="true"/>
     <input id="Control" path="expertControl.gml" relativeToCalcCase="true"/>
@@ -11,7 +11,7 @@
 	<!-- Zeitreihen als Verzeichnisse -->
     <input id="NiederschlagDir" path="Niederschlag" relativeToCalcCase="true"/>
     <input id="KlimaDir" path="Klima" relativeToCalcCase="true"/>
-        <input id="ZuflussDir" path="Zufluss" relativeToCalcCase="true"/>
+    <input id="ZuflussDir" path="Zufluss" relativeToCalcCase="true"/>
     <input id="PegelDir" path="Pegel" relativeToCalcCase="true"/>
     <input id="ErgebnisDir" path="Ergebnisse" relativeToCalcCase="true"/>
     <input id="LZSIM_IN" path="Anfangswerte" relativeToCalcCase="true"/>   
@@ -23,5 +23,7 @@
 	<output id="LOG_EXE_ERROUT" path="/Ergebnisse/Logs/Details/ErrorExe.txt" relativeToCalcCase="true"/>
 	<output id="LOG_OUTRES" path="/Ergebnisse/Logs/Details/output.res" relativeToCalcCase="true"/>
 	<output id="LOG_OUTERR" path="/Ergebnisse/Logs/error.txt" relativeToCalcCase="true"/>
+  
+    <clearAfterCalc path="Ergebnisse/Aktuell" relativeToCalcCase="true"/>
 </modeldata>
 
