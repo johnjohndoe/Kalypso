@@ -23,7 +23,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 public class LengthSectionBridgeLayer extends TupleResultLineLayer
 {
-
   public LengthSectionBridgeLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( data, lineStyle, pointStyle );
@@ -61,25 +60,40 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   {
     final TupleResult tr = m_data.getObservation().getResult();
     final IRecord rec = tr.get( index );
-    final int targetOKComponentIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK );
-    final int targetUKComponentIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
+
+    final int stationIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION );
+    final int okIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK );
+    final int ukIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK );
     final int commentIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_TEXT );
     final int bridgeWidthIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH );
-    final String targetOKComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetOKComponentIndex ) );
-    final String targetUKComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetUKComponentIndex ) );
-    final String bridgeWidthComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( bridgeWidthIndex ) );
-    final Double uk = ProfilUtil.getDoubleValueFor( targetUKComponentIndex, rec );
-    final Double ok = ProfilUtil.getDoubleValueFor( targetOKComponentIndex, rec );
-    final Double bw = ProfilUtil.getDoubleValueFor( bridgeWidthIndex, rec );
-    if( commentIndex < 0 )
-      return String.format( "max. %-12s %.4f %nmin. %-12s %.4f%n%s %.4f", new Object[] { targetOKComponentLabel, ok, targetUKComponentLabel, uk, bridgeWidthComponentLabel, bw } );//$NON-NLS-1$
-    final Object comment = tr.get( index ).getValue( commentIndex );
-    return String.format( "max. %-12s %.4f %nmin. %-12s %.4f%n%s %.4f%n%s", new Object[] { targetOKComponentLabel, ok, targetUKComponentLabel, uk, bridgeWidthComponentLabel, bw, comment } );//$NON-NLS-1$
 
+    final String stationLabel = ComponentUtilities.getComponentLabel( tr.getComponent( stationIndex ) );
+    final String okLabel = "max. " + ComponentUtilities.getComponentLabel( tr.getComponent( okIndex ) ); //$NON-NLS-1$
+    final String ukLabel = "min. " + ComponentUtilities.getComponentLabel( tr.getComponent( ukIndex ) ); //$NON-NLS-1$
+    final String widthLabel = ComponentUtilities.getComponentLabel( tr.getComponent( bridgeWidthIndex ) );
+
+    final Object station = rec.getValue( stationIndex );
+    final Double uk = ProfilUtil.getDoubleValueFor( ukIndex, rec );
+    final Double ok = ProfilUtil.getDoubleValueFor( okIndex, rec );
+    final Double bw = ProfilUtil.getDoubleValueFor( bridgeWidthIndex, rec );
+
+    final ProfilChartTooltip tooltip = new ProfilChartTooltip();
+    tooltip.add( stationLabel, station );
+    tooltip.add( okLabel, ok );
+    tooltip.add( ukLabel, uk );
+    tooltip.add( widthLabel, bw );
+
+    if( commentIndex >= 0 )
+    {
+      final String comment = (String) tr.get( index ).getValue( commentIndex );
+      tooltip.add( comment, null );
+    }
+
+    return tooltip.toString();
   }
 
   @Override
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     if( !isVisible() )
       return null;
@@ -96,14 +110,19 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   {
     final TupleResult result = m_data.getObservation().getResult();
     final IRecord record = result.get( i );
+
     final Double uK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, record );
     final Double oK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, record );
     final Double sT = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, record );
     final Double bR = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, record );
-    if( bR.isNaN() || uK.isNaN() || sT.isNaN() )// || oK.isNaN()
+    if( bR.isNaN() || uK.isNaN() || sT.isNaN() || oK.isNaN() )
       return null;
-    final Point pUK = getCoordinateMapper().numericToScreen( sT + bR / 2000, uK );
-    final Point pOK = getCoordinateMapper().numericToScreen( sT - bR / 2000, uK+3 );
-    return new Rectangle( pOK.x - 3, pOK.y, Math.max( 6, pOK.x - pUK.x ), pUK.y - pOK.y );
+
+    final double startBridge = sT + bR / 2000;
+    final double endBridge = sT - bR / 2000;
+
+    final Point bottomLeft = getCoordinateMapper().numericToScreen( startBridge, uK );
+    final Point topRight = getCoordinateMapper().numericToScreen( endBridge, oK );
+    return RectangleUtils.createNormalizedRectangle( bottomLeft, topRight );
   }
 }
