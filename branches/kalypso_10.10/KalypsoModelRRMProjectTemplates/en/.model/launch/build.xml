@@ -182,25 +182,15 @@
 	<target name="afterCalc" description="Kopiert die Modelldaten nach der Rechnnung">
 	</target>
 
-	<target name="setBasicModel" depends="updateBasicModel,updateIniValues" description="Ersetzt das Basismodell durch das Modell in der Rechenvariante plus Anfangswerte">
-	</target>
-
-	<target name="updateBasicModel" description="Ersetzt das Basismodell durch das Modell in der Rechenvariante">
+	<target name="setBasicModel" description="Ersetzt das Basismodell durch das Modell in der Rechenvariante">
 		<echo message="Rechenvariante als Basismodell übernehmen: ${calc.dir}" />
-		<!-- copy basic modell -->
+
 		<copy file="${calc.dir}/calcCase.gml" tofile="${project.dir}/modell.gml" />
+		<eclipse.refreshLocal resource="${project.path}/modell.gml" depth="one" />
 		<!--
         <copy file="${calc.dir}/calcHydrotop.gml" tofile="${project.dir}/hydrotop.gml" />
         -->
 		<copy file="${calc.dir}/calcParameter.gml" tofile="${project.dir}/parameter.gml" />
+		<eclipse.refreshLocal resource="${project.path}/parameter.gml" depth="one" />
 	</target>
-
-	<target name="updateIniValues" description="Ersetzt das Basismodell durch das Modell in der Rechenvariante">
-		<echo message="Anfangswerte ins Basismodell übernehmen: ${calc.dir}" />
-		<!-- copy basic modell -->
-		<copy todir="${project.dir}/Anfangswerte">
-			<fileset dir="${calc.dir}/Ergebnisse/Berechnet/Anfangswerte" includes="*/**" excludes="**/CVS/**" />
-		</copy>
-	</target>
-
 </project>
