@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.1"?>
+
+<product name="VeloDiff" id="org.kalypso.model1d2d.velodiff2d" application="org.kalypso.model1d2d.velodiff2d" useFeatures="false">
+
+   <configIni use="default"/>
+
+   <launcherArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages/>
+
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+      <windows type="jre">jdk1.5.0_11</windows>
+   </vm>
+
+   <plugins>
+      <plugin id="com.ibm.icu"/>
+      <plugin id="de.belger.swtchart.core"/>
+      <plugin id="de.renew.libs"/>
+      <plugin id="de.renew.workflow.connector"/>
+      <plugin id="de.renew.workflow.model"/>
+      <plugin id="org.apache.ant"/>
+      <plugin id="org.apache.commons.vfs"/>
+      <plugin id="org.eclipse.ant.core"/>
+      <plugin id="org.eclipse.ant.ui"/>
+      <plugin id="org.eclipse.compare"/>
+      <plugin id="org.eclipse.core.commands"/>
+      <plugin id="org.eclipse.core.contenttype"/>
+      <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.expressions"/>
+      <plugin id="org.eclipse.core.filebuffers"/>
+      <plugin id="org.eclipse.core.filesystem"/>
+      <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.net"/>
+      <plugin id="org.eclipse.core.resources"/>
+      <plugin id="org.eclipse.core.resources.compatibility" fragment="true"/>
+      <plugin id="org.eclipse.core.resources.win32" fragment="true"/>
+      <plugin id="org.eclipse.core.runtime"/>
+      <plugin id="org.eclipse.core.runtime.compatibility"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
+      <plugin id="org.eclipse.core.variables"/>
+      <plugin id="org.eclipse.debug.core"/>
+      <plugin id="org.eclipse.debug.ui"/>
+      <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.help"/>
+      <plugin id="org.eclipse.jdt.compiler.apt" fragment="true"/>
+      <plugin id="org.eclipse.jdt.compiler.tool" fragment="true"/>
+      <plugin id="org.eclipse.jdt.core"/>
+      <plugin id="org.eclipse.jdt.core.manipulation"/>
+      <plugin id="org.eclipse.jdt.debug"/>
+      <plugin id="org.eclipse.jdt.debug.ui"/>
+      <plugin id="org.eclipse.jdt.launching"/>
+      <plugin id="org.eclipse.jdt.ui"/>
+      <plugin id="org.eclipse.jface"/>
+      <plugin id="org.eclipse.jface.databinding"/>
+      <plugin id="org.eclipse.jface.text"/>
+      <plugin id="org.eclipse.ltk.core.refactoring"/>
+      <plugin id="org.eclipse.ltk.ui.refactoring"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.search"/>
+      <plugin id="org.eclipse.swt"/>
+      <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.team.core"/>
+      <plugin id="org.eclipse.team.ui"/>
+      <plugin id="org.eclipse.text"/>
+      <plugin id="org.eclipse.ui"/>
+      <plugin id="org.eclipse.ui.browser"/>
+      <plugin id="org.eclipse.ui.console"/>
+      <plugin id="org.eclipse.ui.editors"/>
+      <plugin id="org.eclipse.ui.externaltools"/>
+      <plugin id="org.eclipse.ui.forms"/>
+      <plugin id="org.eclipse.ui.ide"/>
+      <plugin id="org.eclipse.ui.intro"/>
+      <plugin id="org.eclipse.ui.navigator"/>
+      <plugin id="org.eclipse.ui.navigator.resources"/>
+      <plugin id="org.eclipse.ui.views"/>
+      <plugin id="org.eclipse.ui.views.properties.tabbed"/>
+      <plugin id="org.eclipse.ui.win32" fragment="true"/>
+      <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="org.eclipse.ui.workbench.texteditor"/>
+      <plugin id="org.eclipse.update.configurator"/>
+      <plugin id="org.eclipse.update.core"/>
+      <plugin id="org.eclipse.update.core.win32" fragment="true"/>
+      <plugin id="org.eclipse.update.ui"/>
+      <plugin id="org.eclipse.wst.common.uriresolver"/>
+      <plugin id="org.kalypso.ModelSimulationBase"/>
+      <plugin id="org.kalypso.afgui"/>
+      <plugin id="org.kalypso.auth"/>
+      <plugin id="org.kalypso.chart.ext.base"/>
+      <plugin id="org.kalypso.chart.ext.observation"/>
+      <plugin id="org.kalypso.chart.factory"/>
+      <plugin id="org.kalypso.chart.framework"/>
+      <plugin id="org.kalypso.chart.ui"/>
+      <plugin id="org.kalypso.commons"/>
+      <plugin id="org.kalypso.contribs.eclipseplatform"/>
+      <plugin id="org.kalypso.contribs.eclipsercp"/>
+      <plugin id="org.kalypso.contribs.java"/>
+      <plugin id="org.kalypso.contribs.ogc2x"/>
+      <plugin id="org.kalypso.contribs.ogc31"/>
+      <plugin id="org.kalypso.core"/>
+      <plugin id="org.kalypso.deegree"/>
+      <plugin id="org.kalypso.deegree2"/>
+      <plugin id="org.kalypso.featureview"/>
+      <plugin id="org.kalypso.gml.processes"/>
+      <plugin id="org.kalypso.gml.ui"/>
+      <plugin id="org.kalypso.gmlschema"/>
+      <plugin id="org.kalypso.jwsdp"/>
+      <plugin id="org.kalypso.metadoc"/>
+      <plugin id="org.kalypso.model.wspm.core"/>
+      <plugin id="org.kalypso.model.wspm.schema"/>
+      <plugin id="org.kalypso.model.wspm.tuhh.core"/>
+      <plugin id="org.kalypso.model.wspm.tuhh.schema"/>
+      <plugin id="org.kalypso.model.wspm.tuhh.ui"/>
+      <plugin id="org.kalypso.model.wspm.ui"/>
+      <plugin id="org.kalypso.model1d2d"/>
+      <plugin id="org.kalypso.optimize"/>
+      <plugin id="org.kalypso.repository"/>
+      <plugin id="org.kalypso.services.core.client"/>
+      <plugin id="org.kalypso.simulation.core"/>
+      <plugin id="org.kalypso.simulation.ui"/>
+      <plugin id="org.kalypso.ui"/>
+      <plugin id="org.kalypso.ui.addlayer"/>
+      <plugin id="org.kalypso.wspwin.core"/>
+   </plugins>
+
+</product>
