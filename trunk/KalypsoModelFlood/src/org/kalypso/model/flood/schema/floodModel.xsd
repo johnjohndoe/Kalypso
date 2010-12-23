@@ -15,11 +15,7 @@
 	<element name="FloodModel" type="flood:FloodModelType"
 		substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation>
-				
-				<![CDATA[FloodModel]]>
-
-			</documentation>
+			<documentation><![CDATA[FloodModel]]></documentation>
 		</annotation>
 	</element>
 
@@ -30,10 +26,7 @@
 					<element name="polygonMember" type="flood:FloodPolygonPropertyType"
 						minOccurs="0" maxOccurs="unbounded">
 						<annotation>
-							<documentation>
-								Polygon
-								
-							</documentation>
+							<documentation>Polygon</documentation>
 						</annotation>
 					</element>
 					<element name="eventMember" type="flood:RunoffEventPropertyType"

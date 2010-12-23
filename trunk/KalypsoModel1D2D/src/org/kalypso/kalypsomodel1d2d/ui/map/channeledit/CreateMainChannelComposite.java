@@ -490,7 +490,7 @@ public class CreateMainChannelComposite extends Composite
 
     final ComboViewer combviewerBank1 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_toolkit.adapt( combviewerBank1.getControl(), true, false );
-    combviewerBank1.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    combviewerBank1.getControl().setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false ) );
     combviewerBank1.setContentProvider( new ArrayContentProvider() );
     combviewerBank1.setLabelProvider( new LabelProvider() );
     final IKalypsoFeatureTheme bankTheme = m_data.getBankTheme1();
@@ -561,9 +561,11 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the first bank drawing */
     final Button drawFirstBankButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
     m_buttonList.add( drawFirstBankButton );
-
+    
+    GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
+    layoutDataFirstButton.minimumWidth = 25;
     drawFirstBankButton.setVisible( true );
-    drawFirstBankButton.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
+    drawFirstBankButton.setLayoutData( layoutDataFirstButton );
     final Image editImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.EDIT );
     drawFirstBankButton.setImage( editImage );
     drawFirstBankButton.addSelectionListener( new SelectionAdapter()
@@ -588,7 +590,7 @@ public class CreateMainChannelComposite extends Composite
     /* ComboBox for the second bank line theme selection */
     final ComboViewer combviewerBank2 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_toolkit.adapt( combviewerBank2.getControl(), true, false );
-    combviewerBank2.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    combviewerBank2.getControl().setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false ) );
     combviewerBank2.setContentProvider( new ArrayContentProvider() );
     combviewerBank2.setLabelProvider( new LabelProvider() );
     final IKalypsoFeatureTheme bankTheme2 = m_data.getBankTheme2();
@@ -724,7 +726,7 @@ public class CreateMainChannelComposite extends Composite
     final GridData gridDataSpinner = new GridData();
     gridDataSpinner.horizontalAlignment = SWT.RIGHT;
     spinNumBankIntersections.setLayoutData( gridDataSpinner );
-
+    
     return bankSection;
   }
 
@@ -746,7 +748,7 @@ public class CreateMainChannelComposite extends Composite
     /* add combo-box for the wspm-profile theme selection */
     final ComboViewer combviewerProfiles = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_toolkit.adapt( combviewerProfiles.getControl(), true, false );
-    combviewerProfiles.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    combviewerProfiles.getControl().setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false ) );
     combviewerProfiles.setContentProvider( new ArrayContentProvider() );
     combviewerProfiles.setLabelProvider( new LabelProvider() );
 
@@ -792,7 +794,9 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the wspm-profile selection */
     final Button chooseProfilesButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
     m_buttonList.add( chooseProfilesButton );
-    chooseProfilesButton.setLayoutData( gridData );
+    GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
+    layoutDataFirstButton.minimumWidth = 25;
+    chooseProfilesButton.setLayoutData( layoutDataFirstButton );
     chooseProfilesButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
@@ -817,9 +821,12 @@ public class CreateMainChannelComposite extends Composite
         }
       }
     } );
+    final GridData gridDataLabel = new GridData( SWT.FILL, SWT.CENTER, true, false );
 
     /* spinner for specifying the global number of profile intersection points */
-    m_toolkit.createLabel( sectionClient, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.36" ), SWT.NULL ); //$NON-NLS-1$
+    final Label spinnerLabel = new Label( sectionClient, SWT.NULL );
+    spinnerLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.36" ) ); //$NON-NLS-1$
+    spinnerLabel.setLayoutData( gridDataLabel );
 
     final Spinner spinNumProfIntersections = new Spinner( sectionClient, SWT.NONE );
     m_toolkit.adapt( spinNumProfIntersections );
@@ -854,7 +861,7 @@ public class CreateMainChannelComposite extends Composite
     } );
 
     final GridData gridDataSpinner = new GridData();
-    gridDataSpinner.horizontalAlignment = SWT.END;
+    gridDataSpinner.horizontalAlignment = SWT.RIGHT;
     spinNumProfIntersections.setLayoutData( gridDataSpinner );
     m_data.setNumProfileIntersections( spinNumProfIntersections.getSelection() );
 

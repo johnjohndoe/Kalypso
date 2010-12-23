@@ -201,8 +201,21 @@ class GridWidgetFace
       {
         java.awt.Color awtColor = ((LinePointCollectorConfig) element).getColor();
         awtColor = awtColor.darker();
-
-        final Color swtColor = m_toolkit.getColors().createColor( ((LinePointCollectorConfig) element).getName(), awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
+        Color swtColor = null;
+        String strKey = ((LinePointCollectorConfig) element).getName();
+        int red = awtColor.getRed();
+        int green = awtColor.getGreen();
+        int blue = awtColor.getBlue();
+        try{
+          swtColor = m_toolkit.getColors().createColor( strKey, red, green, blue );
+        }
+        catch (Exception e) {
+        }
+        if( swtColor == null || swtColor.isDisposed() ){
+          swtColor = new Color( null, red, green, blue );
+          if( swtColor == null || swtColor.isDisposed() )
+            swtColor = m_toolkit.getColors().getInactiveBackground();
+        }
         m_colorList.add( swtColor );
 
         return swtColor;
@@ -395,6 +408,7 @@ class GridWidgetFace
       m_rootPanel.dispose();
     }
 
+    m_tableViewer.getControl().dispose();
   }
 
   public void setInput( Object input )

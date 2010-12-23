@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.gml;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import javax.xml.namespace.QName;
 
@@ -95,8 +96,14 @@ public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhCo
   // m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceR" ), distanceR );
   // }
 
+  //explicitly set scale fixes the bug #591
   public BigDecimal getStation( )
   {
+    Object lStation = getProperty( PROPERTY_STATION, BigDecimal.class );
+    if( lStation instanceof BigDecimal ){
+      return ((BigDecimal) lStation).setScale( IProfileFeature.STATION_SCALE, RoundingMode.HALF_UP );
+    }
+    //return not valid BigDecimal value, unfortunally we have a lot of data with some invalid entries 
     return getProperty( PROPERTY_STATION, BigDecimal.class );
   }
 

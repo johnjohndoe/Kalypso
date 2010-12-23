@@ -413,18 +413,19 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
     m_composite.getDisplay().syncExec( new Runnable()
     {
-      @Override
+      @Override 
       @SuppressWarnings("synthetic-access")
       public void run( )
       {
         // check if all needed data is specified
         // m_data.completationCheck();
-        if( !m_composite.isDisposed() )
+        if( !m_composite.isDisposed() ){
           m_composite.updateControl( false ); // false means calculate all again
+        }
+        getPanel().repaintMap();
       }
     } );
 
-    getPanel().repaintMap();
   }
 
   /**

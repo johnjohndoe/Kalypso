@@ -40,14 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-
 /**
  * @author Gernot Belger
  */
-public interface IWspmResult extends IWspmResultNode
+public interface IWspmResult extends ITuhhCalculationNode
 {
   WspmResultLengthSection getLengthSection( );
-
-  TuhhCalculation getCalculation( );
 }

@@ -45,7 +45,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
@@ -84,7 +84,7 @@ public class LanduseCollection extends Feature_Impl
    * 
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
-  public Landuse importLanduse( final String label, final GM_MultiSurface geometry, final ImportType importType, final List<IStatus> log )
+  public Landuse importLanduse( final String label, final GM_MultiSurface geometry, final ImportType importType, final IStatusCollector log )
   {
     if( geometry == null )
       return null;
@@ -99,16 +99,16 @@ public class LanduseCollection extends Feature_Impl
         {
           m_landuses.remove( existingLanduse );
           final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.1", existingLanduse.getId() ); //$NON-NLS-1$
-          log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+          log.add( IStatus.WARNING, message );
         }
-          break;
+        break;
 
         case IGNORE_INTERSECTING:
         {
           final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.2", label ); //$NON-NLS-1$
-          log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+          log.add( IStatus.WARNING, message );
         }
-          return null;
+        return null;
 
         case INTERSECT:
         {
@@ -118,13 +118,13 @@ public class LanduseCollection extends Feature_Impl
           {// TODO: check if area of difference is > 0!
             existingLanduse.setGeometry( difference );
             final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.3", existingLanduse.getId(), label ); //$NON-NLS-1$
-            log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
+            log.add( IStatus.INFO, message );
           }
           else
           {
             m_landuses.remove( existingLanduse );
             final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.LanduseCollection.4", existingLanduse.getId(), label ); //$NON-NLS-1$
-            log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
+            log.add( IStatus.INFO, message );
           }
         }
 

@@ -208,7 +208,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
       {
         public IStatus execute( final IProgressMonitor monitor )
         {
-          monitor.beginTask( "", 100 * selectedResults.length );
+          monitor.beginTask( "", 100 * selectedResults.length );//$NON-NLS-1$
           for( final IResultMeta resultMeta : selectedResults )
           {
             if( resultMeta instanceof IStepResultMeta )
@@ -237,7 +237,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
               }
               catch( Exception e )
               {
-                lLog.log( StatusUtilities.statusFromThrowable( e ) );
+                lLog.log( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.8" ) ) );
               }
 
               try

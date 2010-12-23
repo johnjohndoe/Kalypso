@@ -50,6 +50,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -62,15 +63,15 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
 {
-  private final static String INPUT_RASTERMODEL = "RasterModel";
+  private final static String INPUT_RASTERMODEL = "RasterModel"; //$NON-NLS-1$
 
-  private final static String INPUT_RASTERFOLDERSOURCEINPUT = "RasterFolderSourceInput";
+  private final static String INPUT_RASTERFOLDERSOURCEINPUT = "RasterFolderSourceInput"; //$NON-NLS-1$
 
-  private final static String INPUT_RASTERFOLDERSOURCEOUTPUT = "RasterFolderSourceOutput";
+  private final static String INPUT_RASTERFOLDERSOURCEOUTPUT = "RasterFolderSourceOutput"; //$NON-NLS-1$
 
-  private final static String INPUT_STATUSQUO_RASTERMODEL = "StatusQuoRasterModel";
+  private final static String INPUT_STATUSQUO_RASTERMODEL = "StatusQuoRasterModel"; //$NON-NLS-1$
 
-  private final static String OUTPUT_FOLDER = "OutputFolder";
+  private final static String OUTPUT_FOLDER = "OutputFolder"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
@@ -96,37 +97,37 @@ public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
         final File actualRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RASTERFOLDERSOURCEINPUT ) );
         final File actualRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RASTERFOLDERSOURCEOUTPUT ) );
         final List<String> folders = new ArrayList<String>();
-        folders.add( "PLC" );
-        folders.add( "PLC/statusQuo" );
-        folders.add( "PLC/statusQuo/raster" );
-        folders.add( "PLC/statusQuo/raster/input" );
-        folders.add( "PLC/statusQuo/raster/output" );
-        folders.add( "PLC/difference" );
-        folders.add( "PLC/difference/raster" );
-        folders.add( "PLC/difference/raster/output" );
-        folders.add( "PLC/final" );
-        folders.add( "PLC/final/rrm" );
-        folders.add( "PLC/final/risk" );
-        folders.add( "PLC/final/risk/raster" );
-        folders.add( "PLC/final/risk/raster/output" );
+        folders.add( "PLC" ); //$NON-NLS-1$
+        folders.add( "PLC/statusQuo" ); //$NON-NLS-1$
+        folders.add( "PLC/statusQuo/raster" ); //$NON-NLS-1$
+        folders.add( "PLC/statusQuo/raster/input" ); //$NON-NLS-1$
+        folders.add( "PLC/statusQuo/raster/output" ); //$NON-NLS-1$
+        folders.add( "PLC/difference" ); //$NON-NLS-1$
+        folders.add( "PLC/difference/raster" ); //$NON-NLS-1$
+        folders.add( "PLC/difference/raster/output" ); //$NON-NLS-1$
+        folders.add( "PLC/final" ); //$NON-NLS-1$
+        folders.add( "PLC/final/rrm" ); //$NON-NLS-1$
+        folders.add( "PLC/final/risk" ); //$NON-NLS-1$
+        folders.add( "PLC/final/risk/raster" ); //$NON-NLS-1$
+        folders.add( "PLC/final/risk/raster/output" ); //$NON-NLS-1$
         for( final String folder : folders )
         {
           final File f = new File( tmpdir, folder );
           f.mkdirs();
-          final File d = new File( f, "control.ctl" );
+          final File d = new File( f, "control.ctl" ); //$NON-NLS-1$
           d.createNewFile();
         }
-        final File differenceModelFolder = new File( tmpdir, "PLC/difference" );
-        final File statusQuoModelFolder = new File( tmpdir, "PLC/statusQuo" );
-        final File statusQuoRasterFolderInput = new File( tmpdir, "PLC/statusQuo/raster/input" );
-        final File statusQuoRasterFolderOutput = new File( tmpdir, "PLC/statusQuo/raster/output" );
+        final File differenceModelFolder = new File( tmpdir, "PLC/difference" ); //$NON-NLS-1$
+        final File statusQuoModelFolder = new File( tmpdir, "PLC/statusQuo" ); //$NON-NLS-1$
+        final File statusQuoRasterFolderInput = new File( tmpdir, "PLC/statusQuo/raster/input" ); //$NON-NLS-1$
+        final File statusQuoRasterFolderOutput = new File( tmpdir, "PLC/statusQuo/raster/output" ); //$NON-NLS-1$
         if( actualRasterFolderInput.exists() )
         {
           FileUtils.copyDirectory( actualRasterFolderInput, statusQuoRasterFolderInput );
         }
         else
         {
-          Logger.getAnonymousLogger().log( Level.WARNING, "Calculated coverages folder 'input' does not exist. Data not copied to PLC status quo folder." );
+          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString("SimulationKalypsoRisk_PLCPreprocessing_0") ); //$NON-NLS-1$
         }
         if( actualRasterFolderOutput.exists() )
         {
@@ -134,7 +135,7 @@ public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
         }
         else
         {
-          Logger.getAnonymousLogger().log( Level.WARNING, "Calculated coverages folder 'output' does not exist. Data not copied to PLC status quo folder." );
+          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString("SimulationKalypsoRisk_PLCPreprocessing_2") ); //$NON-NLS-1$
         }
         if( actualRasterModel.exists() )
         {
@@ -143,7 +144,7 @@ public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
         }
         else
         {
-          Logger.getAnonymousLogger().log( Level.WARNING, "Raster model does not exist. Model not copied to PLC status quo folder." );
+          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString("SimulationKalypsoRisk_PLCPreprocessing_1") ); //$NON-NLS-1$
         }
       }
     }

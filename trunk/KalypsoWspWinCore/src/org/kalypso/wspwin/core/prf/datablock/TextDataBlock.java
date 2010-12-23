@@ -49,7 +49,7 @@ import java.util.Collection;
 /**
  * @author kimwerner
  */
-public class TextDataBlock extends AbstractDataBlock implements IDataBlock
+public class TextDataBlock extends AbstractDataBlock
 {
   private final Collection<String> m_lines = new ArrayList<String>();
 
@@ -120,7 +120,7 @@ public class TextDataBlock extends AbstractDataBlock implements IDataBlock
   {
     return m_lines.toArray(new String[0]);
   }
-  
+
   public void addLine( final String line )
   {
     m_lines.add( line );

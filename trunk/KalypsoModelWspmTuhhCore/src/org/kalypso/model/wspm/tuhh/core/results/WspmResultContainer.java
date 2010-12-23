@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.Path;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.observation.IObservation;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -53,14 +50,18 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class WspmResultContainer extends AbstractWspmResultNode implements IWspmResult
 {
-  private final IContainer m_resultFolder;
-
   private WspmResultLengthSection m_lengthSection;
 
-  public WspmResultContainer( final WspmResultCalculationNode parent, final IContainer resultFolder )
+  private final IFile m_lsFile;
+
+  private final String m_label;
+
+  public WspmResultContainer( final ITuhhCalculationNode parent, final IFile lsFile, final String label )
   {
     super( parent );
-    m_resultFolder = resultFolder;
+
+    m_lsFile = lsFile;
+    m_label = label;
   }
 
   /**
@@ -78,13 +79,13 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   @Override
   public String getLabel( )
   {
-    return m_resultFolder.getName();
+    return m_label;
   }
 
   @Override
   protected String getInternalName( )
   {
-    return m_resultFolder.getName();
+    return m_label;
   }
 
   /**
@@ -103,8 +104,11 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
     // Maybe we should check, if the file was modified since...
     if( m_lengthSection == null )
     {
-      final IFile lsFile = m_resultFolder.getFile( new Path( IWspmTuhhConstants.FOLDER_RESULT_DATA ).append( IWspmTuhhConstants.FILE_RESULT_LENGTH_SECTION_GML ) );
-      m_lengthSection = WspmResultLengthSection.create( lsFile, new GMLXPath( IObservation.QNAME_OBSERVATION ) );
+      final TuhhCalculation calculation = getCalculation();
+      if( calculation == null )
+        return;
+
+      m_lengthSection = WspmResultLengthSection.create( m_lsFile, new GMLXPath( IObservation.QNAME_OBSERVATION ) );
     }
   }
 
@@ -114,7 +118,7 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   @Override
   public Object getObject( )
   {
-    return m_resultFolder;
+    return m_lsFile;
   }
 
   /**
@@ -124,9 +128,9 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   public TuhhCalculation getCalculation( )
   {
     final IWspmResultNode parent = getParent();
-    if( !(parent instanceof WspmResultCalculationNode) )
-      return null;
+    if( parent instanceof ITuhhCalculationNode )
+      return ((ITuhhCalculationNode) parent).getCalculation();
 
-    return ((WspmResultCalculationNode) parent).getCalculation();
+    return null;
   }
 }

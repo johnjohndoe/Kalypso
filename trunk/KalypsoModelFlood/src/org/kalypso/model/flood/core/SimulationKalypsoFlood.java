@@ -203,7 +203,7 @@ public class SimulationKalypsoFlood implements ISimulation
 
         processEvent( model, eventFolder, event, progress.newChild( 1 ) );
       }
-      System.out.println( "Risk simulation: " + ((new Date()).getTime() - lStart1.getTime()) );
+      System.out.println( "Risk simulation: " + ((new Date()).getTime() - lStart1.getTime()) ); //$NON-NLS-1$
 
       return modelWorkspace;
     }

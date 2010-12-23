@@ -44,9 +44,9 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.ISources;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -75,7 +75,7 @@ public class RRMImportPedologyHandler extends AbstractHandler
       return null;
 
     final FeatureList featureList = ((IKalypsoFeatureTheme) themes[0]).getFeatureList();
-    final INewWizard wizard = new ImportPedologyWizard( featureList );
+    final IWizard wizard = new ImportPedologyWizard( featureList );
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     return dialog.open();
   }

@@ -46,26 +46,18 @@
 		<gft:gridData horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
-	<!--
-		text="Ereignisse" tooltip="Ereignisse, auf welche diese Anpassung
-		angewendet wird"
-	-->
+
 	<gft:label property="flood:eventMember" visible="true" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING"
 			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:group style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.FILL"
-			grabExcessHorizontalSpace="true" />
-		<gft:gridLayout />
-		<gft:extensioncontrol
-			extension-id="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory"
-			property="flood:eventMember" visible="true" style="SWT.NONE" enabled="true">
-			<gft:gridData verticalAlignment="GridData.FILL"
-				horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
-			<gft:param value="true" name="showSelectButtons" />
-		</gft:extensioncontrol>
-	</gft:group>
+	<gft:extensioncontrol
+		extension-id="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory"
+		property="flood:eventMember" visible="true" style="SWT.NONE" enabled="true">
+		<gft:gridData verticalAlignment="GridData.FILL"
+			horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+		<gft:param value="true" name="showSelectButtons" />
+	</gft:extensioncontrol>
 	<gft:label visible="false" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING"
 			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />

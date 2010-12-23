@@ -78,7 +78,6 @@ public class WehrRule extends AbstractValidatorRule
     validateDevider( profil, collector );
     validateParams( profil, collector );
     validateBewuchs( profil, collector );
-
   }
 
   private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
@@ -186,29 +185,42 @@ public class WehrRule extends AbstractValidatorRule
   private void validateLimits( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     final IProfilPointMarker[] devider = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-    if( devider.length < 2 )
-      return;
-    final IRecord firstPoint = devider[0].getPoint();
-    final IRecord lastPoint = devider[devider.length - 1].getPoint();
-    IRecord point = null;
+    for( final IProfilPointMarker marker : devider )
+    {
+      final IRecord point = marker.getPoint();
+      validateLimit( profil, collector, point );
+    }
+  }
+
+  private void validateLimit( final IProfil profil, final IValidatorMarkerCollector collector, final IRecord point ) throws CoreException
+  {
     final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final int iOKWehr = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    final IComponent okWeir = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     if( iOKWehr < 0 || iHoehe < 0 )
       return;
-    final Object p1H = firstPoint.getValue( iHoehe );
-    final Object p1OkW = firstPoint.getValue( iOKWehr );
-    final Object p2H = lastPoint.getValue( iHoehe );
-    final Object p2OkW = lastPoint.getValue( iOKWehr );
-    if( p1H == null || p1OkW == null || p2H == null || p2OkW == null )
+
+    final double deltaOkW = okWeir.getPrecision() / 10;
+
+    final Object groundValue = point.getValue( iHoehe );
+    final Object weirValue = point.getValue( iOKWehr );
+
+    if( !(groundValue instanceof Number) || !(weirValue instanceof Number) )
       return;
-    final double dOkW = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ).getPrecision();
-    if( Math.abs( (Double) p1H - (Double) p1OkW ) > dOkW )
-      point = firstPoint;
-    if( Math.abs( (Double) p2H - (Double) p2OkW ) > dOkW )
-      point = lastPoint;
-    if( point != null )
+
+    final double ground = ((Number) groundValue).doubleValue();
+    final double weir = ((Number) weirValue).doubleValue();
+
+    // FIXME: Fehlermeldung und Test passen nicht zusammen: es wird nicht getestet, ob Werte ausserhalb der TF
+    // exisiterien und/oder auf dem Gelände liegen.
+    // TODO: noch mal prüfen, was der Test eigentlich bewirken soll.
+    // FIXME: >= is not a good double test; we should use BigDecimals with the correct precision instead
+    if( Math.abs( ground - weir ) > deltaOkW )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.14" ), String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String location = String.format( "km %.4f", profil.getStation() ); //$NON-NLS-1$
+      final int indexOfPoint = profil.indexOfPoint( point );
+      final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.14" ); //$NON-NLS-1$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, location, indexOfPoint, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     }
   }
 }

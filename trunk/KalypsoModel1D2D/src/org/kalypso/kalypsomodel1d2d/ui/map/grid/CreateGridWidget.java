@@ -7,12 +7,19 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -41,10 +48,12 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private final GridWidgetFace m_gridWidgetFace = new GridWidgetFace( this );
+//  private GridWidgetFace m_gridWidgetFace;
 
   private Point m_currentPoint = null;
 
-  private final GridPointCollector m_gridPointCollector = new GridPointCollector();
+  final GridPointCollector m_gridPointCollector = new GridPointCollector();
+//  GridPointCollector m_gridPointCollector ;
 
   private boolean isActivated = false;
 
@@ -74,6 +83,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   public CreateGridWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+//    m_gridWidgetFace = new GridWidgetFace( this );
+//    m_gridPointCollector = new GridPointCollector();
   }
 
   /**
@@ -88,6 +99,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
+//    m_gridWidgetFace = new GridWidgetFace( this );
+//    m_gridPointCollector = new GridPointCollector();
     // find the right themes to edit i.e. the discretisation model
     if( isActivated == false )
     {
@@ -453,8 +466,26 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
 
     final CommandableWorkspace workspace = theme.getWorkspace();
-    final IStatus status = m_gridPointCollector.getAddToModelCommand( mapPanel, model1d2d, workspace );
-    // TODO: handle status
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      @Override
+      public IStatus execute( final IProgressMonitor monitor )
+      {
+        final IStatus status = m_gridPointCollector.getAddToModelCommand( mapPanel, model1d2d, workspace );
+        return status;
+      }
+    };
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation, null );
+    if( status.equals( Status.OK_STATUS ) ){
+      try
+      {
+        workspace.postCommand( new EmptyCommand( "set dirty command ", false ) ); //$NON-NLS-1$
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
     reinit();
   }
 

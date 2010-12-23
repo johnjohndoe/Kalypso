@@ -3,14 +3,15 @@
 	xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:gml="http://www.opengis.net/gml">
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL"
 		grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
-	<gft:gridLayout numColumns="1" />
+	<gft:gridLayout numColumns="2" />
 	<gft:label property="c1d2d:activeModelID" visible="true" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" />
 	</gft:label>
 	<gft:combo property="c1d2d:activeModelID" style="SWT.DROP_DOWN | SWT.READ_ONLY" />
-	<gft:subcomposite property="c1d2d:controlModelMember" selector="activeModelID" style="SWT.NONE">
+	
+    <gft:subcomposite property="c1d2d:controlModelMember" selector="activeModelID" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL"
-			grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+			grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" horizontalSpan="2" />
 	</gft:subcomposite>
 </gft:featureview>
 

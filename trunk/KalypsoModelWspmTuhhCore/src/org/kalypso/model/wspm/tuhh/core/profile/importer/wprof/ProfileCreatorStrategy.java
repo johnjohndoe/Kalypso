@@ -135,7 +135,7 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
       return new GelaendeProfileCreator( profileLabel + " (V01)", data, "V01" );  //$NON-NLS-1$//$NON-NLS-2$
 
     if( polygones.hasPoints( "2314" ) ) //$NON-NLS-1$
-      return new GelaendeProfileCreator( profileLabel, data, "2314" ); //$NON-NLS-2$ //$NON-NLS-1$
+      return new GelaendeProfileCreator( profileLabel, data, "2314" ); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$
 
     if( polygones.hasPoints( "21" ) ) //$NON-NLS-1$
       return new GelaendeProfileCreator( profileLabel, data, "21" ); //$NON-NLS-1$

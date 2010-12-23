@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -51,6 +49,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -61,6 +61,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
+import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -126,7 +127,7 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
     final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "soilType" ) ); //$NON-NLS-1$
     final IRelationType pt = (IRelationType) schema.getFeatureType( SoilType.QNAME ).getProperty( SoilType.QNAME_PROP_SOILTYPE );
 
-    final List<IStatus> log = new ArrayList<IStatus>();
+    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
     // traverse input workspace and import all single input soilTypes, if the soilType class exists
     for( int i = 0; i < size; i++ )
     {

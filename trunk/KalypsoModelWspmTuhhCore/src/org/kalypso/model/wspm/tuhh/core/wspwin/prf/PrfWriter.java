@@ -388,9 +388,11 @@ public class PrfWriter implements IPrfConstants
 
     if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "OK-WEHR" ); //$NON-NLS-1$
-    if( ISinuositaetProfileObject.ID.equals( key ) )
 
+    if( ISinuositaetProfileObject.ID.equals( key ) )
       return new DataBlockHeader( "SINUOSITAET", "[-]", IWspWinConstants.SPEZIALPROFIL_SINUOSITAET );//$NON-NLS-1$ //$NON-NLS-2$
+
+    // FIXME: we should probably throw an exception here: finding the error afterwards is very difficult
     return new DataBlockHeader( key );
   }
 
@@ -539,9 +541,9 @@ public class PrfWriter implements IPrfConstants
       try
       {
         final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
+        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
+        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
+        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
         dbu.setSecondLine( secLine );
       }
       catch( final Exception e )
@@ -552,7 +554,7 @@ public class PrfWriter implements IPrfConstants
     }
     else if( buildingType.compareTo( IWspmTuhhConstants.BUILDING_TYP_WEHR ) == 0 )
     {
-      final DataBlockHeader dbhw = createHeader( "OK-W" ); //$NON-NLS-1$
+      final DataBlockHeader dbhw = createHeader( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$
       final CoordDataBlock dbw = new CoordDataBlock( dbhw );
       writeCoords( m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), dbw, null );
       try

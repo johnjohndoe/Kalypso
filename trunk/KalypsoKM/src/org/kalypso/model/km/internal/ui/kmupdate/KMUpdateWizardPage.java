@@ -285,7 +285,7 @@ public class KMUpdateWizardPage extends WizardPage
       m_kmViewer.setInput( label, km );
     }
     else
-      m_kmViewer.setInput( "", null );
+      m_kmViewer.setInput( "", null ); //$NON-NLS-1$
   }
 
   void loadAs( final String path )

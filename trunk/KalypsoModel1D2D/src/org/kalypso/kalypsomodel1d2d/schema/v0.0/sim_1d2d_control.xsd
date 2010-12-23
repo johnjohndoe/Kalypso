@@ -714,7 +714,7 @@
 						<xs:annotation>
 							<xs:documentation>
 
-								Stätionare Berechnung
+								Stationäre Berechnung
 								
 							</xs:documentation>
 						</xs:annotation>
@@ -723,7 +723,7 @@
 						<xs:annotation>
 							<xs:documentation>
 
-								Instätionare Berechnung
+								Instationäre Berechnung
 								
 							</xs:documentation>
 						</xs:annotation>
