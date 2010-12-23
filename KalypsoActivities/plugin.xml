@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension
+          point="org.eclipse.ui.activities">
+       
+       <category
+             description="Defined in order to re-enable some of the Team-Capabilites that are disabled by default."
+             id="org.kalypso.activities.categories.team-enabled"
+             name="Kalypso Team">
+       </category>
+
+       <categoryActivityBinding
+             activityId="org.kalypso.activities.activities.team-enabled"
+             categoryId="org.kalypso.activities.categories.team-enabled">
+       </categoryActivityBinding>
+
+       <activity
+             description="Defined in order to enable some of the Team-Capabilites that are disabled by default."
+             id="org.kalypso.activities.activities.team-enabled"
+             name="Kalypso Team Activity">
+       </activity>
+       
+       <!-- Actually does not work, we enable this activity programmtically in the WorkbenchAdvisor -->
+       <defaultEnablement id="org.kalypso.activities.activities.team-enabled"/>
+
+<!--
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.team-enabled"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.team\.ui/org.*">
+       </activityPatternBinding>
+-->       
+       
+       <!--
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.team-enabled"
+             isEqualityPattern="true"
+             pattern="org.eclipse.team.ui/org.eclipse.team.ui.showLocalHistory">
+       </activityPatternBinding>
+       -->
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.team-enabled"
+             isEqualityPattern="true"
+             pattern="org.eclipse.team.ui/org.eclipse.team.ui.compareLocalHistory">
+       </activityPatternBinding>
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.team-enabled"
+             isEqualityPattern="true"
+             pattern="org.eclipse.team.ui/org.eclipse.team.ui.replaceLocalHistory">
+       </activityPatternBinding>
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.team-enabled"
+             isEqualityPattern="true"
+             pattern="org.eclipse.team.ui/org.eclipse.team.ui.compareWithEachOther">
+       </activityPatternBinding>
+    </extension>
+
+    <extension
+          point="org.eclipse.ui.activities">
+       
+       <category
+             description="Defined in order to remove some ui elements from Kalypso, defined in basic eclipse plug-ins."
+             id="org.kalypso.activities.categories.other-disabled"
+             name="Kalypso UI-Cleanup">
+       </category>
+       <categoryActivityBinding
+             activityId="org.kalypso.activities.activities.other-disabled"
+             categoryId="org.kalypso.activities.categories.other-disabled">
+       </categoryActivityBinding>
+
+       <activity
+             description="Defined in order to remove some ui elements from Kalypso, defined in basic eclipse plug-ins."
+             id="org.kalypso.activities.activities.other-disabled"
+             name="Kalypso UI-Cleanup Activity">
+       </activity>
+       
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.other-disabled"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.compare/compareWithPatch">
+       </activityPatternBinding>
+       
+ 	   <activityPatternBinding
+            activityId="org.kalypso.activities.activities.other-disabled"
+            isEqualityPattern="true"
+            pattern="org.eclipse.platform/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.activities.activities.other-disabled"
+            isEqualityPattern="true"
+            pattern="org.eclipse.ui.window.showKeyAssist">
+      </activityPatternBinding>       
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.other-disabled"
+             isEqualityPattern="true"
+             pattern="org.eclipse.ui.ide.application/org.eclipse.update.ui.updateMenu">
+       </activityPatternBinding>
+
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.other-disabled"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.team\.ui/.*">
+       </activityPatternBinding>
+
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.other-disabled"
+             isEqualityPattern="false"
+             pattern="org\.eclipse\.debug\.ui/.*">
+       </activityPatternBinding>
+
+<!--
+       <activityPatternBinding
+             activityId="org.kalypso.activities.activities.other-disabled"
+             isEqualityPattern="true"
+             pattern="org.eclipse.team.ui/org.eclipse.team.ui.TeamPreferences">
+       </activityPatternBinding>
+-->       
+    </extension>
+    
+</plugin>
