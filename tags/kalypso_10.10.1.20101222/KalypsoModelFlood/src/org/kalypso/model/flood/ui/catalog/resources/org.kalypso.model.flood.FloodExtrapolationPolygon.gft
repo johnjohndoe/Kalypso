@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="flood:FloodExtrapolationPolygon"
+	style="SWT.NONE" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+	xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:flood="org.kalypso.model.flood">
+	<gft:gridData verticalAlignment="GridData.FILL"
+		horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
+		grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="4" />
+
+	<gft:label property="gml:name" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING"
+			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:name" style="SWT.BORDER"
+		xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL"
+			grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:validatorlabel property="gml:name" visible="true"
+		style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+
+	<gft:label property="gml:description" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING"
+			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER"
+		xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData verticalAlignment="GridData.BEGINNING"
+			horizontalSpan="1" horizontalAlignment="GridData.FILL" heightHint="30"
+			grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:validatorlabel property="gml:description"
+		visible="true" style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+
+	<gft:label property="flood:eventMember" visible="true" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING"
+			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:extensioncontrol
+		extension-id="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory"
+		property="flood:eventMember" visible="true" style="SWT.NONE" enabled="true">
+		<gft:gridData verticalAlignment="GridData.FILL"
+			horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+		<gft:param value="true" name="showSelectButtons" />
+	</gft:extensioncontrol>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING"
+			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:validatorlabel property="flood:eventMember"
+		visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
+
+</gft:featureview>
