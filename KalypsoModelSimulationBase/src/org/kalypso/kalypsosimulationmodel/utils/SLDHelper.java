@@ -100,9 +100,9 @@ import org.xml.sax.SAXException;
 
 /**
  * TODO: move this into the deegree plug-in.
- * 
+ *
  * @author Dejan Antanaskovic
- * 
+ *
  */
 public class SLDHelper
 {
@@ -265,7 +265,7 @@ public class SLDHelper
     final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     final FeatureTypeStyle style = StyleFactory.createFeatureTypeStyle();
 
-    //    colorMap.put( -Double.MAX_VALUE, new ColorMapEntry_Impl( Color.WHITE, DEFAULT_RASTER_FILLOPACITY, -Double.MAX_VALUE, Messages.getString( "org.kalypso.kalypsosimulationmodel.utils.SLDHelper.1" ) ) ); //$NON-NLS-1$
+//    colorMap.put( -Double.MAX_VALUE, new ColorMapEntry_Impl( Color.WHITE, DEFAULT_RASTER_FILLOPACITY, -Double.MAX_VALUE, Messages.getString( "org.kalypso.kalypsosimulationmodel.utils.SLDHelper.1" ) ) ); //$NON-NLS-1$
     for( final Object styledFeatureObject : collection )
     {
       if( monitor.isCanceled() )
@@ -344,7 +344,7 @@ public class SLDHelper
       final String ruleName = styledFeature.getName();
       if( ruleName == null )
         continue;
-
+      
       final Operation operation = new PropertyIsLikeOperation( new PropertyName( styleProperty.getLocalPart(), null ), new Literal( ruleName ), '*', '$', '/' );
       final Filter filter = new ComplexFilter( operation );
       rule.setName( styledFeature.getGmlID() );
