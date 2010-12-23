@@ -50,6 +50,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -137,6 +138,10 @@ public class CalcTuhhAction implements IActionDelegate
             properties.put( "result.path", resultPath ); //$NON-NLS-1$
 
             return nature.launchAnt( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.8" ), "calc", properties, gmlFile.getParent(), monitor ); //$NON-NLS-1$ //$NON-NLS-2$
+          }
+          catch( final OperationCanceledException e )
+          {
+            return Status.CANCEL_STATUS;
           }
           catch( final Throwable t )
           {

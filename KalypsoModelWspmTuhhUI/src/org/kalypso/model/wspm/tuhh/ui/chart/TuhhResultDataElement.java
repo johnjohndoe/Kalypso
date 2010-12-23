@@ -67,6 +67,7 @@ public class TuhhResultDataElement implements IWspLayerDataElement
   @Override
   public String getLabel( )
   {
+    // FIXME: delegate path-labeling to IWspmResults, in order ot handle special cases correctly (polynomes...)
     if( m_resultNode instanceof IWspmResult )
     {
       final IWspmResultNode parent = m_resultNode.getParent();

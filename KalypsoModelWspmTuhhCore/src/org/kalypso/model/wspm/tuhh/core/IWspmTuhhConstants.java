@@ -189,7 +189,7 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static String LAYER_EI = PROFILE_LAYER + "EI"; //$NON-NLS-1$
 
   public static String LAYER_TUBES = PROFILE_LAYER + "TUBES"; //$NON-NLS-1$
-  
+
   public static String LAYER_SINUOSITAET = PROFILE_LAYER + "SINUOSITAET"; //$NON-NLS-1$
 
 //  public static String LAYER_WASSERSPIEGEL2D = PROFILE_LAYER + "WASSERPIEGEL2D"; //$NON-NLS-1$
@@ -214,4 +214,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static String FILE_WSPM_GMV = "WSPM.gmv"; //$NON-NLS-1$
 
   public static String FILE_RESULT_LENGTH_SECTION_GML = "Längsschnitt.gml"; //$NON-NLS-1$
+
+  public static String FILE_RESULT_POLYNOME_LENGTH_SECTIONS_GML = "lengthSection_*.gml"; //$NON-NLS-1$
+
+  public static String FILE_PATTERN_POLYNOME_LENGTH_SECTIONS_GML = "lengthSection_(.*).gml"; //$NON-NLS-1$
 }

@@ -48,14 +48,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.operation.hydrotope.DefaultLanduseClassDelegate;
@@ -64,6 +61,7 @@ import org.kalypso.model.hydrology.operation.hydrotope.LanduseShapeInputDescript
 import org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.InputDescriptor;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.ui.rrm.wizards.ImportShapeWizardPage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -71,42 +69,31 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Dejan Antanaskovic
  */
-public class ImportLanduseWizard extends Wizard implements INewWizard
+public class ImportLanduseWizard extends Wizard
 {
-  private IStructuredSelection m_initialSelection;
+  private final static String PROPERTY_LANDUSE = Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.12" ); //$NON-NLS-1$
 
-  protected ImportLanduseWizardPage m_wizardPage;
+  private final static String PROPERTY_SEALING_FACTOR = Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.14" ); //$NON-NLS-1$
+
+  private final static String PROPERTY_DRAINAGE_TYPE = Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.15" ); //$NON-NLS-1$
+
+  protected ImportShapeWizardPage m_wizardPage;
 
   private final FeatureList m_featureList;
 
   public ImportLanduseWizard( final FeatureList featureList )
   {
     m_featureList = featureList;
-  }
 
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    m_initialSelection = selection;
-    setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.0" ) ); //$NON-NLS-1$
-  }
+    setNeedsProgressMonitor( true );
 
-  @Override
-  public void addPages( )
-  {
-    m_wizardPage = new ImportLanduseWizardPage();
-    m_wizardPage.init( m_initialSelection );
+    final String[] properties = new String[] { PROPERTY_LANDUSE, PROPERTY_SEALING_FACTOR, PROPERTY_DRAINAGE_TYPE };
+    m_wizardPage = new ImportShapeWizardPage( "shapePage", properties ); //$NON-NLS-1$
+
+    m_wizardPage.setDescription( Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.3" ) ); //$NON-NLS-1$
+
     addPage( m_wizardPage );
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#canFinish()
-   */
-  @Override
-  public boolean canFinish( )
-  {
-    return m_wizardPage.isPageComplete();
   }
 
   /**
@@ -115,12 +102,11 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
-    final String landuseProperty = m_wizardPage.getLanduseProperty();
-    final String sealingFactorProperty = m_wizardPage.getSealingFactorProperty();
-    final String drainageTypeProperty = m_wizardPage.getDrainageTypeProperty();
-    final String sourceShapeFilePath = m_wizardPage.getSourceLocation().removeFileExtension().toPortableString();
+    final String landuseProperty = m_wizardPage.getProperty( PROPERTY_LANDUSE );
+    final String sealingFactorProperty = m_wizardPage.getProperty( PROPERTY_SEALING_FACTOR );
+    final String drainageTypeProperty = m_wizardPage.getProperty( PROPERTY_DRAINAGE_TYPE );
 
-    final File shapeFile = new File( sourceShapeFilePath );
+    final File shapeFile = m_wizardPage.getShapeFile();
     final InputDescriptor inputDescriptor = new LanduseShapeInputDescriptor( shapeFile, landuseProperty, sealingFactorProperty, drainageTypeProperty );
 
     final Feature parentFeature = m_featureList.getParentFeature();
@@ -142,15 +128,19 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         // call importer
         final LanduseImportOperation op = new LanduseImportOperation( inputDescriptor, output, delegate, ImportType.CLEAR_OUTPUT );
         final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
-        ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
+        new StatusDialog( getShell(), execute, getWindowTitle() ).open();
+        if( execute.matches( IStatus.ERROR ) )
+          return false;
 
         final File outputFile = landuseFile.getLocation().toFile();
         GmlSerializer.serializeWorkspace( outputFile, landuseWorkspace, "UTF-8" ); //$NON-NLS-1$
         landuseFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
+
+        return true;
       }
       catch( final Exception e )
       {
-        MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+        MessageDialog.openError( getShell(), getWindowTitle(), e.getLocalizedMessage() ); //$NON-NLS-1$
         return false;
       }
     }

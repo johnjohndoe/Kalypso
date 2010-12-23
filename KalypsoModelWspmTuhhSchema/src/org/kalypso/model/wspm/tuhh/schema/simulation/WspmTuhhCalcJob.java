@@ -264,7 +264,7 @@ public class WspmTuhhCalcJob implements ISimulation
     }
     catch( final IOException e )
     {
-      final String errorMsg = String.format( "Failed to copy Kalypso-1D.exe to temporary directory: %s", e.getLocalizedMessage() );
+      final String errorMsg = String.format( Messages.getString("WspmTuhhCalcJob.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
       monitor.setFinishInfo( IStatus.ERROR, errorMsg );
       return null;
     }

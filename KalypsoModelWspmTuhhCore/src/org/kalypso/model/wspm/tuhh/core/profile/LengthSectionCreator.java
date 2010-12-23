@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
@@ -93,7 +94,7 @@ public class LengthSectionCreator
     for( final IProfil profil : m_profiles )
       addProfile( profil, lsResult, precision );
 
-    return new Observation<TupleResult>( "LengthSectionResult", "Profiles Length Section", lsResult ); //$NON-NLS-1$
+    return new Observation<TupleResult>( "LengthSectionResult", Messages.getString("LengthSectionCreator_0"), lsResult ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void addProfile( final IProfil profil, final TupleResult lsResult, final Double precision )

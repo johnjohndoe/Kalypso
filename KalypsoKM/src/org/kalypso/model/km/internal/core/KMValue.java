@@ -63,7 +63,7 @@ class KMValue extends AbstractKMValue
     final double n = length / li;
 
     final double liForeland = qmForeland * dh / (slope * dqForeland);
-    if( Double.isNaN( liForeland ) )
+    if( Double.isInfinite( liForeland ) || Double.isNaN( liForeland ) )
     {
       m_kForeland = 0;
       m_nForeland = 0;

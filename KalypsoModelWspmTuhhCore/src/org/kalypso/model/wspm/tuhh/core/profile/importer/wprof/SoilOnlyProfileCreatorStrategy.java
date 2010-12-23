@@ -103,7 +103,7 @@ public class SoilOnlyProfileCreatorStrategy implements IProfileCreatorStrategy
       return new GelaendeProfileCreator( profileLabel, data, "21" ); //$NON-NLS-1$
 
     if( polygones.hasPoints( "2314" ) ) //$NON-NLS-1$
-      return new GelaendeProfileCreator( profileLabel, data, "2314" ); //$NON-NLS-2$ //$NON-NLS-1$
+      return new GelaendeProfileCreator( profileLabel, data, "2314" ); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$
 
     return new EmptyProfileCreator( data );
   }

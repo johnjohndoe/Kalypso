@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.tuhh.core.results;
 
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.gml.CalculationReibConstWspmTuhhSteadyState;
+import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypsodeegree.model.feature.Feature;
@@ -64,7 +66,17 @@ public final class WspmResultFactory
       return new WspmResultWaterNode( parent, (WspmWaterBody) feature );
 
     if( feature instanceof TuhhCalculation )
-      return new WspmResultCalculationNode( parent, (TuhhCalculation) feature );
+      return createCalculationNode( parent, (TuhhCalculation) feature );
+
+    return null;
+  }
+
+  public static final IWspmResultNode createCalculationNode( final IWspmResultNode parent, final TuhhCalculation calculation )
+  {
+    if( calculation instanceof CalculationWspmTuhhSteadyState )
+      return new WspmResultCalculationNode( parent, (CalculationWspmTuhhSteadyState) calculation );
+    if( calculation instanceof CalculationReibConstWspmTuhhSteadyState )
+      return new WspmResultPolynomeCalculationNode( parent, (CalculationReibConstWspmTuhhSteadyState) calculation );
 
     return null;
   }

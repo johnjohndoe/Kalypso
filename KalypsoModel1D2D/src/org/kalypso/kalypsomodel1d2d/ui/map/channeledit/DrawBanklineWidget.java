@@ -51,8 +51,13 @@ import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
+import org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollectorConfig;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -91,6 +96,12 @@ public class DrawBanklineWidget extends AbstractWidget
   private boolean m_edit;
 
   private LineGeometryEditor m_lineEditor = null;
+  
+  private boolean m_snappingActive = true;
+
+  private PointSnapper m_pointSnapper;
+
+  private IFEDiscretisationModel1d2d m_discModel;
 
   private boolean m_warning;
 
@@ -112,7 +123,10 @@ public class DrawBanklineWidget extends AbstractWidget
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
     super.activate( commandPoster, mapPanel );
-
+    
+    m_discModel = UtilMap.findFEModelTheme( mapPanel );
+    m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
+    
     m_edit = false;
 
     reinit();
@@ -135,8 +149,12 @@ public class DrawBanklineWidget extends AbstractWidget
   {
     if( p == null )
       return;
+    final Object newNode = checkNewNode( p );
 
-    m_currentPos = MapUtilities.transform( getMapPanel(), p );
+    if( newNode instanceof IFE1D2DNode )
+      m_currentPos = ((IFE1D2DNode) newNode).getPoint();// MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
+    else
+      m_currentPos = MapUtilities.transform( getMapPanel(), p );
 
     if( m_edit && m_bankline != null )
       m_lineEditor.moved( m_currentPos );
@@ -146,6 +164,23 @@ public class DrawBanklineWidget extends AbstractWidget
     final IMapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaintMap();
+  }
+  
+  private Object checkNewNode( final Point p )
+  {
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return null;
+
+    final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
+    IFE1D2DNode m_snapNode = null;
+
+    if( m_snappingActive )
+      m_snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
+
+    final Object newNode = m_snapNode == null ? currentPoint : m_snapNode;
+
+    return newNode;
   }
 
   /**
@@ -165,15 +200,22 @@ public class DrawBanklineWidget extends AbstractWidget
   public void leftPressed( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
+  
+    final Object newNode = checkNewNode( p );
+
+    if( newNode instanceof IFE1D2DNode )
+      m_currentPos = ((IFE1D2DNode) newNode).getPoint();//MapUtilities.retransform( mapPanel, ((IFE1D2DNode) newNode).getPoint() );
+    else
+      m_currentPos = MapUtilities.transform( mapPanel, p );
 
     /* If we have a node, take this position, else take the current one */
-    final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
+//    final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
 
     if( !m_edit )
     {
       try
       {
-        final GM_Curve curve = (GM_Curve) m_lineBuilder.addPoint( currentPos );
+        final GM_Curve curve = (GM_Curve) m_lineBuilder.addPoint( m_currentPos );
         if( curve != null )
           finishLine( curve );
       }
@@ -208,6 +250,11 @@ public class DrawBanklineWidget extends AbstractWidget
         final Color color = new Color( 255, 100, 100 );
         final Graphics2D g2 = (Graphics2D) g;
         final Stroke oldStroke = g2.getStroke();
+
+        /* paint the snap */
+        if( m_pointSnapper != null )
+          m_pointSnapper.paint( g );
+        
         final float width = 1;
         final BasicStroke basicStroke = new BasicStroke( width );
         g2.setStroke( basicStroke );

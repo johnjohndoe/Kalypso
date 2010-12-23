@@ -100,6 +100,7 @@ public class SetBasicModelDelegate extends AbstractHandler
           Messages.getString("SetBasicModelDelegate.3") ); //$NON-NLS-1$
       return null;
     }
+
     final Job job = new Job( Messages.getString("SetBasicModelDelegate.4") + calcCase.getName() ) //$NON-NLS-1$
     {
       /**
@@ -111,10 +112,7 @@ public class SetBasicModelDelegate extends AbstractHandler
         try
         {
           final ModelNature nature = (ModelNature) calcCase.getProject().getNature( ModelNature.ID );
-
-          final IStatus status = nature.setBasicModel( calcCase, monitor );
-
-          return status;
+          return nature.setBasicModel( calcCase, monitor );
         }
         catch( final CoreException e )
         {
@@ -124,15 +122,10 @@ public class SetBasicModelDelegate extends AbstractHandler
         }
       }
     };
-    // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-    job.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, Messages.getString("SetBasicModelDelegate.5"), Messages.getString("SetBasicModelDelegate.6"), false, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    job.setUser( true );
-    job.setRule( calcCase.getProject() );
-    job.schedule();
 
-//    final CopyFilesAndFoldersOperation operation = new CopyFilesAndFoldersOperation( m_window.getShell() );
-//    operation.copyResources( new IResource[]
-//    { resource }, resource.getParent() );
+    job.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, Messages.getString( "SetBasicModelDelegate.5" ), Messages.getString( "SetBasicModelDelegate.6" ), true, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    job.setUser( true );
+    job.schedule();
 
     return null;
   }

@@ -71,7 +71,6 @@ class MultiKMValue extends AbstractKMValue
   @Override
   public double getKForeland( )
   {
-
     return m_kForeland;
   }
 

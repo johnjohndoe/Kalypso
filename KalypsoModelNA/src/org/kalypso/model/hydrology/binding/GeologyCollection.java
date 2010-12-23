@@ -45,7 +45,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
@@ -84,7 +84,7 @@ public class GeologyCollection extends Feature_Impl
    * 
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
-  public Geology importGeology( final String label, final GM_MultiSurface geometry, final ImportType importType, final List<IStatus> log )
+  public Geology importGeology( final String label, final GM_MultiSurface geometry, final ImportType importType, final IStatusCollector log )
   {
     if( geometry == null )
       return null;
@@ -99,16 +99,16 @@ public class GeologyCollection extends Feature_Impl
         {
           m_geologyMembers.remove( existingMember );
           final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.GeologyCollection.1", existingMember.getId() ); //$NON-NLS-1$
-          log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+          log.add( IStatus.WARNING, message );
         }
-          break;
+        break;
 
         case IGNORE_INTERSECTING:
         {
           final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.GeologyCollection.2", label ); //$NON-NLS-1$
-          log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+          log.add( IStatus.WARNING, message );
         }
-          return null;
+        return null;
 
         case INTERSECT:
         {
@@ -118,13 +118,13 @@ public class GeologyCollection extends Feature_Impl
           {
             existingMember.setGeometry( difference );
             final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.GeologyCollection.3", existingMember.getId(), label ); //$NON-NLS-1$
-            log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
+            log.add( IStatus.INFO, message, null );
           }
           else
           {
             m_geologyMembers.remove( existingMember );
             final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.GeologyCollection.4", existingMember.getId(), label ); //$NON-NLS-1$
-            log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
+            log.add( IStatus.INFO, message, null );
           }
         }
 

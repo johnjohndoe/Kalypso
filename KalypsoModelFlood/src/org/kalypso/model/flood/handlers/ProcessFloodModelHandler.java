@@ -67,7 +67,6 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.binding.IFloodModel;
@@ -213,7 +212,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       return Status.OK_STATUS;
 
     final IStatus[] children = results.toArray( new IStatus[results.size()] );
-    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, 0, children, "Failed to delete existing results", null );
+    return new MultiStatus( KalypsoModelFloodPlugin.PLUGIN_ID, 0, children, Messages.getString("ProcessFloodModelHandler.0"), null ); //$NON-NLS-1$
   }
 
   /** decision dialog for user, if he wants to overwrite existing data */
@@ -280,8 +279,9 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
               }
               catch( final Exception e )
               {
-                showErrorDialog( shell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.14" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
-                return StatusUtilities.createErrorStatus( e.getLocalizedMessage(), new Object[] {} );
+                final String message = Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.14" ) + e.getLocalizedMessage();
+                showErrorDialog( shell, message ); //$NON-NLS-1$
+                return new Status( IStatus.ERROR, KalypsoModelFloodPlugin.PLUGIN_ID, message, e );
               }
             }
             showInfoDialog( shell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.15" ) ); //$NON-NLS-1$
@@ -290,7 +290,8 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
         }
         catch( final Exception e )
         {
-          return StatusUtilities.createErrorStatus( e.getLocalizedMessage(), new Object[] {} );
+          final String message = "Failed to process flood model";
+          return new Status( IStatus.ERROR, KalypsoModelFloodPlugin.PLUGIN_ID, message, e );
         }
         return status;
       }

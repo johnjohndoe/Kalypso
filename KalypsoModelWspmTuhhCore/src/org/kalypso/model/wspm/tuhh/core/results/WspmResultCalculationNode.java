@@ -46,7 +46,6 @@ import java.util.Collection;
 
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -56,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.resources.FileFilterVisitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -63,11 +63,11 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Gernot Belger
  */
-public class WspmResultCalculationNode extends AbstractWspmResultNode
+public class WspmResultCalculationNode extends AbstractWspmResultNode implements ITuhhCalculationNode
 {
-  private final TuhhCalculation m_calculation;
+  private final CalculationWspmTuhhSteadyState m_calculation;
 
-  public WspmResultCalculationNode( final IWspmResultNode parent, final TuhhCalculation calculation )
+  public WspmResultCalculationNode( final IWspmResultNode parent, final CalculationWspmTuhhSteadyState calculation )
   {
     super( parent );
 
@@ -82,7 +82,7 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode
   {
     final Collection<IWspmResultNode> result = new ArrayList<IWspmResultNode>();
 
-    final IFolder resultFolder = findResultFolder();
+    final IFolder resultFolder = findResultFolder( m_calculation );
     if( resultFolder != null )
     {
       try
@@ -91,11 +91,10 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode
         final FileFilterVisitor visitor = new FileFilterVisitor( filter );
         resultFolder.accept( visitor );
         final IFile[] files = visitor.getFiles();
-        for( final IFile lsFile : files )
+        for( final IFile file : files )
         {
-          final IContainer historyFolder = lsFile.getParent().getParent();
-          final IWspmResultNode node = new WspmResultContainer( this, historyFolder );
-          result.add( node );
+          final String label = file.getParent().getParent().getName();
+          result.add( new WspmResultContainer( this, file, label ) );
         }
       }
       catch( final CoreException e )
@@ -107,9 +106,9 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode
     return result.toArray( new IWspmResultNode[result.size()] );
   }
 
-  private IFolder findResultFolder( )
+  public static IFolder findResultFolder( final TuhhCalculation calculation )
   {
-    final GMLWorkspace workspace = m_calculation.getWorkspace();
+    final GMLWorkspace workspace = calculation.getWorkspace();
     if( workspace == null )
       return null;
 
@@ -117,7 +116,7 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode
     if( project == null )
       return null;
 
-    final IPath resultPath = m_calculation.getResultFolder();
+    final IPath resultPath = calculation.getResultFolder();
     return project.getFolder( resultPath );
   }
 
@@ -149,7 +148,8 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode
     return m_calculation;
   }
 
-  public TuhhCalculation getCalculation( )
+  @Override
+  public CalculationWspmTuhhSteadyState getCalculation( )
   {
     return m_calculation;
   }

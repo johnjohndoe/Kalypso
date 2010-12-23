@@ -80,7 +80,6 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class SinuositaetPanel extends AbstractProfilView
 {
-
   private FormToolkit m_toolkit = null;
 
   protected Composite m_propPanel;
@@ -151,7 +150,7 @@ public class SinuositaetPanel extends AbstractProfilView
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        SINUOSITAET_KENNUNG kenn = (SINUOSITAET_KENNUNG) selection.getFirstElement();
+        final SINUOSITAET_KENNUNG kenn = (SINUOSITAET_KENNUNG) selection.getFirstElement();
         if( kenn == null )
           return;
         setValueFor( cmpKen, kenn.name() );
@@ -172,7 +171,7 @@ public class SinuositaetPanel extends AbstractProfilView
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        SINUOSITAET_GERINNE_ART gerA = (SINUOSITAET_GERINNE_ART) selection.getFirstElement();
+        final SINUOSITAET_GERINNE_ART gerA = (SINUOSITAET_GERINNE_ART) selection.getFirstElement();
         if( gerA == null )
           return;
         setValueFor( cmpGer, gerA.name() );
@@ -190,7 +189,7 @@ public class SinuositaetPanel extends AbstractProfilView
     {
 
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         if( e.widget instanceof Text && NumberUtils.isDouble( ((Text) e.widget).getText() ) )
         {
@@ -200,7 +199,7 @@ public class SinuositaetPanel extends AbstractProfilView
       }
 
       @Override
-      public void focusGained( FocusEvent e )
+      public void focusGained( final FocusEvent e )
       {
         if( e.widget instanceof Text )
           ((Text) e.widget).selectAll();
@@ -217,7 +216,7 @@ public class SinuositaetPanel extends AbstractProfilView
     {
 
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         if( e.widget instanceof Text && NumberUtils.isDouble( ((Text) e.widget).getText() ) )
         {
@@ -227,7 +226,7 @@ public class SinuositaetPanel extends AbstractProfilView
       }
 
       @Override
-      public void focusGained( FocusEvent e )
+      public void focusGained( final FocusEvent e )
       {
         if( e.widget instanceof Text )
           ((Text) e.widget).selectAll();

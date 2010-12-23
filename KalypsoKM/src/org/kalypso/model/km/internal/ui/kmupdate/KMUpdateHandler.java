@@ -69,7 +69,7 @@ public class KMUpdateHandler extends AbstractHandler
 
     final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
     if( !(selection instanceof IFeatureSelection) )
-      throw new ExecutionException( "This handler only works on features" );
+      throw new ExecutionException( "This handler only works on features" ); //$NON-NLS-1$
 
     final IFeatureSelection FeatureSelection = (IFeatureSelection) selection;
 
@@ -77,7 +77,7 @@ public class KMUpdateHandler extends AbstractHandler
     final CommandableWorkspace workspace = FeatureSelection.getWorkspace( feature );
 
     final KMUpdateWizard kmWizard = new KMUpdateWizard( workspace, FeatureSelection );
-    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KMPlugin.getDefault(), "kmUpdateAction" );
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KMPlugin.getDefault(), "kmUpdateAction" ); //$NON-NLS-1$
     kmWizard.setDialogSettings( dialogSettings );
 
     final WizardDialog2 dialog = new WizardDialog2( shell, kmWizard );
