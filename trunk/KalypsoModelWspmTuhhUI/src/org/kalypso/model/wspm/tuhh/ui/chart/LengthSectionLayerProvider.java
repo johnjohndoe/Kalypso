@@ -66,31 +66,31 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
   {
     final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null ); //$NON-NLS-1$
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK.equals( targetComponentName ) )
-      return new LengthSectionBridgeLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new LengthSectionBridgeLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmConstants.LENGTH_SECTION_THEME_BUILDINGS.equals( targetComponentName ) )
     {
       return new LengthSectionBuildingTheme( //
-          new IChartLayer[] {
-              new LengthSectionBridgeLayer( getDataContainer( getParameterContainer(), IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK ), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ), //$NON-NLS-1$ //$NON-NLS-2$
-              new LengthSectionWeirLayer(  getDataContainer( getParameterContainer(), IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK ), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ), //$NON-NLS-1$ //$NON-NLS-2$
-              new LengthSectionCulvertLayer( getDataContainer( getParameterContainer(), IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ), //$NON-NLS-1$ //$NON-NLS-2$
-          } );
+      new IChartLayer[] {
+          new LengthSectionBridgeLayer( this, getDataContainer( getParameterContainer(), IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK ), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ), //$NON-NLS-1$ //$NON-NLS-2$
+          new LengthSectionWeirLayer( this, getDataContainer( getParameterContainer(), IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK ), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ), //$NON-NLS-1$ //$NON-NLS-2$
+          new LengthSectionCulvertLayer( this, getDataContainer( getParameterContainer(), IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ), //$NON-NLS-1$ //$NON-NLS-2$
+      } );
     }
 
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK.equals( targetComponentName ) )
-      return new LengthSectionWeirLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new LengthSectionWeirLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN.equals( targetComponentName ) )
-      return new LengthSectionCulvertLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new LengthSectionCulvertLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_RUNOFF.equals( targetComponentName ) )
-      return new LengthSectionRunOffLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new LengthSectionRunOffLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND.equals( targetComponentName ) )
-      return new LengthSectionSoilLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new LengthSectionSoilLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    return new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new TupleResultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -104,7 +104,6 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
 
   private TupleResultDomainValueData< ? , ? > getDataContainer( final IParameterContainer pc, final String targetComponentId )
   {
-
     final String href = pc.getParameterValue( "href", null ); //$NON-NLS-1$
     final String observationId = pc.getParameterValue( "observationId", null ); //$NON-NLS-1$
     final String domainComponentName = pc.getParameterValue( "domainComponentId", null ); //$NON-NLS-1$

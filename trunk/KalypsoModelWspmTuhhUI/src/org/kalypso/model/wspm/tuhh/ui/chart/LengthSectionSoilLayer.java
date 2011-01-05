@@ -8,6 +8,7 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
@@ -17,10 +18,10 @@ public class LengthSectionSoilLayer extends TupleResultLineLayer
    * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTitle()
    */
 
-  public LengthSectionSoilLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public LengthSectionSoilLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
 
-    super( data, lineStyle, pointStyle );
+    super( provider, data, lineStyle, pointStyle );
   }
 
   @Override

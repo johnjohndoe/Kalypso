@@ -12,6 +12,7 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -26,14 +27,14 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
    * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTitle()
    */
 
-  public LengthSectionWeirLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public LengthSectionWeirLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( data, lineStyle, pointStyle );
+    super( provider, data, lineStyle, pointStyle );
 
   }
 
   @Override
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     if( !isVisible() )
       return null;

@@ -64,6 +64,8 @@ public class KingLayer extends AbstractChartLayer
 
   public KingLayer( final KingDataContainer data )
   {
+    super( null );
+
     m_data = data;
   }
 
