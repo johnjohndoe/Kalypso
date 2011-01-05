@@ -56,7 +56,8 @@ import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
  */
 public class LengthSectionBuildingTheme extends AbstractExpandableLayer implements ITooltipChartLayer
 {
-  private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener(){
+  private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener()
+  {
     /**
      * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
      */
@@ -73,29 +74,35 @@ public class LengthSectionBuildingTheme extends AbstractExpandableLayer implemen
     public void onLayerVisibilityChanged( final IChartLayer layer )
     {
       fireLayerContentChanged();
-    }};
+    }
+  };
+
   /**
    * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
    */
   @Override
   public String getTitle( )
   {
-    return Messages.getString("LengthSectionBuildingTheme_0"); //$NON-NLS-1$
+    return Messages.getString( "LengthSectionBuildingTheme_0" ); //$NON-NLS-1$
   }
 
   public LengthSectionBuildingTheme( final IChartLayer[] layers )
   {
-    getLayerManager().addListener(m_eventListener );
+    super( null );
+
+    getLayerManager().addListener( m_eventListener );
     for( final IChartLayer layer : layers )
     {
       layer.setTitle( null );// erzwingt das abfragen des Componentnamens
       getLayerManager().addLayer( layer );
     }
   }
+
   protected final void fireLayerContentChanged( )
   {
     getEventHandler().fireLayerContentChanged( this );
   }
+
   @Override
   protected ILegendEntry[] createLegendEntries( )
   {
@@ -107,7 +114,7 @@ public class LengthSectionBuildingTheme extends AbstractExpandableLayer implemen
    * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     final IChartLayer[] layers = getLayerManager().getLayers();
     for( int i = layers.length - 1; i > -1; i-- ) // reverse layers, last paint will hover first

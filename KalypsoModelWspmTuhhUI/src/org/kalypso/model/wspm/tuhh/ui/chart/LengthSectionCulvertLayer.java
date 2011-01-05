@@ -14,6 +14,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -26,17 +27,16 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
    * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTitle()
    */
 
-  public LengthSectionCulvertLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public LengthSectionCulvertLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-
-    super( data, lineStyle, pointStyle );
+    super( provider, data, lineStyle, pointStyle );
   }
 
   /**
    * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(final IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     final IObservation<TupleResult> obs = m_data.getObservation();
     return getDataRange( obs == null ? null : obs.getResult(), IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_GROUND );

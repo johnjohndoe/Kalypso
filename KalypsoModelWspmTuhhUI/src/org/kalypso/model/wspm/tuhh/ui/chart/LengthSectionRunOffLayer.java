@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -19,9 +20,9 @@ public class LengthSectionRunOffLayer extends TupleResultLineLayer
    * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTitle()
    */
 
-  public LengthSectionRunOffLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public LengthSectionRunOffLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( data, lineStyle, pointStyle );
+    super( provider, data, lineStyle, pointStyle );
 
   }
 
@@ -59,9 +60,9 @@ public class LengthSectionRunOffLayer extends TupleResultLineLayer
         {
           final Point screen = getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValue ), dopTarget.logicalToNumeric( targetValue ) );
           path.add( screen );
-          if(i < domainValues.length-1 && ((Number)targetValue).doubleValue()!=((Number)targetValues[i+1]).doubleValue())
+          if( i < domainValues.length - 1 && ((Number) targetValue).doubleValue() != ((Number) targetValues[i + 1]).doubleValue() )
           {
-            path.add(getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValues[i+1] ), dopTarget.logicalToNumeric( targetValue ) ));
+            path.add( getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValues[i + 1] ), dopTarget.logicalToNumeric( targetValue ) ) );
           }
         }
       }
