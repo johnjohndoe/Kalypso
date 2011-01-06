@@ -67,6 +67,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.util.BufferedAndOtherOutputStream;
 import org.kalypso.simulation.core.util.LogHelper;
+import org.kalypso.wspwin.core.WspWinHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -223,7 +224,8 @@ public class WspmTuhhCalcJob implements ISimulation
       if( log.checkCanceled() )
         return;
 
-      final WspmTuhhPostProcessor postProcessor = new WspmTuhhPostProcessor( calculation, tmpDir, dathDir, epsThinning, ovwMapURL, resultEater, log );
+      final File profDir = WspWinHelper.getProfDir( tmpDir );
+      final WspmTuhhPostProcessor postProcessor = new WspmTuhhPostProcessor( calculation, tmpDir, dathDir, profDir, epsThinning, ovwMapURL, resultEater, log );
       postProcessor.run( monitor );
     }
     finally

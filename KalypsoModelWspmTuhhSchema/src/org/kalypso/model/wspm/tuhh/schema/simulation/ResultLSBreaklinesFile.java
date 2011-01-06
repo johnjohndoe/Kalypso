@@ -53,9 +53,27 @@ public class ResultLSBreaklinesFile extends AbstractResultLSFile
 
   public ResultLSBreaklinesFile( final File outDir, final String runoffName, final BreakLinesWriter breakLines )
   {
-    super( outDir, "Bruchkanten" + runoffName + ".gml", "Breaklines" ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( outDir, runoffName );
 
     m_breakLines = breakLines;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getLogMessage()
+   */
+  @Override
+  public String getTitle( )
+  {
+    return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.28" ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getFilename()
+   */
+  @Override
+  public String getFilename( )
+  {
+    return "Bruchkanten" + getRunoffName() + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -65,15 +83,6 @@ public class ResultLSBreaklinesFile extends AbstractResultLSFile
   public String getResultID( )
   {
     return "Bruchkanten"; //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getLogMessage()
-   */
-  @Override
-  public String getLogMessage( )
-  {
-    return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.28" ); //$NON-NLS-1$ 
   }
 
   /**

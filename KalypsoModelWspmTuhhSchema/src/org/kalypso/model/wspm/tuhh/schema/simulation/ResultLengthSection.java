@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -86,18 +87,6 @@ public class ResultLengthSection
 
   private final String m_epsThinning;
 
-  private File m_tableFile;
-
-  private File m_breaklineFile;
-
-  private File m_tinFile;
-
-  private File m_tinSldFile;
-
-  private File m_boundaryFile;
-
-  private File m_waterlevelFile;
-
   private IStatus m_result;
 
   private final File m_dataDir;
@@ -110,13 +99,15 @@ public class ResultLengthSection
 
   private final BigDecimal m_runoff;
 
+  private final URL m_ovwMapURL;
 
-  public ResultLengthSection( final BigDecimal runoff, final File outDir, final TuhhCalculation calculation, final String epsThinning )
+  public ResultLengthSection( final BigDecimal runoff, final File outDir, final TuhhCalculation calculation, final String epsThinning, final URL ovwMapURL )
   {
     m_runoff = runoff;
     m_outDir = outDir;
     m_calculation = calculation;
     m_epsThinning = epsThinning;
+    m_ovwMapURL = ovwMapURL;
 
     m_dataDir = new File( m_outDir, "Daten" ); //$NON-NLS-1$
   }
@@ -178,52 +169,17 @@ public class ResultLengthSection
     final String dataFilename = m_gmlFilePattern.replaceAll( PATTERN_RUNOFF, runoffName );
 
     /* Create result file handlers */
-    // FIXME create a handler for each file type
     addResultFile( new ResultLSGmlFile( m_dataDir, dataFilename, lengthSectionWorkspace ) );
     addResultFile( new ResultLSChartFile( m_outDir, runoffName, isDirectionUpstreams, dataFilename, title ) );
     addResultFile( new ResultLSTableFile( m_outDir, runoffName, dataFilename ) );
     addResultFile( new ResultLSBreaklinesFile( m_outDir, runoffName, breakLines ) );
     addResultFile( new ResultLSTinFile( m_outDir, runoffName, breakLines ) );
     addResultFile( new ResultLSTinSldFile( m_outDir, runoffName, breakLines ) );
+    addResultFile( new ResultLSModelBoundaryFile( m_outDir, runoffName, result, reachProfileSegments ) );
+    addResultFile( new ResultLSWaterlevelFile( m_outDir, runoffName, result, reachProfileSegments ) );
+    addResultFile( new ResultLSOverviewMapFile( m_outDir, reach, m_ovwMapURL ) );
 
     return writeResultFiles();
-
-    // FIXME
-//    final String boundaryFilename = "Modellgrenzen" + runoffName + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
-//    final String waterlevelFilename = "Überschwemmungslinie" + runoffName + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
-//
-// m_boundaryFile = new File( m_dataDir, boundaryFilename );
-// m_waterlevelFile = new File( m_dataDir, waterlevelFilename );
-//
-// //
-// // Model-Boundaries
-// //
-// try
-// {
-// BreakLinesHelper.createModelBoundary( reachProfileSegments, result,
-// IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL,
-// m_boundaryFile, false );
-// }
-// catch( final Exception e )
-// {
-//      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.ResultLengthSection.3" ) ) ); //$NON-NLS-1$
-// }
-//
-// //
-// // Waterlevel
-// //
-// try
-// {
-// BreakLinesHelper.createModelBoundary( reachProfileSegments, result,
-// IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL,
-// m_waterlevelFile, true );
-// }
-// catch( final Exception e )
-// {
-//      multiStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.ResultLengthSection.4" ) ) ); //$NON-NLS-1$
-// }
-//
-// return multiStatus;
   }
 
   private IStatus writeResultFiles( )
@@ -237,7 +193,7 @@ public class ResultLengthSection
         statusCollector.add( status );
     }
 
-    return statusCollector.asMultiStatusOrOK( "Failed to write result files" );
+    return statusCollector.asMultiStatusOrOK( Messages.getString("ResultLengthSection.3") ); //$NON-NLS-1$
   }
 
   private void addResultFile( final IResultLSFile resultFile )
@@ -264,36 +220,6 @@ public class ResultLengthSection
     rootFeature.setDescription( description );
 
     return obsWks;
-  }
-
-  public File getTableFile( )
-  {
-    return m_tableFile;
-  }
-
-  public File getBreaklineFile( )
-  {
-    return m_breaklineFile;
-  }
-
-  public File getTinFile( )
-  {
-    return m_tinFile;
-  }
-
-  public File getTinSldFile( )
-  {
-    return m_tinSldFile;
-  }
-
-  public File getBoundaryFile( )
-  {
-    return m_boundaryFile;
-  }
-
-  public File getWaterlevelFile( )
-  {
-    return m_waterlevelFile;
   }
 
   public IStatus getResult( )

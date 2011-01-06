@@ -118,7 +118,7 @@ public class BreakLinesWriter implements IWspmConstants
     if( m_segments.length == 0 )
       return;
 
-    m_triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPMCOMMONS, "TriangulatedSurfaceFeature" ), null, null );
+    m_triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPMCOMMONS, "TriangulatedSurfaceFeature" ), null, null ); //$NON-NLS-1$
     final String defaultCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( defaultCrs );
     final Feature triangleFeature = m_triangleWorkspace.getRootFeature();
@@ -130,7 +130,7 @@ public class BreakLinesWriter implements IWspmConstants
     triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "parameter" ), "h" ); //$NON-NLS-1$ //$NON-NLS-2$
     triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "date" ), DateUtilities.toXMLGregorianCalendar( new Date() ) ); //$NON-NLS-1$
 
-    m_breaklinesWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), null, null );
+    m_breaklinesWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), null, null ); //$NON-NLS-1$
     final Feature rootFeature = m_breaklinesWorkspace.getRootFeature();
 
     final String gmlVersion = m_breaklinesWorkspace.getGMLSchema().getGMLVersion();

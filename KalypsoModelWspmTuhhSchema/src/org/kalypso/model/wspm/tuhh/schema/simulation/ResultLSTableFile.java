@@ -56,8 +56,26 @@ public class ResultLSTableFile extends AbstractResultLSFile
 
   public ResultLSTableFile( final File outDir, final String runoffName, final String dataFilename )
   {
-    super( outDir, "Tabelle" + runoffName + ".gft", "Table" ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( outDir, runoffName );
     m_dataFilename = dataFilename;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getFilename()
+   */
+  @Override
+  public String getFilename( )
+  {
+    return "Tabelle" + getRunoffName() + ".gft"; //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+    return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.27" ); //$NON-NLS-1$ 
   }
 
   /**
@@ -67,15 +85,6 @@ public class ResultLSTableFile extends AbstractResultLSFile
   public String getResultID( )
   {
     return "LengthSectionTab"; //$NON-NLS-1$ 
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getLogMessage()
-   */
-  @Override
-  public String getLogMessage( )
-  {
-    return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.27" ); //$NON-NLS-1$ 
   }
 
   /**

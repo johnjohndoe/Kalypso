@@ -51,6 +51,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.math.NumberRange;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizerUtils;
@@ -72,9 +73,27 @@ public class ResultLSTinSldFile extends AbstractResultLSFile
 
   public ResultLSTinSldFile( final File outDir, final String runoffName, final BreakLinesWriter breakLines )
   {
-    super( outDir, "wspTin" + runoffName + ".sld", "TIN Styling" ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( outDir, runoffName );
 
     m_breakLines = breakLines;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+    return Messages.getString("ResultLSTinSldFile_0"); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getFilename()
+   */
+  @Override
+  public String getFilename( )
+  {
+    return "wspTin" + getRunoffName() + ".sld"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -84,15 +103,6 @@ public class ResultLSTinSldFile extends AbstractResultLSFile
   public String getResultID( )
   {
     return "WspTinSld"; //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getLogMessage()
-   */
-  @Override
-  public String getLogMessage( )
-  {
-    return null;
   }
 
   /**

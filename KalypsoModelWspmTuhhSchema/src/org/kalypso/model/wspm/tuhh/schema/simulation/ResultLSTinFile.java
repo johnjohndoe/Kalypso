@@ -54,9 +54,27 @@ public class ResultLSTinFile extends AbstractResultLSFile
 
   public ResultLSTinFile( final File outDir, final String runoffName, final BreakLinesWriter breakLines )
   {
-    super( outDir, "wspTin" + runoffName + ".gml", "TIN" ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( outDir, runoffName );
 
     m_breakLines = breakLines;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+    return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.29" ); //$NON-NLS-1$ 
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getFilename()
+   */
+  @Override
+  public String getFilename( )
+  {
+    return "wspTin" + getRunoffName() + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -68,14 +86,6 @@ public class ResultLSTinFile extends AbstractResultLSFile
     return "WspTin"; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getLogMessage()
-   */
-  @Override
-  public String getLogMessage( )
-  {
-    return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.29" ); //$NON-NLS-1$ 
-  }
 
   /**
    * @see org.kalypso.model.wspm.tuhh.schema.simulation.AbstractResultLSFile#doWrite(java.io.File)
