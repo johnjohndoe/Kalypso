@@ -13539,4 +13539,158 @@ an, um ein externes Bild zu referenzieren.</gml:description>
    </tuhh:runOffIntervalMember>
   </tuhh:CalculationWspmTuhhSteadyState>
  </wspm:calculationMember>
+ <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
+  <tuhh:CalculationWspmTuhhSteadyState gml:id="CalculationWspmTuhhSteadyState1294319606584103">
+   <gml:name>Bordvollberechnung - stationär gleichförmig</gml:name>
+   <wspm:calcCreationMember>
+    <wspm:CalcCreation gml:id="CalcCreation1294319606584809">
+     <wspm:user>BCE</wspm:user>
+     <wspm:date>2011-01-06T13:13:51.000Z</wspm:date>
+    </wspm:CalcCreation>
+   </wspm:calcCreationMember>
+   <tuhh:fliessgesetz>DARCY_WEISBACH_MIT_FORMEINFLUSS</tuhh:fliessgesetz>
+   <tuhh:mode>BF_UNIFORM</tuhh:mode>
+   <tuhh:reachWspmTuhhSteadyStateMember xlink:href="#ReachWspmTuhhSteadyState1211993884481105"/>
+   <tuhh:subReachDefinitionMember>
+    <tuhh:SubReachDefinition gml:id="SubReachDefinition1294319606584399">
+     <tuhh:startStation>0</tuhh:startStation>
+     <tuhh:endStation>50</tuhh:endStation>
+    </tuhh:SubReachDefinition>
+   </tuhh:subReachDefinitionMember>
+   <tuhh:waterlevelParameterMember>
+    <tuhh:WaterlevelParameter gml:id="WaterlevelParameter1294319606584227">
+     <tuhh:exeVersion>_2_2_1_0</tuhh:exeVersion>
+     <tuhh:wspIteration>SIMPLE</tuhh:wspIteration>
+     <tuhh:verzoegerungsverlust>BJOERNSEN</tuhh:verzoegerungsverlust>
+     <tuhh:reibungsverlust>TRAPEZ_FORMULA</tuhh:reibungsverlust>
+     <tuhh:specialOptionsMember>
+      <tuhh:SpecialOptions gml:id="SpecialOptions1294319606584454">
+       <tuhh:doCalcBridges>true</tuhh:doCalcBridges>
+       <tuhh:doCalcBarrages>true</tuhh:doCalcBarrages>
+       <tuhh:useExtremeRoughness>false</tuhh:useExtremeRoughness>
+      </tuhh:SpecialOptions>
+     </tuhh:specialOptionsMember>
+    </tuhh:WaterlevelParameter>
+   </tuhh:waterlevelParameterMember>
+   <tuhh:startConditionMember>
+    <tuhh:StartCondition gml:id="StartCondition12943196065841023">
+     <tuhh:kind>CRITICAL_WATER_DEPTH</tuhh:kind>
+     <tuhh:waterlevel/>
+     <tuhh:bottomSlope/>
+    </tuhh:StartCondition>
+   </tuhh:startConditionMember>
+   <tuhh:runOffEventMember/>
+   <tuhh:runOffIntervalMember>
+    <tuhh:RunOffInterval gml:id="RunOffInterval1294319606584614">
+     <tuhh:minimalRunOff/>
+     <tuhh:runOffStep/>
+     <tuhh:maximalRunOff/>
+    </tuhh:RunOffInterval>
+   </tuhh:runOffIntervalMember>
+  </tuhh:CalculationWspmTuhhSteadyState>
+ </wspm:calculationMember>
+ <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
+  <tuhh:CalculationWspmTuhhSteadyState gml:id="CalculationWspmTuhhSteadyState1294320148799663">
+   <gml:name>Bordvollberechnung  - stationär ungleichförmig</gml:name>
+   <wspm:calcCreationMember>
+    <wspm:CalcCreation gml:id="CalcCreation129432014879928">
+     <wspm:user>BCE</wspm:user>
+     <wspm:date>2011-01-06T13:22:47.301Z</wspm:date>
+    </wspm:CalcCreation>
+   </wspm:calcCreationMember>
+   <tuhh:fliessgesetz>DARCY_WEISBACH_MIT_FORMEINFLUSS</tuhh:fliessgesetz>
+   <tuhh:mode>BF_NON_UNIFORM</tuhh:mode>
+   <tuhh:reachWspmTuhhSteadyStateMember xlink:href="#ReachWspmTuhhSteadyState1211993884481105"/>
+   <tuhh:subReachDefinitionMember>
+    <tuhh:SubReachDefinition gml:id="SubReachDefinition1294320148799265">
+     <tuhh:startStation>0</tuhh:startStation>
+     <tuhh:endStation>50</tuhh:endStation>
+    </tuhh:SubReachDefinition>
+   </tuhh:subReachDefinitionMember>
+   <tuhh:waterlevelParameterMember>
+    <tuhh:WaterlevelParameter gml:id="WaterlevelParameter12943201487997">
+     <tuhh:exeVersion>_2_2_1_0</tuhh:exeVersion>
+     <tuhh:wspIteration>SIMPLE</tuhh:wspIteration>
+     <tuhh:verzoegerungsverlust>BJOERNSEN</tuhh:verzoegerungsverlust>
+     <tuhh:reibungsverlust>TRAPEZ_FORMULA</tuhh:reibungsverlust>
+     <tuhh:specialOptionsMember>
+      <tuhh:SpecialOptions gml:id="SpecialOptions129432014879979">
+       <tuhh:doCalcBridges>true</tuhh:doCalcBridges>
+       <tuhh:doCalcBarrages>true</tuhh:doCalcBarrages>
+       <tuhh:useExtremeRoughness>false</tuhh:useExtremeRoughness>
+      </tuhh:SpecialOptions>
+     </tuhh:specialOptionsMember>
+    </tuhh:WaterlevelParameter>
+   </tuhh:waterlevelParameterMember>
+   <tuhh:startConditionMember>
+    <tuhh:StartCondition gml:id="StartCondition1294320148799365">
+     <tuhh:kind>UNIFORM_BOTTOM_SLOPE</tuhh:kind>
+     <tuhh:waterlevel/>
+     <tuhh:bottomSlope>0.001</tuhh:bottomSlope>
+    </tuhh:StartCondition>
+   </tuhh:startConditionMember>
+   <tuhh:runOffEventMember/>
+   <tuhh:runOffIntervalMember>
+    <tuhh:RunOffInterval gml:id="RunOffInterval1294320148799895">
+     <tuhh:minimalRunOff>10.0</tuhh:minimalRunOff>
+     <tuhh:runOffStep>20.0</tuhh:runOffStep>
+     <tuhh:maximalRunOff>400.0</tuhh:maximalRunOff>
+    </tuhh:RunOffInterval>
+   </tuhh:runOffIntervalMember>
+  </tuhh:CalculationWspmTuhhSteadyState>
+ </wspm:calculationMember>
+ <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
+  <tuhh:CalculationReibConstWspmTuhhSteadyState gml:id="CalculationReibConstWspmTuhhSteadyState1294322157365683">
+   <gml:name>Polynomermittlung</gml:name>
+   <wspm:calcCreationMember>
+    <wspm:CalcCreation gml:id="CalcCreation129432215738041">
+     <wspm:user>BCE</wspm:user>
+     <wspm:date>2011-01-06T13:56:18.050Z</wspm:date>
+    </wspm:CalcCreation>
+   </wspm:calcCreationMember>
+   <tuhh:reachWspmTuhhSteadyStateMember xlink:href="#ReachWspmTuhhSteadyState1211993884481105"/>
+   <tuhh:subReachDefinitionMember>
+    <tuhh:SubReachDefinition gml:id="SubReachDefinition1294322157380461">
+     <tuhh:startStation>0</tuhh:startStation>
+     <tuhh:endStation>50</tuhh:endStation>
+    </tuhh:SubReachDefinition>
+   </tuhh:subReachDefinitionMember>
+   <tuhh:waterlevelParameterMember>
+    <tuhh:WaterlevelParameter gml:id="WaterlevelParameter1294322157380428">
+     <tuhh:exeVersion>_2_2_1_0</tuhh:exeVersion>
+     <tuhh:wspIteration>SIMPLE</tuhh:wspIteration>
+     <tuhh:verzoegerungsverlust>BJOERNSEN</tuhh:verzoegerungsverlust>
+     <tuhh:reibungsverlust>TRAPEZ_FORMULA</tuhh:reibungsverlust>
+     <tuhh:specialOptionsMember>
+      <tuhh:SpecialOptions gml:id="SpecialOptions1294322157380728">
+       <tuhh:doCalcBridges>true</tuhh:doCalcBridges>
+       <tuhh:doCalcBarrages>true</tuhh:doCalcBarrages>
+       <tuhh:useExtremeRoughness>false</tuhh:useExtremeRoughness>
+      </tuhh:SpecialOptions>
+     </tuhh:specialOptionsMember>
+    </tuhh:WaterlevelParameter>
+   </tuhh:waterlevelParameterMember>
+   <tuhh:bottomSlope>0.001</tuhh:bottomSlope>
+   <tuhh:runOffIntervalMember>
+    <tuhh:RunOffInterval gml:id="RunOffInterval129432215738059">
+     <tuhh:minimalRunOff>10.0</tuhh:minimalRunOff>
+     <tuhh:runOffStep>20.0</tuhh:runOffStep>
+     <tuhh:maximalRunOff>400.0</tuhh:maximalRunOff>
+    </tuhh:RunOffInterval>
+   </tuhh:runOffIntervalMember>
+   <tuhh:calcPolynomesMember>
+    <tuhh:CalcPolynomes gml:id="CalcPolynomes1294322157380183">
+     <tuhh:degree>4</tuhh:degree>
+     <tuhh:trippleIt>false</tuhh:trippleIt>
+     <tuhh:trippleMode>bordvoll</tuhh:trippleMode>
+     <tuhh:runoffSlope>2.0000</tuhh:runoffSlope>
+     <tuhh:areaSlope>2.0000</tuhh:areaSlope>
+     <tuhh:alphaSlope>2.0000</tuhh:alphaSlope>
+     <tuhh:weightSplinePoint>1.0</tuhh:weightSplinePoint>
+     <tuhh:ignoreOutlier>true</tuhh:ignoreOutlier>
+     <tuhh:alphaLimit>1.40</tuhh:alphaLimit>
+    </tuhh:CalcPolynomes>
+   </tuhh:calcPolynomesMember>
+  </tuhh:CalculationReibConstWspmTuhhSteadyState>
+ </wspm:calculationMember>
 </WspmProject>
