@@ -48,8 +48,9 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
+ * Calculates froude from other columns.
+ * 
  * @author Gernot Belger
- *
  */
 public class LengthSectionColumnFroude implements ILengthSectionColumn
 {
