@@ -63,7 +63,7 @@ import org.kalypso.model.wspm.ui.action.ProfileSelection;
  */
 public class CsvExportProfilesWizard extends ExportProfilesWizard
 {
-  private static final String FILTER_LABEL = Messages.getString("CsvExportProfilesWizard_0"); //$NON-NLS-1$
+  private static final String FILTER_LABEL = Messages.getString( "CsvExportProfilesWizard_0" ); //$NON-NLS-1$
 
   private static final String EXTENSION = "csv"; //$NON-NLS-1$
 

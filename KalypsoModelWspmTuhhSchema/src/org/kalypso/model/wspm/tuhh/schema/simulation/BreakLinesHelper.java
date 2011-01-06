@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -53,12 +52,7 @@ import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.math.NumberRange;
-import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -66,13 +60,10 @@ import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -81,14 +72,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GMLConstants;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Monika Thül
@@ -100,140 +86,21 @@ public class BreakLinesHelper implements IWspmConstants
     // don't instantiate
   }
 
-  /**
-   * Triangulates the given profile (segments) suing the indicated waterlevel as height.
-   * 
-   * @return The min/max range of the waterlevel. <code>null</code>, if no triangulation has been created.
-   */
-  public static NumberRange createBreaklines( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, final Double epsThinning, final File breaklineFile, final File tinFile ) throws GM_Exception, GMLSchemaException, GmlSerializeException, IOException
+  static Map<Double, Double> createWspMap( final TupleResult result, final String componentStation, final String componentWaterlevel )
   {
-    final Map<Double, Double> wspMap = createWspMap( result, strStationierung, strWsp );
+    final int statIndex = result.indexOfComponent( componentStation );
+    if( statIndex == -1 )
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.BreakLinesHelper.0", componentStation ) ); //$NON-NLS-1$
 
-    if( reachProfileSegments.length == 0 )
-      return null;
-
-    final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPMCOMMONS, "TriangulatedSurfaceFeature" ), tinFile.toURI().toURL(), null ); //$NON-NLS-1$
-    final String defaultCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( defaultCrs );
-    final Feature triangleFeature = triangleWorkspace.getRootFeature();
-    triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "triangulatedSurfaceMember" ), surface ); //$NON-NLS-1$
-    // TODO: set tin name
-    NamedFeatureHelper.setDescription( triangleFeature, Messages.getString("BreakLinesHelper.0") ); //$NON-NLS-1$
-    NamedFeatureHelper.setName( triangleFeature, Messages.getString("BreakLinesHelper.1") ); //$NON-NLS-1$
-    triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "unit" ), "NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
-    triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "parameter" ), "h" ); //$NON-NLS-1$ //$NON-NLS-2$
-    triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "date" ), DateUtilities.toXMLGregorianCalendar( new Date() ) ); //$NON-NLS-1$
-
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), breaklineFile.toURI().toURL(), null ); //$NON-NLS-1$
-    final Feature rootFeature = workspace.getRootFeature();
-
-    final String gmlVersion = workspace.getGMLSchema().getGMLVersion();
-
-    // debug
-    GM_Curve lastProfile = null;
-    NumberRange range = null;
-    for( final TuhhReachProfileSegment reach : reachProfileSegments )
-    {
-      final GM_Curve geometry = reach.getGeometry();
-      final BigDecimal station = reach.getStation();
-      if( geometry == null ) // ignore profiles without geometry
-        continue;
-
-      final Double wsp = wspMap.get( station.doubleValue() );
-
-      final GM_Curve thinProfile = thinnedOutClone( geometry, epsThinning, gmlVersion );
-      if( wsp != null )
-      {
-        if( range == null )
-          range = new NumberRange( wsp );
-        else
-          range = new NumberRange( Math.min( wsp, range.getMinimumDouble() ), Math.max( wsp, range.getMaximumDouble() ) );
-
-        // ignore profiles without result (no value in length section). This can occur if the
-        // simulation does not cover the whole reach.
-        final GM_Curve newProfile = GeometryUtilities.setValueZ( thinProfile.getAsLineString(), wsp );
-
-        /* Triangulate two adjacent profiles */
-        if( lastProfile != null )
-        {
-          final GM_Position[] polygonPosesClosed = GeometryUtilities.getPolygonfromCurves( lastProfile, newProfile );
-
-          // Write the curve as breakline into breakline file
-          final GM_Curve polygoneRing = GeometryFactory.createGM_Curve( polygonPosesClosed, defaultCrs );
-          final Feature ringFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-          ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), polygoneRing ); //$NON-NLS-1$
-          ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station ); //$NON-NLS-1$
-          ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp ); //$NON-NLS-1$
-
-          // Interpolate triangles between two adjacent curves and add them to the triangulated surface
-          final GM_Position[] polygonPosesOpen = (GM_Position[]) ArrayUtils.remove( polygonPosesClosed, polygonPosesClosed.length - 1 );
-          final GM_Position[][] triangles = GeometryUtilities.triangulateRing( polygonPosesOpen );
-          for( final GM_Position[] triangle : triangles )
-          {
-            final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( triangle, defaultCrs );
-            surface.add( gmTriangle );
-          }
-        }
-
-        lastProfile = newProfile;
-      }
-
-    }
-
-    GmlSerializer.serializeWorkspace( tinFile, triangleWorkspace, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
-    GmlSerializer.serializeWorkspace( breaklineFile, workspace, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
-
-    return range;
-  }
-
-  private static Map<Double, Double> createWspMap( final TupleResult result, final String strStationierung, final String strWsp )
-  {
-    final IComponent statComponent = TupleResultUtilities.findComponentById( result, strStationierung );
-    final IComponent wspComp = TupleResultUtilities.findComponentById( result, strWsp );
-
-    if( statComponent == null )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.BreakLinesHelper.0", strStationierung ) ); //$NON-NLS-1$
-    if( wspComp == null )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.BreakLinesHelper.0", strWsp ) ); //$NON-NLS-1$
+    final int wspIndex = result.indexOfComponent( componentWaterlevel );
+    if( wspIndex == -1 )
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.BreakLinesHelper.0", componentWaterlevel ) ); //$NON-NLS-1$
 
     final Map<Double, Double> wspMap = new TreeMap<Double, Double>();
     for( final IRecord record : result )
-    {
-      final int statIndex = result.indexOfComponent( statComponent );
-      final int wpsIndex = result.indexOfComponent( wspComp );
-      wspMap.put( ((BigDecimal) record.getValue( statIndex )).doubleValue(), ((BigDecimal) record.getValue( wpsIndex )).doubleValue() );
-    }
-    return wspMap;
-  }
+      wspMap.put( ((BigDecimal) record.getValue( statIndex )).doubleValue(), ((BigDecimal) record.getValue( wspIndex )).doubleValue() );
 
-  private static GM_Curve thinnedOutClone( final GM_Curve curve, final Double epsThinning, final String gmlVersion )
-  {
-    try
-    {
-      if( epsThinning > 0.0 )
-      {
-        // TODO thin out: sollten "Zwangspunkte" wie Marker fï¿½r Trennflï¿½chen / durchstrï¿½mte Bereiche erhalten
-        // bleiben?
-        return GeometryUtilities.getThinnedCurve( curve, epsThinning );
-      }
-      else
-      {
-        final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GMLConstants.QN_LINE_STRING );
-        final Object cloneObject = lineStringTypeHandler.cloneObject( curve, gmlVersion );
-        return (GM_Curve) cloneObject;
-      }
-    }
-    catch( final CloneNotSupportedException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( final GM_Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return curve;
+    return wspMap;
   }
 
   /** Creates a boundary from the given profiles. The profiles must be sorted. */
