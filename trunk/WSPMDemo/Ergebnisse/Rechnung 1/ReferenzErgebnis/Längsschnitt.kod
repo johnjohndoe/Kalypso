@@ -259,6 +259,7 @@
             <LineStyle role="line" isVisible="false">
             </LineStyle>
           </PointStyle>
+
         </Styles>
       </Layer>
       <Layer id="Bridge" visible="true">
@@ -290,6 +291,7 @@
             <LineStyle role="line" isVisible="false">
             </LineStyle>
           </PointStyle>
+
         </Styles>
       </Layer>
         <Layer id="soil" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
