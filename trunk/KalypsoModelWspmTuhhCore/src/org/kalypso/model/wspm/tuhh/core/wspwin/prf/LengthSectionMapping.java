@@ -67,7 +67,7 @@ public final class LengthSectionMapping
     m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, DataBlockDescription.STATION );
     m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, DataBlockDescription.SOHLHOEHE );
     m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_LI, DataBlockDescription.BOESCHUNG_LI );
-    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERT_BOE_RE, DataBlockDescription.BOESCHUNG_RE );
+    m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BOE_RE, DataBlockDescription.BOESCHUNG_RE );
     m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, DataBlockDescription.OK_WEHRS );
     m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, DataBlockDescription.DECKENOBERK );
     m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, DataBlockDescription.DECKENUNTERK );

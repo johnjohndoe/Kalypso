@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -193,7 +194,7 @@ public class ResultLengthSection
         statusCollector.add( status );
     }
 
-    return statusCollector.asMultiStatusOrOK( Messages.getString("ResultLengthSection.3") ); //$NON-NLS-1$
+    return statusCollector.asMultiStatusOrOK( Messages.getString( "ResultLengthSection.3" ) ); //$NON-NLS-1$
   }
 
   private void addResultFile( final IResultLSFile resultFile )
@@ -216,8 +217,28 @@ public class ResultLengthSection
     m_buffer.delete( 0, m_buffer.length() - 1 );
     final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( obsIs, null, null );
     final Feature rootFeature = obsWks.getRootFeature();
-    rootFeature.setName( title );
-    rootFeature.setDescription( description );
+
+    final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );
+
+    /* Set title */
+    lengthSectionObs.setName( title );
+    lengthSectionObs.setDescription( description );
+
+    /* Add additional columns that are not returned by the calculation core */
+    final TupleResult result = lengthSectionObs.getResult();
+
+    final ILengthSectionColumn[] columns = new ILengthSectionColumn[] { //
+        new LengthSectionColumnAdd( IWspmConstants.LENGTH_SECTION_PROPERTY_F, IWspmConstants.LENGTH_SECTION_PROPERTY_F_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_F_FL, IWspmConstants.LENGTH_SECTION_PROPERTY_F_RE ), //
+        new LengthSectionColumnAdd( IWspmConstants.LENGTH_SECTION_PROPERTY_BR, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_FL, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_RE ), //
+        new LengthSectionColumnDivide( IWspmConstants.LENGTH_SECTION_PROPERTY_V_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_Q_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_F_LI ), //
+        new LengthSectionColumnDivide( IWspmConstants.LENGTH_SECTION_PROPERTY_V_FL, IWspmConstants.LENGTH_SECTION_PROPERTY_Q_FL, IWspmConstants.LENGTH_SECTION_PROPERTY_F_FL ), //
+        new LengthSectionColumnDivide( IWspmConstants.LENGTH_SECTION_PROPERTY_V_RE, IWspmConstants.LENGTH_SECTION_PROPERTY_Q_RE, IWspmConstants.LENGTH_SECTION_PROPERTY_F_RE ), //
+        new LengthSectionColumnFroude() //
+    };
+    for( final ILengthSectionColumn column : columns )
+      column.addColumn( result );
+
+    ObservationFeatureFactory.toFeature( lengthSectionObs, rootFeature );
 
     return obsWks;
   }
