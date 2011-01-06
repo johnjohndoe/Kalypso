@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -79,7 +78,7 @@ public class LengthSectionParser
 
   private final String m_epsThinning;
 
-  private final List<LengthSectionProcessor> m_lengthSections = new ArrayList<LengthSectionProcessor>();
+  private final List<ResultLengthSection> m_lengthSections = new ArrayList<ResultLengthSection>();
 
   private final String m_titlePattern;
 
@@ -106,7 +105,7 @@ public class LengthSectionParser
   private IStatus processIntern( final LogHelper log ) throws Exception
   {
     if( !m_lsFile.exists() )
-      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.0" ) + m_lsFile.getName() ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhSchemaPlugin.getID(), Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.0" ) + m_lsFile.getName() ); //$NON-NLS-1$
 
     /* Add Input File to results */
     m_resultEater.addResult( "LengthSection", m_lsFile ); //$NON-NLS-1$
@@ -126,13 +125,12 @@ public class LengthSectionParser
 
     LineIterator lineIterator = null;
 
-    LengthSectionProcessor lsProc = null;
+    ResultLengthSection lsProc = null;
     try
     {
       lineIterator = IOUtils.lineIterator( new FileInputStream( m_lsFile ), IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
 
       BigDecimal firstStation = null; // station of previous line
-      BigDecimal previousRunoff = null; // the runoff parsed from the current read line
       while( lineIterator.hasNext() )
       {
         if( log.checkCanceled() )
@@ -164,13 +162,15 @@ public class LengthSectionParser
         {
           if( lsProc != null )
           {
-            final IStatus processorResult = closeProcessor( lsProc, previousRunoff );
+            final IStatus processorResult = closeProcessor( lsProc, footer );
             if( !processorResult.isOK() )
               result.add( processorResult );
           }
 
           log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.2" ), runoff ); //$NON-NLS-1$
-          lsProc = new LengthSectionProcessor( m_outputDir, m_calculation, header, footer, m_epsThinning );
+          lsProc = new ResultLengthSection( runoff, m_outputDir, m_calculation, m_epsThinning );
+          lsProc.addLine( header );
+
           lsProc.setTitlePattern( m_titlePattern );
           lsProc.setLsFilePattern( m_lsFilePattern );
         }
@@ -180,12 +180,11 @@ public class LengthSectionParser
 
         if( firstStation == null )
           firstStation = station;
-        previousRunoff = runoff;
       }
 
       if( lsProc != null )
       {
-        final IStatus processorResult = closeProcessor( lsProc, previousRunoff );
+        final IStatus processorResult = closeProcessor( lsProc, footer );
         if( !processorResult.isOK() )
           result.add( processorResult );
       }
@@ -203,18 +202,19 @@ public class LengthSectionParser
     return new MultiStatus( KalypsoModelWspmTuhhSchemaPlugin.getID(), 0, children, msg, null );
   }
 
-  private IStatus closeProcessor( final LengthSectionProcessor lsProc, final BigDecimal runoff ) throws Exception
+  private IStatus closeProcessor( final ResultLengthSection lsProc, final String footer ) throws Exception
   {
-    lsProc.close( runoff );
+    lsProc.addLine( footer );
+    lsProc.close();
 
     m_lengthSections.add( lsProc );
 
     return lsProc.getResult();
   }
 
-  public LengthSectionProcessor[] getProcessedLengthSections( )
+  public ResultLengthSection[] getProcessedLengthSections( )
   {
-    return m_lengthSections.toArray( new LengthSectionProcessor[m_lengthSections.size()] );
+    return m_lengthSections.toArray( new ResultLengthSection[m_lengthSections.size()] );
   }
 
 }
