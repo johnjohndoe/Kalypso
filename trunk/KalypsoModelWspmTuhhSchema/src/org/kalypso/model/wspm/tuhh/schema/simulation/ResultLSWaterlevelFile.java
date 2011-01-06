@@ -42,22 +42,53 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.IStatus;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
+import org.kalypso.observation.result.TupleResult;
 
 /**
- * Represents one result file of a wspm calculation.
- * 
  * @author Gernot Belger
  */
-public interface IResultLSFile
+public class ResultLSWaterlevelFile extends AbstractResultLSModelBoundaryFile
 {
-  IStatus writeFile( );
+  public ResultLSWaterlevelFile( final File outDir, final String runoffName, final TupleResult result, final TuhhReachProfileSegment[] segments )
+  {
+    super( outDir, result, segments, runoffName );
+  }
 
-  String getResultID( );
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+    return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.31" ); //$NON-NLS-1$
+  }
 
-  String getTitle( );
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getFilename()
+   */
+  @Override
+  public String getFilename( )
+  {
+    return "Überschwemmungslinie" + getRunoffName() + ".gml"; //$NON-NLS-1$ //$NON-NLS-2$
+  }
 
-  String getFilename( );
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getResultID()
+   */
+  @Override
+  public String getResultID( )
+  {
+    return "Ueberschwemmungslinie"; //$NON-NLS-1$
+  }
 
-  File getResultFile( );
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.AbstractResultLSModelBoundaryFile#getUseWsp()
+   */
+  @Override
+  protected boolean getUseWsp( )
+  {
+    return true;
+  }
 }

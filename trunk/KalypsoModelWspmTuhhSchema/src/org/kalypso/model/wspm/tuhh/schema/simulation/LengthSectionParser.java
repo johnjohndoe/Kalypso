@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -86,7 +87,9 @@ public class LengthSectionParser
 
   private final String m_lsFilePattern;
 
-  public LengthSectionParser( final TuhhCalculation calculation, final File lsFile, final ISimulationResultEater resultEater, final File outputDir, final String epsThinning, final String titlePattern, final String lsFilePattern )
+  private final URL m_ovwMapURL;
+
+  public LengthSectionParser( final TuhhCalculation calculation, final File lsFile, final ISimulationResultEater resultEater, final File outputDir, final String epsThinning, final String titlePattern, final String lsFilePattern, final URL ovwMapURL )
   {
     m_calculation = calculation;
     m_lsFile = lsFile;
@@ -95,6 +98,7 @@ public class LengthSectionParser
     m_epsThinning = epsThinning;
     m_titlePattern = titlePattern;
     m_lsFilePattern = lsFilePattern;
+    m_ovwMapURL = ovwMapURL;
   }
 
   public IStatus process( final LogHelper log ) throws Exception
@@ -168,7 +172,7 @@ public class LengthSectionParser
           }
 
           log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.LengthSectionParser.2" ), runoff ); //$NON-NLS-1$
-          lsProc = new ResultLengthSection( runoff, m_outputDir, m_calculation, m_epsThinning );
+          lsProc = new ResultLengthSection( runoff, m_outputDir, m_calculation, m_epsThinning, m_ovwMapURL );
           lsProc.addLine( header );
 
           lsProc.setTitlePattern( m_titlePattern );

@@ -65,15 +65,33 @@ public class ResultLSChartFile extends AbstractResultLSFile
 
   private final boolean m_isDirectionUpstreams;
 
-  private final String m_title;
+  private final String m_chartTitle;
 
-  public ResultLSChartFile( final File outDir, final String runoffName, final boolean isDirectionUpstreams, final String dataFilename, final String title )
+  public ResultLSChartFile( final File outDir, final String runoffName, final boolean isDirectionUpstreams, final String dataFilename, final String chartTitle )
   {
-    super( outDir, "Längsschnitt" + runoffName + ".kod", "Chart" ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( outDir, runoffName );
 
     m_isDirectionUpstreams = isDirectionUpstreams;
     m_dataFilename = dataFilename;
-    m_title = title;
+    m_chartTitle = chartTitle;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+    return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.26" ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getFilename()
+   */
+  @Override
+  public String getFilename( )
+  {
+    return "Längsschnitt" + getRunoffName() + ".kod"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -83,15 +101,6 @@ public class ResultLSChartFile extends AbstractResultLSFile
   public String getResultID( )
   {
     return "LengthSectionDiag"; //$NON-NLS-1$ 
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getLogMessage()
-   */
-  @Override
-  public String getLogMessage( )
-  {
-    return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.26" ); //$NON-NLS-1$
   }
 
   /**
@@ -114,7 +123,7 @@ public class ResultLSChartFile extends AbstractResultLSFile
     final ChartType chart = charts[0];
 
     final TitleType t1 = TitleType.Factory.newInstance();
-    t1.setStringValue( String.format( Messages.getString( "ResultLengthSection.2" ), m_title ) );
+    t1.setStringValue( String.format( Messages.getString( "ResultLengthSection.2" ), m_chartTitle ) ); //$NON-NLS-1$
     chart.setTitleArray( new TitleType[] { t1 } ); //$NON-NLS-1$
 
     final AxisType[] axes = chart.getMappers().getAxisArray();

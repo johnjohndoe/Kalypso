@@ -45,20 +45,26 @@ import java.io.File;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin;
+import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
 public abstract class AbstractResultLSFile implements IResultLSFile
 {
-  private final File m_outputFile;
+  private final String m_runoffName;
 
-  private final String m_resultTitle;
+  private final File m_outDir;
 
-  public AbstractResultLSFile( final File outDir, final String filename, final String resultTitle )
+  public AbstractResultLSFile( final File outDir, final String runoffName )
   {
-    m_resultTitle = resultTitle;
-    m_outputFile = new File( outDir, filename );
+    m_outDir = outDir;
+    m_runoffName = runoffName;
+  }
+
+  protected String getRunoffName( )
+  {
+    return m_runoffName;
   }
 
   /**
@@ -67,7 +73,7 @@ public abstract class AbstractResultLSFile implements IResultLSFile
   @Override
   public final File getResultFile( )
   {
-    return m_outputFile;
+    return new File( m_outDir, getFilename() );
   }
 
   /**
@@ -78,12 +84,14 @@ public abstract class AbstractResultLSFile implements IResultLSFile
   {
     try
     {
-      doWrite( m_outputFile );
+      final File resultFile = getResultFile();
+      doWrite( resultFile );
       return Status.OK_STATUS;
     }
     catch( final Exception e )
     {
-      final String message = String.format( "Failed to write result: %s", m_resultTitle );
+      final String title = getTitle();
+      final String message = String.format( Messages.getString("AbstractResultLSFile_0"), title ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoModelWspmTuhhSchemaPlugin.getID(), message, e );
     }
   }

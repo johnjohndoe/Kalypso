@@ -42,22 +42,37 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.IStatus;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.observation.result.TupleResult;
 
 /**
- * Represents one result file of a wspm calculation.
- * 
  * @author Gernot Belger
  */
-public interface IResultLSFile
+public abstract class AbstractResultLSModelBoundaryFile extends AbstractResultLSFile
 {
-  IStatus writeFile( );
+  private final TupleResult m_result;
 
-  String getResultID( );
+  private final TuhhReachProfileSegment[] m_segments;
 
-  String getTitle( );
+  public AbstractResultLSModelBoundaryFile( final File outDir, final TupleResult result, final TuhhReachProfileSegment[] segments, final String runoffName )
+  {
+    super( outDir, runoffName );
 
-  String getFilename( );
+    m_result = result;
+    m_segments = segments;
+  }
 
-  File getResultFile( );
+  /**
+   * @see org.kalypso.model.wspm.tuhh.schema.simulation.AbstractResultLSFile#doWrite(java.io.File)
+   */
+  @Override
+  protected void doWrite( final File outputFile ) throws Exception
+  {
+    final boolean useWsp = getUseWsp();
+
+    BreakLinesHelper.createModelBoundary( m_segments, m_result, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, outputFile, useWsp );
+  }
+
+  protected abstract boolean getUseWsp( );
 }
