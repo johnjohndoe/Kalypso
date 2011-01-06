@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Observation xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:om="http://www.opengis.net/om" xmlns:st="http://www.seegrid.csiro.au/xml/st" xs:schemaLocation="http://www.opengis.net/om http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd     http://www.opengis.net/gml http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd     http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd     http://www.opengis.net/swe http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd     http://www.seegrid.csiro.au/xml/st http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/simpleTypeDerivation.xsd" gml:id="LengthSectionResult">
+<om:Observation xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xs:schemaLocation="http://www.opengis.net/om http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd     http://www.opengis.net/gml http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd     http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd     http://www.opengis.net/swe http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd     http://www.seegrid.csiro.au/xml/st http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/simpleTypeDerivation.xsd" gml:id="LengthSectionResult">
  <gml:description>Längsschnitt: Rechnung 1 - mit Brücke</gml:description>
  <gml:name>Rechnung 1 - mit Brücke</gml:name>
- <time/>
- <procedure>
-  <ObservationProcedure gml:id="proc_wspm_ls">
+ <om:time/>
+ <om:procedure>
+  <om:ObservationProcedure gml:id="proc_wspm_ls">
    <gml:description>WSPM TUHH LÃ¤ngsschnitt Ergebnis</gml:description>
    <gml:name>WSPM-TUHH-LS</gml:name>
-   <method/>
-  </ObservationProcedure>
- </procedure>
- <observedProperty>
+   <om:method/>
+  </om:ObservationProcedure>
+ </om:procedure>
+ <om:observedProperty>
   <swe:Phenomenon gml:id="phen_wspm_ls">
    <gml:name>WSPM-TUHH-LS</gml:name>
   </swe:Phenomenon>
- </observedProperty>
- <featureOfInterest/>
- <resultDefinition>
+ </om:observedProperty>
+ <om:featureOfInterest/>
+ <om:resultDefinition>
   <swe:RecordDefinition gml:id="rd">
    <gml:name/>
    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
@@ -51,8 +51,9 @@
    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_AlphaEW"/>
    <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_I_Reib"/>
   </swe:RecordDefinition>
- </resultDefinition>
- <result><![CDATA[    41.7200    n     20.000 0.362033E+03 0.363500E+03 0.363520E+03 0.364363E+03 0.365007E+03 0.364363E+03 0.627813E+00 0.430289E+01 0.000000E+00 0.200000E+02 0.000000E+00 0.000000E+00 0.873354E-01 0.000000E+00 0.000000E+00 0.318566E+02 0.000000E+00 0.000000E+00 0.320778E+02 0.000000E+00      null       null       null       null       null  0.100000E+01 0.100000E+01 0.000000E+00
+ </om:resultDefinition>
+ <om:result><![CDATA[
+    41.7200    n     20.000 0.362033E+03 0.363500E+03 0.363520E+03 0.364363E+03 0.365007E+03 0.364363E+03 0.627813E+00 0.430289E+01 0.000000E+00 0.200000E+02 0.000000E+00 0.000000E+00 0.873354E-01 0.000000E+00 0.000000E+00 0.318566E+02 0.000000E+00 0.000000E+00 0.320778E+02 0.000000E+00      null       null       null       null       null  0.100000E+01 0.100000E+01 0.000000E+00
     41.7400    n     20.000 0.362033E+03 0.363508E+03 0.363530E+03 0.364574E+03 0.365126E+03 0.364574E+03 0.656906E+00 0.453194E+01 0.000000E+00 0.200000E+02 0.000000E+00 0.000000E+00 0.840170E-01 0.000000E+00 0.000000E+00 0.304458E+02 0.000000E+00 0.000000E+00 0.289180E+02 0.000000E+00      null       null       null       null       null  0.100000E+01 0.100000E+01 0.000000E+00
     41.7450    n     20.000 0.362033E+03 0.363507E+03 0.363533E+03 0.365191E+03 0.365191E+03 0.365296E+03 0.703217E+00 0.520184E+01 0.000000E+00 0.199698E+02 0.000000E+00 0.000000E+00 0.844074E-01 0.000000E+00 0.000000E+00 0.284407E+02 0.000000E+00 0.000000E+00 0.273456E+02 0.000000E+00      null       null       null       null       null  0.100000E+01 0.100000E+01 0.000000E+00
     41.8000    n     20.000 0.362035E+03 0.363535E+03 0.363561E+03 0.364709E+03 0.365384E+03 0.364709E+03 0.716796E+00 0.524974E+01 0.000000E+00 0.200290E+02 0.000000E+00 0.000000E+00 0.815039E-01 0.000000E+00 0.000000E+00 0.279020E+02 0.000000E+00 0.000000E+00 0.252798E+02 0.000000E+00      null       null       null       null       null  0.100000E+01 0.100000E+01 0.000000E+00
@@ -122,5 +123,5 @@
     47.2000    n     20.000 0.362532E+03 0.363870E+03 0.363875E+03 0.363336E+03 0.364211E+03 0.363336E+03 0.312488E+00 0.126096E+01 0.000000E+00 0.196425E+02 0.358482E+00 0.000000E+00 0.945455E-01 0.142009E+00 0.000000E+00 0.601344E+02 0.386801E+01 0.000000E+00 0.542185E+02 0.292372E+02      null       null       null       null       null  0.103242E+01 0.107522E+01 0.000000E+00
     47.3000    n     20.000 0.362510E+03 0.363883E+03 0.363890E+03 0.363741E+03 0.364359E+03 0.363741E+03 0.373117E+00 0.166866E+01 0.000000E+00 0.199236E+02 0.764194E-01 0.000000E+00 0.929376E-01 0.162062E+00 0.000000E+00 0.525695E+02 0.103292E+01 0.000000E+00 0.482678E+02 0.155622E+02      null       null       null       null       null  0.101249E+01 0.102762E+01 0.000000E+00
 
-    ]]></result>
-</Observation>
+    ]]></om:result>
+</om:Observation>
