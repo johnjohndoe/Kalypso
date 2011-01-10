@@ -41,13 +41,21 @@
 package org.kalypso.model.wspm.tuhh.ui.export.csv;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.CsvSink;
+import org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn;
+import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
+import org.kalypso.model.wspm.tuhh.core.profile.export.ResultColumn;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
@@ -57,6 +65,7 @@ import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * @author kimwerner
@@ -96,10 +105,51 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
   @Override
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
+    final IComponent[] components = getComponents( profiles );
     final WspmResultLengthSectionColumn[] lsColumns = m_resultPage.getSelectedColumns();
 
+    final IProfileExportColumn[] columns = createColumns( components, lsColumns );
+
     final File file = m_profileFileChooserPage.getFile();
-    final CsvSink csvSink = new CsvSink( lsColumns );
+
+    final CsvSink csvSink = new CsvSink( columns );
+    // final CsvSink csvSink = new CsvSink( lsColumns );
+
     csvSink.export( profiles, file, monitor );
+  }
+
+  private IProfileExportColumn[] createColumns( final IComponent[] components, final WspmResultLengthSectionColumn[] lsColumns )
+  {
+    final Collection<IProfileExportColumn> columns = new ArrayList<IProfileExportColumn>();
+
+    // FIXME: theses columns should be configurable by the user
+    columns.add( new PatternReplacementColumn( "Station", "<Station>" ) ); //$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( "Name", "<Name>" ) ); //$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( "Description", "<Description>" ) ); //$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( "Comment", "<Comment>" ) ); //$NON-NLS-2$
+
+    // FIXME: these columns should be configurable by the user (at least, 'all or nothing')
+    for( final IComponent comp : components )
+    {
+      final String pattern = String.format( "<Component:%s>", comp.getId() );
+      columns.add( new PatternReplacementColumn( comp.getName(), pattern ) );
+    }
+
+    for( final WspmResultLengthSectionColumn ls : lsColumns )
+      columns.add( new ResultColumn( ls ) );
+
+    return columns.toArray( new IProfileExportColumn[columns.size()] );
+  }
+
+  private final IComponent[] getComponents( final IProfileFeature[] profiles )
+  {
+    final Set<IComponent> profCompSet = new HashSet<IComponent>();
+    for( final IProfileFeature profileFeature : profiles )
+    {
+      final IProfil profil = profileFeature.getProfil();
+      for( final IComponent component : profil.getPointProperties() )
+        profCompSet.add( component );
+    }
+    return profCompSet.toArray( new IComponent[] {} );
   }
 }

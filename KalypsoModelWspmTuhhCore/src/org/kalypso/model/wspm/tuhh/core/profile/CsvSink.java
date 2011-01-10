@@ -40,15 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.math.BigDecimal;
-import java.util.Formatter;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.PrintWriter;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -59,159 +53,99 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
-import org.kalypso.observation.result.IComponent;
+import org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn;
 import org.kalypso.observation.result.IRecord;
 
 /**
- * @author kimwerner
+ * @author Gernot Belger
  */
 public class CsvSink
 {
-  private final static String DOUBLE_FORMAT = "%.4f"; //$NON-NLS-1$
+  private final IProfileExportColumn[] m_columns;
 
-  private final static String TAB_DOUBLE_FORMAT = "\t%.4f"; //$NON-NLS-1$
-
-  private final String lineSeparator = System.getProperty( "line.separator" ); //$NON-NLS-1$
-
-  private final WspmResultLengthSectionColumn[] m_columns;
-
-  public CsvSink( final WspmResultLengthSectionColumn[] columns )
+  public CsvSink( final IProfileExportColumn[] columns )
   {
     m_columns = columns;
   }
 
-  private final void writeData( final Formatter formatter, final IComponent[] comps, final IProfil profil ) throws IOException
-  {
-    final double station = profil.getStation();
-    final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
-
-    // get metadata from profile
-    final String metaString = String.format( DOUBLE_FORMAT + "\t'%s'\t'%s'\t'%s'", bigStation, profil.getName(), profil.getDescription(), profil.getComment() ); //$NON-NLS-1$
-
-    final int[] componentIndices = new int[comps.length];
-    for( int i = 0; i < componentIndices.length; i++ )
-      componentIndices[i] = profil.indexOfProperty( comps[i] );
-
-    // get point data
-    for( final IRecord point : profil.getPoints() )
-    {
-      formatter.format( metaString );
-
-      for( final IComponent component : comps )
-      {
-        final int index = profil.indexOfProperty( component );
-        if( index < 0 )
-          formatter.format( "\tnull" ); //$NON-NLS-1$
-        else
-        {
-          final Object value = point.getValue( index );
-          formatValue( formatter, value );
-        }
-      }
-
-      writeResults( bigStation, formatter );
-
-      formatter.format( lineSeparator );
-
-      final IOException ioException = formatter.ioException();
-      if( ioException != null )
-        throw ioException;
-    }
-  }
-
-  private void formatValue( final Formatter formatter, final Object value )
-  {
-    // TODO: we need a more sophisticated handling of types here...
-    if( value instanceof Number )
-      formatter.format( TAB_DOUBLE_FORMAT, value );
-    else
-      formatter.format( "\t%s", value ); //$NON-NLS-1$
-  }
-
-  private void writeResults( final BigDecimal station, final Formatter formatter )
-  {
-    for( final WspmResultLengthSectionColumn ls : m_columns )
-    {
-      final Object value = ls.getValue( station );
-      formatValue( formatter, value );
-    }
-  }
-
-  private final void writeHeader( final Formatter formatter, final IComponent[] comps )
-  {
-    formatter.format( Messages.getString("CsvSink_0") ); //$NON-NLS-1$
-
-    for( final IComponent comp : comps )
-      formatter.format( "\t'%s'", comp.getName() ); //$NON-NLS-1$
-
-    for( final WspmResultLengthSectionColumn ls : m_columns )
-      formatter.format( "\t'%s'", ls.getLabel() ); //$NON-NLS-1$
-
-    formatter.format( lineSeparator );
-  }
-
-  private final IComponent[] getComponents( final IProfileFeature[] profiles )
-  {
-    final Set<IComponent> profCompSet = new HashSet<IComponent>();
-    for( final IProfileFeature profileFeature : profiles )
-    {
-      final IProfil profil = profileFeature.getProfil();
-      for( final IComponent component : profil.getPointProperties() )
-        profCompSet.add( component );
-    }
-    return profCompSet.toArray( new IComponent[] {} );
-  }
-
   public void export( final IProfileFeature[] profiles, final File file, final IProgressMonitor monitor ) throws CoreException
   {
-    OutputStream outputStream = null;
+    PrintWriter writer = null;
     try
     {
-      outputStream = new BufferedOutputStream( new FileOutputStream( file ) );
-      write( profiles, outputStream, monitor );
-      outputStream.close();
+      writer = new PrintWriter( file );
+      write( profiles, writer, monitor );
+      writer.flush();
+      writer.close();
+
+      if( writer.checkError() )
+        throw new IOException();
     }
     catch( final IOException e )
     {
-      final String message = String.format( Messages.getString("CsvSink_1") ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "CsvSink_1" ) ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }
     finally
     {
-      IOUtils.closeQuietly( outputStream );
+      IOUtils.closeQuietly( writer );
       monitor.done();
     }
-
   }
 
-  private boolean write( final IProfileFeature[] profiles, final OutputStream writer, final IProgressMonitor monitor ) throws IOException, CoreException
+  private boolean write( final IProfileFeature[] profiles, final PrintWriter writer, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("CsvSink_2"), profiles.length ); //$NON-NLS-1$
-
-    // get all components of the profiles in order to create table header that fits
-    final IComponent[] comps = getComponents( profiles );
-
-    final Formatter formatter = new Formatter( writer );
+    monitor.beginTask( Messages.getString( "CsvSink_2" ), profiles.length ); //$NON-NLS-1$
 
     // write table header including all components
-    writeHeader( formatter, comps );
+    writeHeader( writer );
 
     // write table header including all components
     for( final IProfileFeature profileFeature : profiles )
     {
       monitor.subTask( String.format( "%s (km %s)", profileFeature.getName(), profileFeature.getBigStation() ) ); //$NON-NLS-1$
       final IProfil profil = profileFeature.getProfil();
-      writeData( formatter, comps, profil );
+      writeData( writer, profil );
       ProgressUtilities.worked( monitor, 1 );
     }
-
-    formatter.flush();
 
     return true;
   }
 
+  private final void writeHeader( final PrintWriter writer )
+  {
+    for( int i = 0; i < m_columns.length; i++ )
+    {
+      final IProfileExportColumn column = m_columns[i];
+      writer.append( column.getHeader() );
+      if( i != m_columns.length - 1 )
+        writer.append( "\t" ); //$NON-NLS-1$
+    }
+
+    writer.println();
+  }
+
+  private final void writeData( final PrintWriter writer, final IProfil profil )
+  {
+    for( final IRecord point : profil.getPoints() )
+    {
+      writeDataColumns( writer, profil, point );
+
+      writer.println();
+    }
+  }
+
+  private void writeDataColumns( final PrintWriter writer, final IProfil profil, final IRecord point )
+  {
+    for( int i = 0; i < m_columns.length; i++ )
+    {
+      final IProfileExportColumn column = m_columns[i];
+      final String value = column.getValue( profil, point );
+      writer.append( value );
+      if( i != m_columns.length - 1 )
+        writer.append( '\t' );
+    }
+  }
 }

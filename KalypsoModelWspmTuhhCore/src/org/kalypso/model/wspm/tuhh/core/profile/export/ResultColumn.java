@@ -38,29 +38,57 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.pattern;
+package org.kalypso.model.wspm.tuhh.core.profile.export;
 
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import java.math.BigDecimal;
+
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
  */
-public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
+public class ResultColumn implements IProfileExportColumn
 {
-  private static ProfilePatternInputReplacer INSTANCE = new ProfilePatternInputReplacer();
+  private final WspmResultLengthSectionColumn m_lengthSection;
 
-  public static ProfilePatternInputReplacer getINSTANCE( )
+  public ResultColumn( final WspmResultLengthSectionColumn lengthSection )
   {
-    return INSTANCE;
+    m_lengthSection = lengthSection;
   }
 
-  private ProfilePatternInputReplacer( )
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getHeader()
+   */
+  @Override
+  public String getHeader( )
   {
-    addReplacer( new ProfileNamePattern() );
-    addReplacer( new ProfileDescriptionPattern() );
-    addReplacer( new ProfileStationPattern() );
-    addReplacer( new ProfileWspWinFilenamePattern() );
-    addReplacer( new ProfileCommentPattern() );
+    return m_lengthSection.getLabel();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getValue(org.kalypso.model.wspm.core.profil.IProfil,
+   *      org.kalypso.observation.result.IRecord)
+   */
+  @Override
+  public String getValue( final IProfil profil, final IRecord point )
+  {
+    final double station = profil.getStation();
+    final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
+
+    final Object value = m_lengthSection.getValue( bigStation );
+    return formatValue( value );
+  }
+
+  private String formatValue( final Object value )
+  {
+    // TODO: we need a more sophisticated handling of types here...
+    if( value instanceof Number )
+      return String.format( "%.4f", value ); //$NON-NLS-1$
+
+    return ObjectUtils.toString( value );
   }
 }
