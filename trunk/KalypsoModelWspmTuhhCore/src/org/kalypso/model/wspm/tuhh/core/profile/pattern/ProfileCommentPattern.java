@@ -40,27 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.model.wspm.core.profil.IProfil;
 
-/**
- * @author Gernot Belger
- */
-public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
+public final class ProfileCommentPattern extends AbstractPatternInput<IProfil>
 {
-  private static ProfilePatternInputReplacer INSTANCE = new ProfilePatternInputReplacer();
-
-  public static ProfilePatternInputReplacer getINSTANCE( )
+  public ProfileCommentPattern( )
   {
-    return INSTANCE;
+    super( "Comment", "Comment" ); //$NON-NLS-1$ 
   }
 
-  private ProfilePatternInputReplacer( )
+  /**
+   * @see org.kalypso.commons.patternreplace.IPatternInput#getReplacement(java.lang.Object, java.lang.String)
+   */
+  @Override
+  public String getReplacement( final IProfil profile, final String param )
   {
-    addReplacer( new ProfileNamePattern() );
-    addReplacer( new ProfileDescriptionPattern() );
-    addReplacer( new ProfileStationPattern() );
-    addReplacer( new ProfileWspWinFilenamePattern() );
-    addReplacer( new ProfileCommentPattern() );
+    return profile.getComment();
   }
 }

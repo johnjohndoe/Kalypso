@@ -40,27 +40,47 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang.ObjectUtils;
+import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
+ *
  */
-public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfil>
+public class PointComponentPattern extends AbstractPatternInput<Entry<IProfil, IRecord>>
 {
-  private static ProfilePatternInputReplacer INSTANCE = new ProfilePatternInputReplacer();
-
-  public static ProfilePatternInputReplacer getINSTANCE( )
+  public PointComponentPattern( )
   {
-    return INSTANCE;
+    super( "Component", "Component" );
   }
 
-  private ProfilePatternInputReplacer( )
+  /**
+   * @see org.kalypso.commons.patternreplace.IPatternInput#getReplacement(java.lang.Object, java.lang.String)
+   */
+  @Override
+  public String getReplacement( final Entry<IProfil, IRecord> context, final String param )
   {
-    addReplacer( new ProfileNamePattern() );
-    addReplacer( new ProfileDescriptionPattern() );
-    addReplacer( new ProfileStationPattern() );
-    addReplacer( new ProfileWspWinFilenamePattern() );
-    addReplacer( new ProfileCommentPattern() );
+    final IRecord value = context.getValue();
+
+    final int indexOfComponent = value.indexOfComponent( param );
+    if( indexOfComponent == -1 )
+      return "null"; //$NON-NLS-1$
+
+    final Object recordValue = value.getValue( indexOfComponent );
+
+    return formatValue( recordValue );
+  }
+
+  private String formatValue( final Object value )
+  {
+    // TODO: we need a more sophisticated handling of types here...
+    if( value instanceof Number )
+      return String.format( "%.4f", value ); //$NON-NLS-1$
+
+    return ObjectUtils.toString( value );
   }
 }

@@ -58,6 +58,11 @@ public class ProfilePointPatternInputReplacer extends PatternInputReplacer<Entry
     return INSTANCE;
   }
 
+  public ProfilePointPatternInputReplacer( )
+  {
+    addReplacer( new PointComponentPattern() );
+  }
+
   /**
    * @see org.kalypso.commons.patternreplace.PatternInputReplacer#replaceTokens(java.lang.String, java.lang.Object)
    */
@@ -65,13 +70,14 @@ public class ProfilePointPatternInputReplacer extends PatternInputReplacer<Entry
   public String replaceTokens( final String pattern, final Entry<IProfil, IRecord> context )
   {
     final IRecord point = context.getValue();
+    final IProfil profile = context.getKey();
+
     // Fallback to profile pattern replacement if context has no profile point
     if( point == null )
-    {
-      final IProfil profile = context.getKey();
       return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( pattern, profile );
-    }
 
-    return super.replaceTokens( pattern, context );
+    // Else: first point+profile, after that: only profile
+    final String replacement1 = super.replaceTokens( pattern, context );
+    return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( replacement1, profile );
   }
 }
