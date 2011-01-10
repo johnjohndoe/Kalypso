@@ -113,7 +113,6 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
     final File file = m_profileFileChooserPage.getFile();
 
     final CsvSink csvSink = new CsvSink( columns );
-    // final CsvSink csvSink = new CsvSink( lsColumns );
 
     csvSink.export( profiles, file, monitor );
   }
