@@ -38,33 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.wprof;
+package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
+import java.util.Map.Entry;
+
 import org.kalypso.commons.patternreplace.PatternInputReplacer;
-import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
  */
-public class WProfContextPatternReplacer extends PatternInputReplacer<IWProfPoint>
+public class ProfilePointPatternInputReplacer extends PatternInputReplacer<Entry<IProfil, IRecord>>
 {
-  private static final WProfContextPatternReplacer INSTANCE = new WProfContextPatternReplacer();
+  private static ProfilePointPatternInputReplacer INSTANCE = new ProfilePointPatternInputReplacer();
 
-  public static WProfContextPatternReplacer getInstance( )
+  public static ProfilePointPatternInputReplacer getINSTANCE( )
   {
     return INSTANCE;
   }
 
-  private WProfContextPatternReplacer( )
+  /**
+   * @see org.kalypso.commons.patternreplace.PatternInputReplacer#replaceTokens(java.lang.String, java.lang.Object)
+   */
+  @Override
+  public String replaceTokens( final String pattern, final Entry<IProfil, IRecord> context )
   {
-    addReplacer( new AbstractPatternInput<IWProfPoint>( "River-ID", Messages.getString( "WProfContextPatternReplacer_1" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        {
-      @Override
-      public String getReplacement( final IWProfPoint point, final String param )
-      {
-        return point.getRiverId();
-      }
-        } );
+    final IRecord point = context.getValue();
+    // Fallback to profile pattern replacement if context has no profile point
+    if( point == null )
+    {
+      final IProfil profile = context.getKey();
+      return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( pattern, profile );
+    }
+
+    return super.replaceTokens( pattern, context );
   }
 }

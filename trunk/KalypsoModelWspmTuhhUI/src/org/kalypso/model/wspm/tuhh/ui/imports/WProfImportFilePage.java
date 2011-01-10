@@ -218,6 +218,8 @@ public class WProfImportFilePage extends WizardPage
       @Override
       public void linkEntered( final HyperlinkEvent e )
       {
+        // REMARK: tip not on hyperlink, else the popup will go under the mouse pointer, hence we loose the 'entered'
+        // state, and the tip vanishes (-> tip blinks)
         final Point tipLocation = parent.toDisplay( chooserGroup.getLocation() );
         tip.setLocation( tipLocation );
         tip.setVisible( true );

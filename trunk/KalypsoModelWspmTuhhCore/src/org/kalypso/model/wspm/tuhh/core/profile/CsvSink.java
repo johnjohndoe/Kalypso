@@ -188,7 +188,7 @@ public class CsvSink
 
   }
 
-  public boolean write( final IProfileFeature[] profiles, final OutputStream writer, final IProgressMonitor monitor ) throws IOException, CoreException
+  private boolean write( final IProfileFeature[] profiles, final OutputStream writer, final IProgressMonitor monitor ) throws IOException, CoreException
   {
     monitor.beginTask( Messages.getString("CsvSink_2"), profiles.length ); //$NON-NLS-1$
 
