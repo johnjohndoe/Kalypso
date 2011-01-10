@@ -159,7 +159,7 @@ public class NAModelSimulation
     {
       final String msg = String.format( "Failed to convert data in Kalypso-NA.exe format files: %s", e.getLocalizedMessage() );
       m_logger.log( Level.SEVERE, msg, e );
-      throw new SimulationException( msg );
+      throw new SimulationException( msg, e );
     }
   }
 
