@@ -69,6 +69,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -277,10 +278,9 @@ public class NetElement
   /**
    * writes part 1 of netfile
    */
-  public void write( final AsciiBuffer asciiBuffer, final List<Node> nodeList )
+  public void write( final AsciiBuffer asciiBuffer, final List<Node> nodeList ) throws NAPreprocessorException
   {
-    final Channel channel = getChannel();
-    asciiBuffer.markFeatureForWrite( channel );
+    asciiBuffer.markFeatureForWrite( m_channel );
 
     m_calculated = true;
 
@@ -293,6 +293,12 @@ public class NetElement
     netBuffer.append( String.format( "%8d", channelID ) ); //$NON-NLS-1$
 
     final Node downstreamNode = m_channel.getDownstreamNode();
+    if( downstreamNode == null )
+    {
+      final String message = String.format( "Missing downstream node for channel %s", channelID );
+      throw new NAPreprocessorException( message );
+    }
+
     final Node upstreamNode = m_channel.findUpstreamNode();
 
     final Catchment[] catchmentForThisChannel = m_channel.findCatchments();
