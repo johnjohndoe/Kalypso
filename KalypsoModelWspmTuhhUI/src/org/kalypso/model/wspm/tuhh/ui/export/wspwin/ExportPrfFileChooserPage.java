@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 

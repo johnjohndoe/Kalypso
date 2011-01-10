@@ -38,33 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.wprof;
+package org.kalypso.model.wspm.tuhh.core.profile.export;
 
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
-import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+import java.util.Collections;
+import java.util.Map.Entry;
+
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePointPatternInputReplacer;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
  */
-public class WProfContextPatternReplacer extends PatternInputReplacer<IWProfPoint>
+public class PatternReplacementColumn implements IProfileExportColumn
 {
-  private static final WProfContextPatternReplacer INSTANCE = new WProfContextPatternReplacer();
+  private final String m_header;
 
-  public static WProfContextPatternReplacer getInstance( )
+  private final String m_pattern;
+
+  public PatternReplacementColumn( final String header, final String pattern )
   {
-    return INSTANCE;
+    m_header = header;
+    m_pattern = pattern;
   }
 
-  private WProfContextPatternReplacer( )
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getHeader()
+   */
+  @Override
+  public String getHeader( )
   {
-    addReplacer( new AbstractPatternInput<IWProfPoint>( "River-ID", Messages.getString( "WProfContextPatternReplacer_1" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        {
-      @Override
-      public String getReplacement( final IWProfPoint point, final String param )
-      {
-        return point.getRiverId();
-      }
-        } );
+    return m_header;
   }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getValue(org.kalypso.model.wspm.core.profil.IProfil,
+   *      org.kalypso.observation.result.IRecord)
+   */
+  @Override
+  public String getValue( final IProfil profil, final IRecord point )
+  {
+    final Entry<IProfil, IRecord> value = Collections.singletonMap( profil, point ).entrySet().iterator().next();
+    return ProfilePointPatternInputReplacer.getINSTANCE().replaceTokens( m_pattern, value );
+  }
+
 }

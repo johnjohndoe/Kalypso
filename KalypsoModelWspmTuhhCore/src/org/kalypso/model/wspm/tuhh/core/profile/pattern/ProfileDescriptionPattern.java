@@ -38,33 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.wprof;
+package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
-/**
- * @author Gernot Belger
- */
-public class WProfContextPatternReplacer extends PatternInputReplacer<IWProfPoint>
+public final class ProfileDescriptionPattern extends AbstractPatternInput<IProfil>
 {
-  private static final WProfContextPatternReplacer INSTANCE = new WProfContextPatternReplacer();
-
-  public static WProfContextPatternReplacer getInstance( )
+  public ProfileDescriptionPattern( )
   {
-    return INSTANCE;
+    super( "Description", Messages.getString( "ProfilePatternInputReplacer_2" ) ); //$NON-NLS-1$  //$NON-NLS-2$
   }
 
-  private WProfContextPatternReplacer( )
+  /**
+   * @see org.kalypso.commons.patternreplace.IPatternInput#getReplacement(java.lang.Object, java.lang.String)
+   */
+  @Override
+  public String getReplacement( final IProfil profile, final String param )
   {
-    addReplacer( new AbstractPatternInput<IWProfPoint>( "River-ID", Messages.getString( "WProfContextPatternReplacer_1" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        {
-      @Override
-      public String getReplacement( final IWProfPoint point, final String param )
-      {
-        return point.getRiverId();
-      }
-        } );
+    return profile.getDescription();
   }
 }
