@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.csv;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -54,6 +57,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 
 /**
  * @author Gernot Belger
@@ -84,12 +88,39 @@ public class CsvExportColumnsPage extends WizardPage
 
   private OUTPUT_TYPE m_type = OUTPUT_TYPE.point;
 
+  private ExportColumnsComposite m_columnsComposite;
+
   protected CsvExportColumnsPage( )
   {
     super( "csvColumns" ); //$NON-NLS-1$
 
     setTitle( "Export Optionen" );
     setDescription( "Bitte wählen Sie auf dieser Seite die Optionen für den Export aus." );
+  }
+
+  public OUTPUT_TYPE getType( )
+  {
+    return m_type;
+  }
+
+  public PatternReplacementColumn[] getExportColumns( )
+  {
+    return m_columnsComposite.getColumns();
+  }
+
+  private PatternReplacementColumn[] createDefaultColumns( )
+  {
+    final Collection<PatternReplacementColumn> columns = new ArrayList<PatternReplacementColumn>();
+
+    // FIXME: theses columns should be configurable by the user
+    columns.add( new PatternReplacementColumn( "Station", "<Station>" ) ); //$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( "Name", "<Name>" ) ); //$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( "Description", "<Description>" ) ); //$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( "Comment", "<Comment>" ) ); //$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( "River", "<River>" ) ); //$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( "River-ID", "<River-ID>" ) ); //$NON-NLS-2$
+
+    return columns.toArray( new PatternReplacementColumn[columns.size()] );
   }
 
   /**
@@ -103,13 +134,15 @@ public class CsvExportColumnsPage extends WizardPage
     setControl( panel );
 
     createTypeControl( panel );
+
+    createColumnsControl( panel );
   }
 
-  private Control createTypeControl( final Composite panel )
+  private Control createTypeControl( final Composite parent )
   {
-    new Label( panel, SWT.NONE ).setText( "Ausgabeart" );
+    new Label( parent, SWT.NONE ).setText( "Ausgabeart" );
 
-    final ComboViewer typeCombo = new ComboViewer( panel, SWT.READ_ONLY | SWT.DROP_DOWN );
+    final ComboViewer typeCombo = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     typeCombo.setContentProvider( new ArrayContentProvider() );
     typeCombo.setLabelProvider( new LabelProvider() );
     typeCombo.setInput( new OUTPUT_TYPE[] { OUTPUT_TYPE.point, OUTPUT_TYPE.profiles } );
@@ -134,8 +167,12 @@ public class CsvExportColumnsPage extends WizardPage
     m_type = type;
   }
 
-  public OUTPUT_TYPE getType( )
+  private void createColumnsControl( final Composite parent )
   {
-    return m_type;
+    final PatternReplacementColumn[] defaultColumns = createDefaultColumns();
+
+    m_columnsComposite = new ExportColumnsComposite( defaultColumns );
+    final Control control = m_columnsComposite.createControl( parent );
+    control.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
   }
 }

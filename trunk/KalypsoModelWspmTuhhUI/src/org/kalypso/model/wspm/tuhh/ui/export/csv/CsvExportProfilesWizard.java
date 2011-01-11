@@ -114,17 +114,20 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
   {
     final File file = m_profileFileChooserPage.getFile();
 
-    final OUTPUT_TYPE type = m_columnsPage.getType();
 
-    final AbstractCsvWriter csvSink = createWriter( type, profiles );
+    final AbstractCsvWriter csvSink = createWriter( profiles );
     csvSink.export( profiles, file, monitor );
   }
 
-  private AbstractCsvWriter createWriter( final OUTPUT_TYPE type, final IProfileFeature[] profiles )
+  private AbstractCsvWriter createWriter( final IProfileFeature[] profiles )
   {
     final IComponent[] components = ProfileExportUtils.getComponents( profiles );
     final WspmResultLengthSectionColumn[] lsColumns = m_resultPage.getSelectedColumns();
-    final IProfileExportColumn[] columns = createColumns( components, lsColumns, type );
+
+    final OUTPUT_TYPE type = m_columnsPage.getType();
+    final IProfileExportColumn[] userDefinedColumns = m_columnsPage.getExportColumns();
+
+    final IProfileExportColumn[] columns = createColumns( userDefinedColumns, components, lsColumns, type );
 
     switch( type )
     {
@@ -138,17 +141,12 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
     throw new IllegalArgumentException();
   }
 
-  private IProfileExportColumn[] createColumns( final IComponent[] components, final WspmResultLengthSectionColumn[] lsColumns, final OUTPUT_TYPE type )
+  private IProfileExportColumn[] createColumns( final IProfileExportColumn[] userDefinedColumns, final IComponent[] components, final WspmResultLengthSectionColumn[] lsColumns, final OUTPUT_TYPE type )
   {
     final Collection<IProfileExportColumn> columns = new ArrayList<IProfileExportColumn>();
 
-    // FIXME: theses columns should be configurable by the user
-    columns.add( new PatternReplacementColumn( "Station", "<Station>" ) ); //$NON-NLS-2$
-    columns.add( new PatternReplacementColumn( "Name", "<Name>" ) ); //$NON-NLS-2$
-    columns.add( new PatternReplacementColumn( "Description", "<Description>" ) ); //$NON-NLS-2$
-    columns.add( new PatternReplacementColumn( "Comment", "<Comment>" ) ); //$NON-NLS-2$
-    columns.add( new PatternReplacementColumn( "River", "<River>" ) ); //$NON-NLS-2$
-    columns.add( new PatternReplacementColumn( "River-ID", "<River-ID>" ) ); //$NON-NLS-2$
+    for( final IProfileExportColumn column : userDefinedColumns )
+      columns.add( column );
 
     if( type == OUTPUT_TYPE.point )
     {
