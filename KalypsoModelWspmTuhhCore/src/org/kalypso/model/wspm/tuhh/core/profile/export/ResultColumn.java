@@ -45,8 +45,8 @@ import java.math.BigDecimal;
 import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
@@ -70,12 +70,12 @@ public class ResultColumn implements IProfileExportColumn
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getValue(org.kalypso.model.wspm.core.profil.IProfil,
-   *      org.kalypso.observation.result.IRecord)
+   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getValue(org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData)
    */
   @Override
-  public String getValue( final IProfil profil, final IRecord point )
+  public String getValue( final IProfilePatternData data )
   {
+    final IProfil profil = data.getProfile();
     final double station = profil.getStation();
     final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
 

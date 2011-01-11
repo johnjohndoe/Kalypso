@@ -40,33 +40,54 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
+ *
  */
-public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfilePatternData>
+public class ProfilePatternData implements IProfilePatternData
 {
-  private static ProfilePatternInputReplacer INSTANCE = new ProfilePatternInputReplacer();
+  private final IProfileFeature m_profileFeature;
 
-  public static ProfilePatternInputReplacer getINSTANCE( )
+  private final IProfil m_profile;
+
+  private final IRecord m_point;
+
+  public ProfilePatternData( final IProfileFeature profileFeature, final IProfil profile, final IRecord point )
   {
-    return INSTANCE;
+    m_profileFeature = profileFeature;
+    m_profile = profile;
+    m_point = point;
   }
 
-  private ProfilePatternInputReplacer( )
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData#getProfile()
+   */
+  @Override
+  public IProfil getProfile( )
   {
-    /* Needs profile */
-    addReplacer( new ProfileNamePattern() );
-    addReplacer( new ProfileDescriptionPattern() );
-    addReplacer( new ProfileStationPattern() );
-    addReplacer( new ProfileWspWinFilenamePattern() );
-
-    /* Needs profile feature */
-    addReplacer( new ProfileRiverNamePattern() );
-    addReplacer( new ProfileRiverIdPattern() );
-
-    /* Needs points */
-    addReplacer( new PointComponentPattern() );
+    return m_profile;
   }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData#getProfileFeature()
+   */
+  @Override
+  public IProfileFeature getProfileFeature( )
+  {
+    return m_profileFeature;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData#getPoint()
+   */
+  @Override
+  public IRecord getPoint( )
+  {
+    return m_point;
+  }
+
 }

@@ -38,35 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.pattern;
+package org.kalypso.model.wspm.tuhh.core.profile.export;
 
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import java.io.PrintWriter;
+
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
 
 /**
+ * Exports profiles into a csv, but not the points.
+ * 
  * @author Gernot Belger
  */
-public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfilePatternData>
+public class CsvProfilesWriter extends AbstractCsvWriter
 {
-  private static ProfilePatternInputReplacer INSTANCE = new ProfilePatternInputReplacer();
-
-  public static ProfilePatternInputReplacer getINSTANCE( )
+  public CsvProfilesWriter( final IProfileExportColumn[] columns )
   {
-    return INSTANCE;
+    super( columns );
   }
 
-  private ProfilePatternInputReplacer( )
+  @Override
+  protected void writeData( final PrintWriter writer, final IProfileFeature profileFeature, final IProfil profil )
   {
-    /* Needs profile */
-    addReplacer( new ProfileNamePattern() );
-    addReplacer( new ProfileDescriptionPattern() );
-    addReplacer( new ProfileStationPattern() );
-    addReplacer( new ProfileWspWinFilenamePattern() );
+    writeDataColumns( writer, profileFeature, profil );
+    writer.println();
+  }
 
-    /* Needs profile feature */
-    addReplacer( new ProfileRiverNamePattern() );
-    addReplacer( new ProfileRiverIdPattern() );
+  private void writeDataColumns( final PrintWriter writer, final IProfileFeature profileFeature, final IProfil profil )
+  {
+    final IProfileExportColumn[] columns = getColumns();
 
-    /* Needs points */
-    addReplacer( new PointComponentPattern() );
+    for( int i = 0; i < columns.length; i++ )
+    {
+      final IProfileExportColumn column = columns[i];
+
+      final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
+      final String value = column.getValue( data );
+      writer.append( value );
+      if( i != columns.length - 1 )
+        writer.append( '\t' );
+    }
   }
 }

@@ -51,6 +51,8 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -80,13 +82,15 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
   }
 
   @Override
-  protected void writeProfile( final Formatter formatter, final IProfil profil )
+  protected void writeProfile( final Formatter formatter, final IProfileFeature profileFeature )
   {
+    final IProfil profil = profileFeature.getProfil();
     final IRecord[] points = getPointsToExport( profil );
     if( points == null )
       return;
 
-    final String id = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_idPattern, profil );
+    final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
+    final String id = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_idPattern, data );
     final String profileName = profil.getName();
 
     formatter.format( "CRDS id '%s' nm '%s' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz%n", id, profileName ); //$NON-NLS-1$

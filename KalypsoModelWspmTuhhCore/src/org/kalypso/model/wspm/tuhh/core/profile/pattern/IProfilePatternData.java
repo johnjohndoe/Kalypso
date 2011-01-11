@@ -40,22 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.observation.result.IRecord;
 
-public final class ProfileCommentPattern extends AbstractPatternInput<IProfil>
+/**
+ * @author Gernot Belger
+ */
+public interface IProfilePatternData
 {
-  public ProfileCommentPattern( )
-  {
-    super( "Comment", "Comment" ); //$NON-NLS-1$ 
-  }
+  IProfil getProfile( );
 
-  /**
-   * @see org.kalypso.commons.patternreplace.IPatternInput#getReplacement(java.lang.Object, java.lang.String)
-   */
-  @Override
-  public String getReplacement( final IProfil profile, final String param )
-  {
-    return profile.getComment();
-  }
+  IProfileFeature getProfileFeature( );
+
+  IRecord getPoint( );
 }

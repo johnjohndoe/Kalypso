@@ -47,9 +47,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.IWaterlevel;
@@ -73,12 +76,14 @@ public abstract class PrfExportWizardCallback implements IPrfExporterCallback
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.IPrfExporterCallback#getExportFile(org.kalypso.model.wspm.core.profil.IProfil)
+   * @see org.kalypso.model.wspm.tuhh.ui.export.wspwin.IPrfExporterCallback#getExportFile(org.kalypso.model.wspm.core.gml.IProfileFeature,
+   *      org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  public File getExportFile( final IProfil profil )
+  public File getExportFile( final IProfileFeature feature, final IProfil profil )
   {
-    final String fileName = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_filenamePattern, profil );
+    final IProfilePatternData data = new ProfilePatternData( feature, profil, null );
+    final String fileName = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_filenamePattern, data );
     final String uniqueFileName = createUniqueFilename( fileName );
     final String cleanFileName = cleanupFilename( uniqueFileName );
     return new File( m_exportDirectory, cleanFileName + ".prf" ); //$NON-NLS-1$

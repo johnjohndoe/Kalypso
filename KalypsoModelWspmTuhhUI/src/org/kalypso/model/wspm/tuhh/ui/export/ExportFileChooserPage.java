@@ -59,9 +59,9 @@ public class ExportFileChooserPage extends ValidatingWizardPage
 {
   private FileChooserGroup m_fileChooserGroup;
 
-  private File m_file;
-
   private final IFileChooserDelegate m_fileChooser;
+
+  private File m_file;
 
   private String m_fileGroupText = ""; //$NON-NLS-1$
 
