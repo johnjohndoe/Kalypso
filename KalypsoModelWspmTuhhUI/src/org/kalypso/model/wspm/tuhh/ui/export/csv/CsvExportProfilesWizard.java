@@ -43,18 +43,16 @@ package org.kalypso.model.wspm.tuhh.ui.export.csv;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.CsvSink;
 import org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn;
 import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
+import org.kalypso.model.wspm.tuhh.core.profile.export.ProfileExportUtils;
 import org.kalypso.model.wspm.tuhh.core.profile.export.ResultColumn;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
@@ -105,7 +103,7 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
   @Override
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
-    final IComponent[] components = getComponents( profiles );
+    final IComponent[] components = ProfileExportUtils.getComponents( profiles );
     final WspmResultLengthSectionColumn[] lsColumns = m_resultPage.getSelectedColumns();
 
     final IProfileExportColumn[] columns = createColumns( components, lsColumns );
@@ -138,17 +136,5 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
       columns.add( new ResultColumn( ls ) );
 
     return columns.toArray( new IProfileExportColumn[columns.size()] );
-  }
-
-  private final IComponent[] getComponents( final IProfileFeature[] profiles )
-  {
-    final Set<IComponent> profCompSet = new HashSet<IComponent>();
-    for( final IProfileFeature profileFeature : profiles )
-    {
-      final IProfil profil = profileFeature.getProfil();
-      for( final IComponent component : profil.getPointProperties() )
-        profCompSet.add( component );
-    }
-    return profCompSet.toArray( new IComponent[] {} );
   }
 }
