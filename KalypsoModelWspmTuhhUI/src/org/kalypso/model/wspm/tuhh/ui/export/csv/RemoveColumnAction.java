@@ -38,45 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export;
+package org.kalypso.model.wspm.tuhh.ui.export.csv;
 
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
 /**
  * @author Gernot Belger
+ *
  */
-public class PatternReplacementColumn implements IProfileExportColumn
+public class RemoveColumnAction extends Action
 {
-  private final String m_header;
+  private final PatternReplacementColumn m_column;
 
-  private final String m_pattern;
+  private final ExportColumnsComposite m_columnComposite;
 
-  public PatternReplacementColumn( final String header, final String pattern )
+  public RemoveColumnAction( final PatternReplacementColumn column, final ExportColumnsComposite columnComposite )
   {
-    m_header = header;
-    m_pattern = pattern;
-  }
+    m_column = column;
+    m_columnComposite = columnComposite;
 
-  @Override
-  public String getHeader( )
-  {
-    return m_header;
-  }
+    setDescription( "Remove this column" );
 
-  public String getPattern( )
-  {
-    return m_pattern;
+    final ImageDescriptor image = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.REMOVE_CSV_EXPORT_COLUMN );
+    setImageDescriptor( image );
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getValue(org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData)
+   * @see org.eclipse.jface.action.Action#run()
    */
   @Override
-  public String getValue( final IProfilePatternData data )
+  public void run( )
   {
-    return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_pattern, data );
+    m_columnComposite.removeColumn( m_column );
   }
-
 
 }
