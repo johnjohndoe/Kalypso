@@ -40,18 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import java.util.Map.Entry;
-
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
- *
  */
-public class PointComponentPattern extends AbstractPatternInput<Entry<IProfil, IRecord>>
+public class PointComponentPattern extends AbstractPatternInput<IProfilePatternData>
 {
   public PointComponentPattern( )
   {
@@ -59,12 +56,23 @@ public class PointComponentPattern extends AbstractPatternInput<Entry<IProfil, I
   }
 
   /**
+   * @see org.kalypso.commons.patternreplace.AbstractPatternInput#getShowInMenu()
+   */
+  @Override
+  public boolean getShowInMenu( )
+  {
+    return false;
+  }
+
+  /**
    * @see org.kalypso.commons.patternreplace.IPatternInput#getReplacement(java.lang.Object, java.lang.String)
    */
   @Override
-  public String getReplacement( final Entry<IProfil, IRecord> context, final String param )
+  public String getReplacement( final IProfilePatternData data, final String param )
   {
-    final IRecord value = context.getValue();
+    final IRecord value = data.getPoint();
+    if( value == null )
+      return StringUtils.EMPTY;
 
     final int indexOfComponent = value.indexOfComponent( param );
     if( indexOfComponent == -1 )

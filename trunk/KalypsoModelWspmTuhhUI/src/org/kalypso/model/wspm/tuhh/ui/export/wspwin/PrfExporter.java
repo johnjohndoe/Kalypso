@@ -87,7 +87,7 @@ public class PrfExporter
 
       monitor.subTask( String.format( Messages.getString("PrfExporter_2"), profileName, station ) ); //$NON-NLS-1$
 
-      final File file = m_callback.getExportFile( profil );
+      final File file = m_callback.getExportFile( feature, profil );
       if( file.exists() )
       {
         System.out.println( Messages.getString("PrfExporter_3") + file ); //$NON-NLS-1$

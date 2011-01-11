@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.observation.result.IRecord;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
 
 /**
  * @author Gernot Belger
@@ -50,5 +49,5 @@ public interface IProfileExportColumn
 {
   String getHeader( );
 
-  String getValue( IProfil profil, IRecord point );
+  String getValue( IProfilePatternData data );
 }

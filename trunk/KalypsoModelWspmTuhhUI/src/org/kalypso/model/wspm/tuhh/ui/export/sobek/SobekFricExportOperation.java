@@ -47,6 +47,8 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekFrictionZone.FrictionType;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.FlowZone;
@@ -82,16 +84,14 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
     return Messages.getString("SobekFricExportOperation_0"); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekProfileExportOperation#writeProfile(java.util.Formatter,
-   *      org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
-  protected void writeProfile( final Formatter formatter, final IProfil profil )
+  protected void writeProfile( final Formatter formatter, final IProfileFeature profileFeature )
   {
+    final IProfil profil = profileFeature.getProfil();
     final SobekFrictionZone[] frictionZones = findZones( profil );
 
-    final String crdef = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_idPattern, profil );
+    final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
+    final String crdef = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_idPattern, data );
     final String fricid = String.format( "Rau_%s", crdef ); //$NON-NLS-1$
 
     final String name = profil.getName();

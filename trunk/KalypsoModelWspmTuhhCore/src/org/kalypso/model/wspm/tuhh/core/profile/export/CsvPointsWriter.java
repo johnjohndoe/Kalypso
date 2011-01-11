@@ -38,46 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.pattern;
+package org.kalypso.model.wspm.tuhh.core.profile.export;
 
-import java.util.Map.Entry;
+import java.io.PrintWriter;
 
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
 import org.kalypso.observation.result.IRecord;
 
 /**
+ * Exports all points of profiles into a csv file.
+ * 
  * @author Gernot Belger
  */
-public class ProfilePointPatternInputReplacer extends PatternInputReplacer<Entry<IProfil, IRecord>>
+public class CsvPointsWriter extends AbstractCsvWriter
 {
-  private static ProfilePointPatternInputReplacer INSTANCE = new ProfilePointPatternInputReplacer();
-
-  public static ProfilePointPatternInputReplacer getINSTANCE( )
+  public CsvPointsWriter( final IProfileExportColumn[] columns )
   {
-    return INSTANCE;
+    super( columns );
   }
 
-  public ProfilePointPatternInputReplacer( )
-  {
-    addReplacer( new PointComponentPattern() );
-  }
-
-  /**
-   * @see org.kalypso.commons.patternreplace.PatternInputReplacer#replaceTokens(java.lang.String, java.lang.Object)
-   */
   @Override
-  public String replaceTokens( final String pattern, final Entry<IProfil, IRecord> context )
+  protected void writeData( final PrintWriter writer, final IProfileFeature profileFeature, final IProfil profil )
   {
-    final IRecord point = context.getValue();
-    final IProfil profile = context.getKey();
+    for( final IRecord point : profil.getPoints() )
+    {
+      final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, point );
+      writeDataColumns( writer, data );
+      writer.println();
+    }
+  }
 
-    // Fallback to profile pattern replacement if context has no profile point
-    if( point == null )
-      return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( pattern, profile );
+  private void writeDataColumns( final PrintWriter writer, final IProfilePatternData data )
+  {
+    final IProfileExportColumn[] columns = getColumns();
 
-    // Else: first point+profile, after that: only profile
-    final String replacement1 = super.replaceTokens( pattern, context );
-    return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( replacement1, profile );
+    for( int i = 0; i < columns.length; i++ )
+    {
+      final IProfileExportColumn column = columns[i];
+      final String value = column.getValue( data );
+      writer.append( value );
+      if( i != columns.length - 1 )
+        writer.append( '\t' );
+    }
   }
 }

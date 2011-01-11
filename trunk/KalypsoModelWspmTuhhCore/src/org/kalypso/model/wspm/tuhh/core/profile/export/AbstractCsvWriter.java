@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile;
+package org.kalypso.model.wspm.tuhh.core.profile.export;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,22 +54,27 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn;
-import org.kalypso.observation.result.IRecord;
 
 /**
+ * Exports profiles into a csv file.
+ * 
  * @author Gernot Belger
  */
-public class CsvSink
+public abstract class AbstractCsvWriter
 {
   private final IProfileExportColumn[] m_columns;
 
-  public CsvSink( final IProfileExportColumn[] columns )
+  public AbstractCsvWriter( final IProfileExportColumn[] columns )
   {
     m_columns = columns;
   }
 
-  public void export( final IProfileFeature[] profiles, final File file, final IProgressMonitor monitor ) throws CoreException
+  protected IProfileExportColumn[] getColumns( )
+  {
+    return m_columns;
+  }
+
+  public final void export( final IProfileFeature[] profiles, final File file, final IProgressMonitor monitor ) throws CoreException
   {
     PrintWriter writer = null;
     try
@@ -95,7 +100,7 @@ public class CsvSink
     }
   }
 
-  private boolean write( final IProfileFeature[] profiles, final PrintWriter writer, final IProgressMonitor monitor ) throws CoreException
+  private final boolean write( final IProfileFeature[] profiles, final PrintWriter writer, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( Messages.getString( "CsvSink_2" ), profiles.length ); //$NON-NLS-1$
 
@@ -107,7 +112,7 @@ public class CsvSink
     {
       monitor.subTask( String.format( "%s (km %s)", profileFeature.getName(), profileFeature.getBigStation() ) ); //$NON-NLS-1$
       final IProfil profil = profileFeature.getProfil();
-      writeData( writer, profil );
+      writeData( writer, profileFeature, profil );
       ProgressUtilities.worked( monitor, 1 );
     }
 
@@ -127,25 +132,5 @@ public class CsvSink
     writer.println();
   }
 
-  private final void writeData( final PrintWriter writer, final IProfil profil )
-  {
-    for( final IRecord point : profil.getPoints() )
-    {
-      writeDataColumns( writer, profil, point );
-
-      writer.println();
-    }
-  }
-
-  private void writeDataColumns( final PrintWriter writer, final IProfil profil, final IRecord point )
-  {
-    for( int i = 0; i < m_columns.length; i++ )
-    {
-      final IProfileExportColumn column = m_columns[i];
-      final String value = column.getValue( profil, point );
-      writer.append( value );
-      if( i != m_columns.length - 1 )
-        writer.append( '\t' );
-    }
-  }
+  protected abstract void writeData( final PrintWriter writer, final IProfileFeature profileFeature, final IProfil profil );
 }

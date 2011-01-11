@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
@@ -95,7 +94,7 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
       {
         monitor.subTask( String.format( "%s (%s)", profil.getName(), profil.getBigStation() ) ); //$NON-NLS-1$
 
-        writeProfile( m_formatter, profil.getProfil() );
+        writeProfile( m_formatter, profil );
         ProgressUtilities.worked( monitor, 1 );
       }
       close();
@@ -116,7 +115,7 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
     }
   }
 
-  protected abstract void writeProfile( Formatter formatter, IProfil profil );
+  protected abstract void writeProfile( Formatter formatter, IProfileFeature profil );
 
   protected void add( final IStatus status )
   {

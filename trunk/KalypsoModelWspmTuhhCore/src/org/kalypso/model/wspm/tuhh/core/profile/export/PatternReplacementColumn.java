@@ -40,12 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export;
 
-import java.util.Collections;
-import java.util.Map.Entry;
-
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePointPatternInputReplacer;
-import org.kalypso.observation.result.IRecord;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 
 /**
  * @author Gernot Belger
@@ -72,14 +68,12 @@ public class PatternReplacementColumn implements IProfileExportColumn
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getValue(org.kalypso.model.wspm.core.profil.IProfil,
-   *      org.kalypso.observation.result.IRecord)
+   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getValue(org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData)
    */
   @Override
-  public String getValue( final IProfil profil, final IRecord point )
+  public String getValue( final IProfilePatternData data )
   {
-    final Entry<IProfil, IRecord> value = Collections.singletonMap( profil, point ).entrySet().iterator().next();
-    return ProfilePointPatternInputReplacer.getINSTANCE().replaceTokens( m_pattern, value );
+    return ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_pattern, data );
   }
 
 }

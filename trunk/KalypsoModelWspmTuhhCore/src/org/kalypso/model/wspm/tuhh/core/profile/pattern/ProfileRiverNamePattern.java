@@ -40,33 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.patternreplace.AbstractPatternInput;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 
 /**
  * @author Gernot Belger
  */
-public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfilePatternData>
+public class ProfileRiverNamePattern extends AbstractPatternInput<IProfilePatternData>
 {
-  private static ProfilePatternInputReplacer INSTANCE = new ProfilePatternInputReplacer();
-
-  public static ProfilePatternInputReplacer getINSTANCE( )
+  public ProfileRiverNamePattern( )
   {
-    return INSTANCE;
+    super( "River", "River" ); //$NON-NLS-1$
   }
 
-  private ProfilePatternInputReplacer( )
+  @Override
+  public String getReplacement( final IProfilePatternData data, final String param )
   {
-    /* Needs profile */
-    addReplacer( new ProfileNamePattern() );
-    addReplacer( new ProfileDescriptionPattern() );
-    addReplacer( new ProfileStationPattern() );
-    addReplacer( new ProfileWspWinFilenamePattern() );
+    final IProfileFeature profileFeature = data.getProfileFeature();
+    if( profileFeature == null )
+      return StringUtils.EMPTY;
 
-    /* Needs profile feature */
-    addReplacer( new ProfileRiverNamePattern() );
-    addReplacer( new ProfileRiverIdPattern() );
+    final WspmWaterBody water = profileFeature.getWater();
+    if( water == null )
+      return StringUtils.EMPTY;
 
-    /* Needs points */
-    addReplacer( new PointComponentPattern() );
+    return water.getName();
   }
 }
