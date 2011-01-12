@@ -112,8 +112,9 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
   @Override
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
-    final File file = m_profileFileChooserPage.getFile();
+    m_columnsPage.saveConfiguration();
 
+    final File file = m_profileFileChooserPage.getFile();
 
     final AbstractCsvWriter csvSink = createWriter( profiles );
     csvSink.export( profiles, file, monitor );

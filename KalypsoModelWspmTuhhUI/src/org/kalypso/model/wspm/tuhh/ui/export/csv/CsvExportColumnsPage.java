@@ -40,9 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.csv;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.dialogs.DialogSettings;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -56,8 +61,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Group;
 import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
 /**
  * @author Gernot Belger
@@ -86,9 +92,17 @@ public class CsvExportColumnsPage extends WizardPage
     }
   }
 
+  private static final String SETTINGS_TYPE = "outputType"; //$NON-NLS-1$
+
   private OUTPUT_TYPE m_type = OUTPUT_TYPE.point;
 
-  private ExportColumnsComposite m_columnsComposite;
+  private final ExportColumnsComposite m_columnsComposite;
+
+  private final ExportConfigurationComposite m_configurationComposite;
+
+  private final IDialogSettings m_settings = new DialogSettings( StringUtils.EMPTY );
+
+  private ComboViewer m_typeCombo;
 
   protected CsvExportColumnsPage( )
   {
@@ -96,6 +110,15 @@ public class CsvExportColumnsPage extends WizardPage
 
     setTitle( "Export Optionen" );
     setDescription( "Bitte wählen Sie auf dieser Seite die Optionen für den Export aus." );
+
+    final PatternReplacementColumn[] defaultColumns = createDefaultColumns();
+    m_columnsComposite = new ExportColumnsComposite( defaultColumns );
+
+    final IPath stateLocation = KalypsoModelWspmTuhhUIPlugin.getDefault().getStateLocation();
+    final File stateDir = stateLocation.toFile();
+    final File configurationDir = new File( stateDir, "profileExportColumnConfigurations" );
+
+    m_configurationComposite = new ExportConfigurationComposite( this, configurationDir );
   }
 
   public OUTPUT_TYPE getType( )
@@ -111,15 +134,8 @@ public class CsvExportColumnsPage extends WizardPage
   private PatternReplacementColumn[] createDefaultColumns( )
   {
     final Collection<PatternReplacementColumn> columns = new ArrayList<PatternReplacementColumn>();
-
-    // FIXME: theses columns should be configurable by the user
     columns.add( new PatternReplacementColumn( "Station", "<Station>" ) ); //$NON-NLS-2$
     columns.add( new PatternReplacementColumn( "Name", "<Name>" ) ); //$NON-NLS-2$
-    columns.add( new PatternReplacementColumn( "Description", "<Description>" ) ); //$NON-NLS-2$
-    columns.add( new PatternReplacementColumn( "Comment", "<Comment>" ) ); //$NON-NLS-2$
-    columns.add( new PatternReplacementColumn( "River", "<River>" ) ); //$NON-NLS-2$
-    columns.add( new PatternReplacementColumn( "River-ID", "<River-ID>" ) ); //$NON-NLS-2$
-
     return columns.toArray( new PatternReplacementColumn[columns.size()] );
   }
 
@@ -129,20 +145,62 @@ public class CsvExportColumnsPage extends WizardPage
   @Override
   public void createControl( final Composite parent )
   {
+    m_columnsComposite.setDialogSettings( m_settings );
+
     final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout( 2, false ) );
+    panel.setLayout( new GridLayout() );
     setControl( panel );
 
-    createTypeControl( panel );
+    final Control typeControl = createTypeControl( panel );
+    typeControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    createColumnsControl( panel );
+    final Control columnComposite = m_columnsComposite.createControl( panel );
+    columnComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    final Control configurationControl = m_configurationComposite.createControl( panel );
+    configurationControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+  }
+
+  void applyDialogSettings( final IDialogSettings dialogSettings )
+  {
+    try
+    {
+      if( dialogSettings == null )
+        return;
+
+      final String typeName = dialogSettings.get( SETTINGS_TYPE );
+      if( typeName != null )
+        m_type = OUTPUT_TYPE.valueOf( typeName );
+
+      if( m_typeCombo != null )
+        m_typeCombo.setSelection( new StructuredSelection( m_type ) );
+
+      m_columnsComposite.applyDialogSettings( dialogSettings );
+
+    }
+    catch( final IllegalArgumentException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Writes my state into the dialog settings.
+   */
+  private void saveDialogSettings( )
+  {
+    m_settings.put( SETTINGS_TYPE, m_type.name() );
   }
 
   private Control createTypeControl( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Ausgabeart" );
+    final Group group = new Group( parent, SWT.NONE );
+    group.setText( "Output Type" );
 
-    final ComboViewer typeCombo = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
+    group.setLayout( new GridLayout() );
+
+    final ComboViewer typeCombo = new ComboViewer( group, SWT.READ_ONLY | SWT.DROP_DOWN );
+    m_typeCombo = typeCombo;
     typeCombo.setContentProvider( new ArrayContentProvider() );
     typeCombo.setLabelProvider( new LabelProvider() );
     typeCombo.setInput( new OUTPUT_TYPE[] { OUTPUT_TYPE.point, OUTPUT_TYPE.profiles } );
@@ -157,22 +215,20 @@ public class CsvExportColumnsPage extends WizardPage
       }
     } );
 
-    typeCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    typeCombo.getControl().setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false ) );
 
-    return typeCombo.getControl();
+    return group;
   }
 
   protected void handleTypeChanged( final OUTPUT_TYPE type )
   {
     m_type = type;
+
+    saveDialogSettings();
   }
 
-  private void createColumnsControl( final Composite parent )
+  public void saveConfiguration( )
   {
-    final PatternReplacementColumn[] defaultColumns = createDefaultColumns();
-
-    m_columnsComposite = new ExportColumnsComposite( defaultColumns );
-    final Control control = m_columnsComposite.createControl( parent );
-    control.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
+    m_configurationComposite.saveConfiguration( m_settings );
   }
 }

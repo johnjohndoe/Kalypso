@@ -61,6 +61,7 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfilePa
     addReplacer( new ProfileDescriptionPattern() );
     addReplacer( new ProfileStationPattern() );
     addReplacer( new ProfileWspWinFilenamePattern() );
+    addReplacer( new ProfileResultPattern() );
 
     /* Needs profile feature */
     addReplacer( new ProfileRiverNamePattern() );
