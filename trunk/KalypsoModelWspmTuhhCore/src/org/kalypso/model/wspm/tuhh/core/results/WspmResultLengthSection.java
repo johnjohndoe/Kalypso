@@ -131,6 +131,9 @@ public class WspmResultLengthSection
   public Object getValue( final BigDecimal station, final String componentIdentifier )
   {
     final int component = m_observation.getResult().indexOfComponent( componentIdentifier );
+    if( component == -1 )
+      return null;
+
     final IRecord record = m_stationIndex.getRecord( station );
     if( record == null )
       return null;
