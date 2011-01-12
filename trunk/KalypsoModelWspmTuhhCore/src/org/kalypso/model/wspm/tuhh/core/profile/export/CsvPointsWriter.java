@@ -79,7 +79,13 @@ public class CsvPointsWriter extends AbstractCsvWriter
     {
       final IProfileExportColumn column = columns[i];
       final String value = column.getValue( data );
-      writer.append( value );
+
+      String cleanValue = value;
+      cleanValue = cleanValue.replace( '\n', ' ' );
+      cleanValue = cleanValue.replace( '\r', ' ' );
+
+      writer.append( cleanValue );
+
       if( i != columns.length - 1 )
         writer.append( '\t' );
     }
