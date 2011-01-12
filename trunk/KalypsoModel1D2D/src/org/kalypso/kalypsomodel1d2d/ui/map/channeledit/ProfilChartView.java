@@ -73,7 +73,6 @@ import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
@@ -178,9 +177,8 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       }
     } );
 
- 
     m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
- 
+
     updateLayer();
 
     return m_chartComposite.getPlot();
@@ -203,10 +201,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     for( final IChartLayer layer : mngr.getLayers() )
     {
       map.put( layer.getId(), layer.isVisible() );
-      if( layer instanceof IExpandableChartLayer )
-      {
-        saveStateVisible( ((IExpandableChartLayer) layer).getLayerManager(), map );
-      }
+      saveStateVisible( (layer).getLayerManager(), map );
     }
   }
 
@@ -217,11 +212,8 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     for( final IChartLayer layer : mngr.getLayers() )
     {
       list.add( layer.getId() );
-      if( layer instanceof IExpandableChartLayer )
-      {
-        final List<Object> subList = saveStatePosition( ((IExpandableChartLayer) layer).getLayerManager() );
-        list.add( subList );
-      }
+      final List<Object> subList = saveStatePosition( layer.getLayerManager() );
+      list.add( subList );
     }
 
     return list;
@@ -243,10 +235,9 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     {
       final Boolean visible = map.get( layer.getId() );
       if( visible != null )
-        layer.setVisible( visible );
-      if( layer instanceof IExpandableChartLayer )
       {
-        restoreStateVisible( ((IExpandableChartLayer) layer).getLayerManager(), map );
+        layer.setVisible( visible );
+        restoreStateVisible( layer.getLayerManager(), map );
       }
     }
   }
@@ -268,10 +259,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
         if( layer != null )
         {
           mngr.moveLayerToPosition( layer, pos++ );
-          if( layer instanceof IExpandableChartLayer )
-          {
-            restoreStatePosition( ((IExpandableChartLayer) layer).getLayerManager(), l );
-          }
+          restoreStatePosition( layer.getLayerManager(), l );
         }
       }
       else
@@ -312,7 +300,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
    * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
    */
 
- 
   @Override
   public IChartComposite getChart( )
   {

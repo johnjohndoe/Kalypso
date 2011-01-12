@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
-import de.openali.odysseus.chart.ext.base.layer.AbstractExpandableLayer;
+import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -54,7 +54,7 @@ import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 /**
  * @author kimwerner
  */
-public class LengthSectionBuildingTheme extends AbstractExpandableLayer implements ITooltipChartLayer
+public class LengthSectionBuildingTheme extends AbstractChartLayer implements ITooltipChartLayer
 {
   private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener()
   {
