@@ -959,7 +959,7 @@ public class CreateMainChannelComposite extends Composite
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
       final ILayerManager mngr = profilChartView.getChart().getChartModel().getLayerManager();
-      final IChartLayer overlayLayer = mngr.getLayerById( IWspmOverlayConstants.LAYER_OVERLAY );
+      final IChartLayer overlayLayer = mngr.findLayer( IWspmOverlayConstants.LAYER_OVERLAY );
 
       if( overlayLayer instanceof ProfilOverlayLayer )
       {
