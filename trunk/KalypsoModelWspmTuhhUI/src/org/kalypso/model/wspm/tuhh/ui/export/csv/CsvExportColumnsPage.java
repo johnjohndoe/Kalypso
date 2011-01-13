@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author Gernot Belger
@@ -104,7 +105,7 @@ public class CsvExportColumnsPage extends WizardPage
 
   private ComboViewer m_typeCombo;
 
-  protected CsvExportColumnsPage( )
+  protected CsvExportColumnsPage( final ProfileSelection profileSelection )
   {
     super( "csvColumns" ); //$NON-NLS-1$
 
@@ -112,7 +113,7 @@ public class CsvExportColumnsPage extends WizardPage
     setDescription( "Bitte wählen Sie auf dieser Seite die Optionen für den Export aus." );
 
     final PatternReplacementColumn[] defaultColumns = createDefaultColumns();
-    m_columnsComposite = new ExportColumnsComposite( defaultColumns );
+    m_columnsComposite = new ExportColumnsComposite( defaultColumns, profileSelection );
 
     final IPath stateLocation = KalypsoModelWspmTuhhUIPlugin.getDefault().getStateLocation();
     final File stateDir = stateLocation.toFile();

@@ -42,34 +42,62 @@ package org.kalypso.model.wspm.tuhh.ui.export.csv;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author Gernot Belger
+ *
  */
-public class AddColumnAction extends Action
+public class AddResultColumnsAction extends Action
 {
   private final ExportColumnsComposite m_columnsComposite;
 
-  public AddColumnAction( final ExportColumnsComposite columnsComposite )
+  private final ProfileSelection m_profileSelection;
+
+  public AddResultColumnsAction( final ExportColumnsComposite columnsComposite, final ProfileSelection profileSelection )
   {
     m_columnsComposite = columnsComposite;
+    m_profileSelection = profileSelection;
 
-    setText( "Add Column" );
-    setDescription( "Adds a new empty column" );
+    setText( "Add Result Columns" );
+    setDescription( "Choose from available calculation results and adds them as export columns." );
 
     final ImageDescriptor image = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.ADD_CSV_EXPORT_COLUMN );
     setImageDescriptor( image );
   }
 
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void run( )
+  public void runWithEvent( final Event event )
   {
-    m_columnsComposite.addEmptyColumn();
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+
+    final IWspmResultNode results = WspmResultFactory.createResultNode( null, m_profileSelection.getContainer() );
+    final ProfileResultExportPage resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
+    final SinglePageDialog dialog = new SinglePageDialog( shell, resultPage );
+
+    final Rectangle bounds = shell.getBounds();
+    final Point dialogSize = new Point( bounds.width * 3 / 4, bounds.height * 3 / 4 );
+    dialog.setInitialSize( dialogSize );
+
+    if( dialog.open() != Window.OK )
+      return;
+
+    final WspmResultLengthSectionColumn[] selectedColumns = resultPage.getSelectedColumns();
+    m_columnsComposite.addResultColumns( selectedColumns );
   }
 
 }

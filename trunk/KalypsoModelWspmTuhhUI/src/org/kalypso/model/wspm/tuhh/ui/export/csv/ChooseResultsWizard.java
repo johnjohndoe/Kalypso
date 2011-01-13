@@ -40,36 +40,47 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.csv;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
+import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author Gernot Belger
  */
-public class AddColumnAction extends Action
+public class ChooseResultsWizard extends Wizard
 {
-  private final ExportColumnsComposite m_columnsComposite;
+  private final ProfileResultExportPage m_resultPage;
 
-  public AddColumnAction( final ExportColumnsComposite columnsComposite )
+  private WspmResultLengthSectionColumn[] m_selectedColumns;
+
+  public ChooseResultsWizard( final ProfileSelection profileSelection )
   {
-    m_columnsComposite = columnsComposite;
+    setWindowTitle( "Profilauswahl" );
+    setHelpAvailable( false );
+    setNeedsProgressMonitor( false );
+    setForcePreviousAndNextButtons( false );
 
-    setText( "Add Column" );
-    setDescription( "Adds a new empty column" );
-
-    final ImageDescriptor image = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.ADD_CSV_EXPORT_COLUMN );
-    setImageDescriptor( image );
+    final IWspmResultNode results = WspmResultFactory.createResultNode( null, profileSelection.getContainer() );
+    m_resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
+    addPage( m_resultPage );
   }
 
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
-  public void run( )
+  public boolean performFinish( )
   {
-    m_columnsComposite.addEmptyColumn();
+    m_selectedColumns = m_resultPage.getSelectedColumns();
+
+    return true;
   }
 
+  public WspmResultLengthSectionColumn[] getSelectedColumns( )
+  {
+    return m_selectedColumns;
+  }
 }
