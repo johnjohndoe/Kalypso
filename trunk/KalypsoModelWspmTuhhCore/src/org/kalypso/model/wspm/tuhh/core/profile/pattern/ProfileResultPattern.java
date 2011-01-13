@@ -41,19 +41,25 @@
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
 import java.math.BigDecimal;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.pair.IKeyValue;
+import org.kalypso.commons.pair.KeyValueFactory;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.result.ProfileAndResults;
-import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
-import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
+
+import com.google.common.collect.ComputationException;
+import com.google.common.collect.MapMaker;
 
 public final class ProfileResultPattern extends AbstractPatternInput<IProfilePatternData>
 {
+  private final ConcurrentMap<IKeyValue<IProfileFeature, String>, WspmResultLengthSection> m_lengthSectionCache = new MapMaker().expiration( 5, TimeUnit.SECONDS ).makeComputingMap( new ResultFinder() );
+
   public ProfileResultPattern( )
   {
     super( "Result", "Result" ); //$NON-NLS-1$
@@ -81,31 +87,24 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
     if( StringUtils.isBlank( component ) )
       return StringUtils.EMPTY;
 
-    final IWspmResult result = findResult( profileFeature, nodeID );
-    if( result == null )
+    try
+    {
+      final IKeyValue<IProfileFeature, String> pair = KeyValueFactory.createPairEqualsValue( profileFeature, nodeID );
+      final WspmResultLengthSection lengthSection = m_lengthSectionCache.get( pair );
+      final BigDecimal station = profileFeature.getBigStation();
+      final Object value = lengthSection.getValue( station, component );
+      return formatValue( value );
+    }
+    catch( final NullPointerException e )
+    {
+      // happens, if cache has no value
       return StringUtils.EMPTY;
-
-    final WspmResultLengthSection lengthSection = result.getLengthSection();
-
-    if( lengthSection == null )
+    }
+    catch( final ComputationException e )
+    {
+      // happens, if compution functin throws an exception
       return StringUtils.EMPTY;
-
-    final BigDecimal station = profileFeature.getBigStation();
-    final Object value = lengthSection.getValue( station, component );
-    return formatValue( value );
-  }
-
-  private IWspmResult findResult( final IProfileFeature profileFeature, final String nodeID )
-  {
-    // FIXME: put into some kind of short-time cache
-
-
-    final Object node = ProfileAndResults.findResultNode( profileFeature );
-    if( !(node instanceof IWspmResultNode) )
-      return null;
-
-    final IWspmResultNode resultNode = findNodeByName( (IWspmResultNode) node, nodeID );
-    return findResult( resultNode );
+    }
   }
 
   private String guessComponent( final String component )
@@ -117,39 +116,6 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
       return IWspmConstants.URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS + component;
 
     return IWspmConstants.LENGTH_SECTION_PROPERTY + component;
-  }
-
-  private IWspmResult findResult( final IWspmResultNode node )
-  {
-    if( node instanceof IWspmResult )
-      return (IWspmResult) node;
-
-    final IWspmResultNode[] childNodes = node.getChildResults();
-    for( final IWspmResultNode childNode : childNodes )
-    {
-      final IWspmResult result = findResult( childNode );
-      if( result != null )
-        return result;
-    }
-
-    return null;
-  }
-
-  private IWspmResultNode findNodeByName( final IWspmResultNode node, final String name )
-  {
-    final String nodeName = node.getLabel();
-    if( ObjectUtils.equals( name, nodeName ) )
-      return node;
-
-    final IWspmResultNode[] childNodes = node.getChildResults();
-    for( final IWspmResultNode childNode : childNodes )
-    {
-      final IWspmResultNode result = findNodeByName( childNode, name );
-      if( result != null )
-        return result;
-    }
-
-    return null;
   }
 
   private String formatValue( final Object value )

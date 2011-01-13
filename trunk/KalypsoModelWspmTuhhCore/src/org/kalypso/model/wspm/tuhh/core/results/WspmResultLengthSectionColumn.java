@@ -71,6 +71,8 @@ public class WspmResultLengthSectionColumn implements Formattable
 
   private final String m_observationName;
 
+  private final String m_componentID;
+
   public WspmResultLengthSectionColumn( final IObservation<TupleResult> observation, final TupleResultIndex stationHash, final IComponent component )
   {
     m_observation = observation;
@@ -81,6 +83,8 @@ public class WspmResultLengthSectionColumn implements Formattable
     m_valueTypeName = component.getValueTypeName();
 
     m_componentLabel = component.getName();
+    m_componentID = component.getId();
+
     m_observationName = m_observation.getName();
     m_label = String.format( "%s - %s", m_observationName, m_componentLabel ); //$NON-NLS-1$
   }
@@ -93,6 +97,11 @@ public class WspmResultLengthSectionColumn implements Formattable
   public String getComponentLabel( )
   {
     return m_componentLabel;
+  }
+
+  public String getComponentID( )
+  {
+    return m_componentID;
   }
 
   public QName getValueTypeName( )
@@ -130,6 +139,5 @@ public class WspmResultLengthSectionColumn implements Formattable
       formatter.format( m_componentLabel );
     else
       formatter.format( m_componentLabel.substring( 0, precision ) );
-
   }
 }
