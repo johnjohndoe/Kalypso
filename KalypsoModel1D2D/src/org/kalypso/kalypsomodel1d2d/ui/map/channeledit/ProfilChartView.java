@@ -255,7 +255,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       {
         final List<Object> l = (ArrayList<Object>) o;
         final Object id = l.get( 0 );
-        final IChartLayer layer = id == null ? null : mngr.getLayerById( id.toString() );
+        final IChartLayer layer = id == null ? null : mngr.findLayer( id.toString() );
         if( layer != null )
         {
           mngr.moveLayerToPosition( layer, pos++ );
@@ -264,7 +264,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       }
       else
       {
-        final IChartLayer layer = mngr.getLayerById( o.toString() );
+        final IChartLayer layer = mngr.findLayer( o.toString() );
         if( layer != null )
         {
           mngr.moveLayerToPosition( layer, pos++ );
@@ -275,7 +275,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 
   private final void restoreStateActive( final ILayerManager mngr, final String id )
   {
-    final IChartLayer layer = mngr.getLayerById( id );
+    final IChartLayer layer = mngr.findLayer( id );
     if( layer != null )
     {
       layer.setActive( true );
