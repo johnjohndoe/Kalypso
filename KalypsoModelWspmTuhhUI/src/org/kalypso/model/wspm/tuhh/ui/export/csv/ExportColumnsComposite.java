@@ -45,6 +45,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -68,9 +69,12 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.status.StatusComposite;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author Gernot Belger
@@ -89,8 +93,11 @@ public class ExportColumnsComposite
 
   private IDialogSettings m_dialogSettings;
 
-  public ExportColumnsComposite( final PatternReplacementColumn[] columns )
+  private final ProfileSelection m_profileSelection;
+
+  public ExportColumnsComposite( final PatternReplacementColumn[] columns, final ProfileSelection profileSelection )
   {
+    m_profileSelection = profileSelection;
     m_columns = new ArrayList<PatternReplacementColumn>( Arrays.asList( columns ) );
   }
 
@@ -105,7 +112,7 @@ public class ExportColumnsComposite
     group.setText( "Export Columns" );
     group.setLayout( new FillLayout() );
 
-    m_form = new ScrolledForm( group );
+    m_form = new ScrolledForm( group, SWT.V_SCROLL );
     m_form.setExpandHorizontal( true );
 
     final Composite body = m_form.getBody();
@@ -189,6 +196,10 @@ public class ExportColumnsComposite
     final ImageHyperlink addHyperlink = ActionHyperlink.createHyperlink( null, body, SWT.PUSH, addColumnAction );
     addHyperlink.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false, 4, 1 ) );
 
+    final AddResultColumnsAction addResultColumnsAction = new AddResultColumnsAction( this, m_profileSelection );
+    final ImageHyperlink addResultsHyperlink = ActionHyperlink.createHyperlink( null, body, SWT.PUSH, addResultColumnsAction );
+    addResultsHyperlink.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false, 4, 1 ) );
+
     m_form.reflow( true );
   }
 
@@ -208,9 +219,9 @@ public class ExportColumnsComposite
     return m_columns.toArray( new PatternReplacementColumn[m_columns.size()] );
   }
 
-  public void addColumn( )
+  public void addEmptyColumn( )
   {
-    m_columns.add( new PatternReplacementColumn( "", "" ) );
+    m_columns.add( new PatternReplacementColumn( StringUtils.EMPTY, StringUtils.EMPTY ) );
 
     updatePanel();
     saveDialogSettings();
@@ -285,6 +296,38 @@ public class ExportColumnsComposite
     updatePanel();
 
     saveDialogSettings();
+  }
+
+  public void addResultColumns( final WspmResultLengthSectionColumn[] selectedColumns )
+  {
+    if( ArrayUtils.isEmpty( selectedColumns ) )
+      return;
+
+    for( final WspmResultLengthSectionColumn column : selectedColumns )
+    {
+      final String label = column.getLabel();
+      final String componentID = column.getComponentID();
+      final String resultName = column.getResultName();
+
+      final String component = shortenComponent( componentID );
+
+      final String pattern = String.format( "<Result:%s:%s>", resultName, component );
+      m_columns.add( new PatternReplacementColumn( label, pattern ) );
+    }
+
+    updatePanel();
+    saveDialogSettings();
+  }
+
+  private String shortenComponent( final String componentID )
+  {
+    if( componentID.startsWith( IWspmConstants.LENGTH_SECTION_PROPERTY ) )
+      return componentID.substring( IWspmConstants.LENGTH_SECTION_PROPERTY.length() );
+
+    if( componentID.startsWith( IWspmConstants.URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS ) )
+      return componentID.substring( IWspmConstants.URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS.length() );
+
+    return componentID;
   }
 
 }
