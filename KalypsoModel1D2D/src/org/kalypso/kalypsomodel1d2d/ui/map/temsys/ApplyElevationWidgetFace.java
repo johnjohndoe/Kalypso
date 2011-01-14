@@ -214,7 +214,7 @@ class ApplyElevationWidgetFace
     areaSelectSection.setExpanded( true );
     areaSelectSection.setEnabled( true );
 
-    //
+    // TODO: extract strings and translate it
     final Button dtmButton = toolkit.createButton( scrolledForm.getBody(), "Show/Refresh Model-Isolines", SWT.PUSH ); //$NON-NLS-1$
     dtmButton.addSelectionListener( new SelectionAdapter()
     {
