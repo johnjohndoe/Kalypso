@@ -215,6 +215,9 @@ public class ProfilOverlayLayer extends PointsLineLayer
      * snap Point
      */
     Double width = curserPoint.getX();
+
+    // TODO: check if width is less than the first profile point
+
     if( Math.abs( point.x - profilePointScreen.x ) < 5 )
     {
       width = toNumeric( profilePointScreen ).getX();
