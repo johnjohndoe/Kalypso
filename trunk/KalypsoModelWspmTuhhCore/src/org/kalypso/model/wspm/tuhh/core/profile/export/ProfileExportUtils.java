@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -68,6 +71,20 @@ public final class ProfileExportUtils
         profCompSet.add( component );
     }
     return profCompSet.toArray( new IComponent[] {} );
+  }
+
+  public static IWspmResult[] findResults( final IProfileFeature[] profiles, final IProfileExportColumn[] columns )
+  {
+    final Map<String, IWspmResult> results = new HashMap<String, IWspmResult>();
+
+    for( final IProfileExportColumn column : columns )
+    {
+      final IWspmResult result = column.getResult( profiles );
+      if( result != null )
+        results.put( result.getName(), result );
+    }
+
+    return results.values().toArray( new IWspmResult[results.size()] );
   }
 
 }

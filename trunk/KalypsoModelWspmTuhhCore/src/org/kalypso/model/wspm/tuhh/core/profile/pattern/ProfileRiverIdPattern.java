@@ -40,32 +40,43 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.apache.commons.lang.StringUtils;
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 
 /**
  * @author Gernot Belger
  */
-public class ProfileRiverIdPattern extends AbstractPatternInput<IProfilePatternData>
+public class ProfileRiverIdPattern extends AbstractProfileStringPattern
 {
   public ProfileRiverIdPattern( )
   {
     super( "River-ID", "River-Id" ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getValue(org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData,
+   *      java.lang.String)
+   */
   @Override
-  public String getReplacement( final IProfilePatternData data, final String param )
+  public String getValue( final IProfilePatternData data, final String params )
   {
     final IProfileFeature profileFeature = data.getProfileFeature();
     if( profileFeature == null )
-      return StringUtils.EMPTY;
+      return null;
 
     final WspmWaterBody water = profileFeature.getWater();
     if( water == null )
-      return StringUtils.EMPTY;
+      return null;
 
     return water.getRefNr();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getDefaultWidth(java.lang.String)
+   */
+  @Override
+  public int getDefaultWidth( final String params )
+  {
+    return 10;
   }
 }

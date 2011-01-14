@@ -55,12 +55,15 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.CsvProfilesWriter;
 import org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn;
 import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 import org.kalypso.model.wspm.tuhh.core.profile.export.ProfileExportUtils;
+import org.kalypso.model.wspm.tuhh.core.profile.export.ResultProfileInterpolator;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportColumnsPage.OUTPUT_TYPE;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.profil.wizard.results.IResultInterpolationSettings;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -74,8 +77,6 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
   private final ExportFileChooserPage m_profileFileChooserPage;
 
-// private final ProfileResultExportPage m_resultPage;
-
   private final CsvExportColumnsPage m_columnsPage;
 
   public CsvExportProfilesWizard( final ProfileSelection selection )
@@ -83,6 +84,8 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
     super( selection );
 
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
+
+    setShowResultInterpolationSettings( true );
 
     /* Export file */
     final FileChooserDelegateSave delegateSave = new FileChooserDelegateSave();
@@ -97,11 +100,6 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
     m_columnsPage = new CsvExportColumnsPage( selection );
     addPage( m_columnsPage );
-
-// /* Results */
-// final IWspmResultNode results = WspmResultFactory.createResultNode( null, selection.getContainer() );
-//    m_resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
-// addPage( m_resultPage );
   }
 
   @Override
@@ -110,18 +108,25 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
     m_columnsPage.saveConfiguration();
 
     final File file = m_profileFileChooserPage.getFile();
+    final IProfileExportColumn[] userDefinedColumns = m_columnsPage.getExportColumns();
+    final OUTPUT_TYPE type = m_columnsPage.getType();
 
-    final AbstractCsvWriter csvSink = createWriter( profiles );
-    csvSink.export( profiles, file, monitor );
+    final IWspmResult[] results = ProfileExportUtils.findResults( profiles, userDefinedColumns );
+
+    final IResultInterpolationSettings resultInterpolationSettings = getResultInterpolationSettings();
+    final boolean doAdd = resultInterpolationSettings.shouldAddInterpolatedProfiles();
+    final boolean interpolateForeland = resultInterpolationSettings.shouldInterpolateForland();
+
+    final ResultProfileInterpolator interpolator = new ResultProfileInterpolator( profiles, results, doAdd, interpolateForeland );
+    final IProfileFeature[] interpolatedProfiles = interpolator.execute();
+
+    final AbstractCsvWriter csvSink = createWriter( interpolatedProfiles, userDefinedColumns, type );
+    csvSink.export( interpolatedProfiles, file, monitor );
   }
 
-  private AbstractCsvWriter createWriter( final IProfileFeature[] profiles )
+  private AbstractCsvWriter createWriter( final IProfileFeature[] profiles, final IProfileExportColumn[] userDefinedColumns, final OUTPUT_TYPE type )
   {
     final IComponent[] components = ProfileExportUtils.getComponents( profiles );
-// final WspmResultLengthSectionColumn[] lsColumns = m_resultPage.getSelectedColumns();
-
-    final OUTPUT_TYPE type = m_columnsPage.getType();
-    final IProfileExportColumn[] userDefinedColumns = m_columnsPage.getExportColumns();
 
     final IProfileExportColumn[] columns = createColumns( userDefinedColumns, components, type );
 
@@ -139,7 +144,6 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
   private IProfileExportColumn[] createColumns( final IProfileExportColumn[] userDefinedColumns, final IComponent[] components, final OUTPUT_TYPE type )
   {
-// final WspmResultLengthSectionColumn[] lsColumns,
     final Collection<IProfileExportColumn> columns = new ArrayList<IProfileExportColumn>();
 
     for( final IProfileExportColumn column : userDefinedColumns )
@@ -154,9 +158,6 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
         columns.add( new PatternReplacementColumn( comp.getName(), pattern ) );
       }
     }
-
-// for( final WspmResultLengthSectionColumn ls : lsColumns )
-// columns.add( new ResultColumn( ls ) );
 
     return columns.toArray( new IProfileExportColumn[columns.size()] );
   }

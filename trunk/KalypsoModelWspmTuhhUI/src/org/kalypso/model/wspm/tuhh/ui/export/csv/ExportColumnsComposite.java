@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.csv;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
@@ -86,6 +87,10 @@ public class ExportColumnsComposite
   private static final String SETTINGS_HEADER = "header"; //$NON-NLS-2$
 
   private static final String SETTINGS_PATTERN = "pattern"; //$NON-NLS-2$
+
+  private static final String SETTINGS_WIDTH = "width"; //$NON-NLS-2$
+
+  private static final String SETTINGS_PRECISION = "precision"; //$NON-NLS-2$
 
   private final List<PatternReplacementColumn> m_columns;
 
@@ -116,7 +121,7 @@ public class ExportColumnsComposite
     m_form.setExpandHorizontal( true );
 
     final Composite body = m_form.getBody();
-    final GridLayout bodyLayout = new GridLayout( 4, false );
+    final GridLayout bodyLayout = new GridLayout( 6, false );
     bodyLayout.verticalSpacing = 1;
     body.setLayout( bodyLayout );
 
@@ -147,26 +152,47 @@ public class ExportColumnsComposite
       headerLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
       headerLabel.setText( "Column Name" );
 
+      final Label widthLabel = new Label( body, SWT.NONE );
+      widthLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+      widthLabel.setText( "Width" );
+
+      final Label precisionLabel = new Label( body, SWT.NONE );
+      precisionLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+      precisionLabel.setText( "Precision" );
+
       final Label patternLabel = new Label( body, SWT.NONE );
       patternLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
       patternLabel.setText( "Column Value" );
 
-      new Label( body, SWT.NONE );
-      new Label( body, SWT.NONE );
+      new Label( body, SWT.NONE ).setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false, 2, 1 ) );
     }
 
     for( int i = 0; i < m_columns.size(); i++ )
     {
       final PatternReplacementColumn column = m_columns.get( i );
+      final String header = column.getHeader();
+      final String pattern = column.getPattern();
+      final int width = column.getFormatWidth();
+      final int precision = column.getFormatPrecision();
+      final Class< ? > type = column.getType();
+
+      final boolean hasPrecision = hasPrecision( type );
 
       final Text headerText = new Text( body, SWT.SINGLE | SWT.BORDER );
       headerText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      headerText.setText( column.getHeader() );
+      headerText.setText( header );
       headerText.setMessage( "<Please enter column name>" );
+
+      final Spinner widthSpinner = new Spinner( body, SWT.BORDER );
+      widthSpinner.setValues( width, -1, 1000, 0, 1, 10 );
+
+      final Spinner precisionSpinner = new Spinner( body, SWT.BORDER );
+      precisionSpinner.setValues( precision, -1, 1000, 0, 1, 10 );
+      precisionSpinner.setEnabled( hasPrecision );
 
       final Text patternText = new Text( body, SWT.SINGLE | SWT.BORDER );
       patternText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      patternText.setText( column.getPattern() );
+      patternText.setText( pattern );
       patternText.setMessage( "<Please enter column value or pattern>" );
 
       final Button patternMenuButton = replacer.createPatternButton( body, patternText );
@@ -182,33 +208,42 @@ public class ExportColumnsComposite
         @Override
         public void modifyText( final ModifyEvent e )
         {
-          final String header = headerText.getText();
-          final String pattern = patternText.getText();
-          handleColumnChanged( header, pattern, columnIndex );
+          final String newHeader = headerText.getText();
+          final String newPattern = patternText.getText();
+          final int newWidth = widthSpinner.getSelection();
+          final int newPrecision = precisionSpinner.getSelection();
+          handleColumnChanged( columnIndex, newHeader, newPattern, newWidth, newPrecision );
         }
       };
 
       headerText.addModifyListener( modifyListener );
       patternText.addModifyListener( modifyListener );
+      widthSpinner.addModifyListener( modifyListener );
+      precisionSpinner.addModifyListener( modifyListener );
     }
 
     final AddColumnAction addColumnAction = new AddColumnAction( this );
     final ImageHyperlink addHyperlink = ActionHyperlink.createHyperlink( null, body, SWT.PUSH, addColumnAction );
-    addHyperlink.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false, 4, 1 ) );
+    addHyperlink.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false, 6, 1 ) );
 
     final AddResultColumnsAction addResultColumnsAction = new AddResultColumnsAction( this, m_profileSelection );
     final ImageHyperlink addResultsHyperlink = ActionHyperlink.createHyperlink( null, body, SWT.PUSH, addResultColumnsAction );
-    addResultsHyperlink.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false, 4, 1 ) );
+    addResultsHyperlink.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false, 6, 1 ) );
 
     m_form.reflow( true );
   }
 
-  protected void handleColumnChanged( final String header, final String pattern, final int columnIndex )
+  private boolean hasPrecision( final Class< ? > type )
+  {
+    return type == Float.class || type == Double.class || type == BigDecimal.class;
+  }
+
+  protected void handleColumnChanged( final int columnIndex, final String header, final String pattern, final int width, final int precision )
   {
     if( columnIndex < 0 || columnIndex >= m_columns.size() )
       return;
 
-    final PatternReplacementColumn patternReplacementColumn = new PatternReplacementColumn( header, pattern );
+    final PatternReplacementColumn patternReplacementColumn = new PatternReplacementColumn( header, pattern, width, precision );
     m_columns.set( columnIndex, patternReplacementColumn );
 
     saveDialogSettings();
@@ -249,6 +284,8 @@ public class ExportColumnsComposite
       final IDialogSettings columnSection = subSection.addNewSection( Integer.toString( i ) );
       columnSection.put( SETTINGS_HEADER, column.getHeader() );
       columnSection.put( SETTINGS_PATTERN, column.getPattern() );
+      columnSection.put( SETTINGS_WIDTH, column.getFormatWidth() );
+      columnSection.put( SETTINGS_PRECISION, column.getFormatPrecision() );
     }
   }
 
@@ -265,32 +302,16 @@ public class ExportColumnsComposite
 
     final IDialogSettings[] columnSections = subSection.getSections();
     /* The settings class will not preserve the order of the sub-section, we need to sort it again */
-    Arrays.sort( columnSections, new Comparator<IDialogSettings>()
-        {
-      @Override
-      public int compare( final IDialogSettings o1, final IDialogSettings o2 )
-      {
-        final String name1 = o1.getName();
-        final String name2 = o2.getName();
-
-        final Integer i1 = NumberUtils.parseQuietInteger( name1 );
-        final Integer i2 = NumberUtils.parseQuietInteger( name2 );
-
-        if( i1 == null )
-          return -1;
-        if( i2 == null )
-          return 1;
-
-        return i1 - i2;
-      }
-        } );
+    Arrays.sort( columnSections, new DialogSettingsByNameComparator() );
 
     for( final IDialogSettings columnSection : columnSections )
     {
       final String header = columnSection.get( SETTINGS_HEADER );
       final String pattern = columnSection.get( SETTINGS_PATTERN );
+      final int width = NumberUtils.parseQuietInt( columnSection.get( SETTINGS_WIDTH ), PatternReplacementColumn.NOT_SET );
+      final int precision = NumberUtils.parseQuietInt( columnSection.get( SETTINGS_PRECISION ), PatternReplacementColumn.NOT_SET );
       if( !StringUtils.isBlank( header ) && !StringUtils.isBlank( pattern ) )
-        m_columns.add( new PatternReplacementColumn( header, pattern ) );
+        m_columns.add( new PatternReplacementColumn( header, pattern, width, precision ) );
     }
 
     updatePanel();

@@ -31,17 +31,17 @@ public final class ResultFinder implements Function<IKeyValue<IProfileFeature, S
     return result.getLengthSection();
   }
 
-  private IWspmResult findResult( final IProfileFeature profileFeature, final String nodeID )
+  public static IWspmResult findResult( final IProfileFeature profileFeature, final String nodeID )
   {
     final Object node = ProfileAndResults.findResultNode( profileFeature );
     if( !(node instanceof IWspmResultNode) )
       return null;
 
-    final IWspmResultNode resultNode = findNodeByName( (IWspmResultNode) node, nodeID );
+    final IWspmResultNode resultNode = findNodeByName( ((IWspmResultNode) node), nodeID );
     return findResult( resultNode );
   }
 
-  private IWspmResult findResult( final IWspmResultNode node )
+  private static IWspmResult findResult( final IWspmResultNode node )
   {
     if( node instanceof IWspmResult )
       return (IWspmResult) node;
@@ -57,7 +57,7 @@ public final class ResultFinder implements Function<IKeyValue<IProfileFeature, S
     return null;
   }
 
-  private IWspmResultNode findNodeByName( final IWspmResultNode node, final String name )
+  private static IWspmResultNode findNodeByName( final IWspmResultNode node, final String name )
   {
     final String nodeName = node.getLabel();
     if( ObjectUtils.equals( name, nodeName ) )

@@ -105,7 +105,7 @@ public class CsvExportColumnsPage extends WizardPage
 
   private ComboViewer m_typeCombo;
 
-  protected CsvExportColumnsPage( final ProfileSelection profileSelection )
+  public CsvExportColumnsPage( final ProfileSelection profileSelection )
   {
     super( "csvColumns" ); //$NON-NLS-1$
 
