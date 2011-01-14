@@ -38,42 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export.shape;
+package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import java.nio.charset.Charset;
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.patternreplace.AbstractPatternInput;
 
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.shape.IShapeData;
-import org.kalypso.shape.ShapeType;
-import org.kalypso.shape.dbf.IDBFValue;
-import org.kalypso.shape.deegree.GM_Object2Shape;
-import org.kalypso.shape.deegree.IShapeDataFactory;
-
-public class ProfileLineDataFactory implements IShapeDataFactory
+public abstract class AbstractProfileStringPattern extends AbstractPatternInput<IProfilePatternData> implements IValueWithFormat<String>
 {
-  private final IProfileFeature[] m_profiles;
-
-  private final Charset m_charset;
-
-  private final String m_coordinateSystem;
-
-  private final IDBFValue[] m_fields;
-
-  public ProfileLineDataFactory( final IProfileFeature[] profiles, final Charset charset, final String coordinateSystem, final IDBFValue[] fields )
+  public AbstractProfileStringPattern( final String token, final String label )
   {
-    m_profiles = profiles;
-    m_charset = charset;
-    m_coordinateSystem = coordinateSystem;
-    m_fields = fields;
+    super( token, label );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getType(java.lang.String)
+   */
   @Override
-  public IShapeData createData( )
+  public Class<String> getType( final String params )
   {
-    // TODO: let user choose type; one of POLYLINE(Z) or MULTIPOINT(Z) makes sense.
-    final ShapeType shapeType = ShapeType.POLYLINEZ;
-    final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, m_coordinateSystem );
+    return String.class;
+  }
 
-    return new ProfileLineDataProvider( m_profiles, m_charset, shapeConverter, m_fields );
+  /**
+   * @see org.kalypso.commons.patternreplace.IPatternInput#getReplacement(java.lang.Object, java.lang.String)
+   */
+  @Override
+  public final String getReplacement( final IProfilePatternData data, final String param )
+  {
+    final String value = getValue( data, param );
+    if( value == null )
+      return StringUtils.EMPTY;
+
+    return value;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getDefaultPrecision(java.lang.String)
+   */
+  @Override
+  public int getDefaultPrecision( final String params )
+  {
+    return 0;
   }
 }

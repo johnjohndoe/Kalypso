@@ -41,34 +41,17 @@
 package org.kalypso.model.wspm.tuhh.ui.export.shape;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.ShapeType;
-import org.kalypso.shape.dbf.DBFField;
-import org.kalypso.shape.dbf.DBaseException;
-import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFValue;
-import org.kalypso.shape.deegree.FeatureNameValue;
-import org.kalypso.shape.deegree.FeatureValue;
 import org.kalypso.shape.deegree.GM_Object2Shape;
 import org.kalypso.shape.geometry.ISHPGeometry;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
@@ -83,50 +66,13 @@ public class ProfileLineDataProvider implements IShapeData
 
   private final IDBFValue[] m_fields;
 
-  public ProfileLineDataProvider( final IProfileFeature[] profiles, final Charset charset, final GM_Object2Shape shapeConverter, final WspmResultLengthSectionColumn[] lsColumns )
+  public ProfileLineDataProvider( final IProfileFeature[] profiles, final Charset charset, final GM_Object2Shape shapeConverter, final IDBFValue[] fields )
   {
     m_profiles = profiles;
     m_charset = charset;
     m_shapeConverter = shapeConverter;
 
-    m_fields = fillMapping( lsColumns );
-  }
-
-  private IDBFValue[] fillMapping( final WspmResultLengthSectionColumn[] lsColumns )
-  {
-    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-
-    final Collection<IDBFValue> fields = new ArrayList<IDBFValue>();
-    try
-    {
-      final GMLSchema wspmSchema = schemaCatalog.getSchema( IWspmConstants.NS_WSPMPROF, (String) null );
-      final IFeatureType profileType = wspmSchema.getFeatureType( IProfileFeature.QN_PROFILE );
-
-      final DBFField nameField = new DBFField( "NAME", FieldType.C, (short) 50, (short) 0 ); //$NON-NLS-1$
-      fields.add( new FeatureNameValue( profileType, nameField ) );
-
-      final DBFField descriptionField = new DBFField( "DESCRIPTION", FieldType.C, (short) 128, (short) 0 ); //$NON-NLS-1$
-      fields.add( new FeatureValue( profileType, descriptionField, new GMLXPath( Feature.QN_DESCRIPTION ) ) );
-
-      final DBFField stationField = new DBFField( "STATION", FieldType.N, (short) 10, (short) 4 ); //$NON-NLS-1$
-      fields.add( new ProfileStationValue( Messages.getString("ProfileLineDataProvider_3"), stationField ) ); //$NON-NLS-1$
-
-      final DBFField waterField = new DBFField( Messages.getString("ProfileLineDataProvider_4"), FieldType.C, (short) 30, (short) 0 ); //$NON-NLS-1$
-      fields.add( new ProfileWaterValue( "Name of owning Waterbody", waterField ) ); //$NON-NLS-1$
-
-      for( final WspmResultLengthSectionColumn column : lsColumns )
-        fields.add( new WspmResultValue( column ) );
-    }
-    catch( final DBaseException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final GMLSchemaException e )
-    {
-      e.printStackTrace();
-    }
-
-    return fields.toArray( new IDBFValue[fields.size()] );
+    m_fields = fields;
   }
 
   /**

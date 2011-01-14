@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.apache.commons.lang.StringUtils;
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
-public final class ProfileDescriptionPattern extends AbstractPatternInput<IProfilePatternData>
+public final class ProfileDescriptionPattern extends AbstractProfileStringPattern
 {
   public ProfileDescriptionPattern( )
   {
@@ -53,15 +51,25 @@ public final class ProfileDescriptionPattern extends AbstractPatternInput<IProfi
   }
 
   /**
-   * @see org.kalypso.commons.patternreplace.IPatternInput#getReplacement(java.lang.Object, java.lang.String)
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getValue(org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData,
+   *      java.lang.String)
    */
   @Override
-  public String getReplacement( final IProfilePatternData data, final String param )
+  public String getValue( final IProfilePatternData data, final String params )
   {
     final IProfil profile = data.getProfile();
     if( profile == null )
-      return StringUtils.EMPTY;
+      return null;
 
     return profile.getDescription();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getDefaultWidth(java.lang.String)
+   */
+  @Override
+  public int getDefaultWidth( final String params )
+  {
+    return 30;
   }
 }

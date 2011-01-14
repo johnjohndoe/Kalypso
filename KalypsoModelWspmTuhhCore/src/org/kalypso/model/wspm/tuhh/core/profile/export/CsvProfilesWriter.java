@@ -75,7 +75,7 @@ public class CsvProfilesWriter extends AbstractCsvWriter
       final IProfileExportColumn column = columns[i];
 
       final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
-      final String value = column.getValue( data );
+      final String value = column.formatValue( data );
 
       String cleanValue = value;
       cleanValue = cleanValue.replace( '\n', ' ' );

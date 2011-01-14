@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export;
 
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 
 /**
  * @author Gernot Belger
@@ -49,5 +51,14 @@ public interface IProfileExportColumn
 {
   String getHeader( );
 
-  String getValue( IProfilePatternData data );
+  Object getValue( final IProfilePatternData data );
+
+  String formatValue( IProfilePatternData data );
+
+  int getFormatWidth( );
+
+  int getFormatPrecision( );
+
+  /** If this column is a resutl column, return this result */
+  IWspmResult getResult( IProfileFeature[] profiles );
 }

@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
+import java.util.regex.Matcher;
+
+import org.kalypso.commons.pair.IKeyValue;
+import org.kalypso.commons.pair.KeyValueFactory;
+import org.kalypso.commons.patternreplace.IPatternInput;
 import org.kalypso.commons.patternreplace.PatternInputReplacer;
 
 /**
@@ -69,5 +74,20 @@ public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfilePa
 
     /* Needs points */
     addReplacer( new PointComponentPattern() );
+  }
+
+  public IKeyValue<IPatternInput<IProfilePatternData>, String> getSinglePatternValue( final String pattern )
+  {
+    final Matcher matcher = createPatternMatcher( pattern );
+    if( !matcher.matches() )
+      return null;
+
+    final IPatternInput<IProfilePatternData> tokenReplacer = getMatchedTokenReplacer( matcher );
+    if( tokenReplacer == null )
+      return null;
+
+    final String params = getMatchedParameters( matcher );
+
+    return KeyValueFactory.createPairEqualsBoth( tokenReplacer, params );
   }
 }

@@ -40,13 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.apache.commons.lang.StringUtils;
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
-public final class ProfileNamePattern extends AbstractPatternInput<IProfilePatternData>
+public final class ProfileNamePattern extends AbstractProfileStringPattern
 {
   public ProfileNamePattern( )
   {
@@ -54,25 +51,25 @@ public final class ProfileNamePattern extends AbstractPatternInput<IProfilePatte
   }
 
   /**
-   * @see org.kalypso.commons.patternreplace.IPatternInput#getReplacement(java.lang.Object, java.lang.String)
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getValue(org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData,
+   *      java.lang.String)
    */
   @Override
-  public String getReplacement( final IProfilePatternData data, final String param )
+  public String getValue( final IProfilePatternData data, final String params )
   {
     final IProfil profile = data.getProfile();
     if( profile == null )
-      return StringUtils.EMPTY;
+      return null;
 
-    final String name = profile.getName();
+    return profile.getName();
+  }
 
-    final Integer length = NumberUtils.parseQuietInteger( param );
-    if( length == null )
-      return name;
-
-    final int maxLength = Math.min( name.length(), length );
-    if( maxLength < 0 || maxLength >= name.length() )
-      return name;
-
-    return name.substring( 0, maxLength );
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getDefaultWidth(java.lang.String)
+   */
+  @Override
+  public int getDefaultWidth( final String params )
+  {
+    return 15;
   }
 }

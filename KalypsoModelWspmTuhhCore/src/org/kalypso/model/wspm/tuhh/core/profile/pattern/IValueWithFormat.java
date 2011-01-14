@@ -38,42 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export.shape;
+package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import java.nio.charset.Charset;
-
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.shape.IShapeData;
-import org.kalypso.shape.ShapeType;
-import org.kalypso.shape.dbf.IDBFValue;
-import org.kalypso.shape.deegree.GM_Object2Shape;
-import org.kalypso.shape.deegree.IShapeDataFactory;
-
-public class ProfileLineDataFactory implements IShapeDataFactory
+/**
+ * @author Gernot Belger
+ *
+ */
+public interface IValueWithFormat<T>
 {
-  private final IProfileFeature[] m_profiles;
+  T getValue( IProfilePatternData data, String params );
 
-  private final Charset m_charset;
+  Class< ? extends T> getType( String params );
 
-  private final String m_coordinateSystem;
+  int getDefaultWidth( String params );
 
-  private final IDBFValue[] m_fields;
-
-  public ProfileLineDataFactory( final IProfileFeature[] profiles, final Charset charset, final String coordinateSystem, final IDBFValue[] fields )
-  {
-    m_profiles = profiles;
-    m_charset = charset;
-    m_coordinateSystem = coordinateSystem;
-    m_fields = fields;
-  }
-
-  @Override
-  public IShapeData createData( )
-  {
-    // TODO: let user choose type; one of POLYLINE(Z) or MULTIPOINT(Z) makes sense.
-    final ShapeType shapeType = ShapeType.POLYLINEZ;
-    final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, m_coordinateSystem );
-
-    return new ProfileLineDataProvider( m_profiles, m_charset, shapeConverter, m_fields );
-  }
+  int getDefaultPrecision( String params );
 }

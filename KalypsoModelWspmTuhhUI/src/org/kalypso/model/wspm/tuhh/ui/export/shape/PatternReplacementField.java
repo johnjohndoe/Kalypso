@@ -38,57 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export;
+package org.kalypso.model.wspm.tuhh.ui.export.shape;
 
-import java.math.BigDecimal;
-
-import org.apache.commons.lang.ObjectUtils;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
+import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
+import org.kalypso.shape.dbf.DBFField;
 
 /**
  * @author Gernot Belger
+ *
  */
-public class ResultColumn implements IProfileExportColumn
+public class PatternReplacementField extends AbstractProfileValue
 {
-  private final WspmResultLengthSectionColumn m_lengthSection;
+  private final PatternReplacementColumn m_column;
 
-  public ResultColumn( final WspmResultLengthSectionColumn lengthSection )
+  public PatternReplacementField( final PatternReplacementColumn column, final DBFField field )
   {
-    m_lengthSection = lengthSection;
+    super( column.getHeader(), field );
+
+    m_column = column;
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getHeader()
+   * @see org.kalypso.model.wspm.tuhh.ui.export.shape.AbstractProfileValue#getProfileValue(org.kalypso.model.wspm.core.gml.IProfileFeature)
    */
   @Override
-  public String getHeader( )
+  protected Object getProfileValue( final IProfileFeature profile )
   {
-    return m_lengthSection.getLabel();
+    final IProfil profil = profile.getProfil();
+    final IProfilePatternData data = new ProfilePatternData( profile, profil, null );
+    return m_column.getValue( data );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getValue(org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData)
-   */
-  @Override
-  public String getValue( final IProfilePatternData data )
-  {
-    final IProfil profil = data.getProfile();
-    final double station = profil.getStation();
-    final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
-
-    final Object value = m_lengthSection.getValue( bigStation );
-    return formatValue( value );
-  }
-
-  private String formatValue( final Object value )
-  {
-    // TODO: we need a more sophisticated handling of types here...
-    if( value instanceof Number )
-      return String.format( "%.4f", value ); //$NON-NLS-1$
-
-    return ObjectUtils.toString( value );
-  }
 }

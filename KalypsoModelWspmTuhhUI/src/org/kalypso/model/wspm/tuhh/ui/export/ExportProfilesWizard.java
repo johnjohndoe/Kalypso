@@ -50,12 +50,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
+import org.kalypso.model.wspm.ui.profil.wizard.results.IResultInterpolationSettings;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -69,7 +69,7 @@ public abstract class ExportProfilesWizard extends Wizard
 
   protected static final String STR_EXPORT_FILE_GROUP_TEXT = Messages.getString("ExportProfilesWizard_2"); //$NON-NLS-1$
 
-  private final ArrayChooserPage m_profileChooserPage;
+  private final ProfilesChooserPage m_profileChooserPage;
 
   public ExportProfilesWizard( final ProfileSelection selection )
   {
@@ -84,6 +84,16 @@ public abstract class ExportProfilesWizard extends Wizard
     m_profileChooserPage = new ProfilesChooserPage( pageMessage, profiles, new Object[0], selectedProfiles, 1, false );
 
     addPage( m_profileChooserPage );
+  }
+
+  public void setShowResultInterpolationSettings( final boolean showResultInterpolationSettings )
+  {
+    m_profileChooserPage.setShowResultInterpolationSettings( showResultInterpolationSettings );
+  }
+
+  public IResultInterpolationSettings getResultInterpolationSettings( )
+  {
+    return m_profileChooserPage.getResultInterpolationSettings();
   }
 
   private IProfileFeature[] getChosenProfiles( final Object[] profilFeatures )

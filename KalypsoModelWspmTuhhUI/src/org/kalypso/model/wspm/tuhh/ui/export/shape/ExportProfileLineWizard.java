@@ -43,8 +43,9 @@ package org.kalypso.model.wspm.tuhh.ui.export.shape;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,45 +57,42 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapeOperation;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapePage;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
+import org.kalypso.model.wspm.tuhh.core.profile.export.ProfileExportUtils;
+import org.kalypso.model.wspm.tuhh.core.profile.export.ResultProfileInterpolator;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
-import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultInterpolationProfile;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
-import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
+import org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportColumnsPage;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.profil.wizard.results.IResultInterpolationSettings;
+import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.dbf.FieldType;
+import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypso.shape.deegree.IShapeDataFactory;
 
 public class ExportProfileLineWizard extends ExportProfilesWizard
 {
   private final ExportShapePage m_exportShapePage;
 
-  private final ProfileResultExportPage m_resultsPage;
-
-  private final ExportProfileLineInterpolationPage m_interpolationPage;
+  private final CsvExportColumnsPage m_columnsPage;
 
   public ExportProfileLineWizard( final ProfileSelection selection, final String fileName )
   {
     super( selection );
 
+    setShowResultInterpolationSettings( true );
+
     final IDialogSettings wizardSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
     setDialogSettings( wizardSettings );
 
-    final IWspmResultNode results = WspmResultFactory.createResultNode( null, selection.getContainer() );
-    m_resultsPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
-    addPage( m_resultsPage );
+    m_columnsPage = new CsvExportColumnsPage( selection );
+    addPage( m_columnsPage );
 
     m_exportShapePage = new ExportShapePage( "exportShapePage", fileName ); //$NON-NLS-1$
     addPage( m_exportShapePage );
-
-    m_interpolationPage = new ExportProfileLineInterpolationPage( "interpolationPage" ); //$NON-NLS-1$
-    addPage( m_interpolationPage );
 
     setNeedsProgressMonitor( true );
   }
@@ -111,12 +109,20 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     final String shapeFileBase = m_exportShapePage.getShapeFileBase();
     final boolean doWritePrj = m_exportShapePage.isWritePrj();
 
-    final IWspmResult[] results = m_resultsPage.getSelectedResults();
+    final PatternReplacementColumn[] exportColumns = m_columnsPage.getExportColumns();
 
-    final IProfileFeature[] interpolatedProfiles = interpolateProfiles( profiles, results );
-    final WspmResultLengthSectionColumn[] lsColumns = m_resultsPage.getSelectedColumns();
+    final IResultInterpolationSettings resultInterpolationSettings = getResultInterpolationSettings();
+    final boolean doAdd = resultInterpolationSettings.shouldAddInterpolatedProfiles();
+    final boolean interpolateForeland = resultInterpolationSettings.shouldInterpolateForland();
 
-    final IShapeDataFactory shapeDataFactory = new ProfileLineDataFactory( interpolatedProfiles, shapeCharset, coordinateSystem, lsColumns );
+    final IWspmResult[] results = ProfileExportUtils.findResults( profiles, exportColumns );
+
+    final ResultProfileInterpolator interpolator = new ResultProfileInterpolator( profiles, results, doAdd, interpolateForeland );
+    final IProfileFeature[] interpolatedProfiles = interpolator.execute();
+
+    final IDBFValue[] fields = fillMapping( exportColumns );
+
+    final IShapeDataFactory shapeDataFactory = new ProfileLineDataFactory( interpolatedProfiles, shapeCharset, coordinateSystem, fields );
 
     try
     {
@@ -135,41 +141,51 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     }
   }
 
-  private IProfileFeature[] interpolateProfiles( final IProfileFeature[] profiles, final IWspmResult[] results )
+  private IDBFValue[] fillMapping( final PatternReplacementColumn[] exportColumns )
   {
-    final Collection<IProfileFeature> allProfiles = new ArrayList<IProfileFeature>( (int) (profiles.length * 1.1) );
-
-    allProfiles.addAll( Arrays.asList( profiles ) );
-
-    for( final IWspmResult result : results )
+    final Collection<IDBFValue> fields = new ArrayList<IDBFValue>();
+    try
     {
-      final IProfileFeature[] interpolatedProfiles = createInterpolatedProfiles( result );
-      allProfiles.addAll( Arrays.asList( interpolatedProfiles ) );
+      for( final PatternReplacementColumn column : exportColumns )
+      {
+        final DBFField field = createField( column );
+        fields.add( new PatternReplacementField( column, field ) );
+      }
+    }
+    catch( final DBaseException e )
+    {
+      e.printStackTrace();
     }
 
-    return allProfiles.toArray( new IProfileFeature[allProfiles.size()] );
+    return fields.toArray( new IDBFValue[fields.size()] );
   }
 
-  private IProfileFeature[] createInterpolatedProfiles( final IWspmResult result )
+  private static DBFField createField( final PatternReplacementColumn column ) throws DBaseException
   {
-    final boolean interpolateForland = m_interpolationPage.shouldInterpolateForland();
-    final boolean addInterpolatedProfiles = m_interpolationPage.shouldAddInterpolatedProfiles();
-    if( !addInterpolatedProfiles )
-      return new IProfileFeature[0];
+    final String name = column.getHeader();
+    final int formatWidth = column.getFormatWidth();
+    final int formatPrecision = column.getFormatPrecision();
+    final FieldType type = findFieldType( column.getType() );
 
-    final Collection<IProfileFeature> interpolatedProfiles = new ArrayList<IProfileFeature>();
+    final int width = formatWidth == -1 ? column.getDefaultWidth() : formatWidth;
+    final int precision = formatPrecision == -1 ? column.getDefaultPrecision() : formatPrecision;
 
-    final TuhhCalculation calculation = result.getCalculation();
-    final TuhhReach reach = calculation.getReach();
-    final WspmResultLengthSection lengthSection = result.getLengthSection();
-
-    final WspmResultInterpolationProfile[] interpolationProfiles = lengthSection.findInterpolationStations();
-    for( final WspmResultInterpolationProfile interpolationProfile : interpolationProfiles )
-    {
-      final IProfileFeature interpolatedProfile = interpolationProfile.createInterpolatedProfile( reach, !interpolateForland );
-      interpolatedProfiles.add( interpolatedProfile );
-    }
-
-    return interpolatedProfiles.toArray( new IProfileFeature[interpolatedProfiles.size()] );
+    return new DBFField( name, type, (short) width, (short) precision ); //$NON-NLS-1$
   }
+
+  // FIXME: move into shape helper
+  private static FieldType findFieldType( final Class< ? > type )
+  {
+    if( Boolean.class == type )
+      return FieldType.L;
+
+    if( Number.class.isAssignableFrom( type ) )
+      return FieldType.N;
+
+    if( Date.class == type || Calendar.class == type )
+      return FieldType.D;
+
+    return FieldType.C;
+  }
+
 }

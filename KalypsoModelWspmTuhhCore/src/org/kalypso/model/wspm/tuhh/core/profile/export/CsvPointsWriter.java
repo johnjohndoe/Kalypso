@@ -78,7 +78,7 @@ public class CsvPointsWriter extends AbstractCsvWriter
     for( int i = 0; i < columns.length; i++ )
     {
       final IProfileExportColumn column = columns[i];
-      final String value = column.getValue( data );
+      final String value = column.formatValue( data );
 
       String cleanValue = value;
       cleanValue = cleanValue.replace( '\n', ' ' );
