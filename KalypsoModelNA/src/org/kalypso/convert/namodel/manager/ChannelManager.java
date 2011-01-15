@@ -81,7 +81,7 @@ public class ChannelManager
 
   public ChannelManager( final NAConfiguration conf )
   {
-    m_asciiHelper = new ASCIIHelper( getClass().getResource( "resources/formats/gerinne.txt" ) );
+    m_asciiHelper = new ASCIIHelper( getClass().getResource( "resources/formats/gerinne.txt" ) ); //$NON-NLS-1$
     m_conf = conf;
   }
 

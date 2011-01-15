@@ -104,11 +104,11 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NaPostProcessor
 {
-  private static final String SUFFIX_QGS = "qgs";
+  private static final String SUFFIX_QGS = "qgs"; //$NON-NLS-1$
 
   private static final String STRING_RESULT_SUCCESSFUL_1 = "berechnung wurde ohne fehler beendet"; //$NON-NLS-1$
 
-  private static final String STRING_RESULT_SUCCESSFUL_2 = "Berechnung wurde ohne Fehler beendet!";
+  private static final String STRING_RESULT_SUCCESSFUL_2 = Messages.getString("NaPostProcessor.1"); //$NON-NLS-1$
 
   private static final String FILENAME_OUTPUT_RES = "output.res"; //$NON-NLS-1$
 
@@ -177,14 +177,14 @@ public class NaPostProcessor
       zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( currentResultDirs.exe_logs_zip ) ) );
       // REMARK: We rename the files in the zip, else the windoes explorer will show an empty zip by default (unknown
       // extensions)
-      ZipUtilities.writeZipEntry( zos, asciiDirs.output_res, "output.txt" );
-      ZipUtilities.writeZipEntry( zos, asciiDirs.output_err, "error.txt" );
+      ZipUtilities.writeZipEntry( zos, asciiDirs.output_res, "output.txt" ); //$NON-NLS-1$
+      ZipUtilities.writeZipEntry( zos, asciiDirs.output_err, "error.txt" ); //$NON-NLS-1$
       zos.close();
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      final String msg = String.format( "Failed to copy Kalypso-NA log files.", e.getLocalizedMessage() );
+      final String msg = String.format( Messages.getString("NaPostProcessor.4"), e.getLocalizedMessage() ); //$NON-NLS-1$
       m_logger.severe( msg );
     }
     finally
@@ -279,7 +279,7 @@ public class NaPostProcessor
   private void loadTSResults( final File outWeNatDir, final File resultDir, final TSResultDescriptor descriptor ) throws MalformedURLException, SensorException
   {
     final IFeatureType resultFT = m_modelWorkspace.getGMLSchema().getFeatureType( descriptor.getFeatureType() );
-    final String titlePropName = "name";
+    final String titlePropName = "name"; //$NON-NLS-1$
 
     final String suffix = descriptor.name();
 

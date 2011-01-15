@@ -207,7 +207,7 @@ public class CatchmentManager
 
       final Double gwwiValue = (Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_GWWI );
       if( gwwiValue == null )
-        throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.83", fe.getName() ) ); //$NON-NLS-1$
+        throw new Exception( "" );  //$NON-NLS-1$
 
       sumGwwi += gwwiValue.doubleValue();
     }
@@ -240,7 +240,7 @@ public class CatchmentManager
     if( izknNode == null )
       catchmentBuffer.append( " 0\n" ); //$NON-NLS-1$
     else
-      catchmentBuffer.append( String.format( Locale.US, " %4d\n", idManager.getAsciiID( izknNode ) ) );
+      catchmentBuffer.append( String.format( Locale.US, " %4d\n", idManager.getAsciiID( izknNode ) ) ); //$NON-NLS-1$
 
     // KommentarZeile
     catchmentBuffer.append( "ende gebietsdatensatz\n" ); //$NON-NLS-1$//$NON-NLS-2$

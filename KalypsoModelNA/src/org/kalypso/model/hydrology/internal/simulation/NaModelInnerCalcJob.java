@@ -106,7 +106,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
     catch( final OperationCanceledException e )
     {
-      final String msg = "Simulation cancelled by user";
+      final String msg = Messages.getString("NaModelInnerCalcJob.0"); //$NON-NLS-1$
       logger.log( Level.INFO, msg );
       monitor.setFinishInfo( IStatus.CANCEL, msg );
       return;

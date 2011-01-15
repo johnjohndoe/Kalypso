@@ -194,7 +194,7 @@ public class HydrotopeWriter
     if( soiltypeByName != null )
       return soilTypeID;
 
-    final String msg = String.format( "Unknown soiltype '%s' in hydrotope '%s'.", soilTypeID, hydrotop.getId() );
+    final String msg = String.format( Messages.getString("HydrotopeWriter.0"), soilTypeID, hydrotop.getId() ); //$NON-NLS-1$
     throw new SimulationException( msg );
   }
 
@@ -211,7 +211,7 @@ public class HydrotopeWriter
     final String _40 = formatSudsSealing( info.getSudsSealingByType( "40" ) ); //$NON-NLS-1$ 
     final String _41 = formatSudsSealing( info.getSudsSealingByType( "41" ) ); //$NON-NLS-1$ 
 
-    return String.format( Locale.US, "%s %s %s %s %s %s %s %s %s %s", _10, _11, _12, _13, _20, _21, _30, _31, _40, _41 );
+    return String.format( Locale.US, "%s %s %s %s %s %s %s %s %s %s", _10, _11, _12, _13, _20, _21, _30, _31, _40, _41 ); //$NON-NLS-1$
   }
 
   private static String formatSudsSealing( final Sealing info )

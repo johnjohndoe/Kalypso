@@ -69,18 +69,13 @@ public class WriteAsciiVisitor extends NetElementVisitor
   public boolean visit( final NetElement netElement ) throws NAPreprocessorException
   {
     netElement.write( m_asciiBuffer, m_nodeCollector );
+
     final Node overflowNode = netElement.getOverflowNode();
     if( overflowNode != null && !m_nodeCollector.contains( overflowNode ) )
       m_nodeCollector.add( overflowNode );
-    try
-    {
-      netElement.generateTimeSeries();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      log( e.getLocalizedMessage() );
-    }
+
+    netElement.generateTimeSeries();
+
     return true;
   }
 

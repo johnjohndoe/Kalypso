@@ -48,7 +48,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -81,7 +80,7 @@ public class FeatureListGeometryIntersector
 {
   private static final double MIN_AREA = 0.01;
 
-  private Map<List<Feature>, SplitSortSpatialIndex> m_index = new HashMap<List<Feature>, SplitSortSpatialIndex>();
+  private final Map<List<Feature>, SplitSortSpatialIndex> m_index = new HashMap<List<Feature>, SplitSortSpatialIndex>();
 
   private final List<List<Feature>> m_sourceLayers = new ArrayList<List<Feature>>();
 
@@ -122,7 +121,7 @@ public class FeatureListGeometryIntersector
    * Intersects features given as a list of feature lists, produces the result into the resultList<br>
    */
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  public List<Polygon> intersect( final IProgressMonitor monitor ) throws CoreException
+  public List<Polygon> intersect( final IProgressMonitor monitor )
   {
     if( m_sourceLayers.isEmpty() )
       return Collections.EMPTY_LIST;
@@ -159,7 +158,8 @@ public class FeatureListGeometryIntersector
         }
         catch( final Exception e )
         {
-          m_log.add( StatusUtilities.createStatus( Status.WARNING, "Problem bei Feature " + feature.getName(), e ) );
+          final String message = String.format( Messages.getString("FeatureListGeometryIntersector.0"), feature.getName() ); //$NON-NLS-1$
+          m_log.add( StatusUtilities.createStatus( Status.WARNING, message, e ) );
         }
       }
       sizeMap.put( featureList, polyCount );
@@ -167,14 +167,14 @@ public class FeatureListGeometryIntersector
 
     // sort by real number of polygons
     Collections.sort( m_sourceLayers, new Comparator<List<Feature>>()
-    {
+        {
 
       @Override
       public int compare( final List<Feature> o1, final List<Feature> o2 )
       {
         return sizeMap.get( o1 ) - sizeMap.get( o2 );
       }
-    } );
+        } );
 
     final Iterator<List<Feature>> sourceListIterator = m_sourceLayers.iterator();
     final List<Feature> sourceList = sourceListIterator.next();
@@ -214,7 +214,7 @@ public class FeatureListGeometryIntersector
           final Geometry candidatePolygon = (Geometry) candidateObject;
 
           final Object userData2 = candidatePolygon.getUserData();
-          int dim2 = candidatePolygon.getDimension();
+          final int dim2 = candidatePolygon.getDimension();
 
           final FeatureIntersection userData = new FeatureIntersection( (FeatureIntersection) userData1, (FeatureIntersection) userData2 );
 
@@ -244,14 +244,17 @@ public class FeatureListGeometryIntersector
             }
             catch( final TopologyException e )
             {
-              m_log.add( StatusUtilities.createStatus( Status.ERROR, "Problem bei der Verschneidung von \n" + featurePolygon + "\n" + candidatePolygon, e ) );
+              final String error = String.format( Messages.getString("FeatureListGeometryIntersector.1"), featurePolygon, candidatePolygon ); //$NON-NLS-1$
+              m_log.add( StatusUtilities.createStatus( Status.ERROR, error, e ) );
             }
           }
         }
       }
       sourcePolygons = resultGeometryList;
     }
-    m_log.add( StatusUtilities.createStatus( Status.INFO, "Gesamter Flächenfehler bei der Verschneidung: " + totalAreaDiscarded, null ) );
+
+    final String message = String.format( Messages.getString("FeatureListGeometryIntersector.2"), totalAreaDiscarded ); //$NON-NLS-1$
+    m_log.add( StatusUtilities.createStatus( Status.INFO, message, null ) );
     return resultGeometryList;
   }
   /**

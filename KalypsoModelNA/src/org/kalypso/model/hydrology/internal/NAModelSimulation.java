@@ -157,7 +157,7 @@ public class NAModelSimulation
     }
     catch( final NAPreprocessorException e )
     {
-      final String msg = String.format( "Failed to convert data in Kalypso-NA.exe format files: %s", e.getLocalizedMessage() );
+      final String msg = String.format( Messages.getString("NAModelSimulation.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
       m_logger.log( Level.SEVERE, msg, e );
       throw new SimulationException( msg, e );
     }
@@ -176,7 +176,7 @@ public class NAModelSimulation
     }
     catch( final MalformedURLException e )
     {
-      throw new SimulationException( "Failed to read start condition file", e );
+      throw new SimulationException( Messages.getString("NAModelSimulation.1"), e ); //$NON-NLS-1$
     }
   }
 
@@ -203,7 +203,7 @@ public class NAModelSimulation
     catch( final IOException e )
     {
       e.printStackTrace();
-      final String msg = String.format( "Failed to backup results to directory: %s (%s)", resultDirTo.getAbsoluteFile(), e.getLocalizedMessage() );
+      final String msg = String.format( Messages.getString("NAModelSimulation.2"), resultDirTo.getAbsoluteFile(), e.getLocalizedMessage() ); //$NON-NLS-1$
       m_logger.warning( msg );
     }
   }

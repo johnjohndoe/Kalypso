@@ -178,7 +178,7 @@ public final class NAZMLGenerator
     extWriter.write( observation, axisType, writer, defaultValue );
   }
 
-  public static void createFile( final StringBuffer writer, final String axisValueType, final IObservation observation ) throws Exception
+  public static void createFile( final StringBuffer writer, final String axisValueType, final IObservation observation ) throws SensorException
   {
     final IAxis[] axis = observation.getAxisList();
     final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeseriesConstants.TYPE_DATE );
@@ -236,7 +236,7 @@ public final class NAZMLGenerator
   {
     final String dateString = DF_GRAP_HEADER.format( date );
 
-    writer.append( "\n       " );
+    writer.append( "\n       " ); //$NON-NLS-1$
     writer.append( dateString );
     writer.append( "\ngrap\n" ); //$NON-NLS-1$
   }
