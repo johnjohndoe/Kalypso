@@ -307,7 +307,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             final Geometry g = JTSAdapter.export( f.getDefaultGeometryPropertyValue() );
             if( g == null )
             {
-              System.out.println( "Broken Feature:" + f + " MORE:" + f.getDefaultGeometryPropertyValue() );
+              System.out.println( "Broken Feature:" + f + " MORE:" + f.getDefaultGeometryPropertyValue() ); //$NON-NLS-1$ //$NON-NLS-2$
               m_outputList.remove( f );
               continue;
             }

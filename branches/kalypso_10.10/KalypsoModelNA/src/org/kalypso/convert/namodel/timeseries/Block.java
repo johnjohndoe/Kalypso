@@ -127,7 +127,7 @@ public class Block
       String dateString = dateFormat.format( dateKey );
       writer.print( dateString );
       writer.print( ' ' );
-      writer.format( "%.3f", value );
+      writer.format( "%.3f", value ); //$NON-NLS-1$
     }
     writer.close();
   }

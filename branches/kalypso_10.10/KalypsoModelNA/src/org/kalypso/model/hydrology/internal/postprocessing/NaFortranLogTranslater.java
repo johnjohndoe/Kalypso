@@ -63,9 +63,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NaFortranLogTranslater
 {
-  private static final QName QNAME_ERRLOG_RECORD = new QName( NaModelConstants.NS_NAFORTRANLOG, "record" );
+  private static final QName QNAME_ERRLOG_RECORD = new QName( NaModelConstants.NS_NAFORTRANLOG, "record" ); //$NON-NLS-1$
 
-  private static final QName QNAME_ERRLOG_ELEMENT = new QName( NaModelConstants.NS_NAFORTRANLOG, "element" );
+  private static final QName QNAME_ERRLOG_ELEMENT = new QName( NaModelConstants.NS_NAFORTRANLOG, "element" ); //$NON-NLS-1$
 
   private final File m_logFile;
 
@@ -99,7 +99,7 @@ public class NaFortranLogTranslater
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String msg = String.format( "Failed to read KalypsoNA log file %s", e.getLocalizedMessage() );
+      final String msg = String.format( Messages.getString("NaFortranLogTranslater.2"), e.getLocalizedMessage() ); //$NON-NLS-1$
       m_logger.warning( msg );
     }
   }
@@ -176,7 +176,7 @@ public class NaFortranLogTranslater
     {
       if( m_workspace == null )
       {
-        final String msg = String.format( "Corrupt log-file is copied back to Kalypso. Element IDs are NOT translated." );
+        final String msg = String.format( Messages.getString("NaFortranLogTranslater.3") ); //$NON-NLS-1$
         m_logger.warning( msg );
         FileUtils.copyFile( m_logFile, resultFile );
 
@@ -188,7 +188,7 @@ public class NaFortranLogTranslater
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String msg = String.format( "Failed to write translated KalypsoNA log file %s", e.getLocalizedMessage() );
+      final String msg = String.format( Messages.getString("NaFortranLogTranslater.4"), e.getLocalizedMessage() ); //$NON-NLS-1$
       m_logger.severe( msg );
     }
   }

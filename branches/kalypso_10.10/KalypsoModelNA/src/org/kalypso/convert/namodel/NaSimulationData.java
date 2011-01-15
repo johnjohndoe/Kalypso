@@ -52,6 +52,7 @@ import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.optimize.transform.ParameterOptimizeContext;
@@ -205,7 +206,7 @@ public class NaSimulationData
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Failed to initialize model workspace", e );
+      throw new SimulationException( Messages.getString("NaSimulationData_0"), e ); //$NON-NLS-1$
     }
   }
 

@@ -120,7 +120,7 @@ public class NAModelPreprocessor
     {
       // Handle only unexpected exceptions here. Everything else should be handling deeper down!
       e.printStackTrace();
-      throw new NAPreprocessorException( "Unexpected error while generating Kalypso-NA ASCII files", e );
+      throw new NAPreprocessorException( Messages.getString("NAModelPreprocessor.0"), e ); //$NON-NLS-1$
     }
   }
 
@@ -142,11 +142,11 @@ public class NAModelPreprocessor
     copyPreprocessedDirs();
     checkCancel( monitor );
 
-    monitor.setMessage( "Adding additional virtual channels" );
+    monitor.setMessage( Messages.getString("NAModelPreprocessor.1") ); //$NON-NLS-1$
     tweakGmlModel( modelWorkspace, rootNodeID, useResults );
     checkCancel( monitor );
 
-    monitor.setMessage( "Writing control files for Kalypso-NA" );
+    monitor.setMessage( Messages.getString("NAModelPreprocessor.2") ); //$NON-NLS-1$
     final NAControlConverter naControlConverter = new NAControlConverter( metaControl, m_asciiDirs.startDir );
     naControlConverter.writeFalstart();
     naControlConverter.writeStartFile( naControl, naModel, sudsWorkspace, m_idManager );
@@ -210,7 +210,7 @@ public class NAModelPreprocessor
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new NAPreprocessorException( "Failed to copy preprocessed ascii files", e );
+      throw new NAPreprocessorException( Messages.getString("NAModelPreprocessor.3"), e ); //$NON-NLS-1$
     }
   }
 
@@ -232,7 +232,7 @@ public class NAModelPreprocessor
     }
     catch( final Exception e )
     {
-      final String msg = String.format("Failed to write Kalypso-NA ASCII start condition: %s", e.getLocalizedMessage());
+      final String msg = String.format(Messages.getString("NAModelPreprocessor.4"), e.getLocalizedMessage()); //$NON-NLS-1$
       throw new NAPreprocessorException( msg, e );
     }
   }

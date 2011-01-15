@@ -325,7 +325,7 @@ public interface NaModelConstants
   public static final QName INI_CATCHMENT_LINK_HYD_PROP = new QName( NS_INIVALUES, "hyd" ); //$NON-NLS-1$
 
   /** synthN.xsd */
-  public static final QName SYNTHN_STATN_FT = new QName( NS_SYNTHN, "StatN" );
+  public static final QName SYNTHN_STATN_FT = new QName( NS_SYNTHN, "StatN" ); //$NON-NLS-1$
 
   /** Suds */
   public static final QName SUDS_PROP_SUDS_MEMBER = new QName( NS_NASUDS, "sudMember" ); //$NON-NLS-1$

@@ -70,5 +70,5 @@ public interface INaCalcCaseConstants
 
   String ERGEBNISSE_DIR = "Ergebnisse"; //$NON-NLS-1$
 
-  String AKTUELL_DIR = ERGEBNISSE_DIR + '/' + "Aktuell";
+  String AKTUELL_DIR = ERGEBNISSE_DIR + '/' + "Aktuell"; //$NON-NLS-1$
 }

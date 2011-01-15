@@ -78,6 +78,7 @@ import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.Ueberlauf;
 import org.kalypso.model.hydrology.binding.model.Verzweigung;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -194,19 +195,19 @@ public class NetFileManager
 
         if( upStreamChannel == null )
         {
-          final String message = String.format( "Inconsistent net: Node '%s' with branch has no upstream channel.", upStreamNode.getName() );
+          final String message = String.format( Messages.getString("NetFileManager_0"), upStreamNode.getName() ); //$NON-NLS-1$
           throw new SimulationException( message );
         }
 
         if( downStreamChannelFE == null )
         {
-          final String message = String.format( "Inconsistent net: Node '%s' with branch has no downstream channel.", upStreamNode.getName() );
+          final String message = String.format( Messages.getString("NetFileManager_1"), upStreamNode.getName() ); //$NON-NLS-1$
           throw new SimulationException( message );
         }
 
         if( upStreamChannel == downStreamChannelFE )
         {
-          logWarning( "Impossible net at %s: Node-Node relation to itself", upStreamChannel );
+          logWarning( Messages.getString("NetFileManager_2"), upStreamChannel ); //$NON-NLS-1$
           // FIXME: shouldn't we throw an exception here?
           continue;
         }
@@ -224,20 +225,20 @@ public class NetFileManager
       final Node downStreamNode = channel.getDownstreamNode();
       if( downStreamNode == null )
       {
-        logWarning( "%s is outside network", channel );
+        logWarning( Messages.getString("NetFileManager_3"), channel ); //$NON-NLS-1$
         continue;
       }
 
       final Channel downStreamChannel = downStreamNode.getDownstreamChannel();
       if( downStreamChannel == null )
       {
-        logWarning( "%s has no downstream connection", downStreamNode );
+        logWarning( Messages.getString("NetFileManager_4"), downStreamNode ); //$NON-NLS-1$
         continue;
       }
       // set dependency
       if( channel == downStreamChannel )
       {
-        logWarning( "Impossible net at %s: channel discharges to itself", channel );
+        logWarning( Messages.getString("NetFileManager_5"), channel ); //$NON-NLS-1$
         continue;
       }
 
@@ -275,7 +276,7 @@ public class NetFileManager
       final Channel upstreamChannel = catchment.getChannel();
       if( upstreamChannel == null )
       {
-        logWarning( "%s is not connected to network", catchment );
+        logWarning( Messages.getString("NetFileManager_6"), catchment ); //$NON-NLS-1$
         continue;
       }
 
@@ -304,20 +305,20 @@ public class NetFileManager
         final Catchment downStreamCatchmentFE = (Catchment) workspace.resolveLink( abflussFE, rt2 );
         if( downStreamCatchmentFE == null )
         {
-          logWarning( "Downstream catchment for %s cannot be resolved.", abflussFE );
+          logWarning( Messages.getString("NetFileManager_7"), abflussFE ); //$NON-NLS-1$
           continue;
         }
         final Channel downStreamChannelFE = downStreamCatchmentFE.getChannel();
         if( downStreamChannelFE == null )
         {
-          logWarning( "%s is not connected to network.", downStreamCatchmentFE );
+          logWarning( Messages.getString("NetFileManager_8"), downStreamCatchmentFE ); //$NON-NLS-1$
           continue;
         }
 
         final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
         if( downStreamElement == null )
         {
-          logWarning( "%s has no downstream net element.", downStreamCatchmentFE );
+          logWarning( Messages.getString("NetFileManager_9"), downStreamCatchmentFE ); //$NON-NLS-1$
           continue;
         }
 
@@ -372,18 +373,18 @@ public class NetFileManager
    */
   private static String getLogLabel( final Feature netElement )
   {
-    final String defaultName = String.format( "<Unbekannt> (GML-ID: %s)", netElement.getId() );
+    final String defaultName = String.format( Messages.getString("NetFileManager_10"), netElement.getId() ); //$NON-NLS-1$
     final String gmlName = netElement.getName();
     final String name = StringUtils.isBlank( gmlName ) ? defaultName : gmlName;
 
     if( netElement instanceof Catchment )
-      return String.format( "Teilgebiet #%s", name );
+      return String.format( Messages.getString("NetFileManager_11"), name ); //$NON-NLS-1$
 
     if( netElement instanceof Channel )
-      return String.format( "Strang #%s", name );
+      return String.format( Messages.getString("NetFileManager_12"), name ); //$NON-NLS-1$
 
     if( netElement instanceof Node )
-      return String.format( "Knoten #%s", name );
+      return String.format( Messages.getString("NetFileManager_13"), name ); //$NON-NLS-1$
 
     return name;
   }
@@ -595,7 +596,7 @@ public class NetFileManager
       return new ZuflussBean( 0, 0, 1, 0, 0, queb, branchNode );
     }
 
-    throw new IllegalArgumentException( "Illegal branching type: " + branching.getClass() );
+    throw new IllegalArgumentException( "Illegal branching type: " + branching.getClass() ); //$NON-NLS-1$
   }
 
   private ZuflussBean getQQRelationZuflussBean( final Node node, final IDManager idManager ) throws SensorException

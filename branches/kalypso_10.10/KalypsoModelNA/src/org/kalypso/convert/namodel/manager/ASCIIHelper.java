@@ -119,7 +119,7 @@ public class ASCIIHelper
     final IFeatureType featureType = feature.getFeatureType();
     final IPropertyType propertyType = featureType.getProperty( propLocalName );
     if( propertyType == null )
-      throw new IllegalArgumentException( String.format( "Unknown property: ", propLocalName ) );
+      throw new IllegalArgumentException( String.format( "Unknown property: ", propLocalName ) ); //$NON-NLS-1$
 
     final Object value = getValue( feature, propertyType );
 

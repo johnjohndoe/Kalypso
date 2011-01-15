@@ -74,7 +74,7 @@ public class CalibrationConfig
   private void generateContexts( )
   {
     // REMARK: this code relies heavily on the fixed prefix of the rrm-namespace.
-    final String prefix = "/" + UrlCatalogNA.PREFIX_RRM + ":";
+    final String prefix = "/" + UrlCatalogNA.PREFIX_RRM + ":"; //$NON-NLS-1$ //$NON-NLS-2$
 
     // Catchments
     final String catchmentsProp = m_naControl.getCatchments();

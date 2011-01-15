@@ -98,7 +98,7 @@ public class ShapeWithHash
       catch( final Exception e )
       {
         e.printStackTrace();
-        final String msg = String.format( "Failed to load shape '%s'", shapePath );
+        final String msg = String.format( Messages.getString("ShapeWithHash.0"), shapePath ); //$NON-NLS-1$
         throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, msg, e ) );
       }
     }
@@ -157,7 +157,7 @@ public class ShapeWithHash
     }
     catch( final Exception e )
     {
-      final String message = String.format( "Failed to access shape row '%d', property '%s'", index, property );
+      final String message = String.format( Messages.getString("ShapeWithHash.1"), index, property ); //$NON-NLS-1$
       throw new CoreException( new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, message, e ) );
     }
   }

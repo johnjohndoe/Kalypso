@@ -54,25 +54,25 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
  */
 public enum TSResultDescriptor
 {
-  qgs(".qgs", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", 1.0d), //$NON-NLS-3$ //$NON-NLS-4$
-  pre("j Niederschlag .pre", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RAINFALL, null, null, 1.0d),
-  tmp("j Temperatur .tmp", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_TEMPERATURE, null, null, 1.0d),
-  qif("n Interflow .qif", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  qgw("n Grundwasser .qgw", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  qgg("n Gesamtabfluss TG .qgg", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  gws("n Grundwasserstand .gws - Umrechnung von m auf cm", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_WATERLEVEL, null, null, 100.0d),
-  qbs("n Basisabfluss .qbs", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  qna("n Oberflaechenabfluss .qna", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  qvs("n Abfluss vers. Flaechen .qvs", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  sch("// n Schnee .sch [mm]", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_WATERLEVEL, null, null, 0.1d),
-  qt1("n Kluftgrundw1 .qt1", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  qtg("n Kluftgrundw .qtg", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  vet("n Evapotranspiration .vet [mm]", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_EVAPORATION, null, null, 0.1d),
+  qgs(".qgs", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", 1.0d),  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
+  pre("j Niederschlag .pre", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RAINFALL, null, null, 1.0d), //$NON-NLS-1$
+  tmp("j Temperatur .tmp", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_TEMPERATURE, null, null, 1.0d), //$NON-NLS-1$
+  qif("n Interflow .qif", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d), //$NON-NLS-1$
+  qgw("n Grundwasser .qgw", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d), //$NON-NLS-1$
+  qgg("n Gesamtabfluss TG .qgg", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d), //$NON-NLS-1$
+  gws("n Grundwasserstand .gws - Umrechnung von m auf cm", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_WATERLEVEL, null, null, 100.0d), //$NON-NLS-1$
+  qbs("n Basisabfluss .qbs", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d), //$NON-NLS-1$
+  qna("n Oberflaechenabfluss .qna", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d), //$NON-NLS-1$
+  qvs("n Abfluss vers. Flaechen .qvs", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d), //$NON-NLS-1$
+  sch("// n Schnee .sch [mm]", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_WATERLEVEL, null, null, 0.1d), //$NON-NLS-1$
+  qt1("n Kluftgrundw1 .qt1", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d), //$NON-NLS-1$
+  qtg("n Kluftgrundw .qtg", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d), //$NON-NLS-1$
+  vet("n Evapotranspiration .vet [mm]", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_EVAPORATION, null, null, 0.1d), //$NON-NLS-1$
 
   // Straenge
-  sph("n Wasserstand Speicher .sph [muNN]", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_NORMNULL, null, null, 1.0d),
-  sub("n Speicherueberlauf .sub [m³/s]", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d),
-  spi("n Speicherinhalt .spi [hm³] - Umrechnung auf m³", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_VOLUME, null, null, 1000000.0d);
+  sph("n Wasserstand Speicher .sph [muNN]", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_NORMNULL, null, null, 1.0d), //$NON-NLS-1$
+  sub("n Speicherueberlauf .sub [m³/s]", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_RUNOFF, null, null, 1.0d), //$NON-NLS-1$
+  spi("n Speicherinhalt .spi [hm³] - Umrechnung auf m³", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_VOLUME, null, null, 1000000.0d); //$NON-NLS-1$
 
   private final String m_description;
 

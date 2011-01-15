@@ -74,6 +74,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -155,10 +156,10 @@ public class NetElement
     return m_calculated;
   }
 
-  public void generateTimeSeries( ) throws IOException, Exception
+  public void generateTimeSeries( ) throws NAPreprocessorException
   {
     final File asciiBaseDir = m_conf.getAsciiBaseDir();
-    final File klimaDir = new File( asciiBaseDir, "klima.dat" );
+    final File klimaDir = new File( asciiBaseDir, "klima.dat" ); //$NON-NLS-1$
 
     final NAControl metaControl = m_conf.getMetaControl();
     final Date simulationStart = metaControl.getSimulationStart();
@@ -168,41 +169,49 @@ public class NetElement
 
     for( final Catchment catchment : catchments )
     {
-      final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
-      final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
-      final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
-      final File parent = targetFileN.getParentFile();
-      parent.mkdirs();
-
-      if( metaControl.isUsePrecipitationForm() )
+      try
       {
-        if( !targetFileN.exists() )
-          writeSynthNFile( targetFileN, catchment );
+        final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
+        final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
+        final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( catchment, klimaDir, m_conf ); //$NON-NLS-1$
+        final File parent = targetFileN.getParentFile();
+        parent.mkdirs();
+
+        if( metaControl.isUsePrecipitationForm() )
+        {
+          if( !targetFileN.exists() )
+            writeSynthNFile( targetFileN, catchment );
+        }
+        else
+        {
+          final TimeseriesLinkType linkN = catchment.getPrecipitationLink();
+          writeTimeseries( targetFileN, linkN, ITimeseriesConstants.TYPE_RAINFALL, null, null, null, null );
+
+          final TimeseriesLinkType linkT = catchment.getTemperatureLink();
+          writeTimeseries( targetFileT, linkT, ITimeseriesConstants.TYPE_TEMPERATURE, FILTER_T, "1.0", simulationStart, simulationEnd ); //$NON-NLS-1$
+
+          final TimeseriesLinkType linkV = catchment.getEvaporationLink();
+          writeTimeseries( targetFileV, linkV, ITimeseriesConstants.TYPE_EVAPORATION, FILTER_V, "0.5", simulationStart, simulationEnd ); //$NON-NLS-1$
+        }
       }
-      else
+      catch( final Exception e )
       {
-        final TimeseriesLinkType linkN = catchment.getPrecipitationLink();
-        writeTimeseries( targetFileN, linkN, ITimeseriesConstants.TYPE_RAINFALL, null, null, null, null );
+        e.printStackTrace();
+        final String message = String.format( Messages.getString("NetElement.3"), catchment.getName(), e.getLocalizedMessage() ); //$NON-NLS-1$
+        m_logger.log( Level.SEVERE, message, e );
 
-        final TimeseriesLinkType linkT = catchment.getTemperatureLink();
-        writeTimeseries( targetFileT, linkT, ITimeseriesConstants.TYPE_TEMPERATURE, FILTER_T, "1.0", simulationStart, simulationEnd );
-
-        final TimeseriesLinkType linkV = catchment.getEvaporationLink();
-        writeTimeseries( targetFileV, linkV, ITimeseriesConstants.TYPE_EVAPORATION, FILTER_V, "0.5", simulationStart, simulationEnd );
+        throw new NAPreprocessorException( message, e );
       }
     }
   }
 
-  private void writeTimeseries( final File targetFile, final TimeseriesLinkType link, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws Exception
+  private void writeTimeseries( final File targetFile, final TimeseriesLinkType link, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws SensorException, IOException
   {
     if( link == null )
       return;
 
     if( targetFile.exists() )
       return;
-
-    // TODO: remove
-    // System.out.println( "Writing " + targetFile.getName() );
 
     final String href = link.getHref();
     final String hrefWithFilter = filter == null ? href : ZmlURL.insertFilter( href, filter );
@@ -295,7 +304,7 @@ public class NetElement
     final Node downstreamNode = m_channel.getDownstreamNode();
     if( downstreamNode == null )
     {
-      final String message = String.format( "Missing downstream node for channel %s", channelID );
+      final String message = String.format( Messages.getString("NetElement.4"), channelID ); //$NON-NLS-1$
       throw new NAPreprocessorException( message );
     }
 
@@ -305,7 +314,7 @@ public class NetElement
 
     // append upstream node:
     final int upstreamNodeID = upstreamNode == null ? ANFANGSKNOTEN : idManager.getAsciiID( upstreamNode );
-    netBuffer.append( String.format( "%8d", upstreamNodeID ) );
+    netBuffer.append( String.format( "%8d", upstreamNodeID ) ); //$NON-NLS-1$
 
     // append downstream node:
     final int downstreamNodeID = idManager.getAsciiID( downstreamNode );
@@ -345,7 +354,7 @@ public class NetElement
     return "FID:" + channel.getId() + " AsciiID: " + m_conf.getIdManager().getAsciiID( channel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public void writeSynthNFile( final File targetFileN, final Catchment catchment ) throws Exception
+  public void writeSynthNFile( final File targetFileN, final Catchment catchment ) throws SensorException, IOException
   {
     final NAControl metaControl = m_conf.getMetaControl();
 
