@@ -447,7 +447,13 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       public void widgetSelected( final SelectionEvent e )
       {
         System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.11" ) + checkBtnOptionMinMax1.getSelection() ); //$NON-NLS-1$
-        ElevationColorControl.setMinMaxStatus( checkBtnOptionMinMax1.getSelection() );
+//        ElevationColorControl.setMinMaxStatus( checkBtnOptionMinMax1.getSelection() );
+        //fixes ticket #644. 
+        //according to implementation of ElevationColorControl here needs the manual replacement of min-max values.
+        //only setting of invert flag is not enough here
+        Color maxColor = ElevationColorControl.getMaxColor();
+        ElevationColorControl.setMaxColor( ElevationColorControl.getMinColor() );
+        ElevationColorControl.setMinColor( maxColor );
         preferenceStore_.setValue( LINE_MIN_MAX, checkBtnOptionMinMax1.getSelection() );
         windowCanvas.redraw();
       }
