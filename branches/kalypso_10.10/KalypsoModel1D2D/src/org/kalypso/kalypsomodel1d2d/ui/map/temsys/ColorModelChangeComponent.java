@@ -348,16 +348,39 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     clientComposite.setLayout( new GridLayout( 2, false ) );
 
     final Group minMaxGroup = new Group( clientComposite, SWT.NONE );
-    final GridData gridDataminMaxGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
+    final GridData gridDataminMaxGroup = new GridData( SWT.CENTER, SWT.FILL, false, true );
     minMaxGroup.setLayoutData( gridDataminMaxGroup );
     minMaxGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.4" ) ); //$NON-NLS-1$
 
     final Group optionsColorGroup = new Group( clientComposite, SWT.NONE );
-    final GridData gridDataoptionsColorGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
+    final GridData gridDataoptionsColorGroup = new GridData( SWT.CENTER, SWT.FILL, false, true );
     optionsColorGroup.setLayoutData( gridDataoptionsColorGroup );
 
     firstGroup( minMaxGroup );
     secondGroup( optionsColorGroup );
+
+    final Composite colorApplyComposite = new Composite( clientComposite, SWT.NONE );
+    colorApplyComposite.setLayout( new GridLayout( 2, false ) );
+
+    final GridData gridDataColorApplyComposite = new GridData( SWT.FILL, SWT.FILL, false, false );
+    gridDataColorApplyComposite.horizontalSpan = 2;
+    colorApplyComposite.setLayoutData( gridDataColorApplyComposite );
+    
+    m_applyColors = m_toolkit.createButton( colorApplyComposite,  Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.37" ) , SWT.NONE ); //$NON-NLS-1$
+    m_applyColors.addSelectionListener( new SelectionAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        redrawElevationLayer();
+        windowCanvas.redraw();
+      }
+    } );
+    m_applyColors.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.37" ) ); //$NON-NLS-1$
+    image_Apply = new Image( optionsColorGroup.getDisplay(), AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/ok.gif" ).getImageData() ); //$NON-NLS-1$
+    m_applyColors.setImage( image_Apply );
+    windowCanvas.redraw();
   }
 
   /**
@@ -554,10 +577,10 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     optionsColorGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.12" ) ); //$NON-NLS-1$
     optionsColorGroup.setLayout( new GridLayout( 2, false ) );
 
-    final GridData gridDataoptionsColorGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
+    final GridData gridDataoptionsColorGroup = new GridData( SWT.CENTER, SWT.FILL, false, true );
     optionsColorGroup.setLayoutData( gridDataoptionsColorGroup );
 
-    final Composite elevationChooseComposite = m_toolkit.createComposite( optionsColorGroup, SWT.NONE );
+    final Composite elevationChooseComposite = m_toolkit.createComposite( optionsColorGroup, SWT.FILL );
     elevationChooseComposite.setLayout( new GridLayout( 2, false ) );
     @SuppressWarnings("unused")
     final Label maxElevationLabel = m_toolkit.createLabel( elevationChooseComposite, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.14" ), SWT.FILL ); //$NON-NLS-1$
@@ -728,20 +751,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       }
     } );
 
-    m_applyColors = m_toolkit.createButton( spinnerComposite, "", SWT.NONE ); //$NON-NLS-1$
-    m_applyColors.addSelectionListener( new SelectionAdapter()
-    {
-      @SuppressWarnings("synthetic-access")
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        redrawElevationLayer();
-        windowCanvas.redraw();
-      }
-    } );
-    m_applyColors.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.37" ) ); //$NON-NLS-1$
-    image_Apply = new Image( optionsColorGroup.getDisplay(), AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/ok.gif" ).getImageData() ); //$NON-NLS-1$
-    m_applyColors.setImage( image_Apply );
     windowCanvas.redraw();
   }
 
