@@ -82,6 +82,108 @@
 		</TextSymbolizer>		
 	</Rule>
 	<Rule>
+		<Name>rule_downStreamNode_2nd</Name>
+		<Title>%rule_downStreamNode_2nd_title</Title>
+		<LineSymbolizer>
+			<Geometry>
+				<ogc:PropertyName>link_downStreamNodeMember_2nd</ogc:PropertyName>
+			</Geometry>
+			<Stroke>
+				<CssParameter name="stroke">#8DB6CD</CssParameter>
+				<CssParameter name="stroke-width">2.0</CssParameter>
+				<CssParameter name="stroke-linejoin">mitre</CssParameter>
+				<CssParameter name="stroke-opacity">1.0</CssParameter>
+				<CssParameter name="stroke-linecap">butt</CssParameter>
+			</Stroke>
+		</LineSymbolizer>
+		<TextSymbolizer>
+			<Geometry>
+				<ogc:PropertyName>link_downStreamNodeMember_2nd</ogc:PropertyName>
+			</Geometry>
+			<Label>
+				<ogc:PropertyName>name</ogc:PropertyName>
+			</Label>
+			<Font>
+				<CssParameter name="font-family" />
+				<CssParameter name="font-color">#000000</CssParameter>
+				<CssParameter name="font-size">10.0</CssParameter>
+				<CssParameter name="font-style">normal</CssParameter>
+				<CssParameter name="font-weight">normal</CssParameter>
+			</Font>
+			<LabelPlacement>
+				<LinePlacement>
+					<PerpendicularOffset>above</PerpendicularOffset>
+					<LineWidth>2</LineWidth>
+					<Gap>10</Gap>
+				</LinePlacement>
+			</LabelPlacement>
+			<Halo>
+				<Fill>
+					<CssParameter name="fill-opacity">0.3</CssParameter>
+					<CssParameter name="fill">#8DB6CD</CssParameter>
+				</Fill>
+				<Stroke>
+					<CssParameter name="stroke">#000000</CssParameter>
+					<CssParameter name="stroke-width">1.0</CssParameter>
+					<CssParameter name="stroke-linejoin">round</CssParameter>
+					<CssParameter name="stroke-opacity">1.0</CssParameter>
+					<CssParameter name="stroke-linecap">square</CssParameter>
+				</Stroke>
+			</Halo>
+		</TextSymbolizer>		
+	</Rule>
+	<Rule>
+		<Name>rule_downStreamNode_3rd</Name>
+		<Title>%rule_downStreamNode_3rd_title</Title>
+		<LineSymbolizer>
+			<Geometry>
+				<ogc:PropertyName>link_downStreamNodeMember_3rd</ogc:PropertyName>
+			</Geometry>
+			<Stroke>
+				<CssParameter name="stroke">#87CEFA</CssParameter>
+				<CssParameter name="stroke-width">2.0</CssParameter>
+				<CssParameter name="stroke-linejoin">mitre</CssParameter>
+				<CssParameter name="stroke-opacity">1.0</CssParameter>
+				<CssParameter name="stroke-linecap">butt</CssParameter>
+			</Stroke>
+		</LineSymbolizer>
+		<TextSymbolizer>
+			<Geometry>
+				<ogc:PropertyName>link_downStreamNodeMember_3rd</ogc:PropertyName>
+			</Geometry>
+			<Label>
+				<ogc:PropertyName>name</ogc:PropertyName>
+			</Label>
+			<Font>
+				<CssParameter name="font-family" />
+				<CssParameter name="font-color">#000000</CssParameter>
+				<CssParameter name="font-size">10.0</CssParameter>
+				<CssParameter name="font-style">normal</CssParameter>
+				<CssParameter name="font-weight">normal</CssParameter>
+			</Font>
+			<LabelPlacement>
+				<LinePlacement>
+					<PerpendicularOffset>above</PerpendicularOffset>
+					<LineWidth>2</LineWidth>
+					<Gap>10</Gap>
+				</LinePlacement>
+			</LabelPlacement>
+			<Halo>
+				<Fill>
+					<CssParameter name="fill-opacity">0.3</CssParameter>
+					<CssParameter name="fill">#87CEFA</CssParameter>
+				</Fill>
+				<Stroke>
+					<CssParameter name="stroke">#000000</CssParameter>
+					<CssParameter name="stroke-width">1.0</CssParameter>
+					<CssParameter name="stroke-linejoin">round</CssParameter>
+					<CssParameter name="stroke-opacity">1.0</CssParameter>
+					<CssParameter name="stroke-linecap">square</CssParameter>
+				</Stroke>
+			</Halo>
+		</TextSymbolizer>		
+	</Rule>
+	<Rule>
 		<Name>rule_overflowNode</Name>
 		<Title>%rule_overflowNode_title</Title>
 		<LineSymbolizer>
