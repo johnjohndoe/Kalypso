@@ -100,6 +100,30 @@
         </virtualProperty>
         <virtualProperty
               allowSubstitution="true"
+              feature="{http://www.tuhh.de/kalypsoNA}StorageChannel"
+              function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
+              isList="false"
+              qname="{virtual}link_downStreamNodeMember_2nd"
+              value="{http://www.opengis.net/gml}LineString">
+           <property
+                 name="relation"
+                 value="{http://www.tuhh.de/kalypsoNA}downStreamNodeMember_2nd">
+           </property>
+        </virtualProperty>
+        <virtualProperty
+              allowSubstitution="true"
+              feature="{http://www.tuhh.de/kalypsoNA}StorageChannel"
+              function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
+              isList="false"
+              qname="{virtual}link_downStreamNodeMember_3rd"
+              value="{http://www.opengis.net/gml}LineString">
+           <property
+                 name="relation"
+                 value="{http://www.tuhh.de/kalypsoNA}downStreamNodeMember_3rd">
+           </property>
+        </virtualProperty>
+        <virtualProperty
+              allowSubstitution="true"
               feature="{http://www.tuhh.de/kalypsoNA}Catchment"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               isList="false"
