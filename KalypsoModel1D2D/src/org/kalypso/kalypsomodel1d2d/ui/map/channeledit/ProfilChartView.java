@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
@@ -82,6 +81,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
@@ -99,8 +99,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   private IProfilLayerProvider m_layerProvider;
 
   private final List<IProfilProviderListener> m_listener = new ArrayList<IProfilProviderListener>();
-
-  private PlotDragHandlerDelegate m_plotDragHandler;
 
   private IProfil m_profile;
 
@@ -176,8 +174,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
         activeLayerChanged( layer );
       }
     } );
-
-    m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
 
     updateLayer();
 
@@ -333,9 +329,9 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
    */
 
   @Override
-  public PlotDragHandlerDelegate getPlotDragHandler( )
+  public IPlotHandler getPlotDragHandler( )
   {
-    return m_plotDragHandler;
+    return m_chartComposite.getPlotHandler();
   }
 
   @Override

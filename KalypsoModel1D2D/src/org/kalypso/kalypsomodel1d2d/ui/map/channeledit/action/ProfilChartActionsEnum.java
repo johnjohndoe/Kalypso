@@ -144,7 +144,7 @@ public enum ProfilChartActionsEnum
       public void run( )
       {
         if( chartHandler != null )
-          profilView.getPlotDragHandler().setActiveHandler( chartHandler );
+          profilView.getPlotDragHandler().activatePlotHandler( chartHandler );
       }
     };
 
