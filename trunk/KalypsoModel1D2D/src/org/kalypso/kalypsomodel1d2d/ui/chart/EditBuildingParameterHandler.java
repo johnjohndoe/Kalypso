@@ -69,7 +69,7 @@ public class EditBuildingParameterHandler extends AbstractHandler implements IEl
       return null;
 
     final EditBuildingParameterMouseHandler plotDragZoomInHandler = new EditBuildingParameterMouseHandler( chartPart.getChartComposite() );
-    chartPart.getPlotDragHandler().setActiveHandler( plotDragZoomInHandler );
+    chartPart.getPlotDragHandler().activatePlotHandler( plotDragZoomInHandler );
 
     ChartHandlerUtilities.updateElements( chartPart );
 
