@@ -46,11 +46,11 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.featureview.ChartDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
-import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Gernot Belger

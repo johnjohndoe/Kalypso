@@ -8,7 +8,7 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
-import de.openali.odysseus.chart.factory.provider.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
