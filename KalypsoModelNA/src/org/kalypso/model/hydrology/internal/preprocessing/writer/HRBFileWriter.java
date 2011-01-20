@@ -142,15 +142,15 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     {
       final int asciiID = m_idManager.getAsciiID( channel );
 
-      // This is not a bug, sea evaporation is the exception!
-      // Don't change the format to ITimeseriesConstants.TYPE_EVAPORATION!
-      final String name = String.format( "SE_%d.%s", asciiID, ITimeseriesConstants.TYPE_RAINFALL );//$NON-NLS-1$
+      final String name = String.format( "SE_%d.%s", asciiID, ITimeseriesConstants.TYPE_EVAPORATION );//$NON-NLS-1$
 
       final File asciiTimeseriesFile = new File( m_klimaDir, name );
       try
       {
         final URL context = channel.getWorkspace().getContext();
-        TsFileWriter.writeTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null, "-777", m_metaControl.getSimulationStart(), m_metaControl.getSimulationEnd() );
+        // This is not a bug, sea evaporation is the exception!
+        // Don't change the format to ITimeseriesConstants.TYPE_EVAPORATION!
+        TsFileWriter.writeTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_RAINFALL, null, "-777", m_metaControl.getSimulationStart(), m_metaControl.getSimulationEnd() );
       }
       catch( final Exception e )
       {
