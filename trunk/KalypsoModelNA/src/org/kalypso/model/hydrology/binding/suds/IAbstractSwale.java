@@ -46,7 +46,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IAbstractSwale extends ISudsWithElementType
 {

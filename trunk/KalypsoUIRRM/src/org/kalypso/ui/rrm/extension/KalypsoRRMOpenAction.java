@@ -48,7 +48,7 @@ import org.kalypso.project.database.client.extension.project.AbstractModuleProje
 import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class KalypsoRRMOpenAction extends AbstractModuleProjectOpenAction
 {

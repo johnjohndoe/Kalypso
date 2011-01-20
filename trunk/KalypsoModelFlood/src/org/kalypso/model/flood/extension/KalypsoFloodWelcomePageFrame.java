@@ -45,7 +45,7 @@ import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalypsoModuleWelcomePageFrame;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class KalypsoFloodWelcomePageFrame extends AbstractKalypsoModuleWelcomePageFrame
 {
@@ -62,7 +62,7 @@ public class KalypsoFloodWelcomePageFrame extends AbstractKalypsoModuleWelcomePa
   @Override
   public String getLabel( )
   {
-    return Messages.getString("org.kalypso.model.flood.extension.KalypsoFloodWelcomePageFrame.2"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.model.flood.extension.KalypsoFloodWelcomePageFrame.2" ); //$NON-NLS-1$
   }
 
   @Override

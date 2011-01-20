@@ -51,7 +51,7 @@ import org.kalypso.project.database.client.extension.database.handlers.IProjectH
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class Kalypso1d2dRemoteDatabaseSettings implements IKalypsoModuleDatabaseSettings
 {
