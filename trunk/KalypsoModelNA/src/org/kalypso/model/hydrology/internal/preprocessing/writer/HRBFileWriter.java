@@ -141,7 +141,11 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     if( !m_timseriesMap.containsKey( zmlHref ) )
     {
       final int asciiID = m_idManager.getAsciiID( channel );
-      final String name = String.format( "SE_%d.%s", asciiID, ITimeseriesConstants.TYPE_EVAPORATION );//$NON-NLS-1$
+
+      // This is not a bug, sea evaporation is the exception!
+      // Don't change the format to ITimeseriesConstants.TYPE_EVAPORATION!
+      final String name = String.format( "SE_%d.%s", asciiID, ITimeseriesConstants.TYPE_RAINFALL );//$NON-NLS-1$
+
       final File asciiTimeseriesFile = new File( m_klimaDir, name );
       try
       {
