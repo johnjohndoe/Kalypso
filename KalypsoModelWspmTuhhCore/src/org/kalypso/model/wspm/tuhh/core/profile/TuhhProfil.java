@@ -56,7 +56,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  * @author kimwerner
  */
 public class TuhhProfil extends AbstractProfil

@@ -51,7 +51,7 @@ import org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory;
 import org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class WspmOpenAction extends AbstractModuleProjectOpenAction
 {
@@ -59,6 +59,7 @@ public class WspmOpenAction extends AbstractModuleProjectOpenAction
   {
     super( KalypsoWspmTuhhModule.ID );
   }
+
   /**
    * @see org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction#doOpen(org.eclipse.ui.IWorkbenchPage,
    *      org.eclipse.core.resources.IProject)

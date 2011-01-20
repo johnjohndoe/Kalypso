@@ -44,8 +44,8 @@ import org.eclipse.swt.graphics.Image;
 import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalypsoModuleWelcomePageFrame;
 
 /**
- * @author kuch
- *
+ * @author Dirk Kuch
+ * 
  */
 public class KalypsoRiskWelcomePageFrame extends AbstractKalypsoModuleWelcomePageFrame
 {

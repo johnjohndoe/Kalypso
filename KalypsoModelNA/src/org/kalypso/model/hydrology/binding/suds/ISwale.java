@@ -45,7 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.model.hydrology.NaModelConstants;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface ISwale extends IAbstractSwale
 {

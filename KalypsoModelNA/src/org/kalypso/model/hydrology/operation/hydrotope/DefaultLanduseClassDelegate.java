@@ -45,7 +45,7 @@ import java.util.Map;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class DefaultLanduseClassDelegate implements ILanduseClassDelegate
 {
