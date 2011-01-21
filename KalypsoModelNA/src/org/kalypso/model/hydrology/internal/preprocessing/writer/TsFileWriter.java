@@ -105,6 +105,12 @@ public class TsFileWriter
 
   private final NAOptimize m_naOptimize;
 
+  public static enum TSFormat
+  {
+    GRAP,
+    EX2
+  }
+
   public TsFileWriter( final GMLWorkspace synthNWorkspace, final NAControl naControl, final NAOptimize naOptimize, final NetElement[] channels, final URL zmlContext, final TimeseriesFileManager tsFileManager, final Logger logger )
   {
     m_synthNWorkspace = synthNWorkspace;
@@ -223,7 +229,7 @@ public class TsFileWriter
     return new RangeFactor( forecastRange, forcastFactorN );
   }
 
-  public static final void writeTimeseries( final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws SensorException, IOException
+  public static final void writeTimeseries( final TSFormat tsFormat, final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws SensorException, IOException
   {
     if( targetFile.exists() )
       return;
@@ -234,10 +240,24 @@ public class TsFileWriter
 
     final StringBuffer writer = new StringBuffer();
 
-    final Ext2Writer extWriter = new Ext2Writer( simulationStart, simulationEnd );
-    extWriter.write( observation, valueAxisType, writer, defaultValue );
-
+    switch( tsFormat )
+    {
+      case GRAP:
+        final GrapWriter grapWriter = new GrapWriter( valueAxisType, observation );
+        grapWriter.write( writer );
+        break;
+      case EX2:
+      default:
+        final Ext2Writer extWriter = new Ext2Writer( simulationStart, simulationEnd );
+        extWriter.write( observation, valueAxisType, writer, defaultValue );
+        break;
+    }
     FileUtils.writeStringToFile( targetFile, writer.toString() );
+  }
+
+  public static final void writeTimeseries( final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws SensorException, IOException
+  {
+    writeTimeseries( TSFormat.EX2, targetFile, link, zmlContext, valueAxisType, filter, defaultValue, simulationStart, simulationEnd );
   }
 
   private static IObservation loadObservationWithFilter( final TimeseriesLinkType link, final URL zmlContext, final String filter ) throws MalformedURLException, SensorException
