@@ -474,7 +474,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     axisRendererConfigD.gap = 1;
 
     final IAxisRenderer aRendDom = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_DOMAIN_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigD ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IAxisRenderer aRendLR = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxisRenderer aRendRight = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    axisRendererConfigLR.hideCut = false;
+    final IAxisRenderer aRendLeft = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
     m_domainAxis.setPreferredAdjustment( aaDom );
@@ -482,11 +485,11 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
     final AxisAdjustment aaLeft = new AxisAdjustment( 15, 75, 10 );
     m_targetAxisLeft.setPreferredAdjustment( aaLeft );
-    m_targetAxisLeft.setRenderer( aRendLR );
-
+    m_targetAxisLeft.setRenderer( aRendLeft );
+ 
     final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
     m_targetAxisRight.setPreferredAdjustment( aaRight );
-    m_targetAxisRight.setRenderer( aRendLR );
+    m_targetAxisRight.setRenderer( aRendRight );
 
     m_screenAxisVertical.setPreferredAdjustment( new AxisAdjustment( 0, 1, 0 ) );
     mapperRegistry.addMapper( m_domainAxis );
