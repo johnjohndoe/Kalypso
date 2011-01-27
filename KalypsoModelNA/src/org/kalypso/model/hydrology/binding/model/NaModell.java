@@ -160,7 +160,7 @@ public class NaModell extends Feature_Impl
   @Deprecated
   public FeatureList getCatchmentsList( )
   {
-    final Feature catchmentsMember = getProperty( QNAME_FEATURE, Feature.class );
+    final Feature catchmentsMember = getProperty( MEMBER_CATCHMENT_COLLECTION, Feature.class );
     return (FeatureList) catchmentsMember.getProperty( MEMBER_CATCHMENT );
   }
 }
