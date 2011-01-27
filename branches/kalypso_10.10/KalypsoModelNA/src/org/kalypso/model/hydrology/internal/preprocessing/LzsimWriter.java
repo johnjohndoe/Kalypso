@@ -90,7 +90,7 @@ public class LzsimWriter
     m_initialValues = initialValues;
   }
 
-  public void writeLzsimFiles( final File lzsimDir ) throws SimulationException
+  public void writeLzsimFiles( final File lzsimDir ) throws SimulationException, NAPreprocessorException
   {
     lzsimDir.mkdirs();
 
@@ -147,7 +147,7 @@ public class LzsimWriter
     }
   }
 
-  private void writeLzs( final File lzsimDir, final String iniDate ) throws SimulationException
+  private void writeLzs( final File lzsimDir, final String iniDate ) throws SimulationException, NAPreprocessorException
   {
     final Map<org.kalypso.model.hydrology.binding.model.Catchment, Catchment> iniCatchmentHash = buildCatchmentHash();
 
@@ -218,7 +218,7 @@ public class LzsimWriter
       final Double qb = iniCatchment.getQb();
       writer.format( Locale.US, LZS_FORMAT_STRING, iniDate, "gwsp", hgws, qb ); //$NON-NLS-1$
 
-      // hydrotops (interception storage content& soil moisture)
+      // hydrotops (interception storage content & soil moisture)
       writer.format( Locale.US, "%s h  %4d bodf\n", iniDate, iniHyds.length ); //$NON-NLS-1$ 
 
       for( int i = 0; i < iniHyds.length; i++ )
@@ -247,7 +247,7 @@ public class LzsimWriter
     }
   }
 
-  private IniHyd[] getIniHyds( final org.kalypso.model.hydrology.binding.model.Catchment naCatchment, final Catchment iniCatchment )
+  private IniHyd[] getIniHyds( final org.kalypso.model.hydrology.binding.model.Catchment naCatchment, final Catchment iniCatchment ) throws NAPreprocessorException
   {
     /*
      * Special case: if the hydro hash does not know this catchment, it was actually never written. This happens e.g.
@@ -276,8 +276,13 @@ public class LzsimWriter
       final String naHydrotopID = hydrotop.getId();
 
       final IniHyd iniHyd = iniHydHash.get( naHydrotopID );
-
-      iniHydMap.put( localID, iniHyd );
+      if( iniHyd == null )
+      {
+        final String message = String.format( Messages.getString("LzsimWriter.1"), hydrotop.getName() ); //$NON-NLS-1$
+        throw new NAPreprocessorException( message );
+      }
+      else
+        iniHydMap.put( localID, iniHyd );
     }
 
     return iniHydMap.values().toArray( new IniHyd[iniHydMap.size()] );
