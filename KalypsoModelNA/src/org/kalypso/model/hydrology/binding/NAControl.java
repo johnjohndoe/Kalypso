@@ -139,7 +139,11 @@ public class NAControl extends Feature_Impl
   public double getAnnuality( )
   {
     // the GUI asks for return period [a] - the fortran kernal needs annuality [1/a]
-    return 1d / getProperty( PROP_XJAH, Double.class );
+    final Double returnPeriod = getProperty( PROP_XJAH, Double.class );
+    if( returnPeriod == null )
+      return Double.NaN;
+
+    return 1d / returnPeriod;
   }
 
   private Double getDurationMinutes( )
@@ -147,9 +151,13 @@ public class NAControl extends Feature_Impl
     return (Double) getProperty( PROP_XWAHL2 );
   }
 
-  public Double getDurationHours()
+  public double getDurationHours( )
   {
-    return getDurationMinutes() / 60d;
+    final Double durationMinutes = getDurationMinutes();
+    if( durationMinutes == null )
+      return Double.NaN;
+
+    return durationMinutes / 60d;
   }
 
   public String getPrecipitationForm( )
