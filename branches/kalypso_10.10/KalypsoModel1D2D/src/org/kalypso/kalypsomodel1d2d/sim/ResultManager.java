@@ -115,7 +115,6 @@ public class ResultManager implements ISimulation1D2DConstants
   // never read
   // private final Pattern m_resultFilePattern = Pattern.compile( "A(\\d+)" );
 
-  /* just for test purposes TODO: still? */
   private final List<ResultType.TYPE> m_parameters = new ArrayList<ResultType.TYPE>();
 
   private final IGeoLog m_geoLog;
@@ -185,23 +184,23 @@ public class ResultManager implements ISimulation1D2DConstants
         {
           try
           {
-            FileObject swanResFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
-            FileObject swanResShiftFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
-            FileObject swanResOutTabFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "_out.tab" ); //$NON-NLS-1$
+            final FileObject swanResFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
+            final FileObject swanResShiftFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
+            final FileObject swanResOutTabFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "_out.tab" ); //$NON-NLS-1$
             processSWANTabFile( swanResOutTabFile, swanResShiftFile );
-            File zipOutput = new File( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip" ); //$NON-NLS-1$
-            List<File> lListFilesToZip = new ArrayList<File>();
+            final File zipOutput = new File( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip" ); //$NON-NLS-1$
+            final List<File> lListFilesToZip = new ArrayList<File>();
             lListFilesToZip.add( new File( swanResFile.getURL().toURI() ) );
             lListFilesToZip.add( new File( swanResShiftFile.getURL().toURI() ) );
             lListFilesToZip.add( new File( swanResOutTabFile.getURL().toURI() ) );
             if( m_controlModel.getINITialValuesSWAN() == 3 )
             {
-              FileObject swanResHotFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_HOT_FILE );
+              final FileObject swanResHotFile = m_resultDirSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_HOT_FILE );
               lListFilesToZip.add( new File( swanResHotFile.getURL().toURI() ) );
             }
             ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[lListFilesToZip.size()] ), new File( m_resultDirSWAN.getURL().toURI() ) );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             e.printStackTrace();
           }
@@ -279,9 +278,9 @@ public class ResultManager implements ISimulation1D2DConstants
     }
   }
 
-  private void processSWANTabFile( FileObject swanResOutTabFile, FileObject swanResShiftFile )
+  private void processSWANTabFile( final FileObject swanResOutTabFile, final FileObject swanResShiftFile )
   {
-    GM_Position lShiftPosition = SWANDataConverterHelper.readCoordinateShiftValues( swanResShiftFile );
+    final GM_Position lShiftPosition = SWANDataConverterHelper.readCoordinateShiftValues( swanResShiftFile );
     if( lShiftPosition == null )
     {
       return;
@@ -292,28 +291,28 @@ public class ResultManager implements ISimulation1D2DConstants
       {
         swanResOutTabFile.close();
       }
-      FileObject swanResOutTabFileBackUp = swanResOutTabFile.getParent().resolveFile( swanResOutTabFile.getName().getBaseName() + ".bck" ); //$NON-NLS-1$
+      final FileObject swanResOutTabFileBackUp = swanResOutTabFile.getParent().resolveFile( swanResOutTabFile.getName().getBaseName() + ".bck" ); //$NON-NLS-1$
       swanResOutTabFile.moveTo( swanResOutTabFileBackUp );
       
       int lIntLinesCounter = 0;
-      OutputStream lOutStream = swanResOutTabFile.getContent().getOutputStream();
-      DataInputStream lInDataStream = new DataInputStream( swanResOutTabFileBackUp.getContent().getInputStream() );
+      final OutputStream lOutStream = swanResOutTabFile.getContent().getOutputStream();
+      final DataInputStream lInDataStream = new DataInputStream( swanResOutTabFileBackUp.getContent().getInputStream() );
 
-      Formatter lFormatter = new Formatter( lOutStream, Charset.defaultCharset().name(), Locale.US );
+      final Formatter lFormatter = new Formatter( lOutStream, Charset.defaultCharset().name(), Locale.US );
       while( lInDataStream.available() != 0 )
       {
-        String lStrTmpLine = lInDataStream.readLine().trim();
+        final String lStrTmpLine = lInDataStream.readLine().trim();
         ++lIntLinesCounter;
         if( lStrTmpLine.startsWith( "%" ) ) { //$NON-NLS-1$
           lFormatter.format( "%s\n", lStrTmpLine ); //$NON-NLS-1$ 
           continue;
         }
-        StringTokenizer lStrTokenizer = new StringTokenizer( lStrTmpLine, " " ); //$NON-NLS-1$
+        final StringTokenizer lStrTokenizer = new StringTokenizer( lStrTmpLine, " " ); //$NON-NLS-1$
         int lIntTokenCounter = 0;
         String lStrNewLine = ""; //$NON-NLS-1$
         while( lStrTokenizer.hasMoreTokens() )
         {
-          String lStrToken = lStrTokenizer.nextToken();
+          final String lStrToken = lStrTokenizer.nextToken();
           if( lIntTokenCounter == 1 )
           {
             lStrNewLine += String.format( Locale.US, "%.5f\t", NumberUtils.parseQuietDouble( lStrToken ) + lShiftPosition.getX() ); //$NON-NLS-1$
@@ -335,7 +334,7 @@ public class ResultManager implements ISimulation1D2DConstants
       lInDataStream.close();
       lOutStream.close();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return;
     }
@@ -367,13 +366,13 @@ public class ResultManager implements ISimulation1D2DConstants
         }
         if( lFileObjectSWANResult == null )
         {
-          IPath lPath = ResultMeta1d2dHelper.getSavedSWANRawResultData( calcUnitResultMeta );
+          final IPath lPath = ResultMeta1d2dHelper.getSavedSWANRawResultData( calcUnitResultMeta );
 
           try
           {
             lFileObjectSWANResult = file.getParent().getParent().resolveFile( lPath.toOSString() );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.15" ), resultFileName ); //$NON-NLS-1$
 
@@ -398,7 +397,7 @@ public class ResultManager implements ISimulation1D2DConstants
       else if( stepDate == MAXI_DATE )
         outDirName = "maxi"; //$NON-NLS-1$
       else{
-        SimpleDateFormat timeFormatter = new SimpleDateFormat( ResultMeta1d2dHelper.FULL_DATE_TIME_FORMAT_RESULT_STEP );
+        final SimpleDateFormat timeFormatter = new SimpleDateFormat( ResultMeta1d2dHelper.FULL_DATE_TIME_FORMAT_RESULT_STEP );
         outDirName = ResultMeta1d2dHelper.TIME_STEP_PREFIX + timeFormatter.format( stepDate );
 //        outDirName = String.format( ResultMeta1d2dHelper.TIME_STEP_PREFIX + "%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tS_%1$ts_%1$tZ", stepDate ); //$NON-NLS-1$
       }
