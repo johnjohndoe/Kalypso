@@ -50,7 +50,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution;
 import org.kalypso.observation.result.IComponent;
@@ -64,7 +64,7 @@ public class RauheitRule extends AbstractValidatorRule
   @Override
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( profil == null || istDurchlass( profil.getProfileObjects( AbstractObservationBuilding.class ) ) )
+    if( profil == null || istDurchlass( profil.getProfileObjects( IProfileBuilding.class ) ) )
       return;
 
     final String stationId = String.format( "km %.4f", profil.getStation() );//$NON-NLS-1$

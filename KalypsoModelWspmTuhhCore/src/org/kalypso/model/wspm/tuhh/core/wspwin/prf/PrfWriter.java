@@ -67,7 +67,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
@@ -290,7 +289,7 @@ public class PrfWriter implements IPrfConstants
 
   private final Double getRoughnessFromBuilding( )
   {
-    final IProfileBuilding[] buildings = m_profil.getProfileObjects( AbstractObservationBuilding.class );
+    final IProfileBuilding[] buildings = m_profil.getProfileObjects( IProfileBuilding.class );
     if( !istDurchlass( buildings ) )
       return Double.NaN;
     return BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, buildings[0] );

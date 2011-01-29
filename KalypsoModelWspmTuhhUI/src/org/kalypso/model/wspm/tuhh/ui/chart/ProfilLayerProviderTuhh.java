@@ -58,7 +58,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectAdd;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
@@ -335,7 +335,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
     // TODO IProfileObjects now returned as list from IProfile, but we can only handle one IProfileObject (WSPM can't
     // handle more!)
-    final IProfileObject[] buildings = profil.getProfileObjects( AbstractObservationBuilding.class );
+    final IProfileObject[] buildings = profil.getProfileObjects( IProfileBuilding.class );
 
     if( buildings.length > 0 )
     {
@@ -430,7 +430,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     for( final IChartLayer layer : mngr.getLayers() )
       existingLayers.add( layer.getId() );
 
-    final IProfileObject[] objects = profile.getProfileObjects( AbstractObservationBuilding.class );
+    final IProfileObject[] objects = profile.getProfileObjects( IProfileBuilding.class );
 
     // only ONE Object allowed
     if( ArrayUtils.isEmpty( objects ) )
@@ -486,7 +486,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     final AxisAdjustment aaLeft = new AxisAdjustment( 15, 75, 10 );
     m_targetAxisLeft.setPreferredAdjustment( aaLeft );
     m_targetAxisLeft.setRenderer( aRendLeft );
- 
+
     final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
     m_targetAxisRight.setPreferredAdjustment( aaRight );
     m_targetAxisRight.setRenderer( aRendRight );

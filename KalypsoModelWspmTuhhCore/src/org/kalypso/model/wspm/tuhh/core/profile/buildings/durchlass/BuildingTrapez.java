@@ -40,10 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
@@ -52,7 +51,7 @@ import org.kalypso.observation.result.TupleResult;
 /**
  * @author kimwerner
  */
-public final class BuildingTrapez extends AbstractObservationBuilding
+public final class BuildingTrapez extends AbstractProfileObject implements IProfileBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_TRAPEZ;
 

@@ -73,7 +73,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
@@ -215,7 +215,7 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
       }
       else if( flowRel instanceof IBuildingFlowRelation )
       {
-        final IProfileObject[] profileObjects = profile.getProfileObjects( AbstractObservationBuilding.class );
+        final IProfileObject[] profileObjects = profile.getProfileObjects( IProfileBuilding.class );
         if( ArrayUtils.isEmpty( profileObjects ) )
           MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.9" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         else
@@ -234,20 +234,20 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
           }
         }
       }
-// //TODO: check for 2d if it is needed
-// else if( flowRel instanceof IBuildingFlowRelation2D )
-// {
-// final IProfileObject[] profileObjects = profile.getProfileObjects();
-// if( profileObjects.length == 0 )
-//          MessageDialog.openWarning( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.9"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.10") ); //$NON-NLS-1$ //$NON-NLS-2$
-// else
-// {
-// final IRelationType pt = (IRelationType) flowRel.getFeature().getFeatureType().getProperty(
-// IBuildingFlowRelation2D.QNAME_PROP_PROFILE );
-//          final Feature newLinkFeature = new XLinkedFeature_Impl( feature, pt, pt.getTargetFeatureType(), profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-// fireFeatureChange( new ChangeFeatureCommand( flowRel.getFeature(), pt, newLinkFeature ) );
-// }
-// }
+      // //TODO: check for 2d if it is needed
+      // else if( flowRel instanceof IBuildingFlowRelation2D )
+      // {
+      // final IProfileObject[] profileObjects = profile.getProfileObjects();
+      // if( profileObjects.length == 0 )
+      //          MessageDialog.openWarning( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.9"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.10") ); //$NON-NLS-1$ //$NON-NLS-2$
+      // else
+      // {
+      // final IRelationType pt = (IRelationType) flowRel.getFeature().getFeatureType().getProperty(
+      // IBuildingFlowRelation2D.QNAME_PROP_PROFILE );
+      //          final Feature newLinkFeature = new XLinkedFeature_Impl( feature, pt, pt.getTargetFeatureType(), profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      // fireFeatureChange( new ChangeFeatureCommand( flowRel.getFeature(), pt, newLinkFeature ) );
+      // }
+      // }
 
       // TODO: set name of flowrel according to profile or create a dummy name
       if( flowRel.getName().equals( "" ) ) //$NON-NLS-1$

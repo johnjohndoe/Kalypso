@@ -49,7 +49,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
@@ -126,7 +126,7 @@ public class BewuchsRule extends AbstractValidatorRule
       }
       final int lastIndex = leftIndex > 0 ? leftIndex - 1 : leftIndex;
 
-      if( WspmProfileHelper.getBuilding( profil, AbstractObservationBuilding.class ) == null )
+      if( WspmProfileHelper.getBuilding( profil, IProfileBuilding.class ) == null )
       {
         final boolean VorlandLhasValues = validateArea( profil, collector, VorlandL );
         final boolean VorlandRhasValues = validateArea( profil, collector, VorlandR );
