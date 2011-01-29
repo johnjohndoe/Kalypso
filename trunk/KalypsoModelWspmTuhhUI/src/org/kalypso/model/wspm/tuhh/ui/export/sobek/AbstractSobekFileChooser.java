@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 /**
  * @author Gernot Belger
  */
-public class SobekFileChooser
+public abstract class AbstractSobekFileChooser
 {
   private FileChooserGroup m_fileChooserGroup;
 
@@ -68,7 +68,7 @@ public class SobekFileChooser
 
   private final IDialogSettings m_dialogSettings;
 
-  public SobekFileChooser( final SobekProfileExportFileChooserPage page, final IDialogSettings dialogSettings, final String filterLabel, final String extension )
+  public AbstractSobekFileChooser( final SobekProfileExportFileChooserPage page, final IDialogSettings dialogSettings, final String filterLabel, final String extension )
   {
     m_page = page;
     m_dialogSettings = dialogSettings;
@@ -93,7 +93,7 @@ public class SobekFileChooser
       }
     } );
 
-    m_fileChooserGroup.setLabel( null );
+    m_fileChooserGroup.setLabel( "Target File" );
 
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( 3, false ) );
@@ -119,6 +119,11 @@ public class SobekFileChooser
   {
     m_file = file;
 
+    updateMessage();
+  }
+
+  protected void updateMessage( )
+  {
     m_page.updateMessage();
   }
 
@@ -136,12 +141,5 @@ public class SobekFileChooser
     return m_delegate.validate( m_file );
   }
 
-  public ISobekProfileExportOperation createOperation( final IProfileFeature[] profiles, final String idPattern )
-  {
-    final File file = getFile();
-    if( file == null )
-      return null;
-
-    return new SobekDefExportOperation( file, profiles, idPattern );
-  }
+  public abstract ISobekProfileExportOperation createOperation( IProfileFeature[] profiles, String idPattern, String buildingSuffix );
 }

@@ -41,22 +41,30 @@
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Formatter;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.sobek.utils.hw.BridgeResult;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.observation.result.ComponentUtilities;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author Gernot Belger
@@ -65,11 +73,20 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
 {
   private final String m_idPattern;
 
-  public SobekDefExportOperation( final File targetFile, final IProfileFeature[] profilesToExport, final String idPattern )
+  private final String m_pointMarkerId;
+
+  private final boolean m_exportBuildings;
+
+  private final String m_idSuffix;
+
+  public SobekDefExportOperation( final File targetFile, final IProfileFeature[] profilesToExport, final String idPattern, final String pointMarkerId, final boolean exportBuildings, final String idSuffix )
   {
     super( targetFile, profilesToExport );
 
     m_idPattern = idPattern;
+    m_pointMarkerId = pointMarkerId;
+    m_exportBuildings = exportBuildings;
+    m_idSuffix = idSuffix;
   }
 
   /**
@@ -78,7 +95,7 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString("SobekDefExportOperation_0"); //$NON-NLS-1$
+    return Messages.getString( "SobekDefExportOperation_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -93,6 +110,12 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
     final String id = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_idPattern, data );
     final String profileName = profil.getName();
 
+    writeNormalProfile( formatter, id, profileName, points, profil );
+    writeProfileBuilding( formatter, id, profileName, points, profil );
+  }
+
+  private void writeNormalProfile( final Formatter formatter, final String id, final String profileName, final IRecord[] points, final IProfil profil )
+  {
     formatter.format( "CRDS id '%s' nm '%s' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz%n", id, profileName ); //$NON-NLS-1$
     formatter.format( "TBLE%n" ); //$NON-NLS-1$
 
@@ -109,22 +132,88 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
     formatter.format( "crds%n" ); //$NON-NLS-1$
   }
 
+  private void writeProfileBuilding( final Formatter formatter, final String id, final String profileName, final IRecord[] points, final IProfil profil )
+  {
+    if( !m_exportBuildings )
+      return;
+
+    // switch over building type
+    final IProfileObject[] profileObjects = profil.getProfileObjects();
+    int reallyExportedBuildings = 0;
+    for( final IProfileObject profileObject : profileObjects )
+    {
+      final String countSuffix = reallyExportedBuildings == 0 ? StringUtils.EMPTY : "_" + reallyExportedBuildings;
+      final String buildingId = id + m_idSuffix + countSuffix;
+
+      reallyExportedBuildings++;
+
+      if( profileObject instanceof BuildingBruecke )
+        writeBridge( formatter, buildingId, profileName, points, profil );
+      // TODO: support other building types (tube, ...)
+      else
+        reallyExportedBuildings--;
+    }
+  }
+
+  private void writeBridge( final Formatter formatter, final String id, final String profileName, final IRecord[] points, final IProfil profil )
+  {
+    final Collection<Coordinate> lowerCrds = new ArrayList<Coordinate>();
+    final Collection<Coordinate> upperCrds = new ArrayList<Coordinate>();
+
+    final int widthIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int heigthIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final int ukIndex = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+
+    if( widthIndex == -1 || heigthIndex == -1 || ukIndex == -1 )
+      // FIXME: add error status
+      return;
+
+    for( final IRecord point : points )
+    {
+      final Object widthValue = point.getValue( widthIndex );
+      final Object heightValue = point.getValue( heigthIndex );
+      final Object ukValue = point.getValue( ukIndex );
+
+      if( widthValue instanceof Number )
+      {
+        final double width = ((Number) widthValue).doubleValue();
+        if( heightValue instanceof Number )
+        {
+          final double heigth = ((Number) heightValue).doubleValue();
+          lowerCrds.add( new Coordinate( width, heigth ) );
+        }
+
+        if( ukValue instanceof Number )
+        {
+          final double uk = ((Number) ukValue).doubleValue();
+          upperCrds.add( new Coordinate( width, uk ) );
+        }
+      }
+    }
+
+    /* Only for testing purposes: write tube geometry into shape file */
+    final File tempDir = null; // FileUtils.getTempDirectory();
+    final String shapeFileName = "profileDefBuildingShape";//$NON-NLS-1$
+
+    final BridgeResult bridgeHw = new BridgeResult( shapeFileName, id, id, profileName, lowerCrds, upperCrds, tempDir );
+    // TODO: handle problems/errors (change formattErr to a IStatusCollector)
+    bridgeHw.formatOut( formatter );
+  }
+
   private IRecord[] getPointsToExport( final IProfil profil )
   {
-    // TODO: let user choose get marker type
-    final String pointMarkerId = IWspmTuhhConstants.MARKER_TYP_BORDVOLL;
-    // TODO: get from some registry
-    final String markerLabel = Messages.getString("SobekDefExportOperation_1"); //$NON-NLS-1$
-
-    if( pointMarkerId == null )
+    if( StringUtils.isBlank( m_pointMarkerId ) )
       return profil.getPoints();
 
-    final IProfilPointMarker[] markers = profil.getPointMarkerFor( pointMarkerId );
+    final IComponent markerComponent = ComponentUtilities.getFeatureComponent( m_pointMarkerId );
+    final String unknownLabel = String.format( "Unknown: %s", m_pointMarkerId );
+    final String markerLabel = markerComponent == null ? unknownLabel : ComponentUtilities.getComponentLabel( markerComponent );
+
+    final IProfilPointMarker[] markers = profil.getPointMarkerFor( m_pointMarkerId );
     if( markers.length < 2 )
     {
-      final String message = String.format( Messages.getString("SobekDefExportOperation_2"), markerLabel, profil.getStation(), profil.getName() ); //$NON-NLS-1$
-      final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
-      add( status );
+      final String message = String.format( Messages.getString( "SobekDefExportOperation_2" ), markerLabel, profil.getStation(), profil.getName() ); //$NON-NLS-1$
+      getLog().add( IStatus.WARNING, message );
       return profil.getPoints();
     }
 

@@ -211,5 +211,4 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
 
     return FrictionType.unknown1;
   }
-
 }

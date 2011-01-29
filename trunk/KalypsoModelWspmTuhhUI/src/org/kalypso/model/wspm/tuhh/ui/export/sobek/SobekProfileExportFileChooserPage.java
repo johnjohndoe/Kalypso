@@ -66,26 +66,39 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
  */
 public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
 {
-  private static final String DEF_GROUP_LABEL = Messages.getString("SobekProfileExportFileChooserPage_0"); //$NON-NLS-1$
+  private static final String DEF_GROUP_LABEL = "Profile.def"; //$NON-NLS-1$
 
   private static final String DEF_FILTER_LABEL = Messages.getString("SobekProfileExportFileChooserPage_1"); //$NON-NLS-1$
 
-  // FIXME
-  private static final String FRIC_GROUP_LABEL = Messages.getString("SobekProfileExportFileChooserPage_2"); //$NON-NLS-1$
+  private static final String FRIC_GROUP_LABEL = "Friction.dat"; //$NON-NLS-1$
 
   private static final String FRIC_FILTER_LABEL = Messages.getString("SobekProfileExportFileChooserPage_3"); //$NON-NLS-1$
+
+  private static final String STRUCT_GROUP_LABEL = "Struct.def"; //$NON-NLS-1$
+
+  private static final String STRUCT_FILTER_LABEL = "SOBEK struct.def file";
 
   private static final String DEF_EXTENSION = "def"; //$NON-NLS-1$
 
   private static final String FRIC_EXTENSION = "dat"; //$NON-NLS-1$
 
+  private static final String STRUCT_EXTENSION = "def"; //$NON-NLS-1$
+
   private static final String SETTINGS_ID_PATTERN = "idPattern"; //$NON-NLS-1$
 
-  private SobekFileChooser m_defFileChooser;
+  private static final String SETTINGS_BUILDINGS_SUFFIX = "buildingsSuffix"; //$NON-NLS-1$
 
-  private SobekFileChooser m_fricFileChooser;
+  private static final String STR_SUFFIX_TOOLTIP = "Append this suffix to the id of structures";
+
+  private String m_idSuffix = "_building";
+
+  private AbstractSobekFileChooser m_defFileChooser;
+
+  private AbstractSobekFileChooser m_fricFileChooser;
 
   private String m_idPattern = "<Name>"; //$NON-NLS-1$
+
+  private SobekStructFileChooser m_structFileChooser;
 
   public SobekProfileExportFileChooserPage( )
   {
@@ -93,6 +106,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
 
     setTitle( Messages.getString("SobekProfileExportFileChooserPage_5") ); //$NON-NLS-1$
     setDescription( Messages.getString("SobekProfileExportFileChooserPage_6") ); //$NON-NLS-1$
+
   }
 
   /**
@@ -101,32 +115,58 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   @Override
   public void createControl( final Composite parent )
   {
+    readSettings();
+
     final Composite comp = new Composite( parent, SWT.NONE );
     comp.setLayout( new GridLayout() );
 
-    createPatternControl( comp );
+    final Composite idPanel = new Composite( comp, SWT.NONE );
+    idPanel.setLayout( new GridLayout( 3, false ) );
+    idPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    createPatternControl( idPanel );
+    createBuildingSuffixControl( idPanel );
 
     final IDialogSettings defSettings = PluginUtilities.getSection( getDialogSettings(), "def" ); //$NON-NLS-1$
     final IDialogSettings fricSettings = PluginUtilities.getSection( getDialogSettings(), "dat" ); //$NON-NLS-1$
-    m_defFileChooser = new SobekFileChooser( this, defSettings, DEF_FILTER_LABEL, DEF_EXTENSION );
+    final IDialogSettings structSettings = PluginUtilities.getSection( getDialogSettings(), "structDef" ); //$NON-NLS-1$
+
+    m_defFileChooser = new SobekProfileFileChooser( this, defSettings, DEF_FILTER_LABEL, DEF_EXTENSION );
     m_defFileChooser.createControl( comp, DEF_GROUP_LABEL );
+
     m_fricFileChooser = new SobekFricFileChooser( this, fricSettings, FRIC_FILTER_LABEL, FRIC_EXTENSION );
     m_fricFileChooser.createControl( comp, FRIC_GROUP_LABEL );
+
+    m_structFileChooser = new SobekStructFileChooser( this, structSettings, STRUCT_FILTER_LABEL, STRUCT_EXTENSION );
+    m_structFileChooser.createControl( comp, STRUCT_GROUP_LABEL );
 
     setControl( comp );
 
     super.createControl( parent );
   }
 
+  private void readSettings( )
+  {
+    final IDialogSettings settings = getDialogSettings();
+    if( settings == null )
+      return;
+
+    final String idPattern = settings.get( SETTINGS_ID_PATTERN );
+    if( idPattern != null )
+      m_idPattern = idPattern;
+
+    final String idSuffix = settings.get( SETTINGS_BUILDINGS_SUFFIX );
+    if( idSuffix != null )
+      m_idSuffix = idSuffix;
+  }
+
   private void createPatternControl( final Composite parent )
   {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout( 3, false ) );
-    panel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final Label patternLabel = new Label( parent, SWT.NONE );
+    patternLabel.setText( Messages.getString( "SobekProfileExportFileChooserPage_9" ) ); //$NON-NLS-1$
+    patternLabel.setToolTipText( "This pattern is used to generate sobek profile ID's" );
 
-    new Label( panel, SWT.NONE ).setText( Messages.getString("SobekProfileExportFileChooserPage_9") ); //$NON-NLS-1$
-
-    final Text text = new Text( panel, SWT.BORDER );
+    final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     text.setText( m_idPattern );
 
@@ -139,7 +179,47 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
       }
     } );
 
-    ProfilePatternInputReplacer.getINSTANCE().createPatternButton( panel, text );
+    ProfilePatternInputReplacer.getINSTANCE().createPatternButton( parent, text );
+  }
+
+  private void createBuildingSuffixControl( final Composite parent )
+  {
+    final Label suffixLabel = new Label( parent, SWT.NONE );
+    suffixLabel.setText( "ID-Suffix" );
+    suffixLabel.setToolTipText( STR_SUFFIX_TOOLTIP );
+
+    final Text suffixText = new Text( parent, SWT.SINGLE | SWT.BORDER );
+    suffixText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    suffixText.setText( m_idSuffix );
+    suffixText.setToolTipText( STR_SUFFIX_TOOLTIP );
+
+    suffixText.addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        handleSuffixModified( suffixText.getText() );
+      }
+    } );
+  }
+
+  protected void handleSuffixModified( final String idSuffix )
+  {
+    m_idSuffix = idSuffix;
+
+    saveSettings();
+
+    updateMessage();
+  }
+
+  private void saveSettings( )
+  {
+    final IDialogSettings settings = getDialogSettings();
+    if( settings == null )
+      return;
+
+    settings.put( SETTINGS_BUILDINGS_SUFFIX, m_idSuffix );
+    settings.put( SETTINGS_ID_PATTERN, m_idPattern );
   }
 
   protected void handleIdPatternChanged( final String currentValue )
@@ -148,24 +228,25 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
 
     updateMessage();
 
-    final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings == null )
-      return;
+    saveSettings();
 
-    dialogSettings.put( SETTINGS_ID_PATTERN, currentValue );
   }
 
   public ISobekProfileExportOperation[] getOperations( final IProfileFeature[] profiles )
   {
     final Collection<ISobekProfileExportOperation> ops = new ArrayList<ISobekProfileExportOperation>();
 
-    final ISobekProfileExportOperation defOperation = m_defFileChooser.createOperation( profiles, m_idPattern );
+    final ISobekProfileExportOperation defOperation = m_defFileChooser.createOperation( profiles, m_idPattern, m_idSuffix );
     if( defOperation != null )
       ops.add( defOperation );
 
-    final ISobekProfileExportOperation fricOperation = m_fricFileChooser.createOperation( profiles, m_idPattern );
+    final ISobekProfileExportOperation fricOperation = m_fricFileChooser.createOperation( profiles, m_idPattern, m_idSuffix );
     if( fricOperation != null )
       ops.add( fricOperation );
+
+    final ISobekProfileExportOperation structOperation = m_structFileChooser.createOperation( profiles, m_idPattern, m_idSuffix );
+    if( structOperation != null )
+      ops.add( structOperation );
 
     return ops.toArray( new ISobekProfileExportOperation[ops.size()] );
   }
@@ -176,6 +257,9 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
     if( StringUtils.isBlank( m_idPattern ) )
       return new MessageProvider( Messages.getString("SobekProfileExportFileChooserPage_10"), WARNING ); //$NON-NLS-1$
 
+    if( StringUtils.isBlank( m_idSuffix ) )
+      return new MessageProvider( "Empty id-suffix for building - you will get id conflicts in the export file", IMessageProvider.WARNING );
+
     if( m_defFileChooser != null )
     {
       final IMessageProvider defMessage = m_defFileChooser.validate();
@@ -184,7 +268,14 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
     }
 
     if( m_fricFileChooser != null )
-      return m_fricFileChooser.validate();
+    {
+      final IMessageProvider frictMessage = m_fricFileChooser.validate();
+      if( frictMessage != null )
+        return frictMessage;
+    }
+
+    if( m_structFileChooser != null )
+      return m_structFileChooser.validate();
 
     return null;
   }
