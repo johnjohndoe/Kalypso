@@ -59,6 +59,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -75,7 +76,7 @@ import org.kalypso.observation.result.IComponent;
 /**
  * @author Gernot Belger
  */
-public class SobekFricFileChooser extends SobekFileChooser
+public class SobekFricFileChooser extends AbstractSobekFileChooser
 {
   private static final String SETTING_ROUGHNESS = "roughnessId"; //$NON-NLS-1$
 
@@ -153,8 +154,12 @@ public class SobekFricFileChooser extends SobekFileChooser
   {
     final String[] input = new String[] { IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST };
 
+    final Label roughnessLabel = new Label( parent, SWT.NONE );
+    roughnessLabel.setText( "Roughness Type" );
+    roughnessLabel.setToolTipText( "Export the chosen roughness type to sobek" );
+
     final ComboViewer roughnessViewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
-    roughnessViewer.getControl().setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false, 3, 1 ) );
+    roughnessViewer.getControl().setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false, 2, 1 ) );
     roughnessViewer.setContentProvider( new ArrayContentProvider() );
     roughnessViewer.setLabelProvider( LABELPROVIDER );
     roughnessViewer.setInput( input );
@@ -181,6 +186,11 @@ public class SobekFricFileChooser extends SobekFileChooser
 
   private void createZoneChooser( final Composite parent )
   {
+    final Label zoneLabel = new Label( parent, SWT.NONE );
+    zoneLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false ) );
+    zoneLabel.setText( "Flow Zones" );
+    zoneLabel.setToolTipText( "Build sobek friction as average from these flow zones" );
+
     final Table table = new Table( parent, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL );
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
     final CheckboxTableViewer zoneViewer = new CheckboxTableViewer( table );
@@ -217,8 +227,12 @@ public class SobekFricFileChooser extends SobekFileChooser
     }
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekFileChooser#createOperation(org.kalypso.model.wspm.core.gml.IProfileFeature[],
+   *      java.lang.String, java.lang.String)
+   */
   @Override
-  public ISobekProfileExportOperation createOperation( final IProfileFeature[] profiles, final String idPattern )
+  public ISobekProfileExportOperation createOperation( final IProfileFeature[] profiles, final String idPattern, final String buildingSuffix )
   {
     final File file = getFile();
     if( file == null )

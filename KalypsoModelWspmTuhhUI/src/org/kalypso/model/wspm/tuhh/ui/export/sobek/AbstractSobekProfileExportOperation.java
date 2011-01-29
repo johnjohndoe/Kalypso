@@ -43,16 +43,15 @@ package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Formatter;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -70,7 +69,7 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
 
   private Formatter m_formatter;
 
-  private final Collection<IStatus> m_stati = new ArrayList<IStatus>();
+  private final IStatusCollector m_stati = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
 
   public AbstractSobekProfileExportOperation( final File targetFile, final IProfileFeature[] profilesToExport )
   {
@@ -99,7 +98,7 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
       }
       close();
 
-      return getStatus();
+      return m_stati.asMultiStatusOrOK( Messages.getString( "AbstractSobekProfileExportOperation_3" ), null ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
@@ -117,9 +116,9 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
 
   protected abstract void writeProfile( Formatter formatter, IProfileFeature profil );
 
-  protected void add( final IStatus status )
+  protected IStatusCollector getLog( )
   {
-    m_stati.add( status );
+    return m_stati;
   }
 
   protected void close( ) throws IOException
@@ -135,14 +134,6 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
     final IOException ioException = m_formatter.ioException();
     if( ioException != null )
       throw ioException;
-  }
-
-  private IStatus getStatus( )
-  {
-    final IStatus[] children = m_stati.toArray( new IStatus[m_stati.size()] );
-    if( children.length > 0 )
-      return new MultiStatus( KalypsoModelWspmTuhhUIPlugin.getID(), -1, children, Messages.getString("AbstractSobekProfileExportOperation_3"), null ); //$NON-NLS-1$
-    return Status.OK_STATUS;
   }
 
 }
