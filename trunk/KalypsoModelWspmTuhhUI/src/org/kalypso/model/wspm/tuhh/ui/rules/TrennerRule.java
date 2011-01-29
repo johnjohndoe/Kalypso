@@ -51,7 +51,6 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
@@ -76,7 +75,7 @@ public class TrennerRule extends AbstractValidatorRule
     if( profil == null )
       return;
 
-    final IProfileObject building = WspmProfileHelper.getBuilding( profil, AbstractObservationBuilding.class );
+    final IProfileObject building = WspmProfileHelper.getBuilding( profil, IProfileBuilding.class );
     final boolean isDurchlass = isDurchlass( building );
 
     if( !validateSize( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, collector, false ) )

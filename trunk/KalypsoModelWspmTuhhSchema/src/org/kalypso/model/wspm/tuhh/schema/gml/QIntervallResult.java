@@ -53,7 +53,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
@@ -162,7 +162,7 @@ public class QIntervallResult extends AbstractFeatureBinder
     final Feature profileFeatureRef = new XLinkedFeature_Impl( feature, profileRelation, ftProfile, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     feature.setProperty( profileRelation, profileFeatureRef );
 
-    final IProfileObject[] buildings = profile.getProfil().getProfileObjects( AbstractObservationBuilding.class );
+    final IProfileObject[] buildings = profile.getProfil().getProfileObjects( IProfileBuilding.class );
     if( ArrayUtils.isEmpty( buildings ) )
       return;
 

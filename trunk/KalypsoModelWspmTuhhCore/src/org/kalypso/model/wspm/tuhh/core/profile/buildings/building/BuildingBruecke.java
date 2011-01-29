@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
+import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
@@ -52,7 +53,7 @@ import org.kalypso.observation.result.TupleResult;
 /**
  * @author kimwerner
  */
-final public class BuildingBruecke extends AbstractObservationBuilding
+final public class BuildingBruecke extends AbstractProfileObject implements IProfileBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_BRUECKE;
 
@@ -73,6 +74,11 @@ final public class BuildingBruecke extends AbstractObservationBuilding
     final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result );
 
     return observation;
+  }
+
+  public double getWidth( )
+  {
+    return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
   }
 
   public BuildingBruecke( final IProfil profil ,final IObservation<TupleResult> observation )

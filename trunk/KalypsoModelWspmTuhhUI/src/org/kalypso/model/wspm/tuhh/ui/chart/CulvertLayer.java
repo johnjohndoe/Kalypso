@@ -46,7 +46,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -80,7 +79,7 @@ public class CulvertLayer extends AbstractProfilLayer
 
   private IProfileBuilding getTube( )
   {
-    final IProfileBuilding[] objects = getProfil().getProfileObjects( AbstractObservationBuilding.class );
+    final IProfileBuilding[] objects = getProfil().getProfileObjects( IProfileBuilding.class );
     if( ArrayUtils.isEmpty( objects ) )
       return null;
 

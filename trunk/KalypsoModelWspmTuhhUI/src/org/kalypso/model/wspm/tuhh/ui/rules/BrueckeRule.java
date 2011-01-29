@@ -48,7 +48,6 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -96,7 +95,7 @@ public class BrueckeRule extends AbstractValidatorRule
     if( profil == null )
       return;
 
-    final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, AbstractObservationBuilding.class );
+    final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, IProfileBuilding.class );
     if( building == null )
       return;
     if( !IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( building.getId() ) )

@@ -51,7 +51,6 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class BuildingWehrProvider implements IProfileObjectProvider
 {
-
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#buildProfileObject(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.kalypso.observation.IObservation)

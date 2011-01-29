@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.observation.result.IComponent;
 
 /**
  * restriction: tuhh profile buildings only consists of tuple results with one record set-> so we have special members
@@ -51,11 +50,4 @@ import org.kalypso.observation.result.IComponent;
  */
 public interface IProfileBuilding extends IProfileObject
 {
-  public Object getValue( IComponent component );
-
-  public Object getValueFor( String componentID );
-
-  public void setValue( IComponent component, Object value );
-
-  public void setValueFor( String componentID, Object value );
 }
