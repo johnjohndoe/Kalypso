@@ -24,6 +24,8 @@ Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.afgui;bundle-version="0.0.0",
  org.kalypso.project.database.client;bundle-version="1.0.0",
  org.kalypso.gml.ui;bundle-version="2.2.0",
- org.kalypso.module;bundle-version="2.3.0"
+ org.kalypso.module;bundle-version="2.3.0",
+ org.junit;resolution:=optional,
+ org.kalypso.model.wspm.tuhh.schema;bundle-version="10.10.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
