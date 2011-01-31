@@ -91,7 +91,7 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
     final Double oK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, record );
     final Double sT = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, record );
     final Double uK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_GROUND, record );
-    if( uK.isNaN() || oK.isNaN() || sT.isNaN() )
+    if( uK.isNaN() || oK.isNaN() || sT.isNaN()||getCoordinateMapper()==null )
       return null;
     final Point pOK = getCoordinateMapper().numericToScreen( sT, oK );
     final Point pUK = getCoordinateMapper().numericToScreen( sT, uK );

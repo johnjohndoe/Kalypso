@@ -156,11 +156,19 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public EditInfo getHover( final Point pos )
   {
-    final EditInfo ei = super.getHover( pos );
-    if( ei == null )
-      return null;
-    ei.m_pos.y = pos.y;
-    return ei;
+    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( getTargetComponent() );
+    for( final IProfilPointMarker devider : deviders )
+    {
+      final IRecord point = devider.getPoint();
+      final Rectangle hoverRect = getHoverRect(point);
+      if( hoverRect == null )
+        continue;
+      if( hoverRect.contains( pos ) )
+      {
+        return new EditInfo( this, null, null,getProfil().indexOfPoint( point ), getTooltipInfo( point ), pos );
+      }
+    }
+    return null;
   }
 
   /**
@@ -169,20 +177,11 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public Rectangle getHoverRect( final IRecord profilPoint )
   {
-    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( profilPoint );
     final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() );
     final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() ) + m_offset;
-    for( final IProfilPointMarker devider : deviders )
-    {
-      if( devider.getId().equals( getTargetComponent() ) )
-      {
-        final Double breite = ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoint );
-        final int screenX = getCoordinateMapper().getDomainAxis().numericToScreen( breite );
-
-        return new Rectangle( screenX - 5, top, 10, bottom - top );
-      }
-    }
-    return null;
+    final Double breite = ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoint );
+    final int screenX = getCoordinateMapper().getDomainAxis().numericToScreen( breite );
+    return new Rectangle( screenX - 5, top, 10, bottom - top );
   }
 
   /**
@@ -301,7 +300,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
       final int screenX1 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[0].getPoint() ) );
       final int screenX2 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[len - 1].getPoint() ) );
 
-      pf.setPoints( new Point[] {new Point(screenX1, top  ),new Point( screenX2, top )} );
+      pf.setPoints( new Point[] { new Point( screenX1, top ), new Point( screenX2, top ) } );
       pf.paint( gc );
     }
   }
