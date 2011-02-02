@@ -96,9 +96,9 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   private static final QName QNAME_PROP_DRY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "dry" ); //$NON-NLS-1$
 
   private static final QName QNAME_PROP_WAVE_HSIG = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "waveHsig" ); //$NON-NLS-1$
-  
+
   private static final QName QNAME_PROP_WAVE_DIR = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "waveDir" ); //$NON-NLS-1$
-  
+
   private static final QName QNAME_PROP_WAVE_PER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "wavePer" ); //$NON-NLS-1$
 
   public final List<ArcResult> m_arcs = new LinkedList<ArcResult>();
@@ -252,7 +252,10 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   @Override
   public double getVirtualDepth( )
   {
-    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTUALDEPTH );
+    final Double virtDepth = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTUALDEPTH );
+    if( virtDepth == null )
+      return 0.0;
+    return virtDepth;
   }
 
   @Override
@@ -265,7 +268,10 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   @Override
   public double getWaterlevel( )
   {
-    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WATERLEVEL );
+    final Double waterlevel = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WATERLEVEL );
+    if( waterlevel == null )
+      return Double.NaN;
+    return waterlevel;
   }
 
   @Override
@@ -410,7 +416,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setDischarge(double)
    */
   @Override
-  public void setDischarge( double discharge )
+  public void setDischarge( final double discharge )
   {
     getFeature().setProperty( GMLNodeResult.QNAME_PROP_DISCHARGE, new Double( discharge ) );
   }
@@ -427,9 +433,9 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     try{
       veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIME );
     }
-    catch (Exception e) {
+    catch (final Exception e) {
     }
-    
+
     if( veloList == null )
     {
       veloList = new ArrayList<Double>();
@@ -447,6 +453,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTimePrevStep()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public List<Double> getVelOverTimePrevStep( )
   {
@@ -455,9 +462,9 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     try{
       veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIMEPREVSTEP );
     }
-    catch (Exception e) {
+    catch (final Exception e) {
     }
-    
+
     if( veloList == null )
     {
       veloList = new ArrayList<Double>();
@@ -484,9 +491,9 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     try{
       veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELPREVSTEP );
     }
-    catch (Exception e) {
+    catch (final Exception e) {
     }
-    
+
     if( veloList == null )
     {
       veloList = new ArrayList<Double>();
@@ -497,7 +504,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
       while( veloList.size() < 2 )
         veloList.add( 0.0 );
     }
-    
+
     return veloList;
   }
 
@@ -537,14 +544,17 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
       VirtDepPrevStep = 0.0;
     return VirtDepPrevStep;
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getWaveDirection()
    */
   @Override
   public double getWaveDirection( )
   {
-    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_DIR );
+    final Double waveDir = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_DIR );
+    if( waveDir == null )
+      return Double.NaN;
+    return waveDir;
   }
 
   /**
@@ -553,7 +563,10 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   @Override
   public double getWaveHsig( )
   {
-    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_HSIG );
+    final Double waveHsig = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_HSIG );
+    if( waveHsig == null )
+      return Double.NaN;
+    return waveHsig;
   }
 
   /**
@@ -562,14 +575,17 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   @Override
   public double getWavePeriod( )
   {
-    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_PER );
+    final Double wavePeriod = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_PER );
+    if( wavePeriod == null )
+      return Double.NaN;
+    return wavePeriod;
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaveDirection(double)
    */
   @Override
-  public void setWaveDirection( double direction )
+  public void setWaveDirection( final double direction )
   {
     getFeature().setProperty( QNAME_PROP_WAVE_DIR, direction ); 
   }
@@ -578,7 +594,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaveHsig(double)
    */
   @Override
-  public void setWaveHsig( double hsig )
+  public void setWaveHsig( final double hsig )
   {
     getFeature().setProperty( QNAME_PROP_WAVE_HSIG, hsig );
   }
@@ -587,7 +603,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWavePeriod(double)
    */
   @Override
-  public void setWavePeriod( double period )
+  public void setWavePeriod( final double period )
   {
     getFeature().setProperty( QNAME_PROP_WAVE_PER, period );
   }
