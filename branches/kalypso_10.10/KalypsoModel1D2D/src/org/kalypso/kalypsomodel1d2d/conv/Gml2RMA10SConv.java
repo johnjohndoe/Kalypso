@@ -117,11 +117,11 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     VO,
     GO
   }
-  
+
   public static final boolean SUPPORT_MIDSIDE_NODES = true;
-  
+
   public static final boolean SUPPORT_FLOW_RESISTANCE_CLASSES = true;
-  
+
   private static String WEIR2D_CONST_ID = "_2D_WEIR2RMA10_ID_"; //$NON-NLS-1$
 
   private final IdMap m_roughnessIDProvider;
@@ -192,8 +192,8 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     {
       if( relationship instanceof IFlowRelation2D )
       {
-        IFlowRelation2D lBuilding2d = (IFlowRelation2D) relationship;
-        IPolyElement lPolyElementWithWeir = m_discretisationModel1d2d.find2DElement( lBuilding2d.getPosition(), 0.01 );
+        final IFlowRelation2D lBuilding2d = (IFlowRelation2D) relationship;
+        final IPolyElement lPolyElementWithWeir = m_discretisationModel1d2d.find2DElement( lBuilding2d.getPosition(), 0.01 );
         if( m_calculationUnit.contains( lPolyElementWithWeir ) )
         {
           m_mapPolyElementsWithWeir.put( lPolyElementWithWeir, lBuilding2d );
@@ -287,7 +287,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       }
     }
   }
-  
+
   public void writeRMA10sModel( final OutputStream outputStream) throws IOException
   {
     Formatter formatter = null;
@@ -299,7 +299,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       writeRMA10sModel( formatter );
       FormatterUtils.checkIoException( formatter );
     }
-    catch (Exception e) {
+    catch (final Exception e) {
       e.printStackTrace();
       throw new IOException();
     }
@@ -312,7 +312,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       }
     }
   }
-  
+
 
   private void writeRMA10sModel( final Formatter formatter ) throws CoreException, IOException
   {
@@ -531,7 +531,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
                 }
                 else
                 {
-//                  System.out.println();
+                  //                  System.out.println();
                 }
               }
               else
@@ -669,7 +669,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       {
         lPointAct = lActNode.getPoint();
         final double lDoubleAngleInBetween = Math.atan2( lActNode.getPoint().getY() - lPointStart.getY(), lActNode.getPoint().getX() - lPointStart.getX() )
-            - Math.atan2( lPointPrev.getY() - lPointStart.getY(), lPointPrev.getX() - lPointStart.getX() );
+        - Math.atan2( lPointPrev.getY() - lPointStart.getY(), lPointPrev.getX() - lPointStart.getX() );
 
         lDoubleResAngle += lDoubleAngleInBetween;
       }
@@ -894,7 +894,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
     final List<IFE1D2DElement> elementsInBBox = m_discretisationModel1d2d.getElements();
 
-    List<IFE1D2DElement> lListAllElements = new ArrayList<IFE1D2DElement>();
+    final List<IFE1D2DElement> lListAllElements = new ArrayList<IFE1D2DElement>();
     lListAllElements.addAll( elementsInBBox );
 
     // better way, but creates some errors because of the order of elements in output
@@ -1214,7 +1214,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       }
 
       // no values in feature present at all (old models)
-      if( velTotal == null )
+      if( velTotal == null || velTotal.size() == 0 )
       {
         velXComp = 0.0;
         velYComp = 0.0;
@@ -1222,7 +1222,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
       else if( velTotal != null )
       {
-//        System.out.print( "velTotal: " + velTotal );
+        //        System.out.print( "velTotal: " + velTotal );
         if( velTotal.get( 0 ) == null )
         {
           velXComp = 0.0;
@@ -1427,7 +1427,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     public String toString( )
     {
       return "First node: " + getFirstNode() + ", second node: " + getSecondNode() + ", gml parent id: " + getStrGMLParentId() + ", created parent id: " + getIntParentId() + ", is real edge: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-          + isBoolRealExistingEdge() + "\n"; //$NON-NLS-1$
+      + isBoolRealExistingEdge() + "\n"; //$NON-NLS-1$
     }
   }
 

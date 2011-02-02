@@ -80,10 +80,10 @@ import org.kalypso.kalypsomodel1d2d.conv.results.MultiTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
-import org.kalypso.kalypsomodel1d2d.conv.results.SWANResultsReader;
-import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
+import org.kalypso.kalypsomodel1d2d.conv.results.SWANResultsReader;
 import org.kalypso.kalypsomodel1d2d.conv.results.TinResultWriter.QNameAndString;
+import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler1d;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
@@ -117,7 +117,7 @@ public class ProcessResultsJob extends Job
 
   private FileObject m_inputFile;
 
-  private NodeResultMinMaxCatcher m_resultMinMaxCatcher = new NodeResultMinMaxCatcher();
+  private final NodeResultMinMaxCatcher m_resultMinMaxCatcher = new NodeResultMinMaxCatcher();
 
   private List<TYPE> m_parameters;
 
@@ -229,7 +229,7 @@ public class ProcessResultsJob extends Job
     {
       InputStream contentStream = null;
 
-      ZipOutputStream zos = null;
+      final ZipOutputStream zos = null;
       try
       {
         /* Zip .2d file to outputDir */
@@ -300,7 +300,7 @@ public class ProcessResultsJob extends Job
         if( lResFile.getName().getFriendlyURI().endsWith( ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ) )
         {
           lSWANResultsReader = new SWANResultsReader( lResFile );
-          String timeStringFormatedForSWANOutput = SWANDataConverterHelper.getTimeStringFormatedForSWANOutput( m_stepDate );
+          final String timeStringFormatedForSWANOutput = SWANDataConverterHelper.getTimeStringFormatedForSWANOutput( m_stepDate );
           m_mapResults = lSWANResultsReader.readMatResultsFile( timeStringFormatedForSWANOutput );
           KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( "read data for: " + timeStringFormatedForSWANOutput ) );
         }
@@ -518,11 +518,7 @@ public class ProcessResultsJob extends Job
   }
 
   private ITriangleEater createTinEater( final File tinResultFile, final TYPE parameter, final String crs ) throws CoreException
-  // , MalformedURLException, GM_Exception
   {
-    // TODO: for debug purpose only...
-    // final boolean fast = true;
-
     final List<QNameAndString> properties = new ArrayList<QNameAndString>();
 
     switch( parameter )
@@ -575,22 +571,7 @@ public class ProcessResultsJob extends Job
     }
 
     final QNameAndString[] props = properties.toArray( new QNameAndString[properties.size()] );
-    // if( fast )
     return new TriangulatedSurfaceDirectTriangleEater( tinResultFile, parameter, crs, props );
-
-    /*
-     * 
-     * this part of code was already "dead code", the fast variable is set constant to true
-     * 
-     * GMLWorkspace triangleWorkspace = null; try { triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName(
-     * UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURI().toURL(), null ); } catch(
-     * GMLSchemaException e ) { e.printStackTrace(); } final GM_TriangulatedSurface surface =
-     * org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs ); final Feature
-     * triangleFeature = triangleWorkspace.getRootFeature(); triangleFeature.setProperty( new QName(
-     * UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface ); //$NON-NLS-1$ return new
-     * TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, parameter, props );
-     */
-
   }
 
   // /**
