@@ -197,6 +197,7 @@ public class HydrographUtils
     return null;
   }
 
+  // FIXME: handle saving via pool
   public static Feature createNewHydrograph( final ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, GmlSerializeException, IOException, GMLSchemaException
   {
     /* get a path */
@@ -214,7 +215,7 @@ public class HydrographUtils
     final OutputStreamWriter writer = null;
     try
     {
-      final String charset = gmlResultFile.getCharset();
+      final String charset = "UTF-8";
       GmlSerializer.serializeWorkspace( gmlResultFile.getLocation().toFile(), workspace, charset );
       // refresh workspace
       /* update resource folder */
