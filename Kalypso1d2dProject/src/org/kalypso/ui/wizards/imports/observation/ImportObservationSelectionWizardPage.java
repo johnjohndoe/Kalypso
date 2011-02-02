@@ -498,6 +498,9 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private void fireSelectionChanged( )
   {
+    if( m_sourceFile == null ){
+      return;
+    }
     for( final ISelectionChangedListener iSelectionChangedListener : m_selectionListener )
       (iSelectionChangedListener).selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
   }
