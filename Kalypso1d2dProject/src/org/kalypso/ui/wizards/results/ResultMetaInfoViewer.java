@@ -53,7 +53,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -63,6 +62,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
+import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.i18n.Messages;
 
@@ -317,7 +317,7 @@ public class ResultMetaInfoViewer extends Viewer
           maxValueForType = docResult.getMaxValueForType( resultType );
           docMax = maxValueForType.toString();
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           continue;
         }
@@ -333,10 +333,10 @@ public class ResultMetaInfoViewer extends Viewer
         /*
          * set actual min/max settings also in the helper map
          */
-        String sourceFile = docResult.getFullPath().toOSString();
-        int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
-        String stepNameStr = sourceFile.substring( beginIndex, beginIndex + 16 );
-        Map<String, Object> m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepNameStr );
+        final String sourceFile = docResult.getFullPath().toOSString();
+        final int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
+        final String stepNameStr = sourceFile.substring( beginIndex, beginIndex + 16 );
+        final Map<String, Object> m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepNameStr );
         m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MIN_PREFIX + resultType.toLowerCase(), minValueForType.doubleValue() );
         m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MAX_PREFIX + resultType.toLowerCase(), maxValueForType.doubleValue() );
 
@@ -350,7 +350,7 @@ public class ResultMetaInfoViewer extends Viewer
           docMin = docResult.getMinValue().toString();
           docMax = docResult.getMaxValue().toString();
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
 
         }
