@@ -447,10 +447,15 @@ public class TempGrid
     List<Feature> lListRes = new ArrayList<Feature>();
     IFE1D2DNode lastNode = null;
     int iCountNodes = 0;
+    Map<GM_Position, IFE1D2DNode> lNodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
     for( final GM_Point lPoint : lListPoses )
     {
 
       IFE1D2DNode actNode = m_nodesNameConversionMap.get( lPoint.getPosition() );
+      if( actNode == null )
+      {
+        actNode = lNodesNameConversionMap.get( lPoint.getPosition() );
+      }
       if( actNode == null )
       {
         actNode = discModel.createNode( lPoint, -1, NOT_CREATED );
