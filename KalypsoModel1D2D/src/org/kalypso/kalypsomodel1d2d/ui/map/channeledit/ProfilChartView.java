@@ -161,7 +161,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     final GridData gD = new GridData( SWT.FILL, SWT.FILL, true, true );
     // gD.exclude = true;
     m_chartComposite.getPlot().setLayoutData( gD );
-    m_chartComposite.getChartModel().setHideUnusedAxes( true );
+    m_chartComposite.getChartModel().getBehaviour().setHideUnusedAxes( true );
 
     m_chartComposite.getChartModel().getLayerManager().addListener( new AbstractLayerManagerEventListener()
     {
@@ -433,7 +433,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     if( m_profile == null )
     {
       ((GridData) (m_chartComposite.getPlot().getLayoutData())).exclude = true;
-      m_chartComposite.getChartModel().setTitle( "<No Profile Selected>", ALIGNMENT.TICK_CENTERED, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
+      m_chartComposite.getChartModel().getSettings().setTitle( "<No Profile Selected>", ALIGNMENT.TICK_CENTERED, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
 
     }
     else
@@ -442,7 +442,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       {
         m_profile.addProfilListener( this );
 
-        m_chartComposite.getChartModel().setTitle( String.format( "Station km %10.4f", m_profile.getStation() ), ALIGNMENT.TICK_CENTERED, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) );
+        m_chartComposite.getChartModel().getSettings().setTitle( String.format( "Station km %10.4f", m_profile.getStation() ), ALIGNMENT.TICK_CENTERED, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) );
         ((GridData) (m_chartComposite.getPlot().getLayoutData())).exclude = false;
         updateLayer();
       }
