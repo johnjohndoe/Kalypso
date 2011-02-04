@@ -250,6 +250,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   {
     if( layerID == null || profil == null )
       return null;
+
     final CoordinateMapper cmLeft = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
     final CoordinateMapper cmScreen = new CoordinateMapper( m_domainAxis, m_screenAxisVertical );
 
@@ -258,56 +259,53 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       return new VegetationTheme( profil, new IProfilChartLayer[] { new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ),
           new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) }, cmLeft, m_lsp );
     }
-
-    if( layerID.equals( IWspmConstants.LAYER_GEOKOORDINATEN ) )
+    else if( layerID.equals( IWspmConstants.LAYER_GEOKOORDINATEN ) )
     {
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ),
           new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) };
       return new GeoCoordinateTheme( profil, subLayers, null );
     }
-
-    if( layerID.equals( IWspmConstants.LAYER_GELAENDE ) )
+    else if( layerID.equals( IWspmConstants.LAYER_GELAENDE ) )
     {
       return new CrossSectionTheme( profil, new IProfilChartLayer[] { new StationLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE ),
           new StationPointLayer( layerID, profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ) }, cmLeft );
     }
-
-    if( layerID.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
+    else if( layerID.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
     {
       final CoordinateMapper cmRight = new CoordinateMapper( m_domainAxis, m_targetAxisRight );
 
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { new RoughnessLayer( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, m_lsp ),
           new RoughnessLayer( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, m_lsp ) };
+
       return new RoughnessTheme( profil, subLayers, cmRight );
     }
-
-    if( layerID.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
+    else if( layerID.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
     {
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] {
           new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_lsp ), //$NON-NLS-1$
           new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, m_lsp ) }; //$NON-NLS-1$
+
       return new BuildingBridgeTheme( profil, subLayers, cmLeft );
     }
-
-    if( layerID.equals( IWspmTuhhConstants.LAYER_WEHR ) )
+    else if( layerID.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] {
           new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, m_lsp ), //$NON-NLS-1$
           new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_WEHR, m_lsp, 30, false ) };
+
       return new BuildingWeirTheme( profil, subLayers, cmLeft );
     }
-
-    if( layerID.equals( IWspmTuhhConstants.LAYER_TUBES ) )
+    else if( layerID.equals( IWspmTuhhConstants.LAYER_TUBES ) )
       return new BuildingTubesTheme( profil, new IProfilChartLayer[] { new CulvertLayer( profil, m_lsp ) }, cmLeft );
-    if( layerID.equals( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
+    else if( layerID.equals( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
       return new SinuositaetLayer( profil );
-
-    if( layerID.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
+    else if( layerID.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
     {
       final PointMarkerLayer dbLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_lsp, 5, true );
       final RiverChannelLayer tfLayer = new RiverChannelLayer( profil, m_lsp, 15, false );
       final PointMarkerLayer bvLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_lsp, 25, false );
       final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { dbLayer, tfLayer, bvLayer };
+
       return new DeviderTheme( profil, subLayers, cmScreen );
     }
 
