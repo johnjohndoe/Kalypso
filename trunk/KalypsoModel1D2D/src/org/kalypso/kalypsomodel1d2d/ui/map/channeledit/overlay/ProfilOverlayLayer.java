@@ -175,7 +175,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
       };
     }
 
-    return new EditInfo( this, null, hoverFigure, dragStartData.m_data, getTooltipInfo( snapPoint ), curserPos );
+    return new EditInfo( this, null, hoverFigure, dragStartData.getData(), getTooltipInfo( snapPoint ), curserPos );
   }
 
   /**
@@ -185,7 +185,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
-    final Integer index = (Integer) dragStartData.m_data;
+    final Integer index = (Integer) dragStartData.getData();
     final IProfil profil = getProfil();
     final IProfil origProfil = m_data.getProfil();
     final IRecord targetPoint = profil.getPoint( index );

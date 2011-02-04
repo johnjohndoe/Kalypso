@@ -108,7 +108,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
     hoverFigure.setStyle( getLineStyle_hover() );
     hoverFigure.setRectangle( new Rectangle( x - 5, m_offset, 10, getTargetAxis().getScreenHeight() ) );
 
-    return new EditInfo( this, null, hoverFigure, dragStartData.m_data, getTooltipInfo( point ), dragStartData.m_pos );
+    return new EditInfo( this, null, hoverFigure, dragStartData.getData(), getTooltipInfo( point ), dragStartData.getPosition() );
   }
 
   /**
@@ -119,7 +119,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public final void executeDrop( final Point point, final EditInfo dragStartData )
   {
-    final Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
+    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) (dragStartData.getData()) : -1;
     if( pos == -1 )
       return;
 
