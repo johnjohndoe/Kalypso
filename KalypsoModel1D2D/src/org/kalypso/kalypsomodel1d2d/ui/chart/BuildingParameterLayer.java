@@ -281,7 +281,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     if( info == null )
       return;
 
-    final IRecord record = (IRecord) info.m_data;
+    final IRecord record = (IRecord) info.getData();
     m_result.remove( record );
 
     updatePaintData();
@@ -417,7 +417,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     final BigDecimal xValue = new BigDecimal( (xAxis.screenToNumeric( point.x )).doubleValue() );
     final BigDecimal yValue = new BigDecimal( (yAxis.screenToNumeric( point.y )).doubleValue() );
 
-    final IRecord record = (IRecord) info.m_data;
+    final IRecord record = (IRecord) info.getData();
 
     record.setValue( m_domainComponent, xValue );
     record.setValue( m_valueComponent, yValue );

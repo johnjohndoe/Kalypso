@@ -112,7 +112,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
     final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
     final EditInfo info = layer.getEditInfo( new Point( e.x, e.y ) );
 
-    if( info.m_data != null )
+    if( info.getData() != null )
       layer.delete( info );
   }
 
@@ -124,7 +124,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
   {
     final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
     final EditInfo editInfo = layer.getEditInfo( new Point( e.x, e.y ) );
-    if( editInfo != null && editInfo.m_data != null )
+    if( editInfo != null && editInfo.getData() != null )
       m_info = editInfo;
   }
 
@@ -152,10 +152,10 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
     {
       ctrl.setCursor( e.display.getSystemCursor( SWT.CURSOR_HAND ) );
 
-      if( info.m_data == null )
-        layer.setTooltip( info.m_text + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.EditBuildingParameterMouseHandler.0" ), point ); //$NON-NLS-1$
+      if( info.getData() == null )
+        layer.setTooltip( info.getText() + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.EditBuildingParameterMouseHandler.0" ), point ); //$NON-NLS-1$
       else
-        layer.setTooltip( info.m_text + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.EditBuildingParameterMouseHandler.1" ), point ); //$NON-NLS-1$
+        layer.setTooltip( info.getText() + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.EditBuildingParameterMouseHandler.1" ), point ); //$NON-NLS-1$
     }
   }
 
@@ -171,12 +171,12 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
       // Klick on cross-point?
       final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
       final EditInfo editInfo = layer.getEditInfo( new Point( e.x, e.y ) );
-      if( editInfo != null && editInfo.m_data == null )
+      if( editInfo != null && editInfo.getData() == null )
       {
         final Control ctrl = (Control) e.getSource();
         final Rectangle bounds = ctrl.getBounds();
         final int zoomFactor = 3;
-        final Point point = editInfo.m_pos;
+        final Point point = editInfo.getPosition();
         final Point zoomMin = new Point( point.x - bounds.width / zoomFactor, point.y - bounds.height / zoomFactor );
         final Point zoomMax = new Point( point.x + bounds.width / zoomFactor, point.y + bounds.height / zoomFactor );
 
