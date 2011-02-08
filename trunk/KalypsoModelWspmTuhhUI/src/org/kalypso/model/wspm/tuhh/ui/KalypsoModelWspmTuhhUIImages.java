@@ -54,7 +54,9 @@ public enum KalypsoModelWspmTuhhUIImages implements ImageKey
   ADD_CSV_EXPORT_COLUMN("icons/obj16/addCsvExportColumn.gif"), //$NON-NLS-1$
   ADD_CSV_EXPORT_RESULT_COLUMNS("icons/obj16/addCsvExportResultColumns.gif"), //$NON-NLS-1$
   REMOVE_CSV_EXPORT_COLUMN("icons/obj16/removeCsvExportColumn.gif"), //$NON-NLS-1$
-  REMOVE_CSV_CONFIGURATION("icons/obj16/removeCsvConfiguration.gif"); //$NON-NLS-1$
+  REMOVE_CSV_CONFIGURATION("icons/obj16/removeCsvConfiguration.gif"), //$NON-NLS-1$
+  ROUGHNESS_PANEL_ADD("icons/obj16/roughnessPanelAdd.gif"), //$NON-NLS-1$
+  ROUGHNESS_PANEL_REMOVE("icons/obj16/roughnessPanelRemove.gif"); //$NON-NLS-1$
 
   private final String m_imagePath;
 
