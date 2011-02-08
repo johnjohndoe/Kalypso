@@ -154,7 +154,7 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
       // FIXME: these columns should be configurable by the user (at least, 'all or nothing')
       for( final IComponent comp : components )
       {
-        final String pattern = String.format( "<Component:%s>", comp.getId() );
+        final String pattern = String.format( "<Component:%s>", comp.getId() ); //$NON-NLS-1$
         columns.add( new PatternReplacementColumn( comp.getName(), pattern ) );
       }
     }

@@ -45,6 +45,7 @@ import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
@@ -58,7 +59,7 @@ public class ChooseResultsWizard extends Wizard
 
   public ChooseResultsWizard( final ProfileSelection profileSelection )
   {
-    setWindowTitle( "Profilauswahl" );
+    setWindowTitle( Messages.getString("ChooseResultsWizard_0") ); //$NON-NLS-1$
     setHelpAvailable( false );
     setNeedsProgressMonitor( false );
     setForcePreviousAndNextButtons( false );

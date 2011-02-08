@@ -70,6 +70,7 @@ import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.LeftForeland;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.MainChannel;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.RightBank;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.RightForeland;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
@@ -155,8 +156,8 @@ public class SobekFricFileChooser extends AbstractSobekFileChooser
     final String[] input = new String[] { IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST };
 
     final Label roughnessLabel = new Label( parent, SWT.NONE );
-    roughnessLabel.setText( "Roughness Type" );
-    roughnessLabel.setToolTipText( "Export the chosen roughness type to sobek" );
+    roughnessLabel.setText( Messages.getString("SobekFricFileChooser_0") ); //$NON-NLS-1$
+    roughnessLabel.setToolTipText( Messages.getString("SobekFricFileChooser_1") ); //$NON-NLS-1$
 
     final ComboViewer roughnessViewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     roughnessViewer.getControl().setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false, 2, 1 ) );
@@ -188,8 +189,8 @@ public class SobekFricFileChooser extends AbstractSobekFileChooser
   {
     final Label zoneLabel = new Label( parent, SWT.NONE );
     zoneLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false ) );
-    zoneLabel.setText( "Flow Zones" );
-    zoneLabel.setToolTipText( "Build sobek friction as average from these flow zones" );
+    zoneLabel.setText( Messages.getString("SobekFricFileChooser_2") ); //$NON-NLS-1$
+    zoneLabel.setToolTipText( Messages.getString("SobekFricFileChooser_3") ); //$NON-NLS-1$
 
     final Table table = new Table( parent, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL );
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );

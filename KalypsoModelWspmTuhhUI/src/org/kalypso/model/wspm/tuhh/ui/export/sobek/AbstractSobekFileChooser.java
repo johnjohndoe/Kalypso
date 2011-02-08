@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Group;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -93,7 +94,7 @@ public abstract class AbstractSobekFileChooser
       }
     } );
 
-    m_fileChooserGroup.setLabel( "Target File" );
+    m_fileChooserGroup.setLabel( Messages.getString("AbstractSobekFileChooser_0") ); //$NON-NLS-1$
 
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( 3, false ) );

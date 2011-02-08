@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
@@ -74,9 +75,9 @@ public class SobekProfileFileChooser extends AbstractSobekFileChooser
 
   private static final String SETTINGS_EXPORT_BUILDINGS = "exportBuildings"; //$NON-NLS-1$
 
-  private static final String STR_ZONE_LABEL = "Restrict To";
+  private static final String STR_ZONE_LABEL = Messages.getString("SobekProfileFileChooser_0"); //$NON-NLS-1$
 
-  private static final String STR_ZONE_TOOLTIP = "Restrict exported points to this flow zone";
+  private static final String STR_ZONE_TOOLTIP = Messages.getString("SobekProfileFileChooser_1"); //$NON-NLS-1$
 
 
   private String m_flowZone = IWspmTuhhConstants.MARKER_TYP_BORDVOLL;
@@ -117,7 +118,7 @@ public class SobekProfileFileChooser extends AbstractSobekFileChooser
       {
         final String componentID = (String) element;
         if( StringUtils.isBlank( componentID ) )
-          return "<Complete Profile>";
+          return Messages.getString("SobekProfileFileChooser_2"); //$NON-NLS-1$
 
         final IComponent component = ComponentUtilities.getFeatureComponent( componentID );
         return ComponentUtilities.getComponentLabel( component );
@@ -142,7 +143,7 @@ public class SobekProfileFileChooser extends AbstractSobekFileChooser
   private void createTubeControls( final Composite parent )
   {
     final Button bridgeCheck = new Button( parent, SWT.CHECK );
-    bridgeCheck.setText( "Export Buildings" );
+    bridgeCheck.setText( Messages.getString("SobekProfileFileChooser_3") ); //$NON-NLS-1$
     bridgeCheck.setSelection( m_exportBuildings );
 
     bridgeCheck.addSelectionListener( new SelectionAdapter()

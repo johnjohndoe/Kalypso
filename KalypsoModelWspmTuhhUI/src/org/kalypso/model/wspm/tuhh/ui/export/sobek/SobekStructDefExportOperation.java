@@ -98,14 +98,14 @@ public class SobekStructDefExportOperation extends AbstractSobekProfileExportOpe
     int reallyExportedBuildings = 0;
     for( final IProfileObject profileObject : profileObjects )
     {
-      final String countSuffix = reallyExportedBuildings == 0 ? StringUtils.EMPTY : "_" + reallyExportedBuildings;
+      final String countSuffix = reallyExportedBuildings == 0 ? StringUtils.EMPTY : "_" + reallyExportedBuildings; //$NON-NLS-1$
       final String buildingId = id + countSuffix;
 
       final SobekStructDef structDef = buildStructDef( buildingId, profil, profileName, profileObject );
       if( structDef != null )
       {
         final String line = structDef.serialize();
-        formatter.format( "%s%n", line );
+        formatter.format( "%s%n", line ); //$NON-NLS-1$
         reallyExportedBuildings++;
       }
     }

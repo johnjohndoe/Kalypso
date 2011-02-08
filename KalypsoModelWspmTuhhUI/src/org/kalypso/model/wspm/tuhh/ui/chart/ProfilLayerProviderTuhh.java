@@ -240,9 +240,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       p2.setValue( index, y2 );
 
       building.setValue( building.getObjectProperty( BUILDING_PROPERTY_FORMBEIWERT ), 1.0 );
-
     }
-
   }
 
   @Override
@@ -325,8 +323,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) != null )
       layerToAdd.add( createLayer( profil, IWspmConstants.LAYER_GEOKOORDINATEN ) );
 
-    if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) != null || profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
-      layerToAdd.add( createLayer( profil, IWspmTuhhConstants.LAYER_RAUHEIT ) );
+// if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) != null || profil.hasPointProperty(
+// IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
+    layerToAdd.add( createLayer( profil, IWspmTuhhConstants.LAYER_RAUHEIT ) );
 
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) != null )
       layerToAdd.add( createLayer( profil, IWspmTuhhConstants.LAYER_BEWUCHS ) );
