@@ -85,7 +85,7 @@ public class ProfilChartTooltip
       else
       {
         if( key != null )
-          formatter.format( "%s", key );
+          formatter.format( "%s", key ); //$NON-NLS-1$
       }
     }
 
@@ -95,7 +95,7 @@ public class ProfilChartTooltip
 
   private String getFormat( final int maxLabelLength )
   {
-    return String.format( "%%-%ds %%9.4f\n", maxLabelLength );
+    return String.format( "%%-%ds %%9.4f\n", maxLabelLength ); //$NON-NLS-1$
   }
 
   private int getMaxLabelLength( )

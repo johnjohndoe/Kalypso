@@ -142,7 +142,7 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
     int reallyExportedBuildings = 0;
     for( final IProfileObject profileObject : profileObjects )
     {
-      final String countSuffix = reallyExportedBuildings == 0 ? StringUtils.EMPTY : "_" + reallyExportedBuildings;
+      final String countSuffix = reallyExportedBuildings == 0 ? StringUtils.EMPTY : "_" + reallyExportedBuildings; //$NON-NLS-1$
       final String buildingId = id + m_idSuffix + countSuffix;
 
       reallyExportedBuildings++;
@@ -206,7 +206,7 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
       return profil.getPoints();
 
     final IComponent markerComponent = ComponentUtilities.getFeatureComponent( m_pointMarkerId );
-    final String unknownLabel = String.format( "Unknown: %s", m_pointMarkerId );
+    final String unknownLabel = String.format( Messages.getString("SobekDefExportOperation.1"), m_pointMarkerId ); //$NON-NLS-1$
     final String markerLabel = markerComponent == null ? unknownLabel : ComponentUtilities.getComponentLabel( markerComponent );
 
     final IProfilPointMarker[] markers = profil.getPointMarkerFor( m_pointMarkerId );

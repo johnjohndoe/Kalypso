@@ -75,17 +75,18 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
 public class ExportConfigurationComposite
 {
-  private static final String _STR_COMBO_DEFAULT_ENTRY = "<Select a previously saved configuration>";
+  private static final String _STR_COMBO_DEFAULT_ENTRY = Messages.getString("ExportConfigurationComposite_0"); //$NON-NLS-1$
 
-  private static final Object _STR_COMBO_EMPTY_ENTRY = "<No previously save configuration available>";
+  private static final Object _STR_COMBO_EMPTY_ENTRY = Messages.getString("ExportConfigurationComposite_1"); //$NON-NLS-1$
 
-  private static final String SETTINGS_LABEL = "label";
+  private static final String SETTINGS_LABEL = "label"; //$NON-NLS-1$
 
   private final CsvExportColumnsPage m_csvExportColumnsPage;
 
@@ -132,12 +133,12 @@ public class ExportConfigurationComposite
   {
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( 3, false ) );
-    group.setText( "Save Configuration As..." );
+    group.setText( Messages.getString("ExportConfigurationComposite_3") ); //$NON-NLS-1$
 
     final Text saveConfigNameField = new Text( group, SWT.SINGLE | SWT.BORDER );
     m_saveConfigNameField = saveConfigNameField;
     saveConfigNameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    saveConfigNameField.setMessage( "<Pleaser enter a name to save the configuration under>" );
+    saveConfigNameField.setMessage( Messages.getString("ExportConfigurationComposite_4") ); //$NON-NLS-1$
     saveConfigNameField.addModifyListener( new ModifyListener()
     {
       @Override
@@ -167,7 +168,7 @@ public class ExportConfigurationComposite
     updateControl();
 
     final ImageDescriptor removeImage = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.REMOVE_CSV_CONFIGURATION );
-    final Action removeConfigAction = new Action( "Remove Configuration", removeImage )
+    final Action removeConfigAction = new Action( Messages.getString("ExportConfigurationComposite_5"), removeImage ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#run()
@@ -227,7 +228,7 @@ public class ExportConfigurationComposite
     final Shell shell = m_csvExportColumnsPage.getShell();
 
     final String configLabel = configuration.get( SETTINGS_LABEL );
-    final String message = String.format( "Removing configuration '%s'. Continue?", configLabel );
+    final String message = String.format( Messages.getString("ExportConfigurationComposite_6"), configLabel ); //$NON-NLS-1$
     if( !MessageDialog.openConfirm( shell, title, message ) )
       return;
 
@@ -297,7 +298,7 @@ public class ExportConfigurationComposite
     int counter = 0;
     while( true )
     {
-      final String filename = "configuration_" + counter++;
+      final String filename = "configuration_" + counter++; //$NON-NLS-1$
       final File configFile = new File( m_settingsBaseDir, filename );
       if( !configFile.exists() )
         return filename;

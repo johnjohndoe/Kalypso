@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
@@ -70,8 +71,8 @@ public class AddResultColumnsAction extends Action
     m_columnsComposite = columnsComposite;
     m_profileSelection = profileSelection;
 
-    setText( "Add Result Columns" );
-    setDescription( "Choose from available calculation results and adds them as export columns." );
+    setText( Messages.getString("AddResultColumnsAction_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("AddResultColumnsAction_1") ); //$NON-NLS-1$
 
     final ImageDescriptor image = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.ADD_CSV_EXPORT_COLUMN );
     setImageDescriptor( image );

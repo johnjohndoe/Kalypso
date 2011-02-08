@@ -76,7 +76,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
 
   private static final String STRUCT_GROUP_LABEL = "Struct.def"; //$NON-NLS-1$
 
-  private static final String STRUCT_FILTER_LABEL = "SOBEK struct.def file";
+  private static final String STRUCT_FILTER_LABEL = Messages.getString("SobekProfileExportFileChooserPage.0"); //$NON-NLS-1$
 
   private static final String DEF_EXTENSION = "def"; //$NON-NLS-1$
 
@@ -88,9 +88,9 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
 
   private static final String SETTINGS_BUILDINGS_SUFFIX = "buildingsSuffix"; //$NON-NLS-1$
 
-  private static final String STR_SUFFIX_TOOLTIP = "Append this suffix to the id of structures";
+  private static final String STR_SUFFIX_TOOLTIP = Messages.getString("SobekProfileExportFileChooserPage.1"); //$NON-NLS-1$
 
-  private String m_idSuffix = "_building";
+  private String m_idSuffix = "_building"; //$NON-NLS-1$
 
   private AbstractSobekFileChooser m_defFileChooser;
 
@@ -164,7 +164,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   {
     final Label patternLabel = new Label( parent, SWT.NONE );
     patternLabel.setText( Messages.getString( "SobekProfileExportFileChooserPage_9" ) ); //$NON-NLS-1$
-    patternLabel.setToolTipText( "This pattern is used to generate sobek profile ID's" );
+    patternLabel.setToolTipText( Messages.getString("SobekProfileExportFileChooserPage.3") ); //$NON-NLS-1$
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -185,7 +185,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   private void createBuildingSuffixControl( final Composite parent )
   {
     final Label suffixLabel = new Label( parent, SWT.NONE );
-    suffixLabel.setText( "ID-Suffix" );
+    suffixLabel.setText( Messages.getString("SobekProfileExportFileChooserPage.4") ); //$NON-NLS-1$
     suffixLabel.setToolTipText( STR_SUFFIX_TOOLTIP );
 
     final Text suffixText = new Text( parent, SWT.SINGLE | SWT.BORDER );
@@ -258,7 +258,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
       return new MessageProvider( Messages.getString("SobekProfileExportFileChooserPage_10"), WARNING ); //$NON-NLS-1$
 
     if( StringUtils.isBlank( m_idSuffix ) )
-      return new MessageProvider( "Empty id-suffix for building - you will get id conflicts in the export file", IMessageProvider.WARNING );
+      return new MessageProvider( Messages.getString("SobekProfileExportFileChooserPage.5"), IMessageProvider.WARNING ); //$NON-NLS-1$
 
     if( m_defFileChooser != null )
     {

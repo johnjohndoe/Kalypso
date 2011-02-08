@@ -64,7 +64,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
  */
 public class RoughnessLayer extends AbstractProfilLayer
 {
-
   public RoughnessLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( IWspmTuhhConstants.LAYER_RAUHEIT, profil, targetRangeProperty, styleProvider );

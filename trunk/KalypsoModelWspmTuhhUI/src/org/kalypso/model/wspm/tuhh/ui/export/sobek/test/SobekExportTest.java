@@ -74,7 +74,7 @@ public class SobekExportTest extends Assert
   {
     m_platformEncoding = Charset.defaultCharset().name();
 
-    final URL dataLocation = getClass().getResource( "resources/modell.gml.gz" );
+    final URL dataLocation = getClass().getResource( "resources/modell.gml.gz" ); //$NON-NLS-1$
 
     final GMLWorkspace wspmWorkspace = GmlSerializer.createGMLWorkspace( dataLocation, null );
     m_project = (TuhhWspmProject) wspmWorkspace.getRootFeature();
@@ -83,19 +83,19 @@ public class SobekExportTest extends Assert
   @Test
   public void exportProfileDef( ) throws IOException, CoreException
   {
-    final URL expectedContentLocation = getClass().getResource( "resources/profile.def" );
+    final URL expectedContentLocation = getClass().getResource( "resources/profile.def" ); //$NON-NLS-1$
     final String expectedContent = UrlUtilities.readUrlToString( expectedContentLocation, m_platformEncoding );
 
     final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
     final IFeatureBindingCollection<IProfileFeature> profiles = waterBodies[0].getProfiles();
     final IProfileFeature[] allProfiles = profiles.toArray( new IProfileFeature[profiles.size()] );
 
-    final File targetFile = File.createTempFile( "profile", ".def" );
+    final File targetFile = File.createTempFile( "profile", ".def" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final String idPattern = "<Name>";
+    final String idPattern = "<Name>"; //$NON-NLS-1$
     final String pointMarkerId = IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE;
     final boolean exportBuildings = true;
-    final String idSuffix = "_building";
+    final String idSuffix = "_building"; //$NON-NLS-1$
     final SobekDefExportOperation exportOperation = new SobekDefExportOperation( targetFile, allProfiles, idPattern, pointMarkerId, exportBuildings, idSuffix );
     exportOperation.execute( new NullProgressMonitor() );
 
@@ -109,16 +109,16 @@ public class SobekExportTest extends Assert
   @Test
   public void exportStructDef( ) throws IOException, CoreException
   {
-    final URL expectedContentLocation = getClass().getResource( "resources/struct.def" );
+    final URL expectedContentLocation = getClass().getResource( "resources/struct.def" ); //$NON-NLS-1$
     final String expectedContent = UrlUtilities.readUrlToString( expectedContentLocation, m_platformEncoding );
 
     final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
     final IFeatureBindingCollection<IProfileFeature> profiles = waterBodies[0].getProfiles();
     final IProfileFeature[] allProfiles = profiles.toArray( new IProfileFeature[profiles.size()] );
 
-    final File targetFile = File.createTempFile( "struct", ".def" );
+    final File targetFile = File.createTempFile( "struct", ".def" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final String idPattern = "<Name>_building";
+    final String idPattern = "<Name>_building"; //$NON-NLS-1$
     final SobekStructDefExportOperation exportOperation = new SobekStructDefExportOperation( targetFile, allProfiles, idPattern );
     exportOperation.execute( new NullProgressMonitor() );
 

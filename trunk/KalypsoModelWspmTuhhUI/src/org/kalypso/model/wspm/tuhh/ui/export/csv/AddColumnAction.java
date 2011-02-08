@@ -44,6 +44,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -56,8 +57,8 @@ public class AddColumnAction extends Action
   {
     m_columnsComposite = columnsComposite;
 
-    setText( "Add Column" );
-    setDescription( "Adds a new empty column" );
+    setText( Messages.getString("AddColumnAction_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("AddColumnAction_1") ); //$NON-NLS-1$
 
     final ImageDescriptor image = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.ADD_CSV_EXPORT_COLUMN );
     setImageDescriptor( image );

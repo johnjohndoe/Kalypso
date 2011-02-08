@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
@@ -73,8 +74,8 @@ public class CsvExportColumnsPage extends WizardPage
 {
   enum OUTPUT_TYPE
   {
-    point("einzelne Profilpunkte"),
-    profiles("nur Profile");
+    point(Messages.getString("CsvExportColumnsPage_0")), //$NON-NLS-1$
+    profiles(Messages.getString("CsvExportColumnsPage_1")); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -109,15 +110,15 @@ public class CsvExportColumnsPage extends WizardPage
   {
     super( "csvColumns" ); //$NON-NLS-1$
 
-    setTitle( "Export Optionen" );
-    setDescription( "Bitte wählen Sie auf dieser Seite die Optionen für den Export aus." );
+    setTitle( Messages.getString("CsvExportColumnsPage_2") ); //$NON-NLS-1$
+    setDescription( Messages.getString("CsvExportColumnsPage_3") ); //$NON-NLS-1$
 
     final PatternReplacementColumn[] defaultColumns = createDefaultColumns();
     m_columnsComposite = new ExportColumnsComposite( defaultColumns, profileSelection );
 
     final IPath stateLocation = KalypsoModelWspmTuhhUIPlugin.getDefault().getStateLocation();
     final File stateDir = stateLocation.toFile();
-    final File configurationDir = new File( stateDir, "profileExportColumnConfigurations" );
+    final File configurationDir = new File( stateDir, "profileExportColumnConfigurations" ); //$NON-NLS-1$
 
     m_configurationComposite = new ExportConfigurationComposite( this, configurationDir );
   }
@@ -135,8 +136,8 @@ public class CsvExportColumnsPage extends WizardPage
   private PatternReplacementColumn[] createDefaultColumns( )
   {
     final Collection<PatternReplacementColumn> columns = new ArrayList<PatternReplacementColumn>();
-    columns.add( new PatternReplacementColumn( "Station", "<Station>" ) ); //$NON-NLS-2$
-    columns.add( new PatternReplacementColumn( "Name", "<Name>" ) ); //$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( Messages.getString("CsvExportColumnsPage_5"), "<Station>" ) );  //$NON-NLS-1$//$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( Messages.getString("CsvExportColumnsPage_6"), "<Name>" ) );  //$NON-NLS-1$//$NON-NLS-2$
     return columns.toArray( new PatternReplacementColumn[columns.size()] );
   }
 
@@ -196,7 +197,7 @@ public class CsvExportColumnsPage extends WizardPage
   private Control createTypeControl( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( "Output Type" );
+    group.setText( Messages.getString("CsvExportColumnsPage_7") ); //$NON-NLS-1$
 
     group.setLayout( new GridLayout() );
 

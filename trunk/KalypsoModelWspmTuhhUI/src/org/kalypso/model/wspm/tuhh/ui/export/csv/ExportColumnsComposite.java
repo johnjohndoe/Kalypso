@@ -75,6 +75,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
@@ -82,15 +83,15 @@ import org.kalypso.model.wspm.ui.action.ProfileSelection;
  */
 public class ExportColumnsComposite
 {
-  private static final String SETTINGS_SECTION = "columns"; //$NON-NLS-2$
+  private static final String SETTINGS_SECTION = "columns"; //$NON-NLS-1$
 
-  private static final String SETTINGS_HEADER = "header"; //$NON-NLS-2$
+  private static final String SETTINGS_HEADER = "header"; //$NON-NLS-1$
 
-  private static final String SETTINGS_PATTERN = "pattern"; //$NON-NLS-2$
+  private static final String SETTINGS_PATTERN = "pattern"; //$NON-NLS-1$
 
-  private static final String SETTINGS_WIDTH = "width"; //$NON-NLS-2$
+  private static final String SETTINGS_WIDTH = "width"; //$NON-NLS-1$
 
-  private static final String SETTINGS_PRECISION = "precision"; //$NON-NLS-2$
+  private static final String SETTINGS_PRECISION = "precision"; //$NON-NLS-1$
 
   private final List<PatternReplacementColumn> m_columns;
 
@@ -114,7 +115,7 @@ public class ExportColumnsComposite
   public Control createControl( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( "Export Columns" );
+    group.setText( Messages.getString("ExportColumnsComposite_5") ); //$NON-NLS-1$
     group.setLayout( new FillLayout() );
 
     m_form = new ScrolledForm( group, SWT.V_SCROLL );
@@ -142,7 +143,7 @@ public class ExportColumnsComposite
 
     if( m_columns.size() == 0 )
     {
-      final IStatus status = new Status( IStatus.INFO, KalypsoModelWspmTuhhUIPlugin.getID(), "No columns defined. Please add at least one column." );
+      final IStatus status = new Status( IStatus.INFO, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("ExportColumnsComposite_6") ); //$NON-NLS-1$
       new StatusComposite( body, SWT.NONE ).setStatus( status );
     }
     else
@@ -150,19 +151,19 @@ public class ExportColumnsComposite
       /* Header */
       final Label headerLabel = new Label( body, SWT.NONE );
       headerLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-      headerLabel.setText( "Column Name" );
+      headerLabel.setText( Messages.getString("ExportColumnsComposite_7") ); //$NON-NLS-1$
 
       final Label widthLabel = new Label( body, SWT.NONE );
       widthLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-      widthLabel.setText( "Width" );
+      widthLabel.setText( Messages.getString("ExportColumnsComposite_8") ); //$NON-NLS-1$
 
       final Label precisionLabel = new Label( body, SWT.NONE );
       precisionLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-      precisionLabel.setText( "Precision" );
+      precisionLabel.setText( Messages.getString("ExportColumnsComposite_9") ); //$NON-NLS-1$
 
       final Label patternLabel = new Label( body, SWT.NONE );
       patternLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-      patternLabel.setText( "Column Value" );
+      patternLabel.setText( Messages.getString("ExportColumnsComposite_10") ); //$NON-NLS-1$
 
       new Label( body, SWT.NONE ).setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false, 2, 1 ) );
     }
@@ -181,7 +182,7 @@ public class ExportColumnsComposite
       final Text headerText = new Text( body, SWT.SINGLE | SWT.BORDER );
       headerText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       headerText.setText( header );
-      headerText.setMessage( "<Please enter column name>" );
+      headerText.setMessage( Messages.getString("ExportColumnsComposite_11") ); //$NON-NLS-1$
 
       final Spinner widthSpinner = new Spinner( body, SWT.BORDER );
       widthSpinner.setValues( width, -1, 1000, 0, 1, 10 );
@@ -193,7 +194,7 @@ public class ExportColumnsComposite
       final Text patternText = new Text( body, SWT.SINGLE | SWT.BORDER );
       patternText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       patternText.setText( pattern );
-      patternText.setMessage( "<Please enter column value or pattern>" );
+      patternText.setMessage( Messages.getString("ExportColumnsComposite_12") ); //$NON-NLS-1$
 
       final Button patternMenuButton = replacer.createPatternButton( body, patternText );
       patternMenuButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
@@ -332,7 +333,7 @@ public class ExportColumnsComposite
 
       final String component = shortenComponent( componentID );
 
-      final String pattern = String.format( "<Result:%s:%s>", resultName, component );
+      final String pattern = String.format( "<Result:%s:%s>", resultName, component ); //$NON-NLS-1$
       m_columns.add( new PatternReplacementColumn( label, pattern ) );
     }
 
