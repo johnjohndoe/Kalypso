@@ -83,20 +83,4 @@ public class WeirLabelProvider extends LabelProvider
   {
     return new String[] { IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG, IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG, IWspmTuhhConstants.WEHR_TYP_BREITKRONIG, IWspmTuhhConstants.WEHR_TYP_BEIWERT };
   }
-
-  // FIXME: not used; broken and wrong strings
-  public final String getTooltip( final String type )
-  {
-    if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( type ) )
-      return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.19" ); //$NON-NLS-1$
-    else if( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG.equals( type ) )
-      return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.23" ); //$NON-NLS-1$
-    else if( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG.equals( type ) )
-      return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.26" ); //$NON-NLS-1$
-    else if( IWspmTuhhConstants.WEHR_TYP_BEIWERT.equals( type ) )
-      return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.29" ); //$NON-NLS-1$
-    else
-      return type;
-  }
-
 }
