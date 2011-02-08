@@ -159,7 +159,9 @@ public class CatchmentManager
     final int overflowNodeID = overflowNode == null ? 0 : idManager.getAsciiID( overflowNode );
     final double bimax = 1.0;// JH: dummy for bimax, because it is not used in fortran!
 
-    catchmentBuffer.append( String.format( Locale.US, "%5.3f %4d %9.1f %9.1f %4d %4.1f %4.1f\n", 1.0, bodenKorrekturFeatures.length, bimax, catchment.getBianf(), overflowNodeID, catchment.getTint(), catchment.getRintmx() ) ); //$NON-NLS-1$
+    // f5.3,i5,2(5x,f5.1),i5,2(5x,f5.1)
+    catchmentBuffer.append( String.format( Locale.US, "%5.3f%5d     %5.1f     %5.1f%5d     %5.1f     %5.1f\n", 1.0, bodenKorrekturFeatures.length, bimax, catchment.getBianf(), overflowNodeID, catchment.getTint(), catchment.getRintmx() ) ); //$NON-NLS-1$
+//    catchmentBuffer.append( String.format( Locale.US, "%5.3f %4d %9.1f %9.1f %4d %4.1f %4.1f\n", 1.0, bodenKorrekturFeatures.length, bimax, catchment.getBianf(), overflowNodeID, catchment.getTint(), catchment.getRintmx() ) ); //$NON-NLS-1$
 
     // 9 (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)
     // JH: + dummy for "evalay", because the parameter is not used in fortran code
