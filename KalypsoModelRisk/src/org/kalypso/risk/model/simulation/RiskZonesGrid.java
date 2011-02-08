@@ -319,8 +319,8 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
           return Double.NaN;
 
         // we allow no negative flow depths!
-        // if( value < 0.0 )
-        // return 0.0;
+        if( value < 0.0 )
+          return 0.0;
 
         return value;
       }
