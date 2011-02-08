@@ -288,7 +288,7 @@ public class ProcessResultsJob extends Job
         FileObject lResFile = m_inputResFileSWAN;
         if( m_inputResFileSWAN.getName().getFriendlyURI().endsWith( "zip" ) ) { //$NON-NLS-1$
           ZipUtilities.unzip( new File( m_inputResFileSWAN.getURL().toURI() ), new File( m_outputDir.toURI() ) );
-          lResFile = VFSUtilities.getNewManager().resolveFile( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT );
+          lResFile = VFSUtilities.getNewManager().resolveFile( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
         }
         // check if the given object is the directory with swan results.
         else if( m_inputResFileSWAN.getType().equals( FileType.FOLDER ) )

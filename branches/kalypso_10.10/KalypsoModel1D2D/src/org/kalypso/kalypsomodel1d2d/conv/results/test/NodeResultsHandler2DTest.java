@@ -125,9 +125,9 @@ public class NodeResultsHandler2DTest
 
   private void writeShape( final File outputDir ) throws Exception
   {
-    final File tinFile = new File( outputDir, "Tin\\tin_WATERLEVEL.gz" );
+    final File tinFile = new File( outputDir, "Tin\\tin_WATERLEVEL.gz" ); //$NON-NLS-1$
 
-    final File shapeFile = new File( outputDir, "Waterlevel" );
+    final File shapeFile = new File( outputDir, "Waterlevel" ); //$NON-NLS-1$
 
     final GMLWorkspace tinWorkspace = GmlSerializer.createGMLWorkspace( tinFile, null );
     final Feature rootFeature = tinWorkspace.getRootFeature();
@@ -135,7 +135,7 @@ public class NodeResultsHandler2DTest
     final Feature[] featureArray = new Feature[] { rootFeature };
 
     final ShapeType shapeType = ShapeType.POLYGONZ;
-    final GMLXPath geometry = new GMLXPath( "triangulatedSurfaceMember", null );
+    final GMLXPath geometry = new GMLXPath( "triangulatedSurfaceMember", null ); //$NON-NLS-1$
     final Charset charset = ShapeSerializer.getShapeDefaultCharset();
     final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, coordinateSystem );

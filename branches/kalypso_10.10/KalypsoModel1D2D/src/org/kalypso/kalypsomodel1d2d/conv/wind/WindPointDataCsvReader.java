@@ -132,7 +132,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
 
   private String m_strTimeStepLine = ""; //$NON-NLS-1$
 
-  private String m_strSourceCrs = "";
+  private String m_strSourceCrs = ""; //$NON-NLS-1$
 
   private List<String> m_listTimeAdditionalInfo;
 
@@ -239,7 +239,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
       WindDataGenericGridConverter lActWindDataProvider = new WindDataGenericGridConverter( m_dateActStep, m_pairsActTimeStepWindData, m_gridDescriptor, m_urlOutputDir, m_strFileNameSuffix );
       if( !lActWindDataProvider.convert() )
       {
-        throw new IOException( "Cannot convert actual data!" );
+        throw new IOException( Messages.WindPointDataCsvReader_1 );
       }
       m_listWindDataProviders.add( lActWindDataProvider );
       initializePairsArray();
@@ -274,7 +274,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
 
       Double lDoubleFirst = 0.;
       Double lDoubleSecond = 0.;
-      String lStrToken = "";
+      String lStrToken = ""; //$NON-NLS-1$
       try
       {
         lStrToken = lStringTokenizer.nextToken();
@@ -285,7 +285,7 @@ public class WindPointDataCsvReader implements IWindDataCollectionReader
       }
       catch( Exception e )
       {
-        logger.warning( "Not valid line! zero values will be set for this time step: " + strActLine );
+        logger.warning( Messages.WindPointDataCsvReader_3 + strActLine );
       }
       // Nautical to Cartesian...
       double lAng = 360 - lDoubleSecond - 90;

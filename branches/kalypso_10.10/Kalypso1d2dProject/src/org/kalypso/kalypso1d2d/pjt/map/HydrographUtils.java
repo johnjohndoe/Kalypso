@@ -215,7 +215,7 @@ public class HydrographUtils
     final OutputStreamWriter writer = null;
     try
     {
-      final String charset = "UTF-8";
+      final String charset = "UTF-8"; //$NON-NLS-1$
       GmlSerializer.serializeWorkspace( gmlResultFile.getLocation().toFile(), workspace, charset );
       // refresh workspace
       /* update resource folder */
