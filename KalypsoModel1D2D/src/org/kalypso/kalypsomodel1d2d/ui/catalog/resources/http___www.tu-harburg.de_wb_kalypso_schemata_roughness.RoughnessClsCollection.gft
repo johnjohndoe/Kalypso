@@ -9,11 +9,11 @@
       <gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
       <ns1:gistableview>
         <ns1:layer id="roughnessClsMember" linktype="gml">
-          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="name" width="200" />
-          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="roughness_GroundLink" width="150" />
-          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="roughness_VegetationLink" width="150" />
-          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="roughness_EddyViscosityLink" width="150" />
-          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="colorStyle" width="150" />
+          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="name" width="180" />
+          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="roughness_GroundLink" width="140" />
+          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="roughness_VegetationLink" width="140" />
+          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="roughness_EddyViscosityLink" width="140" />
+          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="colorStyle" width="100" />
           <ns1:column alignment="SWT.LEFT" editable="true" format="" name="description" width="150" />
           <ns1:sort propertyName="name" />
         </ns1:layer>
@@ -28,7 +28,7 @@
       <ns1:gistableview>
         <ns1:layer id="roughness_GroundClsMember" linktype="gml">
           <ns1:column alignment="SWT.LEFT" editable="true" format="" name="name" width="200" />
-          <ns1:column alignment="SWT.CENTER" editable="true" format="" name="ks" width="70" />
+          <ns1:column alignment="SWT.RIGHT" editable="true" format="" name="ks" width="60" />
           <ns1:column alignment="SWT.LEFT" editable="true" format="" name="description" width="150" />
           <ns1:sort propertyName="name" />
         </ns1:layer>
@@ -42,9 +42,9 @@
       <gft:gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" heightHint="200" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
       <ns1:gistableview>
         <ns1:layer id="roughness_VegetationClsMember" linktype="gml">
-          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="name" width="200" />
-          <ns1:column alignment="SWT.END" editable="true" format="" name="axay" width="70" />
-          <ns1:column alignment="SWT.END" editable="true" format="" name="dp" width="70" />
+          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="name" width="100" />
+          <ns1:column alignment="SWT.RIGHT" editable="true" format="" name="axay" width="70" />
+          <ns1:column alignment="SWT.RIGHT" editable="true" format="" name="dp" width="70" />
           <ns1:column alignment="SWT.LEFT" editable="true" format="" name="description" width="100" />
           <ns1:sort propertyName="name" />
         </ns1:layer>
@@ -59,11 +59,11 @@
       <ns1:gistableview>
         <ns1:layer id="roughness_EddyViscosityClsMember" linktype="gml">
           <ns1:column alignment="SWT.LEFT" editable="true" format="" name="name" width="100" />
-          <ns1:column alignment="SWT.CENTER" editable="true" format="" name="exx" width="80" />
-          <ns1:column alignment="SWT.CENTER" editable="true" format="" name="eyx" width="80" />
-          <ns1:column alignment="SWT.CENTER" editable="true" format="" name="exy" width="80" />
-          <ns1:column alignment="SWT.CENTER" editable="true" format="" name="eyy" width="80" />
-          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="description" width="100" />
+          <ns1:column alignment="SWT.RIGHT" editable="true" format="" name="exx" width="75" />
+          <ns1:column alignment="SWT.RIGHT" editable="true" format="" name="eyx" width="75" />
+          <ns1:column alignment="SWT.RIGHT" editable="true" format="" name="exy" width="75" />
+          <ns1:column alignment="SWT.RIGHT" editable="true" format="" name="eyy" width="75" />
+          <ns1:column alignment="SWT.LEFT" editable="true" format="" name="description" width="50" />
           <ns1:sort propertyName="name" />
         </ns1:layer>
       </ns1:gistableview>
