@@ -126,7 +126,7 @@ public class TimeStepFillerWizardPage extends WizardPage
   public void createControl( final Composite parent )
   {
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
-    final DateFormat dateTimeFormat = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss.SSS" );
+    final DateFormat dateTimeFormat = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss.SSS" ); //$NON-NLS-1$
     dateTimeFormat.setTimeZone( timeZone );
 
     final Composite container = new Composite( parent, SWT.NULL );

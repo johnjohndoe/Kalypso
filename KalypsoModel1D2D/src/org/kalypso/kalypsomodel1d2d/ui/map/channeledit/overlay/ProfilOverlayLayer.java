@@ -80,7 +80,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
   CreateMainChannelWidget m_widget = null;
 
-  public static String LAYER_ID = "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay";
+  public static String LAYER_ID = "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay"; //$NON-NLS-1$
 
   private CreateChannelData m_data;
 

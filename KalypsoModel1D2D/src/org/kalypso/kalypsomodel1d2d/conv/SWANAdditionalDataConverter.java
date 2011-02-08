@@ -237,21 +237,21 @@ public class SWANAdditionalDataConverter
           {
             List<Double> lListDoubleVelocity = lResultAct.getVelocity();// AbsoluteVelocity();
             lFormatterCurrent.format( "%.2f\n", lListDoubleVelocity.get( 0 ) ); //$NON-NLS-1$
-            lStrBuffY.append( String.format( Locale.US, "%.2f\n", lListDoubleVelocity.get( 1 ) ) );
+            lStrBuffY.append( String.format( Locale.US, "%.2f\n", lListDoubleVelocity.get( 1 ) ) ); //$NON-NLS-1$
           }
           catch( Exception e )
           {
             lFormatterCurrent.format( "%s\n", m_strDefaulCurrentValue ); //$NON-NLS-1$
-            lStrBuffY.append( String.format( Locale.US, "%s\n", m_strDefaulCurrentValue ) );
+            lStrBuffY.append( String.format( Locale.US, "%s\n", m_strDefaulCurrentValue ) ); //$NON-NLS-1$
           }
         }
         else
         {
           lFormatterCurrent.format( "%s\n", m_strDefaulCurrentValue ); //$NON-NLS-1$
-          lStrBuffY.append( String.format( Locale.US, "%s\n", m_strDefaulCurrentValue ) );
+          lStrBuffY.append( String.format( Locale.US, "%s\n", m_strDefaulCurrentValue ) ); //$NON-NLS-1$
         }
       }
-      lFormatterCurrent.format( "%s\n", lStrBuffY.toString() );
+      lFormatterCurrent.format( "%s\n", lStrBuffY.toString() ); //$NON-NLS-1$
 
       FormatterUtils.checkIoException( lFormatterCurrent );
     }

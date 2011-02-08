@@ -236,7 +236,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
               }
               catch( final Exception e )
               {
-                lLog.log( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.8" ) ) );
+                lLog.log( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.8" ) ) ); //$NON-NLS-1$
               }
 
               try
@@ -297,10 +297,10 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                 // remove temporary unzipped swan data
                 try
                 {
-                  final FileObject unzippedSwanFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "."
+                  final FileObject unzippedSwanFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." //$NON-NLS-1$
                       + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT );
                   final FileObject unzippedShiftFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
-                  final FileObject unzippedTabFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE  + "_out.tab" );
+                  final FileObject unzippedTabFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE  + "_out.tab" ); //$NON-NLS-1$
                   unzippedSwanFile.delete();
                   unzippedShiftFile.delete();
                   unzippedTabFile.delete();

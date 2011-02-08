@@ -183,7 +183,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
       final String charset = gmlResultFile.getCharset();
 
       writer = new OutputStreamWriter( new FileOutputStream( gmlResultFile.getLocation().toFile() ) );
-      GmlSerializer.serializeWorkspace( writer, feature.getWorkspace(), "UTF-8", false );
+      GmlSerializer.serializeWorkspace( writer, feature.getWorkspace(), "UTF-8", false ); //$NON-NLS-1$
       writer.close();
 
       // refresh workspace

@@ -269,7 +269,7 @@ public class Control1D2DConverterSWAN
         m_strStepLength = "" + lLongStepLen; //$NON-NLS-1$
       }
       m_strStationary = m_controlModel.isUnsteadySelected() ? "NONSTATIONARY " : ""; //$NON-NLS-1$ //$NON-NLS-2$ //STATIONARY  
-      m_strSeries = (m_controlModel.isUnsteadySelected() ? "SERIES " : ""); //$NON-NLS-1$
+      m_strSeries = (m_controlModel.isUnsteadySelected() ? "SERIES " : ""); //$NON-NLS-1$ //$NON-NLS-2$
 
     }
     catch( Exception e )
@@ -281,7 +281,7 @@ public class Control1D2DConverterSWAN
     m_strTimeZeroFromToFormated = "" + (m_controlModel.isUnsteadySelected() ? m_strTimeFromZero : "") + " " + m_strStepLength + " " + m_strStepLengthUnit + " " + //$NON-NLS-1$    //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         (m_controlModel.isUnsteadySelected() ? m_strTimeTo : ""); //$NON-NLS-1$  
 
-    m_strTimeZeroFromFormated = "" + (m_controlModel.isUnsteadySelected() ? m_strTimeFromZero : "") + " " + m_strStepLength + " " + m_strStepLengthUnit; //$NON-NLS-1$    //$NON-NLS-2$ //$NON-NLS-3$
+    m_strTimeZeroFromFormated = "" + (m_controlModel.isUnsteadySelected() ? m_strTimeFromZero : "") + " " + m_strStepLength + " " + m_strStepLengthUnit; //$NON-NLS-1$    //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
   private String getSeriesFileNameFormated( final String pStrInitialFileName )
@@ -333,7 +333,7 @@ public class Control1D2DConverterSWAN
         "READGRID UNSTRUCTURED triangle '%s'\n" + //$NON-NLS-1$
         "$\n", //$NON-NLS-1$
     ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE );
-    formatter.format( "$internal shift in X:%f, internal shift in Y:%f\n$\n", m_doubleShiftX, m_doubleShiftY );
+    formatter.format( "$internal shift in X:%f, internal shift in Y:%f\n$\n", m_doubleShiftX, m_doubleShiftY ); //$NON-NLS-1$
   }
 
   /**
@@ -420,7 +420,7 @@ public class Control1D2DConverterSWAN
     // //format the currents
     final Integer lInitVal = m_controlModel.getINITialValuesSWAN();
     String lStrInitVal = INIT_DEF;
-    String lStrInitPAR = "";
+    String lStrInitPAR = ""; //$NON-NLS-1$
     switch( lInitVal )
     {
       case 0:
@@ -440,7 +440,7 @@ public class Control1D2DConverterSWAN
     }
     formatter.format( "INIT %s", lStrInitVal ); //$NON-NLS-1$
 
-    if( !"".equals( lStrInitPAR ) )
+    if( !"".equals( lStrInitPAR ) ) //$NON-NLS-1$
     {
       formatter.format( " %s", lStrInitPAR ); //$NON-NLS-1$
     }

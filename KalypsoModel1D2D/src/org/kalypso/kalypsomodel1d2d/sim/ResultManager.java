@@ -451,7 +451,7 @@ public class ResultManager implements ISimulation1D2DConstants
     {
       final FileName childName = child.getName();
       final String baseName = childName.getBaseName();
-      if( FilenameUtils.wildcardMatch( baseName, "*.2d" ) || FilenameUtils.wildcardMatch( baseName, "*.2d.zip" ) ) //$NON-NLS-1$
+      if( FilenameUtils.wildcardMatch( baseName, "*.2d" ) || FilenameUtils.wildcardMatch( baseName, "*.2d.zip" ) ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         resultList.add( child );
       }

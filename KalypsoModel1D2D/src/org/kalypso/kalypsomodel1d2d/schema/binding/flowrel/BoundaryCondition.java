@@ -174,14 +174,14 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     if( property instanceof Double )
     {
 //      return ((Double) property).doubleValue();
-      return "" + ((Double) property).doubleValue();
+      return "" + ((Double) property).doubleValue(); //$NON-NLS-1$
     }
     else if( property instanceof String ){
-      return "" + NumberUtils.parseQuietDouble( (String) property );
+      return "" + NumberUtils.parseQuietDouble( (String) property ); //$NON-NLS-1$
     }
     else
     {
-      return "" + Double.NaN;
+      return "" + Double.NaN; //$NON-NLS-1$
     }
   }
 
