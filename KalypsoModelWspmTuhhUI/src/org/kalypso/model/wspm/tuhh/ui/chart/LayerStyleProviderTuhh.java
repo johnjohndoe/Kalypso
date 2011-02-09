@@ -95,11 +95,11 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     lsT.setColor( markerProvider.getColorFor(  IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     lsT.setWidth( 2 );
 
-    final ILineStyle lsD = lsT.copy();
+    final ILineStyle lsD = lsT.clone();
     lsD.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
     addStyle( IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + LINE, lsD ); //$NON-NLS-1$
 
-    final ILineStyle lsB = lsT.copy();
+    final ILineStyle lsB = lsT.clone();
     lsB.setColor( markerProvider.getColorFor(  IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
     addStyle( IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_BORDVOLL + LINE, lsB ); //$NON-NLS-1$
   }
@@ -111,7 +111,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 
     final ILineStyle ls = getStyleFor(  IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_WEHR + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( col );
-    addStyle( IWspmTuhhConstants.LAYER_WEHR + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + LINE, ls.copy() ); //$NON-NLS-1$
+    addStyle( IWspmTuhhConstants.LAYER_WEHR + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + LINE, ls.clone() ); //$NON-NLS-1$
   }
 
   private void createCrossSectionStyles( )
@@ -130,7 +130,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     final ILineStyle lsO = getStyleFor( IWspmTuhhConstants.LAYER_BRUECKE + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + LINE, LineStyle.class ); //$NON-NLS-1$
     lsO.setColor( new RGB( 0, 128, 0 ) );
 
-    final ILineStyle lsU = lsO.copy();
+    final ILineStyle lsU = lsO.clone();
     lsU.setColor( new RGB( 0, 128, 179 ) );
     addStyle( IWspmTuhhConstants.LAYER_BRUECKE + "_" + IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + LINE, lsU ); //$NON-NLS-1$
   }
