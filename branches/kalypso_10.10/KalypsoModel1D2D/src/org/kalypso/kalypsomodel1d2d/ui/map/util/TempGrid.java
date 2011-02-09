@@ -443,7 +443,7 @@ public class TempGrid
   private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge> lListEdges, final List<GM_Point> lListPoses )
   {
     final List<Feature> lListRes = new ArrayList<Feature>();
-
+    Map<GM_Position, IFE1D2DNode> lNodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
     /* Create nodes */
     final List<IFE1D2DNode< ? >> nodes = new ArrayList<IFE1D2DNode< ? >>();
     for( int i = 0; i < lListPoses.size() - 1; i++ )
@@ -453,10 +453,15 @@ public class TempGrid
       IFE1D2DNode< ? > actNode = m_nodesNameConversionMap.get( lPoint.getPosition() );
       if( actNode == null )
       {
+        actNode = lNodesNameConversionMap.get( lPoint.getPosition() );
+      }
+      if( actNode == null )
+      {
         actNode = discModel.createNode( lPoint, -1, NOT_CREATED );
         if( actNode == null )
           return new ArrayList<Feature>();
-
+        
+        lNodesNameConversionMap.put( lPoint.getPosition(), actNode );
         lListRes.add( actNode.getFeature() );
       }
 

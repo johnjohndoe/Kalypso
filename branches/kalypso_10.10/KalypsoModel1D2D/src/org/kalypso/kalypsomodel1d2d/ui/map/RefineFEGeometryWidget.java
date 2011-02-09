@@ -49,6 +49,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -59,14 +62,18 @@ import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -86,6 +93,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -115,6 +123,8 @@ import org.kalypsodeegree_impl.tools.refinement.Refinement;
  */
 public class RefineFEGeometryWidget extends AbstractWidget
 {
+  private static final double SNAP_DISTANCE = 0.02;
+
   private boolean m_modePolygon = false;
 
   private Point m_currentMapPoint;
@@ -138,6 +148,8 @@ public class RefineFEGeometryWidget extends AbstractWidget
   private List<Feature> m_featuresToRefine;
 
   private boolean m_warning;
+  
+  private Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
 
   public RefineFEGeometryWidget( )
   {
@@ -374,23 +386,48 @@ public class RefineFEGeometryWidget extends AbstractWidget
       final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( workspace.getRootFeature() );
 
       // add remove element command
+      final IDiscrModel1d2dChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( discModel );
+      List < Feature > elementsToRemove = new ArrayList<Feature>();
       for( final Feature feature : refineList )
       {
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
         {
-          final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( feature, discModel );
-          workspace.postCommand( deleteCmd );
+          ((DeletePolyElementCmd) deleteCmdPolyElement).addElementToRemove( feature );
+          elementsToRemove.add( feature );
+//          final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( feature, discModel );
+//          workspace.postCommand( deleteCmd );
         }
       }
-
+      try
+      {
+        deleteCmdPolyElement.process();
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+      
+      discModel.getElements().removeAllAtOnce( elementsToRemove );
+//      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, discModel.getFeature(), elementsToRemove.toArray( new Feature[ elementsToRemove.size() ] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+      m_nodesNameConversionMap.clear();
+      
+      List< Feature > lListAdded = new ArrayList<Feature>();
       /* create new elements */
       for( final GM_Object object : m_objects )
       {
         if( object instanceof GM_Surface )
         {
           final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) object;
-          ElementGeometryHelper.createFE1D2DfromSurface( workspace, discModel, surface );
+          lListAdded.addAll( createPolyElement( surface, discModel ) );
+//          ElementGeometryHelper.createFE1D2DfromSurface( workspace, discModel, surface );
         }
+      }
+      
+      if( lListAdded.size() > 0 )
+      {
+        FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel.getFeature(), lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+        workspace.fireModellEvent( changeEvent );
+        Logger.getLogger( RefineFEGeometryWidget.class.getName() ).log( Level.INFO, "Model event fired: " + changeEvent ); //$NON-NLS-1$
       }
       reinit();
     }
@@ -399,6 +436,86 @@ public class RefineFEGeometryWidget extends AbstractWidget
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
+  
+  
+
+  private List<Feature> createPolyElement( final GM_Surface<GM_SurfacePatch> surface, final IFEDiscretisationModel1d2d discModel )
+  {
+    List<Feature> lListRes = new ArrayList<Feature>();
+    List<IFE1D2DEdge> lListEdges = new ArrayList<IFE1D2DEdge>();
+    for( final GM_SurfacePatch surfacePatch : surface )
+    {
+      final GM_Position[] poses = surfacePatch.getExteriorRing();
+      List< GM_Point > lListPoints = new ArrayList<GM_Point>();
+      for( int i = 0; i < poses.length - 1; i++ )
+        lListPoints.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], surface.getCoordinateSystem() ) );
+
+      lListRes.addAll( createNodesAndEdges( discModel, lListEdges, lListPoints ) );
+
+      IPolyElement element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
+      lListRes.add( element2d.getFeature() );
+      for( final IFE1D2DEdge lEdge : lListEdges )
+      {
+        // add edge to element and element to edge
+        final String elementId = element2d.getGmlID();
+        element2d.addEdge( lEdge.getGmlID() );
+        lEdge.addContainer( elementId );
+      }
+    }
+
+    return lListRes;
+  }
+  
+  private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge> lListEdges, final List<GM_Point> lListPoses )
+  {
+    List<Feature> lListRes = new ArrayList<Feature>();
+    IFE1D2DNode lastNode = null;
+    int iCountNodes = 0;
+    if( lListPoses.size() > 0 && !lListPoses.get( lListPoses.size() - 1 ).equals( lListPoses.get( 0 ) ) ){
+      lListPoses.add( lListPoses.get( 0 ) );
+    }
+    for( final GM_Point lPoint : lListPoses )
+    {
+      IFE1D2DNode actNode = m_nodesNameConversionMap.get( lPoint.getPosition() );
+      
+      if( actNode == null )
+      {
+        actNode = discModel.findNode( lPoint, SNAP_DISTANCE );
+      }
+      
+      if( actNode == null )
+      {
+        actNode = discModel.createNode( lPoint, -1,
+            new boolean[1] );
+        if( actNode == null )
+        {
+          return new ArrayList<Feature>();
+        }
+        m_nodesNameConversionMap.put( lPoint.getPosition(), actNode );
+        lListRes.add( actNode.getFeature() );
+      }
+
+      if( iCountNodes > 0 )
+      {
+        final IFE1D2DEdge existingEdge = discModel.findEdge( lastNode, actNode );
+        final IFE1D2DEdge edge;
+        if( existingEdge != null )
+        {
+          edge = existingEdge;
+        }
+        else
+        {
+          edge = FE1D2DEdge.createFromModel( discModel, lastNode, actNode );
+          lListRes.add( edge.getFeature() );
+        }
+        lListEdges.add( edge );
+        // final String gmlID = edge.getGmlID();
+      }
+      iCountNodes++;
+      lastNode = actNode;
+    }
+    return lListRes;
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
