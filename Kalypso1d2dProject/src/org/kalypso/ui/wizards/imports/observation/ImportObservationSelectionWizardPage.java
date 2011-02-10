@@ -42,12 +42,11 @@ package org.kalypso.ui.wizards.imports.observation;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.TimeZone;
-import java.util.TreeSet;
 
-import org.eclipse.compare.internal.ListContentProvider;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -56,7 +55,9 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -64,12 +65,17 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -82,13 +88,16 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.jface.viewers.FCVArrayDelegate;
-import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
+import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
+import org.kalypso.ui.wizard.sensor.ObservationImportSelection;
 import org.kalypso.ui.wizards.i18n.Messages;
 
 /**
+ * FIXME: this is a stupid copy/paste from the original ImportObservationSelectionWizardPage, however it does almost the
+ * same thing -> we need to combine the two pages again!
+ * 
  * @author doemming
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
@@ -102,11 +111,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   final List<ISelectionChangedListener> m_selectionListener = new ArrayList<ISelectionChangedListener>();
 
-  private Composite m_topLevel = null;
-
   protected Text m_textFileSource;
-
-  // private Text m_textFileTarget;
 
   private Button m_buttonRetainMeta;
 
@@ -114,7 +119,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private ComboViewer m_formatCombo;
 
-  File m_targetFile = null;
+  private IFile m_targetFile = null;
 
   File m_sourceFile = null;
 
@@ -125,6 +130,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   public ImportObservationSelectionWizardPage( final String pageName, final IFolder targetFolder )
   {
     this( pageName, null, null );
+
     m_targetFolder = targetFolder;
   }
 
@@ -163,7 +169,6 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
         }
         catch( final CoreException e )
         {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
       }
@@ -179,22 +184,19 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   public void createControl( final Composite parent )
   {
     initializeDialogUnits( parent );
-    m_topLevel = new Composite( parent, SWT.NONE );
 
-    final GridLayout gridLayout = new GridLayout( 1, false );
-    m_topLevel.setLayout( gridLayout );
+    final Composite topLevel = new Composite( parent, SWT.NONE );
+    topLevel.setLayout( new GridLayout( 1, false ) );
+    setControl( topLevel );
 
-    final GridData topData = new GridData( SWT.FILL, SWT.FILL, true, false );
-    m_topLevel.setLayoutData( topData );
+    // topLevel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    createControlSource( m_topLevel );
-    createControlTarget( m_topLevel );
-    setControl( m_topLevel );
-    // validate();
+    createControlSource( topLevel );
+    createControlTarget( topLevel );
+
     m_controlFinished = true;
   }
 
-  @SuppressWarnings("restriction")
   public void createControlSource( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
@@ -249,9 +251,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
     m_formatCombo.add( m_adapter );
 
-    final ListContentProvider provider = new ListContentProvider();
-    // TODO: probably ArrayContentProvider is better here
-    m_formatCombo.setContentProvider( provider );
+    m_formatCombo.setContentProvider( new ArrayContentProvider() );
 
     m_formatCombo.setLabelProvider( new ILabelProvider()
     {
@@ -305,68 +305,88 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     final Label timezoneLabel = new Label( group, SWT.NONE );
     timezoneLabel.setText( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.0" ) ); //$NON-NLS-1$
 
-    final Set<String> timeZones = new TreeSet<String>();
     final String[] tz = TimeZone.getAvailableIDs();
-    for( final String z : tz )
-      if( z.contains( "Europe/" ) || z.contains( "GMT" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        timeZones.add( z );
+    Arrays.sort( tz );
 
-    final FacadeComboViewer ComboTimeZones = new FacadeComboViewer( new FCVArrayDelegate( timeZones.toArray( new String[] {} ) ) );
-    ComboTimeZones.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
-    ComboTimeZones.addSelectionChangedListener( new Runnable()
+    final ComboViewer comboTimeZones = new ComboViewer( group, SWT.BORDER | SWT.SINGLE );
+    comboTimeZones.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    m_timezone = KalypsoCorePlugin.getDefault().getTimeZone();
+
+    comboTimeZones.setContentProvider( new ArrayContentProvider() );
+    comboTimeZones.setLabelProvider( new LabelProvider() );
+    comboTimeZones.setInput( tz );
+
+    comboTimeZones.addFilter( new ViewerFilter()
     {
       @Override
-      public void run( )
+      public boolean select( final Viewer viewer, final Object parentElement, final Object element )
       {
-        updateTimeZone( (IStructuredSelection) ComboTimeZones.getSelection() );
+        if( element instanceof String )
+        {
+          final String name = (String) element;
+          return !name.toLowerCase().startsWith( "etc/" ); //$NON-NLS-1$
+        }
+
+        return true;
       }
     } );
+
+    comboTimeZones.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) comboTimeZones.getSelection();
+        updateTimeZone( (String) selection.getFirstElement() );
+      }
+    } );
+
+    comboTimeZones.getCombo().addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        updateTimeZone( comboTimeZones.getCombo().getText() );
+      }
+    } );
+
+    if( m_timezone != null )
+    {
+      final String id = m_timezone.getID();
+      if( ArrayUtils.contains( tz, id ) )
+        comboTimeZones.setSelection( new StructuredSelection( id ) );
+      else
+        comboTimeZones.getCombo().setText( id );
+    }
 
     // just a placeholder
     new Label( group, SWT.NONE );
   }
 
   /**
-   *  resolves the type value of selected observation adapter. 
+   * resolves the type value of selected observation adapter.
    */
-  private String getInputTypeFromSelection(){
-    ISelection lSelection = m_formatCombo.getSelection();
-    INativeObservationAdapter lNativeObservationAdapter = (INativeObservationAdapter) ( ( StructuredSelection )lSelection ).getFirstElement();
+  private String getInputTypeFromSelection( )
+  {
+    final ISelection lSelection = m_formatCombo.getSelection();
+    final INativeObservationAdapter lNativeObservationAdapter = (INativeObservationAdapter) ((StructuredSelection) lSelection).getFirstElement();
     return lNativeObservationAdapter.getAxisTypeValue();
   }
-  
-  protected void updateTimeZone( final IStructuredSelection selection )
+
+  protected void updateTimeZone( final String timeZoneID )
   {
-    final Object element = selection.getFirstElement();
-    if( element == null )
-      return;
+    m_timezone = null;
 
-    if( element instanceof String )
+    if( timeZoneID != null )
     {
-      String TimeZoneID = (String) element;
-      // BUG!!! Bug, bug, bug, nasty bug!
-
-      // Etc/GMT+1 is not the same as GMT+1
-      // Etc/GMT+1 has offset of -3600000
-      // GMT+1 has offset of 3600000
-      // i.e. Etc/GMT+1 is actually GMT-1 !!!
-
-      // As TimeZone.getAvailableIDs() does NOT offer GMT+1, only Etc/GMT+1, users will probably select Etc/GMT+1 which
-      // is wrong
-      if( TimeZoneID.startsWith( "Etc/" ) ) //$NON-NLS-1$
-        TimeZoneID = TimeZoneID.substring( 4 );
-
-      m_timezone = TimeZone.getTimeZone( TimeZoneID );
+      final TimeZone timeZone = TimeZone.getTimeZone( timeZoneID.toUpperCase() );
+      // Only set, if timezone could be parsed
+      if( !timeZone.getID().equals( "GMT" ) || timeZoneID.toUpperCase().equals( "GMT" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+        m_timezone = timeZone;
     }
-    else
-    {
-      m_timezone = null;
-    }
-  }
 
-  public TimeZone getTimezone( )
-  {
-    return m_timezone;
+    validate();
   }
 
   public void createControlTarget( final Composite parent )
@@ -430,48 +450,35 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * validates the page
    */
-  void validate( )
+  private void validate( )
   {
-    setErrorMessage( null );
-    setMessage( null );
-    setPageComplete( true );
-    final StringBuffer error = new StringBuffer();
+    // TODO: does not belong here, strange!
     if( m_sourceFile != null && m_sourceFile.isFile() )
       m_textFileSource.setText( m_sourceFile.getPath() );
+
+    final IMessageProvider message = doValidate();
+    if( message == null )
+      setMessage( null );
     else
-    {
-      // m_textFileSource.setText( DEFAUL_FILE_LABEL );
-      error.append( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.14" ) ); //$NON-NLS-1$
-      setPageComplete( false );
-    }
-    if( error.length() > 0 )
-      setErrorMessage( error.toString() );
-    else
-      setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.15" ) ); //$NON-NLS-1$
+      setMessage( message.getMessage(), message.getMessageType() );
+
+    setPageComplete( message == null );
+
+    // TODO: does not belong here, strange
     fireSelectionChanged();
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizardPage#canFlipToNextPage()
-   */
-  @Override
-  public boolean canFlipToNextPage( )
+  private IMessageProvider doValidate( )
   {
-    return isPageComplete();
-  }
+    if( m_sourceFile == null || !m_sourceFile.isFile() )
+      return new MessageProvider( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.14" ), ERROR ); //$NON-NLS-1$
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    super.dispose();
-    if( m_topLevel != null && !m_topLevel.isDisposed() )
-    {
-      m_topLevel.dispose();
-      m_topLevel = null;
-    }
+    // setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.15" ) ); //$NON-NLS-1$
+
+    if( m_timezone == null )
+      return new MessageProvider( "Please select a valid time zone", ERROR );
+
+    return null;
   }
 
   /**
@@ -491,7 +498,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   {
     if( m_sourceFile != null && !m_sourceFile.getName().equals( m_textFileSource.getText() ) )
     {
-      m_sourceFile = new File( m_sourceFile.getParentFile(), m_textFileSource.getText() );
+      m_sourceFile = new File( m_textFileSource.getText() );
     }
     validate();
   }
@@ -520,18 +527,21 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     final IStructuredSelection formatSelection = (IStructuredSelection) m_formatCombo.getSelection();
     if( !m_controlFinished )
       return new ISelection()
+    {
+      @Override
+      public boolean isEmpty( )
       {
-        @Override
-        public boolean isEmpty( )
-        {
-          return true;
-        }
-      };
-    // TODO: use IResource-Api to create suhc pathes! (i.e. m_project.getFile() and such! )
-    final IFile targetFile = m_targetFolder.getFile( FileUtilities.nameWithoutExtension( m_sourceFile.getName() ) + "." + getInputTypeFromSelection() + ".zml" ); //$NON-NLS-1$
-    // TODO: use IFile instead of file, we are inside of Eclipse!
-    m_targetFile = targetFile.getLocation().toFile();
-    return new ObservationImportSelection( m_sourceFile, m_targetFile, (INativeObservationAdapter) formatSelection.getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection() );
+        return true;
+      }
+    };
+
+    if( m_sourceFile == null )
+      return StructuredSelection.EMPTY;
+
+    final String sourceName = FileUtilities.nameWithoutExtension( m_sourceFile.getName() );
+
+    m_targetFile = m_targetFolder.getFile( sourceName + "." + getInputTypeFromSelection() + ".zml" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new ObservationImportSelection( m_sourceFile, m_targetFile, (INativeObservationAdapter) formatSelection.getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection(), m_timezone );
   }
 
   /**
@@ -565,12 +575,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     {
       final Object firstElement = ((StructuredSelection) selection).getFirstElement();
       if( firstElement instanceof IFile )
-      {
-        // TODO: DONT do such stuff! Do NOT!!! work against eclipse! This is
-        m_targetFile = ResourceUtilities.makeFileFromPath( ((IFile) firstElement).getFullPath() );
-      }
+        m_targetFile = (IFile) firstElement;
     }
-    // nothing
   }
 
   /**
