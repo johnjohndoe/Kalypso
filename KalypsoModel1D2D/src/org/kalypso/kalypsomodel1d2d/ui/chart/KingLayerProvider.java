@@ -68,7 +68,7 @@ public class KingLayerProvider extends AbstractLayerProvider
 
     IParameterContainer pc = getParameterContainer();
     // LayerType lt = getLayerType();
-    IChartModel chartModel = getChartModel();
+    IChartModel chartModel = getModel();
 
     final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
     if( featureKey == null )
