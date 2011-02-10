@@ -148,6 +148,9 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
     final FrictionType frictionType = getFrictionType();
     final double friction = calculateFriction( profil, from, to );
 
+    if( Double.isNaN( friction ) )
+      System.out.println( "Oups" );
+
     return new SobekFrictionZone( from, to, frictionType, friction, label );
   }
 
@@ -185,7 +188,11 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
       }
     }
 
-    return totalRoughness / totalLength;
+    final double friction = totalRoughness / totalLength;
+    if( Double.isNaN( friction ) || Double.isInfinite( friction ) )
+      return 0.0;
+
+    return friction;
   }
 
   private double getRecordValue( final int componentIndex, final IRecord point )
