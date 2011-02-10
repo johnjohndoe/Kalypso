@@ -88,15 +88,15 @@ public class SobekProfileDatExportOperation extends AbstractSobekFileExportOpera
 
     final int rl = 0;
 
-    final double rs = getWidth( surfacePoints[0] );
-    final double ls = getWidth( surfacePoints[1] );
+    final double rs = getHeight( surfacePoints[0] );
+    final double ls = getHeight( surfacePoints[1] );
 
     getFormatter().format( Locale.US, "CRSN id '%s' di '%s' rl %d  rs %.2f ls %.2f crsn%n", id, id, rl, rs, ls );
   }
 
-  private double getWidth( final IRecord point )
+  private double getHeight( final IRecord point )
   {
-    final int widthindex = point.indexOfComponent( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int widthindex = point.indexOfComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
     return ProfilUtil.getDoubleValueFor( widthindex, point );
   }
 
