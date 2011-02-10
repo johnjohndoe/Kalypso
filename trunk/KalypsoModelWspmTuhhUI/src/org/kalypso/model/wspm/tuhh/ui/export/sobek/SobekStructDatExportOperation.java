@@ -40,50 +40,51 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import java.io.File;
+import java.util.Locale;
 
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 
 /**
+ * Exports WSPM profiles as struct.def SOBEK file.
+ * 
  * @author Gernot Belger
  */
-public class SobekStructFileChooser extends AbstractSobekFileChooser
+public class SobekStructDatExportOperation extends AbstractSobekStructExportOperation
 {
-  public SobekStructFileChooser( final SobekProfileExportFileChooserPage page, final IDialogSettings dialogSettings, final String filterLabel, final String extension )
-  {
-    super( page, dialogSettings, filterLabel, extension );
+  public static final String STRUCT_DAT = "struct.dat"; //$NON-NLS-1$
 
-    readSettings();
-  }
-
-  @Override
-  protected void createOtherControls( final Composite parent )
+  public SobekStructDatExportOperation( final SobekExportInfo info )
   {
-  }
-
-  private void readSettings( )
-  {
-    final IDialogSettings settings = getDialogSettings();
-    if( settings == null )
-      return;
+    super( info, STRUCT_DAT );
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekFileChooser#createOperation(org.kalypso.model.wspm.core.gml.IProfileFeature[],
-   *      java.lang.String, java.lang.String)
+   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation#getLabel()
    */
   @Override
-  public ISobekProfileExportOperation createOperation( final IProfileFeature[] profiles, final String idPattern, final String buildingSuffix )
+  public String getLabel( )
   {
-    final File file = getFile();
-    if( file == null )
-      return null;
+    return STRUCT_DAT;
+  }
 
-    /* All elements in struct.def are buildings, we directly change the pattern here */
-    final String pattern = idPattern + buildingSuffix;
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekStructExportOperation#writeBuilding(java.lang.String,
+   *      org.kalypso.model.wspm.core.profil.IProfil, java.lang.String,
+   *      org.kalypso.model.wspm.core.profil.IProfileObject)
+   */
+  @Override
+  protected boolean writeBuilding( final String structId, final IProfil profil, final String profileName, final IProfileObject profileObject )
+  {
+    // todo: maybe use ca/cj/cm for controlled elements
 
-    return new SobekStructDefExportOperation( file, profiles, pattern );
+    if( profileObject instanceof BuildingBruecke )
+    {
+      getFormatter().format( Locale.US, "STRU id '%s' nm '%s' dd '%s' stru%n", structId, profileName, structId );
+      return true;
+    }
+
+    return false;
   }
 }

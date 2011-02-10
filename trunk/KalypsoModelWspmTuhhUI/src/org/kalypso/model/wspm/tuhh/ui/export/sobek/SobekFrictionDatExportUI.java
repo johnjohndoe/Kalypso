@@ -40,12 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -58,18 +52,14 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.IFlowZoneType;
-import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.LeftBank;
-import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.LeftForeland;
-import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.MainChannel;
-import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.RightBank;
-import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.RightForeland;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -77,12 +67,8 @@ import org.kalypso.observation.result.IComponent;
 /**
  * @author Gernot Belger
  */
-public class SobekFricFileChooser extends AbstractSobekFileChooser
+public class SobekFrictionDatExportUI
 {
-  private static final String SETTING_ROUGHNESS = "roughnessId"; //$NON-NLS-1$
-
-  private static final String SETTING_ZONES = "zones"; //$NON-NLS-1$
-
   private final static LabelProvider LABELPROVIDER = new LabelProvider()
   {
     /**
@@ -96,59 +82,25 @@ public class SobekFricFileChooser extends AbstractSobekFileChooser
     }
   };
 
-  private static final IFlowZoneType[] ALL_ZONES = new IFlowZoneType[] { new LeftForeland(), new LeftBank(), new MainChannel(), new RightBank(), new RightForeland() };
+  private final SobekExportInfo m_info;
 
-  private String m_roughnessId = IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS;
-
-  private IFlowZoneType[] m_zoneTypes = new IFlowZoneType[0];
-
-
-  public SobekFricFileChooser( final SobekProfileExportFileChooserPage page, final IDialogSettings dialogSettings, final String filterLabel, final String extension )
+  public SobekFrictionDatExportUI( final SobekExportInfo info )
   {
-    super( page, dialogSettings, filterLabel, extension );
-
-    readSettings( dialogSettings );
+    m_info = info;
   }
 
-  private void readSettings( final IDialogSettings dialogSettings )
+  public final void createControl( final Composite parent )
   {
-    if( dialogSettings == null )
-      return;
+    final Group group = new Group( parent, SWT.NONE );
+    group.setLayout( new GridLayout( 3, false ) );
+    group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    group.setText( "Rauheit" );
 
-    final String savedRoughness = dialogSettings.get( SETTING_ROUGHNESS );
-    if( !StringUtils.isBlank( savedRoughness ) )
-      m_roughnessId = savedRoughness;
+    createRoughnessCombo( group );
+    createZoneChooser( group );
 
-    final String[] savedZones = dialogSettings.getArray( SETTING_ZONES );
-    if( savedZones != null )
-    {
-      final Collection<IFlowZoneType> zoneTypes = new ArrayList<IFlowZoneType>( savedZones.length );
-      for( final String className : savedZones )
-      {
-        final IFlowZoneType zone = findZone( className );
-        if( zone != null )
-          zoneTypes.add( zone );
-      }
-      m_zoneTypes = zoneTypes.toArray( new IFlowZoneType[zoneTypes.size()] );
-    }
-  }
-
-  private IFlowZoneType findZone( final String className )
-  {
-    for( final IFlowZoneType zoneType : ALL_ZONES )
-    {
-      if( className.equals( zoneType.getClass().getName() ) )
-        return zoneType;
-    }
-
-    return null;
-  }
-
-  @Override
-  protected void createOtherControls( final Composite parent )
-  {
-    createRoughnessCombo( parent );
-    createZoneChooser( parent );
+    if( group.getChildren().length == 0 )
+      group.dispose();
   }
 
   private void createRoughnessCombo( final Composite parent )
@@ -164,7 +116,7 @@ public class SobekFricFileChooser extends AbstractSobekFileChooser
     roughnessViewer.setContentProvider( new ArrayContentProvider() );
     roughnessViewer.setLabelProvider( LABELPROVIDER );
     roughnessViewer.setInput( input );
-    roughnessViewer.setSelection( new StructuredSelection( m_roughnessId ) );
+    roughnessViewer.setSelection( new StructuredSelection( m_info.getRoughnessID() ) );
 
     roughnessViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -178,11 +130,8 @@ public class SobekFricFileChooser extends AbstractSobekFileChooser
 
   protected void handleRoughnessSelectionChanged( final IStructuredSelection selection )
   {
-    m_roughnessId = (String) selection.getFirstElement();
-
-    final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings != null )
-      dialogSettings.put( SETTING_ROUGHNESS, m_roughnessId );
+    final String roughnessId = (String) selection.getFirstElement();
+    m_info.setRoughnessID( roughnessId );
   }
 
   private void createZoneChooser( final Composite parent )
@@ -198,9 +147,8 @@ public class SobekFricFileChooser extends AbstractSobekFileChooser
 
     zoneViewer.setLabelProvider( new LabelProvider() );
     zoneViewer.setContentProvider( new ArrayContentProvider() );
-    zoneViewer.setInput( ALL_ZONES );
-
-    zoneViewer.setCheckedElements( m_zoneTypes );
+    zoneViewer.setInput( m_info.getAllRoughnessZones() );
+    zoneViewer.setCheckedElements( m_info.getRoughnessZoneTypes() );
 
     zoneViewer.addCheckStateListener( new ICheckStateListener()
     {
@@ -214,31 +162,10 @@ public class SobekFricFileChooser extends AbstractSobekFileChooser
 
   protected void handleZonesChecked( final Object[] objects )
   {
-    m_zoneTypes = new IFlowZoneType[objects.length];
+    final IFlowZoneType[] zoneTypes = new IFlowZoneType[objects.length];
     for( int i = 0; i < objects.length; i++ )
-      m_zoneTypes[i] = (IFlowZoneType) objects[i];
+      zoneTypes[i] = (IFlowZoneType) objects[i];
 
-    final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings != null )
-    {
-      final String[] zoneNames = new String[m_zoneTypes.length];
-      for( int i = 0; i < zoneNames.length; i++ )
-        zoneNames[i] = m_zoneTypes[i].getClass().getName();
-      dialogSettings.put( SETTING_ZONES, zoneNames );
-    }
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekFileChooser#createOperation(org.kalypso.model.wspm.core.gml.IProfileFeature[],
-   *      java.lang.String, java.lang.String)
-   */
-  @Override
-  public ISobekProfileExportOperation createOperation( final IProfileFeature[] profiles, final String idPattern, final String buildingSuffix )
-  {
-    final File file = getFile();
-    if( file == null )
-      return null;
-
-    return new SobekFricExportOperation( file, profiles, m_zoneTypes, m_roughnessId, idPattern );
+    m_info.setRoughnessZoneTypes( zoneTypes );
   }
 }

@@ -40,35 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import java.io.File;
-import java.util.Formatter;
-
-import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.sobek.struct.SobekStructDef;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 
 /**
  * Exports WSPM profiles as struct.def SOBEK file.
  * 
  * @author Gernot Belger
  */
-public class SobekStructDefExportOperation extends AbstractSobekProfileExportOperation
+public class SobekStructDefExportOperation extends AbstractSobekStructExportOperation
 {
-  private final String m_idPattern;
+  public static final String STRUCT_DEF = "struct.def"; //$NON-NLS-1$
 
-  public SobekStructDefExportOperation( final File targetFile, final IProfileFeature[] profilesToExport, final String idPattern )
+  public SobekStructDefExportOperation( final SobekExportInfo info )
   {
-    super( targetFile, profilesToExport );
-
-    m_idPattern = idPattern;
+    super( info, STRUCT_DEF );
   }
 
   /**
@@ -77,38 +67,19 @@ public class SobekStructDefExportOperation extends AbstractSobekProfileExportOpe
   @Override
   public String getLabel( )
   {
-    return "Struct.def"; //$NON-NLS-1$
+    return STRUCT_DEF;
   }
 
   @Override
-  protected void writeProfile( final Formatter formatter, final IProfileFeature profileFeature )
+  protected boolean writeBuilding( final String structId, final IProfil profil, final String profileName, final IProfileObject profileObject )
   {
-    final IProfil profil = profileFeature.getProfil();
+    final SobekStructDef structDef = buildStructDef( structId, profil, profileName, profileObject );
+    if( structDef == null )
+      return false;
 
-    final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
-    final String id = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_idPattern, data );
-    final String profileName = profil.getName();
-
-    writeStructLine( formatter, id, profileName, profil );
-  }
-
-  private void writeStructLine( final Formatter formatter, final String id, final String profileName, final IProfil profil )
-  {
-    final IProfileObject[] profileObjects = profil.getProfileObjects();
-    int reallyExportedBuildings = 0;
-    for( final IProfileObject profileObject : profileObjects )
-    {
-      final String countSuffix = reallyExportedBuildings == 0 ? StringUtils.EMPTY : "_" + reallyExportedBuildings; //$NON-NLS-1$
-      final String buildingId = id + countSuffix;
-
-      final SobekStructDef structDef = buildStructDef( buildingId, profil, profileName, profileObject );
-      if( structDef != null )
-      {
-        final String line = structDef.serialize();
-        formatter.format( "%s%n", line ); //$NON-NLS-1$
-        reallyExportedBuildings++;
-      }
-    }
+    final String line = structDef.serialize();
+    getFormatter().format( "%s%n", line ); //$NON-NLS-1$
+    return true;
   }
 
   private SobekStructDef buildStructDef( final String buildingId, final IProfil profil, final String profileName, final IProfileObject profileObject )

@@ -40,16 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import java.io.File;
 import java.util.Formatter;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekFrictionZone.FrictionType;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.FlowZone;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.IFlowZoneType;
@@ -59,20 +55,13 @@ import org.kalypso.observation.result.IRecord;
 /**
  * @author Gernot Belger
  */
-public class SobekFricExportOperation extends AbstractSobekProfileExportOperation
+public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOperation
 {
-  private final IFlowZoneType[] m_zoneTypes;
+  public static final String FRICTION_DAT = "friction.dat"; //$NON-NLS-1$
 
-  private final String m_roughnesId;
-
-  private final String m_idPattern;
-
-  public SobekFricExportOperation( final File fricFile, final IProfileFeature[] profiles, final IFlowZoneType[] zoneTypes, final String roughnesId, final String idPattern )
+  public SobekFrictionDatExportOperation( final SobekExportInfo info )
   {
-    super( fricFile, profiles );
-    m_zoneTypes = zoneTypes;
-    m_roughnesId = roughnesId;
-    m_idPattern = idPattern;
+    super( info, FRICTION_DAT );
   }
 
   /**
@@ -81,21 +70,24 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
   @Override
   public String getLabel( )
   {
-    return Messages.getString("SobekFricExportOperation_0"); //$NON-NLS-1$
+    return FRICTION_DAT;
   }
 
   @Override
-  protected void writeProfile( final Formatter formatter, final IProfileFeature profileFeature )
+  protected void writeProfile( final IProfileFeature profileFeature )
   {
     final IProfil profil = profileFeature.getProfil();
     final SobekFrictionZone[] frictionZones = findZones( profil );
 
-    final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
-    final String crdef = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_idPattern, data );
-    final String fricid = String.format( "Rau_%s", crdef ); //$NON-NLS-1$
+    final SobekExportInfo info = getInfo();
 
-    final String name = profil.getName();
-    formatter.format( "CRFR id '%s' nm '%s' cs '%s'%n", fricid, name, crdef ); //$NON-NLS-1$
+    final String id = info.getID( profileFeature );
+    final String name = info.getName( profileFeature );
+
+    final String fricid = String.format( "Rau_%s", id ); //$NON-NLS-1$
+
+    final Formatter formatter = getFormatter();
+    formatter.format( "CRFR id '%s' nm '%s' cs '%s'%n", fricid, name, id ); //$NON-NLS-1$
     writeTables( formatter, frictionZones );
     formatter.format( "crfr%n" ); //$NON-NLS-1$
   }
@@ -132,9 +124,11 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
 
   private SobekFrictionZone[] findZones( final IProfil profil )
   {
-    final SobekFrictionZone[] zones = new SobekFrictionZone[m_zoneTypes.length];
+    final IFlowZoneType[] zoneTypes = getInfo().getRoughnessZoneTypes();
+
+    final SobekFrictionZone[] zones = new SobekFrictionZone[zoneTypes.length];
     for( int i = 0; i < zones.length; i++ )
-      zones[i] = createZone( profil, m_zoneTypes[i] );
+      zones[i] = createZone( profil, zoneTypes[i] );
     return zones;
   }
 
@@ -162,8 +156,10 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
    */
   private double calculateFriction( final IProfil profil, final double from, final double to )
   {
+    final String roughnessId = getInfo().getRoughnessID();
+
     final int widthIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    final int roughnessIndex = profil.indexOfProperty( m_roughnesId );
+    final int roughnessIndex = profil.indexOfProperty( roughnessId );
     // FIXME: throw exception instead and collect stati and show them to user
     if( roughnessIndex == -1 )
       return -1.0;
@@ -203,10 +199,11 @@ public class SobekFricExportOperation extends AbstractSobekProfileExportOperatio
 
   private FrictionType getFrictionType( )
   {
-    if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS.equals( m_roughnesId ) )
+    final String roughnessId = getInfo().getRoughnessID();
+    if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS.equals( roughnessId ) )
       return FrictionType.White_Colebrook;
 
-    if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST.equals( m_roughnesId ) )
+    if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST.equals( roughnessId ) )
       return FrictionType.Strickler_Ks;
 
     return FrictionType.unknown1;
