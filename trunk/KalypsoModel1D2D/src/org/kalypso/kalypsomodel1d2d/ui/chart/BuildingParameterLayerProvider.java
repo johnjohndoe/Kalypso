@@ -76,7 +76,7 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    final IChartModel chartModel = getChartModel();
+    final IChartModel chartModel = getModel();
 
     final IParameterContainer pc = getParameterContainer();
 
