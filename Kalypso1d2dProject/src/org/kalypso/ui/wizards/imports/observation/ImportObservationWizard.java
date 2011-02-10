@@ -41,10 +41,12 @@
 package org.kalypso.ui.wizards.imports.observation;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.TimeZone;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -63,6 +65,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.afgui.perspective.Perspective;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
@@ -83,13 +86,14 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryContainerSingelton;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.file.FileItem;
+import org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage;
+import org.kalypso.ui.wizard.sensor.ObservationImportSelection;
 import org.kalypso.ui.wizards.i18n.Messages;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class ImportObservationWizard extends Wizard implements INewWizard
 {
-
   private ImportObservationSelectionWizardPage m_page1 = null;
 
   private IStructuredSelection m_selection;
@@ -227,9 +231,9 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     {
       final ObservationImportSelection selection = (ObservationImportSelection) m_page1.getSelection();
       final File fileSource = selection.getFileSource();
-      final File fileTarget = selection.getFileTarget();
+      final IFile fileTarget = selection.getFileTarget();
 
-      final TimeZone timezone = m_page1.getTimezone();
+      final TimeZone timezone = selection.getSourceTimezone();
 
       final INativeObservationAdapter nativaAdapter = selection.getNativeAdapter();
       IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource, timezone, false );
@@ -255,7 +259,8 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       final int countTarget;
       if( fileTarget.exists() && (selection.isAppend() || selection.isRetainMetadata()) )
       {
-        targetObservation = m_page2.getTargetObservation( fileTarget.toURL() );
+        final URL targetLocation = ResourceUtilities.createURL( fileTarget );
+        targetObservation = ZmlFactory.parseXML( targetLocation );
         tuppelModelTarget = targetObservation.getValues( null );
         if( selection.isAppend() )
           countTarget = tuppelModelTarget.size();
@@ -339,7 +344,8 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       // or something similar
       if( m_timeseriesView != null )
       {
-        final FileItem item = m_configuredRepository.createItem( fileTarget );
+        final File targetJavaFile = fileTarget.getLocation().toFile();
+        final FileItem item = m_configuredRepository.createItem( targetJavaFile );
         m_timeseriesView.getViewSite().getSelectionProvider().setSelection( new StructuredSelection( item ) );
       }
     }
