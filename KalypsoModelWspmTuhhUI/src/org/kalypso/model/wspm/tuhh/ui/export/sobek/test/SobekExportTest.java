@@ -55,7 +55,8 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
-import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekDefExportOperation;
+import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportInfo;
+import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekProfileDefExportOperation;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekStructDefExportOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -70,9 +71,18 @@ public class SobekExportTest extends Assert
 
   private final TuhhWspmProject m_project;
 
+  private final SobekExportInfo m_info;
+
   public SobekExportTest( ) throws Exception
   {
     m_platformEncoding = Charset.defaultCharset().name();
+
+    m_info = new SobekExportInfo( null, null );
+    m_info.setIdPattern( "<Name>" ); //$NON-NLS-1$
+    m_info.setIdSuffix( "_building" ); //$NON-NLS-1$
+    m_info.setNamePattern( "<Name>" ); //$NON-NLS-1$
+    m_info.setFlowZone( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    m_info.setExportBridges( true );
 
     final URL dataLocation = getClass().getResource( "resources/modell.gml.gz" ); //$NON-NLS-1$
 
@@ -92,11 +102,9 @@ public class SobekExportTest extends Assert
 
     final File targetFile = File.createTempFile( "profile", ".def" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final String idPattern = "<Name>"; //$NON-NLS-1$
-    final String pointMarkerId = IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE;
-    final boolean exportBuildings = true;
-    final String idSuffix = "_building"; //$NON-NLS-1$
-    final SobekDefExportOperation exportOperation = new SobekDefExportOperation( targetFile, allProfiles, idPattern, pointMarkerId, exportBuildings, idSuffix );
+    m_info.setProfiles( allProfiles );
+
+    final SobekProfileDefExportOperation exportOperation = new SobekProfileDefExportOperation( m_info );
     exportOperation.execute( new NullProgressMonitor() );
 
     final String actualContent = FileUtils.readFileToString( targetFile, m_platformEncoding );
@@ -118,8 +126,9 @@ public class SobekExportTest extends Assert
 
     final File targetFile = File.createTempFile( "struct", ".def" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final String idPattern = "<Name>_building"; //$NON-NLS-1$
-    final SobekStructDefExportOperation exportOperation = new SobekStructDefExportOperation( targetFile, allProfiles, idPattern );
+    m_info.setProfiles( allProfiles );
+
+    final SobekStructDefExportOperation exportOperation = new SobekStructDefExportOperation( m_info );
     exportOperation.execute( new NullProgressMonitor() );
 
     final String actualContent = FileUtils.readFileToString( targetFile, m_platformEncoding );

@@ -40,12 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Formatter;
-import java.util.Locale;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -61,20 +55,25 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractSobekProfileExportOperation implements ISobekProfileExportOperation
+public abstract class AbstractSobekExportOperation implements ISobekProfileExportOperation
 {
-  private final File m_targetFile;
-
-  private final IProfileFeature[] m_profiles;
-
-  private Formatter m_formatter;
-
   private final IStatusCollector m_stati = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
 
-  public AbstractSobekProfileExportOperation( final File targetFile, final IProfileFeature[] profilesToExport )
+  private final SobekExportInfo m_info;
+
+  public AbstractSobekExportOperation( final SobekExportInfo info )
   {
-    m_targetFile = targetFile;
-    m_profiles = profilesToExport;
+    m_info = info;
+  }
+
+  protected SobekExportInfo getInfo( )
+  {
+    return m_info;
+  }
+
+  protected IStatusCollector getLog( )
+  {
+    return m_stati;
   }
 
   /**
@@ -85,22 +84,25 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
   {
     try
     {
-      monitor.beginTask( Messages.getString("AbstractSobekProfileExportOperation_0"), m_profiles.length ); //$NON-NLS-1$
+      final IProfileFeature[] profiles = getProfiles();
 
-      m_formatter = new Formatter( m_targetFile, Charset.defaultCharset().name(), Locale.US );
+      monitor.beginTask( Messages.getString( "AbstractSobekProfileExportOperation_0" ), profiles.length ); //$NON-NLS-1$
 
-      for( final IProfileFeature profil : m_profiles )
+      initTargetFile();
+
+      for( final IProfileFeature profil : profiles )
       {
         monitor.subTask( String.format( "%s (%s)", profil.getName(), profil.getBigStation() ) ); //$NON-NLS-1$
 
-        writeProfile( m_formatter, profil );
+        writeProfile( profil );
         ProgressUtilities.worked( monitor, 1 );
       }
+
       close();
 
       return m_stati.asMultiStatusOrOK( Messages.getString( "AbstractSobekProfileExportOperation_3" ), null ); //$NON-NLS-1$
     }
-    catch( final IOException e )
+    catch( final Exception e )
     {
       final String message = String.format( Messages.getString("AbstractSobekProfileExportOperation_2") ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
@@ -108,32 +110,23 @@ public abstract class AbstractSobekProfileExportOperation implements ISobekProfi
     }
     finally
     {
-      if( m_formatter != null )
-        m_formatter.close();
+      closeQuiet();
+
       monitor.done();
     }
   }
 
-  protected abstract void writeProfile( Formatter formatter, IProfileFeature profil );
-
-  protected IStatusCollector getLog( )
+  protected IProfileFeature[] getProfiles( )
   {
-    return m_stati;
+    return m_info.getProfiles();
   }
 
-  protected void close( ) throws IOException
-  {
-    m_formatter.flush();
-    checkIO();
-    m_formatter.close();
-    checkIO();
-  }
+  protected abstract void initTargetFile( ) throws Exception;
 
-  private void checkIO( ) throws IOException
-  {
-    final IOException ioException = m_formatter.ioException();
-    if( ioException != null )
-      throw ioException;
-  }
+  protected abstract void writeProfile( IProfileFeature profil ) throws Exception;
+
+  protected abstract void close( ) throws Exception;
+
+  protected abstract void closeQuiet( );
 
 }

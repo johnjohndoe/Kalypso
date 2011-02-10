@@ -56,9 +56,6 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.sobek.utils.hw.BridgeResult;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -69,24 +66,13 @@ import com.vividsolutions.jts.geom.Coordinate;
 /**
  * @author Gernot Belger
  */
-public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
+public class SobekProfileDefExportOperation extends AbstractSobekFileExportOperation
 {
-  private final String m_idPattern;
+  public static final String PROFILE_DEF = "profile.def"; //$NON-NLS-1$
 
-  private final String m_pointMarkerId;
-
-  private final boolean m_exportBuildings;
-
-  private final String m_idSuffix;
-
-  public SobekDefExportOperation( final File targetFile, final IProfileFeature[] profilesToExport, final String idPattern, final String pointMarkerId, final boolean exportBuildings, final String idSuffix )
+  public SobekProfileDefExportOperation( final SobekExportInfo info )
   {
-    super( targetFile, profilesToExport );
-
-    m_idPattern = idPattern;
-    m_pointMarkerId = pointMarkerId;
-    m_exportBuildings = exportBuildings;
-    m_idSuffix = idSuffix;
+    super( info, PROFILE_DEF );
   }
 
   /**
@@ -95,27 +81,29 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString( "SobekDefExportOperation_0" ); //$NON-NLS-1$
+    return PROFILE_DEF;
   }
 
   @Override
-  protected void writeProfile( final Formatter formatter, final IProfileFeature profileFeature )
+  protected void writeProfile( final IProfileFeature profileFeature )
   {
     final IProfil profil = profileFeature.getProfil();
     final IRecord[] points = getPointsToExport( profil );
     if( points == null )
       return;
 
-    final IProfilePatternData data = new ProfilePatternData( profileFeature, profil, null );
-    final String id = ProfilePatternInputReplacer.getINSTANCE().replaceTokens( m_idPattern, data );
-    final String profileName = profil.getName();
+    final SobekExportInfo info = getInfo();
 
-    writeNormalProfile( formatter, id, profileName, points, profil );
-    writeProfileBuilding( formatter, id, profileName, points, profil );
+    final String id = info.getID( profileFeature );
+    final String profileName = info.getName( profileFeature );
+
+    writeNormalProfile( id, profileName, points, profil );
+    writeProfileBuilding( id, profileName, points, profil );
   }
 
-  private void writeNormalProfile( final Formatter formatter, final String id, final String profileName, final IRecord[] points, final IProfil profil )
+  private void writeNormalProfile( final String id, final String profileName, final IRecord[] points, final IProfil profil )
   {
+    final Formatter formatter = getFormatter();
     formatter.format( "CRDS id '%s' nm '%s' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz%n", id, profileName ); //$NON-NLS-1$
     formatter.format( "TBLE%n" ); //$NON-NLS-1$
 
@@ -132,9 +120,10 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
     formatter.format( "crds%n" ); //$NON-NLS-1$
   }
 
-  private void writeProfileBuilding( final Formatter formatter, final String id, final String profileName, final IRecord[] points, final IProfil profil )
+  private void writeProfileBuilding( final String id, final String profileName, final IRecord[] points, final IProfil profil )
   {
-    if( !m_exportBuildings )
+    final SobekExportInfo info = getInfo();
+    if( !info.getExportBuildings() )
       return;
 
     // switch over building type
@@ -143,10 +132,12 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
     for( final IProfileObject profileObject : profileObjects )
     {
       final String countSuffix = reallyExportedBuildings == 0 ? StringUtils.EMPTY : "_" + reallyExportedBuildings; //$NON-NLS-1$
-      final String buildingId = id + m_idSuffix + countSuffix;
+      final String idSuffix = info.getIdSuffix();
+      final String buildingId = id + idSuffix + countSuffix;
 
       reallyExportedBuildings++;
 
+      final Formatter formatter = getFormatter();
       if( profileObject instanceof BuildingBruecke )
         writeBridge( formatter, buildingId, profileName, points, profil );
       // TODO: support other building types (tube, ...)
@@ -202,14 +193,15 @@ public class SobekDefExportOperation extends AbstractSobekProfileExportOperation
 
   private IRecord[] getPointsToExport( final IProfil profil )
   {
-    if( StringUtils.isBlank( m_pointMarkerId ) )
+    final String flowZone = getInfo().getFlowZone();
+    if( StringUtils.isBlank( flowZone ) )
       return profil.getPoints();
 
-    final IComponent markerComponent = ComponentUtilities.getFeatureComponent( m_pointMarkerId );
-    final String unknownLabel = String.format( Messages.getString("SobekDefExportOperation.1"), m_pointMarkerId ); //$NON-NLS-1$
+    final IComponent markerComponent = ComponentUtilities.getFeatureComponent( flowZone );
+    final String unknownLabel = String.format( Messages.getString( "SobekDefExportOperation.1" ), flowZone ); //$NON-NLS-1$
     final String markerLabel = markerComponent == null ? unknownLabel : ComponentUtilities.getComponentLabel( markerComponent );
 
-    final IProfilPointMarker[] markers = profil.getPointMarkerFor( m_pointMarkerId );
+    final IProfilPointMarker[] markers = profil.getPointMarkerFor( flowZone );
     if( markers.length < 2 )
     {
       final String message = String.format( Messages.getString( "SobekDefExportOperation_2" ), markerLabel, profil.getStation(), profil.getName() ); //$NON-NLS-1$
