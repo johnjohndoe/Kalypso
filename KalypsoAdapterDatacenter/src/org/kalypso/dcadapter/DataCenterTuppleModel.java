@@ -11,6 +11,9 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxisRange;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
+import org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue;
 
 import com.bce.datacenter.db.timeseries.TimeserieTupple;
 
@@ -21,13 +24,13 @@ import com.bce.datacenter.db.timeseries.TimeserieTupple;
  */
 public class DataCenterTuppleModel implements ITupleModel
 {
-  private final TimeserieTupple[] m_tupples;
+  protected final TimeserieTupple[] m_tupples;
 
   private final IAxis[] m_axes;
 
   private final Map<IAxis, Integer> m_axesPos;
-  
-  public DataCenterTuppleModel( final TimeserieTupple[] tupples, IAxis[] axes )
+
+  public DataCenterTuppleModel( final TimeserieTupple[] tupples, final IAxis[] axes )
   {
     m_tupples = tupples;
     m_axes = axes;
@@ -41,7 +44,7 @@ public class DataCenterTuppleModel implements ITupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
    */
   @Override
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxes( )
   {
     return m_axes;
   }
@@ -59,26 +62,25 @@ public class DataCenterTuppleModel implements ITupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getRangeFor(org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public IAxisRange getRange( IAxis axis ) throws SensorException
+  public IAxisRange getRange( final IAxis axis ) throws SensorException
   {
     if( m_tupples.length == 0 )
       return null;
-    
+
     switch( getPosition( axis ) )
     {
       case 0:
-        return new DefaultAxisRange( m_tupples[0].getDate(), m_tupples[m_tupples.length - 1 ].getDate() );
+        return new DefaultAxisRange( m_tupples[0].getDate(), m_tupples[m_tupples.length - 1].getDate() );
       default:
         throw new SensorException( "Axis " + axis + " not supported for method getRangeFor() " ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public Object get( int index, IAxis axis ) throws SensorException
+  public Object get( final int index, final IAxis axis ) throws SensorException
   {
     switch( getPosition( axis ) )
     {
@@ -94,12 +96,10 @@ public class DataCenterTuppleModel implements ITupleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public void set( int index, IAxis axis, Object element )
-      throws SensorException
+  public void set( final int index, final IAxis axis, final Object element ) throws SensorException
   {
     switch( getPosition( axis ) )
     {
@@ -115,11 +115,10 @@ public class DataCenterTuppleModel implements ITupleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public int indexOf( Object element, IAxis axis )
+  public int indexOf( final Object element, final IAxis axis )
   {
     if( m_axesPos.get( axis ).intValue() == 0 )
     {
@@ -127,7 +126,7 @@ public class DataCenterTuppleModel implements ITupleModel
         if( m_tupples[i].getDate().equals( element ) )
           return i;
     }
-    
+
     return -1;
   }
 
@@ -136,20 +135,20 @@ public class DataCenterTuppleModel implements ITupleModel
    */
   public static TimeserieTupple[] toTupples( final ITupleModel model ) throws SensorException
   {
-    final IAxis[] axes = model.getAxisList();
-    
+    final IAxis[] axes = model.getAxes();
+
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
     final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( axes, Double.class, true );
-    
-    final TimeserieTupple[] tupples = new TimeserieTupple[ model.size()];
-    
+
+    final TimeserieTupple[] tupples = new TimeserieTupple[model.size()];
+
     for( int i = 0; i < model.size(); i++ )
     {
-      tupples[i].setDate( (Date) model.get(i, dateAxis) );
-      tupples[i].setValue( (Double) model.get(i, valueAxis) );
+      tupples[i].setDate( (Date) model.get( i, dateAxis ) );
+      tupples[i].setValue( (Double) model.get( i, valueAxis ) );
       // TODO tupples[i].setStatus( (Double) model.getElement(i, valueAxis) );
     }
-    
+
     return tupples;
   }
 
@@ -157,12 +156,46 @@ public class DataCenterTuppleModel implements ITupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getPositionFor(org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public int getPosition( IAxis axis ) throws SensorException
+  public int getPosition( final IAxis axis ) throws SensorException
   {
     if( m_axesPos.containsKey( axis ) )
       return m_axesPos.get( axis ).intValue();
 
     throw new SensorException( "The axis " + axis //$NON-NLS-1$
         + " is not part of this model" ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITupleModel#accept(org.kalypso.ogc.sensor.visitor.ITupleModelVisitor)
+   */
+  @Override
+  public void accept( final ITupleModelVisitor visitor )
+  {
+
+    for( int i = 0; i < m_tupples.length; i++ )
+    {
+      final int index = i;
+
+      visitor.visit( new ITupleModelVisitorValue()
+      {
+        @Override
+        public int getIndex( )
+        {
+          return index;
+        }
+
+        @Override
+        public Object get( final IAxis axis )
+        {
+          if( AxisUtils.isDateAxis( axis ) )
+            return m_tupples[index].getDate();
+          else if( AxisUtils.isStatusAxis( axis ) )
+            return m_tupples[index].getStatus();
+
+          return m_tupples[index].getValue();
+        }
+      } );
+    }
+
   }
 }

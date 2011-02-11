@@ -139,15 +139,15 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
       // System.out.println(model.getAxisList()[0].getDataClass());
       // System.out.println(model.getAxisList()[1].getDataClass());
       // TODO: this is dangerous, there is a utility class to find the axes
-      if( model.getAxisList()[0].getDataClass().equals( Date.class ) )
+      if( model.getAxes()[0].getDataClass().equals( Date.class ) )
       {
-        dateAxis = model.getAxisList()[0];
-        valueAxis = model.getAxisList()[1];
+        dateAxis = model.getAxes()[0];
+        valueAxis = model.getAxes()[1];
       }
       else
       {
-        dateAxis = model.getAxisList()[1];
-        valueAxis = model.getAxisList()[0];
+        dateAxis = model.getAxes()[1];
+        valueAxis = model.getAxes()[0];
       }
 
       final Date fromDate = m_wizardPageZmlChooser.getFromDate();

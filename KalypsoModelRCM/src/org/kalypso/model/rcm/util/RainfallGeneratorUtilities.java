@@ -180,7 +180,7 @@ public final class RainfallGeneratorUtilities
     final ITupleModel[] tuppleModels = observationValues.toArray( new ITupleModel[observationValues.size()] );
 
     final ITupleModel firstTuppleModel = firstObservation.getValues( null );
-    final IAxis[] firstAxisList = firstTuppleModel.getAxisList();
+    final IAxis[] firstAxisList = firstTuppleModel.getAxes();
 
     final IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
     final IAxis firstValueAxis = ObservationUtilities.findAxisByClass( firstAxisList, Double.class );
