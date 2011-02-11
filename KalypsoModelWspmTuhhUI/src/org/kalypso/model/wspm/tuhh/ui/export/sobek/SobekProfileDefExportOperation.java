@@ -183,8 +183,9 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
     }
 
     /* Only for testing purposes: write tube geometry into shape file */
-    final File tempDir = null; // FileUtils.getTempDirectory();
-    final String shapeFileName = "profileDefBuildingShape";//$NON-NLS-1$
+    final File tempDir = new File( getInfo().getFile(), "struct" );
+    tempDir.mkdirs();
+    final String shapeFileName = "struct_";//$NON-NLS-1$
 
     final BridgeResult bridgeHw = new BridgeResult( shapeFileName, id, id, profileName, lowerCrds, upperCrds, tempDir );
     // TODO: handle problems/errors (change formattErr to a IStatusCollector)

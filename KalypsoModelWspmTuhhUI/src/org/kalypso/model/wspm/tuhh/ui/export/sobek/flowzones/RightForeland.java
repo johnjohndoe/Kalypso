@@ -66,14 +66,14 @@ public class RightForeland extends AbstractFlowZoneType
   @Override
   public FlowZone createFlowZone( final IProfil profile )
   {
-    final IProfilPointMarker[] tfMarkers = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] bvMarkers = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
     final IProfilPointMarker[] dbMarkers = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    if( tfMarkers == null || tfMarkers.length != 2 )
+    if( bvMarkers == null || bvMarkers.length != 2 )
       return null;
     if( dbMarkers == null || dbMarkers.length != 2 )
       return null;
 
-    final IProfilPointMarker leftMarker = tfMarkers[1];
+    final IProfilPointMarker leftMarker = bvMarkers[1];
     final IProfilPointMarker rightMarker = dbMarkers[1];
 
     return createZone( profile, leftMarker, rightMarker, getLabel() );

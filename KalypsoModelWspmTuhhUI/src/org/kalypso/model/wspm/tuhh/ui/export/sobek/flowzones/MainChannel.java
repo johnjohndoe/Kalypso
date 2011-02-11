@@ -57,7 +57,7 @@ public class MainChannel extends AbstractFlowZoneType
   @Override
   public String getLabel( )
   {
-    return Messages.getString("MainChannel_0"); //$NON-NLS-1$
+    return Messages.getString( "MainChannel_0" ); //$NON-NLS-1$
   }
 
   /**
