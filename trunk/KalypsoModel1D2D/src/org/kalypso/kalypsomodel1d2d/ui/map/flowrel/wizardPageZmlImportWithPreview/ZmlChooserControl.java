@@ -343,7 +343,7 @@ public abstract class ZmlChooserControl
           try
           {
             final ITupleModel values = m_observation.getValues( null );
-            final IAxis[] axisList = values.getAxisList();
+            final IAxis[] axisList = values.getAxes();
             final IAxis axis = ObservationUtilities.findAxisByType( axisList, "date" ); //$NON-NLS-1$
             m_dateFrom = (Date) values.get( 0, axis );
             m_dateTo = (Date) values.get( values.size() - 1, axis );

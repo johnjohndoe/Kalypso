@@ -233,7 +233,7 @@ public class OmbrometerUtils
    */
   private static int countStatus( final ITupleModel values, final IAxis axis ) throws SensorException
   {
-    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values.getAxisList(), axis );
+    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values.getAxes(), axis );
     int count = 0;
     for( int i = 0; i < values.size(); i++ )
     {

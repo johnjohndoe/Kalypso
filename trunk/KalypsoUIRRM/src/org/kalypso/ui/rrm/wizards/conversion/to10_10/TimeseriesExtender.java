@@ -89,7 +89,7 @@ public class TimeseriesExtender
     m_sourceValues = sourceValues;
     m_href = href;
 
-    m_axisList = m_sourceValues.getAxisList();
+    m_axisList = m_sourceValues.getAxes();
     m_dateAxis = AxisUtils.findDateAxis( m_axisList );
     if( m_dateAxis == null )
     {
@@ -215,7 +215,7 @@ public class TimeseriesExtender
   private void copyValues( ) throws SensorException
   {
     final int size = m_sourceValues.size();
-    final IAxis[] axisList = m_sourceValues.getAxisList();
+    final IAxis[] axisList = m_sourceValues.getAxes();
     for( int i = 0; i < size; i++ )
     {
       final Object[] values = new Object[axisList.length];
