@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
@@ -145,16 +147,6 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
       {
         final String label = m_inputDescriptor.getName( i );
         final GM_MultiSurface geometry = m_inputDescriptor.getGeometry( i );
-        final String landuseclass = m_inputDescriptor.getLanduseclass( i );
-
-        // find landuse-class
-        final String landuseRef = m_landuseClasses.getReference( landuseclass );
-        if( landuseRef == null )
-        {
-          final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
-          throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
-        }
-
         if( geometry == null )
         {
           final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.3", label ); //$NON-NLS-1$
@@ -169,37 +161,75 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
           }
         }
 
-        final Landuse landuse = m_output.importLanduse( label, geometry, m_importType, log );
-        if( landuse != null )
+        // find landuse-class
+        final String landuseclass = m_inputDescriptor.getLanduseclass( i );
+
+        // if there is no landuse class, we just update the original landuses with suds information
+        if( landuseclass == null )
         {
-          final String desc = m_inputDescriptor.getDescription( i );
-          final double corrSealing = m_inputDescriptor.getSealingCorrectionFactor( i );
-          final String drainageType = m_inputDescriptor.getDrainageType( i );
           final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
 
-          landuse.setDescription( desc );
-          landuse.setCorrSealing( corrSealing );
-          landuse.setDrainageType( drainageType );
-
-          /* add sud members */
-          final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
-          final GMLWorkspace landuseWorkspace = landuse.getWorkspace();
-          final IGMLSchema landuseSchmea = landuseWorkspace.getGMLSchema();
-
-          for( final Feature sud : suds )
+          // Handle existing landuses that intersect the new one
+          final List<Landuse> existingLanduses = m_output.getLanduses().query( geometry.getEnvelope() );
+          for( final Landuse landuse : existingLanduses )
           {
-            final IRelationType rt = (IRelationType) landuseSchmea.getFeatureType( Landuse.QNAME_PROP_SUD_MEMBERS );
-            final IFeatureType ft = sud.getFeatureType();
-            final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
+            /* add sud members */
+            final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
+            final GMLWorkspace landuseWorkspace = landuse.getWorkspace();
+            final IGMLSchema landuseSchmea = landuseWorkspace.getGMLSchema();
 
-            final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
-            sudCollection.add( lnk );
+            for( final Feature sud : suds )
+            {
+              final IRelationType rt = (IRelationType) landuseSchmea.getFeatureType( Landuse.QNAME_PROP_SUD_MEMBERS );
+              final IFeatureType ft = sud.getFeatureType();
+              final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
+
+              final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
+              sudCollection.add( lnk );
+            }
           }
+        }
+        else
+        {
+          final Landuse landuse = m_output.importLanduse( label, geometry, m_importType, log );
+          if( landuse != null )
+          {
+            final String desc = m_inputDescriptor.getDescription( i );
+            final double corrSealing = m_inputDescriptor.getSealingCorrectionFactor( i );
+            final String drainageType = m_inputDescriptor.getDrainageType( i );
+            final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
 
-          final String href = "parameter.gml#" + landuseRef; //$NON-NLS-1$
-          final XLinkedFeature_Impl landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
+            landuse.setDescription( desc );
+            landuse.setCorrSealing( corrSealing );
+            landuse.setDrainageType( drainageType );
 
-          landuse.setLanduse( landuseXLink );
+            /* add sud members */
+            final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
+            final GMLWorkspace landuseWorkspace = landuse.getWorkspace();
+            final IGMLSchema landuseSchmea = landuseWorkspace.getGMLSchema();
+
+            for( final Feature sud : suds )
+            {
+              final IRelationType rt = (IRelationType) landuseSchmea.getFeatureType( Landuse.QNAME_PROP_SUD_MEMBERS );
+              final IFeatureType ft = sud.getFeatureType();
+              final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
+
+              final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
+              sudCollection.add( lnk );
+            }
+
+            final String landuseRef = m_landuseClasses.getReference( landuseclass );
+            if( landuseRef == null )
+            {
+              final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
+              throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+            }
+
+            final String href = "parameter.gml#" + landuseRef; //$NON-NLS-1$
+            final XLinkedFeature_Impl landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
+
+            landuse.setLanduse( landuseXLink );
+          }
         }
       }
       catch( final CoreException e )
