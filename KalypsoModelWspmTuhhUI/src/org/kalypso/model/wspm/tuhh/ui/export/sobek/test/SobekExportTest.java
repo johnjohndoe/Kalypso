@@ -48,15 +48,22 @@ import java.nio.charset.Charset;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportInfo;
+import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekFrictionDatExportOperation;
+import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekProfileDatExportOperation;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekProfileDefExportOperation;
+import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekStructDatExportOperation;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekStructDefExportOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -67,15 +74,22 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class SobekExportTest extends Assert
 {
-  private final String m_platformEncoding;
+  private String m_platformEncoding;
 
-  private final TuhhWspmProject m_project;
+  private TuhhWspmProject m_project;
 
-  private final SobekExportInfo m_info;
+  private SobekExportInfo m_info;
 
-  public SobekExportTest( ) throws Exception
+  private File m_targetDir;
+
+  private IProfileFeature[] m_profiles;
+
+  @Before
+  public void setup( ) throws Exception
   {
     m_platformEncoding = Charset.defaultCharset().name();
+
+    m_targetDir = FileUtilities.createNewTempDir( "sobekExportText" );
 
     m_info = new SobekExportInfo( null, null );
     m_info.setIdPattern( "<Name>" ); //$NON-NLS-1$
@@ -83,59 +97,76 @@ public class SobekExportTest extends Assert
     m_info.setNamePattern( "<Name>" ); //$NON-NLS-1$
     m_info.setFlowZone( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     m_info.setExportBridges( true );
+    m_info.setTargetDir( m_targetDir );
+    m_info.setRoughnessID( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
+    m_info.setRoughnessZoneTypes( m_info.getAllRoughnessZones() );
 
     final URL dataLocation = getClass().getResource( "resources/modell.gml.gz" ); //$NON-NLS-1$
 
     final GMLWorkspace wspmWorkspace = GmlSerializer.createGMLWorkspace( dataLocation, null );
     m_project = (TuhhWspmProject) wspmWorkspace.getRootFeature();
+
+    final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
+    final IFeatureBindingCollection<IProfileFeature> profiles = waterBodies[0].getProfiles();
+    m_profiles = profiles.toArray( new IProfileFeature[profiles.size()] );
+
+    m_info.setProfiles( m_profiles );
+  }
+
+  @After
+  public void tearDown( ) throws IOException
+  {
+    if( m_targetDir != null )
+      FileUtils.deleteDirectory( m_targetDir );
+  }
+
+  private void testOperation( final ISobekProfileExportOperation exportOperation, final String filename ) throws IOException, CoreException
+  {
+    final File targetFile = new File( m_targetDir, filename );
+
+    exportOperation.execute( new NullProgressMonitor() );
+
+    final String actualContent = FileUtils.readFileToString( targetFile, m_platformEncoding );
+
+    final URL expectedContentLocation = getClass().getResource( "resources/" + filename ); //$NON-NLS-1$
+    final String expectedContent = UrlUtilities.readUrlToString( expectedContentLocation, m_platformEncoding );
+
+    assertEquals( expectedContent, actualContent );
   }
 
   @Test
   public void exportProfileDef( ) throws IOException, CoreException
   {
-    final URL expectedContentLocation = getClass().getResource( "resources/profile.def" ); //$NON-NLS-1$
-    final String expectedContent = UrlUtilities.readUrlToString( expectedContentLocation, m_platformEncoding );
+    final ISobekProfileExportOperation exportOperation = new SobekProfileDefExportOperation( m_info );
+    testOperation( exportOperation, SobekProfileDefExportOperation.PROFILE_DEF );
+  }
 
-    final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
-    final IFeatureBindingCollection<IProfileFeature> profiles = waterBodies[0].getProfiles();
-    final IProfileFeature[] allProfiles = profiles.toArray( new IProfileFeature[profiles.size()] );
-
-    final File targetFile = File.createTempFile( "profile", ".def" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    m_info.setProfiles( allProfiles );
-
-    final SobekProfileDefExportOperation exportOperation = new SobekProfileDefExportOperation( m_info );
-    exportOperation.execute( new NullProgressMonitor() );
-
-    final String actualContent = FileUtils.readFileToString( targetFile, m_platformEncoding );
-
-    assertEquals( expectedContent, actualContent );
-
-    targetFile.delete();
+  @Test
+  public void exportProfileDat( ) throws IOException, CoreException
+  {
+    final ISobekProfileExportOperation exportOperation = new SobekProfileDatExportOperation( m_info );
+    testOperation( exportOperation, SobekProfileDatExportOperation.PROFILE_DAT );
   }
 
   @Test
   public void exportStructDef( ) throws IOException, CoreException
   {
-    final URL expectedContentLocation = getClass().getResource( "resources/struct.def" ); //$NON-NLS-1$
-    final String expectedContent = UrlUtilities.readUrlToString( expectedContentLocation, m_platformEncoding );
+    final ISobekProfileExportOperation exportOperation = new SobekStructDefExportOperation( m_info );
+    testOperation( exportOperation, SobekStructDefExportOperation.STRUCT_DEF );
+  }
 
-    final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
-    final IFeatureBindingCollection<IProfileFeature> profiles = waterBodies[0].getProfiles();
-    final IProfileFeature[] allProfiles = profiles.toArray( new IProfileFeature[profiles.size()] );
+  @Test
+  public void exportStructDat( ) throws IOException, CoreException
+  {
+    final ISobekProfileExportOperation exportOperation = new SobekStructDatExportOperation( m_info );
+    testOperation( exportOperation, SobekStructDatExportOperation.STRUCT_DAT );
+  }
 
-    final File targetFile = File.createTempFile( "struct", ".def" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    m_info.setProfiles( allProfiles );
-
-    final SobekStructDefExportOperation exportOperation = new SobekStructDefExportOperation( m_info );
-    exportOperation.execute( new NullProgressMonitor() );
-
-    final String actualContent = FileUtils.readFileToString( targetFile, m_platformEncoding );
-
-    assertEquals( expectedContent, actualContent );
-
-    targetFile.delete();
+  @Test
+  public void exportFrictionDef( ) throws IOException, CoreException
+  {
+    final ISobekProfileExportOperation exportOperation = new SobekFrictionDatExportOperation( m_info );
+    testOperation( exportOperation, SobekFrictionDatExportOperation.FRICTION_DAT );
   }
 
 }

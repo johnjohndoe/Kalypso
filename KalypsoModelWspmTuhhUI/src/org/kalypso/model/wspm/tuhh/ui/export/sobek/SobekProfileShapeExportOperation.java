@@ -89,7 +89,7 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
   @Override
   protected void initTargetFile( ) throws DBaseException, IOException
   {
-    final File dir = getInfo().getFile();
+    final File dir = getInfo().getTargetDir();
     m_shapePoint.create( dir );
   }
 

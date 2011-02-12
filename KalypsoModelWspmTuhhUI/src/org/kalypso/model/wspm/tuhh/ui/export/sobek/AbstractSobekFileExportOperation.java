@@ -61,7 +61,7 @@ public abstract class AbstractSobekFileExportOperation extends AbstractSobekExpo
   {
     super( info );
 
-    m_targetFile = new File( info.getFile(), filename );
+    m_targetFile = new File( info.getTargetDir(), filename );
   }
 
   @Override
