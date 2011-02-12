@@ -150,7 +150,7 @@ public class SobekExportInfo
     return m_dirChooser;
   }
 
-  public File getFile( )
+  public File getTargetDir( )
   {
     return m_dirChooser.getFile();
   }
@@ -191,7 +191,7 @@ public class SobekExportInfo
 
     saveSettings();
 
-    m_page.updateMessage();
+    updateMessage();
   }
 
   public void setIdSuffix( final String idSuffix )
@@ -200,7 +200,7 @@ public class SobekExportInfo
 
     saveSettings();
 
-    m_page.updateMessage();
+    updateMessage();
   }
 
   public void setNamePattern( final String namePattern )
@@ -209,7 +209,7 @@ public class SobekExportInfo
 
     saveSettings();
 
-    m_page.updateMessage();
+    updateMessage();
   }
 
   public void setExportBridges( final boolean selection )
@@ -382,4 +382,16 @@ public class SobekExportInfo
 
     return markers.toArray( new String[markers.size()] );
   }
+
+  private void updateMessage( )
+  {
+    if( m_page != null )
+      m_page.updateMessage();
+  }
+
+  public void setTargetDir( final File targetDir )
+  {
+    m_dirChooser.setFile( targetDir );
+  }
+
 }

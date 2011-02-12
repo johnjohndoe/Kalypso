@@ -292,7 +292,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
     final Collection<ISobekProfileExportOperation> ops = new ArrayList<ISobekProfileExportOperation>();
 
     // FIXME: check if files exist and ask user to overwrite
-    m_info.getFile().mkdirs();
+    m_info.getTargetDir().mkdirs();
 
     ops.add( new SobekProfileDefExportOperation( m_info ) );
     ops.add( new SobekProfileDatExportOperation( m_info ) );
