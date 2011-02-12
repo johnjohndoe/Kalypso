@@ -52,6 +52,7 @@ import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -96,6 +97,8 @@ public class OptimizeTest
     final ISimulationDataProvider dataProvider = prepareData( dataDir );
     final NAOptimizingJob optimizeJob = doOptimizeRun( simulationDir, dataProvider );
     checkResults( optimizeJob, expectedResultsDir );
+
+    FileUtils.deleteDirectory( tmpDir );
   }
 
   private ISimulationDataProvider prepareData( final File dataDir ) throws SimulationException, IOException
