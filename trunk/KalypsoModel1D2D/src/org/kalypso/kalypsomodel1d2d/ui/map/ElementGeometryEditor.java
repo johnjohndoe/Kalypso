@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -86,16 +87,13 @@ public class ElementGeometryEditor
 {
   private static final double SEARCH_DISTANCE = 0.1;
 
-  @SuppressWarnings("unchecked")
-  private final Set<IFE1D2DElement> m_elementList = new HashSet<IFE1D2DElement>();
+  private final Set<IFE1D2DElement< ? , ? >> m_elementList = new HashSet<IFE1D2DElement< ? , ? >>();
 
   private final IKalypsoFeatureTheme m_nodeTheme;
 
-  @SuppressWarnings("unchecked")
-  private IFE1D2DNode m_startNode;
+  private IFE1D2DNode< ? > m_startNode;
 
-  @SuppressWarnings("unchecked")
-  private IFE1D2DNode m_endNode;
+  private IFE1D2DNode< ? > m_endNode;
 
   private GM_Point m_endPoint;
 
@@ -109,10 +107,9 @@ public class ElementGeometryEditor
     m_nodeTheme = nodeTheme;
   }
 
-  @SuppressWarnings("unchecked")
-  public void addElements( final IFE1D2DElement[] elements )
+  public void addElements( final IFE1D2DElement< ? , ? >[] elements )
   {
-    for( final IFE1D2DElement element : elements )
+    for( final IFE1D2DElement< ? , ? > element : elements )
     {
       m_elementList.add( element );
     }
@@ -141,11 +138,10 @@ public class ElementGeometryEditor
       paintPreview( g, projection, currentPoint );
   }
 
-  @SuppressWarnings("unchecked")
   private void paintPreview( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
-    final IFE1D2DElement[] elements = m_elementList.toArray( new IFE1D2DElement[m_elementList.size()] );
-    for( final IFE1D2DElement element : elements )
+    final IFE1D2DElement< ? , ? >[] elements = m_elementList.toArray( new IFE1D2DElement[m_elementList.size()] );
+    for( final IFE1D2DElement< ? , ? > element : elements )
     {
       final List<GM_Point> pointsToDraw = new ArrayList<GM_Point>();
 
@@ -194,21 +190,19 @@ public class ElementGeometryEditor
    * done for every newly added node, so we check only Criteria, which could go wring for the new node (i.e. the last
    * one in the array).
    */
-  @SuppressWarnings("unchecked")
   private IStatus checkNewElements( )
   {
     try
     {
-
       final IFEDiscretisationModel1d2d discModel = DiscretisationModelUtils.modelForTheme( m_nodeTheme );
 
       /* A) element type checks */
       // A.1) check for 1d-elements (they are not supported yet)
-      final IFE1D2DElement[] startElements = m_startNode.getElements();
-      for( final IFE1D2DElement element : startElements )
+      final IFE1D2DElement< ? , ? >[] startElements = m_startNode.getElements();
+      for( final IFE1D2DElement< ? , ? > element : startElements )
       {
         if( element instanceof Element1D )
-          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.0" ) ); //$NON-NLS-1$
+          return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.0" ) ); //$NON-NLS-1$
       }
 
       /* B) node position checks */
@@ -216,24 +210,24 @@ public class ElementGeometryEditor
       if( m_endNode != null )
       {
         if( m_startNode.equals( m_endNode ) )
-          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.1" ) ); //$NON-NLS-1$
+          return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.1" ) ); //$NON-NLS-1$
       }
 
       // B.2) New Node lies inside an element, that is not in the current elements list
       // (only for non-grabbed point)
       if( m_endNode == null )
       {
-        final IPolyElement elementForNewNode = discModel.find2DElement( m_endPoint, 0.0 );
+        final IPolyElement< ? , ? > elementForNewNode = discModel.find2DElement( m_endPoint, 0.0 );
         if( elementForNewNode != null )
         {
           final GM_Surface<GM_SurfacePatch> surface = elementForNewNode.getGeometry();
           if( surface.contains( m_endPoint ) && !m_elementList.contains( elementForNewNode ) )
-            return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.2" ) ); //$NON-NLS-1$
+            return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.2" ) ); //$NON-NLS-1$
         }
       }
       else
         // B.3) right now we don't allow that the new Node lies on an already existing node
-        return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.3" ) ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.3" ) ); //$NON-NLS-1$
 
       /* C) edge checks */
       // C.1) one of the new edges crosses other edges
@@ -246,27 +240,27 @@ public class ElementGeometryEditor
         final GM_Position[] poses = ring.getPositions();
         // D.1) new element self-intersects
         if( GeometryUtilities.isSelfIntersecting( poses ) )
-          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.4" ) ); //$NON-NLS-1$
+          return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.4" ) ); //$NON-NLS-1$
 
-        final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, crs );
-        
+        final GM_Surface< ? extends GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, crs );
+
         // D.2) new element is not convex
         if( newSurface.getConvexHull().difference( newSurface ) != null && poses.length < 4 )
-          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.7" ) ); //$NON-NLS-1$
-        
+          return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.7" ) ); //$NON-NLS-1$
+
         // D.3) new elements intersect other elements
         final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
-        for( final IFE1D2DElement element : elements )
+        for( final IFE1D2DElement< ? , ? > element : elements )
         {
           if( element instanceof IPolyElement )
           {
-            final IPolyElement element2D = (IPolyElement) element;
+            final IPolyElement< ? , ? > element2D = (IPolyElement< ? , ? >) element;
             final GM_Surface<GM_SurfacePatch> eleGeom = element2D.getGeometry();
             if( eleGeom.intersects( newSurface ) && !m_elementList.contains( element2D ) )
             {
               final GM_Object intersection = eleGeom.intersection( newSurface );
               if( intersection instanceof GM_Surface )
-                return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.5" ) ); //$NON-NLS-1$
+                return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.5" ) ); //$NON-NLS-1$
             }
           }
         }
@@ -278,7 +272,7 @@ public class ElementGeometryEditor
           final GM_Point point = GeometryFactory.createGM_Point( position, crs );
           final IFELine contiLine = discModel.findContinuityLine( point, SEARCH_DISTANCE );
           if( contiLine != null )
-            return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.6" ) ); //$NON-NLS-1$
+            return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.6" ) ); //$NON-NLS-1$
         }
       }
       return Status.OK_STATUS;
@@ -293,11 +287,10 @@ public class ElementGeometryEditor
   /**
    * generates the new element geometries based on the end node (only 2D-Elements hare andled)
    */
-  @SuppressWarnings("unchecked")
   private GM_Ring[] getNewGeometries( ) throws GM_Exception
   {
     final List<GM_Ring> ringList = new ArrayList<GM_Ring>();
-    for( final IFE1D2DElement element : m_elementList )
+    for( final IFE1D2DElement< ? , ? > element : m_elementList )
     {
       if( element instanceof IPolyElement )
         ringList.add( getEditedGeometryAsRing( element ) );
@@ -308,8 +301,7 @@ public class ElementGeometryEditor
   /**
    * returns a given {@link IFE1D2DElement} as a {@link GM_Ring}
    */
-  @SuppressWarnings("unchecked")
-  private GM_Ring getEditedGeometryAsRing( final IFE1D2DElement element ) throws GM_Exception
+  private GM_Ring getEditedGeometryAsRing( final IFE1D2DElement< ? , ? > element ) throws GM_Exception
   {
     final GM_Position[] poses = getEditedNodesPositions( element );
 
@@ -321,14 +313,13 @@ public class ElementGeometryEditor
    * returns the updated geometry of an edited {@link IFE1D2DElement} as {@link GM_Position} array. <BR>
    * The z-coordinate value of the moved element node remains the same.
    */
-  @SuppressWarnings("unchecked")
-  private GM_Position[] getEditedNodesPositions( final IFE1D2DElement element )
+  private GM_Position[] getEditedNodesPositions( final IFE1D2DElement< ? , ? > element )
   {
     final List<GM_Position> posList = new ArrayList<GM_Position>();
     final List<IFE1D2DNode> nodes = element.getNodes();
     for( int i = 0; i < nodes.size(); i++ )
     {
-      final IFE1D2DNode node = nodes.get( i );
+      final IFE1D2DNode< ? > node = nodes.get( i );
       if( node.equals( m_startNode ) )
       {
         final GM_Position position = m_endPoint.getPosition();
@@ -362,14 +353,12 @@ public class ElementGeometryEditor
     return poses;
   }
 
-  @SuppressWarnings("unchecked")
-  public IFE1D2DNode getStartNode( )
+  public IFE1D2DNode< ? > getStartNode( )
   {
     return m_startNode;
   }
 
-  @SuppressWarnings("unchecked")
-  public void setStartNode( final IFE1D2DNode startNode )
+  public void setStartNode( final IFE1D2DNode< ? > startNode )
   {
     m_startNode = startNode;
 
@@ -382,13 +371,12 @@ public class ElementGeometryEditor
   /**
    * check the node
    */
-  @SuppressWarnings("unchecked")
   public IStatus checkNewNode( final Object newNode )
   {
     /* set the new end node candidate */
     if( newNode instanceof IFE1D2DNode )
     {
-      m_endNode = (IFE1D2DNode) newNode;
+      m_endNode = (IFE1D2DNode< ? >) newNode;
       m_endPoint = m_endNode.getPoint();
     }
     else

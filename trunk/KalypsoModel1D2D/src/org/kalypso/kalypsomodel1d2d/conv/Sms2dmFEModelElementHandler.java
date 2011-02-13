@@ -49,62 +49,35 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.refinement.RefinementUtils;
 
+/**
+ * @author Thomas Jung
+ */
 public class Sms2dmFEModelElementHandler implements IFEModelElementHandler
 {
-
-  /**
-   * @author Thomas Jung
-   */
-
   private class SmsElementData
   {
-
-    private final int m_id;
-
     private final Integer[] m_nodeIds;
 
-    private final int m_roughnessClassID;
-
-    public SmsElementData( final int id, final Integer[] nodeIds, final int roughnessClassID )
+    public SmsElementData( final Integer[] nodeIds )
     {
-      m_id = id;
       m_nodeIds = nodeIds;
-      m_roughnessClassID = roughnessClassID;
     }
 
-    public int getId( )
-    {
-      return m_id;
-    }
-
-    public Integer[] getNodeIds( )
-    {
-      return m_nodeIds;
-    }
-
-    public int getRoughnessClassID( )
-    {
-      return m_roughnessClassID;
-    }
-
-    public GM_Surface getSurface( final String crs ) throws GM_Exception
+    public GM_Surface< ? > getSurface( final String crs ) throws GM_Exception
     {
       final ArrayList<GM_Position> posList = new ArrayList<GM_Position>();
 
-      for( int i = 0; i < m_nodeIds.length; i++ )
+      for( final Integer m_nodeId : m_nodeIds )
       {
-        posList.add( m_nodeMap.get( m_nodeIds[i] ) );
+        posList.add( m_nodeMap.get( m_nodeId ) );
       }
       posList.add( m_nodeMap.get( m_nodeIds[0] ) );
 
       final GM_Position[] poses = posList.toArray( new GM_Position[posList.size()] );
-      final GM_Surface<GM_SurfacePatch> surface = RefinementUtils.getSurface( poses, crs );
-
-      return surface;
+      return RefinementUtils.getSurface( poses, crs );
     }
   }
 
@@ -127,14 +100,13 @@ public class Sms2dmFEModelElementHandler implements IFEModelElementHandler
     {
       for( final SmsElementData element : m_elementList )
       {
-        final GM_Surface surface = element.getSurface( m_crs );
+        final GM_Surface< ? > surface = element.getSurface( m_crs );
         for( final IDiscModelImporter importer : m_importerList )
           importer.addElement( surface );
       }
     }
     catch( final GM_Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     for( final IDiscModelImporter importer : m_importerList )
@@ -158,7 +130,7 @@ public class Sms2dmFEModelElementHandler implements IFEModelElementHandler
   @Override
   public void handleElement( final String lineString, final int id, final Integer[] nodeIds, final int roughnessClassID )
   {
-    final SmsElementData data = new SmsElementData( id, nodeIds, roughnessClassID );
+    final SmsElementData data = new SmsElementData( nodeIds );
     m_elementList.add( data );
   }
 
