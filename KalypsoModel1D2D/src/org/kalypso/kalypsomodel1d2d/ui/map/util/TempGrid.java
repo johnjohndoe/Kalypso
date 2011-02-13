@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
@@ -75,7 +76,6 @@ import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -121,9 +121,9 @@ public class TempGrid
 
   private IKalypsoFeatureTheme m_nodeTheme;
 
-  private List<GM_Position> m_setNotInsertedNodes = new ArrayList<GM_Position>();
+  private final List<GM_Position> m_setNotInsertedNodes = new ArrayList<GM_Position>();
 
-  private Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
+  private final Map<GM_Position, IFE1D2DNode< ? >> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode< ? >>();
 
   private GM_Envelope m_gmExistingEnvelope;
 
@@ -176,7 +176,7 @@ public class TempGrid
   private void paintEdges( final Graphics g, final GeoTransform projection ) throws GM_Exception, CoreException
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+    final Stroke stroke = new Stroke_Impl( new HashMap<String, String>(), null, null );
 
     Color color = new Color( 100, 100, 100 ); // default is it set to green
     if( isValid() != Status.OK_STATUS )
@@ -185,7 +185,6 @@ public class TempGrid
     stroke.setWidth( 1 );
     stroke.setStroke( color );
     symb.setStroke( stroke );
-    DisplayElement de;
 
     final GM_Position[] pos = new GM_Position[2];
 
@@ -196,7 +195,7 @@ public class TempGrid
         pos[0] = element[j].getPosition();
         pos[1] = element[j + 1].getPosition();
         final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( pos, m_crs );
-        de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
         de.paint( g, projection, new NullProgressMonitor() );
       }
     }
@@ -207,7 +206,7 @@ public class TempGrid
         pos[0] = m_gridPoints[i][j].getPosition();
         pos[1] = m_gridPoints[i + 1][j].getPosition();
         final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( pos, m_crs );
-        de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
         de.paint( g, projection, new NullProgressMonitor() );
       }
     }
@@ -313,7 +312,7 @@ public class TempGrid
     final GM_Point[][] points2D = m_gridPoints;
 
     if( points2D.length == 0 )
-      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.1" ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.1" ) ); //$NON-NLS-1$
 
     // we must have the node theme. First node theme gets it
     final IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( panel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
@@ -321,7 +320,7 @@ public class TempGrid
     {
       try
       {
-        addElements( commandableWorkspace, nodeTheme, model );
+        addElements( commandableWorkspace, model );
       }
       catch( final Exception e )
       {
@@ -330,16 +329,13 @@ public class TempGrid
       }
     }
     else
-      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.3" ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.3" ) ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
 
-  private void addElements( final CommandableWorkspace workspace, final IKalypsoFeatureTheme nodeTheme, final IFEDiscretisationModel1d2d discModel ) throws Exception
+  private void addElements( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel ) throws Exception
   {
-    final FeatureList featureList = nodeTheme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
-
     /* Initialize elements needed for edges and elements */
     // final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
     final List<GM_Ring> elements = getRingsFromPoses();
@@ -349,21 +345,21 @@ public class TempGrid
     {
       m_gmExistingEnvelope = discModel.getNodes().getBoundingBox();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
-    List<Feature> lListAdded = new ArrayList<Feature>();
+    final List<Feature> lListAdded = new ArrayList<Feature>();
     for( final GM_Ring ring : elements )
     {
       lListAdded.addAll( createElementsFromRing( workspace, discModel, ring ) );
       // ElementGeometryHelper.createFE1D2DfromRing( workspace, discModel, ring );
     }
     Logger.getLogger( TempGrid.class.getName() ).log( Level.INFO, "new elements created: " + lListAdded ); //$NON-NLS-1$
-    
+
     if( lListAdded.size() > 0 )
     {
-      FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel.getFeature(), lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+      final FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel.getFeature(), lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
       workspace.fireModellEvent( changeEvent );
       Logger.getLogger( TempGrid.class.getName() ).log( Level.INFO, "Model event fired: " + changeEvent ); //$NON-NLS-1$
     }
@@ -371,9 +367,9 @@ public class TempGrid
 
   private List<Feature> createElementsFromRing( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final GM_Ring ring )
   {
-    List<Feature> lListRes = new ArrayList<Feature>();
-    List<IFE1D2DEdge> lListEdges = new ArrayList<IFE1D2DEdge>();
-    List<GM_Point> lListPoses = new ArrayList<GM_Point>();
+    final List<Feature> lListRes = new ArrayList<Feature>();
+    final List<IFE1D2DEdge< ? , ? >> lListEdges = new ArrayList<IFE1D2DEdge< ? , ? >>();
+    final List<GM_Point> lListPoses = new ArrayList<GM_Point>();
 
     checkPosesForCreationOfElement( discModel, ring, lListPoses );
 
@@ -386,30 +382,30 @@ public class TempGrid
     }
 
     // IPolyElement element2d = discModel.find2DElement( getInnerPoint( lListEdges ), SNAP_DISTANCE );
-    IPolyElement element2d = discModel.find2DElement( GeometryUtilities.centroidFromRing( ring.getPositions(), ring.getCoordinateSystem() ), SNAP_DISTANCE );
+    IPolyElement< ? , ? > element2d = discModel.find2DElement( GeometryUtilities.centroidFromRing( ring.getPositions(), ring.getCoordinateSystem() ), SNAP_DISTANCE );
 
     if( element2d != null )
     {
       return new ArrayList<Feature>();
     }
-    GM_Surface<GM_SurfacePatch> newSurface = null;
+    GM_Surface< ? extends GM_SurfacePatch> newSurface = null;
     List<IFE1D2DElement> lListFoundPolyElements = null;
     try
     {
       newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), null, ring.getCoordinateSystem() );
       lListFoundPolyElements = discModel.getElements().query( newSurface, false );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
     }
 
     if( lListFoundPolyElements != null && lListFoundPolyElements.size() > 0 )
     {
-      for( final IFE1D2DElement lEle : lListFoundPolyElements )
+      for( final IFE1D2DElement< ? , ? > lEle : lListFoundPolyElements )
       {
         if( lEle instanceof IPolyElement )
         {
-          final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) lEle).getGeometry();
+          final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement< ? , ? >) lEle).getGeometry();
           if( eleGeom.intersects( newSurface ) )
           {
             try
@@ -419,7 +415,7 @@ public class TempGrid
               if( intersection instanceof GM_Surface )
                 return new ArrayList<Feature>();
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
             }
           }
@@ -431,7 +427,7 @@ public class TempGrid
 
     element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
     lListRes.add( element2d.getFeature() );
-    for( final IFE1D2DEdge lEdge : lListEdges )
+    for( final IFE1D2DEdge< ? , ? > lEdge : lListEdges )
     {
       // add edge to element and element to edge
       final String elementId = element2d.getGmlID();
@@ -442,15 +438,15 @@ public class TempGrid
     return lListRes;
   }
 
-  private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge> lListEdges, final List<GM_Point> lListPoses )
+  private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge< ? , ? >> lListEdges, final List<GM_Point> lListPoses )
   {
-    List<Feature> lListRes = new ArrayList<Feature>();
-    IFE1D2DNode lastNode = null;
+    final List<Feature> lListRes = new ArrayList<Feature>();
+    IFE1D2DNode< ? > lastNode = null;
     int iCountNodes = 0;
     for( final GM_Point lPoint : lListPoses )
     {
 
-      IFE1D2DNode actNode = m_nodesNameConversionMap.get( lPoint.getPosition() );
+      IFE1D2DNode< ? > actNode = m_nodesNameConversionMap.get( lPoint.getPosition() );
       if( actNode == null )
       {
         actNode = discModel.createNode( lPoint, -1, NOT_CREATED );
@@ -463,8 +459,8 @@ public class TempGrid
 
       if( iCountNodes > 0 )
       {
-        final IFE1D2DEdge existingEdge = discModel.findEdge( lastNode, actNode );
-        final IFE1D2DEdge edge;
+        final IFE1D2DEdge< ? , ? > existingEdge = discModel.findEdge( lastNode, actNode );
+        final IFE1D2DEdge< ? , ? > edge;
         if( existingEdge != null )
         {
           edge = existingEdge;
@@ -487,7 +483,7 @@ public class TempGrid
   {
     for( final GM_Position lPosition : ring.getPositions() )
     {
-      IFE1D2DNode node = null;// m_nodesNameConversionMap.get( lPosition );
+      IFE1D2DNode< ? > node = null;// m_nodesNameConversionMap.get( lPosition );
       // if( node == null )
       {
         //        Logger.getLogger( TempGrid.class.getName() ).log( Level.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.13", node.getPoint().toString() ) ); //$NON-NLS-1$
@@ -498,7 +494,7 @@ public class TempGrid
         {
           if( m_gmExistingEnvelope != null && m_gmExistingEnvelope.contains( lPosition ) )
           {
-            IPolyElement lFoundElement = discModel.find2DElement( nodeLocation, SNAP_DISTANCE );
+            final IPolyElement< ? , ? > lFoundElement = discModel.find2DElement( nodeLocation, SNAP_DISTANCE );
             if( lFoundElement != null )
             {
               // do not insert nodes that are placed on existing model(overlapped elements)
@@ -524,22 +520,11 @@ public class TempGrid
     }
   }
 
-  private GM_Point getInnerPoint( final List<IFE1D2DEdge> pListEdges )
-  {
-    for( final IFE1D2DEdge lEdge : pListEdges )
-    {
-
-    }
-
-    // TODO Auto-generated method stub
-    return null;
-  }
-
   @SuppressWarnings("unchecked")
   private IStatus checkElements( )
   {
     if( m_nodeTheme == null )
-      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.4" ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.4" ) ); //$NON-NLS-1$
     try
     {
       final IFEDiscretisationModel1d2d discModel = DiscretisationModelUtils.modelForTheme( m_nodeTheme );
@@ -548,21 +533,21 @@ public class TempGrid
       {
         // 4) New Element self-intersects
         if( GeometryUtilities.isSelfIntersecting( ring.getPositions() ) )
-          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.5" ) ); //$NON-NLS-1$
+          return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.5" ) ); //$NON-NLS-1$
 
         // New Element intersects other elements
-        final GM_Surface<GM_SurfacePatch> newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+        final GM_Surface< ? extends GM_SurfacePatch> newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
         final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
-        for( final IFE1D2DElement element : elements )
+        for( final IFE1D2DElement< ? , ? > element : elements )
         {
           if( element instanceof IPolyElement )
           {
-            final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) element).getGeometry();
+            final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement< ? , ? >) element).getGeometry();
             if( eleGeom.intersects( newSurface ) )
             {
               final GM_Object intersection = eleGeom.intersection( newSurface );
               if( intersection instanceof GM_Surface )
-                return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.6" ) ); //$NON-NLS-1$
+                return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.6" ) ); //$NON-NLS-1$
             }
           }
         }

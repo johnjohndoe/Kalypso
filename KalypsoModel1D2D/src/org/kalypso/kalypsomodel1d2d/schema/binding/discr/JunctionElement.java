@@ -114,7 +114,7 @@ public class JunctionElement extends AbstractFeatureBinder implements IJunctionE
     // close the ring
     elementPositions.add( elementPositions.get( 0 ) );
 
-    final GM_Surface<GM_SurfacePatch> createGM_Surface = GeometryFactory.createGM_Surface( elementPositions.toArray( new GM_Position[] {} ), new GM_Position[][] {}, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
+    final GM_Surface< ? extends GM_SurfacePatch> createGM_Surface = GeometryFactory.createGM_Surface( elementPositions.toArray( new GM_Position[] {} ), new GM_Position[][] {}, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
     final Geometry export = JTSAdapter.export( createGM_Surface );
     final Geometry convexHull = export.convexHull();
     return JTSAdapter.wrap( convexHull );

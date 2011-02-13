@@ -52,12 +52,14 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
@@ -121,7 +123,7 @@ public class ElementGeometryBuilder
    * Adds a node or a would-be node (i.e. a GM_Point) to this builder.<br>
    * REMARK: No validity check is done here. Call {@link #checkNewNode(Object)} before a new node is added.
    */
-//  public ICommand addNode( final GM_Point node ) throws Exception
+  //  public ICommand addNode( final GM_Point node ) throws Exception
   public final IFeatureWrapper2 addNode( final GM_Point node, final CompositeCommand command  ) throws Exception
   {
     m_nodes.add( node );
@@ -141,24 +143,14 @@ public class ElementGeometryBuilder
    */
   public final IFeatureWrapper2 finish( final CompositeCommand command ) throws Exception
   {
-//    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-
-    IFeatureWrapper2 lNewFeature = null;
-    
     final CommandableWorkspace workspace = m_nodeTheme.getWorkspace();
     final FeatureList featureList = m_nodeTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
 
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
-    {
-      // bugfix - compile error due to changes in ElementGeometryHelper (revision 6435 to 6506)
-      // TODO check if this functionality is OK
-//      lNewFeature = ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, discModel, m_nodes );
-      lNewFeature = ElementGeometryHelper.createAdd2dElement( command, workspace, discModel, m_nodes );
-    }
-      
-    return lNewFeature;
+
+    return ElementGeometryHelper.createAdd2dElement( command, workspace, discModel, m_nodes );
   }
 
   /**
@@ -203,8 +195,7 @@ public class ElementGeometryBuilder
     return m_nodes.size();
   }
 
-  @SuppressWarnings("unchecked")
-  public boolean contains( final IFE1D2DNode snapNode )
+  public boolean contains( final IFE1D2DNode< ? > snapNode )
   {
     return m_nodes.contains( snapNode );
   }
@@ -241,11 +232,10 @@ public class ElementGeometryBuilder
 
     return status;
   }
-  
+
   // REMARK: some optimization is done here, in order to enhance performance.
   // We assume, that the same checks has been done for every newly added node, so we check only
   // Criteria, which could go wring for the new node (i.e. the last one in the array).
-  @SuppressWarnings("unchecked")
   private IStatus checkNewElement( final GM_Point[] allNodes, final boolean pBoolFinalPont )
   {
     try
@@ -256,19 +246,19 @@ public class ElementGeometryBuilder
 
       // 0) Node was already grabbed
       if( ArrayUtils.indexOf( allNodes, newPoint ) != allNodes.length - 1 )
-        return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.0" ) ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.0" ) ); //$NON-NLS-1$
 
       // 1) New Node lies inside an element (only for non-grabbed point)
 
-      final IPolyElement elementForNewNode = discModel.find2DElement( newPoint, 0.0 );
+      final IPolyElement< ? , ? > elementForNewNode = discModel.find2DElement( newPoint, 0.0 );
       if( elementForNewNode != null )
       {
-        final IFE1D2DNode foundNode = discModel.findNode( newPoint, SEARCH_DISTANCE );
+        final IFE1D2DNode< ? > foundNode = discModel.findNode( newPoint, SEARCH_DISTANCE );
         if( foundNode == null )
         {
           final GM_Surface<GM_SurfacePatch> surface = elementForNewNode.getGeometry();
           if( surface.contains( newPoint ) )
-            return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.6" ) ); //$NON-NLS-1$
+            return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.6" ) ); //$NON-NLS-1$
         }
       }
 
@@ -284,17 +274,17 @@ public class ElementGeometryBuilder
 
         final GM_Curve curve = GeometryFactory.createGM_Curve( line, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
         final List<IFE1D2DElement> elements = discModel.getElements().query( curve.getEnvelope() );
-        for( final IFE1D2DElement element : elements )
+        for( final IFE1D2DElement< ? , ? > element : elements )
         {
           if( element instanceof IPolyElement )
           {
-            final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) element).getGeometry();
+            final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement< ? , ? >) element).getGeometry();
             if( eleGeom == null )
             {
               // check for null geometries... What to do?
               // delete the elements???
 
-              return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.2" ) ); //$NON-NLS-1$
+              return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.2" ) ); //$NON-NLS-1$
             }
             if( eleGeom.intersects( curve ) )
             {
@@ -306,7 +296,7 @@ public class ElementGeometryBuilder
                 final GM_Point endPoint = intersCurve.getAsLineString().getEndPoint();
 
                 if( checkIntersectionCurve( allNodes, startPoint, endPoint ) )
-                  return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3" ) ); //$NON-NLS-1$
+                  return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3" ) ); //$NON-NLS-1$
               }
             }
           }
@@ -322,26 +312,26 @@ public class ElementGeometryBuilder
 
       // 4) New Element self-intersects
       if( GeometryUtilities.isSelfIntersecting( ring ) && pBoolFinalPont )
-        return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.4" ) ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.4" ) ); //$NON-NLS-1$
 
-      final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      
+      final GM_Surface< ? extends GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+
       // new element is not convex
       if( m_cnt_points > 0 && newSurface.getConvexHull().difference( newSurface ) != null )
-        return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.7" ) ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.7" ) ); //$NON-NLS-1$
 
       // new element intersects other elements
       final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
-      for( final IFE1D2DElement element : elements )
+      for( final IFE1D2DElement< ? , ? > element : elements )
       {
         if( element instanceof IPolyElement )
         {
-          final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) element).getGeometry();
+          final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement< ? , ? >) element).getGeometry();
           if( eleGeom.intersects( newSurface ) && pBoolFinalPont )
           {
             final GM_Object intersection = eleGeom.intersection( newSurface );
             if( intersection instanceof GM_Surface  )
-              return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.5" ) ); //$NON-NLS-1$
+              return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.5" ) ); //$NON-NLS-1$
           }
         }
       }
