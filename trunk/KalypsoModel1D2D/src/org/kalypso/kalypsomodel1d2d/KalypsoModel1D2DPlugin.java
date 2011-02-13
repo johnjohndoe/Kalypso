@@ -12,6 +12,8 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
 {
+  public static final String PLUGIN_ID = "org.kalypso.model1d2d";
+
   // The shared instance.
   private static KalypsoModel1D2DPlugin plugin;
 
