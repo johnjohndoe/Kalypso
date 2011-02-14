@@ -194,6 +194,12 @@ public class DataCenterTuppleModel implements ITupleModel
 
           return m_tupples[index].getValue();
         }
+
+        @Override
+        public boolean hasAxis( final String... types )
+        {
+          return true;
+        }
       } );
     }
 
