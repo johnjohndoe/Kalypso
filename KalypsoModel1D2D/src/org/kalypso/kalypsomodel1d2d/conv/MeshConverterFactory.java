@@ -56,11 +56,11 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection
  */
 public class MeshConverterFactory
 {
-  private static final String _2D_EXTENSION = "*.2d";
+  private static final String _2D_EXTENSION = "*.2d"; //$NON-NLS-1$
 
-  private static final String _2DM_EXTENSION = "*.2dm";
+  private static final String _2DM_EXTENSION = "*.2dm"; //$NON-NLS-1$
 
-  private static final String _HMO_EXTENSION = "*.hmo";
+  private static final String _HMO_EXTENSION = "*.hmo"; //$NON-NLS-1$
   
   public MeshConverterFactory( )
   {

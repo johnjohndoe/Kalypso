@@ -69,7 +69,7 @@ import com.sun.org.apache.xml.internal.serializer.ToXMLStream;
  */
 public class MarshallPolyhedralSurfaceTest extends TestCase
 {
-  private final static String crs = "EPSG:31467";
+  private final static String crs = "EPSG:31467"; //$NON-NLS-1$
 
   private static final GM_Position pos1 = GeometryFactory.createGM_Position( 0.0, 0.0, 1.0 );
   private static final GM_Position pos2 = GeometryFactory.createGM_Position( 0.0, 1.0, 2.0 );
@@ -87,7 +87,7 @@ public class MarshallPolyhedralSurfaceTest extends TestCase
     File polyFile = null;
     OutputStream os = null;
     try{        
-      polyFile = File.createTempFile( "polyTest", ".gml" );
+      polyFile = File.createTempFile( "polyTest", ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
       polyFile.deleteOnExit(); 
 
       /* Output: to stream */
@@ -100,7 +100,7 @@ public class MarshallPolyhedralSurfaceTest extends TestCase
       xmlStream.setLineSepUse( true );
       xmlStream.setIndent( true );
       xmlStream.setIndentAmount( 1 );
-      xmlStream.setEncoding( "UTF-8" );
+      xmlStream.setEncoding( "UTF-8" ); //$NON-NLS-1$
 
       final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
       xmlReader.setContentHandler( xmlStream );
@@ -114,7 +114,7 @@ public class MarshallPolyhedralSurfaceTest extends TestCase
 
       os.close();
 
-      final String xmlString = FileUtils.readFileToString( polyFile, "UTF-8" );
+      final String xmlString = FileUtils.readFileToString( polyFile, "UTF-8" ); //$NON-NLS-1$
       System.out.println( xmlString );
     }
     finally

@@ -214,7 +214,7 @@ class ApplyElevationWidgetFace
     areaSelectSection.setExpanded( true );
     areaSelectSection.setEnabled( true );
 
-    //
+    // TODO: extract strings and translate it
     final Button dtmButton = toolkit.createButton( scrolledForm.getBody(), "Show/Refresh Model-Isolines", SWT.PUSH ); //$NON-NLS-1$
     dtmButton.addSelectionListener( new SelectionAdapter()
     {
@@ -239,7 +239,7 @@ class ApplyElevationWidgetFace
     tableWrapData = new TableWrapData();// TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
-    tableWrapData.heightHint = 282;// 168
+    tableWrapData.heightHint = 350;// 168
     tableWrapData.align = TableWrapData.FILL_GRAB;
     elevationColorSection.setLayoutData( tableWrapData );
 

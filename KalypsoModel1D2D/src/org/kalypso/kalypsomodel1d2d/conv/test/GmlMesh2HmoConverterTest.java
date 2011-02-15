@@ -65,17 +65,17 @@ public class GmlMesh2HmoConverterTest extends TestCase
   @Test
   public void testConvert() throws Exception
   {
-    URL gmlLocation = getClass().getResource( "tinyDiscretization.gml" );
+    URL gmlLocation = getClass().getResource( "tinyDiscretization.gml" ); //$NON-NLS-1$
     assertNotNull( gmlLocation );
 
-    URL hmoLocation = getClass().getResource( "tinyDis.hmo" );
+    URL hmoLocation = getClass().getResource( "tinyDis.hmo" ); //$NON-NLS-1$
     assertNotNull( hmoLocation );
 
     GMLWorkspace disWorkspace = GmlSerializer.createGMLWorkspace( gmlLocation, null );
     Feature rootFeature = disWorkspace.getRootFeature();
     IFEDiscretisationModel1d2d dis = (IFEDiscretisationModel1d2d) rootFeature.getAdapter( IFEDiscretisationModel1d2d.class );    
     
-    File result = FileUtilities.createNewUniqueFile( "hmoTest", FileUtilities.TMP_DIR );
+    File result = FileUtilities.createNewUniqueFile( "hmoTest", FileUtilities.TMP_DIR ); //$NON-NLS-1$
     
     GmlMesh2HmoConverter conv = new GmlMesh2HmoConverter( dis );
     conv.writeMesh( result );
@@ -87,8 +87,8 @@ public class GmlMesh2HmoConverterTest extends TestCase
   
   private void assertContentEquals( File file, URL location ) throws IOException
   {
-    String fileContent = FileUtils.readFileToString( new File(file.getAbsolutePath()), System.getProperty( "file.encoding" ) );
-    String urlContent = UrlUtilities.toString( location, System.getProperty( "file.encoding" ) );
+    String fileContent = FileUtils.readFileToString( new File(file.getAbsolutePath()), System.getProperty( "file.encoding" ) ); //$NON-NLS-1$
+    String urlContent = UrlUtilities.toString( location, System.getProperty( "file.encoding" ) ); //$NON-NLS-1$
     assertEquals( fileContent, urlContent );
   }  
 }

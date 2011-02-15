@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -67,12 +70,14 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.TeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
@@ -250,9 +255,15 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
       // }
 
       // TODO: set name of flowrel according to profile or create a dummy name
-      if( flowRel.getName().equals( "" ) ) //$NON-NLS-1$
-        flowRel.setName( "" + profile.getStation() ); //$NON-NLS-1$
+      final double station = profile.getStation();
+      final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
 
+      if( StringUtils.isBlank( flowRel.getName() ) )
+        flowRel.setName( bigStation.toString() ); //$NON-NLS-1$
+
+      // Automatically update station of TeschkeFlowRelation
+      if( flowRel instanceof TeschkeFlowRelation )
+        ((TeschkeFlowRelation) flowRel).setStation( bigStation );
     }
     catch( final CoreException e )
     {

@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -91,15 +92,15 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final IPositionProvider m_positionProvider;
 
-  private final HashMap<Integer, String> m_nodesNameConversionMap = new HashMap<Integer, String>();
+  private final Map<Integer, String> m_nodesNameConversionMap = new HashMap<Integer, String>();
 
-  private final HashMap<Integer, String> m_edgesNameConversionMap = new HashMap<Integer, String>();
+  private final Map<Integer, String> m_edgesNameConversionMap = new HashMap<Integer, String>();
 
-  private final HashMap<Integer, String> m_elementsNameConversionMap = new HashMap<Integer, String>();
+  private final Map<Integer, String> m_elementsNameConversionMap = new HashMap<Integer, String>();
 
   private GM_Envelope m_gmExistingEnvelope;
 
-  private Set< Integer > m_setNotInsertedNodes;
+  private final Set< Integer > m_setNotInsertedNodes;
 
   private static boolean[] NOT_CREATED = new boolean[1];
 
@@ -113,7 +114,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       m_gmExistingEnvelope = m_model.getNodes().getBoundingBox();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -135,17 +136,26 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     final Feature[] lElementsToRemove = getElementsWithoutGeometry();
     final Feature[] lAllElements = m_model.getElements().getWrappedList().toFeatures();
-   
+
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), lAllElements, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    
+
     removeElements( lElementsToRemove );
+
+    /*
+     * HOTFIX: invalidate all geo-indices here. After import, especially into an empty model, the index used to be very
+     * specific (e.g. all elements are in one single box), which causes strange effects later (elements beeing pinted
+     * twice and similar. Invalidating the geo index here fixes that. However this should be fixed in a more general
+     * way.
+     */
+    m_model.getNodes().getWrappedList().invalidate();
+    m_model.getEdges().getWrappedList().invalidate();
+    m_model.getElements().getWrappedList().invalidate();
   }
 
-  private void removeElements( Feature[] elementsToRemove )
+  private void removeElements( final Feature[] elementsToRemove )
   {
     final IDiscrModel1d2dChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( m_model );
-    
-    
+
     for( final Feature feature : elementsToRemove )
     {
       if( feature != null )
@@ -161,18 +171,18 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       deleteCmdPolyElement.process();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
-    
+
     m_model.getElements().removeAllAtOnce( Arrays.asList( elementsToRemove ) );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), elementsToRemove, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
-  
+
   private Feature[] getElementsWithoutGeometry( )
   {
-    Set< Feature > lSetToRemove = new HashSet< Feature >();
+    final Set< Feature > lSetToRemove = new HashSet< Feature >();
     for( final IFE1D2DElement lElement: m_model.getElements() ){
       if( lElement instanceof IPolyElement ){
         final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) lElement).getGeometry();
@@ -190,7 +200,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      int, int)
    */
   @Override
-  @SuppressWarnings("unchecked")
   public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
     final IFE1D2DNode node1 = getNode( node1ID );
@@ -245,12 +254,12 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   private final void maybeAddEdgeToElement( final int rmaID, final IFE1D2DEdge edge )
   {
     final String edgeId = edge.getGmlID();
-    
-    IFeatureWrapperCollection lContainers = edge.getContainers();
+
+    final IFeatureWrapperCollection lContainers = edge.getContainers();
     int iCountPolyElements = 0;
     for( int i = 0; i < lContainers.size(); ++i )
     {
-      Object lFeature = lContainers.get( i );
+      final Object lFeature = lContainers.get( i );
       if( lFeature instanceof IPolyElement )
       {
         iCountPolyElements++;
@@ -364,14 +373,14 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     if( node == null )
     {
       if( m_gmExistingEnvelope != null && m_gmExistingEnvelope.contains( nodeLocation.getPosition() ) ){
-         IPolyElement lFoundElement = m_model.find2DElement( nodeLocation, 0.01 );
-         if( lFoundElement != null )
-         {
-           //do not insert nodes that are placed on existing model(overlapped elements) 
-           m_setNotInsertedNodes.add( id );
-           Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, "removed node ", nodeLocation.toString() ); //$NON-NLS-1$
-           return;
-         }
+        final IPolyElement lFoundElement = m_model.find2DElement( nodeLocation, 0.01 );
+        if( lFoundElement != null )
+        {
+          //do not insert nodes that are placed on existing model(overlapped elements) 
+          m_setNotInsertedNodes.add( id );
+          Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, "removed node ", nodeLocation.toString() ); //$NON-NLS-1$
+          return;
+        }
       }
       // new node, create
       node = m_model.createNode( nodeLocation, -1, NOT_CREATED );
@@ -435,7 +444,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      double, double, double)
    */
   @Override
-  public void handleFlowResitance( String line, int id, double combinedLambda, double soilLambda, double vegetationLambda )
+  public void handleFlowResitance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
   {
     // TODO Auto-generated method stub
 
@@ -446,7 +455,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      double, double, double, double)
    */
   @Override
-  public void handleNodeInformation( String line, int id, int dry, double value1, double value2, double value3, double value4 )
+  public void handleNodeInformation( final String line, final int id, final int dry, final double value1, final double value2, final double value3, final double value4 )
   {
     // TODO Auto-generated method stub
 
@@ -457,7 +466,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      int, java.util.List)
    */
   @Override
-  public void handle1dJunctionInformation( String line, int junctionId, List<Integer> junctionNodeIDList )
+  public void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList )
   {
     // TODO Auto-generated method stub
   }
@@ -467,7 +476,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      int, double, double, double, org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES)
    */
   @Override
-  public void handleTimeDependentAdditionalResult( String lineString, int id, double vx, double vy, double depth, RESULTLINES resultlines )
+  public void handleTimeDependentAdditionalResult( final String lineString, final int id, final double vx, final double vy, final double depth, final RESULTLINES resultlines )
   {
     // TODO Auto-generated method stub
 

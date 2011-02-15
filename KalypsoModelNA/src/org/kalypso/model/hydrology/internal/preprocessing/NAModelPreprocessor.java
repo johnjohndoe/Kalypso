@@ -115,7 +115,7 @@ public class NAModelPreprocessor
     {
       // Handle only unexpected exceptions here. Everything else should be handling deeper down!
       e.printStackTrace();
-      throw new NAPreprocessorException( "Unexpected error while generating Kalypso-NA ASCII files", e );
+      throw new NAPreprocessorException( Messages.getString("NAModelPreprocessor.0"), e ); //$NON-NLS-1$
     }
   }
 
@@ -144,12 +144,12 @@ public class NAModelPreprocessor
 
     checkCancel( monitor );
 
-    monitor.setMessage( "Adding additional virtual channels" );
+    monitor.setMessage( Messages.getString("NAModelPreprocessor.1") ); //$NON-NLS-1$
     final NaModelTweaker naModelTweaker = new NaModelTweaker( naModel, rootNode );
     naModelTweaker.tweakModel();
     checkCancel( monitor );
 
-    monitor.setMessage( "Writing control files for Kalypso-NA" );
+    monitor.setMessage( Messages.getString("NAModelPreprocessor.2") ); //$NON-NLS-1$
     final NAControlConverter naControlConverter = new NAControlConverter( metaControl, m_asciiDirs.startDir );
     naControlConverter.writeFalstart();
     naControlConverter.writeStartFile( naControl, rootNode, naModel, sudsWorkspace, m_idManager );

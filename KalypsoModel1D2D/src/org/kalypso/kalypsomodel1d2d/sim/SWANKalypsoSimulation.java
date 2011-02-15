@@ -260,7 +260,7 @@ public class SWANKalypsoSimulation implements ISimulation, ISimulation1D2DConsta
   {
     // REMARK: This is OS dependent; we use should use a pattern according to OS
     String exeName = exeVersionName;
-    if( exeVersionName == null || "".equals( exeVersionName.trim() ) )
+    if( exeVersionName == null || "".equals( exeVersionName.trim() ) ) //$NON-NLS-1$
     {
       exeName = ISimulation1D2DConstants.SIM_SWAN_EXE_FILE_PREFIX + ".exe"; //$NON-NLS-1$
     }

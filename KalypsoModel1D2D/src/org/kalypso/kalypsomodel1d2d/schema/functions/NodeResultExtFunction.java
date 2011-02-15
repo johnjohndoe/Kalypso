@@ -59,9 +59,9 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  */
 public class NodeResultExtFunction extends FeaturePropertyFunction
 {
-  private static final String LAST_VALID_COLOR = "lastValidColor";
+  private static final String LAST_VALID_COLOR = "lastValidColor"; //$NON-NLS-1$
 
-  private static final String LAST_VALID_VALUE = "lastValidValue";
+  private static final String LAST_VALID_VALUE = "lastValidValue"; //$NON-NLS-1$
 
   private static final String WAVEDIR_TYPE = "wavedir"; //$NON-NLS-1$
 
@@ -106,7 +106,7 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
   public void init( final Map<String, String> properties )
   {
     m_locationProperty = QName.valueOf( properties.get( "location" ) ); //$NON-NLS-1$
-    m_typeName = properties.get( "resultType" );
+    m_typeName = properties.get( "resultType" ); //$NON-NLS-1$
     m_resultTypeProperty = QName.valueOf( m_typeName ); //$NON-NLS-1$
     m_kind = properties.get( "resultKind" ); //$NON-NLS-1$
     m_fromColor = m_minColor;
