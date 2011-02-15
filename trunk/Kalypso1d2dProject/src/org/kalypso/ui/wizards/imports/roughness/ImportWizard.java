@@ -3,6 +3,9 @@
  */
 package org.kalypso.ui.wizards.imports.roughness;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -20,10 +23,15 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -154,6 +162,20 @@ public class ImportWizard extends Wizard implements INewWizard
       m_data.getRoughnessStaticCollectionMap().clear();
       m_data.saveUserSelection();
       m_szenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
+
+      final List<Feature> changedFeatures = new ArrayList<Feature>();
+      final List<IRoughnessPolygonCollection> roughnessPolygonCollections = m_data.getModel().getRoughnessPolygonCollections();
+      for( final IRoughnessPolygonCollection collection : roughnessPolygonCollections )
+      {
+        final List<IRoughnessPolygon> polygons = collection.getRoughnessPolygons();
+        for( final IRoughnessPolygon polygon : polygons )
+        {
+          changedFeatures.add( polygon.getFeature() );
+        }
+      }
+      final GMLWorkspace workspace = m_data.getModel().getFeature().getWorkspace();
+      workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, changedFeatures.toArray( new Feature[changedFeatures.size()] ) ) );
+
     }
     catch( final Exception e )
     {

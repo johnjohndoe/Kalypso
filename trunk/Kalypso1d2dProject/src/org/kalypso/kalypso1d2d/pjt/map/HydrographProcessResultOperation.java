@@ -87,7 +87,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public final class HydrographProcessResultOperation implements ICoreRunnableWithProgress
 {
@@ -159,7 +159,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       {
         final Date date = entry.getValue();
         count++;
-        progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.1" , count, resultSize ) ); //$NON-NLS-1$
+        progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.1", count, resultSize ) ); //$NON-NLS-1$
 
         /* get the observation */
 
@@ -197,7 +197,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
             final GM_Point point = (GM_Point) location;
 
             // TODO: check for right time zone
-            progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.2" , count, resultSize, date.toString(), hyd, m_hydrographs.size() ) ); //$NON-NLS-1$
+            progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.2", count, resultSize, date.toString(), hyd, m_hydrographs.size() ) ); //$NON-NLS-1$
             addResult( obsMap, calendar, nodeList, point );
           }
         }
@@ -251,73 +251,41 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       final Double waterlevel = nodeResult.getWaterlevel();
       final Double discharge = nodeResult.getDischarge();
       final double absoluteVelocity = nodeResult.getAbsoluteVelocity();
-      
-      Double lDoubleHsig = Double.NaN;
-      Double lDoublePer = Double.NaN;
-      Double lDoubleDir = Double.NaN;
-      
-      try{
-        lDoubleHsig = nodeResult.getWaveHsig();
-        lDoublePer = nodeResult.getWavePeriod();
-        lDoubleDir = nodeResult.getWaveDirection();
-      }catch (Exception e) {
-        // TODO: handle exception
-      }
+
+      final Double lDoubleHsig = nodeResult.getWaveHsig();
+      final Double lDoublePer = nodeResult.getWavePeriod();
+      final Double lDoubleDir = nodeResult.getWaveDirection();
 
       /* add the data to the observation */
       final IRecord newRecord = tuples.createRecord();
 
       newRecord.setValue( dateComp, DATATYPE_FACTORY.newXMLGregorianCalendar( calendar ) );
-      if( !Double.isNaN( waterlevel ) )
-      {
-        newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      }
-      else
-        System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.10" ) ); //$NON-NLS-1$
-      if( !Double.isNaN( depth ) )
-      {
-        newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      }
-      else
-        System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.11" ) ); //$NON-NLS-1$
-      if( !Double.isNaN( depth ) )
-      {
-        newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      }
-      else
-        System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
-      // newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       newRecord.setValue( velocityComp, new BigDecimal( absoluteVelocity ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       if( discharge != null )
-      {
+
         newRecord.setValue( dischargeComp, new BigDecimal( discharge ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      }
       else
         newRecord.setValue( dischargeComp, new BigDecimal( 0.0 ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      
-      // Wave parameter 
+
+      // Wave parameter
+
       if( lDoubleHsig != null && !Double.isNaN( lDoubleHsig ) )
-      {
         newRecord.setValue( waveHsigComp, new BigDecimal( lDoubleHsig ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      }
       else
         System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
-     
+
       if( lDoublePer != null && !Double.isNaN( lDoublePer ) )
-      {
         newRecord.setValue( wavePerComp, new BigDecimal( lDoublePer ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      }
       else
         System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
-      
+
       if( lDoubleDir != null && !Double.isNaN( lDoubleDir ) )
-      {
         newRecord.setValue( waveDirComp, new BigDecimal( lDoubleDir ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      }
       else
         System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
-      
-      
+
       tuples.add( newRecord );
       o.setResult( tuples );
     }
