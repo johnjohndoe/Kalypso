@@ -1,0 +1,1 @@
+folder for native terrain model; e.g. .asc, .hmo ..
