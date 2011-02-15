@@ -46,7 +46,7 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.export.AbstractCsvWriter;
@@ -83,7 +83,7 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
   {
     super( selection );
 
-    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     setShowResultInterpolationSettings( true );
 
@@ -111,6 +111,7 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
     final IProfileExportColumn[] userDefinedColumns = m_columnsPage.getExportColumns();
     final OUTPUT_TYPE type = m_columnsPage.getType();
 
+    // FIXME: we should check at the same time if for each column the result is ok, else, show a warning message
     final IWspmResult[] results = ProfileExportUtils.findResults( profiles, userDefinedColumns );
 
     final IResultInterpolationSettings resultInterpolationSettings = getResultInterpolationSettings();
