@@ -80,9 +80,8 @@ public class EditBuildingParameterHandler extends AbstractHandler implements IEl
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
   @Override
-  @SuppressWarnings("unchecked")
-  public void updateElement( final UIElement element, final Map parameters )
+  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    ElementUpdateHelper.updateElement( element, parameters, EditBuildingParameterMouseHandler.class );
+    ElementUpdateHelper.updateElement( element, EditBuildingParameterMouseHandler.class );
   }
 }
