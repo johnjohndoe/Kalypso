@@ -1,0 +1,19 @@
+<!DOCTYPE catalog
+  PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN"
+         "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+  <uri name="org.kalypso.na.control" uri="schemata/control.xsd" />
+  <uri name="http://www.tuhh.de/kalypsoNA" uri="schemata/namodell.xsd" />
+  <uri name="org.kalypso.namodell.control" uri="schemata/nacontrol.xsd" />
+  <uri name="http://www.tuhh.de/hydrotop" uri="schemata/hydrotop.xsd" />
+  <uri name="http://www.tuhh.de/parameter" uri="schemata/parameter.xsd" />
+  <uri name="http://org.kalypso.ombrometer" uri="schemata/ombrometer.xsd" />
+  <uri name="http://www.tuhh.de/synthN" uri="schemata/synthN.xsd" />
+  <uri name="http://www.tuhh.de/initialValues" uri="schemata/initialValues.xsd" />
+  <uri name="http://www.tuhh.de/NAFortranLog" uri="schemata/NAFortranLog.xsd" />
+  <uri name="http://kalypso.sorgeforge.net/schemata/hydrology/optimize" uri="schemata/naoptimize.xsd" />
+  <uri name="http://sourceforge.kalypso.org/schemata/hydrology/landuse" uri="schemata/landuse.xsd" />
+  <uri name="http://sourceforge.kalypso.org/schemata/hydrology/pedologie" uri="schemata/pedologie.xsd" />
+  <uri name="http://sourceforge.kalypso.org/schemata/hydrology/geologie" uri="schemata/geologie.xsd" />
+  <uri name="http://sourceforge.kalypso.org/schemata/hydrology/suds" uri="schemata/suds.xsd" />
+</catalog>
