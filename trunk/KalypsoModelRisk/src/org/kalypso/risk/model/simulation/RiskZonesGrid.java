@@ -101,13 +101,13 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private final SortedMap<Double, IRiskZoneDefinition> m_nonUrbanZonesDefinitions = new TreeMap<Double, IRiskZoneDefinition>();
 
-  private Coordinate m_origin;
+  private final Coordinate m_origin;
 
-  private Coordinate m_offsetX;
+  private final Coordinate m_offsetX;
 
-  private Coordinate m_offsetY;
+  private final Coordinate m_offsetY;
 
-  private IGeoTransformer m_geoTransformer;
+  private final IGeoTransformer m_geoTransformer;
 
   public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureBindingCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
   {
@@ -138,11 +138,11 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     for( final IAnnualCoverageCollection collection : m_annualCoverageCollection )
     {
       final List<BinaryGeoGridReader> gridList = new ArrayList<BinaryGeoGridReader>();
-      IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
+      final IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
       for( final ICoverage coverage : coverages )
       {
-        RectifiedGridCoverageGeoGrid grid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( coverage );
-        BinaryGeoGridReader lReader = new BinaryGeoGridReader( grid, grid.getGridURL() );
+        final RectifiedGridCoverageGeoGrid grid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( coverage );
+        final BinaryGeoGridReader lReader = new BinaryGeoGridReader( grid, grid.getGridURL() );
         gridList.add( lReader );
       }
 
@@ -187,6 +187,8 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
     try
     {
+      // FIXME: very dubious: performance -> does not depends on x/y; why do we do it again and again?
+
       /* we need a sorted list of the annual coverage collections */
       final SortedMap<Double, IAnnualCoverageCollection> covMap = new TreeMap<Double, IAnnualCoverageCollection>();
       for( final IAnnualCoverageCollection cov : m_annualCoverageCollection )
@@ -317,8 +319,8 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
           return Double.NaN;
 
         // we allow no negative flow depths!
-        // if( value < 0.0 )
-        // return 0.0;
+        if( value < 0.0 )
+          return 0.0;
 
         return value;
       }

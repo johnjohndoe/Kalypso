@@ -137,9 +137,9 @@ public class NAModelSimulation
     }
     catch( final NAPreprocessorException e )
     {
-      final String msg = String.format( "Failed to convert data in Kalypso-NA.exe format files: %s", e.getLocalizedMessage() );
+      final String msg = String.format( Messages.getString("NAModelSimulation.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
       m_logger.log( Level.SEVERE, msg, e );
-      throw new SimulationException( msg );
+      throw new SimulationException( msg, e );
     }
   }
 

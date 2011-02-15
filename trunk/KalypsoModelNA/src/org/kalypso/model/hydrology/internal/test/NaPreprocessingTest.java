@@ -74,25 +74,25 @@ public class NaPreprocessingTest
 {
   public NaPreprocessingTest( )
   {
-    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
+    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" ); //$NON-NLS-1$
   }
 
   @Test
   public void testDemoModel( ) throws Exception
   {
-    testRunPreprocessing( "naDemoModel", "resources/demoModel_Langzeit" );
+    testRunPreprocessing( "naDemoModel", "resources/demoModel_Langzeit" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Test
   public void testDemoModelWithSuds( ) throws Exception
   {
-    testRunPreprocessing( "naDemoModelWithSuds", "resources/demoModel_WithSuds" );
+    testRunPreprocessing( "naDemoModelWithSuds", "resources/demoModel_WithSuds" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Test
   public void testWeisseElsterLangzeit( ) throws Exception
   {
-    testRunPreprocessing( "WeisseElsterLangzeit", "resources/weisseElster_langzeit" );
+    testRunPreprocessing( "WeisseElsterLangzeit", "resources/weisseElster_langzeit" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 // @Test
@@ -104,9 +104,9 @@ public class NaPreprocessingTest
 
   private void testRunPreprocessing( final String label, final String baseResourceLocation ) throws Exception
   {
-    final File outputDir = FileUtilities.createNewTempDir( label + "PreprocessingTest" );
-    final File asciiDir = new File( outputDir, "ascii" );
-    final File asciiExpectedDir = new File( outputDir, "asciiExpected" );
+    final File outputDir = FileUtilities.createNewTempDir( label + "PreprocessingTest" ); //$NON-NLS-1$
+    final File asciiDir = new File( outputDir, "ascii" ); //$NON-NLS-1$
+    final File asciiExpectedDir = new File( outputDir, "asciiExpected" ); //$NON-NLS-1$
 
     final NAModelPreprocessor preprocessor = initPreprocessor( baseResourceLocation, asciiDir );
 
@@ -125,8 +125,8 @@ public class NaPreprocessingTest
     final NaAsciiDirs outputDirs = new NaAsciiDirs( asciiDir );
     final Logger logger = Logger.getAnonymousLogger();
 
-    final URL gmlInputZipLocation = getClass().getResource( baseResourceLocation + "/gmlInput.zip" );
-    final URL baseURL = new URL( String.format( "jar:%s!/", gmlInputZipLocation.toExternalForm() ) );
+    final URL gmlInputZipLocation = getClass().getResource( baseResourceLocation + "/gmlInput.zip" ); //$NON-NLS-1$
+    final URL baseURL = new URL( String.format( "jar:%s!/", gmlInputZipLocation.toExternalForm() ) ); //$NON-NLS-1$
 
     final INaSimulationData simulationData = createDemoModelsimulationData( baseURL );
 
@@ -135,14 +135,14 @@ public class NaPreprocessingTest
 
   private INaSimulationData createDemoModelsimulationData( final URL base ) throws Exception
   {
-    final URL modelUrl = new URL( base, "calcCase.gml" );
-    final URL controlUrl = new URL( base, "expertControl.gml" );
-    final URL metaUrl = new URL( base, ".calculation" );
-    final URL parameterUrl = new URL( base, "calcParameter.gml" );
-    final URL hydrotopUrl = new URL( base, "calcHydrotop.gml" );
-    final URL sudsUrl = checkUrlExists( new URL( base, "suds.gml" ) );
+    final URL modelUrl = new URL( base, "calcCase.gml" ); //$NON-NLS-1$
+    final URL controlUrl = new URL( base, "expertControl.gml" ); //$NON-NLS-1$
+    final URL metaUrl = new URL( base, ".calculation" ); //$NON-NLS-1$
+    final URL parameterUrl = new URL( base, "calcParameter.gml" ); //$NON-NLS-1$
+    final URL hydrotopUrl = new URL( base, "calcHydrotop.gml" ); //$NON-NLS-1$
+    final URL sudsUrl = checkUrlExists( new URL( base, "suds.gml" ) ); //$NON-NLS-1$
     final URL syntNUrl = null;
-    final URL lzsimUrl = checkUrlExists( new URL( base, "Anfangswerte/lzsim.gml" ) );
+    final URL lzsimUrl = checkUrlExists( new URL( base, "Anfangswerte/lzsim.gml" ) ); //$NON-NLS-1$
 
     return NaSimulationDataFactory.load( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, null, null );
   }
@@ -159,7 +159,7 @@ public class NaPreprocessingTest
   {
     /* Fetch the expected results */
     asciiExpectedDir.mkdir();
-    ZipUtilities.unzip( getClass().getResource( baseResourceLocation + "/expectedAscii.zip" ), asciiExpectedDir );
+    ZipUtilities.unzip( getClass().getResource( baseResourceLocation + "/expectedAscii.zip" ), asciiExpectedDir ); //$NON-NLS-1$
 
     checkDifferences( asciiExpectedDir, asciiDir );
 
@@ -184,6 +184,6 @@ public class NaPreprocessingTest
     differenceDumper.dumpDifferences();
 
     if( differenceDumper.hasDifferences() )
-      Assert.fail( "Expected ascii files are different from actual ones. See console dump" );
+      Assert.fail( "Expected ascii files are different from actual ones. See console dump" ); //$NON-NLS-1$
   }
 }

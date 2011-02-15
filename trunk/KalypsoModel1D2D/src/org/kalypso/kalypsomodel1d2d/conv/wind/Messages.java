@@ -38,37 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.project;
+package org.kalypso.kalypsomodel1d2d.conv.wind;
+
+import org.eclipse.osgi.util.NLS;
 
 /**
- * Constants relevant for the structure of a na model calc case.<br/>
- * Most pathes are relative to the calc case.
- * 
  * @author Gernot Belger
+ *
  */
-public interface INaCalcCaseConstants
+public class Messages extends NLS
 {
-  String CALC_CASE = "calcCase.gml"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.conv.wind.messages"; //$NON-NLS-1$
 
-  String CALC_HYDROTOP = "calcHydrotop.gml"; //$NON-NLS-1$
+  public static String WindPointDataCsvReader_1;
 
-  String CALC_PARAMETER = "calcParameter.gml"; //$NON-NLS-1$
+  public static String WindPointDataCsvReader_3;
+  static
+  {
+    // initialize resource bundle
+    NLS.initializeMessages( BUNDLE_NAME, Messages.class );
+  }
 
-  String EXPERT_CONTROL = "expertControl.gml"; //$NON-NLS-1$
-
-  String DOT_CALCULATION = ".calculation"; //$NON-NLS-1$
-
-  String ANFANGSWERTE_DIR = "Anfangswerte"; //$NON-NLS-1$
-
-  String ANFANGSWERTE_FILE = ANFANGSWERTE_DIR + '/' + "lzsim.gml"; //$NON-NLS-1$
-
-  String KLIMA_DIR = "Klima"; //$NON-NLS-1$
-
-  String NIEDERSCHLAG_DIR = "Niederschlag"; //$NON-NLS-1$
-
-  String PEGEL_DIR = "Pegel"; //$NON-NLS-1$
-
-  String ERGEBNISSE_DIR = "Ergebnisse"; //$NON-NLS-1$
-
-  String AKTUELL_DIR = ERGEBNISSE_DIR + '/' + "Aktuell"; //$NON-NLS-1$
+  private Messages( )
+  {
+  }
 }

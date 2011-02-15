@@ -77,7 +77,7 @@ public class NACalculationLogger
 
       m_logHandler = new FileHandler( m_logFile.getAbsolutePath(), false );
       m_logHandler.setFormatter( new SimplisticFormatter() );
-      m_logHandler.setEncoding( "UTF-8" );
+      m_logHandler.setEncoding( "UTF-8" ); //$NON-NLS-1$
 
       m_logger = Logger.getLogger( LOGFILE_NAME );
       m_logger.addHandler( m_logHandler );

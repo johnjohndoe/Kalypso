@@ -324,9 +324,9 @@ public class PreSWANKalypso implements ISimulation
     }
     FileObject lAdditionalCoordFile = null;
     List<GM_Position> lListAdditionalCoord = null;
-    if( lUrlFileAdditionalCoord != null && !"".equals( lUrlFileAdditionalCoord ) )
+    if( lUrlFileAdditionalCoord != null && !"".equals( lUrlFileAdditionalCoord ) ) //$NON-NLS-1$
     {
-      if( lUrlFileAdditionalCoord.getFile().endsWith( ".zip" ) )
+      if( lUrlFileAdditionalCoord.getFile().endsWith( ".zip" ) ) //$NON-NLS-1$
       {
         try
         {
@@ -403,7 +403,7 @@ public class PreSWANKalypso implements ISimulation
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
     ProgressUtilities.worked( progress, 1 );
-    progress.beginTask( "", 100 );
+    progress.beginTask( "", 100 ); //$NON-NLS-1$
     try
     {
       m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.3" ) ); //$NON-NLS-1$

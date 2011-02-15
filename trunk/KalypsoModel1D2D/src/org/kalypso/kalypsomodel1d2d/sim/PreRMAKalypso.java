@@ -172,10 +172,20 @@ public class PreRMAKalypso implements ISimulation
         flowRelationshipModel = (IFlowRelationshipModel) flowRelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
       }
 
-      final URL roughnessURL = (URL) inputProvider.getInputForID( INPUT_ROUGHNESS );
-      final GMLWorkspace roughnessWorkspace = GmlSerializer.createGMLWorkspace( roughnessURL, null );
-      final IRoughnessClsCollection roughnessModel = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
-
+      IRoughnessClsCollection roughnessModel = null;
+      try{
+        final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
+        roughnessModel = caseDataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
+      }
+      catch (Exception e) {
+        // TODO: handle exception
+      }
+      if( roughnessModel == null ){
+        final URL roughnessURL = (URL) inputProvider.getInputForID( INPUT_ROUGHNESS );
+        final GMLWorkspace roughnessWorkspace = GmlSerializer.createGMLWorkspace( roughnessURL, null );
+        roughnessModel = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
+      }
+      
       IWindModel windModel = null;
       try
       {

@@ -91,19 +91,19 @@ public class SWANWindBinaryGeoGridWalker extends AbstractWindGeoGridWalker
   public void operate( int x, int y, Coordinate c ) throws GeoGridException
   {
     if( m_intLastY != -1 && m_intLastY != y ){
-      m_stringBuffers[ 0 ].append( String.format( "\n" ) );
-      m_stringBuffers[ 1 ].append( String.format( "\n" ) );
+      m_stringBuffers[ 0 ].append( String.format( "\n" ) ); //$NON-NLS-1$
+      m_stringBuffers[ 1 ].append( String.format( "\n" ) ); //$NON-NLS-1$
     }
     Pair<Double, Double> lPairVectorNativeWindValues = ((BinaryGeoGridWrapperForPairsModel) getGrid()).getPairValue( x, y );
     if( lPairVectorNativeWindValues == null || Double.isNaN( lPairVectorNativeWindValues.first ) || Double.isNaN( lPairVectorNativeWindValues.second ) )
     {
-      m_stringBuffers[ 0 ].append( String.format( Locale.US, "%.2f ", DOUBLE_DEFAULT_IGNORE_VALUE ) );
-      m_stringBuffers[ 1 ].append( String.format( Locale.US, "%.2f ", DOUBLE_DEFAULT_IGNORE_VALUE ) );
+      m_stringBuffers[ 0 ].append( String.format( Locale.US, "%.2f ", DOUBLE_DEFAULT_IGNORE_VALUE ) ); //$NON-NLS-1$
+      m_stringBuffers[ 1 ].append( String.format( Locale.US, "%.2f ", DOUBLE_DEFAULT_IGNORE_VALUE ) ); //$NON-NLS-1$
     }
     else
     {
-      m_stringBuffers[ 0 ].append( String.format( Locale.US, "%.2f ", lPairVectorNativeWindValues.first ) );
-      m_stringBuffers[ 1 ].append( String.format( Locale.US, "%.2f ", lPairVectorNativeWindValues.second ) );
+      m_stringBuffers[ 0 ].append( String.format( Locale.US, "%.2f ", lPairVectorNativeWindValues.first ) ); //$NON-NLS-1$
+      m_stringBuffers[ 1 ].append( String.format( Locale.US, "%.2f ", lPairVectorNativeWindValues.second ) ); //$NON-NLS-1$
     }
     m_intLastY = y;
   }

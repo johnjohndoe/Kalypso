@@ -289,6 +289,7 @@ public class RiskLanduseHelper
     {
       final List<String> names = (List<String>) damageFeatureClass.getProperty( propName );
       if( names != null && names.size() > 0 )
+      {
         if( names.get( 0 ).equals( damageFunctionsCollectionName ) )
         {
           final List<Feature> dataMemberList = (List<Feature>) damageFeatureClass.getProperty( propDataMember );
@@ -319,6 +320,7 @@ public class RiskLanduseHelper
           }
           break;
         }
+      }
     }
   }
 

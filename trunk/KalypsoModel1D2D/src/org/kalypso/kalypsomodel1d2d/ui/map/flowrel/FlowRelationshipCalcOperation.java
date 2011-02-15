@@ -58,11 +58,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
@@ -310,12 +312,22 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       for( final Object o : resultList )
       {
         final QIntervallResult qresult = new QIntervallResult( FeatureHelper.getFeature( qresultsWorkspace, o ) );
+        final BigDecimal flowStation = flowRel.getStation();
+        if( flowStation == null )
+        {
+          final String message = String.format( "Station not defined for parameter '%s'", flowRel.getName() );
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message, null ) ); //$NON-NLS-1$
+        }
+
         // HACK: we set a scale here in order to get a right comparison with the station value that was read from the
         // profile. if a rounded station value occurs in the flow relation, the result of the comparison is always
         // false, because the station value of the flow relation gets rounded and the one of the profile gets not
         // rounded (read from string with fixed length).
         // TODO: implement the right setting of the station value for the flow relation with a fixed scale of 4!
-        final BigDecimal station = flowRel.getStation().setScale( 4, BigDecimal.ROUND_HALF_UP );
+        final BigDecimal station = flowStation.setScale( 4, BigDecimal.ROUND_HALF_UP );
+
+        // FIXME: why do we use the station defined in the relation at all -> the calculation uses the station defined
+        // in the profile anyways
 
         // REMARK: sometimes it could be, that the user wants to assign a profile to a new created flow relation. in
         // this case he is able to to this and to calculate the data, but the assignment will never happen, if the

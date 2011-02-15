@@ -52,11 +52,11 @@ public class WindDataConverterFactory
 {
   public static enum EWindFileTypes
   {
-    DAT("dwd.dat"),
+    DAT("dwd.dat"), //$NON-NLS-1$
     // ASC("asc"),
-    DAT_GZ("dwd.dat.gz"),
+    DAT_GZ("dwd.dat.gz"), //$NON-NLS-1$
     // ASC("asc"),
-    CSV_POINT_EXTRAPOLATION("point.xtrp.csv");
+    CSV_POINT_EXTRAPOLATION("point.xtrp.csv"); //$NON-NLS-1$
 
     private final String value;
 

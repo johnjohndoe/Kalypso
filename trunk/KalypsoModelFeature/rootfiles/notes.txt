@@ -17,7 +17,7 @@ Changes
 -------
 Bugfixes to Kalypso 11.4.0
 
-Please visit http://sourceforge.net/apps/trac/kalypso/report/24 for a detailed list of changes since Kalypso 10.10.0.
+Please visit http://sourceforge.net/apps/trac/kalypso/report/25 for a detailed list of changes since Kalypso 10.10.0.
 
 Known-Issues
 ------------
