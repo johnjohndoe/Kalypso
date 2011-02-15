@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
@@ -61,7 +62,17 @@ public final class ProfileNamePattern extends AbstractProfileStringPattern
     if( profile == null )
       return null;
 
-    return profile.getName();
+    final String name = profile.getName();
+
+    final Integer length = NumberUtils.parseQuietInteger( params );
+    if( length == null )
+      return name;
+
+    final int maxLength = Math.min( name.length(), length );
+    if( maxLength < 0 || maxLength >= name.length() )
+      return name;
+
+    return name.substring( 0, maxLength );
   }
 
   /**
