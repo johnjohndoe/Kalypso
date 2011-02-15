@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="simBase:RoughnessPolygon" style="SWT.NONE"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:gft="featureview.template.kalypso.org"
+	xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
+
+        <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+        <gft:gridLayout numColumns="1" horizontalSpacing="20" verticalSpacing="20"/>
+<!-- text="Rauheitspolygon Angaben" -->
+        <gft:group text="Roughness Polygon Settings" style="0">
+			<gft:gridData verticalSpan="1" horizontalSpan="1"
+				horizontalAlignment="GridData.FILL"
+				verticalAlignment="GridData.FILL"
+				grabExcessHorizontalSpace="true"
+				grabExcessVerticalSpace="false" />
+			<gft:gridLayout numColumns="3" horizontalSpacing="10" verticalSpacing="10" />
+
+        <gft:label property="gml:name"  visible="true" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.BEGINNING"
+            			  horizontalAlignment="GridData.BEGINNING"
+                          grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="gml:name" style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+            <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <gft:validatorlabel property="gml:name" visible="true" style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+
+        <gft:label property="gml:description" visible="true" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+            <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <gft:validatorlabel property="gml:description" visible="true" style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+
+        <gft:label property="simBase:roughnessClassMember"  visible="true" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:combo property="simBase:roughnessClassMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+            <gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:combo>
+        <gft:validatorlabel property="simBase:roughnessClassMember" visible="true" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+
+        </gft:group>
+
+        <gft:group text="Corrections" style="0">
+			<gft:gridData verticalSpan="1" horizontalSpan="1"
+				horizontalAlignment="GridData.FILL"
+				verticalAlignment="GridData.FILL"
+				grabExcessHorizontalSpace="true"
+				grabExcessVerticalSpace="false" />
+			<gft:gridLayout numColumns="2" horizontalSpacing="10" verticalSpacing="10" />
+
+        <gft:label property="simBase:correction_ks" visible="true" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="simBase:correction_ks" style="SWT.BORDER">
+            <gft:gridData horizontalSpan="1"
+                          horizontalAlignment="GridData.FILL"
+                          grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <!--
+        <gft:validatorlabel property="simBase:correction_ks" visible="true" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+		-->
+        <gft:label property="simBase:correction_axay" visible="true" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="simBase:correction_axay" style="SWT.BORDER">
+            <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <!--
+        <gft:validatorlabel property="simBase:correction_axay" visible="true" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+		-->
+        <gft:label property="simBase:correction_dp" visible="true" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="simBase:correction_dp" style="SWT.BORDER">
+            <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <!--
+        <gft:validatorlabel property="simBase:correction_dp" visible="true" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+		-->
+        </gft:group>
+
+</gft:featureview>
