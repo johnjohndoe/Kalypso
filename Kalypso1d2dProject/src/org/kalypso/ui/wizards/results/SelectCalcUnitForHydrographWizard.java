@@ -110,7 +110,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
   {
     final NonCalcUnitResultViewerFilter resultFilter = new NonCalcUnitResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
-    SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$ 
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$ 
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
@@ -130,10 +130,8 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
 
     // final List<IResultMeta> resultList = new LinkedList<IResultMeta>();
 
-    for( int i = 0; i < results.length; i++ )
+    for( final IResultMeta resultMeta : results )
     {
-      final IResultMeta resultMeta = results[i];
-
       if( resultMeta instanceof ICalcUnitResultMeta )
       {
 
@@ -157,7 +155,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
             HydrographUtils.addHydrographTheme( m_mapModell, hydrograph, calcUnitResult );
 
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
           StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.3" ) ); //$NON-NLS-1$
@@ -169,7 +167,8 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
 
   }
 
-  private void saveModel( final ICalcUnitResultMeta calcUnitResult, IFeatureWrapper2 hydrograph ) throws GmlSerializeException, CoreException, IOException
+  // FIXME: please let the pool handle the saving!!!
+  private void saveModel( final ICalcUnitResultMeta calcUnitResult, final IFeatureWrapper2 hydrograph ) throws GmlSerializeException, CoreException, IOException
   {
     // get a path
     final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" ); //$NON-NLS-1$
@@ -184,7 +183,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
       final String charset = gmlResultFile.getCharset();
 
       writer = new OutputStreamWriter( new FileOutputStream( gmlResultFile.getLocation().toFile() ) );
-      GmlSerializer.serializeWorkspace( writer, feature.getWorkspace(), charset, false );
+      GmlSerializer.serializeWorkspace( writer, feature.getWorkspace(), "UTF-8", false ); //$NON-NLS-1$
       writer.close();
 
       // refresh workspace
@@ -202,7 +201,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
    * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setCommandTarget(org.kalypso.commons.command.ICommandTarget)
    */
   @Override
-  public void setCommandTarget( ICommandTarget commandTarget )
+  public void setCommandTarget( final ICommandTarget commandTarget )
   {
     // TODO Auto-generated method stub
 
@@ -212,7 +211,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
    * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
    */
   @Override
-  public void setMapModel( IKalypsoLayerModell modell )
+  public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_mapModell = modell;
   }
@@ -242,7 +241,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
     }
   }
 
-  public void setResultModel( IScenarioResultMeta resultModel )
+  public void setResultModel( final IScenarioResultMeta resultModel )
   {
     m_resultModel = resultModel;
   }

@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:sld="http://www.opengis.net/sld" xmlns:sldExt="http://www.opengis.net/sldExt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:sld="http://www.opengis.net/sld" xmlns:sldExt="http://www.opengis.net/sldExt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0">
     <NamedLayer>
-        <Name>deegree style definition</Name>
+        <Name>Flow Resistance Class</Name>
         <UserStyle>
             <Name>Roughness style</Name>
-            <Title>Roughness style</Title>
+            <Title>Flow Resistance Class</Title>
             <FeatureTypeStyle>
                 <Rule>
                     <Name>undefinierterStilID</Name>
                     <Title>undefinierter Stil</Title>
                     <Abstract>undefinierter Stil</Abstract>
-                    <ogc:ElseFilter/>
+                    <ElseFilter/>
                     <MinScaleDenominator>0.0</MinScaleDenominator>
                     <MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
                     <PolygonSymbolizer uom="pixel">
@@ -19,12 +19,12 @@
                             <CssParameter name="fill-opacity">0.0</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.5</CssParameter>
-                            <CssParameter name="stroke-dasharray">2.0,3.5</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#ff0000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-dasharray">2.0,3.5</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.5</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -46,11 +46,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -72,11 +72,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -98,11 +98,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -124,11 +124,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -150,11 +150,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -176,11 +176,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -202,11 +202,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -228,11 +228,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -254,11 +254,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -280,11 +280,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -306,11 +306,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -332,11 +332,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -358,11 +358,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -384,11 +384,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -410,11 +410,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -436,11 +436,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -462,11 +462,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -488,11 +488,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -514,11 +514,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -540,11 +540,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -566,11 +566,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -592,11 +592,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -618,11 +618,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -644,11 +644,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -670,11 +670,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -696,11 +696,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -722,11 +722,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -748,11 +748,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -774,11 +774,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -800,11 +800,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -826,11 +826,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -852,11 +852,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -878,11 +878,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -904,11 +904,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -930,11 +930,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -956,11 +956,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -982,11 +982,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1008,11 +1008,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1034,11 +1034,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1060,11 +1060,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1086,11 +1086,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1112,11 +1112,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1138,11 +1138,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1164,11 +1164,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1190,11 +1190,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1216,11 +1216,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1242,11 +1242,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1268,11 +1268,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1294,11 +1294,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1320,11 +1320,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1346,11 +1346,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1372,11 +1372,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1398,11 +1398,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1424,11 +1424,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1450,11 +1450,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1476,11 +1476,11 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
                 </Rule>
@@ -1502,45 +1502,13 @@
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
-                            <CssParameter name="stroke-width">1.0</CssParameter>
-                            <CssParameter name="stroke-opacity">1.0</CssParameter>
                             <CssParameter name="stroke">#000000</CssParameter>
-                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
                             <CssParameter name="stroke-linecap">butt</CssParameter>
+                            <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                            <CssParameter name="stroke-opacity">1.0</CssParameter>
+                            <CssParameter name="stroke-width">1.0</CssParameter>
                         </Stroke>
                     </PolygonSymbolizer>
-                </Rule>
-                <Rule>
-                    <Name>Labelle</Name>
-                    <Title>Labelle</Title>
-                    <Abstract>Labelle</Abstract>
-                    <MinScaleDenominator>0.0</MinScaleDenominator>
-                    <MaxScaleDenominator>10.0</MaxScaleDenominator>
-                    <TextSymbolizer uom="pixel">
-                        <Label>
-                            <ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-size">11.0</CssParameter>
-                            <CssParameter name="font-weight">normal</CssParameter>
-                            <CssParameter name="font-color">#000000</CssParameter>
-                            <CssParameter name="font-style">normal</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement auto="true">
-                                <AnchorPoint>
-                                    <AnchorPointX>0.5</AnchorPointX>
-                                    <AnchorPointY>0.5</AnchorPointY>
-                                </AnchorPoint>
-                                <Rotation>0.0</Rotation>
-                            </PointPlacement>
-                        </LabelPlacement>
-                        <Fill>
-                            <CssParameter name="fill">#808080</CssParameter>
-                            <CssParameter name="fill-opacity">1.0</CssParameter>
-                        </Fill>
-                    </TextSymbolizer>
                 </Rule>
             </FeatureTypeStyle>
         </UserStyle>
