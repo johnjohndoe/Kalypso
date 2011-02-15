@@ -45,6 +45,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.CalculationReibConstWspmTuhhSteadySt
 import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -67,6 +68,9 @@ public final class WspmResultFactory
 
     if( feature instanceof TuhhCalculation )
       return createCalculationNode( parent, (TuhhCalculation) feature );
+
+    if( feature instanceof TuhhWspmProject )
+      return new WspmResultProjectNode( (TuhhWspmProject) feature );
 
     return null;
   }

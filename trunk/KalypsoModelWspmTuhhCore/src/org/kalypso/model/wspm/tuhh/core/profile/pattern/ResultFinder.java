@@ -33,16 +33,21 @@ public final class ResultFinder implements Function<IKeyValue<IProfileFeature, S
 
   public static IWspmResult findResult( final IProfileFeature profileFeature, final String nodeID )
   {
-    final Object node = ProfileAndResults.findResultNode( profileFeature );
-    if( !(node instanceof IWspmResultNode) )
+    final Object element = ProfileAndResults.findResultNode( profileFeature );
+    if( !(element instanceof IWspmResultNode) )
       return null;
 
-    final IWspmResultNode resultNode = findNodeByName( ((IWspmResultNode) node), nodeID );
+    final IWspmResultNode node = (IWspmResultNode) element;
+
+    final IWspmResultNode resultNode = findNodeByName( node, nodeID );
     return findResult( resultNode );
   }
 
   private static IWspmResult findResult( final IWspmResultNode node )
   {
+    if( node == null )
+      return null;
+
     if( node instanceof IWspmResult )
       return (IWspmResult) node;
 
