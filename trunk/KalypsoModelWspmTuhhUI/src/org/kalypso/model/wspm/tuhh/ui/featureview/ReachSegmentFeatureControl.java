@@ -249,6 +249,25 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
         segments.add( segment );
     }
 
+    /* HACK: we use this time here to cleanup-broken reaches as well: remove everything than cannot be here */
+    final WspmWaterBody segmentWater = reach.getWaterBody();
+    for( final Object segmentElement : segmentList )
+    {
+      final TuhhReachProfileSegment segment = (TuhhReachProfileSegment) segmentElement;
+
+      /* Remove segments without profile and segments with a profile from the wrong water body */
+      /* This might happen, if the water body was duplicated */
+      final IProfileFeature profileMember = segment.getProfileMember();
+      if( profileMember == null )
+        segments.add( segment );
+      else
+      {
+        final WspmWaterBody water = profileMember.getWater();
+        if( !segmentWater.equals( water ) )
+          segments.add( segment );
+      }
+    }
+
     return segments.toArray( new TuhhReachProfileSegment[segments.size()] );
   }
 
