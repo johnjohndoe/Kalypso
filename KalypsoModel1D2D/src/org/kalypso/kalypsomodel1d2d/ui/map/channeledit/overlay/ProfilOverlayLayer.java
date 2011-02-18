@@ -216,15 +216,25 @@ public class ProfilOverlayLayer extends PointsLineLayer
      */
     Double width = curserPoint.getX();
 
-    // TODO: check if width is less than the first profile point
-
+    // check if there is a point in snap distance
     if( Math.abs( point.x - profilePointScreen.x ) < 5 )
     {
-      width = toNumeric( profilePointScreen ).getX();
+      // Here we have to get the real width of the original profile point otherwise we have a rounding problem by
+      width = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, profilePoint );
     }
 
-    // /* set the initial height to the profile height */
-    // /* and get the geo coordinates for the moved profile point */
+    // check if width is less than the first profile point
+    final double widthFirstProfilePoint = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, origProfil.getPoint( 0 ) );
+    if( width < widthFirstProfilePoint )
+      return;
+
+    // check if width is greater than the last profile point
+    final double widthLastProfilePoint = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, origProfil.getPoint( origProfil.getPoints().length - 1 ) );
+    if( width > widthLastProfilePoint )
+      return;
+
+    /* set the initial height to the profile height */
+    /* and get the geo coordinates for the moved profile point */
     double heigth = 0;
     GM_Point gmPoint = null;
     GM_Point geoPoint = null;
@@ -232,6 +242,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
     {
       heigth = WspmProfileHelper.getHeightByWidth( width, origProfil );
       gmPoint = WspmProfileHelper.getGeoPosition( width, origProfil );
+      if( gmPoint == null )
+        return;
       final String srsName = (String) profil.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
       geoPoint = WspmGeometryUtilities.pointFromPoint( gmPoint, srsName );
       geoPoint = WspmGeometryUtilities.pointFromRwHw( gmPoint.getX(), gmPoint.getY(), gmPoint.getZ() );
