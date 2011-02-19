@@ -103,6 +103,7 @@ public class RiskModelHelper
   private static enum FIELD
   {
     STYLE_URN,
+    STYLE_NAME,
     THEMEINFO_CLASS,
     I18N_THEMEINFO_LABEL,
     I18N_LAYER_NAME
@@ -114,7 +115,7 @@ public class RiskModelHelper
       put( LAYER_TYPE.WATERLEVEL, new HashMap<FIELD, String>()
           {
         {
-          put( FIELD.STYLE_URN, "urn:style:sld:risk:inundation:waterlevel" ); //$NON-NLS-1$
+          put( FIELD.STYLE_URN, "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
           put( FIELD.THEMEINFO_CLASS, "org.kalypso.gml.ui.map.CoverageThemeInfo" ); //$NON-NLS-1$
           put( FIELD.I18N_THEMEINFO_LABEL, "WaterlevelMap.gismapview.themeInfoLabel" ); //$NON-NLS-1$
           put( FIELD.I18N_LAYER_NAME, "WaterlevelMap.gismapview.layer" ); //$NON-NLS-1$
@@ -124,6 +125,7 @@ public class RiskModelHelper
           {
         {
           put( FIELD.STYLE_URN, "urn:style:sld:risk:damage:specific" ); //$NON-NLS-1$
+          put( FIELD.STYLE_NAME, "default" ); //$NON-NLS-1$
           put( FIELD.THEMEINFO_CLASS, "org.kalypso.risk.plugin.DamagePotentialThemeInfo" ); //$NON-NLS-1$
           put( FIELD.I18N_LAYER_NAME, "SpecificDamagePotentialMap.gismapview.layer" ); //$NON-NLS-1$
         }
@@ -314,6 +316,7 @@ public class RiskModelHelper
     final String themeInfoClass = propertyMap.get( FIELD.THEMEINFO_CLASS );
     final String localizedThemeInfoLabel = propertyMap.containsKey( FIELD.I18N_THEMEINFO_LABEL ) ? Messages.getString( propertyMap.get( FIELD.I18N_THEMEINFO_LABEL ) ) : null;
     final String styleURN = propertyMap.get( FIELD.STYLE_URN );
+    final String styleName = propertyMap.get( FIELD.STYLE_NAME );
 
     final StyledLayerType layer = new StyledLayerType();
     layer.setName( layerName );
@@ -339,7 +342,7 @@ public class RiskModelHelper
     final List<Style> styleList = layer.getStyle();
     final Style style = new Style();
     style.setLinktype( "sld" ); //$NON-NLS-1$
-    style.setStyle( "default" ); //$NON-NLS-1$
+    style.setStyle( styleName );
     style.setActuate( "onRequest" ); //$NON-NLS-1$
     style.setHref( styleURN );
     style.setType( "simple" ); //$NON-NLS-1$
@@ -862,7 +865,7 @@ public class RiskModelHelper
   /**
    * Finds and activates the event theme if present.
    * 
-   * @return <code>true</code>, if the theme was succesfully activated.
+   * @return <code>true</code>, if the theme was successfully activated.
    * */
   public static boolean activateEventTheme( final IMapPanel mapPanel )
   {
