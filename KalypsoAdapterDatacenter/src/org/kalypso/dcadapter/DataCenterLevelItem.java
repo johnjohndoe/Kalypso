@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IRepositoryItemVisitor;
+import org.kalypso.repository.RepositoryException;
 
 import com.bce.datacenter.db.common.Level;
 import com.bce.datacenter.db.timeseries.Channel;
@@ -134,5 +136,18 @@ public class DataCenterLevelItem implements IRepositoryItem
   public boolean isMultipleSourceItem( )
   {
     return false;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#accept(org.kalypso.repository.IRepositoryItemVisitor)
+   */
+  @Override
+  public void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
+  {
+    final IRepositoryItem[] children = getChildren();
+    for( final IRepositoryItem child : children )
+    {
+      visitor.visit( child );
+    }
   }
 }
