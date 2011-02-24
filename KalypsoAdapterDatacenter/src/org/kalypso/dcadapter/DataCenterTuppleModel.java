@@ -204,4 +204,13 @@ public class DataCenterTuppleModel implements ITupleModel
     }
 
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITupleModel#isEmpty()
+   */
+  @Override
+  public boolean isEmpty( )
+  {
+    return size() == 0;
+  }
 }
