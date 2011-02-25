@@ -166,7 +166,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
   private WVQInfo getWVQInfo( final IObservation observation ) throws SensorException
   {
     final StringBuffer buffer = new StringBuffer();
-    final IAxis[] axisList = observation.getAxisList();
+    final IAxis[] axisList = observation.getAxes();
     final IAxis axis_NN = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_NORMNULL );
     final IAxis axis_V = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_VOLUME );
     final IAxis axis_Q = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF );

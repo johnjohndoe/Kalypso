@@ -426,7 +426,7 @@ public abstract class ZmlChooserControl
   public String getValueComponentUrn( )
   {
     // TODO: this is not nice...
-    final String type = ObservationUtilities.findAxesByClass( m_observation.getAxisList(), Double.class )[0].getType();
+    final String type = ObservationUtilities.findAxesByClass( m_observation.getAxes(), Double.class )[0].getType();
 
     if( type.equals( "W" ) ) //$NON-NLS-1$
       return Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL;

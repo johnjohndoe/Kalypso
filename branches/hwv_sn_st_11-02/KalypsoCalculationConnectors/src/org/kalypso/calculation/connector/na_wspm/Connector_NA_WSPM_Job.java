@@ -115,7 +115,7 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
           }
 
           final IObservation maxDischargesObservation = ZmlFactory.parseXML( urlStatisticalReportNA );
-          final IAxis[] axisList = maxDischargesObservation.getAxisList();
+          final IAxis[] axisList = maxDischargesObservation.getAxes();
           IAxis axisNodeNr = null;
           IAxis axisMaxDischarge = null;
           // Observation structure:
