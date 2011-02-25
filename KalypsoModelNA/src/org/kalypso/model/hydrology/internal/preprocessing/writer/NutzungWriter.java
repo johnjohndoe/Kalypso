@@ -133,7 +133,7 @@ public class NutzungWriter
 
   private void writeIdealLanduse( final IObservation observation, final Writer zmlWriter ) throws SensorException, IOException
   {
-    final IAxis[] axisList = observation.getAxisList();
+    final IAxis[] axisList = observation.getAxes();
     final IAxis idleDateAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_DATE );
     final IAxis kcAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_KC );
     final IAxis wtAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_WT );

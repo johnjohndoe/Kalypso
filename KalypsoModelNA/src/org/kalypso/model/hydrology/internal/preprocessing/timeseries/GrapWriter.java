@@ -92,7 +92,7 @@ public class GrapWriter
 
   public void write( final StringBuffer writer ) throws SensorException
   {
-    final IAxis[] axis = m_observation.getAxisList();
+    final IAxis[] axis = m_observation.getAxes();
     final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeseriesConstants.TYPE_DATE );
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axis, m_valueAxisType );
 
@@ -114,7 +114,7 @@ public class GrapWriter
     if( simulationStart.after( simulationEnd ) )
       return;
 
-    final IAxis[] axis = m_observation.getAxisList();
+    final IAxis[] axis = m_observation.getAxes();
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axis, m_valueAxisType );
 
     final ITupleModel values = m_observation.getValues( null );

@@ -218,7 +218,7 @@ public class OmbrometerUtils
 
   public static String analyseOmbrometer( final IObservation observation ) throws SensorException
   {
-    final IAxis axis = ObservationUtilities.findAxisByType( observation.getAxisList(), "N" );
+    final IAxis axis = ObservationUtilities.findAxisByType( observation.getAxes(), "N" );
     final ITupleModel values = observation.getValues( null );
 
     final int goods = countStatus( values, axis );

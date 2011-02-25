@@ -155,7 +155,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
   @Override
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxes( )
   {
     if( m_axes == null )
     {
@@ -209,7 +209,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
       else
         tupples = m_ts.getValues( null, null );
 
-      return new DataCenterTuppleModel( tupples, getAxisList() );
+      return new DataCenterTuppleModel( tupples, getAxes() );
     }
     catch( final SQLException e )
     {

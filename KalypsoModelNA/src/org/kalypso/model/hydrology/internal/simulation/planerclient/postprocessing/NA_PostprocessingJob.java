@@ -186,8 +186,8 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       final IObservation obs1 = ZmlFactory.parseXML( new File( statusQuoResultsFolder, "Report/statistics.zml" ).toURI().toURL() ); //$NON-NLS-1$ //$NON-NLS-2$
       final IObservation obs2 = ZmlFactory.parseXML( new File( calculatedResultsFolder, "Report/statistics.zml" ).toURI().toURL() ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      final IAxis[] axes1 = obs1.getAxisList();
-      final IAxis[] axes2 = obs2.getAxisList();
+      final IAxis[] axes1 = obs1.getAxes();
+      final IAxis[] axes2 = obs2.getAxes();
       final IAxis idAxis1 = ObservationUtilities.findAxisByName( axes1, "NODE_ID" ); //$NON-NLS-1$
       final IAxis idAxis2 = ObservationUtilities.findAxisByName( axes2, "NODE_ID" ); //$NON-NLS-1$
       final IAxis dateAxis1 = ObservationUtilities.findAxisByName( axes1, "DATE" ); //$NON-NLS-1$
