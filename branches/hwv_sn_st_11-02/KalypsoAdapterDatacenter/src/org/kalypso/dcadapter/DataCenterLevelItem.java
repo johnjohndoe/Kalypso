@@ -8,6 +8,7 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IRepositoryItemVisitor;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.utils.RepositoryVisitors;
 
 import com.bce.datacenter.db.common.Level;
 import com.bce.datacenter.db.timeseries.Channel;
@@ -144,11 +145,6 @@ public class DataCenterLevelItem implements IRepositoryItem
   @Override
   public void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
   {
-    final IRepositoryItem[] children = getChildren();
-    for( final IRepositoryItem child : children )
-    {
-      if( !visitor.visit( child ) )
-        break;
-    }
+    RepositoryVisitors.accept( this, visitor );
   }
 }
