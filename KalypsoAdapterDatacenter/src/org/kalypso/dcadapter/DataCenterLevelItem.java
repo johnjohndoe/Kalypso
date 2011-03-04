@@ -147,7 +147,8 @@ public class DataCenterLevelItem implements IRepositoryItem
     final IRepositoryItem[] children = getChildren();
     for( final IRepositoryItem child : children )
     {
-      visitor.visit( child );
+      if( !visitor.visit( child ) )
+        break;
     }
   }
 }
