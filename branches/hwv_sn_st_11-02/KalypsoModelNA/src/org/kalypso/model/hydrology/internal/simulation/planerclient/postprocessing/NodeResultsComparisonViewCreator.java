@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obsdiagview.Obsdiagview.Legend;
 import org.kalypso.template.obsdiagview.TypeAxis;
@@ -38,7 +39,7 @@ public final class NodeResultsComparisonViewCreator
     axis.add( createDischargeAxis() );
     final Map<String, String> mappingsMap = new HashMap<String, String>();
     mappingsMap.put( "date", "Datum" ); //$NON-NLS-1$ //$NON-NLS-2$
-    mappingsMap.put( "Q", "Abfluss" ); //$NON-NLS-1$ //$NON-NLS-2$
+    mappingsMap.put( ITimeseriesConstants.TYPE_DISCHARGE, "Abfluss" ); //$NON-NLS-1$ //$NON-NLS-2$
     final List<TypeObservation> observationList = view.getObservation();
     observationList.add( createDiagObservation( izPath, "Q - " + nodeID + " - Status Quo", "C1", COLOR_STATUSQUO, mappingsMap ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     observationList.add( createDiagObservation( calculatePath, "Q - " + nodeID + " - Szenario", "C2", COLOR_SCENARIO, mappingsMap ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -68,7 +69,7 @@ public final class NodeResultsComparisonViewCreator
 
   private final static TypeAxis createDischargeAxis( )
   {
-    return createAxis( "Q", "Abfluss", "double", "m3/s", TypePosition.LEFT, TypeDirection.VERTICAL, false ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    return createAxis( ITimeseriesConstants.TYPE_DISCHARGE, "Abfluss", "double", "m3/s", TypePosition.LEFT, TypeDirection.VERTICAL, false ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
   private final static TypeAxis createDateAxis( )

@@ -53,6 +53,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.template.ObsView;
@@ -428,9 +429,9 @@ public abstract class ZmlChooserControl
     // TODO: this is not nice...
     final String type = ObservationUtilities.findAxesByClass( m_observation.getAxes(), Double.class )[0].getType();
 
-    if( type.equals( "W" ) ) //$NON-NLS-1$
+    if( type.equals( ITimeseriesConstants.TYPE_WATERLEVEL ) ) //$NON-NLS-1$
       return Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL;
-    else if( type.equals( "Q" ) ) //$NON-NLS-1$
+    else if( type.equals( ITimeseriesConstants.TYPE_DISCHARGE ) ) //$NON-NLS-1$
       return Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE;
 
     throw new IllegalStateException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.0" ) ); //$NON-NLS-1$
