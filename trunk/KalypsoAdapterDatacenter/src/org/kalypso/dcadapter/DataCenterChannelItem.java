@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IRepositoryItemVisitor;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.utils.RepositoryVisitors;
 
 import com.bce.datacenter.db.timeseries.Channel;
 import com.bce.datacenter.db.timeseries.Timeserie;
@@ -133,5 +135,14 @@ public class DataCenterChannelItem implements IRepositoryItem
   public boolean isMultipleSourceItem( )
   {
     return false;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#accept(org.kalypso.repository.IRepositoryItemVisitor)
+   */
+  @Override
+  public void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
+  {
+    RepositoryVisitors.accept( this, visitor );
   }
 }

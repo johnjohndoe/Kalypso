@@ -12,8 +12,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxisRange;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
-import org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue;
 
 import com.bce.datacenter.db.timeseries.TimeserieTupple;
 
@@ -176,7 +176,7 @@ public class DataCenterTuppleModel implements ITupleModel
     {
       final int index = i;
 
-      visitor.visit( new ITupleModelVisitorValue()
+      visitor.visit( new ITupleModelValueContainer()
       {
         @Override
         public int getIndex( )
@@ -200,8 +200,23 @@ public class DataCenterTuppleModel implements ITupleModel
         {
           return true;
         }
+
+        @Override
+        public IAxis[] getAxes( )
+        {
+          return DataCenterTuppleModel.this.getAxes();
+        }
       } );
     }
 
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITupleModel#isEmpty()
+   */
+  @Override
+  public boolean isEmpty( )
+  {
+    return size() == 0;
   }
 }
