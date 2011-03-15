@@ -157,7 +157,7 @@ public class RhbWriter extends AbstractCoreFileWriter
 
     final int count = values.size();
 
-    final IAxis[] axisList = observation.getAxisList();
+    final IAxis[] axisList = observation.getAxes();
     final IAxis waterTableAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_NORMNULL );
     final IAxis volumeAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_VOLUME );
     final IAxis dischargeAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF );

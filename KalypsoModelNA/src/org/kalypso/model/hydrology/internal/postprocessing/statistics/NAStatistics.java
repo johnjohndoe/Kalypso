@@ -223,7 +223,7 @@ public class NAStatistics
     final File reportFileCSV = new File( reportDir, FILENAME_CSV );
 
     final ITupleModel values = observation.getValues( null );
-    final IAxis[] resultAxisList = observation.getAxisList();
+    final IAxis[] resultAxisList = observation.getAxes();
 
     FileOutputStream streamCSV = null;
     OutputStreamWriter writerCSV = null;

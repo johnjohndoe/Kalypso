@@ -335,8 +335,8 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
       final IObservation observation = linkMeasuredTS.loadObservation();
 
-      final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_DATE );
-      final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_RUNOFF );
+      final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxes(), ITimeseriesConstants.TYPE_DATE );
+      final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxes(), ITimeseriesConstants.TYPE_RUNOFF );
       final ITupleModel values = observation.getValues( null );
       for( int i = 0; i < values.size(); i++ )
       {
@@ -367,8 +367,8 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
     final File tsFile = new File( optimizeResultDir, calcHref );
     final IObservation observation = ZmlFactory.parseXML( tsFile.toURI().toURL() ); //$NON-NLS-1$
-    final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_DATE );
-    final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), ITimeseriesConstants.TYPE_RUNOFF );
+    final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxes(), ITimeseriesConstants.TYPE_DATE );
+    final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxes(), ITimeseriesConstants.TYPE_RUNOFF );
     final ITupleModel values = observation.getValues( null );
     for( int i = 0; i < values.size(); i++ )
     {

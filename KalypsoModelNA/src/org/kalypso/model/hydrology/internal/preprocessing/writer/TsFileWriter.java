@@ -306,7 +306,7 @@ public class TsFileWriter
               if( tnProp != null )
               {
                 final IObservation observation = tnProp;
-                final IAxis[] axisList = observation.getAxisList();
+                final IAxis[] axisList = observation.getAxes();
                 final IAxis minutesAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_MIN );
                 final IAxis precipitationAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RAINFALL );
                 buffer.append( FortranFormatHelper.printf( annualityKey, "f6.3" ) + " " + "1" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$

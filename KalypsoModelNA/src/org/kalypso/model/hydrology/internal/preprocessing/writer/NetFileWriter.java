@@ -221,7 +221,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     if( observation == null )
       return null;
     final StringBuffer buffer = new StringBuffer();
-    final IAxis[] axisList = observation.getAxisList();
+    final IAxis[] axisList = observation.getAxes();
     final IAxis q1Axis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF );
     final IAxis q2Axis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF_RHB );
     final ITupleModel values = observation.getValues( null );
@@ -278,7 +278,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
         if( m_metaControl.isUsePrecipitationForm() )
         {
           final ITupleModel values = observation.getValues( null );
-          final IAxis[] axis = observation.getAxisList();
+          final IAxis[] axis = observation.getAxes();
           final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, ITimeseriesConstants.TYPE_DATE );
           final long simulationStartDateMillis = ((Date) values.get( 0, dateAxis )).getTime();
           final long simulationEndDateMillis = ((Date) values.get( values.size() - 1, dateAxis )).getTime();

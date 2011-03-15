@@ -64,7 +64,7 @@ public class Ext2Writer
 
   public void write( final IObservation observation, final String axisType, final Appendable writer, final String defaultValue ) throws IOException, SensorException
   {
-    final IAxis[] axisList = observation.getAxisList();
+    final IAxis[] axisList = observation.getAxes();
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class );
     final ITupleModel values = observation.getValues( null );

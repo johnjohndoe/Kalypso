@@ -18,8 +18,13 @@ import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.util.Observations;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IRepositoryItemVisitor;
+import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.utils.RepositoryVisitors;
 
 import com.bce.datacenter.db.timeseries.Timeserie;
 import com.bce.datacenter.db.timeseries.TimeserieTupple;
@@ -153,7 +158,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
   @Override
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxes( )
   {
     if( m_axes == null )
     {
@@ -207,7 +212,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
       else
         tupples = m_ts.getValues( null, null );
 
-      return new DataCenterTuppleModel( tupples, getAxisList() );
+      return new DataCenterTuppleModel( tupples, getAxes() );
     }
     catch( final SQLException e )
     {
@@ -278,5 +283,24 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   public boolean isMultipleSourceItem( )
   {
     return false;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#accept(org.kalypso.repository.IRepositoryItemVisitor)
+   */
+  @Override
+  public void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
+  {
+    RepositoryVisitors.accept( this, visitor );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
+   *      org.kalypso.ogc.sensor.request.IRequest)
+   */
+  @Override
+  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
+  {
+    Observations.accept( this, visitor, request );
   }
 }

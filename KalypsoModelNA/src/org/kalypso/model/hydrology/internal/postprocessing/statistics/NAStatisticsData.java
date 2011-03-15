@@ -80,7 +80,7 @@ public class NAStatisticsData
 
   public void calculateStatistics( ) throws SensorException
   {
-    final IAxis[] axisList = m_observation.getAxisList();
+    final IAxis[] axisList = m_observation.getAxes();
     final IAxis dateAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_DATE );
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF );
     if( dateAxis == null || valueAxis == null )

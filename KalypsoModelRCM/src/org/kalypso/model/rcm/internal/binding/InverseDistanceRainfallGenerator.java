@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -147,8 +148,16 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
    *      java.util.Date, java.util.Date, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final String sourceFilter, final IProgressMonitor monitor ) throws CoreException
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final String sourceFilter, IProgressMonitor monitor ) throws CoreException
   {
+    /* Monitor. */
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
+
+    /* Monitor. */
+    monitor.beginTask( "Führe Generator Ombrometer (Inverse Distanz) aus...", 1000 );
+    monitor.subTask( "Prüfe Voraussetzungen..." );
+
     /* Update the log. */
     LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde gestartet.", null ) );
 
@@ -165,6 +174,10 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
     final GMLXPath linkXPath = new GMLXPath( linkPath, getWorkspace().getNamespaceContext() );
     final GMLXPath stationLocationXPath = new GMLXPath( stationLocationPath, getWorkspace().getNamespaceContext() );
     final GMLXPath catchmentAreaXPath = new GMLXPath( catchmentAreaPath, getWorkspace().getNamespaceContext() );
+
+    /* Monitor. */
+    monitor.worked( 100 );
+    monitor.subTask( "Lade Ombrometer..." );
 
     try
     {
@@ -189,10 +202,18 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
       /* Convert to an array. */
       final Feature[] ombrometerFeatures = featureList.toArray( new Feature[featureList.size()] );
 
+      /* Monitor. */
+      monitor.worked( 100 );
+      monitor.subTask( "Konvertiere..." );
+
       /* Convert to zml observations . */
       final TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkXPath, new TimeseriesLinkType[ombrometerFeatures.length] );
       final URL sourceContext = ombrometerList.getParentFeature().getWorkspace().getContext();
       final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, from, to, sourceFilter, sourceContext );
+
+      /* Monitor. */
+      monitor.worked( 100 );
+      monitor.subTask( "Erzeuge Ombrometerpunkte..." );
 
       /* Get the station locations. */
       final GM_Point[] ombrometerStations = FeatureHelper.getProperties( ombrometerFeatures, stationLocationXPath, new GM_Point[ombrometerFeatures.length] );
@@ -205,19 +226,35 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
         final GM_Point ombrometerPoint = ombrometerStations[i];
         final GM_Object ombrometerTransformed = transformer.transform( ombrometerPoint );
         ombrometerPoints[i] = (Point) JTSAdapter.export( ombrometerTransformed );
+
+        /* Monitor. */
+        monitor.worked( 200 / ombrometerStations.length );
       }
+
+      /* Monitor. */
+      monitor.subTask( "Hole Einzugsgebiete..." );
 
       /* Get all catchment areas. */
       final GM_MultiSurface[] areas = RainfallGeneratorUtilities.findCatchmentAreas( catchmentFeatures, catchmentAreaXPath );
+
+      /* Monitor. */
+      monitor.worked( 100 );
+      monitor.subTask( "Bearbeite Einzugsgebiete..." );
 
       /* Iterate through all catchments. */
       final IObservation[] result = new IObservation[areas.length];
       for( int i = 0; i < areas.length; i++ )
       {
+        /* Monitor. */
+        monitor.subTask( String.format( "Bearbeite Einzugsgebiet %d / %d...", i + 1, areas.length ) );
+
         /* Get the catchment. */
         final GM_MultiSurface area = areas[i];
         if( area == null )
+        {
+          monitor.worked( 400 / areas.length );
           continue;
+        }
 
         /* Convert to a JTS geometry. */
         final Geometry areaGeometry = JTSAdapter.export( area );
@@ -227,6 +264,9 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
 
         /* Combine the observations. */
         result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://inverse.distance" );
+
+        /* Monitor. */
+        monitor.worked( 400 / areas.length );
       }
 
       /* Update the log. */
@@ -266,6 +306,9 @@ public class InverseDistanceRainfallGenerator extends Feature_Impl implements IR
     {
       /* Update the log. */
       LogUtilities.logQuietly( m_log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde beendet.", null ) );
+
+      /* Monitor. */
+      monitor.done();
     }
   }
 
