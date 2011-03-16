@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="WINDOWS-1252"?>
+<wbr:RoughnessClsCollection xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness" gml:id="root">
+ <gml:name>Rauheit</gml:name>
+ <wbr:roughnessClsMember>
+  <wbr:RoughnessCls gml:id="roughness_cls1">
+   <gml:name>Sand und Schilf</gml:name>
+   <wbr:roughness_GroundLink xlink:href="ground_cls1"/>
+   <wbr:roughness_VegetationLink xlink:href="vegeta2"/>
+   <!-- wbr:groundTypeName>Sand</wbr:groundTypeName>
+   <wbr:vegetationTypeName>Schilf, dicht</wbr:vegetationTypeName -->
+
+  </wbr:RoughnessCls>
+ </wbr:roughnessClsMember>
+ 
+ <wbr:roughnessClsMember>
+  <wbr:RoughnessCls gml:id="roughness_cls2">
+   <gml:name>Sand mit Büsche (gleichmäßiger), mittlere Größe</gml:name>
+   <wbr:roughness_GroundLink xlink:href="ground_cls2"/>
+   <wbr:roughness_VegetationLink xlink:href="vegeta1"/>
+  </wbr:RoughnessCls>
+ </wbr:roughnessClsMember>
+ 
+ <wbr:roughnessClsMember>
+  <wbr:RoughnessCls gml:id="roughness_cls3">
+   <gml:name>roughness_class_3</gml:name>
+   <wbr:roughness_GroundLink xlink:href="ground_cls2"/>
+   <wbr:roughness_VegetationLink xlink:href="vegeta2"/>
+  </wbr:RoughnessCls>
+ </wbr:roughnessClsMember>
+ 
+ <wbr:roughness_GroundClsMember>
+  <wbr:Roughness_GroundCls gml:id="ground_cls1">
+   <gml:name>Dry soil</gml:name>
+   <wbr:ks>0.1</wbr:ks>
+  </wbr:Roughness_GroundCls>
+ </wbr:roughness_GroundClsMember>
+ <wbr:roughness_GroundClsMember>
+  <wbr:Roughness_GroundCls gml:id="ground_cls2">
+   <gml:name>Sand</gml:name>
+   <wbr:ks>0.02</wbr:ks>
+  </wbr:Roughness_GroundCls>
+ </wbr:roughness_GroundClsMember>
+ <wbr:roughness_VegetationClsMember>
+  <wbr:Roughness_VegetationCls gml:id="vegeta1">
+   <gml:name>Röhricht</gml:name>
+   <wbr:axay>0.02</wbr:axay>
+   <wbr:dp>0.0070</wbr:dp>
+  </wbr:Roughness_VegetationCls>
+ </wbr:roughness_VegetationClsMember>
+ <wbr:roughness_VegetationClsMember>
+  <wbr:Roughness_VegetationCls gml:id="vegeta2">
+   <gml:name>Sträucher, einjährig</gml:name>
+   <wbr:axay>0.3</wbr:axay>
+   <wbr:dp>0.03</wbr:dp>
+  </wbr:Roughness_VegetationCls>
+ </wbr:roughness_VegetationClsMember>
+ 
+ 
+</wbr:RoughnessClsCollection>
