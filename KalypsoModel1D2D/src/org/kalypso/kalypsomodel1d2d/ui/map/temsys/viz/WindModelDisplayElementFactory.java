@@ -55,8 +55,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.IPlainGridVisitor;
 import org.kalypsodeegree_impl.graphics.displayelements.GridVisitableDisplayElement;
-import org.kalypsodeegree_impl.graphics.displayelements.VectorPainterPlainGridVisitor;
 import org.kalypsodeegree_impl.graphics.displayelements.GridVisitableDisplayElement.IGridVisitorFactory;
+import org.kalypsodeegree_impl.graphics.displayelements.VectorPainterPlainGridVisitor;
 
 /**
  * @author ig

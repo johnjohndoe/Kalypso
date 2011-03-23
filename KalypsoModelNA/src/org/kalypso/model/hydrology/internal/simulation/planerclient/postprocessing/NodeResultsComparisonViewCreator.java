@@ -74,7 +74,7 @@ public final class NodeResultsComparisonViewCreator
 
   private final static TypeAxis createDateAxis( )
   {
-    return createAxis( "date", "Datum", "date", "", TypePosition.BOTTOM, TypeDirection.HORIZONTAL, false ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    return createAxis( ITimeseriesConstants.TYPE_DATE, "Datum", ITimeseriesConstants.TYPE_DATE, "", TypePosition.BOTTOM, TypeDirection.HORIZONTAL, false ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
   private final static TypeAxis createAxis( final String ID, final String label, final String dataType, final String unit, final TypePosition position, final TypeDirection direction, final boolean inverted )
