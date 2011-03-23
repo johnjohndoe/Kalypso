@@ -425,7 +425,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       return new LayerDescriptor[] {};
 
     for( final IChartLayer layer : mngr.getLayers() )
-      existingLayers.add( layer.getId() );
+      existingLayers.add( layer.getIdentifier() );
 
     final IProfileObject[] objects = profile.getProfileObjects( IProfileBuilding.class );
 
@@ -450,7 +450,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       addableLayer.add( new LayerDescriptor( GeoCoordinateTheme.TITLE, IWspmConstants.LAYER_GEOKOORDINATEN ) );
 
     final ISinuositaetProfileObject[] sinObj = profile.getProfileObjects( ISinuositaetProfileObject.class );
-    if( sinObj.length < 1 && !(existingLayers.contains( IWspmTuhhConstants.LAYER_SINUOSITAET )) )
+    if( sinObj.length < 1 && !existingLayers.contains( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
       addableLayer.add( new LayerDescriptor( Messages.getString( "ProfilLayerProviderTuhh.3" ), IWspmTuhhConstants.LAYER_SINUOSITAET ) ); //$NON-NLS-1$
 
     return addableLayer.toArray( new LayerDescriptor[addableLayer.size()] );
