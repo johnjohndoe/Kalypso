@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.conv.wind;
 
 import java.io.File;
-//import java.io.RandomAccessFile;
 import java.net.URL;
 import java.util.logging.Logger;
 

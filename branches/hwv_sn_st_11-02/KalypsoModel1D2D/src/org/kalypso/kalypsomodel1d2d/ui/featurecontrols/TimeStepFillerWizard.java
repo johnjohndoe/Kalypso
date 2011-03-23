@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
