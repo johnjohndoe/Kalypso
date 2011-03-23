@@ -182,7 +182,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 
   public void dispose( )
   {
-    if( (m_chartComposite != null) && !m_chartComposite.getPlot().isDisposed() )
+    if( m_chartComposite != null && !m_chartComposite.getPlot().isDisposed() )
       m_chartComposite.getPlot().dispose();
   }
 
@@ -196,8 +196,8 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   {
     for( final IChartLayer layer : mngr.getLayers() )
     {
-      map.put( layer.getId(), layer.isVisible() );
-      saveStateVisible( (layer).getLayerManager(), map );
+      map.put( layer.getIdentifier(), layer.isVisible() );
+      saveStateVisible( layer.getLayerManager(), map );
     }
   }
 
@@ -207,7 +207,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 
     for( final IChartLayer layer : mngr.getLayers() )
     {
-      list.add( layer.getId() );
+      list.add( layer.getIdentifier() );
       final List<Object> subList = saveStatePosition( layer.getLayerManager() );
       list.add( subList );
     }
@@ -220,7 +220,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     for( final IChartLayer layer : mngr.getLayers() )
     {
       if( layer.isActive() )
-        return layer.getId();
+        return layer.getIdentifier();
     }
     return ""; //$NON-NLS-1$
   }
@@ -229,7 +229,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   {
     for( final IChartLayer layer : mngr.getLayers() )
     {
-      final Boolean visible = map.get( layer.getId() );
+      final Boolean visible = map.get( layer.getIdentifier() );
       if( visible != null )
       {
         layer.setVisible( visible );
@@ -363,7 +363,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     final IChartComposite chart = m_chartComposite;
-    if( (chart == null) || chart.getPlot().isDisposed() )
+    if( chart == null || chart.getPlot().isDisposed() )
       return;
 
     chart.getPlot().getDisplay().syncExec( new Runnable()
@@ -391,7 +391,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   protected void redrawChart( )
   {
     final IChartComposite chart = m_chartComposite;
-    if( (chart != null) && !chart.getPlot().isDisposed() )
+    if( chart != null && !chart.getPlot().isDisposed() )
       chart.getPlot().getDisplay().syncExec( new Runnable()
       {
 
@@ -432,7 +432,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     m_profile = profil;
     if( m_profile == null )
     {
-      ((GridData) (m_chartComposite.getPlot().getLayoutData())).exclude = true;
+      ((GridData) m_chartComposite.getPlot().getLayoutData()).exclude = true;
       m_chartComposite.getChartModel().getSettings().setTitle( "<No Profile Selected>", ALIGNMENT.TICK_CENTERED, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
 
     }
@@ -443,7 +443,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
         m_profile.addProfilListener( this );
 
         m_chartComposite.getChartModel().getSettings().setTitle( String.format( "Station km %10.4f", m_profile.getStation() ), ALIGNMENT.TICK_CENTERED, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) );
-        ((GridData) (m_chartComposite.getPlot().getLayoutData())).exclude = false;
+        ((GridData) m_chartComposite.getPlot().getLayoutData()).exclude = false;
         updateLayer();
       }
     }
