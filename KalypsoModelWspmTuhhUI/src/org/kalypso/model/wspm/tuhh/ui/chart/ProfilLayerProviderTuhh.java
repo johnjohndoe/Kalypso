@@ -469,11 +469,12 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     axisRendererConfigLR.gap = 5;
     final AxisRendererConfig axisRendererConfigD = new AxisRendererConfig();
     axisRendererConfigD.gap = 1;
+    axisRendererConfigD.hideCut = false;
 
     final IAxisRenderer aRendDom = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_DOMAIN_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigD ); //$NON-NLS-1$ //$NON-NLS-2$
     final IAxisRenderer aRendRight = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    axisRendererConfigLR.hideCut = false;
+
     final IAxisRenderer aRendLeft = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
