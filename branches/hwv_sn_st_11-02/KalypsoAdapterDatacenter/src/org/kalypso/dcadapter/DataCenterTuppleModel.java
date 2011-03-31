@@ -206,6 +206,17 @@ public class DataCenterTuppleModel implements ITupleModel
         {
           return DataCenterTuppleModel.this.getAxes();
         }
+
+        @Override
+        public void set( final IAxis axis, final Object value )
+        {
+          if( AxisUtils.isDateAxis( axis ) )
+            m_tupples[index].setDate( (Date) value );
+          else if( AxisUtils.isStatusAxis( axis ) )
+            m_tupples[index].setStatus( (String) value );
+
+          m_tupples[index].setValue( ((Number) value).doubleValue() );
+        }
       } );
     }
 
