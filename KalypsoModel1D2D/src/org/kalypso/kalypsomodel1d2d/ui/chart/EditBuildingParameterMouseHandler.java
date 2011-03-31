@@ -77,7 +77,7 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
 
   public EditBuildingParameterMouseHandler( final IChartComposite chartComposite )
   {
-    super( chartComposite, SWT.CURSOR_ARROW );
+    super( chartComposite );
   }
 
   /**
