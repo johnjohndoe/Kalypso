@@ -72,7 +72,7 @@ public class CulvertLayer extends AbstractProfilLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
    */
   @Override
-  public String getId( )
+  public String getIdentifier( )
   {
     return getTube() == null ? Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.TubeLayer.0" ) : getTube().getObservation().getName(); //$NON-NLS-1$
   }

@@ -58,6 +58,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypsodeegree.model.feature.Feature;
@@ -218,12 +219,12 @@ public class OmbrometerUtils
 
   public static String analyseOmbrometer( final IObservation observation ) throws SensorException
   {
-    final IAxis axis = ObservationUtilities.findAxisByType( observation.getAxes(), "N" );
+    final IAxis axis = ObservationUtilities.findAxisByType( observation.getAxes(), ITimeseriesConstants.TYPE_RAINFALL );
     final ITupleModel values = observation.getValues( null );
 
     final int goods = countStatus( values, axis );
     final int count = values.size();
-    return String.format( "%3d / %3d", goods, count );
+    return String.format( "%3d / %3d", goods, count ); //$NON-NLS-1$
   }
 
   /**

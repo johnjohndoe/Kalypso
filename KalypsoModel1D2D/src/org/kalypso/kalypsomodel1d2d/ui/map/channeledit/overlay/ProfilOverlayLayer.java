@@ -305,7 +305,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     final IComponent HW = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
     final IComponent RW = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
 
-    if( (HW == null) || (RW == null) )
+    if( HW == null || RW == null )
       return ""; //$NON-NLS-1$
     try
     {
@@ -324,7 +324,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
    */
   @Override
-  public String getId( )
+  public String getIdentifier( )
   {
     return IWspmOverlayConstants.LAYER_OVERLAY;
   }
@@ -639,14 +639,14 @@ public class ProfilOverlayLayer extends PointsLineLayer
         {
           if( widthorder != null )
             try
-          {
+            {
               segment.setIntersPoint( point, profNeighbour, widthorder, width );
-          }
-          catch( final Exception e )
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
+            }
+            catch( final Exception e )
+            {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
           segment.setNewIntersectedProfile( profil, profNeighbour );
         }
       }

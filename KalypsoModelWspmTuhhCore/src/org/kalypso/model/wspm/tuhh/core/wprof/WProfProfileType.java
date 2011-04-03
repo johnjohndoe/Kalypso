@@ -46,7 +46,7 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
  * @author Gernot Belger
  */
 public enum WProfProfileType
-{
+{ 
   Gewässerprofil(2, Messages.getString("WProfProfileType_0")), //$NON-NLS-1$
   Brückenprofil(3, Messages.getString("WProfProfileType_1")), //$NON-NLS-1$
   Absturzprofil(4, Messages.getString("WProfProfileType_2")), //$NON-NLS-1$

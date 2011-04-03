@@ -48,16 +48,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
+import net.opengeospatial.wps.ProcessDescriptionType;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;

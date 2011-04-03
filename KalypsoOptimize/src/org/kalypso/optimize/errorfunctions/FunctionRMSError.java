@@ -41,8 +41,8 @@
 package org.kalypso.optimize.errorfunctions;
 
 import java.util.Date;
-import java.util.SortedMap;
 import java.util.Map.Entry;
+import java.util.SortedMap;
 
 /**
  * @author doemming
