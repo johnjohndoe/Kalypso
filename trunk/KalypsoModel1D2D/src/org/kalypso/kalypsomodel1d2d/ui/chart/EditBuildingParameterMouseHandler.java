@@ -41,11 +41,11 @@
 package org.kalypso.kalypsomodel1d2d.ui.chart;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -54,12 +54,11 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
 /**
  * @author Gernot Belger
  */
-public class EditBuildingParameterMouseHandler implements IChartDragHandler
+public class EditBuildingParameterMouseHandler extends AbstractChartHandler
 {
   public static BuildingParameterLayer findLayer( final IChartModel model )
   {
@@ -74,33 +73,11 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
     return null;
   }
 
-  private final IChartComposite m_chartComposite;
-
   private EditInfo m_info;
 
   public EditBuildingParameterMouseHandler( final IChartComposite chartComposite )
   {
-    m_chartComposite = chartComposite;
-  }
-
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
-   */
-  @Override
-  public void keyPressed( final KeyEvent e )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
-   */
-  @Override
-  public void keyReleased( final KeyEvent e )
-  {
-    // TODO Auto-generated method stub
-
+    super( chartComposite );
   }
 
   /**
@@ -109,7 +86,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
   @Override
   public void mouseDoubleClick( final MouseEvent e )
   {
-    final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
+    final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
     final EditInfo info = layer.getEditInfo( new Point( e.x, e.y ) );
 
     if( info.getData() != null )
@@ -122,7 +99,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
   @Override
   public void mouseDown( final MouseEvent e )
   {
-    final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
+    final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
     final EditInfo editInfo = layer.getEditInfo( new Point( e.x, e.y ) );
     if( editInfo != null && editInfo.getData() != null )
       m_info = editInfo;
@@ -137,12 +114,11 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
     final Point point = new Point( e.x, e.y );
 
     // Show tooltip
-    final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
+    final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
     final EditInfo info = layer.getEditInfo( point );
     // HACK/TODO: this is ugly and should not be necessary: there should be another mechanism, so that mouse handler can
     // draw tooltips (or other things) on the map.
     final Control ctrl = (Control) e.getSource();
-    final Rectangle bounds = ctrl.getBounds();
     if( info == null )
     {
       ctrl.setCursor( e.display.getSystemCursor( SWT.CURSOR_ARROW ) );
@@ -169,7 +145,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
     if( info == null )
     {
       // Klick on cross-point?
-      final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
+      final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
       final EditInfo editInfo = layer.getEditInfo( new Point( e.x, e.y ) );
       if( editInfo != null && editInfo.getData() == null )
       {
@@ -182,7 +158,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
 
         final ZoomInVisitor visitor = new ZoomInVisitor( zoomMin, zoomMax );
 
-        final IChartModel model = m_chartComposite.getChartModel();
+        final IChartModel model = getChart().getChartModel();
         model.getMapperRegistry().accept( visitor );
       }
 
@@ -192,16 +168,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
     // prepare for exception
     m_info = null;
 
-    final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
+    final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
     layer.edit( new Point( e.x, e.y ), info );
   }
-  // /**
-  // * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
-  // */
-  // @Override
-  // public Cursor getCursor( final MouseEvent e )
-  // {
-  // return e.display.getSystemCursor( SWT.CURSOR_HAND );
-  // }
-
 }

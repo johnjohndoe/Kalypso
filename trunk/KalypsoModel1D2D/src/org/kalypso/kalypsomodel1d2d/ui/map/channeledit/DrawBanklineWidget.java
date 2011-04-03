@@ -55,7 +55,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
-import org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollectorConfig;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.map.IMapPanel;

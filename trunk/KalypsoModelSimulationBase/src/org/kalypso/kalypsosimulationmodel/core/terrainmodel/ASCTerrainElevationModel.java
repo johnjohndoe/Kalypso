@@ -49,7 +49,6 @@ import java.net.URL;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
