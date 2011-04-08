@@ -96,7 +96,7 @@ public class KalypsoNaProcessor
     {
       final File kalypsoNaExe = CalcCoreUtils.findExecutable( m_exeVersion, EXECUTABLES_FILE_TEMPLATE, EXECUTABLES_FILE_PATTERN, CalcCoreUtils.COMPATIBILITY_MODE.NA );
       if( kalypsoNaExe == null )
-        throw new SimulationException( Messages.getString("KalypsoNaProcessor.0") ); //$NON-NLS-1$
+        throw new SimulationException( "No Kalypso-NA.exe version configured." );
 
       final File destFile = new File( m_asciiDirs.startDir, kalypsoNaExe.getName() );
       if( !destFile.exists() )
@@ -112,7 +112,7 @@ public class KalypsoNaProcessor
     }
     catch( final IOException e )
     {
-      final String msg = String.format( Messages.getString("KalypsoNaProcessor.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final String msg = String.format( "Failed to copy Kalypso-NA.exe into calculation directory: %s", e.getLocalizedMessage() );
       throw new SimulationException( msg, e );
     }
   }

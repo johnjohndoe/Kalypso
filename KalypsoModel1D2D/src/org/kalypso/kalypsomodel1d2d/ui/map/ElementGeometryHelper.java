@@ -44,6 +44,8 @@ import java.awt.Point;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -147,14 +149,14 @@ public class ElementGeometryHelper
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
     /* Build new nodes */
-    final IFE1D2DNode< ? >[] nodes1 = buildNewNodes( points, command, workspace, parentFeature, parentNodeProperty, discModel, SEARCH_DISTANCE );
-    final IFE1D2DNode< ? >[] nodes = makeCCW( nodes1 );
+    final IFE1D2DNode[] nodes = buildNewNodes( points, command, workspace, parentFeature, parentNodeProperty, discModel, SEARCH_DISTANCE );
 
     /* Build new edges */
-    final IFE1D2DEdge< ? , ? >[] edges = buildNewEdges( points.size(), command, workspace, parentFeature, parentEdgeProperty, nodeContainerPT, discModel, changes, nodes );
+    final IFE1D2DEdge[] edges = buildNewEdges( points.size(), command, workspace, parentFeature, parentEdgeProperty, nodeContainerPT, discModel, changes, nodes );
 
     /* Build new element */
-    final IFE1D2DElement< ? , ? > newElement = PolyElement.createPolyElement( discModel );
+    IFE1D2DElement newElement = null;
+    newElement = PolyElement.createPolyElement( discModel );
     ((PolyElement) newElement).setEdges( edges );
 
     final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement.getFeature(), null, true );
@@ -211,7 +213,7 @@ public class ElementGeometryHelper
 
     final IElement1D newElement = new Element1D( eleFeature );
     newElement.setEdge( edges[0] );
-    // final IElement1D newElement = ModelOps.createElement1d( discModel, edges[0] );
+// final IElement1D newElement = ModelOps.createElement1d( discModel, edges[0] );
 
     final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement.getFeature(), null, true );
     command.addCommand( addElementCommand );
@@ -261,6 +263,7 @@ public class ElementGeometryHelper
    * @param discModel
    * @param searchDistance
    */
+  @SuppressWarnings("unchecked")
   public static IFE1D2DNode[] buildNewNodes( final List<GM_Point> points, final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentNodeProperty, final IFEDiscretisationModel1d2d discModel, final double searchDistance )
   {
     /* Build new nodes */
@@ -288,22 +291,19 @@ public class ElementGeometryHelper
         nodes[i] = foundNode;
     }
 
-    return nodes;
-  }
-
-  /**
-   * Makes sure that the given ring of nodes is oriented clockwise.
-   */
-  public static IFE1D2DNode< ? >[] makeCCW( final IFE1D2DNode< ? >[] nodes )
-  {
     // reverse direction of element nodes if not in ccw-order
     final Coordinate[] jtsCoordinates = new Coordinate[nodes.length + 1];
     for( int i = 0; i < nodes.length; i++ )
+    {
       jtsCoordinates[i] = JTSAdapter.export( nodes[i].getPoint().getPosition() );
+    }
     jtsCoordinates[nodes.length] = jtsCoordinates[0];
-
     if( CGAlgorithms.isCCW( jtsCoordinates ) )
-      ArrayUtils.reverse( nodes );
+    {
+      final List<IFE1D2DNode> nodeList = Arrays.asList( nodes );
+      Collections.reverse( nodeList );
+      nodeList.toArray( nodes );
+    }
 
     return nodes;
   }
@@ -346,10 +346,10 @@ public class ElementGeometryHelper
     final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
 
-    for( final GM_Point node : nodes )
+    for( int i = 0; i < nodes.length; i++ )
     {
-      final int x = (int) projection.getDestX( node.getX() );
-      final int y = (int) projection.getDestY( node.getY() );
+      final int x = (int) projection.getDestX( nodes[i].getX() );
+      final int y = (int) projection.getDestY( nodes[i].getY() );
 
       xArray.add( x );
       yArray.add( y );

@@ -86,12 +86,12 @@ public class SWANDataConverterHelper
   
   public static String getTimeStringFormatedForSWANInput( final Object pObjTime )
   {
-    return getTimeStringFormatedForSWANWithDelim( pObjTime, "." ); //$NON-NLS-1$
+    return getTimeStringFormatedForSWANWithDelim( pObjTime, "." );
   }
   
   public static String getTimeStringFormatedForSWANOutput( final Object pObjTime )
   {
-    return getTimeStringFormatedForSWANWithDelim( pObjTime, "_" ); //$NON-NLS-1$
+    return getTimeStringFormatedForSWANWithDelim( pObjTime, "_" );
   }
   
   public static Date getDateForStepFromString( String strActDateSWAN )

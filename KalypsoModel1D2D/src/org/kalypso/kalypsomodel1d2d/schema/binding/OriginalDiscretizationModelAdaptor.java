@@ -279,7 +279,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     catch( final Exception e )
     {
       
-      statusList.add( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.loader.GmlLoader.12" ) ) ); //$NON-NLS-1$
+      statusList.add( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.loader.GmlLoader.12" ) ) );
       statusList.add( StatusUtilities.statusFromThrowable( e ) );
       
 //       update the gml version even in failure case, to avoid the dead-lock recursion 

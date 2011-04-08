@@ -40,16 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.suds;
 
-import java.util.ArrayList;
-
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 public class PlaningArea extends Feature_Impl
@@ -65,26 +61,9 @@ public class PlaningArea extends Feature_Impl
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  
-//  public GM_Surface<GM_SurfacePatch> getGeometry( )
-//  {
-//    return getProperty( QNAME_PROP_GEOMETRY, GM_Surface.class );
-//  }
-    
   public GM_MultiSurface getGeometry( )
   {
-    Object geom = getProperty( QNAME_PROP_GEOMETRY );
-    if (geom instanceof GM_MultiSurface) {
-      return (GM_MultiSurface) geom;
-    } else if (geom instanceof GM_Surface) {
-      final ArrayList<GM_Surface< ? >> arrayList = new ArrayList<GM_Surface< ? >>();
-      arrayList.add( (GM_Surface< ? >) geom );
-      final GM_MultiSurface multiSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_MultiSurface( arrayList.toArray( new GM_Surface[0] ), ((GM_Surface) geom).getCoordinateSystem() );
-      return multiSurface;
-    }
-    
-    //GM_MultiSurface.class );
-    return null;
+    return getProperty( QNAME_PROP_GEOMETRY, GM_MultiSurface.class );
   }
 
   public void setGeometry( final GM_MultiSurface geometry )

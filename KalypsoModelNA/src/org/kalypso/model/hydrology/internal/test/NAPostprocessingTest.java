@@ -75,26 +75,26 @@ public class NAPostprocessingTest
 {
   public NAPostprocessingTest( )
   {
-    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" ); //$NON-NLS-1$
+    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
   }
 
   @Test
   public void testDemoModel( ) throws Exception
   {
-    testPostprocessing( "naDemoModel", "resources/demoModel_Langzeit" ); //$NON-NLS-1$ //$NON-NLS-2$
+    testPostprocessing( "naDemoModel", "resources/demoModel_Langzeit" );
   }
 
   public void testPostprocessing( final String label, final String resourceBasePath ) throws Exception
   {
     // prepare (unzip)
-    final File outputDir = FileUtilities.createNewTempDir( label + "PostprocessingTest" ); //$NON-NLS-1$
+    final File outputDir = FileUtilities.createNewTempDir( label + "PostprocessingTest" );
     final File asciiResults = prepareAsciiResults( resourceBasePath, outputDir );
 
     // run postprocessing
     final File resultsDir = doPostprocessing( resourceBasePath, outputDir, asciiResults );
 
     // compare results with expected
-    final File expectedResultsDir = new File( outputDir, "expectedResults" ); //$NON-NLS-1$
+    final File expectedResultsDir = new File( outputDir, "expectedResults" );
     checkResult( resultsDir, expectedResultsDir );
 
     FileUtils.forceDelete( outputDir );
@@ -102,10 +102,10 @@ public class NAPostprocessingTest
 
   private File doPostprocessing( final String baseResourceLocation, final File outputDir, final File asciiBaseDir ) throws Exception
   {
-    final File resultsDir = new File( outputDir, "results" ); //$NON-NLS-1$
+    final File resultsDir = new File( outputDir, "results" );
 
-    final URL gmlInputZipLocation = getClass().getResource( baseResourceLocation + "/gmlInput.zip" ); //$NON-NLS-1$
-    final URL baseURL = new URL( String.format( "jar:%s!/", gmlInputZipLocation.toExternalForm() ) ); //$NON-NLS-1$
+    final URL gmlInputZipLocation = getClass().getResource( baseResourceLocation + "/gmlInput.zip" );
+    final URL baseURL = new URL( String.format( "jar:%s!/", gmlInputZipLocation.toExternalForm() ) );
 
     final Logger logger = Logger.getAnonymousLogger();
     logger.setUseParentHandlers( false );
@@ -113,10 +113,10 @@ public class NAPostprocessingTest
     for( final Handler handler : handlers )
       logger.removeHandler( handler );
 
-    final URL modelResource = new URL( baseURL, "calcCase.gml" ); //$NON-NLS-1$
+    final URL modelResource = new URL( baseURL, "calcCase.gml" );
     final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelResource, null );
 
-    final URL controlResource = new URL( baseURL, "expertControl.gml" ); //$NON-NLS-1$
+    final URL controlResource = new URL( baseURL, "expertControl.gml" );
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlResource, null );
     final NAModellControl naControl = (NAModellControl) controlWorkspace.getRootFeature();
 
@@ -133,9 +133,9 @@ public class NAPostprocessingTest
 
   private File prepareAsciiResults( final String resourceBasePath, final File outputDir ) throws IOException
   {
-    final File asciiDir = new File( outputDir, "ascii" ); //$NON-NLS-1$
+    final File asciiDir = new File( outputDir, "ascii" );
     asciiDir.mkdirs();
-    final URL asciiResultsResource = getClass().getResource( resourceBasePath + "/asciiAfterCalc.zip" ); //$NON-NLS-1$
+    final URL asciiResultsResource = getClass().getResource( resourceBasePath + "/asciiAfterCalc.zip" );
     ZipUtilities.unzip( asciiResultsResource, asciiDir );
     return asciiDir;
   }
@@ -144,10 +144,10 @@ public class NAPostprocessingTest
   {
     /* Fetch the expected results */
     resultExpectedDir.mkdirs();
-    ZipUtilities.unzip( getClass().getResource( "resources/demoModel_Langzeit/results.zip" ), resultExpectedDir ); //$NON-NLS-1$
+    ZipUtilities.unzip( getClass().getResource( "resources/demoModel_Langzeit/results.zip" ), resultExpectedDir );
 
     /* compare with expected results */
-    final File currentResultsDir = new File( resultsDir, "results/Ergebnisse" ); //$NON-NLS-1$
+    final File currentResultsDir = new File( resultsDir, "results/Ergebnisse" );
     final FileStructureComparator actualComparator = new FileStructureComparator( currentResultsDir );
     final FileStructureComparator expectedComparator = new FileStructureComparator( resultExpectedDir );
 
@@ -160,7 +160,7 @@ public class NAPostprocessingTest
       public void dumpElement( final ICompareInput input )
       {
         // We ignore this gml file at the moment. It is different, as the gml-id changes each time.
-        if( "20020728.gml".equals( input.getName() ) ) //$NON-NLS-1$
+        if( "20020728.gml".equals( input.getName() ) )
           return;
 
         new FileContentAssertDumper().dumpElement( input );

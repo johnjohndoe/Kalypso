@@ -648,7 +648,7 @@
 								</ogc:PropertyIsLike>
 							</or>
 						</gft:enabledOperation>
-						<gft:gridData horizontalAlignment="SWT.FILL"  />
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
 					</gft:text>
 					<gft:validatorlabel property="c1d2d:TBFACT" visible="true" style="SWT.NONE">
 						<gft:enabledOperation>
@@ -704,7 +704,7 @@
 								</ogc:PropertyIsLike>
 							</or>
 						</gft:enabledOperation>
-						<gft:gridData horizontalAlignment="SWT.FILL"  />
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
 					</gft:text>
 					<gft:validatorlabel property="c1d2d:TBFACT_ESCUDIER" visible="true" style="SWT.NONE">
 						<gft:enabledOperation>
@@ -770,7 +770,7 @@
 								</ogc:PropertyIsBetween>
 							</or>
 						</gft:enabledOperation>
-						<gft:gridData horizontalAlignment="SWT.FILL"  />
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
 					</gft:text>
 					<gft:validatorlabel property="c1d2d:_p_bottom" visible="true" style="SWT.NONE">
 						<gft:enabledOperation>
@@ -911,7 +911,8 @@
 
         <!-- SWAN-Parameter -->
 		<gft:tabItem>
-			<gft:tabLabel>Calculation Unit Settings for SWAN calculation</gft:tabLabel>
+			<gft:tabLabel>Calculation Unit Settings for swell calculation</gft:tabLabel>
+				
 			<gft:composite style="SWT.NONE">
 				<gft:enabledOperation>
 					<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">

@@ -103,7 +103,7 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
       {
         m_geoLog = new GeoLog( KalypsoModel1D2DPlugin.getDefault().getLog() );
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
         e.printStackTrace();
       }
@@ -142,7 +142,7 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     {
       final GridData pLayout = (GridData) layoutData;
       pLayout.widthHint = 700;
-      pLayout.heightHint = 400;
+      pLayout.heightHint = 350;
       parent.layout();
     }
     final Composite panel = new Composite( parent, SWT.NONE );

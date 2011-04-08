@@ -12,4 +12,7 @@
 
 	<input id="MAP_SPECIFIC_DAMAGE_POTENTIAL" path="maps/SpecificDamagePotentialMap.gmt" relativeToCalcCase="true" optional="true" />
 	<output id="MAP_SPECIFIC_DAMAGE_POTENTIAL" path="maps/SpecificDamagePotentialMap.gmt" relativeToCalcCase="true" optional="true" />
+	<!-- 
+	<output id="OUTPUT_SLD" path="styles/SpecificDamagePotentialCoverage.sld" relativeToCalcCase="true" optional="true" />
+	 -->
 </modelspec>

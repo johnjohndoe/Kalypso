@@ -50,7 +50,6 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
@@ -138,7 +137,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       if( updateMap )
       {
         final URL mapURL = (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.MAP_SPECIFIC_DAMAGE_POTENTIAL.toString() );
-        final File mapFile = FileUtils.toFile( mapURL );
+        final File mapFile = new File( mapURL.getPath() );
 
         /* Load the map template. */
         final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile );
@@ -192,7 +191,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       for( int i = 0; i < specificDamageCoverageCollection.size(); i++ )
       {
         final IAnnualCoverageCollection annualCoverageCollection = specificDamageCoverageCollection.get( i );
-        final IFeatureBindingCollection<ICoverage> coverages = annualCoverageCollection.getCoverages();
+        IFeatureBindingCollection<ICoverage> coverages = annualCoverageCollection.getCoverages();
         for( int k = 0; k < coverages.size(); k++ )
           CoverageManagementHelper.deleteGridFile( coverages.get( k ) );
       }
@@ -200,11 +199,11 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
 
       // Put classes into list by, with index ordinal-number for faster access later
       final List<ILanduseClass> landuseClasses = new ArrayList<ILanduseClass>();
-      for( final ILanduseClass landuseClass : landuseClassesList )
+      for( ILanduseClass landuseClass : landuseClassesList )
       {
         landuseClass.clearStatisticEntries();
 
-        final int ordinalNumber = landuseClass.getOrdinalNumber();
+        int ordinalNumber = landuseClass.getOrdinalNumber();
         if( landuseClasses.size() > ordinalNumber && landuseClasses.get( ordinalNumber ) != null )
           Logger.getAnonymousLogger().log( Level.WARNING, String.format( "WARNING: two landuse classes with same ordinal number: %s", ordinalNumber ) ); //$NON-NLS-1$
 
@@ -217,10 +216,10 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       /* loop over all waterdepths */
       for( final IAnnualCoverageCollection srcAnnualCoverages : rasterModel.getWaterlevelCoverageCollection() )
       {
-        final IFeatureBindingCollection<ICoverage> srcAnnualCoveragesList = srcAnnualCoverages.getCoverages();
-        final int srcAnnualCoverageSize = srcAnnualCoveragesList.size();
+        IFeatureBindingCollection<ICoverage> srcAnnualCoveragesList = srcAnnualCoverages.getCoverages();
+        int srcAnnualCoverageSize = srcAnnualCoveragesList.size();
         final int perCoverageTicks = 100 / srcAnnualCoverageSize;
-        final String taskName = Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10", srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
+        String taskName = Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10", srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
         final SubMonitor subMonitor = SubMonitor.convert( monitor, taskName, 100 );
 
         /* create annual damage coverage collection */

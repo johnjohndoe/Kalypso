@@ -48,7 +48,6 @@ import org.kalypso.model.hydrology.binding.model.KontZufluss;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.VirtualChannel;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -159,7 +158,7 @@ public class NaModelTweaker
           final Node targetNode = branchingWithNode.getNode();
           if( targetNode == null )
           {
-            final String message = String.format( Messages.getString("NaModelTweaker_0"), node.getName() ); //$NON-NLS-1$
+            final String message = String.format( "Node not set for branching in Node '%s'", node.getName() );
             throw new NAPreprocessorException( message );
           }
 

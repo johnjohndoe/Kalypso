@@ -85,8 +85,6 @@ public class SzenarioController implements IScenarioDataListener
     {
       m_discModel.getFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
       m_terrainModel.getFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
-      if( m_roughnessAssignListener != null )
-        m_roughnessAssignListener.dispose();
     }
 
     if( model instanceof IFEDiscretisationModel1d2d )
@@ -145,7 +143,5 @@ public class SzenarioController implements IScenarioDataListener
 
     // maybe save status into dstatus model
   }
-  
-  
 
 }

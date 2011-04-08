@@ -219,7 +219,7 @@ public class IterationInfo implements IIterationInfo
     {
       String lStrActSub = strings[i].trim();
 
-      if( "nan".equalsIgnoreCase( lStrActSub ) ) //$NON-NLS-1$
+      if( "nan".equalsIgnoreCase( lStrActSub ) )
       {
         values[i] = new BigDecimal( -9999.0 );
       }

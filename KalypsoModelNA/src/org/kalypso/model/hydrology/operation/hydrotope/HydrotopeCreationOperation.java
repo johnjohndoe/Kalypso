@@ -67,6 +67,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -77,7 +78,6 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -106,13 +106,9 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
   private GM_MultiSurface m_workingArea = null;
 
-  private double m_sealingCorrectionFactorValue = Double.NaN;
+  private double m_forcedSealingCorrectionFactorValue = Double.NaN;
 
-  private boolean m_isSealingCorrectionEnabled = false;
-
-  private int m_zopa_count = 0;
-
-  private int m_thrownout_hydros = 0;
+  private boolean m_isSealingCorrectionForced = false;
 
   public HydrotopeCreationOperation( final FeatureList landuseList, final FeatureList pedologyList, final FeatureList geologyList, final FeatureList catchmentsList, final IFeatureBindingCollection<IHydrotope> outputList, final GMLWorkspace outputWorkspace, final GM_MultiSurface workingArea )
   {
@@ -134,16 +130,15 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
    * Forces the given sealing correction factor, instead the one from the landuse data. <br>
    * If the given value is Double.NaN, then the factor value is not forced.
    */
-  public final void setSealingCorrectionFactor( final double value )
+  public final void forceSealingCorrectionFactor( final double value )
   {
-    m_sealingCorrectionFactorValue = value;
-    m_isSealingCorrectionEnabled = !Double.isNaN( value );
+    m_forcedSealingCorrectionFactorValue = value;
+    m_isSealingCorrectionForced = !Double.isNaN( value );
   }
 
   private final FeatureListGeometryIntersector getIntersector( )
   {
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
-    
     if( m_workingArea == null )
     {
       geometryIntersector.addFeatureList( m_pedologyList );
@@ -155,16 +150,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     else
     {
       final GM_Envelope envelope = m_workingArea.getEnvelope();
-
-      List pedologyQuery = m_pedologyList.query( envelope, null );
-      List geologyQuery = m_geologyList.query( envelope, null );
-      List catchmentsQuery = m_catchmentsList.query( envelope, null );
-      List landuseQuery = m_landuseList.query( envelope, null );
-
-      geometryIntersector.addFeatureList( pedologyQuery );
-      geometryIntersector.addFeatureList( geologyQuery );
-      geometryIntersector.addFeatureList( catchmentsQuery );
-      geometryIntersector.addFeatureList( landuseQuery );
+      geometryIntersector.addFeatureList( m_pedologyList.query( envelope, null ) );
+      geometryIntersector.addFeatureList( m_geologyList.query( envelope, null ) );
+      geometryIntersector.addFeatureList( m_catchmentsList.query( envelope, null ) );
+      geometryIntersector.addFeatureList( m_landuseList.query( envelope, null ) );
     }
     return geometryIntersector;
   }
@@ -206,19 +195,13 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           else
           {
             final Geometry geometry = g.difference( intersectionArea );
-            if ( geometry.isEmpty() ) {
-              continue;
+            final GM_MultiSurface hydrotopGeometry = toMultiSurface( geometry, COORDINATE_SYSTEM );
+            if( hydrotopGeometry != null )
+              hydrotop.setGeometry( hydrotopGeometry );
+            else
+            {
+              // TODO what to do?
             }
-            if (geometry instanceof MultiPolygon) {
-              // FIXME: Complicated case! fix it!
-              continue;
-            } else {
-              final GM_MultiSurface hydrotopGeometry = toMultiSurface( geometry, COORDINATE_SYSTEM );
-              if( hydrotopGeometry != null )
-                hydrotop.setGeometry( hydrotopGeometry );
-            }
-            
-            
           }
         }
       }
@@ -246,39 +229,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         // we always expect an intersection of subcatchments, landuse, geology and pedology
         if( features.length != 4 )
           continue;
-        
-        boolean b_catchment = false;
-        boolean b_landuse = false;
-        boolean b_soiltype = false;
-        boolean b_geology = false;
 
-        for( final Feature feature : features )
-        {
-          if( feature instanceof org.kalypso.model.hydrology.binding.model.Catchment )
-          {
-            b_catchment = true;
-          }
-          else if( feature instanceof Landuse )
-          {
-            b_landuse = true;
-          }
-          else if( feature instanceof SoilType )
-          {
-            b_soiltype = true;
-          }
-          else if( feature instanceof Geology )
-          {
-            b_geology = true;
-          }
-          
-        }
-        
-        if (!b_geology || !b_landuse || !b_catchment || !b_soiltype) {
-//          System.out.println("WARNING");
-          m_thrownout_hydros ++;
-          continue;
-        }
-        
         final IHydrotope hydrotop = m_outputList.addNew( IHydrotope.QNAME );
 
         for( final Feature feature : features )
@@ -299,15 +250,15 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
               hydrotop.setLanduse( ((XLinkedFeature_Impl) landuseClassLink).getFeatureId() );
             else
               hydrotop.setLanduse( featureLanduse.getName() );
-            
-            final Double corrSealing = landuse.getCorrSealing();
-            if( m_isSealingCorrectionEnabled && featureLanduse.getId().startsWith( Landuse.QNAME + "_PLC" )  ) 
+            if( m_isSealingCorrectionForced )
             {
-              hydrotop.setCorrSealing( corrSealing * m_sealingCorrectionFactorValue );
-            } else {
+              hydrotop.setCorrSealing( m_forcedSealingCorrectionFactorValue );
+            }
+            else
+            {
+              final Double corrSealing = landuse.getCorrSealing();
               hydrotop.setCorrSealing( corrSealing );
             }
-            
             final IFeatureBindingCollection<Feature> landuseSudsCollection = landuse.getSudCollection();
             final IFeatureBindingCollection<ISuds> hydrotopeSudsCollection = hydrotop.getSudCollection();
             final FeatureList hydrotopeFeatureList = hydrotopeSudsCollection.getFeatureList();
@@ -376,10 +327,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             try
             {
               union = geometryCollection.union();
-              if( union.getNumGeometries() > 1 )
-                union = union.buffer( 0.0001 ); // fixes problem with precision
               m_outputList.removeAll( featuresToMergeWith );
-              m_outputList.removeAll( featuresToMergeWith ); // fixes problem, what is going on here?
             }
             catch( final Exception e )
             {
@@ -434,17 +382,21 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     try
     {
       final GM_Object newGeometry = JTSAdapter.wrap( geometry, crs );
-      if( newGeometry instanceof GM_Surface )
+      if( newGeometry instanceof GM_MultiSurface )
+        return (GM_MultiSurface) newGeometry;
+      else if( newGeometry instanceof GM_Surface )
       {
         final ArrayList<GM_Surface< ? >> arrayList = new ArrayList<GM_Surface< ? >>();
         arrayList.add( (GM_Surface< ? >) newGeometry );
         final GM_MultiSurface multiSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_MultiSurface( arrayList.toArray( new GM_Surface[0] ), newGeometry.getCoordinateSystem() );
         return multiSurface;
       }
-      else
+      else if( newGeometry instanceof GM_MultiPrimitive )
       {
-    	  throw new IllegalStateException( "cannot create hydrotope with multisurface" );
+        final GeometryCollection lCol = (GeometryCollection) JTSAdapter.export( newGeometry );
+        return toMultiSurface( lCol.buffer( 0.0 ), crs );
       }
+      return null;
     }
     catch( final GM_Exception e )
     {

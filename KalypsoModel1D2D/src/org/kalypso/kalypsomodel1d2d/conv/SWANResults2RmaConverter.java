@@ -68,7 +68,7 @@ public class SWANResults2RmaConverter
 
   private Date[] m_arraySteps;
 
-  private String[] m_arrayNamesForOutput = new String[] { "WForce_x", "WForce_y" }; //$NON-NLS-1$ //$NON-NLS-2$
+  private String[] m_arrayNamesForOutput = new String[] { "WForce_x", "WForce_y" };
 
   private int m_intAmountOfValues;
 
@@ -143,7 +143,7 @@ public class SWANResults2RmaConverter
 
   private void writeEndLine( Formatter formatter )
   {
-    formatter.format( "ENDDATA\n" ); //$NON-NLS-1$
+    formatter.format( "ENDDATA\n" );
   }
 
   /**
@@ -154,7 +154,7 @@ public class SWANResults2RmaConverter
   {
     Calendar lCal = Calendar.getInstance();
     lCal.setTime( actDate );
-    formatter.format( "DY     %7d %7d %7d %7d", lCal.get( Calendar.DAY_OF_YEAR ), lCal.get( Calendar.HOUR_OF_DAY ), m_intAmountOfValues, lCal.get( Calendar.YEAR ) ); // actDate.getHours() //$NON-NLS-1$
+    formatter.format( "DY     %7d %7d %7d %7d", lCal.get( Calendar.DAY_OF_YEAR ), lCal.get( Calendar.HOUR_OF_DAY ), m_intAmountOfValues, lCal.get( Calendar.YEAR ) ); // actDate.getHours()
                                                                                                                                                                       // actDate.getYear()
 
   }
@@ -174,32 +174,32 @@ public class SWANResults2RmaConverter
     for( int i = 0; i < m_listOriginalPositions.size(); ++i )
     {
       String lStrFormatedDataLine = getActLine( i, lStrActDatePartName );
-      formatter.format( "ST      %7d %s\n", i, lStrFormatedDataLine ); //$NON-NLS-1$
+      formatter.format( "ST      %7d %s\n", i, lStrFormatedDataLine );
     }
   }
 
   private String getActLine( final int pIntIndex, String pStrActDatePartName )
   {
-    String lStrRes = ""; //$NON-NLS-1$
+    String lStrRes = "";
     GM_Position lGMPosition = m_listOriginalPositions.get( pIntIndex );
     lGMPosition = GeometryFactory.createGM_Position( lGMPosition.getX() - m_doubleShiftX, lGMPosition.getY() - m_doubleShiftY );
 
     for( final String lStrName : m_arrayNamesForOutput )
     {
       Map<GM_Position, Double> lMapAct = m_mapSWANResults.get( lStrName + pStrActDatePartName );
-      lStrRes += String.format( "%15f ", lMapAct.get( lGMPosition ) ); //$NON-NLS-1$
+      lStrRes += String.format( "%15f ", lMapAct.get( lGMPosition ) );
     }
     return lStrRes;
   }
 
   private void writeHeader( Formatter formatter )
   {
-    formatter.format( "HEADWT    A\n" ); //$NON-NLS-1$
+    formatter.format( "HEADWT    A\n" );
   }
 
   private String getSWANFormatedDate( final Object pObjTime )
   {
-    String lStrTimeRes = ""; //$NON-NLS-1$
+    String lStrTimeRes = "";
     if( pObjTime instanceof String )
     {
       lStrTimeRes = (String) pObjTime;

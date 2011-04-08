@@ -305,8 +305,8 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     addSpinner( m_resultProcessViewer, composite );
 
-    final String SELECT_ALL_TITLE = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.16" );// WorkbenchMessages.SelectionDialog_selectLabel; //$NON-NLS-1$
-    final String DESELECT_ALL_TITLE = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.17" );// WorkbenchMessages.SelectionDialog_deselectLabel; //$NON-NLS-1$
+    final String SELECT_ALL_TITLE = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.16" );// WorkbenchMessages.SelectionDialog_selectLabel;
+    final String DESELECT_ALL_TITLE = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.17" );// WorkbenchMessages.SelectionDialog_deselectLabel;
 
     final Button selectButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL_TITLE, false );
 

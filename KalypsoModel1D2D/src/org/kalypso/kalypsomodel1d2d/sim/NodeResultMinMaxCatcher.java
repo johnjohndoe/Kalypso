@@ -78,53 +78,67 @@ public class NodeResultMinMaxCatcher
 
   public void addNodeResult( final INodeResult nodeResult )
   {
-    final double velocity = nodeResult.getAbsoluteVelocity();
-    final double depth = nodeResult.getDepth();
-    final double waterlevel = nodeResult.getWaterlevel();
-    final double Terrain = nodeResult.getPoint().getZ();
-    final double waveHsig = nodeResult.getWaveHsig();
-    final double wavePer = nodeResult.getWavePeriod();
+    try
+    {
+      final double velocity = nodeResult.getAbsoluteVelocity();
+      final double depth = nodeResult.getDepth();
+      final double waterlevel = nodeResult.getWaterlevel();
+      final double Terrain = nodeResult.getPoint().getZ();
+      double waveHsig = Double.NaN;
+      double wavePer = Double.NaN; 
+      try{
+        waveHsig = nodeResult.getWaveHsig();
+        wavePer = nodeResult.getWavePeriod();
+      }
+      catch (Exception e) {
+        //wave simulation results are not found
+      }
 
-    // TODO: implement the shear stress
-    final double shearstress = 0;
+      // TODO: implement the shear stress
+      final double shearstress = 0;
 
-    if( velocity != Double.NaN && velocity < m_minVelocityAbs )
-      m_minVelocityAbs = velocity;
-    if( velocity != Double.NaN && velocity > m_maxVelocityAbs )
-      m_maxVelocityAbs = velocity;
+      if( velocity != Double.NaN && velocity < m_minVelocityAbs )
+        m_minVelocityAbs = velocity;
+      if( velocity != Double.NaN && velocity > m_maxVelocityAbs )
+        m_maxVelocityAbs = velocity;
 
-    if( depth != Double.NaN && depth < m_minDepth )
-      m_minDepth = depth;
-    if( depth != Double.NaN && depth > m_maxDepth )
-      m_maxDepth = depth;
+      if( depth != Double.NaN && depth < m_minDepth )
+        m_minDepth = depth;
+      if( depth != Double.NaN && depth > m_maxDepth )
+        m_maxDepth = depth;
 
-    if( waterlevel != Double.NaN && waterlevel < m_minWaterlevel )
-      m_minWaterlevel = waterlevel;
-    if( waterlevel != Double.NaN && waterlevel > m_maxWaterlevel )
-      m_maxWaterlevel = waterlevel;
+      if( waterlevel != Double.NaN && waterlevel < m_minWaterlevel )
+        m_minWaterlevel = waterlevel;
+      if( waterlevel != Double.NaN && waterlevel > m_maxWaterlevel )
+        m_maxWaterlevel = waterlevel;
 
-    if( shearstress != Double.NaN && shearstress < m_minShearStress )
-      m_minShearStress = shearstress;
-    if( shearstress != Double.NaN && shearstress > m_maxShearStress )
-      m_maxShearStress = shearstress;
+      if( shearstress != Double.NaN && shearstress < m_minShearStress )
+        m_minShearStress = shearstress;
+      if( shearstress != Double.NaN && shearstress > m_maxShearStress )
+        m_maxShearStress = shearstress;
 
-    if( Terrain != Double.NaN && Terrain < m_minTerrain )
-      m_minTerrain = Terrain;
-    if( Terrain != Double.NaN && Terrain > m_maxTerrain )
-      m_maxTerrain = Terrain;
+      if( Terrain != Double.NaN && Terrain < m_minTerrain )
+        m_minTerrain = Terrain;
+      if( Terrain != Double.NaN && Terrain > m_maxTerrain )
+        m_maxTerrain = Terrain;
 
-    if( waveHsig != Double.NaN && waveHsig > m_maxWaveHsig )
-      m_maxWaveHsig = waveHsig;
-    if( waveHsig != Double.NaN && waveHsig < m_minWaveHsig )
-      m_minWaveHsig = waveHsig;
+      if( waveHsig != Double.NaN && waveHsig > m_maxWaveHsig )
+        m_maxWaveHsig = waveHsig;
+      if( waveHsig != Double.NaN && waveHsig < m_minWaveHsig )
+        m_minWaveHsig = waveHsig;
 
-    if( wavePer != Double.NaN && wavePer > m_maxWavePer )
-      m_maxWavePer = wavePer;
-    if( wavePer != Double.NaN && wavePer < m_minWavePer )
-      m_minWavePer = wavePer;
+      if( wavePer != Double.NaN && wavePer > m_maxWavePer )
+        m_maxWavePer = wavePer;
+      if( wavePer != Double.NaN && wavePer < m_minWavePer )
+        m_minWavePer = wavePer;
+    }
+    catch( Exception e )
+    {
+    }
+
   }
 
-  public void addNodeResultMinMaxCatcher( final NodeResultMinMaxCatcher minMaxCatcher )
+  public void addNodeResultMinMaxCatcher( NodeResultMinMaxCatcher minMaxCatcher )
   {
     try
     {
@@ -168,7 +182,7 @@ public class NodeResultMinMaxCatcher
       if( minMaxCatcher.getMinWavePer() < m_minWavePer )
         m_minWavePer = minMaxCatcher.getMinWavePer();
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
     }
   }

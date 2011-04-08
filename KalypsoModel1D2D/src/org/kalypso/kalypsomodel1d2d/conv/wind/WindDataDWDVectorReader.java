@@ -137,7 +137,7 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
 
   private String m_strTimeStepLine = ""; //$NON-NLS-1$
 
-  private String m_strSourceCrs = ""; //$NON-NLS-1$
+  private String m_strSourceCrs = "";
 
   private List<Integer> m_listElementPropId;
 
@@ -255,7 +255,7 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
         WindDataGenericGridConverter lActWindDataProvider = new WindDataGenericGridConverter( m_dateActStep, m_pairsActTimeStepWindData, m_gridDescriptor, m_urlOutputDir, m_strFileNameSuffix );
         if( !lActWindDataProvider.convert() )
         {
-          throw new IOException( "Cannot convert actual data!" ); //$NON-NLS-1$
+          throw new IOException( "Cannot convert actual data!" );
         }
         m_listWindDataProviders.add( lActWindDataProvider );
         initializePairsArray();

@@ -179,7 +179,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   public final static QName WB1D2DCONTROL_PROP_SWAN_GEN3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANGEN3" ); //$NON-NLS-1$
 
   public final static QName WB1D2DCONTROL_PROP_SWAN_INPUT_COORD_FILE = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANInputCoordFile" ); //$NON-NLS-1$
-
+  
   public final static QName WB1D2DCONTROL_PROP_SWAN_INPUT_ADDITIONAL_COMMANDS = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANInputAdditionalCmds" ); //$NON-NLS-1$
 
   public ControlModel1D2D( final Feature featureToBind )
@@ -609,21 +609,24 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   @Override
   public boolean calculateSWAN( )
   {
-      final Object swan = getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN );
-      if( swan == null )
-        return false;
-      return ((Boolean) swan).booleanValue();
+    try
+    {
+      return ((Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN )).booleanValue();
+    }
+    catch( Exception e )
+    {
+      return false;
+    }
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getVersionSWAN()
    */
-  @Override
   public String getVersionSWAN( )
   {
     return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION_SWAN );
   }
-
+  
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#isRestartAfterSWAN()
    */
@@ -631,14 +634,14 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   public boolean isRestartAfterSWAN( )
   {
     //TODO: implement coupled restart, if somebody will really need it... :)
-    //    try
-    //    {
-    //      return ((Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_F_RESTART_MODEL_SWAN ));
-    //    }
-    //    catch( Exception e )
-    //    {
-    //      return false;
-    //    }
+//    try
+//    {
+//      return ((Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_F_RESTART_MODEL_SWAN ));
+//    }
+//    catch( Exception e )
+//    {
+//      return false;
+//    }
     return false;
   }
 
@@ -646,7 +649,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#setCalculateSWAN(boolean)
    */
   @Override
-  public void setCalculateSWAN( final boolean doCalculateSWAN )
+  public void setCalculateSWAN( boolean doCalculateSWAN )
   {
     getFeature().setProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN, doCalculateSWAN );
   }

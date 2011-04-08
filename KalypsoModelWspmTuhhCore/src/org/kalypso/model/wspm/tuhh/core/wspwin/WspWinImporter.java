@@ -63,9 +63,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -126,8 +124,7 @@ public class WspWinImporter
    */
   public static IStatus importProject( final File wspwinDirectory, final IContainer targetContainer, final IProgressMonitor monitor ) throws Exception
   {
-    final IStatusCollector logStatus = new StatusCollector( KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID );
-    final String problemMessage = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.1" ); //$NON-NLS-1$
+    final MultiStatus logStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.1" ), null ); //$NON-NLS-1$
 
     monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.2" ), 1000 ); //$NON-NLS-1$
 
@@ -210,7 +207,7 @@ public class WspWinImporter
          * If an error in the profproj parsing happens, just give a warning to the user. What we really need are the
          * profile within the existing strand-elements.
          */
-        logStatus.add( IStatus.WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.15" ), pe ); //$NON-NLS-1$
+        logStatus.add( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.15" ), pe ) ); //$NON-NLS-1$
       }
 
       // ////////////// //
@@ -225,14 +222,13 @@ public class WspWinImporter
         }
         catch( final Exception e )
         {
-          logStatus.add( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.16", zustandBean.getFileName() ), e ); //$NON-NLS-1$
+          logStatus.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.16" ) + zustandBean.getFileName() ) ); //$NON-NLS-1$
         }
       }
 
       // stop, if we have errors until now
-      final IStatus tmpStatus = logStatus.asMultiStatus( problemMessage );
-      if( tmpStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
-        return tmpStatus;
+      if( logStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
+        return logStatus;
 
       // /////////////// //
       // write workspace //
@@ -254,14 +250,7 @@ public class WspWinImporter
       monitor.done();
     }
 
-    final MultiStatus completeStatus = logStatus.asMultiStatus( problemMessage );
-    if( completeStatus.isOK() )
-    {
-      final String okMessage = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.29" ); //$NON-NLS-1$
-      return logStatus.asMultiStatus( okMessage );
-    }
-
-    return completeStatus;
+    return logStatus;
   }
 
   /**
@@ -270,8 +259,7 @@ public class WspWinImporter
    */
   private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, IProfileFeature> addedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject )
   {
-    final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID );
-    final String problemMessgage = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.18" ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.18" ), null ); //$NON-NLS-1$
 
     for( final ProfileBean bean : commonProfiles )
     {
@@ -282,30 +270,29 @@ public class WspWinImporter
         final BigDecimal profStation = profile.getBigStation();
         final BigDecimal beanStation = new BigDecimal( bean.getStation() );
 
-        if( Math.abs( profStation.doubleValue() - beanStation.doubleValue() ) > 0.0001 )
+        if( Math.abs( profStation.doubleValue() - beanStation.doubleValue() ) > 0.001 )
         {
           final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.19", bean.getFileName(), profStation, bean.getWaterName(), bean.getStateName(), beanStation ); //$NON-NLS-1$
-          log.add( IStatus.WARNING, msg );
+          status.add( StatusUtilities.createWarningStatus( msg ) );
           profile.setBigStation( new BigDecimal( bean.getStation() ) );
         }
       }
       catch( final IOException e )
       {
         final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.119", bean.getFileName() );//$NON-NLS-1$
-        log.add( IStatus.WARNING, msg, e );
+        status.add( StatusUtilities.createStatus( IStatus.WARNING, msg, e ) );
       }
       catch( final GMLSchemaException e )
       {
-        log.add( IStatus.ERROR, e.getLocalizedMessage(), e );
+        status.add( StatusUtilities.statusFromThrowable( e ) );
       }
       catch( final CoreException e )
       {
-        log.add( e.getStatus() );
+        status.add( StatusUtilities.statusFromThrowable( e ) );
       }
     }
 
-    final String okMessage = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.120" );//$NON-NLS-1$
-    return log.asMultiStatusOrOK( problemMessgage, okMessage );
+    return status;
   }
 
   /**
@@ -347,8 +334,7 @@ public class WspWinImporter
    */
   private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws IOException, ParseException
   {
-    final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.21", zustandBean.getFileName() );
-    final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID );
+    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.21" ) + zustandBean.getFileName(), null ); //$NON-NLS-1$
 
     final String name = zustandBean.getName();
     final String waterName = zustandBean.getWaterName();
@@ -398,7 +384,7 @@ public class WspWinImporter
       }
       catch( final Exception e )
       {
-        log.add( IStatus.ERROR, e.getLocalizedMessage(), e );
+        status.add( StatusUtilities.statusFromThrowable( e ) );
       }
     }
 
@@ -429,7 +415,7 @@ public class WspWinImporter
     }
     catch( final Exception e )
     {
-      log.add( IStatus.ERROR, e.getLocalizedMessage(), e );
+      status.add( StatusUtilities.statusFromThrowable( e ) );
     }
 
     try
@@ -446,7 +432,7 @@ public class WspWinImporter
     }
     catch( final Exception e )
     {
-      log.add( IStatus.ERROR, e.getLocalizedMessage(), e );
+      status.add( StatusUtilities.statusFromThrowable( e ) );
     }
 
     // /////////////////////////////////////////// //
@@ -469,7 +455,7 @@ public class WspWinImporter
     }
     catch( final Exception e )
     {
-      log.add( IStatus.ERROR, e.getLocalizedMessage(), e );
+      status.add( StatusUtilities.statusFromThrowable( e ) );
     }
 
     // TODO: don't forget to add the local energy losses to profiles: handle multiple losses at one profile - mean
@@ -483,17 +469,17 @@ public class WspWinImporter
     try
     {
       if( !isNotTuhhProject )
-        importCalculations( tuhhProject, zustandBean, log, reach, profDir, baseName, readRunOffEvents );
+        importCalculations( tuhhProject, zustandBean, status, reach, profDir, baseName, readRunOffEvents );
     }
     catch( final Exception e )
     {
-      log.add( IStatus.ERROR, e.getLocalizedMessage(), e );
+      status.add( StatusUtilities.statusFromThrowable( e ) );
     }
 
-    return log.asMultiStatus( message );
+    return status;
   }
 
-  private static void importCalculations( final TuhhWspmProject tuhhProject, final ZustandBean zustandBean, final IStatusCollector log, final TuhhReach reach, final File profDir, final String baseName, final Map<Integer, String> readRunOffEvents ) throws ParseException, IOException
+  private static void importCalculations( final TuhhWspmProject tuhhProject, final ZustandBean zustandBean, final MultiStatus status, final TuhhReach reach, final File profDir, final String baseName, final Map<Integer, String> readRunOffEvents ) throws ParseException, IOException
   {
     final CalculationBean[] calcBeans = zustandBean.readCalculations( profDir );
     for( final CalculationBean bean : calcBeans )
@@ -601,7 +587,7 @@ public class WspWinImporter
       }
       catch( final Exception e )
       {
-        log.add( IStatus.ERROR, e.getLocalizedMessage(), e );
+        status.add( StatusUtilities.statusFromThrowable( e ) );
       }
     }
   }

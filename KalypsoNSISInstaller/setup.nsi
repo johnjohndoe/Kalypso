@@ -8,8 +8,8 @@ Name Kalypso
 !define REGKEY "SOFTWARE\$(^Name)"
 
 # version number, which is used for builtin pathes and menu entries.
-!define VERSION 10.10.1
-!define DATE 20101222
+!define VERSION 10.10.0
+!define DATE 20101030
 
 !define COMPANY BCE
 !define URL http://kalypso.bjoernsen.de
@@ -98,7 +98,7 @@ InstallDir $PROGRAMFILES\Kalypso
 CRCCheck on
 XPStyle on
 ShowInstDetails hide
-VIProductVersion 10.10.1.20101222
+VIProductVersion 10.10.0.20101030
 
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductName Kalypso

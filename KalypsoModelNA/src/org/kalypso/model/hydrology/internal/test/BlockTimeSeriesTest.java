@@ -25,7 +25,7 @@ public class BlockTimeSeriesTest extends TestCase
 {
   public void testBlocktimeSeries( ) throws IOException
   {
-    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" ); //$NON-NLS-1$
+    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
 
 //    final Block block = load( "resources/timeseries.dat", "4500" ); //$NON-NLS-1$ //$NON-NLS-2$
     final Block block = load( "resources/WinterSommerTest.dat", "103" ); //$NON-NLS-1$ //$NON-NLS-2$

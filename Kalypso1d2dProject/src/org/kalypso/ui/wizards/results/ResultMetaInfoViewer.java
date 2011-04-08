@@ -62,7 +62,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
-import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.i18n.Messages;
 
@@ -317,26 +316,26 @@ public class ResultMetaInfoViewer extends Viewer
           maxValueForType = docResult.getMaxValueForType( resultType );
           docMax = maxValueForType.toString();
         }
-        catch( final Exception e )
+        catch( Exception e )
         {
           continue;
         }
         if( docMax != null )
         {
-          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"maximaler " + resultType + " Wert:\">" + docMax + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"maximaler " + resultType + " Wert:\">" + docMax + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if( docMin != null )
         {
-          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"minimaler " + resultType + " Wert:\">" + docMin + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"minimaler " + resultType + " Wert:\">" + docMin + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         bDone = true;
         /*
          * set actual min/max settings also in the helper map
          */
-        final String sourceFile = docResult.getFullPath().toOSString();
-        final int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
-        final String stepNameStr = sourceFile.substring( beginIndex, beginIndex + 16 );
-        final Map<String, Object> m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepNameStr );
+        String sourceFile = docResult.getFullPath().toOSString();
+        int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
+        String stepNameStr = sourceFile.substring( beginIndex, beginIndex + 16 );
+        Map<String, Object> m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepNameStr );
         m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MIN_PREFIX + resultType.toLowerCase(), minValueForType.doubleValue() );
         m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MAX_PREFIX + resultType.toLowerCase(), maxValueForType.doubleValue() );
 
@@ -350,7 +349,7 @@ public class ResultMetaInfoViewer extends Viewer
           docMin = docResult.getMinValue().toString();
           docMax = docResult.getMaxValue().toString();
         }
-        catch( final Exception e )
+        catch( Exception e )
         {
 
         }

@@ -41,6 +41,9 @@
 
 package org.kalypso.ui.rrm.wizards;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -54,9 +57,10 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -88,6 +92,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.VirtualChannel;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
@@ -198,14 +203,14 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
   @Override
   public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
-    final IFile modelFile = project.getFile( "modell.gml" ); //$NON-NLS-1$
-    final IFile hydrotopeFile = project.getFile( "hydrotop.gml" ); //$NON-NLS-1$
+    final IPath modelPath = project.getLocation().append( "/modell.gml" ); //$NON-NLS-1$
+    final IPath hydPath = project.getLocation().append( "/hydrotop.gml" ); //$NON-NLS-1$
 
     try
     {
       // open modell.gml and hydrotop.gml file to write imported feature
-      m_modelWS = GmlSerializer.createGMLWorkspace( modelFile );
-      m_hydWS = GmlSerializer.createGMLWorkspace( hydrotopeFile );
+      m_modelWS = GmlSerializer.createGMLWorkspace( modelPath.toFile(), null );
+      m_hydWS = GmlSerializer.createGMLWorkspace( hydPath.toFile(), null );
     }
     catch( final Exception e1 )
     {
@@ -248,10 +253,26 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     // in the workspace model.gml
     try
     {
-      GmlSerializer.serializeWorkspace( modelFile, m_modelWS, new NullProgressMonitor() );
-      GmlSerializer.serializeWorkspace( hydrotopeFile, m_hydWS, new NullProgressMonitor() );
+      final OutputStreamWriter modelWriter = new FileWriter( modelPath.toFile() );
+      GmlSerializer.serializeWorkspace( modelWriter, m_modelWS );
+      modelWriter.close();
+      // hydrotop.gml
+      final OutputStreamWriter hydrotopWriter = new FileWriter( hydPath.toFile() );
+      GmlSerializer.serializeWorkspace( hydrotopWriter, m_hydWS );
+      hydrotopWriter.close();
 
+      project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
       return Status.OK_STATUS;
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAProjectWizard_5"), e ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
+    catch( final GmlSerializeException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAProjectWizard_6"), e ); //$NON-NLS-1$
+      throw new CoreException( status );
     }
     finally
     {

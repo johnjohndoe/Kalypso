@@ -101,6 +101,7 @@ public class LanduseStyleUpdateService extends Job
     m_dbFile = file;
     m_landuseVectorSymbolizerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" ); //$NON-NLS-1$
     m_riskZonesSymbolizerSldFile = scenarioFolder.getFile( "/styles/RiskZonesCoverage.sld" ); //$NON-NLS-1$
+    //    m_riskValuesSymbolizerSldFile = scenarioFolder.getFile( "/styles/RiskValuesCoverage.sld" ); //$NON-NLS-1$
   }
 
   /**
@@ -150,9 +151,9 @@ public class LanduseStyleUpdateService extends Job
             quantity = urbanZonesBoundaryList.get( urbanZonesBoundaryList.indexOf( zoneDef.getLowerBoundary() ) + 1 );
           else
             quantity = zoneDef.getLowerBoundary() > 0.0 ? -zoneDef.getLowerBoundary() : 0.0;
-            final RGB rgb = zoneDef.getColorStyle();
-            final Color color = rgb == null ? Color.WHITE : new Color( rgb.red, rgb.green, rgb.blue );
-            riskZonesAdaptedList.add( new ColorMapEntry_Impl( color, 1.0, quantity, zoneDef.getName() ) );
+          final RGB rgb = zoneDef.getColorStyle();
+          final Color color = rgb == null ? Color.WHITE : new Color( rgb.red, rgb.green, rgb.blue );
+          riskZonesAdaptedList.add( new ColorMapEntry_Impl( color, 1.0, quantity, zoneDef.getName() ) );
         }
         SLDHelper.exportRasterSymbolyzerSLD( m_riskZonesSymbolizerSldFile, riskZonesAdaptedList, null, null, monitor );
 

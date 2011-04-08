@@ -116,7 +116,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
 
   protected IStatus resultStatus;
 
-  public ResultManager1d2dWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final Result1d2dMetaComparator comparator, final IThemeConstructionFactory factory, final IGeoLog geoLog )
+  public ResultManager1d2dWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, Result1d2dMetaComparator comparator, final IThemeConstructionFactory factory, final IGeoLog geoLog )
   {
     super( pageName, title, titleImage, filter, comparator, factory, geoLog );
   }
@@ -183,7 +183,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         reevaluateResults();
         /* handle tree */
@@ -213,6 +213,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
           {
             if( resultMeta instanceof IStepResultMeta )
             {
+
               /* handle result meta entries */
               final IStepResultMeta stepResult = (IStepResultMeta) resultMeta;
               final ProcessResultsBean bean = new ProcessResultsBean();
@@ -234,16 +235,16 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                 actResult = VFSUtilities.getNewManager().resolveFile( scenarioFolder.getFolder( stepResult.getFullPath() ).getLocationURI().toURL().toExternalForm() );
                 fileObjSWANResult = actResult.resolveFile( ResultMeta1d2dHelper.getSavedSWANRawResultData( stepResult ).toOSString() );
               }
-              catch( final Exception e )
+              catch( Exception e )
               {
-                lLog.log( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.8" ) ) ); //$NON-NLS-1$
+                lLog.log( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.8" ) ) );
               }
 
               try
               {
                 resultManager = new ResultManager( actResult, fileObjSWANResult, m_modelProvider, m_geoLog );
               }
-              catch( final CoreException e )
+              catch( CoreException e )
               {
                 lLog.log( StatusUtilities.statusFromThrowable( e ) );
               }
@@ -252,7 +253,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
               {
                 resultManager.setStepsToProcess( bean.userCalculatedSteps, resultManager.getControlModel() );
               }
-              catch( final IOException e1 )
+              catch( IOException e1 )
               {
                 resultStatus = StatusUtilities.statusFromThrowable( e1 );
                 return resultStatus;
@@ -268,7 +269,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                   // set the dirty flag of the results model
                   ((ICommandPoster) m_modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
                 }
-                catch( final Exception e )
+                catch( Exception e )
                 {
                   lLog.log( StatusUtilities.statusFromThrowable( e ) );
                 }
@@ -290,26 +291,26 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                   lListResultsToRemove.add( stepResult.getGmlID() );
                 }
                 lListResultsToRemove = removeAllOthersStepWithDate( lListResultsToRemove, stepResult.getGmlID() );
-
-                final String[] lResultsToRemove = lListResultsToRemove.toArray( new String[ lListResultsToRemove.size() ] );
+                  
+                String[] lResultsToRemove = lListResultsToRemove.toArray( new String[ lListResultsToRemove.size() ] );
 
                 final Path unitFolderRelativePath = new Path( "results/" + calcUnitId ); //$NON-NLS-1$
                 // remove temporary unzipped swan data
                 try
                 {
-                  final FileObject unzippedSwanFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." //$NON-NLS-1$
+                  FileObject unzippedSwanFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "."
                       + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT );
-                  final FileObject unzippedShiftFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
-                  final FileObject unzippedTabFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE  + "_out.tab" ); //$NON-NLS-1$
+                  FileObject unzippedShiftFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
+                  FileObject unzippedTabFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE  + "_out.tab" );
                   unzippedSwanFile.delete();
                   unzippedShiftFile.delete();
                   unzippedTabFile.delete();
                 }
-                catch( final FileSystemException e )
+                catch( FileSystemException e )
                 {
                   lLog.log( StatusUtilities.statusFromThrowable( e ) );
                 }
-                final IFolder unitFolder = scenarioFolder.getFolder( unitFolderRelativePath );
+                IFolder unitFolder = scenarioFolder.getFolder( unitFolderRelativePath );
                 final ResultManagerOperation dataOperation = new ResultManagerOperation( resultManager, unitFolder, Status.OK_STATUS, m_modelProvider, processingOperation.getOutputDir(), calcUnitMeta, lResultsToRemove ); // processingOperation.getOriginalStepsToDelete()
                 dataOperation.setBoolRemoveRawResult( false );
                 resultStatus = dataOperation.execute( monitor );
@@ -319,9 +320,9 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
           return resultStatus;
         }
 
-        private List< String > removeAllOthersStepWithDate( final List<String> lListResultsToRemove, final String stepId )
+        private List< String > removeAllOthersStepWithDate( List<String> lListResultsToRemove, final String stepId )
         {
-          final List< String > lListRes = new ArrayList<String>();
+          List< String > lListRes = new ArrayList<String>();
           for( final String lId: lListResultsToRemove ){
             if( lId.equals( stepId ) ){
               lListRes.add( lId );
@@ -332,28 +333,28 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
         }
 
         @Override
-        public void run( final IProgressMonitor monitor )
+        public void run( IProgressMonitor monitor )
         {
           execute( monitor );
         }
       };
 
-      final ProgressMonitorDialog dialog = new ProgressMonitorDialog( getShell() );
+      ProgressMonitorDialog dialog = new ProgressMonitorDialog( getShell() );
       try
       {
         dialog.run( true, true, calculationOperation );
       }
-      catch( final InvocationTargetException e1 )
+      catch( InvocationTargetException e1 )
       {
         e1.printStackTrace();
       }
-      catch( final InterruptedException e1 )
+      catch( InterruptedException e1 )
       {
         e1.printStackTrace();
       }
 
     }
-    catch( final CoreException e )
+    catch( CoreException e )
     {
       e.printStackTrace();
     }

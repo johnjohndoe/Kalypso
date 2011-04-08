@@ -84,7 +84,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   private final IPageChangedListener m_pageChangeListener = new IPageChangedListener()
   {
     @Override
-    public void pageChanged( final PageChangedEvent event )
+    public void pageChanged( PageChangedEvent event )
     {
       handlePageChanged( event );
     }
@@ -212,8 +212,8 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     /* Jump to next page and set simulation status to result page */
     try
     {
-      final FileObject resultDirSWAN = m_calcPage.getResultDirSWAN();
-      final FileObject resultDirRMA = m_calcPage.getResultDirRMA();
+      FileObject resultDirSWAN = m_calcPage.getResultDirSWAN();
+      FileObject resultDirRMA = m_calcPage.getResultDirRMA();
       m_resultPage = new RMA10ResultPage( "resultPage", resultDirRMA, resultDirSWAN, m_geoLog, m_unitFolder, m_caseDataProvider, this ); //$NON-NLS-1$
     }
     catch( final CoreException e )
@@ -378,7 +378,6 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
       // directory
       // REMARK2: the calc unit meta may be not set, but the simulation log is written anyway... Probably we should
       // change this?
-      // YES, WE SHOULD!
       if( !m_unitFolder.exists() && m_unitFolder instanceof IFolder )
         ((IFolder) m_unitFolder).create( true, true, new NullProgressMonitor() );
 

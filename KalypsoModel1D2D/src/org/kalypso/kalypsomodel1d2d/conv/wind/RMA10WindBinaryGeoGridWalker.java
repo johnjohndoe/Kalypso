@@ -101,7 +101,7 @@ public class RMA10WindBinaryGeoGridWalker extends AbstractWindGeoGridWalker
     }
     else
     {
-      m_formatter.format( "WI %5d   %.3f   %.3f  %2.2f\n", m_listWrittenPositions.size() + 1, lPairSpeedDirection.first, lPairSpeedDirection.second, DOUBLE_DEFAULT_SCALE_VALUE ); //$NON-NLS-1$
+      m_formatter.format( "WI %5d   %.3f   %.3f  %2.2f\n", m_listWrittenPositions.size() + 1, lPairSpeedDirection.first, lPairSpeedDirection.second, DOUBLE_DEFAULT_SCALE_VALUE );
     }
     m_listWrittenPositions.add( GeometryFactory.createGM_Position( c.x, c.y ) );
   }

@@ -167,7 +167,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     {
       /* remove existing (invalid) coverages from the model and clean statistic */
       final ICoverageCollection outputCoverages = rasterModel.getRiskZonesCoverage();
-      final IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
+      IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
       for( final ICoverage coverage : outputCoveragesList )
         CoverageManagementHelper.deleteGridFile( coverage );
 
@@ -175,7 +175,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
       controlModel.resetStatistics();
 
       final ICoverageCollection baseCoverages = RiskModelHelper.getMaxReturnPeriodCollection( rasterModel.getSpecificDamageCoverageCollection() );
-      final IFeatureBindingCollection<ICoverage> baseCoveragesList = baseCoverages.getCoverages();
+      IFeatureBindingCollection<ICoverage> baseCoveragesList = baseCoverages.getCoverages();
 
       final int ticks = 100 / baseCoveragesList.size();
       for( int i = 0; i < baseCoveragesList.size(); i++ )
@@ -352,19 +352,22 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
           }
         }
       }
-
+      
       result.add( newRecord );
-
       final int recordSize = newRecord.getOwner().getComponents().length;
       for( int i = 1; i < recordSize - 1; i++ )
       {
         final Object value = newRecord.getValue( i );
         if( value == null )
+        {
           newRecord.setValue( i, new BigDecimal( 0.0 ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+        }
       }
 
       // average annual damage value for the whole landuse class
       newRecord.setValue( recordSize - 1, landuseClass.getAverageAnnualDamage() );
+
+      result.add( newRecord );
     }
 
     calculateLastRow( result );

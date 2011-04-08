@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import java.io.File;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -103,7 +102,7 @@ public class WspWinImportSourcePage extends WizardPage
     final Label label = new Label( group, SWT.NONE );
     label.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinImportSourcePage.6") ); //$NON-NLS-1$
     label.setToolTipText( STR_TOOLTIP_PATH );
-
+    
     /* The text field for the path. */
     final Text text = new Text( group, SWT.BORDER );
     m_text = text;
@@ -119,7 +118,7 @@ public class WspWinImportSourcePage extends WizardPage
     m_text.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( final ModifyEvent e )
+      public void modifyText( ModifyEvent e )
       {
         final File kwert_file = new File( text.getText() );
 
@@ -179,7 +178,7 @@ public class WspWinImportSourcePage extends WizardPage
     {
       /* Öffnen des FileDialogs und setzen des Pfades in das Textfeld. */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         final DirectoryDialog dialog = new DirectoryDialog( group.getShell() );
 
@@ -194,11 +193,14 @@ public class WspWinImportSourcePage extends WizardPage
         if( loadPath == null )
           return;
 
+        if( dialogSettings != null )
+          dialogSettings.put( SETTINGS_FILE_PATH, loadPath );
+
         text.setText( loadPath );
       }
 
       @Override
-      public void widgetDefaultSelected( final SelectionEvent e )
+      public void widgetDefaultSelected( SelectionEvent e )
       {
       }
     } );
@@ -208,15 +210,6 @@ public class WspWinImportSourcePage extends WizardPage
 
   protected void setDir( final File dir )
   {
-    final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings != null ) //$NON-NLS-1$
-    {
-      if( dir == null )
-        dialogSettings.put( SETTINGS_FILE_PATH, StringUtils.EMPTY );
-      else
-        dialogSettings.put( SETTINGS_FILE_PATH, dir.getAbsolutePath() );
-    }
-
     m_dir = dir;
   }
 

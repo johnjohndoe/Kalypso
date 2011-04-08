@@ -167,31 +167,31 @@ public class RMA10S2GmlConv
       }
       if( line.length() < 2 )
         continue;
-      if( line.startsWith( "FP" ) ) //$NON-NLS-1$
+      if( line.startsWith( "FP" ) )
         interpreteNodeLine( line );
-      if( line.startsWith( "FE" ) ) //$NON-NLS-1$
+      if( line.startsWith( "FE" ) )
         interpreteElementLine( line );
-      if( line.startsWith( "AR" ) ) //$NON-NLS-1$
+      if( line.startsWith( "AR" ) )
         interpreteArcLine( line );
-      if( line.startsWith( "RK" ) ) //$NON-NLS-1$
+      if( line.startsWith( "RK" ) )
       {
         // still not implemented
       }
-      if( line.startsWith( Messages.getString("RMA10S2GmlConv.4") ) ) //$NON-NLS-1$
+      if( line.startsWith( "VA" ) )
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_VA );
-      if( line.startsWith( "VO" ) ) //$NON-NLS-1$
+      if( line.startsWith( "VO" ) )
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_VO );
-      if( line.startsWith( "GA" ) ) //$NON-NLS-1$
+      if( line.startsWith( "GA" ) )
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_GA );
-      if( line.startsWith( "GO" ) ) //$NON-NLS-1$
+      if( line.startsWith( "GO" ) )
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_GO );
-      if( line.startsWith( Messages.getString("RMA10S2GmlConv.8") ) ) //$NON-NLS-1$
+      if( line.startsWith( "DA" ) )
         interpreteTimeLine( line );
-      if( line.startsWith( "TL" ) ) //$NON-NLS-1$
+      if( line.startsWith( "TL" ) )
         interprete1d2dJunctionElement( line );
-      if( line.startsWith( "ZU" ) ) //$NON-NLS-1$
+      if( line.startsWith( "ZU" ) )
         interpreteNodeInformationLine( line );
-      if( line.startsWith( "JE" ) ) //$NON-NLS-1$
+      if( line.startsWith( "JE" ) )
         interpreteJunctionInformationLine( line );
       
       else if( VERBOSE_MODE )
@@ -314,7 +314,7 @@ public class RMA10S2GmlConv
 
   private void interpreteResultLine( final String line, final RESULTLINES resultlines )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" ); //$NON-NLS-1$
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" );
     if( lStringParser.getIntSepCounter() == 6 )
     {
       try
@@ -354,7 +354,7 @@ public class RMA10S2GmlConv
 
   private void interpreteArcLine( final String line )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" ); //$NON-NLS-1$
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" );
     try
     {
       if( lStringParser.getIntSepCounter() == 7 )
@@ -390,7 +390,7 @@ public class RMA10S2GmlConv
 
   private void interpreteNodeInformationLine( final String line )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " " ); //$NON-NLS-1$
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " " );
     try
     {
       {
@@ -472,7 +472,7 @@ public class RMA10S2GmlConv
 
   private void interpreteElementLine( final String line )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " " ); //$NON-NLS-1$
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " " );
     try
     {
       if( lStringParser.getIntSepCounter() >= 5 )
@@ -628,7 +628,7 @@ public class RMA10S2GmlConv
         String lStrRes = m_stringTokenizer.nextToken();
         return lStrRes;
       }
-      return ""; //$NON-NLS-1$
+      return "";
     }
 
   }

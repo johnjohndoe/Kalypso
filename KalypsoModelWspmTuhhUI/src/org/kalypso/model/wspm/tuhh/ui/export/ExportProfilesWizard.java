@@ -124,7 +124,7 @@ public abstract class ExportProfilesWizard extends Wizard
     final ICoreRunnableWithProgress m_exportJob = new ICoreRunnableWithProgress()
     {
       @Override
-      public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
+      public IStatus execute( final IProgressMonitor monitor )
       {
         try
         {
@@ -136,10 +136,7 @@ public abstract class ExportProfilesWizard extends Wizard
         }
         catch( final CoreException e )
         {
-          final IStatus status = e.getStatus();
-          if( status.matches( IStatus.CANCEL ) )
-            throw new InterruptedException();
-          return status;
+          return e.getStatus();
         }
       }
     };

@@ -99,9 +99,6 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   public double getSlope( )
   {
     final BigDecimal slope = (BigDecimal) getFeature().getProperty( QNAME_PROP_SLOPE );
-    if( slope == null )
-      return Double.NaN;
-
     return slope.doubleValue();
   }
 

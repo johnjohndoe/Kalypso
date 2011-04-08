@@ -64,7 +64,7 @@ import com.google.common.collect.MapMaker;
 
 public final class ProfileResultPattern extends AbstractPatternInput<IProfilePatternData> implements IValueWithFormat<Object>
 {
-  private final ConcurrentMap<IKeyValue<IProfileFeature, String>, WspmResultLengthSection> m_lengthSectionCache = new MapMaker().expireAfterWrite( 5, TimeUnit.SECONDS ).makeComputingMap( new ResultFinder() );
+  private final ConcurrentMap<IKeyValue<IProfileFeature, String>, WspmResultLengthSection> m_lengthSectionCache = new MapMaker().expiration( 5, TimeUnit.SECONDS ).makeComputingMap( new ResultFinder() );
 
   public ProfileResultPattern( )
   {

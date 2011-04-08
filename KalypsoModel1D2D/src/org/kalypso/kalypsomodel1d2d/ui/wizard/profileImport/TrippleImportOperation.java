@@ -1,15 +1,14 @@
 package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
@@ -54,7 +53,7 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.13" ), 2 ); //$NON-NLS-1$
 
@@ -63,7 +62,7 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
       /* Import Trippel Data */
       monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.14" ) ); //$NON-NLS-1$
 
-      final IProfil[] profiles = ImportTrippleHelper.importTrippelData( m_trippelFile, m_separator, IWspmTuhhConstants.PROFIL_TYPE_PASCHE, m_crs );
+      final List<IProfil> profiles = ImportTrippleHelper.importTrippelData( m_trippelFile, m_separator, IWspmTuhhConstants.PROFIL_TYPE_PASCHE, m_crs );
 
       monitor.worked( 1 );
 
@@ -76,14 +75,11 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
 
       return status;
     }
-    catch( final CoreException e )
-    {
-      throw e;
-    }
     catch( final Exception e )
     {
-      throw new InvocationTargetException( e );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.15" ) ); //$NON-NLS-1$
     }
+
     finally
     {
       monitor.done();
@@ -97,7 +93,7 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
    *          the GML river network, in which the profiles will be stored
    * @param addedFeatures
    */
-  protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures, final IProfil[] profiles ) throws Exception
+  protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures, final List<IProfil> profiles ) throws Exception
   {
     final IRiverProfileNetwork network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
     final Feature networkFeature = network.getFeature();

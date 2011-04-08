@@ -390,7 +390,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         try{
           handleListSelectionChanged( parent, hydrographInfoGroup, featureComposite, event );
         }
-        catch (final Exception e) {
+        catch (Exception e) {
           e.printStackTrace();
         }
       }

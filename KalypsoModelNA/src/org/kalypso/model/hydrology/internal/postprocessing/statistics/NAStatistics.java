@@ -129,7 +129,7 @@ public class NAStatistics
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String msg = String.format( Messages.getString("NAStatistics.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final String msg = String.format( "Failed to create statistics: %s", e.getLocalizedMessage() );
       m_logger.severe( msg );
     }
   }
@@ -138,7 +138,7 @@ public class NAStatistics
   {
     final IAxis[] resultAxes = createAxes();
     final ITupleModel resultTuppleModel = new SimpleTupleModel( resultAxes, resultValues );
-    return new SimpleObservation( FILENAME_ZML, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), new MetadataList(), resultTuppleModel ); //$NON-NLS-1$
+    return new SimpleObservation( FILENAME_ZML, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), new MetadataList(), resultTuppleModel );
   }
 
   private Object[][] gatherData( final File inputDir ) throws SensorException
@@ -176,7 +176,7 @@ public class NAStatistics
   {
     final String relativePath = FileUtilities.getRelativePathTo( inputDir, resultFile );
     final String relativePathWithSlashes = relativePath.replace( '\\', '/' );
-    if( relativePathWithSlashes.startsWith( "/" ) ) //$NON-NLS-1$
+    if( relativePathWithSlashes.startsWith( "/" ) )
       return relativePathWithSlashes.substring( 1 );
 
     return relativePathWithSlashes;
@@ -258,7 +258,7 @@ public class NAStatistics
   private String asText( final Object currentElement, final int j )
   {
     if( currentElement == null )
-      return ""; //$NON-NLS-1$
+      return "";
 
     switch( j )
     {

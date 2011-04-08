@@ -25,7 +25,7 @@
 					<st:restriction base="integer">
 						<st:minInclusive value="1" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="-" />
+					<gml:unitOfMeasure uom=" " />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -39,6 +39,7 @@
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="dateTime" />
+					<gml:unitOfMeasure uom="dict_uom.xml#time" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>

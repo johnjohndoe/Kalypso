@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Kalypso
 Bundle-SymbolicName: org.kalypso.model.product;singleton:=true
-Bundle-Version: 10.10.2.qualifier
+Bundle-Version: 10.10.1.qualifier
 Bundle-Activator: org.kalypso.model.product.KalypsoModelProductPlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin

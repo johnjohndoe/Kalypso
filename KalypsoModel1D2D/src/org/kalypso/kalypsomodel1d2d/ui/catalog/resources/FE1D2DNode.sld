@@ -9,7 +9,7 @@
     <FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Node</FeatureTypeName>
 	<Rule>
 		<Name>Node</Name>
-		<Title>FE-Knoten (mit Höhe)</Title>
+		<Title>FE-Knoten</Title>
 		<Abstract>default</Abstract>
 		
 		<ogc:Filter>
@@ -53,7 +53,7 @@
 	
 	<Rule>
 		<Name>Node_NO_ELEVATION</Name>
-		<Title>FE-Knoten (ohne Höhe)</Title>
+		<Title>FE-Knoten</Title>
 		<Abstract>default</Abstract>
 		
 		<ogc:Filter>

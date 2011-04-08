@@ -80,7 +80,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
   CreateMainChannelWidget m_widget = null;
 
-  public static String LAYER_ID = "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay"; //$NON-NLS-1$
+  public static String LAYER_ID = "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay";
 
   private CreateChannelData m_data;
 
@@ -215,26 +215,13 @@ public class ProfilOverlayLayer extends PointsLineLayer
      * snap Point
      */
     Double width = curserPoint.getX();
-
-    // check if there is a point in snap distance
     if( Math.abs( point.x - profilePointScreen.x ) < 5 )
     {
-      // Here we have to get the real width of the original profile point otherwise we have a rounding problem by
-      width = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, profilePoint );
+      width = toNumeric( profilePointScreen ).getX();
     }
 
-    // check if width is less than the first profile point
-    final double widthFirstProfilePoint = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, origProfil.getPoint( 0 ) );
-    if( width < widthFirstProfilePoint )
-      return;
-
-    // check if width is greater than the last profile point
-    final double widthLastProfilePoint = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, origProfil.getPoint( origProfil.getPoints().length - 1 ) );
-    if( width > widthLastProfilePoint )
-      return;
-
-    /* set the initial height to the profile height */
-    /* and get the geo coordinates for the moved profile point */
+    // /* set the initial height to the profile height */
+    // /* and get the geo coordinates for the moved profile point */
     double heigth = 0;
     GM_Point gmPoint = null;
     GM_Point geoPoint = null;
@@ -242,8 +229,6 @@ public class ProfilOverlayLayer extends PointsLineLayer
     {
       heigth = WspmProfileHelper.getHeightByWidth( width, origProfil );
       gmPoint = WspmProfileHelper.getGeoPosition( width, origProfil );
-      if( gmPoint == null )
-        return;
       final String srsName = (String) profil.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
       geoPoint = WspmGeometryUtilities.pointFromPoint( gmPoint, srsName );
       geoPoint = WspmGeometryUtilities.pointFromRwHw( gmPoint.getX(), gmPoint.getY(), gmPoint.getZ() );

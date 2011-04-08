@@ -82,7 +82,7 @@ public class Export2dWizard extends Wizard implements INewWizard
   public void addPages( )
   {
     super.addPages();
-    m_page1 = new Export2dFileSelectWizardPage( "fileselect", new String[] { "*.2d", "*.2dm", "*.hmo" }, new String[] { Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.3"), Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.4"), Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.8") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+    m_page1 = new Export2dFileSelectWizardPage( "fileselect", new String[] { "*.2d", "*.2dm", "*.hmo" }, new String[] { Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.3"), Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.4"), Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.8") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     addPage( m_page1 );
   }
 

@@ -117,7 +117,7 @@ public class ProcessResultsJob extends Job
 
   private FileObject m_inputFile;
 
-  private final NodeResultMinMaxCatcher m_resultMinMaxCatcher = new NodeResultMinMaxCatcher();
+  private NodeResultMinMaxCatcher m_resultMinMaxCatcher = new NodeResultMinMaxCatcher();
 
   private List<TYPE> m_parameters;
 
@@ -229,7 +229,7 @@ public class ProcessResultsJob extends Job
     {
       InputStream contentStream = null;
 
-      final ZipOutputStream zos = null;
+      ZipOutputStream zos = null;
       try
       {
         /* Zip .2d file to outputDir */
@@ -288,7 +288,7 @@ public class ProcessResultsJob extends Job
         FileObject lResFile = m_inputResFileSWAN;
         if( m_inputResFileSWAN.getName().getFriendlyURI().endsWith( "zip" ) ) { //$NON-NLS-1$
           ZipUtilities.unzip( new File( m_inputResFileSWAN.getURL().toURI() ), new File( m_outputDir.toURI() ) );
-          lResFile = VFSUtilities.getNewManager().resolveFile( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
+          lResFile = VFSUtilities.getNewManager().resolveFile( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT );
         }
         // check if the given object is the directory with swan results.
         else if( m_inputResFileSWAN.getType().equals( FileType.FOLDER ) )
@@ -300,7 +300,7 @@ public class ProcessResultsJob extends Job
         if( lResFile.getName().getFriendlyURI().endsWith( ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ) )
         {
           lSWANResultsReader = new SWANResultsReader( lResFile );
-          final String timeStringFormatedForSWANOutput = SWANDataConverterHelper.getTimeStringFormatedForSWANOutput( m_stepDate );
+          String timeStringFormatedForSWANOutput = SWANDataConverterHelper.getTimeStringFormatedForSWANOutput( m_stepDate );
           m_mapResults = lSWANResultsReader.readMatResultsFile( timeStringFormatedForSWANOutput );
           KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( "read data for: " + timeStringFormatedForSWANOutput ) );
         }
@@ -518,7 +518,11 @@ public class ProcessResultsJob extends Job
   }
 
   private ITriangleEater createTinEater( final File tinResultFile, final TYPE parameter, final String crs ) throws CoreException
+  // , MalformedURLException, GM_Exception
   {
+    // TODO: for debug purpose only...
+    // final boolean fast = true;
+
     final List<QNameAndString> properties = new ArrayList<QNameAndString>();
 
     switch( parameter )
@@ -571,7 +575,22 @@ public class ProcessResultsJob extends Job
     }
 
     final QNameAndString[] props = properties.toArray( new QNameAndString[properties.size()] );
+    // if( fast )
     return new TriangulatedSurfaceDirectTriangleEater( tinResultFile, parameter, crs, props );
+
+    /*
+     * 
+     * this part of code was already "dead code", the fast variable is set constant to true
+     * 
+     * GMLWorkspace triangleWorkspace = null; try { triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName(
+     * UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURI().toURL(), null ); } catch(
+     * GMLSchemaException e ) { e.printStackTrace(); } final GM_TriangulatedSurface surface =
+     * org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs ); final Feature
+     * triangleFeature = triangleWorkspace.getRootFeature(); triangleFeature.setProperty( new QName(
+     * UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface ); //$NON-NLS-1$ return new
+     * TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, parameter, props );
+     */
+
   }
 
   // /**
