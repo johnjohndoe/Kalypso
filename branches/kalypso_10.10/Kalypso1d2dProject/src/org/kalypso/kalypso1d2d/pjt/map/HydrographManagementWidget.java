@@ -72,6 +72,7 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
@@ -775,7 +776,14 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
   protected void handleHydrographExport( @SuppressWarnings("unused") final Event event )
   {
-    // TODO Auto-generated method stub
+    // set wizard
+    final IWizard exportProfileWizard = new ExportHydrographWizard( m_hydrographs, m_selectedHydrograph );
+
+    Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();;
+
+    final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileWizard );
+    dialog.setRememberSize( true );
+    dialog.open();
 
   }
 
