@@ -316,7 +316,7 @@ public class ExportHydrographWizard extends Wizard
     formatter.format( "\n" ); //$NON-NLS-1$
     for( final XMLGregorianCalendar actDate : m_listDates )
     {
-      formatter.format( "%s" + m_textSep, m_mapDateStringsToPrint.get( actDate ) ); //$NON-NLS-1$
+      formatter.format( "%s", m_mapDateStringsToPrint.get( actDate ) ); //$NON-NLS-1$
       formatter.format( "\n" ); //$NON-NLS-1$
     }
     formatter.flush();
