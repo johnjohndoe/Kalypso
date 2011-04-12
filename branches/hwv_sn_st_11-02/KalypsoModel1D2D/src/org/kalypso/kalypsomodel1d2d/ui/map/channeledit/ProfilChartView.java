@@ -64,7 +64,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
-import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
+import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -123,11 +123,11 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   private void setDefaultAxis( final IMapperRegistry mr )
   {
     final AxisRendererConfig configDom = new AxisRendererConfig();
-    final IAxisRenderer aRendDom = new GenericAxisRenderer( "rendDom", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxisRenderer aRendDom = new ExtendedAxisRenderer( "rendDom", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final AxisRendererConfig configLR = new AxisRendererConfig();
     configLR.gap = 5;
-    final IAxisRenderer aRendLR = new GenericAxisRenderer( "rendLR", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxisRenderer aRendLR = new ExtendedAxisRenderer( "rendLR", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IAxis domainAxis = new GenericLinearAxis( "ID_AXIS_DOMAIN", POSITION.BOTTOM, null, aRendDom );//$NON-NLS-1$
     final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
