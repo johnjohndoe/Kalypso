@@ -189,7 +189,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   public void end( )
   {
     /* extrapolate the water level into dry areas */
-    extrapolateWaterLevel( 0 );
+    //should not be done for calculated by RMA results 
+    // extrapolateWaterLevel( 0 );
     // create the triangles for each element
     for( final ElementResult element : m_elemIndex.values() )
     {
@@ -488,7 +489,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         /* check the element (number of arcs, nodes, mid-side nodes) */
 
         /* check water levels for dry nodes */
-        elementResult.checkWaterlevels();
+        //should not be done for calculated by RMA results 
+//        elementResult.checkWaterlevels();
       }
     }
     else
