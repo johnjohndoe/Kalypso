@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,7 +89,7 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
-import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
+import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -99,6 +100,9 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
+import de.openali.odysseus.chart.framework.util.img.ChartLabelRendererFactory;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 /**
  * @author kimwerner
@@ -107,7 +111,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 {
   protected final LayerStyleProviderTuhh m_lsp = new LayerStyleProviderTuhh();
 
-  protected final IAxis m_domainAxis = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_DOMAIN", POSITION.BOTTOM, Number.class );//$NON-NLS-1$
+  protected final IAxis m_domainAxis = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_DOMAIN", POSITION.TOP, Number.class );//$NON-NLS-1$
 
   protected final IAxis m_targetAxisLeft = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_LEFT", POSITION.LEFT, Number.class );//$NON-NLS-1$
 
@@ -397,16 +401,25 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
   final void setAxisLabel( final IProfil profil )
   {
-    m_domainAxis.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) ) ) );
-    m_targetAxisLeft.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) ) ) );
+    final String domLabel = String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) ) );
+    m_domainAxis.clearLabels();
+    m_domainAxis.addLabel( ChartLabelRendererFactory.getAxisLabelType( POSITION.TOP, domLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
+    final String leftLabel = String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
+    m_targetAxisLeft.clearLabels();
+    m_targetAxisLeft.addLabel( ChartLabelRendererFactory.getAxisLabelType( POSITION.LEFT, leftLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
+
     final IComponent roughnessKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
     final IComponent roughnessKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+    final String rightLabel;
     if( roughnessKS != null )
-      m_targetAxisRight.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKS ) ) );
+      rightLabel = String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKS ) );
     else if( roughnessKST != null )
-      m_targetAxisRight.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKST ) ) );
+      rightLabel = String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKST ) );
     else
-      m_targetAxisRight.setLabel( "" ); //$NON-NLS-1$
+      rightLabel = ""; //$NON-NLS-1$
+    m_targetAxisRight.clearLabels();
+    m_targetAxisRight.addLabel( ChartLabelRendererFactory.getAxisLabelType( POSITION.RIGHT, rightLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
+
   }
 
   /**
@@ -471,11 +484,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     axisRendererConfigD.gap = 1;
     axisRendererConfigD.hideCut = false;
 
-    final IAxisRenderer aRendDom = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_DOMAIN_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigD ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IAxisRenderer aRendRight = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxisRenderer aRendDom = new ExtendedAxisRenderer( "ProfilLayerProviderTuhh_AXIS_DOMAIN_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigD ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxisRenderer aRendRight = new ExtendedAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
 
-
-    final IAxisRenderer aRendLeft = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxisRenderer aRendLeft = new ExtendedAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
     m_domainAxis.setPreferredAdjustment( aaDom );
