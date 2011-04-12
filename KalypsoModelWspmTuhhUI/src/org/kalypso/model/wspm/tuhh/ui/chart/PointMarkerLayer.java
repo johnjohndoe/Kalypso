@@ -177,8 +177,8 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public Rectangle getHoverRect( final IRecord profilPoint )
   {
-    final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() );
-    final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() ) + m_offset;
+    final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() );
+    final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() ) + m_offset;
     final Double breite = ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoint );
     final int screenX = getCoordinateMapper().getDomainAxis().numericToScreen( breite );
     return new Rectangle( screenX - 5, top, 10, bottom - top );
@@ -279,8 +279,8 @@ public class PointMarkerLayer extends AbstractProfilLayer
       return;
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( target.getId() );
     final int len = deviders.length;
-    final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() );
-    final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() ) + m_offset;
+    final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() );
+    final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() ) + m_offset;
 
     final PolylineFigure pf = new PolylineFigure();
     pf.setStyle( getLineStyle() );
