@@ -48,8 +48,10 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
@@ -57,6 +59,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -67,7 +70,6 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author doemming
@@ -93,7 +95,7 @@ public class CatchmentManager
     m_logger = logger;
   }
 
-  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws Exception
+  public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace ) throws NAPreprocessorException
   {
     final NaModell naModel = (NaModell) workspace.getRootFeature();
 
@@ -105,14 +107,19 @@ public class CatchmentManager
     }
   }
 
-  private void writeFeature( final AsciiBuffer asciiBuffer, final GMLWorkspace workSpace, final Catchment catchment ) throws Exception
+  private void writeFeature( final AsciiBuffer asciiBuffer, final GMLWorkspace workSpace, final Catchment catchment ) throws NAPreprocessorException
   {
     final StringBuffer catchmentBuffer = asciiBuffer.getCatchmentBuffer();
+
+    final String catchmentName = catchment.getName();
 
     // 0
     final IDManager idManager = m_conf.getIdManager();
     final int asciiID = idManager.getAsciiID( catchment );
     catchmentBuffer.append( String.format( Locale.US, "%16d%7d\n", asciiID, 7 ) ); //$NON-NLS-1$
+
+    // CHECK: fallback to internal id if catchment has no name, is there a better idea?
+    final String catchmentLabel = StringUtils.isBlank( catchmentName ) ? Integer.toString( asciiID ) : catchmentName;
 
     // 1 (empty line)
     catchmentBuffer.append( "\n" ); //$NON-NLS-1$
@@ -133,11 +140,20 @@ public class CatchmentManager
     if( zftProp instanceof IObservation )
     {
       catchmentBuffer.append( "we_nat.zft\n" ); //$NON-NLS-1$
-      writeZML( (IObservation) zftProp, asciiID, asciiBuffer.getZFTBuffer() );
+      try
+      {
+        writeZML( (IObservation) zftProp, asciiID, asciiBuffer.getZFTBuffer() );
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+        final String message = String.format( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.81"), catchmentLabel ); //$NON-NLS-1$
+        throw new NAPreprocessorException( message, e );
+      }
     }
     else
     {
-      final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.0", asciiID ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.0", catchmentLabel ); //$NON-NLS-1$
       m_logger.log( Level.WARNING, msg );
 
       catchmentBuffer.append( "we999.zfl\n" ); //$NON-NLS-1$
@@ -191,31 +207,38 @@ public class CatchmentManager
     catchmentBuffer.append( String.format( Locale.US, "%f %f %f %f %f %f\n", retvs, retob, retint, retbas, retgw, retklu ) ); //$NON-NLS-1$
 
     // 12-14
-    final Feature[] getgrundwasserAbflussFeatures = catchment.getgrundwasserAbflussFeatures();
-    catchmentBuffer.append( String.format( Locale.US, "%d\n", getgrundwasserAbflussFeatures.length ) ); //$NON-NLS-1$
+    final Feature[] grundwasserAbflussFeatures = catchment.getgrundwasserAbflussFeatures();
+    catchmentBuffer.append( String.format( Locale.US, "%d\n", grundwasserAbflussFeatures.length ) ); //$NON-NLS-1$
     final StringBuffer line13 = new StringBuffer();
     final StringBuffer line14 = new StringBuffer();
     double sumGwwi = 0.0;
-    for( final Feature fe : getgrundwasserAbflussFeatures )
+    for( final Feature geFeature : grundwasserAbflussFeatures )
     {
-      final IRelationType rt2 = (IRelationType) fe.getFeatureType().getProperty( NaModelConstants.CATCHMENT_PROP_NGWZU );
-      final Feature linkedFE = workSpace.resolveLink( fe, rt2 );
-
+      final IRelationType rt2 = (IRelationType) geFeature.getFeatureType().getProperty( NaModelConstants.CATCHMENT_PROP_NGWZU );
+      final Feature linkedFE = workSpace.resolveLink( geFeature, rt2 );
       if( linkedFE == null )
-        throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", FeatureHelper.getAsString( fe, "ngwzu" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      {
+        final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", catchmentLabel ); //$NON-NLS-1$
+        throw new NAPreprocessorException( msg );
+      }
 
       line13.append( String.format( Locale.US, "%d ", idManager.getAsciiID( linkedFE ) ) ); //$NON-NLS-1$
-      line14.append( String.format( Locale.US, "%s ", m_asciiHelper.toAscii( fe, 14 ) ) ); //$NON-NLS-1$
+      line14.append( String.format( Locale.US, "%s ", m_asciiHelper.toAscii( geFeature, 14 ) ) ); //$NON-NLS-1$
 
-      final Double gwwiValue = (Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_GWWI );
+      final Double gwwiValue = (Double) geFeature.getProperty( NaModelConstants.CATCHMENT_PROP_GWWI );
       if( gwwiValue == null )
-        throw new Exception( "" );  //$NON-NLS-1$
+      {
+        final IPropertyType gwwiPT = geFeature.getFeatureType().getProperty( NaModelConstants.CATCHMENT_PROP_GWWI );
+        final String gwwiLabel = gwwiPT.getAnnotation().getLabel();
+        final String message = String.format( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.1"), gwwiLabel, catchmentLabel ); //$NON-NLS-1$
+        throw new NAPreprocessorException( message );
+      }
 
       sumGwwi += gwwiValue.doubleValue();
     }
 
     if( sumGwwi > 1.001 )
-      throw new Exception( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.84", catchment.getName() ) //$NON-NLS-1$
+      throw new NAPreprocessorException( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.84", catchmentLabel ) //$NON-NLS-1$
           + ", AsciiID: " + asciiID ); //$NON-NLS-1$
     if( sumGwwi < 0.999 )
     {
@@ -223,11 +246,11 @@ public class CatchmentManager
       final double delta = 1 - sumGwwi;
       line13.append( "0 " ); //$NON-NLS-1$
       line14.append( delta ).append( " " ); //$NON-NLS-1$
-      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Locale.US, Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88" ), catchment.getName(), Integer.toString( asciiID ), sumGwwi * 100.0 ) ); //$NON-NLS-1$
+      Logger.getAnonymousLogger().log( Level.WARNING, String.format( Locale.US, Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.88" ), catchmentLabel, Integer.toString( asciiID ), sumGwwi * 100.0 ) ); //$NON-NLS-1$
       Logger.getAnonymousLogger().log( Level.WARNING, String.format( Locale.US, Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.92" ), delta * 100.0 ) ); //$NON-NLS-1$
     }
 
-    if( getgrundwasserAbflussFeatures.length > 0 )
+    if( grundwasserAbflussFeatures.length > 0 )
     {
       catchmentBuffer.append( line13 ).append( "\n" ); //$NON-NLS-1$
       catchmentBuffer.append( line14 ).append( "\n" ); //$NON-NLS-1$
