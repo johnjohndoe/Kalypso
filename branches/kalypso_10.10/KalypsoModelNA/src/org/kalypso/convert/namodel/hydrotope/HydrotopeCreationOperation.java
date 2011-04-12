@@ -67,7 +67,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -327,7 +326,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             try
             {
               union = geometryCollection.union();
+              if( union.getNumGeometries() > 1 )
+                union = union.buffer( 0.0001 ); // fixes problem with precision
               m_outputList.removeAll( featuresToMergeWith );
+              m_outputList.removeAll( featuresToMergeWith ); // fixes problem, what is going on here?
             }
             catch( final Exception e )
             {
@@ -382,21 +384,17 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     try
     {
       final GM_Object newGeometry = JTSAdapter.wrap( geometry, crs );
-      if( newGeometry instanceof GM_MultiSurface )
-        return (GM_MultiSurface) newGeometry;
-      else if( newGeometry instanceof GM_Surface )
+      if( newGeometry instanceof GM_Surface )
       {
         final ArrayList<GM_Surface< ? >> arrayList = new ArrayList<GM_Surface< ? >>();
         arrayList.add( (GM_Surface< ? >) newGeometry );
         final GM_MultiSurface multiSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_MultiSurface( arrayList.toArray( new GM_Surface[0] ), newGeometry.getCoordinateSystem() );
         return multiSurface;
       }
-      else if( newGeometry instanceof GM_MultiPrimitive )
+      else
       {
-        final GeometryCollection lCol = (GeometryCollection) JTSAdapter.export( newGeometry );
-        return toMultiSurface( lCol.buffer( 0.0 ), crs );
+    	  throw new IllegalStateException( "cannot create hydrotope with multisurface" );
       }
-      return null;
     }
     catch( final GM_Exception e )
     {
