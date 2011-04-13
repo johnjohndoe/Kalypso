@@ -51,8 +51,12 @@ public class TuhhStationRange
 
   private final BigDecimal m_to;
 
-  public TuhhStationRange( final TuhhCalculation calculation, final boolean isDirectionUpstreams )
+  private final boolean m_directionUpstreams;
+
+  public TuhhStationRange( final TuhhCalculation calculation )
   {
+    m_directionUpstreams = calculation.getReach().getWaterBody().isDirectionUpstreams();
+
     final BigDecimal startStation = calculation.getStartStation();
     final BigDecimal endStation = calculation.getEndStation();
 
@@ -65,8 +69,8 @@ public class TuhhStationRange
     }
     else
     {
-      m_from = startStation;
-      m_to = endStation;
+      m_from = endStation;
+      m_to = startStation;
     }
   }
 
@@ -78,4 +82,26 @@ public class TuhhStationRange
     return m_from.compareTo( station ) > 0 || station.compareTo( m_to ) > 0;
   }
 
+  public boolean getDirection( )
+  {
+    return m_directionUpstreams;
+  }
+
+  public BigDecimal getFrom( )
+  {
+    return m_from;
+  }
+
+  public BigDecimal getTo( )
+  {
+    return m_to;
+  }
+
+  public int getExportSign( )
+  {
+    if( m_directionUpstreams )
+      return 1;
+    else
+      return -1;
+  }
 }
