@@ -200,10 +200,11 @@ public class WspWinExporter
     if( profileSegments.length == 0 )
       throw new IllegalArgumentException( Messages.getString("WspWinExporter.1") ); //$NON-NLS-1$
 
-    final boolean isDirectionUpstreams = reach.isDirectionUpstreams();
+    final TuhhStationRange stationRange = new TuhhStationRange( calculation );
 
-    write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile, isDirectionUpstreams );
-    write1DTuhhZustand( calculation, isDirectionUpstreams, zustFile, psiFile );
+    write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile, stationRange );
+
+    write1DTuhhZustand( calculation, stationRange, zustFile, psiFile );
     if( calculation.getCalcMode() == MODE.WATERLEVEL )
     {
       final IRunOffEvent runOffEvent = calculation.getRunOffEvent();
@@ -217,12 +218,14 @@ public class WspWinExporter
         throw new IllegalArgumentException( error );
       }
 
-      write1DTuhhRunOff( runOffEvent, qwtFile );
+      write1DTuhhRunOff( runOffEvent, qwtFile, stationRange );
     }
   }
 
-  private static void write1DTuhhRunOff( final IRunOffEvent runOffEvent, final File qwtFile ) throws IOException
+  private static void write1DTuhhRunOff( final IRunOffEvent runOffEvent, final File qwtFile, final TuhhStationRange stationRange ) throws IOException
   {
+    // FIXME XXX
+
     final SortedMap<BigDecimal, BigDecimal> values = runOffEvent.getDischargeTable();
 
     PrintWriter pw = null;
@@ -261,8 +264,10 @@ public class WspWinExporter
     return runoffName.replaceAll( "( |,|\\.)", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  private static void write1DTuhhSteuerparameter( final TuhhCalculation calculation, final File batFile, final File zustFile, final File qwtFile, final boolean isDirectionUpstreams ) throws IOException
+  private static void write1DTuhhSteuerparameter( final TuhhCalculation calculation, final File batFile, final File zustFile, final File qwtFile, final TuhhStationRange stationRange ) throws IOException
   {
+    // FIXME XXX
+
     final MODE calcMode = calculation.getCalcMode();
 
     Formatter pw = null;
@@ -297,8 +302,12 @@ public class WspWinExporter
       pw.format( "FLIESSGESETZ=%s%n", calculation.getFliessgesetz().name() ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
-      pw.format( "ANFANGSSTATION=%s%n", Double.toString( calculation.getStartStation().doubleValue() ) ); //$NON-NLS-1$
-      pw.format( "ENDSTATION=%s%n", Double.toString( calculation.getEndStation().doubleValue() ) ); //$NON-NLS-1$
+
+      final BigDecimal startStation = stationRange.getFrom();
+      final BigDecimal endStation = stationRange.getTo();
+
+      pw.format( "ANFANGSSTATION=%s%n", Double.toString( startStation.doubleValue() ) ); //$NON-NLS-1$
+      pw.format( "ENDSTATION=%s%n", Double.toString( endStation.doubleValue() ) ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
       pw.format( "# mögliche Werte%n" ); //$NON-NLS-1$
@@ -385,13 +394,14 @@ public class WspWinExporter
       return ""; //$NON-NLS-1$
   }
 
-  private static void write1DTuhhZustand( final TuhhCalculation calculation, final boolean isDirectionUpstreams, final File zustFile, final File psiFile ) throws IOException
+  private static void write1DTuhhZustand( final TuhhCalculation calculation, final TuhhStationRange stationRange, final File zustFile, final File psiFile ) throws IOException
   {
+    // FIXME XXX
+
     final TuhhReach reach = calculation.getReach();
     final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
 
-    final TuhhStationRange stationRange = new TuhhStationRange( calculation, isDirectionUpstreams );
-    final TuhhSegmentStationComparator stationComparator = new TuhhSegmentStationComparator( isDirectionUpstreams );
+    final TuhhSegmentStationComparator stationComparator = new TuhhSegmentStationComparator( stationRange.getDirection() );
 
     Arrays.sort( segments, stationComparator );
 
