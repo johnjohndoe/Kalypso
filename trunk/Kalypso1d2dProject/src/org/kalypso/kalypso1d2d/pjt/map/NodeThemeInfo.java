@@ -198,6 +198,8 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
       {
         IFE1D2DNode actNode = iterator.next();
         Feature nodeRes = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( actNode.getPoint().getPosition(), coordinateSystem ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
+        if(nodeRes == null)
+          continue;
         
         Object value = nodeRes.getProperty( m_actPropQname );
         if( value == null )
