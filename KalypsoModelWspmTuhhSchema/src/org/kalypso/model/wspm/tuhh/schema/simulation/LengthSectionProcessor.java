@@ -60,6 +60,7 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -69,6 +70,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -304,9 +306,37 @@ public class LengthSectionProcessor
     rootFeature.setName( title );
     rootFeature.setDescription( description );
 
+    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( rootFeature );
+
+    checkDirection( observation );
+
+    ObservationFeatureFactory.toFeature( observation, rootFeature );
+
     GmlSerializer.serializeWorkspace( m_gmlFile, obsWks, "UTF-8" ); //$NON-NLS-1$
 
-    return ObservationFeatureFactory.toObservation( rootFeature );
+    return observation;
+  }
+
+  /**
+   * If the station is direction of flow, the station was written with negative sign. We revert this here, so the
+   * results have the original stations.
+   */
+  private void checkDirection( final IObservation<TupleResult> observation )
+  {
+    final TupleResult result = observation.getResult();
+
+    final boolean direction = m_calculation.getReach().getWaterBody().isDirectionUpstreams();
+    final BigDecimal sign = direction ? new BigDecimal( 1 ) : new BigDecimal( -1 );
+
+    final int stationIndex = result.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
+
+    for( int i = 0; i < result.size(); i++ )
+    {
+      final IRecord record = result.get( i );
+      final BigDecimal station = (BigDecimal) record.getValue( stationIndex );
+      final BigDecimal newStation = station.multiply( sign );
+      record.setValue( stationIndex, newStation );
+    }
   }
 
   private void createWspTinSld( final NumberRange wspRange ) throws IOException, XMLParsingException, SAXException
@@ -385,15 +415,6 @@ public class LengthSectionProcessor
 
   private void createDiagram( final File diagFile, final boolean isDirectionUpstreams, final String title ) throws IOException, XmlException
   {
-    // Check if optional bundle is installed
-    // They are no more optional... however the id has changed and this does not work any more...
-    // TODO: probably its better to check per reflection if a certain class is present...
-    // Or even beteer: catch the ClassNotFoundExcpetion (check if this is the right exception) and ignore it (or give a
-    // warning message)
-// if( Platform.getBundle( "org.kalypso.chart.factory" ) == null || Platform.getBundle( "org.kalypso.chart.framework" )
-    // == null )
-// return;
-
     /* We just load the template and tweak the direction of the station-axis */
     final URL kodResource = LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" ); //$NON-NLS-1$
     final String kodContent = UrlUtilities.toString( kodResource, "UTF-8" ); //$NON-NLS-1$

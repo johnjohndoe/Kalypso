@@ -87,14 +87,14 @@ public class TuhhStationRange
     return m_directionUpstreams;
   }
 
-  public BigDecimal getFrom( )
+  public double getExportFrom( )
   {
-    return m_from;
+    return m_directionUpstreams ? m_from.doubleValue() : -m_to.doubleValue();
   }
 
-  public BigDecimal getTo( )
+  public double getExportTo( )
   {
-    return m_to;
+    return m_directionUpstreams ? m_to.doubleValue() : -m_from.doubleValue();
   }
 
   public int getExportSign( )
