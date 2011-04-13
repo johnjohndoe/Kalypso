@@ -43,7 +43,11 @@ public class ExportHydrographWizard extends Wizard
 
   private final static SimpleDateFormat m_dateFormat = new SimpleDateFormat( "dd.MM.yyyy" ); //$NON-NLS-1$
 
-  private final static SimpleDateFormat m_timeFormat = new SimpleDateFormat( "HH:mm:SS.sss" ); //$NON-NLS-1$
+  private final static SimpleDateFormat m_timeFormat = new SimpleDateFormat( "HH:mm:ss.SSS" ); //$NON-NLS-1$
+
+  private final static SimpleDateFormat m_dateTimeFormatFileName = new SimpleDateFormat( "yyyy_MM_dd_HH_mm_ss" ); //$NON-NLS-1$
+  
+  private final static String SINGLE_FILE_NAME_PREFIX = "all_hydrographs_exptt_"; //$NON-NLS-1$
 
   private static final int HEADER_COLS_COUNT = 8;
 
@@ -212,7 +216,7 @@ public class ExportHydrographWizard extends Wizard
     }
     else
     {
-      lListHydrographs.add( lSelectedHydrograph.getFeature() );
+      lListHydrographs.add( lSelectedHydrograph.getFeature() ); 
     }
 
     m_mapDateStringsToPrint = new HashMap<XMLGregorianCalendar, String>();
@@ -231,7 +235,11 @@ public class ExportHydrographWizard extends Wizard
       selectedHydrograph = (IHydrograph) (lListHydrographs.get( lCountHydrographs )).getAdapter( IHydrograph.class );
       m_geoPosition = selectedHydrograph.getLocation();
       Date lDateNow = new Date();
-      final File stdOutFile = new File( lStringExportDir, /* "hydrograph_" + */selectedHydrograph.getName().replace( " ", "_" ) + "_" + lDateNow.getTime() + ".txt" ); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      String lStrFileName = /* "hydrograph_" + */selectedHydrograph.getName().replace( " ", "_" ) + "_Nr_" + lCountHydrographs + "_exptt_" + m_dateTimeFormatFileName.format( lDateNow ) + ".txt"; //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      if( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() ){
+        lStrFileName = SINGLE_FILE_NAME_PREFIX + m_dateTimeFormatFileName.format( lDateNow ) + ".txt";
+      }
+      final File stdOutFile = new File( lStringExportDir, lStrFileName  ); 
 
       if( m_exportHydrographWizardPage.getRadioMultipleFiles().getSelection() || lCountHydrographs == 0 )
       {
@@ -331,6 +339,7 @@ public class ExportHydrographWizard extends Wizard
     NumberFormat lNf = NumberFormat.getInstance( m_selectedLocale );
     lNf.setMinimumFractionDigits( 3 );
     lNf.setGroupingUsed( false );
+    lNf.setMaximumFractionDigits( 10 );
     TupleResult obsResult = observation.getResult();
     String lPositionStr = String.format( "[%s %s]%s", lNf.format( m_geoPosition.getCentroid().getX() ), lNf.format( m_geoPosition.getCentroid().getY() ), m_textSep ); //$NON-NLS-1$
     for( int i = 0; i < obsResult.size(); ++i )
@@ -421,7 +430,7 @@ public class ExportHydrographWizard extends Wizard
   {
     if( pIntCounter == 0 || ( m_exportHydrographWizardPage.getRadioMultipleFiles().getSelection() ) )
     {
-      formatter.format( "[DD.MM.YYYY]%s[HH:MM:SS.sss]%s", m_textSep, m_textSep ); //$NON-NLS-1$
+      formatter.format( "[%s]%s[%s]%s", m_dateFormat.toPattern(), m_textSep, m_timeFormat.toPattern(), m_textSep ); //$NON-NLS-1$
     }
     if( pIntCounter > 0 && ( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() && !m_boolHorizontalExport ) )
     {
@@ -432,7 +441,7 @@ public class ExportHydrographWizard extends Wizard
     for( int i = 1; i < HEADER_COLS_COUNT; ++i )
     {
       if( i == 1 )
-      {
+      { 
         formatter.format( "%s%s", COL_POS, m_textSep ); //$NON-NLS-1$
       }
       if( m_setExclusion.contains( i ) )
