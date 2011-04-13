@@ -87,7 +87,7 @@ public class PrfReader
     return m_metaMap.get( index );
   }
 
-  private final int getDataSize(final int key , final int size )
+  private final int getDataSize( final int key, final int size )
   {
     if( key == IWspWinConstants.SPEZIALPROFIL_TRAPEZ )
       return 6;
@@ -116,6 +116,7 @@ public class PrfReader
       return IWspWinConstants.DATA_BLOCK_TYPE_DOUBLE;
     else if( key == 0 )
       return IWspWinConstants.DATA_BLOCK_TYPE_COORDINATE;
+
     return IWspWinConstants.DATA_BLOCK_TYPE_UNKNOWN;
   }
 
@@ -153,9 +154,9 @@ public class PrfReader
         if( isValid( dbh ) )
         {
           final int key = dbh.getSpecification( 8 );
-          final int dataBlockType = getDataBlockType(key);
+          final int dataBlockType = getDataBlockType( key );
           final IDataBlock dB = createDataBlock( dbh, dataBlockType );
-          dB.readFromReader(getDataSize( key, pointCount ), br );
+          dB.readFromReader( getDataSize( key, pointCount ), br );
           m_dbs.put( createFirstLine( dbh.getFirstLine() ), dB );
         }
       }
@@ -240,9 +241,9 @@ public class PrfReader
     // TODO: Kim Serializer:MapperFormat Anzahl über 999 Punkte lesen
 
     // 1. Format: Whitespace separated
-    final StringTokenizer sT = (string == null) ? null : new StringTokenizer( string );
-    final int count = (sT == null) ? -1 : sT.countTokens() - 1;
-    if( (count < 0) || (count != Integer.parseInt( sT.nextToken() )) )
+    final StringTokenizer sT = string == null ? null : new StringTokenizer( string );
+    final int count = sT == null ? -1 : sT.countTokens() - 1;
+    if( count < 0 || count != Integer.parseInt( sT.nextToken() ) )
       m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.wspwin.core.prf.PrfReader.39" ) ); //$NON-NLS-1$
 
     final int[] counts = new int[count];
