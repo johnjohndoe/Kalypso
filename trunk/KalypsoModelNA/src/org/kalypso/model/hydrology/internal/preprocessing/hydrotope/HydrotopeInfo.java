@@ -130,11 +130,11 @@ public class HydrotopeInfo
     final double corrSealing = m_hydrotop.getCorrSealing();
     // FIXME:
     // HOTFIX: should actually lead to an exception instead: planer client produces corrSeling > 1.0
-    final double corrSealingFixed = Math.abs( Math.min( corrSealing, 1.0 ) );
-
-    final double totalSealingFaktor = landuseSealing * corrSealingFixed;
-    if( totalSealingFaktor > 1.0 )
-      throw new SimulationException( String.format( "Hydrotop has a sealing faktor > 1.0: %.2f", totalSealingFaktor ) ); //$NON-NLS-1$
+    // final double corrSealingFixed = Math.abs( Math.min( corrSealing, 1.0 ) );
+    final double totalSealingFaktor = landuseSealing * corrSealing;
+    //final double totalSealingFaktor = landuseSealing * corrSealingFixed;
+    //    if( totalSealingFaktor > 1.0 )
+    // throw new SimulationException( String.format( "Hydrotop has a sealing faktor > 1.0: %.2f", totalSealingFaktor ) ); //$NON-NLS-1$
 
     final Sealing originalHydrotopSealing = Sealing.createFromSealing( hydrotopArea, totalSealingFaktor );
 
