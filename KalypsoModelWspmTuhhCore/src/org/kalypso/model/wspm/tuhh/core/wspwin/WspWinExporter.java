@@ -116,7 +116,6 @@ public class WspWinExporter
         final IResource resource = modelGml.next();
         if( resource instanceof IFile )
         {
-          // TODO: ensure that resource is a GML file?
           // read gml workspace
           final URL modelGmlUrl = ResourceUtilities.createURL( resource );
 
@@ -130,8 +129,6 @@ public class WspWinExporter
           // process only WspmProject features
           if( QNameUtilities.equals( featureName, IWspmConstants.NS_WSPMPROJ, "WspmProject" ) ) //$NON-NLS-1$
           {
-            // TODO: sicherstellen, dass es sich um ein TU-HH-Modell handelt?
-
             // load (initialize) WspmProject
             monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.3" ) + resource.getName() + Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
             final TuhhWspmProject wspmProject = (TuhhWspmProject) gmlWrkSpce.getRootFeature();
@@ -205,7 +202,7 @@ public class WspWinExporter
 
     final boolean isDirectionUpstreams = reach.isDirectionUpstreams();
 
-    write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile );
+    write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile, isDirectionUpstreams );
     write1DTuhhZustand( calculation, isDirectionUpstreams, zustFile, psiFile );
     if( calculation.getCalcMode() == MODE.WATERLEVEL )
     {
@@ -264,7 +261,7 @@ public class WspWinExporter
     return runoffName.replaceAll( "( |,|\\.)", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  private static void write1DTuhhSteuerparameter( final TuhhCalculation calculation, final File batFile, final File zustFile, final File qwtFile ) throws IOException
+  private static void write1DTuhhSteuerparameter( final TuhhCalculation calculation, final File batFile, final File zustFile, final File qwtFile, final boolean isDirectionUpstreams ) throws IOException
   {
     final MODE calcMode = calculation.getCalcMode();
 
@@ -280,7 +277,7 @@ public class WspWinExporter
 
       pw.format( "%n" ); //$NON-NLS-1$
       // TODO: normally instead of the projekt path, also a '.' should work.
-      pw.format( "PROJEKTPFAD=%s%n", zustFile.getParentFile().getParentFile().getAbsolutePath() ); //$NON-NLS-1$
+      pw.format( "PROJEKTPFAD=%s%n", "." ); //$NON-NLS-1$ //$NON-NLS-2$
       pw.format( "STRANGDATEI=%s%n", zustFile.getName() ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
@@ -292,7 +289,6 @@ public class WspWinExporter
 
       pw.format( "BERECHNUNGSMODUS=%s%n", calcMode.name() ); //$NON-NLS-1$
 
-      // TODO: passt das zum RK?
       pw.format( "%n" ); //$NON-NLS-1$
       pw.format( "# mögliche Werte:%n" ); //$NON-NLS-1$
       pw.format( "# DARCY_WEISBACH_OHNE_FORMEINFLUSS%n" ); //$NON-NLS-1$
@@ -426,7 +422,6 @@ public class WspWinExporter
 
           zustWriter.print( prfName );
           zustWriter.print( " " ); //$NON-NLS-1$
-          // TODO mindestens 4, besser 5 Nachkommastellen?
           zustWriter.println( station );
 
           final IProfil profil = profileMember.getProfil();
