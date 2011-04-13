@@ -106,14 +106,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
   private GM_MultiSurface m_workingArea = null;
 
-  private double m_sealingCorrectionFactorValue = Double.NaN;
-
-  private boolean m_isSealingCorrectionEnabled = false;
-
-  private int m_zopa_count = 0;
-
-  private int m_thrownout_hydros = 0;
-
   public HydrotopeCreationOperation( final FeatureList landuseList, final FeatureList pedologyList, final FeatureList geologyList, final FeatureList catchmentsList, final IFeatureBindingCollection<IHydrotope> outputList, final GMLWorkspace outputWorkspace, final GM_MultiSurface workingArea )
   {
     m_landuseList = landuseList;
@@ -130,20 +122,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     m_dissolveFeatures = dissolveFeatures;
   }
 
-  /**
-   * Forces the given sealing correction factor, instead the one from the landuse data. <br>
-   * If the given value is Double.NaN, then the factor value is not forced.
-   */
-  public final void setSealingCorrectionFactor( final double value )
-  {
-    m_sealingCorrectionFactorValue = value;
-    m_isSealingCorrectionEnabled = !Double.isNaN( value );
-  }
-
   private final FeatureListGeometryIntersector getIntersector( )
   {
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
-    
+
     if( m_workingArea == null )
     {
       geometryIntersector.addFeatureList( m_pedologyList );
@@ -206,19 +188,22 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           else
           {
             final Geometry geometry = g.difference( intersectionArea );
-            if ( geometry.isEmpty() ) {
+            if( geometry.isEmpty() )
+            {
               continue;
             }
-            if (geometry instanceof MultiPolygon) {
+            if( geometry instanceof MultiPolygon )
+            {
               // FIXME: Complicated case! fix it!
               continue;
-            } else {
+            }
+            else
+            {
               final GM_MultiSurface hydrotopGeometry = toMultiSurface( geometry, COORDINATE_SYSTEM );
               if( hydrotopGeometry != null )
                 hydrotop.setGeometry( hydrotopGeometry );
             }
-            
-            
+
           }
         }
       }
@@ -246,7 +231,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         // we always expect an intersection of subcatchments, landuse, geology and pedology
         if( features.length != 4 )
           continue;
-        
+
         boolean b_catchment = false;
         boolean b_landuse = false;
         boolean b_soiltype = false;
@@ -270,15 +255,14 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           {
             b_geology = true;
           }
-          
+
         }
-        
-        if (!b_geology || !b_landuse || !b_catchment || !b_soiltype) {
-//          System.out.println("WARNING");
-          m_thrownout_hydros ++;
+
+        if( !b_geology || !b_landuse || !b_catchment || !b_soiltype )
+        {
           continue;
         }
-        
+
         final IHydrotope hydrotop = m_outputList.addNew( IHydrotope.QNAME );
 
         for( final Feature feature : features )
@@ -299,15 +283,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
               hydrotop.setLanduse( ((XLinkedFeature_Impl) landuseClassLink).getFeatureId() );
             else
               hydrotop.setLanduse( featureLanduse.getName() );
-            
+
             final Double corrSealing = landuse.getCorrSealing();
-            if( m_isSealingCorrectionEnabled && featureLanduse.getId().startsWith( Landuse.QNAME + "_PLC" )  ) 
-            {
-              hydrotop.setCorrSealing( corrSealing * m_sealingCorrectionFactorValue );
-            } else {
-              hydrotop.setCorrSealing( corrSealing );
-            }
-            
+            hydrotop.setCorrSealing( corrSealing );
+
             final IFeatureBindingCollection<Feature> landuseSudsCollection = landuse.getSudCollection();
             final IFeatureBindingCollection<ISuds> hydrotopeSudsCollection = hydrotop.getSudCollection();
             final FeatureList hydrotopeFeatureList = hydrotopeSudsCollection.getFeatureList();
@@ -443,7 +422,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       }
       else
       {
-    	  throw new IllegalStateException( "cannot create hydrotope with multisurface" );
+        throw new IllegalStateException( "cannot create hydrotope with multisurface" );
       }
     }
     catch( final GM_Exception e )
@@ -452,91 +431,4 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       return null;
     }
   }
-
-// public static final boolean isPointInsidePolygon( final GM_Position[] pos, final GM_Point point )
-// {
-// boolean isInside = false;
-// int nPoints = pos.length;
-//
-// if( pos[nPoints - 1].equals( pos[0] ) == true )
-// nPoints -= 1;
-//
-// int j = 0;
-// for( int i = 0; i < nPoints; i++ )
-// {
-// j++;
-// if( j == nPoints )
-// j = 0;
-//
-// /*
-// * if (y[i] < pointY && y[j] >= pointY || y[j] < pointY && y[i] >= pointY) { nx = x - pos[0].x; if (x[i] + (pointY
-// * - y[i]) / (y[j] - y[i]) * (x[j] - x[i]) < pointX) { isInside = !isInside; } }
-// */
-//
-// if( pos[i].getY() < point.getY() && (pos[j].getY() > point.getY() || AboutEqual( pos[j].getY(), point.getY() )) ||
-// (pos[j].getY() < point.getY() && (pos[i].getY() > point.getY()
-// /* || AboutEqual( pos[i].getY(), point.getY()) */)) )
-// {
-// if( (pos[i].getX() - point.getX()) + (point.getY() - pos[i].getY()) / (pos[j].getY() - pos[i].getY()) *
-// (pos[j].getX() - pos[i].getX()) < 0 )
-// {
-// isInside = !isInside;
-// }
-// else if( isOnLine( pos[i], pos[j], point.getPosition() ) )
-// {
-// isInside = true;
-// break;
-// }
-// }
-// }
-//
-// return isInside;
-// }
-
-// public static final boolean AboutEqual( final double x, final double y )
-// {
-// return Math.abs( x - y ) <= GM_Position.MUTE;
-// }
-
-// public static final boolean isPointInsidePolygon( final GM_Object gmObject, final GM_Point point )
-// {
-// if( gmObject instanceof GM_Surface )
-// {
-// final GM_SurfacePatch patch = ((GM_Surface< ? >) gmObject).get( 0 );
-// final GM_Position[] exteriorRing = patch.getExteriorRing();
-// final GM_Position[][] interiorRings = patch.getInteriorRings();
-//
-// if( isPointInsidePolygon( exteriorRing, point ) == false )
-// return false;
-//
-// if( interiorRings != null )
-// for( final GM_Position[] interiorRing : interiorRings )
-// if( isPointInsidePolygon( interiorRing, point ) == true )
-// return false;
-//
-// return true;
-// }
-//
-// if( gmObject instanceof GM_MultiSurface )
-// {
-// final GM_Surface< ? >[] surfaces = ((GM_MultiSurface) gmObject).getAllSurfaces();
-//
-// if( surfaces != null )
-// for( final GM_Surface< ? > surface : surfaces )
-// if( isPointInsidePolygon( surface, point ) == true )
-// return true;
-//
-// return false;
-// }
-//
-// return false;
-// }
-
-// private static final boolean isOnLine( final GM_Position endPoint1, final GM_Position endPoint2, final GM_Position
-// checkPoint )
-// {
-// return (checkPoint.getY() - endPoint1.getY()) / (endPoint2.getY() - endPoint1.getY()) == (checkPoint.getX() -
-// endPoint1.getX()) / (endPoint2.getX() - endPoint1.getX());
-// }
-
 }
