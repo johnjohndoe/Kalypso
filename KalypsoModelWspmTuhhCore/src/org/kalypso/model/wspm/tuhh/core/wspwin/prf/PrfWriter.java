@@ -80,6 +80,7 @@ import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.DoubleDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
+import org.kalypso.wspwin.core.prf.datablock.SinuositaetDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
 
 /**
@@ -90,6 +91,9 @@ import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
  */
 public class PrfWriter implements IPrfConstants
 {
+  // FIXME typo
+  public static final String HEADER_SINUOSITAET = "SINOUSITAET"; //$NON-NLS-1$
+
   private final Map<Integer, String[]> m_defaultPrfMetadata = new HashMap<Integer, String[]>();
 
   private final DataBlockWriter m_dbWriter = new DataBlockWriter();
@@ -233,7 +237,7 @@ public class PrfWriter implements IPrfConstants
   private void writeComment( )
   {
     final String comment = m_profil.getComment();
-    final DataBlockHeader dbh = createHeader(IWspmConstants.POINT_PROPERTY_COMMENT); //$NON-NLS-1$
+    final DataBlockHeader dbh = createHeader( IWspmConstants.POINT_PROPERTY_COMMENT ); //$NON-NLS-1$
     final TextDataBlock db = new TextDataBlock( dbh );
 
     final StringReader stringReader = new StringReader( comment );
@@ -358,7 +362,7 @@ public class PrfWriter implements IPrfConstants
     if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "OK-BRUECKE" ); //$NON-NLS-1$
 
-    if( IWspmConstants.POINT_PROPERTY_COMMENT.equals( key )) //$NON-NLS-1$
+    if( IWspmConstants.POINT_PROPERTY_COMMENT.equals( key ) ) //$NON-NLS-1$
     {
       // REMARK: Important: Kommmentar MUST be written with lower case letters, else WspWin will not read it...
       return new DataBlockHeader( "Kommentar:" ); //$NON-NLS-1$
@@ -389,12 +393,11 @@ public class PrfWriter implements IPrfConstants
       return new DataBlockHeader( "OK-WEHR" ); //$NON-NLS-1$
 
     if( ISinuositaetProfileObject.ID.equals( key ) )
-      return new DataBlockHeader( "SINUOSITAET", "[-]", IWspWinConstants.SPEZIALPROFIL_SINUOSITAET );//$NON-NLS-1$ //$NON-NLS-2$
+      return new DataBlockHeader( HEADER_SINUOSITAET, "[-]", IWspWinConstants.SPEZIALPROFIL_SINUOSITAET );//$NON-NLS-1$ //$NON-NLS-2$
 
     // FIXME: we should probably throw an exception here: finding the error afterwards is very difficult
     return new DataBlockHeader( key );
   }
-
 
   private void writeCoords( final IComponent prop, final CoordDataBlock db, final Double nullValue )
   {
@@ -540,9 +543,9 @@ public class PrfWriter implements IPrfConstants
       try
       {
         final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) ) //$NON-NLS-1$
-        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
-        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
-        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
         dbu.setSecondLine( secLine );
       }
       catch( final Exception e )
@@ -650,8 +653,8 @@ public class PrfWriter implements IPrfConstants
     {
       final ISinuositaetProfileObject sinuosity = (ISinuositaetProfileObject) profileObject;
 
-      final DataBlockHeader header = createHeader( sinuosity.getId() ); 
-      final DoubleDataBlock dataBlock = new DoubleDataBlock( header );
+      final DataBlockHeader header = createHeader( sinuosity.getId() );
+      final DoubleDataBlock dataBlock = new SinuositaetDataBlock( header );
       final SINUOSITAET_KENNUNG kennung = sinuosity.getKennung();
       final double sinus = sinuosity.getSinuositaet();
       final SINUOSITAET_GERINNE_ART gerinne = sinuosity.getGerinneArt();

@@ -116,7 +116,7 @@ public class PrfSource implements IProfilSource
         readBewuchs( p, pr );
         readComment( p, pr );
         readGeoCoord( p, pr );
-        readSinousitaet( p, pr );
+        readSinuositaet( p, pr );
         if( !(readWehr( p, pr ) || readBridge( p, pr )) )
           readBuilding( p, pr );
       }
@@ -222,9 +222,9 @@ public class PrfSource implements IProfilSource
     writePointProperty( p, rechtswert, dbr );
   }
 
-  private void readSinousitaet( final IProfil p, final PrfReader pr )
+  private void readSinuositaet( final IProfil p, final PrfReader pr )
   {
-    IDataBlock db = pr.getDataBlock( "SINUOSITAET" ); //$NON-NLS-1$
+    final IDataBlock db = pr.getDataBlock( PrfWriter.HEADER_SINUOSITAET ); //$NON-NLS-1$
     if( db == null )
       return;
     final Double[] sin = db.getX();
@@ -644,7 +644,7 @@ public class PrfSource implements IProfilSource
     final IProfil profil = ProfilFactory.createProfil( profileTyp );
 
     if( profil == null )
-      throw new IOException( Messages.getString("PrfSource.0") + profileTyp ); //$NON-NLS-1$
+      throw new IOException( Messages.getString( "PrfSource.0" ) + profileTyp ); //$NON-NLS-1$
 
     final PrfReader prfReader = new PrfReader();
     prfReader.readFromReader( new BufferedReader( reader ) );

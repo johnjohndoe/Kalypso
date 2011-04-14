@@ -152,7 +152,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     return (WspmWaterBody) FeatureHelper.resolveLinkedFeature( getWorkspace(), body );
   }
 
-  private FeatureList getReachSegmentList( )
+  public FeatureList getReachSegmentList( )
   {
     return (FeatureList) getProperty( QNAME_PROP_REACHSEGMENTMEMBER );
   }

@@ -69,12 +69,12 @@ public class SinuositaetLayer extends ComponentLayer
   public void removeYourself( )
   {
     final ISinuositaetProfileObject[] sin = getProfil().getProfileObjects( ISinuositaetProfileObject.class );
-    final ProfilOperation operation = new ProfilOperation( Messages.getString("SinuositaetLayer_0") , getProfil(), true );  //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "SinuositaetLayer_0" ), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectRemove( getProfil(), sin ) );
     new ProfilOperationJob( operation ).schedule();
   }
 
-  public SinuositaetLayer( IProfil profil )
+  public SinuositaetLayer( final IProfil profil )
   {
     super( profil, "NullComponent" ); //$NON-NLS-1$
 
@@ -99,7 +99,7 @@ public class SinuositaetLayer extends ComponentLayer
     {
 
       @Override
-      public void paintSymbol( GC gc, Point size )
+      public void paintSymbol( final GC gc, final Point size )
       {
         // TODO get nice icon
 
