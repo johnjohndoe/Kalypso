@@ -97,7 +97,16 @@ public class Greenroof extends AbstractSud implements IGreenRoof
     final Object property = getProperty( QN_PROPERTY_EMERGENCY_SPILL_HEIGHT );
     if( property instanceof Double )
       return (Double) property;
-
+    
+    // default
+    switch( getUsageType() )
+    {
+      case EXTENSIVE:
+        return 35.0;
+      case INTENSIVE:
+        return 70.0;
+    }
+    
     return null;
   }
 

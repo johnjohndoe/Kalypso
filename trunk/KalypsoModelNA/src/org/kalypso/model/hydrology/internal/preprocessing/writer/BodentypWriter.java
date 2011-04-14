@@ -163,15 +163,15 @@ public class BodentypWriter extends AbstractCoreFileWriter
   {
     // add Greenroof type
     final List<Layer> greenroofExternalLayers = new ArrayList<Layer>();
-    greenroofExternalLayers.add( new Layer( "GR-stau", 2.0, false ) ); //$NON-NLS-1$
-    greenroofExternalLayers.add( new Layer( "Substr", 2.0, false ) ); //$NON-NLS-1$
-    greenroofExternalLayers.add( new Layer( "Drain", 1.0, false ) ); //$NON-NLS-1$
+    greenroofExternalLayers.add( new Layer( "GR-stau", 1.35, false ) ); //$NON-NLS-1$
+    greenroofExternalLayers.add( new Layer( "Substr", 0.8, false ) ); //$NON-NLS-1$
+    greenroofExternalLayers.add( new Layer( "Drain", 0.5, false ) ); //$NON-NLS-1$
     m_soilTypes.put( EUsageType.EXTENSIVE.getSoilTypeID(), greenroofExternalLayers ); //$NON-NLS-1$
 
     final List<Layer> greenroofInternalLayers = new ArrayList<Layer>();
-    greenroofInternalLayers.add( new Layer( "GR-stau", 2.0, false ) ); //$NON-NLS-1$
-    greenroofInternalLayers.add( new Layer( "Substr", 6.0, false ) ); //$NON-NLS-1$
-    greenroofInternalLayers.add( new Layer( "Drain", 1.0, false ) ); //$NON-NLS-1$
+    greenroofInternalLayers.add( new Layer( "GR-stau", 1.7, false ) ); //$NON-NLS-1$
+    greenroofInternalLayers.add( new Layer( "Substr", 2.0, false ) ); //$NON-NLS-1$
+    greenroofInternalLayers.add( new Layer( "Drain", 1.2, false ) ); //$NON-NLS-1$
     m_soilTypes.put( EUsageType.INTENSIVE.getSoilTypeID(), greenroofInternalLayers ); //$NON-NLS-1$
 
     final Map<String, Double> mrsTypes = new LinkedHashMap<String, Double>();
@@ -194,7 +194,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
       final List<Layer> layers = new ArrayList<Layer>();
       layers.add( new Layer( "mulde", mrsTypes.get( typeName ), false ) ); //$NON-NLS-1$
       layers.add( new Layer( "rein", 3.0, false ) ); //$NON-NLS-1$
-      layers.add( new Layer( "filter", 7.0, false ) ); //$NON-NLS-1$
+      layers.add( new Layer( "filter", 6.0, false ) ); //$NON-NLS-1$
       layers.add( new Layer( "base", 1.0, false ) ); //$NON-NLS-1$
       m_soilTypes.put( typeName, layers );
     }
@@ -205,6 +205,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
       final List<Layer> layers = new ArrayList<Layer>();
       layers.add( new Layer( "mulde", muldeTypes.get( typeName ), false ) ); //$NON-NLS-1$
       layers.add( new Layer( "rein", 3.0, false ) ); //$NON-NLS-1$
+      layers.add( new Layer( "basem", 3.0, false ) ); //$NON-NLS-1$
       m_soilTypes.put( typeName, layers );
     }
   }
