@@ -112,7 +112,7 @@ public class SinuositaetPanel extends AbstractProfilView
     m_propPanel = m_toolkit.createComposite( parent );
     m_propPanel.setLayout( new GridLayout( 2, false ) );
     if( m_propPanel == null )
-      m_toolkit.createText( m_propPanel, Messages.getString("SinuositaetPanel_0") ); //$NON-NLS-1$
+      m_toolkit.createText( m_propPanel, Messages.getString( "SinuositaetPanel_0" ) ); //$NON-NLS-1$
     else
       createPropertyPanel();
     updateControls();
