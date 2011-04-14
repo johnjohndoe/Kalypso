@@ -149,7 +149,8 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   final Swale suds = (Swale) f;
                   key = suds.getElementType();
 
-                  value.add( String.format( Locale.US, "%s %s 2.5E-8 1.0", suds.getIdealLanduseName(), BodentypWriter.getSwaleSoiltypeName( suds ) ) ); //$NON-NLS-1$
+                  final double maxPercRate = maxPercolationCalculator.getSudsAverageMaxPercRate( suds );
+                  value.add( String.format( Locale.US, "%s %s %.4g %.4g", suds.getIdealLanduseName(), BodentypWriter.getSwaleSoiltypeName( suds ), maxPercRate, suds.getPercentToGroundwater() ) ); //$NON-NLS-1$
                   value.add( String.format( Locale.US, "%.3f 0", suds.getWidth() ) ); //$NON-NLS-1$
                 }
                 else if( f instanceof Greenroof )
@@ -157,17 +158,17 @@ public class SudsFileWriter extends AbstractCoreFileWriter
                   final Greenroof suds = (Greenroof) f;
                   key = suds.getElementType();
 
-                  value.add( String.format( Locale.US, "%s %s 2.8E-10 1.0", suds.getIdealLanduseName(), suds.getUsageType().getSoilTypeID() ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%s %s 2.5E-20 0.0", suds.getIdealLanduseName(), suds.getUsageType().getSoilTypeID() ) ); //$NON-NLS-1$
 
                   // second line params:
                   // 1. Drainage pipe diameter [mm]
                   // 2. Overflow pipe diameter [mm]
                   // 3. Drainage pipe sand roughness [mm] - fixed to 2.0
                   // 4. Overflow pipe sand roughness [mm] - fixed to 2.0
-                  // 5. Drainage area per pipe [m2] - fixed to 100.0
-                  // 6. Overflow height of the roof [mm] - fixed to 100.0, max value equals to layer thickness
+                  // 5. Drainage area per pipe [m2] - fixed to 300.0
+                  // 6. Overflow height of the roof [mm] - max value equals to layer thickness
                   // 7. Drainage node ID; 0 = default drainage node of the catchment
-                  value.add( String.format( Locale.US, "%.1f %.1f 2.0 2.0 100.0 100.0 0", new Double( suds.getRainwaterPipeDiameter().toString() ), new Double( suds.getEmergencySpillPipeDiameter().toString() ) ) ); //$NON-NLS-1$
+                  value.add( String.format( Locale.US, "%.1f %.1f 2.0 2.0 300.0 %.1f 0", new Double( suds.getRainwaterPipeDiameter().toString() ), new Double( suds.getEmergencySpillPipeDiameter().toString() ), new Double( suds.getEmergencySpillHeight().toString() ) ) ); //$NON-NLS-1$
                 }
                 else
                   continue;

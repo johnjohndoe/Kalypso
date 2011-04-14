@@ -121,7 +121,7 @@ public abstract class AbstractSwale extends AbstractSud implements IAbstractSwal
     if( property instanceof Integer )
       return (Integer) property;
 
-    return 8000;
+    return 8270;
   }
 
   /**
@@ -170,6 +170,32 @@ public abstract class AbstractSwale extends AbstractSud implements IAbstractSwal
   {
     // width parameter fixed in NA core to 1.8
     return 1.8;
+  }
+  
+  /**
+   * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getMaxPercRate()
+   */
+  @Override
+  public double getMaxPercRate( )
+  {
+    final Object property = getProperty( QN_PROPERTY_MAX_PERC_RATE );
+    if( property instanceof Double )
+      return (Double) property;
+
+    return 5E-5;
+  }
+  
+  /**
+   * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getPercentToGroundwater()
+   */
+  @Override
+  public double getPercentToGroundwater( )
+  {
+    final Object property = getProperty( QN_PROPERTY_PERCENT_TO_GROUNDWATER );
+    if( property instanceof Double )
+      return (Double) property;
+
+    return 1.0;
   }
 
 }
