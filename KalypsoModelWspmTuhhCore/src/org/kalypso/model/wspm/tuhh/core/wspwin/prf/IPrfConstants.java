@@ -56,4 +56,6 @@ public interface IPrfConstants
   static final Integer PRF_LINE_6_PROJEKTBEZEICHNUNG_3 = 6;
 
   static final Integer PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT = 13;
+
+  static final String HEADER_SINUOSITAET = "SINOUSITAET"; //$NON-NLS-1$
 }

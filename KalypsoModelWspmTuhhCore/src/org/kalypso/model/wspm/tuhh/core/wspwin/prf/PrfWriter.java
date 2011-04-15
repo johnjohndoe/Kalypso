@@ -91,8 +91,6 @@ import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
  */
 public class PrfWriter implements IPrfConstants
 {
-  // FIXME typo
-  public static final String HEADER_SINUOSITAET = "SINOUSITAET"; //$NON-NLS-1$
 
   private final Map<Integer, String[]> m_defaultPrfMetadata = new HashMap<Integer, String[]>();
 
