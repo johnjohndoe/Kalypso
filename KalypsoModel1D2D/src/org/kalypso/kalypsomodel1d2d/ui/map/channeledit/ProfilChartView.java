@@ -123,21 +123,22 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   private void setDefaultAxis( final IMapperRegistry mr )
   {
     final AxisRendererConfig configDom = new AxisRendererConfig();
-    final IAxisRenderer aRendDom = new ExtendedAxisRenderer( "rendDom", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxisRenderer aRendDom = new ExtendedAxisRenderer( "rendDom",POSITION.BOTTOM, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final AxisRendererConfig configLR = new AxisRendererConfig();
-    configLR.gap = 5;
-    final IAxisRenderer aRendLR = new ExtendedAxisRenderer( "rendLR", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
+    configLR.axisInsets = new Insets(5,0,0,0);
+    final IAxisRenderer aRendL = new ExtendedAxisRenderer( "rendL",POSITION.LEFT, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxisRenderer aRendR = new ExtendedAxisRenderer( "rendL",POSITION.RIGHT , new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IAxis domainAxis = new GenericLinearAxis( "ID_AXIS_DOMAIN", POSITION.BOTTOM, null, aRendDom );//$NON-NLS-1$
     final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
     domainAxis.setPreferredAdjustment( aaDom );
 
-    final IAxis targetAxisLeft = new GenericLinearAxis( "ID_AXIS_LEFT", POSITION.LEFT, null, aRendLR );//$NON-NLS-1$
+    final IAxis targetAxisLeft = new GenericLinearAxis( "ID_AXIS_LEFT", POSITION.LEFT, null, aRendL );//$NON-NLS-1$
     final AxisAdjustment aaLeft = new AxisAdjustment( 15, 75, 10 );
     targetAxisLeft.setPreferredAdjustment( aaLeft );
 
-    final IAxis targetAxisRight = new GenericLinearAxis( "ID_AXIS_RIGHT", POSITION.RIGHT, null, aRendLR );//$NON-NLS-1$
+    final IAxis targetAxisRight = new GenericLinearAxis( "ID_AXIS_RIGHT", POSITION.RIGHT, null, aRendR );//$NON-NLS-1$
     final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
     targetAxisRight.setPreferredAdjustment( aaRight );
 

@@ -70,8 +70,8 @@ public class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
       layers.add( layer );
     }
 
-    final ProfilOverlayLayer overlay = new ProfilOverlayLayer( profil, m_lsp );
-    overlay.setCoordinateMapper( new CoordinateMapper( m_domainAxis, m_targetAxisLeft ) );
+    final ProfilOverlayLayer overlay = new ProfilOverlayLayer( profil, getLsp() );
+    overlay.setCoordinateMapper( new CoordinateMapper( getDomainAxis(), getTargetAxisLeft() ) );
     layers.add( overlay );
 
     return layers.toArray( new IProfilChartLayer[layers.size()] );
