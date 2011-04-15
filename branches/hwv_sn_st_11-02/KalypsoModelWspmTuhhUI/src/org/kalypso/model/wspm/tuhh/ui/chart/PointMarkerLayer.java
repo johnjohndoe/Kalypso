@@ -279,8 +279,8 @@ public class PointMarkerLayer extends AbstractProfilLayer
       return;
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( target.getId() );
     final int len = deviders.length;
-    final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() );
-    final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() ) + m_offset;
+    final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() );
+    final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() ) + m_offset;
 
     final PolylineFigure pf = new PolylineFigure();
     pf.setStyle( getLineStyle() );
