@@ -109,11 +109,23 @@
 						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
 					</gft:text>
 					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:SWANVersion" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
 						<gft:param name="dir" value="bin" />
 						<gft:param name="label" value="SWAN-Software Version" />
 						<gft:param name="exePattern" value="swan(.*).exe" />
 					</gft:extensioncontrol>
 					<gft:validatorlabel property="c1d2d:SWANVersion" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
 						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
 					</gft:validatorlabel>
 				</gft:group>
@@ -947,6 +959,12 @@
 						</gft:enabledOperation>
 					</gft:combo>
 					<gft:validatorlabel property="c1d2d:SWANINITialValues" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
 						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
 					</gft:validatorlabel>
 					<gft:label property="c1d2d:SWANINITialValuesPar" visible="true" style="SWT.NONE">
@@ -1000,6 +1018,7 @@
                     </gft:enabledOperation>
                     <gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
                   </gft:text>
+                  
                   <gft:validatorlabel property="c1d2d:SWANAdditionalResultsPar" visible="true" style="SWT.NONE">
                     <gft:enabledOperation>
                       <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
@@ -1022,9 +1041,17 @@
                     <!-- simple file name pattern for setting it in to file open dialog -->
                     <gft:param name="exePattern" value="*.txt" />
                   </gft:extensioncontrol>
+                  <!--
                   <gft:validatorlabel property="c1d2d:SWANInputCoordFile" visible="true" style="SWT.NONE">
+                  	<gft:enabledOperation>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</gft:enabledOperation>
                     <gft:gridData horizontalAlignment="SWT.BEGINNING" />
                   </gft:validatorlabel>
+                  -->
                 </gft:group>        
         
 				<!-- SWAN Boundary Conditions Settings  horizontalAlignment="SWT.FILL"-->
@@ -1137,6 +1164,12 @@
 						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="true" />
 					</gft:text>
 					<gft:validatorlabel property="c1d2d:SWANInputAdditionalCmds" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
 						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
 					</gft:validatorlabel>				
 				</gft:group>
