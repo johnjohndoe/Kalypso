@@ -100,6 +100,7 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.ChartLabelRendererFactory;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
@@ -126,8 +127,18 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     m_lsp.createStyles();
 
     final AxisRendererConfig axisRendererConfigLR = new AxisRendererConfig();
+    axisRendererConfigLR.axisLineStyle.setLineCap( LINECAP.FLAT );
+    axisRendererConfigLR.tickLineStyle.setLineCap( LINECAP.FLAT );
+    axisRendererConfigLR.axisLineStyle.setWidth( 1 );
+    axisRendererConfigLR.tickLineStyle.setWidth( 1 );
+//    configDom.axisLineStyle.setLineJoin(LINEJOIN.BEVEL);
+//    configDom.tickLineStyle.setLineJoin(LINEJOIN.BEVEL);
     axisRendererConfigLR.axisInsets = new Insets(5,0,0,0);
     final AxisRendererConfig axisRendererConfigD = new AxisRendererConfig();
+    axisRendererConfigD.axisLineStyle.setLineCap( LINECAP.FLAT );
+    axisRendererConfigD.tickLineStyle.setLineCap( LINECAP.FLAT );
+    axisRendererConfigD.axisLineStyle.setWidth( 1 );
+    axisRendererConfigD.tickLineStyle.setWidth( 1 );
     axisRendererConfigD.axisInsets = new Insets(1,0,0,0);
     axisRendererConfigD.hideCut = false;
 
