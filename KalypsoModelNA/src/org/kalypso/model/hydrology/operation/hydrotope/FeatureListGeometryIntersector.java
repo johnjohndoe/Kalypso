@@ -81,7 +81,7 @@ public class FeatureListGeometryIntersector
 {
   private static final double MIN_AREA = 0.01;
 
-  private Map<List<Feature>, SplitSortSpatialIndex> m_index = new HashMap<List<Feature>, SplitSortSpatialIndex>();
+  private final Map<List<Feature>, SplitSortSpatialIndex> m_index = new HashMap<List<Feature>, SplitSortSpatialIndex>();
 
   private final List<List<Feature>> m_sourceLayers = new ArrayList<List<Feature>>();
 
@@ -128,7 +128,7 @@ public class FeatureListGeometryIntersector
       return Collections.EMPTY_LIST;
 
     final int layerCount = m_sourceLayers.size();
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.0" ), (layerCount * (layerCount + 1) / 2) + 1 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.0" ), layerCount * (layerCount + 1) / 2 + 1 ); //$NON-NLS-1$
     progress.subTask( Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.1" ) ); //$NON-NLS-1$
     init();
     progress.worked( 2 );
@@ -196,8 +196,12 @@ public class FeatureListGeometryIntersector
       {
         if( count % 10 == 0 )
         {
-          progress.subTask( Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", count, countSourceFeatures, countTargetFeatures, layer + 1 ) ); //$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", count, countSourceFeatures, countTargetFeatures, layer + 1 );
+          progress.subTask( msg ); //$NON-NLS-1$
           childProgress.worked( 10 );
+
+          // FIXME
+          System.out.println( msg );
         }
         count++;
 
@@ -214,7 +218,7 @@ public class FeatureListGeometryIntersector
           final Geometry candidatePolygon = (Geometry) candidateObject;
 
           final Object userData2 = candidatePolygon.getUserData();
-          int dim2 = candidatePolygon.getDimension();
+          final int dim2 = candidatePolygon.getDimension();
 
           final FeatureIntersection userData = new FeatureIntersection( (FeatureIntersection) userData1, (FeatureIntersection) userData2 );
 
