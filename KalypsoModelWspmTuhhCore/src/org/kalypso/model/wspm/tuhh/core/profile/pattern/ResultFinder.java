@@ -38,40 +38,25 @@ public final class ResultFinder implements Function<IKeyValue<IProfileFeature, S
       return null;
 
     final IWspmResultNode node = (IWspmResultNode) element;
-
-    final IWspmResultNode resultNode = findNodeByName( node, nodeID );
-    return findResult( resultNode );
+    return findResultByName( node, nodeID );
   }
 
-  private static IWspmResult findResult( final IWspmResultNode node )
+  private static IWspmResult findResultByName( final IWspmResultNode node, final String name )
   {
-    if( node == null )
-      return null;
-
     if( node instanceof IWspmResult )
-      return (IWspmResult) node;
-
-    final IWspmResultNode[] childNodes = node.getChildResults();
-    for( final IWspmResultNode childNode : childNodes )
     {
-      final IWspmResult result = findResult( childNode );
-      if( result != null )
-        return result;
+      final IWspmResultNode parent = node.getParent();
+      final String parentLabel = parent.getLabel();
+      if( ObjectUtils.equals( name, parentLabel ) )
+        return (IWspmResult) node;
     }
 
-    return null;
-  }
-
-  private static IWspmResultNode findNodeByName( final IWspmResultNode node, final String name )
-  {
-    final String nodeName = node.getLabel();
-    if( ObjectUtils.equals( name, nodeName ) )
-      return node;
-
+    // REMARK: tricky: this relies on the fact, that the current result ('_aktuell')
+    // is always the first element
     final IWspmResultNode[] childNodes = node.getChildResults();
     for( final IWspmResultNode childNode : childNodes )
     {
-      final IWspmResultNode result = findNodeByName( childNode, name );
+      final IWspmResult result = findResultByName( childNode, name );
       if( result != null )
         return result;
     }
