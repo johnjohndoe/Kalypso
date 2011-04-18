@@ -138,10 +138,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     {
       final GM_Envelope envelope = m_workingArea.getEnvelope();
 
-      List pedologyQuery = m_pedologyList.query( envelope, null );
-      List geologyQuery = m_geologyList.query( envelope, null );
-      List catchmentsQuery = m_catchmentsList.query( envelope, null );
-      List landuseQuery = m_landuseList.query( envelope, null );
+      final List pedologyQuery = m_pedologyList.query( envelope, null );
+      final List geologyQuery = m_geologyList.query( envelope, null );
+      final List catchmentsQuery = m_catchmentsList.query( envelope, null );
+      final List landuseQuery = m_landuseList.query( envelope, null );
 
       geometryIntersector.addFeatureList( pedologyQuery );
       geometryIntersector.addFeatureList( geologyQuery );
@@ -219,10 +219,14 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       {
         if( count % 100 == 0 )
         {
-          progress.subTask( Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.3", count, intersectionList.size() ) ); //$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.3", count, intersectionList.size() );
+          progress.subTask( msg ); //$NON-NLS-1$
           // TODO: belongs to the end of this loop, but there are just too many else's
           // Better: put into sub-method and 'return' instead of 'continue'
           ProgressUtilities.worked( monitor, 100 );
+
+          // FIXME
+          System.out.println( msg );
         }
         count++;
 
