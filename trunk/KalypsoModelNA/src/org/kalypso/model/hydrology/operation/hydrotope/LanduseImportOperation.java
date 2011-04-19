@@ -125,7 +125,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final int size = m_inputDescriptor.size();
-    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.0" ), size + 10 ); //$NON-NLS-1$
+    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.0" ), size + 10 ); //$NON-NLS-1$
 
     if( m_importType == ImportType.CLEAR_OUTPUT )
     {
@@ -149,7 +149,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
         final GM_MultiSurface geometry = m_inputDescriptor.getGeometry( i );
         if( geometry == null )
         {
-          final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.3", label ); //$NON-NLS-1$
+          final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.3", label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
         else
@@ -221,7 +221,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
             final String landuseRef = m_landuseClasses.getReference( landuseclass );
             if( landuseRef == null )
             {
-              final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
+              final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
               throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
             }
 
@@ -242,7 +242,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
 
     if( !log.isEmpty() )
     {
-      return new MultiStatus( "org.kalypso.NACalcJob", -1, log.toArray( new IStatus[] {} ), Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new MultiStatus( "org.kalypso.NACalcJob", -1, log.toArray( new IStatus[] {} ), Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return Status.OK_STATUS;
