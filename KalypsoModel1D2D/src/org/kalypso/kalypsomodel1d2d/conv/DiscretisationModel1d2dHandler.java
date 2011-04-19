@@ -471,6 +471,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   private int createFlowRels1d( )
   {
+    if( m_set1dFlowNodes == null || m_mapQResults == null )
+      return 0;
     int lIntCountNew = 0;
     final SortedMap<BigDecimal, IProfileFeature> profilesByStation = new TreeMap<BigDecimal, IProfileFeature>();
     for( Object element : m_set1dFlowNodes )
