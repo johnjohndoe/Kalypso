@@ -8,6 +8,8 @@ import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.preferences.IKalypsoDeegreePreferences;
 
 /**
@@ -67,6 +69,11 @@ public class DataContainer
     return m_szenarioDataProvider.getModel( IFEDiscretisationModel1d2d.class );
   }
 
+  public final IFlowRelationshipModel getFlowrelationshipModel( ) throws CoreException
+  {
+    return m_szenarioDataProvider.getModel( IFlowRelationshipModel.class );
+  }
+
   public void setSzenarioDataProvider( final SzenarioDataProvider szenarioDataProvider )
   {
     m_szenarioDataProvider = szenarioDataProvider;
@@ -75,5 +82,10 @@ public class DataContainer
   public void postCommand( final Class< ? extends IModel> clazz, final ICommand command ) throws Exception
   {
     m_szenarioDataProvider.postCommand( clazz, command );
+  }
+
+  public CommandableWorkspace getCommandableWorkspace( final Class< ? extends IModel> clazz ) throws Exception
+  {
+    return m_szenarioDataProvider.getCommandableWorkSpace( clazz );
   }
 }

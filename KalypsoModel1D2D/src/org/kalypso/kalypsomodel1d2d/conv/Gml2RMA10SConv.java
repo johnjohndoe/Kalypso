@@ -60,6 +60,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.java.util.FormatterUtils;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
@@ -85,6 +86,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
@@ -194,7 +196,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       {
         final IFlowRelation2D lBuilding2d = (IFlowRelation2D) relationship;
         final IPolyElement lPolyElementWithWeir = m_discretisationModel1d2d.find2DElement( lBuilding2d.getPosition(), 0.01 );
-        if( m_calculationUnit.contains( lPolyElementWithWeir ) )
+        if( m_calculationUnit == null || m_calculationUnit.contains( lPolyElementWithWeir ) )
         {
           m_mapPolyElementsWithWeir.put( lPolyElementWithWeir, lBuilding2d );
         }
@@ -288,18 +290,19 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     }
   }
 
-  public void writeRMA10sModel( final OutputStream outputStream) throws IOException
+  public void writeRMA10sModel( final OutputStream outputStream ) throws IOException
   {
     Formatter formatter = null;
     try
-    { 
+    {
       // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
       // so no locale parameter for each format is needed any more .
       formatter = new Formatter( outputStream, Charset.defaultCharset().name(), Locale.US );
       writeRMA10sModel( formatter );
       FormatterUtils.checkIoException( formatter );
     }
-    catch (final Exception e) {
+    catch( final Exception e )
+    {
       e.printStackTrace();
       throw new IOException();
     }
@@ -312,7 +315,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       }
     }
   }
-
 
   private void writeRMA10sModel( final Formatter formatter ) throws CoreException, IOException
   {
@@ -440,6 +442,8 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     int cnt = 1;
     for( final IFE1D2DEdge edge : edges )
     {
+      if( edge == null )
+          continue;
       final IFE1D2DNode node0 = edge.getNode( 0 );
       final int node0ID = getConversionID( node0 );
       final IFE1D2DNode node1 = edge.getNode( 1 );
@@ -531,7 +535,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
                 }
                 else
                 {
-                  //                  System.out.println();
+                  // System.out.println();
                 }
               }
               else
@@ -669,7 +673,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       {
         lPointAct = lActNode.getPoint();
         final double lDoubleAngleInBetween = Math.atan2( lActNode.getPoint().getY() - lPointStart.getY(), lActNode.getPoint().getX() - lPointStart.getX() )
-        - Math.atan2( lPointPrev.getY() - lPointStart.getY(), lPointPrev.getX() - lPointStart.getX() );
+            - Math.atan2( lPointPrev.getY() - lPointStart.getY(), lPointPrev.getX() - lPointStart.getX() );
 
         lDoubleResAngle += lDoubleAngleInBetween;
       }
@@ -711,7 +715,8 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         final GM_Point position = node.getPoint();
         final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.9" ); //$NON-NLS-1$
         final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, position, null );
-        throw new CoreException( status );
+        if( !m_exportRequest )
+          throw new CoreException( status );
       }
 
       m_writtenNodesIDs.add( node.getGmlID() );
@@ -842,7 +847,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     if( point.getCoordinateDimension() == 3 )
       z = point.getZ();
     else
-      z = -9999;
+      z = KalypsoModel1D2DHelper.DOUBLE_IGNORE_VALUE;
 
     if( station == null )
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, x, y, z ); //$NON-NLS-1$
@@ -910,6 +915,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     // }
     final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<IFE1D2DEdge>( lListAllElements.size() * 2 );
 
+    int lIntWeirDirection = 0;
     if( lListAllElements.size() == 0 )
     {
       final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.25" ); //$NON-NLS-1$
@@ -923,9 +929,9 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       if( !m_exportRequest && !m_calculationUnit.contains( element ) )
         continue;
 
-      // TODO: has nothing to do with export request; make special flag which kinds of elements should get exported
-      if( m_exportRequest && element instanceof IElement1D )
-        continue;
+      // // TODO: has nothing to do with export request; make special flag which kinds of elements should get exported
+      // if( m_exportRequest && element instanceof IElement1D )
+      // continue;
 
       int id = getConversionID( element );
 
@@ -937,35 +943,50 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         /* 1D-Elements get special handling. */
         final IElement1D element1D = (IElement1D) element;
 
-        final IBuildingFlowRelation building = FlowRelationUtilitites.findBuildingElement1D( element1D, m_flowrelationModel );
-        if( building != null )
+        IBuildingFlowRelation building = null;
+        try
         {
-          /* A Building? Create dynamic building number and use it as building ID. */
-          final int buildingID = m_buildingIDProvider.addBuilding( building );
-          final IFE1D2DNode upstreamNode = FlowRelationUtilitites.findUpstreamNode( building, m_discretisationModel1d2d );
-          final int upstreamNodeID = getConversionID( upstreamNode );
-          formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        }
-        else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
-        {
-          /* Element without building: The special roughness-class '89' should be used. */
-          formatter.format( "FE%10d%10d%n", id, 89 ); //$NON-NLS-1$
-        }
-        else
-        {
-          // TODO: give hint what 1D-element is was?
-          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.43", element1D.getGmlID() );//$NON-NLS-1$
-          final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
-          throw new CoreException( status );
-        }
+          building = FlowRelationUtilitites.findBuildingElement1D( element1D, m_flowrelationModel );
+          if( building != null )
+          {
+            /* A Building? Create dynamic building number and use it as building ID. */
+            final int buildingID = m_buildingIDProvider.addBuilding( building );
+            final IFE1D2DNode upstreamNode = FlowRelationUtilitites.findUpstreamNode( building, m_discretisationModel1d2d );
+            final int upstreamNodeID = getConversionID( upstreamNode );
+            formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          }
+          else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
+          {
+            /* Element without building: The special roughness-class '89' should be used. */
+            formatter.format( "FE%10d%10d%n", id, 89 ); //$NON-NLS-1$
+          }
+          else
+          {
+            // TODO: give hint what 1D-element is was?
+            final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.43", element1D.getGmlID() );//$NON-NLS-1$
+            final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
+            throw new CoreException( status );
+          }
 
-        // TODO: find 1D-calc unit in which this element resides
-        // TODO write new lp line
-        final ICalculationUnit1D calcUnit1D = find1dCalcUnit( m_calculationUnit, element1D );
-        if( calcUnit1D != null && building == null )
+          // TODO: find 1D-calc unit in which this element resides
+          // TODO write new lp line
+          if( m_calculationUnit != null )
+          {
+            final ICalculationUnit1D calcUnit1D = find1dCalcUnit( m_calculationUnit, element1D );
+            if( calcUnit1D != null && building == null )
+            {
+              final int interpolationCount = calcUnit1D.getInterpolationCount();
+              formatter.format( "IP%10d%10d%n", id, interpolationCount ); //$NON-NLS-1$
+            }
+          }
+          else
+          {
+            //
+          }
+        }
+        catch( Exception e )
         {
-          final int interpolationCount = calcUnit1D.getInterpolationCount();
-          formatter.format( "IP%10d%10d%n", id, interpolationCount ); //$NON-NLS-1$
+          continue;
         }
       }
       else if( element instanceof IPolyElement )
@@ -989,9 +1010,14 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
             {
               final List<PseudoEdge> lListEdges = new ArrayList<PseudoEdge>();
               boolean lBoolLastEdgeExists = false;
+              if( building instanceof IWeirFlowRelation2D )
+              {
+                lIntWeirDirection = ((IWeirFlowRelation2D) building).getDirection();
+              }
               if( lIntIter > 0 )
               {
                 id = getConversionID( element, element.getGmlID() + WEIR2D_CONST_ID + buildingID + "_" + lIntIter ); //$NON-NLS-1$
+
               }
               else
               {
@@ -1018,7 +1044,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
               m_mapTmpElementToPolyWeir.put( id, element.getGmlID() );
               m_mapPolyWeir2DSubElement.put( id, lListEdges );
               final int upstreamNodeID = getConversionID( lListEdges.get( upstreamNodePositionInEachElement ).getFirstNode() );
-              formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              formatter.format( "FE%10d%10d%10s%10s%10d%10d%n", id, buildingID, "", "", upstreamNodeID, lIntWeirDirection ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             }
             for( final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
@@ -1064,6 +1090,9 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     // write edge set nodes
     for( final IFE1D2DEdge edge : edgeSet )
     {
+      if( edge == null ){
+        continue;
+      }
       writeNodes( formatter, edge.getNodes() );
       if( m_exportMiddleNode )
       {
@@ -1222,7 +1251,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
       else if( velTotal != null )
       {
-        //        System.out.print( "velTotal: " + velTotal );
+        // System.out.print( "velTotal: " + velTotal );
         if( velTotal.get( 0 ) == null )
         {
           velXComp = 0.0;
@@ -1427,7 +1456,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     public String toString( )
     {
       return "First node: " + getFirstNode() + ", second node: " + getSecondNode() + ", gml parent id: " + getStrGMLParentId() + ", created parent id: " + getIntParentId() + ", is real edge: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-      + isBoolRealExistingEdge() + "\n"; //$NON-NLS-1$
+          + isBoolRealExistingEdge() + "\n"; //$NON-NLS-1$
     }
   }
 
@@ -1436,7 +1465,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
    */
   @Override
   public boolean supportFlowResistanceClasses( )
-  { 
+  {
     return SUPPORT_FLOW_RESISTANCE_CLASSES;
   }
 
