@@ -342,7 +342,7 @@ public class ProcessResultsJob extends Job
         for( final ResultType.TYPE parameter : m_parameters )
         {
           /* GML(s) */
-          if( parameter == ResultType.TYPE.TERRAIN )
+          if( parameter == ResultType.TYPE.TERRAIN && !ResultMeta1d2dHelper.containsTerrain( m_stepResultMeta )  )
           {
             /* create TIN-Dir for FEM terrain model */
             // TODO: obscure, why go outside our output dir... TODO: refaktor it!
@@ -428,11 +428,11 @@ public class ProcessResultsJob extends Job
           /* GML(s) */
 
           /* result db */
-
+          
           switch( parameter )
           {
             case TERRAIN:
-              if( m_stepResultMeta != null )
+              if( m_stepResultMeta != null && !ResultMeta1d2dHelper.containsTerrain( m_stepResultMeta ) )
               {
                 /* check if there exists already an entry for terrainTin */
                 final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) m_stepResultMeta.getParent();
