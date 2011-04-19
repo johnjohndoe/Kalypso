@@ -193,6 +193,20 @@ public class RMA10S2GmlConv
         interpreteNodeInformationLine( line );
       if( line.startsWith( "JE" ) ) //$NON-NLS-1$
         interpreteJunctionInformationLine( line );
+      if( line.startsWith( "MM" ) ) //$NON-NLS-1$
+        interpretePolynomeMinMaxLine( line );
+      if( line.startsWith( "PRA" ) ) //$NON-NLS-1$
+        interpretePolynomialRangesLine( line );
+      if( line.startsWith( "AP" ) ) //$NON-NLS-1$
+        interpreteSplittedPolynomialsLine( line );
+      if( line.startsWith( "PRQ" ) ) //$NON-NLS-1$
+        interpretePolynomialRangesLine( line );
+      if( line.startsWith( "QP" ) ) //$NON-NLS-1$
+        interpreteSplittedPolynomialsLine( line );
+      if( line.startsWith( "PRB" ) ) //$NON-NLS-1$
+        interpretePolynomialRangesLine( line );
+      if( line.startsWith( "ALP" ) ) //$NON-NLS-1$
+        interpreteSplittedPolynomialsLine( line );
       
       else if( VERBOSE_MODE )
         System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.1" ) + line ); //$NON-NLS-1$
@@ -201,6 +215,86 @@ public class RMA10S2GmlConv
     // signal parsing stop
     m_handler.end();
 
+  }
+
+  private void interpreteSplittedPolynomialsLine( String line )
+  {
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
+
+    try
+    {
+      int lIntStartMaxes = 3;
+      final String lStrPolyKind = lStringParser.getSub( 0 ); 
+      final int lIntNodeId = Integer.parseInt( lStringParser.getSub( 1 ) );
+      final int lIntAmountRanges = Integer.parseInt( lStringParser.getSub( 2 ) );
+      final List<Double> lListPolyAreaMaxRanges = new ArrayList<Double>();
+      Double lDoubleSlope = null;
+      if( lStrPolyKind.equalsIgnoreCase( "QP" ) ){ //$NON-NLS-1$
+        try{
+          lDoubleSlope = Double.parseDouble( lStringParser.getSub( 3 ) );
+          lIntStartMaxes++;
+        }
+        catch (Exception e) {
+        } 
+      }
+      for( int i = lIntStartMaxes; i < lStringParser.getIntSepCounter(); ++i )
+      {
+        lListPolyAreaMaxRanges.add( Double.parseDouble( lStringParser.getSub( i ) ) );
+      }
+      m_handler.handle1dSplittedPolynomialsInformation( line, lStrPolyKind, lIntNodeId, lIntAmountRanges, lListPolyAreaMaxRanges, lDoubleSlope );
+    }
+    catch( final NumberFormatException e )
+    {
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+    }
+    
+  }
+
+  private void interpretePolynomialRangesLine( String line )
+  {
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
+
+    try
+    {
+      final String lStrPolyKind = lStringParser.getSub( 0 ); 
+      final int lIntNodeId = Integer.parseInt( lStringParser.getSub( 1 ) );
+      final int lIntAmountRanges = Integer.parseInt( lStringParser.getSub( 2 ) );
+      final List<Double> lListPolyAreaMaxRanges = new ArrayList<Double>();
+
+      for( int i = 3; i < lStringParser.getIntSepCounter(); ++i )
+      {
+        lListPolyAreaMaxRanges.add( Double.parseDouble( lStringParser.getSub( i ) ) );
+      }
+      m_handler.handle1dPolynomialRangesInformation( line, lStrPolyKind, lIntNodeId, lIntAmountRanges, lListPolyAreaMaxRanges );
+    }
+    catch( final NumberFormatException e )
+    {
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+    }
+    
+  }
+
+  private void interpretePolynomeMinMaxLine( String line )
+  {
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" ); //$NON-NLS-1$
+    if( lStringParser.getIntSepCounter() == 4 )
+    {
+      try
+      {
+        lStringParser.getFirstSub();
+        final int id = Integer.parseInt( lStringParser.getNextSub() );
+        final double min = Double.parseDouble( lStringParser.getNextSub() );
+        final double max = Double.parseDouble( lStringParser.getNextSub() );
+        m_handler.handle1dPolynomeMinMax( line, id, min, max );
+      }
+      catch( final NumberFormatException e )
+      {
+        m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+      }
+    }
+    else
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+    
   }
 
   // this form of parsing was used on all types of lines from the result line
@@ -303,7 +397,16 @@ public class RMA10S2GmlConv
         // TODO: the value '-9999' represents the NODATA-value, should be discussed
         if( elevation == -9999 )
           elevation = Double.NaN;
-        m_handler.handleNode( line, id, easting, northing, elevation );
+        if( lStringParser.getIntSepCounter() == 6 ){
+          try{
+            m_handler.handleNode( line, id, easting, northing, elevation, Double.parseDouble( lStringParser.getSub( 5 ) ) );
+          }
+          catch (Exception e) {
+          }
+        }
+        else{
+          m_handler.handleNode( line, id, easting, northing, elevation );
+        }
       }
       catch( final NumberFormatException e )
       {
@@ -489,6 +592,16 @@ public class RMA10S2GmlConv
       }
       else
       {
+        if( lStringParser.getIntSepCounter() == 5 )
+        {
+          lStringParser.getFirstSub();
+          final int id = Integer.parseInt( lStringParser.getNextSub() );
+          final int currentRougthnessClassID = Integer.parseInt( lStringParser.getNextSub() );
+          final int previousRoughnessClassID = Integer.parseInt( lStringParser.getNextSub() );
+          //used for export import functionality of 2dWeir elements
+          final int intWeirDirection = Integer.parseInt( lStringParser.getNextSub() );
+          m_handler.handleElement( line, id, currentRougthnessClassID, previousRoughnessClassID, intWeirDirection );
+        }
         if( lStringParser.getIntSepCounter() == 4 )
         {
           lStringParser.getFirstSub();

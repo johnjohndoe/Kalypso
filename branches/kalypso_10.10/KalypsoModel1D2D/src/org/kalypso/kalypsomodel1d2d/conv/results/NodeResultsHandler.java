@@ -1891,4 +1891,44 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
 
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomialRangesInformation(java.lang.String, java.lang.String, int, int, java.util.List)
+   */
+  @Override
+  public void handle1dPolynomialRangesInformation( String line, String lStrPolyKind, int lIntNodeId, int lIntAmountRanges, List<Double> lListPolyAreaMaxRanges )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomeMinMax(java.lang.String, int, double, double)
+   */
+  @Override
+  public void handle1dPolynomeMinMax( String line, int id, double min, double max )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dSplittedPolynomialsInformation(java.lang.String, java.lang.String, int, int, java.util.List, java.lang.Double)
+   */
+  @Override
+  public void handle1dSplittedPolynomialsInformation( String line, String lStrPolyKind, int lIntNodeId, int lIntAmountRanges, List<Double> lListPolyAreaMaxRanges, Double lIntSlope )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double, double)
+   */
+  @Override
+  public void handleNode( String line, int id, double easting, double northing, double elevation, double stationName )
+  {
+    // TODO Auto-generated method stub
+    
+  }
 }

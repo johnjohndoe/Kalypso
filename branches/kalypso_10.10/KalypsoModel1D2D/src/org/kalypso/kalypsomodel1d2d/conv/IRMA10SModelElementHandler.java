@@ -100,4 +100,12 @@ public interface IRMA10SModelElementHandler
   public void handleNodeInformation( String line, int id, int dry, double value1, double value2, double value3, double value4 );
 
   public void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList );
+
+  public void handle1dPolynomialRangesInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges );
+
+  public void handle1dPolynomeMinMax( final String line, final int id, final double min, final double max );
+
+  public void handle1dSplittedPolynomialsInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges, final Double lIntSlope );
+
+  public void handleNode( final String line, final int id, final double easting, final double northing, final double elevation, final double stationName );
 }

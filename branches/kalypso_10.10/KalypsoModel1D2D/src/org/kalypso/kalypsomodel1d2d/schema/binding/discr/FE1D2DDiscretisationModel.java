@@ -176,6 +176,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findNode(org.kalypsodeegree.model.geometry.GM_Point,
    *      double)
+   *      
    */
   @Override
   public IFE1D2DNode findNode( final GM_Point nodeLocation, final double searchRectWidth )
@@ -197,7 +198,15 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
         final GM_Point point = currentNode.getPoint();
         if( point == null )
           throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel.0") + currentNode ); //$NON-NLS-1$
-        final double currentDistance = nodeLocation.distance( point );
+        
+        /** 
+         * calculating the distance only between two nodes(simple operation) should not be done with vividsolutions 
+         * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl.distance( final GM_Object gmo )
+         * huge and complex computing of distance between two geometries of any kind
+         * 
+         * replaced by local simple and fast implementation 
+         */
+        final double currentDistance = calculateDistance2d( nodeLocation, point );
         if( minDistance > currentDistance )
         {
           nearestNode = currentNode;
@@ -210,6 +219,19 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
         return null;
 
       return nearestNode;
+    }
+  }
+
+  private double calculateDistance2d( final GM_Point firstPoint, final GM_Point secondPoint )
+  {
+    try{
+      double dx = firstPoint.getX() - secondPoint.getX();
+      double dy = firstPoint.getY() - secondPoint.getY();
+      
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+    catch (Exception e) {
+      return Double.MAX_VALUE;
     }
   }
 
