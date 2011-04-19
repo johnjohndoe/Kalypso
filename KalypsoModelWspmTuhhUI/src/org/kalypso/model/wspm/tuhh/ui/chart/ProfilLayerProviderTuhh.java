@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPhenomenonConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -89,9 +90,6 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
-import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
-import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
-import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -99,11 +97,10 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.ChartLabelRendererFactory;
-import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 /**
  * @author kimwerner
@@ -129,17 +126,26 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     final AxisRendererConfig axisRendererConfigLR = new AxisRendererConfig();
     axisRendererConfigLR.axisLineStyle.setLineCap( LINECAP.FLAT );
     axisRendererConfigLR.tickLineStyle.setLineCap( LINECAP.FLAT );
-    axisRendererConfigLR.axisLineStyle.setWidth( 1 );
+    axisRendererConfigLR.axisLineStyle.setLineJoin(  LINEJOIN.BEVEL);
+    axisRendererConfigLR.tickLineStyle.setLineJoin( LINEJOIN.BEVEL);
+    axisRendererConfigLR.axisLineStyle.setWidth( 2 );
     axisRendererConfigLR.tickLineStyle.setWidth( 1 );
-//    configDom.axisLineStyle.setLineJoin(LINEJOIN.BEVEL);
-//    configDom.tickLineStyle.setLineJoin(LINEJOIN.BEVEL);
-    axisRendererConfigLR.axisInsets = new Insets(5,0,0,0);
+// configDom.axisLineStyle.setLineJoin(LINEJOIN.BEVEL);
+    axisRendererConfigLR.tickLineStyle.setColor( new RGB(  255, 0, 0) );
+    axisRendererConfigLR.axisInsets = new Insets( 5, 0, 0, 0 );
     final AxisRendererConfig axisRendererConfigD = new AxisRendererConfig();
     axisRendererConfigD.axisLineStyle.setLineCap( LINECAP.FLAT );
     axisRendererConfigD.tickLineStyle.setLineCap( LINECAP.FLAT );
-    axisRendererConfigD.axisLineStyle.setWidth( 1 );
+    axisRendererConfigD.axisLineStyle.setLineJoin(  LINEJOIN.BEVEL);
+    axisRendererConfigD.tickLineStyle.setLineJoin( LINEJOIN.BEVEL);
+    axisRendererConfigD.axisLineStyle.setDash( 0, null );
+    axisRendererConfigD.tickLineStyle.setDash( 0, null );
+//    axisRendererConfigD.axisLineStyle.setMiterLimit( 100 );
+//    axisRendererConfigD.tickLineStyle.setMiterLimit( 100 );
+    axisRendererConfigD.axisLineStyle.setWidth( 2 );
     axisRendererConfigD.tickLineStyle.setWidth( 1 );
-    axisRendererConfigD.axisInsets = new Insets(1,0,0,0);
+    axisRendererConfigD.axisInsets = new Insets( 5, 0, 0, 0 );
+    axisRendererConfigD.tickLineStyle.setColor( new RGB( 255, 0, 0 ) );
     axisRendererConfigD.hideCut = false;
 
     m_screenAxisVertical = new ScreenCoordinateAxis( "ProfilLayerProviderTuhh_AXIS_VERTICAL_SCREEN", POSITION.RIGHT );//$NON-NLS-1$
@@ -530,7 +536,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     m_domainAxis.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_domainAxis.getPosition(), domLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
     final String leftLabel = String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
     m_targetAxisLeft.clearLabels();
-    m_targetAxisLeft.addLabel( ChartLabelRendererFactory.getAxisLabelType(m_targetAxisLeft.getPosition(), leftLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
+    m_targetAxisLeft.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_targetAxisLeft.getPosition(), leftLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
 
     final IComponent roughnessKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
     final IComponent roughnessKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
