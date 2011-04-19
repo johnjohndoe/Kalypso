@@ -389,22 +389,27 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     }
 
     final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-
-    IPolyElement lNewPoly = (IPolyElement) ElementGeometryHelper.createAdd2dElement( command, m_cmdWorkspace2d, m_model, lListRes );
-    try
-    {
-      command.process();
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
+    
+    IPolyElement lNewPoly = lPoly;
+    if( pListElementsIdsRma.size() > 1 ){
+      lNewPoly = (IPolyElement) ElementGeometryHelper.createAdd2dElement( command, m_cmdWorkspace2d, m_model, lListRes );
+      try
+      {
+        command.process();
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
     }
     if( lNewPoly != null )
     {
       Feature lNewFlowFeature = createNewFlowrelation( lNewPoly, pIntDegrees );
       m_listNewFlowElements.add( lNewFlowFeature );
       // cleanup and update
-      removeElements( lListElementsToRemove.toArray( new Feature[lListElementsToRemove.size()] ) );
+      if( pListElementsIdsRma.size() > 1 ){
+        removeElements( lListElementsToRemove.toArray( new Feature[lListElementsToRemove.size()] ) );
+      }
     }
 
     return lNewPoly;
