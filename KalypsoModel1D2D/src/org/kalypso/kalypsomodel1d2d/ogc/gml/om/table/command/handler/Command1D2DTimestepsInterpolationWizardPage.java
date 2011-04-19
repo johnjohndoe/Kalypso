@@ -221,7 +221,7 @@ public class Command1D2DTimestepsInterpolationWizardPage extends WizardPage
     uRelFactorLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizardPage.8") ); //$NON-NLS-1$
 
 //  changed to string to allow more flexible expansion of "Relaxation Factor"	
-    m_uRelFactorCombo = new Text( container, SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_uRelFactorCombo = new Text( container, SWT.NONE );
     m_uRelFactorCombo.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     /*
     m_uRelFactorCombo = new Combo( container, SWT.DROP_DOWN | SWT.READ_ONLY );
