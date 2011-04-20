@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -46,14 +46,14 @@ public class Transformer implements ICoreRunnableWithProgress
       RMA10S2GmlConv.VERBOSE_MODE = false;
       final IPositionProvider positionProvider = new XYZOffsetPositionProvider( 0.0, 0.0, m_data.getCoordinateSystem( true ) );
       final RMA10S2GmlConv converter = new RMA10S2GmlConv( monitor, getNumberOfLines( m_data.getInputFile() ) );
-      final List< Class< ? extends IModel> > lListModelClassesSetDirty = new ArrayList<Class< ? extends IModel> >();
-      final IRMA10SModelElementHandler handler = new DiscretisationModel1d2dHandler( m_data.getFE1D2DDiscretisationModel(), m_data.getFlowrelationshipModel(), positionProvider, lListModelClassesSetDirty, m_data.getCommandableWorkspace( IFEDiscretisationModel1d2d.class ) );
+      final Set< Class< ? extends IModel> > lSetModelClassesSetDirty = new HashSet<Class< ? extends IModel> >();
+      final IRMA10SModelElementHandler handler = new DiscretisationModel1d2dHandler( m_data.getFE1D2DDiscretisationModel(), m_data.getFlowrelationshipModel(), positionProvider, lSetModelClassesSetDirty, m_data.getCommandableWorkspace( IFEDiscretisationModel1d2d.class ) );
       converter.setRMA10SModelElementHandler( handler );
       converter.parse( m_data.getInputFileURL().openStream() );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
       
-      for( Class< ? extends IModel> element : lListModelClassesSetDirty )
+      for( Class< ? extends IModel> element : lSetModelClassesSetDirty )
       {
         Class< ? extends IModel> clazz = element;
         m_data.postCommand( clazz, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
