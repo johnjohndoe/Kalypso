@@ -216,7 +216,7 @@ public class DeleteFeElementsHelper
     return Status.OK_STATUS;
   }
 
-  private static void deleteParameter( final IMapPanel pMapPanel, final EasyFeatureWrapper pParentToRemoveFrom, IKalypsoFeatureTheme lFlowTheme, FeatureList lFeatureList, Feature lParentFeature, IFlowRelationshipModel lFlowRelCollection ) throws Exception
+  private static void deleteParameter( final IMapPanel pMapPanel, final EasyFeatureWrapper pParentToRemoveFrom, final IKalypsoFeatureTheme lFlowTheme, final FeatureList lFeatureList, final Feature lParentFeature, final IFlowRelationshipModel lFlowRelCollection ) throws Exception
   {
     // final IKalypsoFeatureTheme lFlowTheme = UtilMap.findEditableTheme( pMapPanel, IFlowRelationship.QNAME );
     // final FeatureList lFeatureList = lFlowTheme.getFeatureList();
