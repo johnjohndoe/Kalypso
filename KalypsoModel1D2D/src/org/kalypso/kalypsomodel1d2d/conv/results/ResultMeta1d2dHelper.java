@@ -981,5 +981,23 @@ public class ResultMeta1d2dHelper
     }
     return false;
   }
+  
+  /**
+   * gets the CalcUnitResultMeta as the papa of all steps
+   */
+  public static ICalcUnitResultMeta getCalcUnitResultMeta( final IResultMeta result )
+  {
+    if( result instanceof ICalcUnitResultMeta )
+      return (ICalcUnitResultMeta) result;
+    else
+    {
+      final IResultMeta parent = result.getParent();
+      if( parent != null )
+      {
+        return getCalcUnitResultMeta( parent );
+      }
+    }
+    return null;
+  }
 
 }
