@@ -140,6 +140,8 @@ public class Catchment extends AbstractNaModelElement
 
   private static final QName PROP_FVER = new QName( NS_NAMODELL, "fver" ); //$NON-NLS-1$
 
+  public static final QName QNAME_PROP_CORRSEALING = new QName( NS_NAMODELL, "corrSealing" ); //$NON-NLS-1$
+
   private IFeatureBindingCollection<Bodenschichtkorrektur> m_bodenKorrekturCollection = null;
 
   private IFeatureBindingCollection<Grundwasserabfluss> m_grundwasserAbflussCollection = null;
@@ -421,5 +423,15 @@ public class Catchment extends AbstractNaModelElement
         sumGwwi += gwa.getGwwi();
     }
     return sumGwwi;
+  }
+
+  public Double getCorrSealing( )
+  {
+    return getDoubleProperty( QNAME_PROP_CORRSEALING, 1.0 );
+  }
+
+  public void setCorrSealing( final Double corrSealing )
+  {
+    setProperty( QNAME_PROP_CORRSEALING, corrSealing );
   }
 }

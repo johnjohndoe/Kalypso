@@ -372,10 +372,21 @@
 					<element name="faktorRetbas" type="double" minOccurs="0"/>
 					<element name="faktorRetgw" type="double" minOccurs="0"/>
 					<element name="faktorRetklu" type="double" minOccurs="0"/>
+					<element ref="na:corrSealing" minOccurs="0"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
+
+	<element name="corrSealing" default="1.0">
+		<simpleType>
+			<restriction base="double">
+				<minInclusive value="0.0" />
+				<maxInclusive value="1.0" />
+			</restriction>
+		</simpleType>
+	</element>
+  
 	<!-- ______________Channels_____________________ -->
 	<complexType name="ChannelCollectionAssociationType">
 		<sequence>

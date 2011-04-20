@@ -58,6 +58,7 @@ import org.kalypso.model.hydrology.binding.Hydrotop;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.SoilType;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.suds.ISuds;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -268,7 +269,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         }
 
         final IHydrotope hydrotop = m_outputList.addNew( IHydrotope.QNAME );
-
+        
+        // sealing correction factor is now the product of
+        // factors from catchment and landuse
+        double corrSealing = 1.0;
         for( final Feature feature : features )
         {
           if( feature instanceof org.kalypso.model.hydrology.binding.model.Catchment )
@@ -277,6 +281,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             final String href = String.format( "modell.gml#%s", feature.getId() ); //$NON-NLS-1$
             final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, catchmentMemberRT, featureType, href, null, null, null, null, null );
             hydrotop.setCatchmentMember( lnk );
+            corrSealing = corrSealing * ((Catchment) feature).getCorrSealing();
           }
           else if( feature instanceof Landuse )
           {
@@ -288,8 +293,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             else
               hydrotop.setLanduse( featureLanduse.getName() );
 
-            final Double corrSealing = landuse.getCorrSealing();
-            hydrotop.setCorrSealing( corrSealing );
+            corrSealing = corrSealing * landuse.getCorrSealing();
 
             final IFeatureBindingCollection<Feature> landuseSudsCollection = landuse.getSudCollection();
             final IFeatureBindingCollection<ISuds> hydrotopeSudsCollection = hydrotop.getSudCollection();
@@ -324,6 +328,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             hydrotop.setGWFactor( geology.getGWFactor() );
           }
         }
+        hydrotop.setCorrSealing( corrSealing );
 
         if( m_dissolveFeatures )
         {
