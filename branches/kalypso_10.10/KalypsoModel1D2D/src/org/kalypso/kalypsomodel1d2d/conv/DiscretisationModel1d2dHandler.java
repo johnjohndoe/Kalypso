@@ -158,7 +158,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private GMLWorkspace m_flowWorkspace;
 
-  private List<Class< ? extends IModel>> m_listModelClassesToSetDirty;
+  private Set<Class< ? extends IModel>> m_setModelClassesToSetDirty;
 
   private List<Feature> m_listNewFlowElements = new ArrayList<Feature>();
 
@@ -168,7 +168,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private Set< Integer > m_setMiddleNodeIDs = new HashSet<Integer>();
 
-  public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IFlowRelationshipModel pFlowRelationshipModel, final IPositionProvider positionProvider, final List<Class< ? extends IModel>> pListClassesSetDirty, final CommandableWorkspace pCommandableWorkspace2d )
+  public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IFlowRelationshipModel pFlowRelationshipModel, final IPositionProvider positionProvider, final Set<Class< ? extends IModel>> pSetClassesSetDirty, final CommandableWorkspace pCommandableWorkspace2d )
   {
     m_model = model;
     m_flowModel = pFlowRelationshipModel;
@@ -177,7 +177,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     m_cmdWorkspace2d = pCommandableWorkspace2d;
     m_positionProvider = positionProvider;
     m_setNotInsertedNodes = new HashSet<Integer>();
-    m_listModelClassesToSetDirty = pListClassesSetDirty;
+    m_setModelClassesToSetDirty = pSetClassesSetDirty;
     try
     {
       m_gmExistingEnvelope = m_model.getNodes().getBoundingBox();
@@ -209,7 +209,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     if( lIntCountCreated > 0 && lAllElementsFlow.length > 0 )
     {
       m_flowWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_flowWorkspace, m_flowModel.getFeature(), lAllElementsFlow, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );//
-      m_listModelClassesToSetDirty.add( IFlowRelationshipModel.class );
+      m_setModelClassesToSetDirty.add( IFlowRelationshipModel.class );
     }
 
     m_flowModel.getWrappedList().invalidate();
@@ -221,7 +221,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
     if( lAllElements.length > 0 )
     {
-      m_listModelClassesToSetDirty.add( IFEDiscretisationModel1d2d.class );
+      m_setModelClassesToSetDirty.add( IFEDiscretisationModel1d2d.class );
     }
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), lAllElements, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
@@ -235,8 +235,14 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
      * way.
      */
     createFlowRels2d();
-    if( m_listNewFlowElements.size() > 0 )
+    if( m_listNewFlowElements.size() > 0 ){
       m_flowWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_flowWorkspace, m_flowModel.getFeature(), m_listNewFlowElements.toArray( new Feature[m_listNewFlowElements.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );//
+      m_setModelClassesToSetDirty.add( IFlowRelationshipModel.class );
+    }
+
+    if( m_listNewPolysWithWeir.size() > 0 ){
+      m_setModelClassesToSetDirty.add( IFEDiscretisationModel1d2d.class );
+    }
 
     m_model.getNodes().getWrappedList().invalidate();
     m_model.getEdges().getWrappedList().invalidate();
@@ -282,7 +288,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       final List< Integer > lListElements = new ArrayList<Integer>(); 
       lListElements.addAll( lMapElements.values() );
       IPolyElement lNewWeirPoly = mergeElementsToWeir( lListElements, m_mapIdBuildingDirection.get( id ) );
-      m_listNewPolysWithWeir.add( lNewWeirPoly.getFeature() );
+      
     }
   }
 
@@ -408,6 +414,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       m_listNewFlowElements.add( lNewFlowFeature );
       // cleanup and update
       if( pListElementsIdsRma.size() > 1 ){
+        m_listNewPolysWithWeir.add( lNewPoly.getFeature() );
         removeElements( lListElementsToRemove.toArray( new Feature[lListElementsToRemove.size()] ) );
       }
     }
