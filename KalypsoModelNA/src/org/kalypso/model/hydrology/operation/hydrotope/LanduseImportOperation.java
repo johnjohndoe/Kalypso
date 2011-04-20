@@ -174,19 +174,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
           for( final Landuse landuse : existingLanduses )
           {
             /* add sud members */
-            final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
-            final GMLWorkspace landuseWorkspace = landuse.getWorkspace();
-            final IGMLSchema landuseSchmea = landuseWorkspace.getGMLSchema();
-
-            for( final Feature sud : suds )
-            {
-              final IRelationType rt = (IRelationType) landuseSchmea.getFeatureType( Landuse.QNAME_PROP_SUD_MEMBERS );
-              final IFeatureType ft = sud.getFeatureType();
-              final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
-
-              final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
-              sudCollection.add( lnk );
-            }
+            addSudsToLanduse( suds, landuse );
           }
         }
         else
@@ -203,20 +191,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
             landuse.setCorrSealing( corrSealing );
             landuse.setDrainageType( drainageType );
 
-            /* add sud members */
-            final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
-            final GMLWorkspace landuseWorkspace = landuse.getWorkspace();
-            final IGMLSchema landuseSchmea = landuseWorkspace.getGMLSchema();
-
-            for( final Feature sud : suds )
-            {
-              final IRelationType rt = (IRelationType) landuseSchmea.getFeatureType( Landuse.QNAME_PROP_SUD_MEMBERS );
-              final IFeatureType ft = sud.getFeatureType();
-              final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
-
-              final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
-              sudCollection.add( lnk );
-            }
+            addSudsToLanduse( suds, landuse );
 
             final String landuseRef = m_landuseClasses.getReference( landuseclass );
             if( landuseRef == null )
@@ -246,6 +221,23 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
     }
 
     return Status.OK_STATUS;
+  }
+
+  private void addSudsToLanduse( final AbstractSud[] suds, final Landuse landuse )
+  {
+    final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
+    final GMLWorkspace landuseWorkspace = landuse.getWorkspace();
+    final IGMLSchema landuseSchmea = landuseWorkspace.getGMLSchema();
+
+    for( final Feature sud : suds )
+    {
+      final IRelationType rt = (IRelationType) landuseSchmea.getFeatureType( Landuse.QNAME_PROP_SUD_MEMBERS );
+      final IFeatureType ft = sud.getFeatureType();
+      final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
+
+      final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
+      sudCollection.add( lnk );
+    }
   }
 
 }

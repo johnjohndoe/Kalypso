@@ -114,7 +114,7 @@ public class Landuse extends Feature_Impl
 
   public Double getCorrSealing( )
   {
-    return getProperty( QNAME_PROP_CORRSEALING, Double.class );
+    return getDoubleProperty( QNAME_PROP_CORRSEALING, 1.0 );
   }
 
   public void setCorrSealing( final Double corrSealing )

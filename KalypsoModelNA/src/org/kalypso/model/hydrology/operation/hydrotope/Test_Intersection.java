@@ -125,20 +125,20 @@ public class Test_Intersection extends TestCase
       final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
 
       final List<Catchment> catchmentList = ((IFeatureBindingCollection<Catchment>) catchments).query( envelope );
+      Catchment catchment = null;
       if( catchmentList.size() == 0 )
         continue;
       else
       {
-        boolean catchmentFound = false;
         for( final Catchment object : catchmentList )
         {
           if( object.getDefaultGeometryPropertyValue().contains( point ) )
           {
-            catchmentFound = true;
+            catchment = object;
             break;
           }
         }
-        if( !catchmentFound )
+        if( catchment == null )
           continue;
       }
 
@@ -163,7 +163,8 @@ public class Test_Intersection extends TestCase
         else
           value = landuseClassLink.toString().substring( landuseClassLink.toString().indexOf( "#" ) + 1 );
         hydrotop.setLanduse( value );
-        hydrotop.setCorrSealing( landuse.getCorrSealing() );
+        final double corrSealing = landuse.getCorrSealing() * catchment.getCorrSealing();
+        hydrotop.setCorrSealing( corrSealing );
       }
       else
         continue;
