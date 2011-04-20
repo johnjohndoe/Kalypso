@@ -136,7 +136,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
       m_calcUnitMeta = m_resultManager.getCalcUnitMeta();
       if( m_calcUnitMeta == null )
-        scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
+        m_calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
 
       m_originalStepsToDelete = findStepsToDelete( m_calcUnitMeta, m_bean );
 
