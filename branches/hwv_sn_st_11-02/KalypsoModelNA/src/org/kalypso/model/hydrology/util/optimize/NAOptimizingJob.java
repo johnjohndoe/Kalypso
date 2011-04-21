@@ -174,10 +174,11 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     try
     {
       if( m_counter == 0 )
+        // FIXME: if first run fails, we cannot 'runAgain', as the processor may not be initialized.
         m_lastSucceeded = runFirst( monitor );
       else
         m_lastSucceeded = runAgain( monitor );
-      
+
       return m_lastSucceeded;
     }
     catch( final OperationCanceledException e )

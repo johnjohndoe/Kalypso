@@ -124,7 +124,6 @@ public class NAModelSimulation
     return postProcess( m_simulationData, monitor );
   }
 
-
   private void preprocess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
   {
     try
@@ -139,14 +138,14 @@ public class NAModelSimulation
     {
       final String msg = String.format( "Failed to convert data in Kalypso-NA.exe format files: %s", e.getLocalizedMessage() );
       m_logger.log( Level.SEVERE, msg, e );
-      throw new SimulationException( msg );
+      throw new SimulationException( msg, e );
     }
   }
 
   private boolean postProcess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws Exception
   {
     final String messageStartPostprocess = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.28" ); //$NON-NLS-1$
-    monitor.setMessage( messageStartPostprocess ); 
+    monitor.setMessage( messageStartPostprocess );
     m_logger.log( Level.FINEST, messageStartPostprocess );
 
     final GMLWorkspace modelWorkspace = simulationData.getModelWorkspace();
