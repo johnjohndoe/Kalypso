@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -101,6 +101,8 @@ public class KalypsoNaProcessor
       final File destFile = new File( m_asciiDirs.startDir, kalypsoNaExe.getName() );
       if( !destFile.exists() )
         FileUtils.copyFile( kalypsoNaExe, destFile );
+      
+      destFile.setExecutable( true );
 
       return destFile;
     }
