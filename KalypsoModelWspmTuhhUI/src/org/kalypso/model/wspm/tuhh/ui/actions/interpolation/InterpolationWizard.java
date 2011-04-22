@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.actions.interpolation;
 
-import java.math.BigDecimal;
-
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
@@ -53,34 +50,14 @@ public class InterpolationWizard extends Wizard
 {
   private final InterpolationStationPage m_stationPage;
 
-  public InterpolationWizard( final IProfileFeature[] profiles )
+  public InterpolationWizard( final InterpolationStationData data )
   {
-    m_stationPage = new InterpolationStationPage( "stationPage", profiles ); //$NON-NLS-1$
+    m_stationPage = new InterpolationStationPage( "stationPage", data ); //$NON-NLS-1$
     addPage( m_stationPage );
 
     setNeedsProgressMonitor( false );
     setHelpAvailable( false );
     setWindowTitle( Messages.getString("InterpolationWizard_0") ); //$NON-NLS-1$
-  }
-
-  public IProfileFeature getPreviousProfile( )
-  {
-    return m_stationPage.getPreviousProfile();
-  }
-
-  public IProfileFeature getNextProfile( )
-  {
-    return m_stationPage.getNextProfile();
-  }
-
-  public BigDecimal getNewStation( )
-  {
-    return m_stationPage.getNewStation();
-  }
-
-  public boolean getOnlyRiverChannel( )
-  {
-    return m_stationPage.getOnlyRiverChannel();
   }
 
   /**
@@ -91,5 +68,4 @@ public class InterpolationWizard extends Wizard
   {
     return true;
   }
-
 }
