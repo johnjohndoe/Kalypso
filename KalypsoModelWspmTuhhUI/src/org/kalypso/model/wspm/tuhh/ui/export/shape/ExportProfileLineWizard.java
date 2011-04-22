@@ -52,7 +52,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapeOperation;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapePage;
@@ -85,7 +85,7 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
 
     setShowResultInterpolationSettings( true );
 
-    final IDialogSettings wizardSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
+    final IDialogSettings wizardSettings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
     setDialogSettings( wizardSettings );
 
     m_columnsPage = new CsvExportColumnsPage( selection );
@@ -131,7 +131,7 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     }
     catch( final InvocationTargetException e )
     {
-      final String msg = Messages.getString("ExportProfileLineWizard_1"); //$NON-NLS-1$
+      final String msg = Messages.getString( "ExportProfileLineWizard_1" ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), msg, e.getTargetException() );
       throw new CoreException( status );
     }
@@ -165,7 +165,8 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     final String name = column.getHeader();
     final int formatWidth = column.getFormatWidth();
     final int formatPrecision = column.getFormatPrecision();
-    final FieldType type = findFieldType( column.getType() );
+    final Class< ? > columnType = column.getType();
+    final FieldType type = findFieldType( columnType );
 
     final int width = formatWidth == -1 ? column.getDefaultWidth() : formatWidth;
     final int precision = formatPrecision == -1 ? column.getDefaultPrecision() : formatPrecision;
@@ -187,5 +188,4 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
 
     return FieldType.C;
   }
-
 }
