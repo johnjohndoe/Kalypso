@@ -124,7 +124,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
     }
     catch( final ComputationException e )
     {
-      // happens, if compution functin throws an exception
+      // happens, if computation function throws an exception
       return StringUtils.EMPTY;
     }
   }
