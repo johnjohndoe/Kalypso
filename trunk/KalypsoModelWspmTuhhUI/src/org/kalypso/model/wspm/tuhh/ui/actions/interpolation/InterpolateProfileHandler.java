@@ -45,14 +45,16 @@ public class InterpolateProfileHandler extends AbstractHandler
     final TuhhReach reach = ProfileUiUtils.findReach( container );
 
     final IProfileFeature[] profiles = profileSelection.getProfiles();
-    final InterpolationWizard wizard = new InterpolationWizard( profiles );
+    final InterpolationStationData interpolationData = new InterpolationStationData( profiles );
+
+    final InterpolationWizard wizard = new InterpolationWizard( interpolationData );
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     if( dialog.open() != Window.OK )
       return null;
 
     try
     {
-      doInterpolation( waterBody, reach, wizard );
+      doInterpolation( waterBody, reach, interpolationData );
       final CommandableWorkspace workspace = profileSelection.getWorkspace();
       workspace.postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$
     }
@@ -70,20 +72,19 @@ public class InterpolateProfileHandler extends AbstractHandler
     return null;
   }
 
-  private void doInterpolation( final WspmWaterBody waterBody, final TuhhReach reach, final InterpolationWizard wizard ) throws CoreException
+  private void doInterpolation( final WspmWaterBody waterBody, final TuhhReach reach, final InterpolationStationData interpolationData ) throws CoreException
   {
     try
     {
-      final IProfil previousProfile = wizard.getPreviousProfile().getProfil();
-      final IProfil nextProfile = wizard.getNextProfile().getProfil();
-      final BigDecimal newStation = wizard.getNewStation();
-      final boolean onlyRiverChannel = wizard.getOnlyRiverChannel();
+      final IProfil previousProfile = interpolationData.getPreviousProfile().getProfil();
+      final IProfil nextProfile = interpolationData.getNextProfile().getProfil();
+      final BigDecimal newStation = interpolationData.getNewStation();
+      final boolean onlyRiverChannel = interpolationData.getOnlyChannel();
 
       final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile, nextProfile, onlyRiverChannel );
       final IProfil newProfile = interpolation.interpolate( newStation, previousProfile.getType() );
 
       ProfileUiUtils.addNewProfileAndFireEvents( newProfile, waterBody, reach );
-
     }
     catch( final Exception e )
     {
