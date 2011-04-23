@@ -50,6 +50,7 @@ import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.Before;
 import org.junit.Test;
 import org.kalypso.commons.compare.DifferenceDumper;
 import org.kalypso.commons.compare.FileContentAssertDumper;
@@ -57,6 +58,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
+import org.kalypso.core.IKalypsoCoreConstants;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.model.hydrology.INaSimulationData;
@@ -75,6 +77,12 @@ public class NaPreprocessingTest
   public NaPreprocessingTest( )
   {
     KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
+  }
+
+  @Before
+  public void init( )
+  {
+    System.setProperty( IKalypsoCoreConstants.CONFIG_PROPERTY_TIMEZONE, "GMT+1" );
   }
 
   @Test
