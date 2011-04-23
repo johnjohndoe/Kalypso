@@ -48,11 +48,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.preprocessing.writer.TsFileWriter.TSFormat;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -75,14 +73,11 @@ public class HRBFileWriter extends AbstractCoreFileWriter
 
   private final IDManager m_idManager;
 
-  private final NAControl m_metaControl;
-
-  public HRBFileWriter( final StorageChannel[] storageChannels, final NAControl metaControl, final IDManager idManager, final File klimaDir, final Logger logger )
+  public HRBFileWriter( final StorageChannel[] storageChannels, final IDManager idManager, final File klimaDir, final Logger logger )
   {
     super( logger );
 
     m_storageChannels = storageChannels;
-    m_metaControl = metaControl;
     m_klimaDir = klimaDir;
     m_idManager = idManager;
   }
@@ -150,7 +145,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
       {
         final URL context = channel.getWorkspace().getContext();
         // This is not a bug, sea evaporation is the exception (needs GRAP format)!
-        TsFileWriter.writeTimeseries(TSFormat.GRAP, asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null, "-777", m_metaControl.getSimulationStart(), m_metaControl.getSimulationEnd() );
+        TsFileWriter.writeGrapTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null );
       }
       catch( final Exception e )
       {
