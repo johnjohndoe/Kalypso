@@ -141,7 +141,7 @@ public class NAModellConverter
     final SudsFileWriter sudsFileWriter = new SudsFileWriter( naModel, hydrotopeCollection, sudsWorkspace, m_logger );
     sudsFileWriter.write( m_asciiDirs.swaleAndTrenchFile );
 
-    final HRBFileWriter hrbFileWriter = new HRBFileWriter( naModel.getStorageChannels(), metaControl, m_idManager, m_asciiDirs.klimaDatDir, m_logger );
+    final HRBFileWriter hrbFileWriter = new HRBFileWriter( naModel.getStorageChannels(), m_idManager, m_asciiDirs.klimaDatDir, m_logger );
     hrbFileWriter.write( m_asciiDirs.hrbFile );
 
     if( hydroHash != null )
