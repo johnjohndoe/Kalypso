@@ -70,6 +70,7 @@ import org.kalypso.model.wspm.ui.profil.wizard.results.IResultInterpolationSetti
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
+import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypso.shape.deegree.IShapeDataFactory;
 
@@ -148,7 +149,7 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     {
       for( final PatternReplacementColumn column : exportColumns )
       {
-        final DBFField field = createField( column );
+        final IDBFField field = createField( column );
         fields.add( new PatternReplacementField( column, field ) );
       }
     }
@@ -160,7 +161,7 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     return fields.toArray( new IDBFValue[fields.size()] );
   }
 
-  private static DBFField createField( final PatternReplacementColumn column ) throws DBaseException
+  private static IDBFField createField( final PatternReplacementColumn column ) throws DBaseException
   {
     final String name = column.getHeader();
     final int formatWidth = column.getFormatWidth();
