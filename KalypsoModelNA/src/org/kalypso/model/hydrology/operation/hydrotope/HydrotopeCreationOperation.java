@@ -83,7 +83,8 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Creates and writes hydrotops into a 'hydrotop.gml' file from 'modell.gml' (catchments), 'pedologie.gml',
- * 'geologie.gml' and 'landuse.gml'
+ * 'geologie.gml' and 'landuse.gml'<br/>
+ * FIXME: break this code into smaller chunks. Else, no one will every understand how it works....
  * 
  * @author Dejan Antanaskovic
  */
@@ -137,6 +138,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     }
     else
     {
+      // FIXME: this doe not work; if the planning area is present, hydrotope creation fails.
       final GM_Envelope envelope = m_workingArea.getEnvelope();
 
       final List pedologyQuery = m_pedologyList.query( envelope, null );
@@ -160,22 +162,23 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
   @Override
   public void run( final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.0" ), 100 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.0" ), 100 ); //$NON-NLS-1$
 
     final FeatureListGeometryIntersector geometryIntersector = getIntersector();
-    final List<Polygon> intersectionList;
     try
     {
-      progress.setTaskName( Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.1" ) ); //$NON-NLS-1$
-      intersectionList = geometryIntersector.intersect( progress.newChild( 80 ) );
+      progress.setTaskName( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.1" ) ); //$NON-NLS-1$
 
-      progress.setTaskName( Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.2" ) ); //$NON-NLS-1$
+      final List<Polygon> intersectionList = geometryIntersector.intersect( progress.newChild( 80 ) );
+
+      progress.setTaskName( Messages.getString( "org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.2" ) ); //$NON-NLS-1$
       progress.setWorkRemaining( intersectionList.size() );
 
       if( m_outputList.size() > 0 )
       {
         final Geometry intersectionArea = JTSAdapter.jtsFactory.createGeometryCollection( intersectionList.toArray( new Polygon[intersectionList.size()] ) ).buffer( 0.0 );
         // FIXME: check if the coordinate system is really required, it was always null in previous implementation
+        // FIXME: yes, it is requiered: FIXME: putting the global one is WRONG -> put the crs of the wrapped geoemtry
         final GM_Envelope gmEnvelope = JTSAdapter.wrap( intersectionArea.getEnvelopeInternal(), COORDINATE_SYSTEM );
         final List<IHydrotope> list = m_outputList.query( gmEnvelope );
         for( final IHydrotope hydrotop : list )
@@ -204,7 +207,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
               if( hydrotopGeometry != null )
                 hydrotop.setGeometry( hydrotopGeometry );
             }
-
           }
         }
       }
@@ -220,8 +222,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       {
         if( count % 100 == 0 )
         {
-          final String msg = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.3", count, intersectionList.size() );
-          progress.subTask( msg ); //$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.3", count, intersectionList.size() ); //$NON-NLS-1$
+          progress.subTask( msg );
           // TODO: belongs to the end of this loop, but there are just too many else's
           // Better: put into sub-method and 'return' instead of 'continue'
           ProgressUtilities.worked( monitor, 100 );
@@ -333,6 +335,11 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         if( m_dissolveFeatures )
         {
           final GM_Envelope featureGeometryEnvelope = JTSAdapter.wrap( geometry.getEnvelopeInternal(), COORDINATE_SYSTEM );
+          // FIXME: this is most probably a heavy performance bug: removing/adding feature to m_output list invalidates
+          // the geo-index
+          // The #query however rebuilds it completly -> so in every loop the geo-index is rebuilt
+          // TODO: the dissolve should happen in another extra operation, mixing it with the hydrotope-creation is bad
+
           final List<IHydrotope> list = m_outputList.query( featureGeometryEnvelope );
           final List<Feature> featuresToMergeWith = new ArrayList<Feature>();
           final List<Geometry> geometriesToMergeWith = new ArrayList<Geometry>();
@@ -371,6 +378,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             }
             catch( final Exception e )
             {
+              // FIXME: why all this strange exception handling? At least: comment this!
               Logger.getLogger( getClass().getName() ).log( Level.WARNING, e.getLocalizedMessage() );
               try
               {
