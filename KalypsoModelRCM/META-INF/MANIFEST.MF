@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Kalypso Rainfall-Catchment-Model
 Bundle-SymbolicName: org.kalypso.model.rcm;singleton:=true
-Bundle-Version: 10.10.2.qualifier
+Bundle-Version: 10.10.3.qualifier
 Bundle-Activator: org.kalypso.model.rcm.KalypsoModelRcmActivator
 Bundle-Vendor: kalypso.org
 Require-Bundle: org.eclipse.ant.core;bundle-version="3.2.0",
