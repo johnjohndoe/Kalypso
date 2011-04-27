@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoActivities
 Bundle-SymbolicName: org.kalypso.activities;singleton:=true
-Bundle-Version: 10.10.2.qualifier
+Bundle-Version: 10.10.3.qualifier
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
