@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -119,9 +120,9 @@ public final class RainfallGeneratorUtilities
     return areas;
   }
 
-  public static IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final Date from, final Date to, final String sourceFilter, final URL context ) throws MalformedURLException, SensorException
+  public static IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final DateRange range, final String sourceFilter, final URL context ) throws MalformedURLException, SensorException
   {
-    final IRequest request = new ObservationRequest( from, to );
+    final IRequest request = new ObservationRequest( range );
 
     final IObservation[] readObservations = new IObservation[ombrometerLinks.length];
     for( int i = 0; i < ombrometerLinks.length; i++ )
