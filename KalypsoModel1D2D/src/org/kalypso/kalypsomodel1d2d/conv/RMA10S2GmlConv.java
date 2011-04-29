@@ -169,43 +169,43 @@ public class RMA10S2GmlConv
         continue;
       if( line.startsWith( "FP" ) ) //$NON-NLS-1$
         interpreteNodeLine( line );
-      if( line.startsWith( "FE" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "FE" ) ) //$NON-NLS-1$
         interpreteElementLine( line );
-      if( line.startsWith( "AR" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "AR" ) ) //$NON-NLS-1$
         interpreteArcLine( line );
-      if( line.startsWith( "RK" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "RK" ) ) //$NON-NLS-1$
       {
         // still not implemented
       }
-      if( line.startsWith( Messages.getString("RMA10S2GmlConv.4") ) ) //$NON-NLS-1$
+      else if( line.startsWith( "VA" ) ) //$NON-NLS-1$
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_VA );
-      if( line.startsWith( "VO" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "VO" ) ) //$NON-NLS-1$
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_VO );
-      if( line.startsWith( "GA" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "GA" ) ) //$NON-NLS-1$
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_GA );
-      if( line.startsWith( "GO" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "GO" ) ) //$NON-NLS-1$
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_GO );
-      if( line.startsWith( Messages.getString("RMA10S2GmlConv.8") ) ) //$NON-NLS-1$
+      else if( line.startsWith( "DA" ) ) //$NON-NLS-1$
         interpreteTimeLine( line );
-      if( line.startsWith( "TL" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "TL" ) ) //$NON-NLS-1$
         interprete1d2dJunctionElement( line );
-      if( line.startsWith( "ZU" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "ZU" ) ) //$NON-NLS-1$
         interpreteNodeInformationLine( line );
-      if( line.startsWith( "JE" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "JE" ) ) //$NON-NLS-1$
         interpreteJunctionInformationLine( line );
-      if( line.startsWith( "MM" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "MM" ) ) //$NON-NLS-1$
         interpretePolynomeMinMaxLine( line );
-      if( line.startsWith( "PRA" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "PRA" ) ) //$NON-NLS-1$
         interpretePolynomialRangesLine( line );
-      if( line.startsWith( "AP" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "AP" ) ) //$NON-NLS-1$
         interpreteSplittedPolynomialsLine( line );
-      if( line.startsWith( "PRQ" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "PRQ" ) ) //$NON-NLS-1$
         interpretePolynomialRangesLine( line );
-      if( line.startsWith( "QP" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "QP" ) ) //$NON-NLS-1$
         interpreteSplittedPolynomialsLine( line );
-      if( line.startsWith( "PRB" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "PRB" ) ) //$NON-NLS-1$
         interpretePolynomialRangesLine( line );
-      if( line.startsWith( "ALP" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "ALP" ) ) //$NON-NLS-1$
         interpreteSplittedPolynomialsLine( line );
       
       else if( VERBOSE_MODE )
