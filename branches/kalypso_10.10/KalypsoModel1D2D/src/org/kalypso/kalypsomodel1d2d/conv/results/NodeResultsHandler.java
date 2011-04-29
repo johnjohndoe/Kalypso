@@ -252,8 +252,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     /* store the information of the connection between arcs and elements at the element object */
     /* left element */
     writeArcInfoAtElement( elementLeftID, arcResult );
-    /* right element */
-    writeArcInfoAtElement( elementRightID, arcResult );
+    if (elementLeftID != elementRightID) 
+      /* right element */
+      writeArcInfoAtElement( elementRightID, arcResult );
 
     if( middleNodeID == 0 )
       return; // maybe this is a good place to mark the 1d-nodes....
@@ -1587,6 +1588,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
 
   }
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double, double)
+   */
+  @Override
+  public void handleNode( String line, int id, double easting, double northing, double elevation, double stationName )
+  {
+    this.handleNode( line, id, easting, northing, elevation );
+    
+    
+  }
 
   private IFE1D2DNode< ? > getResultNodeFromPoint( final GM_Point point )
   {
@@ -1922,13 +1933,4 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double, double)
-   */
-  @Override
-  public void handleNode( String line, int id, double easting, double northing, double elevation, double stationName )
-  {
-    // TODO Auto-generated method stub
-    
-  }
 }
