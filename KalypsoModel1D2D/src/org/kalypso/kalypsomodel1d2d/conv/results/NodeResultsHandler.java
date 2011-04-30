@@ -65,11 +65,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.EReadError;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
@@ -491,7 +491,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         /* check water levels for dry nodes */
         //should not be done for calculated by RMA results 
-//        elementResult.checkWaterlevels();
+        //        elementResult.checkWaterlevels();
       }
     }
     else
@@ -551,7 +551,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final BigDecimal area = NodeResultHelper.getCrossSectionArea( (ITeschkeFlowRelation) flowRelation1d, depth );
 
     if( area == null )
-      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18", nodeResult.getGmlID(), station.doubleValue() ) ); //$NON-NLS-1$
+    {
+      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18", nodeResult.getGmlID(), station.doubleValue() ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg );
+    }
 
     final BigDecimal discharge = velocity.multiply( area ).setScale( 3, BigDecimal.ROUND_HALF_UP );
     nodeResult.setDischarge( discharge.doubleValue() );
@@ -614,7 +617,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     /* Probably profile information missing */
     if( curves[0] == null || curves[1] == null )
-      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.20" ) ); //$NON-NLS-1$
+    {
+      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.20" ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg );
+    }
 
     final double curveDistance = curves[0].distance( curves[1] );
     create1dTriangles( nodes, curves, curveDistance );
@@ -622,7 +628,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return Status.OK_STATUS;
   }
 
-  @SuppressWarnings("unchecked")
   private ICalculationUnit1D getCalcUnit( final ElementResult elementResult )
   {
     if( m_discModel == null )
@@ -780,14 +785,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     final String crs = curveList.get( 0 ).getCoordinateSystem();
 
-    Set< GM_Position > lSetPositions = new HashSet<GM_Position>();
+    final Set< GM_Position > lSetPositions = new HashSet<GM_Position>();
     for( final GM_Curve lCurve: curveList ){
-      
-      GM_Position[] lPositions = lCurve.getAsLineString().getPositions();
+
+      final GM_Position[] lPositions = lCurve.getAsLineString().getPositions();
       for( int i = 0; i < lPositions.length; ++i )
         lSetPositions.add( lPositions[ i ] );
     }
-    List< GM_Position > lListPos = new ArrayList<GM_Position>();
+    final List< GM_Position > lListPos = new ArrayList<GM_Position>();
     lListPos.addAll( lSetPositions );
     if( !lListPos.get( 0 ).equals( lListPos.get( lListPos.size() - 1 ) ) ){
       lListPos.add( lListPos.get( 0 ) );
@@ -1586,17 +1591,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       e.printStackTrace();
     }
-
   }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double, double)
    */
   @Override
-  public void handleNode( String line, int id, double easting, double northing, double elevation, double stationName )
+  public void handleNode( final String line, final int id, final double easting, final double northing, final double elevation, final double stationName )
   {
     this.handleNode( line, id, easting, northing, elevation );
-    
-    
   }
 
   private IFE1D2DNode< ? > getResultNodeFromPoint( final GM_Point point )
@@ -1907,30 +1910,29 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomialRangesInformation(java.lang.String, java.lang.String, int, int, java.util.List)
    */
   @Override
-  public void handle1dPolynomialRangesInformation( String line, String lStrPolyKind, int lIntNodeId, int lIntAmountRanges, List<Double> lListPolyAreaMaxRanges )
+  public void handle1dPolynomialRangesInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomeMinMax(java.lang.String, int, double, double)
    */
   @Override
-  public void handle1dPolynomeMinMax( String line, int id, double min, double max )
+  public void handle1dPolynomeMinMax( final String line, final int id, final double min, final double max )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dSplittedPolynomialsInformation(java.lang.String, java.lang.String, int, int, java.util.List, java.lang.Double)
    */
   @Override
-  public void handle1dSplittedPolynomialsInformation( String line, String lStrPolyKind, int lIntNodeId, int lIntAmountRanges, List<Double> lListPolyAreaMaxRanges, Double lIntSlope )
+  public void handle1dSplittedPolynomialsInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges, final Double lIntSlope )
   {
     // TODO Auto-generated method stub
-    
-  }
 
+  }
 }
