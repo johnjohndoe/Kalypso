@@ -49,16 +49,17 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * GML-binding for the rcm:RainfallGenerator's
+ * GML-binding for the rcm:RainfallGenerator's.
  * 
  * @author Gernot Belger
  */
 public interface IRainfallGenerator extends Feature
 {
   /**
-   * @param sourceFilter Enforces source timeseries to have equal properties (length, interval, ...). May be null.
+   * @param sourceFilter
+   *          Enforces source timeseries to have equal properties (length, interval, ...). May be null.
    */
   public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, ILog log, final IProgressMonitor monitor ) throws CoreException;
 
-  DateRange getPeriod( IStringResolver variables );
+  public DateRange getPeriod( IStringResolver variables );
 }
