@@ -304,13 +304,16 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
     StringTokenizer lStringTokenizer = new StringTokenizer( strActLine, " " ); //$NON-NLS-1$
     while( lStringTokenizer.hasMoreTokens() && (m_intReadFirstElements < actBlockDescriptor.m_intActBlockAmount || m_intReadSecondElements < actBlockDescriptor.m_intActBlockAmount) )
     {
+      final int j = m_intNumberRows - actBlockDescriptor.m_intActBlockLine;
       if( m_intReadFirstElements < actBlockDescriptor.m_intActBlockAmount )
       {
-        m_pairsActTimeStepWindData[m_intReadFirstElements++ + actBlockDescriptor.m_intActBlockColumnStart][m_intNumberRows - actBlockDescriptor.m_intActBlockLine].first = Double.parseDouble( lStringTokenizer.nextToken() );
+        final int i = m_intReadFirstElements++ + actBlockDescriptor.m_intActBlockColumnStart - 1;
+        m_pairsActTimeStepWindData[i][j].first = Double.parseDouble( lStringTokenizer.nextToken() );
       }
       else
       {
-        m_pairsActTimeStepWindData[m_intReadSecondElements++ + actBlockDescriptor.m_intActBlockColumnStart][m_intNumberRows - actBlockDescriptor.m_intActBlockLine].second = Double.parseDouble( lStringTokenizer.nextToken() );
+        final int i = m_intReadSecondElements++ + actBlockDescriptor.m_intActBlockColumnStart - 1;
+        m_pairsActTimeStepWindData[i][j].second = Double.parseDouble( lStringTokenizer.nextToken() );
       }
     }
   }
