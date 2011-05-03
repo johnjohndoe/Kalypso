@@ -73,13 +73,12 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.util.Assert;
 
 public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 {
   private final Map<String, List<BinaryGeoGridReader>> m_gridMap;
 
-  private final IFeatureBindingCollection<IAnnualCoverageCollection> m_annualCoverageCollection;
+  private final Collection<IAnnualCoverageCollection> m_annualCoverageCollection;
 
   private final IFeatureWrapperCollection<ILandusePolygon> m_landusePolygonCollection;
 
@@ -117,7 +116,18 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     m_resultGrid = resultGrid;
 
     m_cellSize = Math.abs( resultGrid.getOffsetX().x - resultGrid.getOffsetY().x ) * Math.abs( resultGrid.getOffsetX().y - resultGrid.getOffsetY().y );
-    m_annualCoverageCollection = annualCoverageCollection;
+
+    /* we need a sorted list of the annual coverage collections */
+    final SortedMap<Double, IAnnualCoverageCollection> covMap = new TreeMap<Double, IAnnualCoverageCollection>();
+    for( final IAnnualCoverageCollection cov : annualCoverageCollection )
+    {
+      final IAnnualCoverageCollection previousValue = covMap.put( cov.getReturnPeriod().doubleValue(), cov );
+      if( previousValue != null )
+        throw new IllegalArgumentException( org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesGrid.1" ) + cov.getReturnPeriod().doubleValue() ); //$NON-NLS-1$
+    }
+
+    m_annualCoverageCollection = covMap.values();
+
     m_landusePolygonCollection = landusePolygonCollection;
     m_landuseClassesList = landuseClassesList;
     m_gridMap = new HashMap<String, List<BinaryGeoGridReader>>();
@@ -187,37 +197,23 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
     try
     {
-      // FIXME: very dubious: performance -> does not depends on x/y; why do we do it again and again?
+      /* fill the probabilities and damages */
+      final int numCov = m_annualCoverageCollection.size();
 
-      /* we need a sorted list of the annual coverage collections */
-      final SortedMap<Double, IAnnualCoverageCollection> covMap = new TreeMap<Double, IAnnualCoverageCollection>();
-      for( final IAnnualCoverageCollection cov : m_annualCoverageCollection )
-      {
-        final IAnnualCoverageCollection previousValue = covMap.put( cov.getReturnPeriod().doubleValue(), cov );
-        if( previousValue != null )
-          throw new IllegalArgumentException( org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesGrid.1" ) + cov.getReturnPeriod().doubleValue() ); //$NON-NLS-1$
-      }
-
-      final Collection<IAnnualCoverageCollection> collections = covMap.values();
-      final IAnnualCoverageCollection[] covArray = collections.toArray( new IAnnualCoverageCollection[collections.size()] );
+      final double[] damage = new double[numCov];
+      final double[] probability = new double[numCov];
 
       final double cx = m_origin.x + x * m_offsetX.x + y * m_offsetY.x;
       final double cy = m_origin.y + x * m_offsetX.y + y * m_offsetY.y;
       final Coordinate coordinate = new Coordinate( cx, cy );
 
-      Assert.isTrue( m_annualCoverageCollection.size() == covArray.length );
-
-      /* fill the probabilities and damages */
-      final double[] damage = new double[covArray.length];
-      final double[] probability = new double[covArray.length];
-
-      for( int i = covArray.length - 1; i >= 0; i-- )
+      int i = 0;
+      for( final IAnnualCoverageCollection collection : m_annualCoverageCollection )
       {
-        final IAnnualCoverageCollection collection = covArray[i];
         final double value = getValue( collection, coordinate );
-
         damage[i] = Double.isNaN( value ) ? 0.0 : value;
         probability[i] = 1.0 / collection.getReturnPeriod();
+        i++;
       }
 
       /* calculate average annual damage */
