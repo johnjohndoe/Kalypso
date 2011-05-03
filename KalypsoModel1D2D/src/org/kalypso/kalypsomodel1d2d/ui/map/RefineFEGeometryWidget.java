@@ -777,6 +777,7 @@ public class RefineFEGeometryWidget extends AbstractWidget implements IWidgetWit
     final Composite sectionComposite = toolkit.createComposite( section, SWT.NONE );
     section.setClient( sectionComposite );
     section.setText( "Triangulierungsoptionen" );
+    section.setDescription( "Diese Optionen haben nur einen Effekt, wenn triangle.exe im \"bin\"-Verzeichnis von Kalypso liegt." );
     section.setExpanded( true );
     sectionComposite.setLayout( gridLayout );
 
