@@ -56,22 +56,34 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.window.DefaultToolTip;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -79,24 +91,20 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
-import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -106,31 +114,26 @@ import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.refinement.Refinement;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * This widget is used in order to refine an existing 2D mesh by drawing a refinement line. The user gets a preview
- * before he starts the refinement of the model.
- * <ul>
- * <li>resulting elements with 5 corners are getting split into triangles by simple polygon triangulation
- * <li>arcs cannot be split twice
- * </ul>
+ * This widget is used to triangulate a boundary with breaklines. The user gets a preview before he starts the
+ * refinement of the model.
  * 
- * @author Thomas Jung
+ * @author Stefan Kurzbach
  */
-public class RefineFEGeometryWidget extends AbstractWidget
+public class TriangulateGeometryWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private static final double SNAP_DISTANCE = 0.02;
 
-  private boolean m_modePolygon = false;
+  private boolean m_modePolygon = true;
 
   private Point m_currentMapPoint;
 
   private PointSnapper m_pointSnapper;
 
-  private IGeometryBuilder m_geometryBuilder = null;
+  private PolygonGeometryBuilder m_geometryBuilder = null;
 
   private IKalypsoFeatureTheme m_theme;
 
@@ -140,20 +143,26 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
   private final ToolTipRenderer m_warningRenderer = new ToolTipRenderer();
 
+  private boolean m_warning;
+
+  private Composite m_composite;
+
+  protected double m_maxArea = -1;
+
+  protected double m_minAngle = 22;
+
+  protected boolean m_noSteiner = true;
+
+  private GM_Surface<GM_SurfacePatch> m_boundaryGeom;
+
   private FeatureList m_featureList;
 
-  private GM_Object[] m_objects;
-
-  private List<Feature> m_featuresToRefine;
-
-  private boolean m_warning;
+  private GM_Surface<GM_SurfacePatch>[] m_objects;
 
   @SuppressWarnings("rawtypes")
   private Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
 
-  private GM_Object m_geom;
-
-  public RefineFEGeometryWidget( )
+  public TriangulateGeometryWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
@@ -186,8 +195,8 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
     if( m_modePolygon )
       m_geometryBuilder = new PolygonGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
-    else
-      m_geometryBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
+    // else
+    // m_geometryBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
     m_pointSnapper = new PointSnapper( m_model1d2d, mapPanel );
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
@@ -197,13 +206,14 @@ public class RefineFEGeometryWidget extends AbstractWidget
       m_featureList = m_theme == null ? null : m_theme.getFeatureList();
     }
 
+    m_nodesNameConversionMap.clear();
     m_objects = null;
   }
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
-  @SuppressWarnings({ "rawtypes" })
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   @Override
   public void leftPressed( final Point p )
   {
@@ -219,16 +229,44 @@ public class RefineFEGeometryWidget extends AbstractWidget
       if( newNode == null )
         mapPanel.setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
 
+      final GM_Point thePoint;
       if( newNode instanceof IFE1D2DNode )
       {
-        final GM_Point point = ((IFE1D2DNode) newNode).getPoint();
-        m_currentMapPoint = MapUtilities.retransform( getMapPanel(), point );
-        m_geometryBuilder.addPoint( point );
+        thePoint = ((IFE1D2DNode) newNode).getPoint();
+        m_currentMapPoint = MapUtilities.retransform( getMapPanel(), thePoint );
       }
       else
       {
         m_currentMapPoint = p;
-        m_geometryBuilder.addPoint( MapUtilities.transform( mapPanel, p ) );
+        thePoint = MapUtilities.transform( mapPanel, m_currentMapPoint );
+      }
+
+      m_geometryBuilder.addPoint( thePoint );
+      final GM_Surface<GM_SurfacePatch> finish = (GM_Surface<GM_SurfacePatch>) m_geometryBuilder.finish();
+      if( finish != null )
+      {
+        if( GeometryUtilities.isSelfIntersecting( finish.get( 0 ).getExteriorRing() ) )
+        {
+          m_warning = true;
+          m_warningRenderer.setTooltip( "Boundary is self-intersecting." );
+          return;
+        }
+
+        final List<Feature> possiblyIntersecting = m_featureList.query( finish.getEnvelope(), null );
+        for( final Feature feature : possiblyIntersecting )
+        {
+          final GM_Object geom = feature.getDefaultGeometryPropertyValue();
+          if( geom.intersects( finish ) )
+          {
+            final GM_Object intersection = geom.intersection( finish );
+            if( intersection instanceof GM_Surface )
+            {
+              m_warning = true;
+              m_warningRenderer.setTooltip( "Boundary intersects existing elements." );
+              return;
+            }
+          }
+        }
       }
       mapPanel.setCursor( Cursor.getDefaultCursor() );
 
@@ -316,33 +354,29 @@ public class RefineFEGeometryWidget extends AbstractWidget
     }
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @SuppressWarnings({ "rawtypes" })
   private void drawRefinement( final Graphics g, final GeoTransform projection ) throws CoreException, GM_Exception
   {
     /* Paint a rect. */
     final LineSymbolizer symb = new LineSymbolizer_Impl();
     final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
     final Color color = new Color( 255, 0, 0 );
-    for( final GM_Object object : m_objects )
+    for( final GM_Surface<GM_SurfacePatch> surface : m_objects )
     {
-      if( object instanceof GM_Surface )
+      final String crs = surface.getCoordinateSystem();
+
+      for( final GM_SurfacePatch surfacePatch : surface )
       {
-        final GM_Surface<GM_SurfacePatch> surface = (GM_Surface) object;
-        final String crs = surface.getCoordinateSystem();
+        final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();
+        final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( exteriorRing, crs );
 
-        for( final GM_SurfacePatch surfacePatch : surface )
-        {
-          final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();
-          final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( exteriorRing, crs );
+        stroke.setWidth( 3 );
+        stroke.setLineCap( 2 ); // round
+        stroke.setStroke( color );
+        symb.setStroke( stroke );
 
-          stroke.setWidth( 3 );
-          stroke.setLineCap( 2 ); // round
-          stroke.setStroke( color );
-          symb.setStroke( stroke );
-
-          final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-          de.paint( g, projection, new NullProgressMonitor() );
-        }
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+        de.paint( g, projection, new NullProgressMonitor() );
       }
     }
   }
@@ -360,25 +394,22 @@ public class RefineFEGeometryWidget extends AbstractWidget
     }
     else if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
       reinit();
+    else if( e.getKeyCode() == KeyEvent.VK_BACK_SPACE )
+    {
+      m_geometryBuilder.removeLastPoint();
+      m_warning = false;
+    }
     else if( e.getKeyCode() == KeyEvent.VK_ENTER )
       convertRefinementToModel();
     else
       super.keyPressed( e );
   }
 
-  @SuppressWarnings({ "unchecked" })
+  @SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
   private void convertRefinementToModel( )
   {
     if( m_objects == null )
       return;
-
-    // first, we re-select all features that lie on the refined GM_Object's center points.
-    // This is necessary because of some additional filters used in the refinement class.
-
-    /* calculate centroids of refinements */
-    final List<GM_Point> centroidList = getCentroids( m_objects );
-    /* reselect */
-    final List<Feature> refineList = reselectFeatures( centroidList );
 
     try
     {
@@ -387,76 +418,41 @@ public class RefineFEGeometryWidget extends AbstractWidget
       /* Initialize elements needed for edges and elements */
       final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( workspace.getRootFeature() );
 
-      // add remove element command
-      final IDiscrModel1d2dChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( discModel );
-      List<Feature> elementsToRemove = new ArrayList<Feature>();
-      for( final Feature feature : refineList )
-      {
-        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
-        {
-          ((DeletePolyElementCmd) deleteCmdPolyElement).addElementToRemove( feature );
-          elementsToRemove.add( feature );
-          // final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( feature, discModel );
-          // workspace.postCommand( deleteCmd );
-        }
-      }
-      try
-      {
-        deleteCmdPolyElement.process();
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
-
-      discModel.getElements().removeAllAtOnce( elementsToRemove );
-      // workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, discModel.getFeature(),
-      // elementsToRemove.toArray( new Feature[ elementsToRemove.size() ] ),
-      // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
-      m_nodesNameConversionMap.clear();
-
       List<Feature> lListAdded = new ArrayList<Feature>();
       /* create new elements */
-      for( final GM_Object object : m_objects )
+      for( final GM_Surface surface : m_objects )
       {
-        if( object instanceof GM_Surface )
-        {
-          final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) object;
-          lListAdded.addAll( createPolyElement( surface, discModel ) );
-          // ElementGeometryHelper.createFE1D2DfromSurface( workspace, discModel, surface );
-        }
+        lListAdded.addAll( createPolyElement( surface, discModel ) );
       }
 
       if( lListAdded.size() > 0 )
       {
         FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel.getFeature(), lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
         workspace.fireModellEvent( changeEvent );
-        Logger.getLogger( RefineFEGeometryWidget.class.getName() ).log( Level.INFO, "Model event fired: " + changeEvent ); //$NON-NLS-1$
+        Logger.getLogger( TriangulateGeometryWidget.class.getName() ).log( Level.INFO, "Model event fired: " + changeEvent ); //$NON-NLS-1$
       }
       reinit();
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
 
-  @SuppressWarnings("rawtypes")
   private List<Feature> createPolyElement( final GM_Surface<GM_SurfacePatch> surface, final IFEDiscretisationModel1d2d discModel )
   {
-    List<Feature> lListRes = new ArrayList<Feature>();
-    List<IFE1D2DEdge> lListEdges = new ArrayList<IFE1D2DEdge>();
+    final List<Feature> lListRes = new ArrayList<Feature>();
+    final List<IFE1D2DEdge> lListEdges = new ArrayList<IFE1D2DEdge>();
     for( final GM_SurfacePatch surfacePatch : surface )
     {
       final GM_Position[] poses = surfacePatch.getExteriorRing();
-      List<GM_Point> lListPoints = new ArrayList<GM_Point>();
+      final List<GM_Point> lListPoints = new ArrayList<GM_Point>();
       for( int i = 0; i < poses.length - 1; i++ )
         lListPoints.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], surface.getCoordinateSystem() ) );
 
       lListRes.addAll( createNodesAndEdges( discModel, lListEdges, lListPoints ) );
 
-      IPolyElement element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
+      final IPolyElement element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
       lListRes.add( element2d.getFeature() );
       for( final IFE1D2DEdge lEdge : lListEdges )
       {
@@ -470,10 +466,9 @@ public class RefineFEGeometryWidget extends AbstractWidget
     return lListRes;
   }
 
-  @SuppressWarnings("rawtypes")
   private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge> lListEdges, final List<GM_Point> lListPoses )
   {
-    List<Feature> lListRes = new ArrayList<Feature>();
+    final List<Feature> lListRes = new ArrayList<Feature>();
     IFE1D2DNode lastNode = null;
     int iCountNodes = 0;
     if( lListPoses.size() > 0 && !lListPoses.get( lListPoses.size() - 1 ).equals( lListPoses.get( 0 ) ) )
@@ -522,51 +517,10 @@ public class RefineFEGeometryWidget extends AbstractWidget
     return lListRes;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  private List<Feature> reselectFeatures( final List<GM_Point> centroidList )
-  {
-    final List<Feature> refineList = new ArrayList<Feature>();
-    for( final Feature feature : m_featuresToRefine )
-    {
-      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
-      {
-        final GM_Object geom = (GM_Object) feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
-        if( geom instanceof GM_Surface )
-        {
-          final GM_Surface<GM_SurfacePatch> surface = (GM_Surface) geom;
-
-          for( final GM_Point centroid : centroidList )
-          {
-            if( surface.intersects( centroid ) )
-              refineList.add( feature );
-          }
-        }
-      }
-    }
-    return refineList;
-  }
-
-  @SuppressWarnings({ "unchecked" })
-  private List<GM_Point> getCentroids( final GM_Object[] objects )
-  {
-    final List<GM_Point> centroidList = new ArrayList<GM_Point>();
-
-    for( final GM_Object object : objects )
-    {
-      if( object instanceof GM_Surface )
-      {
-        final GM_Surface<GM_SurfacePatch> surf = (GM_Surface<GM_SurfacePatch>) object;
-        final GM_Point centroid = surf.getCentroid();
-
-        centroidList.add( centroid );
-      }
-    }
-    return centroidList;
-  }
-
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void doubleClickedLeft( final Point p )
   {
@@ -575,7 +529,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
     try
     {
-      m_geom = (GM_Curve) m_geometryBuilder.finish();
+      m_boundaryGeom = (GM_Surface<GM_SurfacePatch>) m_geometryBuilder.finish();
       finishGeometry();
     }
     catch( final Exception e )
@@ -592,73 +546,34 @@ public class RefineFEGeometryWidget extends AbstractWidget
   @SuppressWarnings({ "unchecked", "rawtypes" })
   protected void finishGeometry( ) throws GM_Exception
   {
-    if( m_geom == null )
+    if( m_boundaryGeom == null )
       return;
 
-    m_warning = false;
-
-    m_featuresToRefine = new ArrayList<Feature>();
+    if( m_warning )
+      return;
 
     if( m_featureList == null )
       return;
 
-    /* select features */
-    final String crs = m_geom.getCoordinateSystem();
+    final List<GM_Surface> refinementList = new ArrayList<GM_Surface>( 1000 );
 
-    final List<Feature> selectedFeatures = doSelect( m_geom, m_featureList );
-
-    final List<GM_Surface> surfaceList = new ArrayList<GM_Surface>();
-
-    for( final Feature feature : selectedFeatures )
+    final List<String> args = new ArrayList<String>();
+    if( m_maxArea > 0 )
     {
-      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
-      {
-        // get the geometry
-        final GM_Object selectedGeom = (GM_Object) feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
-        if( selectedGeom instanceof GM_Surface )
-        {
-          final GM_Surface<GM_SurfacePatch> surface = (GM_Surface) selectedGeom;
-
-          surfaceList.add( surface );
-        }
-
-        // get the selected Feature
-        m_featuresToRefine.add( feature );
-      }
+      args.add( "-a" + m_maxArea );
     }
-
-    /* REFINEMENT */
-    final GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( surfaceList.toArray( new GM_Surface[surfaceList.size()] ), crs );
-    final GM_MultiSurface[] multiSurfaces = new GM_MultiSurface[] { multiSurface };
-
-    final Refinement refinement = new Refinement();
-
-    final GM_Object[] refinements = refinement.doRefine( multiSurfaces, m_geom );
-
-    final List<GM_Surface> refinementList = new ArrayList<GM_Surface>();
-
-    for( final GM_Object refineGeom : refinements )
+    if( m_minAngle > 0 )
     {
-      if( refineGeom instanceof GM_Surface )
-      {
-        final GM_Surface<GM_SurfacePatch> surface = (GM_Surface) refineGeom;
-        for( final GM_SurfacePatch surfacePatch : surface )
-        {
-          final int nodeCount = surfacePatch.getExteriorRing().length;
-          final GM_Surface newSurface = GeometryFactory.createGM_Surface( surfacePatch );
-          if( nodeCount > 5 || !newSurface.getConvexHull().equals( newSurface ) )
-          {
-            final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( newSurface, newSurface.getCoordinateSystem() );
-            for( final GM_Triangle triangle : triangles )
-              refinementList.add( GeometryFactory.createGM_Surface( triangle ) );
-          }
-          else
-          {
-            refinementList.add( newSurface );
-          }
-        }
-      }
+      args.add( "-q" + m_minAngle );
     }
+    if( m_noSteiner )
+    {
+      args.add( "-Y" );
+    }
+    final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( m_boundaryGeom, m_boundaryGeom.getCoordinateSystem(), args.toArray( new String[args.size()] ) );
+
+    for( final GM_Triangle triangle : triangles )
+      refinementList.add( GeometryFactory.createGM_Surface( triangle ) );
 
     if( refinementList.size() == 0 )
     {
@@ -674,64 +589,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     getMapPanel().repaintMap();
   }
 
-  private static List<Feature> doSelect( final GM_Object selectGeometry, final FeatureList featureList )
-  {
-    if( selectGeometry == null )
-      return null;
-    // select feature from featureList by using the selectGeometry
-    if( featureList == null )
-      return null;
-
-    final List<Feature> selectedFeatures = new ArrayList<Feature>();
-
-    final List<Feature> selectedSubList = selectFeatures( featureList, selectGeometry );
-    if( selectedSubList != null )
-      selectedFeatures.addAll( selectedSubList );
-
-    return selectedFeatures;
-  }
-
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  private static List<Feature> selectFeatures( final FeatureList featureList, final GM_Object theGeom )
-  {
-    final List<Feature> selectedFeatures = new ArrayList<Feature>();
-    GM_Object selectGeometry = theGeom;
-    try
-    {
-      if( theGeom instanceof GM_Curve )
-      {
-        final GM_Position[] positions = ((GM_Curve) theGeom).getAsLineString().getPositions();
-        selectGeometry = GeometryFactory.createGM_Surface( positions, null, selectGeometry.getCoordinateSystem() );
-      }
-    }
-    catch( final GM_Exception e )
-    {
-    }
-    final GM_Envelope envelope = selectGeometry.getEnvelope();
-    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
-    final List result = featureList.query( envelope, null );
-
-    for( final Object object : result )
-    {
-      final Feature feature = FeatureHelper.getFeature( workspace, object );
-
-      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
-      {
-        final GM_Object geom = (GM_Object) feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
-        if( geom != null )
-        {
-          final GM_Object intersection = selectGeometry.intersection( geom );
-          if( intersection != null )
-          {
-            selectedFeatures.add( feature );
-          }
-        }
-      }
-    }
-
-    return selectedFeatures;
-  }
-
+  @SuppressWarnings({ "rawtypes" })
   private Object checkNewNode( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
@@ -739,9 +597,188 @@ public class RefineFEGeometryWidget extends AbstractWidget
       return null;
 
     final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
-    final IFE1D2DNode< ? > snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
+    final IFE1D2DNode snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
     final Object newNode = snapNode;
 
     return newNode;
   }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   */
+  @Override
+  public Control createControl( final Composite parent, final FormToolkit toolkit )
+  {
+    m_composite = toolkit.createComposite( parent, SWT.FILL );
+    m_composite.setLayout( new FillLayout() );
+
+    final GridLayout gridLayout = new GridLayout();
+    gridLayout.numColumns = 2;
+
+    final Section section = toolkit.createSection( m_composite, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    final Composite sectionComposite = toolkit.createComposite( section, SWT.NONE );
+    section.setClient( sectionComposite );
+    section.setText( "Triangulierungsoptionen" );
+    section.setDescription( "Diese Optionen haben nur einen Effekt, wenn triangle.exe im \"bin\"-Verzeichnis von Kalypso liegt." );
+    section.setExpanded( true );
+    sectionComposite.setLayout( gridLayout );
+
+    final FocusListener focusListener = new FocusListener()
+    {
+      @Override
+      public void focusLost( FocusEvent arg0 )
+      {
+        try
+        {
+          finishGeometry();
+        }
+        catch( final GM_Exception e1 )
+        {
+          e1.printStackTrace();
+        }
+      }
+
+      @Override
+      public void focusGained( FocusEvent arg0 )
+      {
+      }
+    };
+
+    toolkit.createLabel( sectionComposite, "Maximale Fläche" );
+    final Text maxArea = toolkit.createText( sectionComposite, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
+    final DefaultToolTip toolTip = new DefaultToolTip( maxArea );
+    maxArea.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
+    maxArea.addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        toolTip.hide();
+
+        final String string = maxArea.getText();
+        if( string.isEmpty() )
+        {
+          m_maxArea = -1;
+          return;
+        }
+
+        String message = null;
+        try
+        {
+          m_maxArea = Double.parseDouble( string );
+          if( m_maxArea < 0 )
+          {
+            message = "Fläche muss positiv sein";
+          }
+        }
+        catch( Exception ex )
+        {
+          m_maxArea = -1;
+          message = "Eingabe ist keine Zahl";
+        }
+        if( message != null )
+        {
+          toolTip.setText( message );
+          toolTip.show( maxArea.getCaretLocation() );
+        }
+      }
+    } );
+    maxArea.addFocusListener( focusListener );
+
+    toolkit.createLabel( sectionComposite, "Minimaler Winkel" );
+    final Text minAngle = toolkit.createText( sectionComposite, "22", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
+    final DefaultToolTip toolTip2 = new DefaultToolTip( minAngle );
+    minAngle.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
+    minAngle.addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        toolTip2.hide();
+
+        final String string = minAngle.getText();
+        if( string.isEmpty() )
+        {
+          m_minAngle = -1;
+          return;
+        }
+
+        String message = null;
+        try
+        {
+          m_minAngle = Double.parseDouble( string );
+          if( m_minAngle < 0 )
+          {
+            message = "Winkel muss positiv sein";
+          }
+          else if( m_minAngle > 32 )
+          {
+            message = "Winkel sollte höchstens 32° betragen";
+          }
+        }
+        catch( Exception ex )
+        {
+          m_minAngle = -1;
+          message = "Eingabe ist keine Zahl";
+        }
+        if( message != null )
+        {
+          toolTip.setText( message );
+          toolTip.show( minAngle.getCaretLocation() );
+        }
+      }
+    } );
+    minAngle.addFocusListener( focusListener );
+
+    final Button noSteinerButton = toolkit.createButton( sectionComposite, "Einfügen von Knoten auf dem Rand verbieten", SWT.CHECK );
+    noSteinerButton.setSelection( true );
+    noSteinerButton.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false, 2, 1 ) );
+    noSteinerButton.addSelectionListener( new SelectionListener()
+    {
+      @Override
+      public void widgetSelected( SelectionEvent arg0 )
+      {
+        widgetDefaultSelected( arg0 );
+      }
+
+      @Override
+      public void widgetDefaultSelected( SelectionEvent arg0 )
+      {
+        m_noSteiner = noSteinerButton.getSelection();
+        try
+        {
+          finishGeometry();
+        }
+        catch( final GM_Exception e1 )
+        {
+          e1.printStackTrace();
+        }
+      }
+    } );
+
+    return m_composite;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
+   */
+  @Override
+  public void disposeControl( )
+  {
+    if( m_composite != null && !m_composite.isDisposed() )
+    {
+      m_composite.dispose();
+    }
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  @Override
+  public String getPartName( )
+  {
+    return "Refine Elements";
+  }
+
 }
