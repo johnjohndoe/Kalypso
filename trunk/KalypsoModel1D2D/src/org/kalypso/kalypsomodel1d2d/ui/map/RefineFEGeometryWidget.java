@@ -575,7 +575,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
     try
     {
-      m_geom = (GM_Curve) m_geometryBuilder.finish();
+      m_geom = m_geometryBuilder.finish();
       finishGeometry();
     }
     catch( final Exception e )
