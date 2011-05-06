@@ -129,10 +129,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     axisRendererConfigLR.axisLineStyle.setLineJoin(  LINEJOIN.BEVEL);
     axisRendererConfigLR.tickLineStyle.setLineJoin( LINEJOIN.BEVEL);
     axisRendererConfigLR.axisLineStyle.setWidth( 2 );
-    axisRendererConfigLR.tickLineStyle.setWidth( 1 );
-// configDom.axisLineStyle.setLineJoin(LINEJOIN.BEVEL);
-    axisRendererConfigLR.tickLineStyle.setColor( new RGB(  255, 0, 0) );
+    axisRendererConfigLR.tickLineStyle.setWidth( 2 );
     axisRendererConfigLR.axisInsets = new Insets( 5, 0, 0, 0 );
+    axisRendererConfigLR.hideCut = false;
     final AxisRendererConfig axisRendererConfigD = new AxisRendererConfig();
     axisRendererConfigD.axisLineStyle.setLineCap( LINECAP.FLAT );
     axisRendererConfigD.tickLineStyle.setLineCap( LINECAP.FLAT );
@@ -140,13 +139,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     axisRendererConfigD.tickLineStyle.setLineJoin( LINEJOIN.BEVEL);
     axisRendererConfigD.axisLineStyle.setDash( 0, null );
     axisRendererConfigD.tickLineStyle.setDash( 0, null );
-//    axisRendererConfigD.axisLineStyle.setMiterLimit( 100 );
-//    axisRendererConfigD.tickLineStyle.setMiterLimit( 100 );
     axisRendererConfigD.axisLineStyle.setWidth( 2 );
-    axisRendererConfigD.tickLineStyle.setWidth( 1 );
-    axisRendererConfigD.axisInsets = new Insets( 5, 0, 0, 0 );
-    axisRendererConfigD.tickLineStyle.setColor( new RGB( 255, 0, 0 ) );
-    axisRendererConfigD.hideCut = false;
+    axisRendererConfigD.tickLineStyle.setWidth( 2 );
+    axisRendererConfigD.axisInsets = new Insets( 0, 0, 0, 0 );
+    axisRendererConfigD.hideCut = true;
 
     m_screenAxisVertical = new ScreenCoordinateAxis( "ProfilLayerProviderTuhh_AXIS_VERTICAL_SCREEN", POSITION.RIGHT );//$NON-NLS-1$
     m_screenAxisVertical.setPreferredAdjustment( new AxisAdjustment( 0, 1, 0 ) );
