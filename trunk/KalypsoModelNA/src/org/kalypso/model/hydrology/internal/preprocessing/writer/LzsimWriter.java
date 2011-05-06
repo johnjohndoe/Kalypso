@@ -114,6 +114,8 @@ public class LzsimWriter
 
   private void doWriteLzsimFiles( final File lzsimDir ) throws SimulationException
   {
+    lzsimDir.mkdirs();
+    
     if( m_initialValues == null )
     {
       final Date simulationStart = m_metaControl.getSimulationStart();
@@ -121,8 +123,6 @@ public class LzsimWriter
       m_logger.info( msg );
       return;
     }
-
-    lzsimDir.mkdirs();
 
     // Initial value date
     final Date initialDate = m_initialValues.getInitialDate();
