@@ -113,6 +113,8 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
   {
     IRainfallCatchmentModel rcm = null;
 
+    GeoStatusLog log = null;
+
     try
     {
       // Real work starts here: create the operation, convert and validate parameters
@@ -120,8 +122,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
       progress.subTask( "Definition wird geladen..." );
 
       rcm = loadRainfallCatchmentModell( progress.newChild( 9 ) );
-
-      final GeoStatusLog log = initializeLog( rcm );
+      log = initializeLog( rcm );
 
       final ITarget targetDefinition = rcm.getTarget();
       final Feature[] catchments = targetDefinition.getCatchments();
@@ -134,10 +135,6 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
       final SubMonitor subMon = progress.newChild( 90, SubMonitor.SUPPRESS_NONE );
       final IStatus status = operation.execute( subMon );
 
-      /* Write the log, if one was created. */
-      if( log != null )
-        log.serialize();
-
       final IObservation[] observations = operation.getResult();
 
       /* Find target links right now, to avoid long waiting time if anything fails here */
@@ -148,6 +145,9 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
     }
     catch( final CoreException e )
     {
+      if( log != null )
+        log.log( e.getStatus() );
+      // TODO: log other exceptions as well?
       throw e;
     }
     catch( final RuntimeException e )
@@ -163,6 +163,10 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
     }
     finally
     {
+      /* Write the log, if one was created. */
+      if( log != null )
+        log.serialize();
+
       if( rcm != null )
         rcm.getWorkspace().dispose();
     }
