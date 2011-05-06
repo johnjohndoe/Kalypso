@@ -581,7 +581,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
 
     final GM_Triangle[] triangles = ConstraintDelaunayHelper.createGM_Triangles( m_boundaryGeom.get( 0 ).getExteriorRing(), m_breaklines == null ? null : m_breaklines.getAllCurves(), m_boundaryGeom.getCoordinateSystem(), args.toArray( new String[args.size()] ) );
 
-    if( triangles.length == 0 )
+    if( triangles != null && triangles.length == 0 )
     {
       m_tin = null;
       m_warning = true;
