@@ -94,6 +94,7 @@
 					<element name="layerProfileThickness" type="suds:EnumLayerProfileThicknessType"/>
 					<element name="maxCapacityOfEmergencySpill" type="double" default="0.0"/>
 					<element name="maxPercRate" type="double" default="5.0E-5"/>
+					<element name="percentToGroundwater" type="double" default="1.0"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -124,7 +125,6 @@
 			<extension base="suds:AbstractSwaleType">
 				<sequence>
 					<element name="elementType" type="suds:EnumSwaleInfiltrationDitchType" default="30"/>
-					<element name="percentToGroundwater" type="double" default="1.0"/>
 				</sequence>
 			</extension>
 		</complexContent>
