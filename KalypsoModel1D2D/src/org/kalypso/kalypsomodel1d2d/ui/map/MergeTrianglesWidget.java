@@ -167,7 +167,7 @@ public class MergeTrianglesWidget extends AbstractWidget
     {
       final IFeatureWrapperCollection<IFE1D2DElement> adjacentElements = m_currentEdge.getAdjacentElements();
       final IFE1D2DElement[] elements2remove = adjacentElements.toArray( new IFE1D2DElement[adjacentElements.size()] );
-      
+
       final GM_Surface<GM_SurfacePatch> newElement = createNewElement( (IPolyElement) elements2remove[0], (IPolyElement) elements2remove[1] );
       newElement.setCoordinateSystem( m_currentEdge.getGeometry().getCoordinateSystem() );
       final CommandableWorkspace workspace = m_theme.getWorkspace();
@@ -279,7 +279,7 @@ public class MergeTrianglesWidget extends AbstractWidget
     if( m_goodSld == null )
       m_goodSld = XMLTools.parse( getClass().getResource( "styles/goodEdge.sld" ) ); //$NON-NLS-1$
 
-    return SLDFactory.createSymbolizer( null, m_goodSld.getDocumentElement(), 0.0, Double.MAX_VALUE );
+    return SLDFactory.createSymbolizer( null, m_goodSld.getDocumentElement() );
   }
 
   private Symbolizer createBadSymbolizer( ) throws IOException, SAXException, XMLParsingException
@@ -287,7 +287,7 @@ public class MergeTrianglesWidget extends AbstractWidget
     if( m_badSld == null )
       m_badSld = XMLTools.parse( getClass().getResource( "styles/badEdge.sld" ) ); //$NON-NLS-1$
 
-    return SLDFactory.createSymbolizer( null, m_badSld.getDocumentElement(), 0.0, Double.MAX_VALUE );
+    return SLDFactory.createSymbolizer( null, m_badSld.getDocumentElement() );
   }
 
 }

@@ -122,22 +122,6 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   }
 
   /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#doesScaleConstraintApply(double)
-   */
-  @Override
-  public boolean doesScaleConstraintApply( final double scale )
-  {
-    if( m_decoratedElement != null )
-    {
-      return m_decoratedElement.doesScaleConstraintApply( scale );
-    }
-    else
-    {
-      return true;
-    }
-  }
-
-  /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#getFeature()
    */
   @Override

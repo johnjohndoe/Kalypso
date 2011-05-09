@@ -146,7 +146,7 @@ public class EditStyleDialog extends TitleAreaDialog
 
   Fill m_fill;
 
-  private ResultAddLayerCommandData m_resultAddLayerCommandData;
+  private final ResultAddLayerCommandData m_resultAddLayerCommandData;
 
   Map<String, Object> m_mapSldSettingsIntern;
 
@@ -154,7 +154,7 @@ public class EditStyleDialog extends TitleAreaDialog
 
   private Rule[] m_rules;
 
-  public EditStyleDialog( Shell parentShell, ResultAddLayerCommandData resultAddLayerCommandData, BigDecimal minValue, BigDecimal maxValue )
+  public EditStyleDialog( final Shell parentShell, final ResultAddLayerCommandData resultAddLayerCommandData, final BigDecimal minValue, final BigDecimal maxValue )
   {
     super( parentShell );
     m_resultAddLayerCommandData = resultAddLayerCommandData;
@@ -183,7 +183,7 @@ public class EditStyleDialog extends TitleAreaDialog
   protected Control createDialogArea( final Composite parent )
   {
     final Composite commonComposite = new Composite( parent, SWT.NONE );
-    GridData gridDataCommon = new GridData( SWT.FILL, SWT.FILL, true, true );
+    final GridData gridDataCommon = new GridData( SWT.FILL, SWT.FILL, true, true );
     commonComposite.setLayoutData( gridDataCommon );
     commonComposite.setLayout( new GridLayout( 2, false ) );
 
@@ -209,7 +209,7 @@ public class EditStyleDialog extends TitleAreaDialog
     {
       fileNameText.setEditable( false );
     }
-    GridData gridDataFileNameText = new GridData( SWT.BEGINNING, SWT.CENTER, true, false );
+    final GridData gridDataFileNameText = new GridData( SWT.BEGINNING, SWT.CENTER, true, false );
     gridDataFileNameText.widthHint = 140;
     fileNameText.setLayoutData( gridDataFileNameText );
 
@@ -263,12 +263,12 @@ public class EditStyleDialog extends TitleAreaDialog
     /* choose the composite, depending on the style */
     if( m_symbolizer[0] instanceof SurfaceLineSymbolizer )
     {
-      SurfaceLineSymbolizer symb = (SurfaceLineSymbolizer) m_symbolizer[0];
+      final SurfaceLineSymbolizer symb = (SurfaceLineSymbolizer) m_symbolizer[0];
       final LineColorMap colorMap = symb.getColorMap();
       if( colorMap.getColorMap().length > 0 )
       {
-        LineColorMapEditorComposite comp = new LineColorMapEditorComposite( commonComposite, SWT.NONE, colorMap, m_minValue, m_maxValue );
-        GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
+        final LineColorMapEditorComposite comp = new LineColorMapEditorComposite( commonComposite, SWT.NONE, colorMap, m_minValue, m_maxValue );
+        final GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
         gridDataComp.horizontalSpan = 2;
         comp.setLayoutData( gridDataComp );
       }
@@ -281,7 +281,7 @@ public class EditStyleDialog extends TitleAreaDialog
     }
     else if( m_symbolizer[0] instanceof SurfacePolygonSymbolizer )
     {
-      SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) m_symbolizer[0];
+      final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) m_symbolizer[0];
       final PolygonColorMap colorMap = symb.getColorMap();
       final PolygonColorMapEntry[] colorMapEntries = colorMap.getColorMap();
       if( colorMapEntries.length > 0 )
@@ -289,7 +289,7 @@ public class EditStyleDialog extends TitleAreaDialog
         final PolygonColorMapEntry fromEntry = colorMapEntries[0];
         final PolygonColorMapEntry toEntry = colorMapEntries[colorMapEntries.length - 1];
 
-        PolygonColorMapEditorComposite comp = new PolygonColorMapEditorComposite( commonComposite, SWT.NONE, fromEntry, toEntry, m_minValue, m_maxValue )
+        final PolygonColorMapEditorComposite comp = new PolygonColorMapEditorComposite( commonComposite, SWT.NONE, fromEntry, toEntry, m_minValue, m_maxValue )
         {
           @Override
           protected void colorMapChanged( )
@@ -299,7 +299,7 @@ public class EditStyleDialog extends TitleAreaDialog
               colorMap.replaceColorMap( colorMapList );
           }
         };
-        GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
+        final GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
         gridDataComp.horizontalSpan = 2;
         comp.setLayoutData( gridDataComp );
       }
@@ -312,15 +312,15 @@ public class EditStyleDialog extends TitleAreaDialog
     }
     else if( m_symbolizer[0] instanceof PointSymbolizer )
     {
-      PointSymbolizer symb = (PointSymbolizer) m_symbolizer[0];
-      Object[] mag = symb.getGraphic().getMarksAndExtGraphics();
-      Object object = mag[0];
+      final PointSymbolizer symb = (PointSymbolizer) m_symbolizer[0];
+      final Object[] mag = symb.getGraphic().getMarksAndExtGraphics();
+      final Object object = mag[0];
       /*
        * getting the static map for actual step with settings for using in property function
        */
-      String sourceFile = m_resultAddLayerCommandData.getSource();
-      int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
-      String stepName = sourceFile.substring( beginIndex, beginIndex + 16 );
+      final String sourceFile = m_resultAddLayerCommandData.getSource();
+      final int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
+      final String stepName = sourceFile.substring( beginIndex, beginIndex + 16 );
       final String nodeStyleType = ResultMeta1d2dHelper.resolveResultTypeFromSldFileName( m_fileName, NodeResultHelper.NODE_TYPE ).toLowerCase();
       // m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStyleStep( nodeStyleType, stepName );
       m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepName );
@@ -335,9 +335,9 @@ public class EditStyleDialog extends TitleAreaDialog
             /*
              * getting the according values from sld file, needen to save the last selected configuration for next calls
              */
-            CssParameter cssFillMin = (CssParameter) m_fill.getCssParameters().get( "minColor" );
-            CssParameter cssFillMax = (CssParameter) m_fill.getCssParameters().get( "maxColor" );
-            CssParameter cssValueAmountClasses = (CssParameter) m_fill.getCssParameters().get( "amountClasses" );
+            final CssParameter cssFillMin = m_fill.getCssParameters().get( "minColor" );
+            final CssParameter cssFillMax = m_fill.getCssParameters().get( "maxColor" );
+            final CssParameter cssValueAmountClasses = m_fill.getCssParameters().get( "amountClasses" );
             Color fromColor = resolveColor( m_mapSldSettingsIntern.get( NodeResultHelper.COLOR_MIN_PREFIX + nodeStyleType ) );
             Color toColor = resolveColor( m_mapSldSettingsIntern.get( NodeResultHelper.COLOR_MAX_PREFIX + nodeStyleType ) );
             Double amountOfClasses = ((Double) m_mapSldSettingsIntern.get( NodeResultHelper.AMOUNT_OF_CLASSES_PREFIX + nodeStyleType ));
@@ -349,22 +349,22 @@ public class EditStyleDialog extends TitleAreaDialog
                */
               fromColor = (Color) extractCssValue( cssFillMin );
               toColor = (Color) extractCssValue( cssFillMax );
-              Double extValueMin = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MIN_PREFIX + nodeStyleType );
-              Double extValueMax = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MAX_PREFIX + nodeStyleType );
+              final Double extValueMin = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MIN_PREFIX + nodeStyleType );
+              final Double extValueMax = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MAX_PREFIX + nodeStyleType );
               amountOfClasses = ((Double) extractCssValue( cssValueAmountClasses ));
               m_mapSldSettingsIntern.put( NodeResultHelper.AMOUNT_OF_CLASSES_PREFIX + nodeStyleType, amountOfClasses );
               m_maxValue = new BigDecimal( extValueMax );
               m_minValue = new BigDecimal( extValueMin );
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
               e.printStackTrace();
             }
             final BigDecimal width = m_maxValue.subtract( m_minValue ).divide( new BigDecimal( 4 ), BigDecimal.ROUND_HALF_UP ).setScale( 3, BigDecimal.ROUND_HALF_UP );
 
-            PolygonColorMapEntry_Impl fromEntry = StyleFactory.createPolygonColorMapEntry( fromColor, fromColor, m_minValue, m_minValue.add( width ) );
-            PolygonColorMapEntry_Impl toEntry = StyleFactory.createPolygonColorMapEntry( toColor, toColor, m_maxValue.subtract( width ), m_maxValue );
-            NodeStyleEditorComposite comp = new NodeStyleEditorComposite( commonComposite, SWT.NONE, fromEntry, toEntry, m_minValue, m_maxValue, amountOfClasses.intValue() )
+            final PolygonColorMapEntry_Impl fromEntry = StyleFactory.createPolygonColorMapEntry( fromColor, fromColor, m_minValue, m_minValue.add( width ) );
+            final PolygonColorMapEntry_Impl toEntry = StyleFactory.createPolygonColorMapEntry( toColor, toColor, m_maxValue.subtract( width ), m_maxValue );
+            final NodeStyleEditorComposite comp = new NodeStyleEditorComposite( commonComposite, SWT.NONE, fromEntry, toEntry, m_minValue, m_maxValue, amountOfClasses.intValue() )
             {
               private Map<Integer, Color> m_mapActualColorsCache;
 
@@ -376,21 +376,21 @@ public class EditStyleDialog extends TitleAreaDialog
                 /*
                  * changing the name is needed to be placed in sld file.
                  */
-                Object newMinColor = getFromEntry().getFill().getCssParameters().get( "fill" );
-                ((CssParameter) newMinColor).setName( "minColor" );
+                final CssParameter newMinColor = getFromEntry().getFill().getCssParameters().get( "fill" );
+                (newMinColor).setName( "minColor" );
                 m_fill.getCssParameters().put( "minColor", newMinColor );
-                Object newMaxColor = getToEntry().getFill().getCssParameters().get( "fill" );
-                ((CssParameter) newMaxColor).setName( "maxColor" );
+                final CssParameter newMaxColor = getToEntry().getFill().getCssParameters().get( "fill" );
+                (newMaxColor).setName( "maxColor" );
                 m_fill.getCssParameters().put( "maxColor", newMaxColor );
 
-                Double newAmountClasses = ((Integer) getAmountOfClassesForInterpolation()).doubleValue();
-                CssParameter cssNewValueAmountClasses = (CssParameter) m_fill.getCssParameters().get( "amountClasses" );
+                final Double newAmountClasses = ((Integer) getAmountOfClassesForInterpolation()).doubleValue();
+                final CssParameter cssNewValueAmountClasses = m_fill.getCssParameters().get( "amountClasses" );
                 cssNewValueAmountClasses.setValue( "" + newAmountClasses );
                 m_fill.getCssParameters().put( "amountClasses", cssNewValueAmountClasses );
 
-                Color extractedCssValueMinColor = (Color) extractCssValue( (CssParameter) newMinColor );
+                final Color extractedCssValueMinColor = (Color) extractCssValue( newMinColor );
                 m_mapSldSettingsIntern.put( NodeResultHelper.COLOR_MIN_PREFIX + nodeStyleType, extractedCssValueMinColor );
-                Color extractedCssValueMaxColor = (Color) extractCssValue( (CssParameter) newMaxColor );
+                final Color extractedCssValueMaxColor = (Color) extractCssValue( newMaxColor );
                 m_mapSldSettingsIntern.put( NodeResultHelper.COLOR_MAX_PREFIX + nodeStyleType, extractedCssValueMaxColor );
                 m_mapSldSettingsIntern.put( NodeResultHelper.AMOUNT_OF_CLASSES_PREFIX + nodeStyleType, newAmountClasses );
                 /*
@@ -402,32 +402,32 @@ public class EditStyleDialog extends TitleAreaDialog
                   m_mapActualColorsCache.clear();
               }
             };
-            GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
+            final GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
             gridDataComp.horizontalSpan = 2;
             comp.setLayoutData( gridDataComp );
 
             return;
           }
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
       }
 
-      Double extValueMin = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MIN_PREFIX + nodeStyleType );
-      Double extValueMax = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MAX_PREFIX + nodeStyleType );
+      final Double extValueMin = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MIN_PREFIX + nodeStyleType );
+      final Double extValueMax = (Double) m_mapSldSettingsIntern.get( NodeResultHelper.VALUE_MAX_PREFIX + nodeStyleType );
       m_maxValue = new BigDecimal( extValueMax ).setScale( 2, BigDecimal.ROUND_HALF_UP );
       m_minValue = new BigDecimal( extValueMin ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-      VectorEditorComposite comp = new VectorEditorComposite( commonComposite, SWT.NONE, symb, m_minValue, m_maxValue );
-      GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
+      final VectorEditorComposite comp = new VectorEditorComposite( commonComposite, SWT.NONE, symb, m_minValue, m_maxValue );
+      final GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
       gridDataComp.horizontalSpan = 2;
       comp.setLayoutData( gridDataComp );
     }
     else
     {
       final Text errorText1 = new Text( commonComposite, SWT.NONE );
-      GridData gridDataText1 = new GridData( SWT.BEGINNING, SWT.CENTER, true, true );
+      final GridData gridDataText1 = new GridData( SWT.BEGINNING, SWT.CENTER, true, true );
       gridDataText1.horizontalSpan = 2;
       gridDataText1.widthHint = 400;
 
@@ -458,7 +458,7 @@ public class EditStyleDialog extends TitleAreaDialog
         {
           color = resolveColor( element );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
         }
         return color;
@@ -469,7 +469,7 @@ public class EditStyleDialog extends TitleAreaDialog
         {
           return NumberUtils.parseQuietDouble( (String) element );
         }
-        catch( Exception e1 )
+        catch( final Exception e1 )
         {
           return element;
         }
@@ -513,13 +513,13 @@ public class EditStyleDialog extends TitleAreaDialog
   protected void okPressed( )
   {
     // write the style back to file
-//    if( m_fill == null || m_fill.getGraphicFill() == null )
-//    {
-//      for( int i = 0; i < m_rules.length; i++ )
-//      {
-//        System.out.println( m_rules[i] );
-//      }
-//    }
+    //    if( m_fill == null || m_fill.getGraphicFill() == null )
+    //    {
+    //      for( int i = 0; i < m_rules.length; i++ )
+    //      {
+    //        System.out.println( m_rules[i] );
+    //      }
+    //    }
     final String sldXML = m_sld.exportAsXML();
     final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML; //$NON-NLS-1$
 
@@ -536,7 +536,7 @@ public class EditStyleDialog extends TitleAreaDialog
         updateSldFile();
 
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       // TODO Auto-generated catch block e.printStackTrace();
       e.printStackTrace();
@@ -555,7 +555,7 @@ public class EditStyleDialog extends TitleAreaDialog
       {
         @Override
         @SuppressWarnings("synthetic-access")
-        public URL resolveURL( String relativeOrAbsolute ) throws MalformedURLException
+        public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
         {
           final URL sldURL = ResourceUtilities.createURL( m_sldFile );
           return new URL( sldURL, relativeOrAbsolute );
@@ -583,7 +583,7 @@ public class EditStyleDialog extends TitleAreaDialog
 
         final List<Symbolizer> symbList = new ArrayList<Symbolizer>();
 
-        for( Rule rule : m_rules )
+        for( final Rule rule : m_rules )
         {
           final Symbolizer[] symbolizers = rule.getSymbolizers();
           // and the first and only symbolizer is taken
@@ -594,12 +594,12 @@ public class EditStyleDialog extends TitleAreaDialog
         return symbList.toArray( new Symbolizer[symbList.size()] );
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( XMLParsingException e )
+    catch( final XMLParsingException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -652,7 +652,7 @@ public class EditStyleDialog extends TitleAreaDialog
    */
   private Text checkFileNameText( final Composite comp, final Text text )
   {
-    String tempText = text.getText();
+    final String tempText = text.getText();
 
     final Matcher m = m_patternFileName.matcher( tempText );
 
