@@ -107,8 +107,9 @@ class ProfilePolygones extends HashMap<String, ProfilePolygon>
       final IWProfPoint[] points = polygon.getPoints();
       for( final IWProfPoint point : points )
       {
-        if( point.hasPhotos() )
-          return point.getPhotos();
+        final URL[] photos = point.getPhotos();
+        if( photos != null && photos.length > 0 )
+          return photos;
       }
     }
 
