@@ -115,7 +115,7 @@ public class LzsimWriter
   private void doWriteLzsimFiles( final File lzsimDir ) throws SimulationException
   {
     lzsimDir.mkdirs();
-    
+
     if( m_initialValues == null )
     {
       final Date simulationStart = m_metaControl.getSimulationStart();
@@ -306,7 +306,10 @@ public class LzsimWriter
       final String naHydrotopID = hydrotop.getId();
 
       final IniHyd iniHyd = iniHydHash.get( naHydrotopID );
-
+      if( iniHyd == null )
+      {
+        System.out.println( "oups" );
+      }
       iniHydMap.put( localID, iniHyd );
     }
 

@@ -29,32 +29,32 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements ISimulation
 {
-  private final static QName INUNDATION_STATUSQUO_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "inundationStatusQuoCoverageCollection" );
+  private static final QName INUNDATION_STATUSQUO_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "inundationStatusQuoCoverageCollection" ); //$NON-NLS-1$
 
-  private final static QName INUNDATION_CALCULATED_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "inundationCalculatedCoverageCollection" );
+  private static final QName INUNDATION_CALCULATED_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "inundationCalculatedCoverageCollection" ); //$NON-NLS-1$
 
-  private final static QName INUNDATION_DIFFERENCE_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "inundationDifferenceCoverageCollection" );
+  private static final QName INUNDATION_DIFFERENCE_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "inundationDifferenceCoverageCollection" ); //$NON-NLS-1$
 
-  private final static QName RISK_STATUSQUO_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "riskStatusQuoCoverageCollection" );
+  private static final QName RISK_STATUSQUO_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "riskStatusQuoCoverageCollection" ); //$NON-NLS-1$
 
-  private final static QName RISK_CALCULATED_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "riskCalculatedCoverageCollection" );
+  private static final QName RISK_CALCULATED_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "riskCalculatedCoverageCollection" ); //$NON-NLS-1$
 
-  private final static QName RISK_DIFFERENCE_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "riskDifferenceCoverageCollection" );
+  private static final QName RISK_DIFFERENCE_COVERAGECOLLECTION = new QName( UrlCatalog.NS_CCHAINRESULTS, "riskDifferenceCoverageCollection" ); //$NON-NLS-1$
 
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/modelSpecification.xml" );
+    return getClass().getResource( "resources/modelSpecification.xml" ); //$NON-NLS-1$
   }
 
   public URL getTemplate( )
   {
-    return getClass().getResource( "resources/template.gml" );
+    return getClass().getResource( "resources/template.gml" ); //$NON-NLS-1$
   }
 
   public URL getSLD( )
   {
-    return getClass().getResource( "resources/RiskZonesCoverage.sld" );
+    return getClass().getResource( "resources/RiskZonesCoverage.sld" ); //$NON-NLS-1$
   }
 
   @Override
@@ -62,17 +62,17 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
   {
     try
     {
-      final GMLWorkspace riskStatusQuoRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "riskStatusQuoRasterDataModel" ), null );
-      final GMLWorkspace riskCalculatedRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "riskCalculatedRasterDataModel" ), null );
-      final GMLWorkspace riskDifferenceRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "riskDifferenceRasterDataModel" ), null );
+      final GMLWorkspace riskStatusQuoRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "riskStatusQuoRasterDataModel" ), null ); //$NON-NLS-1$
+      final GMLWorkspace riskCalculatedRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "riskCalculatedRasterDataModel" ), null ); //$NON-NLS-1$
+      final GMLWorkspace riskDifferenceRasterDataModelWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "riskDifferenceRasterDataModel" ), null ); //$NON-NLS-1$
 
-      final File naResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "naResultsFolder" ) );
-      final File statisticsFile = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskDifferenceStatistics" ) );
-      final File riskStatusQuoRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskStatusQuoRasterFolderInput" ) );
-      final File riskStatusQuoRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskStatusQuoRasterFolderOutput" ) );
-      final File riskCalculatedRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskCalculatedRasterFolderInput" ) );
-      final File riskCalculatedRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskCalculatedRasterFolderOutput" ) );
-      final File riskDifferenceRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskDifferenceRasterFolderOutput" ) );
+      final File naResultsFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( "naResultsFolder" ) ); //$NON-NLS-1$
+      final File statisticsFile = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskDifferenceStatistics" ) ); //$NON-NLS-1$
+      final File riskStatusQuoRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskStatusQuoRasterFolderInput" ) ); //$NON-NLS-1$
+      final File riskStatusQuoRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskStatusQuoRasterFolderOutput" ) ); //$NON-NLS-1$
+      final File riskCalculatedRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskCalculatedRasterFolderInput" ) ); //$NON-NLS-1$
+      final File riskCalculatedRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskCalculatedRasterFolderOutput" ) ); //$NON-NLS-1$
+      final File riskDifferenceRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskDifferenceRasterFolderOutput" ) ); //$NON-NLS-1$
 
 // final File outputModel = FileUtils.toFile(getTemplate());
 
@@ -93,10 +93,10 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       {
         if( coverageCollection.getReturnPeriod() == 100 )
         {
-          IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
+          final IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
           for( final ICoverage coverage : coverages )
           {
-            changeCoverageFilePathPrefix( coverage, "statusQuo/" + riskStatusQuoRasterFolderInput.getName() );
+            changeCoverageFilePathPrefix( coverage, "statusQuo/" + riskStatusQuoRasterFolderInput.getName() ); //$NON-NLS-1$
             inundationStatusQuoCoverageCollection.getCoverages().add( coverage );
           }
         }
@@ -105,10 +105,10 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       {
         if( coverageCollection.getReturnPeriod() == 100 )
         {
-          IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
+          final IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
           for( final ICoverage coverage : coverages )
           {
-            changeCoverageFilePathPrefix( coverage, "calculated/" + riskStatusQuoRasterFolderInput.getName() );
+            changeCoverageFilePathPrefix( coverage, "calculated/" + riskStatusQuoRasterFolderInput.getName() ); //$NON-NLS-1$
             inundationCalculatedCoverageCollection.getCoverages().add( coverage );
           }
         }
@@ -117,10 +117,10 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       {
         if( coverageCollection.getReturnPeriod() == 100 )
         {
-          IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
+          final IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
           for( final ICoverage coverage : coverages )
           {
-            changeCoverageFilePathPrefix( coverage, "difference/" + riskStatusQuoRasterFolderOutput.getName() );
+            changeCoverageFilePathPrefix( coverage, "difference/" + riskStatusQuoRasterFolderOutput.getName() ); //$NON-NLS-1$
             inundationDifferenceCoverageCollection.getCoverages().add( coverage );
           }
         }
@@ -129,26 +129,26 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       // adding risk zones coverages to the model
       for( final ICoverage coverage : riskStatusQuoRasterDataModel.getRiskZonesCoverage().getCoverages() )
       {
-        changeCoverageFilePathPrefix( coverage, "statusQuo/" + riskStatusQuoRasterFolderOutput.getName() );
+        changeCoverageFilePathPrefix( coverage, "statusQuo/" + riskStatusQuoRasterFolderOutput.getName() ); //$NON-NLS-1$
         riskStatusQuoCoverageCollection.getCoverages().add( coverage );
       }
       for( final ICoverage coverage : riskCalculatedRasterDataModel.getRiskZonesCoverage().getCoverages() )
       {
-        changeCoverageFilePathPrefix( coverage, "calculated/" + riskCalculatedRasterFolderOutput.getName() );
+        changeCoverageFilePathPrefix( coverage, "calculated/" + riskCalculatedRasterFolderOutput.getName() ); //$NON-NLS-1$
         riskCalculatedCoverageCollection.getCoverages().add( coverage );
       }
       for( final ICoverage coverage : riskDifferenceRasterDataModel.getRiskZonesCoverage().getCoverages() )
       {
-        changeCoverageFilePathPrefix( coverage, "difference/" + riskDifferenceRasterFolderOutput.getName() );
+        changeCoverageFilePathPrefix( coverage, "difference/" + riskDifferenceRasterFolderOutput.getName() ); //$NON-NLS-1$
         riskDifferenceCoverageCollection.getCoverages().add( coverage );
       }
 
-      final File naFolder = new File( tmpdir, "rrm" );
-      final File riskFolder = new File( tmpdir, "risk" );
-      final File riskFolderStatusQuo = new File( riskFolder, "statusQuo" );
-      final File riskFolderCalculated = new File( riskFolder, "calculated" );
-      final File riskFolderDifference = new File( riskFolder, "difference" );
-      final File file = new File( riskFolder, "result.gml" );
+      final File naFolder = new File( tmpdir, "rrm" ); //$NON-NLS-1$
+      final File riskFolder = new File( tmpdir, "risk" ); //$NON-NLS-1$
+      final File riskFolderStatusQuo = new File( riskFolder, "statusQuo" ); //$NON-NLS-1$
+      final File riskFolderCalculated = new File( riskFolder, "calculated" ); //$NON-NLS-1$
+      final File riskFolderDifference = new File( riskFolder, "difference" ); //$NON-NLS-1$
+      final File file = new File( riskFolder, "result.gml" ); //$NON-NLS-1$
       naFolder.mkdirs();
       riskFolder.mkdirs();
       riskFolderStatusQuo.mkdirs();
@@ -157,11 +157,11 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       file.createNewFile();
       GmlSerializer.serializeWorkspace( file, resultsWorkspace, "UTF-8" );
 
-      final File controlModelFile = new File( riskFolder, "RasterizationControlModel.gml" );
-      final File sldFile = new File( riskFolder, "RiskZonesCoverage.sld" );
+      final File controlModelFile = new File( riskFolder, "RasterizationControlModel.gml" ); //$NON-NLS-1$
+      final File sldFile = new File( riskFolder, "RiskZonesCoverage.sld" ); //$NON-NLS-1$
       try
       {
-        FileUtils.copyURLToFile( (URL) inputProvider.getInputForID( "riskRasterizationControlModel" ), controlModelFile );
+        FileUtils.copyURLToFile( (URL) inputProvider.getInputForID( "riskRasterizationControlModel" ), controlModelFile ); //$NON-NLS-1$
         FileUtils.copyURLToFile( getSLD(), sldFile );
         // FileUtils.copyFileToDirectory( sldFile, riskFolder );
       }
@@ -185,7 +185,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       Logger.getAnonymousLogger().log( Level.SEVERE, e.getLocalizedMessage() );
       setStatus( STATUS.ERROR, e.getLocalizedMessage() );
     }
-    resultEater.addResult( "outputFolder", tmpdir );
+    resultEater.addResult( "outputFolder", tmpdir ); //$NON-NLS-1$
     setStatus( STATUS.OK, "Success" );
   }
 
@@ -198,7 +198,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       if( rangeSet instanceof FileType )
       {
         final String fileName = ((FileType) rangeSet).getFileName();
-        ((FileType) rangeSet).setFileName( prefix + "/" + fileName.substring( fileName.lastIndexOf( "/" ) + 1 ) );
+        ((FileType) rangeSet).setFileName( prefix + "/" + fileName.substring( fileName.lastIndexOf( "/" ) + 1 ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }

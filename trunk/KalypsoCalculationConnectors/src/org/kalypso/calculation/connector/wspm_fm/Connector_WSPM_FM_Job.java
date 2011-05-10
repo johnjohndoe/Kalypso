@@ -45,7 +45,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/modelSpecification.xml" );
+    return getClass().getResource( "resources/modelSpecification.xml" ); //$NON-NLS-1$
   }
 
   @Override
@@ -60,7 +60,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
     if( inputProvider.hasID( MODELSPEC_CONNECTOR_WSPM_FM.OPT_DeleteExistingRunoffEvents.name() ) )
     {
       final String pathString = inputProvider.getInputForID( MODELSPEC_CONNECTOR_WSPM_FM.OPT_DeleteExistingRunoffEvents.name() ).toString();
-      deleteExistingRunoffEvents = Boolean.parseBoolean( pathString.substring( pathString.lastIndexOf( "/" ) + 1 ) );
+      deleteExistingRunoffEvents = Boolean.parseBoolean( pathString.substring( pathString.lastIndexOf( "/" ) + 1 ) ); //$NON-NLS-1$
     }
 
     try
@@ -68,19 +68,19 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
       final GMLWorkspace wspmTinFile = GmlSerializer.createGMLWorkspace( wspmTinFileURL, null );
       final GMLWorkspace wspmModel = GmlSerializer.createGMLWorkspace( wspmModelURL, null );
       final GMLWorkspace fmModel = GmlSerializer.createGMLWorkspace( fmModelURL, null );
-      final File fmOutputFile = File.createTempFile( "outTempFM", ".gml", tmpdir );
+      final File fmOutputFile = File.createTempFile( "outTempFM", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$ 
 
       // final File fmEventsFolder = new File(((URL)
       // inputProvider.getInputForID(MODELSPEC_CONNECTOR_WSPM_FM.FM_EventsFolder.name())).toExternalForm());
 
       Integer returnPeriod = null;
-      final IFeatureType wspmRunoffEventFeatureType = wspmModel.getGMLSchema().getFeatureType( new QName( IWspmConstants.NS_WSPMRUNOFF, "RunOffEvent" ) );
+      final IFeatureType wspmRunoffEventFeatureType = wspmModel.getGMLSchema().getFeatureType( new QName( IWspmConstants.NS_WSPMRUNOFF, "RunOffEvent" ) ); //$NON-NLS-1$
       final Feature[] wspmRunoffEvents = wspmModel.getFeatures( wspmRunoffEventFeatureType );
       for( final Feature feature : wspmRunoffEvents )
       {
         if( runOffEventID.equals( feature.getId() ) )
         {
-          returnPeriod = (Integer) feature.getProperty( new QName( IWspmConstants.NS_WSPMRUNOFF, "returnPeriod" ) );
+          returnPeriod = (Integer) feature.getProperty( new QName( IWspmConstants.NS_WSPMRUNOFF, "returnPeriod" ) ); //$NON-NLS-1$
           break;
         }
       }
@@ -98,7 +98,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
         for( final IRunoffEvent event : floodModelEvents )
         {
           final ICoverageCollection coverages = event.getResultCoverages();
-          IFeatureBindingCollection<ICoverage> coveragesList = coverages.getCoverages();
+          final IFeatureBindingCollection<ICoverage> coveragesList = coverages.getCoverages();
           for( final ICoverage coverage : coveragesList )
             CoverageManagementHelper.deleteGridFile( coverage );
         }
@@ -117,9 +117,9 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
         polygon.getEvents().addRef( newRunoffEvent );
       }
       final ITinReference tinReference = newRunoffEvent.getTins().addNew( ITinReference.QNAME );
-      final GM_TriangulatedSurface triangulatedSurface = (GM_TriangulatedSurface) wspmTinRootFeature.getProperty( new QName( IWspmConstants.NS_WSPMCOMMONS, "triangulatedSurfaceMember" ) );
-      final XMLGregorianCalendar date = (XMLGregorianCalendar) wspmTinRootFeature.getProperty( new QName( IWspmConstants.NS_WSPMCOMMONS, "date" ) );
-      final GMLXPath sourceFeaturePath = new GMLXPath( "TriangulatedSurfaceFeature/triangulatedSurfaceMember", wspmTinFile.getNamespaceContext() );
+      final GM_TriangulatedSurface triangulatedSurface = (GM_TriangulatedSurface) wspmTinRootFeature.getProperty( new QName( IWspmConstants.NS_WSPMCOMMONS, "triangulatedSurfaceMember" ) ); //$NON-NLS-1$
+      final XMLGregorianCalendar date = (XMLGregorianCalendar) wspmTinRootFeature.getProperty( new QName( IWspmConstants.NS_WSPMCOMMONS, "date" ) ); //$NON-NLS-1$
+      final GMLXPath sourceFeaturePath = new GMLXPath( "TriangulatedSurfaceFeature/triangulatedSurfaceMember", wspmTinFile.getNamespaceContext() ); //$NON-NLS-1$
 
       double min = Double.MAX_VALUE;
       double max = -Double.MAX_VALUE;
@@ -146,7 +146,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
       tinReference.setSourceLocation( wspmTinFileURL );
       tinReference.setUpdateDate( date.toGregorianCalendar().getTime() );
       tinReference.setSourceType( SOURCETYPE.gml );
-      GmlSerializer.serializeWorkspace( fmOutputFile, fmModel, "UTF-8" );
+      GmlSerializer.serializeWorkspace( fmOutputFile, fmModel, "UTF-8" ); //$NON-NLS-1$
       setStatus( STATUS.OK, "Success" );
       // if (isOkStatus())
       resultEater.addResult( MODELSPEC_CONNECTOR_WSPM_FM.FM_Model.name(), fmOutputFile );
