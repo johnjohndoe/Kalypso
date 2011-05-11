@@ -99,6 +99,7 @@ import org.kalypso.simulation.core.util.DefaultSimulationResultEater;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
@@ -306,12 +307,11 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       // read interval results and remember them
       final File qintervallFile = (File) resultEater.getResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT );
       final GMLWorkspace qresultsWorkspace = GmlSerializer.createGMLWorkspace( qintervallFile, calcWorkspace.getFeatureProviderFactory() );
-      final QIntervallResultCollection qResultCollection = new QIntervallResultCollection( qresultsWorkspace.getRootFeature() );
+      final QIntervallResultCollection qResultCollection = (QIntervallResultCollection) qresultsWorkspace.getRootFeature();
 
-      final List< ? > resultList = qResultCollection.getQResultFeatures();
-      for( final Object o : resultList )
+      final IFeatureBindingCollection<QIntervallResult> resultList = qResultCollection.getQIntervalls();
+      for( final QIntervallResult qresult : resultList )
       {
-        final QIntervallResult qresult = new QIntervallResult( FeatureHelper.getFeature( qresultsWorkspace, o ) );
         final BigDecimal flowStation = flowRel.getStation();
         if( flowStation == null )
         {
@@ -455,7 +455,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
 
     /* clone observation */
-    final Feature pointObsFeature = (Feature) qresult.getFeature().getProperty( QIntervallResult.QNAME_P_QIntervallResult_pointsMember );
+    final Feature pointObsFeature = (Feature) qresult.getProperty( QIntervallResult.QNAME_P_QIntervallResult_pointsMember );
     if( pointObsFeature != null )
       FeatureHelper.cloneFeature( feature, flowRelObsRelation, pointObsFeature );
 
@@ -464,7 +464,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     final List< ? > polynomeFeatures = qresult.getPolynomialFeatures();
     for( final Object object : polynomeFeatures )
     {
-      final GMLWorkspace qresultsWorkspace = qresult.getFeature().getWorkspace();
+      final GMLWorkspace qresultsWorkspace = qresult.getWorkspace();
       final Feature polynomeFeature = FeatureHelper.getFeature( qresultsWorkspace, object );
       if( polynomeFeature != null )
       {

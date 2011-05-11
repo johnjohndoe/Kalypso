@@ -40,52 +40,58 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.gml;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public class QIntervallResultCollection extends AbstractFeatureBinder
+public class QIntervallResultCollection extends Feature_Impl
 {
   public static final QName QNAME_F_QIntervallResultCollection = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "QIntervallResultCollection" ); //$NON-NLS-1$
 
   public static final QName QNAME_P_QIntervallResultCollection_resultMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "resultMember" ); //$NON-NLS-1$
 
-  public QIntervallResultCollection( final Feature featureToBind )
+  private IFeatureBindingCollection<QIntervallResult> m_intervals = null;
+
+  public QIntervallResultCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( featureToBind, QNAME_F_QIntervallResultCollection );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
-  /** Creates new QResult and adds it to this collection. */
-  public QIntervallResult createQResult( ) throws Exception
+  public synchronized IFeatureBindingCollection<QIntervallResult> getQIntervalls( )
   {
-    final Feature feature = getFeature();
-    final GMLWorkspace workspace = feature.getWorkspace();
-    final IGMLSchema schema = workspace.getGMLSchema();
+    if( m_intervals == null )
+      m_intervals = new FeatureBindingCollection<QIntervallResult>( this, QIntervallResult.class, QNAME_P_QIntervallResultCollection_resultMember, true );
 
-    final IRelationType resultRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_P_QIntervallResultCollection_resultMember );
-
-    final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
-
-    final Feature resultFeature = workspace.createFeature( feature, resultRelation, ftQIntervallResult );
-    workspace.addFeatureAsComposition( feature, resultRelation, -1, resultFeature );
-
-    return new QIntervallResult( resultFeature );
+    return m_intervals;
   }
 
-  public List< ? > getQResultFeatures( )
-  {
-    return (List< ? >) getFeature().getProperty( QNAME_P_QIntervallResultCollection_resultMember );
-  }
-
+// /** Creates new QResult and adds it to this collection. */
+// public QIntervallResult createQResult( ) throws Exception
+// {
+// final GMLWorkspace workspace = getWorkspace();
+// final IGMLSchema schema = workspace.getGMLSchema();
+//
+// final IRelationType resultRelation = (IRelationType) getFeatureType().getProperty(
+// QNAME_P_QIntervallResultCollection_resultMember );
+//
+// final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
+//
+// final Feature resultFeature = workspace.createFeature( this, resultRelation, ftQIntervallResult );
+// workspace.addFeatureAsComposition( this, resultRelation, -1, resultFeature );
+//
+// return (QIntervallResult) resultFeature;
+// }
+//
+// public List< ? > getQResultFeatures( )
+// {
+// return (List< ? >) getProperty( QNAME_P_QIntervallResultCollection_resultMember );
+// }
 }

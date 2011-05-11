@@ -44,9 +44,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.net.URL;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
@@ -282,16 +282,11 @@ public class WspmTuhhPostProcessor
     if( m_log.checkCanceled() )
       return null;
 
-    /* *.km files */
-    // TODO: we copy also the *.km files (ok, this is not the best target dir), in order
-    // to use them for Klinin-Miljukov calculation later.
-    // However it would be nice, if the KM import code of KalypsoHydrology could directly read the polynom results (we
-    // probably need to add more data to the polnome files as well).
-    final FileFilter kmFilter = FileFilterUtils.suffixFileFilter( ".km" ); //$NON-NLS-1$
-    final File[] kmFiles = m_profDir.listFiles( kmFilter );
+    /* Process *.km files */
     final File kmDir = new File( lsOutDir, "km" ); //$NON-NLS-1$
-    for( final File kmFile : kmFiles )
-      FileUtils.moveFileToDirectory( kmFile, kmDir, true );
+    final KMProcessor kmProcessor = new KMProcessor( m_profDir, kmDir, m_tmpDir );
+    monitor.setMessage( "Processing .km files" );
+    kmProcessor.execute( new NullProgressMonitor() );
 
     /* Calculate and fetch Polynomes */
     if( !processPolynoms )
