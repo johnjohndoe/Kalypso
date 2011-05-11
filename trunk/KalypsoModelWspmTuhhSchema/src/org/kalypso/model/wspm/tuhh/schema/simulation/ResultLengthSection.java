@@ -173,11 +173,11 @@ public class ResultLengthSection
     addResultFile( new ResultLSGmlFile( m_dataDir, dataFilename, lengthSectionWorkspace ) );
     addResultFile( new ResultLSChartFile( m_outDir, runoffName, isDirectionUpstreams, dataFilename, title ) );
     addResultFile( new ResultLSTableFile( m_outDir, runoffName, dataFilename ) );
-    addResultFile( new ResultLSBreaklinesFile( m_outDir, runoffName, breakLines ) );
-    addResultFile( new ResultLSTinFile( m_outDir, runoffName, breakLines ) );
-    addResultFile( new ResultLSTinSldFile( m_outDir, runoffName, breakLines ) );
-    addResultFile( new ResultLSModelBoundaryFile( m_outDir, runoffName, result, reachProfileSegments ) );
-    addResultFile( new ResultLSWaterlevelFile( m_outDir, runoffName, result, reachProfileSegments ) );
+    addResultFile( new ResultLSBreaklinesFile( m_dataDir, runoffName, breakLines ) );
+    addResultFile( new ResultLSTinFile( m_dataDir, runoffName, breakLines ) );
+    addResultFile( new ResultLSTinSldFile( m_dataDir, runoffName, breakLines ) );
+    addResultFile( new ResultLSModelBoundaryFile( m_dataDir, runoffName, result, reachProfileSegments ) );
+    addResultFile( new ResultLSWaterlevelFile( m_dataDir, runoffName, result, reachProfileSegments ) );
     addResultFile( new ResultLSOverviewMapFile( m_outDir, reach, m_ovwMapURL ) );
 
     return writeResultFiles();
