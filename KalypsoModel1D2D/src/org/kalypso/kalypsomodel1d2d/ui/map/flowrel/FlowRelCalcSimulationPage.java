@@ -301,7 +301,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
           final QIntervallResult result = op.getResult();
           if( result != null )
           {
-            featureComposite.setFeature( result.getFeature() );
+            featureComposite.setFeature( result );
             featureComposite.createControl( featurePanel, SWT.NONE );
           }
         }

@@ -117,6 +117,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper;
+import org.kalypso.model.wspm.tuhh.schema.simulation.QIntervalReader;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IRecord;
@@ -126,6 +127,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizard.gml.GmlFileImportPage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -363,18 +365,16 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final URL calcContext = calcWorkspace.getContext();
       final URL qresultsUrl = new URL( calcContext, "Ergebnisse/" + calculation.getName() + "/_aktuell/Daten/qIntervallResults.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
       final GMLWorkspace qresultsWorkspace = GmlSerializer.createGMLWorkspace( qresultsUrl, calcWorkspace.getFeatureProviderFactory() );
-      final QIntervallResultCollection qResultCollection = new QIntervallResultCollection( qresultsWorkspace.getRootFeature() );
+      final QIntervallResultCollection qResultCollection = (QIntervallResultCollection) qresultsWorkspace.getRootFeature();
 
       final Feature flowRelParentFeature = flowRelModel.getFeature();
       final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
 
-      final List< ? > resultList = qResultCollection.getQResultFeatures();
+      final IFeatureBindingCollection<QIntervallResult> resultList = qResultCollection.getQIntervalls();
 
       final List<Feature> addedFeatures = new ArrayList<Feature>();
-      for( final Object o : resultList )
+      for( final QIntervallResult qresult : resultList )
       {
-        final QIntervallResult qresult = new QIntervallResult( FeatureHelper.getFeature( qresultsWorkspace, o ) );
-
         final BigDecimal station = qresult.getStation();
 
         // Only handle results of chosen segments
@@ -382,7 +382,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           continue;
 
         // get corresponding 1d-element
-        final IFE1D2DNode< ? > node = (IFE1D2DNode) PolynomeHelper.forStation( elementsByStation, station );
+        final IFE1D2DNode< ? > node = (IFE1D2DNode< ? >) QIntervalReader.forStation( elementsByStation, station );
 
         final IFlowRelation1D flowRel;
 

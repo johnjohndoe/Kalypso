@@ -62,8 +62,7 @@
 			<element ref="tuhh:QIntervallResult" />
 		</sequence>
 	</complexType>
-	<element name="QIntervallResult" type="tuhh:QIntervallType"
-		substitutionGroup="gml:_Feature">
+	<element name="QIntervallResult" type="tuhh:QIntervallType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation>Result</documentation>
 		</annotation>

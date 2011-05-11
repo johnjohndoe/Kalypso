@@ -45,5 +45,16 @@
          point="org.kalypso.core.catalogContribution">
       <catalogContribution class="org.kalypso.model.wspm.tuhh.schema.WspmTuhhDictionaryCatalogContribution"/>
    </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection"
+            qname="{org.kalypso.model.wspm.tuhh}QIntervallResultCollection">
+      </feature>
+      <feature
+            class="org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult"
+            qname="{org.kalypso.model.wspm.tuhh}QIntervallResult">
+      </feature>
+   </extension>
    
 </plugin>

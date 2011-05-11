@@ -62,14 +62,14 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public class QIntervallResult extends AbstractFeatureBinder
+public class QIntervallResult extends Feature_Impl
 {
   public static final QName QNAME_F_QIntervallResult = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "QIntervallResult" ); //$NON-NLS-1$
 
@@ -91,19 +91,19 @@ public class QIntervallResult extends AbstractFeatureBinder
 
   public static final QName QNAME_F_BuildingObservation = new QName( NS.OM, "Observation" ); //$NON-NLS-1$
 
-  public QIntervallResult( final Feature featureToBind )
+  public QIntervallResult( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( featureToBind, QNAME_F_QIntervallResult );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   public void setStation( final BigDecimal station )
   {
-    getFeature().setProperty( QNAME_P_QIntervallResult_station, station );
+    setProperty( QNAME_P_QIntervallResult_station, station );
   }
 
   public void setSlope( final BigDecimal slope )
   {
-    getFeature().setProperty( QNAME_P_QIntervallResult_slope, slope );
+    setProperty( QNAME_P_QIntervallResult_slope, slope );
   }
 
   /**
@@ -116,19 +116,18 @@ public class QIntervallResult extends AbstractFeatureBinder
    */
   public IObservation<TupleResult> getPointsObservation( )
   {
-    final Feature feature = getFeature();
-    final Object propertyValue = feature.getProperty( QNAME_P_QIntervallResult_pointsMember );
+    final Object propertyValue = getProperty( QNAME_P_QIntervallResult_pointsMember );
     if( propertyValue != null )
       return ObservationFeatureFactory.toObservation( (Feature) propertyValue );
 
-    final GMLWorkspace workspace = feature.getWorkspace();
+    final GMLWorkspace workspace = getWorkspace();
     final IGMLSchema schema = workspace.getGMLSchema();
     final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
     final IFeatureType ftObservation = schema.getFeatureType( QNAME_F_WPointsObservation );
     final IRelationType pointsObsRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_pointsMember );
 
-    final Feature obsFeature = workspace.createFeature( feature, pointsObsRelation, ftObservation );
-    feature.setProperty( QNAME_P_QIntervallResult_pointsMember, obsFeature );
+    final Feature obsFeature = workspace.createFeature( this, pointsObsRelation, ftObservation );
+    setProperty( QNAME_P_QIntervallResult_pointsMember, obsFeature );
 
     final IComponent[] pointsComponents = createPointsComponents( obsFeature );
 
@@ -138,7 +137,7 @@ public class QIntervallResult extends AbstractFeatureBinder
 
   public void setPointsObservation( final IObservation<TupleResult> observation )
   {
-    final Feature obsFeature = (Feature) getFeature().getProperty( QNAME_P_QIntervallResult_pointsMember );
+    final Feature obsFeature = getProperty( QNAME_P_QIntervallResult_pointsMember, Feature.class );
 
     ObservationFeatureFactory.toFeature( observation, obsFeature );
   }
@@ -151,35 +150,33 @@ public class QIntervallResult extends AbstractFeatureBinder
    */
   public void setProfileLink( final IProfileFeature profile )
   {
-    final Feature feature = getFeature();
-    final IGMLSchema schema = feature.getWorkspace().getGMLSchema();
+    final IGMLSchema schema = getWorkspace().getGMLSchema();
     final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
 
     final IFeatureType ftProfile = schema.getFeatureType( IProfileFeature.QN_PROFILE );
     final IRelationType profileRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_profileMember );
 
     final String href = "project:/modell.gml#" + profile.getId(); //$NON-NLS-1$
-    final Feature profileFeatureRef = new XLinkedFeature_Impl( feature, profileRelation, ftProfile, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    feature.setProperty( profileRelation, profileFeatureRef );
+    final Feature profileFeatureRef = new XLinkedFeature_Impl( this, profileRelation, ftProfile, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    setProperty( profileRelation, profileFeatureRef );
 
     final IProfileObject[] buildings = profile.getProfil().getProfileObjects( IProfileBuilding.class );
     if( ArrayUtils.isEmpty( buildings ) )
       return;
 
     final IProfileObject building = buildings[0];
-    feature.setProperty( QNAME_P_QIntervallResult_buildingId, building.getId() );
+    setProperty( QNAME_P_QIntervallResult_buildingId, building.getId() );
   }
 
   public String getBuildingId( )
   {
-    return (String) getFeature().getProperty( QNAME_P_QIntervallResult_buildingId );
+    return getProperty( QNAME_P_QIntervallResult_buildingId, String.class );
   }
 
   /** Creates and sets the polynomial. */
   public IPolynomial1D createPolynomial( ) throws Exception
   {
-    final Feature feature = getFeature();
-    final GMLWorkspace workspace = feature.getWorkspace();
+    final GMLWorkspace workspace = getWorkspace();
 
     final IGMLSchema schema = workspace.getGMLSchema();
     final IFeatureType resultFT = schema.getFeatureType( QNAME_F_QIntervallResult );
@@ -187,8 +184,8 @@ public class QIntervallResult extends AbstractFeatureBinder
 
     final IFeatureType polynomialFT = schema.getFeatureType( IPolynomial1D.QNAME );
 
-    final Feature polynomialFeature = workspace.createFeature( feature, polynomialRelation, polynomialFT );
-    workspace.addFeatureAsComposition( feature, polynomialRelation, -1, polynomialFeature );
+    final Feature polynomialFeature = workspace.createFeature( this, polynomialRelation, polynomialFT );
+    workspace.addFeatureAsComposition( this, polynomialRelation, -1, polynomialFeature );
     return (IPolynomial1D) polynomialFeature.getAdapter( IPolynomial1D.class );
   }
 
@@ -202,22 +199,21 @@ public class QIntervallResult extends AbstractFeatureBinder
    */
   public IObservation<TupleResult> getBuildingObservation( final boolean createIfEmpty )
   {
-    final Feature feature = getFeature();
-    final Object propertyValue = feature.getProperty( QNAME_P_QIntervallResult_buildingMember );
+    final Object propertyValue = getProperty( QNAME_P_QIntervallResult_buildingMember );
     if( propertyValue != null )
       return ObservationFeatureFactory.toObservation( (Feature) propertyValue );
 
     if( !createIfEmpty )
       return null;
 
-    final GMLWorkspace workspace = feature.getWorkspace();
+    final GMLWorkspace workspace = getWorkspace();
     final IGMLSchema schema = workspace.getGMLSchema();
     final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
     final IFeatureType ftObservation = schema.getFeatureType( QNAME_F_BuildingObservation );
     final IRelationType pointsObsRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_buildingMember );
 
-    final Feature obsFeature = workspace.createFeature( feature, pointsObsRelation, ftObservation );
-    feature.setProperty( QNAME_P_QIntervallResult_buildingMember, obsFeature );
+    final Feature obsFeature = workspace.createFeature( this, pointsObsRelation, ftObservation );
+    setProperty( QNAME_P_QIntervallResult_buildingMember, obsFeature );
 
     final IComponent[] pointsComponents = new IComponent[3];
     pointsComponents[0] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
@@ -234,7 +230,7 @@ public class QIntervallResult extends AbstractFeatureBinder
 
   public void setWeirObservation( final IObservation<TupleResult> observation )
   {
-    final Feature obsFeature = (Feature) getFeature().getProperty( QNAME_P_QIntervallResult_buildingMember );
+    final Feature obsFeature = getProperty( QNAME_P_QIntervallResult_buildingMember, Feature.class );
 
     ObservationFeatureFactory.toFeature( observation, obsFeature );
   }
@@ -257,17 +253,16 @@ public class QIntervallResult extends AbstractFeatureBinder
 
   public BigDecimal getSlope( )
   {
-    return (BigDecimal) getFeature().getProperty( QNAME_P_QIntervallResult_slope );
+    return getProperty( QNAME_P_QIntervallResult_slope, BigDecimal.class );
   }
 
   public BigDecimal getStation( )
   {
-    return (BigDecimal) getFeature().getProperty( QNAME_P_QIntervallResult_station );
+    return getProperty( QNAME_P_QIntervallResult_station, BigDecimal.class );
   }
 
   public List< ? > getPolynomialFeatures( )
   {
-    return (List< ? >) getFeature().getProperty( QNAME_P_QIntervallResult_polynomialMember );
+    return getProperty( QNAME_P_QIntervallResult_polynomialMember, List.class );
   }
-
 }
