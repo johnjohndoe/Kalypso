@@ -68,7 +68,7 @@ public class NATimeSettings
     m_timeZone = KalypsoCorePlugin.getDefault().getTimeZone(); 
     m_calendar = Calendar.getInstance( m_timeZone );
   }
-  
+
   public TimeZone getTimeZone( )
   {
     return m_timeZone;
@@ -76,7 +76,7 @@ public class NATimeSettings
 
   public DateFormat getTimeZonedDateFormat( final DateFormat dateFormat )
   {
-    dateFormat.setTimeZone( (TimeZone) m_timeZone.clone() );
+    dateFormat.setTimeZone( m_timeZone );
     return dateFormat;
   }
 

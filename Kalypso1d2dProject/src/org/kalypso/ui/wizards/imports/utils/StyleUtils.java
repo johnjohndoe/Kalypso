@@ -188,7 +188,7 @@ public class StyleUtils
       final Map.Entry<String, Color> mapEntry = iterator.next();
       final Geometry geometry = new Geometry_Impl( new PropertyName( m_GeometryProperty, null ) );
       fill = StyleFactory.createFill( mapEntry.getValue(), 0.8 );
-      final PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
+      final PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, UOM.pixel );
       final Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
       final Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if( m_CreateFilter )
@@ -358,7 +358,7 @@ public class StyleUtils
       final Map.Entry<String, Color> mapEntry = iterator.next();
       final Geometry geometry = new Geometry_Impl( new PropertyName( geometryProperty, null ) );
       fill = StyleFactory.createFill( mapEntry.getValue(), 0.8 );
-      final PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, minScaleDenominator, maxScaleDenominator, UOM.pixel );
+      final PolygonSymbolizer polygonSymbolizer = new PolygonSymbolizer_Impl( fill, stroke, geometry, UOM.pixel );
       final Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
       final Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if( b_filterPropertySet )

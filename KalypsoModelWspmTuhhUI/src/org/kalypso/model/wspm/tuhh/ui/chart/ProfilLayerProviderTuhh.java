@@ -40,11 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPhenomenonConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -88,9 +90,6 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
-import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
-import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
-import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -98,28 +97,61 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
+import de.openali.odysseus.chart.framework.util.img.ChartLabelRendererFactory;
 
 /**
  * @author kimwerner
  */
 public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhConstants
 {
-  protected final LayerStyleProviderTuhh m_lsp = new LayerStyleProviderTuhh();
+  private final LayerStyleProviderTuhh m_lsp = new LayerStyleProviderTuhh();
 
-  protected final IAxis m_domainAxis = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_DOMAIN", POSITION.BOTTOM, Number.class );//$NON-NLS-1$
+  private final IAxis m_domainAxis;
 
-  protected final IAxis m_targetAxisLeft = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_LEFT", POSITION.LEFT, Number.class );//$NON-NLS-1$
+  private final IAxis m_targetAxisLeft;
 
-  protected final IAxis m_targetAxisRight = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_RIGHT", POSITION.RIGHT, Number.class );//$NON-NLS-1$
+  private final IAxis m_targetAxisRight;
 
-  protected final IAxis m_screenAxisVertical = new ScreenCoordinateAxis( "ProfilLayerProviderTuhh_AXIS_VERTICAL_SCREEN", POSITION.RIGHT );//$NON-NLS-1$
+  private final IAxis m_screenAxisVertical;
 
   private final static String m_AxisLabel = "[%s]"; //$NON-NLS-1$
 
   public ProfilLayerProviderTuhh( )
   {
     m_lsp.createStyles();
+
+    final AxisRendererConfig axisRendererConfigLR = new AxisRendererConfig();
+    axisRendererConfigLR.axisLineStyle.setLineCap( LINECAP.FLAT );
+    axisRendererConfigLR.tickLineStyle.setLineCap( LINECAP.FLAT );
+    axisRendererConfigLR.axisLineStyle.setLineJoin(  LINEJOIN.BEVEL);
+    axisRendererConfigLR.tickLineStyle.setLineJoin( LINEJOIN.BEVEL);
+    axisRendererConfigLR.axisLineStyle.setWidth( 2 );
+    axisRendererConfigLR.tickLineStyle.setWidth( 2 );
+    axisRendererConfigLR.axisInsets = new Insets( 5, 0, 0, 0 );
+    axisRendererConfigLR.hideCut = false;
+    final AxisRendererConfig axisRendererConfigD = new AxisRendererConfig();
+    axisRendererConfigD.axisLineStyle.setLineCap( LINECAP.FLAT );
+    axisRendererConfigD.tickLineStyle.setLineCap( LINECAP.FLAT );
+    axisRendererConfigD.axisLineStyle.setLineJoin(  LINEJOIN.BEVEL);
+    axisRendererConfigD.tickLineStyle.setLineJoin( LINEJOIN.BEVEL);
+    axisRendererConfigD.axisLineStyle.setDash( 0, null );
+    axisRendererConfigD.tickLineStyle.setDash( 0, null );
+    axisRendererConfigD.axisLineStyle.setWidth( 2 );
+    axisRendererConfigD.tickLineStyle.setWidth( 2 );
+    axisRendererConfigD.axisInsets = new Insets( 0, 0, 0, 0 );
+    axisRendererConfigD.hideCut = true;
+
+    m_screenAxisVertical = new ScreenCoordinateAxis( "ProfilLayerProviderTuhh_AXIS_VERTICAL_SCREEN", POSITION.RIGHT );//$NON-NLS-1$
+    m_screenAxisVertical.setPreferredAdjustment( new AxisAdjustment( 0, 1, 0 ) );
+    m_domainAxis = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_DOMAIN", POSITION.BOTTOM, axisRendererConfigD );//$NON-NLS-1$
+    m_domainAxis.setPreferredAdjustment( new AxisAdjustment( 3, 94, 3 ) );
+    m_targetAxisLeft = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_LEFT", POSITION.LEFT, axisRendererConfigLR );//$NON-NLS-1$
+    m_targetAxisLeft.setPreferredAdjustment( new AxisAdjustment( 15, 75, 10 ) );
+    m_targetAxisRight = new GenericLinearAxis( "ProfilLayerProviderTuhh_AXIS_RIGHT", POSITION.RIGHT, axisRendererConfigLR );//$NON-NLS-1$
+    m_targetAxisRight.setPreferredAdjustment( new AxisAdjustment( 2, 40, 58 ) );
   }
 
   /**
@@ -223,24 +255,6 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       new ProfilOperationJob( operation ).schedule();
     }
 
-  }
-
-  private final void setInitialValues( final BuildingWehr building, final IProfil profil )
-  {
-    final IProfilPointMarker[] marker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    if( marker.length == 2 )
-    {
-
-      final IRecord p1 = marker[0].getPoint();
-      final IRecord p2 = marker[1].getPoint();
-      final int index = profil.indexOfProperty( POINT_PROPERTY_HOEHE );
-      final Double y1 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p1 );
-      final Double y2 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p2 );
-      p1.setValue( index, y1 );
-      p2.setValue( index, y2 );
-
-      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_FORMBEIWERT ), 1.0 );
-    }
   }
 
   @Override
@@ -395,20 +409,6 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     return new WspLayer( profil, IWspmTuhhConstants.LAYER_WASSERSPIEGEL, m_lsp, wspLayerData, false, cm );
   }
 
-  final void setAxisLabel( final IProfil profil )
-  {
-    m_domainAxis.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) ) ) );
-    m_targetAxisLeft.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) ) ) );
-    final IComponent roughnessKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
-    final IComponent roughnessKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
-    if( roughnessKS != null )
-      m_targetAxisRight.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKS ) ) );
-    else if( roughnessKST != null )
-      m_targetAxisRight.setLabel( String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKST ) ) );
-    else
-      m_targetAxisRight.setLabel( "" ); //$NON-NLS-1$
-  }
-
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getAddableLayers(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
@@ -457,56 +457,17 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getChartAxis()
-   */
-  @Override
-  public IAxis[] registerAxis( final IMapperRegistry mapperRegistry )
-  {
-    if( mapperRegistry == null )
-      return new IAxis[] {};
-
-    final AxisRendererConfig axisRendererConfigLR = new AxisRendererConfig();
-    axisRendererConfigLR.gap = 5;
-    final AxisRendererConfig axisRendererConfigD = new AxisRendererConfig();
-    axisRendererConfigD.gap = 1;
-    axisRendererConfigD.hideCut = false;
-
-    final IAxisRenderer aRendDom = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_DOMAIN_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigD ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IAxisRenderer aRendRight = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
-
-
-    final IAxisRenderer aRendLeft = new GenericAxisRenderer( "ProfilLayerProviderTuhh_AXIS_TARGET_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), axisRendererConfigLR ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
-    m_domainAxis.setPreferredAdjustment( aaDom );
-    m_domainAxis.setRenderer( aRendDom );
-
-    final AxisAdjustment aaLeft = new AxisAdjustment( 15, 75, 10 );
-    m_targetAxisLeft.setPreferredAdjustment( aaLeft );
-    m_targetAxisLeft.setRenderer( aRendLeft );
-
-    final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
-    m_targetAxisRight.setPreferredAdjustment( aaRight );
-    m_targetAxisRight.setRenderer( aRendRight );
-
-    m_screenAxisVertical.setPreferredAdjustment( new AxisAdjustment( 0, 1, 0 ) );
-    mapperRegistry.addMapper( m_domainAxis );
-    mapperRegistry.addMapper( m_targetAxisLeft );
-    mapperRegistry.addMapper( m_targetAxisRight );
-    mapperRegistry.addMapper( m_screenAxisVertical );
-
-    // setAxisLabel()
-
-    return new IAxis[] { m_domainAxis, m_targetAxisLeft, m_targetAxisRight, m_screenAxisVertical };
-  }
-
-  /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getComponentUiHandlerProvider()
    */
   @Override
   public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile )
   {
     return new GenericComponentUiHandlerProvider( profile );
+  }
+
+  public IAxis getDomainAxis( )
+  {
+    return m_domainAxis;
   }
 
   /**
@@ -533,5 +494,75 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     else if( pointPropertyID.startsWith( IWspmTuhhConstants.MARKER_TYP ) )
       return new LayerDescriptor( DeviderTheme.TITLE, IWspmTuhhConstants.LAYER_DEVIDER );
     return null;
+  }
+
+  public LayerStyleProviderTuhh getLsp( )
+  {
+    return m_lsp;
+  }
+
+  public IAxis getTargetAxisLeft( )
+  {
+    return m_targetAxisLeft;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getChartAxis()
+   */
+  @Override
+  public IAxis[] registerAxis( final IMapperRegistry mapperRegistry )
+  {
+    if( mapperRegistry == null )
+      return new IAxis[] {};
+
+    mapperRegistry.addMapper( m_domainAxis );
+    mapperRegistry.addMapper( m_targetAxisLeft );
+    mapperRegistry.addMapper( m_targetAxisRight );
+    mapperRegistry.addMapper( m_screenAxisVertical );
+
+    // setAxisLabel()
+
+    return new IAxis[] { m_domainAxis, m_targetAxisLeft, m_targetAxisRight, m_screenAxisVertical };
+  }
+
+  final void setAxisLabel( final IProfil profil )
+  {
+    final String domLabel = String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) ) );
+    m_domainAxis.clearLabels();
+    m_domainAxis.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_domainAxis.getPosition(), domLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
+    final String leftLabel = String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
+    m_targetAxisLeft.clearLabels();
+    m_targetAxisLeft.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_targetAxisLeft.getPosition(), leftLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
+
+    final IComponent roughnessKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+    final IComponent roughnessKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+    final String rightLabel;
+    if( roughnessKS != null )
+      rightLabel = String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKS ) );
+    else if( roughnessKST != null )
+      rightLabel = String.format( m_AxisLabel, ComponentUtilities.getComponentUnitLabel( roughnessKST ) );
+    else
+      rightLabel = ""; //$NON-NLS-1$
+    m_targetAxisRight.clearLabels();
+    m_targetAxisRight.addLabel( ChartLabelRendererFactory.getAxisLabelType( m_targetAxisRight.getPosition(), rightLabel, new Insets( 2, 2, 2, 2 ), StyleUtils.getDefaultTextStyle() ) );
+
+  }
+
+  private final void setInitialValues( final BuildingWehr building, final IProfil profil )
+  {
+    final IProfilPointMarker[] marker = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    if( marker.length == 2 )
+    {
+
+      final IRecord p1 = marker[0].getPoint();
+      final IRecord p2 = marker[1].getPoint();
+      final int index = profil.indexOfProperty( POINT_PROPERTY_HOEHE );
+      final Double y1 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p1 );
+      final Double y2 = ProfilUtil.getDoubleValueFor( POINT_PROPERTY_HOEHE, p2 );
+      p1.setValue( index, y1 );
+      p2.setValue( index, y2 );
+
+      building.setValue( building.getObjectProperty( BUILDING_PROPERTY_FORMBEIWERT ), 1.0 );
+    }
   }
 }

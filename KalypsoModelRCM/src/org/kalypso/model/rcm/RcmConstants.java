@@ -45,7 +45,7 @@ package org.kalypso.model.rcm;
  */
 public interface RcmConstants
 {
-  final static public String NS_OMBROMETER = "org.kalypso.model.rcm.ombrometer";
+  final static public String NS_OMBROMETER = "org.kalypso.model.rcm.ombrometer"; //$NON-NLS-1$
 
-  final static public String NS_RCM = "org.kalypso.model.rcm";
+  final static public String NS_RCM = "org.kalypso.model.rcm.v2"; //$NON-NLS-1$
 }

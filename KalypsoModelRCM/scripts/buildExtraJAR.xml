@@ -15,6 +15,7 @@
 				<include name="JavaApiContributions/build/bin" />
 				<include name="KalypsoDeegree/build/bin" />
 				<include name="KalypsoCore/build/bin" />
+				<include name="KalypsoCommons/build/bin" />
 				<include name="KalypsoModelRCM/build/bin" />
 				<include name="KalypsoGMLSchema/build/bin" />
 			</dirset>
@@ -24,10 +25,6 @@
 				<include name="plugins/org.eclipse.core.jobs*.jar" />
 				<include name="plugins/org.eclipse.ant.core*.jar" />
 				<include name="plugins/org.eclipse.core.resources*.jar" />
-				<!--
-								<include name="plugins/org.eclipse.swt*.jar" />
-								<include name="plugins/org.eclipse.jface*.jar" />
-								-->
 				<include name="plugins/org.eclipse.ui.workbench*.jar" />
 			</fileset>
 		</path>

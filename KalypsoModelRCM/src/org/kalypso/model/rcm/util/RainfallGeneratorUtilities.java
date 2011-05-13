@@ -46,17 +46,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -119,9 +122,9 @@ public final class RainfallGeneratorUtilities
     return areas;
   }
 
-  public static IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final Date from, final Date to, final String sourceFilter, final URL context ) throws MalformedURLException, SensorException
+  public static IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final DateRange range, final String sourceFilter, final URL context ) throws MalformedURLException, SensorException
   {
-    final IRequest request = new ObservationRequest( from, to );
+    final IRequest request = new ObservationRequest( range );
 
     final IObservation[] readObservations = new IObservation[ombrometerLinks.length];
     for( int i = 0; i < ombrometerLinks.length; i++ )
@@ -173,6 +176,11 @@ public final class RainfallGeneratorUtilities
     final String firstStart = firstMetadataList.getProperty( TimeseriesUtils.MD_VORHERSAGE_START );
     final String firstEnde = firstMetadataList.getProperty( TimeseriesUtils.MD_VORHERSAGE_ENDE );
 
+    // FIXME: we still get values from observations with weight 0.0 -> we should first filter those out to improve
+    // performance
+    // FIXME 2: for still better performance, we could filter out everything with a weight smaller than some limit
+    // ( to still get 100%, we could share the difference with the remaining obses to their weight )
+
     final List<ITupleModel> observationValues = new ArrayList<ITupleModel>();
     for( final IObservation observation : observations )
       observationValues.add( observation.getValues( null ) );
@@ -193,7 +201,12 @@ public final class RainfallGeneratorUtilities
     final ITupleModel combinedTuppleModel = linearAdd.addWeighted( tuppleModels, weights );
 
     /* ATTENTION: Make sure the axes of the observation are in the same order as the axes of the combined tuple model. */
-    final SimpleObservation combinedObservation = new SimpleObservation( "", "", new MetadataList(), combinedTuppleModel );
+    final MetadataList metadata = new MetadataList();
+    // TODO: copy other properties as well?
+    final String timestep = firstMetadataList.getProperty( MetadataHelper.MD_TIMESTEP );
+    metadata.setProperty( MetadataHelper.MD_TIMESTEP, timestep );
+
+    final SimpleObservation combinedObservation = new SimpleObservation( "", "", metadata, combinedTuppleModel );
     combinedObservation.setName( "Generierte Zeitreihe" );
     if( firstStart != null )
       combinedObservation.getMetadataList().setProperty( TimeseriesUtils.MD_VORHERSAGE_START, firstStart );

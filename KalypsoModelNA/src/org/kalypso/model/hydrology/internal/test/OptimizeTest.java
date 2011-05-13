@@ -84,7 +84,7 @@ public class OptimizeTest
   }
 
   @Test
-// @Ignore
+  // @Ignore
   public void testOptimize( ) throws Exception
   {
     final File tmpDir = FileUtilities.createNewTempDir( "optimizeTest" );

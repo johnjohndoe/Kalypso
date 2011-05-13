@@ -1,4 +1,4 @@
-package org.kalypso.model.rcm;
+package org.kalypso.model.rcm.internal;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
