@@ -204,5 +204,4 @@ public class Node extends AbstractNaModelElement
 
     return resultAsInflowLink;
   }
-
 }

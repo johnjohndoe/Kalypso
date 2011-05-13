@@ -72,6 +72,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -172,11 +173,10 @@ public class TempGrid
 
   }
 
-  @SuppressWarnings("unchecked")
   private void paintEdges( final Graphics g, final GeoTransform projection ) throws GM_Exception, CoreException
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap<String, String>(), null, null );
+    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
 
     Color color = new Color( 100, 100, 100 ); // default is it set to green
     if( isValid() != Status.OK_STATUS )

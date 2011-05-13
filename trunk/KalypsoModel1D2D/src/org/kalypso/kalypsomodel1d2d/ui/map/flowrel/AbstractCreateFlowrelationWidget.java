@@ -79,6 +79,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
@@ -140,7 +141,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     return m_modelElement;
   }
 
-  public final void setModelElement( IFeatureWrapper2 modelElement )
+  public final void setModelElement( final IFeatureWrapper2 modelElement )
   {
     m_modelElement = modelElement;
   }
@@ -233,7 +234,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         final GM_Curve line = (GM_Curve) element.recalculateElementGeometry();
 
         final LineSymbolizer symb = new LineSymbolizer_Impl();
-        final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
+        final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
         stroke.setWidth( 3 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
@@ -246,7 +247,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         final GM_Curve line = element.getGeometry();
 
         final LineSymbolizer symb = new LineSymbolizer_Impl();
-        final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
+        final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
         stroke.setWidth( 3 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
@@ -259,7 +260,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) polyElement.recalculateElementGeometry();
 
         final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
-        final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
+        final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
         stroke.setWidth( 3 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
@@ -320,7 +321,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     /* Create flow relation at position */
     display.asyncExec( new Runnable()
     {
-      
+
       @Override
       public void run( )
       {
@@ -397,14 +398,14 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
    *            The grab distance in world (=geo) coordinates.
    */
   @SuppressWarnings("unchecked")
-//  protected abstract IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance );
+  //  protected abstract IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance );
   protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance ){
-    IFeatureWrapper2 lFoundElement = discModel.find1DElement( currentPos, grabDistance );
+    final IFeatureWrapper2 lFoundElement = discModel.find1DElement( currentPos, grabDistance );
     if( lFoundElement == null )
     {
       return null;
     }
-    IFeatureWrapper2 lBuildingExisting = FlowRelationUtilitites.findBuildingElement1D( (IElement1D) lFoundElement, m_flowRelCollection );
+    final IFeatureWrapper2 lBuildingExisting = FlowRelationUtilitites.findBuildingElement1D( (IElement1D) lFoundElement, m_flowRelCollection );
     if( lBuildingExisting == null )
     {
       return lFoundElement;

@@ -64,7 +64,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
-import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
+import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -79,6 +79,8 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IPlotHandler;
@@ -120,36 +122,37 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     m_listener.add( l );
   }
 
-  private void setDefaultAxis( final IMapperRegistry mr )
-  {
-    final AxisRendererConfig configDom = new AxisRendererConfig();
-    final IAxisRenderer aRendDom = new GenericAxisRenderer( "rendDom", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final AxisRendererConfig configLR = new AxisRendererConfig();
-    configLR.gap = 5;
-    final IAxisRenderer aRendLR = new GenericAxisRenderer( "rendLR", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IAxis domainAxis = new GenericLinearAxis( "ID_AXIS_DOMAIN", POSITION.BOTTOM, null, aRendDom );//$NON-NLS-1$
-    final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
-    domainAxis.setPreferredAdjustment( aaDom );
-
-    final IAxis targetAxisLeft = new GenericLinearAxis( "ID_AXIS_LEFT", POSITION.LEFT, null, aRendLR );//$NON-NLS-1$
-    final AxisAdjustment aaLeft = new AxisAdjustment( 15, 75, 10 );
-    targetAxisLeft.setPreferredAdjustment( aaLeft );
-
-    final IAxis targetAxisRight = new GenericLinearAxis( "ID_AXIS_RIGHT", POSITION.RIGHT, null, aRendLR );//$NON-NLS-1$
-    final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
-    targetAxisRight.setPreferredAdjustment( aaRight );
-
-    domainAxis.setLabel( "[m]" ); //$NON-NLS-1$
-
-    targetAxisLeft.setLabel( "[m+NN]" ); //$NON-NLS-1$
-    targetAxisRight.setLabel( "[KS]" ); //$NON-NLS-1$
-
-    mr.addMapper( domainAxis );
-    mr.addMapper( targetAxisLeft );
-    mr.addMapper( targetAxisRight );
-  }
+//  private void setDefaultAxis( final IMapperRegistry mr )
+//  {
+//    final AxisRendererConfig configDom = new AxisRendererConfig();
+//    final IAxisRenderer aRendDom = new ExtendedAxisRenderer( "rendDom", POSITION.BOTTOM, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
+//
+//    final AxisRendererConfig configLR = new AxisRendererConfig();
+//    configLR.axisInsets = new Insets( 5, 0, 0, 0 );
+//    final IAxisRenderer aRendL = new ExtendedAxisRenderer( "rendL", POSITION.LEFT, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
+//    final IAxisRenderer aRendR = new ExtendedAxisRenderer( "rendL", POSITION.RIGHT, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
+//
+//    final IAxis domainAxis = new GenericLinearAxis( "ID_AXIS_DOMAIN", POSITION.BOTTOM, null, aRendDom );//$NON-NLS-1$
+//    final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
+//    domainAxis.setPreferredAdjustment( aaDom );
+//
+//    final IAxis targetAxisLeft = new GenericLinearAxis( "ID_AXIS_LEFT", POSITION.LEFT, null, aRendL );//$NON-NLS-1$
+//    final AxisAdjustment aaLeft = new AxisAdjustment( 15, 75, 10 );
+//    targetAxisLeft.setPreferredAdjustment( aaLeft );
+//
+//    final IAxis targetAxisRight = new GenericLinearAxis( "ID_AXIS_RIGHT", POSITION.RIGHT, null, aRendR );//$NON-NLS-1$
+//    final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
+//    targetAxisRight.setPreferredAdjustment( aaRight );
+//
+//    domainAxis.setLabel( "[m]" ); //$NON-NLS-1$
+//
+//    targetAxisLeft.setLabel( "[m+NN]" ); //$NON-NLS-1$
+//    targetAxisRight.setLabel( "[KS]" ); //$NON-NLS-1$
+//
+//    mr.addMapper( domainAxis );
+//    mr.addMapper( targetAxisLeft );
+//    mr.addMapper( targetAxisRight );
+//  }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.IProfilView#createControl(org.eclipse.swt.widgets.Composite,
@@ -433,7 +436,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     if( m_profile == null )
     {
       ((GridData) m_chartComposite.getPlot().getLayoutData()).exclude = true;
-      m_chartComposite.getChartModel().getSettings().setTitle( "<No Profile Selected>", ALIGNMENT.TICK_CENTERED, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
+      m_chartComposite.getChartModel().getSettings().setTitle( "<No Profile Selected>", ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
 
     }
     else
@@ -442,7 +445,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       {
         m_profile.addProfilListener( this );
 
-        m_chartComposite.getChartModel().getSettings().setTitle( String.format( "Station km %10.4f", m_profile.getStation() ), ALIGNMENT.TICK_CENTERED, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) );
+        m_chartComposite.getChartModel().getSettings().setTitle( String.format( "Station km %10.4f", m_profile.getStation() ), ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) );
         ((GridData) m_chartComposite.getPlot().getLayoutData()).exclude = false;
         updateLayer();
       }
