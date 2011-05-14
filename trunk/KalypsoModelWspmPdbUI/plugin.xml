@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
+            class="org.kalypso.model.wspm.pdb.ui.preferences.internal.WspmPdbPreferencePage"
+            id="WspmPdbPreferencePage"
+            name="Cross Section Database">
+      </page>
+   </extension>
+
+</plugin>

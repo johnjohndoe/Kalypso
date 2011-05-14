@@ -1,0 +1,117 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.model.wspm.pdb.internal;
+
+import org.eclipse.core.runtime.Plugin;
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.internal.PdbConnectionReader;
+import org.kalypso.model.wspm.pdb.connect.internal.PdbConnectionRegistry;
+import org.kalypso.model.wspm.pdb.connect.internal.PdbConnectionWriter;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+
+public class WspmPdbCorePlugin extends Plugin implements BundleActivator
+{
+  public final static String PLUGIN_ID = "org.kalypso.mode.wspm.pdb.core"; //$NON-NLS-1$
+
+  private static final String SECURE_INFO_NODE = "wspmPdbCore.connections";
+
+  /* This instance */
+  private static WspmPdbCorePlugin plugin;
+
+  private final PdbConnectionRegistry m_registry = new PdbConnectionRegistry();
+
+  @Override
+  public void start( final BundleContext bundleContext ) throws Exception
+  {
+    plugin = this;
+  }
+
+  @Override
+  public void stop( final BundleContext bundleContext ) throws Exception
+  {
+    plugin = null;
+  }
+
+  /**
+   * Returns the shared instance
+   * 
+   * @return the shared instance
+   */
+  public static WspmPdbCorePlugin getDefault( )
+  {
+    return plugin;
+  }
+
+  /**
+   * Returns the configured connections for pdb.<br/>
+   * Changes to these connection will not take effect until {@link #setConnections(IPdbConnectInfo[])} is called.
+   * 
+   * @return The currently configured connections for pdb.
+   */
+  public synchronized IPdbConnectInfo[] getConnections( ) throws PdbConnectException
+  {
+    return new PdbConnectionReader().readConnections( getConnectionPreferences() );
+  }
+
+  /**
+   * Sets the connections for pdb. The connections will be immediatlely persisted and can be accessed after workbench
+   * restart.
+   */
+  public synchronized void setConnections( final IPdbConnectInfo[] connections ) throws PdbConnectException
+  {
+    new PdbConnectionWriter( connections ).writeConnections( getConnectionPreferences() );
+  }
+
+  private ISecurePreferences getConnectionPreferences( )
+  {
+    final ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault();
+    return securePreferences.node( SECURE_INFO_NODE );
+  }
+
+  public PdbConnectionRegistry getConnectionRegistry( )
+  {
+    return m_registry;
+  }
+}
