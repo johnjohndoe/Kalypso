@@ -1,0 +1,12 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="event">
+    <class name="org.kalypso.model.wspm.pdb.db.PdbPoint" table="pdbpoint">
+
+        <id name="ID" column="id">
+            <generator class="assigned"/>
+        </id>
+
+        <property name="Point" type="org.hibernatespatial.GeometryUserType"  column="point"/>
+    </class>
+</hibernate-mapping>

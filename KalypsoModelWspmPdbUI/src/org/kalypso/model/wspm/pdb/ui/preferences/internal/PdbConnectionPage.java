@@ -1,0 +1,156 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.contribs.eclipse.jface.action.ActionButton;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusComposite;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
+
+/**
+ * A {@link org.eclipse.jface.dialogs.IDialogPage} that edits the parameters of one {@link IPdbConnectInfo}.
+ * 
+ * @author Gernot Belger
+ */
+class PdbConnectionPage extends WizardPage
+{
+  private IPdbConnectInfo m_connection;
+
+  private DataBindingContext m_binding;
+
+  private ScrolledForm m_form;
+
+  private IAction m_validateAction;
+
+  private StatusComposite m_validationComposite;
+
+  public PdbConnectionPage( final String pageName, final IPdbConnectInfo connection )
+  {
+    super( pageName );
+
+    setConnection( connection );
+    setDescription( "Configure the parameters of the database connection." );
+  }
+
+  void setConnection( final IPdbConnectInfo connection )
+  {
+    m_connection = connection;
+
+    if( connection == null )
+      return;
+
+    setTitle( connection.getLabel() );
+    setImageDescriptor( connection.getImage() );
+
+    m_validateAction = new ValidateConnectionAction( this );
+
+    updateControl();
+  }
+
+  @Override
+  public void createControl( final Composite parent )
+  {
+    m_form = new ScrolledForm( parent );
+    m_form.setExpandHorizontal( true );
+    m_form.setExpandVertical( true );
+
+    final Composite body = m_form.getBody();
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( body );
+
+    m_binding = new DataBindingContext();
+
+    updateControl();
+
+    setControl( m_form );
+  }
+
+  private void updateControl( )
+  {
+    if( m_form == null )
+      return;
+
+    if( m_connection == null )
+      return;
+
+    final Composite body = m_form.getBody();
+
+    final Group group = new Group( body, SWT.NONE );
+    group.setText( "Connection Parameters" );
+    group.setLayout( new FillLayout() );
+    group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
+
+    m_connection.createEditControl( m_binding, group );
+
+    ActionButton.createButton( null, body, m_validateAction );
+    m_validationComposite = new StatusComposite( body, StatusComposite.HIDE_DETAILS_IF_DISABLED | StatusComposite.DETAILS );
+    m_validationComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    m_form.reflow( true );
+
+    WizardPageSupport.create( this, m_binding );
+  }
+
+  @Override
+  public IWizardPage getPreviousPage( )
+  {
+    return null;
+  }
+
+  public void testConnection( )
+  {
+    final ValidationOperation operation = new ValidationOperation( m_connection );
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    m_validationComposite.setStatus( result );
+  }
+}
