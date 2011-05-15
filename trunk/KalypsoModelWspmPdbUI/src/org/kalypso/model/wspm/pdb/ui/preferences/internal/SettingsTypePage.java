@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -84,6 +85,7 @@ class SettingsTypePage extends WizardPage
 
     tableViewer.setLabelProvider( new SettingsLabelProvider( "%s" ) );
     tableViewer.setContentProvider( new ArrayContentProvider() );
+    tableViewer.setSorter( new ViewerSorter() );
     tableViewer.setInput( settings );
 
     tableViewer.addSelectionChangedListener( new ISelectionChangedListener()

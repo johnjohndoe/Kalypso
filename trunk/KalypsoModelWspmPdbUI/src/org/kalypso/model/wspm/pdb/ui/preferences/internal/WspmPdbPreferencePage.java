@@ -55,6 +55,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -88,6 +89,8 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
   public WspmPdbPreferencePage( )
   {
     super( "Wspm Cross Section" );
+
+    noDefaultAndApplyButton();
   }
 
   @Override
@@ -165,6 +168,7 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
 
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setLabelProvider( new SettingsLabelProvider( "%s - %s" ) );
+    m_viewer.setSorter( new ViewerSorter() );
     m_viewer.setInput( m_tableInput );
 
     m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
