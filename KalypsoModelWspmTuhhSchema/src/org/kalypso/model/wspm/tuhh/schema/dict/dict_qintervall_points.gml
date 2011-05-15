@@ -175,6 +175,102 @@
 	</gml:dictionaryEntry>
 
 
+    <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="RunoffChannel">
+            <gml:description>Abfluss Flussschlauch</gml:description>
+            <gml:name>Q</gml:name>
+            <swe:property xlink:href="#phenomenonRunoff" />
+            <swe:representation>
+                <swe:SimpleType>
+                    <st:restriction base="decimal">
+                        <st:fractionDigits value="4" />
+                    </st:restriction>
+                    <gml:unitOfMeasure uom="dict_uom.xml#m³/s" />
+                </swe:SimpleType>
+            </swe:representation>
+        </swe:ItemDefinition>
+    </gml:dictionaryEntry>
+
+    <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="RunoffFloodplain">
+            <gml:description>Abfluss Vorland</gml:description>
+            <gml:name>Q</gml:name>
+            <swe:property xlink:href="#phenomenonRunoff" />
+            <swe:representation>
+                <swe:SimpleType>
+                    <st:restriction base="decimal">
+                        <st:fractionDigits value="4" />
+                    </st:restriction>
+                    <gml:unitOfMeasure uom="dict_uom.xml#m³/s" />
+                </swe:SimpleType>
+            </swe:representation>
+        </swe:ItemDefinition>
+    </gml:dictionaryEntry>
+
+    <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="AreaChannel">
+            <gml:description>Fläche Flussschlauch</gml:description>
+            <gml:name>Fläche</gml:name>
+            <swe:property xlink:href="#phenomenonArea" />
+            <swe:representation>
+                <swe:SimpleType>
+                    <st:restriction base="decimal">
+                        <st:fractionDigits value="4" />
+                    </st:restriction>
+                    <gml:unitOfMeasure uom="dict_uom.xml#m²" />
+                </swe:SimpleType>
+            </swe:representation>
+        </swe:ItemDefinition>
+    </gml:dictionaryEntry>
+
+    <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="AreaFloodplain">
+            <gml:description>Fläche Vorland</gml:description>
+            <gml:name>Fläche</gml:name>
+            <swe:property xlink:href="#phenomenonArea" />
+            <swe:representation>
+                <swe:SimpleType>
+                    <st:restriction base="decimal">
+                        <st:fractionDigits value="4" />
+                    </st:restriction>
+                    <gml:unitOfMeasure uom="dict_uom.xml#m²" />
+                </swe:SimpleType>
+            </swe:representation>
+        </swe:ItemDefinition>
+    </gml:dictionaryEntry>
+
+    <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WidthChannel">
+            <gml:description>Breite Flussschlauch</gml:description>
+            <gml:name>Fläche</gml:name>
+            <swe:property xlink:href="#phenomenonWidth" />
+            <swe:representation>
+                <swe:SimpleType>
+                    <st:restriction base="decimal">
+                        <st:fractionDigits value="4" />
+                    </st:restriction>
+                    <gml:unitOfMeasure uom="dict_uom.xml#m" />
+                </swe:SimpleType>
+            </swe:representation>
+        </swe:ItemDefinition>
+    </gml:dictionaryEntry>
+
+    <gml:dictionaryEntry>
+        <swe:ItemDefinition gml:id="WidthFloodplain">
+            <gml:description>Breite Vorland</gml:description>
+            <gml:name>Fläche</gml:name>
+            <swe:property xlink:href="#phenomenonWidth" />
+            <swe:representation>
+                <swe:SimpleType>
+                    <st:restriction base="decimal">
+                        <st:fractionDigits value="4" />
+                    </st:restriction>
+                    <gml:unitOfMeasure uom="dict_uom.xml#m" />
+                </swe:SimpleType>
+            </swe:representation>
+        </swe:ItemDefinition>
+    </gml:dictionaryEntry>
+
 	<!--  Phenomenons -->
 	<gml:dictionaryEntry>
 		<swe:Phenomenon gml:id="phenomenonWaterlevel">
@@ -208,6 +304,13 @@
 		<swe:Phenomenon gml:id="phenomenonAlpha">
 			<gml:description>Alpha</gml:description>
 			<gml:name>Alpha</gml:name>
+		</swe:Phenomenon>
+	</gml:dictionaryEntry>
+
+	<gml:dictionaryEntry>
+		<swe:Phenomenon gml:id="phenomenonWidth">
+			<gml:description>Width</gml:description>
+			<gml:name>Width</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 
