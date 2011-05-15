@@ -296,4 +296,18 @@
          version="10.10.2.qualifier"
          unpack="false"/>
 
+   <plugin
+         id="org.kalypso.model.wspm.pdb.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.model.wspm.pdb.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
