@@ -83,8 +83,6 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
 
   public KalypsoRiskPreferencePage( )
   {
-    super();
-    setTitle( Messages.getString( "org.kalypso.risk.preferences.title" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.risk.preferences.description" ) ); //$NON-NLS-1$
     setPreferenceStore( KalypsoRiskPlugin.getDefault().getPreferenceStore() );
     checkStore();
@@ -112,6 +110,8 @@ public class KalypsoRiskPreferencePage extends PreferencePage implements IWorkbe
   @Override
   protected Control createContents( final Composite parent )
   {
+    // Must be here, else its overwritten
+    setTitle( "KalypsoRisk" ); //$NON-NLS-1$
 
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout() );
