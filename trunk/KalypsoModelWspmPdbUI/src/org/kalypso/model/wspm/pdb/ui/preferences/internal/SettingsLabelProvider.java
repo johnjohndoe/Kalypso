@@ -40,28 +40,65 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.preferences.internal;
 
-import org.eclipse.jface.action.Action;
+import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 
 /**
  * @author Gernot Belger
  */
-public class ValidateConnectionAction extends Action
+class SettingsLabelProvider extends LabelProvider
 {
-  private final PdbConnectionPage m_page;
+  private final String m_format;
 
-  public ValidateConnectionAction( final PdbConnectionPage page )
+  private final ImageRegistry m_images = new ImageRegistry();
+
+  public SettingsLabelProvider( final String format )
   {
-    m_page = page;
-
-    setText( "Test connection..." );
+    m_format = format;
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#run()
-   */
   @Override
-  public void run( )
+  public void dispose( )
   {
-    m_page.testConnection();
+    m_images.dispose();
+
+    super.dispose();
+  }
+
+  @Override
+  public String getText( final Object element )
+  {
+    if( element instanceof IPdbSettings )
+    {
+      final String label = ((IPdbSettings) element).getLabel();
+      return String.format( m_format, label, element.toString() );
+    }
+
+    return super.getText( element );
+  }
+
+  @Override
+  public Image getImage( final Object element )
+  {
+    if( element instanceof IPdbSettings )
+    {
+      final String key = ObjectUtils.identityToString( element );
+      final Image image = m_images.get( key );
+      if( image != null )
+        return image;
+
+      final ImageDescriptor descr = ((IPdbSettings) element).getImage();
+      if( descr != null )
+      {
+        m_images.put( key, descr );
+        return m_images.get( key );
+      }
+    }
+
+    return super.getImage( element );
   }
 }
