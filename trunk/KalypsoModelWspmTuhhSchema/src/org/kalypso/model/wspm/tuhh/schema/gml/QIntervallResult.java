@@ -107,18 +107,14 @@ public class QIntervallResult extends Feature_Impl
   }
 
   /**
-   * Returns the points-observation.
-   * <p>
-   * If it does not yet exists, it is created and initialized.
-   * </p>
-   * <p>
+   * Creates the points-observation for the polynome case.<br/>
    * If the observation is changed afterwards, {@link #setPointsObservation(IObservation) has to be called.
    */
-  public IObservation<TupleResult> getPointsObservation( )
+  public IObservation<TupleResult> getOrCreatePointsObservation( )
   {
-    final Object propertyValue = getProperty( QNAME_P_QIntervallResult_pointsMember );
+    final Feature propertyValue = getProperty( QNAME_P_QIntervallResult_pointsMember, Feature.class );
     if( propertyValue != null )
-      return ObservationFeatureFactory.toObservation( (Feature) propertyValue );
+      return ObservationFeatureFactory.toObservation( propertyValue );
 
     final GMLWorkspace workspace = getWorkspace();
     final IGMLSchema schema = workspace.getGMLSchema();
@@ -129,9 +125,8 @@ public class QIntervallResult extends Feature_Impl
     final Feature obsFeature = workspace.createFeature( this, pointsObsRelation, ftObservation );
     setProperty( QNAME_P_QIntervallResult_pointsMember, obsFeature );
 
-    final IComponent[] pointsComponents = createPointsComponents( obsFeature );
+    final TupleResult tupleResult = new TupleResult();
 
-    final TupleResult tupleResult = new TupleResult( pointsComponents );
     return new Observation<TupleResult>( "", "", tupleResult ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
@@ -235,22 +230,6 @@ public class QIntervallResult extends Feature_Impl
     ObservationFeatureFactory.toFeature( observation, obsFeature );
   }
 
-  private static IComponent[] createPointsComponents( final Feature obsFeature )
-  {
-    final IComponent[] components = new IComponent[8];
-
-    components[0] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL );
-    components[1] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_DEPTH );
-    components[2] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA );
-    components[3] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
-    components[4] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_ALPHA );
-    components[5] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_DELTA_AREA );
-    components[6] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_DELTA_RUNOFF );
-    components[7] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_DELTA_ALPHA );
-
-    return components;
-  }
-
   public BigDecimal getSlope( )
   {
     return getProperty( QNAME_P_QIntervallResult_slope, BigDecimal.class );
@@ -264,5 +243,12 @@ public class QIntervallResult extends Feature_Impl
   public List< ? > getPolynomialFeatures( )
   {
     return getProperty( QNAME_P_QIntervallResult_polynomialMember, List.class );
+  }
+
+  /** Create a component for the points-observation. */
+  public IComponent createPointsComponent( final String componentID )
+  {
+    final Feature obsFeature = getProperty( QNAME_P_QIntervallResult_pointsMember, Feature.class );
+    return ObservationFeatureFactory.createDictionaryComponent( obsFeature, componentID );
   }
 }

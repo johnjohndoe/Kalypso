@@ -116,8 +116,8 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
-import org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper;
-import org.kalypso.model.wspm.tuhh.schema.simulation.QIntervalReader;
+import org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor;
+import org.kalypso.model.wspm.tuhh.schema.simulation.QIntervalIndex;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IRecord;
@@ -382,7 +382,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           continue;
 
         // get corresponding 1d-element
-        final IFE1D2DNode< ? > node = (IFE1D2DNode< ? >) QIntervalReader.forStation( elementsByStation, station );
+        final IFE1D2DNode< ? > node = QIntervalIndex.forStation( elementsByStation, station );
 
         final IFlowRelation1D flowRel;
 
@@ -390,14 +390,15 @@ public class ImportWspmWizard extends Wizard implements IWizard
         final IObservation<TupleResult> buildingObs = qresult.getBuildingObservation( false );
         if( node == null )
         {
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.14", station ) ) ); //$NON-NLS-1$
+          final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.14", station ) ); //$NON-NLS-1$
+          KalypsoModel1D2DPlugin.getDefault().getLog().log( status ); 
           flowRel = null;
         }
         else if( buildingObs != null )
         {
           // REMARK: it is important that elementsByStation is sorted in upstream direction
-          final IFE1D2DNode< ? > downStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, false );
-          final IFE1D2DNode< ? > upStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, true );
+          final IFE1D2DNode< ? > downStreamNode = PolynomeProcessor.forStationAdjacent( elementsByStation, station, false );
+          final IFE1D2DNode< ? > upStreamNode = PolynomeProcessor.forStationAdjacent( elementsByStation, station, true );
           if( (downStreamNode == null) || (upStreamNode == null) )
           {
             throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.17" ), null ) ); //$NON-NLS-1$

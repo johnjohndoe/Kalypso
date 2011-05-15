@@ -46,7 +46,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Formatter;
 import java.util.Locale;
@@ -55,7 +54,6 @@ import java.util.SortedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -65,7 +63,6 @@ import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties.TripleMode;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
-import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.util.LogHelper;
 
@@ -74,9 +71,9 @@ import org.kalypso.simulation.core.util.LogHelper;
  * 
  * @author Gernot Belger
  */
-public class PolynomeHelper
+public class PolynomeProcessor
 {
-  private static final String ERGEBNISSE_GMV = "Ergebnisse.gmv"; //$NON-NLS-1$
+  private static final int TIMEOUT = 0;
 
   public static final String POLYNOME_1D_EXE_FORMAT = "Polynome1d%s.exe";//$NON-NLS-1$ 
 
@@ -85,84 +82,55 @@ public class PolynomeHelper
   // TODO: Deciding which approach to take, energy level or water stage
 
 // private static final String WEIR_FILE_NAME = "HOW_QWehr_HUW.txt";
-  private static final String WEIR_FILE_NAME = "EOW_QWehr_EUW.txt"; //$NON-NLS-1$
+  static final String WEIR_FILE_NAME = "EOW_QWehr_EUW.txt"; //$NON-NLS-1$
 
 // private static final String BRIDGE_FILE_NAME = "HOW_QBruecke_HUW.txt";
-  private static final String BRIDGE_FILE_NAME = "EOW_QBruecke_EUW.txt"; //$NON-NLS-1$
+  static final String BRIDGE_FILE_NAME = "EOW_QBruecke_EUW.txt"; //$NON-NLS-1$
 
   private static final String QLANG_FILE_NAME = "Q_LangSchnitt.txt"; //$NON-NLS-1$
 
-  /**
-   * Prepares the input files for the polynome process
-   * 
-   * @param tmpDir
-   *          any tmp dir, must be empty before start, may be deleted after end
-   * @param dathDir
-   *          Directory containing the laengsschnitt.txt and the beiwerte.aus files.
-   * @return The polynom input dir (01Eingang), if preparation was succesful, else <code>null</code>.
-   */
-  private static File preparePolynomes( final File tmpDir, final File dathDir, final LogHelper log )
+  private final File m_tmpDir;
+
+  private final File m_dathDir;
+
+  private final TuhhCalculation m_calculation;
+
+  private final LogHelper m_log;
+
+  public PolynomeProcessor( final File tmpDir, final File dathDir, final TuhhCalculation calculation, final LogHelper log )
   {
-    /* The files needed from the 1D-calculation */
-    final File lsQFile = new File( dathDir, QLANG_FILE_NAME );
-    final File weirFile = new File( dathDir, WEIR_FILE_NAME );
-    final File bridgeFile = new File( dathDir, BRIDGE_FILE_NAME );
-
-    final File[] dathFiles = new File[] { lsQFile, weirFile, bridgeFile };
-
-    /* Check input data */
-    for( final File file : dathFiles )
-    {
-      if( !file.exists() )
-      {
-        log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.0" ), file ); //$NON-NLS-1$
-        return null;
-      }
-    }
-
-    /* Copy input data to exe dir */
-    try
-    {
-      final File eingangDir = new File( tmpDir, "01Eingang" ); //$NON-NLS-1$
-
-      for( final File file : dathFiles )
-        FileUtils.copyFileToDirectory( file, eingangDir );
-
-      return eingangDir;
-    }
-    catch( final IOException e )
-    {
-      log.log( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.2" ) ); //$NON-NLS-1$
-      return null;
-    }
+    m_tmpDir = tmpDir;
+    m_dathDir = dathDir;
+    m_calculation = calculation;
+    m_log = log;
   }
 
-  public static void processPolynomes( final File tmpDir, final File dathDir, final LogHelper log, final long timeout, final ISimulationResultEater resultEater, final TuhhCalculation calculation ) throws SimulationException
+  public File processPolynomes( ) throws SimulationException
   {
-    final ISimulationMonitor monitor = log.getMonitor();
+    final ISimulationMonitor monitor = m_log.getMonitor();
 
-    log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.3" ) ); //$NON-NLS-1$
+    m_log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.3" ) ); //$NON-NLS-1$
 
-    log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.4" ) ); //$NON-NLS-1$
+    m_log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.4" ) ); //$NON-NLS-1$
 
-    final File eingangDir = preparePolynomes( tmpDir, dathDir, log );
-    final File resultDir = new File( tmpDir, "02Ausgang" ); //$NON-NLS-1$
+    final File eingangDir = preparePolynomes();
+    final File resultDir = new File( m_tmpDir, "02Ausgang" ); //$NON-NLS-1$
     /* Need to create result-dir, else the calculation does not work */
     resultDir.mkdirs();
     if( eingangDir == null )
-      return;
+      return null;
 
     if( monitor.isCanceled() )
-      return;
+      return null;
 
-    log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.5" ) ); //$NON-NLS-1$
-    prepareSteuerpoly( tmpDir, calculation );
+    m_log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.5" ) ); //$NON-NLS-1$
+    prepareSteuerpoly();
 
     if( monitor.isCanceled() )
-      return;
+      return null;
 
-    final File logFile = new File( tmpDir, "Polynome1d.log" ); //$NON-NLS-1$
-    final File errFile = new File( tmpDir, "Polynome1d.err" ); //$NON-NLS-1$
+    final File logFile = new File( m_tmpDir, "Polynome1d.log" ); //$NON-NLS-1$
+    final File errFile = new File( m_tmpDir, "Polynome1d.err" ); //$NON-NLS-1$
 
     OutputStream logStream = null;
     OutputStream errStream = null;
@@ -172,12 +140,12 @@ public class PolynomeHelper
       errStream = new BufferedOutputStream( new FileOutputStream( errFile ) );
 
       /* Start the polynome1d process */
-      final File exeFile = WspmTuhhCalcJob.getExecuteable( calculation, tmpDir, POLYNOME_1D_EXE_FORMAT, POLYNOME_1D_EXE_PATTERN, monitor );
+      final File exeFile = WspmTuhhCalcJob.getExecuteable( m_calculation, m_tmpDir, POLYNOME_1D_EXE_FORMAT, POLYNOME_1D_EXE_PATTERN, monitor );
       if( exeFile == null )
-        return;
+        return null;
 
       final String cmdLine = "cmd.exe /C \"" + exeFile.getAbsolutePath() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
-      ProcessHelper.startProcess( cmdLine, null, tmpDir, monitor, timeout, logStream, errStream, null );
+      ProcessHelper.startProcess( cmdLine, null, m_tmpDir, monitor, TIMEOUT, logStream, errStream, null );
 
       logStream.close();
       errStream.close();
@@ -188,15 +156,15 @@ public class PolynomeHelper
     }
     catch( final IOException e )
     {
-      log.log( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.8" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.9" ) ); //$NON-NLS-1$
-      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.10" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$
+      m_log.log( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.8" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.9" ) ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.10" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$
     }
     catch( final ProcessTimeoutException e )
     {
-      log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.11" ) ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.11" ) ); //$NON-NLS-1$
-      return;
+      m_log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.11" ) ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.11" ) ); //$NON-NLS-1$
+      return null;
     }
     finally
     {
@@ -204,47 +172,69 @@ public class PolynomeHelper
       IOUtils.closeQuietly( errStream );
     }
 
-    if( log.checkCanceled() )
-      return;
+    if( m_log.checkCanceled() )
+      return null;
 
-    /* Read results */
-    log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.13" ) ); //$NON-NLS-1$
-    final File targetGmlFile = new File( tmpDir, "qIntervallResults.gml" ); //$NON-NLS-1$
-    try
-    {
-      final QIntervalReader qIntervalReader = new QIntervalReader( resultDir, targetGmlFile, calculation, log );
-      qIntervalReader.setWeirFilename( WEIR_FILE_NAME );
-      qIntervalReader.setBridgeFilename( BRIDGE_FILE_NAME );
-      qIntervalReader.execute( new NullProgressMonitor() );
-      resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT, targetGmlFile );
-
-      final File gmvResultFile = new File( tmpDir, ERGEBNISSE_GMV );
-      final URL ergebnisseGmvLocation = PolynomeHelper.class.getResource( "resources/" + ERGEBNISSE_GMV ); //$NON-NLS-1$
-      FileUtils.copyURLToFile( ergebnisseGmvLocation, gmvResultFile );
-      resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT_GMV, gmvResultFile );
-    }
-    catch( final Throwable e )
-    {
-      log.log( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.14" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.15" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
-    }
-
-    final File polynomeLogFile = new File( tmpDir, "Polynome1d.log" ); //$NON-NLS-1$
-    if( polynomeLogFile.exists() )
-      resultEater.addResult( "polynomeLog", polynomeLogFile ); //$NON-NLS-1$
+    return resultDir;
   }
 
-  private static void prepareSteuerpoly( final File tmpDir, final TuhhCalculation calculation ) throws SimulationException
+  /**
+   * Prepares the input files for the polynome process
+   * 
+   * @param tmpDir
+   *          any tmp dir, must be empty before start, may be deleted after end
+   * @param dathDir
+   *          Directory containing the laengsschnitt.txt and the beiwerte.aus files.
+   * @return The polynom input dir (01Eingang), if preparation was succesful, else <code>null</code>.
+   */
+  private File preparePolynomes( )
   {
-    final File steuerFile = new File( tmpDir, "steuerpoly.ini" ); //$NON-NLS-1$
+    /* The files needed from the 1D-calculation */
+    final File lsQFile = new File( m_dathDir, QLANG_FILE_NAME );
+    final File weirFile = new File( m_dathDir, WEIR_FILE_NAME );
+    final File bridgeFile = new File( m_dathDir, BRIDGE_FILE_NAME );
+
+    final File[] dathFiles = new File[] { lsQFile, weirFile, bridgeFile };
+
+    /* Check input data */
+    for( final File file : dathFiles )
+    {
+      if( !file.exists() )
+      {
+        m_log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.0" ), file ); //$NON-NLS-1$
+        return null;
+      }
+    }
+
+    /* Copy input data to exe dir */
+    try
+    {
+      final File eingangDir = new File( m_tmpDir, "01Eingang" ); //$NON-NLS-1$
+
+      for( final File file : dathFiles )
+        FileUtils.copyFileToDirectory( file, eingangDir );
+
+      return eingangDir;
+    }
+    catch( final IOException e )
+    {
+      m_log.log( e, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.2" ) ); //$NON-NLS-1$
+      return null;
+    }
+  }
+
+
+  private void prepareSteuerpoly( ) throws SimulationException
+  {
+    final File steuerFile = new File( m_tmpDir, "steuerpoly.ini" ); //$NON-NLS-1$
 
     try
     {
-      final double startStation = calculation.getStartStation().doubleValue();
-      final double endStation = calculation.getStartStation().doubleValue();
+      final double startStation = m_calculation.getStartStation().doubleValue();
+      final double endStation = m_calculation.getStartStation().doubleValue();
 
       /* Polynomial Parameters */
-      final PolynomeProperties pps = calculation.getPolynomeProperties();
+      final PolynomeProperties pps = m_calculation.getPolynomeProperties();
       final int polynomialDeegree = pps.getDeegree();
       final boolean ignoreOutlier = pps.getIgnoreOutlier();
       final boolean isTripleForAll = pps.getTripleForAll();
@@ -286,13 +276,14 @@ public class PolynomeHelper
     }
     catch( final IOException e )
     {
-      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper.16" ), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.16" ), e ); //$NON-NLS-1$
     }
     finally
     {
     }
   }
 
+  // FIXME does not belong here
   public static <S> S forStationAdjacent( final SortedMap<BigDecimal, S> stationIndex, final BigDecimal station, final boolean upstream )
   {
     final BigDecimal pred = NumberUtils.decrement( station );

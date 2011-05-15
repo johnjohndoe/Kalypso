@@ -117,7 +117,6 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 
       return null;
     }
-
   }
 
   public TuhhReachProfileSegment[] getReachProfileSegments( )

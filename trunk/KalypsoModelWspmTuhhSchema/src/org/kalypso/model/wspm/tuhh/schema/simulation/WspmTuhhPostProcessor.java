@@ -46,7 +46,6 @@ import java.net.URL;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
@@ -282,18 +281,21 @@ public class WspmTuhhPostProcessor
     if( m_log.checkCanceled() )
       return null;
 
-    /* Process *.km files */
-    final File kmDir = new File( lsOutDir, "km" ); //$NON-NLS-1$
-    final KMProcessor kmProcessor = new KMProcessor( m_profDir, kmDir, m_tmpDir );
-    monitor.setMessage( "Processing .km files" );
-    kmProcessor.execute( new NullProgressMonitor() );
+    m_log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.13" ) ); //$NON-NLS-1$
 
-    /* Calculate and fetch Polynomes */
-    if( !processPolynoms )
-      return lsOutDir;
+    final MultipleRunoffReader runoffReader = new MultipleRunoffReader( m_tmpDir, m_profDir, m_calculation, m_log );
+    runoffReader.init();
+    runoffReader.readKM();
 
-    final File polynomeTmpDir = new File( m_tmpDir, "polynome" ); //$NON-NLS-1$
-    PolynomeHelper.processPolynomes( polynomeTmpDir, m_dathDir, m_log, 0, m_resultEater, m_calculation );
+    if( processPolynoms )
+    {
+      final File polynomeTmpDir = new File( m_tmpDir, "polynome" ); //$NON-NLS-1$
+      final PolynomeProcessor processor = new PolynomeProcessor( polynomeTmpDir, m_dathDir, m_calculation, m_log );
+      final File resultDir = processor.processPolynomes();
+      runoffReader.readPolynomeResults( polynomeTmpDir, resultDir, m_log, m_resultEater );
+    }
+
+    runoffReader.createResult( m_resultEater );
 
     return lsOutDir;
   }
