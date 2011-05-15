@@ -47,6 +47,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.dialog.SinglePageDialog;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
