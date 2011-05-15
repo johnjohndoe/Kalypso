@@ -56,20 +56,20 @@ import org.kalypso.model.wspm.pdb.db.PdbProperty;
 /**
  * @author Gernot Belger
  */
-public abstract class HibernatePdbConnection<INFO extends HibernateConnectInfo> implements IPdbConnection
+public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings> implements IPdbConnection
 {
-  private final INFO m_connectInfo;
+  private final SETTINGS m_connectInfo;
 
   private Configuration m_config;
 
   private Session m_session;
 
-  public HibernatePdbConnection( final INFO connectInfo )
+  public HibernatePdbConnection( final SETTINGS connectInfo )
   {
     m_connectInfo = connectInfo;
   }
 
-  protected INFO getConnectInfo( )
+  protected SETTINGS getSettings( )
   {
     return m_connectInfo;
   }

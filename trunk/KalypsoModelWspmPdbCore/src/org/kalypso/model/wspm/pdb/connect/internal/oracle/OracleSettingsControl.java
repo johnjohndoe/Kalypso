@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.internal.postgis;
+package org.kalypso.model.wspm.pdb.connect.internal.oracle;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -47,48 +47,43 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
 
 /**
  * @author Gernot Belger
  */
-class PostGisInfoComposite extends Composite
+class OracleSettingsControl extends Composite implements IPdbSettingsControl
 {
-  private final PostgisConnectInfo m_info;
+  private final OracleSettings m_settings;
 
   private final DataBindingContext m_binding;
 
-  public PostGisInfoComposite( final DataBindingContext binding, final Composite parent, final PostgisConnectInfo info )
+  public OracleSettingsControl( final DataBindingContext binding, final Composite parent, final OracleSettings settings )
   {
     super( parent, SWT.NONE );
 
     m_binding = binding;
 
-    m_info = info;
+    m_settings = settings;
 
     GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( false ).applyTo( this );
 
     final StringBlankValidator nameValidator = new StringBlankValidator( IStatus.WARNING, StringBlankValidator.DEFAULT_WARNING_MESSAGE );
-    createPropertyControl( "Name", SWT.NONE, PostgisConnectInfo.PROPERTY_LABEL, nameValidator );
+    createPropertyControl( "Name", SWT.NONE, OracleSettings.PROPERTY_LABEL, nameValidator );
 
-    final StringBlankValidator hostValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
-    createPropertyControl( "Host", SWT.NONE, PostgisConnectInfo.PROPERTY_HOST, hostValidator );
-
-    createPropertyControl( "Port", SWT.NONE, PostgisConnectInfo.PROPERTY_PORT, new PortValidator() );
-
-    final StringBlankValidator databaseValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
-    createPropertyControl( "Database", SWT.NONE, PostgisConnectInfo.PROPERTY_DBNAME, databaseValidator );
-
-    final StringBlankValidator usernameValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
-    createPropertyControl( "Username", SWT.NONE, PostgisConnectInfo.PROPERTY_USERNAME, usernameValidator );
-
-    final StringBlankValidator warningValidator = new StringBlankValidator( IStatus.WARNING, "Password field is empty" );
-    createPropertyControl( "Password", SWT.PASSWORD, PostgisConnectInfo.PROPERTY_PASSWORD, warningValidator );
+    // FIXME: implement
+// final StringBlankValidator hostValidator = new StringBlankValidator( IStatus.ERROR,
+// StringBlankValidator.DEFAULT_ERROR_MESSAGE );
+// createPropertyControl( "Host", SWT.NONE, OracleConnectSettings.PROPERTY_HOST, hostValidator );
   }
 
   private void createPropertyControl( final String label, final int style, final String property, final IValidator validator )
@@ -104,7 +99,19 @@ class PostGisInfoComposite extends Composite
       targetToModel.setAfterGetValidator( validator );
 
     final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
-    final IObservableValue model = new PostGisInfoPropertyValue( m_info, property );
+    final IObservableValue model = new OracleSettingsPropertyValue( m_settings, property );
     m_binding.bindValue( target, model, targetToModel, null );
+  }
+
+  @Override
+  public Control getControl( )
+  {
+    return this;
+  }
+
+  @Override
+  public ImageDescriptor getPageImage( )
+  {
+    return WspmPdbCoreImages.IMAGE_ORACLE_48x48;
   }
 }

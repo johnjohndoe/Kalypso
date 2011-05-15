@@ -49,16 +49,16 @@ import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.internal.HibernateConnectInfo;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.internal.HibernateSettings;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
 
 /**
  * @author Gernot Belger
  */
-public class PostgisConnectInfo extends HibernateConnectInfo
+public class PostgisSettings extends HibernateSettings
 {
   private static final String DEFAULT_LABEL = ""; //$NON-NLS-1$
 
@@ -84,13 +84,13 @@ public class PostgisConnectInfo extends HibernateConnectInfo
 
   final Properties m_properties = new Properties();
 
-  public PostgisConnectInfo( )
+  public PostgisSettings( )
   {
   }
 
-  public PostgisConnectInfo( final PostgisConnectInfo info )
+  public PostgisSettings( final PostgisSettings settings )
   {
-    m_properties.putAll( info.m_properties );
+    m_properties.putAll( settings.m_properties );
   }
 
   @Override
@@ -108,7 +108,7 @@ public class PostgisConnectInfo extends HibernateConnectInfo
   @Override
   public ImageDescriptor getImage( )
   {
-    return WspmPdbCoreImages.IMAGE_POSTGIS;
+    return WspmPdbCoreImages.IMAGE_POSTGIS_32x32;
   }
 
   @Override
@@ -251,14 +251,14 @@ public class PostgisConnectInfo extends HibernateConnectInfo
   }
 
   @Override
-  public IPdbConnectInfo copy( )
+  public IPdbSettings copy( )
   {
-    return new PostgisConnectInfo( this );
+    return new PostgisSettings( this );
   }
 
   @Override
-  public Control createEditControl( final DataBindingContext binding, final Composite parent )
+  public IPdbSettingsControl createEditControl( final DataBindingContext binding, final Composite parent )
   {
-    return new PostGisInfoComposite( binding, parent, this );
+    return new PostGisSettingsControl( binding, parent, this );
   }
 }

@@ -38,63 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.test;
+package org.kalypso.model.wspm.pdb.connect.internal.oracle;
 
-import junit.framework.Assert;
-
-import org.junit.Test;
+import org.apache.commons.lang.NotImplementedException;
+import org.hibernate.cfg.Configuration;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.internal.postgis.PostgisSettings;
-import org.kalypso.model.wspm.pdb.db.PdbInfo;
-import org.kalypso.model.wspm.pdb.db.PdbPoint;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
+import org.kalypso.model.wspm.pdb.connect.internal.HibernatePdbConnection;
 
 /**
  * @author Gernot Belger
  */
-public class PdbTest extends Assert
+public class OracleConnection extends HibernatePdbConnection<OracleSettings> implements IPdbConnection
 {
-  @Test
-  public void testPdb( ) throws PdbConnectException
+  public OracleConnection( final OracleSettings settings )
   {
-    final PostgisSettings connectInfo = new PostgisSettings();
-    connectInfo.setHost( "map.bjoernsen.de" );
-    connectInfo.setDbName( "pdb" );
-    connectInfo.setUsername( "pdb_admin" );
-    connectInfo.setPassword( "pdb_admin" );
-
-    final IPdbConnection connection = connectInfo.createConnection();
-    connection.connect();
-
-    final PdbInfo info = connection.getInfo();
-    final String version = info.getVersion();
-
-    final Point aPoint = new GeometryFactory().createPoint( new Coordinate( 3.14, 2.79 ) );
-
-    final PdbPoint onePoint = new PdbPoint();
-    onePoint.setPoint( new GeometryFactory().createPoint( new Coordinate( 3.14, 2.79 ) ) );
-    connection.addPoint( onePoint );
-
-    try
-    {
-
-// final PdbProperty version = new PdbProperty();
-// version.setKey( "Version" );
-// version.setValue( "0.0.1" );
-// session.save( version );
-//
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
-    finally
-    {
-    }
+    super( settings );
   }
 
+  @Override
+  protected void doConfiguration( final Configuration configuration )
+  {
+    throw new NotImplementedException();
+
+// final OracleConnectInfo connectInfo = getConnectInfo();
+//
+// final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
+//
+// configuration.setProperty( "hibernate.connection.driver_class", org.postgresql.Driver.class.getName() );
+//
+// final String connectionUrl = String.format( "jdbc:postgresql://%s:%d/%s", connectInfo.getHost(),
+// connectInfo.getPort(), connectInfo.getDbName() );
+//
+// configuration.setProperty( "hibernate.connection.url", connectionUrl );
+// configuration.setProperty( "hibernate.connection.username", connectInfo.getUsername() );
+// configuration.setProperty( "hibernate.connection.password", connectInfo.getPassword() );
+//
+// configuration.setProperty( "hibernate.dialect", dialect.getClass().getName() );
+// configuration.setProperty( "hibernate.spatial.dialect", dialect.getClass().getName() );
+  }
+
+  // ///////////////////
+  // TODO: create DB //
+  // /////////////////
 }

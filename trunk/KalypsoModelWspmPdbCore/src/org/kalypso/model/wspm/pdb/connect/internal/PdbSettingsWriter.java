@@ -42,17 +42,17 @@ package org.kalypso.model.wspm.pdb.connect.internal;
 
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.StorageException;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
  */
-public class PdbConnectionWriter
+public class PdbSettingsWriter
 {
-  private final IPdbConnectInfo[] m_connections;
+  private final IPdbSettings[] m_connections;
 
-  public PdbConnectionWriter( final IPdbConnectInfo[] connections )
+  public PdbSettingsWriter( final IPdbSettings[] connections )
   {
     m_connections = connections;
   }
@@ -74,11 +74,11 @@ public class PdbConnectionWriter
     preferences.clear();
 
     int count = 0;
-    for( final IPdbConnectInfo info : m_connections )
+    for( final IPdbSettings settings : m_connections )
     {
       final ISecurePreferences childNode = preferences.node( "" + count++ );
-      childNode.put( PdbConnectionRegistry.PROPERTY_TYPE, info.getType(), false );
-      info.saveState( childNode );
+      childNode.put( PdbSettingsRegistry.PROPERTY_TYPE, settings.getType(), false );
+      settings.saveState( childNode );
     }
   }
 }

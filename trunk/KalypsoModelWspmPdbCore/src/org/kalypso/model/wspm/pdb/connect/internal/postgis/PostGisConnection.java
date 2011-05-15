@@ -48,27 +48,27 @@ import org.kalypso.model.wspm.pdb.connect.internal.HibernatePdbConnection;
 /**
  * @author Gernot Belger
  */
-public class PostGisConnection extends HibernatePdbConnection<PostgisConnectInfo> implements IPdbConnection
+public class PostGisConnection extends HibernatePdbConnection<PostgisSettings> implements IPdbConnection
 {
-  public PostGisConnection( final PostgisConnectInfo connectInfo )
+  public PostGisConnection( final PostgisSettings settings )
   {
-    super( connectInfo );
+    super( settings );
   }
 
   @Override
   protected void doConfiguration( final Configuration configuration )
   {
-    final PostgisConnectInfo connectInfo = getConnectInfo();
+    final PostgisSettings settings = getSettings();
 
     final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
 
     configuration.setProperty( "hibernate.connection.driver_class", org.postgresql.Driver.class.getName() );
 
-    final String connectionUrl = String.format( "jdbc:postgresql://%s:%d/%s", connectInfo.getHost(), connectInfo.getPort(), connectInfo.getDbName() );
+    final String connectionUrl = String.format( "jdbc:postgresql://%s:%d/%s", settings.getHost(), settings.getPort(), settings.getDbName() );
 
     configuration.setProperty( "hibernate.connection.url", connectionUrl );
-    configuration.setProperty( "hibernate.connection.username", connectInfo.getUsername() );
-    configuration.setProperty( "hibernate.connection.password", connectInfo.getPassword() );
+    configuration.setProperty( "hibernate.connection.username", settings.getUsername() );
+    configuration.setProperty( "hibernate.connection.password", settings.getPassword() );
 
     configuration.setProperty( "hibernate.dialect", dialect.getClass().getName() );
     configuration.setProperty( "hibernate.spatial.dialect", dialect.getClass().getName() );

@@ -68,20 +68,20 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.PdbConnections;
+import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {
   public static final String ID = "WspmPdbPreferencePage"; //$NON-NLS-1$
 
-  private PdbPageAction[] m_actions;
+  private SettingsAction[] m_actions;
 
-  private List<IPdbConnectInfo> m_tableInput;
+  private List<IPdbSettings> m_tableInput;
 
-  private IPdbConnectInfo m_selectedItem;
+  private IPdbSettings m_selectedItem;
 
   private TableViewer m_viewer;
 
@@ -103,8 +103,8 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
   {
     try
     {
-      final IPdbConnectInfo[] infos = m_tableInput.toArray( new IPdbConnectInfo[m_tableInput.size()] );
-      PdbConnections.setConnections( infos );
+      final IPdbSettings[] settings = m_tableInput.toArray( new IPdbSettings[m_tableInput.size()] );
+      PdbSettings.setSettings( settings );
       return true;
     }
     catch( final PdbConnectException e )
@@ -116,11 +116,11 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
     }
   }
 
-  private List<IPdbConnectInfo> getTableInput( )
+  private List<IPdbSettings> getTableInput( )
   {
     // Get connections and clone into list; we are going to change the list
-    final IPdbConnectInfo[] connections = PdbConnections.getConnectionsOrError();
-    return new ArrayList<IPdbConnectInfo>( Arrays.asList( connections ) );
+    final IPdbSettings[] connections = PdbSettings.getSettingsOrError();
+    return new ArrayList<IPdbSettings>( Arrays.asList( connections ) );
   }
 
   @Override
@@ -139,12 +139,12 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
     return panel;
   }
 
-  private PdbPageAction[] createActions( )
+  private SettingsAction[] createActions( )
   {
-    final PdbPageAction[] actions = new PdbPageAction[3];
-    actions[0] = new CreateConnectionAction( this );
-    actions[1] = new EditConnectionAction( this );
-    actions[2] = new RemoveConnectionAction( this );
+    final SettingsAction[] actions = new SettingsAction[3];
+    actions[0] = new CreateSettingsAction( this );
+    actions[1] = new EditSettingsAction( this );
+    actions[2] = new RemoveSettingsAction( this );
     return actions;
   }
 
@@ -164,7 +164,7 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
     table.setHeaderVisible( false );
 
     m_viewer.setContentProvider( new ArrayContentProvider() );
-    m_viewer.setLabelProvider( new PdbConnectInfoLabelProvider( "%s - %s" ) );
+    m_viewer.setLabelProvider( new SettingsLabelProvider( "%s - %s" ) );
     m_viewer.setInput( m_tableInput );
 
     m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -173,8 +173,8 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        final IPdbConnectInfo info = (IPdbConnectInfo) selection.getFirstElement();
-        handleItemSelected( info );
+        final IPdbSettings settings = (IPdbSettings) selection.getFirstElement();
+        handleItemSelected( settings );
       }
     } );
 
@@ -184,16 +184,16 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
     return m_viewer.getControl();
   }
 
-  protected void handleItemSelected( final IPdbConnectInfo info )
+  protected void handleItemSelected( final IPdbSettings settings )
   {
-    m_selectedItem = info;
+    m_selectedItem = settings;
 
     updateActions();
   }
 
   private void updateActions( )
   {
-    for( final PdbPageAction action : m_actions )
+    for( final SettingsAction action : m_actions )
       action.update();
   }
 
@@ -213,24 +213,24 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
     return panel;
   }
 
-  IPdbConnectInfo getSelectedItem( )
+  IPdbSettings getSelectedItem( )
   {
     return m_selectedItem;
   }
 
-  public void removeItem( final IPdbConnectInfo info )
+  public void removeItem( final IPdbSettings settings )
   {
-    final List<IPdbConnectInfo> connections = m_tableInput;
-    final int index = connections.indexOf( info );
-    connections.remove( info );
+    final List<IPdbSettings> connections = m_tableInput;
+    final int index = connections.indexOf( settings );
+    connections.remove( settings );
     m_viewer.refresh();
 
-    final IPdbConnectInfo newSelection = findSelectionAfterRemove( index );
+    final IPdbSettings newSelection = findSelectionAfterRemove( index );
     if( newSelection != null )
       m_viewer.setSelection( new StructuredSelection( newSelection ) );
   }
 
-  private IPdbConnectInfo findSelectionAfterRemove( final int removedIndex )
+  private IPdbSettings findSelectionAfterRemove( final int removedIndex )
   {
     final int size = m_tableInput.size();
     if( size == 0 )
@@ -242,18 +242,18 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
     return m_tableInput.get( size - 1 );
   }
 
-  public void addNewItem( final IPdbConnectInfo newInfo )
+  public void addNewItem( final IPdbSettings newSettings )
   {
-    m_tableInput.add( newInfo );
+    m_tableInput.add( newSettings );
     m_viewer.refresh();
-    m_viewer.setSelection( new StructuredSelection( newInfo ) );
+    m_viewer.setSelection( new StructuredSelection( newSettings ) );
   }
 
-  public void replaceItem( final IPdbConnectInfo oldInfo, final IPdbConnectInfo newInfo )
+  public void replaceItem( final IPdbSettings oldSettings, final IPdbSettings newSettings )
   {
-    final int index = m_tableInput.indexOf( oldInfo );
-    m_tableInput.set( index, newInfo );
+    final int index = m_tableInput.indexOf( oldSettings );
+    m_tableInput.set( index, newSettings );
     m_viewer.refresh();
-    m_viewer.setSelection( new StructuredSelection( newInfo ) );
+    m_viewer.setSelection( new StructuredSelection( newSettings ) );
   }
 }

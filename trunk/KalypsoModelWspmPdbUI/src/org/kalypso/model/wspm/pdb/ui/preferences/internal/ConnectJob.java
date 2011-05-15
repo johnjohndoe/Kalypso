@@ -44,8 +44,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
@@ -54,15 +54,15 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
  */
 public class ConnectJob extends Job
 {
-  private final IPdbConnectInfo m_info;
+  private final IPdbSettings m_settings;
 
   private IStatus m_connectionStatus;
 
-  public ConnectJob( final IPdbConnectInfo info )
+  public ConnectJob( final IPdbSettings settings )
   {
     super( "Rdb connect" );
 
-    m_info = info;
+    m_settings = settings;
   }
 
   public IStatus getConnectionStatus( )
@@ -73,13 +73,13 @@ public class ConnectJob extends Job
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
-    final String taskName = String.format( "Connecting to %s", m_info.getLabel() );
+    final String taskName = String.format( "Connecting to %s", m_settings.getLabel() );
     monitor.beginTask( taskName, IProgressMonitor.UNKNOWN );
 
     try
     {
       monitor.subTask( "connecting..." );
-      final IPdbConnection connection = m_info.createConnection();
+      final IPdbConnection connection = m_settings.createConnection();
       connection.connect();
 
       final PdbInfo info = connection.getInfo();

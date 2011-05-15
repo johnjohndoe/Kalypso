@@ -43,24 +43,24 @@ package org.kalypso.model.wspm.pdb.internal;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.internal.PdbConnectionReader;
-import org.kalypso.model.wspm.pdb.connect.internal.PdbConnectionRegistry;
-import org.kalypso.model.wspm.pdb.connect.internal.PdbConnectionWriter;
+import org.kalypso.model.wspm.pdb.connect.internal.PdbSettingsReader;
+import org.kalypso.model.wspm.pdb.connect.internal.PdbSettingsRegistry;
+import org.kalypso.model.wspm.pdb.connect.internal.PdbSettingsWriter;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 public class WspmPdbCorePlugin extends Plugin implements BundleActivator
 {
-  public final static String PLUGIN_ID = "org.kalypso.mode.wspm.pdb.core"; //$NON-NLS-1$
+  public final static String PLUGIN_ID = "org.kalypso.model.wspm.pdb.core"; //$NON-NLS-1$
 
-  private static final String SECURE_INFO_NODE = "wspmPdbCore.connections";
+  private static final String SECURE_SETTINGS_NODE = "wspmPdbCore.connections";
 
   /* This instance */
   private static WspmPdbCorePlugin plugin;
 
-  private final PdbConnectionRegistry m_registry = new PdbConnectionRegistry();
+  private final PdbSettingsRegistry m_registry = new PdbSettingsRegistry();
 
   @Override
   public void start( final BundleContext bundleContext ) throws Exception
@@ -86,31 +86,31 @@ public class WspmPdbCorePlugin extends Plugin implements BundleActivator
 
   /**
    * Returns the configured connections for pdb.<br/>
-   * Changes to these connection will not take effect until {@link #setConnections(IPdbConnectInfo[])} is called.
+   * Changes to these connection will not take effect until {@link #setConnections(IPdbSettings[])} is called.
    * 
    * @return The currently configured connections for pdb.
    */
-  public synchronized IPdbConnectInfo[] getConnections( ) throws PdbConnectException
+  public synchronized IPdbSettings[] getSettings( ) throws PdbConnectException
   {
-    return new PdbConnectionReader().readConnections( getConnectionPreferences() );
+    return new PdbSettingsReader().readConnections( getConnectionPreferences() );
   }
 
   /**
    * Sets the connections for pdb. The connections will be immediatlely persisted and can be accessed after workbench
    * restart.
    */
-  public synchronized void setConnections( final IPdbConnectInfo[] connections ) throws PdbConnectException
+  public synchronized void setConnections( final IPdbSettings[] connections ) throws PdbConnectException
   {
-    new PdbConnectionWriter( connections ).writeConnections( getConnectionPreferences() );
+    new PdbSettingsWriter( connections ).writeConnections( getConnectionPreferences() );
   }
 
   private ISecurePreferences getConnectionPreferences( )
   {
     final ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault();
-    return securePreferences.node( SECURE_INFO_NODE );
+    return securePreferences.node( SECURE_SETTINGS_NODE );
   }
 
-  public PdbConnectionRegistry getConnectionRegistry( )
+  public PdbSettingsRegistry getConnectionRegistry( )
   {
     return m_registry;
   }

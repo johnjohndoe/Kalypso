@@ -38,63 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.connect.internal.oracle;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
+import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
 
 /**
  * @author Gernot Belger
  */
-class PdbConnectInfoLabelProvider extends LabelProvider
+class OracleSettingsPropertyValue extends TypedObservableValue<OracleSettings, String>
 {
-  private final String m_format;
+  private final String m_property;
 
-  private final ImageRegistry m_images = new ImageRegistry();
-
-  public PdbConnectInfoLabelProvider( final String format )
+  public OracleSettingsPropertyValue( final OracleSettings source, final String property )
   {
-    m_format = format;
+    super( source, String.class );
+
+    m_property = property;
   }
 
   @Override
-  public void dispose( )
+  public void doSetValueTyped( final OracleSettings source, final String value )
   {
-    m_images.dispose();
-
-    super.dispose();
+    source.setProperty( m_property, value );
   }
 
   @Override
-  public String getText( final Object element )
+  public String doGetValueTyped( final OracleSettings source )
   {
-    if( element instanceof IPdbConnectInfo )
-    {
-      final String label = ((IPdbConnectInfo) element).getLabel();
-      return String.format( m_format, label, element.toString() );
-    }
-
-    return super.getText( element );
-  }
-
-  @Override
-  public Image getImage( final Object element )
-  {
-    if( element instanceof IPdbConnectInfo )
-    {
-      final ImageDescriptor descr = ((IPdbConnectInfo) element).getImage();
-      if( descr != null )
-      {
-        final String key = ObjectUtils.identityToString( element );
-        m_images.put( key, descr );
-        return m_images.get( key );
-      }
-    }
-
-    return super.getImage( element );
+    return source.getProperty( m_property );
   }
 }
