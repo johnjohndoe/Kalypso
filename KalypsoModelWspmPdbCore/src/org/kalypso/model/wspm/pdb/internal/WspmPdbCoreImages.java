@@ -58,5 +58,11 @@ public class WspmPdbCoreImages
     return id( WspmPdbCorePlugin.PLUGIN_ID, location );
   }
 
-  public static final ImageDescriptor IMAGE_POSTGIS = id( "icons/PostGIS_32x32.gif" ); //$NON-NLS-1$
+  public static final ImageDescriptor IMAGE_POSTGIS_32x32 = id( "icons/PostGIS_32x32.gif" ); //$NON-NLS-1$
+
+  public static final ImageDescriptor IMAGE_POSTGIS_64x64 = id( "icons/PostGIS_64x64.jpg" ); //$NON-NLS-1$
+
+  public static final ImageDescriptor IMAGE_ORACLE_32x32 = id( "icons/Oracle_32x32.jpg" ); //$NON-NLS-1$
+
+  public static final ImageDescriptor IMAGE_ORACLE_48x48 = id( "icons/Oracle_48x48.png" ); //$NON-NLS-1$
 }

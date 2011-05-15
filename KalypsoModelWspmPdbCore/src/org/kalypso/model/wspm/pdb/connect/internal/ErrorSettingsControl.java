@@ -40,89 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusComposite;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 
 /**
- * Implementation of {@link IPdbConnectInfo} that works as a placeholder, if a original info could not be read.
- * 
  * @author Gernot Belger
  */
-public class ErrorPdbConnectInfo implements IPdbConnectInfo
+public class ErrorSettingsControl implements IPdbSettingsControl
 {
-  static final String TYPE = "error"; //$NON-NLS-1$
+  private final StatusComposite m_statusControl;
 
-  private final IStatus m_status;
-
-  public ErrorPdbConnectInfo( final IStatus status )
+  public ErrorSettingsControl( @SuppressWarnings("unused") final DataBindingContext binding, final Composite parent, final IStatus status )
   {
-    m_status = status;
+    m_statusControl = new StatusComposite( null, parent, StatusComposite.DETAILS );
+    m_statusControl.setStatus( status );
   }
 
   @Override
-  public String getType( )
+  public Control getControl( )
   {
-    return TYPE;
+    return m_statusControl;
   }
 
   @Override
-  public String getLabel( )
+  public ImageDescriptor getPageImage( )
   {
-    return StatusUtilities.getLocalizedSeverity( m_status );
-  }
-
-  @Override
-  public ImageDescriptor getImage( )
-  {
-    return StatusComposite.getStatusImageDescriptor( m_status.getSeverity() );
-  }
-
-  @Override
-  public IPdbConnection createConnection( )
-  {
-    // Connection not possible
-    throw new NotImplementedException();
-  }
-
-  @Override
-  public void saveState( final ISecurePreferences preferences )
-  {
-    // TODO: we should save the old state
-  }
-
-
-  @Override
-  public void readState( final ISecurePreferences preferences )
-  {
-    // TODO: we should somehow copy the state
-  }
-
-  @Override
-  public String toString( )
-  {
-    return m_status.getMessage();
-  }
-
-  @Override
-  public IPdbConnectInfo copy( )
-  {
-    return new ErrorPdbConnectInfo( m_status );
-  }
-
-  @Override
-  public Control createEditControl( final DataBindingContext binding, final Composite parent )
-  {
-    final StatusComposite statusControl = new StatusComposite( null, parent, StatusComposite.DETAILS );
-    statusControl.setStatus( m_status );
-    return statusControl;
+    // TODO Auto-generated method stub
+    return null;
   }
 }

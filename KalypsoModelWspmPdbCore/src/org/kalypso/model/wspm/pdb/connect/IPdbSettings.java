@@ -38,38 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.connect;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.StorageException;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Composite;
 
 /**
+ * Represents the settings needed to connect to a pdb.
+ * 
  * @author Gernot Belger
  */
-class RemoveConnectionAction extends PdbPageAction
+public interface IPdbSettings
 {
-  public RemoveConnectionAction( final WspmPdbPreferencePage page )
-  {
-    super( "Remove", page );
-  }
+  String getType( );
 
-  @Override
-  protected boolean checkEnabled( final IPdbConnectInfo info )
-  {
-    return info != null;
-  }
+  String getLabel( );
 
-  @Override
-  protected void doRun( final Shell shell, final IPdbConnectInfo info )
-  {
-    Assert.isNotNull( info );
+  ImageDescriptor getImage( );
 
-    final String msg = String.format( "Remove connection '%s'", info.getLabel() );
-    if( !MessageDialog.openConfirm( shell, "Remove connection", msg ) )
-      return;
+  IPdbConnection createConnection( );
 
-    getPage().removeItem( info );
-  }
+  /**
+   * Saves the state of this connection settings into the given {@link IMemento}.<br/>
+   */
+  void saveState( ISecurePreferences preferences ) throws StorageException;
+
+  /**
+   * Red the state of this settings from the given preferences.
+   */
+  void readState( ISecurePreferences preferences ) throws StorageException;
+
+  /**
+   * Crates a copy of this instance.
+   */
+  IPdbSettings copy( );
+
+  /**
+   * Create a control that will edit the parameters of this instance.
+   */
+  IPdbSettingsControl createEditControl( DataBindingContext binding, Composite parent );
 }

@@ -38,47 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect;
+package org.kalypso.model.wspm.pdb.connect.internal;
 
-import org.eclipse.core.databinding.DataBindingContext;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.StorageException;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
- * Represents the information needed to connect to a pdb.
- * 
  * @author Gernot Belger
  */
-public interface IPdbConnectInfo
+public class PdbSettingsReader
 {
-  String getType( );
+  public IPdbSettings[] readConnections( final ISecurePreferences preferences ) throws PdbConnectException
+  {
+    try
+    {
+      return doRead( preferences );
+    }
+    catch( final StorageException e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed to access secure storage for pdb connections", e );
+    }
+  }
 
-  String getLabel( );
+  private IPdbSettings[] doRead( final ISecurePreferences preferences ) throws StorageException
+  {
+    final Collection<IPdbSettings> connections = new ArrayList<IPdbSettings>();
 
-  ImageDescriptor getImage( );
+    final PdbSettingsRegistry registry = WspmPdbCorePlugin.getDefault().getConnectionRegistry();
 
-  IPdbConnection createConnection( );
+    final String[] names = preferences.childrenNames();
+    for( final String name : names )
+    {
+      final ISecurePreferences childPreferences = preferences.node( name );
+      final IPdbSettings settings = registry.readSettings( childPreferences );
+      connections.add( settings );
+    }
 
-  /**
-   * Saves the state of this connection info into the given {@link IMemento}.<br/>
-   */
-  void saveState( ISecurePreferences preferences ) throws StorageException;
-
-  /**
-   * Red the state of this info from the given preferences.
-   */
-  void readState( ISecurePreferences preferences ) throws StorageException;
-
-  /**
-   * Crates a copy of this instance.
-   */
-  IPdbConnectInfo copy( );
-
-  /**
-   * Create a control that will edit the parameters of this instance.
-   */
-  Control createEditControl( DataBindingContext binding, Composite parent );
+    return connections.toArray( new IPdbSettings[connections.size()] );
+  }
 }

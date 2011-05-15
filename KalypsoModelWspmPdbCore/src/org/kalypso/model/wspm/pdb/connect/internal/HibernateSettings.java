@@ -38,50 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.connect.internal;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 
 /**
  * @author Gernot Belger
  */
-abstract class PdbPageAction extends Action
+public abstract class HibernateSettings implements IPdbSettings
 {
-  private final WspmPdbPreferencePage m_page;
-
-  public PdbPageAction( final String text, final WspmPdbPreferencePage page )
-  {
-    super( text );
-
-    m_page = page;
-  }
-
-  private IPdbConnectInfo getInfo( )
-  {
-    return m_page.getSelectedItem();
-  }
-
-  protected WspmPdbPreferencePage getPage( )
-  {
-    return m_page;
-  }
-
-  public void update( )
-  {
-    setEnabled( checkEnabled( getInfo() ) );
-  }
-
-  @Override
-  public void runWithEvent( final Event event )
-  {
-    final Shell shell = event.display.getActiveShell();
-    doRun( shell, getInfo() );
-  }
-
-  protected abstract void doRun( Shell shell, IPdbConnectInfo info );
-
-  protected abstract boolean checkEnabled( final IPdbConnectInfo info );
 }

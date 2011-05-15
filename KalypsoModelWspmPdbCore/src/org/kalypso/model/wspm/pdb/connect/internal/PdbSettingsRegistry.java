@@ -40,47 +40,49 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.StorageException;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.internal.oracle.OracleSettings;
+import org.kalypso.model.wspm.pdb.connect.internal.postgis.PostgisSettings;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
+ * Single point that 'knows' of the different types of connections.<br/>
+ * Intended to be bases on extension-point later.
+ * 
  * @author Gernot Belger
  */
-public class PdbConnectionReader
+public class PdbSettingsRegistry
 {
-  public IPdbConnectInfo[] readConnections( final ISecurePreferences preferences ) throws PdbConnectException
+  static final String PROPERTY_TYPE = "type"; //$NON-NLS-1$
+
+  public String[] getRegisteredTypes( )
   {
-    try
-    {
-      return doRead( preferences );
-    }
-    catch( final StorageException e )
-    {
-      e.printStackTrace();
-      throw new PdbConnectException( "Failed to access secure storage for pdb connections", e );
-    }
+    return new String[] { PostgisSettings.TYPE, OracleSettings.TYPE };
   }
 
-  private IPdbConnectInfo[] doRead( final ISecurePreferences preferences ) throws StorageException
+  public IPdbSettings readSettings( final ISecurePreferences preferences ) throws StorageException
   {
-    final Collection<IPdbConnectInfo> connections = new ArrayList<IPdbConnectInfo>();
+    final String type = preferences.get( PROPERTY_TYPE, ErrorSettings.TYPE );
+    final IPdbSettings settings = createSettings( type );
+    settings.readState( preferences );
+    return settings;
+  }
 
-    final PdbConnectionRegistry registry = WspmPdbCorePlugin.getDefault().getConnectionRegistry();
+  public IPdbSettings createSettings( final String type )
+  {
+    // TODO: we should use extensions here
+    if( PostgisSettings.TYPE.equals( type ) )
+      return new PostgisSettings();
 
-    final String[] names = preferences.childrenNames();
-    for( final String name : names )
-    {
-      final ISecurePreferences childPreferences = preferences.node( name );
-      final IPdbConnectInfo info = registry.readConnection( childPreferences );
-      connections.add( info );
-    }
+    if( OracleSettings.TYPE.equals( type ) )
+      return new OracleSettings();
 
-    return connections.toArray( new IPdbConnectInfo[connections.size()] );
+    final String message = String.format( "Unknown connection type: %s", type );
+    final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
+    return new ErrorSettings( status );
   }
 }

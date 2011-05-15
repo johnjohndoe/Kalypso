@@ -38,46 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.internal;
+package org.kalypso.model.wspm.pdb.connect.internal.postgis;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.StorageException;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnectInfo;
-import org.kalypso.model.wspm.pdb.connect.internal.postgis.PostgisConnectInfo;
-import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
 
 /**
- * Single point that 'knows' of the different types of connections.<br/>
- * Intended to be bases on extension-point later.
- * 
  * @author Gernot Belger
  */
-public class PdbConnectionRegistry
+class PostGisSettingsPropertyValue extends TypedObservableValue<PostgisSettings, String>
 {
-  static final String PROPERTY_TYPE = "type"; //$NON-NLS-1$
+  private final String m_property;
 
-  public String[] getRegisteredTypes( )
+  public PostGisSettingsPropertyValue( final PostgisSettings source, final String property )
   {
-    return new String[] { PostgisConnectInfo.TYPE };
+    super( source, String.class );
+
+    m_property = property;
   }
 
-  public IPdbConnectInfo readConnection( final ISecurePreferences preferences ) throws StorageException
+  @Override
+  public void doSetValueTyped( final PostgisSettings source, final String value )
   {
-    final String type = preferences.get( PROPERTY_TYPE, ErrorPdbConnectInfo.TYPE );
-    final IPdbConnectInfo info = createInfo( type );
-    info.readState( preferences );
-    return info;
+    source.setProperty( m_property, value );
   }
 
-  public IPdbConnectInfo createInfo( final String type )
+  @Override
+  public String doGetValueTyped( final PostgisSettings source )
   {
-    if( PostgisConnectInfo.TYPE.equals( type ) )
-      return new PostgisConnectInfo();
-
-    final String message = String.format( "Unknown connection type: %s", type );
-    final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
-    return new ErrorPdbConnectInfo( status );
+    return source.getProperty( m_property );
   }
 }
