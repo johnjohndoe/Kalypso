@@ -71,7 +71,9 @@ public class QRelationFileReader
 
   private BigDecimal m_station;
 
-  private final Pattern m_stationPattern;
+  private BigDecimal m_bankfull;
+
+  private final Pattern m_stationAndBankFullPattern;
 
   private final String[] m_components;
 
@@ -94,10 +96,10 @@ public class QRelationFileReader
    *          The components the read columns should be filled in. The components are in the same order as the read
    *          columns. If a component is <code>null</code>, the corresponding column will be skipped.
    */
-  public QRelationFileReader( final LogHelper log, final Pattern stationPattern, final String[] components, final QIntervalIndex intervalIndex )
+  public QRelationFileReader( final LogHelper log, final Pattern stationAndBankfullPattern, final String[] components, final QIntervalIndex intervalIndex )
   {
     m_log = log;
-    m_stationPattern = stationPattern;
+    m_stationAndBankFullPattern = stationAndBankfullPattern;
     m_components = components;
     m_intervalIndex = intervalIndex;
     m_componentIndex = new int[components.length];
@@ -123,9 +125,11 @@ public class QRelationFileReader
 
     m_qresult = m_intervalIndex.addOrGet( m_station );
 
+    if( m_bankfull != null )
+      m_qresult.setBankfull( m_bankfull );
+
     m_observation = m_qresult.getOrCreatePointsObservation();
     m_result = m_observation.getResult();
-
 
     /* Set some common attributes */
     m_observation.setName( m_qresult.getName() );
@@ -205,7 +209,7 @@ public class QRelationFileReader
     if( tokens == null )
       return;
 
-    if( readStation( line ) )
+    if( readStationAndBankfull( line ) )
       return;
 
     if( tokens.length < m_components.length )
@@ -228,29 +232,30 @@ public class QRelationFileReader
 
     /* Do parse the line */
     final IRecord record = createNewRecord();
-
     for( int i = 0; i < m_components.length; i++ )
-    {
-      final String component = m_components[i];
-      /* Skip null components */
-      if( component == null )
-        continue;
-
-      final String token = tokens[i].replace( 'D', 'E' );
-      try
-      {
-        final BigDecimal value = parseToken( token );
-        final int index = m_componentIndex[i];
-        record.setValue( index, value );
-      }
-      catch( final NumberFormatException nfe )
-      {
-        /* A good line but bad content. Give user a hint that something might be wrong. */
-        m_log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.21" ), filename, lineNumber, token ); //$NON-NLS-1$
-      }
-    }
+      addValue( record, i, tokens, filename, lineNumber );
 
     m_currentRecord++;
+  }
+
+  private void addValue( final IRecord record, final int i, final String[] tokens, final String filename, final int lineNumber )
+  {
+    /* Skip null components */
+    final String component = m_components[i];
+    if( component == null )
+      return;
+
+    try
+    {
+      final BigDecimal value = parseToken( tokens[i] );
+      record.setValue( m_componentIndex[i], value );
+    }
+    catch( final NumberFormatException nfe )
+    {
+      /* A good line but bad content. Give user a hint that something might be wrong. */
+      final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.21" );
+      m_log.log( false, msg, filename, lineNumber, tokens[i] ); //$NON-NLS-1$
+    }
   }
 
   private IRecord createNewRecord( )
@@ -269,19 +274,23 @@ public class QRelationFileReader
     return new BigDecimal( token.replace( 'D', 'E' ) );
   }
 
-  private boolean readStation( final String line )
+  private boolean readStationAndBankfull( final String line )
   {
     if( m_station != null )
       return false;
 
-    if( m_stationPattern == null )
+    if( m_stationAndBankFullPattern == null )
       return false;
 
-    final Matcher matcher = m_stationPattern.matcher( line );
+    final Matcher matcher = m_stationAndBankFullPattern.matcher( line );
     if( matcher.matches() )
     {
       final String stationText = matcher.group( 1 );
       m_station = new BigDecimal( stationText.trim() );
+
+      final String bankfullText = matcher.group( 3 );
+      m_bankfull = new BigDecimal( bankfullText.trim() );
+
       return true;
     }
     else

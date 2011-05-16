@@ -77,6 +77,8 @@ public class QIntervallResult extends Feature_Impl
 
   public static final QName QNAME_P_QIntervallResult_slope = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "slope" ); //$NON-NLS-1$
 
+  public static final QName QNAME_P_QIntervallResult_bankfull = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "bankfullHeight" ); //$NON-NLS-1$
+
   private static final QName QNAME_P_QIntervallResult_buildingId = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "buildingId" ); //$NON-NLS-1$
 
   public static final QName QNAME_P_QIntervallResult_pointsMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "pointsMember" ); //$NON-NLS-1$
@@ -238,6 +240,16 @@ public class QIntervallResult extends Feature_Impl
   public BigDecimal getStation( )
   {
     return getProperty( QNAME_P_QIntervallResult_station, BigDecimal.class );
+  }
+
+  public BigDecimal getBankfull( )
+  {
+    return getProperty( QNAME_P_QIntervallResult_bankfull, BigDecimal.class );
+  }
+
+  public void setBankfull( final BigDecimal bankfull )
+  {
+    setProperty( QNAME_P_QIntervallResult_bankfull, bankfull );
   }
 
   public List< ? > getPolynomialFeatures( )
