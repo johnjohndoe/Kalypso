@@ -76,7 +76,7 @@ public class KMFileReader
 
   private final File[] m_inputFiles;
 
-  private final Pattern m_stationPattern = Pattern.compile( "(.*)(\\QStation [km]\\E)(.*)" );
+  private final Pattern m_stationAndBankfullPattern = Pattern.compile( "(.*)(\\QStation [km]\\E)(.*)(\\QBordvolle Hoehe [mNN]\\E)" );
 
   private final QIntervalIndex m_intervalIndex;
 
@@ -103,7 +103,7 @@ public class KMFileReader
 
       try
       {
-        final QRelationFileReader fileReader = new QRelationFileReader( m_log, m_stationPattern, m_kmComponents, m_intervalIndex );
+        final QRelationFileReader fileReader = new QRelationFileReader( m_log, m_stationAndBankfullPattern, m_kmComponents, m_intervalIndex );
         fileReader.setSlope( m_slope );
         fileReader.read( profFile );
       }

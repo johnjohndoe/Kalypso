@@ -86,6 +86,11 @@
 							<documentation>Slope</documentation>
 						</annotation>
 					</element>
+					<element name="bankfullHeight" type="decimal" minOccurs="0">
+						<annotation>
+							<documentation>Bankfull Height [mNN]</documentation>
+						</annotation>
+					</element>
 					<element name="buildingId" type="string" minOccurs="0">
 						<annotation>
 							<documentation>ID of the building. Corresponds to the id of the	profile observation phenomenon.</documentation>
