@@ -44,7 +44,6 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 
 /**
  * @author Gernot Belger
- *
  */
 public class ConnectionViewer
 {
