@@ -38,72 +38,80 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.db;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.model.wspm.pdb.PdbUtils;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
  * @author Gernot Belger
  */
-public class ValidateSettingsOperation implements ICoreRunnableWithProgress
+public class OpenConnectionJob extends Job
 {
   private final IPdbSettings m_settings;
 
-  private IStatus m_result;
+  private IStatus m_connectionStatus;
 
-  public ValidateSettingsOperation( final IPdbSettings settings )
+  private final boolean m_closeConnection;
+
+  private IPdbConnection m_connection;
+
+  public OpenConnectionJob( final IPdbSettings settings, final boolean closeConnection )
   {
+    super( "Connect to PDB" );
+
     m_settings = settings;
+    m_closeConnection = closeConnection;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
+  public IStatus getConnectionStatus( )
+  {
+    return m_connectionStatus;
+  }
+
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
+  protected IStatus run( final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Testing connection...", IProgressMonitor.UNKNOWN );
-
-    final TestConnectJob job = new TestConnectJob( m_settings );
-
-    final IJobChangeListener listener = new JobChangeAdapter()
+    IPdbConnection connection = null;
+    try
     {
-      @Override
-      public void done( final IJobChangeEvent event )
+      final ConnectOperation operation = new ConnectOperation( m_settings );
+      final IStatus status = operation.execute( monitor );
+      if( !status.isOK() )
       {
-        handleDone( job.getConnectionStatus() );
+        m_connectionStatus = status;
+        return Status.OK_STATUS;
       }
-    };
-    job.addJobChangeListener( listener );
-    job.setUser( false );
-    job.setSystem( true );
-    job.schedule( 0 );
 
-    while( !monitor.isCanceled() && m_result == null )
+      connection = operation.getConnection();
+
+      if( m_closeConnection )
+        connection.close();
+      else
+        m_connection = connection;
+
+      m_connectionStatus = Status.OK_STATUS;
+    }
+    catch( final Exception e )
     {
-      monitor.worked( 1 );
-
-      Thread.sleep( 100 );
+      m_connectionStatus = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Connection failed", e );
+    }
+    finally
+    {
+      PdbUtils.closeQuietly( connection );
     }
 
-    if( monitor.isCanceled() )
-    {
-      job.cancel();
-      return Status.CANCEL_STATUS;
-    }
-
-    return m_result;
+    return Status.OK_STATUS;
   }
 
-  protected void handleDone( final IStatus result )
+  public IPdbConnection getConnection( )
   {
-    m_result = result;
+    return m_connection;
   }
 }

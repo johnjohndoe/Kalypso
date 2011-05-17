@@ -46,7 +46,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.db.ConnectOperation;
+import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
 
 /**
  * @author Gernot Belger
@@ -62,6 +62,7 @@ public class OpenConnectWizard extends Wizard
     addPage( new OpenConnectionPage( "connectPage", m_openConnectionData ) ); //$NON-NLS-1$
 
     setWindowTitle( "Connect to PDB" );
+    setNeedsProgressMonitor( true );
   }
 
   public String getAutoConnectName( )
@@ -85,7 +86,7 @@ public class OpenConnectWizard extends Wizard
   public boolean performFinish( )
   {
     final IPdbSettings settings = m_openConnectionData.getSettings();
-    final ConnectOperation operation = new ConnectOperation( settings );
+    final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
 
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !result.isOK() )

@@ -38,68 +38,84 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.db;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.model.wspm.pdb.PdbUtils;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.db.ConnectOperation;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
+ * Opens a connection in a separate thread.<br/>
+ * Can be used to show a progress while the connection is opened and also allows to cancel the connection.
+ * 
  * @author Gernot Belger
  */
-public class TestConnectJob extends Job
+public class OpenConnectionThreadedOperation implements ICoreRunnableWithProgress
 {
   private final IPdbSettings m_settings;
 
-  private IStatus m_connectionStatus;
+  private IStatus m_result;
 
-  public TestConnectJob( final IPdbSettings settings )
+  private final boolean m_closeConnection;
+
+  private IPdbConnection m_connection;
+
+  public OpenConnectionThreadedOperation( final IPdbSettings settings, final boolean closeConnection )
   {
-    super( "Rdb connect" );
-
     m_settings = settings;
+    m_closeConnection = closeConnection;
   }
 
-  public IStatus getConnectionStatus( )
+  public IPdbConnection getConnection( )
   {
-    return m_connectionStatus;
+    return m_connection;
   }
 
   @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
-    IPdbConnection connection = null;
-    try
-    {
+    monitor.beginTask( "Testing connection...", IProgressMonitor.UNKNOWN );
 
-      final ConnectOperation operation = new ConnectOperation( m_settings );
-      final IStatus status = operation.execute( monitor );
-      if( !status.isOK() )
+    final OpenConnectionJob job = new OpenConnectionJob( m_settings, m_closeConnection );
+
+    final IJobChangeListener listener = new JobChangeAdapter()
+    {
+      @Override
+      public void done( final IJobChangeEvent event )
       {
-        m_connectionStatus = status;
-        return Status.OK_STATUS;
+        handleDone( job.getConnectionStatus(), job.getConnection() );
       }
+    };
+    job.addJobChangeListener( listener );
+    job.setUser( false );
+    job.setSystem( true );
+    job.schedule( 0 );
 
-      connection = operation.getConnection();
-      connection.close();
-
-      m_connectionStatus = Status.OK_STATUS;
-    }
-    catch( final Exception e )
+    while( !monitor.isCanceled() && m_result == null )
     {
-      m_connectionStatus = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Connection failed", e );
-    }
-    finally
-    {
-      PdbUtils.closeQuietly( connection );
+      monitor.worked( 1 );
+
+      Thread.sleep( 100 );
     }
 
-    return Status.OK_STATUS;
+    if( monitor.isCanceled() )
+    {
+      job.cancel();
+      return Status.CANCEL_STATUS;
+    }
+
+    return m_result;
+  }
+
+  protected void handleDone( final IStatus result, final IPdbConnection connection )
+  {
+    m_result = result;
+    m_connection = connection;
   }
 }
