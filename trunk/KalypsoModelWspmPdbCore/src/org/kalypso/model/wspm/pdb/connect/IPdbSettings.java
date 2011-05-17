@@ -55,7 +55,10 @@ public interface IPdbSettings
 {
   String getType( );
 
-  String getLabel( );
+  /**
+   * (Unique) name of this settings.
+   */
+  String getName( );
 
   ImageDescriptor getImage( );
 

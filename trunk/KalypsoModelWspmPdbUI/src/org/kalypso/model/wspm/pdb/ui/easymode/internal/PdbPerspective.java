@@ -38,38 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.ui.easymode.internal;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IPerspectiveFactory;
+import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
 /**
  * @author Gernot Belger
  */
-class RemoveSettingsAction extends SettingsAction
+public class PdbPerspective implements IPerspectiveFactory
 {
-  public RemoveSettingsAction( final WspmPdbPreferencePage page )
-  {
-    super( "Remove", page );
-  }
+  public static String ID = "PdbPerspective"; //$NON-NLS-1$
 
   @Override
-  protected boolean checkEnabled( final IPdbSettings settings )
+  public void createInitialLayout( final IPageLayout layout )
   {
-    return settings != null;
+    defineActions( layout );
+    defineLayout( layout );
   }
 
-  @Override
-  protected void doRun( final Shell shell, final IPdbSettings settings )
+  private void defineActions( final IPageLayout layout )
   {
-    Assert.isNotNull( settings );
+    layout.addPerspectiveShortcut( ModelerPerspectiveFactory.ID );
+  }
 
-    final String msg = String.format( "Remove connection '%s'", settings.getName() );
-    if( !MessageDialog.openConfirm( shell, "Remove connection", msg ) )
-      return;
+  private void defineLayout( final IPageLayout layout )
+  {
+    // FIXME:
+    layout.setFixed( false );
 
-    getPage().removeItem( settings );
+    final String editorArea = layout.getEditorArea();
+    layout.setEditorAreaVisible( false );
+
+    /* Add the manager view. */
+    layout.addView( PdbView.ID, IPageLayout.LEFT, 0.28f, editorArea );
+
+    /* final IFolderLayout folder = */layout.createFolder( "rest", IPageLayout.RIGHT, 0.72f, editorArea );
+    // folder.addView( MapView.ID );
+    // folder.addView( MapView.ID );
   }
 }

@@ -38,38 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
+ * General utils for PDB.
+ * 
  * @author Gernot Belger
  */
-class RemoveSettingsAction extends SettingsAction
+public final class PdbUtils
 {
-  public RemoveSettingsAction( final WspmPdbPreferencePage page )
+  private PdbUtils( )
   {
-    super( "Remove", page );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
-  @Override
-  protected boolean checkEnabled( final IPdbSettings settings )
+  public static void closeQuietly( final IPdbConnection connection )
   {
-    return settings != null;
-  }
-
-  @Override
-  protected void doRun( final Shell shell, final IPdbSettings settings )
-  {
-    Assert.isNotNull( settings );
-
-    final String msg = String.format( "Remove connection '%s'", settings.getName() );
-    if( !MessageDialog.openConfirm( shell, "Remove connection", msg ) )
+    if( connection == null )
       return;
 
-    getPage().removeItem( settings );
+    try
+    {
+      connection.close();
+    }
+    catch( final PdbConnectException e )
+    {
+      // ignore quietly
+    }
   }
 }

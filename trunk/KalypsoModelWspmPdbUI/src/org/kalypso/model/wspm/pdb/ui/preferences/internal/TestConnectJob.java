@@ -40,36 +40,66 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.preferences.internal;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.model.wspm.pdb.PdbUtils;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.db.ConnectOperation;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
  */
-class RemoveSettingsAction extends SettingsAction
+public class TestConnectJob extends Job
 {
-  public RemoveSettingsAction( final WspmPdbPreferencePage page )
+  private final IPdbSettings m_settings;
+
+  private IStatus m_connectionStatus;
+
+  public TestConnectJob( final IPdbSettings settings )
   {
-    super( "Remove", page );
+    super( "Rdb connect" );
+
+    m_settings = settings;
+  }
+
+  public IStatus getConnectionStatus( )
+  {
+    return m_connectionStatus;
   }
 
   @Override
-  protected boolean checkEnabled( final IPdbSettings settings )
+  protected IStatus run( final IProgressMonitor monitor )
   {
-    return settings != null;
-  }
+    IPdbConnection connection = null;
+    try
+    {
 
-  @Override
-  protected void doRun( final Shell shell, final IPdbSettings settings )
-  {
-    Assert.isNotNull( settings );
+      final ConnectOperation operation = new ConnectOperation( m_settings );
+      final IStatus status = operation.execute( monitor );
+      if( !status.isOK() )
+      {
+        m_connectionStatus = status;
+        return Status.OK_STATUS;
+      }
 
-    final String msg = String.format( "Remove connection '%s'", settings.getName() );
-    if( !MessageDialog.openConfirm( shell, "Remove connection", msg ) )
-      return;
+      connection = operation.getConnection();
+      connection.close();
 
-    getPage().removeItem( settings );
+      m_connectionStatus = Status.OK_STATUS;
+    }
+    catch( final Exception e )
+    {
+      m_connectionStatus = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Connection failed", e );
+    }
+    finally
+    {
+      PdbUtils.closeQuietly( connection );
+    }
+
+    return Status.OK_STATUS;
   }
 }

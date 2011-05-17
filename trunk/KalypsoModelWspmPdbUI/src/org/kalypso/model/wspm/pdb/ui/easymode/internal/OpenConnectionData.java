@@ -38,38 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.ui.easymode.internal;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 
 /**
  * @author Gernot Belger
  */
-class RemoveSettingsAction extends SettingsAction
+public class OpenConnectionData extends AbstractModelObject
 {
-  public RemoveSettingsAction( final WspmPdbPreferencePage page )
+  public static final String PROPERTY_SETTINGS = "settings"; //$NON-NLS-1$
+
+  public static final String PROPERTY_AUTOCONNECT = "autoConnect"; //$NON-NLS-1$
+
+  private IPdbSettings m_settings = null;
+
+  private boolean m_autoConnect = false;
+
+  public boolean getAutoConnect( )
   {
-    super( "Remove", page );
+    return m_autoConnect;
   }
 
-  @Override
-  protected boolean checkEnabled( final IPdbSettings settings )
+  public void setAutoConnect( final boolean autoConnect )
   {
-    return settings != null;
+    final boolean oldValue = m_autoConnect;
+
+    m_autoConnect = autoConnect;
+
+    firePropertyChange( PROPERTY_AUTOCONNECT, oldValue, autoConnect );
   }
 
-  @Override
-  protected void doRun( final Shell shell, final IPdbSettings settings )
+  public IPdbSettings getSettings( )
   {
-    Assert.isNotNull( settings );
+    return m_settings;
+  }
 
-    final String msg = String.format( "Remove connection '%s'", settings.getName() );
-    if( !MessageDialog.openConfirm( shell, "Remove connection", msg ) )
-      return;
+  public void setSettings( final IPdbSettings settings )
+  {
+    final IPdbSettings oldValue = m_settings;
 
-    getPage().removeItem( settings );
+    m_settings = settings;
+
+    firePropertyChange( PROPERTY_SETTINGS, oldValue, settings );
   }
 }

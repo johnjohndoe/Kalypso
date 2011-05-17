@@ -10,5 +10,26 @@
             name="Cross Section Database">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.kalypso.model.wspm.pdb.ui.easymode.internal.PdbPerspective"
+            fixed="true"
+            icon="icons/pdb.gif"
+            id="PdbPerspective"
+            name="Profildatenbank">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="org.kalypso.model.wspm.pdb.ui.easymode.internal.PdbView"
+            icon="icons/pdb.gif"
+            id="PdbView"
+            name="Profildatenbank"
+            restorable="true">
+      </view>
+   </extension>
 
 </plugin>

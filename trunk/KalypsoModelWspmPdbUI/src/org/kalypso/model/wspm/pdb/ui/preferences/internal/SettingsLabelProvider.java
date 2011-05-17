@@ -50,7 +50,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 /**
  * @author Gernot Belger
  */
-class SettingsLabelProvider extends LabelProvider
+public class SettingsLabelProvider extends LabelProvider
 {
   private final String m_format;
 
@@ -74,7 +74,7 @@ class SettingsLabelProvider extends LabelProvider
   {
     if( element instanceof IPdbSettings )
     {
-      final String label = ((IPdbSettings) element).getLabel();
+      final String label = ((IPdbSettings) element).getName();
       return String.format( m_format, label, element.toString() );
     }
 

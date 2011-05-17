@@ -15,5 +15,6 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.persistence
-Export-Package: org.kalypso.model.wspm.pdb.connect,
+Export-Package: org.kalypso.model.wspm.pdb,
+ org.kalypso.model.wspm.pdb.connect,
  org.kalypso.model.wspm.pdb.db
