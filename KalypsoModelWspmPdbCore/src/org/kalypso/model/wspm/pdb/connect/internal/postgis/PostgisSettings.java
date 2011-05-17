@@ -100,7 +100,7 @@ public class PostgisSettings extends HibernateSettings
   }
 
   @Override
-  public String getLabel( )
+  public String getName( )
   {
     return getProperty( PROPERTY_LABEL, "PostGIS" );
   }

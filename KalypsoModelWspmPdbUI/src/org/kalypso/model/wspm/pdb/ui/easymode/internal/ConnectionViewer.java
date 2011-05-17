@@ -38,38 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.ui.easymode.internal;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 
 /**
  * @author Gernot Belger
+ *
  */
-class RemoveSettingsAction extends SettingsAction
+public class ConnectionViewer
 {
-  public RemoveSettingsAction( final WspmPdbPreferencePage page )
+  public ConnectionViewer( final IPdbConnection connection )
   {
-    super( "Remove", page );
+    // TODO Auto-generated constructor stub
   }
 
-  @Override
-  protected boolean checkEnabled( final IPdbSettings settings )
-  {
-    return settings != null;
-  }
-
-  @Override
-  protected void doRun( final Shell shell, final IPdbSettings settings )
-  {
-    Assert.isNotNull( settings );
-
-    final String msg = String.format( "Remove connection '%s'", settings.getName() );
-    if( !MessageDialog.openConfirm( shell, "Remove connection", msg ) )
-      return;
-
-    getPage().removeItem( settings );
-  }
 }

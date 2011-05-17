@@ -72,6 +72,9 @@ public class PdbSettingsWriter
   protected void serializeConnections( final ISecurePreferences preferences ) throws StorageException
   {
     preferences.clear();
+    final String[] childrenNames = preferences.childrenNames();
+    for( final String childName : childrenNames )
+      preferences.node( childName ).removeNode();
 
     int count = 0;
     for( final IPdbSettings settings : m_connections )

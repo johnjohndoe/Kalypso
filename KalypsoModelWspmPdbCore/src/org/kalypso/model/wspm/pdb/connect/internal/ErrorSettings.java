@@ -75,7 +75,7 @@ public class ErrorSettings implements IPdbSettings
   }
 
   @Override
-  public String getLabel( )
+  public String getName( )
   {
     return StatusUtilities.getLocalizedSeverity( m_status );
   }

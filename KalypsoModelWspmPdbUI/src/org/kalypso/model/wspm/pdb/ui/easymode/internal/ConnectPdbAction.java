@@ -38,38 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.ui.easymode.internal;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 
 /**
  * @author Gernot Belger
  */
-class RemoveSettingsAction extends SettingsAction
+public class ConnectPdbAction extends Action
 {
-  public RemoveSettingsAction( final WspmPdbPreferencePage page )
+  private final PdbView m_view;
+
+  public ConnectPdbAction( final PdbView view )
   {
-    super( "Remove", page );
+    super("Connect...");
+
+    m_view = view;
+
+    final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.CONNECT_TO_PDB );
+    setImageDescriptor( image );
   }
 
   @Override
-  protected boolean checkEnabled( final IPdbSettings settings )
+  public void runWithEvent( final Event event )
   {
-    return settings != null;
-  }
+    final Shell shell = m_view.getSite().getShell();
+    final OpenConnectWizard wizard = new OpenConnectWizard();
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    if( dialog.open() == Window.OK )
+    {
+      final String autoConnectName = wizard.getAutoConnectName();
+      m_view.setAutoConnect( autoConnectName );
 
-  @Override
-  protected void doRun( final Shell shell, final IPdbSettings settings )
-  {
-    Assert.isNotNull( settings );
-
-    final String msg = String.format( "Remove connection '%s'", settings.getName() );
-    if( !MessageDialog.openConfirm( shell, "Remove connection", msg ) )
-      return;
-
-    getPage().removeItem( settings );
+      final IPdbConnection connection = wizard.getConnection();
+      m_view.setConnection( connection );
+    }
   }
 }

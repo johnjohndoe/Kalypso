@@ -38,62 +38,64 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.ui.easymode.internal;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.db.PdbInfo;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.db.ConnectOperation;
 
 /**
  * @author Gernot Belger
  */
-public class ConnectJob extends Job
+public class OpenConnectWizard extends Wizard
 {
-  private final IPdbSettings m_settings;
+  private final OpenConnectionData m_openConnectionData = new OpenConnectionData();
 
-  private IStatus m_connectionStatus;
+  private IPdbConnection m_connection;
 
-  public ConnectJob( final IPdbSettings settings )
+  public OpenConnectWizard( )
   {
-    super( "Rdb connect" );
+    addPage( new OpenConnectionPage( "connectPage", m_openConnectionData ) ); //$NON-NLS-1$
 
-    m_settings = settings;
+    setWindowTitle( "Connect to PDB" );
   }
 
-  public IStatus getConnectionStatus( )
+  public String getAutoConnectName( )
   {
-    return m_connectionStatus;
+    if( m_openConnectionData.getAutoConnect() )
+    {
+      final IPdbSettings settings = m_openConnectionData.getSettings();
+      if( settings != null )
+        return settings.getName();
+    }
+
+    return null;
+  }
+
+  public IPdbConnection getConnection( )
+  {
+    return m_connection;
   }
 
   @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  public boolean performFinish( )
   {
-    final String taskName = String.format( "Connecting to %s", m_settings.getLabel() );
-    monitor.beginTask( taskName, IProgressMonitor.UNKNOWN );
+    final IPdbSettings settings = m_openConnectionData.getSettings();
+    final ConnectOperation operation = new ConnectOperation( settings );
 
-    try
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, false, operation );
+    if( !result.isOK() )
     {
-      monitor.subTask( "connecting..." );
-      final IPdbConnection connection = m_settings.createConnection();
-      connection.connect();
-
-      final PdbInfo info = connection.getInfo();
-      /* final String version = */info.getVersion();
-      // TODO: check if version is the current one
-
-      m_connectionStatus = Status.OK_STATUS;
-    }
-    catch( final Exception e )
-    {
-      m_connectionStatus = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Connection failed", e );
+      new StatusDialog2( getShell(), result, getWindowTitle() ).open();
+      return false;
     }
 
-    return Status.OK_STATUS;
+    m_connection = operation.getConnection();
+
+    return true;
   }
-
 }

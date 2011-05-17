@@ -38,38 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.ui.easymode.internal;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 
 /**
  * @author Gernot Belger
  */
-class RemoveSettingsAction extends SettingsAction
+public class PdbConnectJob extends Job
 {
-  public RemoveSettingsAction( final WspmPdbPreferencePage page )
+  public PdbConnectJob( final String settingsName )
   {
-    super( "Remove", page );
+    super( "Connect to PDB" );
+
   }
 
   @Override
-  protected boolean checkEnabled( final IPdbSettings settings )
+  protected IStatus run( final IProgressMonitor monitor )
   {
-    return settings != null;
+    // TODO: try auto connect, if it is allowed
+
+    return Status.OK_STATUS;
   }
 
-  @Override
-  protected void doRun( final Shell shell, final IPdbSettings settings )
+  public IPdbConnection getConnection( )
   {
-    Assert.isNotNull( settings );
-
-    final String msg = String.format( "Remove connection '%s'", settings.getName() );
-    if( !MessageDialog.openConfirm( shell, "Remove connection", msg ) )
-      return;
-
-    getPage().removeItem( settings );
+    // TODO Auto-generated method stub
+    return null;
   }
 }

@@ -91,7 +91,7 @@ class SettingsPage extends WizardPage
     if( connection == null )
       return;
 
-    setTitle( connection.getLabel() );
+    setTitle( connection.getName() );
 
     m_validateAction = new ValidateSettingsAction( this );
 
