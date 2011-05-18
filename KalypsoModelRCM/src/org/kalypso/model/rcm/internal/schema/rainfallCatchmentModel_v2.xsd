@@ -6,7 +6,6 @@ A general approach to generate rainfall for catchment areas.]]>
     </documentation>
   </annotation>
   <import namespace="http://www.opengis.net/gml" />
-  <import namespace="http://kalypsobase.sourceforge.net/filters.zml.kalypso.org" />
 
   <element name="RainfallCatchmentModel" type="rcm:RainfallCatchmentModelType" substitutionGroup="gml:_Feature">
     <annotation>
