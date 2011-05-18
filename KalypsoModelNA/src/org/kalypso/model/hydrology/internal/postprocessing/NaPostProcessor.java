@@ -45,7 +45,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
@@ -86,6 +89,8 @@ public class NaPostProcessor
 
   private final IDManager m_idManager;
 
+  private ENACoreResultsFormat m_coreResultsFormat = ENACoreResultsFormat.FMT_2_2_AND_NEWER;
+
   public NaPostProcessor( final IDManager idManager, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final HydroHash hydroHash )
   {
     m_idManager = idManager;
@@ -103,7 +108,7 @@ public class NaPostProcessor
 
     copyNaExeLogs( asciiDirs, currentResultDirs );
 
-    m_isSucceeded = checkSuccess( asciiDirs );
+    checkSuccessAndResultsFormat( asciiDirs );
     if( !m_isSucceeded )
       return;
 
@@ -154,25 +159,65 @@ public class NaPostProcessor
     logTranslater.translate( resultFile );
   }
 
-  private boolean checkSuccess( final NaAsciiDirs asciiDirs )
+  /**
+   * Checks if the calculation was successful or not; if yes, checks for the results file version. Starting from NA core
+   * 2.2 dates for block time series are written as YYYYMMDD, older versions are using YYMMDD format.
+   */
+  private void checkSuccessAndResultsFormat( final NaAsciiDirs asciiDirs )
   {
-    final String logContent = readOutputRes( asciiDirs.startDir );
-    if( logContent == null )
-      return false;
-
-    if( logContent.contains( STRING_RESULT_SUCCESSFUL_1 ) )
-      return true;
-    if( logContent.contains( STRING_RESULT_SUCCESSFUL_2 ) )
-      return true;
-
-    return false;
+    final List<String> logContent = readOutputRes( asciiDirs.startDir );
+    if( logContent == null || logContent.size() == 0 )
+    {
+      m_isSucceeded = false;
+      return;
+    }
+    for( int i = logContent.size() - 1; i >= 0; i-- )
+    {
+      final String line = logContent.get( i );
+      m_isSucceeded = line.contains( STRING_RESULT_SUCCESSFUL_1 ) || line.contains( STRING_RESULT_SUCCESSFUL_2 );
+      if( m_isSucceeded )
+        break;
+    }
+    if( m_isSucceeded )
+    {
+      final Pattern versionPattern = Pattern.compile( ".*\\*+[ \\t]+VERS\\.[ \\t]+(\\d+\\.\\d+)\\.\\d+[ \\t\\w\\.:]+\\*+.*" );
+      for( int i = 0; i < logContent.size(); i++ )
+      {
+        final String line = logContent.get( i );
+        final Matcher matcher = versionPattern.matcher( line );
+        if( matcher.matches() )
+        {
+          final String[] strings = matcher.group( 1 ).split( "\\." );
+          if( Integer.parseInt( strings[0] ) > 2 )
+          {
+            m_coreResultsFormat = ENACoreResultsFormat.FMT_2_2_AND_NEWER;
+          }
+          else if( Integer.parseInt( strings[0] ) == 2 )
+          {
+            if( Integer.parseInt( strings[1] ) >= 2 )
+            {
+              m_coreResultsFormat = ENACoreResultsFormat.FMT_2_2_AND_NEWER;
+            }
+            else
+            {
+              m_coreResultsFormat = ENACoreResultsFormat.FMT_2_1_AND_OLDER;
+            }
+          }
+          else
+          {
+            m_coreResultsFormat = ENACoreResultsFormat.FMT_2_1_AND_OLDER;
+          }
+          break;
+        }
+      }
+    }
   }
 
-  private String readOutputRes( final File startDir )
+  private List<String> readOutputRes( final File startDir )
   {
     try
     {
-      return FileUtils.readFileToString( new File( startDir, FILENAME_OUTPUT_RES ), null );
+      return FileUtils.readLines( new File( startDir, FILENAME_OUTPUT_RES ), null );
     }
     catch( final IOException e )
     {
@@ -218,8 +263,13 @@ public class NaPostProcessor
 
   private NAStatistics loadTSResults( final File outWeNatDir, final File resultDir ) throws SensorException
   {
-    final ResultTimeseriesLoader resultProcessor = new ResultTimeseriesLoader( outWeNatDir, resultDir, m_modelWorkspace, m_idManager, m_logger );
+    final ResultTimeseriesLoader resultProcessor = new ResultTimeseriesLoader( outWeNatDir, resultDir, m_modelWorkspace, m_idManager, getCoreResultsFormat(), m_logger );
     resultProcessor.processResults();
     return resultProcessor.getStatistics();
+  }
+
+  public ENACoreResultsFormat getCoreResultsFormat( )
+  {
+    return m_coreResultsFormat;
   }
 }

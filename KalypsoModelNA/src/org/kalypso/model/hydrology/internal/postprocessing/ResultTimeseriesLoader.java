@@ -89,12 +89,15 @@ public class ResultTimeseriesLoader
 
   private final NAStatistics m_naStatistics;
 
-  public ResultTimeseriesLoader( final File inputDir, final File outputDir, final GMLWorkspace modelWorkspace, final IDManager idManager, final Logger logger )
+  private final ENACoreResultsFormat m_resultsFormat;
+
+  public ResultTimeseriesLoader( final File inputDir, final File outputDir, final GMLWorkspace modelWorkspace, final IDManager idManager, final ENACoreResultsFormat resultsFormat, final Logger logger )
   {
     m_inputDir = inputDir;
     m_outputDir = outputDir;
     m_modelWorkspace = modelWorkspace;
     m_idManager = idManager;
+    m_resultsFormat = resultsFormat;
     m_logger = logger;
 
     m_naStatistics = new NAStatistics( logger );
@@ -120,7 +123,7 @@ public class ResultTimeseriesLoader
 
     m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" ); //$NON-NLS-2$
 
-    final BlockTimeSeries ts = new BlockTimeSeries();
+    final BlockTimeSeries ts = new BlockTimeSeries(m_resultsFormat);
     ts.importBlockFile( qgsFiles[0] );
 
     final Feature[] resultFeatures = m_modelWorkspace.getFeatures( resultFT );
