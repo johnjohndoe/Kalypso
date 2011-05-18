@@ -40,9 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.gaf.internal;
 
+import java.io.File;
+
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.program.Program;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
@@ -62,6 +68,10 @@ public class ImportGafWizard extends Wizard
     m_data.init( settings );
 
     addPage( new ImportGafPage( "gaf", connection, m_data ) ); //$NON-NLS-1$
+    addPage( new EditWaterPage( "waterBody", connection, m_data ) ); //$NON-NLS-1$
+    addPage( new EditStatePage( "state", connection, m_data.getState() ) ); //$NON-NLS-1$
+
+    setNeedsProgressMonitor( true );
   }
 
   @Override
@@ -71,6 +81,25 @@ public class ImportGafWizard extends Wizard
     if( settings != null )
       m_data.store( settings );
 
+    final ImportGafOperation operation = new ImportGafOperation( m_connection, m_data );
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
+
+    final ImportGafResultDialog resultDialog = new ImportGafResultDialog( getShell(), result, m_data );
+    resultDialog.open();
+
+    /* Open log */
+    if( m_data.getOpenLog() )
+      openLogFile( m_data.getLogFile() );
+
     return true;
+  }
+
+  private void openLogFile( final File logFile )
+  {
+    if( !Program.launch( logFile.getName(), logFile.getParent() ) )
+    {
+      final String message = String.format( "Failed to open external viewer for: '%s", logFile.getAbsolutePath() );
+      MessageDialog.openWarning( getShell(), "GAF Import", message );
+    }
   }
 }
