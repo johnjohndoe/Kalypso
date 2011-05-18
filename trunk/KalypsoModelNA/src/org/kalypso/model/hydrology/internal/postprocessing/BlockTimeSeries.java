@@ -81,7 +81,7 @@ public class BlockTimeSeries
 
   // simulationszeitraum: von 970101 24 uhr bis 980102 24 uhr 24.000
   // simulationszeitraum: von 970101 24 uhr bis 102 24 uhr 24.000
-  private static final Pattern pTime = Pattern.compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" ); //$NON-NLS-1$
+  //  private static final Pattern pTime = Pattern.compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" ); //$NON-NLS-1$
 
   // synth. n.: haufigkeit: 0.100 jahre,dauer: 13.00 h , zeitschr.: 0.083 h , verteilung: 2
   private static final Pattern pSynthTime = Pattern.compile( ".+synth. n..+haufigkeit:.+(\\d+\\.\\d+).+jahre,dauer.+(\\d+\\.\\d+).+h , zeitschr.:.+(\\d+\\.\\d+).+" ); //$NON-NLS-1$
@@ -92,15 +92,18 @@ public class BlockTimeSeries
 
   private final DateFormat m_dateFormat;
 
-  public BlockTimeSeries( final TimeZone timeZone )
+  private final ENACoreResultsFormat m_resultsFormat;
+
+  public BlockTimeSeries( final ENACoreResultsFormat resultsFormat, final TimeZone timeZone )
   {
-    m_dateFormat = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
+    m_resultsFormat = resultsFormat;
+    m_dateFormat = new SimpleDateFormat( resultsFormat.getDateFormat() ); //$NON-NLS-1$
     m_dateFormat.setTimeZone( timeZone );
   }
 
-  public BlockTimeSeries( )
+  public BlockTimeSeries( final ENACoreResultsFormat resultsFormat )
   {
-    this( NATimeSettings.getInstance().getTimeZone() );
+    this( resultsFormat, NATimeSettings.getInstance().getTimeZone() );
   }
 
   /**
@@ -162,7 +165,8 @@ public class BlockTimeSeries
       if( line.startsWith( "#" ) ) //$NON-NLS-1$
         continue;
 
-      final Matcher m = pTime.matcher( line );
+      // final Matcher m = pTime.matcher( line );
+      final Matcher m = m_resultsFormat.getSimulationPeriodPattern().matcher( line );
       final Matcher synthM = pSynthTime.matcher( line );
       if( m.matches() )
       {

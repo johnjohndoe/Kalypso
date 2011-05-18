@@ -17,6 +17,7 @@ import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.postprocessing.Block;
 import org.kalypso.model.hydrology.internal.postprocessing.BlockTimeSeries;
+import org.kalypso.model.hydrology.internal.postprocessing.ENACoreResultsFormat;
 
 /**
  * @author flows
@@ -68,7 +69,7 @@ public class BlockTimeSeriesTest extends TestCase
   private Block load( final String resource, final String key ) throws IOException
   {
     final TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
-    final BlockTimeSeries blockTimeseries = new BlockTimeSeries( timeZone );
+    final BlockTimeSeries blockTimeseries = new BlockTimeSeries( ENACoreResultsFormat.FMT_2_2_AND_NEWER, timeZone );
     final File tmpFile = File.createTempFile( "block", "txt" ); //$NON-NLS-1$ //$NON-NLS-2$
     tmpFile.deleteOnExit();
     final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
