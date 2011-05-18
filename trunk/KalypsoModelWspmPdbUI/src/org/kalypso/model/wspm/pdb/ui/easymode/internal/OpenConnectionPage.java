@@ -52,6 +52,7 @@ import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
@@ -95,7 +96,6 @@ public class OpenConnectionPage extends WizardPage
   {
     final DataBindingContext binding = new DataBindingContext();
 
-    WizardPageSupport.create( this, binding );
 
     final Composite composite = new Composite( parent, SWT.NONE );
     setControl( composite );
@@ -106,6 +106,8 @@ public class OpenConnectionPage extends WizardPage
     createAutoConnectCheck( binding, composite );
 
     refreshInput();
+
+    WizardPageSupport.create( this, binding );
   }
 
   private void createSettingsChooser( final DataBindingContext binding, final Composite parent )
@@ -150,6 +152,10 @@ public class OpenConnectionPage extends WizardPage
     {
       final IPdbSettings[] settings = PdbSettings.getSettings();
       m_connectionViewer.setInput( settings );
+
+      final IPdbSettings selected = m_data.getSettings();
+      if( selected != null )
+        m_connectionViewer.setSelection( new StructuredSelection( settings ) );
     }
     catch( final PdbConnectException e )
     {

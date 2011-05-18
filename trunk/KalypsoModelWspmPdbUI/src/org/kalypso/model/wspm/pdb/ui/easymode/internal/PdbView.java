@@ -80,6 +80,8 @@ public class PdbView extends ViewPart
 
   private final Action m_connectAction = new ConnectPdbAction( this );
 
+  private final Action m_disconnectAction = new DisconnectPdbAction( this );
+
   private final UIJob m_updateControlJob = new UIJob( "Update pdb view" )
   {
     @Override
@@ -129,28 +131,44 @@ public class PdbView extends ViewPart
     m_form = m_toolkit.createScrolledForm( parent );
     m_toolkit.decorateFormHeading( m_form.getForm() );
 
-    final Image disponnected = WspmPdbUiImages.getImage( IMAGE.PDB_DISCONNECTED );
-    m_form.setImage( disponnected );
-    m_form.setText( "PDB not connected" );
+    m_form.setImage( getFormImage() );
+    m_form.setText( getFormTitel() );
 
     final IToolBarManager formToolbar = m_form.getToolBarManager();
     formToolbar.add( m_connectAction );
+    formToolbar.add( m_disconnectAction );
     formToolbar.update( true );
 
     final Composite body = m_form.getBody();
     body.setLayout( new FillLayout() );
 
+    updateControl();
+
     startAutoConnect();
+  }
+
+  private Image getFormImage( )
+  {
+    if( m_pdbConnection == null )
+      return WspmPdbUiImages.getImage( IMAGE.PDB_DISCONNECTED );
+
+    return WspmPdbUiImages.getImage( IMAGE.PDB_CONNECTED );
+  }
+
+  private String getFormTitel( )
+  {
+    if( m_pdbConnection == null )
+      return "PDB not connected";
+
+    final String label = m_pdbConnection.getLabel();
+    return String.format( "Connected with '%s'", label );
   }
 
   private void startAutoConnect( )
   {
     /* If we do not auto-connect -> update control and show that we are not connected */
     if( StringUtils.isBlank( m_autoConnectName ) )
-    {
-      m_updateControlJob.schedule();
       return;
-    }
 
     /* Start auto-connection */
     final PdbConnectJob autoConnector = new PdbConnectJob( m_autoConnectName );
@@ -206,14 +224,23 @@ public class PdbView extends ViewPart
     final Composite body = m_form.getBody();
     ControlUtils.disposeChildren( body );
 
+    m_form.setImage( getFormImage() );
+    m_form.setText( getFormTitel() );
+
     final boolean isConnected = m_pdbConnection != null;
+
+    m_connectAction.setEnabled( !isConnected );
+    m_disconnectAction.setEnabled( isConnected );
+
     if( isConnected )
     {
       // TODO:
       new ConnectionViewer( m_pdbConnection );
     }
     else
+    {
       createNonConnectedControl( body );
+    }
 
     m_form.reflow( true );
   }
@@ -231,5 +258,15 @@ public class PdbView extends ViewPart
   void setAutoConnect( final String autoConnectName )
   {
     m_autoConnectName = autoConnectName;
+  }
+
+  IPdbConnection getConnection( )
+  {
+    return m_pdbConnection;
+  }
+
+  String getAutoConnectName( )
+  {
+    return m_autoConnectName;
   }
 }
