@@ -57,4 +57,6 @@ public interface IPdbConnection
   PdbInfo getInfo( ) throws PdbConnectException;
 
   void addPoint( PdbPoint onePoint ) throws PdbConnectException;
+
+  String getLabel( );
 }

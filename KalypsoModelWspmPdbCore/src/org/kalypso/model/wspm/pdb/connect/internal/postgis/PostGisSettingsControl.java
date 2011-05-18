@@ -78,7 +78,8 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
     GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( false ).applyTo( this );
 
     final StringBlankValidator nameValidator = new StringBlankValidator( IStatus.WARNING, StringBlankValidator.DEFAULT_WARNING_MESSAGE );
-    createPropertyControl( "Name", SWT.NONE, PostgisSettings.PROPERTY_LABEL, nameValidator );
+    final UniqueSettingsNameValidator uniqueNameValidator = new UniqueSettingsNameValidator();
+    createPropertyControl( "Name", SWT.NONE, PostgisSettings.PROPERTY_LABEL, nameValidator, uniqueNameValidator );
 
     final StringBlankValidator hostValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
     createPropertyControl( "Host", SWT.NONE, PostgisSettings.PROPERTY_HOST, hostValidator );
@@ -95,7 +96,7 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
     createPropertyControl( "Password", SWT.PASSWORD, PostgisSettings.PROPERTY_PASSWORD, warningValidator );
   }
 
-  private void createPropertyControl( final String label, final int style, final String property, final IValidator validator )
+  private void createPropertyControl( final String label, final int style, final String property, final IValidator... validators )
   {
     new Label( this, SWT.NONE ).setText( label );
 
@@ -104,8 +105,8 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
     field.setMessage( "<Empty>" );
 
     final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-    if( validator != null )
-      targetToModel.setAfterGetValidator( validator );
+    for( final IValidator validator : validators )
+      targetToModel.setAfterConvertValidator( validator );
 
     final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
     final IObservableValue model = new PostGisSettingsPropertyValue( m_settings, property );

@@ -104,7 +104,8 @@ public class OpenConnectionJob extends Job
     }
     finally
     {
-      PdbUtils.closeQuietly( connection );
+      if( m_closeConnection )
+        PdbUtils.closeQuietly( connection );
     }
 
     return Status.OK_STATUS;

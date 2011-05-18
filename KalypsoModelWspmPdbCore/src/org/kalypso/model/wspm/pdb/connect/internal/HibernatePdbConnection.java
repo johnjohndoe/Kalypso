@@ -58,7 +58,7 @@ import org.kalypso.model.wspm.pdb.db.PdbProperty;
  */
 public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings> implements IPdbConnection
 {
-  private final SETTINGS m_connectInfo;
+  private final SETTINGS m_settings;
 
   private Configuration m_config;
 
@@ -66,12 +66,18 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
 
   public HibernatePdbConnection( final SETTINGS connectInfo )
   {
-    m_connectInfo = connectInfo;
+    m_settings = connectInfo;
+  }
+
+  @Override
+  public String getLabel( )
+  {
+    return m_settings.getName();
   }
 
   protected SETTINGS getSettings( )
   {
-    return m_connectInfo;
+    return m_settings;
   }
 
   private synchronized Configuration getConfiguration( )
@@ -91,6 +97,11 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
     configure( configuration );
 
     configureMappings( configuration );
+
+// final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
+// final String[] creationScripts = configuration.generateSchemaCreationScript( dialect );
+// for( final String creationScript : creationScripts )
+// System.out.println( creationScript );
 
     return configuration;
   }
@@ -121,8 +132,8 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
   private void configureMappings( final Configuration configuration )
   {
     configuration.addAnnotatedClass( PdbProperty.class );
-    // configuration.addAnnotatedClass( PdbPoint.class );
-    configuration.addResource( "org/kalypso/model/wspm/pdb/db/pdbpoint.xml" );
+// configuration.addAnnotatedClass( PdbPoint.class );
+    configuration.addResource( "/org/kalypso/model/wspm/pdb/db/pdbpoint.xml" );
     // TODO: add all binding classes
   }
 
@@ -141,6 +152,7 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
       final Configuration configuration = getConfiguration();
 
       final SessionFactory sessionFactory = configuration.buildSessionFactory();
+
       m_session = sessionFactory.openSession();
     }
     catch( final HibernateException e )
@@ -155,7 +167,7 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
     }
     finally
     {
-      Thread.currentThread().setContextClassLoader( oldContextClassLoader );
+// Thread.currentThread().setContextClassLoader( oldContextClassLoader );
     }
   }
 
@@ -196,7 +208,8 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
 
     // query all info's
     final Transaction transaction = m_session.beginTransaction();
-    final List< ? > allInfo = m_session.createQuery( "from Info" ).list();
+    final String query = String.format( "from %s", PdbProperty.class.getName() );
+    final List< ? > allInfo = m_session.createQuery( query ).list();
     transaction.commit();
 
     return new PdbInfo( allInfo );
@@ -209,7 +222,11 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
 
     try
     {
+      final Transaction transaction = m_session.beginTransaction();
+      // TODO: transaction?
       m_session.save( onePoint );
+
+      transaction.commit();
     }
     catch( final HibernateException e )
     {

@@ -40,18 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.test;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.classic.Session;
+import org.hibernatespatial.postgis.PostgisDialect;
 import org.junit.Test;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.internal.postgis.PostgisSettings;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.PdbPoint;
+import org.kalypso.model.wspm.pdb.db.PdbProperty;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Gernot Belger
@@ -72,29 +79,81 @@ public class PdbTest extends Assert
 
     final PdbInfo info = connection.getInfo();
     final String version = info.getVersion();
+    System.out.println( "Version=" + version );
 
-    final Point aPoint = new GeometryFactory().createPoint( new Coordinate( 3.14, 2.79 ) );
+    final PdbPoint onePoint = new PdbPoint();
+    onePoint.setID( System.currentTimeMillis() );
+    onePoint.setPoint( new GeometryFactory().createPoint( new Coordinate( 3.14, 2.79 ) ) );
+    connection.addPoint( onePoint );
+  }
+
+  // @Test
+  public void testPdb2( )
+  {
+    final Configuration configuration = new Configuration();
+
+    configuration.setProperty( "hibernate.order_updates", "true" );
+
+    // FIXME: why does this not work???
+    // configuration.setProperty( "hibernate.hbm2dll.auto", "create" );
+    // configuration.setProperty( "org.hibernate.tool.hbm2ddl", "debug" );
+
+    configuration.setProperty( "connection.pool_size", "1" );
+    configuration.setProperty( "current_session_context_class", "thread" );
+    configuration.setProperty( "cache.provider_class", "org.hibernate.cache.NoCacheProvider" );
+
+    // TODO: via tracing
+    configuration.setProperty( "show_sql", "true" );
+
+    final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
+
+    configuration.setProperty( "hibernate.connection.driver_class", org.postgresql.Driver.class.getName() );
+
+    final String connectionUrl = "jdbc:postgresql://map.bjoernsen.de:5432/pdb";
+
+    configuration.setProperty( "hibernate.connection.url", connectionUrl );
+    configuration.setProperty( "hibernate.connection.username", "pdb_admin" );
+    configuration.setProperty( "hibernate.connection.password", "pdb_admin" );
+
+    configuration.setProperty( "hibernate.dialect", dialect.getClass().getName() );
+    configuration.setProperty( "hibernate.spatial.dialect", dialect.getClass().getName() );
+
+    final ClassLoader classLoader = getClass().getClassLoader();
+    Thread.currentThread().setContextClassLoader( classLoader );
+
+    configuration.addAnnotatedClass( PdbProperty.class );
+    // FIXME
+    // configuration.addAnnotatedClass( PdbPoint.class );
+    configuration.addResource( "/org/kalypso/model/wspm/pdb/db/pdbpoint.xml", classLoader );
+
+
+    final String[] creationScripts = configuration.generateSchemaCreationScript( dialect );
+    for( final String creationScript : creationScripts )
+      System.out.println( creationScript );
+
+    final SessionFactory sessionFactory = configuration.buildSessionFactory();
+
+    final Session session = sessionFactory.openSession();
+
+    final Transaction transaction = session.beginTransaction();
+    final List< ? > allInfo = session.createQuery( String.format( "from %s", PdbProperty.class.getName() ) ).list();
+    transaction.commit();
+
+    final PdbInfo info = new PdbInfo( allInfo );
+
+    final String version = info.getVersion();
+    System.out.println( "Version=" + version );
+
+    final Transaction transaction2 = session.beginTransaction();
 
     final PdbPoint onePoint = new PdbPoint();
     onePoint.setPoint( new GeometryFactory().createPoint( new Coordinate( 3.14, 2.79 ) ) );
-    connection.addPoint( onePoint );
+    onePoint.setID( System.currentTimeMillis() );
+    session.save( onePoint );
+    transaction2.commit();
 
-    try
-    {
-
-// final PdbProperty version = new PdbProperty();
-// version.setKey( "Version" );
-// version.setValue( "0.0.1" );
-// session.save( version );
-//
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
-    finally
-    {
-    }
+    session.flush();
+    session.close();
   }
 
 }
