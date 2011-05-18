@@ -56,7 +56,12 @@ public class WspmPdbUiImages
     DISCONNECT_FROM_PDB("icons/disconnect_pdb.gif"), //$NON-NLS-1$
 
     PDB_CONNECTED("icons/pdb_connected.gif"), //$NON-NLS-1$
-    PDB_DISCONNECTED("icons/pdb_disconnected.gif"); //$NON-NLS-1$
+    PDB_DISCONNECTED("icons/pdb_disconnected.gif"), //$NON-NLS-1$
+
+    GAF_IMPORT("icons/importGAF.gif"), //$NON-NLS-1$
+
+    STATE("icons/state.gif"), //$NON-NLS-1$
+    WATER_BODY("icons/waterBody.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

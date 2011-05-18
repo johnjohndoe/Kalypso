@@ -42,56 +42,26 @@ package org.kalypso.model.wspm.pdb.ui.easymode.internal;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 
 /**
  * @author Gernot Belger
  */
-public class ConnectionViewer extends Composite
+public class ConnectionContentControl extends Composite
 {
   private final IPdbConnection m_connection;
 
-  public ConnectionViewer( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection )
+  public ConnectionContentControl( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection )
   {
     super( parent, SWT.NONE );
 
     m_connection = connection;
 
-    toolkit.adapt( this );
     GridLayoutFactory.swtDefaults().applyTo( this );
-
-    createAdminGroup( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    createPdbView( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    toolkit.adapt( this );
+    // TODO Auto-generated constructor stub
   }
 
-  private Control createAdminGroup( final FormToolkit toolkit, final Composite parent )
-  {
-    final Group group = new Group( parent, SWT.NONE );
-    toolkit.adapt( group );
-    // TODO: nur zeigen, wenn der user admin rechte hats
-    group.setText( "Administration" );
-    group.setLayout( new FillLayout() );
-
-    new ConnectionAdminControl( toolkit, group, m_connection );
-
-    return group;
-  }
-
-  private Control createPdbView( final FormToolkit toolkit, final Composite parent )
-  {
-    final Group group = new Group( parent, SWT.NONE );
-    toolkit.adapt( group );
-    group.setText( "Inhalt" );
-    group.setLayout( new FillLayout() );
-
-    new ConnectionContentControl( toolkit, group, m_connection );
-
-    return group;
-  }
 }
