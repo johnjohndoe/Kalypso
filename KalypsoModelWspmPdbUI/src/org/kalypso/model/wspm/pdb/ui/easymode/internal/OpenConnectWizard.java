@@ -53,12 +53,14 @@ import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
  */
 public class OpenConnectWizard extends Wizard
 {
-  private final OpenConnectionData m_openConnectionData = new OpenConnectionData();
+  private final OpenConnectionData m_openConnectionData;
 
   private IPdbConnection m_connection;
 
-  public OpenConnectWizard( )
+  public OpenConnectWizard( final OpenConnectionData data )
   {
+    m_openConnectionData = data;
+
     addPage( new OpenConnectionPage( "connectPage", m_openConnectionData ) ); //$NON-NLS-1$
 
     setWindowTitle( "Connect to PDB" );

@@ -45,29 +45,52 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.PdbSettings;
+import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
  */
 public class PdbConnectJob extends Job
 {
+  private final String m_settingsName;
+
+  private IPdbConnection m_connection;
+
   public PdbConnectJob( final String settingsName )
   {
     super( "Connect to PDB" );
 
+    m_settingsName = settingsName;
   }
 
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
-    // TODO: try auto connect, if it is allowed
+    try
+    {
+      final IPdbSettings settings = PdbSettings.getSettings( m_settingsName );
+      final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
+      operation.execute( monitor );
+      m_connection = operation.getConnection();
 
-    return Status.OK_STATUS;
+      return Status.OK_STATUS;
+    }
+    catch( final PdbConnectException e )
+    {
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to autoconnect to cross section database", e );
+    }
+    catch( final InterruptedException e )
+    {
+      return Status.CANCEL_STATUS;
+    }
   }
 
   public IPdbConnection getConnection( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_connection;
   }
 }
