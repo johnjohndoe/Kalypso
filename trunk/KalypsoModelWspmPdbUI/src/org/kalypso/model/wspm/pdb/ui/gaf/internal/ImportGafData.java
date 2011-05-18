@@ -42,9 +42,11 @@ package org.kalypso.model.wspm.pdb.ui.gaf.internal;
 
 import java.io.File;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.model.wspm.pdb.db.PdbState;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
@@ -52,13 +54,49 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public class ImportGafData extends AbstractModelObject
 {
+  public static final String PROPERTY_OPEN_LOG = "openLog"; //$NON-NLS-1$
+
   public static final String PROPERTY_SRS = "srs"; //$NON-NLS-1$
 
   public static final String PROPERTY_GAF_FILE = "gafFile"; //$NON-NLS-1$
 
   private String m_srs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-  private File m_gafFile;
+  private File m_gafFile = null;
+
+  private boolean m_openLog = true;
+
+  /** We always create a new state when importing a gaf file */
+  private final PdbState m_state = new PdbState();
+
+  public void init( final IDialogSettings settings )
+  {
+    if( settings == null )
+      return;
+
+    final String gafPath = settings.get( PROPERTY_GAF_FILE );
+    if( !StringUtils.isBlank( gafPath ) )
+      m_gafFile = new File( gafPath );
+
+    final String srs = settings.get( PROPERTY_SRS );
+    if( srs != null )
+      m_srs = srs;
+
+    if( !StringUtils.isBlank( settings.get( PROPERTY_OPEN_LOG ) ) )
+      m_openLog = settings.getBoolean( PROPERTY_GAF_FILE );
+  }
+
+  public void store( final IDialogSettings settings )
+  {
+    if( settings == null )
+      return;
+
+    final String gafPath = m_gafFile == null ? null : m_gafFile.getAbsolutePath();
+
+    settings.put( PROPERTY_SRS, m_srs );
+    settings.put( PROPERTY_GAF_FILE, gafPath );
+    settings.put( PROPERTY_OPEN_LOG, m_openLog );
+  }
 
   public String getSrs( )
   {
@@ -86,30 +124,43 @@ public class ImportGafData extends AbstractModelObject
     m_gafFile = gafFile;
 
     firePropertyChange( PROPERTY_GAF_FILE, oldValue, m_gafFile );
+
+    if( m_gafFile != null )
+    {
+      final String filename = m_gafFile.getName();
+
+      final String stateSource = String.format( "Importiert aus: %s", filename );
+      m_state.setSource( stateSource );
+
+      m_state.setName( FilenameUtils.removeExtension( filename ) );
+    }
   }
 
-  public void init( final IDialogSettings settings )
+  public PdbState getState( )
   {
-    if( settings == null )
-      return;
-
-    final String gafPath = settings.get( PROPERTY_GAF_FILE );
-    if( !StringUtils.isBlank( gafPath ) )
-      m_gafFile = new File( gafPath );
-
-    final String srs = settings.get( PROPERTY_SRS );
-    if( srs != null )
-      m_srs = srs;
+    return m_state;
   }
 
-  public void store( final IDialogSettings settings )
+  public boolean getOpenLog( )
   {
-    if( settings == null )
-      return;
+    return m_openLog;
+  }
 
-    final String gafPath = m_gafFile == null ? null : m_gafFile.getAbsolutePath();
+  public void setOpenLog( final boolean openLog )
+  {
+    final boolean oldValue = m_openLog;
 
-    settings.put( PROPERTY_SRS, m_srs );
-    settings.put( PROPERTY_GAF_FILE, gafPath );
+    m_openLog = openLog;
+
+    firePropertyChange( PROPERTY_OPEN_LOG, oldValue, m_openLog );
+  }
+
+  public File getLogFile( )
+  {
+    final File gafFile = getGafFile();
+    if( gafFile == null )
+      return null;
+
+    return new File( gafFile.getAbsolutePath() + ".log" );
   }
 }
