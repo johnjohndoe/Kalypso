@@ -65,13 +65,17 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
 {
   private final IFeatureWrapperCollection<ICalculationUnit> m_subCalculationUnits;
 
-  private final List<IFENetItem> m_virtualElements;
+  private List<IFENetItem> m_virtualElements;
 
   private Set<String> m_virtualMemberIDs;
 
   private final QName m_qnameToBind;
 
   private final QName m_subUnitPropQName;
+
+  private List<IPolyElement> m_list2DElements = null;
+
+  private List<IElement1D> m_list1DElements = null;
 
   public CalculationUnit1D2D( final Feature featureToBind )
   {
@@ -84,9 +88,29 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
     m_qnameToBind = qnameToBind;
     m_subUnitPropQName = subUnitPropQName;
     m_subCalculationUnits = Util.get( featureToBind, m_qnameToBind, m_subUnitPropQName, ICalculationUnit.class, true );
+    refreshVirtualElements();
+  }
+
+  private void refreshVirtualElements( )
+  {
+    if( m_virtualElements != null )
+    {
+      int lIntCountAllElements = 0;
+      for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
+      {
+        lIntCountAllElements += calculationUnit.getElements().size();
+      }
+      if( m_virtualElements.size() == lIntCountAllElements )
+      {
+        return;
+      }
+    }
     m_virtualElements = new ArrayList<IFENetItem>();
     for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
       m_virtualElements.addAll( calculationUnit.getElements() );
+
+    calculate1DElements();
+    calculate2DElements();
   }
 
   /**
@@ -95,6 +119,7 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   @Override
   public IFeatureWrapperCollection<ICalculationUnit> getChangedSubUnits( )
   {
+    refreshVirtualElements();
     return m_subCalculationUnits;
   }
 
@@ -143,11 +168,20 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   @Override
   public List<IElement1D> getElements1D( )
   {
-    final List<IElement1D> list = new ArrayList<IElement1D>();
+    if( m_list1DElements == null )
+    {
+      calculate1DElements();
+    }
+    return m_list1DElements;
+  }
+
+  private void calculate1DElements( )
+  {
+    m_list1DElements = new ArrayList<IElement1D>();
     for( final IFeatureWrapper2 element : m_virtualElements )
       if( element instanceof IElement1D )
-        list.add( (IElement1D) element );
-    return list;
+        m_list1DElements.add( (IElement1D) element );
+
   }
 
   /**
@@ -156,11 +190,20 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   @Override
   public List<IPolyElement> getElements2D( )
   {
-    final List<IPolyElement> list = new ArrayList<IPolyElement>();
+    if( m_list2DElements == null )
+    {
+      calculate2DElements();
+    }
+    return m_list2DElements;
+  }
+
+  private void calculate2DElements( )
+  {
+    m_list2DElements = new ArrayList<IPolyElement>();
     for( final IFeatureWrapper2 element : m_virtualElements )
       if( element instanceof IPolyElement )
-        list.add( (IPolyElement) element );
-    return list;
+        m_list2DElements.add( (IPolyElement) element );
+
   }
 
   /**
