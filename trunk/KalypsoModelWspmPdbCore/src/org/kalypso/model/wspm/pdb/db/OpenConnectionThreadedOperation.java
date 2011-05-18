@@ -80,7 +80,8 @@ public class OpenConnectionThreadedOperation implements ICoreRunnableWithProgres
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
-    monitor.beginTask( "Testing connection...", IProgressMonitor.UNKNOWN );
+    final String taskName = String.format( "Open Connection '%s'", m_settings.getName() );
+    monitor.beginTask( taskName, IProgressMonitor.UNKNOWN );
 
     final OpenConnectionJob job = new OpenConnectionJob( m_settings, m_closeConnection );
 

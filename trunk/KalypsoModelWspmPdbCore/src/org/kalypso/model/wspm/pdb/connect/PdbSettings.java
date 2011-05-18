@@ -66,6 +66,19 @@ public final class PdbSettings
     return WspmPdbCorePlugin.getDefault().getSettings();
   }
 
+  public static IPdbSettings getSettings( final String settingsName ) throws PdbConnectException
+  {
+    final IPdbSettings[] allSettings = getSettings();
+    for( final IPdbSettings settings : allSettings )
+    {
+      if( settings.getName().equals( settingsName ) )
+        return settings;
+    }
+
+    final String msg = String.format( "Missing settings: '%s'", settingsName );
+    throw new PdbConnectException( msg );
+  }
+
   /**
    * Updates the global kept pdb settings.
    */

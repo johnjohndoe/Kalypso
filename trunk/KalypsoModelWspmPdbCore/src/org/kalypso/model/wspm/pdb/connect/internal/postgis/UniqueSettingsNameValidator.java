@@ -38,51 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.db;
+package org.kalypso.model.wspm.pdb.connect.internal.postgis;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.vividsolutions.jts.geom.Point;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 
 /**
  * @author Gernot Belger
  */
-@Entity
-@Table(name = "pdbpoint")
-public class PdbPoint
+public class UniqueSettingsNameValidator extends TypedValidator<String>
 {
-  private Long m_id;
+  private final Set<String> m_names = new HashSet<String>();
 
-  private Point m_point;
-
-  public PdbPoint( )
+  public UniqueSettingsNameValidator( )
   {
-    // for hibernate
+    super( String.class, IStatus.ERROR, "A PDB connection with the same name already exists." );
+
+    try
+    {
+      final IPdbSettings[] settings = PdbSettings.getSettings();
+      for( final IPdbSettings s : settings )
+        m_names.add( s.getName() );
+    }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+    }
   }
 
-  @Id
-  public Long getID( )
+  @Override
+  protected IStatus doValidate( final String value ) throws CoreException
   {
-    return m_id;
-  }
+    if( m_names.contains( value ) )
+      fail();
 
-  public void setID( final Long id )
-  {
-    m_id = id;
-  }
-
-  // REMARK: actually that does not work, we are still using the pdbpoint.xml
-  @Column(columnDefinition = "Geometry", name = "point")
-  public Point getPoint( )
-  {
-    return m_point;
-  }
-
-  public void setPoint( final Point point )
-  {
-    m_point = point;
+    return Status.OK_STATUS;
   }
 }
