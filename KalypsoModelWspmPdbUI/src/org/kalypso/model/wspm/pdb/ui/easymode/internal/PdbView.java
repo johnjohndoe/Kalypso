@@ -233,14 +233,9 @@ public class PdbView extends ViewPart
     m_disconnectAction.setEnabled( isConnected );
 
     if( isConnected )
-    {
-      // TODO:
-      new ConnectionViewer( m_pdbConnection );
-    }
+      new ConnectionViewer( m_toolkit, body, m_pdbConnection );
     else
-    {
       createNonConnectedControl( body );
-    }
 
     m_form.reflow( true );
   }
