@@ -294,7 +294,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
           else
             resultText.setText( op.getConsoleText() );
 
-          // Scroll to bottom of text, as this is the intersting part
+          // Scroll to bottom of text, as this is the interesting part
           final int lineCount = resultText.getLineCount();
           resultText.setTopIndex( lineCount - 1 );
 
