@@ -38,24 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.easymode.internal;
+package org.kalypso.model.wspm.pdb.ui.gaf.internal;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
-/**
- * @author Gernot Belger
- */
-public class ImportGafAction extends Action
+public class ImportGafWizard extends Wizard
 {
   private final IPdbConnection m_connection;
 
-  public ImportGafAction( final IPdbConnection connection )
+  private final ImportGafData m_data = new ImportGafData();
+
+  public ImportGafWizard( final IPdbConnection connection )
   {
     m_connection = connection;
 
-    setText( "GAF Daten importieren..." );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.GAF_IMPORT ) );
+    final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() );
+    setDialogSettings( settings );
+
+    m_data.init( settings );
+
+    addPage( new ImportGafPage( "gaf", connection, m_data ) ); //$NON-NLS-1$
+  }
+
+  @Override
+  public boolean performFinish( )
+  {
+    final IDialogSettings settings = getDialogSettings();
+    if( settings != null )
+      m_data.store( settings );
+
+    return true;
   }
 }
