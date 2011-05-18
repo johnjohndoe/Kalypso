@@ -45,6 +45,10 @@ import javax.xml.namespace.QName;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
+
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Dirk Kuch
@@ -126,4 +130,8 @@ public interface INode extends INaModelFeature
   void setIsSynteticZufluss( Boolean isSynteticZufluss );
 
   void setZuflussLink( TimeseriesLinkType zuflussLink );
+
+  GM_Point getPosition( );
+
+  Point getJtsPosition( ) throws GM_Exception;
 }

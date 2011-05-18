@@ -43,12 +43,18 @@ package org.kalypso.model.hydrology.binding.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}Node.
@@ -196,5 +202,31 @@ public class Node extends AbstractNaModelElement implements INode
   public void setZuflussLink( final TimeseriesLinkType zuflussLink )
   {
     setProperty( PROPERTY_ZUFLUSS_ZR, zuflussLink );
+  }
+
+  /**
+   * @see org.kalypso.model.hydrology.binding.model.INode#getPoint()
+   */
+  @Override
+  public GM_Point getPosition( )
+  {
+    final Object property = getProperty( PROPERTY_ORT );
+    if( property instanceof GM_Point )
+      return (GM_Point) property;
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.hydrology.binding.model.INode#getJtsPoint()
+   */
+  @Override
+  public Point getJtsPosition( ) throws GM_Exception
+  {
+    final GM_Point point = getPosition();
+    if( Objects.isNotNull( point ) )
+      return (Point) JTSAdapter.export( point );
+
+    return null;
   }
 }
