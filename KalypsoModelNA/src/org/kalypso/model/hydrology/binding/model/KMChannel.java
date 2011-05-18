@@ -69,7 +69,6 @@ public class KMChannel extends Channel
 
   private IFeatureBindingCollection<KMParameter> m_parameters = null;
 
-
   public KMChannel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );

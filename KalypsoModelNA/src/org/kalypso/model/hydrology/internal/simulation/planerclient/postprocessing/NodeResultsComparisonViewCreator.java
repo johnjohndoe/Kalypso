@@ -21,11 +21,11 @@ import org.kalypso.template.obstableview.TypeRenderingRule;
 
 public final class NodeResultsComparisonViewCreator
 {
-  final static Color COLOR_STATUSQUO = new Color( 0, 255, 0 );
+  static final Color COLOR_STATUSQUO = new Color( 0, 255, 0 );
 
-  final static Color COLOR_SCENARIO = new Color( 0, 0, 255 );
+  static final Color COLOR_SCENARIO = new Color( 0, 0, 255 );
 
-  public final static Obsdiagview createView( final String title, final String legendTitle, final String izPath, final String calculatePath, final String nodeID )
+  public static final Obsdiagview createView( final String title, final String legendTitle, final String izPath, final String calculatePath, final String nodeID )
   {
     final Obsdiagview view = new Obsdiagview();
     view.setTitle( title );
@@ -46,7 +46,7 @@ public final class NodeResultsComparisonViewCreator
     return view;
   }
 
-  public final static Obstableview createTableView( final String izPath, final String calculatedPath )
+  public static final Obstableview createTableView( final String izPath, final String calculatedPath )
   {
     final Obstableview view = new Obstableview();
     view.setFeatures( "Vorhersage;Alarmstufen" ); //$NON-NLS-1$
@@ -67,17 +67,17 @@ public final class NodeResultsComparisonViewCreator
     return view;
   }
 
-  private final static TypeAxis createDischargeAxis( )
+  private static final TypeAxis createDischargeAxis( )
   {
     return createAxis( ITimeseriesConstants.TYPE_DISCHARGE, "Abfluss", "double", "m3/s", TypePosition.LEFT, TypeDirection.VERTICAL, false ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
-  private final static TypeAxis createDateAxis( )
+  private static final TypeAxis createDateAxis( )
   {
     return createAxis( ITimeseriesConstants.TYPE_DATE, "Datum", ITimeseriesConstants.TYPE_DATE, "", TypePosition.BOTTOM, TypeDirection.HORIZONTAL, false ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
-  private final static TypeAxis createAxis( final String ID, final String label, final String dataType, final String unit, final TypePosition position, final TypeDirection direction, final boolean inverted )
+  private static final TypeAxis createAxis( final String ID, final String label, final String dataType, final String unit, final TypePosition position, final TypeDirection direction, final boolean inverted )
   {
     final TypeAxis axis = new TypeAxis();
     axis.setInverted( inverted );
@@ -90,7 +90,7 @@ public final class NodeResultsComparisonViewCreator
     return axis;
   }
 
-  private final static TypeObservation createDiagObservation( final String zmlFilePath, final String obsTitle, final String obsID, final Color color, final Map<String, String> mappingsMap )
+  private static final TypeObservation createDiagObservation( final String zmlFilePath, final String obsTitle, final String obsID, final Color color, final Map<String, String> mappingsMap )
   {
     final TypeObservation observation = new TypeObservation();
     observation.setLinktype( "zml" ); //$NON-NLS-1$
@@ -110,7 +110,7 @@ public final class NodeResultsComparisonViewCreator
     return observation;
   }
 
-  private final static org.kalypso.template.obstableview.TypeObservation createTableObservation( final String zmlFilePath, final String obsTitle, final String obsID, final String axis )
+  private static final org.kalypso.template.obstableview.TypeObservation createTableObservation( final String zmlFilePath, final String obsTitle, final String obsID, final String axis )
   {
     final org.kalypso.template.obstableview.TypeObservation observation = new org.kalypso.template.obstableview.TypeObservation();
     observation.setLinktype( "zml" ); //$NON-NLS-1$
@@ -126,7 +126,7 @@ public final class NodeResultsComparisonViewCreator
     return observation;
   }
 
-  private final static Mapping createAxisMapping( final String diagramAxis, final String observationAxis )
+  private static final Mapping createAxisMapping( final String diagramAxis, final String observationAxis )
   {
     final Mapping mapping = new Mapping();
     mapping.setDiagramAxis( diagramAxis );

@@ -30,9 +30,9 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
+import org.kalypso.model.hydrology.binding.model.INode;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.suds.PlaningArea;
@@ -378,9 +378,9 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         dataList.add( node.getDefaultGeometryPropertyValue() );
         dataList.add( node.getName() );
 
-        final String riverCode = (String) node.getProperty( NaModelConstants.NODE_RIVER_CODE_PROP );
+        final String riverCode = (String) node.getProperty( INode.PROPERTY_RIVER_CODE );
         dataList.add( riverCode == null ? "" : riverCode ); //$NON-NLS-1$
-        final Double riverKm = (Double) node.getProperty( NaModelConstants.NODE_RIVER_KILOMETER_PROP );
+        final Double riverKm = (Double) node.getProperty( INode.PROPERTY_RIVER_KM );
         dataList.add( riverKm == null ? Double.NaN : riverKm );
 
         final String name = node.getName();

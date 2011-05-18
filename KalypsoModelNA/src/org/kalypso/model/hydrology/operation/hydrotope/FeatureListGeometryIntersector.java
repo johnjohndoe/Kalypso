@@ -48,10 +48,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -122,7 +120,7 @@ public class FeatureListGeometryIntersector
    * Intersects features given as a list of feature lists, produces the result into the resultList<br>
    */
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  public List<Polygon> intersect( final IProgressMonitor monitor ) throws CoreException
+  public List<Polygon> intersect( final IProgressMonitor monitor )
   {
     if( m_sourceLayers.isEmpty() )
       return Collections.EMPTY_LIST;
@@ -159,7 +157,7 @@ public class FeatureListGeometryIntersector
         }
         catch( final Exception e )
         {
-          m_log.add( StatusUtilities.createStatus( Status.WARNING, "Problem bei Feature " + feature.getName(), e ) );
+          m_log.add( StatusUtilities.createStatus( IStatus.WARNING, "Problem bei Feature " + feature.getName(), e ) );
         }
       }
       sizeMap.put( featureList, polyCount );
@@ -248,14 +246,14 @@ public class FeatureListGeometryIntersector
             }
             catch( final TopologyException e )
             {
-              m_log.add( StatusUtilities.createStatus( Status.ERROR, "Problem bei der Verschneidung von \n" + featurePolygon + "\n" + candidatePolygon, e ) );
+              m_log.add( StatusUtilities.createStatus( IStatus.ERROR, "Problem bei der Verschneidung von \n" + featurePolygon + "\n" + candidatePolygon, e ) );
             }
           }
         }
       }
       sourcePolygons = resultGeometryList;
     }
-    m_log.add( StatusUtilities.createStatus( Status.INFO, "Gesamter Flächenfehler bei der Verschneidung: " + totalAreaDiscarded, null ) );
+    m_log.add( StatusUtilities.createStatus( IStatus.INFO, "Gesamter Flächenfehler bei der Verschneidung: " + totalAreaDiscarded, null ) );
     return resultGeometryList;
   }
   /**

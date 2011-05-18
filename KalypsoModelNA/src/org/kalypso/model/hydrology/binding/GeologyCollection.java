@@ -98,17 +98,17 @@ public class GeologyCollection extends Feature_Impl
         case DELETE_INTERSECTING:
         {
           m_geologyMembers.remove( existingMember );
-          final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.GeologyCollection.1", existingMember.getId() ); //$NON-NLS-1$
+          final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.GeologyCollection.1", existingMember.getId() ); //$NON-NLS-1$
           log.add( IStatus.WARNING, message );
         }
-        break;
+          break;
 
         case IGNORE_INTERSECTING:
         {
-          final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.GeologyCollection.2", label ); //$NON-NLS-1$
+          final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.GeologyCollection.2", label ); //$NON-NLS-1$
           log.add( IStatus.WARNING, message );
         }
-        return null;
+          return null;
 
         case INTERSECT:
         {
@@ -117,13 +117,13 @@ public class GeologyCollection extends Feature_Impl
           if( difference != null )
           {
             existingMember.setGeometry( difference );
-            final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.GeologyCollection.3", existingMember.getId(), label ); //$NON-NLS-1$
+            final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.GeologyCollection.3", existingMember.getId(), label ); //$NON-NLS-1$
             log.add( IStatus.INFO, message, null );
           }
           else
           {
             m_geologyMembers.remove( existingMember );
-            final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.GeologyCollection.4", existingMember.getId(), label ); //$NON-NLS-1$
+            final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.GeologyCollection.4", existingMember.getId(), label ); //$NON-NLS-1$
             log.add( IStatus.INFO, message, null );
           }
         }

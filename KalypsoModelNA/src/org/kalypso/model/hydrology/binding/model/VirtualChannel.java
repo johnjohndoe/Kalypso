@@ -40,21 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.model;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}Virtual.
  * 
  * @author Gernot Belger
  */
-public class VirtualChannel extends Channel
+public class VirtualChannel extends Channel implements IVirtualChannel
 {
-  public static final QName FEATURE_VIRTUAL_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "VirtualChannel" ); //$NON-NLS-1$
-
   public VirtualChannel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );

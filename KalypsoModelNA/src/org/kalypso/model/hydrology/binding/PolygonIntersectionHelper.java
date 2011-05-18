@@ -48,8 +48,12 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Dejan Antanaskovic
  */
-public class PolygonIntersectionHelper
+public final class PolygonIntersectionHelper
 {
+  private PolygonIntersectionHelper( )
+  {
+  }
+
   /**
    * Defines how existing features are handled when imported.
    */

@@ -61,7 +61,7 @@ public class Sealing
     this( 0.0, 0.0 );
   }
 
-  public Sealing(final double sealedArea, final double naturalArea )
+  public Sealing( final double sealedArea, final double naturalArea )
   {
     m_sealedArea = sealedArea;
     m_naturalArea = naturalArea;

@@ -88,7 +88,7 @@ public class PedologyShapeInputDescriptor implements InputDescriptor
   @Override
   public String getDescription( final int index )
   {
-    return Messages.getString("org.kalypso.model.hydrology.operation.hydrotope.PedologyShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.PedologyShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
   }
 
   /**
@@ -110,7 +110,7 @@ public class PedologyShapeInputDescriptor implements InputDescriptor
       if( property instanceof GM_MultiSurface )
         return (GM_MultiSurface) property;
 
-      throw new NotImplementedException( Messages.getString("org.kalypso.model.hydrology.operation.hydrotope.PedologyShapeInputDescriptor.2") ); //$NON-NLS-1$
+      throw new NotImplementedException( Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.PedologyShapeInputDescriptor.2" ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
@@ -164,7 +164,7 @@ public class PedologyShapeInputDescriptor implements InputDescriptor
     final Integer column = m_propHash.get( property );
     if( column == null )
     {
-      final String message =  Messages.getString("org.kalypso.model.hydrology.operation.hydrotope.PedologyShapeInputDescriptor.3", property ); //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.PedologyShapeInputDescriptor.3", property ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, message, null ) );
     }
 

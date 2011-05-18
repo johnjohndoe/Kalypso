@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Ignore;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
-import org.kalypso.model.hydrology.binding.Hydrotop;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
@@ -120,7 +119,7 @@ public class Test_Intersection extends TestCase
 
     for( final Geometry geometry : intersectionList )
     {
-      final IHydrotope hydrotop = hydrotopes.addNew( Hydrotop.QNAME );
+      final IHydrotope hydrotop = hydrotopes.addNew( IHydrotope.QNAME );
       final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
 

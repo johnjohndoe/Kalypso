@@ -54,10 +54,10 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Branching;
 import org.kalypso.model.hydrology.binding.model.BranchingWithNode;
+import org.kalypso.model.hydrology.binding.model.INode;
 import org.kalypso.model.hydrology.binding.model.KontEntnahme;
 import org.kalypso.model.hydrology.binding.model.KontZufluss;
 import org.kalypso.model.hydrology.binding.model.Node;
@@ -217,7 +217,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     final Node relatedNode = node.getQQRelatedNode();
     if( relatedNode == null )
       return null;
-    final IObservation observation = (IObservation) node.getProperty( NaModelConstants.NODE_QQRELATION_PROP );
+    final IObservation observation = (IObservation) node.getProperty( INode.PROPERTY_QQ_RELATION );
     if( observation == null )
       return null;
     final StringBuffer buffer = new StringBuffer();

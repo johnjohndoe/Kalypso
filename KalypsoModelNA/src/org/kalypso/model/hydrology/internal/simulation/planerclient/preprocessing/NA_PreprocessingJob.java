@@ -13,20 +13,20 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 
 /**
- * This class prepares the rainfall-runoff data for the PLC postprocessing; it creates the "IstZustand" folder structure if it does
- * not exist.
+ * This class prepares the rainfall-runoff data for the PLC postprocessing; it creates the "IstZustand" folder structure
+ * if it does not exist.
  * 
  * @author Dejan Antanaskovic
  */
 public class NA_PreprocessingJob extends AbstractInternalStatusJob implements ISimulation
 {
-  private final static String INPUT_STATUSQUO_RESULTSFOLDER = "StatusQuoResultsFolder"; //$NON-NLS-1$
+  private static final String INPUT_STATUSQUO_RESULTSFOLDER = "StatusQuoResultsFolder"; //$NON-NLS-1$
 
-  private final static String INPUT_DIFFERENCE_FOLDER = "StatusQuoResultsFolder"; //$NON-NLS-1$
+  private static final String INPUT_DIFFERENCE_FOLDER = "StatusQuoResultsFolder"; //$NON-NLS-1$
 
-  private final static String INPUT_ACTUAL_RESULTSFOLDER = "ActualResultsFolder"; //$NON-NLS-1$
+  private static final String INPUT_ACTUAL_RESULTSFOLDER = "ActualResultsFolder"; //$NON-NLS-1$
 
-  private final static String OUTPUT_FOLDER = "OutputFolder"; //$NON-NLS-1$
+  private static final String OUTPUT_FOLDER = "OutputFolder"; //$NON-NLS-1$
 
   @Override
   public URL getSpezifikation( )

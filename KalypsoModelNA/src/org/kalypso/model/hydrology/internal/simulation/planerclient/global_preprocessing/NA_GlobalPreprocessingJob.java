@@ -57,11 +57,11 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class NA_GlobalPreprocessingJob extends AbstractInternalStatusJob implements ISimulation
 {
-  private final static String INPUT_PARAMETER_MODEL = "parametersModel"; //$NON-NLS-1$
+  private static final String INPUT_PARAMETER_MODEL = "parametersModel"; //$NON-NLS-1$
 
-  private final static String OUTPUT_SUDS_MODEL = "sudsModel"; //$NON-NLS-1$
+  private static final String OUTPUT_SUDS_MODEL = "sudsModel"; //$NON-NLS-1$
 
-  private final static String OUTPUT_SUDS_FOLDER = "SudsFolder"; //$NON-NLS-1$
+  private static final String OUTPUT_SUDS_FOLDER = "SudsFolder"; //$NON-NLS-1$
 
   @Override
   public URL getSpezifikation( )

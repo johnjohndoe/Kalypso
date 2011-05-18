@@ -170,7 +170,6 @@ public class LzsToGml
     final String fileName = String.format( "we%s.lzs", asciiID ); //$NON-NLS-1$
     final File lzsFile = new File( m_lzsimDir, fileName );
 
-
     FileReader fileReader = null;
     try
     {
@@ -248,7 +247,7 @@ public class LzsToGml
             counterHydros = 0;
           }
         }
-        break;
+          break;
 
         case READ_GWSP:
         {
@@ -259,7 +258,7 @@ public class LzsToGml
           lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "qb" ), qb ); //$NON-NLS-1$
           status = CatchmentStatus.SEARCH_HEADER;
         }
-        break;
+          break;
 
         case READ_SNOW:
           final String[] strings = cleanLine.split( " " ); //$NON-NLS-1$

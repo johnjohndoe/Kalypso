@@ -38,42 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.operation.hydrotope;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package org.kalypso.model.hydrology.binding.model;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dirk Kuch
  */
-public final class LanduseClassHelper
+public interface IVirtualChannel extends IChannel
 {
-  private LanduseClassHelper( )
-  {
-  }
-
-  public static Map<String, String> resolve( final GMLWorkspace landuseClassesWorkspace )
-  {
-    final List< ? > landuseClassesFeatures = (List< ? >) landuseClassesWorkspace.getRootFeature().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, "landuseMember" ) ); //$NON-NLS-1$
-
-    final Map<String, String> landuseClasses = new HashMap<String, String>();
-    for( final Object object : landuseClassesFeatures )
-    {
-      final Feature f = (Feature) object;
-      final String name = f.getName();
-      final String id = f.getId();
-
-      landuseClasses.put( name, id );
-    }
-
-    return landuseClasses;
-  }
+  QName FEATURE_VIRTUAL_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "VirtualChannel" ); //$NON-NLS-1$
 
 }

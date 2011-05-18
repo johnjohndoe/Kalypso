@@ -68,7 +68,7 @@ public class BlockTimeSeriesDiffObject implements IDiffObject
     final String[] keys = m_blockTimeSeries.getKeys();
 
     final List<String> list = new ArrayList<String>();
-    for( String key : keys )
+    for( final String key : keys )
       list.add( name + SEPERATOR + key );
 
     m_pathes = list;

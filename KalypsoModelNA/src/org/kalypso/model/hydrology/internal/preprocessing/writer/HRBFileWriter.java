@@ -184,7 +184,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
       for( int row = 0; row < count; row++ )
       {
         final double w = (Double) values.get( row, axis_NN );
-        final double v = ((Double) values.get( row, axis_V )) / 1000000;
+        final double v = (Double) values.get( row, axis_V ) / 1000000;
         final Double q = (Double) values.get( row, axis_Q );
         final Double q2 = axis_Q2 == null ? 0.0 : (Double) values.get( row, axis_Q2 );
         final Double q3 = axis_Q3 == null ? 0.0 : (Double) values.get( row, axis_Q3 );

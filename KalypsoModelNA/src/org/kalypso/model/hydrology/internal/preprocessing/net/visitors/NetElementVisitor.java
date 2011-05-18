@@ -56,7 +56,7 @@ public abstract class NetElementVisitor
       m_logger.info( info );
   }
 
-  public Logger getLogger()
+  public Logger getLogger( )
   {
     return m_logger;
   }

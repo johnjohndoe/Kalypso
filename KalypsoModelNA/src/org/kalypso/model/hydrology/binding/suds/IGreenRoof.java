@@ -49,13 +49,13 @@ import org.kalypso.model.hydrology.NaModelConstants;
  */
 public interface IGreenRoof extends ISudsWithElementType
 {
-  public static final String IDEAL_LANDUSE_EXTENSIVE = "GRext_N"; //$NON-NLS-1$
+  String IDEAL_LANDUSE_EXTENSIVE = "GRext_N"; //$NON-NLS-1$
 
-  public static final String IDEAL_LANDUSE_INTENSIVE = "GRint_N"; //$NON-NLS-1$
+  String IDEAL_LANDUSE_INTENSIVE = "GRint_N"; //$NON-NLS-1$
 
   public static enum EUsageType
   {
-    EXTENSIVE("grs_ex"), //$NON-NLS-1$
+    EXTENSIVE("grs_ex"), //$NON-NLS-1$ 
     INTENSIVE("grs_int"); //$NON-NLS-1$
 
     private final String m_soilTypeID;
@@ -76,44 +76,44 @@ public interface IGreenRoof extends ISudsWithElementType
     }
   }
 
-  public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // suds:EnumGreenRoofType //$NON-NLS-1$
+  QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); // suds:EnumGreenRoofType //$NON-NLS-1$
 
-  public QName QN_PROPERTY_AREA_PERCENTAGE = new QName( NaModelConstants.NS_NASUDS, "areaPercentage" ); // double //$NON-NLS-1$
+  QName QN_PROPERTY_AREA_PERCENTAGE = new QName( NaModelConstants.NS_NASUDS, "areaPercentage" ); // double //$NON-NLS-1$
 
-  public QName QN_PROPERTY_SLOPE = new QName( NaModelConstants.NS_NASUDS, "slope" ); // double //$NON-NLS-1$
+  QName QN_PROPERTY_SLOPE = new QName( NaModelConstants.NS_NASUDS, "slope" ); // double //$NON-NLS-1$
 
-  public QName QN_PROPERTY_USAGE_TYPE = new QName( NaModelConstants.NS_NASUDS, "usageType" ); // suds:EnumGreenRoofLanduseType //$NON-NLS-1$
+  QName QN_PROPERTY_USAGE_TYPE = new QName( NaModelConstants.NS_NASUDS, "usageType" ); // suds:EnumGreenRoofLanduseType //$NON-NLS-1$
 
-  public QName QN_PROPERTY_RAINWATER_PIPE_DIAMETER = new QName( NaModelConstants.NS_NASUDS, "rainwaterPipeDiameter" ); // suds:EnumPipeDiameter //$NON-NLS-1$
+  QName QN_PROPERTY_RAINWATER_PIPE_DIAMETER = new QName( NaModelConstants.NS_NASUDS, "rainwaterPipeDiameter" ); // suds:EnumPipeDiameter //$NON-NLS-1$
 
-  public QName QN_PROPERTY_RAINWATER_PIPE_ROUGHNESS = new QName( NaModelConstants.NS_NASUDS, "rainwaterPipeRoughness" ); // double //$NON-NLS-1$
+  QName QN_PROPERTY_RAINWATER_PIPE_ROUGHNESS = new QName( NaModelConstants.NS_NASUDS, "rainwaterPipeRoughness" ); // double //$NON-NLS-1$
 
-  public QName QN_PROPERTY_DRAINAGE_LAYER_POROSITY = new QName( NaModelConstants.NS_NASUDS, "drainageLayerPorosity" ); // double //$NON-NLS-1$
+  QName QN_PROPERTY_DRAINAGE_LAYER_POROSITY = new QName( NaModelConstants.NS_NASUDS, "drainageLayerPorosity" ); // double //$NON-NLS-1$
 
-  public QName QN_PROPERTY_EMERGENCY_SPILL_PIPE_DIAMETER = new QName( NaModelConstants.NS_NASUDS, "emergencySpillPipeDiameter" ); // suds:EnumPipeDiameter //$NON-NLS-1$
+  QName QN_PROPERTY_EMERGENCY_SPILL_PIPE_DIAMETER = new QName( NaModelConstants.NS_NASUDS, "emergencySpillPipeDiameter" ); // suds:EnumPipeDiameter //$NON-NLS-1$
 
-  public QName QN_PROPERTY_EMERGENCY_SPILL_PIPE_ROUGHNESS = new QName( NaModelConstants.NS_NASUDS, "emergencySpillPipeRoughness" ); // double //$NON-NLS-1$
+  QName QN_PROPERTY_EMERGENCY_SPILL_PIPE_ROUGHNESS = new QName( NaModelConstants.NS_NASUDS, "emergencySpillPipeRoughness" ); // double //$NON-NLS-1$
 
-  public QName QN_PROPERTY_EMERGENCY_SPILL_HEIGHT = new QName( NaModelConstants.NS_NASUDS, "emergencySpillHeight" ); // double //$NON-NLS-1$
+  QName QN_PROPERTY_EMERGENCY_SPILL_HEIGHT = new QName( NaModelConstants.NS_NASUDS, "emergencySpillHeight" ); // double //$NON-NLS-1$
 
-  public Double getAreaPercentage( );
+  Double getAreaPercentage( );
 
-  public Double getSlope( );
+  Double getSlope( );
 
-  public EUsageType getUsageType( );
+  EUsageType getUsageType( );
 
-  public String getIdealLanduseName( );
+  String getIdealLanduseName( );
 
-  public Object getRainwaterPipeDiameter( );
+  Object getRainwaterPipeDiameter( );
 
-  public Double getRainwaterPipeRoughness( );
+  Double getRainwaterPipeRoughness( );
 
-  public Double getDrainageLayerPorosity( );
+  Double getDrainageLayerPorosity( );
 
-  public Object getEmergencySpillPipeDiameter( );
+  Object getEmergencySpillPipeDiameter( );
 
-  public Double getEmergencySpillPipeRoughness( );
+  Double getEmergencySpillPipeRoughness( );
 
-  public Double getEmergencySpillHeight( );
+  Double getEmergencySpillHeight( );
 
 }

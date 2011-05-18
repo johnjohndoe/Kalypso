@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding.model;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -54,87 +51,76 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger
  */
-public class StorageChannel extends Channel
+public class StorageChannel extends Channel implements IStorageChannel
 {
-  public static final QName FEATURE_STORAGE_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "StorageChannel" ); //$NON-NLS-1$
-
-  private static final QName PROP_HVVSQD = new QName( NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
-
-  private static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
-
-  private static final QName PROP_DOWNSTREAM_NODE = new QName( NS_NAMODELL, "iknotNodeMember" ); //$NON-NLS-1$
-
-  private static final QName PROP_DOWNSTREAM_NODE_2 = new QName( NS_NAMODELL, "downStreamNodeMember_2nd" ); //$NON-NLS-1$
-
-  private static final QName PROP_DOWNSTREAM_NODE_3 = new QName( NS_NAMODELL, "downStreamNodeMember_3rd" ); //$NON-NLS-1$
-
-  private static final QName PROP_SEA_EVAPORATION_ZMLLINK = new QName( NS_NAMODELL, "zmlLinkSeaEvaporation" ); //$NON-NLS-1$
-
-  private static final QName PROP_SEA_EVAPORATION_FACTOR = new QName( NS_NAMODELL, "faktorSeaEvaporation" ); //$NON-NLS-1$
-
-  private static final QName PROP_INITIAL_CAPACITY = new QName( NS_NAMODELL, "sv" ); //$NON-NLS-1$
-
-  private static final QName PROP_VOLUME_MAX = new QName( NS_NAMODELL, "vmax" ); //$NON-NLS-1$
-
-  private static final QName PROP_VOLUME_MIN = new QName( NS_NAMODELL, "vmin" ); //$NON-NLS-1$
-
   public StorageChannel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  @Override
   public IObservation getWVQObservation( )
   {
-    return (IObservation) getProperty( PROP_HVVSQD );
+    return (IObservation) getProperty( PROPERTY_HVVSQD );
   }
 
+  @Override
   public boolean isGenerateResults( )
   {
-    return getBoolean( GENERATE_RESULT_PROP, false );
+    return getBoolean( PROPERTY_GENERATE_RESULT, false );
   }
 
+  @Override
   public void setGenerateResults( final boolean value )
   {
-    setProperty( GENERATE_RESULT_PROP, value );
+    setProperty( PROPERTY_GENERATE_RESULT, value );
   }
 
+  @Override
   public Node getOverflowNode( )
   {
-    return (Node) FeatureHelper.resolveLink( this, PROP_DOWNSTREAM_NODE, true );
+    return (Node) FeatureHelper.resolveLink( this, PROPERTY_DOWNSTREAM_NODE, true );
   }
 
+  @Override
   public Node getOverflowNode2( )
   {
-    return (Node) FeatureHelper.resolveLink( this, PROP_DOWNSTREAM_NODE_2, true );
+    return (Node) FeatureHelper.resolveLink( this, PROPERTY_DOWNSTREAM_NODE_2, true );
   }
 
+  @Override
   public Node getOverflowNode3( )
   {
-    return (Node) FeatureHelper.resolveLink( this, PROP_DOWNSTREAM_NODE_3, true );
+    return (Node) FeatureHelper.resolveLink( this, PROPERTY_DOWNSTREAM_NODE_3, true );
   }
 
+  @Override
   public TimeseriesLinkType getSeaEvaporationTimeseriesLink( )
   {
-    return getProperty( PROP_SEA_EVAPORATION_ZMLLINK, TimeseriesLinkType.class );
+    return getProperty( PROPERTY_SEA_EVAPORATION_ZMLLINK, TimeseriesLinkType.class );
   }
 
+  @Override
   public double getSeaEvaporationFactor( )
   {
-    return getDoubleProperty( PROP_SEA_EVAPORATION_FACTOR, 1.0 );
+    return getDoubleProperty( PROPERTY_SEA_EVAPORATION_FACTOR, 1.0 );
   }
 
+  @Override
   public double getInitialCapacity( )
   {
-    return getDoubleProperty( PROP_INITIAL_CAPACITY, 0.0 );
+    return getDoubleProperty( PROPERTY_INITIAL_CAPACITY, 0.0 );
   }
 
+  @Override
   public double getVolumeMax( )
   {
-    return getDoubleProperty( PROP_VOLUME_MAX, 0.0 );
+    return getDoubleProperty( PROPERTY_VOLUME_MAX, 0.0 );
   }
 
+  @Override
   public double getVolumeMin( )
   {
-    return getDoubleProperty( PROP_VOLUME_MIN, 0.0 );
+    return getDoubleProperty( PROPERTY_VOLUME_MIN, 0.0 );
   }
 }

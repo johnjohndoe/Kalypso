@@ -140,7 +140,6 @@ public class BodentypWriter extends AbstractCoreFileWriter
     }
     addSudsSoilLayers();
 
-
     buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
     final Iterator<String> soilTypesIterator = m_soilTypes.keySet().iterator();
     while( soilTypesIterator.hasNext() )

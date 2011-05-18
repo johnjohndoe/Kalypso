@@ -46,7 +46,7 @@ import java.io.PrintWriter;
 import java.util.Calendar;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.preprocessing.timeseries.Ext2Writer;
 import org.kalypso.ogc.sensor.DateRange;
@@ -81,7 +81,7 @@ public class Ext2InterpolationWriter
     final DateRange extendedRange = createExtendedRange( simulationRange );
     final IRequest request = new ObservationRequest( extendedRange );
 
-    final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 24, true, m_defaultValue, Status.WARNING, false );
+    final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 24, true, m_defaultValue, IStatus.WARNING, false );
     filter.initFilter( null, m_observation, null );
 
     PrintWriter writer = null;

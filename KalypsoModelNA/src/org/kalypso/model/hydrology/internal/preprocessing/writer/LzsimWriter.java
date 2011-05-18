@@ -76,9 +76,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class LzsimWriter
 {
-  private final static String LZS_FORMAT_STRING = "%s h     1 %s\n   1%9.2f%9.2f\n"; //$NON-NLS-1$
+  private static final String LZS_FORMAT_STRING = "%s h     1 %s\n   1%9.2f%9.2f\n"; //$NON-NLS-1$
 
-  private final static String LZG_FORMAT_STRING = "%s h   1 %s\n   1%9.3f\n"; //$NON-NLS-1$
+  private static final String LZG_FORMAT_STRING = "%s h   1 %s\n   1%9.3f\n"; //$NON-NLS-1$
 
   private final InitialValues m_initialValues;
 

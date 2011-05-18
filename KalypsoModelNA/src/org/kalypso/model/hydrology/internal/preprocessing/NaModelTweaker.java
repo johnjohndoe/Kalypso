@@ -44,10 +44,11 @@ import org.kalypso.model.hydrology.binding.model.Branching;
 import org.kalypso.model.hydrology.binding.model.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Channel;
+import org.kalypso.model.hydrology.binding.model.INode;
+import org.kalypso.model.hydrology.binding.model.IVirtualChannel;
 import org.kalypso.model.hydrology.binding.model.KontZufluss;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
-import org.kalypso.model.hydrology.binding.model.VirtualChannel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -114,7 +115,7 @@ public class NaModelTweaker
         final Node node = channel.getDownstreamNode();
 
         /* Create new channel and relocate catchment to the new channel. */
-        final Channel newChannel = m_naModel.getChannels().addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
+        final Channel newChannel = m_naModel.getChannels().addNew( IVirtualChannel.FEATURE_VIRTUAL_CHANNEL );
         catchment.setChannel( newChannel );
 
         /* Connect the new channel into the net */
@@ -159,7 +160,7 @@ public class NaModelTweaker
           final Node targetNode = branchingWithNode.getNode();
           if( targetNode == null )
           {
-            final String message = String.format( Messages.getString("NaModelTweaker_0"), node.getName() ); //$NON-NLS-1$
+            final String message = String.format( Messages.getString( "NaModelTweaker_0" ), node.getName() ); //$NON-NLS-1$
             throw new NAPreprocessorException( message );
           }
 
@@ -246,7 +247,7 @@ public class NaModelTweaker
         final Channel[] upstreamChannels = node.findUpstreamChannels();
         for( final Channel channel : upstreamChannels )
         {
-          final Node newEndNode = nodes.addNew( Node.FEATURE_NODE );
+          final Node newEndNode = nodes.addNew( INode.FEATURE_NODE );
           channel.setDownstreamNode( newEndNode );
         }
 
@@ -286,9 +287,9 @@ public class NaModelTweaker
     final IFeatureBindingCollection<Channel> channels = m_naModel.getChannels();
 
     // add to collections:
-    final Channel newChannel1 = channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
-    final Channel newChannel3 = channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL );
-    final Node newNode2 = nodes.addNew( Node.FEATURE_NODE );
+    final Channel newChannel1 = channels.addNew( IVirtualChannel.FEATURE_VIRTUAL_CHANNEL );
+    final Channel newChannel3 = channels.addNew( IVirtualChannel.FEATURE_VIRTUAL_CHANNEL );
+    final Node newNode2 = nodes.addNew( INode.FEATURE_NODE );
 
     /* Create network */
     newChannel3.setDownstreamNode( newNode2 );

@@ -132,11 +132,11 @@ public class NAControlConverter
 
       final double annuality = m_metaControl.getAnnuality();
       if( Double.isNaN( annuality ) )
-        throw new NAPreprocessorException( Messages.getString("NAControlConverter.0") ); //$NON-NLS-1$
+        throw new NAPreprocessorException( Messages.getString( "NAControlConverter.0" ) ); //$NON-NLS-1$
 
       final double duration = m_metaControl.getDurationHours();
       if( Double.isNaN( duration ) )
-        throw new NAPreprocessorException( Messages.getString("NAControlConverter.1") ); //$NON-NLS-1$
+        throw new NAPreprocessorException( Messages.getString( "NAControlConverter.1" ) ); //$NON-NLS-1$
 
       writer.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Dateiname: Wahrscheinlichkeit [1/a]; Dauer [h]; Verteilung; Konfigurationsdatei mit Pfad\n" ); //$NON-NLS-1$
       writer.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + FortranFormatHelper.printf( annuality, "f6.3" ) + " " + FortranFormatHelper.printf( duration, "f9.3" ) //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
@@ -292,7 +292,6 @@ public class NAControlConverter
     }
     writer.append( "99999\n" ); //$NON-NLS-1$
   }
-
 
   private static String getBoolean( final boolean property )
   {
