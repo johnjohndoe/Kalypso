@@ -39,6 +39,8 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 
 public class ExportHydrographWizard extends Wizard
 {
+  private static final String NO_VALUE = "#NV"; //$NON-NLS-1$
+
   private Set<Integer> m_setExclusion = new HashSet<Integer>();
 
   private final static SimpleDateFormat m_dateFormat = new SimpleDateFormat( "dd.MM.yyyy" ); //$NON-NLS-1$
@@ -46,7 +48,7 @@ public class ExportHydrographWizard extends Wizard
   private final static SimpleDateFormat m_timeFormat = new SimpleDateFormat( "HH:mm:ss.SSS" ); //$NON-NLS-1$
 
   private final static SimpleDateFormat m_dateTimeFormatFileName = new SimpleDateFormat( "yyyy_MM_dd_HH_mm_ss" ); //$NON-NLS-1$
-  
+
   private final static String SINGLE_FILE_NAME_PREFIX = "all_hydrographs_exptt_"; //$NON-NLS-1$
 
   private static final int HEADER_COLS_COUNT = 8;
@@ -134,25 +136,31 @@ public class ExportHydrographWizard extends Wizard
       final IComponent wavePerComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_PER );
       final IComponent waveDirComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_DIR );
       m_componentsOrdered = new IComponent[] { dateComp, waterlevelComp, depthComp, velocityComp, dischargeComp, waveHsigComp, wavePerComp, waveDirComp };
-      
-      if( m_exportHydrographWizardPage.getsSeparator() != null ){
+
+      if( m_exportHydrographWizardPage.getsSeparator() != null )
+      {
         m_textSep = m_exportHydrographWizardPage.getsSeparator().getText().trim();
-        if( m_textSep.charAt( 0 ) == '\\' ){
-          if( m_textSep.charAt( 1 ) == 't' ){
+        if( m_textSep.charAt( 0 ) == '\\' )
+        {
+          if( m_textSep.charAt( 1 ) == 't' )
+          {
             m_textSep = "\t"; //$NON-NLS-1$
           }
-          else if( m_textSep.charAt( 1 ) == '0' ){
+          else if( m_textSep.charAt( 1 ) == '0' )
+          {
             m_textSep = "\0"; //$NON-NLS-1$
           }
-          else if( m_textSep.charAt( 1 ) == 'r' ){
+          else if( m_textSep.charAt( 1 ) == 'r' )
+          {
             m_textSep = "\r"; //$NON-NLS-1$
           }
-          else if( m_textSep.charAt( 1 ) == 'n' ){
+          else if( m_textSep.charAt( 1 ) == 'n' )
+          {
             m_textSep = "\n"; //$NON-NLS-1$
           }
         }
       }
-            
+
       if( !m_exportHydrographWizardPage.getBtnCheckButton().getSelection() )
       {
         m_setExclusion.add( 1 );
@@ -177,21 +185,26 @@ public class ExportHydrographWizard extends Wizard
       {
         m_setExclusion.add( 7 );
       }
-      if( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() ){
-        if( m_exportHydrographWizardPage.getBtnHorizontal().getSelection() ){
+      if( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() )
+      {
+        if( m_exportHydrographWizardPage.getBtnHorizontal().getSelection() )
+        {
           m_boolHorizontalExport = true;
         }
-        else{
+        else
+        {
           m_boolHorizontalExport = false;
         }
       }
-      if( m_exportHydrographWizardPage.getBtnSeparatorButton_1().getSelection() ){
+      if( m_exportHydrographWizardPage.getBtnSeparatorButton_1().getSelection() )
+      {
         m_boolPointSeparator = false;
       }
-      else{
+      else
+      {
         m_boolPointSeparator = true;
       }
-      
+
       runExport();
 
     }
@@ -204,7 +217,7 @@ public class ExportHydrographWizard extends Wizard
     String lStringExportDir = m_exportHydrographWizardPage.getsOutputDir().getText();
     if( lStringExportDir == null || lStringExportDir.trim() == "" ) //$NON-NLS-1$
     {
-      
+
       lStringExportDir = m_outDefaultDir;
     }
     IHydrograph lSelectedHydrograph = m_selectedHydrograph;
@@ -216,7 +229,7 @@ public class ExportHydrographWizard extends Wizard
     }
     else
     {
-      lListHydrographs.add( lSelectedHydrograph.getFeature() ); 
+      lListHydrographs.add( lSelectedHydrograph.getFeature() );
     }
 
     m_mapDateStringsToPrint = new HashMap<XMLGregorianCalendar, String>();
@@ -224,10 +237,11 @@ public class ExportHydrographWizard extends Wizard
     OutputStream lOutStream = null;
     Formatter formatter = null;
     m_selectedLocale = Locale.US;
-    if( !m_boolPointSeparator ){
+    if( !m_boolPointSeparator )
+    {
       m_selectedLocale = Locale.GERMAN;
     }
-    
+
     for( int lCountHydrographs = 0; lCountHydrographs < lListHydrographs.size(); ++lCountHydrographs )
     {
 
@@ -236,10 +250,11 @@ public class ExportHydrographWizard extends Wizard
       m_geoPosition = selectedHydrograph.getLocation();
       Date lDateNow = new Date();
       String lStrFileName = /* "hydrograph_" + */selectedHydrograph.getName().replace( " ", "_" ) + "_Nr_" + lCountHydrographs + "_exptt_" + m_dateTimeFormatFileName.format( lDateNow ) + ".txt"; //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-      if( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() ){
+      if( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() )
+      {
         lStrFileName = SINGLE_FILE_NAME_PREFIX + m_dateTimeFormatFileName.format( lDateNow ) + ".txt";
       }
-      final File stdOutFile = new File( lStringExportDir, lStrFileName  ); 
+      final File stdOutFile = new File( lStringExportDir, lStrFileName );
 
       if( m_exportHydrographWizardPage.getRadioMultipleFiles().getSelection() || lCountHydrographs == 0 )
       {
@@ -389,13 +404,21 @@ public class ExportHydrographWizard extends Wizard
         }
         else
         {
-          String lStr = String.format( "%s%s", lNf.format( lResTuple.getValue( j ) ), m_textSep ); //$NON-NLS-1$
+          String lStrValue = NO_VALUE;
+          try
+          {
+            lStrValue = lNf.format( lResTuple.getValue( j ) );
+          }
+          catch( Exception e )
+          {
+          }
+          String lStr = String.format( "%s%s", lStrValue, m_textSep ); //$NON-NLS-1$
 
           if( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() && m_boolHorizontalExport )
           {
             String lStrOld = m_mapDateStringsToPrint.get( m_actCalendarDate );
             if( lStrOld == null )
-            { 
+            {
               lStrOld = ""; //$NON-NLS-1$
             }
             if( j > 0 && !lBoolPosSet )
@@ -428,11 +451,11 @@ public class ExportHydrographWizard extends Wizard
 
   private void formatHeader( final Formatter formatter, final int pIntCounter )
   {
-    if( pIntCounter == 0 || ( m_exportHydrographWizardPage.getRadioMultipleFiles().getSelection() ) )
+    if( pIntCounter == 0 || (m_exportHydrographWizardPage.getRadioMultipleFiles().getSelection()) )
     {
       formatter.format( "[%s]%s[%s]%s", m_dateFormat.toPattern(), m_textSep, m_timeFormat.toPattern(), m_textSep ); //$NON-NLS-1$
     }
-    if( pIntCounter > 0 && ( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() && !m_boolHorizontalExport ) )
+    if( pIntCounter > 0 && (m_exportHydrographWizardPage.getRadioSingleFile().getSelection() && !m_boolHorizontalExport) )
     {
       formatter.format( "\n" ); //$NON-NLS-1$
       formatter.flush();
@@ -441,7 +464,7 @@ public class ExportHydrographWizard extends Wizard
     for( int i = 1; i < HEADER_COLS_COUNT; ++i )
     {
       if( i == 1 )
-      { 
+      {
         formatter.format( "%s%s", COL_POS, m_textSep ); //$NON-NLS-1$
       }
       if( m_setExclusion.contains( i ) )
@@ -450,7 +473,7 @@ public class ExportHydrographWizard extends Wizard
       }
       formatter.format( "%s%s", m_componentsOrdered[i].getDescription(), m_textSep ); //$NON-NLS-1$
     }
-    if( m_exportHydrographWizardPage.getRadioMultipleFiles().getSelection() || ( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() && !m_boolHorizontalExport ) )
+    if( m_exportHydrographWizardPage.getRadioMultipleFiles().getSelection() || (m_exportHydrographWizardPage.getRadioSingleFile().getSelection() && !m_boolHorizontalExport) )
     {
       formatter.format( "\n" ); //$NON-NLS-1$
     }
