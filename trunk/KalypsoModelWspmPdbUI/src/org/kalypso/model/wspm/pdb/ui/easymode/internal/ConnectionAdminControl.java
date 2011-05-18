@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.gaf.internal.ImportGafAction;
 
 /**
  * @author Gernot Belger
