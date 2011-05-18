@@ -147,7 +147,6 @@ public class WProfImportFilePage extends WizardPage
   private Control createSrsControl( final Composite parent )
   {
     m_crsPanel = new CRSSelectionPanel( parent, SWT.NONE );
-    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final IDialogSettings dialogSettings = getDialogSettings();
 
