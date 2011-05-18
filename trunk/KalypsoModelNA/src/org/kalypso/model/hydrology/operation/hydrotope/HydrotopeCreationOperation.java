@@ -214,7 +214,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       int count = 0;
 
       final IGMLSchema gmlSchema = m_workspace.getGMLSchema();
-      final IFeatureType hydrotopeFT = gmlSchema.getFeatureType( Hydrotop.QNAME );
+      final IFeatureType hydrotopeFT = gmlSchema.getFeatureType( IHydrotope.QNAME );
       final IRelationType sudsMemberRT = (IRelationType) hydrotopeFT.getProperty( Hydrotop.QNAME_PROP_SUD_MEMBERS );
       final IRelationType catchmentMemberRT = (IRelationType) hydrotopeFT.getProperty( Hydrotop.QNAME_PROP_CATCHMENT_MEMBER );
 
@@ -271,7 +271,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         }
 
         final IHydrotope hydrotop = m_outputList.addNew( IHydrotope.QNAME );
-        
+
         // sealing correction factor is now the product of
         // factors from catchment and landuse
         double corrSealing = 1.0;

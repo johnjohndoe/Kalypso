@@ -12,8 +12,8 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_NA_WSPM;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.INode;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -158,13 +158,13 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
               {
                 if( naRiverCode != null && naRiverCode.length() > 0 )
                 {
-                  final Object nodeRiverCodeProperty = node.getProperty( NaModelConstants.NODE_RIVER_CODE_PROP );
+                  final Object nodeRiverCodeProperty = node.getProperty( INode.PROPERTY_RIVER_CODE );
                   if( nodeRiverCodeProperty == null || !naRiverCode.equals( nodeRiverCodeProperty ) )
                   {
                     continue;
                   }
                 }
-                final Object riverKilometerProp = node.getProperty( NaModelConstants.NODE_RIVER_KILOMETER_PROP );
+                final Object riverKilometerProp = node.getProperty( INode.PROPERTY_RIVER_KM );
                 if( riverKilometerProp != null )
                 {
                   final Double nodeRiverKilometerProperty = Double.parseDouble( riverKilometerProp.toString() );

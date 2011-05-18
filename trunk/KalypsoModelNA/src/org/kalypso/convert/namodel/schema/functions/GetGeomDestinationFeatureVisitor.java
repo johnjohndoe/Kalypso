@@ -65,7 +65,7 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
 
   private final List<GM_Object> m_result;
 
-  public GetGeomDestinationFeatureVisitor( GMLWorkspace workspace, IRelationType initialPropName, int maxLevel )
+  public GetGeomDestinationFeatureVisitor( final GMLWorkspace workspace, final IRelationType initialPropName, final int maxLevel )
   {
     m_workspace = workspace;
     m_prelationPT = initialPropName;
@@ -82,24 +82,24 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public boolean visit( Feature f )
+  public boolean visit( final Feature f )
   {
     visit( f, m_prelationPT, 0 );
     return false;
   }
 
-  private void visit( Feature feature, int level )
+  private void visit( final Feature feature, int level )
   {
     level++;
-    IPropertyType[] properties = feature.getFeatureType().getProperties();
-    for( int i = 0; i < properties.length; i++ )
+    final IPropertyType[] properties = feature.getFeatureType().getProperties();
+    for( final IPropertyType propertie : properties )
     {
-      if( properties[i] instanceof IRelationType )
-        visit( feature, (IRelationType) properties[i], level );
+      if( propertie instanceof IRelationType )
+        visit( feature, (IRelationType) propertie, level );
     }
   }
 
-  private void visit( Feature feature, IRelationType linkProp, int level )
+  private void visit( final Feature feature, final IRelationType linkProp, final int level )
   {
     // get childs
     final Feature[] destFEs;
@@ -108,32 +108,32 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
       destFEs = m_workspace.resolveLinks( feature, linkProp );
     else
     {
-      Feature destFE = m_workspace.resolveLink( feature, linkProp );
+      final Feature destFE = m_workspace.resolveLink( feature, linkProp );
       if( destFE != null )
         destFEs = new Feature[] { destFE };
       else
         destFEs = new Feature[0];
     }
     // process childs
-    for( int i = 0; i < destFEs.length; i++ )
+    for( final Feature destFE : destFEs )
     {
-      if( destFEs[i] == null )
+      if( destFE == null )
       {
-        System.out.println( Messages.getString("org.kalypso.convert.namodel.schema.functions.GetGeomDestinationFeatureVisitor.0") ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.convert.namodel.schema.functions.GetGeomDestinationFeatureVisitor.0" ) ); //$NON-NLS-1$
         continue;
       }
 
-      final IFeatureType featureType = destFEs[i].getFeatureType();
+      final IFeatureType featureType = destFE.getFeatureType();
       if( featureType.getDefaultGeometryProperty() != null )
       {
-        final GM_Object geom = destFEs[i].getDefaultGeometryProperty();
+        final GM_Object geom = destFE.getDefaultGeometryProperty();
         if( geom != null )
           m_result.add( geom );
       }
       else
       {
         if( level <= m_maxLevel )
-          visit( destFEs[i], level );
+          visit( destFE, level );
       }
     }
   }

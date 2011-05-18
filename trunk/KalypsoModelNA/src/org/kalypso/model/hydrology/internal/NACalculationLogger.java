@@ -65,7 +65,7 @@ public class NACalculationLogger
     m_logFile = new File( logDir, LOGFILE_NAME );
   }
 
-  private final void startLogging( )
+  private void startLogging( )
   {
     if( m_logHandler != null )
       return;

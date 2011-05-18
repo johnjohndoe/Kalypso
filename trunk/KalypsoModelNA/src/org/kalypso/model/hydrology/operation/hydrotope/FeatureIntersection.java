@@ -54,7 +54,7 @@ public class FeatureIntersection
   /**
    * Create a new intersection from a feature list
    */
-  public FeatureIntersection( Feature... features )
+  public FeatureIntersection( final Feature... features )
   {
     m_features = features;
   }
@@ -62,7 +62,7 @@ public class FeatureIntersection
   /**
    * Creates an intersection of intersected features by merging the lists
    */
-  public FeatureIntersection( FeatureIntersection... features )
+  public FeatureIntersection( final FeatureIntersection... features )
   {
     int size = 0;
     for( final FeatureIntersection featureIntersection : features )
@@ -73,7 +73,7 @@ public class FeatureIntersection
     int count = 0;
     for( final FeatureIntersection featureIntersection : features )
     {
-      for( Feature feature : featureIntersection.getFeatures() )
+      for( final Feature feature : featureIntersection.getFeatures() )
       {
         m_features[count++] = feature;
       }

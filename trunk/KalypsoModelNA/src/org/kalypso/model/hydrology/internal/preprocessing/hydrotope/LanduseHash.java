@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class LanduseHash
 {
-  private final static String PLC_LANDUSE_NAME_FORMAT = "PLC_%05d"; //$NON-NLS-1$
+  private static final String PLC_LANDUSE_NAME_FORMAT = "PLC_%05d"; //$NON-NLS-1$
 
   private int m_plcLanduseCounter = 1;
 

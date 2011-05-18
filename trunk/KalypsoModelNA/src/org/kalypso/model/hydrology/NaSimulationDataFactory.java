@@ -52,14 +52,18 @@ import org.kalypso.simulation.core.SimulationException;
 /**
  * @author Gernot Belger
  */
-public class NaSimulationDataFactory
+public final class NaSimulationDataFactory
 {
-  public static final INaSimulationData load( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessASCIIlocation ) throws Exception
+  private NaSimulationDataFactory( )
+  {
+  }
+
+  public static INaSimulationData load( final URL modelUrl, final URL controlURL, final URL metaUrl, final URL parameterUrl, final URL hydrotopUrl, final URL sudsUrl, final URL syntNUrl, final URL lzsimUrl, final NaOptimizeLoader optimizeLoader, final URL preprocessASCIIlocation ) throws Exception
   {
     return new NaSimulationData( modelUrl, controlURL, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, optimizeLoader, preprocessASCIIlocation );
   }
 
-  public static final INaSimulationData load( final ISimulationDataProvider inputProvider ) throws SimulationException
+  public static INaSimulationData load( final ISimulationDataProvider inputProvider ) throws SimulationException
   {
     try
     {

@@ -81,12 +81,12 @@ public class BlockTimeSeries
 
   // simulationszeitraum: von 970101 24 uhr bis 980102 24 uhr 24.000
   // simulationszeitraum: von 970101 24 uhr bis 102 24 uhr 24.000
-  private final static Pattern pTime = Pattern.compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" ); //$NON-NLS-1$
+  private static final Pattern pTime = Pattern.compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" ); //$NON-NLS-1$
 
   // synth. n.: haufigkeit: 0.100 jahre,dauer: 13.00 h , zeitschr.: 0.083 h , verteilung: 2
-  private final static Pattern pSynthTime = Pattern.compile( ".+synth. n..+haufigkeit:.+(\\d+\\.\\d+).+jahre,dauer.+(\\d+\\.\\d+).+h , zeitschr.:.+(\\d+\\.\\d+).+" ); //$NON-NLS-1$
+  private static final Pattern pSynthTime = Pattern.compile( ".+synth. n..+haufigkeit:.+(\\d+\\.\\d+).+jahre,dauer.+(\\d+\\.\\d+).+h , zeitschr.:.+(\\d+\\.\\d+).+" ); //$NON-NLS-1$
 
-  private final static Pattern PATTERN_BLOCK_HEADER = Pattern.compile( "\\D*(\\d+)\\D+(\\d+)\\D+(\\d+)\\D*" ); //$NON-NLS-1$
+  private static final Pattern PATTERN_BLOCK_HEADER = Pattern.compile( "\\D*(\\d+)\\D+(\\d+)\\D+(\\d+)\\D*" ); //$NON-NLS-1$
 
   private final Map<String, Block> m_blocks = new HashMap<String, Block>();
 
@@ -113,7 +113,7 @@ public class BlockTimeSeries
     {
       reader = new LineNumberReader( new FileReader( blockFile ) );
 
-      BlockTimeStep timeStep = searchTimeoffset( reader );
+      final BlockTimeStep timeStep = searchTimeoffset( reader );
 
       while( reader.ready() )
       {
@@ -141,7 +141,7 @@ public class BlockTimeSeries
     }
   }
 
-  private Block getOrCreateBlock( String key, BlockTimeStep timeStep )
+  private Block getOrCreateBlock( final String key, final BlockTimeStep timeStep )
   {
     if( m_blocks.containsKey( key ) )
       return m_blocks.get( key );
@@ -151,19 +151,19 @@ public class BlockTimeSeries
     return block;
   }
 
-  private BlockTimeStep searchTimeoffset( LineNumberReader reader ) throws ParseException, IOException
+  private BlockTimeStep searchTimeoffset( final LineNumberReader reader ) throws ParseException, IOException
   {
     while( reader.ready() )
     {
-      String line = reader.readLine();
+      final String line = reader.readLine();
       if( line == null )
         break;
 
       if( line.startsWith( "#" ) ) //$NON-NLS-1$
         continue;
 
-      Matcher m = pTime.matcher( line );
-      Matcher synthM = pSynthTime.matcher( line );
+      final Matcher m = pTime.matcher( line );
+      final Matcher synthM = pSynthTime.matcher( line );
       if( m.matches() )
       {
         final String sDate = m.group( 1 );
@@ -178,7 +178,7 @@ public class BlockTimeSeries
       {
         // synthetisches Ereignis hat kein Anfangsdatum, daher wird 01.01.2000 angenommen!
         final String sDate = "000101"; //$NON-NLS-1$
-        String sTime = "0"; //$NON-NLS-1$
+        final String sTime = "0"; //$NON-NLS-1$
         final String sStep = synthM.group( 3 );
 
         final Calendar startCal = parseDate24( sDate, sTime );
@@ -190,7 +190,7 @@ public class BlockTimeSeries
     return null;
   }
 
-  private Entry<String, Integer> searchBlockHeader( LineNumberReader reader ) throws NumberFormatException, IOException
+  private Entry<String, Integer> searchBlockHeader( final LineNumberReader reader ) throws NumberFormatException, IOException
   {
     while( reader.ready() )
     {
@@ -201,11 +201,11 @@ public class BlockTimeSeries
       if( line.startsWith( "#" ) ) //$NON-NLS-1$
         continue;
 
-      Matcher m = PATTERN_BLOCK_HEADER.matcher( line );
+      final Matcher m = PATTERN_BLOCK_HEADER.matcher( line );
       if( m.matches() )
       {
         final String key = m.group( 1 );
-        int valuesCount = Integer.parseInt( m.group( 3 ) );
+        final int valuesCount = Integer.parseInt( m.group( 3 ) );
 
         // HACK: create singleton map in order to create entry
         return Collections.singletonMap( key, valuesCount ).entrySet().iterator().next();
@@ -215,18 +215,18 @@ public class BlockTimeSeries
     return null;
   }
 
-  private Duration parseDuration( String sStep )
+  private Duration parseDuration( final String sStep )
   {
     // TRICKY: the read value is in hours.
     // If we just calculate the millies from that, we cannot really compute with that duration and get strange effects
     // due to skip-seconds etc.
 
     final float hours = Float.parseFloat( sStep );
-    
+
     // Try to find the best match
-    
+
     // month and year do not have a fixed number of hours, so we cannot match
-    
+
     final Duration dayMatch = getDurationAsDays( hours );
     if( dayMatch != null )
       return dayMatch;
@@ -237,20 +237,20 @@ public class BlockTimeSeries
 
     final Duration minuteMatch = getDurationAsMinutes( hours );
     return minuteMatch;
-    
+
     // TODO: implement SECONDS?
-    
+
 //
 //    if( "0.083".equals( sStep ) ) //$NON-NLS-1$
-//      return DATATYPE_FACTORY.newDuration( 300000l );
-//    else
-//    {
-//      float step = Float.parseFloat( sStep );
-//      return DATATYPE_FACTORY.newDuration( ((long) (step * 1000f)) * 3600l );
-//    }
+// return DATATYPE_FACTORY.newDuration( 300000l );
+// else
+// {
+// float step = Float.parseFloat( sStep );
+// return DATATYPE_FACTORY.newDuration( ((long) (step * 1000f)) * 3600l );
+// }
   }
 
-  private Duration getDurationAsDays( float hours )
+  private Duration getDurationAsDays( final float hours )
   {
     final float days = hours / 24.0f;
     final int daysRounded = Math.round( days );
@@ -261,7 +261,7 @@ public class BlockTimeSeries
     return null;
   }
 
-  private Duration getDurationAsHours( float hours )
+  private Duration getDurationAsHours( final float hours )
   {
     final int hoursRounded = Math.round( hours );
     if( hours == hoursRounded )
@@ -274,7 +274,7 @@ public class BlockTimeSeries
   // we assume, that the smallest amount here is minutes; so we just round the hours.
   // Actually, the hours of the calculation core have too less digits e.g. 0.083 is 4.98 minutes, but the real timestep
   // is 5.0 minutes. We need to change the calc core in order to return more digits!
-  private Duration getDurationAsMinutes( float hours )
+  private Duration getDurationAsMinutes( final float hours )
   {
     final float minutes = hours * 60.0f;
     final int minutesRounded = Math.round( minutes );
@@ -285,10 +285,10 @@ public class BlockTimeSeries
 // return null;
   }
 
-  private Calendar parseDate24( String sDate, String sTime ) throws ParseException
+  private Calendar parseDate24( final String sDate, final String sTime ) throws ParseException
   {
     final Date parseDate = m_dateFormat.parse( sDate );
-//    final Calendar startCal = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+// final Calendar startCal = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     final Calendar startCal = Calendar.getInstance( NATimeSettings.getInstance().getTimeZone() );
     startCal.setTime( parseDate );
 

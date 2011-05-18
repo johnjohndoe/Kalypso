@@ -43,11 +43,8 @@ package org.kalypso.model.hydrology.binding.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -58,59 +55,19 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger
  */
-public class Node extends AbstractNaModelElement
+public class Node extends AbstractNaModelElement implements INode
 {
-  public static final QName FEATURE_NODE = new QName( NaModelConstants.NS_NAMODELL, "Node" ); //$NON-NLS-1$
-
-  private static final QName PROP_ZUFLUSS_ZR = new QName( NS_NAMODELL, "zuflussZR" ); //$NON-NLS-1$
-
-  private static final QName PROP_PEGEL_ZR = new QName( NS_NAMODELL, "pegelZR" ); //$NON-NLS-1$
-
-  private static final QName PROP_RESULT_TIMESERIESLINK = new QName( NS_NAMODELL, "qberechnetZR" ); //$NON-NLS-1$
-
-  private static final QName PROP_SYNTHETIC_ZUFLUSS_ZR = new QName( NS_NAMODELL, "syntheticZuflussZR" ); //$NON-NLS-1$
-
-  private static final QName MEMBER_BRANCHING = new QName( NS_NAMODELL, "branchingMember" ); //$NON-NLS-1$
-
-  private static final QName LINK_DOWNSTREAMCHANNEL = new QName( NS_NAMODELL, "downStreamChannelMember" ); //$NON-NLS-1$
-
-  private static final QName GENERATE_RESULT_PROP = new QName( NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
-
-  private static final QName PROP_QQRELATED = new QName( NS_NAMODELL, "qqRelatedNode" ); //$NON-NLS-1$
-
-  private static final QName PROP_USE_RESULT_AS_INFLOW = new QName( NS_NAMODELL, "useResultAsInflow" ); //$NON-NLS-1$
-
-  private static final QName PROP_RESULT_AS_INFLOW_ZR = new QName( NS_NAMODELL, "resultAsInflowZR" ); //$NON-NLS-1$
 
   public Node( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public ZmlLink getPegelLink( )
-  {
-    return new ZmlLink( this, PROP_PEGEL_ZR );
-  }
-
-  public TimeseriesLinkType getZuflussLink( )
-  {
-    return getProperty( PROP_ZUFLUSS_ZR, TimeseriesLinkType.class );
-  }
-
-  public void setZuflussLink( final TimeseriesLinkType zuflussLink )
-  {
-    setProperty( PROP_ZUFLUSS_ZR, zuflussLink );
-  }
-
-  public ZmlLink getResultLink( )
-  {
-    return new ZmlLink( this, PROP_RESULT_TIMESERIESLINK );
-  }
-
   /**
    * Returns all channels of this na modell that have this node as downstream node.<br/>
    * Use with care, as this method involves a linear search through all existing channels.
    */
+  @Override
   public Channel[] findUpstreamChannels( )
   {
     final Collection<Channel> upstreamChannels = new ArrayList<Channel>();
@@ -128,65 +85,41 @@ public class Node extends AbstractNaModelElement
     return upstreamChannels.toArray( new Channel[upstreamChannels.size()] );
   }
 
+  @Override
   public Branching getBranching( )
   {
     return (Branching) FeatureHelper.resolveLink( this, MEMBER_BRANCHING, true );
   }
 
-  public void setBranching( final Branching branching )
-  {
-    setProperty( MEMBER_BRANCHING, branching );
-  }
-
-  public Boolean isSynteticZufluss( )
-  {
-    return getProperty( PROP_SYNTHETIC_ZUFLUSS_ZR, Boolean.class );
-  }
-
-  public void setIsSynteticZufluss( final Boolean isSynteticZufluss )
-  {
-    setProperty( PROP_SYNTHETIC_ZUFLUSS_ZR, isSynteticZufluss );
-  }
-
-  public void setDownstreamChannel( final Channel downstreamChannel )
-  {
-    FeatureHelper.setAsLink( this, LINK_DOWNSTREAMCHANNEL, downstreamChannel );
-  }
-
+  @Override
   public Channel getDownstreamChannel( )
   {
-    return (Channel) FeatureHelper.resolveLink( this, LINK_DOWNSTREAMCHANNEL, true );
+    return (Channel) FeatureHelper.resolveLink( this, PROPERTY_LINKED_DOWNSTREAMCHANNEL, true );
   }
 
-  public boolean isGenerateResults( )
+  @Override
+  public ZmlLink getPegelLink( )
   {
-    return getBoolean( GENERATE_RESULT_PROP, false );
+    return new ZmlLink( this, PROPERTY_PEGEL_ZR );
   }
 
-  public void setGenerateResults( final boolean value )
-  {
-    setProperty( GENERATE_RESULT_PROP, value );
-  }
-
+  @Override
   public Node getQQRelatedNode( )
   {
-    return (Node) FeatureHelper.resolveLink( this, PROP_QQRELATED, true );
+    return (Node) FeatureHelper.resolveLink( this, PROPERTY_QQ_RELATED, true );
   }
 
-  public boolean isUseResultAsInflow( )
-  {
-    return getBoolean( PROP_USE_RESULT_AS_INFLOW, false );
-  }
-
+  @Override
   public ZmlLink getResultAsInflowLink( )
   {
-    return new ZmlLink( this, PROP_RESULT_AS_INFLOW_ZR );
+    return new ZmlLink( this, PROPERTY_RESULT_AS_INFLOW_ZR );
   }
 
   /**
    * Returns the link that should be used as inflow. Checks if it really should be used, else <code>null</code> is
    * returned.
    */
+  @Override
   public ZmlLink getResultAsInflowLinkChecked( final Node rootNode )
   {
     if( !isUseResultAsInflow() )
@@ -203,5 +136,65 @@ public class Node extends AbstractNaModelElement
       return null;
 
     return resultAsInflowLink;
+  }
+
+  @Override
+  public ZmlLink getResultLink( )
+  {
+    return new ZmlLink( this, PROPERTY_RESULT_TIMESERIESLINK );
+  }
+
+  @Override
+  public TimeseriesLinkType getZuflussLink( )
+  {
+    return getProperty( PROPERTY_ZUFLUSS_ZR, TimeseriesLinkType.class );
+  }
+
+  @Override
+  public boolean isGenerateResults( )
+  {
+    return getBoolean( PROPERTY_GENERATE_RESULT, false );
+  }
+
+  @Override
+  public Boolean isSynteticZufluss( )
+  {
+    return getProperty( PROPERTY_SYNTHETIC_ZUFLUSS_ZR, Boolean.class );
+  }
+
+  @Override
+  public boolean isUseResultAsInflow( )
+  {
+    return getBoolean( PROPERTY_USE_RESULT_AS_INFLOW, false );
+  }
+
+  @Override
+  public void setBranching( final Branching branching )
+  {
+    setProperty( MEMBER_BRANCHING, branching );
+  }
+
+  @Override
+  public void setDownstreamChannel( final Channel downstreamChannel )
+  {
+    FeatureHelper.setAsLink( this, PROPERTY_LINKED_DOWNSTREAMCHANNEL, downstreamChannel );
+  }
+
+  @Override
+  public void setGenerateResults( final boolean value )
+  {
+    setProperty( PROPERTY_GENERATE_RESULT, value );
+  }
+
+  @Override
+  public void setIsSynteticZufluss( final Boolean isSynteticZufluss )
+  {
+    setProperty( PROPERTY_SYNTHETIC_ZUFLUSS_ZR, isSynteticZufluss );
+  }
+
+  @Override
+  public void setZuflussLink( final TimeseriesLinkType zuflussLink )
+  {
+    setProperty( PROPERTY_ZUFLUSS_ZR, zuflussLink );
   }
 }

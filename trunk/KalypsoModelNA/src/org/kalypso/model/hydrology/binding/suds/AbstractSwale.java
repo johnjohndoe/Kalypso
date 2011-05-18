@@ -171,7 +171,7 @@ public abstract class AbstractSwale extends AbstractSud implements IAbstractSwal
     // width parameter fixed in NA core to 1.8
     return 1.8;
   }
-  
+
   /**
    * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getMaxPercRate()
    */
@@ -184,7 +184,7 @@ public abstract class AbstractSwale extends AbstractSud implements IAbstractSwal
 
     return 5E-5;
   }
-  
+
   /**
    * @see org.kalypso.convert.namodel.schema.binding.suds.ISwaleInfiltrationDitch#getPercentToGroundwater()
    */

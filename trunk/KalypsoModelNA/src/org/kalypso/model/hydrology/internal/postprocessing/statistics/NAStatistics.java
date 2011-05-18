@@ -129,7 +129,7 @@ public class NAStatistics
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String msg = String.format( Messages.getString("NAStatistics.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "NAStatistics.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
       m_logger.severe( msg );
     }
   }

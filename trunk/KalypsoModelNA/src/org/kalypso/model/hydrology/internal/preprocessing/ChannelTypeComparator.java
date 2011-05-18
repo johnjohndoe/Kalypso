@@ -103,7 +103,6 @@ public class ChannelTypeComparator implements Comparator<NetElement>
     if( channel instanceof KMChannel )
       return 3;
 
-
     return 0;
   }
 

@@ -78,7 +78,7 @@ public class InitialValues extends Feature_Impl
 
   public Date getInitialDate( )
   {
-    return DateUtilities.toDate( getProperty( PROP_INI_DATE ) ); 
+    return DateUtilities.toDate( getProperty( PROP_INI_DATE ) );
   }
 
   public void setInitialDate( final Date newInitialDate )
@@ -101,6 +101,5 @@ public class InitialValues extends Feature_Impl
 
     return m_channels;
   }
-
 
 }

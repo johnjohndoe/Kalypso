@@ -108,7 +108,7 @@ public class BodenartWriter extends AbstractCoreFileWriter
     if( !names.contains( "Drain" ) ) //$NON-NLS-1$
       writer.append( "Drain kap 4.0 30.5 40.0 1720.0 0.10\n" ); //$NON-NLS-1$
     if( !names.contains( "basem" ) ) //$NON-NLS-1$
-        writer.append( "basem kap 6.5 24.0 41.0 1570.0 0.50\n" ); //$NON-NLS-1$    
+      writer.append( "basem kap 6.5 24.0 41.0 1570.0 0.50\n" ); //$NON-NLS-1$    
   }
 
   private void writeFeature( final PrintWriter writer, final Feature feature ) throws Exception

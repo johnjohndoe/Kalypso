@@ -78,7 +78,7 @@ public interface NaModelConstants
 
   String NS_NASUDS = "http://sourceforge.kalypso.org/schemata/hydrology/suds"; //$NON-NLS-1$
 
-  final String NS_NAOPTIMIZE = "http://kalypso.sorgeforge.net/schemata/hydrology/optimize"; //$NON-NLS-1$
+  String NS_NAOPTIMIZE = "http://kalypso.sorgeforge.net/schemata/hydrology/optimize"; //$NON-NLS-1$
 
   /** server client bean constants */
   // input
@@ -141,34 +141,10 @@ public interface NaModelConstants
 
   /** namodell.xsd */
 
-  // channels
+// channels
   QName KM_CHANNEL_KMSTART = new QName( NS_NAMODELL, "startkm" ); //$NON-NLS-1$
 
   QName KM_CHANNEL_KMEND = new QName( NS_NAMODELL, "endkm" ); //$NON-NLS-1$
-
-  // nodes
-  QName NODE_GEOM_PROP = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
-
-  QName NODE_VERZW_MEMBER_PROP = new QName( NS_NAMODELL, "verzweigungNodeMember" ); //$NON-NLS-1$
-
-  QName NODE_VERZW_ENTNAHME = new QName( NS_NAMODELL, "KontEntnahme" ); //$NON-NLS-1$
-
-  QName NODE_VERZW_ZUFLUSS = new QName( NS_NAMODELL, "KontZufluss" ); //$NON-NLS-1$
-
-  QName NODE_VERZW_UEBERLAUF = new QName( NS_NAMODELL, "Ueberlauf" ); //$NON-NLS-1$
-
-  QName NODE_VERZW_VERZWEIGUNG = new QName( NS_NAMODELL, "Verzweigung" ); //$NON-NLS-1$
-
-  QName NODE_COLLECTION_FT = new QName( NS_NAMODELL, "NodeCollection" ); //$NON-NLS-1$
-
-
-  QName NODE_ZUFLUSS_ZR_REPOSITORY_PROP = new QName( NS_NAMODELL, "zuflussZRRepository" ); //$NON-NLS-1$
-
-  QName NODE_RIVER_CODE_PROP = new QName( NS_NAMODELL, "riverCode" ); //$NON-NLS-1$
-
-  QName NODE_RIVER_KILOMETER_PROP = new QName( NS_NAMODELL, "riverKilometer" ); //$NON-NLS-1$
-
-  QName NODE_QQRELATION_PROP = new QName( NS_NAMODELL, "qqRelation" ); //$NON-NLS-1$
 
   // catchments
 
@@ -230,9 +206,9 @@ public interface NaModelConstants
 
   QName PARA_LANDUSE = new QName( NS_NAPARAMETER, "Landuse" ); //$NON-NLS-1$
 
-  QName PARA_SEALING = new QName( NS_NAPARAMETER, "Sealing" ); //$NON-NLS-1$
+  QName PARA_SEALING = new QName( NS_NAPARAMETER, "Sealing" ); //$NON-NLS-1$ 
 
-  QName PARA_SoilLayerParameter_FT = new QName( NS_NAPARAMETER, "SoilLayerParameter" ); //$NON-NLS-1$
+  QName PARA_SOIL_LAYER_PARAMETER_FT = new QName( NS_NAPARAMETER, "SoilLayerParameter" ); //$NON-NLS-1$
 
   QName PARA_SOIL_LAYER_PARAMETER_MEMBER = new QName( NS_NAPARAMETER, "soilLayerParameterMember" ); //$NON-NLS-1$
 

@@ -65,8 +65,8 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
   public boolean diff( final IDiffLogger logger, final Object content1, final Object content2 ) throws Exception
   {
     boolean result = false;
-    final SortedMap<Date, String> timeSeries1 = ((SortedMap<Date, String>) content1);
-    final SortedMap<Date, String> timeSeries2 = ((SortedMap<Date, String>) content2);
+    final SortedMap<Date, String> timeSeries1 = (SortedMap<Date, String>) content1;
+    final SortedMap<Date, String> timeSeries2 = (SortedMap<Date, String>) content2;
 
     logger.log( DIFF_INFO, Messages.getString( "org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.0" ) ); //$NON-NLS-1$
     final boolean valuesResult = diffValues( logger, timeSeries1, timeSeries2 );
@@ -105,8 +105,8 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
       final Object o2 = it2.next();
       if( o1.getClass().equals( Date.class ) && o2.getClass().equals( Date.class ) )
       {
-        final Date date1 = ((Date) o1);
-        final Date date2 = ((Date) o2);
+        final Date date1 = (Date) o1;
+        final Date date2 = (Date) o2;
         if( !date1.equals( date2 ) )
         {
           logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.3" ) + date1 + " : " + date2 ); //$NON-NLS-1$ //$NON-NLS-2$

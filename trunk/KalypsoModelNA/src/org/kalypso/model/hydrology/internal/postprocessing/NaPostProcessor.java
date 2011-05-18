@@ -70,7 +70,7 @@ public class NaPostProcessor
 {
   private static final String STRING_RESULT_SUCCESSFUL_1 = "berechnung wurde ohne fehler beendet";
 
-  private static final String STRING_RESULT_SUCCESSFUL_2 = Messages.getString("NaPostProcessor.1"); //$NON-NLS-1$
+  private static final String STRING_RESULT_SUCCESSFUL_2 = Messages.getString( "NaPostProcessor.1" ); //$NON-NLS-1$
 
   private static final String FILENAME_OUTPUT_RES = "output.res"; //$NON-NLS-1$
 
@@ -132,7 +132,7 @@ public class NaPostProcessor
     catch( final IOException e )
     {
       e.printStackTrace();
-      final String msg = String.format( Messages.getString("NaPostProcessor.4"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "NaPostProcessor.4" ), e.getLocalizedMessage() ); //$NON-NLS-1$
       m_logger.severe( msg );
     }
     finally

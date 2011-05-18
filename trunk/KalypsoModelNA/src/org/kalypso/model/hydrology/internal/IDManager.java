@@ -53,11 +53,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class IDManager
 {
-  public final static int CHANNEL = 1;
+  public static final int CHANNEL = 1;
 
-  public final static int CATCHMENT = 2;
+  public static final int CATCHMENT = 2;
 
-  public final static int NODE = 3;
+  public static final int NODE = 3;
 
   final Map<Feature, IDMap> m_featureIDMap = new HashMap<Feature, IDMap>(); // feature -> IDMap
 
@@ -92,11 +92,11 @@ public class IDManager
   private int getType( final Feature feature )
   {
     final String name = feature.getFeatureType().getQName().getLocalPart();
-    if( name.equals( "Catchment" ) ) //$NON-NLS-1$
+    if( "Catchment".equals( name ) ) //$NON-NLS-1$
       return CATCHMENT;
     if( name.endsWith( "Channel" ) ) //$NON-NLS-1$
       return CHANNEL;
-    if( name.equals( "Node" ) ) //$NON-NLS-1$
+    if( "Node".equals( name ) ) //$NON-NLS-1$
       return NODE;
     throw new UnsupportedOperationException();
   }
@@ -138,7 +138,7 @@ public class IDManager
     return testMap;
   }
 
-  public void dump( File idMapFile ) throws SimulationException
+  public void dump( final File idMapFile ) throws SimulationException
   {
     Writer idWriter = null;
     try
@@ -156,11 +156,11 @@ public class IDManager
       IOUtils.closeQuietly( idWriter );
     }
   }
-  
+
   public void dump( final Writer writer ) throws IOException
   {
     final SortedSet<IDMap> sort = new TreeSet<IDMap>( IDMap.COMPARATOR );
-    
+
     sort.addAll( m_idMapFeature.keySet() );
     writer.write( String.format( Locale.US, "%-10s%-6s%-16s %-32s %-32s %-32s\n\n", "ASCII ID", "", "GML Type", "GML ID", "GML Name", "GML Description" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
     for( final IDMap idmap : sort )

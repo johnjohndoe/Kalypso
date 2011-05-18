@@ -69,13 +69,13 @@ public interface IAbstractSwale extends ISudsWithElementType
   QName QN_PROPERTY_MAX_CAP_EMERGENCY_SPILL = new QName( NaModelConstants.NS_NASUDS, "maxCapacityOfEmergencySpill" ); // double //$NON-NLS-1$
 
   QName QN_PROPERTY_MAX_PERC_RATE = new QName( NaModelConstants.NS_NASUDS, "maxPercRate" ); // double //$NON-NLS-1$
-  
+
   QName QN_PROPERTY_PERCENT_TO_GROUNDWATER = new QName( NaModelConstants.NS_NASUDS, "percentToGroundwater" ); // double //$NON-NLS-1$
 
   double getPercentToGroundwater( );
-  
+
   double getMaxPercRate( );
-  
+
   double getWidth( );
 
   double getNaturalAreaPercentage( );

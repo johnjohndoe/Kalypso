@@ -111,8 +111,8 @@ public class GerWriter extends AbstractCoreFileWriter
       writer.println( KMCHANNEL );
 
       final KMChannel kmChannel = (KMChannel) channel;
-      double faktorRkf = kmChannel.getFaktorRkf();
-      double faktorRnf = kmChannel.getFaktorRnf();
+      final double faktorRkf = kmChannel.getFaktorRkf();
+      final double faktorRnf = kmChannel.getFaktorRnf();
       final IFeatureBindingCollection<KMParameter> parameters = kmChannel.getParameters();
       for( final KMParameter kmParameter : parameters )
         writeParameter( writer, kmParameter, faktorRnf, faktorRkf );
@@ -126,7 +126,7 @@ public class GerWriter extends AbstractCoreFileWriter
       throw new UnsupportedOperationException( "can not write Feature to ascii" + channel.toString() ); //$NON-NLS-1$
   }
 
-  private void writeParameter( final PrintWriter writer, final KMParameter kmParameter, double faktorRnf, double faktorRkf )
+  private void writeParameter( final PrintWriter writer, final KMParameter kmParameter, final double faktorRnf, final double faktorRkf )
   {
     final double qrk = kmParameter.getQrk();
     final double rnf = kmParameter.getRnf() * faktorRnf;

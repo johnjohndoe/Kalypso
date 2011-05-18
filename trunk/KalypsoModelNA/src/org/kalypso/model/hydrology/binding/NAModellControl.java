@@ -108,7 +108,6 @@ public class NAModellControl extends Feature_Impl
 
   private static final QName PROP_SUP = new QName( NS_NACONTROL, "sup" ); //$NON-NLS-1$
 
-
   public NAModellControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -198,6 +197,7 @@ public class NAModellControl extends Feature_Impl
   {
     return getBoolean( PROP_HYD, false );
   }
+
   public boolean doGenerateBIL( )
   {
     return getBoolean( PROP_BIL, false );
@@ -219,9 +219,10 @@ public class NAModellControl extends Feature_Impl
   }
 
   /**
-   * Get initial dates that should be written.<br/>The dates will be returned sorted.
+   * Get initial dates that should be written.<br/>
+   * The dates will be returned sorted.
    */
-  public Date[] getInitialDatesToBeWritten(  )
+  public Date[] getInitialDatesToBeWritten( )
   {
     final List< ? > dateList = (List< ? >) getProperty( PROP_INITIALVALUEDATE );
     if( dateList == null )

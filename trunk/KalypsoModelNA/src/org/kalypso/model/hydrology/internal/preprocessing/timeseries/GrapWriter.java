@@ -57,13 +57,12 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
 /**
  * @author Gernot Belger
- *
  */
 public class GrapWriter
 {
   private static final DateFormat DF_GRAP_HEADER = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "'\n       'yyyyMMddHHmm'\ngrap\n'" ) ); //$NON-NLS-1$
 
-  private final static DateFormat GRAP_DATE_FORMAT = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "dd MM yyyy HH mm ss" ) ); //$NON-NLS-1$
+  private static final DateFormat GRAP_DATE_FORMAT = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "dd MM yyyy HH mm ss" ) ); //$NON-NLS-1$
 
   private static final RangeFactor DEFAULT_RANGE_FACTOR = new RangeFactor( null, 1.0 );
 

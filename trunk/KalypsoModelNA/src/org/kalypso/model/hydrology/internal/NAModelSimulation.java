@@ -66,7 +66,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NAModelSimulation
 {
-  private final DateFormat START_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd(HH-mm-ss)" ); //$NON-NLS-1$
+  private static final DateFormat START_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd(HH-mm-ss)" ); //$NON-NLS-1$
 
   private final String m_startDateText = START_DATE_FORMAT.format( new Date() );
 
@@ -136,7 +136,7 @@ public class NAModelSimulation
     }
     catch( final NAPreprocessorException e )
     {
-      final String msg = String.format( Messages.getString("NAModelSimulation.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "NAModelSimulation.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
       m_logger.log( Level.SEVERE, msg, e );
       throw new SimulationException( msg, e );
     }

@@ -44,7 +44,7 @@ import java.util.Comparator;
 
 class IDMap
 {
-  public static final Comparator< IDMap> COMPARATOR = new Comparator<IDMap>()
+  public static final Comparator<IDMap> COMPARATOR = new Comparator<IDMap>()
   {
     @Override
     public int compare( final IDMap m1, final IDMap m2 )

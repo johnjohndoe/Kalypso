@@ -64,11 +64,11 @@ public class Block
 
   private final BlockTimeStep m_timeStep;
 
-  private Calendar m_currentStep;
+  private final Calendar m_currentStep;
 
   private final SortedMap<Date, Double> m_data = new TreeMap<Date, Double>();
 
-  public Block( String key, BlockTimeStep timeStep )
+  public Block( final String key, final BlockTimeStep timeStep )
   {
     m_key = key;
     m_timeStep = timeStep;
@@ -86,7 +86,7 @@ public class Block
 
     while( reader.ready() )
     {
-      String line = reader.readLine();
+      final String line = reader.readLine();
       if( line == null )
         break;
 
@@ -96,7 +96,7 @@ public class Block
       if( StringUtils.isBlank( line ) )
         continue;
 
-      final String values[] = StringUtils.split( line, null );
+      final String[] values = StringUtils.split( line, null );
       for( final String item : values )
       {
         m_timeStep.step( m_currentStep );
@@ -115,16 +115,16 @@ public class Block
     }
   }
 
-  public void exportToFile( File exportFile, DateFormat dateFormat ) throws IOException
+  public void exportToFile( final File exportFile, final DateFormat dateFormat ) throws IOException
   {
     final PrintWriter writer = new PrintWriter( exportFile );
 
-    Set<Entry<Date, Double>> entrySet = m_data.entrySet();
-    for( Entry<Date, Double> entry : entrySet )
+    final Set<Entry<Date, Double>> entrySet = m_data.entrySet();
+    for( final Entry<Date, Double> entry : entrySet )
     {
       final Date dateKey = entry.getKey();
       final Double value = entry.getValue();
-      String dateString = dateFormat.format( dateKey );
+      final String dateString = dateFormat.format( dateKey );
       writer.print( dateString );
       writer.print( ' ' );
       writer.format( "%.3f", value );
@@ -137,7 +137,7 @@ public class Block
     return m_data.keySet().toArray( new Date[m_data.keySet().size()] );
   }
 
-  public Double getValue( Date date )
+  public Double getValue( final Date date )
   {
     return m_data.get( date );
   }

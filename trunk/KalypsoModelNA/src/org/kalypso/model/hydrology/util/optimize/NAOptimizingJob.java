@@ -188,7 +188,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
       monitor.setFinishInfo( IStatus.CANCEL, msg );
       return false;
     }
-    catch( Exception exception )
+    catch( final Exception exception )
     {
       final String msg = "Unexpected error during simulation";
       m_logger.log( Level.SEVERE, msg, exception );
@@ -281,7 +281,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
    * @see org.kalypso.optimize.IOptimizingJob#optimize(org.kalypso.optimizer.Parameter[], double[])
    */
   @Override
-  public void optimize( final Parameter[] parameterConf, final double values[] ) throws Exception
+  public void optimize( final Parameter[] parameterConf, final double[] values ) throws Exception
   {
     final ParameterOptimizeContext[] calcContexts = new ParameterOptimizeContext[parameterConf.length];
     for( int i = 0; i < parameterConf.length; i++ )

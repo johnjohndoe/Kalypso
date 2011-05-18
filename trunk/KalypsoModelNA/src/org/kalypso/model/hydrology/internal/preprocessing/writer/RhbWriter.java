@@ -154,7 +154,6 @@ public class RhbWriter extends AbstractCoreFileWriter
 
     writer.format( Locale.US, "%4d\n", size ); //$NON-NLS-1$
 
-
     final int count = values.size();
 
     final IAxis[] axisList = observation.getAxes();
@@ -164,7 +163,7 @@ public class RhbWriter extends AbstractCoreFileWriter
     for( int row = 0; row < count; row++ )
     {
       final Double w = (Double) values.get( row, waterTableAxis );
-      final Double v = ((Double) values.get( row, volumeAxis )) / 1000000;
+      final Double v = (Double) values.get( row, volumeAxis ) / 1000000;
       final Double q = (Double) values.get( row, dischargeAxis );
       // ____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
       writer.format( Locale.US, "    %8.2f        %9.6f      %8.3f\n", w, v, q ); //$NON-NLS-1$ 

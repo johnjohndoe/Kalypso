@@ -38,42 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.operation.hydrotope;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package org.kalypso.model.hydrology.binding.model;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dirk Kuch
  */
-public final class LanduseClassHelper
+public interface IChannel extends INaModelFeature
 {
-  private LanduseClassHelper( )
-  {
-  }
+  QName FEATURE_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "_Channel" ); //$NON-NLS-1$
 
-  public static Map<String, String> resolve( final GMLWorkspace landuseClassesWorkspace )
-  {
-    final List< ? > landuseClassesFeatures = (List< ? >) landuseClassesWorkspace.getRootFeature().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, "landuseMember" ) ); //$NON-NLS-1$
+  QName PROPERTY_LINKED_DOWNSTREAM_NODE = new QName( NaModelConstants.NS_NAMODELL, "downStreamNodeMember" ); //$NON-NLS-1$
 
-    final Map<String, String> landuseClasses = new HashMap<String, String>();
-    for( final Object object : landuseClassesFeatures )
-    {
-      final Feature f = (Feature) object;
-      final String name = f.getName();
-      final String id = f.getId();
+  void setDownstreamNode( Node downstreamNode );
 
-      landuseClasses.put( name, id );
-    }
-
-    return landuseClasses;
-  }
+  Node getDownstreamNode( );
 
 }

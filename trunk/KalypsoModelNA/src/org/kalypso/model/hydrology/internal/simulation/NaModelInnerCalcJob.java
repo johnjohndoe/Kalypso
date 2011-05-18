@@ -91,7 +91,7 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
     }
     catch( final OperationCanceledException e )
     {
-      final String msg = Messages.getString("NaModelInnerCalcJob.0"); //$NON-NLS-1$
+      final String msg = Messages.getString( "NaModelInnerCalcJob.0" ); //$NON-NLS-1$
       logger.log( Level.INFO, msg );
       monitor.setFinishInfo( IStatus.CANCEL, msg );
       return false;

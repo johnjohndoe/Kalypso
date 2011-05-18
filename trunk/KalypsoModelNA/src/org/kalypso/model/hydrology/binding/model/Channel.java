@@ -43,11 +43,8 @@ package org.kalypso.model.hydrology.binding.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -56,27 +53,24 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger
  */
-public abstract class Channel extends AbstractNaModelElement
+public abstract class Channel extends AbstractNaModelElement implements IChannel
 {
-  public static final QName FEATURE_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "_Channel" ); //$NON-NLS-1$
-
-  private static final QName LINK_DOWNSTREAMNODE = new QName( NS_NAMODELL, "downStreamNodeMember" ); //$NON-NLS-1$
-
-  public static final QName PROP_ORT = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 
   public Channel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  @Override
   public void setDownstreamNode( final Node downstreamNode )
   {
-    setProperty( LINK_DOWNSTREAMNODE, downstreamNode.getId() );
+    setProperty( PROPERTY_LINKED_DOWNSTREAM_NODE, downstreamNode.getId() );
   }
 
+  @Override
   public Node getDownstreamNode( )
   {
-    return (Node) FeatureHelper.resolveLink( this, LINK_DOWNSTREAMNODE, true );
+    return (Node) FeatureHelper.resolveLink( this, PROPERTY_LINKED_DOWNSTREAM_NODE, true );
   }
 
   /**

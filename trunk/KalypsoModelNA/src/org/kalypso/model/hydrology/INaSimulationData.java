@@ -53,7 +53,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Gernot Belger
- *
  */
 public interface INaSimulationData
 {
