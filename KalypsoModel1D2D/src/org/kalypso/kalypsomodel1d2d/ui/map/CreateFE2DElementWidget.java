@@ -11,9 +11,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
@@ -64,8 +65,12 @@ public class CreateFE2DElementWidget extends AbstractWidget
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
     final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
-    // we must have the node theme. First node theme gets it
-    m_nodeTheme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    // we must have a discretization model theme
+    m_nodeTheme = UtilMap.findEditableTheme( mapPanel, IFE1D2DNode.QNAME );
+    if( m_nodeTheme == null )
+      m_nodeTheme = UtilMap.findEditableTheme( mapPanel, IFE1D2DEdge.QNAME );
+    if( m_nodeTheme == null )
+      m_nodeTheme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_pointSnapper = new PointSnapper( discModel, mapPanel );
 
     reinit();
