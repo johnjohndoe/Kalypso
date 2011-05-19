@@ -47,7 +47,7 @@ import org.kalypso.model.wspm.pdb.connect.internal.PdbSettingsRegistry;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
- * Access to the configured connnections.
+ * Access to the configured connections.
  * 
  * @author Gernot Belger
  */

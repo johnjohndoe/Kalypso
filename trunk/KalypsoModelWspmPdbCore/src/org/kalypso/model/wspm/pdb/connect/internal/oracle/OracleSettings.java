@@ -50,8 +50,8 @@ import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.connect.internal.HibernateSettings;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
 
@@ -66,23 +66,21 @@ public class OracleSettings extends HibernateSettings
 
   private static final String DEFAULT_HOST = "localhost"; //$NON-NLS-1$
 
-// private static final int DEFAULT_PORT = 5432;
-
-//  private static final String DEFAULT_DBNAME = "kalypso_pdb"; //$NON-NLS-1$;
+  static final int DEFAULT_PORT = 1521;
 
   static final String PROPERTY_LABEL = "label"; //$NON-NLS-1$
 
-//  static final String PROPERTY_DBNAME = "dbname"; //$NON-NLS-1$
+  static final String PROPERTY_DBNAME = "dbname"; //$NON-NLS-1$
 
   static final String PROPERTY_HOST = "host";//$NON-NLS-1$
 
-//  static final String PROPERTY_PORT = "port";//$NON-NLS-1$
+  static final String PROPERTY_PORT = "port";//$NON-NLS-1$
 
-//  static final String PROPERTY_USERNAME = "username";//$NON-NLS-1$
+  static final String PROPERTY_USERNAME = "username";//$NON-NLS-1$
 
-//  static final String PROPERTY_PASSWORD = "password";//$NON-NLS-1$
+  static final String PROPERTY_PASSWORD = "password";//$NON-NLS-1$
 
-  final Properties m_properties = new Properties();
+  private final Properties m_properties = new Properties();
 
   public OracleSettings( )
   {
@@ -139,17 +137,17 @@ public class OracleSettings extends HibernateSettings
     if( PROPERTY_HOST.equals( property ) )
       return DEFAULT_HOST;
 
-// if( PROPERTY_PORT.equals( property ) )
-// return Integer.toString( DEFAULT_PORT );
-//
-// if( PROPERTY_DBNAME.equals( property ) )
-// return DEFAULT_DBNAME;
-//
-// if( PROPERTY_USERNAME.equals( property ) )
-//      return System.getProperty( "user.name" ); //$NON-NLS-1$
-//
-// if( PROPERTY_PASSWORD.equals( property ) )
-// return StringUtils.EMPTY;
+    if( PROPERTY_PORT.equals( property ) )
+      return Integer.toString( DEFAULT_PORT );
+
+    if( PROPERTY_DBNAME.equals( property ) )
+      return DEFAULT_DBNAME;
+
+    if( PROPERTY_USERNAME.equals( property ) )
+      return System.getProperty( "user.name" ); //$NON-NLS-1$
+
+    if( PROPERTY_PASSWORD.equals( property ) )
+      return StringUtils.EMPTY;
 
     throw new IllegalArgumentException( String.format( "Unknwon property: %s", property ) );
   }
@@ -169,57 +167,57 @@ public class OracleSettings extends HibernateSettings
     return getProperty( PROPERTY_HOST );
   }
 
-// public void setPort( final Integer port )
-// {
-// if( port == null )
-// setProperty( PROPERTY_PORT, null );
-// else
-// setProperty( PROPERTY_PORT, Integer.toString( port ) );
-// }
-//
-// int getPort( )
-// {
-// try
-// {
-// final String property = getProperty( PROPERTY_PORT );
-// return Integer.valueOf( property );
-// }
-// catch( final NumberFormatException e )
-// {
-// e.printStackTrace();
-// return DEFAULT_PORT;
-// }
-// }
-//
-// public void setDbName( final String dbName )
-// {
-// setProperty( PROPERTY_DBNAME, dbName );
-// }
-//
-// String getDbName( )
-// {
-// return getProperty( PROPERTY_DBNAME );
-// }
-//
-// public void setUsername( final String username )
-// {
-// setProperty( PROPERTY_USERNAME, username );
-// }
-//
-// String getUsername( )
-// {
-// return getProperty( PROPERTY_USERNAME );
-// }
-//
-// public void setPassword( final String password )
-// {
-// setProperty( PROPERTY_PASSWORD, password );
-// }
-//
-// String getPassword( )
-// {
-// return getProperty( PROPERTY_PASSWORD );
-// }
+  public void setPort( final Integer port )
+  {
+    if( port == null )
+      setProperty( PROPERTY_PORT, null );
+    else
+      setProperty( PROPERTY_PORT, Integer.toString( port ) );
+  }
+
+  int getPort( )
+  {
+    try
+    {
+      final String property = getProperty( PROPERTY_PORT );
+      return Integer.valueOf( property );
+    }
+    catch( final NumberFormatException e )
+    {
+      e.printStackTrace();
+      return DEFAULT_PORT;
+    }
+  }
+
+  public void setDbName( final String dbName )
+  {
+    setProperty( PROPERTY_DBNAME, dbName );
+  }
+
+  String getDbName( )
+  {
+    return getProperty( PROPERTY_DBNAME );
+  }
+
+  public void setUsername( final String username )
+  {
+    setProperty( PROPERTY_USERNAME, username );
+  }
+
+  String getUsername( )
+  {
+    return getProperty( PROPERTY_USERNAME );
+  }
+
+  public void setPassword( final String password )
+  {
+    setProperty( PROPERTY_PASSWORD, password );
+  }
+
+  String getPassword( )
+  {
+    return getProperty( PROPERTY_PASSWORD );
+  }
 
   @Override
   public void saveState( final ISecurePreferences preferences ) throws StorageException
@@ -247,8 +245,7 @@ public class OracleSettings extends HibernateSettings
   @Override
   public String toString( )
   {
-// return String.format( "%s@%s:%s/%s", getUsername(), getHost(), getPort(), getDbName() );
-    return String.format( "%s", getHost() );
+    return String.format( "%s@%s:%s/%s", getUsername(), getHost(), getPort(), getDbName() );
   }
 
   @Override

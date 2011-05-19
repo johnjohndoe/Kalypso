@@ -40,15 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal.oracle;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.hibernate.cfg.Configuration;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.hibernatespatial.oracle.OracleSpatial10gDialect;
 import org.kalypso.model.wspm.pdb.connect.internal.HibernatePdbConnection;
 
 /**
+ * TODO: choose dialect?!
+ * 
  * @author Gernot Belger
  */
-public class OracleConnection extends HibernatePdbConnection<OracleSettings> implements IPdbConnection
+public class OracleConnection extends HibernatePdbConnection<OracleSettings>
 {
   public OracleConnection( final OracleSettings settings )
   {
@@ -58,7 +59,20 @@ public class OracleConnection extends HibernatePdbConnection<OracleSettings> imp
   @Override
   protected void doConfiguration( final Configuration configuration )
   {
-    throw new NotImplementedException();
+    final OracleSettings settings = getSettings();
+
+    final OracleSpatial10gDialect dialect = new OracleSpatial10gDialect();
+
+    configuration.setProperty( "hibernate.connection.driver_class", oracle.jdbc.OracleDriver.class.getName() );
+
+    final String connectionUrl = String.format( "jdbc:oracle:thin:@%s:%d:%s", settings.getHost(), settings.getPort(), settings.getDbName() );
+
+    configuration.setProperty( "hibernate.connection.url", connectionUrl );
+    configuration.setProperty( "hibernate.connection.username", settings.getUsername() );
+    configuration.setProperty( "hibernate.connection.password", settings.getPassword() );
+
+    configuration.setProperty( "hibernate.dialect", dialect.getClass().getName() );
+    configuration.setProperty( "hibernate.spatial.dialect", dialect.getClass().getName() );
 
 // final OracleConnectInfo connectInfo = getConnectInfo();
 //

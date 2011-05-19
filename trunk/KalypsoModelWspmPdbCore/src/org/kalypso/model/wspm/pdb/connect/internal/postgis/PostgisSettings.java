@@ -50,8 +50,8 @@ import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.connect.internal.HibernateSettings;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
 
@@ -64,9 +64,7 @@ public class PostgisSettings extends HibernateSettings
 
   private static final String DEFAULT_HOST = "localhost"; //$NON-NLS-1$
 
-  private static final int DEFAULT_PORT = 5432;
-
-  private static final String DEFAULT_DBNAME = "kalypso_pdb"; //$NON-NLS-1$;
+  static final int DEFAULT_PORT = 5432;
 
   public static final String TYPE = "postgis"; //$NON-NLS-1$
 
@@ -82,7 +80,7 @@ public class PostgisSettings extends HibernateSettings
 
   static final String PROPERTY_PASSWORD = "password";//$NON-NLS-1$
 
-  final Properties m_properties = new Properties();
+  private final Properties m_properties = new Properties();
 
   public PostgisSettings( )
   {

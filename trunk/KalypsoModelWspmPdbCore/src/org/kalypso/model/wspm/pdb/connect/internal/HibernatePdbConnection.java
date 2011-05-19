@@ -40,18 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
+import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
-import org.kalypso.model.wspm.pdb.db.PdbPoint;
-import org.kalypso.model.wspm.pdb.db.PdbProperty;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionParts;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
+import org.kalypso.model.wspm.pdb.db.mapping.Events;
+import org.kalypso.model.wspm.pdb.db.mapping.Info;
+import org.kalypso.model.wspm.pdb.db.mapping.PointKinds;
+import org.kalypso.model.wspm.pdb.db.mapping.Points;
+import org.kalypso.model.wspm.pdb.db.mapping.Roughnesses;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.Vegetations;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixations;
 
 /**
  * @author Gernot Belger
@@ -80,7 +92,7 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
     return m_settings;
   }
 
-  private synchronized Configuration getConfiguration( )
+  synchronized Configuration getConfiguration( )
   {
     if( m_config == null )
       m_config = createConfiguration();
@@ -131,10 +143,18 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
 
   private void configureMappings( final Configuration configuration )
   {
-    configuration.addAnnotatedClass( PdbProperty.class );
-// configuration.addAnnotatedClass( PdbPoint.class );
-    configuration.addResource( "/org/kalypso/model/wspm/pdb/db/pdbpoint.xml" );
-    // TODO: add all binding classes
+    configuration.addAnnotatedClass( Info.class );
+    configuration.addAnnotatedClass( WaterBodies.class );
+    configuration.addAnnotatedClass( States.class );
+    configuration.addAnnotatedClass( Events.class );
+    configuration.addAnnotatedClass( CrossSections.class );
+    configuration.addAnnotatedClass( CrossSectionParts.class );
+    configuration.addAnnotatedClass( Points.class );
+    configuration.addAnnotatedClass( PointKinds.class );
+    configuration.addAnnotatedClass( Roughnesses.class );
+    configuration.addAnnotatedClass( Vegetations.class );
+    configuration.addAnnotatedClass( WaterlevelFixations.class );
+// configuration.addResource( "/org/kalypso/model/wspm/pdb/db/pdbpoint.xml" );
   }
 
   @Override
@@ -143,17 +163,22 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
     if( isConnected() )
       return;
 
-    // FIXME: use helper stuff here
     final ClassLoader classLoader = getClass().getClassLoader();
-    final ClassLoader oldContextClassLoader = Thread.currentThread().getContextClassLoader();
-    Thread.currentThread().setContextClassLoader( classLoader );
+    final ThreadContextClassLoaderRunnable operation = new ThreadContextClassLoaderRunnable( classLoader )
+    {
+      @Override
+      protected void runWithContextClassLoader( ) throws Exception
+      {
+        final Configuration configuration = getConfiguration();
+        final SessionFactory sessionFactory = configuration.buildSessionFactory();
+        final Session session = sessionFactory.openSession();
+        setSession( session );
+      }
+    };
+
     try
     {
-      final Configuration configuration = getConfiguration();
-
-      final SessionFactory sessionFactory = configuration.buildSessionFactory();
-
-      m_session = sessionFactory.openSession();
+      operation.run();
     }
     catch( final HibernateException e )
     {
@@ -165,10 +190,11 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
       e.printStackTrace();
       throw new PdbConnectException( "Failed to open connection to PDB", e );
     }
-    finally
-    {
-// Thread.currentThread().setContextClassLoader( oldContextClassLoader );
-    }
+  }
+
+  protected void setSession( final Session session )
+  {
+    m_session = session;
   }
 
   @Override
@@ -182,7 +208,8 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
   {
     try
     {
-      m_session.close();
+      if( m_session != null )
+        m_session.close();
     }
     catch( final HibernateException e )
     {
@@ -208,7 +235,7 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
 
     // query all info's
     final Transaction transaction = m_session.beginTransaction();
-    final String query = String.format( "from %s", PdbProperty.class.getName() );
+    final String query = String.format( "from %s", Info.class.getName() );
     final List< ? > allInfo = m_session.createQuery( query ).list();
     transaction.commit();
 
@@ -216,7 +243,7 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
   }
 
   @Override
-  public void addPoint( final PdbPoint onePoint ) throws PdbConnectException
+  public void addPoint( final Points onePoint ) throws PdbConnectException
   {
     checkConnection();
 
@@ -233,5 +260,32 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
       e.printStackTrace();
       throw new PdbConnectException( "Failed to write point to pdb.", e );
     }
+  }
+
+  @Override
+  public List<WaterBodies> getWaterBodies( ) throws PdbConnectException
+  {
+    checkConnection();
+
+// final Transaction transaction = m_session.beginTransaction();
+// final String query = String.format( "from %s", WaterBodies.class.getName() );
+// final Query q = m_session.createQuery( query );
+// final List< ? > allWaterbodies = q.list();
+// transaction.commit();
+//
+// return (List<WaterBodies>) allWaterbodies;
+    final List<WaterBodies> list = new ArrayList<WaterBodies>();
+    list.add( new WaterBodies( "1234", "Rhein" ) );
+    list.add( new WaterBodies( "5432", "Model" ) );
+    list.add( new WaterBodies( "9876", "Neckar" ) );
+
+    return list;
+  }
+
+  @Override
+  public void addWaterBody( final WaterBodies waterBody )
+  {
+    // TODO Auto-generated method stub
+    throw new NotImplementedException();
   }
 }

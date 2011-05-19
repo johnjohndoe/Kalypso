@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
+import org.kalypso.model.wspm.pdb.internal.utils.PortValidator;
 
 /**
  * @author Gernot Belger
@@ -84,7 +85,7 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
     final StringBlankValidator hostValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
     createPropertyControl( "Host", SWT.NONE, PostgisSettings.PROPERTY_HOST, hostValidator );
 
-    createPropertyControl( "Port", SWT.NONE, PostgisSettings.PROPERTY_PORT, new PortValidator() );
+    createPropertyControl( "Port", SWT.NONE, PostgisSettings.PROPERTY_PORT, new PortValidator( PostgisSettings.DEFAULT_PORT ) );
 
     final StringBlankValidator databaseValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
     createPropertyControl( "Database", SWT.NONE, PostgisSettings.PROPERTY_DBNAME, databaseValidator );
