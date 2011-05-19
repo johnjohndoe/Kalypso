@@ -38,49 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.db;
-
-import org.apache.commons.lang.StringUtils;
-import org.kalypso.commons.java.util.AbstractModelObject;
+package org.kalypso.model.wspm.pdb.db.constants;
 
 /**
  * @author Gernot Belger
  */
-public class PdbState extends AbstractModelObject
+public interface WaterBodiesConstants
 {
-  public static final String PROPERTY_SOURCE = "source"; //$NON-NLS-1$ 
+  String PROPERTY_CROSSSECTIONSES = "crossSectionses"; //$NON-NLS-1$
 
-  public static final String PROPERTY_NAME = "name"; //$NON-NLS-1$
+  String PROPERTY_EVENTSES = "eventses"; //$NON-NLS-1$
 
-  private String m_source = StringUtils.EMPTY;
+  String PROPERTY_COMMENT = "comment"; //$NON-NLS-1$
 
-  private String m_name;
+  String PROPERTY_NAME = "name"; //$NON-NLS-1$
 
-  public String getSource( )
-  {
-    return m_source;
-  }
+  String PROPERTY_RIVERLINE = "riverline"; //$NON-NLS-1$
 
-  public void setSource( final String source )
-  {
-    final String oldValue = m_source;
-
-    m_source = source;
-
-    firePropertyChange( PROPERTY_SOURCE, oldValue, m_source );
-  }
-
-  public String getName( )
-  {
-    return m_name;
-  }
-
-  public void setName( final String name )
-  {
-    final String oldValue = m_name;
-
-    m_name = name;
-
-    firePropertyChange( PROPERTY_NAME, oldValue, m_name );
-  }
+  String PROPERTY_WATERBODY = "waterBody"; //$NON-NLS-1$
 }

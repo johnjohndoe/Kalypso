@@ -38,51 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.db;
+package org.kalypso.model.wspm.pdb.internal.utils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import com.vividsolutions.jts.geom.Point;
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.databinding.validation.TypedValidator;
 
 /**
  * @author Gernot Belger
  */
-@Entity
-@Table(name = "pdbpoint")
-public class PdbPoint
+public class PortValidator extends TypedValidator<String>
 {
-  private Long m_id;
+  private final int m_defaultPort;
 
-  private Point m_point;
-
-  public PdbPoint( )
+  public PortValidator( final int defaultPort )
   {
-    // for hibernate
+    super( String.class, IStatus.ERROR, "Invalid port" );
+
+    m_defaultPort = defaultPort;
   }
 
-  @Id
-  public Long getID( )
+  @Override
+  protected IStatus doValidate( final String value )
   {
-    return m_id;
-  }
+    if( StringUtils.isBlank( value ) )
+      return ValidationStatus.info( String.format( "Using default port (%s)", m_defaultPort ) );
 
-  public void setID( final Long id )
-  {
-    m_id = id;
-  }
+    try
+    {
+      final int port = Integer.parseInt( value );
+      if( port <= 0 || port > 9999 )
+        return ValidationStatus.error( "Port must be an integer between 1 and 9999" );
 
-  // REMARK: actually that does not work, we are still using the pdbpoint.xml
-  @Column(columnDefinition = "Geometry", name = "point")
-  public Point getPoint( )
-  {
-    return m_point;
-  }
-
-  public void setPoint( final Point point )
-  {
-    m_point = point;
+      return ValidationStatus.ok();
+    }
+    catch( final NumberFormatException e )
+    {
+      return ValidationStatus.error( "Port must be an integer" );
+    }
   }
 }

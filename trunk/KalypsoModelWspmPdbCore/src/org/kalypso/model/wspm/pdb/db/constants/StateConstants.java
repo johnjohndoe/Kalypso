@@ -38,12 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.db;
+package org.kalypso.model.wspm.pdb.db.constants;
 
 /**
  * @author Gernot Belger
  */
-public class PdbWaterBody
+public interface StateConstants
 {
+  String PROPERTY_SOURCE = "source"; //$NON-NLS-1$ 
 
+  String PROPERTY_STATE = "state"; //$NON-NLS-1$
+
+  String PROPERTY_COMMENT = "comment"; //$NON-NLS-1$
+
+  String PROPERTY_ISSTATEZERO = "isstatezero"; //$NON-NLS-1$
+
+  String PROPERTY_CREATIONDATE = "creationdate"; //$NON-NLS-1$
+
+  String PROPERTY_EDITINGDATE = "editingdate"; //$NON-NLS-1$
+
+  String PROPERTY_EDITINGUSER = "editinguser"; //$NON-NLS-1$
+
+  String PROPERTY_MEASUREMENTDATE = "measurementdate"; //$NON-NLS-1$
+
+  String PROPERTY_CROSSSECTIONSES = "crosssectionses"; //$NON-NLS-1$
+
+  int NAME_LIMIT = 100;
+
+  int COMMENT_LIMIT = 256;
 }
