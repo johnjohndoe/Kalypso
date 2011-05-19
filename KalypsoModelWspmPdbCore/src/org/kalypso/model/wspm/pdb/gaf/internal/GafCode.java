@@ -40,51 +40,57 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf.internal;
 
-import java.math.BigDecimal;
 
 /**
- * represents one line of a gaf file
+ * Represents the 'Kennziffer' (KZ) of a gaf file.
  * 
  * @author Gernot Belger
  */
-public class GafPoint
+public class GafCode
 {
-  private final BigDecimal m_station;
+  private final String m_key;
 
-  private final String m_pointId;
+  private final String m_dbCode;
 
-  private final BigDecimal m_width;
+  private final String m_description;
 
-  private final BigDecimal m_height;
+  private final String m_hyk;
 
-  private final GafCode m_kz;
-
-  private final String m_roughnessClass;
-
-  private final String m_vegetationClass;
-
-  private final BigDecimal m_rw;
-
-  private final BigDecimal m_hw;
-
-  private final GafCode m_hyk;
-
-  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final GafCode kzCode, final String roughnessClass, final String vegetationClass, final BigDecimal rw, final BigDecimal hw, final GafCode hykCode )
+  public GafCode( final String key, final String value )
   {
-    m_station = station;
-    m_pointId = pointId;
-    m_width = width;
-    m_height = height;
-    m_kz = kzCode;
-    m_roughnessClass = roughnessClass;
-    m_vegetationClass = vegetationClass;
-    m_rw = rw;
-    m_hw = hw;
-    m_hyk = hykCode;
+    m_key = key;
+
+    final String[] tokens = value.split( ";", 3 );
+    m_dbCode = tokens[0];
+    m_description = tokens[1];
+    m_hyk = tokens[2];
   }
 
-  public BigDecimal getStation( )
+  public GafCode( final String key, final String dbCode, final String description, final String hyk )
   {
-    return m_station;
+    m_key = key;
+    m_dbCode = dbCode;
+    m_description = description;
+    m_hyk = hyk;
+  }
+
+  public String getDbCode( )
+  {
+    return m_dbCode;
+  }
+
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  public String getHyk( )
+  {
+    return m_hyk;
+  }
+
+  public String getCode( )
+  {
+    return m_key;
   }
 }

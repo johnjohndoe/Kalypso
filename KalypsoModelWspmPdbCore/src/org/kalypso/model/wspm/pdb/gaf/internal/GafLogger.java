@@ -40,51 +40,57 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf.internal;
 
-import java.math.BigDecimal;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafReader.SkipLineException;
 
 /**
- * represents one line of a gaf file
- * 
  * @author Gernot Belger
  */
-public class GafPoint
+public class GafLogger
 {
-  private final BigDecimal m_station;
+  private final PrintWriter m_logWriter;
 
-  private final String m_pointId;
-
-  private final BigDecimal m_width;
-
-  private final BigDecimal m_height;
-
-  private final GafCode m_kz;
-
-  private final String m_roughnessClass;
-
-  private final String m_vegetationClass;
-
-  private final BigDecimal m_rw;
-
-  private final BigDecimal m_hw;
-
-  private final GafCode m_hyk;
-
-  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final GafCode kzCode, final String roughnessClass, final String vegetationClass, final BigDecimal rw, final BigDecimal hw, final GafCode hykCode )
+  public GafLogger( final File logFile ) throws FileNotFoundException
   {
-    m_station = station;
-    m_pointId = pointId;
-    m_width = width;
-    m_height = height;
-    m_kz = kzCode;
-    m_roughnessClass = roughnessClass;
-    m_vegetationClass = vegetationClass;
-    m_rw = rw;
-    m_hw = hw;
-    m_hyk = hykCode;
+    m_logWriter = new PrintWriter( logFile );
   }
 
-  public BigDecimal getStation( )
+  public void log( final SkipLineException e, final String line )
   {
-    return m_station;
+    log( e.getLineNumber(), e.getSeverity(), e.getMessage(), line, null );
+  }
+
+  public void log( final int lineNumber, final IStatus status, final String line )
+  {
+    log( lineNumber, status.getSeverity(), status.getMessage(), line, status.getException() );
+  }
+
+  public void log( final int lineNumber, final int severity, final String message, final String line, final Throwable e )
+  {
+    final String level = StatusUtilities.getLocalizedSeverity( severity );
+
+    if( lineNumber != -1 )
+      m_logWriter.format( "Line %6d: ", lineNumber );
+
+    m_logWriter.format( "%s - %s", level, message );
+
+    if( line != null )
+      m_logWriter.format( ": \"%s\"", line );
+
+    m_logWriter.println();
+
+    if( e != null )
+      e.printStackTrace( m_logWriter );
+  }
+
+  public void close( )
+  {
+    if( m_logWriter != null )
+      m_logWriter.close();
   }
 }

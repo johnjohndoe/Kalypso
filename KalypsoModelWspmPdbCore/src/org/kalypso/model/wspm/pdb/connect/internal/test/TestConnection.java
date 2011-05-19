@@ -67,6 +67,9 @@ public class TestConnection implements IPdbConnection
   public TestConnection( final TestSettings settings )
   {
     m_settings = settings;
+
+    /* Add some data */
+    m_waterbodies.add( new WaterBodies( "1234", "Bächle" ) );
   }
 
   @Override
