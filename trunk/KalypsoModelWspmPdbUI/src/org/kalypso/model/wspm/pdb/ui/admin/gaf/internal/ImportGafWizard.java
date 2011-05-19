@@ -110,7 +110,7 @@ public class ImportGafWizard extends Wizard
 
   private void openLogFile( final File logFile )
   {
-    if( !Program.launch( logFile.getName(), logFile.getParent() ) )
+    if( !Program.launch( logFile.getAbsolutePath(), logFile.getParent() ) )
     {
       final String message = String.format( "Failed to open external viewer for: '%s", logFile.getAbsolutePath() );
       MessageDialog.openWarning( getShell(), "GAF Import", message );

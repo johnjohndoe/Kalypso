@@ -80,4 +80,9 @@ public class AddWaterBodyWizard extends Wizard
 
     return true;
   }
+
+  public WaterBodies getWaterBody( )
+  {
+    return m_waterBody;
+  }
 }

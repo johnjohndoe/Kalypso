@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
@@ -73,8 +74,7 @@ public class AddWaterBodyAction extends Action
     wizard.setWindowTitle( "Create New Water Body" );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
-    dialog.open();
-
-    m_page.refreshWaterBodies();
+    if( dialog.open() == Window.OK )
+      m_page.refreshWaterBodies( wizard.getWaterBody() );
   }
 }

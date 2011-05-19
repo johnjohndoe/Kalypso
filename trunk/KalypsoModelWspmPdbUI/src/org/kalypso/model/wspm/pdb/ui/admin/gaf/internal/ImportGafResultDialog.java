@@ -51,13 +51,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 
 /**
  * @author Gernot Belger
  */
-public class ImportGafResultDialog extends StatusDialog2
+public class ImportGafResultDialog extends StatusDialog
 {
   private final ImportGafData m_data;
 
@@ -75,7 +75,7 @@ public class ImportGafResultDialog extends StatusDialog2
 
     final DataBindingContext context = new DataBindingContext();
 
-    final Button showLogButton = new Button( customArea, SWT.TOGGLE );
+    final Button showLogButton = new Button( customArea, SWT.CHECK );
     showLogButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     showLogButton.setText( "Open Log File" );
 
