@@ -91,15 +91,15 @@ public class ImportGafWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final IDialogSettings settings = getDialogSettings();
-    if( settings != null )
-      m_data.store( settings );
-
     final ImportGafOperation operation = new ImportGafOperation( m_connection, m_data );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
 
     final ImportGafResultDialog resultDialog = new ImportGafResultDialog( getShell(), result, m_data );
     resultDialog.open();
+
+    final IDialogSettings settings = getDialogSettings();
+    if( settings != null )
+      m_data.store( settings );
 
     /* Open log */
     if( m_data.getOpenLog() )
