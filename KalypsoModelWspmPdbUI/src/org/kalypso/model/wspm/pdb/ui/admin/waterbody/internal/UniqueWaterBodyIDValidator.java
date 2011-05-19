@@ -38,59 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.easymode.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.PdbSettings;
-import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
  * @author Gernot Belger
  */
-public class PdbConnectJob extends Job
+public class UniqueWaterBodyIDValidator extends TypedValidator<String>
 {
-  private final String m_settingsName;
+  private final Set<String> m_ids = new HashSet<String>();
 
-  private IPdbConnection m_connection;
-
-  public PdbConnectJob( final String settingsName )
+  public UniqueWaterBodyIDValidator( final WaterBodies[] existingWaterbodies )
   {
-    super( "Connect to PDB" );
+    super( String.class, IStatus.ERROR, "A waterbody with that ID already exists" );
 
-    m_settingsName = settingsName;
+    for( final WaterBodies waterBody : existingWaterbodies )
+      m_ids.add( waterBody.getWaterBody() );
   }
 
   @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  protected IStatus doValidate( final String value ) throws CoreException
   {
-    try
-    {
-      final IPdbSettings settings = PdbSettings.getSettings( m_settingsName );
-      final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
-      operation.execute( monitor );
-      m_connection = operation.getConnection();
+    if( m_ids.contains( value ) )
+      fail();
 
-      return Status.OK_STATUS;
-    }
-    catch( final PdbConnectException e )
-    {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to autoconnect to cross section database", e );
-    }
-    catch( final InterruptedException e )
-    {
-      return Status.CANCEL_STATUS;
-    }
-  }
-
-  public IPdbConnection getConnection( )
-  {
-    return m_connection;
+    return ValidationStatus.ok();
   }
 }

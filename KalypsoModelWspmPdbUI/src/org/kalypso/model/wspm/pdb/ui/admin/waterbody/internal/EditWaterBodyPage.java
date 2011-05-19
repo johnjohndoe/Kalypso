@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -52,47 +52,65 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
 /**
  * @author Gernot Belger
  */
-public class EditStatePage extends WizardPage
+public class EditWaterBodyPage extends WizardPage
 {
-  private final IPdbConnection m_connection;
-
-  private final States m_state;
+  private final WaterBodies m_waterBody;
 
   private DatabindingWizardPage m_binding;
 
-  public EditStatePage( final String pageName, final IPdbConnection connection, final States state )
+  private final WaterBodies[] m_existingWaterbodies;
+
+  public EditWaterBodyPage( final String pageName, final WaterBodies waterBody, final WaterBodies[] existingWaterbodies )
   {
     super( pageName );
 
-    m_connection = connection;
-    m_state = state;
+    m_waterBody = waterBody;
+    m_existingWaterbodies = existingWaterbodies;
 
-    setTitle( "Enter State Properties" );
-    setDescription( "Enter the properties of the freshly created state" );
+    setTitle( "Edit Properties" );
+    setDescription( "Edit the properties of the water body" );
   }
 
   @Override
   public void createControl( final Composite parent )
   {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    setControl( panel );
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
+    final Composite composite = new Composite( parent, SWT.NONE );
+    setControl( composite );
+
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( composite );
 
     m_binding = new DatabindingWizardPage( this, null );
 
-    createNameControls( panel );
-    createCommentControls( panel );
+    createIDControls( composite );
+    createNameControls( composite );
+    createCommentControls( composite );
+    // private Geometry riverline;
+  }
 
-    // TODO: alle anderen parameter editieren
+  private void createIDControls( final Composite parent )
+  {
+    new Label( parent, SWT.NONE ).setText( "Gewässerkennziffer" );
 
-    createSourceControls( panel );
+    final Text field = new Text( parent, SWT.BORDER );
+    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    field.setMessage( "<Eindeutige Kennziffer des Gewässers>" );
+    field.setTextLimit( WaterBodies.WATERBODY_LIMIT );
+
+    final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
+    final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBodies.PROPERTY_WATERBODY );
+
+    final DataBinder binder = new DataBinder( target, model );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'ID' is empty" ) );
+    binder.addTargetAfterGetValidator( new UniqueWaterBodyIDValidator( m_existingWaterbodies ) );
+
+    m_binding.bindValue( binder );
   }
 
   private void createNameControls( final Composite parent )
@@ -101,15 +119,17 @@ public class EditStatePage extends WizardPage
 
     final Text field = new Text( parent, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setMessage( "<Eindeutiger Name des Zustands>" );
-    field.setTextLimit( States.NAME_LIMIT );
+    field.setMessage( "<Eindeutiger Name des Gewässers>" );
+    field.setTextLimit( WaterBodies.NAME_LIMIT );
 
-    final IObservableValue target = SWTObservables.observeText( field );
-    final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_STATE );
+    final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
+    final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBodies.PROPERTY_NAME );
+    final DataBinder binder = new DataBinder( target, model );
 
-    // TODO: validator that checks if a state with same name already exists
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Name' is empty" ) );
+    binder.addTargetAfterGetValidator( new UniqueWaterBodyNameValidator( m_existingWaterbodies ) );
 
-    m_binding.bindValue( target, model, new StringBlankValidator( IStatus.ERROR, "'Name' is empty" ) );
+    m_binding.bindValue( binder );
   }
 
   private void createCommentControls( final Composite parent )
@@ -119,25 +139,12 @@ public class EditStatePage extends WizardPage
     label.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
 
     final Text field = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
-    field.setTextLimit( States.COMMENT_LIMIT );
+    field.setTextLimit( WaterBodies.COMMENT_LIMIT );
     field.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    field.setMessage( "<Beschreibung des Zustands>" );
+    field.setMessage( "<Beschreibung des Gewässers>" );
 
-    final IObservableValue target = SWTObservables.observeText( field );
-    final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_COMMENT );
-
-    m_binding.bindValue( target, model );
-  }
-
-  private void createSourceControls( final Composite parent )
-  {
-    new Label( parent, SWT.NONE ).setText( "Source" );
-
-    final Text field = new Text( parent, SWT.BORDER | SWT.READ_ONLY );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
-    final IObservableValue target = SWTObservables.observeText( field );
-    final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_SOURCE );
+    final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
+    final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBodies.PROPERTY_COMMENT );
 
     m_binding.bindValue( target, model );
   }

@@ -46,7 +46,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.pdb.db.PdbState;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
@@ -60,6 +61,8 @@ public class ImportGafData extends AbstractModelObject
 
   public static final String PROPERTY_GAF_FILE = "gafFile"; //$NON-NLS-1$
 
+  public static final String PROPERTY_WATER_BODY = "waterBody"; //$NON-NLS-1$
+
   private String m_srs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   private File m_gafFile = null;
@@ -67,7 +70,9 @@ public class ImportGafData extends AbstractModelObject
   private boolean m_openLog = true;
 
   /** We always create a new state when importing a gaf file */
-  private final PdbState m_state = new PdbState();
+  private final States m_state = new States();
+
+  private WaterBodies m_waterBody;
 
   public void init( final IDialogSettings settings )
   {
@@ -76,14 +81,14 @@ public class ImportGafData extends AbstractModelObject
 
     final String gafPath = settings.get( PROPERTY_GAF_FILE );
     if( !StringUtils.isBlank( gafPath ) )
-      m_gafFile = new File( gafPath );
+      setGafFile( new File( gafPath ) );
 
     final String srs = settings.get( PROPERTY_SRS );
     if( srs != null )
-      m_srs = srs;
+      setSrs( srs );
 
     if( !StringUtils.isBlank( settings.get( PROPERTY_OPEN_LOG ) ) )
-      m_openLog = settings.getBoolean( PROPERTY_GAF_FILE );
+      setOpenLog( settings.getBoolean( PROPERTY_GAF_FILE ) );
   }
 
   public void store( final IDialogSettings settings )
@@ -112,6 +117,20 @@ public class ImportGafData extends AbstractModelObject
     firePropertyChange( PROPERTY_SRS, oldValue, m_srs );
   }
 
+  public WaterBodies getWaterBody( )
+  {
+    return m_waterBody;
+  }
+
+  public void setWaterBody( final WaterBodies waterBody )
+  {
+    final WaterBodies oldValue = m_waterBody;
+
+    m_waterBody = waterBody;
+
+    firePropertyChange( PROPERTY_WATER_BODY, oldValue, m_waterBody );
+  }
+
   public File getGafFile( )
   {
     return m_gafFile;
@@ -132,11 +151,11 @@ public class ImportGafData extends AbstractModelObject
       final String stateSource = String.format( "Importiert aus: %s", filename );
       m_state.setSource( stateSource );
 
-      m_state.setName( FilenameUtils.removeExtension( filename ) );
+      m_state.setState( FilenameUtils.removeExtension( filename ) );
     }
   }
 
-  public PdbState getState( )
+  public States getState( )
   {
     return m_state;
   }

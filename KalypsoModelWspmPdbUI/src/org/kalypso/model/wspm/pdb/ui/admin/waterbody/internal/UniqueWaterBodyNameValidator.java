@@ -38,33 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.easymode.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Event;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
  * @author Gernot Belger
  */
-public class DisconnectPdbAction extends Action
+public class UniqueWaterBodyNameValidator extends TypedValidator<String>
 {
-  private final PdbView m_view;
+  private final Set<String> m_ids = new HashSet<String>();
 
-  public DisconnectPdbAction( final PdbView view )
+  public UniqueWaterBodyNameValidator( final WaterBodies[] existingWaterbodies )
   {
-    super( "Close Connection" );
+    super( String.class, IStatus.WARNING, "A waterbody with the same name already exists" );
 
-    m_view = view;
-
-    final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.DISCONNECT_FROM_PDB );
-    setImageDescriptor( image );
+    for( final WaterBodies waterBody : existingWaterbodies )
+      m_ids.add( waterBody.getName() );
   }
 
   @Override
-  public void runWithEvent( final Event event )
+  protected IStatus doValidate( final String value ) throws CoreException
   {
-    m_view.setConnection( null );
+    if( m_ids.contains( value ) )
+      fail();
+
+    return ValidationStatus.ok();
   }
 }

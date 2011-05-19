@@ -45,6 +45,7 @@ import java.io.File;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.program.Program;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -72,6 +73,17 @@ public class ImportGafWizard extends Wizard
     addPage( new EditStatePage( "state", connection, m_data.getState() ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
+  }
+
+  @Override
+  public boolean canFinish( )
+  {
+    /* Do not allow to finish early */
+    final IWizardPage currentPage = getContainer().getCurrentPage();
+    if( currentPage.getNextPage() != null )
+      return false;
+
+    return super.canFinish();
   }
 
   @Override
