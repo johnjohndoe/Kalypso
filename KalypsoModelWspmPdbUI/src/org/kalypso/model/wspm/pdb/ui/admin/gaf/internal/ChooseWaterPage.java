@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.databinding.beans.BeanProperties;
@@ -54,6 +55,7 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerSupport;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -150,8 +152,9 @@ public class ChooseWaterPage extends WizardPage
     nameColumn.getColumn().setWidth( 100 );
     ColumnViewerSorter.registerSorter( nameColumn, new ViewerSorter() );
 
-    final List< ? > waterBodies = loadWaterbodies();
-    m_tableInput = new WritableList( waterBodies, WaterBodies.class );
+    m_tableInput = new WritableList( new ArrayList<WaterBodies>(), WaterBodies.class );
+
+    refreshWaterBodies( null );
 
     final IValueProperty[] labelProperties = new IValueProperty[] { gknProperty, nameProperty };
     ViewerSupport.bind( m_waterBodiesViewer, m_tableInput, labelProperties );
@@ -167,16 +170,17 @@ public class ChooseWaterPage extends WizardPage
     return table;
   }
 
-  protected List< ? > loadWaterbodies( )
+  protected WaterBodies[] loadWaterbodies( )
   {
     try
     {
-      return m_connection.getWaterBodies();
+      final List<WaterBodies> waterBodies = m_connection.getWaterBodies();
+      return waterBodies.toArray( new WaterBodies[waterBodies.size()] );
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return Collections.singletonList( "Failed to load waterbodies: " + e.toString() );
+      return new WaterBodies[] {};
     }
   }
 
@@ -236,10 +240,14 @@ public class ChooseWaterPage extends WizardPage
     return ActionHyperlink.createHyperlink( null, panel, SWT.NONE, addAction );
   }
 
-  void refreshWaterBodies( )
+  void refreshWaterBodies( final WaterBodies select )
   {
+// m_waterBodiesViewer.refresh();
     m_tableInput.clear();
-    m_tableInput.addAll( loadWaterbodies() );
+    m_tableInput.addAll( Arrays.asList( loadWaterbodies() ) );
+
+    if( select != null )
+      m_waterBodiesViewer.setSelection( new StructuredSelection( select ) );
   }
 
   public WaterBodies[] getExistingWaterbodies( )
