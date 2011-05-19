@@ -38,26 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
-import java.math.BigDecimal;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal.AddWaterBodyWizard;
 
 /**
- * represents one line of a gaf file
- * 
  * @author Gernot Belger
  */
-public class GafPoint
+public class AddWaterBodyAction extends Action
 {
-  private final BigDecimal m_station;
+  private final ChooseWaterPage m_page;
 
-  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final String kz, final BigDecimal rw, final BigDecimal hw, final String kz2 )
+  private final IPdbConnection m_connection;
+
+  public AddWaterBodyAction( final IPdbConnection connection, final ChooseWaterPage page )
   {
-    m_station = station;
+    m_connection = connection;
+    m_page = page;
+
+    setText( "Create New Water Body..." );
   }
 
-  public BigDecimal getStation( )
+  @Override
+  public void runWithEvent( final Event event )
   {
-    return m_station;
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+
+    final AddWaterBodyWizard wizard = new AddWaterBodyWizard( m_connection, m_page.getExistingWaterbodies() );
+    wizard.setWindowTitle( "Create New Water Body" );
+
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    dialog.open();
+
+    m_page.refreshWaterBodies();
   }
 }

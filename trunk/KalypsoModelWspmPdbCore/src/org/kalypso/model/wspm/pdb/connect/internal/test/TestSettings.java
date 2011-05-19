@@ -63,7 +63,7 @@ public class TestSettings implements IPdbSettings
 
   public TestSettings( )
   {
-    this( null );
+    this( "Test" ); //$NON-NLS-1$;
   }
 
   private TestSettings( final String name )
@@ -125,5 +125,11 @@ public class TestSettings implements IPdbSettings
   void setName( final String value )
   {
     m_name = value;
+  }
+
+  @Override
+  public String toString( )
+  {
+    return String.format( "%s (for debugging purpose only)", getName() );
   }
 }

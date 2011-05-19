@@ -13,7 +13,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.kalypso.model.wspm.pdb.ui.perspective.internal.PdbPerspective"
+            class="org.kalypso.model.wspm.pdb.ui.preferences.internal.PdbPerspective"
             fixed="true"
             icon="icons/pdb.gif"
             id="PdbPerspective"
@@ -24,21 +24,18 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="org.kalypso.model.wspm.pdb.ui.perspective.internal.PdbView"
+            class="org.kalypso.model.wspm.pdb.ui.preferences.internal.PdbView"
             icon="icons/pdb.gif"
             id="PdbView"
             name="Profildatenbank"
             restorable="true">
       </view>
+      <view
+            class="org.kalypso.model.wspm.pdb.ui.admin.info.internal.PdbInfoView"
+            icon="icons/infoView.gif"
+            id="PdbInfoView"
+            name="Info"
+            restorable="true">
+      </view>
    </extension>
-   <extension
-         point="org.eclipse.debug.ui.launchConfigurationTabs">
-      <tab
-            class="kalypsomodelwspmpdbui.LaunchConfigurationTab1"
-            group="KalypsoModelWspmPdbUI.tab1"
-            id="KalypsoModelWspmPdbUI.tab1"
-            name="KalypsoModelWspmPdbUI.tab1">
-      </tab>
-   </extension>
-
 </plugin>

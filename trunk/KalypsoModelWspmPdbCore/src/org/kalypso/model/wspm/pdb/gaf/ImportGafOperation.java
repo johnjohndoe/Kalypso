@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.gaf;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -51,7 +51,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafImporter;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
  * First stage of gaf importing: open log file, then delegate to next level.
@@ -91,7 +92,7 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     catch( final IOException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Error while writing log file", e );
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Error while writing log file", e );
     }
     catch( final CoreException e )
     {

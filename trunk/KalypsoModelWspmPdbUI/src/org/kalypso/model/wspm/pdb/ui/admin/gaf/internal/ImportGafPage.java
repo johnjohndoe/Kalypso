@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -62,6 +62,7 @@ import org.kalypso.commons.databinding.validation.FileIsFileValidator;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;

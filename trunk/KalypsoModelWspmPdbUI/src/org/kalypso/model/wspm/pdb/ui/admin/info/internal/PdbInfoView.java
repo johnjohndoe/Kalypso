@@ -38,43 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.info.internal;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal.AddWaterBodyWizard;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.part.ViewPart;
 
 /**
  * @author Gernot Belger
  */
-public class AddWaterBodyAction extends Action
+public class PdbInfoView extends ViewPart
 {
-  private final EditWaterPage m_page;
+  public static final String ID = "PdbInfoView"; //$NON-NLS-1$
 
-  private final IPdbConnection m_connection;
-
-  public AddWaterBodyAction( final IPdbConnection connection, final EditWaterPage page )
+  @Override
+  public void createPartControl( final Composite parent )
   {
-    m_connection = connection;
-    m_page = page;
+    // TODO Auto-generated method stub
 
-    setText( "Create New Water Body..." );
   }
 
   @Override
-  public void runWithEvent( final Event event )
+  public void setFocus( )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
+    // TODO Auto-generated method stub
 
-    final AddWaterBodyWizard wizard = new AddWaterBodyWizard( m_connection, m_page.getExistingWaterbodies() );
-    wizard.setWindowTitle( "Create New Water Body" );
-
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    dialog.open();
-
-    m_page.refreshWaterBodies();
   }
 }

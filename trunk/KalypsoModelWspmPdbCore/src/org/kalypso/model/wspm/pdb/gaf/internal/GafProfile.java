@@ -38,45 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.gaf.internal;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.eclipse.core.runtime.Assert;
 
 /**
+ * Represent point of a gaf file with the same station.
+ * 
  * @author Gernot Belger
  */
-public class WaterBodiesFilter extends ViewerFilter
+public class GafProfile
 {
-  private final String m_gkn;
+  private final Collection<GafPoint> m_points = new ArrayList<GafPoint>( 20 );
 
-  private final String m_name;
+  private final BigDecimal m_station;
 
-  public WaterBodiesFilter( final String gkn, final String name )
+  public GafProfile( final BigDecimal station )
   {
-    m_gkn = StringUtils.isBlank( gkn ) ? null : gkn.toLowerCase();
-    m_name = StringUtils.isBlank( name ) ? null : name.toLowerCase();
+    m_station = station;
   }
 
-  @Override
-  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
+  public BigDecimal getStation( )
   {
-    if( element instanceof WaterBodies )
-    {
-      final WaterBodies waterBody = (WaterBodies) element;
-      final String name = waterBody.getName().toLowerCase();
-      final String gkn = waterBody.getWaterBody().toLowerCase();
-
-      if( m_gkn != null && !gkn.contains( m_gkn ) )
-        return false;
-
-      if( m_name != null && !name.contains( m_name ) )
-        return false;
-    }
-
-    return true;
+    return m_station;
   }
 
+  public void addPoint( final GafPoint point )
+  {
+    final BigDecimal station = point.getStation();
+
+    Assert.isTrue( station.equals( m_station ) );
+
+    m_points.add( point );
+  }
 }
