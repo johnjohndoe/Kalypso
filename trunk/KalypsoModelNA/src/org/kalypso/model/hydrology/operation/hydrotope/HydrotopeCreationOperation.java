@@ -425,7 +425,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     }
   }
 
-  private final GM_MultiSurface toMultiSurface( final Geometry geometry, final String crs )
+  private GM_MultiSurface toMultiSurface( final Geometry geometry, final String crs )
   {
     try
     {

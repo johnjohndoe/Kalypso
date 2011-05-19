@@ -38,17 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.model;
+package org.kalypso.model.hydrology.binding.model.channels;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.INaModelFeature;
+import org.kalypso.model.hydrology.binding.model.Node;
 
 /**
  * @author Dirk Kuch
  */
-public interface IVirtualChannel extends IChannel
+public interface IChannel extends INaModelFeature
 {
-  QName FEATURE_VIRTUAL_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "VirtualChannel" ); //$NON-NLS-1$
+  QName FEATURE_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "_Channel" ); //$NON-NLS-1$
+
+  QName PROPERTY_LINKED_DOWNSTREAM_NODE = new QName( NaModelConstants.NS_NAMODELL, "downStreamNodeMember" ); //$NON-NLS-1$
+
+  void setDownstreamNode( Node downstreamNode );
+
+  Node getDownstreamNode( );
 
 }

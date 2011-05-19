@@ -38,11 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.model;
+package org.kalypso.model.hydrology.binding.model.channels;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 
@@ -61,6 +62,9 @@ public interface IStorageChannel extends IChannel
 
   QName PROPERTY_GENERATE_RESULT = new QName( NaModelConstants.NS_NAMODELL, "generateResult" ); //$NON-NLS-1$
 
+  /**
+   * wvq-relationship
+   */
   QName PROPERTY_HVVSQD = new QName( NaModelConstants.NS_NAMODELL, "hvvsqd" ); //$NON-NLS-1$
 
   QName PROPERTY_INITIAL_CAPACITY = new QName( NaModelConstants.NS_NAMODELL, "sv" ); //$NON-NLS-1$
@@ -89,6 +93,9 @@ public interface IStorageChannel extends IChannel
 
   double getVolumeMin( );
 
+  /**
+   * @return IObservation stored in "hvvsqd" feature type property
+   */
   IObservation getWVQObservation( );
 
   boolean isGenerateResults( );

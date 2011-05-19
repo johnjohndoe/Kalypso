@@ -75,7 +75,7 @@ public class Channel extends Feature_Impl
     return getProperty( PROP_FEATURE_ID, String.class );
   }
 
-  public void setNaChannelID( final org.kalypso.model.hydrology.binding.model.Channel channel )
+  public void setNaChannelID( final org.kalypso.model.hydrology.binding.model.channels.Channel channel )
   {
     setProperty( PROP_FEATURE_ID, channel.getId() ); //$NON-NLS-1$
   }

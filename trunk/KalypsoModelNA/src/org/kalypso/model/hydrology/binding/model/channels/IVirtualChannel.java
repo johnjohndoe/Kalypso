@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,20 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.model;
+package org.kalypso.model.hydrology.binding.model.channels;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import javax.xml.namespace.QName;
+
+import org.kalypso.model.hydrology.NaModelConstants;
 
 /**
- * Binding class for {http://www.tuhh.de/kalypsoNA}Virtual.
- * 
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class VirtualChannel extends Channel implements IVirtualChannel
+public interface IVirtualChannel extends IChannel
 {
-  public VirtualChannel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  QName FEATURE_VIRTUAL_CHANNEL = new QName( NaModelConstants.NS_NAMODELL, "VirtualChannel" ); //$NON-NLS-1$
+
 }
