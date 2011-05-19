@@ -43,6 +43,7 @@ package org.kalypso.model.hydrology.binding.model;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.geometry.GM_Exception;

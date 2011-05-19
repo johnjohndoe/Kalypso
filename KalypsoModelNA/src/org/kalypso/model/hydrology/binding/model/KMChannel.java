@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 

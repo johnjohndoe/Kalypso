@@ -271,7 +271,7 @@
               qname="{http://www.tuhh.de/kalypsoNA}Node">
         </feature>
         <feature
-              class="org.kalypso.model.hydrology.binding.model.VirtualChannel"
+              class="org.kalypso.model.hydrology.binding.model.channels.VirtualChannel"
               qname="{http://www.tuhh.de/kalypsoNA}VirtualChannel">
         </feature>
         <feature
@@ -279,7 +279,7 @@
               qname="{http://www.tuhh.de/kalypsoNA}KMChannel">
         </feature>
         <feature
-              class="org.kalypso.model.hydrology.binding.model.StorageChannel"
+              class="org.kalypso.model.hydrology.binding.model.channels.StorageChannel"
               qname="{http://www.tuhh.de/kalypsoNA}StorageChannel">
         </feature>
         <feature

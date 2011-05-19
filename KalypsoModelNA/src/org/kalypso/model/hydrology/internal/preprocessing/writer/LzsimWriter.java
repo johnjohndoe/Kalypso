@@ -135,7 +135,7 @@ public class LzsimWriter
 
   private void writeLzg( final File lzsimDir, final String iniDate ) throws SimulationException
   {
-    final Map<String, org.kalypso.model.hydrology.binding.model.Channel> naChannelHash = buildChannelHash( m_idManager );
+    final Map<String, org.kalypso.model.hydrology.binding.model.channels.Channel> naChannelHash = buildChannelHash( m_idManager );
 
     // write initial conditions for the strands
     // TODO:write only for strands of the actual calculation
@@ -143,7 +143,7 @@ public class LzsimWriter
     for( final Channel iniChannel : channels )
     {
       final String naChannelID = iniChannel.getNaChannelID();
-      final org.kalypso.model.hydrology.binding.model.Channel naChannel = naChannelHash.get( naChannelID );
+      final org.kalypso.model.hydrology.binding.model.channels.Channel naChannel = naChannelHash.get( naChannelID );
       if( naChannel != null )
       {
         final int asciiChannelID = m_idManager.getAsciiID( naChannel );
@@ -154,12 +154,12 @@ public class LzsimWriter
     }
   }
 
-  private static Map<String, org.kalypso.model.hydrology.binding.model.Channel> buildChannelHash( final IDManager idManager )
+  private static Map<String, org.kalypso.model.hydrology.binding.model.channels.Channel> buildChannelHash( final IDManager idManager )
   {
     final List<Feature> allNAChannelFeatures = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
-    final Map<String, org.kalypso.model.hydrology.binding.model.Channel> naChannelHash = new HashMap<String, org.kalypso.model.hydrology.binding.model.Channel>();
+    final Map<String, org.kalypso.model.hydrology.binding.model.channels.Channel> naChannelHash = new HashMap<String, org.kalypso.model.hydrology.binding.model.channels.Channel>();
     for( final Feature feature : allNAChannelFeatures )
-      naChannelHash.put( feature.getId(), (org.kalypso.model.hydrology.binding.model.Channel) feature );
+      naChannelHash.put( feature.getId(), (org.kalypso.model.hydrology.binding.model.channels.Channel) feature );
     return naChannelHash;
   }
 

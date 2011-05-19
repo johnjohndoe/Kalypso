@@ -42,10 +42,10 @@ package org.kalypso.model.hydrology.internal.preprocessing;
 
 import java.util.Comparator;
 
-import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
-import org.kalypso.model.hydrology.binding.model.StorageChannel;
-import org.kalypso.model.hydrology.binding.model.VirtualChannel;
+import org.kalypso.model.hydrology.binding.model.channels.Channel;
+import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
+import org.kalypso.model.hydrology.binding.model.channels.VirtualChannel;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 

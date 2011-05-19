@@ -38,10 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.model;
+package org.kalypso.model.hydrology.binding.model.channels;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
