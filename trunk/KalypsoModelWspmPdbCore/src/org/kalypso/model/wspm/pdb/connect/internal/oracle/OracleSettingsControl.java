@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
-import org.kalypso.model.wspm.pdb.connect.internal.postgis.UniqueSettingsNameValidator;
+import org.kalypso.model.wspm.pdb.connect.internal.UniqueSettingsNameValidator;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
 import org.kalypso.model.wspm.pdb.internal.utils.PortValidator;
 

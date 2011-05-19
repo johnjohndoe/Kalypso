@@ -96,7 +96,7 @@ public class WspmPdbCorePlugin extends Plugin implements BundleActivator
   }
 
   /**
-   * Sets the connections for pdb. The connections will be immediatlely persisted and can be accessed after workbench
+   * Sets the connections for pdb. The connections will be immediately persisted and can be accessed after workbench
    * restart.
    */
   public synchronized void setConnections( final IPdbSettings[] connections ) throws PdbConnectException

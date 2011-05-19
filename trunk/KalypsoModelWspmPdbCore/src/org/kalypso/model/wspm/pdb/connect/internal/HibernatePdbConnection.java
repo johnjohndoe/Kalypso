@@ -236,7 +236,7 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
     // query all info's
     final Transaction transaction = m_session.beginTransaction();
     final String query = String.format( "from %s", Info.class.getName() );
-    final List< ? > allInfo = m_session.createQuery( query ).list();
+    final List<Info> allInfo = m_session.createQuery( query ).list();
     transaction.commit();
 
     return new PdbInfo( allInfo );

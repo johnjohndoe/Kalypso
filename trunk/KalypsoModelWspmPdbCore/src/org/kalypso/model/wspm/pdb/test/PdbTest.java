@@ -136,7 +136,7 @@ public class PdbTest extends Assert
     final Session session = sessionFactory.openSession();
 
     final Transaction transaction = session.beginTransaction();
-    final List< ? > allInfo = session.createQuery( String.format( "from %s", Info.class.getName() ) ).list();
+    final List<Info> allInfo = session.createQuery( String.format( "from %s", Info.class.getName() ) ).list();
     transaction.commit();
 
     final PdbInfo info = new PdbInfo( allInfo );
