@@ -43,12 +43,14 @@ package org.kalypso.model.wspm.pdb.db;
 import java.util.List;
 import java.util.Properties;
 
+import org.kalypso.model.wspm.pdb.db.mapping.Info;
+
 /**
  * @author Gernot Belger
  */
 public class PdbInfo
 {
-  private static final String VERSION = "Version"; //$NON-NLS-1$
+  private final String VERSION = "Version"; //$NON-NLS-1$
 
   private final Properties m_properties = new Properties();
 
@@ -56,9 +58,9 @@ public class PdbInfo
   {
     for( final Object object : allInfo )
     {
-      if( object instanceof PdbProperty )
+      if( object instanceof Info )
       {
-        final PdbProperty property = (PdbProperty) object;
+        final Info property = (Info) object;
         m_properties.put( property.getKey(), property.getValue() );
       }
     }

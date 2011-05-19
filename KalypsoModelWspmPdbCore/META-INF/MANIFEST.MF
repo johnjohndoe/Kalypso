@@ -17,4 +17,6 @@ Bundle-ActivationPolicy: lazy
 Import-Package: javax.persistence
 Export-Package: org.kalypso.model.wspm.pdb,
  org.kalypso.model.wspm.pdb.connect,
- org.kalypso.model.wspm.pdb.db
+ org.kalypso.model.wspm.pdb.db,
+ org.kalypso.model.wspm.pdb.db.constants,
+ org.kalypso.model.wspm.pdb.db.mapping

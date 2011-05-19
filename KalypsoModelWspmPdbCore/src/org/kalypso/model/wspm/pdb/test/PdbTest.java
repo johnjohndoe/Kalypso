@@ -54,8 +54,8 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.internal.postgis.PostgisSettings;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
-import org.kalypso.model.wspm.pdb.db.PdbPoint;
-import org.kalypso.model.wspm.pdb.db.PdbProperty;
+import org.kalypso.model.wspm.pdb.db.mapping.Info;
+import org.kalypso.model.wspm.pdb.db.mapping.Points;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -81,9 +81,9 @@ public class PdbTest extends Assert
     final String version = info.getVersion();
     System.out.println( "Version=" + version );
 
-    final PdbPoint onePoint = new PdbPoint();
-    onePoint.setID( System.currentTimeMillis() );
-    onePoint.setPoint( new GeometryFactory().createPoint( new Coordinate( 3.14, 2.79 ) ) );
+    final Points onePoint = new Points();
+    onePoint.setPoint( "" + System.currentTimeMillis() );
+    onePoint.setLocation( new GeometryFactory().createPoint( new Coordinate( 3.14, 2.79 ) ) );
     connection.addPoint( onePoint );
   }
 
@@ -121,7 +121,7 @@ public class PdbTest extends Assert
     final ClassLoader classLoader = getClass().getClassLoader();
     Thread.currentThread().setContextClassLoader( classLoader );
 
-    configuration.addAnnotatedClass( PdbProperty.class );
+    configuration.addAnnotatedClass( Info.class );
     // FIXME
     // configuration.addAnnotatedClass( PdbPoint.class );
     configuration.addResource( "/org/kalypso/model/wspm/pdb/db/pdbpoint.xml", classLoader );
@@ -136,7 +136,7 @@ public class PdbTest extends Assert
     final Session session = sessionFactory.openSession();
 
     final Transaction transaction = session.beginTransaction();
-    final List< ? > allInfo = session.createQuery( String.format( "from %s", PdbProperty.class.getName() ) ).list();
+    final List< ? > allInfo = session.createQuery( String.format( "from %s", Info.class.getName() ) ).list();
     transaction.commit();
 
     final PdbInfo info = new PdbInfo( allInfo );
@@ -146,9 +146,9 @@ public class PdbTest extends Assert
 
     final Transaction transaction2 = session.beginTransaction();
 
-    final PdbPoint onePoint = new PdbPoint();
-    onePoint.setPoint( new GeometryFactory().createPoint( new Coordinate( 3.14, 2.79 ) ) );
-    onePoint.setID( System.currentTimeMillis() );
+    final Points onePoint = new Points();
+    onePoint.setPoint( "" + System.currentTimeMillis() );
+    onePoint.setLocation( new GeometryFactory().createPoint( new Coordinate( 3.14, 2.79 ) ) );
     session.save( onePoint );
     transaction2.commit();
 
