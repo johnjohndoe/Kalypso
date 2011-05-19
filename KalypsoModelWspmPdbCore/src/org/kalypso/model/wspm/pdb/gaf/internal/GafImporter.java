@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.gaf.internal;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +54,8 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
  * @author Gernot Belger
@@ -95,14 +96,14 @@ public class GafImporter implements ICoreRunnableWithProgress
       gafReader.read( gafFile, new SubProgressMonitor( monitor, 90 ) );
       gafReader.close();
 
-      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "Successfully imported GAF file" );
+      return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "Successfully imported GAF file" );
     }
     catch( final IOException e )
     {
       final String message = "Error while reading file";
       m_logWriter.println( message );
       e.printStackTrace( m_logWriter );
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, message, e );
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
     }
     finally
     {

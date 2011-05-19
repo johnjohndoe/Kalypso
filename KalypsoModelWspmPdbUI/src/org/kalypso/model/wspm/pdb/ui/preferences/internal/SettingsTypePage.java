@@ -79,7 +79,6 @@ class SettingsTypePage extends WizardPage
     for( int i = 0; i < settings.length; i++ )
       settings[i] = PdbSettings.createSettings( connectionTypes[i] );
 
-
     final TableViewer tableViewer = new TableViewer( parent, SWT.BORDER );
     setControl( tableViewer.getControl() );
 

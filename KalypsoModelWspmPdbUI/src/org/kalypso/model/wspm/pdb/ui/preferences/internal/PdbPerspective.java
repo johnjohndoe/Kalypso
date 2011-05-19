@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.preferences.internal;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.kalypso.model.wspm.pdb.ui.admin.info.internal.PdbInfoView;
 import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
 /**
@@ -73,8 +74,16 @@ public class PdbPerspective implements IPerspectiveFactory
 
     /* Add the manager view. */
     layout.addView( PdbView.ID, IPageLayout.LEFT, 0.28f, editorArea );
+    layout.addView( PdbInfoView.ID, IPageLayout.RIGHT, 0.72f, editorArea );
 
-    /* final IFolderLayout folder = */layout.createFolder( "rest", IPageLayout.RIGHT, 0.72f, editorArea );
+    layout.getViewLayout( PdbView.ID ).setCloseable( false );
+    layout.getViewLayout( PdbView.ID ).setMoveable( false );
+
+    layout.getViewLayout( PdbInfoView.ID ).setCloseable( false );
+    layout.getViewLayout( PdbInfoView.ID ).setMoveable( false );
+
+    /* final IFolderLayout folder = */
+    // layout.createFolder( "rest", IPageLayout.RIGHT, 0.72f, editorArea );
     // folder.addView( MapView.ID );
     // folder.addView( MapView.ID );
   }

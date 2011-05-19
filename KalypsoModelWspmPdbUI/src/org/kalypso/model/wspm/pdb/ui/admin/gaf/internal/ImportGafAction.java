@@ -38,50 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 
 /**
  * @author Gernot Belger
  */
-public class ImportGafResultDialog extends StatusDialog2
+public class ImportGafAction extends Action
 {
-  private final ImportGafData m_data;
+  private final IPdbConnection m_connection;
 
-  public ImportGafResultDialog( final Shell parentShell, final IStatus status, final ImportGafData data )
+  public ImportGafAction( final IPdbConnection connection )
   {
-    super( parentShell, status, "GAF Import" );
+    m_connection = connection;
 
-    m_data = data;
+    setText( "GAF Daten importieren..." );
+    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.GAF_IMPORT ) );
   }
 
   @Override
-  protected Control createCustomArea( final Composite parent )
+  public void runWithEvent( final Event event )
   {
-    final Composite customArea = (Composite) super.createCustomArea( parent );
+    final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final DataBindingContext context = new DataBindingContext();
+    final Wizard importWizard = new ImportGafWizard( m_connection );
+    importWizard.setWindowTitle( "Import GAF file" );
+    final WizardDialog dialog = new WizardDialog( shell, importWizard );
+    dialog.open();
 
-    final Button showLogButton = new Button( customArea, SWT.TOGGLE );
-    showLogButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    showLogButton.setText( "Open Log File" );
-
-    final IObservableValue target = SWTObservables.observeSelection( showLogButton );
-    final IObservableValue model = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_OPEN_LOG );
-    context.bindValue( target, model );
-
-    return customArea;
+    // TODO: show result here?
+    // -log file viewer?
+    // or show import as console log?
   }
 }

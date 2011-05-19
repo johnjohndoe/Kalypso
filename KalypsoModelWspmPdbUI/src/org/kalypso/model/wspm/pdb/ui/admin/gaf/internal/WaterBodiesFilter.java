@@ -38,43 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
  * @author Gernot Belger
  */
-public class ImportGafAction extends Action
+public class WaterBodiesFilter extends ViewerFilter
 {
-  private final IPdbConnection m_connection;
+  private final String m_gkn;
 
-  public ImportGafAction( final IPdbConnection connection )
+  private final String m_name;
+
+  public WaterBodiesFilter( final String gkn, final String name )
   {
-    m_connection = connection;
-
-    setText( "GAF Daten importieren..." );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.GAF_IMPORT ) );
+    m_gkn = StringUtils.isBlank( gkn ) ? null : gkn.toLowerCase();
+    m_name = StringUtils.isBlank( name ) ? null : name.toLowerCase();
   }
 
   @Override
-  public void runWithEvent( final Event event )
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
+    if( element instanceof WaterBodies )
+    {
+      final WaterBodies waterBody = (WaterBodies) element;
+      final String name = waterBody.getName().toLowerCase();
+      final String gkn = waterBody.getWaterBody().toLowerCase();
 
-    final Wizard importWizard = new ImportGafWizard( m_connection );
-    importWizard.setWindowTitle( "Import GAF file" );
-    final WizardDialog dialog = new WizardDialog( shell, importWizard );
-    dialog.open();
+      if( m_gkn != null && !gkn.contains( m_gkn ) )
+        return false;
 
-    // TODO: show result here?
-    // -log file viewer?
-    // or show import as console log?
+      if( m_name != null && !name.contains( m_name ) )
+        return false;
+    }
+
+    return true;
   }
+
 }

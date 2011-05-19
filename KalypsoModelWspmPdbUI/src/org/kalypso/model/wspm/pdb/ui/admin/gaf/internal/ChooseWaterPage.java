@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
 import java.util.Collections;
 import java.util.List;
@@ -78,13 +78,14 @@ import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
 /**
  * @author Gernot Belger
  */
-public class EditWaterPage extends WizardPage
+public class ChooseWaterPage extends WizardPage
 {
   private static final String STR_NAME = "Name";
 
@@ -98,7 +99,7 @@ public class EditWaterPage extends WizardPage
 
   private WritableList m_tableInput;
 
-  EditWaterPage( final String pageName, final IPdbConnection connection, final ImportGafData data )
+  ChooseWaterPage( final String pageName, final IPdbConnection connection, final ImportGafData data )
   {
     super( pageName );
 
@@ -119,7 +120,7 @@ public class EditWaterPage extends WizardPage
     final DatabindingWizardPage binding = new DatabindingWizardPage( this, null );
     createSearchFields( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createWaterBodyTable( binding, panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    createActions( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    createActions( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     // TODO Auto-generated method stub
 

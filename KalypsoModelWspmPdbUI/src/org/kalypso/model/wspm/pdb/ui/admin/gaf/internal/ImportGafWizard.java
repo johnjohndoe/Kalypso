@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
 import java.io.File;
 
@@ -51,6 +51,8 @@ import org.eclipse.swt.program.Program;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
+import org.kalypso.model.wspm.pdb.gaf.ImportGafOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 public class ImportGafWizard extends Wizard
@@ -69,7 +71,7 @@ public class ImportGafWizard extends Wizard
     m_data.init( settings );
 
     addPage( new ImportGafPage( "gaf", connection, m_data ) ); //$NON-NLS-1$
-    addPage( new EditWaterPage( "waterBody", connection, m_data ) ); //$NON-NLS-1$
+    addPage( new ChooseWaterPage( "waterBody", connection, m_data ) ); //$NON-NLS-1$
     addPage( new EditStatePage( "state", connection, m_data.getState() ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );

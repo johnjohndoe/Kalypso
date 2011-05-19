@@ -38,26 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.gaf.internal;
+package org.kalypso.model.wspm.pdb.gaf.internal;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.eclipse.core.runtime.Assert;
 
 /**
- * Represent point of a gaf file with the same station.
+ * represents one line of a gaf file
  * 
  * @author Gernot Belger
  */
-public class GafProfile
+public class GafPoint
 {
-  private final Collection<GafPoint> m_points = new ArrayList<GafPoint>( 20 );
-
   private final BigDecimal m_station;
 
-  public GafProfile( final BigDecimal station )
+  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final String kz, final BigDecimal rw, final BigDecimal hw, final String kz2 )
   {
     m_station = station;
   }
@@ -65,14 +59,5 @@ public class GafProfile
   public BigDecimal getStation( )
   {
     return m_station;
-  }
-
-  public void addPoint( final GafPoint point )
-  {
-    final BigDecimal station = point.getStation();
-
-    Assert.isTrue( station.equals( m_station ) );
-
-    m_points.add( point );
   }
 }
