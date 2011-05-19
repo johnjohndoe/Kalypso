@@ -249,49 +249,49 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       final List<Node> affectedNodes = new ArrayList<Node>();
 
       // FIXME: this is planer client code and DOES NOT belong here!
-      if( !planningAreaDefined )
-      {
+//      if( !planningAreaDefined )
+//      {
         final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
         affectedNodes.addAll( nodes );
-      }
-      else
-      {
-        for( final Catchment catchment : catchments )
-        {
-          // FIXME: do not use default geometry property at all!
-          final Geometry geometry = JTSAdapter.export( catchment.getDefaultGeometryPropertyValue() );
-          if( planingAreaGeometry.intersects( geometry ) )
-          {
-            // resolve downstream channel and node, and add node to the affected nodes list
-            final Channel downstreamChannel = catchment.getChannel();
-            if( downstreamChannel != null )
-            {
-              final Node downstreamNode = downstreamChannel.getDownstreamNode();
-              if( downstreamNode != null )
-                affectedNodes.add( downstreamNode );
-            }
-          }
-        }
-        // resolve all downstream nodes (from those who are the direct downstream nodes for the affected catchments)
-        final List<Node> additionalDownstreamNodes = new ArrayList<Node>();
-        for( final Node node : affectedNodes )
-        {
-          // resolve downstream channel and node, and add node to the affected nodes list (if not already there)
-          final Channel downstreamChannel = node.getDownstreamChannel();
-          if( downstreamChannel != null )
-          {
-            final Node downstreamNode = downstreamChannel.getDownstreamNode();
-            if( downstreamNode != null && !additionalDownstreamNodes.contains( downstreamNode ) )
-              additionalDownstreamNodes.add( downstreamNode );
-          }
-        }
-        // additional list is the easiest way to avoid concurrent modification exception...
-        for( final Node node : additionalDownstreamNodes )
-        {
-          if( !affectedNodes.contains( node ) )
-            affectedNodes.add( node );
-        }
-      }
+//      }
+//      else
+//      {
+//        for( final Catchment catchment : catchments )
+//        {
+//          // FIXME: do not use default geometry property at all!
+//          final Geometry geometry = JTSAdapter.export( catchment.getDefaultGeometryPropertyValue() );
+//          if( planingAreaGeometry.intersects( geometry ) )
+//          {
+//            // resolve downstream channel and node, and add node to the affected nodes list
+//            final Channel downstreamChannel = catchment.getChannel();
+//            if( downstreamChannel != null )
+//            {
+//              final Node downstreamNode = downstreamChannel.getDownstreamNode();
+//              if( downstreamNode != null )
+//                affectedNodes.add( downstreamNode );
+//            }
+//          }
+//        }
+//        // resolve all downstream nodes (from those who are the direct downstream nodes for the affected catchments)
+//        final List<Node> additionalDownstreamNodes = new ArrayList<Node>();
+//        for( final Node node : affectedNodes )
+//        {
+//          // resolve downstream channel and node, and add node to the affected nodes list (if not already there)
+//          final Channel downstreamChannel = node.getDownstreamChannel();
+//          if( downstreamChannel != null )
+//          {
+//            final Node downstreamNode = downstreamChannel.getDownstreamNode();
+//            if( downstreamNode != null && !additionalDownstreamNodes.contains( downstreamNode ) )
+//              additionalDownstreamNodes.add( downstreamNode );
+//          }
+//        }
+//        // additional list is the easiest way to avoid concurrent modification exception...
+//        for( final Node node : additionalDownstreamNodes )
+//        {
+//          if( !affectedNodes.contains( node ) )
+//            affectedNodes.add( node );
+//        }
+//      }
 
       if( affectedNodes.size() == 0 )
       {
