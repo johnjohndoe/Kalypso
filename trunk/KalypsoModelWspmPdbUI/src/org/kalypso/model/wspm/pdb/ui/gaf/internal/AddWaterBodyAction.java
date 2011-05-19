@@ -38,60 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.easymode.internal;
+package org.kalypso.model.wspm.pdb.ui.gaf.internal;
 
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal.AddWaterBodyWizard;
 
 /**
  * @author Gernot Belger
  */
-public class ConnectionViewer extends Composite
+public class AddWaterBodyAction extends Action
 {
+  private final EditWaterPage m_page;
+
   private final IPdbConnection m_connection;
 
-  public ConnectionViewer( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection )
+  public AddWaterBodyAction( final IPdbConnection connection, final EditWaterPage page )
   {
-    super( parent, SWT.NONE );
-
     m_connection = connection;
+    m_page = page;
 
-    toolkit.adapt( this );
-    GridLayoutFactory.swtDefaults().applyTo( this );
-
-    createAdminGroup( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    createPdbView( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    setText( "Create New Water Body..." );
   }
 
-  private Control createAdminGroup( final FormToolkit toolkit, final Composite parent )
+  @Override
+  public void runWithEvent( final Event event )
   {
-    final Group group = new Group( parent, SWT.NONE );
-    toolkit.adapt( group );
-    // TODO: nur zeigen, wenn der user admin rechte hats
-    group.setText( "Administration" );
-    group.setLayout( new FillLayout() );
+    final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    new ConnectionAdminControl( toolkit, group, m_connection );
+    final AddWaterBodyWizard wizard = new AddWaterBodyWizard( m_connection, m_page.getExistingWaterbodies() );
+    wizard.setWindowTitle( "Create New Water Body" );
 
-    return group;
-  }
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    dialog.open();
 
-  private Control createPdbView( final FormToolkit toolkit, final Composite parent )
-  {
-    final Group group = new Group( parent, SWT.NONE );
-    toolkit.adapt( group );
-    group.setText( "Inhalt" );
-    group.setLayout( new FillLayout() );
-
-    new ConnectionContentControl( toolkit, group, m_connection );
-
-    return group;
+    m_page.refreshWaterBodies();
   }
 }

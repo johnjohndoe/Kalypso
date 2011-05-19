@@ -54,8 +54,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
-import org.kalypso.model.wspm.pdb.db.PdbState;
-import org.kalypso.model.wspm.pdb.db.PdbWaterBody;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
  * @author Gernot Belger
@@ -68,15 +68,15 @@ public class GafReader
 
   private LineNumberReader m_reader;
 
-  private final PdbState m_state;
+  private final States m_state;
 
-  private final PdbWaterBody m_waterBody;
+  private final WaterBodies m_waterBody;
 
   private final PrintWriter m_logWriter;
 
   private GafProfile m_currentProfile;
 
-  public GafReader( final PdbState state, final PdbWaterBody waterBody, final PrintWriter logWriter )
+  public GafReader( final States state, final WaterBodies waterBody, final PrintWriter logWriter )
   {
     m_state = state;
     m_waterBody = waterBody;

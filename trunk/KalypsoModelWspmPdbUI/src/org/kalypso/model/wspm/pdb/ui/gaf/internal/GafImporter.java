@@ -52,8 +52,8 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.db.PdbState;
-import org.kalypso.model.wspm.pdb.db.PdbWaterBody;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
@@ -83,11 +83,11 @@ public class GafImporter implements ICoreRunnableWithProgress
     try
     {
       monitor.subTask( "create new state" );
-      final PdbState state = addState();
+      final States state = addState();
       ProgressUtilities.worked( monitor, 5 );
 
       monitor.subTask( "find water body" );
-      final PdbWaterBody waterBody = findWaterBody();
+      final WaterBodies waterBody = findWaterBody();
       ProgressUtilities.worked( monitor, 5 );
 
       final File gafFile = m_data.getGafFile();
@@ -111,7 +111,7 @@ public class GafImporter implements ICoreRunnableWithProgress
     }
   }
 
-  private PdbState addState( )
+  private States addState( )
   {
     // FIXME
     // TODO Auto-generated method stub
@@ -119,7 +119,7 @@ public class GafImporter implements ICoreRunnableWithProgress
     return m_data.getState();
   }
 
-  private PdbWaterBody findWaterBody( )
+  private WaterBodies findWaterBody( )
   {
     // FIXME
     return null;

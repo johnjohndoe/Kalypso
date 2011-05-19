@@ -55,12 +55,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.databinding.conversion.FileToStringConverter;
+import org.kalypso.commons.databinding.conversion.StringToFileConverter;
 import org.kalypso.commons.databinding.swt.FileValueSelectionListener;
-import org.kalypso.commons.databinding.validation.FileExistsValidator;
+import org.kalypso.commons.databinding.validation.FileIsFileValidator;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
 /**
@@ -120,10 +123,15 @@ public class ImportGafPage extends WizardPage
     final ISWTObservableValue target = SWTObservables.observeText( text, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_GAF_FILE );
 
-    final StringBlankValidator notBlankValidator = new StringBlankValidator( IStatus.ERROR, "File path may not be empty" );
-    final FileExistsValidator existsValidator = new FileExistsValidator( IStatus.ERROR );
-// FIXME: cannot work...
-    m_context.bindValue( target, model, notBlankValidator, existsValidator );
+    final DataBinder binder = new DataBinder( target, model );
+
+    binder.setTargetToModelConverter( new StringToFileConverter() );
+    binder.setModelToTargetConverter( new FileToStringConverter() );
+
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "File path may not be empty" ) );
+    binder.addTargetAfterConvertValidator( new FileIsFileValidator( IStatus.ERROR ) );
+
+    m_context.bindValue( binder );
 
     final String titel = "Select GAF file";
     final FileValueSelectionListener fileListener = new FileValueSelectionListener( model, titel, SWT.OPEN );

@@ -38,24 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.easymode.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
  */
-public class ManageStateAction extends Action
+public class AddWaterBodyWizard extends Wizard
 {
+  private final WaterBodies m_waterBody = new WaterBodies();
+
   private final IPdbConnection m_connection;
 
-  public ManageStateAction( final IPdbConnection connection )
+  public AddWaterBodyWizard( final IPdbConnection connection, final WaterBodies[] existingWaterbodies )
   {
     m_connection = connection;
 
-    setText( "Zustände verwalten..." );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.STATE ) );
+    addPage( new EditWaterBodyPage( "editWaterBody", m_waterBody, existingWaterbodies ) );
+  }
+
+  @Override
+  public boolean performFinish( )
+  {
+    try
+    {
+      m_connection.addWaterBody( m_waterBody );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to create new water body", e );
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+    }
+
+    return true;
   }
 }

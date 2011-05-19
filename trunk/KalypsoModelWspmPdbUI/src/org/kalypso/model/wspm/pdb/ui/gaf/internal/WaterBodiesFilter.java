@@ -38,24 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.easymode.internal;
+package org.kalypso.model.wspm.pdb.ui.gaf.internal;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
  * @author Gernot Belger
  */
-public class ManageWaterBodyAction extends Action
+public class WaterBodiesFilter extends ViewerFilter
 {
-  private final IPdbConnection m_connection;
+  private final String m_gkn;
 
-  public ManageWaterBodyAction( final IPdbConnection connection )
+  private final String m_name;
+
+  public WaterBodiesFilter( final String gkn, final String name )
   {
-    m_connection = connection;
-
-    setText( "Gewässer verwalten..." );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.WATER_BODY ) );
+    m_gkn = StringUtils.isBlank( gkn ) ? null : gkn.toLowerCase();
+    m_name = StringUtils.isBlank( name ) ? null : name.toLowerCase();
   }
+
+  @Override
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
+  {
+    if( element instanceof WaterBodies )
+    {
+      final WaterBodies waterBody = (WaterBodies) element;
+      final String name = waterBody.getName().toLowerCase();
+      final String gkn = waterBody.getWaterBody().toLowerCase();
+
+      if( m_gkn != null && !gkn.contains( m_gkn ) )
+        return false;
+
+      if( m_name != null && !name.contains( m_name ) )
+        return false;
+    }
+
+    return true;
+  }
+
 }
