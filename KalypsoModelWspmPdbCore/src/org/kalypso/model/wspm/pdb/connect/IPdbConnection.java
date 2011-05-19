@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect;
 
+import java.util.List;
+
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
-import org.kalypso.model.wspm.pdb.db.PdbPoint;
+import org.kalypso.model.wspm.pdb.db.mapping.Points;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
  * @author Gernot Belger
@@ -56,7 +59,11 @@ public interface IPdbConnection
 
   PdbInfo getInfo( ) throws PdbConnectException;
 
-  void addPoint( PdbPoint onePoint ) throws PdbConnectException;
+  void addPoint( Points onePoint ) throws PdbConnectException;
 
   String getLabel( );
+
+  List<WaterBodies> getWaterBodies( ) throws PdbConnectException;
+
+  void addWaterBody( WaterBodies waterBody );
 }

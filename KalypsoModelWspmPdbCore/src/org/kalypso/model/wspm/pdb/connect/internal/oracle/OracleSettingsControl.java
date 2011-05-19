@@ -56,7 +56,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
+import org.kalypso.model.wspm.pdb.connect.internal.postgis.UniqueSettingsNameValidator;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
+import org.kalypso.model.wspm.pdb.internal.utils.PortValidator;
 
 /**
  * @author Gernot Belger
@@ -78,15 +80,25 @@ class OracleSettingsControl extends Composite implements IPdbSettingsControl
     GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( false ).applyTo( this );
 
     final StringBlankValidator nameValidator = new StringBlankValidator( IStatus.WARNING, StringBlankValidator.DEFAULT_WARNING_MESSAGE );
-    createPropertyControl( "Name", SWT.NONE, OracleSettings.PROPERTY_LABEL, nameValidator );
+    final UniqueSettingsNameValidator uniqueNameValidator = new UniqueSettingsNameValidator();
+    createPropertyControl( "Name", SWT.NONE, OracleSettings.PROPERTY_LABEL, nameValidator, uniqueNameValidator );
 
-    // FIXME: implement
-// final StringBlankValidator hostValidator = new StringBlankValidator( IStatus.ERROR,
-// StringBlankValidator.DEFAULT_ERROR_MESSAGE );
-// createPropertyControl( "Host", SWT.NONE, OracleConnectSettings.PROPERTY_HOST, hostValidator );
+    final StringBlankValidator hostValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
+    createPropertyControl( "Host", SWT.NONE, OracleSettings.PROPERTY_HOST, hostValidator );
+
+    createPropertyControl( "Port", SWT.NONE, OracleSettings.PROPERTY_PORT, new PortValidator( OracleSettings.DEFAULT_PORT ) );
+
+    final StringBlankValidator databaseValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
+    createPropertyControl( "Database", SWT.NONE, OracleSettings.PROPERTY_DBNAME, databaseValidator );
+
+    final StringBlankValidator usernameValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
+    createPropertyControl( "Username", SWT.NONE, OracleSettings.PROPERTY_USERNAME, usernameValidator );
+
+    final StringBlankValidator warningValidator = new StringBlankValidator( IStatus.WARNING, "Password field is empty" );
+    createPropertyControl( "Password", SWT.PASSWORD, OracleSettings.PROPERTY_PASSWORD, warningValidator );
   }
 
-  private void createPropertyControl( final String label, final int style, final String property, final IValidator validator )
+  private void createPropertyControl( final String label, final int style, final String property, final IValidator... validators )
   {
     new Label( this, SWT.NONE ).setText( label );
 
@@ -95,8 +107,8 @@ class OracleSettingsControl extends Composite implements IPdbSettingsControl
     field.setMessage( "<Empty>" );
 
     final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-    if( validator != null )
-      targetToModel.setAfterGetValidator( validator );
+    for( final IValidator validator : validators )
+      targetToModel.setAfterConvertValidator( validator );
 
     final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
     final IObservableValue model = new OracleSettingsPropertyValue( m_settings, property );
