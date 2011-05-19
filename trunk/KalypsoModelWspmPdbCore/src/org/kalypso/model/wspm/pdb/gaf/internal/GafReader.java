@@ -47,13 +47,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.PrintWriter;
 import java.math.BigDecimal;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
@@ -64,6 +66,27 @@ public class GafReader
 {
   public class SkipLineException extends RuntimeException
   {
+    private final int m_severity;
+
+    private final int m_lineNumber;
+
+    public SkipLineException( final int severity, final String message )
+    {
+      super( message );
+
+      m_severity = severity;
+      m_lineNumber = GafReader.this.getLineNumber();
+    }
+
+    public int getLineNumber( )
+    {
+      return m_lineNumber;
+    }
+
+    public int getSeverity( )
+    {
+      return m_severity;
+    }
   }
 
   private LineNumberReader m_reader;
@@ -72,19 +95,32 @@ public class GafReader
 
   private final WaterBodies m_waterBody;
 
-  private final PrintWriter m_logWriter;
-
   private GafProfile m_currentProfile;
 
-  public GafReader( final States state, final WaterBodies waterBody, final PrintWriter logWriter )
+  private final GafLogger m_logger;
+
+  private int m_goodLines;
+
+  private int m_badLines;
+
+  private GafCodes m_gafCodes;
+
+  public GafReader( final States state, final WaterBodies waterBody, final GafLogger logger )
   {
     m_state = state;
     m_waterBody = waterBody;
-    m_logWriter = logWriter;
+    m_logger = logger;
+  }
+
+  int getLineNumber( )
+  {
+    return m_reader.getLineNumber();
   }
 
   public void read( final File gafFile, final IProgressMonitor monitor ) throws IOException
   {
+    m_gafCodes = new GafCodes();
+
     /* Reading gaf with progress stream to show nice progress for large files */
     final long contentLength = gafFile.length();
 
@@ -94,6 +130,9 @@ public class GafReader
     m_reader = new LineNumberReader( new InputStreamReader( progresStream ) );
 
     readLines();
+
+    m_logger.log( -1, IStatus.INFO, String.format( "%6d lines read", m_goodLines ), null, null );
+    m_logger.log( -1, IStatus.INFO, String.format( "%6d lines skipped", m_badLines ), null, null );
   }
 
   public void close( ) throws IOException
@@ -127,69 +166,104 @@ public class GafReader
     {
       final GafPoint point = parseLine( line );
       addPoint( point );
+      m_goodLines++;
     }
     catch( final SkipLineException e )
     {
-      // just skip, error handling already has been done
-      // TODO: count errors, stop parsing after 1000 errors
+      m_logger.log( e, line );
+      m_badLines++;
+      // TODO: stop parsing after 1000 errors
     }
   }
 
   private GafPoint parseLine( final String line )
   {
     final String[] tokens = StringUtils.split( line );
-    if( tokens.length < 7 )
-    {
-      logWarning( "Format error: too few tokens in line", line );
-      throw new SkipLineException();
-    }
+    if( tokens.length < 9 )
+      throw new SkipLineException( IStatus.INFO, "Skipping line: too few tokens in line" );
 
-    final String stationToken = tokens[0];
+    final Object[] items = parseTokens( tokens );
+    checkCommentLine( items );
+
+    final BigDecimal station = asDecimal( items[0], "Station" );
     final String pointId = tokens[1];
-    final String widthToken = tokens[2];
-    final String heightToken = tokens[3];
-    final String kzToken = tokens[4];
-    final String rwToken = tokens[5];
-    final String hwToken = tokens[6];
-    final String hykToken = tokens.length > 6 ? tokens[7] : null;
+    final BigDecimal width = asDecimal( items[2], "Width" );
+    final BigDecimal height = asDecimal( items[3], "Height" );
+    final String kz = tokens[4];
+    final String roughnessClass = tokens[5];
+    final String vegetationClass = tokens[6];
+    final BigDecimal rw = asDecimal( items[7], "Rechtswert" );
+    final BigDecimal hw = asDecimal( items[8], "Hochwert" );
+    final String hyk = tokens[9];
 
-    final BigDecimal station = parseDecimal( stationToken, "Station" );
-    final BigDecimal width = parseDecimal( widthToken, "Width" );
-    final BigDecimal height = parseDecimal( heightToken, "Height" );
-    final BigDecimal rw = parseDecimal( rwToken, "Rechtswert" );
-    final BigDecimal hw = parseDecimal( hwToken, "Hochwert" );
+    final GafCode kzCode = checkKz( kz );
+    final GafCode hykCode = checkHyk( hyk );
 
-    final String kz = parseKennziffer(kzToken);
-    final String hyk = parseHyk( hykToken );
-
-    return new GafPoint( station, pointId, width, height, kz, rw, hw, hyk );
+    return new GafPoint( station, pointId, width, height, kzCode, roughnessClass, vegetationClass, rw, hw, hykCode );
   }
 
-  private BigDecimal parseDecimal( final String token, final String label )
+  /**
+   * Skip line, if all token are strings -> we assume it's a comment line
+   */
+  private void checkCommentLine( final Object[] items )
   {
-    try
+    for( final Object item : items )
     {
-      final String cleanToken = StringUtils.replaceChars( token, ',', '.' );
-      return new BigDecimal( cleanToken );
+      if( !(item instanceof String) )
+        return;
     }
-    catch( final NumberFormatException e )
-    {
-      final String message = String.format( "Failed to parse field '%s'", label );
-      logError( message, token );
-      throw new SkipLineException();
-    }
+
+    throw new SkipLineException( IStatus.INFO, "Skpping line" );
   }
 
-  private String parseKennziffer( final String kzToken )
+  private Object[] parseTokens( final String[] tokens )
   {
-    // TODO Auto-generated method stub
-    return null;
+    final Object[] items = new Object[tokens.length];
+    for( int i = 0; i < items.length; i++ )
+      items[i] = parseToken( tokens[i] );
+    return items;
   }
 
-  private String parseHyk( final String hykToken )
+  private Object parseToken( final String token )
   {
-    // TODO Auto-generated method stub
-    return null;
+    final BigDecimal decimal = NumberUtils.parseQuietDecimal( token );
+    if( decimal != null )
+      return decimal;
+
+    return ObjectUtils.toString( token );
+  }
+
+  private BigDecimal asDecimal( final Object item, final String label )
+  {
+    if( item instanceof BigDecimal )
+      return (BigDecimal) item;
+
+    final String message = String.format( "Field '%s' is not a number", label );
+    throw new SkipLineException( IStatus.ERROR, message );
+  }
+
+  private GafCode checkKz( final String kz )
+  {
+    final GafCode code = m_gafCodes.getCode( kz );
+
+    if( code == null )
+      throw new SkipLineException( IStatus.WARNING, String.format( "Unknown KZ: '%s'; line skipped", kz ) );
+
+    return code;
+  }
+
+  private GafCode checkHyk( final String hyk )
+  {
+    /* Empty string is allowed: no-code */
+    if( StringUtils.isBlank( hyk ) )
+      return GafCodes.NULL_HYK;
+
+    final GafCode hykCode = m_gafCodes.getHykCode( hyk );
+
+    if( hykCode == null )
+      throw new SkipLineException( IStatus.WARNING, String.format( "Unknown Hyk: '%s'; line skipped", hyk ) );
+
+    return hykCode;
   }
 
   private void addPoint( final GafPoint point )
@@ -209,29 +283,12 @@ public class GafReader
 
   private void createProfile( final BigDecimal station )
   {
-    // TODO Auto-generated method stub
     m_currentProfile = new GafProfile( station );
   }
 
   private void commitProfile( )
   {
-    // TODO Auto-generated method stub
-
+    // FIXME: write profile into db
     m_currentProfile = null;
-  }
-
-  private void logWarning( final String message, final String line )
-  {
-    log( "WARNING", message, line );
-  }
-
-  private void logError( final String message, final String line )
-  {
-    log( "ERROR", message, line );
-  }
-
-  private void log( final String level, final String message, final String line )
-  {
-    m_logWriter.format( "Line %d: %s - %s (%s)%n", level, message, line );
   }
 }

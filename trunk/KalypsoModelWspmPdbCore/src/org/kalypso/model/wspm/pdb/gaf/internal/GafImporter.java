@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.pdb.gaf.internal;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -62,15 +62,15 @@ import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
  */
 public class GafImporter implements ICoreRunnableWithProgress
 {
-  private final PrintWriter m_logWriter;
-
   private final ImportGafData m_data;
 
   private final IPdbConnection m_connection;
 
-  public GafImporter( final PrintWriter logWriter, final ImportGafData data, final IPdbConnection connection )
+  private final GafLogger m_logger;
+
+  public GafImporter( final GafLogger logger, final ImportGafData data, final IPdbConnection connection )
   {
-    m_logWriter = logWriter;
+    m_logger = logger;
     m_data = data;
     m_connection = connection;
   }
@@ -92,7 +92,7 @@ public class GafImporter implements ICoreRunnableWithProgress
       ProgressUtilities.worked( monitor, 5 );
 
       final File gafFile = m_data.getGafFile();
-      gafReader = new GafReader( state, waterBody, m_logWriter );
+      gafReader = new GafReader( state, waterBody, m_logger );
       gafReader.read( gafFile, new SubProgressMonitor( monitor, 90 ) );
       gafReader.close();
 
@@ -101,8 +101,7 @@ public class GafImporter implements ICoreRunnableWithProgress
     catch( final IOException e )
     {
       final String message = "Error while reading file";
-      m_logWriter.println( message );
-      e.printStackTrace( m_logWriter );
+      m_logger.log( -1, IStatus.ERROR, message, StringUtils.EMPTY, e );
       return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
     }
     finally

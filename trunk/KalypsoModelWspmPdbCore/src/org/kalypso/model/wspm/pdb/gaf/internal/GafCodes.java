@@ -40,51 +40,55 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf.internal;
 
-import java.math.BigDecimal;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.contribs.java.util.PropertiesUtilities;
 
 /**
- * represents one line of a gaf file
+ * Represents the 'Kennziffer' (KZ) of a gaf file.
  * 
  * @author Gernot Belger
  */
-public class GafPoint
+public class GafCodes
 {
-  private final BigDecimal m_station;
+  public static final GafCode NULL_HYK = new GafCode( StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY );
 
-  private final String m_pointId;
+  private final Map<String, GafCode> m_codes = new HashMap<String, GafCode>();
 
-  private final BigDecimal m_width;
+  private final Map<String, GafCode> m_hykCodes = new HashMap<String, GafCode>();
 
-  private final BigDecimal m_height;
-
-  private final GafCode m_kz;
-
-  private final String m_roughnessClass;
-
-  private final String m_vegetationClass;
-
-  private final BigDecimal m_rw;
-
-  private final BigDecimal m_hw;
-
-  private final GafCode m_hyk;
-
-  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final GafCode kzCode, final String roughnessClass, final String vegetationClass, final BigDecimal rw, final BigDecimal hw, final GafCode hykCode )
+  public GafCodes( ) throws IOException
   {
-    m_station = station;
-    m_pointId = pointId;
-    m_width = width;
-    m_height = height;
-    m_kz = kzCode;
-    m_roughnessClass = roughnessClass;
-    m_vegetationClass = vegetationClass;
-    m_rw = rw;
-    m_hw = hw;
-    m_hyk = hykCode;
+    final Properties properties = PropertiesUtilities.load( getClass().getResource( "kz.properties" ) );
+    for( final String key : properties.stringPropertyNames() )
+    {
+      final String value = properties.getProperty( key );
+      final GafCode gafCode = new GafCode(key, value);
+
+      m_codes.put( gafCode.getCode(), gafCode );
+      m_hykCodes.put( gafCode.getHyk(), gafCode );
+
+      m_hykCodes.put( StringUtils.EMPTY, NULL_HYK );
+    }
   }
 
-  public BigDecimal getStation( )
+  public GafCode getCode( final String kz )
   {
-    return m_station;
+    if( "x".equalsIgnoreCase( kz ) ) //$NON-NLS-1$
+      return m_codes.get( "PP" ); //$NON-NLS-1$
+
+    return m_codes.get( kz );
+  }
+
+  public GafCode getHykCode( final String hyk )
+  {
+    if( "x".equalsIgnoreCase( hyk ) ) //$NON-NLS-1$
+      return NULL_HYK;
+
+    return m_codes.get( hyk );
   }
 }

@@ -40,11 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -52,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafImporter;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
@@ -77,17 +76,14 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     monitor.beginTask( "Import GAF", 100 );
 
     // Handle log first and separately in order to separate reading errors from log problems
-    PrintWriter logWriter = null;
+    GafLogger logger = null;
 
     try
     {
-      logWriter = createLog();
+      logger = new GafLogger( m_data.getLogFile() );
 
-      final GafImporter importer = new GafImporter( logWriter, m_data, m_connection );
-      final IStatus result = importer.execute( monitor );
-
-      logWriter.close();
-      return result;
+      final GafImporter importer = new GafImporter( logger, m_data, m_connection );
+      return importer.execute( monitor );
     }
     catch( final IOException e )
     {
@@ -99,23 +95,17 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
       final IStatus status = e.getStatus();
       if( status.matches( IStatus.CANCEL ) )
       {
-        logWriter.println( "Operation cancelled by user" );
+        logger.log( -1, IStatus.CANCEL, "Operation cancelled by user", StringUtils.EMPTY, null );
         throw new InterruptedException();
       }
 
-      logWriter.println( status.getMessage() );
-      if( e.getCause() != null )
-        e.getCause().printStackTrace( logWriter );
+      logger.log( -1, status, StringUtils.EMPTY );
       throw e;
     }
     finally
     {
-      IOUtils.closeQuietly( logWriter );
+      if( logger != null )
+        logger.close();
     }
-  }
-
-  private PrintWriter createLog( ) throws FileNotFoundException
-  {
-    return new PrintWriter( m_data.getLogFile() );
   }
 }

@@ -88,7 +88,7 @@ public class ImportGafData extends AbstractModelObject
       setSrs( srs );
 
     if( !StringUtils.isBlank( settings.get( PROPERTY_OPEN_LOG ) ) )
-      setOpenLog( settings.getBoolean( PROPERTY_GAF_FILE ) );
+      setOpenLog( settings.getBoolean( PROPERTY_OPEN_LOG ) );
   }
 
   public void store( final IDialogSettings settings )
