@@ -38,12 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.internal.postgis;
+package org.kalypso.model.wspm.pdb.connect.internal.test;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -57,19 +56,17 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.connect.internal.UniqueSettingsNameValidator;
-import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
-import org.kalypso.model.wspm.pdb.internal.utils.PortValidator;
 
 /**
  * @author Gernot Belger
  */
-class PostGisSettingsControl extends Composite implements IPdbSettingsControl
+public class TestSettingsControl extends Composite implements IPdbSettingsControl
 {
-  private final PostgisSettings m_settings;
-
   private final DataBindingContext m_binding;
 
-  public PostGisSettingsControl( final DataBindingContext binding, final Composite parent, final PostgisSettings settings )
+  private final TestSettings m_settings;
+
+  public TestSettingsControl( final DataBindingContext binding, final Composite parent, final TestSettings settings )
   {
     super( parent, SWT.NONE );
 
@@ -79,39 +76,24 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
 
     GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( false ).applyTo( this );
 
-    final StringBlankValidator nameValidator = new StringBlankValidator( IStatus.WARNING, StringBlankValidator.DEFAULT_WARNING_MESSAGE );
-    final UniqueSettingsNameValidator uniqueNameValidator = new UniqueSettingsNameValidator();
-    createPropertyControl( "Name", SWT.NONE, PostgisSettings.PROPERTY_LABEL, nameValidator, uniqueNameValidator );
-
-    final StringBlankValidator hostValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
-    createPropertyControl( "Host", SWT.NONE, PostgisSettings.PROPERTY_HOST, hostValidator );
-
-    createPropertyControl( "Port", SWT.NONE, PostgisSettings.PROPERTY_PORT, new PortValidator( PostgisSettings.DEFAULT_PORT ) );
-
-    final StringBlankValidator databaseValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
-    createPropertyControl( "Database", SWT.NONE, PostgisSettings.PROPERTY_DBNAME, databaseValidator );
-
-    final StringBlankValidator usernameValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
-    createPropertyControl( "Username", SWT.NONE, PostgisSettings.PROPERTY_USERNAME, usernameValidator );
-
-    final StringBlankValidator warningValidator = new StringBlankValidator( IStatus.WARNING, "Password field is empty" );
-    createPropertyControl( "Password", SWT.PASSWORD, PostgisSettings.PROPERTY_PASSWORD, warningValidator );
+    createNameControl();
   }
 
-  private void createPropertyControl( final String label, final int style, final String property, final IValidator... validators )
+  private void createNameControl( )
   {
-    new Label( this, SWT.NONE ).setText( label );
+    new Label( this, SWT.NONE ).setText( "Name" );
 
-    final Text field = new Text( this, SWT.BORDER | style );
+    final Text field = new Text( this, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     field.setMessage( "<Empty>" );
 
     final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-    for( final IValidator validator : validators )
-      targetToModel.setAfterConvertValidator( validator );
+
+    targetToModel.setAfterGetValidator( new StringBlankValidator( IStatus.WARNING, StringBlankValidator.DEFAULT_WARNING_MESSAGE ) );
+    targetToModel.setAfterGetValidator( new UniqueSettingsNameValidator() );
 
     final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
-    final IObservableValue model = new PostGisSettingsPropertyValue( m_settings, property );
+    final IObservableValue model = new TestSettingsNameValue( m_settings );
     m_binding.bindValue( target, model, targetToModel, null );
   }
 
@@ -124,6 +106,6 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
   @Override
   public ImageDescriptor getPageImage( )
   {
-    return WspmPdbCoreImages.IMAGE_POSTGIS_64x64;
+    return null;
   }
 }

@@ -47,6 +47,7 @@ import org.eclipse.equinox.security.storage.StorageException;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.internal.oracle.OracleSettings;
 import org.kalypso.model.wspm.pdb.connect.internal.postgis.PostgisSettings;
+import org.kalypso.model.wspm.pdb.connect.internal.test.TestSettings;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
@@ -61,7 +62,7 @@ public class PdbSettingsRegistry
 
   public String[] getRegisteredTypes( )
   {
-    return new String[] { PostgisSettings.TYPE, OracleSettings.TYPE };
+    return new String[] { PostgisSettings.TYPE, OracleSettings.TYPE, TestSettings.TYPE };
   }
 
   public IPdbSettings readSettings( final ISecurePreferences preferences ) throws StorageException
@@ -80,6 +81,9 @@ public class PdbSettingsRegistry
 
     if( OracleSettings.TYPE.equals( type ) )
       return new OracleSettings();
+
+    if( TestSettings.TYPE.equals( type ) )
+      return new TestSettings();
 
     final String message = String.format( "Unknown connection type: %s", type );
     final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );

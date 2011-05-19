@@ -38,30 +38,82 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.db;
+package org.kalypso.model.wspm.pdb.connect.internal.test;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
+import org.kalypso.model.wspm.pdb.db.mapping.Points;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
  * @author Gernot Belger
  */
-public class PdbInfo
+public class TestConnection implements IPdbConnection
 {
-  private final String VERSION = "Version"; //$NON-NLS-1$
+  private boolean m_connected = false;
 
-  private final Properties m_properties = new Properties();
+  private final PdbInfo m_info = new PdbInfo( new ArrayList<Info>() );
 
-  public PdbInfo( final List<Info> allInfo )
+  private final List<Points> m_points = new ArrayList<Points>();
+
+  private final List<WaterBodies> m_waterbodies = new ArrayList<WaterBodies>();
+
+  private final TestSettings m_settings;
+
+  public TestConnection( final TestSettings settings )
   {
-    for( final Info property : allInfo )
-      m_properties.put( property.getKey(), property.getValue() );
+    m_settings = settings;
   }
 
-  public String getVersion( )
+  @Override
+  public void connect( )
   {
-    return m_properties.getProperty( VERSION );
+    m_connected = true;
+  }
+
+  @Override
+  public boolean isConnected( )
+  {
+    return m_connected;
+  }
+
+  @Override
+  public void close( )
+  {
+    m_connected = false;
+  }
+
+  @Override
+  public PdbInfo getInfo( )
+  {
+    return m_info;
+  }
+
+  @Override
+  public void addPoint( final Points onePoint )
+  {
+    m_points.add( onePoint );
+  }
+
+  @Override
+  public String getLabel( )
+  {
+    return m_settings.getName();
+  }
+
+  @Override
+  public List<WaterBodies> getWaterBodies( )
+  {
+    return m_waterbodies;
+  }
+
+  @Override
+  public void addWaterBody( final WaterBodies waterBody )
+  {
+    m_waterbodies.add( waterBody );
   }
 }
