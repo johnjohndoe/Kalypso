@@ -59,7 +59,7 @@ import org.kalypso.simulation.core.util.LogHelper;
 public class KMFileReader
 {
   private final String[] m_kmComponents = new String[] { //
-      null, //
+  null, //
       IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL, //
       IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF_CHANNEL, //
       IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF_FLOODPLAIN, //
@@ -67,8 +67,7 @@ public class KMFileReader
       IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA_FLOODPLAIN, //
       IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH_CHANNEL, //
       IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH_FLOODPLAIN, //
-      null
-  };
+      null };
 
   private final Map<BigDecimal, QIntervallResult> m_results = new HashMap<BigDecimal, QIntervallResult>();
 

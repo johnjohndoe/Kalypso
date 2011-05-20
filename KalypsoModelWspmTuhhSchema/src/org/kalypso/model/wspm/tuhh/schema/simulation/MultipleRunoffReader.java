@@ -56,8 +56,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -75,7 +81,6 @@ public class MultipleRunoffReader
   private static final String ERGEBNISSE_GMV = "Ergebnisse.gmv"; //$NON-NLS-1$
 
   private final TuhhCalculation m_calculation;
-
 
   private final File m_targetGmlFile;
 
@@ -150,12 +155,60 @@ public class MultipleRunoffReader
   {
     final GMLWorkspace workspace = m_resultCollection.getWorkspace();
     GmlSerializer.serializeWorkspace( m_targetGmlFile, workspace, CharEncoding.UTF_8 );
-
     resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT, m_targetGmlFile );
 
     final File gmvResultFile = new File( m_targetGmlFile.getParentFile(), ERGEBNISSE_GMV );
     final URL ergebnisseGmvLocation = PolynomeProcessor.class.getResource( "resources/" + ERGEBNISSE_GMV ); //$NON-NLS-1$
     FileUtils.copyURLToFile( ergebnisseGmvLocation, gmvResultFile );
     resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT_GMV, gmvResultFile );
+  }
+
+  public void createSumComponents( )
+  {
+    for( final QIntervallResult qInterval : m_resultCollection.getQIntervalls() )
+    {
+      IObservation<TupleResult> observation = qInterval.getOrCreatePointsObservation();
+      TupleResult result = observation.getResult();
+      int indexRunoff = result.indexOfComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
+      if( indexRunoff < 0 )
+      {
+        IComponent targetComponent = qInterval.createPointsComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
+        result.addComponent( targetComponent );
+        createSum( result, IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF_CHANNEL, IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF_FLOODPLAIN, IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
+      }
+
+      int indexArea = result.indexOfComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA );
+      if( indexArea < 0 )
+      {
+        IComponent targetComponent = qInterval.createPointsComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA );
+        result.addComponent( targetComponent );
+        createSum( result, IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA_CHANNEL, IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA_FLOODPLAIN, IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA );
+      }
+
+      int indexWidth = result.indexOfComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH );
+      if( indexWidth < 0 )
+      {
+        IComponent targetComponent = qInterval.createPointsComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH );
+        result.addComponent( targetComponent );
+        createSum( result, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH_CHANNEL, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH_FLOODPLAIN, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH );
+      }
+
+      qInterval.setPointsObservation( observation );
+    }
+  }
+
+  private void createSum( TupleResult result, String idOne, String idTwo, String idTarget )
+  {
+    int indexOne = result.indexOfComponent( idOne );
+    int indexTwo = result.indexOfComponent( idTwo );
+    int indexTarget = result.indexOfComponent( idTarget );
+
+    for( IRecord record : result )
+    {
+      BigDecimal valueOne = (BigDecimal) record.getValue( indexOne );
+      BigDecimal valueTwo = (BigDecimal) record.getValue( indexTwo );
+      BigDecimal valueTarget = valueOne.add( valueTwo );
+      record.setValue( indexTarget, valueTarget );
+    }
   }
 }

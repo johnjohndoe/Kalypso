@@ -1,472 +1,1083 @@
-<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
-<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
-	
-	
-	
-	<Chart id="runoffChart">
-		<Title>Abfluss</Title>
-		<Description>Abflusswerte der Berechnung</Description>
-		<Layers>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/../../../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
+  <Chart id="runoffChart">
+    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Abfluss</Title>
+    <Description>Abflusswerte der Berechnung</Description>
+    <Layers>
 
-			<Layer visible="true" id="runoffLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" >
-					<Parameters>
-						<Parameter name="featureKey" value="theResultFeatureKey" />
-						<Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
-						<Parameter name="showPoints" value="true" />
-						<Parameter name="showLines" value="false" />
-						<Parameter name="domainComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
-						<Parameter name="valueComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
-					</Parameters>
-				</Provider>
-				<Title>Abfluss</Title>
-				<Description>Abfluss abh�ngig vom Wasserspiegel</Description>
-				
-				<MapperRefs>
-					<DomainAxisRef ref="wsp_Axis" />
-					<TargetAxisRef ref="runoff_Axis" />
-				</MapperRefs>
-				<Styles>
-					<LineStyle role="line" isVisible="false">
-						<Title></Title>
-					</LineStyle>
-					
-					<PointStyle role="point">
-						<Title>Abfluss</Title>
-						<Width>8</Width>
-						<Height>8</Height>
-						<Stroke>
-							<Width>1</Width>
-							<LineColor>000000</LineColor>
-						</Stroke>
-						<OvalMarker>
-						</OvalMarker>
-						<FillColor>ff0000</FillColor>
-					</PointStyle>
-				</Styles>
-				
-			</Layer>
+      <Layer visible="true" legend="false" id="runoffGridLayer">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
+          <Parameters>
+          </Parameters>
+        </Provider>
+        <Title>Gitterlinien</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef ref="wsp_Axis" />
+          <TargetAxisRef ref="runoff_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="gridLineStyle">
+            <Width>1</Width>
+            <LineColor>CCCCCC</LineColor>
+            <DashOffset>0</DashOffset>
+            <DashArray>2 2 2</DashArray>
+            <LineCap>ROUND</LineCap>
+            <LineJoin>ROUND</LineJoin>
+            <MiterLimit>1</MiterLimit>
+          </LineStyle>
+          <!-- THIS IS THE STLYE OF THE BORDER... (even if it is a point style) -->
+          <PointStyle role="gridPointStyle">
+            <Stroke>
+              <Width>2</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <FillColor isVisible="false">
+              <Color>000000</Color>
+            </FillColor>
+          </PointStyle>
+        </Styles>
+      </Layer>
 
-			<Layer visible="true" id="runoffPolynomeLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider" >
-					<Parameters>
-						<Parameter name="featureKey" value="theResultFeatureKey" />
-						<Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}polynomialMember" />
-						<Parameter name="domainId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonRunoff" />
-					</Parameters>
-				</Provider>
-				<Title>Abflusspolynome</Title>
-				<Description>Abflusspolynome abh�ngig vom Wasserspiegel</Description>
-				<MapperRefs>
-					<DomainAxisRef ref="wsp_Axis" />
-					<TargetAxisRef ref="runoff_Axis" />
-				</MapperRefs>
-				<Styles>
-					<PointStyle role="point" isVisible="false">
-						<Title></Title>
-					</PointStyle>
-					<LineStyle role="line">
-						<Title>Abflusspolynome</Title>
-						<Width>3</Width>
-						<LineColor>00aaff</LineColor>
-					</LineStyle>
-				</Styles>
-				
-			</Layer>
-			<!--
-			<Layer visible="true" id="runoffDeltaLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" >
-					<Parameters>
-						<Parameter name="featureKey" value="theResultFeatureKey" />
-						<Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
-						<Parameter name="showPoints" value="true" />
-						<Parameter name="showLines" value="false" />
-						<Parameter name="domainComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
-						<Parameter name="valueComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaRunoff" />
-					</Parameters>
-				</Provider>
-				<Title>Abfluss-Delta</Title>
-				<Description>Abfluss Differenzen bei der Polynomerstellung</Description>
-				<MapperRefs>
-					<DomainAxisRef ref="wsp_Axis" />
-					<TargetAxisRef ref="runoffDelta_Axis" />
-				</MapperRefs>
-				<Styles>
-					<PointStyle role="point">
-						<Title>Abfluss-Delta</Title>
-						<Width>8</Width>
-						<Height>8</Height>
-						<Stroke>
-							<Width>1</Width>
-							<LineColor>000000</LineColor>
-						</Stroke>
-						<OvalMarker></OvalMarker>
-						<FillColor>00ff00</FillColor>
-					</PointStyle>
-					<LineStyle role="line" isVisible="false">
-						<Title></Title>
-					</LineStyle>
-					</Styles>
-			</Layer>
-			-->
-		</Layers>
-		<Mappers>
-			<Axis id="wsp_Axis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Wassertiefe [m]</Label>
-				<Direction>POSITIVE</Direction>
-				<Position>BOTTOM</Position>
-				<NumberRange>
-					<MinValue>0</MinValue>
-					<MaxValue>100</MaxValue>
-				</NumberRange>
-				<RendererRef ref="NumberAxisRenderer"/>
-			</Axis>
-			<Axis id="runoff_Axis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Abfluss [m�/s]</Label>
-				<Direction>POSITIVE</Direction>
-				<Position>LEFT</Position>
-				<NumberRange>
-					<MinValue>5</MinValue>
-					<MaxValue>10</MaxValue>
-				</NumberRange>
-				<RendererRef ref="NumberAxisRenderer"/>
-			</Axis>
-			<Axis id="runoffDelta_Axis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Abfluss-Delta [m�/s]</Label>
-				<Direction>POSITIVE</Direction>
-				<Position>LEFT</Position>
-				<NumberRange>
-					<MinValue>5</MinValue>
-					<MaxValue>10</MaxValue>
-				</NumberRange>
-				<RendererRef ref="NumberAxisRenderer"/>
-			</Axis>
-		</Mappers>
-		<Renderers>
-			<AxisRenderer id="NumberAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
-					<Parameters>
-						<Parameter name="inset_tick" value="1"/>
-					</Parameters>
-				</Provider>
-			</AxisRenderer>
-		</Renderers>
-	</Chart>
-	
+      <Layer visible="true" id="runoffLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
+          </Parameters>
+        </Provider>
+        <Title>Abfluss</Title>
+        <Description>Abfluss abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wsp_Axis" />
+          <TargetAxisRef ref="runoff_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="line" isVisible="false">
+            <Title></Title>
+          </LineStyle>
+          <PointStyle role="point">
+            <Title>Abfluss</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker>
+            </OvalMarker>
+            <FillColor>
+              <Color>ff0000</Color>
+            </FillColor>
+          </PointStyle>
+        </Styles>
+      </Layer>
 
-	<Chart id="areaChart">
-		<Title>Fl�che</Title>
-		<Description>Fl�chenwerte der Berechnung</Description>
-		<Layers>
-			<Layer visible="true" id="areaLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
-					<Parameters>
-						<Parameter name="featureKey" value="theResultFeatureKey"/>
-						<Parameter name="propertyName"
-							value="{org.kalypso.model.wspm.tuhh}pointsMember"/>
-						<Parameter name="showPoints" value="true"/>
-						<Parameter name="showLines" value="false"/>
-						<Parameter name="domainComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth"/>
-						<Parameter name="valueComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area"
-						/>
-					</Parameters>
-				</Provider>
-				<Title>Fl�che</Title>
-				<Description>Fl�che abh�ngig vom Wasserspiegel</Description>
-				<MapperRefs>
-					<DomainAxisRef ref="wsp_Axis"/>
-					<TargetAxisRef ref="area_Axis"/>
-				</MapperRefs>
-				<Styles>
-					<PointStyle role="point">
-						<Title>Fl�che</Title>
-						<Width>8</Width>
-						<Height>8</Height>
-						<Stroke>
-							<Width>1</Width>
-							<LineColor>000000</LineColor>
-						</Stroke>
-						<OvalMarker/>
-						<FillColor>ff00ff</FillColor>
-					</PointStyle>
-					<LineStyle role="line" isVisible="false">
-						<Title/>
-					</LineStyle>
-				</Styles>
-			</Layer>
-			<Layer visible="true" id="areaPolynomeLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider">
-					<Parameters>
-						<Parameter name="featureKey" value="theResultFeatureKey"/>
-						<Parameter name="propertyName"
-							value="{org.kalypso.model.wspm.tuhh}polynomialMember"/>
-						<Parameter name="domainId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonArea"
-						/>
-					</Parameters>
-				</Provider>
-				<Title>Fl�chenpolynome</Title>
-				<Description>Fl�chenpolynome abh�ngig vom Wasserspiegel</Description>
-				<MapperRefs>
-					<DomainAxisRef ref="wsp_Axis"/>
-					<TargetAxisRef ref="area_Axis"/>
-				</MapperRefs>
-				<Styles>
-					<PointStyle role="point" isVisible="false">
-						<Title/>
-					</PointStyle>
-					<LineStyle role="line">
-						<Title>Fl�chenpolynome</Title>
-						<Width>3</Width>
-						<LineColor>00aaff</LineColor>
-					</LineStyle>
-				</Styles>
+      <Layer visible="true" id="runoffPolynomeLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}polynomialMember" />
+            <Parameter name="domainId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonRunoff" />
+          </Parameters>
+        </Provider>
+        <Title>Abflusspolynome</Title>
+        <Description>Abflusspolynome abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wsp_Axis" />
+          <TargetAxisRef ref="runoff_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point" isVisible="false">
+            <Title></Title>
+          </PointStyle>
+          <LineStyle role="line">
+            <Title>Abflusspolynome</Title>
+            <Width>3</Width>
+            <LineColor>00aaff</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+    </Layers>
 
-			</Layer>
-			
-			<!--
-			<Layer visible="true" id="areaDeltaLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
-					<Parameters>
-						<Parameter name="featureKey" value="theResultFeatureKey"/>
-						<Parameter name="propertyName"
-							value="{org.kalypso.model.wspm.tuhh}pointsMember"/>
-						<Parameter name="showPoints" value="true"/>
-						<Parameter name="showLines" value="false"/>
-						<Parameter name="domainComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth"/>
-						<Parameter name="valueComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaArea"
-						/>
-					</Parameters>
-				</Provider>
-				<Title>Fl�chen-Delta</Title>
-				<Description>Fl�chen Differenzen bei der Polynomerstellung</Description>
-				<MapperRefs>
-					<DomainAxisRef ref="wsp_Axis"/>
-					<TargetAxisRef ref="areaDelta_Axis"/>
-				</MapperRefs>
-				<Styles>
-					<PointStyle role="point">
-						<Title>Fl�chen-Delta</Title>
-						<Width>8</Width>
-						<Height>8</Height>
-						<Stroke>
-							<Width>1</Width>
-							<LineColor>000000</LineColor>
-						</Stroke>
-						<OvalMarker/>
-						<FillColor>00ffff</FillColor>
-					</PointStyle>
-					<LineStyle role="line" isVisible="false">
-						<Title/>
-					</LineStyle>
+    <Mappers>
+      <Axis id="wsp_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Wassertiefe [m]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>BOTTOM</Position>
+        <NumberRange>
+          <MinValue>0</MinValue>
+          <MaxValue>100</MaxValue>
+        </NumberRange>
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+      <Axis id="runoff_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Abfluss [m³/s]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <NumberRange>
+          <MinValue>5</MinValue>
+          <MaxValue>10</MaxValue>
+        </NumberRange>
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+      <Axis id="runoffDelta_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Abfluss-Delta [m³/s]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <NumberRange>
+          <MinValue>5</MinValue>
+          <MaxValue>10</MaxValue>
+        </NumberRange>
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+    </Mappers>
+    <Renderers>
+      <AxisRenderer id="NumberAxisRenderer">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+          <Parameters>
+            <Parameter name="inset_tick" value="1" />
+          </Parameters>
+        </Provider>
+      </AxisRenderer>
+    </Renderers>
+  </Chart>
 
-				</Styles>
-			</Layer>
-			-->
+  <Chart id="areaChart">
+    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Fläche</Title>
+    <Description>Flächenwerte der Berechnung</Description>
+    <Layers>
 
+      <Layer visible="true" legend="false" id="areaGridLayer">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
+          <Parameters>
+          </Parameters>
+        </Provider>
+        <Title>Gitterlinien</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef ref="wsp_Axis" />
+          <TargetAxisRef ref="area_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="gridLineStyle">
+            <Width>1</Width>
+            <LineColor>CCCCCC</LineColor>
+            <DashOffset>0</DashOffset>
+            <DashArray>2 2 2</DashArray>
+            <LineCap>ROUND</LineCap>
+            <LineJoin>ROUND</LineJoin>
+            <MiterLimit>1</MiterLimit>
+          </LineStyle>
+          <!-- THIS IS THE STLYE OF THE BORDER... (even if it is a point style) -->
+          <PointStyle role="gridPointStyle">
+            <Stroke>
+              <Width>2</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <FillColor isVisible="false">
+              <Color>000000</Color>
+            </FillColor>
+          </PointStyle>
+        </Styles>
+      </Layer>
 
+      <Layer visible="true" id="areaLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
+          </Parameters>
+        </Provider>
+        <Title>Fläche</Title>
+        <Description>Fläche abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wsp_Axis" />
+          <TargetAxisRef ref="area_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point">
+            <Title>Fläche</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker />
+            <FillColor>
+              <Color>ff00ff</Color>
+            </FillColor>
+          </PointStyle>
+          <LineStyle role="line" isVisible="false">
+            <Title />
+          </LineStyle>
+        </Styles>
+      </Layer>
 
-		</Layers>
-		<Mappers>
-			<Axis id="area_Axis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Fl�che [m�]</Label>
-				
-				<Direction>POSITIVE</Direction>
-				<Position>LEFT</Position>
-				<NumberRange>
-					<MinValue>5</MinValue>
-					<MaxValue>10</MaxValue>
-				</NumberRange>
-				<RendererRef ref="NumberAxisRenderer2"/>
-			</Axis>
-			<Axis id="areaDelta_Axis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Fl�che-Delta [m�/s]</Label>
-				<Direction>POSITIVE</Direction>
-				<Position>LEFT</Position>
-				<NumberRange>
-					<MinValue>5</MinValue>
-					<MaxValue>10</MaxValue>
-				</NumberRange>
-				<RendererRef ref="NumberAxisRenderer2"/>
-			</Axis>
-		</Mappers>
-		<Renderers>
-			<AxisRenderer id="NumberAxisRenderer2">
-				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
-					<Parameters>
-						<Parameter name="inset_tick" value="1"/>
-					</Parameters>
-				</Provider>
-			</AxisRenderer>
-		</Renderers>
-		
-	</Chart>
-	
-	
-	
-	
+      <Layer visible="true" id="areaPolynomeLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}polynomialMember" />
+            <Parameter name="domainId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonArea" />
+          </Parameters>
+        </Provider>
+        <Title>Flächenpolynome</Title>
+        <Description>Flächenpolynome abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wsp_Axis" />
+          <TargetAxisRef ref="area_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point" isVisible="false">
+            <Title />
+          </PointStyle>
+          <LineStyle role="line">
+            <Title>Flächenpolynome</Title>
+            <Width>3</Width>
+            <LineColor>00aaff</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+    </Layers>
 
+    <Mappers>
+      <Axis id="area_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Fläche [m²]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <NumberRange>
+          <MinValue>5</MinValue>
+          <MaxValue>10</MaxValue>
+        </NumberRange>
+        <RendererRef ref="NumberAxisRenderer2" />
+      </Axis>
+      <Axis id="areaDelta_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Fläche-Delta [m³/s]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <NumberRange>
+          <MinValue>5</MinValue>
+          <MaxValue>10</MaxValue>
+        </NumberRange>
+        <RendererRef ref="NumberAxisRenderer2" />
+      </Axis>
+    </Mappers>
+    <Renderers>
+      <AxisRenderer id="NumberAxisRenderer2">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+          <Parameters>
+            <Parameter name="inset_tick" value="1" />
+          </Parameters>
+        </Provider>
+      </AxisRenderer>
+    </Renderers>
+  </Chart>
 
-	<!-- ALPHA -->
-	<Chart id="alphaChart">
-		<Title>Alpha</Title>
-		<Description>Alphawerte der Berechnung</Description>
-		<Layers>
-			
-			<Layer visible="true" id="alphaLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" >
-					<Parameters>
-						<Parameter name="featureKey" value="theResultFeatureKey" />
-						<Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
-						<Parameter name="showPoints" value="true" />
-						<Parameter name="showLines" value="false" />
-						<Parameter name="domainComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
-						<Parameter name="valueComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Alpha" />
-					</Parameters>
-				</Provider>
-				<Title>Alpha</Title>
-				<Description>Alpha abh�ngig vom Wasserspiegel</Description>
-				
-				<MapperRefs>
-					<DomainAxisRef ref="wsp_Axis" />
-					<TargetAxisRef ref="alpha_Axis" />
-				</MapperRefs>
-				<Styles>
-					<PointStyle role="point">
-						<Title>Alpha</Title>
-						<Width>8</Width>
-						<Height>8</Height>
-						<Stroke>
-							<Width>1</Width>
-							<LineColor>000000</LineColor>
-						</Stroke>
-						<OvalMarker></OvalMarker>
-						<FillColor>00a000</FillColor>
-					</PointStyle>
-					<LineStyle role="line" isVisible="false">
-						<Title></Title>
-					</LineStyle>
-				</Styles>
-			</Layer>
-			
-			<Layer visible="true" id="alphaPolynomeLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider" >
-					<Parameters>
-						<Parameter name="featureKey" value="theResultFeatureKey" />
-						<Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}polynomialMember" />
-						<Parameter name="domainId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonAlpha" />
-					</Parameters>
-				</Provider>
-				<Title>Alpha-Polynome</Title>
-				<Description>Alpha-Polynome abh�ngig vom Wasserspiegel</Description>
-				<MapperRefs>
-					<DomainAxisRef ref="wsp_Axis" />
-					<TargetAxisRef ref="alpha_Axis" />
-				</MapperRefs>
-				<Styles>
-					<PointStyle role="point" isVisible="false">
-						<Title></Title>
-					</PointStyle>
-					<LineStyle role="line">
-						<Title>Alpha-Polynome</Title>
-						<Width>3</Width>
-						<LineColor>00aaff</LineColor>
-					</LineStyle>
-				</Styles>
-				
-			</Layer>
-			<!--
-			<Layer visible="true" id="alphaDeltaLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" >
-					<Parameters>
-						<Parameter name="featureKey" value="theResultFeatureKey" />
-						<Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
-						<Parameter name="showPoints" value="true" />
-						<Parameter name="showLines" value="false" />
-						<Parameter name="domainComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
-						<Parameter name="valueComponentId"
-							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha" />
-					</Parameters>
-				</Provider>
-				<Title>Abfluss-Delta</Title>
-				<Description>Alpha Differenzen bei der Polynomerstellung</Description>
-				<MapperRefs>
-					<DomainAxisRef ref="wsp_Axis" />
-					<TargetAxisRef ref="alphaDelta_Axis" />
-				</MapperRefs>
-				<Styles>
-					<PointStyle role="point">
-						<Title>Abfluss-Delta</Title>
-						<Width>8</Width>
-						<Height>8</Height>
-						<Stroke>
-							<Width>1</Width>
-							<LineColor>000000</LineColor>
-						</Stroke>
-						<OvalMarker></OvalMarker>
-						<FillColor>009900</FillColor>
-					</PointStyle>
-					<LineStyle role="line" isVisible="false">
-						<Title></Title>
-					</LineStyle>
-				</Styles>
-			</Layer>
-			-->
-		</Layers>
-		<Mappers>	
-			<Axis id="alpha_Axis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Alpha [-]</Label>
-				<Direction>POSITIVE</Direction>
-				<Position>LEFT</Position>
-				<NumberRange>
-					<MinValue>5</MinValue>
-					<MaxValue>10</MaxValue>
-				</NumberRange>
-				<RendererRef ref="NumberAxisRenderer3"/>
-			</Axis>
-			<Axis id="alphaDelta_Axis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Alpha-Delta [-]</Label>
-				<Direction>POSITIVE</Direction>
-				<Position>LEFT</Position>
-				<NumberRange>
-					<MinValue>5</MinValue>
-					<MaxValue>10</MaxValue>
-				</NumberRange>
-				<RendererRef ref="NumberAxisRenderer3"/>
-			</Axis>
-		</Mappers>
-		<Renderers>
-			<AxisRenderer id="NumberAxisRenderer3">
-				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
-					<Parameters>
-						<Parameter name="inset_tick" value="1"/>
-					</Parameters>
-				</Provider>
-			</AxisRenderer>
-		</Renderers>
-	</Chart>
-	
+  <!-- ALPHA -->
+  <Chart id="alphaChart">
+    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Alpha</Title>
+    <Description>Alphawerte der Berechnung</Description>
+    <Layers>
+
+      <Layer visible="true" legend="false" id="alphyGridLayer">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
+          <Parameters>
+          </Parameters>
+        </Provider>
+        <Title>Gitterlinien</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef ref="wsp_Axis" />
+          <TargetAxisRef ref="alpha_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="gridLineStyle">
+            <Width>1</Width>
+            <LineColor>CCCCCC</LineColor>
+            <DashOffset>0</DashOffset>
+            <DashArray>2 2 2</DashArray>
+            <LineCap>ROUND</LineCap>
+            <LineJoin>ROUND</LineJoin>
+            <MiterLimit>1</MiterLimit>
+          </LineStyle>
+          <!-- THIS IS THE STLYE OF THE BORDER... (even if it is a point style) -->
+          <PointStyle role="gridPointStyle">
+            <Stroke>
+              <Width>2</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <FillColor isVisible="false">
+              <Color>000000</Color>
+            </FillColor>
+          </PointStyle>
+        </Styles>
+      </Layer>
+
+      <Layer visible="true" id="alphaLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Alpha" />
+          </Parameters>
+        </Provider>
+        <Title>Alpha</Title>
+        <Description>Alpha abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wsp_Axis" />
+          <TargetAxisRef ref="alpha_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point">
+            <Title>Alpha</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker></OvalMarker>
+            <FillColor>
+              <Color>00a000</Color>
+            </FillColor>
+          </PointStyle>
+          <LineStyle role="line" isVisible="false">
+            <Title></Title>
+          </LineStyle>
+        </Styles>
+      </Layer>
+
+      <Layer visible="true" id="alphaPolynomeLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}polynomialMember" />
+            <Parameter name="domainId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonAlpha" />
+          </Parameters>
+        </Provider>
+        <Title>Alpha-Polynome</Title>
+        <Description>Alpha-Polynome abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wsp_Axis" />
+          <TargetAxisRef ref="alpha_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point" isVisible="false">
+            <Title></Title>
+          </PointStyle>
+          <LineStyle role="line">
+            <Title>Alpha-Polynome</Title>
+            <Width>3</Width>
+            <LineColor>00aaff</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+    </Layers>
+
+    <Mappers>
+      <Axis id="alpha_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Alpha [-]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <NumberRange>
+          <MinValue>5</MinValue>
+          <MaxValue>10</MaxValue>
+        </NumberRange>
+        <RendererRef ref="NumberAxisRenderer3" />
+      </Axis>
+      <Axis id="alphaDelta_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Alpha-Delta [-]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <NumberRange>
+          <MinValue>5</MinValue>
+          <MaxValue>10</MaxValue>
+        </NumberRange>
+        <RendererRef ref="NumberAxisRenderer3" />
+      </Axis>
+    </Mappers>
+    <Renderers>
+      <AxisRenderer id="NumberAxisRenderer3">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+          <Parameters>
+            <Parameter name="inset_tick" value="1" />
+          </Parameters>
+        </Provider>
+      </AxisRenderer>
+    </Renderers>
+  </Chart>
+
+  <!-- new chart configurations -->
+  <Chart id="runoffChannelAndFloodplainChart">
+    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Abfluss Flussschlauch und Vorland</Title>
+    <Description>Abflusswerte innerhalb des Flussschlauchs und des Vorlands</Description>
+    <Layers>
+
+      <!-- grid and border -->
+      <Layer visible="true" legend="false" id="runoffChannelAndFloodplainGridLayer">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
+          <Parameters>
+          </Parameters>
+        </Provider>
+        <Title>Gitterlinien</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="runoffChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="gridLineStyle">
+            <Width>1</Width>
+            <LineColor>CCCCCC</LineColor>
+            <DashOffset>0</DashOffset>
+            <DashArray>2 2 2</DashArray>
+            <LineCap>ROUND</LineCap>
+            <LineJoin>ROUND</LineJoin>
+            <MiterLimit>1</MiterLimit>
+          </LineStyle>
+          <!-- THIS IS THE STLYE OF THE BORDER... (even if it is a point style) -->
+          <PointStyle role="gridPointStyle">
+            <Stroke>
+              <Width>2</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <FillColor isVisible="false">
+              <Color>000000</Color>
+            </FillColor>
+          </PointStyle>
+        </Styles>
+      </Layer>
+
+      <!-- sum of channel and floodplain -->
+      <Layer visible="true" id="runoffSumLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
+          </Parameters>
+        </Provider>
+        <Title>Summe</Title>
+        <Description>Summe des Abflusses von Flussschlauch und Vorland</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="runoffChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="line" isVisible="true">
+            <Title>Summe</Title>
+            <Width>1</Width>
+            <LineColor>999999</LineColor>
+          </LineStyle>
+          <PointStyle role="point">
+            <Title>Summe</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker>
+            </OvalMarker>
+            <FillColor>
+              <Color>ff0000</Color>
+            </FillColor>
+          </PointStyle>
+        </Styles>
+      </Layer>
+
+      <!-- channel -->
+      <Layer visible="true" id="runoffChannelLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffChannel" />
+          </Parameters>
+        </Provider>
+        <Title>Abfluss Flussschlauch</Title>
+        <Description>Abfluss im Flussschlauch abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="runoffChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="line" isVisible="true">
+            <Title>Abfluss Flussschlauch</Title>
+            <Width>1</Width>
+            <LineColor>999999</LineColor>
+          </LineStyle>
+          <PointStyle role="point">
+            <Title>Abfluss Flussschlauch</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker>
+            </OvalMarker>
+            <FillColor>
+              <Color>0000ff</Color>
+            </FillColor>
+          </PointStyle>
+        </Styles>
+      </Layer>
+
+      <!-- floodplain -->
+      <Layer visible="true" id="runoffFloodplainLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffFloodplain" />
+          </Parameters>
+        </Provider>
+        <Title>Abfluss Vorland</Title>
+        <Description>Abfluss im Vorland abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="runoffChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="line" isVisible="true">
+            <Title>Abfluss Vorland</Title>
+            <Width>1</Width>
+            <LineColor>999999</LineColor>
+          </LineStyle>
+          <PointStyle role="point">
+            <Title>Abfluss Vorland</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker>
+            </OvalMarker>
+            <FillColor>
+              <Color>00ff00</Color>
+            </FillColor>
+          </PointStyle>
+        </Styles>
+      </Layer>
+
+      <!-- bankfull height -->
+      <Layer visible="true" id="runoffBankfullHeightLayer">
+        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}bankfullHeight" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Bordvollhöhe</Title>
+        <Description>Bordvollhöhe</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="runoffChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point" isVisible="false">
+            <Title></Title>
+          </PointStyle>
+          <LineStyle role="line" isVisible="true">
+            <Title>Bordvollhöhe</Title>
+            <Width>1</Width>
+            <LineColor>AA0000</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+    </Layers>
+
+    <Mappers>
+      <Axis id="wspChannelAndFloodplain_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Wasserspiegel [mNN]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>BOTTOM</Position>
+        <NumberRange>
+          <MinValue>0</MinValue>
+          <MaxValue>100</MaxValue>
+        </NumberRange>
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+      <Axis id="runoffChannelAndFloodplain_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Abfluss [m³/s]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <NumberRange>
+          <MinValue>5</MinValue>
+          <MaxValue>10</MaxValue>
+        </NumberRange>
+        <RendererRef ref="NumberAxisRenderer4" />
+      </Axis>
+    </Mappers>
+    <Renderers>
+      <AxisRenderer id="NumberAxisRenderer4">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+          <Parameters>
+            <Parameter name="inset_tick" value="1" />
+          </Parameters>
+        </Provider>
+      </AxisRenderer>
+    </Renderers>
+  </Chart>
+
+  <Chart id="areaChannelAndFloodplainChart">
+    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Fläche Flussschlauch und Vorland</Title>
+    <Description>Flächenwerte innerhalb des Flussschlauchs und des Vorlands</Description>
+    <Layers>
+    
+      <!-- grid and border -->
+      <Layer visible="true" legend="false" id="areaChannelAndFloodplainGridLayer">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
+          <Parameters>
+          </Parameters>
+        </Provider>
+        <Title>Gitterlinien</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="areaChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="gridLineStyle">
+            <Width>1</Width>
+            <LineColor>CCCCCC</LineColor>
+            <DashOffset>0</DashOffset>
+            <DashArray>2 2 2</DashArray>
+            <LineCap>ROUND</LineCap>
+            <LineJoin>ROUND</LineJoin>
+            <MiterLimit>1</MiterLimit>
+          </LineStyle>
+          <!-- THIS IS THE STLYE OF THE BORDER... (even if it is a point style) -->
+          <PointStyle role="gridPointStyle">
+            <Stroke>
+              <Width>2</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <FillColor isVisible="false">
+              <Color>000000</Color>
+            </FillColor>
+          </PointStyle>
+        </Styles>
+      </Layer>
+
+      <!-- sum of channel and floodplain -->
+      <Layer visible="true" id="areaSumLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
+          </Parameters>
+        </Provider>
+        <Title>Summe</Title>
+        <Description>Summe der Flächenwerte von Flussschlauch und Vorland</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="areaChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point">
+            <Title>Summe</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker />
+            <FillColor>
+              <Color>ff00ff</Color>
+            </FillColor>
+          </PointStyle>
+          <LineStyle role="line" isVisible="true">
+            <Title>Summe</Title>
+            <Width>1</Width>
+            <LineColor>999999</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+
+      <!-- channel -->
+      <Layer visible="true" id="areaChannelLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#AreaChannel" />
+          </Parameters>
+        </Provider>
+        <Title>Fläche Flussschlauch</Title>
+        <Description>Flächenwerte innerhalb des Flussschlauchs abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="areaChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point">
+            <Title>Fläche Flussschlauch</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker />
+            <FillColor>
+              <Color>0000ff</Color>
+            </FillColor>
+          </PointStyle>
+          <LineStyle role="line" isVisible="true">
+            <Title>Fläche Flussschlauch</Title>
+            <Width>1</Width>
+            <LineColor>999999</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+
+      <!-- floodplain -->
+      <Layer visible="true" id="areaFloodplainLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#AreaFloodplain" />
+          </Parameters>
+        </Provider>
+        <Title>Fläche Vorland</Title>
+        <Description>Flächenwerte innerhalb des Vorlands abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="areaChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point">
+            <Title>Fläche Vorland</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker />
+            <FillColor>
+              <Color>00ff00</Color>
+            </FillColor>
+          </PointStyle>
+          <LineStyle role="line" isVisible="true">
+            <Title>Fläche Vorland</Title>
+            <Width>1</Width>
+            <LineColor>999999</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+
+      <!-- bankfull height -->
+      <Layer visible="true" id="areaBankfullHeightLayer">
+        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}bankfullHeight" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Bordvollhöhe</Title>
+        <Description>Bordvollhöhe</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="areaChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point" isVisible="false">
+            <Title></Title>
+          </PointStyle>
+          <LineStyle role="line" isVisible="true">
+            <Title>Bordvollhöhe</Title>
+            <Width>1</Width>
+            <LineColor>AA0000</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+    </Layers>
+
+    <Mappers>
+      <Axis id="areaChannelAndFloodplain_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Fläche [m²]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <NumberRange>
+          <MinValue>5</MinValue>
+          <MaxValue>10</MaxValue>
+        </NumberRange>
+        <RendererRef ref="NumberAxisRenderer5" />
+      </Axis>
+    </Mappers>
+    <Renderers>
+      <AxisRenderer id="NumberAxisRenderer5">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+          <Parameters>
+            <Parameter name="inset_tick" value="1" />
+          </Parameters>
+        </Provider>
+      </AxisRenderer>
+    </Renderers>
+  </Chart>
+
+  <Chart id="widthChannelAndFloodplainChart">
+    <Title horizontalTextAnchor="CENTER" verticalTextAnchor="TOP" horizontalPosition="CENTER" verticalPosition="TOP">Breite Flussschlauch und Vorland</Title>
+    <Description>Breite des Flussschlauchs und des Vorlands</Description>
+    <Layers>
+    
+      <!-- grid and border -->
+      <Layer visible="true" legend="false" id="widthChannelAndFloodplainGridLayer">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
+          <Parameters>
+          </Parameters>
+        </Provider>
+        <Title>Gitterlinien</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="widthChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="gridLineStyle">
+            <Width>1</Width>
+            <LineColor>CCCCCC</LineColor>
+            <DashOffset>0</DashOffset>
+            <DashArray>2 2 2</DashArray>
+            <LineCap>ROUND</LineCap>
+            <LineJoin>ROUND</LineJoin>
+            <MiterLimit>1</MiterLimit>
+          </LineStyle>
+          <!-- THIS IS THE STLYE OF THE BORDER... (even if it is a point style) -->
+          <PointStyle role="gridPointStyle">
+            <Stroke>
+              <Width>2</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <FillColor isVisible="false">
+              <Color>000000</Color>
+            </FillColor>
+          </PointStyle>
+        </Styles>
+      </Layer>
+
+      <!-- sum of channel and floodplain -->
+      <Layer visible="true" id="widthSumLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Width" />
+          </Parameters>
+        </Provider>
+        <Title>Summe</Title>
+        <Description>Summe der Breite von Flussschlauch und Vorland</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="widthChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point">
+            <Title>Summe</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker />
+            <FillColor>
+              <Color>00ffff</Color>
+            </FillColor>
+          </PointStyle>
+          <LineStyle role="line" isVisible="true">
+            <Title>Summe</Title>
+            <Width>1</Width>
+            <LineColor>999999</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+
+      <!-- channel -->
+      <Layer visible="true" id="widthChannelLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#WidthChannel" />
+          </Parameters>
+        </Provider>
+        <Title>Breite Flussschlauch</Title>
+        <Description>Breite des Flussschlauchs abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="widthChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point">
+            <Title>Breite Flussschlauch</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker />
+            <FillColor>
+              <Color>0000ff</Color>
+            </FillColor>
+          </PointStyle>
+          <LineStyle role="line" isVisible="true">
+            <Title>Breite Flussschlauch</Title>
+            <Width>1</Width>
+            <LineColor>999999</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+
+      <!-- floodplain -->
+      <Layer visible="true" id="widthFloodplainLayer">
+        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}pointsMember" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="false" />
+            <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
+            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#WidthFloodplain" />
+          </Parameters>
+        </Provider>
+        <Title>Breite Vorland</Title>
+        <Description>Breite des Vorlands abhängig vom Wasserspiegel</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="widthChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point">
+            <Title>Breite Vorland</Title>
+            <Width>8</Width>
+            <Height>8</Height>
+            <Stroke>
+              <Width>1</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <OvalMarker />
+            <FillColor>
+              <Color>00ff00</Color>
+            </FillColor>
+          </PointStyle>
+          <LineStyle role="line" isVisible="true">
+            <Title>Breite Vorland</Title>
+            <Width>1</Width>
+            <LineColor>999999</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+
+      <!-- bankfull height -->
+      <Layer visible="true" id="widthBankfullHeightLayer">
+        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
+          <Parameters>
+            <Parameter name="featureKey" value="theResultFeatureKey" />
+            <Parameter name="propertyName" value="{org.kalypso.model.wspm.tuhh}bankfullHeight" />
+            <Parameter name="showPoints" value="true" />
+            <Parameter name="showLines" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Bordvollhöhe</Title>
+        <Description>Bordvollhöhe</Description>
+        <MapperRefs>
+          <DomainAxisRef ref="wspChannelAndFloodplain_Axis" />
+          <TargetAxisRef ref="widthChannelAndFloodplain_Axis" />
+        </MapperRefs>
+        <Styles>
+          <PointStyle role="point" isVisible="false">
+            <Title></Title>
+          </PointStyle>
+          <LineStyle role="line" isVisible="true">
+            <Title>Bordvollhöhe</Title>
+            <Width>1</Width>
+            <LineColor>AA0000</LineColor>
+          </LineStyle>
+        </Styles>
+      </Layer>
+    </Layers>
+
+    <Mappers>
+      <Axis id="widthChannelAndFloodplain_Axis">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Breite [m²]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <NumberRange>
+          <MinValue>5</MinValue>
+          <MaxValue>10</MaxValue>
+        </NumberRange>
+        <RendererRef ref="NumberAxisRenderer6" />
+      </Axis>
+    </Mappers>
+    <Renderers>
+      <AxisRenderer id="NumberAxisRenderer6">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+          <Parameters>
+            <Parameter name="inset_tick" value="1" />
+          </Parameters>
+        </Provider>
+      </AxisRenderer>
+    </Renderers>
+  </Chart>
 </ChartConfiguration>
-
