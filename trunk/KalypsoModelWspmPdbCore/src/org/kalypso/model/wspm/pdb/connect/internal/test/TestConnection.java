@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
 import org.kalypso.model.wspm.pdb.db.mapping.Points;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
@@ -65,7 +66,10 @@ public class TestConnection implements IPdbConnection
 
   private final List<States> m_states = new ArrayList<States>();
 
+  private final List<CrossSections> m_crossSections = new ArrayList<CrossSections>();
+
   private final TestSettings m_settings;
+
 
   public TestConnection( final TestSettings settings )
   {
@@ -127,5 +131,17 @@ public class TestConnection implements IPdbConnection
   public void addState( final States state )
   {
     m_states.add( state );
+  }
+
+  @Override
+  public void addCrossSection( final CrossSections crossSection )
+  {
+    m_crossSections.add( crossSection );
+  }
+
+  @Override
+  public List<States> getStates( )
+  {
+    return m_states;
   }
 }

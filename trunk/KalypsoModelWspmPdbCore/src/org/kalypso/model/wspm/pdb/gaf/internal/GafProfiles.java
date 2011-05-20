@@ -45,6 +45,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * Assembles all read points into different profiles.
@@ -67,7 +68,7 @@ public class GafProfiles
     m_gaf2db = gaf2db;
   }
 
-  public void addPoint( final GafPoint point )
+  public void addPoint( final GafPoint point ) throws PdbConnectException
   {
     final BigDecimal station = point.getStation();
 
@@ -86,7 +87,7 @@ public class GafProfiles
     m_currentProfile.addPoint( point );
   }
 
-  public void stop( )
+  public void stop( ) throws PdbConnectException
   {
     commitProfile();
   }
@@ -96,7 +97,7 @@ public class GafProfiles
     m_currentProfile = new GafProfile( station, m_logger );
   }
 
-  private void commitProfile( )
+  private void commitProfile( ) throws PdbConnectException
   {
     if( m_currentProfile == null )
       return;

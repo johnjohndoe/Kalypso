@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -57,6 +58,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
 /**
@@ -68,11 +70,14 @@ public class EditStatePage extends WizardPage
 
   private DatabindingWizardPage m_binding;
 
-  public EditStatePage( final String pageName, final States state )
+  private final List<States> m_existingStates;
+
+  public EditStatePage( final String pageName, final States state, final List<States> existingStates )
   {
     super( pageName );
 
     m_state = state;
+    m_existingStates = existingStates;
 
     setTitle( "Enter State Properties" );
     setDescription( "Enter the properties of the freshly created state" );
@@ -103,12 +108,13 @@ public class EditStatePage extends WizardPage
     field.setMessage( "<Eindeutiger Name des Zustands>" );
     field.setTextLimit( States.NAME_LIMIT );
 
-    final IObservableValue target = SWTObservables.observeText( field );
+    final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_STATE );
 
-    // TODO: validator that checks if a state with same name already exists
-
-    m_binding.bindValue( target, model, new StringBlankValidator( IStatus.ERROR, "'Name' is empty" ) );
+    final DataBinder binder = new DataBinder( target, model );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Name' is empty" ) );
+    binder.addTargetAfterGetValidator( new UniqueStateNameValidator( m_existingStates ) );
+    m_binding.bindValue( binder );
   }
 
   private void createCommentControls( final Composite parent )
@@ -122,7 +128,7 @@ public class EditStatePage extends WizardPage
     field.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
     field.setMessage( "<Beschreibung des Zustands>" );
 
-    final IObservableValue target = SWTObservables.observeText( field );
+    final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_COMMENT );
 
     m_binding.bindValue( target, model );
@@ -135,7 +141,7 @@ public class EditStatePage extends WizardPage
     final Text field = new Text( parent, SWT.BORDER | SWT.READ_ONLY );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
-    final IObservableValue target = SWTObservables.observeText( field );
+    final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_SOURCE );
 
     m_binding.bindValue( target, model );
@@ -151,8 +157,6 @@ public class EditStatePage extends WizardPage
     final DateTime timeField = new DateTime( parent, SWT.TIME | SWT.SHORT );
     timeField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-// final IObservableValue calendarValue = new CalendarObservableValue();
-
     final Calendar cal = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     cal.setTime( m_state.getMeasurementDate() );
     final DateTimeSelectionProperty selectionProperty = new DateTimeSelectionProperty( cal );
@@ -164,13 +168,5 @@ public class EditStatePage extends WizardPage
 
     m_binding.bindValue( dateTarget, model );
     m_binding.bindValue( timeTarget, model );
-
-// final DataBinder binder = new DataBinder( calendarValue, model );
-// binder.setModelToTargetConverter( new DateToCalendarConverter( KalypsoCorePlugin.getDefault().getTimeZone() ) );
-// binder.setTargetToModelConverter( new CalendarToDateConverter() );
-// m_binding.bindValue( binder );
-
-// m_binding.bindValue( dateTarget, calendarValue );
-// m_binding.bindValue( timeTarget, calendarValue );
   }
 }

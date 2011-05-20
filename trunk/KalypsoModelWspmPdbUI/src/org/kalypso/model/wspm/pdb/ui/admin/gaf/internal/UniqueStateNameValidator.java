@@ -38,40 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect;
+package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.kalypso.model.wspm.pdb.db.PdbInfo;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
-import org.kalypso.model.wspm.pdb.db.mapping.Points;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.databinding.validation.TypedValidator;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
  * @author Gernot Belger
  */
-public interface IPdbConnection
+public class UniqueStateNameValidator extends TypedValidator<String>
 {
-  void connect( ) throws PdbConnectException;
+  private final Set<String> m_names = new HashSet<String>();
 
-  boolean isConnected( );
+  public UniqueStateNameValidator( final List<States> existingStates )
+  {
+    super( String.class, IStatus.ERROR, "A state with the same name already exists" );
 
-  void close( ) throws PdbConnectException;
+    for( final States states : existingStates )
+      m_names.add( states.getState() );
+  }
 
-  PdbInfo getInfo( ) throws PdbConnectException;
+  @Override
+  protected IStatus doValidate( final String value ) throws CoreException
+  {
+    if( m_names.contains( value ) )
+      fail();
 
-  void addPoint( Points onePoint ) throws PdbConnectException;
-
-  String getLabel( );
-
-  List<WaterBodies> getWaterBodies( ) throws PdbConnectException;
-
-  void addWaterBody( WaterBodies waterBody ) throws PdbConnectException;
-
-  void addState( States state ) throws PdbConnectException;
-
-  void addCrossSection( CrossSections crossSection ) throws PdbConnectException;
-
-  List<States> getStates( ) throws PdbConnectException;
+    return Status.OK_STATUS;
+  }
 }

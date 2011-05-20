@@ -47,6 +47,10 @@ import java.util.Map;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+
 /**
  * Represent point of a gaf file with the same station.
  * 
@@ -121,5 +125,13 @@ public class GafProfile
       m_parts.put( kind, new GafPart( kind ) );
 
     return m_parts.get( kind );
+  }
+
+  public LineString createLine( )
+  {
+    // FIXME...
+
+    final Coordinate[] crds = new Coordinate[] { new Coordinate( 3.14, 2.718 ), new Coordinate( 2.718, 3.14 ) };
+    return new GeometryFactory().createLineString( crds );
   }
 }

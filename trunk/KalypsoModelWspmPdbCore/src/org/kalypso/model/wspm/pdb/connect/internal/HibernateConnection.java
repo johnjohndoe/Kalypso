@@ -231,46 +231,78 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
   @Override
   public PdbInfo getInfo( ) throws PdbConnectException
   {
+    final List<Info> properties = getList( Info.class );
+
+    return new PdbInfo( properties );
+  }
+
+  private void addObject( final Object object ) throws PdbConnectException
+  {
     checkConnection();
 
-    // query all info's
-// final Transaction transaction = m_session.beginTransaction();
-    final String query = String.format( "from %s", Info.class.getName() );
-    final List<Info> allInfo = m_session.createQuery( query ).list();
-// transaction.commit();
+    Transaction transaction = null;
+    try
+    {
+      transaction = m_session.beginTransaction();
+      m_session.save( object );
+      transaction.commit();
+    }
+    catch( final HibernateException e )
+    {
+      doRollback( transaction );
 
-    return new PdbInfo( allInfo );
+      e.printStackTrace();
+      final String message = String.format( "Failed to write object to pdb: %s", object );
+      throw new PdbConnectException( message, e );
+    }
+  }
+
+  private void doRollback( final Transaction transaction ) throws PdbConnectException
+  {
+    try
+    {
+      if( transaction != null )
+        transaction.rollback();
+    }
+    catch( final HibernateException e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed to rollback transaction", e );
+    }
   }
 
   @Override
   public void addPoint( final Points onePoint ) throws PdbConnectException
   {
-    checkConnection();
-
-    try
-    {
-      final Transaction transaction = m_session.beginTransaction();
-      m_session.save( onePoint );
-      transaction.commit();
-    }
-    catch( final HibernateException e )
-    {
-      e.printStackTrace();
-      throw new PdbConnectException( "Failed to write point to pdb.", e );
-    }
+    addObject( onePoint );
   }
+
 
   @Override
   public List<WaterBodies> getWaterBodies( ) throws PdbConnectException
   {
+    return getList( WaterBodies.class );
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> List<T> getList( final Class<T> type ) throws PdbConnectException
+  {
     checkConnection();
 
-    final String query = String.format( "from %s", WaterBodies.class.getName() );
-    final Query q = m_session.createQuery( query );
+    try
+    {
+      final String query = String.format( "from %s", type.getName() );
+      final Query q = m_session.createQuery( query );
 
-    final List< ? > allWaterbodies = q.list();
+      final List< ? > allWaterbodies = q.list();
 
-    return (List<WaterBodies>) allWaterbodies;
+      return (List<T>) allWaterbodies;
+    }
+    catch( final HibernateException e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed to access database", e );
+    }
   }
 
   @Override
@@ -278,27 +310,33 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
   {
     checkConnection();
 
-    final Transaction transaction = m_session.beginTransaction();
-
-    m_session.save( waterBody );
-
-    transaction.commit();
+    addObject( waterBody );
   }
 
   @Override
   public void addState( final States state ) throws PdbConnectException
   {
-    checkConnection();
-
     final Date now = new Date();
     state.setCreationDate( now );
     state.setEditingDate( now );
     state.setEditingUser( getSettings().getUsername() );
 
-    final Transaction transaction = m_session.beginTransaction();
+    checkConnection();
 
-    m_session.save( state );
+    addObject( state );
+  }
 
-    transaction.commit();
+  @Override
+  public void addCrossSection( final CrossSections crossSection ) throws PdbConnectException
+  {
+    checkConnection();
+
+    addObject( crossSection );
+  }
+
+  @Override
+  public List<States> getStates( ) throws PdbConnectException
+  {
+    return getList( States.class );
   }
 }
