@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
@@ -98,7 +99,7 @@ public class GafReader
     m_gafProfiles = new GafProfiles( logger, gaf2db );
   }
 
-  public void read( final File gafFile, final IProgressMonitor monitor ) throws IOException
+  public void read( final File gafFile, final IProgressMonitor monitor ) throws IOException, PdbConnectException
   {
     /* Reading gaf with progress stream to show nice progress for large files */
     final long contentLength = gafFile.length();
@@ -132,7 +133,7 @@ public class GafReader
     IOUtils.closeQuietly( m_reader );
   }
 
-  private void readLines( ) throws IOException
+  private void readLines( ) throws IOException, PdbConnectException
   {
     while( m_reader.ready() )
     {
@@ -146,7 +147,7 @@ public class GafReader
     m_gafProfiles.stop();
   }
 
-  private void readLine( final String line )
+  private void readLine( final String line ) throws PdbConnectException
   {
     try
     {

@@ -123,12 +123,6 @@ public class ChooseWaterPage extends WizardPage
     createSearchFields( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createWaterBodyTable( binding, panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createActions( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
-    // TODO Auto-generated method stub
-
-    // - aus allen vorhandenen gewässern auswählen -> tabelle anzeigen?!
-    // - Möglichkeit (popup), ein neues Gewässer zu erzeugen
-    // -> direkt in ImportGafPage?
   }
 
   private Control createWaterBodyTable( final DatabindingWizardPage binding, final Composite parent )

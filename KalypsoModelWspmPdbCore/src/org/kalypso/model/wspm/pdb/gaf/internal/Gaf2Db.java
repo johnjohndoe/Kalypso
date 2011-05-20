@@ -40,10 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf.internal;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Writes a gaf profile into the database.
@@ -58,6 +62,8 @@ public class Gaf2Db
 
   private final States m_state;
 
+  private int m_profileCount;
+
   public Gaf2Db( final IPdbConnection connection, final WaterBodies waterBody, final States state )
   {
     m_connection = connection;
@@ -65,15 +71,49 @@ public class Gaf2Db
     m_state = state;
   }
 
-  public void commitProfile( final GafProfile profile )
+  public void commitProfile( final GafProfile profile ) throws PdbConnectException
   {
     // add cross section
+    final CrossSections crossSection = addCrossSection( profile );
 
     // add parts
     // - add points
 
     // TODO Auto-generated method stub
 
+  }
+
+  private CrossSections addCrossSection( final GafProfile profile ) throws PdbConnectException
+  {
+    final CrossSections crossSection = new CrossSections();
+
+    // TODO: better way of auto-numbering?
+    final String id = m_state.getState() + "_" + m_profileCount++;
+    crossSection.setCrossSection( id );
+
+    // TODO: what to set into comment?
+    // Log entries of this station?
+    // or comment of state
+
+    crossSection.setStates( m_state );
+    crossSection.setWaterBodies( m_waterBody );
+
+    crossSection.setComment( StringUtils.EMPTY );
+
+    crossSection.setStation( profile.getStation() );
+
+    /* Copy initial dates from state */
+    crossSection.setCreationDate( m_state.getCreationDate() );
+    crossSection.setEditingDate( m_state.getEditingDate() );
+    crossSection.setEditingUser( m_state.getEditingUser() );
+    crossSection.setMeasurementDate( m_state.getMeasurementDate() );
+
+    final LineString line = profile.createLine();
+    crossSection.setLine( line );
+
+    m_connection.addCrossSection( crossSection );
+
+    return crossSection;
   }
 
   public void addState( ) throws PdbConnectException

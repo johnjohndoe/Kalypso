@@ -40,13 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
+import java.util.List;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
@@ -68,13 +76,20 @@ public class ImportGafAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final Wizard importWizard = new ImportGafWizard( m_connection );
-    importWizard.setWindowTitle( "Import GAF file" );
-    final WizardDialog dialog = new WizardDialog( shell, importWizard );
-    dialog.open();
+    try
+    {
+      final List<States> states = m_connection.getStates();
 
-    // TODO: show result here?
-    // -log file viewer?
-    // or show import as console log?
+      final Wizard importWizard = new ImportGafWizard( m_connection, states );
+      importWizard.setWindowTitle( "Import GAF file" );
+      final WizardDialog dialog = new WizardDialog( shell, importWizard );
+      dialog.open();
+    }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Error during GAF Import", e );
+      new StatusDialog2( shell, status, "GAF Import" ).open();
+    }
   }
 }

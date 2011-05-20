@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
 import java.io.File;
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -51,6 +52,7 @@ import org.eclipse.swt.program.Program;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -61,7 +63,7 @@ public class ImportGafWizard extends Wizard
 
   private final ImportGafData m_data = new ImportGafData();
 
-  public ImportGafWizard( final IPdbConnection connection )
+  public ImportGafWizard( final IPdbConnection connection, final List<States> existingStates )
   {
     m_connection = connection;
 
@@ -72,7 +74,7 @@ public class ImportGafWizard extends Wizard
 
     addPage( new ImportGafPage( "gaf", connection, m_data ) ); //$NON-NLS-1$
     addPage( new ChooseWaterPage( "waterBody", connection, m_data ) ); //$NON-NLS-1$
-    addPage( new EditStatePage( "state", m_data.getState() ) ); //$NON-NLS-1$
+    addPage( new EditStatePage( "state", m_data.getState(), existingStates ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }
@@ -93,6 +95,8 @@ public class ImportGafWizard extends Wizard
   {
     final ImportGafOperation operation = new ImportGafOperation( m_connection, m_data );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
+
+    // TODO: instead we might show the log during import as a console dialog
 
     final ImportGafResultDialog resultDialog = new ImportGafResultDialog( getShell(), result, m_data );
     resultDialog.open();
