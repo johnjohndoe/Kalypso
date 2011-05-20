@@ -72,6 +72,8 @@ public interface IWspmTuhhQIntervallConstants extends IWspmTuhhConstants
   String DICT_COMPONENT_RUNOFF = DICT_BASE + "Runoff"; //$NON-NLS-1$
 
   String DICT_COMPONENT_ALPHA = DICT_BASE + "Alpha"; //$NON-NLS-1$
+  
+  String DICT_COMPONENT_WIDTH = DICT_BASE + "Width"; //$NON-NLS-1$
 
   String DICT_COMPONENT_DELTA_AREA = DICT_BASE + "DeltaArea"; //$NON-NLS-1$
 

@@ -294,7 +294,8 @@ public class WspmTuhhPostProcessor
       final File resultDir = processor.processPolynomes();
       runoffReader.readPolynomeResults( polynomeTmpDir, resultDir, m_log, m_resultEater );
     }
-
+    
+    runoffReader.createSumComponents();
     runoffReader.createResult( m_resultEater );
 
     return lsOutDir;

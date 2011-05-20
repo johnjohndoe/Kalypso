@@ -577,6 +577,10 @@
            class="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider"
            id="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
      </provider>
+     <provider
+           class="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider"
+           id="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
+     </provider>
   </extension>
   <extension
         point="org.eclipse.ui.commandImages">
