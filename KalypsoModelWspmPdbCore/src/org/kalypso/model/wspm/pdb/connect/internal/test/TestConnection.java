@@ -47,6 +47,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
 import org.kalypso.model.wspm.pdb.db.mapping.Points;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
@@ -61,6 +62,8 @@ public class TestConnection implements IPdbConnection
   private final List<Points> m_points = new ArrayList<Points>();
 
   private final List<WaterBodies> m_waterbodies = new ArrayList<WaterBodies>();
+
+  private final List<States> m_states = new ArrayList<States>();
 
   private final TestSettings m_settings;
 
@@ -118,5 +121,11 @@ public class TestConnection implements IPdbConnection
   public void addWaterBody( final WaterBodies waterBody )
   {
     m_waterbodies.add( waterBody );
+  }
+
+  @Override
+  public void addState( final States state )
+  {
+    m_states.add( state );
   }
 }

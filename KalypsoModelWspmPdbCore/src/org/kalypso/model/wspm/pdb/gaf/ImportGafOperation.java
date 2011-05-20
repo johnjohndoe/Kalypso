@@ -40,14 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf;
 
+import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.gaf.internal.Gaf2Db;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafImporter;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
@@ -59,18 +62,21 @@ import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
  */
 public class ImportGafOperation implements ICoreRunnableWithProgress
 {
-  private final IPdbConnection m_connection;
+  private final Gaf2Db m_gaf2db;
 
   private final ImportGafData m_data;
 
   public ImportGafOperation( final IPdbConnection connection, final ImportGafData data )
   {
-    m_connection = connection;
     m_data = data;
+    final States state = data.getState();
+    final WaterBodies waterBody = data.getWaterBody();
+    m_gaf2db = new Gaf2Db( connection, waterBody, state );
+
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( "Import GAF", 100 );
 
@@ -81,7 +87,8 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     {
       logger = new GafLogger( m_data.getLogFile() );
 
-      final GafImporter importer = new GafImporter( logger, m_data, m_connection );
+      final File gafFile = m_data.getGafFile();
+      final GafImporter importer = new GafImporter( gafFile, logger, m_gaf2db );
       return importer.execute( monitor );
     }
     catch( final IOException e )
@@ -89,18 +96,18 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
       e.printStackTrace();
       return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Error while writing log file", e );
     }
-    catch( final CoreException e )
-    {
-      final IStatus status = e.getStatus();
-      if( status.matches( IStatus.CANCEL ) )
-      {
-        logger.log( IStatus.CANCEL, "Operation cancelled by user" );
-        throw new InterruptedException();
-      }
-
-      logger.log( status, null );
-      throw e;
-    }
+// catch( final CoreException e )
+// {
+// final IStatus status = e.getStatus();
+// if( status.matches( IStatus.CANCEL ) )
+// {
+// logger.log( IStatus.CANCEL, "Operation cancelled by user" );
+// throw new InterruptedException();
+// }
+//
+// logger.log( status, null );
+// throw e;
+// }
     finally
     {
       if( logger != null )

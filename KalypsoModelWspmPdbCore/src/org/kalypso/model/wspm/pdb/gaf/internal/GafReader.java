@@ -56,8 +56,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
  * @author Gernot Belger
@@ -85,10 +83,6 @@ public class GafReader
 
   private final GafProfiles m_gafProfiles;
 
-  private final States m_state;
-
-  private final WaterBodies m_waterBody;
-
   private final GafLogger m_logger;
 
   private int m_goodLines;
@@ -97,13 +91,11 @@ public class GafReader
 
   private GafCodes m_gafCodes;
 
-  public GafReader( final States state, final WaterBodies waterBody, final GafLogger logger )
+  public GafReader( final GafLogger logger, final Gaf2Db gaf2db )
   {
-    m_state = state;
-    m_waterBody = waterBody;
     m_logger = logger;
 
-    m_gafProfiles = new GafProfiles( logger );
+    m_gafProfiles = new GafProfiles( logger, gaf2db );
   }
 
   public void read( final File gafFile, final IProgressMonitor monitor ) throws IOException

@@ -110,7 +110,7 @@ public class WaterBodies extends AbstractModelObject implements java.io.Serializ
     firePropertyChange( PROPERTY_NAME, oldValue, name );
   }
 
-  @Column(name = "Comment")
+  @Column(name = "description")
   public String getComment( )
   {
     return this.comment;

@@ -43,17 +43,12 @@ package org.kalypso.model.wspm.pdb.gaf.internal;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
-import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
@@ -61,38 +56,31 @@ import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
  */
 public class GafImporter implements ICoreRunnableWithProgress
 {
-  private final ImportGafData m_data;
-
-  private final IPdbConnection m_connection;
-
   private final GafLogger m_logger;
 
-  public GafImporter( final GafLogger logger, final ImportGafData data, final IPdbConnection connection )
+  private final Gaf2Db m_gaf2db;
+
+  private final File m_gafFile;
+
+  public GafImporter( final File gafFile, final GafLogger logger, final Gaf2Db gaf2db )
   {
+    m_gafFile = gafFile;
     m_logger = logger;
-    m_data = data;
-    m_connection = connection;
+    m_gaf2db = gaf2db;
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( "Read GAF file", 100 );
 
     GafReader gafReader = null;
     try
     {
-      monitor.subTask( "create new state" );
-      final States state = addState();
-      ProgressUtilities.worked( monitor, 5 );
+      m_gaf2db.addState();
 
-      monitor.subTask( "find water body" );
-      final WaterBodies waterBody = findWaterBody();
-      ProgressUtilities.worked( monitor, 5 );
-
-      final File gafFile = m_data.getGafFile();
-      gafReader = new GafReader( state, waterBody, m_logger );
-      gafReader.read( gafFile, new SubProgressMonitor( monitor, 90 ) );
+      gafReader = new GafReader( m_logger, m_gaf2db );
+      gafReader.read( m_gafFile, new SubProgressMonitor( monitor, 90 ) );
       gafReader.close();
 
       return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "Successfully imported GAF file" );
@@ -103,24 +91,16 @@ public class GafImporter implements ICoreRunnableWithProgress
       m_logger.log( IStatus.ERROR, message, null, e );
       return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
     }
+    catch( final PdbConnectException e )
+    {
+      final String message = "Failed to write data into database";
+      m_logger.log( IStatus.ERROR, message, null, e );
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
+    }
     finally
     {
       if( gafReader != null )
         gafReader.closeQuietly();
     }
-  }
-
-  private States addState( )
-  {
-    // FIXME
-    // TODO Auto-generated method stub
-
-    return m_data.getState();
-  }
-
-  private WaterBodies findWaterBody( )
-  {
-    // FIXME
-    return null;
   }
 }

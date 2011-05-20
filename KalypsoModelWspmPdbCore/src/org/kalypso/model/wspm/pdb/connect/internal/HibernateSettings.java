@@ -48,4 +48,6 @@ import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 public abstract class HibernateSettings implements IPdbSettings
 {
   protected static final String DEFAULT_DBNAME = "kalypso_pdb"; //$NON-NLS-1$;
+
+  public abstract String getUsername( );
 }

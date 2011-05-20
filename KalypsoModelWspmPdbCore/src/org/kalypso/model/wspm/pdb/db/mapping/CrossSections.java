@@ -27,7 +27,6 @@ import javax.persistence.TemporalType;
 @Table(name = "CROSS_SECTIONS", schema = "PDB_ADMIN")
 public class CrossSections implements java.io.Serializable
 {
-
   private String crossSection;
 
   private States states;
@@ -46,7 +45,7 @@ public class CrossSections implements java.io.Serializable
 
   private Date measurementDate;
 
-  private String comment;
+  private String description;
 
   private Set<CrossSectionParts> crossSectionPartses = new HashSet<CrossSectionParts>( 0 );
 
@@ -54,7 +53,7 @@ public class CrossSections implements java.io.Serializable
   {
   }
 
-  public CrossSections( String crossSection, States states, WaterBodies waterBodies, BigDecimal station, Date creationDate, Date editingDate, String editingUser )
+  public CrossSections( final String crossSection, final States states, final WaterBodies waterBodies, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser )
   {
     this.crossSection = crossSection;
     this.states = states;
@@ -65,7 +64,7 @@ public class CrossSections implements java.io.Serializable
     this.editingUser = editingUser;
   }
 
-  public CrossSections( String crossSection, States states, WaterBodies waterBodies, Serializable line, BigDecimal station, Date creationDate, Date editingDate, String editingUser, Date measurementDate, String comment, Set<CrossSectionParts> crossSectionPartses )
+  public CrossSections( final String crossSection, final States states, final WaterBodies waterBodies, final Serializable line, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String comment, final Set<CrossSectionParts> crossSectionPartses )
   {
     this.crossSection = crossSection;
     this.states = states;
@@ -76,7 +75,7 @@ public class CrossSections implements java.io.Serializable
     this.editingDate = editingDate;
     this.editingUser = editingUser;
     this.measurementDate = measurementDate;
-    this.comment = comment;
+    this.description = comment;
     this.crossSectionPartses = crossSectionPartses;
   }
 
@@ -87,7 +86,7 @@ public class CrossSections implements java.io.Serializable
     return this.crossSection;
   }
 
-  public void setCrossSection( String crossSection )
+  public void setCrossSection( final String crossSection )
   {
     this.crossSection = crossSection;
   }
@@ -99,7 +98,7 @@ public class CrossSections implements java.io.Serializable
     return this.states;
   }
 
-  public void setStates( States states )
+  public void setStates( final States states )
   {
     this.states = states;
   }
@@ -111,7 +110,7 @@ public class CrossSections implements java.io.Serializable
     return this.waterBodies;
   }
 
-  public void setWaterBodies( WaterBodies waterBodies )
+  public void setWaterBodies( final WaterBodies waterBodies )
   {
     this.waterBodies = waterBodies;
   }
@@ -122,7 +121,7 @@ public class CrossSections implements java.io.Serializable
     return this.line;
   }
 
-  public void setLine( Serializable line )
+  public void setLine( final Serializable line )
   {
     this.line = line;
   }
@@ -133,7 +132,7 @@ public class CrossSections implements java.io.Serializable
     return this.station;
   }
 
-  public void setStation( BigDecimal station )
+  public void setStation( final BigDecimal station )
   {
     this.station = station;
   }
@@ -145,7 +144,7 @@ public class CrossSections implements java.io.Serializable
     return this.creationDate;
   }
 
-  public void setCreationDate( Date creationDate )
+  public void setCreationDate( final Date creationDate )
   {
     this.creationDate = creationDate;
   }
@@ -157,7 +156,7 @@ public class CrossSections implements java.io.Serializable
     return this.editingDate;
   }
 
-  public void setEditingDate( Date editingDate )
+  public void setEditingDate( final Date editingDate )
   {
     this.editingDate = editingDate;
   }
@@ -168,7 +167,7 @@ public class CrossSections implements java.io.Serializable
     return this.editingUser;
   }
 
-  public void setEditingUser( String editingUser )
+  public void setEditingUser( final String editingUser )
   {
     this.editingUser = editingUser;
   }
@@ -180,20 +179,20 @@ public class CrossSections implements java.io.Serializable
     return this.measurementDate;
   }
 
-  public void setMeasurementDate( Date measurementDate )
+  public void setMeasurementDate( final Date measurementDate )
   {
     this.measurementDate = measurementDate;
   }
 
-  @Column(name = "Comment")
+  @Column(name = "description")
   public String getComment( )
   {
-    return this.comment;
+    return this.description;
   }
 
-  public void setComment( String comment )
+  public void setComment( final String comment )
   {
-    this.comment = comment;
+    this.description = comment;
   }
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSections")
@@ -202,9 +201,8 @@ public class CrossSections implements java.io.Serializable
     return this.crossSectionPartses;
   }
 
-  public void setCrossSectionPartses( Set<CrossSectionParts> crossSectionPartses )
+  public void setCrossSectionPartses( final Set<CrossSectionParts> crossSectionPartses )
   {
     this.crossSectionPartses = crossSectionPartses;
   }
-
 }

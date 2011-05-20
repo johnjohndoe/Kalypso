@@ -38,35 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect;
+package org.kalypso.model.wspm.pdb.gaf.internal;
 
-import java.util.List;
-
-import org.kalypso.model.wspm.pdb.db.PdbInfo;
-import org.kalypso.model.wspm.pdb.db.mapping.Points;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
+ * Writes a gaf profile into the database.
+ * 
  * @author Gernot Belger
  */
-public interface IPdbConnection
+public class Gaf2Db
 {
-  void connect( ) throws PdbConnectException;
+  private final IPdbConnection m_connection;
 
-  boolean isConnected( );
+  private final WaterBodies m_waterBody;
 
-  void close( ) throws PdbConnectException;
+  private final States m_state;
 
-  PdbInfo getInfo( ) throws PdbConnectException;
+  public Gaf2Db( final IPdbConnection connection, final WaterBodies waterBody, final States state )
+  {
+    m_connection = connection;
+    m_waterBody = waterBody;
+    m_state = state;
+  }
 
-  void addPoint( Points onePoint ) throws PdbConnectException;
+  public void commitProfile( final GafProfile profile )
+  {
+    // add cross section
 
-  String getLabel( );
+    // add parts
+    // - add points
 
-  List<WaterBodies> getWaterBodies( ) throws PdbConnectException;
+    // TODO Auto-generated method stub
 
-  void addWaterBody( WaterBodies waterBody ) throws PdbConnectException;
+  }
 
-  void addState( States state ) throws PdbConnectException;
+  public void addState( ) throws PdbConnectException
+  {
+    m_connection.addState( m_state );
+  }
 }

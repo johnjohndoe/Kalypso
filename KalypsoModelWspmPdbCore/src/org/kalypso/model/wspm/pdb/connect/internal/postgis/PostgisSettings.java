@@ -204,7 +204,8 @@ public class PostgisSettings extends HibernateSettings
     setProperty( PROPERTY_USERNAME, username );
   }
 
-  String getUsername( )
+  @Override
+  public String getUsername( )
   {
     return getProperty( PROPERTY_USERNAME );
   }

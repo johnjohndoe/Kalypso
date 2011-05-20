@@ -90,7 +90,7 @@ public class OpenConnectWizard extends Wizard
     final IPdbSettings settings = m_openConnectionData.getSettings();
     final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
 
-    final IStatus result = RunnableContextHelper.execute( getContainer(), true, false, operation );
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !result.isOK() )
     {
       new StatusDialog2( getShell(), result, getWindowTitle() ).open();

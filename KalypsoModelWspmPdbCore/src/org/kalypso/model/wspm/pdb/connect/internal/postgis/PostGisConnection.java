@@ -42,12 +42,12 @@ package org.kalypso.model.wspm.pdb.connect.internal.postgis;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernatespatial.postgis.PostgisDialect;
-import org.kalypso.model.wspm.pdb.connect.internal.HibernatePdbConnection;
+import org.kalypso.model.wspm.pdb.connect.internal.HibernateConnection;
 
 /**
  * @author Gernot Belger
  */
-public class PostGisConnection extends HibernatePdbConnection<PostgisSettings>
+public class PostGisConnection extends HibernateConnection<PostgisSettings>
 {
   public PostGisConnection( final PostgisSettings settings )
   {
