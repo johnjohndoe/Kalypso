@@ -40,56 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf.internal;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
- * represents one line of a gaf file
- * 
  * @author Gernot Belger
  */
-public class GafPoint
+public class GafPart
 {
-  private final BigDecimal m_station;
+  private final Collection<GafPoint> m_points = new ArrayList<GafPoint>( 20 );
 
-  private final String m_pointId;
+  private final String m_kind;
 
-  private final BigDecimal m_width;
-
-  private final BigDecimal m_height;
-
-  private final GafCode m_kz;
-
-  private final String m_roughnessClass;
-
-  private final String m_vegetationClass;
-
-  private final BigDecimal m_rw;
-
-  private final BigDecimal m_hw;
-
-  private final GafCode m_hyk;
-
-  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final GafCode kzCode, final String roughnessClass, final String vegetationClass, final BigDecimal rw, final BigDecimal hw, final GafCode hykCode )
+  public GafPart( final String kind )
   {
-    m_station = station;
-    m_pointId = pointId;
-    m_width = width;
-    m_height = height;
-    m_kz = kzCode;
-    m_roughnessClass = roughnessClass;
-    m_vegetationClass = vegetationClass;
-    m_rw = rw;
-    m_hw = hw;
-    m_hyk = hykCode;
+    m_kind = kind;
   }
 
-  public BigDecimal getStation( )
+  public String getKind( )
   {
-    return m_station;
+    return m_kind;
   }
 
-  public GafCode getCodeKZ( )
+  public void add( final GafPoint point )
   {
-    return m_kz;
+    m_points.add( point );
   }
 }

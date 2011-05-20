@@ -68,19 +68,11 @@ public class GafReader
   {
     private final int m_severity;
 
-    private final int m_lineNumber;
-
     public SkipLineException( final int severity, final String message )
     {
       super( message );
 
       m_severity = severity;
-      m_lineNumber = GafReader.this.getLineNumber();
-    }
-
-    public int getLineNumber( )
-    {
-      return m_lineNumber;
     }
 
     public int getSeverity( )
@@ -91,11 +83,11 @@ public class GafReader
 
   private LineNumberReader m_reader;
 
+  private final GafProfiles m_gafProfiles;
+
   private final States m_state;
 
   private final WaterBodies m_waterBody;
-
-  private GafProfile m_currentProfile;
 
   private final GafLogger m_logger;
 
@@ -110,29 +102,31 @@ public class GafReader
     m_state = state;
     m_waterBody = waterBody;
     m_logger = logger;
-  }
 
-  int getLineNumber( )
-  {
-    return m_reader.getLineNumber();
+    m_gafProfiles = new GafProfiles( logger );
   }
 
   public void read( final File gafFile, final IProgressMonitor monitor ) throws IOException
   {
-    m_gafCodes = new GafCodes();
-
     /* Reading gaf with progress stream to show nice progress for large files */
     final long contentLength = gafFile.length();
-
     monitor.beginTask( "Reading GAF", (int) contentLength );
+
+    /* Init codes */
+    m_gafCodes = new GafCodes();
+
+    /* Open Reader */
     final InputStream fileStream = new BufferedInputStream( new FileInputStream( gafFile ) );
     final ProgressInputStream progresStream = new ProgressInputStream( fileStream, contentLength, monitor );
     m_reader = new LineNumberReader( new InputStreamReader( progresStream ) );
+    m_logger.setReader( m_reader );
 
     readLines();
 
-    m_logger.log( -1, IStatus.INFO, String.format( "%6d lines read", m_goodLines ), null, null );
-    m_logger.log( -1, IStatus.INFO, String.format( "%6d lines skipped", m_badLines ), null, null );
+    m_logger.setReader( null );
+
+    m_logger.log( IStatus.INFO, String.format( "%6d lines read", m_goodLines ), null, null );
+    m_logger.log( IStatus.INFO, String.format( "%6d lines skipped", m_badLines ), null, null );
   }
 
   public void close( ) throws IOException
@@ -157,7 +151,7 @@ public class GafReader
       readLine( line );
     }
 
-    commitProfile();
+    m_gafProfiles.stop();
   }
 
   private void readLine( final String line )
@@ -165,7 +159,7 @@ public class GafReader
     try
     {
       final GafPoint point = parseLine( line );
-      addPoint( point );
+      m_gafProfiles.addPoint( point );
       m_goodLines++;
     }
     catch( final SkipLineException e )
@@ -189,12 +183,12 @@ public class GafReader
     final String pointId = tokens[1];
     final BigDecimal width = asDecimal( items[2], "Width" );
     final BigDecimal height = asDecimal( items[3], "Height" );
-    final String kz = tokens[4];
+    final String kz = tokens[4].toUpperCase();
     final String roughnessClass = tokens[5];
     final String vegetationClass = tokens[6];
     final BigDecimal rw = asDecimal( items[7], "Rechtswert" );
     final BigDecimal hw = asDecimal( items[8], "Hochwert" );
-    final String hyk = tokens[9];
+    final String hyk = tokens.length < 10 ? null : tokens[9].toUpperCase();
 
     final GafCode kzCode = checkKz( kz );
     final GafCode hykCode = checkHyk( hyk );
@@ -264,31 +258,5 @@ public class GafReader
       throw new SkipLineException( IStatus.WARNING, String.format( "Unknown Hyk: '%s'; line skipped", hyk ) );
 
     return hykCode;
-  }
-
-  private void addPoint( final GafPoint point )
-  {
-    final BigDecimal station = point.getStation();
-
-    // TODO: check, if this station has already be processed -> error
-
-    if( m_currentProfile != null && !station.equals( m_currentProfile.getStation() ) )
-      commitProfile();
-
-    if( m_currentProfile == null )
-      createProfile( station );
-
-    m_currentProfile.addPoint( point );
-  }
-
-  private void createProfile( final BigDecimal station )
-  {
-    m_currentProfile = new GafProfile( station );
-  }
-
-  private void commitProfile( )
-  {
-    // FIXME: write profile into db
-    m_currentProfile = null;
   }
 }

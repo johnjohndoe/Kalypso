@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.pdb.gaf;
 
 import java.io.IOException;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -95,11 +94,11 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
       final IStatus status = e.getStatus();
       if( status.matches( IStatus.CANCEL ) )
       {
-        logger.log( -1, IStatus.CANCEL, "Operation cancelled by user", StringUtils.EMPTY, null );
+        logger.log( IStatus.CANCEL, "Operation cancelled by user" );
         throw new InterruptedException();
       }
 
-      logger.log( -1, status, StringUtils.EMPTY );
+      logger.log( status, null );
       throw e;
     }
     finally

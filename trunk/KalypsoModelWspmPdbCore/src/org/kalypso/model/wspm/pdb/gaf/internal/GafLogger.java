@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.gaf.internal;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.LineNumberReader;
 import java.io.PrintWriter;
 
 import org.eclipse.core.runtime.IStatus;
@@ -53,28 +54,52 @@ import org.kalypso.model.wspm.pdb.gaf.internal.GafReader.SkipLineException;
  */
 public class GafLogger
 {
+  private static final int NO_LINE_NUMBER = -1;
+
   private final PrintWriter m_logWriter;
+
+  private LineNumberReader m_reader;
 
   public GafLogger( final File logFile ) throws FileNotFoundException
   {
     m_logWriter = new PrintWriter( logFile );
   }
 
+  public void setReader( final LineNumberReader reader )
+  {
+    m_reader = reader;
+  }
+
+  private int getLineNumber( )
+  {
+    if( m_reader == null )
+      return NO_LINE_NUMBER;
+
+    return m_reader.getLineNumber();
+  }
+
   public void log( final SkipLineException e, final String line )
   {
-    log( e.getLineNumber(), e.getSeverity(), e.getMessage(), line, null );
+    log( e.getSeverity(), e.getMessage(), line, null );
   }
 
-  public void log( final int lineNumber, final IStatus status, final String line )
+
+  public void log( final IStatus status, final String line )
   {
-    log( lineNumber, status.getSeverity(), status.getMessage(), line, status.getException() );
+    log( status.getSeverity(), status.getMessage(), line, status.getException() );
   }
 
-  public void log( final int lineNumber, final int severity, final String message, final String line, final Throwable e )
+  public void log( final int severity, final String message )
+  {
+    log( severity, message, null, null );
+  }
+
+  public void log( final int severity, final String message, final String line, final Throwable e )
   {
     final String level = StatusUtilities.getLocalizedSeverity( severity );
 
-    if( lineNumber != -1 )
+    final int lineNumber = getLineNumber();
+    if( lineNumber != NO_LINE_NUMBER )
       m_logWriter.format( "Line %6d: ", lineNumber );
 
     m_logWriter.format( "%s - %s", level, message );

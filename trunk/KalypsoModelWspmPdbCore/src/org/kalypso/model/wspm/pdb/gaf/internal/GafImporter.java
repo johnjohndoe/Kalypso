@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.pdb.gaf.internal;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -101,7 +100,7 @@ public class GafImporter implements ICoreRunnableWithProgress
     catch( final IOException e )
     {
       final String message = "Error while reading file";
-      m_logger.log( -1, IStatus.ERROR, message, StringUtils.EMPTY, e );
+      m_logger.log( IStatus.ERROR, message, null, e );
       return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
     }
     finally
