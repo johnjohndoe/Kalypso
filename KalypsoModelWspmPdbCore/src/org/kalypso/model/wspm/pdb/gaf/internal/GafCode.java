@@ -56,22 +56,26 @@ public class GafCode
 
   private final String m_hyk;
 
+  private final String m_kind;
+
   public GafCode( final String key, final String value )
   {
     m_key = key;
 
-    final String[] tokens = value.split( ";", 3 );
+    final String[] tokens = value.split( ";", 4 );
     m_dbCode = tokens[0];
     m_description = tokens[1];
     m_hyk = tokens[2];
+    m_kind = tokens[3];
   }
 
-  public GafCode( final String key, final String dbCode, final String description, final String hyk )
+  public GafCode( final String key, final String dbCode, final String description, final String hyk, final String kind )
   {
     m_key = key;
     m_dbCode = dbCode;
     m_description = description;
     m_hyk = hyk;
+    m_kind = kind;
   }
 
   public String getDbCode( )
@@ -92,5 +96,13 @@ public class GafCode
   public String getCode( )
   {
     return m_key;
+  }
+
+  /**
+   * Classifies the point in different kinds of points; each kind representing one cross section part.
+   */
+  public String getKind( )
+  {
+    return m_kind;
   }
 }

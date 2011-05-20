@@ -55,7 +55,7 @@ import org.kalypso.contribs.java.util.PropertiesUtilities;
  */
 public class GafCodes
 {
-  public static final GafCode NULL_HYK = new GafCode( StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY );
+  public static final GafCode NULL_HYK = new GafCode( StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY );
 
   private final Map<String, GafCode> m_codes = new HashMap<String, GafCode>();
 

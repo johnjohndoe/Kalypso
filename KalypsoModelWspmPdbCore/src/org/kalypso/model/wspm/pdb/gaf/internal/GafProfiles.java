@@ -41,55 +41,68 @@
 package org.kalypso.model.wspm.pdb.gaf.internal;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.core.runtime.IStatus;
 
 /**
- * represents one line of a gaf file
+ * Assembles all read points into different profiles.
  * 
  * @author Gernot Belger
  */
-public class GafPoint
+public class GafProfiles
 {
-  private final BigDecimal m_station;
+  private GafProfile m_currentProfile;
 
-  private final String m_pointId;
+  private final Set<BigDecimal> m_committedStations = new HashSet<BigDecimal>();
 
-  private final BigDecimal m_width;
+  private final GafLogger m_logger;
 
-  private final BigDecimal m_height;
-
-  private final GafCode m_kz;
-
-  private final String m_roughnessClass;
-
-  private final String m_vegetationClass;
-
-  private final BigDecimal m_rw;
-
-  private final BigDecimal m_hw;
-
-  private final GafCode m_hyk;
-
-  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final GafCode kzCode, final String roughnessClass, final String vegetationClass, final BigDecimal rw, final BigDecimal hw, final GafCode hykCode )
+  public GafProfiles( final GafLogger logger )
   {
-    m_station = station;
-    m_pointId = pointId;
-    m_width = width;
-    m_height = height;
-    m_kz = kzCode;
-    m_roughnessClass = roughnessClass;
-    m_vegetationClass = vegetationClass;
-    m_rw = rw;
-    m_hw = hw;
-    m_hyk = hykCode;
+    m_logger = logger;
   }
 
-  public BigDecimal getStation( )
+  public void addPoint( final GafPoint point )
   {
-    return m_station;
+    final BigDecimal station = point.getStation();
+
+    if( m_committedStations.contains( station ) )
+    {
+      final String message = String.format( "duplicate station: %s", station );
+      m_logger.log( IStatus.WARNING, message );
+    }
+
+    if( m_currentProfile != null && !station.equals( m_currentProfile.getStation() ) )
+      commitProfile();
+
+    if( m_currentProfile == null )
+      createProfile( station );
+
+    m_currentProfile.addPoint( point );
   }
 
-  public GafCode getCodeKZ( )
+  public void stop( )
   {
-    return m_kz;
+    commitProfile();
+  }
+
+  private void createProfile( final BigDecimal station )
+  {
+    m_currentProfile = new GafProfile( station, m_logger );
+  }
+
+  private void commitProfile( )
+  {
+    if( m_currentProfile == null )
+      return;
+
+    final BigDecimal station = m_currentProfile.getStation();
+
+    m_committedStations.add( station );
+
+    // FIXME: write profile into db
+    m_currentProfile = null;
   }
 }

@@ -41,10 +41,11 @@
 package org.kalypso.model.wspm.pdb.gaf.internal;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
 
 /**
  * Represent point of a gaf file with the same station.
@@ -53,13 +54,22 @@ import org.eclipse.core.runtime.Assert;
  */
 public class GafProfile
 {
-  private final Collection<GafPoint> m_points = new ArrayList<GafPoint>( 20 );
+  private final Map<String, GafPart> m_parts = new HashMap<String, GafPart>();
+
+// private final Set<String> m_committedKinds = new HashSet<String>();
 
   private final BigDecimal m_station;
 
-  public GafProfile( final BigDecimal station )
+// private GafPart m_currentPart;
+
+  private String m_lastKind = null;
+
+  private final GafLogger m_logger;
+
+  public GafProfile( final BigDecimal station, final GafLogger logger )
   {
     m_station = station;
+    m_logger = logger;
   }
 
   public BigDecimal getStation( )
@@ -73,6 +83,43 @@ public class GafProfile
 
     Assert.isTrue( station.equals( m_station ) );
 
-    m_points.add( point );
+    final GafCode codeKZ = point.getCodeKZ();
+    Assert.isNotNull( codeKZ );
+
+    final String kind = codeKZ.getKind();
+
+    checkDiscontinuosPart( kind );
+
+    final GafPart part = getOrCreatePart( kind );
+
+    part.add( point );
+
+    m_lastKind = kind;
+  }
+
+  /* Check, if we have discontinues parts */
+  private void checkDiscontinuosPart( final String kind )
+  {
+    if( !kind.equals( m_lastKind ) )
+    {
+      if( m_parts.containsKey( kind ) )
+      {
+        /* Ignore water levels can occur anywhere, thats normal */
+        if( "W".equals( m_lastKind ) || kind.equals( "W" ) )
+          return;
+
+        final String message = String.format( "discontinuos part of kind '%s'", kind );
+        m_logger.log( IStatus.WARNING, message );
+      }
+    }
+  }
+
+  private GafPart getOrCreatePart( final String kind )
+  {
+    /* Make sure this kind of parts exists */
+    if( !m_parts.containsKey( kind ) )
+      m_parts.put( kind, new GafPart( kind ) );
+
+    return m_parts.get( kind );
   }
 }
