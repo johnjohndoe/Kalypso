@@ -74,7 +74,7 @@ public class ConnectionViewer extends Composite
   {
     final Group group = new Group( parent, SWT.NONE );
     toolkit.adapt( group );
-    // TODO: nur zeigen, wenn der user admin rechte hats
+    // TODO: nur zeigen, wenn der user admin rechte hat
     group.setText( "Administration" );
     group.setLayout( new FillLayout() );
 

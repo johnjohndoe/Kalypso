@@ -117,7 +117,9 @@ public class GafPoint
 
   public Coordinate getCoordinate( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    if( m_rw == null || m_hw == null )
+      return null;
+
+    return new Coordinate( m_rw.doubleValue(), m_hw.doubleValue() );
   }
 }

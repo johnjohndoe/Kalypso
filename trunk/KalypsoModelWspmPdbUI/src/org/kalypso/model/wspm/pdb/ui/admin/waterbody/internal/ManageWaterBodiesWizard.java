@@ -38,55 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.preferences.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal.ManageWaterBodiesWizard;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 
 /**
  * @author Gernot Belger
  */
-public class ManageWaterBodyAction extends Action
+public class ManageWaterBodiesWizard extends Wizard
 {
-  private final IPdbConnection m_connection;
-
-  public ManageWaterBodyAction( final IPdbConnection connection )
+  public ManageWaterBodiesWizard( final IPdbConnection connection )
   {
-    m_connection = connection;
-
-    setText( "Gewässer verwalten..." );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.WATER_BODY ) );
+    addPage( new ManageWaterBodiesPage( "waterBodies", connection ) ); //$NON-NLS-1$
   }
 
   @Override
-  public void runWithEvent( final Event event )
+  public boolean performFinish( )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    final Wizard wizard = new ManageWaterBodiesWizard( m_connection );
-    wizard.setWindowTitle( "Manage Water Bodies" );
-    final WizardDialog dialog = new WizardDialog( shell, wizard )
-    {
-      @Override
-      protected void createButtonsForButtonBar( final Composite parent )
-      {
-        super.createButtonsForButtonBar( parent );
-
-        final Button cancelButton = getButton( IDialogConstants.CANCEL_ID );
-        cancelButton.setVisible( false );
-        ((GridData) cancelButton.getLayoutData()).exclude = true;
-      }
-    };
-    dialog.open();
+    return true;
   }
 }
