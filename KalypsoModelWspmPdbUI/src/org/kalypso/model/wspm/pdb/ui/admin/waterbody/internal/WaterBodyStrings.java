@@ -38,43 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
-
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal.AddWaterBodyWizard;
+package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
 /**
  * @author Gernot Belger
  */
-public class AddWaterBodyAction extends Action
+public interface WaterBodyStrings
 {
-  private final ChooseWaterPage m_page;
+  String STR_NAME = "Name";
 
-  private final IPdbConnection m_connection;
-
-  public AddWaterBodyAction( final IPdbConnection connection, final ChooseWaterPage page )
-  {
-    m_connection = connection;
-    m_page = page;
-
-    setText( "Create New Water Body..." );
-  }
-
-  @Override
-  public void runWithEvent( final Event event )
-  {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    final AddWaterBodyWizard wizard = new AddWaterBodyWizard( m_connection, m_page.getExistingWaterbodies() );
-    wizard.setWindowTitle( "Create New Water Body" );
-
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    if( dialog.open() == Window.OK )
-      m_page.refreshWaterBodies( wizard.getWaterBody() );
-  }
+  String STR_GEWÄSSERKENNZIFFER = "Gewässerkennziffer";
 }
