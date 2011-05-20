@@ -43,6 +43,10 @@ package org.kalypso.model.wspm.pdb.gaf.internal;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+
 /**
  * @author Gernot Belger
  */
@@ -52,9 +56,12 @@ public class GafPart
 
   private final String m_kind;
 
-  public GafPart( final String kind )
+  private final GeometryFactory m_geometryFactory;
+
+  public GafPart( final String kind, final GeometryFactory geometryFactory )
   {
     m_kind = kind;
+    m_geometryFactory = geometryFactory;
   }
 
   public String getKind( )
@@ -65,5 +72,33 @@ public class GafPart
   public void add( final GafPoint point )
   {
     m_points.add( point );
+  }
+
+  public LineString getLine( )
+  {
+    final Collection<Coordinate> crds = new ArrayList<Coordinate>();
+
+    for( final GafPoint point : m_points )
+    {
+      final Coordinate crd = point.getCoordinate();
+      if( crd != null )
+        crds.add( crd );
+    }
+
+    final Coordinate[] cs = crds.toArray( new Coordinate[crds.size()] );
+
+    // TODO: we should provide log messages here...
+
+    if( cs.length < 2 )
+      return null;
+
+    final LineString line = m_geometryFactory.createLineString( cs );
+    // TODO: check if line is topologically ok; -> log warning
+    return line;
+  }
+
+  public GafPoint[] getPoints( )
+  {
+    return m_points.toArray( new GafPoint[m_points.size()] );
   }
 }

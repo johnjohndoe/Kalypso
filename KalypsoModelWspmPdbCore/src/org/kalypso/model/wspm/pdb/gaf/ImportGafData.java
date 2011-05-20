@@ -191,4 +191,12 @@ public class ImportGafData extends AbstractModelObject
 
     return new File( gafFile.getAbsolutePath() + ".log" );
   }
+
+  public int getSrid( )
+  {
+    // FIXME: find srid from pdb by srs set here...
+
+    // TODO Auto-generated method stub
+    return 31467;
+  }
 }

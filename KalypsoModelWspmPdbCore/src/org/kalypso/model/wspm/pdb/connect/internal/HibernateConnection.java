@@ -51,6 +51,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionParts;
@@ -74,7 +75,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
 
   private Configuration m_config;
 
-  private Session m_session;
+  private SessionFactory m_sessionFactory;
 
   public HibernateConnection( final SETTINGS connectInfo )
   {
@@ -171,8 +172,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
       {
         final Configuration configuration = getConfiguration();
         final SessionFactory sessionFactory = configuration.buildSessionFactory();
-        final Session session = sessionFactory.openSession();
-        setSession( session );
+        setSessionFactory( sessionFactory );
       }
     };
 
@@ -192,15 +192,15 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     }
   }
 
-  protected void setSession( final Session session )
+  protected void setSessionFactory( final SessionFactory sessionFactory )
   {
-    m_session = session;
+    m_sessionFactory = sessionFactory;
   }
 
   @Override
   public boolean isConnected( )
   {
-    return m_session != null;
+    return m_sessionFactory != null;
   }
 
   @Override
@@ -208,8 +208,8 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
   {
     try
     {
-      if( m_session != null )
-        m_session.close();
+      if( m_sessionFactory != null )
+        m_sessionFactory.close();
     }
     catch( final HibernateException e )
     {
@@ -218,14 +218,41 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     }
     finally
     {
-      m_session = null;
+      m_sessionFactory = null;
     }
   }
 
   private void checkConnection( ) throws PdbConnectException
   {
-    if( !isConnected() || !m_session.isConnected() )
+    if( !isConnected() )
       throw new PdbConnectException( "PDB connection is not open" );
+  }
+
+  @Override
+  public void executeCommand( final IPdbOperation command ) throws PdbConnectException
+  {
+    checkConnection();
+
+    final Session session = m_sessionFactory.openSession();
+    Transaction transaction = null;
+    try
+    {
+      transaction = session.beginTransaction();
+      command.execute( session );
+      transaction.commit();
+    }
+    catch( final HibernateException e )
+    {
+      doRollback( transaction );
+
+      e.printStackTrace();
+      final String message = String.format( "Failed to execute command: %s", command.getLabel() );
+      throw new PdbConnectException( message, e );
+    }
+    finally
+    {
+      session.close();
+    }
   }
 
   @Override
@@ -238,23 +265,8 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
 
   private void addObject( final Object object ) throws PdbConnectException
   {
-    checkConnection();
-
-    Transaction transaction = null;
-    try
-    {
-      transaction = m_session.beginTransaction();
-      m_session.save( object );
-      transaction.commit();
-    }
-    catch( final HibernateException e )
-    {
-      doRollback( transaction );
-
-      e.printStackTrace();
-      final String message = String.format( "Failed to write object to pdb: %s", object );
-      throw new PdbConnectException( message, e );
-    }
+    final IPdbOperation operation = new AddObjectOperation( object );
+    executeCommand( operation );
   }
 
   private void doRollback( final Transaction transaction ) throws PdbConnectException
@@ -277,7 +289,6 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     addObject( onePoint );
   }
 
-
   @Override
   public List<WaterBodies> getWaterBodies( ) throws PdbConnectException
   {
@@ -289,10 +300,11 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
   {
     checkConnection();
 
+    final Session session = m_sessionFactory.openSession();
     try
     {
       final String query = String.format( "from %s", type.getName() );
-      final Query q = m_session.createQuery( query );
+      final Query q = session.createQuery( query );
 
       final List< ? > allWaterbodies = q.list();
 
@@ -302,6 +314,10 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     {
       e.printStackTrace();
       throw new PdbConnectException( "Failed to access database", e );
+    }
+    finally
+    {
+      session.close();
     }
   }
 
@@ -338,5 +354,11 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
   public List<States> getStates( ) throws PdbConnectException
   {
     return getList( States.class );
+  }
+
+  @Override
+  public void addCrossSectionPart( final CrossSectionParts csPart ) throws PdbConnectException
+  {
+    addObject( csPart );
   }
 }

@@ -71,8 +71,8 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     m_data = data;
     final States state = data.getState();
     final WaterBodies waterBody = data.getWaterBody();
-    m_gaf2db = new Gaf2Db( connection, waterBody, state );
-
+    final int srid = data.getSrid();
+    m_gaf2db = new Gaf2Db( connection, waterBody, state, srid );
   }
 
   @Override

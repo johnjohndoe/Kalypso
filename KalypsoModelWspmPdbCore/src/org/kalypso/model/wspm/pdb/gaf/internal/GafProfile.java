@@ -41,13 +41,12 @@
 package org.kalypso.model.wspm.pdb.gaf.internal;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
@@ -58,22 +57,26 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class GafProfile
 {
-  private final Map<String, GafPart> m_parts = new HashMap<String, GafPart>();
+  private static final String KIND_PROFILE = "P"; //$NON-NLS-1$
 
-// private final Set<String> m_committedKinds = new HashSet<String>();
+  private static final String KIND_WATERLEVEL = "W"; //$NON-NLS-1$
+
+  /** Linked in order to preserve original order from graf file */
+  private final Map<String, GafPart> m_parts = new LinkedHashMap<String, GafPart>();
 
   private final BigDecimal m_station;
-
-// private GafPart m_currentPart;
 
   private String m_lastKind = null;
 
   private final GafLogger m_logger;
 
-  public GafProfile( final BigDecimal station, final GafLogger logger )
+  private final GeometryFactory m_geometryFactory;
+
+  public GafProfile( final BigDecimal station, final GafLogger logger, final GeometryFactory geometryFactory )
   {
     m_station = station;
     m_logger = logger;
+    m_geometryFactory = geometryFactory;
   }
 
   public BigDecimal getStation( )
@@ -109,7 +112,7 @@ public class GafProfile
       if( m_parts.containsKey( kind ) )
       {
         /* Ignore water levels can occur anywhere, thats normal */
-        if( "W".equals( m_lastKind ) || kind.equals( "W" ) )
+        if( KIND_WATERLEVEL.equals( m_lastKind ) || kind.equals( KIND_WATERLEVEL ) )
           return;
 
         final String message = String.format( "discontinuos part of kind '%s'", kind );
@@ -122,16 +125,28 @@ public class GafProfile
   {
     /* Make sure this kind of parts exists */
     if( !m_parts.containsKey( kind ) )
-      m_parts.put( kind, new GafPart( kind ) );
+      m_parts.put( kind, new GafPart( kind, m_geometryFactory ) );
 
     return m_parts.get( kind );
   }
 
   public LineString createLine( )
   {
-    // FIXME...
+    /* Normally, the line of the cross section is the line of the profile */
+    final GafPart profilePart = m_parts.get( KIND_PROFILE );
+    if( profilePart != null )
+      return profilePart.getLine();
 
-    final Coordinate[] crds = new Coordinate[] { new Coordinate( 3.14, 2.718 ), new Coordinate( 2.718, 3.14 ) };
-    return new GeometryFactory().createLineString( crds );
+    /* Else, if it is only one single part, we use it */
+    if( m_parts.size() == 1 )
+      return m_parts.values().iterator().next().getLine();
+
+    /* Don't known what to do now */
+    return null;
+  }
+
+  public GafPart[] getParts( )
+  {
+    return m_parts.values().toArray( new GafPart[m_parts.size()] );
   }
 }

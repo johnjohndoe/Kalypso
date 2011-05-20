@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.pdb.gaf.internal;
 
 import java.math.BigDecimal;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 /**
  * represents one line of a gaf file
  * 
@@ -83,6 +85,11 @@ public class GafPoint
     m_hyk = hykCode;
   }
 
+  public String getPointId( )
+  {
+    return m_pointId;
+  }
+
   public BigDecimal getStation( )
   {
     return m_station;
@@ -91,5 +98,26 @@ public class GafPoint
   public GafCode getCodeKZ( )
   {
     return m_kz;
+  }
+
+  public BigDecimal getWidth( )
+  {
+    return m_width;
+  }
+
+  public BigDecimal getHeight( )
+  {
+    return m_height;
+  }
+
+  public GafCode getHyk( )
+  {
+    return m_hyk;
+  }
+
+  public Coordinate getCoordinate( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

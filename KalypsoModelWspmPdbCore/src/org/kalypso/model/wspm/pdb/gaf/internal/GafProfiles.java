@@ -47,6 +47,8 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
+import com.vividsolutions.jts.geom.GeometryFactory;
+
 /**
  * Assembles all read points into different profiles.
  * 
@@ -94,7 +96,8 @@ public class GafProfiles
 
   private void createProfile( final BigDecimal station )
   {
-    m_currentProfile = new GafProfile( station, m_logger );
+    final GeometryFactory geometryFactory = m_gaf2db.getGeometryFactory();
+    m_currentProfile = new GafProfile( station, m_logger, geometryFactory );
   }
 
   private void commitProfile( ) throws PdbConnectException
