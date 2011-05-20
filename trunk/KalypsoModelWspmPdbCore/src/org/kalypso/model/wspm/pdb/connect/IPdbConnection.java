@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.connect;
 import java.util.List;
 
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionParts;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
 import org.kalypso.model.wspm.pdb.db.mapping.Points;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
@@ -59,9 +60,11 @@ public interface IPdbConnection
 
   void close( ) throws PdbConnectException;
 
+  void executeCommand( IPdbOperation command ) throws PdbConnectException;
+
   PdbInfo getInfo( ) throws PdbConnectException;
 
-  void addPoint( Points onePoint ) throws PdbConnectException;
+  void addPoint( Points point ) throws PdbConnectException;
 
   String getLabel( );
 
@@ -74,4 +77,6 @@ public interface IPdbConnection
   void addCrossSection( CrossSections crossSection ) throws PdbConnectException;
 
   List<States> getStates( ) throws PdbConnectException;
+
+  void addCrossSectionPart( CrossSectionParts csPart ) throws PdbConnectException;
 }

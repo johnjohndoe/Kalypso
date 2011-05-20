@@ -15,6 +15,8 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -140,7 +142,8 @@ public class Points implements java.io.Serializable
     this.crossSectionParts = crossSectionParts;
   }
 
-  @Column(name = "LOCATION", nullable = false, columnDefinition = "Geometry")
+  @Column(name = "LOCATION", nullable = true, columnDefinition = "Geometry")
+  @Type(type = "org.hibernatespatial.GeometryUserType")
   public Serializable getLocation( )
   {
     return this.location;
@@ -272,7 +275,7 @@ public class Points implements java.io.Serializable
     this.vegetationAy = vegetationAy;
   }
 
-  @Column(name = "Comment")
+  @Column(name = "description")
   public String getComment( )
   {
     return this.comment;

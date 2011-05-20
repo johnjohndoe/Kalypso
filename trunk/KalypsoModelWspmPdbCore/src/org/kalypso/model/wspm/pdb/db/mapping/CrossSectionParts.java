@@ -112,5 +112,4 @@ public class CrossSectionParts implements java.io.Serializable
   {
     this.line = line;
   }
-
 }

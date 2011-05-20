@@ -38,54 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.gaf.internal;
+package org.kalypso.model.wspm.pdb.connect;
 
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.PrecisionModel;
+import org.hibernate.classic.Session;
 
 /**
- * Writes a gaf profile into the database.
- * 
  * @author Gernot Belger
  */
-public class Gaf2Db
+public interface IPdbOperation
 {
-  private final IPdbConnection m_connection;
+  String getLabel( );
 
-  private final WaterBodies m_waterBody;
-
-  private final States m_state;
-
-  private final GeometryFactory m_geometryFactory;
-
-  private int m_profileCount = 0;
-
-  public Gaf2Db( final IPdbConnection connection, final WaterBodies waterBody, final States state, final int srid )
-  {
-    m_connection = connection;
-    m_waterBody = waterBody;
-    m_state = state;
-    m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
-  }
-
-  public void addState( ) throws PdbConnectException
-  {
-    m_connection.addState( m_state );
-  }
-
-  public void commitProfile( final GafProfile profile ) throws PdbConnectException
-  {
-    final AddProfileCommand operation = new AddProfileCommand( m_profileCount++, profile, m_waterBody, m_state, m_geometryFactory );
-    m_connection.executeCommand( operation );
-  }
-
-  public GeometryFactory getGeometryFactory( )
-  {
-    return m_geometryFactory;
-  }
+  void execute( Session session );
 }

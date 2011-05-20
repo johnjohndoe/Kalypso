@@ -38,13 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect;
+package org.kalypso.model.wspm.pdb.connect.internal;
+
+import org.hibernate.classic.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**
  * @author Gernot Belger
  *
  */
-public interface IPDbCommand
+public class AddObjectOperation implements IPdbOperation
 {
+  private final Object m_object;
 
+  public AddObjectOperation( final Object object )
+  {
+    m_object = object;
+  }
+
+  @Override
+  public String getLabel( )
+  {
+    return String.format( "Save object to pdb: %s", m_object );
+  }
+
+  @Override
+  public void execute( final Session session )
+  {
+    session.save( m_object );
+  }
 }
