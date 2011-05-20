@@ -179,7 +179,7 @@ public class States extends AbstractModelObject implements java.io.Serializable,
     firePropertyChange( PROPERTY_SOURCE, oldValue, source );
   }
 
-  @Column(name = "Comment")
+  @Column(name = "description")
   public String getComment( )
   {
     return this.comment;

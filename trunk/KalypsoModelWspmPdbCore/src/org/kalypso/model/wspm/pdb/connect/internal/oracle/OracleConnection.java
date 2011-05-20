@@ -42,14 +42,14 @@ package org.kalypso.model.wspm.pdb.connect.internal.oracle;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernatespatial.oracle.OracleSpatial10gDialect;
-import org.kalypso.model.wspm.pdb.connect.internal.HibernatePdbConnection;
+import org.kalypso.model.wspm.pdb.connect.internal.HibernateConnection;
 
 /**
  * TODO: choose dialect?!
  * 
  * @author Gernot Belger
  */
-public class OracleConnection extends HibernatePdbConnection<OracleSettings>
+public class OracleConnection extends HibernateConnection<OracleSettings>
 {
   public OracleConnection( final OracleSettings settings )
   {

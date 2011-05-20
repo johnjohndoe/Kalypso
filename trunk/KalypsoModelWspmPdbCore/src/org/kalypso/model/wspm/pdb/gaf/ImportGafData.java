@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.gaf;
 
 import java.io.File;
+import java.util.Date;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -73,6 +74,14 @@ public class ImportGafData extends AbstractModelObject
   private final States m_state = new States();
 
   private WaterBodies m_waterBody;
+
+  public ImportGafData( )
+  {
+    /* Pre init measurement date to now */
+    m_state.setMeasurementDate( new Date() );
+    m_state.setIsstatezero( States.ZERO_STATE_ON );
+    m_state.setComment( StringUtils.EMPTY );
+  }
 
   public void init( final IDialogSettings settings )
   {

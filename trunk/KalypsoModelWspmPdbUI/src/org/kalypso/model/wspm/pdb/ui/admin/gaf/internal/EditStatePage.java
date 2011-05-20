@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
 
+import java.util.Calendar;
+
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
@@ -49,10 +51,11 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
@@ -61,17 +64,14 @@ import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
  */
 public class EditStatePage extends WizardPage
 {
-  private final IPdbConnection m_connection;
-
   private final States m_state;
 
   private DatabindingWizardPage m_binding;
 
-  public EditStatePage( final String pageName, final IPdbConnection connection, final States state )
+  public EditStatePage( final String pageName, final States state )
   {
     super( pageName );
 
-    m_connection = connection;
     m_state = state;
 
     setTitle( "Enter State Properties" );
@@ -83,16 +83,15 @@ public class EditStatePage extends WizardPage
   {
     final Composite panel = new Composite( parent, SWT.NONE );
     setControl( panel );
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
+    GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( panel );
 
     m_binding = new DatabindingWizardPage( this, null );
 
     createNameControls( panel );
     createCommentControls( panel );
 
-    // TODO: alle anderen parameter editieren
-
     createSourceControls( panel );
+    createMeasureDateControls( panel );
   }
 
   private void createNameControls( final Composite parent )
@@ -100,7 +99,7 @@ public class EditStatePage extends WizardPage
     new Label( parent, SWT.NONE ).setText( "Name" );
 
     final Text field = new Text( parent, SWT.BORDER );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     field.setMessage( "<Eindeutiger Name des Zustands>" );
     field.setTextLimit( States.NAME_LIMIT );
 
@@ -116,11 +115,11 @@ public class EditStatePage extends WizardPage
   {
     final Label label = new Label( parent, SWT.NONE );
     label.setText( "Description" );
-    label.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
+    label.setLayoutData( new GridData( SWT.LEFT, SWT.TOP, false, false ) );
 
     final Text field = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
     field.setTextLimit( States.COMMENT_LIMIT );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    field.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
     field.setMessage( "<Beschreibung des Zustands>" );
 
     final IObservableValue target = SWTObservables.observeText( field );
@@ -134,11 +133,44 @@ public class EditStatePage extends WizardPage
     new Label( parent, SWT.NONE ).setText( "Source" );
 
     final Text field = new Text( parent, SWT.BORDER | SWT.READ_ONLY );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
     final IObservableValue target = SWTObservables.observeText( field );
     final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_SOURCE );
 
     m_binding.bindValue( target, model );
+  }
+
+  private void createMeasureDateControls( final Composite parent )
+  {
+    new Label( parent, SWT.NONE ).setText( "Measurement Date" );
+
+    final DateTime dateField = new DateTime( parent, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN );
+    dateField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final DateTime timeField = new DateTime( parent, SWT.TIME | SWT.SHORT );
+    timeField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+// final IObservableValue calendarValue = new CalendarObservableValue();
+
+    final Calendar cal = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+    cal.setTime( m_state.getMeasurementDate() );
+    final DateTimeSelectionProperty selectionProperty = new DateTimeSelectionProperty( cal );
+
+    final IObservableValue dateTarget = selectionProperty.observe( dateField );
+    final IObservableValue timeTarget = selectionProperty.observe( timeField );
+
+    final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_MEASUREMENTDATE );
+
+    m_binding.bindValue( dateTarget, model );
+    m_binding.bindValue( timeTarget, model );
+
+// final DataBinder binder = new DataBinder( calendarValue, model );
+// binder.setModelToTargetConverter( new DateToCalendarConverter( KalypsoCorePlugin.getDefault().getTimeZone() ) );
+// binder.setTargetToModelConverter( new CalendarToDateConverter() );
+// m_binding.bindValue( binder );
+
+// m_binding.bindValue( dateTarget, calendarValue );
+// m_binding.bindValue( timeTarget, calendarValue );
   }
 }

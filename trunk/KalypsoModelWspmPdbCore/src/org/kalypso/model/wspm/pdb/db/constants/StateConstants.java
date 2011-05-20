@@ -53,17 +53,22 @@ public interface StateConstants
 
   String PROPERTY_ISSTATEZERO = "isstatezero"; //$NON-NLS-1$
 
-  String PROPERTY_CREATIONDATE = "creationdate"; //$NON-NLS-1$
+  String PROPERTY_CREATIONDATE = "creationDate"; //$NON-NLS-1$
 
-  String PROPERTY_EDITINGDATE = "editingdate"; //$NON-NLS-1$
+  String PROPERTY_EDITINGDATE = "editingDate"; //$NON-NLS-1$
 
-  String PROPERTY_EDITINGUSER = "editinguser"; //$NON-NLS-1$
+  String PROPERTY_EDITINGUSER = "editingUser"; //$NON-NLS-1$
 
-  String PROPERTY_MEASUREMENTDATE = "measurementdate"; //$NON-NLS-1$
+  String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
 
-  String PROPERTY_CROSSSECTIONSES = "crosssectionses"; //$NON-NLS-1$
+  String PROPERTY_CROSSSECTIONSES = "crossSectionses"; //$NON-NLS-1$
 
   int NAME_LIMIT = 100;
 
   int COMMENT_LIMIT = 256;
+
+  public static final char ZERO_STATE_ON = 'T';
+
+  public static final char ZERO_STATE_OFF = 'F';
+
 }

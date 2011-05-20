@@ -59,9 +59,12 @@ public class GafProfiles
 
   private final GafLogger m_logger;
 
-  public GafProfiles( final GafLogger logger )
+  private final Gaf2Db m_gaf2db;
+
+  public GafProfiles( final GafLogger logger, final Gaf2Db gaf2db )
   {
     m_logger = logger;
+    m_gaf2db = gaf2db;
   }
 
   public void addPoint( final GafPoint point )
@@ -102,7 +105,8 @@ public class GafProfiles
 
     m_committedStations.add( station );
 
-    // FIXME: write profile into db
+    m_gaf2db.commitProfile( m_currentProfile );
+
     m_currentProfile = null;
   }
 }

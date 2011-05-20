@@ -50,7 +50,7 @@ public class Events implements java.io.Serializable
   {
   }
 
-  public Events( String name, WaterBodies waterBodies, Date creationDate, Date editingDate, String editingUser )
+  public Events( final String name, final WaterBodies waterBodies, final Date creationDate, final Date editingDate, final String editingUser )
   {
     this.name = name;
     this.waterBodies = waterBodies;
@@ -59,7 +59,7 @@ public class Events implements java.io.Serializable
     this.editingUser = editingUser;
   }
 
-  public Events( String name, WaterBodies waterBodies, Date creationDate, Date editingDate, String editingUser, Date measurementDate, String source, String type, String comment, Set<WaterlevelFixations> waterlevelFixationses )
+  public Events( final String name, final WaterBodies waterBodies, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String type, final String comment, final Set<WaterlevelFixations> waterlevelFixationses )
   {
     this.name = name;
     this.waterBodies = waterBodies;
@@ -80,7 +80,7 @@ public class Events implements java.io.Serializable
     return this.name;
   }
 
-  public void setName( String name )
+  public void setName( final String name )
   {
     this.name = name;
   }
@@ -92,7 +92,7 @@ public class Events implements java.io.Serializable
     return this.waterBodies;
   }
 
-  public void setWaterBodies( WaterBodies waterBodies )
+  public void setWaterBodies( final WaterBodies waterBodies )
   {
     this.waterBodies = waterBodies;
   }
@@ -104,7 +104,7 @@ public class Events implements java.io.Serializable
     return this.creationDate;
   }
 
-  public void setCreationDate( Date creationDate )
+  public void setCreationDate( final Date creationDate )
   {
     this.creationDate = creationDate;
   }
@@ -116,7 +116,7 @@ public class Events implements java.io.Serializable
     return this.editingDate;
   }
 
-  public void setEditingDate( Date editingDate )
+  public void setEditingDate( final Date editingDate )
   {
     this.editingDate = editingDate;
   }
@@ -127,7 +127,7 @@ public class Events implements java.io.Serializable
     return this.editingUser;
   }
 
-  public void setEditingUser( String editingUser )
+  public void setEditingUser( final String editingUser )
   {
     this.editingUser = editingUser;
   }
@@ -139,7 +139,7 @@ public class Events implements java.io.Serializable
     return this.measurementDate;
   }
 
-  public void setMeasurementDate( Date measurementDate )
+  public void setMeasurementDate( final Date measurementDate )
   {
     this.measurementDate = measurementDate;
   }
@@ -150,7 +150,7 @@ public class Events implements java.io.Serializable
     return this.source;
   }
 
-  public void setSource( String source )
+  public void setSource( final String source )
   {
     this.source = source;
   }
@@ -161,18 +161,18 @@ public class Events implements java.io.Serializable
     return this.type;
   }
 
-  public void setType( String type )
+  public void setType( final String type )
   {
     this.type = type;
   }
 
-  @Column(name = "Comment")
+  @Column(name = "description")
   public String getComment( )
   {
     return this.comment;
   }
 
-  public void setComment( String comment )
+  public void setComment( final String comment )
   {
     this.comment = comment;
   }
@@ -183,7 +183,7 @@ public class Events implements java.io.Serializable
     return this.waterlevelFixationses;
   }
 
-  public void setWaterlevelFixationses( Set<WaterlevelFixations> waterlevelFixationses )
+  public void setWaterlevelFixationses( final Set<WaterlevelFixations> waterlevelFixationses )
   {
     this.waterlevelFixationses = waterlevelFixationses;
   }

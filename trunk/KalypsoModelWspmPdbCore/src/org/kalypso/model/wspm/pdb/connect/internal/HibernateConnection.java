@@ -40,11 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
@@ -68,7 +68,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixations;
 /**
  * @author Gernot Belger
  */
-public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings> implements IPdbConnection
+public abstract class HibernateConnection<SETTINGS extends HibernateSettings> implements IPdbConnection
 {
   private final SETTINGS m_settings;
 
@@ -76,7 +76,7 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
 
   private Session m_session;
 
-  public HibernatePdbConnection( final SETTINGS connectInfo )
+  public HibernateConnection( final SETTINGS connectInfo )
   {
     m_settings = connectInfo;
   }
@@ -234,10 +234,10 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
     checkConnection();
 
     // query all info's
-    final Transaction transaction = m_session.beginTransaction();
+// final Transaction transaction = m_session.beginTransaction();
     final String query = String.format( "from %s", Info.class.getName() );
     final List<Info> allInfo = m_session.createQuery( query ).list();
-    transaction.commit();
+// transaction.commit();
 
     return new PdbInfo( allInfo );
   }
@@ -250,9 +250,7 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
     try
     {
       final Transaction transaction = m_session.beginTransaction();
-      // TODO: transaction?
       m_session.save( onePoint );
-
       transaction.commit();
     }
     catch( final HibernateException e )
@@ -267,25 +265,40 @@ public abstract class HibernatePdbConnection<SETTINGS extends HibernateSettings>
   {
     checkConnection();
 
-// final Transaction transaction = m_session.beginTransaction();
-// final String query = String.format( "from %s", WaterBodies.class.getName() );
-// final Query q = m_session.createQuery( query );
-// final List< ? > allWaterbodies = q.list();
-// transaction.commit();
-//
-// return (List<WaterBodies>) allWaterbodies;
-    final List<WaterBodies> list = new ArrayList<WaterBodies>();
-    list.add( new WaterBodies( "1234", "Rhein" ) );
-    list.add( new WaterBodies( "5432", "Model" ) );
-    list.add( new WaterBodies( "9876", "Neckar" ) );
+    final String query = String.format( "from %s", WaterBodies.class.getName() );
+    final Query q = m_session.createQuery( query );
 
-    return list;
+    final List< ? > allWaterbodies = q.list();
+
+    return (List<WaterBodies>) allWaterbodies;
   }
 
   @Override
-  public void addWaterBody( final WaterBodies waterBody )
+  public void addWaterBody( final WaterBodies waterBody ) throws PdbConnectException
   {
-    // TODO Auto-generated method stub
-    throw new NotImplementedException();
+    checkConnection();
+
+    final Transaction transaction = m_session.beginTransaction();
+
+    m_session.save( waterBody );
+
+    transaction.commit();
+  }
+
+  @Override
+  public void addState( final States state ) throws PdbConnectException
+  {
+    checkConnection();
+
+    final Date now = new Date();
+    state.setCreationDate( now );
+    state.setEditingDate( now );
+    state.setEditingUser( getSettings().getUsername() );
+
+    final Transaction transaction = m_session.beginTransaction();
+
+    m_session.save( state );
+
+    transaction.commit();
   }
 }

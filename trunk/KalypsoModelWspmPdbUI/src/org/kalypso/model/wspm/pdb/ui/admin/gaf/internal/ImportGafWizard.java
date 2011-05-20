@@ -72,7 +72,7 @@ public class ImportGafWizard extends Wizard
 
     addPage( new ImportGafPage( "gaf", connection, m_data ) ); //$NON-NLS-1$
     addPage( new ChooseWaterPage( "waterBody", connection, m_data ) ); //$NON-NLS-1$
-    addPage( new EditStatePage( "state", connection, m_data.getState() ) ); //$NON-NLS-1$
+    addPage( new EditStatePage( "state", m_data.getState() ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }
