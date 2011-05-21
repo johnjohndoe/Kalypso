@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.preferences.internal;
 
-import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -52,13 +54,19 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
+import org.kalypso.model.wspm.pdb.connect.SettingsNameValue;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
+import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
 /**
  * A {@link org.eclipse.jface.dialogs.IDialogPage} that edits the parameters of one {@link IPdbSettings}.
@@ -67,9 +75,7 @@ import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
  */
 class SettingsPage extends WizardPage
 {
-  private IPdbSettings m_connection;
-
-  private DataBindingContext m_binding;
+  private IPdbSettings m_settings;
 
   private ScrolledForm m_form;
 
@@ -77,17 +83,26 @@ class SettingsPage extends WizardPage
 
   private StatusComposite m_validationComposite;
 
-  public SettingsPage( final String pageName, final IPdbSettings connection )
+  private DatabindingWizardPage m_binding;
+
+  private String m_initialName;
+
+  public SettingsPage( final String pageName, final IPdbSettings settings )
   {
     super( pageName );
 
-    setConnection( connection );
     setDescription( "Configure the parameters of the database connection." );
+
+    setSettings( settings );
+
+    // This name is ok, if we come from editing a state
+    m_initialName = settings.getName();
   }
 
-  void setConnection( final IPdbSettings connection )
+  void setSettings( final IPdbSettings connection )
   {
-    m_connection = connection;
+    m_settings = connection;
+    m_initialName = null;
 
     if( connection == null )
       return;
@@ -109,8 +124,6 @@ class SettingsPage extends WizardPage
     final Composite body = m_form.getBody();
     GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( body );
 
-    m_binding = new DataBindingContext();
-
     updateControl();
 
     setControl( m_form );
@@ -118,29 +131,73 @@ class SettingsPage extends WizardPage
 
   private void updateControl( )
   {
+    if( m_binding != null )
+    {
+      m_binding.dispose();
+      m_binding = null;
+    }
+
     if( m_form == null )
       return;
 
-    if( m_connection == null )
+    if( m_settings == null )
       return;
+
+    m_binding = new DatabindingWizardPage( this, null );
 
     final Composite body = m_form.getBody();
 
-    final Group group = new Group( body, SWT.NONE );
+    createNameControl( body );
+    createSettingsGroup( body );
+    createTestAction( body );
+
+    m_form.reflow( true );
+  }
+
+  private void createNameControl( final Composite parent )
+  {
+    new Label( parent, SWT.NONE ).setText( "Name" );
+
+    final Text field = new Text( parent, SWT.BORDER );
+    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    field.setMessage( "<Empty>" );
+
+    final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
+    final IObservableValue model = new SettingsNameValue( m_settings );
+
+    final DataBinder binder = new DataBinder( target, model );
+
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.WARNING, StringBlankValidator.DEFAULT_WARNING_MESSAGE ) );
+    binder.addTargetAfterGetValidator( new UniqueSettingsNameValidator( m_initialName ) );
+
+    model.addValueChangeListener( new IValueChangeListener()
+    {
+      @Override
+      public void handleValueChange( final ValueChangeEvent event )
+      {
+        setTitle( (String) event.diff.getNewValue() );
+      }
+    } );
+
+    m_binding.bindValue( binder );
+  }
+
+  private void createSettingsGroup( final Composite parent )
+  {
+    final Group group = new Group( parent, SWT.NONE );
     group.setText( "Connection Parameters" );
     group.setLayout( new FillLayout() );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
 
-    final IPdbSettingsControl editor = m_connection.createEditControl( m_binding, group );
+    final IPdbSettingsControl editor = m_settings.createEditControl( m_binding.getBindingContext(), group );
     setImageDescriptor( editor.getPageImage() );
+  }
 
-    ActionButton.createButton( null, body, m_validateAction );
-    m_validationComposite = new StatusComposite( body, StatusComposite.HIDE_DETAILS_IF_DISABLED | StatusComposite.DETAILS );
+  private void createTestAction( final Composite parent )
+  {
+    ActionButton.createButton( null, parent, m_validateAction );
+    m_validationComposite = new StatusComposite( parent, StatusComposite.HIDE_DETAILS_IF_DISABLED | StatusComposite.DETAILS );
     m_validationComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
-    m_form.reflow( true );
-
-    WizardPageSupport.create( this, m_binding );
   }
 
   @Override
@@ -151,7 +208,7 @@ class SettingsPage extends WizardPage
 
   public void testConnection( )
   {
-    final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( m_connection, true );
+    final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( m_settings, true );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
     m_validationComposite.setStatus( result );
   }

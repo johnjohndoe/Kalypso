@@ -56,7 +56,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
-import org.kalypso.contribs.eclipse.jface.viewers.table.TableViewerUtilities;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -80,18 +80,23 @@ public class WaterBodyViewer
 
   public TableViewer createTableViewer( final Composite parent )
   {
-    m_viewer = new TableViewer( parent, SWT.BORDER | SWT.FULL_SELECTION );
+    m_viewer = new TableViewer( parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.H_SCROLL );
     final Table table = m_viewer.getTable();
     table.setHeaderVisible( true );
 
+    table.addControlListener( new ColumnsResizeControlListener() );
+
     final TableViewerColumn gknColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     gknColumn.getColumn().setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
-    gknColumn.getColumn().setWidth( 100 );
+    gknColumn.getColumn().setResizable( false );
+    gknColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+
     ColumnViewerSorter.registerSorter( gknColumn, new ViewerSorter() );
 
     final TableViewerColumn nameColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     nameColumn.getColumn().setText( WaterBodyStrings.STR_NAME );
-    nameColumn.getColumn().setWidth( 100 );
+    nameColumn.getColumn().setResizable( false );
+    nameColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
     ColumnViewerSorter.registerSorter( nameColumn, new ViewerSorter() );
 
     m_tableInput = new WritableList( new ArrayList<WaterBodies>(), WaterBodies.class );
@@ -103,8 +108,6 @@ public class WaterBodyViewer
 
     final IValueProperty[] labelProperties = new IValueProperty[] { gknProperty, nameProperty };
     ViewerSupport.bind( m_viewer, m_tableInput, labelProperties );
-
-    TableViewerUtilities.addColumnsResizeListener( m_viewer );
 
     return m_viewer;
   }
