@@ -40,46 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.databinding.validation.TypedValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 
 /**
  * @author Gernot Belger
  */
-public class UniqueSettingsNameValidator extends TypedValidator<String>
+public abstract class AbstractSettings implements IPdbSettings
 {
-  private final Set<String> m_names = new HashSet<String>();
+  private String m_name;
 
-  public UniqueSettingsNameValidator( )
+  public AbstractSettings( final String name )
   {
-    super( String.class, IStatus.ERROR, "A PDB connection with the same name already exists." );
+    m_name = name;
+  }
 
-    try
-    {
-      final IPdbSettings[] settings = PdbSettings.getSettings();
-      for( final IPdbSettings s : settings )
-        m_names.add( s.getName() );
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-    }
+  public final void setName( final String name )
+  {
+    m_name = name;
   }
 
   @Override
-  protected IStatus doValidate( final String value ) throws CoreException
+  public final String getName( )
   {
-    if( m_names.contains( value ) )
-      fail();
-
-    return Status.OK_STATUS;
+    return m_name;
   }
 }

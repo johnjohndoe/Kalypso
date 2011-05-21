@@ -41,60 +41,23 @@
 package org.kalypso.model.wspm.pdb.connect.internal.test;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
-import org.kalypso.model.wspm.pdb.connect.internal.UniqueSettingsNameValidator;
 
 /**
  * @author Gernot Belger
  */
 public class TestSettingsControl extends Composite implements IPdbSettingsControl
 {
-  private final DataBindingContext m_binding;
-
-  private final TestSettings m_settings;
-
   public TestSettingsControl( final DataBindingContext binding, final Composite parent, final TestSettings settings )
   {
     super( parent, SWT.NONE );
 
-    m_binding = binding;
-
-    m_settings = settings;
-
     GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( false ).applyTo( this );
-
-    createNameControl();
-  }
-
-  private void createNameControl( )
-  {
-    new Label( this, SWT.NONE ).setText( "Name" );
-
-    final Text field = new Text( this, SWT.BORDER );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setMessage( "<Empty>" );
-
-    final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-
-    targetToModel.setAfterGetValidator( new StringBlankValidator( IStatus.WARNING, StringBlankValidator.DEFAULT_WARNING_MESSAGE ) );
-    targetToModel.setAfterGetValidator( new UniqueSettingsNameValidator() );
-
-    final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
-    final IObservableValue model = new TestSettingsNameValue( m_settings );
-    m_binding.bindValue( target, model, targetToModel, null );
   }
 
   @Override

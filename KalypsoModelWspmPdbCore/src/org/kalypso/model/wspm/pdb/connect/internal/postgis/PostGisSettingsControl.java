@@ -56,7 +56,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
-import org.kalypso.model.wspm.pdb.connect.internal.UniqueSettingsNameValidator;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
 import org.kalypso.model.wspm.pdb.internal.utils.PortValidator;
 
@@ -78,10 +77,6 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
     m_settings = settings;
 
     GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( false ).applyTo( this );
-
-    final StringBlankValidator nameValidator = new StringBlankValidator( IStatus.WARNING, StringBlankValidator.DEFAULT_WARNING_MESSAGE );
-    final UniqueSettingsNameValidator uniqueNameValidator = new UniqueSettingsNameValidator();
-    createPropertyControl( "Name", SWT.NONE, PostgisSettings.PROPERTY_LABEL, nameValidator, uniqueNameValidator );
 
     final StringBlankValidator hostValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
     createPropertyControl( "Host", SWT.NONE, PostgisSettings.PROPERTY_HOST, hostValidator );

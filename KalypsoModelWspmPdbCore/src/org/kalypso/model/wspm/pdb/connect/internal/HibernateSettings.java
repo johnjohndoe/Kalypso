@@ -40,14 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal;
 
-import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-
 /**
  * @author Gernot Belger
  */
-public abstract class HibernateSettings implements IPdbSettings
+public abstract class HibernateSettings extends AbstractSettings
 {
   protected static final String DEFAULT_DBNAME = "kalypso_pdb"; //$NON-NLS-1$;
 
   public abstract String getUsername( );
+
+  public HibernateSettings( final String name )
+  {
+    super( name );
+  }
 }

@@ -48,7 +48,9 @@ import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 import org.hibernate.classic.Session;
+import org.hibernatespatial.postgis.PostgisDialect;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
@@ -71,6 +73,8 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixations;
  */
 public abstract class HibernateConnection<SETTINGS extends HibernateSettings> implements IPdbConnection
 {
+  protected static final String SPATIAL_DIALECT = "hibernate.spatial.dialect"; //$NON-NLS-1$
+
   private final SETTINGS m_settings;
 
   private Configuration m_config;
@@ -123,18 +127,19 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
 
   private void configure( final Configuration configuration )
   {
-    configuration.setProperty( "hibernate.order_updates", "true" );
+    configuration.setProperty( Environment.ORDER_UPDATES, Boolean.TRUE.toString() );
 
     // FIXME: why does this not work???
     // configuration.setProperty( "hibernate.hbm2dll.auto", "create" );
     // configuration.setProperty( "org.hibernate.tool.hbm2ddl", "debug" );
 
-    configuration.setProperty( "connection.pool_size", "1" );
-    configuration.setProperty( "current_session_context_class", "thread" );
-    configuration.setProperty( "cache.provider_class", "org.hibernate.cache.NoCacheProvider" );
+    configuration.setProperty( Environment.POOL_SIZE, "1" );
+    configuration.setProperty( Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread" );
+    configuration.setProperty( Environment.CACHE_PROVIDER, "org.hibernate.cache.NoCacheProvider" );
 
     // TODO: via tracing
-    configuration.setProperty( "show_sql", "true" );
+    configuration.setProperty( Environment.SHOW_SQL, Boolean.FALSE.toString() );
+    configuration.setProperty( Environment.FORMAT_SQL, Boolean.FALSE.toString() );
 
 // configuration.setProperty( "hibernate.c3p0.min_size", "5" );
 // configuration.setProperty( "hibernate.c3p0.max_size", "20" );
@@ -171,6 +176,12 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
       protected void runWithContextClassLoader( ) throws Exception
       {
         final Configuration configuration = getConfiguration();
+
+        final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
+        final String[] creationScript = configuration.generateSchemaCreationScript( dialect );
+        for( final String sql : creationScript )
+          System.out.println( sql );
+
         final SessionFactory sessionFactory = configuration.buildSessionFactory();
         setSessionFactory( sessionFactory );
       }
