@@ -106,7 +106,7 @@ class CreateSettingsWizard extends Wizard
   protected void handlePageChanging( )
   {
     m_settings = m_typePage.getSettings();
-    m_connectionPage.setConnection( m_settings );
+    m_connectionPage.setSettings( m_settings );
     getContainer().updateButtons();
   }
 
