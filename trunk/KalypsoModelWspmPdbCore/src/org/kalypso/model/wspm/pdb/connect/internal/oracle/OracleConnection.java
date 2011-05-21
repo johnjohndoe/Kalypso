@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.connect.internal.oracle;
 
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 import org.hibernatespatial.oracle.OracleSpatial10gDialect;
 import org.kalypso.model.wspm.pdb.connect.internal.HibernateConnection;
 
@@ -63,16 +64,16 @@ public class OracleConnection extends HibernateConnection<OracleSettings>
 
     final OracleSpatial10gDialect dialect = new OracleSpatial10gDialect();
 
-    configuration.setProperty( "hibernate.connection.driver_class", oracle.jdbc.OracleDriver.class.getName() );
+    configuration.setProperty( Environment.DRIVER, oracle.jdbc.OracleDriver.class.getName() );
 
     final String connectionUrl = String.format( "jdbc:oracle:thin:@%s:%d:%s", settings.getHost(), settings.getPort(), settings.getDbName() );
 
-    configuration.setProperty( "hibernate.connection.url", connectionUrl );
-    configuration.setProperty( "hibernate.connection.username", settings.getUsername() );
-    configuration.setProperty( "hibernate.connection.password", settings.getPassword() );
+    configuration.setProperty( Environment.URL, connectionUrl );
+    configuration.setProperty( Environment.USER, settings.getUsername() );
+    configuration.setProperty( Environment.PASS, settings.getPassword() );
 
-    configuration.setProperty( "hibernate.dialect", dialect.getClass().getName() );
-    configuration.setProperty( "hibernate.spatial.dialect", dialect.getClass().getName() );
+    configuration.setProperty( Environment.DIALECT, dialect.getClass().getName() );
+    configuration.setProperty( SPATIAL_DIALECT, dialect.getClass().getName() );
 
 // final OracleConnectInfo connectInfo = getConnectInfo();
 //

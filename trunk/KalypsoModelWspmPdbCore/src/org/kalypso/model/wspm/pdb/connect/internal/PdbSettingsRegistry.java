@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
@@ -60,6 +61,8 @@ public class PdbSettingsRegistry
 {
   static final String PROPERTY_TYPE = "type"; //$NON-NLS-1$
 
+  static final String PROPERTY_NAME = "name"; //$NON-NLS-1$
+
   public String[] getRegisteredTypes( )
   {
     return new String[] { PostgisSettings.TYPE, OracleSettings.TYPE, TestSettings.TYPE };
@@ -68,12 +71,15 @@ public class PdbSettingsRegistry
   public IPdbSettings readSettings( final ISecurePreferences preferences ) throws StorageException
   {
     final String type = preferences.get( PROPERTY_TYPE, ErrorSettings.TYPE );
-    final IPdbSettings settings = createSettings( type );
+    final String name = preferences.get( PROPERTY_NAME, StringUtils.EMPTY );
+
+    final AbstractSettings settings = createSettings( type );
     settings.readState( preferences );
+    settings.setName( name );
     return settings;
   }
 
-  public IPdbSettings createSettings( final String type )
+  public AbstractSettings createSettings( final String type )
   {
     // TODO: we should use extensions here
     if( PostgisSettings.TYPE.equals( type ) )

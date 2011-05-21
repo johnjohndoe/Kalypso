@@ -60,15 +60,11 @@ import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
  */
 public class PostgisSettings extends HibernateSettings
 {
-  private static final String DEFAULT_LABEL = ""; //$NON-NLS-1$
-
   private static final String DEFAULT_HOST = "localhost"; //$NON-NLS-1$
 
   static final int DEFAULT_PORT = 5432;
 
   public static final String TYPE = "postgis"; //$NON-NLS-1$
-
-  static final String PROPERTY_LABEL = "label"; //$NON-NLS-1$
 
   static final String PROPERTY_DBNAME = "dbname"; //$NON-NLS-1$
 
@@ -84,10 +80,13 @@ public class PostgisSettings extends HibernateSettings
 
   public PostgisSettings( )
   {
+    super( StringUtils.EMPTY );
   }
 
-  public PostgisSettings( final PostgisSettings settings )
+  public PostgisSettings( final String name, final PostgisSettings settings )
   {
+    super( name );
+
     m_properties.putAll( settings.m_properties );
   }
 
@@ -95,12 +94,6 @@ public class PostgisSettings extends HibernateSettings
   public String getType( )
   {
     return TYPE;
-  }
-
-  @Override
-  public String getName( )
-  {
-    return getProperty( PROPERTY_LABEL, "PostGIS" );
   }
 
   @Override
@@ -131,9 +124,6 @@ public class PostgisSettings extends HibernateSettings
 
   private String getDefaultValue( final String property )
   {
-    if( PROPERTY_LABEL.equals( property ) )
-      return DEFAULT_LABEL;
-
     if( PROPERTY_HOST.equals( property ) )
       return DEFAULT_HOST;
 
@@ -252,7 +242,7 @@ public class PostgisSettings extends HibernateSettings
   @Override
   public IPdbSettings copy( )
   {
-    return new PostgisSettings( this );
+    return new PostgisSettings( getName(), this );
   }
 
   @Override

@@ -49,15 +49,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 
 /**
  * Implementation of {@link IPdbConnectSettings} that works as a placeholder, if a original settings could not be read.
  * 
  * @author Gernot Belger
  */
-public class ErrorSettings implements IPdbSettings
+public class ErrorSettings extends AbstractSettings
 {
   static final String TYPE = "error"; //$NON-NLS-1$
 
@@ -65,6 +65,8 @@ public class ErrorSettings implements IPdbSettings
 
   public ErrorSettings( final IStatus status )
   {
+    super( StatusUtilities.getLocalizedSeverity( status ) );
+
     m_status = status;
   }
 
@@ -72,12 +74,6 @@ public class ErrorSettings implements IPdbSettings
   public String getType( )
   {
     return TYPE;
-  }
-
-  @Override
-  public String getName( )
-  {
-    return StatusUtilities.getLocalizedSeverity( m_status );
   }
 
   @Override

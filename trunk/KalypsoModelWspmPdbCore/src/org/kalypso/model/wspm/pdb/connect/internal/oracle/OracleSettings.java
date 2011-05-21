@@ -62,13 +62,9 @@ public class OracleSettings extends HibernateSettings
 {
   public static final String TYPE = "oracle"; //$NON-NLS-1$
 
-  private static final String DEFAULT_LABEL = ""; //$NON-NLS-1$
-
   private static final String DEFAULT_HOST = "localhost"; //$NON-NLS-1$
 
   static final int DEFAULT_PORT = 1521;
-
-  static final String PROPERTY_LABEL = "label"; //$NON-NLS-1$
 
   static final String PROPERTY_DBNAME = "dbname"; //$NON-NLS-1$
 
@@ -84,10 +80,13 @@ public class OracleSettings extends HibernateSettings
 
   public OracleSettings( )
   {
+    super( StringUtils.EMPTY );
   }
 
-  public OracleSettings( final OracleSettings settings )
+  public OracleSettings( final String name, final OracleSettings settings )
   {
+    super( name );
+
     m_properties.putAll( settings.m_properties );
   }
 
@@ -95,12 +94,6 @@ public class OracleSettings extends HibernateSettings
   public String getType( )
   {
     return TYPE;
-  }
-
-  @Override
-  public String getName( )
-  {
-    return getProperty( PROPERTY_LABEL, "Oracle" );
   }
 
   @Override
@@ -131,9 +124,6 @@ public class OracleSettings extends HibernateSettings
 
   private String getDefaultValue( final String property )
   {
-    if( PROPERTY_LABEL.equals( property ) )
-      return DEFAULT_LABEL;
-
     if( PROPERTY_HOST.equals( property ) )
       return DEFAULT_HOST;
 
@@ -252,7 +242,7 @@ public class OracleSettings extends HibernateSettings
   @Override
   public IPdbSettings copy( )
   {
-    return new OracleSettings( this );
+    return new OracleSettings( getName(), this );
   }
 
   @Override

@@ -40,26 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal.test;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
+import org.kalypso.model.wspm.pdb.connect.internal.AbstractSettings;
 
 /**
  * @author Gernot Belger
  */
-public class TestSettings implements IPdbSettings
+public class TestSettings extends AbstractSettings
 {
-  static final String PROPERTY_NAME = "name"; //$NON-NLS-1$
-
   public static final String TYPE = "test"; //$NON-NLS-1$
-
-  private String m_name;
 
   public TestSettings( )
   {
@@ -68,19 +63,13 @@ public class TestSettings implements IPdbSettings
 
   private TestSettings( final String name )
   {
-    m_name = name;
+    super( name );
   }
 
   @Override
   public String getType( )
   {
     return TYPE;
-  }
-
-  @Override
-  public String getName( )
-  {
-    return m_name;
   }
 
   @Override
@@ -96,35 +85,25 @@ public class TestSettings implements IPdbSettings
   }
 
   @Override
-  public void saveState( final ISecurePreferences preferences ) throws StorageException
+  public void saveState( final ISecurePreferences preferences )
   {
-    preferences.put( PROPERTY_NAME, m_name, false );
   }
 
   @Override
-  public void readState( final ISecurePreferences preferences ) throws StorageException
+  public void readState( final ISecurePreferences preferences )
   {
-    m_name = preferences.get( PROPERTY_NAME, StringUtils.EMPTY );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.pdb.connect.IPdbSettings#copy()
-   */
   @Override
   public IPdbSettings copy( )
   {
-    return new TestSettings( m_name );
+    return new TestSettings( getName() );
   }
 
   @Override
   public IPdbSettingsControl createEditControl( final DataBindingContext binding, final Composite parent )
   {
     return new TestSettingsControl( binding, parent, this );
-  }
-
-  void setName( final String value )
-  {
-    m_name = value;
   }
 
   @Override
