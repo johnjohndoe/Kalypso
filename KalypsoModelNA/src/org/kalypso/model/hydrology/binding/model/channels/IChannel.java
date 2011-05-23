@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.INaModelFeature;
-import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
 
 /**
  * @author Dirk Kuch

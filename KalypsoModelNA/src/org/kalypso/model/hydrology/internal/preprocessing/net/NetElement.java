@@ -45,8 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypsodeegree.model.feature.Feature;

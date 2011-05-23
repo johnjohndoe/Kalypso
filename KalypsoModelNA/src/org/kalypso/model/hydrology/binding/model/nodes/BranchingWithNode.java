@@ -38,20 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.model;
+package org.kalypso.model.hydrology.binding.model.nodes;
+
+import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}_Branching.
  * 
  * @author Gernot Belger
  */
-public abstract class Branching extends AbstractNaModelElement
+public abstract class BranchingWithNode extends Branching
 {
-  public Branching( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public static final QName QN_BRANCHING_NODE_MEMBER = new QName( NS_NAMODELL, "branchingNodeMember" ); //$NON-NLS-1$
+
+  public BranchingWithNode( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public Node getNode( )
+  {
+    return (Node) FeatureHelper.resolveLink( this, QN_BRANCHING_NODE_MEMBER, true );
+  }
+
+  public void setNode( final Node node )
+  {
+    setProperty( QN_BRANCHING_NODE_MEMBER, node.getId() );
   }
 }

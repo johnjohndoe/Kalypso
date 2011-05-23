@@ -43,7 +43,7 @@ package org.kalypso.model.hydrology.binding.model.channels;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 

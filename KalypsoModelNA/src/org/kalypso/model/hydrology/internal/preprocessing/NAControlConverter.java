@@ -56,7 +56,7 @@ import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.suds.Greenroof;
 import org.kalypso.model.hydrology.binding.suds.Swale;
 import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
