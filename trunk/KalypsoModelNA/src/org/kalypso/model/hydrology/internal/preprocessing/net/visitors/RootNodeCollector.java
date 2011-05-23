@@ -43,7 +43,7 @@ package org.kalypso.model.hydrology.internal.preprocessing.net.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
 public class RootNodeCollector

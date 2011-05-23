@@ -267,7 +267,7 @@
               qname="{http://www.tuhh.de/kalypsoNA}Catchment">
         </feature>
         <feature
-              class="org.kalypso.model.hydrology.binding.model.Node"
+              class="org.kalypso.model.hydrology.binding.model.nodes.Node"
               qname="{http://www.tuhh.de/kalypsoNA}Node">
         </feature>
         <feature
@@ -295,7 +295,7 @@
               qname="{http://www.tuhh.de/kalypsoNA}Ueberlauf">
         </feature>
         <feature
-              class="org.kalypso.model.hydrology.binding.model.Verzweigung"
+              class="org.kalypso.model.hydrology.binding.model.nodes.Verzweigung"
               qname="{http://www.tuhh.de/kalypsoNA}Verzweigung">
         </feature>
         <feature

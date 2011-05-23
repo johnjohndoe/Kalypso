@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.binding.model.nodes.BranchingWithNode;
 
 /**
  * Binding class for {http://www.tuhh.de/kalypsoNA}KontEntnahme.

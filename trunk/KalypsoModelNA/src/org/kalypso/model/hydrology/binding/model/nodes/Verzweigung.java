@@ -38,35 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.model;
+package org.kalypso.model.hydrology.binding.model.nodes;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * Binding class for {http://www.tuhh.de/kalypsoNA}_Branching.
+ * Binding class for {http://www.tuhh.de/kalypsoNA}Verzweigung.
  * 
  * @author Gernot Belger
  */
-public abstract class BranchingWithNode extends Branching
+public class Verzweigung extends BranchingWithNode
 {
-  public static final QName QN_BRANCHING_NODE_MEMBER = new QName( NS_NAMODELL, "branchingNodeMember" ); //$NON-NLS-1$
+  public static final QName QN_TYPE = new QName( NS_NAMODELL, "Verzweigung" ); //$NON-NLS-1$
 
-  public BranchingWithNode( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public static final QName QN_PROPERTY_ZPROZ = new QName( NS_NAMODELL, "zproz" ); //$NON-NLS-1$
+
+  public Verzweigung( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public Node getNode( )
+  public double getZProz( )
   {
-    return (Node) FeatureHelper.resolveLink( this, QN_BRANCHING_NODE_MEMBER, true );
-  }
-
-  public void setNode( final Node node )
-  {
-    setProperty( QN_BRANCHING_NODE_MEMBER, node.getId() );
+    // Default is 0.0 for backwards compatibility, schema defines 1.0
+    return getDoubleProperty( QN_PROPERTY_ZPROZ, 0.0 );
   }
 }

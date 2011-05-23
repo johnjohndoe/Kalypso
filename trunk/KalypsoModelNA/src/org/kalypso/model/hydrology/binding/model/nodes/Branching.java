@@ -38,32 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.model;
-
-import javax.xml.namespace.QName;
+package org.kalypso.model.hydrology.binding.model.nodes;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.binding.model.AbstractNaModelElement;
 
 /**
- * Binding class for {http://www.tuhh.de/kalypsoNA}Verzweigung.
+ * Binding class for {http://www.tuhh.de/kalypsoNA}_Branching.
  * 
  * @author Gernot Belger
  */
-public class Verzweigung extends BranchingWithNode
+public abstract class Branching extends AbstractNaModelElement
 {
-  public static final QName QN_TYPE = new QName( NS_NAMODELL, "Verzweigung" ); //$NON-NLS-1$
-
-  public static final QName QN_PROPERTY_ZPROZ = new QName( NS_NAMODELL, "zproz" ); //$NON-NLS-1$
-
-  public Verzweigung( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public Branching( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
-  }
-
-  public double getZProz( )
-  {
-    // Default is 0.0 for backwards compatibility, schema defines 1.0
-    return getDoubleProperty( QN_PROPERTY_ZPROZ, 0.0 );
   }
 }
