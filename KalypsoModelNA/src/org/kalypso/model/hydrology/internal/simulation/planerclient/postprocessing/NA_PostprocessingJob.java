@@ -422,7 +422,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
     catch( final Exception e )
     {
       setStatus( STATUS.ERROR, e.getLocalizedMessage() );
-      throw new SimulationException( e.getLocalizedMessage() );
+      throw new SimulationException( "Problem bei der Differenzenbildung", e );
     }
     resultEater.addResult( "OutputFolder", tmpdir ); //$NON-NLS-1$
     setStatus( STATUS.OK, "Success" ); //$NON-NLS-1$
