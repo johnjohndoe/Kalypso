@@ -84,6 +84,8 @@ public class WaterBodyViewer
     final Table table = m_viewer.getTable();
     table.setHeaderVisible( true );
 
+    // TODO Should be added to the parent of the table.
+    // TODO TableViewerUtilities has a function for adding this type of listener.
     table.addControlListener( new ColumnsResizeControlListener() );
 
     final TableViewerColumn gknColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
