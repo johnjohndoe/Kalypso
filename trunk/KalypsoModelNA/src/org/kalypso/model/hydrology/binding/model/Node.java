@@ -113,7 +113,7 @@ public class Node extends AbstractNaModelElement implements INode
   @Override
   public Node getQQRelatedNode( )
   {
-    return (Node) FeatureHelper.resolveLink( this, PROPERTY_QQ_RELATED, true );
+    return (Node) FeatureHelper.resolveLink( this, PROPERTY_QQ_RELATED_NODE, true );
   }
 
   @Override
