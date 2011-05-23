@@ -53,7 +53,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public abstract class BranchingWithNode extends Branching
 {
-  private static final QName LINK_NODE = new QName( NS_NAMODELL, "branchingNodeMember" ); //$NON-NLS-1$
+  public static final QName QN_BRANCHING_NODE_MEMBER = new QName( NS_NAMODELL, "branchingNodeMember" ); //$NON-NLS-1$
 
   public BranchingWithNode( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -62,11 +62,11 @@ public abstract class BranchingWithNode extends Branching
 
   public Node getNode( )
   {
-    return (Node) FeatureHelper.resolveLink( this, LINK_NODE, true );
+    return (Node) FeatureHelper.resolveLink( this, QN_BRANCHING_NODE_MEMBER, true );
   }
 
   public void setNode( final Node node )
   {
-    setProperty( LINK_NODE, node.getId() );
+    setProperty( QN_BRANCHING_NODE_MEMBER, node.getId() );
   }
 }

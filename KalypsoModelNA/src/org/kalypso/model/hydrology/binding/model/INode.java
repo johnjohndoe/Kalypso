@@ -70,7 +70,7 @@ public interface INode extends INaModelFeature
 
   QName PROPERTY_PEGEL_ZR = new QName( NaModelConstants.NS_NAMODELL, "pegelZR" ); //$NON-NLS-1$
 
-  QName PROPERTY_QQ_RELATED = new QName( NaModelConstants.NS_NAMODELL, "qqRelatedNode" ); //$NON-NLS-1$
+  QName PROPERTY_QQ_RELATED_NODE = new QName( NaModelConstants.NS_NAMODELL, "qqRelatedNode" ); //$NON-NLS-1$
 
   QName PROPERTY_QQ_RELATION = new QName( NaModelConstants.NS_NAMODELL, "qqRelation" ); //$NON-NLS-1$
 
