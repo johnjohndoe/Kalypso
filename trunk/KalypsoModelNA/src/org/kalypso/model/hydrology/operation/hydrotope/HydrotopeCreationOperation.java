@@ -124,7 +124,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     m_dissolveFeatures = dissolveFeatures;
   }
 
-  private final FeatureListGeometryIntersector getIntersector( )
+  private FeatureListGeometryIntersector getIntersector( )
   {
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
 
