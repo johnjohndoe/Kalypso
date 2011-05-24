@@ -79,5 +79,4 @@ public class KMViewerCheckStateProvider implements ICheckStateProvider
 
     return false;
   }
-
 }
