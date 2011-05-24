@@ -22,11 +22,6 @@
             class="org.kalypso.model.km.internal.ui.kmupdate.KMUpdateHandler"
             commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters">
          <enabledWhen>
-            <and>
-               <systemTest
-                     property="org.kalypso.rrrm.km.updateAction"
-                     value="isActive">
-               </systemTest>
                <with
                      variable="selection">
                   <iterate ifEmpty="false">
@@ -36,7 +31,6 @@
 	                  </test>
                   </iterate>
                </with>
-            </and>
          </enabledWhen>
       </handler>
    </extension>

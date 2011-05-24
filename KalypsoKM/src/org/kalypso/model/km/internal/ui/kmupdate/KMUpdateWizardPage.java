@@ -52,7 +52,6 @@ import javax.xml.bind.JAXBException;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -61,6 +60,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -88,287 +89,104 @@ import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
 
 /**
- * @author doemming
+ * A wizard page for calculating the KM parameter with the results of a wspm calculation.
+ * 
+ * @author Andreas Doemming (original)
+ * @author Holger Albert (modified)
  */
 public class KMUpdateWizardPage extends WizardPage
 {
-  private KMViewer m_kmViewer = null;
+  /**
+   * The commandable workspace of the NA model.
+   */
+  private CommandableWorkspace m_workspace;
 
-  private final Feature[] m_selection;
+  /**
+   * The NA model.
+   */
+  private NaModell m_naModel;
 
-  private final CommandableWorkspace m_workspace;
+  /**
+   * The selected features.
+   */
+  private Feature[] m_features;
 
+  /**
+   * The channel list viewer.
+   */
   private CheckboxTableViewer m_channelListViewer;
 
-  private KalininMiljukovGroupType m_kmGroup = null;
+  /**
+   * The KM viewer.
+   */
+  private KMViewer m_kmViewer = null;
 
-  private String m_configPath = null;
+  /**
+   * The KM group (data model).
+   */
+  private KalininMiljukovGroupType m_kmGroup;
 
-  private final KMUpdateLabelProvider m_kmUpdateLabelProvider = new KMUpdateLabelProvider();
+  /**
+   * The configuration path.
+   */
+  protected String m_configPath;
 
-  private final NaModell m_naModel;
-
-  public KMUpdateWizardPage( final CommandableWorkspace workspace, final IFeatureSelection selection )
+  /**
+   * The constructor.
+   * 
+   * @param workspace
+   *          The commandable workspace of the NA model.
+   * @param selection
+   *          The selected features.
+   */
+  public KMUpdateWizardPage( CommandableWorkspace workspace, IFeatureSelection selection )
   {
     super( "kmPage", Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.0" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    setDescription( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.1" ) ); //$NON-NLS-1$
-
+    /* Initialize the members. */
     m_workspace = workspace;
-    m_naModel = (NaModell) m_workspace.getRootFeature();
+    m_naModel = (NaModell) workspace.getRootFeature();
+    m_features = FeatureSelectionHelper.getFeatures( selection );
+    m_channelListViewer = null;
+    m_kmViewer = null;
+    m_kmGroup = null;
+    m_configPath = null;
 
-    m_selection = FeatureSelectionHelper.getFeatures( selection );
+    /* Set the description. */
+    setDescription( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.1" ) ); //$NON-NLS-1$
   }
 
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( final Composite parent )
+  public void createControl( Composite parent )
   {
-    final Composite top = new Composite( parent, SWT.NONE );
-    top.setLayout( new GridLayout( 2, true ) );
+    /* Create the main composite. */
+    Composite main = new Composite( parent, SWT.NONE );
+    main.setLayout( new GridLayout( 2, true ) );
 
-    // column 1 tree-group
-    final Group treeGroup = createKMChannelListViewer( top );
-    treeGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    // column 2 KM detailed
-    final Group kmGroup = new Group( top, SWT.NONE );
-    kmGroup.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.3" ) ); //$NON-NLS-1$
-    kmGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_kmViewer = new KMViewer( kmGroup );
-
-    final Composite configPanel = createGenerateArea( top );
-    configPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
-
-    setControl( top );
-  }
-
-  private Composite createGenerateArea( final Composite parent )
-  {
-    final Composite configPanel = new Composite( parent, SWT.NONE );
-    configPanel.setLayout( new GridLayout( 4, false ) );
-
-    final Label label = new Label( configPanel, SWT.NONE );
-    label.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.4" ) ); //$NON-NLS-1$
-
-    final Text text = new Text( configPanel, SWT.READ_ONLY | SWT.BORDER );
-    text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
-    final Button loadButton = new Button( configPanel, SWT.PUSH );
-    loadButton.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.5" ) ); //$NON-NLS-1$
-    loadButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-
-    final Button saveButton = new Button( configPanel, SWT.PUSH );
-    saveButton.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.6" ) ); //$NON-NLS-1$
-    saveButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-
-    loadButton.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        handleLoadConfig( text );
-      }
-    } );
-
-    saveButton.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        handleSaveconfig( text );
-      }
-    } );
-
-    final String path = getDialogSettings().get( getResourceKey() );
-    m_configPath = path;
-    final KalininMiljukovGroupType kmGroup = KMBindingUtils.toKMConfiguration( m_naModel );
-    setKMGroup( kmGroup );
-
-    if( !StringUtils.isBlank( path ) )
-    {
-      text.setText( m_configPath );
-      loadAs( path );
-    }
-
-    return configPanel;
-  }
-
-  protected void handleSaveconfig( final Text text )
-  {
-    final FileDialog dialog = new FileDialog( getShell(), SWT.SAVE );
-    dialog.setFilterExtensions( new String[] { "*.km_xml" } ); //$NON-NLS-1$
-    final String path = dialog.open();
-    if( path == null || path.length() <= 0 )
-      return;
-
-    setConfigPath( text, path );
-    saveAs( path );
-  }
-
-  protected void handleLoadConfig( final Text text )
-  {
-    final FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
-    dialog.setFilterExtensions( new String[] { "*.km_xml" } ); //$NON-NLS-1$
-    final String path = dialog.open();
-    if( path == null || path.length() <= 0 )
-      return;
-
-    setConfigPath( text, path );
-    loadAs( path );
-  }
-
-  private void setConfigPath( final Text text, final String path )
-  {
-    text.setText( path );
-    m_configPath = path;
-    getDialogSettings().put( getResourceKey(), m_configPath );
-  }
-
-  protected void setKMGroup( final KalininMiljukovGroupType kmGroup )
-  {
-    m_kmGroup = kmGroup;
-    if( m_channelListViewer == null )
-      return;
-
-    m_channelListViewer.refresh();
-    m_channelListViewer.setSelection( StructuredSelection.EMPTY );
-  }
-
-  private Group createKMChannelListViewer( final Composite parent )
-  {
-    final Group treeGroup = new Group( parent, SWT.FILL );
+    /* Create the group of the left side. */
+    Group treeGroup = new Group( main, SWT.FILL );
     treeGroup.setLayout( new FillLayout() );
+    treeGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     treeGroup.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.2" ) ); //$NON-NLS-1$
 
-    m_channelListViewer = CheckboxTableViewer.newCheckList( treeGroup, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+    /* Create the channel list viewer. */
+    m_channelListViewer = createChannelListViewer( treeGroup );
 
-    final KMChannel[] kmChannels = m_naModel.getKMChannels();
+    /* Create the group of the right side. */
+    Group kmGroup = new Group( main, SWT.NONE );
+    kmGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    kmGroup.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.3" ) ); //$NON-NLS-1$
+    m_kmViewer = new KMViewer( kmGroup );
 
-    m_channelListViewer.setContentProvider( new ArrayContentProvider() );
+    /* Create the config composite. */
+    Composite configComposite = createConfigComposite( main );
+    configComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
 
-    m_channelListViewer.setLabelProvider( m_kmUpdateLabelProvider );
-    m_channelListViewer.setInput( kmChannels );
-
-    m_channelListViewer.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      @Override
-      public void selectionChanged( final SelectionChangedEvent event )
-      {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        handleChannelListChanged( selection );
-      }
-    } );
-
-    if( m_selection.length > 0 )
-      m_channelListViewer.setSelection( new StructuredSelection( m_selection[0] ) );
-    m_channelListViewer.setCheckedElements( m_selection );
-
-    return treeGroup;
-  }
-
-  protected void handleChannelListChanged( final IStructuredSelection selection )
-  {
-    if( m_kmViewer == null )
-      return;
-
-    final Object firstElement = selection.getFirstElement();
-    if( firstElement instanceof KMChannel )
-    {
-      final KMChannel channel = (KMChannel) firstElement;
-      final String fid = channel.getId();
-      final KalininMiljukovType km = getForID( fid );
-
-      final String label = m_kmUpdateLabelProvider.getText( channel );
-      m_kmViewer.setInput( label, km );
-    }
-    else
-      m_kmViewer.setInput( "", null ); //$NON-NLS-1$
-  }
-
-  void loadAs( final String path )
-  {
-    try
-    {
-      final File file = new File( path );
-      if( !file.exists() )
-        return;
-
-      final KalininMiljukovGroupType kmGroup = KMBindingUtils.load( file );
-      applyKMGroup( kmGroup );
-    }
-    catch( final JAXBException ex )
-    {
-      final String windowTitle = getWizard().getWindowTitle();
-      final String message = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.12", ex.toString() ); //$NON-NLS-1$
-      final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), message, ex );
-      KMPlugin.getDefault().getLog().log( status );
-      new StatusDialog( getShell(), status, windowTitle ).open();
-    }
-  }
-
-  private void applyKMGroup( final KalininMiljukovGroupType loadedGroup )
-  {
-    final List<KalininMiljukovType> kalininMiljukov = loadedGroup.getKalininMiljukov();
-    for( final KalininMiljukovType loadedKmType : kalininMiljukov )
-    {
-      final String id = loadedKmType.getId();
-      final KalininMiljukovType kmType = getForID( id );
-      if( kmType != null )
-      {
-        // clone into
-        kmType.setFilePattern( loadedKmType.getFilePattern() );
-        kmType.setPath( loadedKmType.getPath() );
-        kmType.setKmStart( loadedKmType.getKmStart() );
-        kmType.setKmEnd( loadedKmType.getKmEnd() );
-        kmType.setRiverName( loadedKmType.getRiverName() );
-
-        final List<Profile> profiles = kmType.getProfile();
-        profiles.clear();
-        final List<Profile> loadedProfiles = loadedKmType.getProfile();
-        profiles.addAll( loadedProfiles );
-      }
-    }
-  }
-
-  boolean saveAs( final String path )
-  {
-    try
-    {
-      final File file = new File( path );
-      KMBindingUtils.save( m_kmGroup, file );
-      return true;
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-      final String msg = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.16", e.getLocalizedMessage() ); //$NON-NLS-1$
-      MessageDialog.openError( getShell(), getWizard().getWindowTitle(), msg );
-      return false;
-    }
-  }
-
-// FIXME: move into own class!
-  public boolean finish( )
-  {
-    return StringUtils.isBlank( m_configPath ) || saveAs( m_configPath );
-  }
-
-  protected KalininMiljukovType getForID( final String fid )
-  {
-    if( m_kmGroup == null )
-      return null;
-
-    final List<KalininMiljukovType> kalininMiljukov = m_kmGroup.getKalininMiljukov();
-    for( final Object element : kalininMiljukov )
-    {
-      final KalininMiljukovType km = (KalininMiljukovType) element;
-      if( fid.equals( km.getId() ) )
-        return km;
-    }
-    return null;
+    /* Set the control. */
+    setControl( main );
   }
 
   /**
@@ -380,25 +198,296 @@ public class KMUpdateWizardPage extends WizardPage
     return m_channelListViewer.getCheckedElements().length > 0;
   }
 
+  /**
+   * This function creates the channel list viewer.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @return The channel list viewer.
+   */
+  private CheckboxTableViewer createChannelListViewer( Composite parent )
+  {
+    /* Get the km channels of the NA model. */
+    KMChannel[] kmChannels = m_naModel.getKMChannels();
+
+    /* Create a checkbox table viewer. */
+    CheckboxTableViewer channelListViewer = CheckboxTableViewer.newCheckList( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+
+    /* Configure it. */
+    channelListViewer.setContentProvider( new ArrayContentProvider() );
+    channelListViewer.setLabelProvider( new KMUpdateLabelProvider() );
+    channelListViewer.setInput( kmChannels );
+
+    /* Add a listener. */
+    channelListViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+       */
+      @Override
+      public void selectionChanged( SelectionChangedEvent event )
+      {
+        IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        handleChannelListChanged( selection );
+      }
+    } );
+
+    /* If there are selected features, select the first one. */
+    if( m_features.length > 0 )
+    {
+      /* Select the first selected feature. */
+      channelListViewer.setSelection( new StructuredSelection( m_features[0] ) );
+
+      /* Check all selected features. */
+      channelListViewer.setCheckedElements( m_features );
+    }
+
+    return channelListViewer;
+  }
+
+  /**
+   * This function creates the config composite.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @return The config composite.
+   */
+  private Composite createConfigComposite( Composite parent )
+  {
+    /* Create the config composite. */
+    Composite configComposite = new Composite( parent, SWT.NONE );
+    configComposite.setLayout( new GridLayout( 4, false ) );
+
+    /* Create a label. */
+    Label configLabel = new Label( configComposite, SWT.NONE );
+    configLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    configLabel.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.4" ) ); //$NON-NLS-1$
+
+    /* Create a text. */
+    final Text configText = new Text( configComposite, SWT.READ_ONLY | SWT.BORDER );
+    configText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    /* Create a button. */
+    Button loadButton = new Button( configComposite, SWT.PUSH );
+    loadButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    loadButton.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.5" ) ); //$NON-NLS-1$
+
+    /* Create a button. */
+    Button saveButton = new Button( configComposite, SWT.PUSH );
+    saveButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    saveButton.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.6" ) ); //$NON-NLS-1$
+
+    /* Set a default value, if the dialog was used before. */
+    m_configPath = getDialogSettings().get( getResourceKey() );
+
+    /* Add a listener. */
+    configText.addModifyListener( new ModifyListener()
+    {
+      /**
+       * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+       */
+      @Override
+      public void modifyText( ModifyEvent e )
+      {
+        Text source = (Text) e.getSource();
+        String text = source.getText();
+        m_configPath = text;
+      }
+    } );
+
+    /* Add a listener. */
+    loadButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        handleConfigButtonClicked( configText, SWT.OPEN );
+      }
+    } );
+
+    /* Add a listener. */
+    saveButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        handleConfigButtonClicked( configText, SWT.SAVE );
+      }
+    } );
+
+    /* Create the KM group. */
+    m_kmGroup = KMBindingUtils.toKMConfiguration( m_naModel );
+    m_channelListViewer.refresh();
+    m_channelListViewer.setSelection( StructuredSelection.EMPTY );
+
+    /* If there is a config path set, load it. */
+    if( !StringUtils.isBlank( m_configPath ) )
+      loadAs( m_configPath );
+
+    return configComposite;
+  }
+
+  protected void handleChannelListChanged( IStructuredSelection selection )
+  {
+    if( m_kmViewer == null )
+      return;
+
+    Object firstElement = selection.getFirstElement();
+    if( firstElement instanceof KMChannel )
+    {
+      KMChannel channel = (KMChannel) firstElement;
+      String fid = channel.getId();
+      KalininMiljukovType km = getForID( fid );
+
+      KMUpdateLabelProvider labelProvider = new KMUpdateLabelProvider();
+      String label = labelProvider.getText( channel );
+      m_kmViewer.setInput( label, km );
+
+      return;
+    }
+
+    m_kmViewer.setInput( "", null ); //$NON-NLS-1$
+  }
+
+  protected void handleConfigButtonClicked( Text text, int style )
+  {
+    FileDialog dialog = new FileDialog( getShell(), style );
+    dialog.setFilterExtensions( new String[] { "*.km_xml" } ); //$NON-NLS-1$
+    String path = dialog.open();
+    if( path == null || path.length() <= 0 )
+      return;
+
+    setConfigPath( text, path );
+
+    if( style == SWT.SAVE )
+      saveAs( path );
+    else
+      loadAs( path );
+  }
+
+  private void setConfigPath( Text text, String path )
+  {
+    text.setText( path );
+    m_configPath = path;
+    getDialogSettings().put( getResourceKey(), m_configPath );
+  }
+
+  private void loadAs( String path )
+  {
+    try
+    {
+      File file = new File( path );
+      if( !file.exists() )
+        return;
+
+      KalininMiljukovGroupType kmGroup = KMBindingUtils.load( file );
+      applyKMGroup( kmGroup );
+    }
+    catch( JAXBException ex )
+    {
+      IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.12", ex.toString() ), ex );//$NON-NLS-1$
+
+      KMPlugin.getDefault().getLog().log( status );
+
+      StatusDialog statusDialog = new StatusDialog( getShell(), status, getWizard().getWindowTitle() );
+      statusDialog.open();
+    }
+  }
+
+  private boolean saveAs( String path )
+  {
+    try
+    {
+      KMBindingUtils.save( m_kmGroup, new File( path ) );
+
+      return true;
+    }
+    catch( JAXBException ex )
+    {
+      IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.16", ex.toString() ), ex );//$NON-NLS-1$
+
+      KMPlugin.getDefault().getLog().log( status );
+
+      StatusDialog statusDialog = new StatusDialog( getShell(), status, getWizard().getWindowTitle() );
+      statusDialog.open();
+
+      return false;
+    }
+  }
+
+  private void applyKMGroup( final KalininMiljukovGroupType loadedGroup )
+  {
+    List<KalininMiljukovType> loadedKalininMiljukov = loadedGroup.getKalininMiljukov();
+    for( KalininMiljukovType loadedKmType : loadedKalininMiljukov )
+    {
+      String id = loadedKmType.getId();
+      KalininMiljukovType kmType = getForID( id );
+      if( kmType != null )
+      {
+        /* Copy values in the km type of the km group, which is created in the wizard. */
+        kmType.setFilePattern( loadedKmType.getFilePattern() );
+        kmType.setPath( loadedKmType.getPath() );
+        kmType.setKmStart( loadedKmType.getKmStart() );
+        kmType.setKmEnd( loadedKmType.getKmEnd() );
+        kmType.setRiverName( loadedKmType.getRiverName() );
+
+        /* Clear old profiles. */
+        List<Profile> profiles = kmType.getProfile();
+        profiles.clear();
+
+        /* Add new profiles. */
+        List<Profile> loadedProfiles = loadedKmType.getProfile();
+        profiles.addAll( loadedProfiles );
+      }
+    }
+  }
+
+  private KalininMiljukovType getForID( String fid )
+  {
+    if( m_kmGroup == null )
+      return null;
+
+    List<KalininMiljukovType> kalininMiljukov = m_kmGroup.getKalininMiljukov();
+    for( final Object element : kalininMiljukov )
+    {
+      final KalininMiljukovType km = (KalininMiljukovType) element;
+      if( fid.equals( km.getId() ) )
+        return km;
+    }
+
+    return null;
+  }
+
   private String getResourceKey( )
   {
-    final String base = "kalypsoRRM.kmUpdate.configPath"; //$NON-NLS-1$
-    final URL context = m_workspace.getContext();
+    String base = "kalypsoRRM.kmUpdate.configPath"; //$NON-NLS-1$
+    URL context = m_workspace.getContext();
     if( context == null )
       return base;
 
     return base + context.toString();
   }
 
+  public boolean finish( )
+  {
+    return StringUtils.isBlank( m_configPath ) || saveAs( m_configPath );
+  }
+
   public Map<KMChannel, KalininMiljukovType> getSelectedChannels( )
   {
-    final Object[] checkedElements = m_channelListViewer.getCheckedElements();
-    final Map<KMChannel, KalininMiljukovType> channels = new HashMap<KMChannel, KalininMiljukovType>();
+    Object[] checkedElements = m_channelListViewer.getCheckedElements();
+    Map<KMChannel, KalininMiljukovType> channels = new HashMap<KMChannel, KalininMiljukovType>();
 
-    for( final Object checkedElement : checkedElements )
+    for( Object checkedElement : checkedElements )
     {
-      final KMChannel channel = (KMChannel) checkedElement;
-      final KalininMiljukovType km = getForID( channel.getId() );
+      KMChannel channel = (KMChannel) checkedElement;
+      KalininMiljukovType km = getForID( channel.getId() );
       channels.put( channel, km );
     }
 
@@ -407,7 +496,7 @@ public class KMUpdateWizardPage extends WizardPage
 
   public KMUpdateOperation createOperation( )
   {
-    final Map<KMChannel, KalininMiljukovType> checkedChannels = getSelectedChannels();
+    Map<KMChannel, KalininMiljukovType> checkedChannels = getSelectedChannels();
     return new KMUpdateOperation( m_workspace, checkedChannels );
   }
 }
