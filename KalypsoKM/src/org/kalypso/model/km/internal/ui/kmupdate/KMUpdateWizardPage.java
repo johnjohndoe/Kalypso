@@ -179,7 +179,8 @@ public class KMUpdateWizardPage extends WizardPage
     Group kmGroup = new Group( main, SWT.NONE );
     kmGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     kmGroup.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.3" ) ); //$NON-NLS-1$
-    m_kmViewer = new KMViewer( kmGroup );
+    m_kmViewer = new KMViewer();
+    m_kmViewer.createControls( kmGroup );
 
     /* Create the config composite. */
     Composite configComposite = createConfigComposite( main );
