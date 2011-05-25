@@ -38,33 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.connect.Executor;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.DeleteObjectCommand;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.ui.internal.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
- *
  */
-public class RemoveWaterBodyAction extends UpdateableAction
+public class RemoveStateAction extends UpdateableAction
 {
-  private final ManageWaterBodiesPage m_page;
+  private final ManageStatesPage m_page;
 
-  private final WaterBodyViewer m_viewer;
+  private final StatesViewer m_viewer;
 
-  public RemoveWaterBodyAction( final ManageWaterBodiesPage page, final WaterBodyViewer viewer )
+  public RemoveStateAction( final ManageStatesPage page, final StatesViewer viewer )
   {
     m_page = page;
     m_viewer = viewer;
@@ -83,45 +82,23 @@ public class RemoveWaterBodyAction extends UpdateableAction
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final WaterBodies waterBody = m_page.getSelectedItem();
-    final String id = waterBody.getWaterBody();
-    final String dialogTitle = "Remove Water Body";
+    final States state = m_page.getSelectedItem();
+    final String id = state.getState();
+    final String dialogTitle = "Remove State";
 
-    try
+    final RemoveStateDialog dialog = new RemoveStateDialog( shell, dialogTitle, state );
+    if( dialog.open() == Window.OK )
     {
-      final boolean hasData = hasData( waterBody );
+      final Session session = m_page.getSession();
+      final IPdbOperation operation = new RemoveStateOperation( state );
 
-      if( hasData )
-      {
-        /* show dialog with states/cross-sections -> water cannot be removed */
-        final CannotRemoveWaterBodyDialog dialog = new CannotRemoveWaterBodyDialog( shell, dialogTitle, waterBody );
-        dialog.open();
-        return;
-      }
-      else
-      {
-        final String message = String.format( "Remove waterbody: %s (%s)? This operation cannot be undone.", waterBody.getName(), id );
-        if( !MessageDialog.openConfirm( shell, dialogTitle, message ) )
-          return;
-
-        final Session session = m_page.getSession();
-        final DeleteObjectCommand operation = new DeleteObjectCommand( waterBody );
-        new Executor( session, operation ).execute();
-      }
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
-      new StatusDialog2( shell, status, dialogTitle ).open();
+      final ExecutorRunnable runnable = new ExecutorRunnable( session, operation );
+      runnable.setOKStatus( new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "Status was successfully removed" ) );
+      final IStatus result = RunnableContextHelper.execute( m_page.getWizard().getContainer(), true, false, runnable );
+      new StatusDialog2( shell, result, dialogTitle ).open();
     }
 
     /* Refresh and try to select old id (good in case of cancel) */
-    m_viewer.refreshWaterBodies( id );
-  }
-
-  private boolean hasData( final WaterBodies waterBody )
-  {
-    return !waterBody.getCrossSectionses().isEmpty();
+    m_viewer.refreshStates( id );
   }
 }

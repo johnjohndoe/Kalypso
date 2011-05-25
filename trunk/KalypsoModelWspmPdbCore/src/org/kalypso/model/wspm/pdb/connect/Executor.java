@@ -61,6 +61,11 @@ public class Executor
     m_operation = operation;
   }
 
+  public String getLabel( )
+  {
+    return m_operation.getLabel();
+  }
+
   public void execute( ) throws PdbConnectException
   {
     Assert.isTrue( m_session.isOpen() );

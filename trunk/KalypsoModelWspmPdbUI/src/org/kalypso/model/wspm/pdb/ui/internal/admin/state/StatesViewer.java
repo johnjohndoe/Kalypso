@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,12 +62,12 @@ import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
 
 /**
  * @author Gernot Belger
  */
-public class WaterBodyViewer
+public class StatesViewer
 {
   private TableViewer m_viewer;
 
@@ -75,7 +75,7 @@ public class WaterBodyViewer
 
   private final Session m_session;
 
-  public WaterBodyViewer( final Session session )
+  public StatesViewer( final Session session )
   {
     m_session = session;
   }
@@ -88,39 +88,33 @@ public class WaterBodyViewer
 
     table.addControlListener( new ColumnsResizeControlListener() );
 
-    final TableViewerColumn gknColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
-    gknColumn.getColumn().setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
-    gknColumn.getColumn().setResizable( false );
-    gknColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
-
-    ColumnViewerSorter.registerSorter( gknColumn, new ViewerSorter() );
-
     final TableViewerColumn nameColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
-    nameColumn.getColumn().setText( WaterBodyStrings.STR_NAME );
+    nameColumn.getColumn().setText( "Name" );
     nameColumn.getColumn().setResizable( false );
     nameColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
     ColumnViewerSorter.registerSorter( nameColumn, new ViewerSorter() );
 
-    m_tableInput = new WritableList( new ArrayList<WaterBodies>(), WaterBodies.class );
+    ColumnViewerSorter.setSortState( nameColumn, Boolean.FALSE );
 
-    refreshWaterBodies( null );
+    m_tableInput = new WritableList( new ArrayList<States>(), States.class );
 
-    final IValueProperty nameProperty = BeanProperties.value( WaterBodies.class, WaterBodies.PROPERTY_NAME );
-    final IValueProperty gknProperty = BeanProperties.value( WaterBodies.class, WaterBodies.PROPERTY_WATERBODY );
+    refreshStates( null );
 
-    final IValueProperty[] labelProperties = new IValueProperty[] { gknProperty, nameProperty };
+    final IValueProperty nameProperty = BeanProperties.value( States.class, States.PROPERTY_STATE );
+
+    final IValueProperty[] labelProperties = new IValueProperty[] { nameProperty };
     ViewerSupport.bind( m_viewer, m_tableInput, labelProperties );
 
     return m_viewer;
   }
 
-  public void refreshWaterBodies( final String id )
+  public void refreshStates( final String id )
   {
     m_tableInput.clear();
-    final List<WaterBodies> waterBodies = Arrays.asList( loadWaterbodies() );
-    m_tableInput.addAll( waterBodies );
+    final List<States> states = Arrays.asList( loadStates() );
+    m_tableInput.addAll( states );
 
-    final WaterBodies toSelect = findWaterBody( waterBodies, id );
+    final States toSelect = findState( states, id );
 
     if( toSelect == null )
       m_viewer.setSelection( StructuredSelection.EMPTY );
@@ -128,15 +122,15 @@ public class WaterBodyViewer
       m_viewer.setSelection( new StructuredSelection( toSelect ) );
   }
 
-  private static WaterBodies findWaterBody( final List<WaterBodies> waterBodies, final String id )
+  private static States findState( final List<States> states, final String name )
   {
-    if( id == null )
+    if( name == null )
       return null;
 
-    for( final WaterBodies waterBody : waterBodies )
+    for( final States state : states )
     {
-      if( waterBody.getWaterBody().equals( id ) )
-        return waterBody;
+      if( state.getState().equals( name ) )
+        return state;
     }
 
     return null;
@@ -147,19 +141,19 @@ public class WaterBodyViewer
     return m_viewer.getControl();
   }
 
-  protected WaterBodies[] loadWaterbodies( )
+  protected States[] loadStates( )
   {
     try
     {
-      final ListOperation<WaterBodies> operation = new ListOperation<WaterBodies>( WaterBodies.class );
+      final ListOperation<States> operation = new ListOperation<States>( States.class );
       new Executor( m_session, operation ).execute();
-      final List<WaterBodies> waterBodies = operation.getList();
-      return waterBodies.toArray( new WaterBodies[waterBodies.size()] );
+      final List<States> states = operation.getList();
+      return states.toArray( new States[states.size()] );
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new WaterBodies[] {};
+      return new States[] {};
     }
   }
 
@@ -168,8 +162,8 @@ public class WaterBodyViewer
     return m_viewer;
   }
 
-  public WaterBodies[] getExistingWaterbodies( )
+  public States[] getExistingStates( )
   {
-    return (WaterBodies[]) m_tableInput.toArray( new WaterBodies[m_tableInput.size()] );
+    return (States[]) m_tableInput.toArray( new States[m_tableInput.size()] );
   }
 }

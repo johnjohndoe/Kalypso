@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.pdb.connect.ConnectionUtils;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
@@ -77,7 +76,8 @@ public class GafImporter implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Read GAF file", 100 );
+    final String taskName = String.format( "Reading %s", m_gafFile.getName() );
+    monitor.beginTask( taskName, 100 );
 
     final Session session = m_data.getSession();
 
@@ -95,8 +95,6 @@ public class GafImporter implements ICoreRunnableWithProgress
       gafReader = new GafReader( m_logger, gaf2db );
       gafReader.read( m_gafFile, new SubProgressMonitor( monitor, 90 ) );
       gafReader.close();
-
-      session.close();
 
       return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "Successfully imported GAF file" );
     }
@@ -116,8 +114,6 @@ public class GafImporter implements ICoreRunnableWithProgress
     {
       if( gafReader != null )
         gafReader.closeQuietly();
-
-      ConnectionUtils.closeSessionQuietly( session );
     }
   }
 }

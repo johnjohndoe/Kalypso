@@ -48,6 +48,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Session;
+import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -59,7 +60,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.
 /**
  * @author Gernot Belger
  */
-public class EditWaterBodyAction extends WaterBodyAction
+public class EditWaterBodyAction extends UpdateableAction
 {
   private final ManageWaterBodiesPage m_page;
 
@@ -96,6 +97,8 @@ public class EditWaterBodyAction extends WaterBodyAction
         final String newID = selectedItem.getWaterBody();
         Assert.isTrue( newID.equals( oldID ) );
 
+        // FIXME: a bit dubious (also the refresh below). Instead, we should clone the object
+        // and edit the clone. Only copy the changed values back, if OK
         final UpdateObjectCommand operation = new UpdateObjectCommand( selectedItem );
         new Executor( session, operation ).execute();
       }

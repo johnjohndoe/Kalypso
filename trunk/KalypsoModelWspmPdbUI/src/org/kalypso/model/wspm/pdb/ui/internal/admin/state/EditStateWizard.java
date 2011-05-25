@@ -38,19 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
 
 /**
  * @author Gernot Belger
  */
-public abstract class WaterBodyAction extends Action
+public class EditStateWizard extends Wizard
 {
-  public void update( )
+  private final States m_state;
+
+  public EditStateWizard( final States[] existingStates, final States state )
   {
-    setEnabled( checkEnabled() );
+    m_state = state;
+
+    setWindowTitle( "Edit State" );
+
+    addPage( new EditStatePage( "editState", m_state, existingStates, Mode.EDIT ) ); //$NON-NLS-1$
   }
 
-  protected abstract boolean checkEnabled( );
+  @Override
+  public boolean performFinish( )
+  {
+    return true;
+  }
 }

@@ -84,7 +84,7 @@ public class ImportGafAction extends Action
     try
     {
       session = m_connection.openSession();
-      final List<States> states = getStates( session );
+      final States[] states = getStates( session );
 
       final String username = m_connection.getSettings().getUsername();
       final Wizard importWizard = new ImportGafWizard( session, states, username );
@@ -106,10 +106,11 @@ public class ImportGafAction extends Action
     }
   }
 
-  private List<States> getStates( final Session session ) throws PdbConnectException
+  private States[] getStates( final Session session ) throws PdbConnectException
   {
     final ListOperation<States> operation = new ListOperation<States>( States.class );
     new Executor( session, operation ).execute();
-    return operation.getList();
+    final List<States> list = operation.getList();
+    return list.toArray( new States[list.size()] );
   }
 }

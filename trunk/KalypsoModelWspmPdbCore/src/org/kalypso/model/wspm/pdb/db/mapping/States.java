@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -148,7 +149,7 @@ public class States extends AbstractModelObject implements java.io.Serializable,
     firePropertyChange( PROPERTY_EDITINGUSER, oldValue, editingUser );
   }
 
-  @Temporal(TemporalType.DATE)
+  @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "MEASUREMENT_DATE", length = 7)
   public Date getMeasurementDate( )
   {
@@ -194,7 +195,7 @@ public class States extends AbstractModelObject implements java.io.Serializable,
     firePropertyChange( PROPERTY_COMMENT, oldValue, comment );
   }
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "states")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "states", cascade = CascadeType.REMOVE)
   public Set<CrossSections> getCrossSectionses( )
   {
     return this.crossSectionses;
@@ -208,5 +209,4 @@ public class States extends AbstractModelObject implements java.io.Serializable,
 
     firePropertyChange( PROPERTY_CROSSSECTIONSES, oldValue, crossSectionses );
   }
-
 }

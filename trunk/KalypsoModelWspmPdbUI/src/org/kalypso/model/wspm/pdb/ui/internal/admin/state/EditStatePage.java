@@ -38,10 +38,9 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import java.util.Calendar;
-import java.util.List;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -58,6 +57,8 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.DateTimeSelectionProperty;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.UniqueStateNameValidator;
 import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
@@ -66,18 +67,27 @@ import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
  */
 public class EditStatePage extends WizardPage
 {
+  public enum Mode
+  {
+    NEW,
+    EDIT;
+  }
+
   private final States m_state;
 
   private DatabindingWizardPage m_binding;
 
-  private final List<States> m_existingStates;
+  private final States[] m_existingStates;
 
-  public EditStatePage( final String pageName, final States state, final List<States> existingStates )
+  private final Mode m_mode;
+
+  public EditStatePage( final String pageName, final States state, final States[] existingStates, final Mode mode )
   {
     super( pageName );
 
     m_state = state;
     m_existingStates = existingStates;
+    m_mode = mode;
 
     setTitle( "Enter State Properties" );
     setDescription( "Enter the properties of the freshly created state" );
@@ -103,7 +113,9 @@ public class EditStatePage extends WizardPage
   {
     new Label( parent, SWT.NONE ).setText( "Name" );
 
-    final Text field = new Text( parent, SWT.BORDER );
+    final int style = m_mode == Mode.EDIT ? SWT.BORDER | SWT.READ_ONLY : SWT.BORDER;
+
+    final Text field = new Text( parent, style );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     field.setMessage( "<Eindeutiger Name des Zustands>" );
     field.setTextLimit( States.NAME_LIMIT );
@@ -113,11 +125,15 @@ public class EditStatePage extends WizardPage
 
     final DataBinder binder = new DataBinder( target, model );
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Name' is empty" ) );
-    binder.addTargetAfterGetValidator( new UniqueStateNameValidator( m_existingStates ) );
-    binder.addTargetBeforeSetValidator( new UniqueStateNameValidator( m_existingStates ) );
-    // FIXME: does not work correctly: if file is changed on file page, we will not get a correct validation here
-    // using a warning here at least shows the correct
-    binder.addModelAfterGetValidator( new UniqueStateNameValidator( m_existingStates, IStatus.WARNING ) );
+    if( m_mode == Mode.NEW )
+    {
+      final UniqueStateNameValidator uniqueStateNameValidator = new UniqueStateNameValidator( m_existingStates );
+      binder.addTargetAfterGetValidator( uniqueStateNameValidator );
+      binder.addTargetBeforeSetValidator( uniqueStateNameValidator );
+      // FIXME: does not work correctly: if file is changed on file page, we will not get a correct validation here
+      // using a warning here at least shows the correct
+      binder.addModelAfterGetValidator( new UniqueStateNameValidator( m_existingStates, IStatus.WARNING ) );
+    }
 
     m_binding.bindValue( binder );
   }

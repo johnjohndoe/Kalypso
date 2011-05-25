@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -57,8 +58,11 @@ public class ByStateContentProvider implements ITreeContentProvider
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement instanceof States[] )
-      return (States[]) inputElement;
+    if( inputElement instanceof Object[] )
+      return (Object[]) inputElement;
+
+    if( inputElement instanceof Collection )
+      return ((Collection< ? >) inputElement).toArray();
 
     return ArrayUtils.EMPTY_OBJECT_ARRAY;
   }
