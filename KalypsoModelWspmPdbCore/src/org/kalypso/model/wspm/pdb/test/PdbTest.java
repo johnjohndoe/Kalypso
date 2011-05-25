@@ -44,14 +44,16 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.classic.Session;
 import org.hibernatespatial.postgis.PostgisDialect;
 import org.junit.Test;
+import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.internal.AddObjectOperation;
 import org.kalypso.model.wspm.pdb.connect.internal.postgis.PostgisSettings;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
@@ -84,7 +86,10 @@ public class PdbTest extends Assert
     final Points onePoint = new Points();
     onePoint.setPoint( "" + System.currentTimeMillis() );
     onePoint.setLocation( new GeometryFactory().createPoint( new Coordinate( 3.14, 2.79 ) ) );
-    connection.addPoint( onePoint );
+
+    final Session session = connection.openSession();
+    final AddObjectOperation operation = new AddObjectOperation( onePoint );
+    new Executor( session, operation ).execute();
   }
 
   // @Test

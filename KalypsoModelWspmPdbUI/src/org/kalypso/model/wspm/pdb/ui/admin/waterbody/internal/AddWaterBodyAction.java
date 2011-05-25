@@ -46,8 +46,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.hibernate.Session;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.SaveObjectCommand;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
@@ -59,13 +60,13 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
  */
 public class AddWaterBodyAction extends WaterBodyAction
 {
-  private final IPdbConnection m_connection;
-
   private final WaterBodyViewer m_viewer;
 
-  public AddWaterBodyAction( final IPdbConnection connection, final WaterBodyViewer viewer, final String title )
+  private final Session m_session;
+
+  public AddWaterBodyAction( final Session session, final WaterBodyViewer viewer, final String title )
   {
-    m_connection = connection;
+    m_session = session;
     m_viewer = viewer;
 
     setText( title );
@@ -85,7 +86,8 @@ public class AddWaterBodyAction extends WaterBodyAction
     {
       try
       {
-        m_connection.executeCommand( new SaveObjectCommand( newWaterBody ) );
+        final SaveObjectCommand operation = new SaveObjectCommand( newWaterBody );
+        new Executor( m_session, operation ).execute();
         m_viewer.refreshWaterBodies( newWaterBody.getWaterBody() );
       }
       catch( final PdbConnectException e )

@@ -46,6 +46,7 @@ import java.util.Date;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
@@ -75,12 +76,16 @@ public class ImportGafData extends AbstractModelObject
 
   private WaterBodies m_waterBody;
 
-  public ImportGafData( )
+  private final Session m_session;
+
+  public ImportGafData( final Session session, final String username )
   {
+    m_session = session;
     /* Pre init measurement date to now */
     m_state.setMeasurementDate( new Date() );
     m_state.setIsstatezero( States.ZERO_STATE_ON );
     m_state.setComment( StringUtils.EMPTY );
+    m_state.setEditingUser( username );
   }
 
   public void init( final IDialogSettings settings )
@@ -198,5 +203,10 @@ public class ImportGafData extends AbstractModelObject
 
     // TODO Auto-generated method stub
     return 31467;
+  }
+
+  public Session getSession( )
+  {
+    return m_session;
   }
 }

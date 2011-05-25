@@ -64,6 +64,11 @@ public class WaterBodies extends AbstractModelObject implements java.io.Serializ
     this.crossSectionses = crossSectionses;
   }
 
+  public WaterBodies( final WaterBodies selectedItem )
+  {
+    // TODO Auto-generated constructor stub
+  }
+
   @Id
   @Column(name = "WATER_BODY", unique = true, nullable = false, length = 100)
   public String getWaterBody( )

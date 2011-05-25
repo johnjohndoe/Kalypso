@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.commons;bundle-version="10.10.2",
  org.eclipse.equinox.security;bundle-version="1.0.200",
  org.kalypso.core;bundle-version="10.10.2",
- org.hibernate;bundle-version="3.6.4"
+ org.hibernate;bundle-version="3.6.4";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.persistence

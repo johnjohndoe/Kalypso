@@ -61,9 +61,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.hibernate.Session;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal.AddWaterBodyAction;
@@ -77,17 +77,14 @@ import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
  */
 public class ChooseWaterPage extends WizardPage
 {
-  private final IPdbConnection m_connection;
-
   private final ImportGafData m_data;
 
   private WaterBodyViewer m_waterBodyViewer;
 
-  ChooseWaterPage( final String pageName, final IPdbConnection connection, final ImportGafData data )
+  ChooseWaterPage( final String pageName, final ImportGafData data )
   {
     super( pageName );
 
-    m_connection = connection;
     m_data = data;
 
     setTitle( "Choose Water Body" );
@@ -109,7 +106,7 @@ public class ChooseWaterPage extends WizardPage
 
   private Control createWaterBodyTable( final DatabindingWizardPage binding, final Composite parent )
   {
-    m_waterBodyViewer = new WaterBodyViewer( m_connection );
+    m_waterBodyViewer = new WaterBodyViewer( m_data.getSession() );
     final TableViewer waterBodiesViewer = m_waterBodyViewer.createTableViewer( parent );
 
     /* selection -> data */
@@ -177,7 +174,8 @@ public class ChooseWaterPage extends WizardPage
 
   private Control createActions( final Composite panel )
   {
-    final Action addAction = new AddWaterBodyAction( m_connection, m_waterBodyViewer, "Create New Water Body..." );
+    final Session session = m_data.getSession();
+    final Action addAction = new AddWaterBodyAction( session, m_waterBodyViewer, "Create New Water Body..." );
     return ActionHyperlink.createHyperlink( null, panel, SWT.NONE, addAction );
   }
 }

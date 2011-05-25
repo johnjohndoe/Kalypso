@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.command;
 
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**

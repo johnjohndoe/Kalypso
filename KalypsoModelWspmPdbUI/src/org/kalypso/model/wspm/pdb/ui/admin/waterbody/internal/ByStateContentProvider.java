@@ -40,50 +40,69 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.ConnectionUtils;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import java.util.Set;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
 
 /**
  * @author Gernot Belger
+ *
  */
-public class ManageWaterBodiesWizard extends Wizard
+public class ByStateContentProvider implements ITreeContentProvider
 {
-  private final Session m_session;
-
-  public ManageWaterBodiesWizard( final IPdbConnection connection )
+  @Override
+  public Object[] getElements( final Object inputElement )
   {
-    m_session = openSession( connection );
+    if( inputElement instanceof States[] )
+      return (States[]) inputElement;
 
-    addPage( new ManageWaterBodiesPage( "waterBodies", m_session ) ); //$NON-NLS-1$
+    return ArrayUtils.EMPTY_OBJECT_ARRAY;
   }
 
-  private Session openSession( final IPdbConnection connection )
+  @Override
+  public boolean hasChildren( final Object element )
   {
-    try
+    if( element instanceof States )
     {
-      return connection.openSession();
+      final Set<CrossSections> children = ((States) element).getCrossSectionses();
+      return !children.isEmpty();
     }
-    catch( final PdbConnectException e )
+
+    return false;
+  }
+
+  @Override
+  public Object[] getChildren( final Object parentElement )
+  {
+    if( parentElement instanceof States )
     {
-      e.printStackTrace();
-      return null;
+      final Set<CrossSections> children = ((States) parentElement).getCrossSectionses();
+      return children.toArray( new CrossSections[children.size()] );
     }
+
+    return ArrayUtils.EMPTY_OBJECT_ARRAY;
+  }
+
+  @Override
+  public Object getParent( final Object element )
+  {
+    if( element instanceof CrossSections )
+      return ((CrossSections) element).getStates();
+
+    return null;
   }
 
   @Override
   public void dispose( )
   {
-    ConnectionUtils.closeSessionQuietly( m_session );
-
-    super.dispose();
   }
 
   @Override
-  public boolean performFinish( )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    return true;
   }
 }

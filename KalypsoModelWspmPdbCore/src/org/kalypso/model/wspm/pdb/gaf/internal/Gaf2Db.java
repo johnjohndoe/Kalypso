@@ -40,8 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf.internal;
 
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import java.util.Date;
+
+import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.internal.AddObjectOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
@@ -55,8 +59,6 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  */
 public class Gaf2Db
 {
-  private final IPdbConnection m_connection;
-
   private final WaterBodies m_waterBody;
 
   private final States m_state;
@@ -65,9 +67,11 @@ public class Gaf2Db
 
   private int m_profileCount = 0;
 
-  public Gaf2Db( final IPdbConnection connection, final WaterBodies waterBody, final States state, final int srid )
+  private final Session m_session;
+
+  public Gaf2Db( final Session session, final WaterBodies waterBody, final States state, final int srid )
   {
-    m_connection = connection;
+    m_session = session;
     m_waterBody = waterBody;
     m_state = state;
     m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
@@ -75,13 +79,18 @@ public class Gaf2Db
 
   public void addState( ) throws PdbConnectException
   {
-    m_connection.addState( m_state );
+    final Date now = new Date();
+    m_state.setCreationDate( now );
+    m_state.setEditingDate( now );
+
+    final AddObjectOperation addOperation = new AddObjectOperation( m_state );
+    new Executor( m_session, addOperation ).execute();
   }
 
   public void commitProfile( final GafProfile profile ) throws PdbConnectException
   {
     final AddProfileCommand operation = new AddProfileCommand( m_profileCount++, profile, m_waterBody, m_state, m_geometryFactory );
-    m_connection.executeCommand( operation );
+    new Executor( m_session, operation ).execute();
   }
 
   public GeometryFactory getGeometryFactory( )

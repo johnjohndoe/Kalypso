@@ -61,7 +61,8 @@ public class WspmPdbUiImages
     GAF_IMPORT("icons/importGAF.gif"), //$NON-NLS-1$
 
     STATE("icons/state.gif"), //$NON-NLS-1$
-    WATER_BODY("icons/waterBody.gif"); //$NON-NLS-1$
+    WATER_BODY("icons/waterBody.gif"),
+    CROSS_SECTION("icons/crossSection.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

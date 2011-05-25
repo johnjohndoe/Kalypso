@@ -38,32 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.command;
+package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import java.math.BigDecimal;
+
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
 
 /**
  * @author Gernot Belger
  */
-public class SaveObjectCommand implements IPdbOperation
+public class PdbComparator extends ViewerComparator
 {
-  private final Object m_element;
-
-  public SaveObjectCommand( final Object element )
-  {
-    m_element = element;
-  }
-
   @Override
-  public String getLabel( )
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    return "Save object: " + m_element;
-  }
+    if( e1 instanceof CrossSections && e2 instanceof CrossSections )
+    {
+      final CrossSections c1 = (CrossSections) e1;
+      final CrossSections c2 = (CrossSections) e2;
 
-  @Override
-  public void execute( final Session session )
-  {
-    session.save( m_element );
+      final BigDecimal s1 = c1.getStation();
+      final BigDecimal s2 = c2.getStation();
+
+      return s1.compareTo( s2 );
+    }
+
+    return super.compare( viewer, e1, e2 );
   }
 }

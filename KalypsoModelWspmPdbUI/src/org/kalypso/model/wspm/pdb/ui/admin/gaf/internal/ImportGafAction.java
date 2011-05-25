@@ -49,9 +49,13 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.hibernate.Session;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.connect.ConnectionUtils;
+import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -76,14 +80,19 @@ public class ImportGafAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
+    Session session = null;
     try
     {
-      final List<States> states = m_connection.getStates();
+      session = m_connection.openSession();
+      final List<States> states = getStates( session );
 
-      final Wizard importWizard = new ImportGafWizard( m_connection, states );
+      final String username = m_connection.getSettings().getUsername();
+      final Wizard importWizard = new ImportGafWizard( session, states, username );
       importWizard.setWindowTitle( "Import GAF file" );
       final WizardDialog dialog = new WizardDialog( shell, importWizard );
       dialog.open();
+
+      session.close();
     }
     catch( final PdbConnectException e )
     {
@@ -91,5 +100,16 @@ public class ImportGafAction extends Action
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Error during GAF Import", e );
       new StatusDialog2( shell, status, "GAF Import" ).open();
     }
+    finally
+    {
+      ConnectionUtils.closeSessionQuietly( session );
+    }
+  }
+
+  private List<States> getStates( final Session session ) throws PdbConnectException
+  {
+    final ListOperation<States> operation = new ListOperation<States>( States.class );
+    new Executor( session, operation ).execute();
+    return operation.getList();
   }
 }
