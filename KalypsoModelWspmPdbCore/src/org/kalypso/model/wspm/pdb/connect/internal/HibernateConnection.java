@@ -245,6 +245,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     checkConnection();
 
     final Session session = m_sessionFactory.openSession();
+
     Transaction transaction = null;
     try
     {
@@ -312,6 +313,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     checkConnection();
 
     final Session session = m_sessionFactory.openSession();
+
     try
     {
       final String query = String.format( "from %s", type.getName() );

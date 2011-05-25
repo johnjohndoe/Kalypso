@@ -114,13 +114,32 @@ public class WaterBodyViewer
     return m_viewer;
   }
 
-  public void refreshWaterBodies( final WaterBodies select )
+  public void refreshWaterBodies( final String id )
   {
     m_tableInput.clear();
-    m_tableInput.addAll( Arrays.asList( loadWaterbodies() ) );
+    final List<WaterBodies> waterBodies = Arrays.asList( loadWaterbodies() );
+    m_tableInput.addAll( waterBodies );
 
-    if( select != null )
-      m_viewer.setSelection( new StructuredSelection( select ) );
+    final WaterBodies toSelect = findWaterBody( waterBodies, id );
+
+    if( toSelect == null )
+      m_viewer.setSelection( StructuredSelection.EMPTY );
+    else
+      m_viewer.setSelection( new StructuredSelection( toSelect ) );
+  }
+
+  private static WaterBodies findWaterBody( final List<WaterBodies> waterBodies, final String id )
+  {
+    if( id == null )
+      return null;
+
+    for( final WaterBodies waterBody : waterBodies )
+    {
+      if( waterBody.getWaterBody().equals( id ) )
+        return waterBody;
+    }
+
+    return null;
   }
 
   public Control getControl( )

@@ -40,11 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.SaveObjectCommand;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal.EditWaterBodyPage.Mode;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
@@ -68,12 +76,25 @@ public class AddWaterBodyAction extends WaterBodyAction
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final AddWaterBodyWizard wizard = new AddWaterBodyWizard( m_connection, m_viewer.getExistingWaterbodies() );
+    final WaterBodies newWaterBody = new WaterBodies();
+    final EditWaterBodyWizard wizard = new EditWaterBodyWizard( m_viewer.getExistingWaterbodies(), newWaterBody, Mode.NEW );
     wizard.setWindowTitle( "Create New Water Body" );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     if( dialog.open() == Window.OK )
-      m_viewer.refreshWaterBodies( wizard.getWaterBody() );
+    {
+      try
+      {
+        m_connection.executeCommand( new SaveObjectCommand( newWaterBody ) );
+        m_viewer.refreshWaterBodies( newWaterBody.getWaterBody() );
+      }
+      catch( final PdbConnectException e )
+      {
+        e.printStackTrace();
+        final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
+        new StatusDialog2( shell, status, wizard.getWindowTitle() ).open();
+      }
+    }
   }
 
   @Override

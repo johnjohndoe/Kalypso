@@ -61,18 +61,27 @@ import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
  */
 public class EditWaterBodyPage extends WizardPage
 {
+  enum Mode
+  {
+    NEW,
+    EDIT;
+  }
+
   private final WaterBodies m_waterBody;
 
   private DatabindingWizardPage m_binding;
 
   private final WaterBodies[] m_existingWaterbodies;
 
-  public EditWaterBodyPage( final String pageName, final WaterBodies waterBody, final WaterBodies[] existingWaterbodies )
+  private final Mode m_mode;
+
+  public EditWaterBodyPage( final String pageName, final WaterBodies waterBody, final WaterBodies[] existingWaterbodies, final Mode mode )
   {
     super( pageName );
 
     m_waterBody = waterBody;
     m_existingWaterbodies = existingWaterbodies;
+    m_mode = mode;
 
     setTitle( "Edit Properties" );
     setDescription( "Edit the properties of the water body" );
@@ -98,7 +107,9 @@ public class EditWaterBodyPage extends WizardPage
   {
     new Label( parent, SWT.NONE ).setText( "Gewässerkennziffer" );
 
-    final Text field = new Text( parent, SWT.BORDER );
+    final int style = getIDStyle();
+
+    final Text field = new Text( parent, SWT.BORDER | style );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     field.setMessage( "<Eindeutige Kennziffer des Gewässers>" );
     field.setTextLimit( WaterBodies.WATERBODY_LIMIT );
@@ -108,9 +119,25 @@ public class EditWaterBodyPage extends WizardPage
 
     final DataBinder binder = new DataBinder( target, model );
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'ID' is empty" ) );
-    binder.addTargetAfterGetValidator( new UniqueWaterBodyIDValidator( m_existingWaterbodies ) );
+
+    if( m_mode == Mode.NEW )
+      binder.addTargetAfterGetValidator( new UniqueWaterBodyIDValidator( m_existingWaterbodies ) );
 
     m_binding.bindValue( binder );
+  }
+
+  private int getIDStyle( )
+  {
+    switch( m_mode )
+    {
+      case NEW:
+        return SWT.NONE;
+
+      case EDIT:
+        return SWT.READ_ONLY;
+    }
+
+    throw new IllegalStateException();
   }
 
   private void createNameControls( final Composite parent )
@@ -119,15 +146,17 @@ public class EditWaterBodyPage extends WizardPage
 
     final Text field = new Text( parent, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setMessage( "<Eindeutiger Name des Gewässers>" );
+    field.setMessage( "<Name des Gewässers>" );
     field.setTextLimit( WaterBodies.NAME_LIMIT );
 
     final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBodies.PROPERTY_NAME );
     final DataBinder binder = new DataBinder( target, model );
 
+    final String ignoreName = m_mode == Mode.EDIT ? m_waterBody.getName() : null;
+
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Name' is empty" ) );
-    binder.addTargetAfterGetValidator( new UniqueWaterBodyNameValidator( m_existingWaterbodies ) );
+    binder.addTargetAfterGetValidator( new UniqueWaterBodyNameValidator( m_existingWaterbodies, ignoreName ) );
 
     m_binding.bindValue( binder );
   }
@@ -136,7 +165,7 @@ public class EditWaterBodyPage extends WizardPage
   {
     final Label label = new Label( parent, SWT.NONE );
     label.setText( "Description" );
-    label.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
+    label.setLayoutData( new GridData( SWT.LEFT, SWT.TOP, false, false ) );
 
     final Text field = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
     field.setTextLimit( WaterBodies.COMMENT_LIMIT );

@@ -114,6 +114,11 @@ public class EditStatePage extends WizardPage
     final DataBinder binder = new DataBinder( target, model );
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Name' is empty" ) );
     binder.addTargetAfterGetValidator( new UniqueStateNameValidator( m_existingStates ) );
+    binder.addTargetBeforeSetValidator( new UniqueStateNameValidator( m_existingStates ) );
+    // FIXME: does not work correctly: if file is changed on file page, we will not get a correct validation here
+    // using a warning here at least shows the correct
+    binder.addModelAfterGetValidator( new UniqueStateNameValidator( m_existingStates, IStatus.WARNING ) );
+
     m_binding.bindValue( binder );
   }
 
