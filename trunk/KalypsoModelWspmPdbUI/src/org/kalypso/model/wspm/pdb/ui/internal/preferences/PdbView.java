@@ -57,8 +57,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
@@ -92,7 +92,7 @@ public class PdbView extends ViewPart
     }
   };
 
-  private ScrolledForm m_form;
+  private Form m_form;
 
   private FormToolkit m_toolkit;
 
@@ -128,8 +128,8 @@ public class PdbView extends ViewPart
   {
     m_toolkit = ToolkitUtils.createToolkit( parent );
 
-    m_form = m_toolkit.createScrolledForm( parent );
-    m_toolkit.decorateFormHeading( m_form.getForm() );
+    m_form = m_toolkit.createForm( parent );
+    m_toolkit.decorateFormHeading( m_form );
 
     m_form.setImage( getFormImage() );
     m_form.setText( getFormTitel() );
@@ -237,7 +237,7 @@ public class PdbView extends ViewPart
     else
       createNonConnectedControl( body );
 
-    m_form.reflow( true );
+    m_form.layout();
   }
 
   private void createNonConnectedControl( final Composite parent )

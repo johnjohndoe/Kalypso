@@ -48,14 +48,28 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.ConnectionAdminControl;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ConnectionContentControl;
 
 /**
  * @author Gernot Belger
  */
 public class ConnectionViewer extends Composite
 {
+  private final IUpdateable m_updateable = new IUpdateable()
+  {
+    @Override
+    public void update( )
+    {
+      handleUpdate();
+    }
+  };
+
   private final IPdbConnection m_connection;
+
+  private ConnectionContentControl m_contentViewer;
 
   public ConnectionViewer( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection )
   {
@@ -78,7 +92,7 @@ public class ConnectionViewer extends Composite
     group.setText( "Administration" );
     group.setLayout( new FillLayout() );
 
-    new ConnectionAdminControl( toolkit, group, m_connection );
+    new ConnectionAdminControl( toolkit, group, m_connection, m_updateable );
 
     return group;
   }
@@ -90,8 +104,14 @@ public class ConnectionViewer extends Composite
     group.setText( "Inhalt" );
     group.setLayout( new FillLayout() );
 
-    new ConnectionContentControl( toolkit, group, m_connection );
+    m_contentViewer = new ConnectionContentControl( toolkit, group, m_connection );
 
     return group;
+  }
+
+  protected void handleUpdate( )
+  {
+    if( m_contentViewer != null )
+      m_contentViewer.refresh();
   }
 }

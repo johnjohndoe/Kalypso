@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.preferences;
+package org.kalypso.model.wspm.pdb.ui.internal.admin;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -48,8 +48,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafAction;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.ManageStateAction;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ManageWaterBodyAction;
 
 /**
  * @author Gernot Belger
@@ -58,11 +61,14 @@ public class ConnectionAdminControl extends Composite
 {
   private final IPdbConnection m_connection;
 
-  public ConnectionAdminControl( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection )
+  private final IUpdateable m_updateable;
+
+  public ConnectionAdminControl( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection, final IUpdateable updateable )
   {
     super( parent, SWT.NONE );
 
     m_connection = connection;
+    m_updateable = updateable;
 
     GridLayoutFactory.swtDefaults().applyTo( this );
     toolkit.adapt( this );
@@ -74,19 +80,19 @@ public class ConnectionAdminControl extends Composite
 
   private Control createImportControl( final FormToolkit toolkit, final Composite parent )
   {
-    final Action importAction = new ImportGafAction( m_connection );
+    final Action importAction = new ImportGafAction( m_connection, m_updateable );
     return ActionHyperlink.createHyperlink( toolkit, parent, SWT.NONE, importAction );
   }
 
   private Control createWaterBodyControl( final FormToolkit toolkit, final Composite parent )
   {
-    final Action waterbodyAction = new ManageWaterBodyAction( m_connection );
+    final Action waterbodyAction = new ManageWaterBodyAction( m_connection, m_updateable );
     return ActionHyperlink.createHyperlink( toolkit, parent, SWT.NONE, waterbodyAction );
   }
 
   private Control createStateControl( final FormToolkit toolkit, final Composite parent )
   {
-    final Action stateAction = new ManageStateAction( m_connection );
+    final Action stateAction = new ManageStateAction( m_connection, m_updateable );
     return ActionHyperlink.createHyperlink( toolkit, parent, SWT.NONE, stateAction );
   }
 }

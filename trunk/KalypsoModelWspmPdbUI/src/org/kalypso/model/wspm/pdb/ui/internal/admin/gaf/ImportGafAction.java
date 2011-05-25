@@ -45,11 +45,13 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Session;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.ConnectionUtils;
 import org.kalypso.model.wspm.pdb.connect.Executor;
@@ -67,9 +69,12 @@ public class ImportGafAction extends Action
 {
   private final IPdbConnection m_connection;
 
-  public ImportGafAction( final IPdbConnection connection )
+  private final IUpdateable m_updateable;
+
+  public ImportGafAction( final IPdbConnection connection, final IUpdateable updateable )
   {
     m_connection = connection;
+    m_updateable = updateable;
 
     setText( "GAF Daten importieren..." );
     setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.GAF_IMPORT ) );
@@ -90,9 +95,10 @@ public class ImportGafAction extends Action
       final Wizard importWizard = new ImportGafWizard( session, states, username );
       importWizard.setWindowTitle( "Import GAF file" );
       final WizardDialog dialog = new WizardDialog( shell, importWizard );
-      dialog.open();
-
+      final int result = dialog.open();
       session.close();
+      if( result == Window.OK )
+        m_updateable.update();
     }
     catch( final PdbConnectException e )
     {

@@ -38,49 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.eclipse.jface.action.Action;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 
 /**
  * @author Gernot Belger
  */
-public class PdbLabelProvider extends LabelProvider
+public class ByWaterBodyAction extends Action
 {
-  @Override
-  public String getText( final Object element )
+  private final ConnectionContentControl m_control;
+
+  public ByWaterBodyAction( final ConnectionContentControl control )
   {
-    if( element instanceof WaterBodies )
-      return ((WaterBodies) element).getName();
+    super( "By Water Body", AS_RADIO_BUTTON );
 
-    if( element instanceof States )
-      return ((States) element).getState();
+    m_control = control;
 
-    if( element instanceof CrossSections )
-      return ObjectUtils.toString( ((CrossSections) element).getStation() );
-
-    return super.getText( element );
+    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.WATER_BODY ) );
   }
 
   @Override
-  public Image getImage( final Object element )
+  public void run( )
   {
-    if( element instanceof WaterBodies )
-      return WspmPdbUiImages.getImage( IMAGE.WATER_BODY );
-
-    if( element instanceof States )
-      return WspmPdbUiImages.getImage( IMAGE.STATE );
-
-    if( element instanceof CrossSections )
-      return WspmPdbUiImages.getImage( IMAGE.CROSS_SECTION );
-
-    return super.getImage( element );
+    if( isChecked() )
+      m_control.setContentProvider( new ByWaterBodyContentProvider() );
   }
 }

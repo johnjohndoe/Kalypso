@@ -38,55 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.preferences;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.state.ManageStatesWizard;
 
 /**
  * @author Gernot Belger
  */
-public class ManageStateAction extends Action
+public class RefreshAction extends Action
 {
-  private final IPdbConnection m_connection;
+  private final ConnectionContentControl m_control;
 
-  public ManageStateAction( final IPdbConnection connection )
+  public RefreshAction( final ConnectionContentControl control )
   {
-    m_connection = connection;
+    m_control = control;
 
-    setText( "Zustände verwalten..." );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.STATE ) );
+    setText( "Refresh" );
+    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
   }
 
   @Override
-  public void runWithEvent( final Event event )
+  public void run( )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    final Wizard wizard = new ManageStatesWizard( m_connection );
-    wizard.setWindowTitle( "Manage States" );
-    final WizardDialog dialog = new WizardDialog( shell, wizard )
-    {
-      @Override
-      protected void createButtonsForButtonBar( final Composite parent )
-      {
-        super.createButtonsForButtonBar( parent );
-
-        final Button cancelButton = getButton( IDialogConstants.CANCEL_ID );
-        cancelButton.setVisible( false );
-        ((GridData) cancelButton.getLayoutData()).exclude = true;
-      }
-    };
-    dialog.open();
+    m_control.refresh();
   }
 }
