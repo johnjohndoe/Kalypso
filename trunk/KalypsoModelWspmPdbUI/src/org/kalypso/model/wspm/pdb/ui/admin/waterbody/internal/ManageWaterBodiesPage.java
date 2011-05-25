@@ -116,8 +116,8 @@ public class ManageWaterBodiesPage extends WizardPage
   {
     m_actions = new WaterBodyAction[3];
     m_actions[0] = new AddWaterBodyAction( m_connection, m_viewer, "&New..." );
-    m_actions[1] = new EditWaterBodyAction( this );
-    m_actions[2] = new RemoveWaterBodyAction( this );
+    m_actions[1] = new EditWaterBodyAction( this, m_viewer );
+    m_actions[2] = new RemoveWaterBodyAction( this, m_viewer );
 
     return m_actions;
   }
@@ -138,5 +138,10 @@ public class ManageWaterBodiesPage extends WizardPage
   public WaterBodies getSelectedItem( )
   {
     return m_selectedItem;
+  }
+
+  IPdbConnection getConnection( )
+  {
+    return m_connection;
   }
 }

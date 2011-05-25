@@ -38,51 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
+package org.kalypso.model.wspm.pdb.connect.command;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.hibernate.classic.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**
  * @author Gernot Belger
  */
-public class AddWaterBodyWizard extends Wizard
+public class UpdateObjectCommand implements IPdbOperation
 {
-  private final WaterBodies m_waterBody = new WaterBodies();
+  private final Object m_element;
 
-  private final IPdbConnection m_connection;
-
-  public AddWaterBodyWizard( final IPdbConnection connection, final WaterBodies[] existingWaterbodies )
+  public UpdateObjectCommand( final Object element )
   {
-    m_connection = connection;
-
-    addPage( new EditWaterBodyPage( "editWaterBody", m_waterBody, existingWaterbodies ) );
+    m_element = element;
   }
 
   @Override
-  public boolean performFinish( )
+  public String getLabel( )
   {
-    try
-    {
-      m_connection.addWaterBody( m_waterBody );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to create new water body", e );
-      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
-    }
-
-    return true;
+    return "Update object: " + m_element;
   }
 
-  public WaterBodies getWaterBody( )
+  @Override
+  public void execute( final Session session )
   {
-    return m_waterBody;
+    session.update( m_element );
   }
 }

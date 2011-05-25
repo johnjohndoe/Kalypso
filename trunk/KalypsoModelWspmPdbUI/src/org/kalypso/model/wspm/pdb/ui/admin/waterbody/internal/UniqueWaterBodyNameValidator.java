@@ -56,9 +56,13 @@ public class UniqueWaterBodyNameValidator extends TypedValidator<String>
 {
   private final Set<String> m_ids = new HashSet<String>();
 
-  public UniqueWaterBodyNameValidator( final WaterBodies[] existingWaterbodies )
+  private final String m_ignoreName;
+
+  public UniqueWaterBodyNameValidator( final WaterBodies[] existingWaterbodies, final String ignoreName )
   {
     super( String.class, IStatus.WARNING, "A waterbody with the same name already exists" );
+
+    m_ignoreName = ignoreName;
 
     for( final WaterBodies waterBody : existingWaterbodies )
       m_ids.add( waterBody.getName() );
@@ -67,6 +71,9 @@ public class UniqueWaterBodyNameValidator extends TypedValidator<String>
   @Override
   protected IStatus doValidate( final String value ) throws CoreException
   {
+    if( value.equals( m_ignoreName ) )
+      return ValidationStatus.ok();
+
     if( m_ids.contains( value ) )
       fail();
 

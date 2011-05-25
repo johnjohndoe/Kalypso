@@ -38,44 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
+package org.kalypso.model.wspm.pdb.connect.command;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.databinding.validation.TypedValidator;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.hibernate.classic.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**
  * @author Gernot Belger
  */
-public class UniqueStateNameValidator extends TypedValidator<String>
+public class DeleteObjectCommand implements IPdbOperation
 {
-  private final Set<String> m_names = new HashSet<String>();
+  private final Object m_element;
 
-  public UniqueStateNameValidator( final List<States> existingStates )
+  public DeleteObjectCommand( final Object element )
   {
-    this( existingStates, IStatus.ERROR );
-  }
-
-  public UniqueStateNameValidator( final List<States> existingStates, final int severity )
-  {
-    super( String.class, severity, "A state with the same name already exists" );
-
-    for( final States states : existingStates )
-      m_names.add( states.getState() );
+    m_element = element;
   }
 
   @Override
-  protected IStatus doValidate( final String value ) throws CoreException
+  public String getLabel( )
   {
-    if( m_names.contains( value ) )
-      fail();
+    return "Delete object: " + m_element;
+  }
 
-    return Status.OK_STATUS;
+  @Override
+  public void execute( final Session session )
+  {
+    session.delete( m_element );
   }
 }

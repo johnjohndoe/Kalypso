@@ -38,44 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.admin.gaf.internal;
+package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.databinding.validation.TypedValidator;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal.EditWaterBodyPage.Mode;
 
 /**
  * @author Gernot Belger
  */
-public class UniqueStateNameValidator extends TypedValidator<String>
+public class EditWaterBodyWizard extends Wizard
 {
-  private final Set<String> m_names = new HashSet<String>();
+  private final WaterBodies m_waterBody;
 
-  public UniqueStateNameValidator( final List<States> existingStates )
+  public EditWaterBodyWizard( final WaterBodies[] existingWaterbodies, final WaterBodies waterBody, final Mode mode )
   {
-    this( existingStates, IStatus.ERROR );
-  }
+    m_waterBody = waterBody;
 
-  public UniqueStateNameValidator( final List<States> existingStates, final int severity )
-  {
-    super( String.class, severity, "A state with the same name already exists" );
-
-    for( final States states : existingStates )
-      m_names.add( states.getState() );
+    addPage( new EditWaterBodyPage( "editWaterBody", m_waterBody, existingWaterbodies, mode ) );
   }
 
   @Override
-  protected IStatus doValidate( final String value ) throws CoreException
+  public boolean performFinish( )
   {
-    if( m_names.contains( value ) )
-      fail();
-
-    return Status.OK_STATUS;
+    return true;
   }
 }

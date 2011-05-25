@@ -40,19 +40,72 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.UpdateObjectCommand;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal.EditWaterBodyPage.Mode;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+
 /**
  * @author Gernot Belger
- *
  */
 public class EditWaterBodyAction extends WaterBodyAction
 {
   private final ManageWaterBodiesPage m_page;
 
-  public EditWaterBodyAction( final ManageWaterBodiesPage page )
+  private final WaterBodyViewer m_viewer;
+
+  public EditWaterBodyAction( final ManageWaterBodiesPage page, final WaterBodyViewer viewer )
   {
+    m_viewer = viewer;
     m_page = page;
 
     setText( "&Edit..." );
+  }
+
+  @Override
+  public void runWithEvent( final Event event )
+  {
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+
+    final IPdbConnection connection = m_page.getConnection();
+    final WaterBodies[] existingWaterbodies = m_viewer.getExistingWaterbodies();
+
+    final WaterBodies selectedItem = m_page.getSelectedItem();
+    final String oldID = selectedItem.getWaterBody();
+
+    final EditWaterBodyWizard wizard = new EditWaterBodyWizard( existingWaterbodies, selectedItem, Mode.EDIT );
+    wizard.setWindowTitle( "Edit Water Body" );
+
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    try
+    {
+      if( dialog.open() == Window.OK )
+      {
+        final String newID = selectedItem.getWaterBody();
+        Assert.isTrue( newID.equals( oldID ) );
+
+        /* Re-attach to a new session; and flush session directly */
+        connection.executeCommand( new UpdateObjectCommand( selectedItem ) );
+      }
+    }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
+      new StatusDialog2( shell, status, wizard.getWindowTitle() ).open();
+    }
+
+    m_viewer.refreshWaterBodies( oldID );
   }
 
   @Override
