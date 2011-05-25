@@ -111,7 +111,7 @@ public class ProfileData
       if( m_rows[i].getSlope() < 0.0 )
       {
         return Messages.getString( "org.kalypso.model.km.ProfileData.7" ) + (i + 2) //$NON-NLS-1$ 
-        + Messages.getString( "org.kalypso.model.km.ProfileData.9" ); //$NON-NLS-1$
+            + Messages.getString( "org.kalypso.model.km.ProfileData.9" ); //$NON-NLS-1$
       }
     }
 
@@ -122,5 +122,4 @@ public class ProfileData
   {
     m_range = range;
   }
-
 }

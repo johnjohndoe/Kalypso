@@ -62,8 +62,8 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.km.internal.binding.KMBindingUtils;
+import org.kalypso.model.km.internal.core.AbstractProfileDataSet;
 import org.kalypso.model.km.internal.core.ProfileData;
-import org.kalypso.model.km.internal.core.ProfileDataSet;
 import org.kalypso.model.km.internal.core.ProfileFactory;
 import org.kalypso.model.km.internal.i18n.Messages;
 
@@ -102,9 +102,9 @@ public class KMViewer
   private CheckboxTableViewer m_profileListViewer;
 
   /**
-   * The profile data set.
+   * The abstract profile data set.
    */
-  private ProfileDataSet m_profileSet;
+  private AbstractProfileDataSet m_profileSet;
 
   /**
    * The input.
@@ -148,8 +148,8 @@ public class KMViewer
     Label emptyLabel1 = new Label( parent, SWT.NONE );
     emptyLabel1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
-    /* Create a widget for asking for a directory. */
-    m_dirField = new DirectoryFieldWidget( true, parent, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.1" ), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.0" ), 1, 1, 1 ); //$NON-NLS-1$ //$NON-NLS-2$
+    /* Create a widget for asking for a file. */
+    m_dirField = new DirectoryFieldWidget( false, parent, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.1" ), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.0" ), 1, 1, 1 ); //$NON-NLS-1$ //$NON-NLS-2$
     m_dirField.addSelectionChangedListener( new ISelectionChangedListener()
     {
       /**
@@ -412,7 +412,7 @@ public class KMViewer
     if( StringUtils.isBlank( path ) )
       m_profileSet = null;
     else
-      m_profileSet = ProfileFactory.createProfileSet( new File( path ) );
+      m_profileSet = ProfileFactory.createProfileObservationSet( new File( path ), Double.NaN, Double.NaN );
   }
 
   private void inputChanged( final KalininMiljukovType oldInput, final KalininMiljukovType kmType )

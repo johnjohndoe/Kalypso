@@ -82,6 +82,9 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
     return m_label;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.results.AbstractWspmResultNode#getInternalName()
+   */
   @Override
   protected String getInternalName( )
   {
