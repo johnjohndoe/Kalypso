@@ -40,43 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect;
 
-import java.util.List;
-
+import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionParts;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
-import org.kalypso.model.wspm.pdb.db.mapping.Points;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
  * @author Gernot Belger
  */
 public interface IPdbConnection
 {
+  IPdbSettings getSettings( );
+
   void connect( ) throws PdbConnectException;
 
   boolean isConnected( );
 
   void close( ) throws PdbConnectException;
 
-  void executeCommand( IPdbOperation command ) throws PdbConnectException;
+  Session openSession( ) throws PdbConnectException;
 
   PdbInfo getInfo( ) throws PdbConnectException;
 
-  void addPoint( Points point ) throws PdbConnectException;
-
   String getLabel( );
-
-  List<WaterBodies> getWaterBodies( ) throws PdbConnectException;
-
-  void addWaterBody( WaterBodies waterBody ) throws PdbConnectException;
-
-  void addState( States state ) throws PdbConnectException;
-
-  void addCrossSection( CrossSections crossSection ) throws PdbConnectException;
-
-  List<States> getStates( ) throws PdbConnectException;
-
-  void addCrossSectionPart( CrossSectionParts csPart ) throws PdbConnectException;
 }

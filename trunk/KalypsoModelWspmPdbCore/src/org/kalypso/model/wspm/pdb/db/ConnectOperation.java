@@ -45,7 +45,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -86,8 +85,10 @@ public class ConnectOperation implements ICoreRunnableWithProgress
     }
     catch( final PdbConnectException e )
     {
+      e.printStackTrace();
+
       /* Try to close the connection */
-      PdbUtils.closeQuietly( m_connection );
+// PdbUtils.closeQuietly( m_connection );
 
       // TODO: make message more human readable
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Connection failed", e );

@@ -49,9 +49,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.program.Program;
+import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafOperation;
@@ -59,21 +59,19 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 public class ImportGafWizard extends Wizard
 {
-  private final IPdbConnection m_connection;
+  private final ImportGafData m_data;
 
-  private final ImportGafData m_data = new ImportGafData();
-
-  public ImportGafWizard( final IPdbConnection connection, final List<States> existingStates )
+  public ImportGafWizard( final Session session, final List<States> existingStates, final String username )
   {
-    m_connection = connection;
+    m_data = new ImportGafData( session, username );
 
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() );
     setDialogSettings( settings );
 
     m_data.init( settings );
 
-    addPage( new ImportGafPage( "gaf", connection, m_data ) ); //$NON-NLS-1$
-    addPage( new ChooseWaterPage( "waterBody", connection, m_data ) ); //$NON-NLS-1$
+    addPage( new ImportGafPage( "gaf", m_data ) ); //$NON-NLS-1$
+    addPage( new ChooseWaterPage( "waterBody", m_data ) ); //$NON-NLS-1$
     addPage( new EditStatePage( "state", m_data.getState(), existingStates ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
@@ -93,7 +91,7 @@ public class ImportGafWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final ImportGafOperation operation = new ImportGafOperation( m_connection, m_data );
+    final ImportGafOperation operation = new ImportGafOperation( m_data );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
 
     // TODO: instead we might show the log during import as a console dialog

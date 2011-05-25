@@ -45,8 +45,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.hibernate.Session;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.DeleteObjectCommand;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
@@ -81,30 +82,30 @@ public class RemoveWaterBodyAction extends WaterBodyAction
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final IPdbConnection connection = m_page.getConnection();
-
-    final WaterBodies selectedItem = m_page.getSelectedItem();
-    final String id = selectedItem.getWaterBody();
+    final WaterBodies waterBody = m_page.getSelectedItem();
+    final String id = waterBody.getWaterBody();
     final String dialogTitle = "Remove Water Body";
 
     try
     {
-      final boolean hasData = hasData( selectedItem );
+      final boolean hasData = hasData( waterBody );
 
       if( hasData )
       {
         /* show dialog with states/cross-sections -> water cannot be removed */
-        final String message = "There are cross sections referencing this water body. Water body cannot be removed.";
-        MessageDialog.openInformation( shell, dialogTitle, message );
+        final CannotRemoveWaterBodyDialog dialog = new CannotRemoveWaterBodyDialog( shell, dialogTitle, waterBody );
+        dialog.open();
         return;
       }
       else
       {
-        final String message = String.format( "Remove waterbody: %s (%s)? This operation cannot be undone.", selectedItem.getName(), id );
+        final String message = String.format( "Remove waterbody: %s (%s)? This operation cannot be undone.", waterBody.getName(), id );
         if( !MessageDialog.openConfirm( shell, dialogTitle, message ) )
           return;
 
-        connection.executeCommand( new DeleteObjectCommand( selectedItem ) );
+        final Session session = m_page.getSession();
+        final DeleteObjectCommand operation = new DeleteObjectCommand( waterBody );
+        new Executor( session, operation ).execute();
       }
     }
     catch( final PdbConnectException e )

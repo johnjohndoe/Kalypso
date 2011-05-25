@@ -49,8 +49,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
@@ -60,22 +60,21 @@ public class ManageWaterBodiesPage extends WizardPage
 {
   private final WaterBodyViewer m_viewer;
 
-  private final IPdbConnection m_connection;
-
   private WaterBodyAction[] m_actions;
 
   private WaterBodies m_selectedItem;
 
-  protected ManageWaterBodiesPage( final String pageName, final IPdbConnection connection )
+  private final Session m_session;
+
+  protected ManageWaterBodiesPage( final String pageName, final Session session )
   {
     super( pageName );
 
     setTitle( "Manage Water Bodies" );
     setDescription( "Manage the Water Bodies of the Cross Section Database" );
 
-    m_connection = connection;
-
-    m_viewer = new WaterBodyViewer( connection );
+    m_session = session;
+    m_viewer = new WaterBodyViewer( m_session );
   }
 
   @Override
@@ -110,12 +109,14 @@ public class ManageWaterBodiesPage extends WizardPage
       final Button button = ActionButton.createButton( null, actionPanel, action );
       button.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     }
+
+    updateActions();
   }
 
   private WaterBodyAction[] createActions( )
   {
     m_actions = new WaterBodyAction[3];
-    m_actions[0] = new AddWaterBodyAction( m_connection, m_viewer, "&New..." );
+    m_actions[0] = new AddWaterBodyAction( m_session, m_viewer, "&New..." );
     m_actions[1] = new EditWaterBodyAction( this, m_viewer );
     m_actions[2] = new RemoveWaterBodyAction( this, m_viewer );
 
@@ -140,8 +141,8 @@ public class ManageWaterBodiesPage extends WizardPage
     return m_selectedItem;
   }
 
-  IPdbConnection getConnection( )
+  Session getSession( )
   {
-    return m_connection;
+    return m_session;
   }
 }

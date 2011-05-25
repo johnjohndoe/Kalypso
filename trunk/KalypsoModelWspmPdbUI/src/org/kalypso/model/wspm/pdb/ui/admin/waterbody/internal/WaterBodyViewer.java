@@ -56,10 +56,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
+import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
 
 /**
@@ -71,11 +73,11 @@ public class WaterBodyViewer
 
   private WritableList m_tableInput;
 
-  private final IPdbConnection m_connection;
+  private final Session m_session;
 
-  public WaterBodyViewer( final IPdbConnection connection )
+  public WaterBodyViewer( final Session session )
   {
-    m_connection = connection;
+    m_session = session;
   }
 
   public TableViewer createTableViewer( final Composite parent )
@@ -151,7 +153,9 @@ public class WaterBodyViewer
   {
     try
     {
-      final List<WaterBodies> waterBodies = m_connection.getWaterBodies();
+      final ListOperation<WaterBodies> operation = new ListOperation<WaterBodies>( WaterBodies.class );
+      new Executor( m_session, operation ).execute();
+      final List<WaterBodies> waterBodies = operation.getList();
       return waterBodies.toArray( new WaterBodies[waterBodies.size()] );
     }
     catch( final PdbConnectException e )

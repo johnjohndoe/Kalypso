@@ -38,32 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.command;
+package org.kalypso.model.wspm.pdb.ui.admin.waterbody.internal;
 
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 
 /**
  * @author Gernot Belger
  */
-public class SaveObjectCommand implements IPdbOperation
+public class PdbLabelProvider extends LabelProvider
 {
-  private final Object m_element;
-
-  public SaveObjectCommand( final Object element )
+  @Override
+  public String getText( final Object element )
   {
-    m_element = element;
+    if( element instanceof WaterBodies )
+      return ((WaterBodies) element).getName();
+
+    if( element instanceof States )
+      return ((States) element).getState();
+
+    if( element instanceof CrossSections )
+      return ObjectUtils.toString( ((CrossSections) element).getStation() );
+
+    return super.getText( element );
   }
 
   @Override
-  public String getLabel( )
+  public Image getImage( final Object element )
   {
-    return "Save object: " + m_element;
-  }
+    if( element instanceof WaterBodies )
+      return WspmPdbUiImages.getImage( IMAGE.WATER_BODY );
 
-  @Override
-  public void execute( final Session session )
-  {
-    session.save( m_element );
+    if( element instanceof States )
+      return WspmPdbUiImages.getImage( IMAGE.STATE );
+
+    if( element instanceof CrossSections )
+      return WspmPdbUiImages.getImage( IMAGE.CROSS_SECTION );
+
+    return super.getImage( element );
   }
 }

@@ -47,6 +47,7 @@ public abstract class HibernateSettings extends AbstractSettings
 {
   protected static final String DEFAULT_DBNAME = "kalypso_pdb"; //$NON-NLS-1$;
 
+  @Override
   public abstract String getUsername( );
 
   public HibernateSettings( final String name )

@@ -38,32 +38,61 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.command;
+package org.kalypso.model.wspm.pdb.connect;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.hibernate.Transaction;
+
+import com.vividsolutions.jts.util.Assert;
 
 /**
  * @author Gernot Belger
  */
-public class SaveObjectCommand implements IPdbOperation
+public class Executor
 {
-  private final Object m_element;
+  private final Session m_session;
 
-  public SaveObjectCommand( final Object element )
+  private final IPdbOperation m_operation;
+
+  public Executor( final Session session, final IPdbOperation operation )
   {
-    m_element = element;
+    m_session = session;
+    m_operation = operation;
   }
 
-  @Override
-  public String getLabel( )
+  public void execute( ) throws PdbConnectException
   {
-    return "Save object: " + m_element;
+    Assert.isTrue( m_session.isOpen() );
+
+    Transaction transaction = null;
+    try
+    {
+      transaction = m_session.beginTransaction();
+      m_operation.execute( m_session );
+      transaction.commit();
+    }
+    catch( final HibernateException e )
+    {
+      doRollback( transaction );
+
+      e.printStackTrace();
+      final String message = String.format( "Failed to execute command: %s", m_operation.getLabel() );
+      throw new PdbConnectException( message, e );
+    }
   }
 
-  @Override
-  public void execute( final Session session )
+  private void doRollback( final Transaction transaction ) throws PdbConnectException
   {
-    session.save( m_element );
+    try
+    {
+      if( transaction != null )
+        transaction.rollback();
+    }
+    catch( final HibernateException e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed to rollback transaction", e );
+    }
   }
 }

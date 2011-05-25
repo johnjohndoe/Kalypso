@@ -40,12 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal;
 
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**
  * @author Gernot Belger
- *
  */
 public class AddObjectOperation implements IPdbOperation
 {

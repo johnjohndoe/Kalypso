@@ -40,30 +40,43 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.command;
 
+import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**
  * @author Gernot Belger
  */
-public class SaveObjectCommand implements IPdbOperation
+public class ListOperation<T> implements IPdbOperation
 {
-  private final Object m_element;
+  private final Class<T> m_type;
 
-  public SaveObjectCommand( final Object element )
+  private List<T> m_list;
+
+  public ListOperation( final Class<T> type )
   {
-    m_element = element;
+    m_type = type;
   }
 
   @Override
   public String getLabel( )
   {
-    return "Save object: " + m_element;
+    return "Get List";
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void execute( final Session session )
   {
-    session.save( m_element );
+    final String query = String.format( "from %s", m_type.getName() );
+    final Query q = session.createQuery( query );
+    m_list = q.list();
+  }
+
+  public List<T> getList( )
+  {
+    return m_list;
   }
 }

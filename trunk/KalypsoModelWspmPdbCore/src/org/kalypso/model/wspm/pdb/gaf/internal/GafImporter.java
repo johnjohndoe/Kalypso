@@ -47,8 +47,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.pdb.connect.ConnectionUtils;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
@@ -58,15 +63,15 @@ public class GafImporter implements ICoreRunnableWithProgress
 {
   private final GafLogger m_logger;
 
-  private final Gaf2Db m_gaf2db;
-
   private final File m_gafFile;
 
-  public GafImporter( final File gafFile, final GafLogger logger, final Gaf2Db gaf2db )
+  private final ImportGafData m_data;
+
+  public GafImporter( final File gafFile, final GafLogger logger, final ImportGafData data )
   {
     m_gafFile = gafFile;
     m_logger = logger;
-    m_gaf2db = gaf2db;
+    m_data = data;
   }
 
   @Override
@@ -74,14 +79,24 @@ public class GafImporter implements ICoreRunnableWithProgress
   {
     monitor.beginTask( "Read GAF file", 100 );
 
+    final Session session = m_data.getSession();
+
     GafReader gafReader = null;
     try
     {
-      m_gaf2db.addState();
+      final States state = m_data.getState();
+      final WaterBodies waterBody = m_data.getWaterBody();
+      final int srid = m_data.getSrid();
 
-      gafReader = new GafReader( m_logger, m_gaf2db );
+      final Gaf2Db gaf2db = new Gaf2Db( session, waterBody, state, srid );
+
+      gaf2db.addState();
+
+      gafReader = new GafReader( m_logger, gaf2db );
       gafReader.read( m_gafFile, new SubProgressMonitor( monitor, 90 ) );
       gafReader.close();
+
+      session.close();
 
       return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "Successfully imported GAF file" );
     }
@@ -101,6 +116,8 @@ public class GafImporter implements ICoreRunnableWithProgress
     {
       if( gafReader != null )
         gafReader.closeQuietly();
+
+      ConnectionUtils.closeSessionQuietly( session );
     }
   }
 }

@@ -40,21 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal;
 
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
-import org.hibernate.classic.Session;
 import org.hibernatespatial.postgis.PostgisDialect;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
+import org.kalypso.model.wspm.pdb.connect.ConnectionUtils;
+import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionParts;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
@@ -92,7 +91,8 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     return m_settings.getName();
   }
 
-  protected SETTINGS getSettings( )
+  @Override
+  public SETTINGS getSettings( )
   {
     return m_settings;
   }
@@ -233,145 +233,102 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     }
   }
 
-  private void checkConnection( ) throws PdbConnectException
-  {
-    if( !isConnected() )
-      throw new PdbConnectException( "PDB connection is not open" );
-  }
-
-  @Override
-  public void executeCommand( final IPdbOperation command ) throws PdbConnectException
-  {
-    checkConnection();
-
-    final Session session = m_sessionFactory.openSession();
-
-    Transaction transaction = null;
-    try
-    {
-      transaction = session.beginTransaction();
-      command.execute( session );
-      transaction.commit();
-    }
-    catch( final HibernateException e )
-    {
-      doRollback( transaction );
-
-      e.printStackTrace();
-      final String message = String.format( "Failed to execute command: %s", command.getLabel() );
-      throw new PdbConnectException( message, e );
-    }
-    finally
-    {
-      session.close();
-    }
-  }
+// private void checkConnection( ) throws PdbConnectException
+// {
+// if( !isConnected() )
+// throw new PdbConnectException( "PDB connection is not open" );
+// }
 
   @Override
   public PdbInfo getInfo( ) throws PdbConnectException
   {
-    final List<Info> properties = getList( Info.class );
-
-    return new PdbInfo( properties );
-  }
-
-  private void addObject( final Object object ) throws PdbConnectException
-  {
-    final IPdbOperation operation = new AddObjectOperation( object );
-    executeCommand( operation );
-  }
-
-  private void doRollback( final Transaction transaction ) throws PdbConnectException
-  {
+    final Session session = openSession();
     try
     {
-      if( transaction != null )
-        transaction.rollback();
-    }
-    catch( final HibernateException e )
-    {
-      e.printStackTrace();
-      throw new PdbConnectException( "Failed to rollback transaction", e );
-    }
-  }
-
-  @Override
-  public void addPoint( final Points onePoint ) throws PdbConnectException
-  {
-    addObject( onePoint );
-  }
-
-  @Override
-  public List<WaterBodies> getWaterBodies( ) throws PdbConnectException
-  {
-    return getList( WaterBodies.class );
-  }
-
-  @SuppressWarnings("unchecked")
-  private <T> List<T> getList( final Class<T> type ) throws PdbConnectException
-  {
-    checkConnection();
-
-    final Session session = m_sessionFactory.openSession();
-
-    try
-    {
-      final String query = String.format( "from %s", type.getName() );
-      final Query q = session.createQuery( query );
-
-      final List< ? > allWaterbodies = q.list();
-
-      return (List<T>) allWaterbodies;
-    }
-    catch( final HibernateException e )
-    {
-      e.printStackTrace();
-      throw new PdbConnectException( "Failed to access database", e );
+      final ListOperation<Info> operation = new ListOperation<Info>( Info.class );
+      new Executor( session, operation ).execute();
+      final List<Info> properties = operation.getList();
+      return new PdbInfo( properties );
     }
     finally
     {
-      session.close();
+      ConnectionUtils.closeSessionQuietly( session );
     }
   }
 
+// private void addObject( final Object object ) throws PdbConnectException
+// {
+// final IPdbOperation operation = new AddObjectOperation( object );
+// executeCommand( operation );
+// }
+
+// @Override
+// public void addPoint( final Points onePoint ) throws PdbConnectException
+// {
+// addObject( onePoint );
+// }
+
+// @Override
+// public List<WaterBodies> getWaterBodies( ) throws PdbConnectException
+// {
+// return getList( WaterBodies.class );
+// }
+
+// @Override
+// public void addWaterBody( final WaterBodies waterBody ) throws PdbConnectException
+// {
+// checkConnection();
+//
+// addObject( waterBody );
+// }
+
+// @Override
+// public void addState( final States state ) throws PdbConnectException
+// {
+// final Date now = new Date();
+// state.setCreationDate( now );
+// state.setEditingDate( now );
+// state.setEditingUser( getSettings().getUsername() );
+//
+// checkConnection();
+//
+// addObject( state );
+// }
+
+// @Override
+// public void addCrossSection( final CrossSections crossSection ) throws PdbConnectException
+// {
+// checkConnection();
+//
+// addObject( crossSection );
+// }
+
+// @Override
+// public List<States> getStates( ) throws PdbConnectException
+// {
+// return getList( States.class );
+// }
+
+// @Override
+// public void addCrossSectionPart( final CrossSectionParts csPart ) throws PdbConnectException
+// {
+// addObject( csPart );
+// }
+
   @Override
-  public void addWaterBody( final WaterBodies waterBody ) throws PdbConnectException
+  public Session openSession( ) throws PdbConnectException
   {
-    checkConnection();
+    if( !isConnected() )
+      throw new PdbConnectException( "PDB not connected" );
 
-    addObject( waterBody );
-  }
-
-  @Override
-  public void addState( final States state ) throws PdbConnectException
-  {
-    final Date now = new Date();
-    state.setCreationDate( now );
-    state.setEditingDate( now );
-    state.setEditingUser( getSettings().getUsername() );
-
-    checkConnection();
-
-    addObject( state );
-  }
-
-  @Override
-  public void addCrossSection( final CrossSections crossSection ) throws PdbConnectException
-  {
-    checkConnection();
-
-    addObject( crossSection );
-  }
-
-  @Override
-  public List<States> getStates( ) throws PdbConnectException
-  {
-    return getList( States.class );
-  }
-
-  @Override
-  public void addCrossSectionPart( final CrossSectionParts csPart ) throws PdbConnectException
-  {
-    addObject( csPart );
+    try
+    {
+      return m_sessionFactory.openSession();
+    }
+    catch( final HibernateException e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed to open db session", e );
+    }
   }
 }

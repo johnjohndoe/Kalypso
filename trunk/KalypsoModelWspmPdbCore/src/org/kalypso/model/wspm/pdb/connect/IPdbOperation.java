@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect;
 
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 
 /**
  * @author Gernot Belger

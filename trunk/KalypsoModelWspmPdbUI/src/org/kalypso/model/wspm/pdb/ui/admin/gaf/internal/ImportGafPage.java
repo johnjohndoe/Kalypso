@@ -61,7 +61,6 @@ import org.kalypso.commons.databinding.swt.FileValueSelectionListener;
 import org.kalypso.commons.databinding.validation.FileIsFileValidator;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
@@ -72,17 +71,14 @@ import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
  */
 public class ImportGafPage extends WizardPage
 {
-  private final IPdbConnection m_connection;
-
   private final ImportGafData m_data;
 
   private DatabindingWizardPage m_context;
 
-  public ImportGafPage( final String pageName, final IPdbConnection connection, final ImportGafData data )
+  public ImportGafPage( final String pageName, final ImportGafData data )
   {
     super( pageName );
 
-    m_connection = connection;
     m_data = data;
 
     setTitle( "GAF Import" );

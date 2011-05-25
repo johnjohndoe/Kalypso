@@ -47,8 +47,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.hibernate.Session;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.UpdateObjectCommand;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
@@ -77,10 +78,11 @@ public class EditWaterBodyAction extends WaterBodyAction
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final IPdbConnection connection = m_page.getConnection();
+    final Session session = m_page.getSession();
     final WaterBodies[] existingWaterbodies = m_viewer.getExistingWaterbodies();
 
     final WaterBodies selectedItem = m_page.getSelectedItem();
+
     final String oldID = selectedItem.getWaterBody();
 
     final EditWaterBodyWizard wizard = new EditWaterBodyWizard( existingWaterbodies, selectedItem, Mode.EDIT );
@@ -94,8 +96,12 @@ public class EditWaterBodyAction extends WaterBodyAction
         final String newID = selectedItem.getWaterBody();
         Assert.isTrue( newID.equals( oldID ) );
 
-        /* Re-attach to a new session; and flush session directly */
-        connection.executeCommand( new UpdateObjectCommand( selectedItem ) );
+        final UpdateObjectCommand operation = new UpdateObjectCommand( selectedItem );
+        new Executor( session, operation ).execute();
+      }
+      else
+      {
+        session.refresh( selectedItem );
       }
     }
     catch( final PdbConnectException e )

@@ -60,6 +60,8 @@ public interface IPdbSettings
    */
   String getName( );
 
+  String getUsername( );
+
   ImageDescriptor getImage( );
 
   IPdbConnection createConnection( );

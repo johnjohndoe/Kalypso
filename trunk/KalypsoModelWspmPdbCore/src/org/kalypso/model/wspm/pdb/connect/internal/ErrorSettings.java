@@ -77,6 +77,12 @@ public class ErrorSettings extends AbstractSettings
   }
 
   @Override
+  public String getUsername( )
+  {
+    return null;
+  }
+
+  @Override
   public ImageDescriptor getImage( )
   {
     return StatusComposite.getStatusImageDescriptor( m_status.getSeverity() );
