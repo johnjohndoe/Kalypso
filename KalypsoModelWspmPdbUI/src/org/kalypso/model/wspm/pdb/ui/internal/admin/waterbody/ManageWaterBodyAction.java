@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.preferences;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -49,9 +49,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ManageWaterBodiesWizard;
 
 /**
  * @author Gernot Belger
@@ -60,9 +60,12 @@ public class ManageWaterBodyAction extends Action
 {
   private final IPdbConnection m_connection;
 
-  public ManageWaterBodyAction( final IPdbConnection connection )
+  private final IUpdateable m_updateable;
+
+  public ManageWaterBodyAction( final IPdbConnection connection, final IUpdateable updateable )
   {
     m_connection = connection;
+    m_updateable = updateable;
 
     setText( "Gewässer verwalten..." );
     setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.WATER_BODY ) );
@@ -88,5 +91,7 @@ public class ManageWaterBodyAction extends Action
       }
     };
     dialog.open();
+
+    m_updateable.update();
   }
 }

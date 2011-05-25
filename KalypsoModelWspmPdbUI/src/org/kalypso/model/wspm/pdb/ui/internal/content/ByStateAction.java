@@ -38,33 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import java.math.BigDecimal;
-
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
+import org.eclipse.jface.action.Action;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 
 /**
  * @author Gernot Belger
  */
-public class PdbComparator extends ViewerComparator
+public class ByStateAction extends Action
 {
-  @Override
-  public int compare( final Viewer viewer, final Object e1, final Object e2 )
+  private final ConnectionContentControl m_control;
+
+  public ByStateAction( final ConnectionContentControl control )
   {
-    if( e1 instanceof CrossSections && e2 instanceof CrossSections )
-    {
-      final CrossSections c1 = (CrossSections) e1;
-      final CrossSections c2 = (CrossSections) e2;
+    super( "By State", AS_RADIO_BUTTON );
 
-      final BigDecimal s1 = c1.getStation();
-      final BigDecimal s2 = c2.getStation();
+    m_control = control;
 
-      return s1.compareTo( s2 );
-    }
+    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.STATE ) );
+  }
 
-    return super.compare( viewer, e1, e2 );
+  @Override
+  public void run( )
+  {
+    if( isChecked() )
+      m_control.setContentProvider( new ByStateContentProvider() );
   }
 }

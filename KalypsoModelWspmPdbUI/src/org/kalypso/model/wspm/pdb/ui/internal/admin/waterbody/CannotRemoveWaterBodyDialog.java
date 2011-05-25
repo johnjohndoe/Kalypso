@@ -54,6 +54,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ByStateContentProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.content.PdbComparator;
+import org.kalypso.model.wspm.pdb.ui.internal.content.PdbLabelProvider;
 
 /**
  * @author Gernot Belger

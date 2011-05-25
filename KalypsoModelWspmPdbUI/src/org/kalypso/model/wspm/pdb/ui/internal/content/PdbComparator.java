@@ -38,75 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import java.util.Collection;
-import java.util.Set;
+import java.math.BigDecimal;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
 
 /**
  * @author Gernot Belger
- *
  */
-public class ByStateContentProvider implements ITreeContentProvider
+public class PdbComparator extends ViewerComparator
 {
   @Override
-  public Object[] getElements( final Object inputElement )
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    if( inputElement instanceof Object[] )
-      return (Object[]) inputElement;
-
-    if( inputElement instanceof Collection )
-      return ((Collection< ? >) inputElement).toArray();
-
-    return ArrayUtils.EMPTY_OBJECT_ARRAY;
-  }
-
-  @Override
-  public boolean hasChildren( final Object element )
-  {
-    if( element instanceof States )
+    if( e1 instanceof CrossSections && e2 instanceof CrossSections )
     {
-      final Set<CrossSections> children = ((States) element).getCrossSectionses();
-      return !children.isEmpty();
+      final CrossSections c1 = (CrossSections) e1;
+      final CrossSections c2 = (CrossSections) e2;
+
+      final BigDecimal s1 = c1.getStation();
+      final BigDecimal s2 = c2.getStation();
+
+      return s1.compareTo( s2 );
     }
 
-    return false;
-  }
-
-  @Override
-  public Object[] getChildren( final Object parentElement )
-  {
-    if( parentElement instanceof States )
-    {
-      final Set<CrossSections> children = ((States) parentElement).getCrossSectionses();
-      return children.toArray( new CrossSections[children.size()] );
-    }
-
-    return ArrayUtils.EMPTY_OBJECT_ARRAY;
-  }
-
-  @Override
-  public Object getParent( final Object element )
-  {
-    if( element instanceof CrossSections )
-      return ((CrossSections) element).getStates();
-
-    return null;
-  }
-
-  @Override
-  public void dispose( )
-  {
-  }
-
-  @Override
-  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
-  {
+    return super.compare( viewer, e1, e2 );
   }
 }

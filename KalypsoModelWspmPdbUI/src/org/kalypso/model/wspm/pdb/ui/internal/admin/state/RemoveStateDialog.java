@@ -49,9 +49,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ByStateContentProvider;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.PdbComparator;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.PdbLabelProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ByStateContentProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.content.PdbComparator;
+import org.kalypso.model.wspm.pdb.ui.internal.content.PdbLabelProvider;
 
 /**
  * @author Gernot Belger
