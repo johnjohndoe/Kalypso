@@ -5,7 +5,7 @@
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
-            class="org.kalypso.model.wspm.pdb.ui.preferences.internal.WspmPdbPreferencePage"
+            class="org.kalypso.model.wspm.pdb.ui.internal.preferences.WspmPdbPreferencePage"
             id="WspmPdbPreferencePage"
             name="Cross Section Database">
       </page>
@@ -13,7 +13,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.kalypso.model.wspm.pdb.ui.preferences.internal.PdbPerspective"
+            class="org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbPerspective"
             fixed="true"
             icon="icons/pdb.gif"
             id="PdbPerspective"
@@ -24,14 +24,14 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="org.kalypso.model.wspm.pdb.ui.preferences.internal.PdbView"
+            class="org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbView"
             icon="icons/pdb.gif"
             id="PdbView"
             name="Profildatenbank"
             restorable="true">
       </view>
       <view
-            class="org.kalypso.model.wspm.pdb.ui.admin.info.internal.PdbInfoView"
+            class="org.kalypso.model.wspm.pdb.ui.internal.admin.info.PdbInfoView"
             icon="icons/infoView.gif"
             id="PdbInfoView"
             name="Info"
