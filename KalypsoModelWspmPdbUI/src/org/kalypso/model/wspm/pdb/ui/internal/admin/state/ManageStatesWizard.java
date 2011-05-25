@@ -38,24 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
+import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.ConnectionUtils;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
  */
-public class EditWaterBodyWizard extends Wizard
+public class ManageStatesWizard extends Wizard
 {
-  private final WaterBodies m_waterBody;
+  private final Session m_session;
 
-  public EditWaterBodyWizard( final WaterBodies[] existingWaterbodies, final WaterBodies waterBody, final Mode mode )
+  public ManageStatesWizard( final IPdbConnection connection )
   {
-    m_waterBody = waterBody;
+    m_session = openSession( connection );
 
-    addPage( new EditWaterBodyPage( "editWaterBody", m_waterBody, existingWaterbodies, mode ) ); //$NON-NLS-1$
+    addPage( new ManageStatesPage( "states", m_session ) ); //$NON-NLS-1$
+  }
+
+  private Session openSession( final IPdbConnection connection )
+  {
+    try
+    {
+      return connection.openSession();
+    }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  @Override
+  public void dispose( )
+  {
+    ConnectionUtils.closeSessionQuietly( m_session );
+
+    super.dispose();
   }
 
   @Override

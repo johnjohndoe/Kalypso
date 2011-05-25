@@ -47,6 +47,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Session;
+import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -58,7 +59,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.
 /**
  * @author Gernot Belger
  */
-public class AddWaterBodyAction extends WaterBodyAction
+public class AddWaterBodyAction extends UpdateableAction
 {
   private final WaterBodyViewer m_viewer;
 

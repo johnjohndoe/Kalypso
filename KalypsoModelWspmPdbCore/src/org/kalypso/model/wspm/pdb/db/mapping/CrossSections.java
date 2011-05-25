@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -199,7 +200,7 @@ public class CrossSections implements java.io.Serializable
     this.description = comment;
   }
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSections")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSections", cascade = CascadeType.REMOVE)
   public Set<CrossSectionParts> getCrossSectionPartses( )
   {
     return this.crossSectionPartses;

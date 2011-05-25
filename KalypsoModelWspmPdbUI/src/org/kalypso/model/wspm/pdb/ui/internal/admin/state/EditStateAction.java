@@ -38,11 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Session;
@@ -50,32 +52,25 @@ import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.DeleteObjectCommand;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.connect.command.UpdateObjectCommand;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
- *
  */
-public class RemoveWaterBodyAction extends UpdateableAction
+public class EditStateAction extends UpdateableAction
 {
-  private final ManageWaterBodiesPage m_page;
+  private final ManageStatesPage m_page;
 
-  private final WaterBodyViewer m_viewer;
+  private final StatesViewer m_viewer;
 
-  public RemoveWaterBodyAction( final ManageWaterBodiesPage page, final WaterBodyViewer viewer )
+  public EditStateAction( final ManageStatesPage page, final StatesViewer viewer )
   {
-    m_page = page;
     m_viewer = viewer;
+    m_page = page;
 
-    setText( "&Remove..." );
-  }
-
-  @Override
-  protected boolean checkEnabled( )
-  {
-    return m_page.getSelectedItem() != null;
+    setText( "&Edit..." );
   }
 
   @Override
@@ -83,45 +78,47 @@ public class RemoveWaterBodyAction extends UpdateableAction
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final WaterBodies waterBody = m_page.getSelectedItem();
-    final String id = waterBody.getWaterBody();
-    final String dialogTitle = "Remove Water Body";
+    final Session session = m_page.getSession();
+    final States[] existingWaterbodies = m_viewer.getExistingStates();
 
+    final States selectedItem = m_page.getSelectedItem();
+
+    final String oldID = selectedItem.getState();
+
+    final EditStateWizard wizard = new EditStateWizard( existingWaterbodies, selectedItem );
+
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
     try
     {
-      final boolean hasData = hasData( waterBody );
-
-      if( hasData )
+      if( dialog.open() == Window.OK )
       {
-        /* show dialog with states/cross-sections -> water cannot be removed */
-        final CannotRemoveWaterBodyDialog dialog = new CannotRemoveWaterBodyDialog( shell, dialogTitle, waterBody );
-        dialog.open();
-        return;
+        final String newID = selectedItem.getState();
+        Assert.isTrue( newID.equals( oldID ) );
+
+        // FIXME: a bit dubious (also the refresh below). Instead, we should clone the object
+        // and edit the clone. Only copy the changed values back, if OK
+        final UpdateObjectCommand operation = new UpdateObjectCommand( selectedItem );
+        new Executor( session, operation ).execute();
       }
       else
       {
-        final String message = String.format( "Remove waterbody: %s (%s)? This operation cannot be undone.", waterBody.getName(), id );
-        if( !MessageDialog.openConfirm( shell, dialogTitle, message ) )
-          return;
-
-        final Session session = m_page.getSession();
-        final DeleteObjectCommand operation = new DeleteObjectCommand( waterBody );
-        new Executor( session, operation ).execute();
+        session.refresh( selectedItem );
       }
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
-      new StatusDialog2( shell, status, dialogTitle ).open();
+      new StatusDialog2( shell, status, wizard.getWindowTitle() ).open();
     }
 
-    /* Refresh and try to select old id (good in case of cancel) */
-    m_viewer.refreshWaterBodies( id );
+    // FIXME: change to new id
+    m_viewer.refreshStates( oldID );
   }
 
-  private boolean hasData( final WaterBodies waterBody )
+  @Override
+  protected boolean checkEnabled( )
   {
-    return !waterBody.getCrossSectionses().isEmpty();
+    return m_page.getSelectedItem() != null;
   }
 }

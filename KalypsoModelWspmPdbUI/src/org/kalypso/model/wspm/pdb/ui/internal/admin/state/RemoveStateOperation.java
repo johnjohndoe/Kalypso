@@ -38,29 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
+import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
 
 /**
  * @author Gernot Belger
  */
-public class EditWaterBodyWizard extends Wizard
+public class RemoveStateOperation implements IPdbOperation
 {
-  private final WaterBodies m_waterBody;
+  private final States m_state;
 
-  public EditWaterBodyWizard( final WaterBodies[] existingWaterbodies, final WaterBodies waterBody, final Mode mode )
+  public RemoveStateOperation( final States state )
   {
-    m_waterBody = waterBody;
-
-    addPage( new EditWaterBodyPage( "editWaterBody", m_waterBody, existingWaterbodies, mode ) ); //$NON-NLS-1$
+    m_state = state;
   }
 
   @Override
-  public boolean performFinish( )
+  public String getLabel( )
   {
-    return true;
+    return String.format( "Remove state '%s'", m_state.getState() );
+  }
+
+  @Override
+  public void execute( final Session session )
+  {
+    session.delete( m_state );
   }
 }

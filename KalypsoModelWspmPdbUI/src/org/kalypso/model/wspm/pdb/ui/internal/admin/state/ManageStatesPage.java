@@ -38,12 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -52,30 +53,29 @@ import org.eclipse.swt.widgets.Composite;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.States;
 
 /**
  * @author Gernot Belger
  */
-public class ManageWaterBodiesPage extends WizardPage
+public class ManageStatesPage extends WizardPage
 {
-  private final WaterBodyViewer m_viewer;
-
   private UpdateableAction[] m_actions;
 
-  private WaterBodies m_selectedItem;
+  private States m_selectedItem;
 
   private final Session m_session;
 
-  protected ManageWaterBodiesPage( final String pageName, final Session session )
+  private StatesViewer m_viewer;
+
+  protected ManageStatesPage( final String pageName, final Session session )
   {
     super( pageName );
 
-    setTitle( "Manage Water Bodies" );
-    setDescription( "Manage the Water Bodies of the Cross Section Database" );
+    setTitle( "Manage States" );
+    setDescription( "Manage the States of the Cross Section Database" );
 
     m_session = session;
-    m_viewer = new WaterBodyViewer( m_session );
   }
 
   @Override
@@ -85,18 +85,18 @@ public class ManageWaterBodiesPage extends WizardPage
     setControl( panel );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
 
-    // Table
-    m_viewer.createTableViewer( panel );
+    m_viewer = new StatesViewer( m_session );
+    final TableViewer tableViewer = m_viewer.createTableViewer( panel );
     m_viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_viewer.getViewer().addSelectionChangedListener( new ISelectionChangedListener()
+    tableViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        final WaterBodies waterBody = (WaterBodies) selection.getFirstElement();
-        handleItemSelected( waterBody );
+        final States state = (States) selection.getFirstElement();
+        handleItemSelected( state );
       }
     } );
 
@@ -116,17 +116,16 @@ public class ManageWaterBodiesPage extends WizardPage
 
   private UpdateableAction[] createActions( )
   {
-    m_actions = new UpdateableAction[3];
-    m_actions[0] = new AddWaterBodyAction( m_session, m_viewer, "&New..." );
-    m_actions[1] = new EditWaterBodyAction( this, m_viewer );
-    m_actions[2] = new RemoveWaterBodyAction( this, m_viewer );
+    m_actions = new UpdateableAction[2];
+    m_actions[0] = new EditStateAction( this, m_viewer );
+    m_actions[1] = new RemoveStateAction( this, m_viewer );
 
     return m_actions;
   }
 
-  protected void handleItemSelected( final WaterBodies waterBody )
+  protected void handleItemSelected( final States state )
   {
-    m_selectedItem = waterBody;
+    m_selectedItem = state;
 
     updateActions();
   }
@@ -137,7 +136,7 @@ public class ManageWaterBodiesPage extends WizardPage
       action.update();
   }
 
-  public WaterBodies getSelectedItem( )
+  public States getSelectedItem( )
   {
     return m_selectedItem;
   }

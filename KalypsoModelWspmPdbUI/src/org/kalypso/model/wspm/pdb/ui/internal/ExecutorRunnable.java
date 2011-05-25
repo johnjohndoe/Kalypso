@@ -38,29 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.hibernate.Session;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.pdb.connect.Executor;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
  */
-public class EditWaterBodyWizard extends Wizard
+public class ExecutorRunnable implements ICoreRunnableWithProgress
 {
-  private final WaterBodies m_waterBody;
+  private final Executor m_executor;
 
-  public EditWaterBodyWizard( final WaterBodies[] existingWaterbodies, final WaterBodies waterBody, final Mode mode )
+  private IStatus m_okStatus = Status.OK_STATUS;
+
+  public ExecutorRunnable( final Session session, final IPdbOperation operation )
   {
-    m_waterBody = waterBody;
+    m_executor = new Executor( session, operation );
+  }
 
-    addPage( new EditWaterBodyPage( "editWaterBody", m_waterBody, existingWaterbodies, mode ) ); //$NON-NLS-1$
+  /**
+   * Sets an OK status that will be returned in case of success.
+   */
+  public void setOKStatus( final Status status )
+  {
+    m_okStatus = status;
   }
 
   @Override
-  public boolean performFinish( )
+  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    return true;
+    try
+    {
+      monitor.beginTask( m_executor.getLabel(), IProgressMonitor.UNKNOWN );
+
+      m_executor.execute();
+      return m_okStatus;
+    }
+    catch( final PdbConnectException e )
+    {
+      throw new InvocationTargetException( e );
+    }
   }
 }

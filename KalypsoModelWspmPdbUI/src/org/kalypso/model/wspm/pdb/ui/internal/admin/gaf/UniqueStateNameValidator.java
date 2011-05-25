@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -57,12 +56,12 @@ public class UniqueStateNameValidator extends TypedValidator<String>
 {
   private final Set<String> m_names = new HashSet<String>();
 
-  public UniqueStateNameValidator( final List<States> existingStates )
+  public UniqueStateNameValidator( final States[] existingStates )
   {
     this( existingStates, IStatus.ERROR );
   }
 
-  public UniqueStateNameValidator( final List<States> existingStates, final int severity )
+  public UniqueStateNameValidator( final States[] existingStates, final int severity )
   {
     super( String.class, severity, "A state with the same name already exists" );
 

@@ -41,8 +41,17 @@
 package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.ManageStatesWizard;
 
 /**
  * @author Gernot Belger
@@ -57,5 +66,27 @@ public class ManageStateAction extends Action
 
     setText( "Zustände verwalten..." );
     setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.STATE ) );
+  }
+
+  @Override
+  public void runWithEvent( final Event event )
+  {
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+
+    final Wizard wizard = new ManageStatesWizard( m_connection );
+    wizard.setWindowTitle( "Manage States" );
+    final WizardDialog dialog = new WizardDialog( shell, wizard )
+    {
+      @Override
+      protected void createButtonsForButtonBar( final Composite parent )
+      {
+        super.createButtonsForButtonBar( parent );
+
+        final Button cancelButton = getButton( IDialogConstants.CANCEL_ID );
+        cancelButton.setVisible( false );
+        ((GridData) cancelButton.getLayoutData()).exclude = true;
+      }
+    };
+    dialog.open();
   }
 }

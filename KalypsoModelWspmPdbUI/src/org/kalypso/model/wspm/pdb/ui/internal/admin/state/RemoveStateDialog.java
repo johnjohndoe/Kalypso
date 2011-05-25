@@ -38,10 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
-
-import java.util.HashSet;
-import java.util.Set;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -51,24 +48,28 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
 import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ByStateContentProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.PdbComparator;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.PdbLabelProvider;
 
 /**
  * @author Gernot Belger
  */
-public class CannotRemoveWaterBodyDialog extends MessageDialog
+public class RemoveStateDialog extends MessageDialog
 {
-  private static String DIALOG_MESSAGE = "Cannot remove water body.\nThere are cross sections referencing this water body:";
+  private final States m_state;
 
-  private final WaterBodies m_waterBody;
-
-  public CannotRemoveWaterBodyDialog(final Shell shell, final String dialogTitle, final WaterBodies waterBody )
+  public RemoveStateDialog( final Shell shell, final String dialogTitle, final States state )
   {
-    super( shell, dialogTitle, null, DIALOG_MESSAGE, INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0 );
+    super( shell, dialogTitle, null, formatMessage( state ), CONFIRM, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 );
 
-    m_waterBody = waterBody;
+    m_state = state;
+  }
+
+  private static String formatMessage( final States state )
+  {
+    return String.format( "Remove state '%s'?  All referenced cross sections (see below) will be removed as well.\nThis operation cannot be undone.", state.getState() );
   }
 
   @Override
@@ -90,24 +91,8 @@ public class CannotRemoveWaterBodyDialog extends MessageDialog
     viewer.setContentProvider( new ByStateContentProvider() );
     viewer.setComparator( new PdbComparator() );
 
-    final States[] allStates = findAllState( m_waterBody );
-    viewer.setInput( allStates );
-
+    viewer.setInput( m_state.getCrossSectionses() );
 
     return viewer.getControl();
-  }
-
-  private States[] findAllState( final WaterBodies waterBody )
-  {
-    final Set<States> allStates = new HashSet<States>();
-
-    final Set<CrossSections> crossSections = waterBody.getCrossSectionses();
-    for( final CrossSections crossSection : crossSections )
-    {
-      final States states = crossSection.getStates();
-      allStates.add( states );
-    }
-
-    return allStates.toArray( new States[allStates.size()] );
   }
 }
