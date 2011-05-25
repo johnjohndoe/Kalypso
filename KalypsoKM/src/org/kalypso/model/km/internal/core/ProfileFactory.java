@@ -102,4 +102,11 @@ public class ProfileFactory
     lineReader.close();
     return wqProfile;
   }
+
+  public static ProfileObservationSet createProfileObservationSet( File gmlFile, double minKM, double maxKM )
+  {
+    KMObservationReader reader = new KMObservationReader();
+    reader.read( gmlFile, 1000d * minKM, 1000d * maxKM );
+    return reader.getProfiles();
+  }
 }

@@ -1,55 +1,70 @@
 package org.kalypso.model.km.internal.core;
 
-/*
- * Eine Reihe der KM-Dateien
+/**
+ * Eine Reihe der KM-Dateien.
  */
-class Row
+public class Row
 {
-  private final double m_hNN;
+  /**
+   * The heigth of the waterlevel.
+   */
+  private double m_hNN;
 
-  private final double m_q;
+  /**
+   * The runoff of the main channel.
+   */
+  private double m_q;
 
-  private final double m_qforeland;
+  /**
+   * The runoff of the foreland.
+   */
+  private double m_qf;
 
-  private final double m_a;
+  /**
+   * The area of the main channel.
+   */
+  private double m_a;
 
-  private final double m_af;
+  /**
+   * The area of the foreland.
+   */
+  private double m_af;
 
-  private final double m_w;
+  /**
+   * The width of the main channel.
+   */
+  private double m_w;
 
-  private final double m_wf;
+  /**
+   * The width of the foreland.
+   */
+  private double m_wf;
 
-  private final double m_i;
+  /**
+   * The slope.
+   */
+  private double m_i;
 
   public Row( final double hNN, final double q, final double qf, final double a, final double af, final double w, final double wf, final double i )
   {
     m_hNN = hNN;
     m_q = q;
-    m_qforeland = qf;
+    m_qf = qf;
     m_a = a;
     m_af = af;
     m_w = w;
     m_wf = wf;
     m_i = i;
-
   }
 
-  public double getH( )
-  {
-
-    return m_hNN;
-  }
-
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {
-    return "" + m_hNN + " " + m_q + " " + m_qforeland + " " + m_a + " " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    + m_af + " " + m_w + " " + m_wf + " " + m_i; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-  }
-
-  public double getQ( )
-  {
-    return m_q;
+    return "" + m_hNN + " " + m_q + " " + m_qf + " " + m_a + " " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        + m_af + " " + m_w + " " + m_wf + " " + m_i; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public double getHNN( )
@@ -57,14 +72,24 @@ class Row
     return m_hNN;
   }
 
-  public double getQforeland( )
+  public double getQ( )
   {
-    return m_qforeland;
+    return m_q;
   }
 
-  public double getSlope( )
+  public double getQforeland( )
   {
-    return m_i;
+    return m_qf;
+  }
+
+  public double getArea( )
+  {
+    return m_a;
+  }
+
+  public double getAreaForeland( )
+  {
+    return m_af;
   }
 
   public double getWidth( )
@@ -78,14 +103,9 @@ class Row
     return m_wf;
   }
 
-  public double getArea( )
+  public double getSlope( )
   {
-    return m_a;
-  }
-
-  public double getAreaForeland( )
-  {
-    return m_af;
+    return m_i;
   }
 
   public double getAlpha( )
@@ -95,7 +115,6 @@ class Row
 
   private double getQfull( )
   {
-    return m_q + m_qforeland;
+    return m_q + m_qf;
   }
-
 }

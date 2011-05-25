@@ -204,6 +204,9 @@ public class DirectoryFieldWidget implements ISelectionProvider
           dialog.setFilterPath( m_lastPath );
 
         String filePath = dialog.open();
+        if( filePath == null || filePath.length() == 0 )
+          return;
+
         m_text.setText( filePath );
         m_lastPath = filePath;
         fireSelectionChangeEvent();
