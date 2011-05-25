@@ -175,7 +175,7 @@ public class NAStatistics
   private String getResultRelativePath( final File inputDir, final File resultFile )
   {
     final String relativePath = FileUtilities.getRelativePathTo( inputDir, resultFile );
-    final String relativePathWithSlashes = relativePath.replace( '\\', '/' );
+    final String relativePathWithSlashes = relativePath.replace( '\\', '/' ); //$NON-NLS-1$ //$NON-NLS-2$
     if( relativePathWithSlashes.startsWith( "/" ) ) //$NON-NLS-1$
       return relativePathWithSlashes.substring( 1 );
 
@@ -283,7 +283,7 @@ public class NAStatistics
     throw new NotImplementedException();
   }
 
-  private final Double getDoubleValueFormatted( final Object object )
+  private Double getDoubleValueFormatted( final Object object )
   {
     if( object == null )
       return null;
