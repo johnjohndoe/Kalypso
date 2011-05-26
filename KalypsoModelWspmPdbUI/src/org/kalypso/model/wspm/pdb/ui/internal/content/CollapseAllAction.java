@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
@@ -67,8 +68,10 @@ public class CollapseAllAction extends Action
       final ICommandService cs = (ICommandService) locator.getService( ICommandService.class );
       final Command cmd = cs.getCommand( IWorkbenchCommandConstants.NAVIGATE_COLLAPSE_ALL );
       setText( cmd.getName() );
+
       final ICommandImageService cis = (ICommandImageService) locator.getService( ICommandImageService.class );
-      cis.getImageDescriptor( IWorkbenchCommandConstants.NAVIGATE_COLLAPSE_ALL, ICommandImageService.TYPE_DEFAULT, ICommandImageService.IMAGE_STYLE_TOOLBAR );
+      final ImageDescriptor collapseAllImage = cis.getImageDescriptor( IWorkbenchCommandConstants.NAVIGATE_COLLAPSE_ALL, ICommandImageService.TYPE_DEFAULT, ICommandImageService.IMAGE_STYLE_TOOLBAR );
+      setImageDescriptor( collapseAllImage );
     }
     catch( final NotDefinedException e )
     {
