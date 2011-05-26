@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
@@ -63,7 +63,7 @@ public class ManageWaterBodiesPage extends WizardPage
 
   private UpdateableAction[] m_actions;
 
-  private WaterBodies m_selectedItem;
+  private WaterBody m_selectedItem;
 
   private final Session m_session;
 
@@ -95,7 +95,7 @@ public class ManageWaterBodiesPage extends WizardPage
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        final WaterBodies waterBody = (WaterBodies) selection.getFirstElement();
+        final WaterBody waterBody = (WaterBody) selection.getFirstElement();
         handleItemSelected( waterBody );
       }
     } );
@@ -124,7 +124,7 @@ public class ManageWaterBodiesPage extends WizardPage
     return m_actions;
   }
 
-  protected void handleItemSelected( final WaterBodies waterBody )
+  protected void handleItemSelected( final WaterBody waterBody )
   {
     m_selectedItem = waterBody;
 
@@ -137,7 +137,7 @@ public class ManageWaterBodiesPage extends WizardPage
       action.update();
   }
 
-  public WaterBodies getSelectedItem( )
+  public WaterBody getSelectedItem( )
   {
     return m_selectedItem;
   }

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
@@ -53,7 +52,7 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.UpdateObjectCommand;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
 
@@ -80,11 +79,9 @@ public class EditWaterBodyAction extends UpdateableAction
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
     final Session session = m_page.getSession();
-    final WaterBodies[] existingWaterbodies = m_viewer.getExistingWaterbodies();
+    final WaterBody[] existingWaterbodies = m_viewer.getExistingWaterbodies();
 
-    final WaterBodies selectedItem = m_page.getSelectedItem();
-
-    final String oldID = selectedItem.getWaterBody();
+    final WaterBody selectedItem = m_page.getSelectedItem();
 
     final EditWaterBodyWizard wizard = new EditWaterBodyWizard( existingWaterbodies, selectedItem, Mode.EDIT );
     wizard.setWindowTitle( "Edit Water Body" );
@@ -94,9 +91,6 @@ public class EditWaterBodyAction extends UpdateableAction
     {
       if( dialog.open() == Window.OK )
       {
-        final String newID = selectedItem.getWaterBody();
-        Assert.isTrue( newID.equals( oldID ) );
-
         // FIXME: a bit dubious (also the refresh below). Instead, we should clone the object
         // and edit the clone. Only copy the changed values back, if OK
         final UpdateObjectCommand operation = new UpdateObjectCommand( selectedItem );
@@ -114,7 +108,7 @@ public class EditWaterBodyAction extends UpdateableAction
       new StatusDialog2( shell, status, wizard.getWindowTitle() ).open();
     }
 
-    m_viewer.refreshWaterBodies( oldID );
+    m_viewer.refreshWaterBody( selectedItem.getName() );
   }
 
   @Override

@@ -43,9 +43,9 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 
@@ -63,14 +63,17 @@ public class PdbLabelProvider extends LabelProvider
   @Override
   public String getText( final Object element )
   {
-    if( element instanceof WaterBodies )
-      return ((WaterBodies) element).getName();
+    if( element instanceof WaterBody )
+    {
+      final WaterBody waterBody = (WaterBody) element;
+      return String.format( "%s (%s)", waterBody.getLabel(), waterBody.getName() );
+    }
 
-    if( element instanceof States )
-      return ((States) element).getState();
+    if( element instanceof State )
+      return ((State) element).getName();
 
-    if( element instanceof CrossSections )
-      return ObjectUtils.toString( ((CrossSections) element).getStation() );
+    if( element instanceof CrossSection )
+      return ObjectUtils.toString( ((CrossSection) element).getStation() );
 
     return super.getText( element );
   }
@@ -78,13 +81,13 @@ public class PdbLabelProvider extends LabelProvider
   @Override
   public Image getImage( final Object element )
   {
-    if( element instanceof WaterBodies )
+    if( element instanceof WaterBody )
       return WspmPdbUiImages.getImage( IMAGE.WATER_BODY );
 
-    if( element instanceof States )
+    if( element instanceof State )
       return WspmPdbUiImages.getImage( IMAGE.STATE );
 
-    if( element instanceof CrossSections )
+    if( element instanceof CrossSection )
       return WspmPdbUiImages.getImage( IMAGE.CROSS_SECTION );
 
     if( element == PENDING )

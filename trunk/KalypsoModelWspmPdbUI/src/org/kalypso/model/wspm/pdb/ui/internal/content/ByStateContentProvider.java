@@ -46,8 +46,8 @@ import java.util.Set;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
  * @author Gernot Belger
@@ -59,7 +59,7 @@ public class ByStateContentProvider implements ITreeContentProvider
   {
     if( inputElement instanceof ConnectionInput )
     {
-      final States[] states = ((ConnectionInput) inputElement).getStates();
+      final State[] states = ((ConnectionInput) inputElement).getState();
       if( ArrayUtils.isEmpty( states ) )
         return new Object[] { PdbLabelProvider.EMPTY_STATES };
 
@@ -81,9 +81,9 @@ public class ByStateContentProvider implements ITreeContentProvider
   @Override
   public boolean hasChildren( final Object element )
   {
-    if( element instanceof States )
+    if( element instanceof State )
     {
-      final Set<CrossSections> children = ((States) element).getCrossSectionses();
+      final Set<CrossSection> children = ((State) element).getCrossSections();
       return !children.isEmpty();
     }
 
@@ -93,10 +93,10 @@ public class ByStateContentProvider implements ITreeContentProvider
   @Override
   public Object[] getChildren( final Object parentElement )
   {
-    if( parentElement instanceof States )
+    if( parentElement instanceof State )
     {
-      final Set<CrossSections> children = ((States) parentElement).getCrossSectionses();
-      return children.toArray( new CrossSections[children.size()] );
+      final Set<CrossSection> children = ((State) parentElement).getCrossSections();
+      return children.toArray( new CrossSection[children.size()] );
     }
 
     return ArrayUtils.EMPTY_OBJECT_ARRAY;
@@ -105,8 +105,8 @@ public class ByStateContentProvider implements ITreeContentProvider
   @Override
   public Object getParent( final Object element )
   {
-    if( element instanceof CrossSections )
-      return ((CrossSections) element).getStates();
+    if( element instanceof CrossSection )
+      return ((CrossSection) element).getState();
 
     return null;
   }

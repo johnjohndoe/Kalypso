@@ -46,8 +46,8 @@ import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.internal.AddObjectOperation;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
@@ -59,9 +59,9 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  */
 public class Gaf2Db
 {
-  private final WaterBodies m_waterBody;
+  private final WaterBody m_waterBody;
 
-  private final States m_state;
+  private final State m_state;
 
   private final GeometryFactory m_geometryFactory;
 
@@ -69,7 +69,7 @@ public class Gaf2Db
 
   private final Session m_session;
 
-  public Gaf2Db( final Session session, final WaterBodies waterBody, final States state, final int srid )
+  public Gaf2Db( final Session session, final WaterBody waterBody, final State state, final int srid )
   {
     m_session = session;
     m_waterBody = waterBody;

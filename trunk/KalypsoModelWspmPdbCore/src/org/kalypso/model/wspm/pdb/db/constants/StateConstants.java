@@ -47,9 +47,11 @@ public interface StateConstants
 {
   String PROPERTY_SOURCE = "source"; //$NON-NLS-1$ 
 
-  String PROPERTY_STATE = "state"; //$NON-NLS-1$
+  String PROPERTY_ID = "id"; //$NON-NLS-1$
 
-  String PROPERTY_COMMENT = "comment"; //$NON-NLS-1$
+  String PROPERTY_NAME = "name"; //$NON-NLS-1$
+
+  String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
 
   String PROPERTY_ISSTATEZERO = "isstatezero"; //$NON-NLS-1$
 
@@ -60,8 +62,6 @@ public interface StateConstants
   String PROPERTY_EDITINGUSER = "editingUser"; //$NON-NLS-1$
 
   String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
-
-  String PROPERTY_CROSSSECTIONSES = "crossSectionses"; //$NON-NLS-1$
 
   int NAME_LIMIT = 100;
 

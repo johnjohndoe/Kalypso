@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -96,7 +97,7 @@ class SettingsPage extends WizardPage
     setSettings( settings );
 
     // This name is ok, if we come from editing a state
-    m_initialName = settings.getName();
+    m_initialName = settings == null ? StringUtils.EMPTY : settings.getName();
   }
 
   void setSettings( final IPdbSettings connection )

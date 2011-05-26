@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Text;
 import org.hibernate.Session;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.AddWaterBodyAction;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyStrings;
@@ -115,7 +115,7 @@ public class ChooseWaterPage extends WizardPage
 
     final DataBinder dataBinder = new DataBinder( target, model );
 
-    dataBinder.addTargetAfterGetValidator( new NotNullValidator<WaterBodies>( WaterBodies.class, IStatus.ERROR, "no water body is selected" ) );
+    dataBinder.addTargetAfterGetValidator( new NotNullValidator<WaterBody>( WaterBody.class, IStatus.ERROR, "no water body is selected" ) );
     binding.bindValue( dataBinder );
 
     return m_waterBodyViewer.getControl();

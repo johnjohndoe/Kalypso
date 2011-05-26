@@ -51,9 +51,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ByStateContentProvider;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbLabelProvider;
@@ -65,9 +65,9 @@ public class CannotRemoveWaterBodyDialog extends MessageDialog
 {
   private static String DIALOG_MESSAGE = "Cannot remove water body.\nThere are cross sections referencing this water body:";
 
-  private final WaterBodies m_waterBody;
+  private final WaterBody m_waterBody;
 
-  public CannotRemoveWaterBodyDialog(final Shell shell, final String dialogTitle, final WaterBodies waterBody )
+  public CannotRemoveWaterBodyDialog(final Shell shell, final String dialogTitle, final WaterBody waterBody )
   {
     super( shell, dialogTitle, null, DIALOG_MESSAGE, INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0 );
 
@@ -93,24 +93,24 @@ public class CannotRemoveWaterBodyDialog extends MessageDialog
     viewer.setContentProvider( new ByStateContentProvider() );
     viewer.setComparator( new PdbComparator() );
 
-    final States[] allStates = findAllState( m_waterBody );
-    viewer.setInput( allStates );
+    final State[] allState = findAllState( m_waterBody );
+    viewer.setInput( allState );
 
 
     return viewer.getControl();
   }
 
-  private States[] findAllState( final WaterBodies waterBody )
+  private State[] findAllState( final WaterBody waterBody )
   {
-    final Set<States> allStates = new HashSet<States>();
+    final Set<State> allState = new HashSet<State>();
 
-    final Set<CrossSections> crossSections = waterBody.getCrossSectionses();
-    for( final CrossSections crossSection : crossSections )
+    final Set<CrossSection> crossSections = waterBody.getCrossSections();
+    for( final CrossSection crossSection : crossSections )
     {
-      final States states = crossSection.getStates();
-      allStates.add( states );
+      final State states = crossSection.getState();
+      allState.add( states );
     }
 
-    return allStates.toArray( new States[allStates.size()] );
+    return allState.toArray( new State[allState.size()] );
   }
 }

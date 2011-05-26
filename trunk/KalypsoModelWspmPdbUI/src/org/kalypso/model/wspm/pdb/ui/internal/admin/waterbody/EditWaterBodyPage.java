@@ -52,7 +52,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
@@ -67,15 +68,15 @@ public class EditWaterBodyPage extends WizardPage
     EDIT;
   }
 
-  private final WaterBodies m_waterBody;
+  private final WaterBody m_waterBody;
 
   private DatabindingWizardPage m_binding;
 
-  private final WaterBodies[] m_existingWaterbodies;
+  private final WaterBody[] m_existingWaterbodies;
 
   private final Mode m_mode;
 
-  public EditWaterBodyPage( final String pageName, final WaterBodies waterBody, final WaterBodies[] existingWaterbodies, final Mode mode )
+  public EditWaterBodyPage( final String pageName, final WaterBody waterBody, final WaterBody[] existingWaterbodies, final Mode mode )
   {
     super( pageName );
 
@@ -97,83 +98,68 @@ public class EditWaterBodyPage extends WizardPage
 
     m_binding = new DatabindingWizardPage( this, null );
 
-    createIDControls( composite );
     createNameControls( composite );
-    createCommentControls( composite );
+    createLabelControls( composite );
+    createDescriptionControls( composite );
     // private Geometry riverline;
   }
 
-  private void createIDControls( final Composite parent )
+  private void createNameControls( final Composite parent )
   {
     new Label( parent, SWT.NONE ).setText( "Gewässerkennziffer" );
 
-    final int style = getIDStyle();
-
-    final Text field = new Text( parent, SWT.BORDER | style );
+    final Text field = new Text( parent, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     field.setMessage( "<Eindeutige Kennziffer des Gewässers>" );
-    field.setTextLimit( WaterBodies.WATERBODY_LIMIT );
+    field.setTextLimit( WaterBodyConstants.NAME_LIMIT );
 
     final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBodies.PROPERTY_WATERBODY );
+    final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBody.PROPERTY_NAME );
 
     final DataBinder binder = new DataBinder( target, model );
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'ID' is empty" ) );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Code' is empty" ) );
 
-    if( m_mode == Mode.NEW )
-      binder.addTargetAfterGetValidator( new UniqueWaterBodyIDValidator( m_existingWaterbodies ) );
+    final String ignoreName = m_mode == Mode.EDIT ? m_waterBody.getName() : null;
+
+    binder.addTargetAfterGetValidator( new UniqueWaterBodyNameValidator( m_existingWaterbodies, ignoreName ) );
 
     m_binding.bindValue( binder );
   }
 
-  private int getIDStyle( )
-  {
-    switch( m_mode )
-    {
-      case NEW:
-        return SWT.NONE;
-
-      case EDIT:
-        return SWT.READ_ONLY;
-    }
-
-    throw new IllegalStateException();
-  }
-
-  private void createNameControls( final Composite parent )
+  private void createLabelControls( final Composite parent )
   {
     new Label( parent, SWT.NONE ).setText( "Name" );
 
     final Text field = new Text( parent, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     field.setMessage( "<Name des Gewässers>" );
-    field.setTextLimit( WaterBodies.NAME_LIMIT );
+    field.setTextLimit( WaterBody.NAME_LIMIT );
 
     final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBodies.PROPERTY_NAME );
+    final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBody.PROPERTY_LABEL );
     final DataBinder binder = new DataBinder( target, model );
 
-    final String ignoreName = m_mode == Mode.EDIT ? m_waterBody.getName() : null;
+    final String ignoreLabel = m_mode == Mode.EDIT ? m_waterBody.getLabel() : null;
 
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Name' is empty" ) );
-    binder.addTargetAfterGetValidator( new UniqueWaterBodyNameValidator( m_existingWaterbodies, ignoreName ) );
+    binder.addTargetAfterGetValidator( new UniqueWaterBodyLabelValidator( m_existingWaterbodies, ignoreLabel ) );
 
     m_binding.bindValue( binder );
   }
 
-  private void createCommentControls( final Composite parent )
+  private void createDescriptionControls( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
     label.setText( "Description" );
     label.setLayoutData( new GridData( SWT.LEFT, SWT.TOP, false, false ) );
 
     final Text field = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
-    field.setTextLimit( WaterBodies.COMMENT_LIMIT );
+    field.setTextLimit( WaterBodyConstants.DESCRIPTION_LIMIT );
     field.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     field.setMessage( "<Beschreibung des Gewässers>" );
 
     final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBodies.PROPERTY_COMMENT );
+    final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBody.PROPERTY_DESCRIPTION );
 
     m_binding.bindValue( target, model );
   }

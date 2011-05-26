@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.databinding.validation.TypedValidator;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
  * @author Gernot Belger
@@ -56,22 +56,29 @@ public class UniqueStateNameValidator extends TypedValidator<String>
 {
   private final Set<String> m_names = new HashSet<String>();
 
-  public UniqueStateNameValidator( final States[] existingStates )
+  private final String m_ignoreName;
+
+  public UniqueStateNameValidator( final State[] existingState, final String ignoreName )
   {
-    this( existingStates, IStatus.ERROR );
+    this( existingState, IStatus.ERROR, ignoreName );
   }
 
-  public UniqueStateNameValidator( final States[] existingStates, final int severity )
+  public UniqueStateNameValidator( final State[] existingState, final int severity, final String ignoreName )
   {
     super( String.class, severity, "A state with the same name already exists" );
 
-    for( final States states : existingStates )
-      m_names.add( states.getState() );
+    m_ignoreName = ignoreName;
+
+    for( final State states : existingState )
+      m_names.add( states.getName() );
   }
 
   @Override
   protected IStatus doValidate( final String value ) throws CoreException
   {
+    if( value.equals( m_ignoreName ) )
+      return Status.OK_STATUS;
+
     if( m_names.contains( value ) )
       fail();
 

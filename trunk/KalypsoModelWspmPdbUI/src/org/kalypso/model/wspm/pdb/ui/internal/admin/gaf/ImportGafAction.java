@@ -58,7 +58,7 @@ import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
@@ -89,7 +89,7 @@ public class ImportGafAction extends Action
     try
     {
       session = m_connection.openSession();
-      final States[] states = getStates( session );
+      final State[] states = getState( session );
 
       final String username = m_connection.getSettings().getUsername();
       final Wizard importWizard = new ImportGafWizard( session, states, username );
@@ -112,11 +112,11 @@ public class ImportGafAction extends Action
     }
   }
 
-  private States[] getStates( final Session session ) throws PdbConnectException
+  private State[] getState( final Session session ) throws PdbConnectException
   {
-    final ListOperation<States> operation = new ListOperation<States>( States.class );
+    final ListOperation<State> operation = new ListOperation<State>( State.class );
     new Executor( session, operation ).execute();
-    final List<States> list = operation.getList();
-    return list.toArray( new States[list.size()] );
+    final List<State> list = operation.getList();
+    return list.toArray( new State[list.size()] );
   }
 }

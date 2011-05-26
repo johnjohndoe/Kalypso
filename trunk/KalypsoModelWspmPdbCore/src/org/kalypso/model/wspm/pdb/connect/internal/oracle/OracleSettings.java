@@ -80,7 +80,7 @@ public class OracleSettings extends HibernateSettings
 
   public OracleSettings( )
   {
-    super( StringUtils.EMPTY );
+    super( "Oracle" );
   }
 
   public OracleSettings( final String name, final OracleSettings settings )

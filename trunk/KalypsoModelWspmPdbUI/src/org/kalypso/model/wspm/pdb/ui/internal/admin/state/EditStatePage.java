@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.DateTimeSelectionProperty;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.UniqueStateNameValidator;
 import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
@@ -73,20 +73,20 @@ public class EditStatePage extends WizardPage
     EDIT;
   }
 
-  private final States m_state;
+  private final State m_state;
 
   private DatabindingWizardPage m_binding;
 
-  private final States[] m_existingStates;
+  private final State[] m_existingState;
 
   private final Mode m_mode;
 
-  public EditStatePage( final String pageName, final States state, final States[] existingStates, final Mode mode )
+  public EditStatePage( final String pageName, final State state, final State[] existingState, final Mode mode )
   {
     super( pageName );
 
     m_state = state;
-    m_existingStates = existingStates;
+    m_existingState = existingState;
     m_mode = mode;
 
     setTitle( "Enter State Properties" );
@@ -113,27 +113,26 @@ public class EditStatePage extends WizardPage
   {
     new Label( parent, SWT.NONE ).setText( "Name" );
 
-    final int style = m_mode == Mode.EDIT ? SWT.BORDER | SWT.READ_ONLY : SWT.BORDER;
-
-    final Text field = new Text( parent, style );
+    final Text field = new Text( parent, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     field.setMessage( "<Eindeutiger Name des Zustands>" );
-    field.setTextLimit( States.NAME_LIMIT );
+    field.setTextLimit( State.NAME_LIMIT );
 
     final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_STATE );
+    final IObservableValue model = BeansObservables.observeValue( m_state, State.PROPERTY_NAME );
 
     final DataBinder binder = new DataBinder( target, model );
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Name' is empty" ) );
-    if( m_mode == Mode.NEW )
-    {
-      final UniqueStateNameValidator uniqueStateNameValidator = new UniqueStateNameValidator( m_existingStates );
-      binder.addTargetAfterGetValidator( uniqueStateNameValidator );
-      binder.addTargetBeforeSetValidator( uniqueStateNameValidator );
-      // FIXME: does not work correctly: if file is changed on file page, we will not get a correct validation here
-      // using a warning here at least shows the correct
-      binder.addModelAfterGetValidator( new UniqueStateNameValidator( m_existingStates, IStatus.WARNING ) );
-    }
+
+    /* Ignore own name in edit mode */
+    final String ignoreName = m_mode == Mode.EDIT ? m_state.getName() : null;
+
+    final UniqueStateNameValidator uniqueStateNameValidator = new UniqueStateNameValidator( m_existingState, ignoreName );
+    binder.addTargetAfterGetValidator( uniqueStateNameValidator );
+    binder.addTargetBeforeSetValidator( uniqueStateNameValidator );
+    // FIXME: does not work correctly: if file is changed on file page, we will not get a correct validation here
+    // using a warning here at least shows the correct
+    binder.addModelAfterGetValidator( new UniqueStateNameValidator( m_existingState, IStatus.WARNING, ignoreName ) );
 
     m_binding.bindValue( binder );
   }
@@ -145,12 +144,12 @@ public class EditStatePage extends WizardPage
     label.setLayoutData( new GridData( SWT.LEFT, SWT.TOP, false, false ) );
 
     final Text field = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
-    field.setTextLimit( States.COMMENT_LIMIT );
+    field.setTextLimit( State.COMMENT_LIMIT );
     field.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
     field.setMessage( "<Beschreibung des Zustands>" );
 
     final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_COMMENT );
+    final IObservableValue model = BeansObservables.observeValue( m_state, State.PROPERTY_DESCRIPTION );
 
     m_binding.bindValue( target, model );
   }
@@ -163,7 +162,7 @@ public class EditStatePage extends WizardPage
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
     final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_SOURCE );
+    final IObservableValue model = BeansObservables.observeValue( m_state, State.PROPERTY_SOURCE );
 
     m_binding.bindValue( target, model );
   }
@@ -185,7 +184,7 @@ public class EditStatePage extends WizardPage
     final IObservableValue dateTarget = selectionProperty.observe( dateField );
     final IObservableValue timeTarget = selectionProperty.observe( timeField );
 
-    final IObservableValue model = BeansObservables.observeValue( m_state, States.PROPERTY_MEASUREMENTDATE );
+    final IObservableValue model = BeansObservables.observeValue( m_state, State.PROPERTY_MEASUREMENTDATE );
 
     m_binding.bindValue( dateTarget, model );
     m_binding.bindValue( timeTarget, model );

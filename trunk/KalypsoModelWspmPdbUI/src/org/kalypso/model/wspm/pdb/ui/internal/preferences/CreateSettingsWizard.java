@@ -73,6 +73,7 @@ class CreateSettingsWizard extends Wizard
     m_page = page;
 
     m_typePage = new SettingsTypePage( "type" ); //$NON-NLS-1$
+
     m_connectionPage = new SettingsPage( "connection", null ); //$NON-NLS-1$
 
     setWindowTitle( "Create New Connection Settings" );
