@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.ui.kmupdate;
 
-import java.io.File;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.km.internal.binding.KMBindingUtils;
@@ -82,7 +83,7 @@ public class KMViewer
   private Text m_labelText;
 
   /**
-   * The widget for selecting a directory.
+   * The widget for selecting a file.
    */
   private DirectoryFieldWidget m_dirField;
 
@@ -149,7 +150,7 @@ public class KMViewer
     emptyLabel1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
     /* Create a widget for asking for a file. */
-    m_dirField = new DirectoryFieldWidget( false, parent, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.1" ), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.0" ), 1, 1, 1 ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_dirField = new DirectoryFieldWidget( parent, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.1" ), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.0" ), 1, 1, 1 ); //$NON-NLS-1$ //$NON-NLS-2$
     m_dirField.addSelectionChangedListener( new ISelectionChangedListener()
     {
       /**
@@ -201,11 +202,11 @@ public class KMViewer
     m_profileListViewer.setCheckStateProvider( new KMViewerCheckStateProvider( this ) );
 
     /* Create a table viewer column. */
-    TableViewerColumn labelColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
-    labelColumn.setLabelProvider( new ProfileNameLabelProvider() );
-    labelColumn.getColumn().setText( Messages.getString( "KMViewer_0" ) ); //$NON-NLS-1$
-    labelColumn.getColumn().setWidth( 100 );
-    ColumnViewerSorter.registerSorter( labelColumn, new ProfileNameSorter() );
+    // TableViewerColumn labelColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
+    // labelColumn.setLabelProvider( new ProfileNameLabelProvider() );
+    //    labelColumn.getColumn().setText( Messages.getString( "KMViewer_0" ) ); //$NON-NLS-1$
+    // labelColumn.getColumn().setWidth( 100 );
+    // ColumnViewerSorter.registerSorter( labelColumn, new ProfileNameSorter() );
 
     /* Create a table viewer column. */
     TableViewerColumn stationColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
@@ -219,6 +220,9 @@ public class KMViewer
     validColumn.setLabelProvider( new ProfileValidLabelProvider( this ) );
     validColumn.getColumn().setText( Messages.getString( "KMViewer_2" ) ); //$NON-NLS-1$
     validColumn.getColumn().setWidth( 200 );
+
+    /* Make sure, the columns are properly resized. */
+    m_profileListViewer.getTable().addControlListener( new ColumnsResizeControlListener() );
 
     /* Add a listener. */
     m_startText.addFocusListener( new FocusAdapter()
@@ -347,14 +351,14 @@ public class KMViewer
     ProfileData[] allProfiles = m_profileSet.getAllProfiles();
     for( ProfileData pd : allProfiles )
     {
-      File file = pd.getFile();
+      String file = pd.getFile();
       double position = pd.getPosition();
       double station = position / 1000.0;
 
       if( (kmStart == null || kmStart <= station) && (kmEnd == null || station <= kmEnd) )
       {
         Profile profileData = KMBindingUtils.OF.createKalininMiljukovTypeProfile();
-        profileData.setFile( file.getAbsolutePath() );
+        profileData.setFile( file );
         profileData.setPositionKM( position );
         profileData.setEnabled( pd.isValidForKalypso() == null );
         profileList.add( profileData );
@@ -409,10 +413,14 @@ public class KMViewer
 
   private void readProfileSet( String path )
   {
-    if( StringUtils.isBlank( path ) )
-      m_profileSet = null;
-    else
-      m_profileSet = ProfileFactory.createProfileObservationSet( new File( path ), Double.NaN, Double.NaN );
+    if( !StringUtils.isBlank( path ) )
+    {
+      m_profileSet = ProfileFactory.createProfileObservationSet( new Path( path ), Double.NaN, Double.NaN );
+
+      return;
+    }
+
+    m_profileSet = null;
   }
 
   private void inputChanged( final KalininMiljukovType oldInput, final KalininMiljukovType kmType )
@@ -456,7 +464,7 @@ public class KMViewer
     ProfileData[] data = m_profileSet.getAllProfiles();
     for( ProfileData profileData : data )
     {
-      if( file.equals( profileData.getFile().getAbsolutePath() ) )
+      if( file.equals( profileData.getFile() ) )
         return profileData;
     }
 

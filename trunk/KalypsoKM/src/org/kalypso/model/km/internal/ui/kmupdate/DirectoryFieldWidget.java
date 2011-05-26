@@ -43,12 +43,14 @@ package org.kalypso.model.km.internal.ui.kmupdate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -57,11 +59,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.model.km.internal.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultQIntervalNode;
 
 /**
  * @author Andreas Doemming (original)
@@ -73,11 +77,6 @@ public class DirectoryFieldWidget implements ISelectionProvider
    * The listeners.
    */
   private List<ISelectionChangedListener> m_listeners;
-
-  /**
-   * A directory should be selected.
-   */
-  protected boolean m_dirOnly;
 
   /**
    * The text field.
@@ -92,8 +91,6 @@ public class DirectoryFieldWidget implements ISelectionProvider
   /**
    * The constructor.
    * 
-   * @param dirOnly
-   *          A directory should be selected.
    * @param parent
    *          The parent composite.
    * @param label
@@ -110,10 +107,9 @@ public class DirectoryFieldWidget implements ISelectionProvider
    *          The control consists of 3 columns. This is the colspan of the third one. Check your your layout. It must
    *          have at least 3 columns and the number of columns must match the sum of sp1, sp2 and sp3.
    */
-  public DirectoryFieldWidget( boolean dirOnly, Composite parent, String label, String tooltip, int sp1, int sp2, int sp3 )
+  public DirectoryFieldWidget( Composite parent, String label, String tooltip, int sp1, int sp2, int sp3 )
   {
     m_listeners = new ArrayList<ISelectionChangedListener>();
-    m_dirOnly = dirOnly;
     m_text = null;
     m_button = null;
 
@@ -151,6 +147,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
     m_text = new Text( parent, SWT.BORDER );
     m_text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, sp2, 1 ) );
     m_text.setToolTipText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.0" ) ); //$NON-NLS-1$
+    m_text.setEditable( false );
 
     /* Add a listener. */
     m_text.addFocusListener( new FocusAdapter()
@@ -172,46 +169,39 @@ public class DirectoryFieldWidget implements ISelectionProvider
     m_button.addSelectionListener( new SelectionAdapter()
     {
       /**
-       * The last selected path.
-       */
-      private String m_lastPath = null;
-
-      /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        if( m_dirOnly )
-        {
-          DirectoryDialog dialog = new DirectoryDialog( parent.getShell() );
-          if( m_lastPath != null )
-            dialog.setFilterPath( m_lastPath );
-
-          String filePath = dialog.open();
-          if( filePath != null )
-          {
-            m_text.setText( filePath );
-            m_lastPath = filePath;
-            fireSelectionChangeEvent();
-          }
-
-          return;
-        }
-
-        FileDialog dialog = new FileDialog( parent.getShell() );
-        if( m_lastPath != null )
-          dialog.setFilterPath( m_lastPath );
-
-        String filePath = dialog.open();
-        if( filePath == null || filePath.length() == 0 )
-          return;
-
-        m_text.setText( filePath );
-        m_lastPath = filePath;
-        fireSelectionChangeEvent();
+        handleBrowseClicked( parent.getDisplay() );
       }
     } );
+  }
+
+  protected void handleBrowseClicked( Display display )
+  {
+    try
+    {
+      IWspmResultNode rootNodes[] = WspmResultFactory.createRootNodes();
+      BrowseWspmDialog dialog = new BrowseWspmDialog( display.getActiveShell(), rootNodes );
+      int open = dialog.open();
+      if( open != Window.OK )
+        return;
+
+      IWspmResultNode selectedNode = dialog.getSelectedNode();
+      if( !(selectedNode instanceof WspmResultQIntervalNode) )
+        return;
+
+      IPath path = (IPath) selectedNode.getObject();
+      m_text.setText( path.toString() );
+
+      fireSelectionChangeEvent();
+    }
+    catch( Exception ex )
+    {
+      ex.printStackTrace();
+    }
   }
 
   /**
@@ -277,6 +267,5 @@ public class DirectoryFieldWidget implements ISelectionProvider
   public void setEnabled( boolean enabled )
   {
     m_button.setEnabled( enabled );
-    m_text.setEnabled( enabled );
   }
 }

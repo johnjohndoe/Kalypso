@@ -46,21 +46,23 @@ import org.kalypso.observation.IObservation;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
+ * This result container represents a WSPM result.
+ * 
  * @author Gernot Belger
  */
 public class WspmResultContainer extends AbstractWspmResultNode implements IWspmResult
 {
   private WspmResultLengthSection m_lengthSection;
 
-  private final IFile m_lsFile;
+  private IFile m_file;
 
-  private final String m_label;
+  private String m_label;
 
-  public WspmResultContainer( final ITuhhCalculationNode parent, final IFile lsFile, final String label )
+  public WspmResultContainer( ITuhhCalculationNode parent, IFile file, String label )
   {
     super( parent );
 
-    m_lsFile = lsFile;
+    m_file = file;
     m_label = label;
   }
 
@@ -97,22 +99,17 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   @Override
   public WspmResultLengthSection getLengthSection( )
   {
-    checkLengthSection();
-
-    return m_lengthSection;
-  }
-
-  private void checkLengthSection( )
-  {
     // Maybe we should check, if the file was modified since...
     if( m_lengthSection == null )
     {
-      final TuhhCalculation calculation = getCalculation();
+      TuhhCalculation calculation = getCalculation();
       if( calculation == null )
-        return;
+        return null;
 
-      m_lengthSection = WspmResultLengthSection.create( m_lsFile, new GMLXPath( IObservation.QNAME_OBSERVATION ) );
+      m_lengthSection = WspmResultLengthSection.create( m_file, new GMLXPath( IObservation.QNAME_OBSERVATION ) );
     }
+
+    return m_lengthSection;
   }
 
   /**
@@ -121,7 +118,7 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   @Override
   public Object getObject( )
   {
-    return m_lsFile;
+    return m_file;
   }
 
   /**
@@ -130,7 +127,7 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   @Override
   public TuhhCalculation getCalculation( )
   {
-    final IWspmResultNode parent = getParent();
+    IWspmResultNode parent = getParent();
     if( parent instanceof ITuhhCalculationNode )
       return ((ITuhhCalculationNode) parent).getCalculation();
 
