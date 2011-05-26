@@ -101,6 +101,9 @@ public class WspmResultContentProvider implements ITreeContentProvider
   @Override
   public Object[] getChildren( final Object parentElement )
   {
+    if( parentElement instanceof IWspmResultNode[] )
+      return (IWspmResultNode[]) parentElement;
+
     if( parentElement instanceof IWspmResultNode )
       return ((IWspmResultNode) parentElement).getChildResults();
 
@@ -113,6 +116,9 @@ public class WspmResultContentProvider implements ITreeContentProvider
   @Override
   public Object getParent( final Object element )
   {
+    if( element instanceof IWspmResultNode[] )
+      return null;
+
     if( element instanceof IWspmResultNode )
       return ((IWspmResultNode) element).getParent();
 
@@ -125,6 +131,9 @@ public class WspmResultContentProvider implements ITreeContentProvider
   @Override
   public boolean hasChildren( final Object element )
   {
+    if( element instanceof IWspmResultNode[] )
+      return ((IWspmResultNode[]) element).length > 0;
+
     if( element instanceof IWspmResultNode )
       return ((IWspmResultNode) element).getChildResults().length > 0;
 
@@ -137,6 +146,9 @@ public class WspmResultContentProvider implements ITreeContentProvider
   @Override
   public Object[] getElements( final Object inputElement )
   {
+    if( inputElement instanceof IWspmResultNode[] )
+      return (IWspmResultNode[]) inputElement;
+
     if( inputElement instanceof IWspmResultNode )
       return ((IWspmResultNode) inputElement).getChildResults();
 

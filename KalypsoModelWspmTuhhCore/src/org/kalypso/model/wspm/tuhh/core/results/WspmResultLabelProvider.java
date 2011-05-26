@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -101,6 +102,11 @@ public class WspmResultLabelProvider extends LabelProvider implements ITableLabe
       final Image image = m_gmlLabelProvider.getImage( object );
       if( image != null )
         return image;
+
+      if( object instanceof IPath )
+      {
+        // TODO Do we need a icon in this case?
+      }
 
       return m_workbenchLabelProvider.getImage( object );
     }

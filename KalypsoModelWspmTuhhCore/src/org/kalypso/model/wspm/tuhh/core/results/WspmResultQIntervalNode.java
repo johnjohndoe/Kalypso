@@ -40,31 +40,42 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.IPath;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Gernot Belger
+ * This result container represents a WSPM result.
+ * 
+ * @author Holger Albert
  */
-public class WspmResultFixationNode extends AbstractWspmResultNode implements IWspmResult
+public class WspmResultQIntervalNode extends AbstractWspmResultNode implements ITuhhCalculationNode
 {
-  private final Feature m_fixation;
-
-  public WspmResultFixationNode( final IWspmResultNode parent, final Feature fixation )
-  {
-    super( parent );
-
-    m_fixation = fixation;
-  }
+  /**
+   * The path of the q interval file.
+   */
+  private IPath m_qIntervalPath;
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getChildResults()
+   * The label.
    */
-  @Override
-  public IWspmResultNode[] getChildResults( )
+  private String m_label;
+
+  /**
+   * The constructor.
+   * 
+   * @param parentNode
+   *          The parent node.
+   * @param qIntervalPath
+   *          The path of the q interval file.
+   * @param label
+   *          The label.
+   */
+  public WspmResultQIntervalNode( IWspmResultNode parentNode, IPath qIntervalPath, String label )
   {
-    return new IWspmResultNode[0];
+    super( parentNode );
+
+    m_qIntervalPath = qIntervalPath;
+    m_label = label;
   }
 
   /**
@@ -73,23 +84,16 @@ public class WspmResultFixationNode extends AbstractWspmResultNode implements IW
   @Override
   public String getLabel( )
   {
-    return m_fixation.getName();
-  }
-
-  @Override
-  protected String getInternalName( )
-  {
-    // id of feature would be nicer
-    return m_fixation.getName();
+    return "Ergebnis";
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResult#getLengthSection()
+   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getChildResults()
    */
   @Override
-  public WspmResultLengthSection getLengthSection( )
+  public IWspmResultNode[] getChildResults( )
   {
-    return WspmResultLengthSection.create( m_fixation );
+    return new IWspmResultNode[] {};
   }
 
   /**
@@ -98,15 +102,28 @@ public class WspmResultFixationNode extends AbstractWspmResultNode implements IW
   @Override
   public Object getObject( )
   {
-    return m_fixation;
+    return m_qIntervalPath;
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResult#getCalculation()
+   * @see org.kalypso.model.wspm.tuhh.core.results.AbstractWspmResultNode#getInternalName()
+   */
+  @Override
+  protected String getInternalName( )
+  {
+    return m_label;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.results.ITuhhCalculationNode#getCalculation()
    */
   @Override
   public TuhhCalculation getCalculation( )
   {
-    throw new NotImplementedException();
+    IWspmResultNode parent = getParent();
+    if( parent instanceof ITuhhCalculationNode )
+      return ((ITuhhCalculationNode) parent).getCalculation();
+
+    return null;
   }
 }

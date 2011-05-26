@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IPath;
+
 /*
  * Liest die KM-Dateien und erzeugt hieraus die Profildaten
  */
@@ -70,7 +72,7 @@ public class ProfileFactory
       if( kmMatcher.matches() )
       {
         final double meter = 1000d * Double.parseDouble( kmMatcher.group( 1 ) );
-        wqProfile = new ProfileData( file, min, max, meter );
+        wqProfile = new ProfileData( file.getAbsolutePath(), min, max, meter );
         continue;
       }
       final Matcher tableMatcher = PATTERN_TABLE.matcher( line );
@@ -103,10 +105,10 @@ public class ProfileFactory
     return wqProfile;
   }
 
-  public static ProfileObservationSet createProfileObservationSet( File gmlFile, double minKM, double maxKM )
+  public static ProfileObservationSet createProfileObservationSet( IPath path, double minKM, double maxKM )
   {
     KMObservationReader reader = new KMObservationReader();
-    reader.read( gmlFile, 1000d * minKM, 1000d * maxKM );
+    reader.read( path, 1000d * minKM, 1000d * maxKM );
     return reader.getProfiles();
   }
 }

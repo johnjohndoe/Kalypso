@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.ui.kmupdate;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +47,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -177,15 +178,15 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
       return new IStatus[] { status };
     }
     // TODO: also better validate in dialog
-    final File[] files = getFiles( km );
-    if( files.length == 0 )
+    final IPath[] paths = getPaths( km );
+    if( paths.length == 0 )
     {
       final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.37" ) ); //$NON-NLS-1$
       return new IStatus[] { status };
     }
 
     // TODO HACK: In the profile observation set all files are the same...
-    final AbstractProfileDataSet profileSet = ProfileFactory.createProfileObservationSet( files[0], kmStart, kmEnd );
+    final AbstractProfileDataSet profileSet = ProfileFactory.createProfileObservationSet( paths[0], kmStart, kmEnd );
     final IKMValue[] values = profileSet.getKMValues();
 
     m_featureChanges.add( new FeatureChange( kmChannel, kmKMStartPT, km.getKmStart() ) );
@@ -266,21 +267,19 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     return decimal.doubleValue();
   }
 
-  private File[] getFiles( final KalininMiljukovType km )
+  private IPath[] getPaths( final KalininMiljukovType km )
   {
-    final List<File> list = new ArrayList<File>();
-    final List<Profile> profiles = km.getProfile();
-    for( final Profile profile : profiles )
+    List<IPath> list = new ArrayList<IPath>();
+    List<Profile> profiles = km.getProfile();
+    for( Profile profile : profiles )
     {
       if( profile.isEnabled() )
       {
-        final String path = profile.getFile();
-        final File file = new File( path );
-        if( file.canRead() )
-          list.add( file );
+        Path path = new Path( profile.getFile() );
+        list.add( path );
       }
     }
 
-    return list.toArray( new File[list.size()] );
+    return list.toArray( new IPath[list.size()] );
   }
 }

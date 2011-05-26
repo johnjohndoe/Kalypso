@@ -90,7 +90,12 @@ public class WspmResultProjectNode extends AbstractWspmResultNode
   @Override
   public String getLabel( )
   {
-    return m_project.getName();
+
+    String name = m_project.getName();
+    if( name != null && name.length() > 0 )
+      return name;
+
+    return m_project.getId();
   }
 
   @Override

@@ -49,8 +49,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.kalypso.contribs.eclipse.core.resources.CollectFolderVisitor;
 import org.kalypso.contribs.eclipse.core.resources.FileFilterVisitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -87,6 +89,7 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
     {
       try
       {
+        /* Collect all results with length sections. */
         final FileFilter filter = new NameFileFilter( IWspmTuhhConstants.FILE_RESULT_LENGTH_SECTION_GML );
         final FileFilterVisitor visitor = new FileFilterVisitor( filter );
         resultFolder.accept( visitor );
@@ -95,6 +98,19 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
         {
           final String label = file.getParent().getParent().getName();
           result.add( new WspmResultContainer( this, file, label ) );
+        }
+
+        /* Collect all folders. */
+        CollectFolderVisitor dirVisitor = new CollectFolderVisitor( new IFolder[] { resultFolder.getFolder( ".svn" ) } ); //$NON-NLS-1$
+        resultFolder.accept( dirVisitor, IResource.DEPTH_ONE, false );
+        IFolder[] folders = dirVisitor.getFolders();
+        for( IFolder folder : folders )
+        {
+          if( !resultFolder.equals( folder ) )
+          {
+            WspmResultFolderNode folderNode = new WspmResultFolderNode( this, folder );
+            result.add( folderNode );
+          }
         }
       }
       catch( final CoreException e )
@@ -128,7 +144,7 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
   {
     final IWspmResultNode[] childResults = getChildResults();
     if( ArrayUtils.isEmpty( childResults ) )
-      return String.format( Messages.getString("WspmResultCalculationNode_0"), m_calculation.getName() ); //$NON-NLS-1$
+      return String.format( Messages.getString( "WspmResultCalculationNode_0" ), m_calculation.getName() ); //$NON-NLS-1$
 
     return m_calculation.getName();
   }

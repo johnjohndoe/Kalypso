@@ -1,7 +1,5 @@
 package org.kalypso.model.km.internal.core;
 
-import java.io.File;
-
 import org.kalypso.model.km.internal.i18n.Messages;
 
 public class ProfileData
@@ -14,11 +12,11 @@ public class ProfileData
 
   private Row[] m_rows;
 
-  private final File m_file;
+  private final String m_file;
 
   private double m_range;
 
-  public ProfileData( final File file, final double min, final double max, final double meter )
+  public ProfileData( final String file, final double min, final double max, final double meter )
   {
     m_file = file;
     m_meter = meter;
@@ -26,7 +24,7 @@ public class ProfileData
     m_max = max;
   }
 
-  public File getFile( )
+  public String getFile( )
   {
     return m_file;
   }

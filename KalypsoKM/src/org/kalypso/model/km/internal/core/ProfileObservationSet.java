@@ -40,11 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.core;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
@@ -63,25 +65,25 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 public class ProfileObservationSet extends AbstractProfileDataSet
 {
   /**
-   * The gml file.
+   * The path of the gml file.
    */
-  private File m_gmlFile;
+  private IPath m_path;
 
   /**
    * The constructor.
    * 
-   * @param gmlFile
-   *          The gml file.
+   * @param path
+   *          The path of the gml file.
    * @param startPosition
    *          The start position (the first station). In meters!
    * @param endPosition
    *          The end position (the last station). In meters!
    */
-  public ProfileObservationSet( File gmlFile, double startPosition, double endPosition )
+  public ProfileObservationSet( IPath path, double startPosition, double endPosition )
   {
     super( startPosition, endPosition );
 
-    m_gmlFile = gmlFile;
+    m_path = path;
   }
 
   /**
@@ -93,7 +95,8 @@ public class ProfileObservationSet extends AbstractProfileDataSet
     try
     {
       /* Load the workspace. */
-      GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_gmlFile, null );
+      IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( m_path );
+      GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( file );
 
       /* Get the root feature. */
       QIntervallResultCollection qIntervalResultCollection = (QIntervallResultCollection) workspace.getRootFeature();
@@ -166,7 +169,7 @@ public class ProfileObservationSet extends AbstractProfileDataSet
     }
 
     /* Create the profile data. */
-    ProfileData profileData = new ProfileData( m_gmlFile, getStartPosition(), getEndPosition(), 1000d * station.doubleValue() );
+    ProfileData profileData = new ProfileData( m_path.toString(), getStartPosition(), getEndPosition(), 1000d * station.doubleValue() );
     profileData.set( rows.toArray( new Row[] {} ) );
 
     return profileData;
