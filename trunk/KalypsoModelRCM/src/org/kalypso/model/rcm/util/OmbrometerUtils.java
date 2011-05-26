@@ -183,6 +183,7 @@ public class OmbrometerUtils
     {
       // Calculate voronoi polygons
       final DTriangulationForJTS tri = new DTriangulationForJTS( points, thiessenBoundary );
+      // tri.getAllTrianglesWithZValues( ring, crs )
       final List<Polygon> thiessenPolys = tri.getThiessenPolys();
       ProgressUtilities.worked( monitor, 2 );
 

@@ -31,4 +31,11 @@
             typeID="KalypsoPLC_Postprocessing">
       </simulation>
    </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.calculation.plc.postprocessing.binding.ScenarioResults"
+            qname="{org.kalypso.calculation.plc.postprocessing}ScenarioResults">
+      </feature>
+   </extension>
 </plugin>
