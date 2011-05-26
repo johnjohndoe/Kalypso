@@ -48,8 +48,8 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
@@ -72,9 +72,9 @@ public class ImportGafData extends AbstractModelObject
   private boolean m_openLog = true;
 
   /** We always create a new state when importing a gaf file */
-  private final States m_state = new States();
+  private final State m_state = new State();
 
-  private WaterBodies m_waterBody;
+  private WaterBody m_waterBody;
 
   private final Session m_session;
 
@@ -83,8 +83,8 @@ public class ImportGafData extends AbstractModelObject
     m_session = session;
     /* Pre init measurement date to now */
     m_state.setMeasurementDate( new Date() );
-    m_state.setIsstatezero( States.ZERO_STATE_ON );
-    m_state.setComment( StringUtils.EMPTY );
+    m_state.setIsstatezero( State.ZERO_STATE_ON );
+    m_state.setDescription( StringUtils.EMPTY );
     m_state.setEditingUser( username );
   }
 
@@ -131,14 +131,14 @@ public class ImportGafData extends AbstractModelObject
     firePropertyChange( PROPERTY_SRS, oldValue, m_srs );
   }
 
-  public WaterBodies getWaterBody( )
+  public WaterBody getWaterBody( )
   {
     return m_waterBody;
   }
 
-  public void setWaterBody( final WaterBodies waterBody )
+  public void setWaterBody( final WaterBody waterBody )
   {
-    final WaterBodies oldValue = m_waterBody;
+    final WaterBody oldValue = m_waterBody;
 
     m_waterBody = waterBody;
 
@@ -165,11 +165,11 @@ public class ImportGafData extends AbstractModelObject
       final String stateSource = String.format( "Importiert aus: %s", filename );
       m_state.setSource( stateSource );
 
-      m_state.setState( FilenameUtils.removeExtension( filename ) );
+      m_state.setName( FilenameUtils.removeExtension( filename ) );
     }
   }
 
-  public States getState( )
+  public State getState( )
   {
     return m_state;
   }

@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
  * @author Gernot Belger
@@ -62,7 +62,7 @@ public class ManageStatesPage extends WizardPage
 {
   private UpdateableAction[] m_actions;
 
-  private States m_selectedItem;
+  private State m_selectedItem;
 
   private final Session m_session;
 
@@ -72,8 +72,8 @@ public class ManageStatesPage extends WizardPage
   {
     super( pageName );
 
-    setTitle( "Manage States" );
-    setDescription( "Manage the States of the Cross Section Database" );
+    setTitle( "Manage State" );
+    setDescription( "Manage the State of the Cross Section Database" );
 
     m_session = session;
   }
@@ -95,7 +95,7 @@ public class ManageStatesPage extends WizardPage
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        final States state = (States) selection.getFirstElement();
+        final State state = (State) selection.getFirstElement();
         handleItemSelected( state );
       }
     } );
@@ -123,7 +123,7 @@ public class ManageStatesPage extends WizardPage
     return m_actions;
   }
 
-  protected void handleItemSelected( final States state )
+  protected void handleItemSelected( final State state )
   {
     m_selectedItem = state;
 
@@ -136,7 +136,7 @@ public class ManageStatesPage extends WizardPage
       action.update();
   }
 
-  public States getSelectedItem( )
+  public State getSelectedItem( )
   {
     return m_selectedItem;
   }

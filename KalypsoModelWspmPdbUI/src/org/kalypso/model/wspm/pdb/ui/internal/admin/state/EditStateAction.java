@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
@@ -53,7 +52,7 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.UpdateObjectCommand;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
@@ -79,11 +78,9 @@ public class EditStateAction extends UpdateableAction
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
     final Session session = m_page.getSession();
-    final States[] existingWaterbodies = m_viewer.getExistingStates();
+    final State[] existingWaterbodies = m_viewer.getExistingState();
 
-    final States selectedItem = m_page.getSelectedItem();
-
-    final String oldID = selectedItem.getState();
+    final State selectedItem = m_page.getSelectedItem();
 
     final EditStateWizard wizard = new EditStateWizard( existingWaterbodies, selectedItem );
 
@@ -92,9 +89,6 @@ public class EditStateAction extends UpdateableAction
     {
       if( dialog.open() == Window.OK )
       {
-        final String newID = selectedItem.getState();
-        Assert.isTrue( newID.equals( oldID ) );
-
         // FIXME: a bit dubious (also the refresh below). Instead, we should clone the object
         // and edit the clone. Only copy the changed values back, if OK
         final UpdateObjectCommand operation = new UpdateObjectCommand( selectedItem );
@@ -112,8 +106,7 @@ public class EditStateAction extends UpdateableAction
       new StatusDialog2( shell, status, wizard.getWindowTitle() ).open();
     }
 
-    // FIXME: change to new id
-    m_viewer.refreshStates( oldID );
+    m_viewer.refreshState( selectedItem.getName() );
   }
 
   @Override

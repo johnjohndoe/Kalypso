@@ -51,7 +51,7 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.DeleteObjectCommand;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
@@ -83,8 +83,8 @@ public class RemoveWaterBodyAction extends UpdateableAction
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final WaterBodies waterBody = m_page.getSelectedItem();
-    final String id = waterBody.getWaterBody();
+    final WaterBody waterBody = m_page.getSelectedItem();
+    final String name = waterBody.getName();
     final String dialogTitle = "Remove Water Body";
 
     try
@@ -100,7 +100,7 @@ public class RemoveWaterBodyAction extends UpdateableAction
       }
       else
       {
-        final String message = String.format( "Remove waterbody: %s (%s)? This operation cannot be undone.", waterBody.getName(), id );
+        final String message = String.format( "Remove waterbody: %s (%s)? This operation cannot be undone.", waterBody.getLabel(), name );
         if( !MessageDialog.openConfirm( shell, dialogTitle, message ) )
           return;
 
@@ -117,11 +117,11 @@ public class RemoveWaterBodyAction extends UpdateableAction
     }
 
     /* Refresh and try to select old id (good in case of cancel) */
-    m_viewer.refreshWaterBodies( id );
+    m_viewer.refreshWaterBody( name );
   }
 
-  private boolean hasData( final WaterBodies waterBody )
+  private boolean hasData( final WaterBody waterBody )
   {
-    return !waterBody.getCrossSectionses().isEmpty();
+    return !waterBody.getCrossSections().isEmpty();
   }
 }

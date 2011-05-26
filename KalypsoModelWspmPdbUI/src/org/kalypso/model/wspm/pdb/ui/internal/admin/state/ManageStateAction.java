@@ -77,7 +77,7 @@ public class ManageStateAction extends Action
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
     final Wizard wizard = new ManageStatesWizard( m_connection );
-    wizard.setWindowTitle( "Manage States" );
+    wizard.setWindowTitle( "Manage State" );
     final WizardDialog dialog = new WizardDialog( shell, wizard )
     {
       @Override

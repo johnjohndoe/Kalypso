@@ -50,7 +50,7 @@ import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
@@ -82,8 +82,8 @@ public class RemoveStateAction extends UpdateableAction
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final States state = m_page.getSelectedItem();
-    final String id = state.getState();
+    final State state = m_page.getSelectedItem();
+    final String name = state.getName();
     final String dialogTitle = "Remove State";
 
     final RemoveStateDialog dialog = new RemoveStateDialog( shell, dialogTitle, state );
@@ -99,6 +99,6 @@ public class RemoveStateAction extends UpdateableAction
     }
 
     /* Refresh and try to select old id (good in case of cancel) */
-    m_viewer.refreshStates( id );
+    m_viewer.refreshState( name );
   }
 }

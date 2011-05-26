@@ -42,16 +42,16 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
  * @author Gernot Belger
  */
 public class RemoveStateOperation implements IPdbOperation
 {
-  private final States m_state;
+  private final State m_state;
 
-  public RemoveStateOperation( final States state )
+  public RemoveStateOperation( final State state )
   {
     m_state = state;
   }
@@ -59,7 +59,7 @@ public class RemoveStateOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return String.format( "Remove state '%s'", m_state.getState() );
+    return String.format( "Remove state '%s'", m_state.getName() );
   }
 
   @Override

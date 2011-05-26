@@ -47,8 +47,8 @@ import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
@@ -57,45 +57,45 @@ public class ConnectionInput
 {
   private final Session m_session;
 
-  private final List<States> m_states;
+  private final List<State> m_states;
 
-  private final List<WaterBodies> m_waterBodies;
+  private final List<WaterBody> m_waterBodies;
 
   public ConnectionInput( final Session session )
   {
     m_session = session;
 
-    m_states = readStates();
-    m_waterBodies = readWaterBodies();
+    m_states = readState();
+    m_waterBodies = readWaterBody();
   }
 
-  private List<States> readStates( )
+  private List<State> readState( )
   {
     try
     {
-      final ListOperation<States> operation = new ListOperation<States>( States.class );
+      final ListOperation<State> operation = new ListOperation<State>( State.class );
       new Executor( m_session, operation ).execute();
       return operation.getList();
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new ArrayList<States>();
+      return new ArrayList<State>();
     }
   }
 
-  private List<WaterBodies> readWaterBodies( )
+  private List<WaterBody> readWaterBody( )
   {
     try
     {
-      final ListOperation<WaterBodies> operation = new ListOperation<WaterBodies>( WaterBodies.class );
+      final ListOperation<WaterBody> operation = new ListOperation<WaterBody>( WaterBody.class );
       new Executor( m_session, operation ).execute();
       return operation.getList();
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new ArrayList<WaterBodies>();
+      return new ArrayList<WaterBody>();
     }
   }
 
@@ -104,13 +104,13 @@ public class ConnectionInput
     m_session.close();
   }
 
-  public States[] getStates( )
+  public State[] getState( )
   {
-    return m_states.toArray( new States[m_states.size()] );
+    return m_states.toArray( new State[m_states.size()] );
   }
 
-  public WaterBodies[] getWaterBodies( )
+  public WaterBody[] getWaterBody( )
   {
-    return m_waterBodies.toArray( new WaterBodies[m_waterBodies.size()] );
+    return m_waterBodies.toArray( new WaterBody[m_waterBodies.size()] );
   }
 }

@@ -50,8 +50,8 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
@@ -84,8 +84,8 @@ public class GafImporter implements ICoreRunnableWithProgress
     GafReader gafReader = null;
     try
     {
-      final States state = m_data.getState();
-      final WaterBodies waterBody = m_data.getWaterBody();
+      final State state = m_data.getState();
+      final WaterBody waterBody = m_data.getWaterBody();
       final int srid = m_data.getSrid();
 
       final Gaf2Db gaf2db = new Gaf2Db( session, waterBody, state, srid );

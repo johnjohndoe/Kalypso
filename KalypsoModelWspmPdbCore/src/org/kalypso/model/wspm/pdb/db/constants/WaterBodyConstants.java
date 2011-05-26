@@ -43,17 +43,20 @@ package org.kalypso.model.wspm.pdb.db.constants;
 /**
  * @author Gernot Belger
  */
-public interface WaterBodiesConstants
+public interface WaterBodyConstants
 {
-  String PROPERTY_CROSSSECTIONSES = "crossSectionses"; //$NON-NLS-1$
+  String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
 
-  String PROPERTY_EVENTSES = "eventses"; //$NON-NLS-1$
-
-  String PROPERTY_COMMENT = "comment"; //$NON-NLS-1$
+  String PROPERTY_ID = "id"; //$NON-NLS-1$
 
   String PROPERTY_NAME = "name"; //$NON-NLS-1$
 
+  String PROPERTY_LABEL = "label"; //$NON-NLS-1$
+
   String PROPERTY_RIVERLINE = "riverline"; //$NON-NLS-1$
 
-  String PROPERTY_WATERBODY = "waterBody"; //$NON-NLS-1$
+  // FIXME: fetch from annotation
+  int NAME_LIMIT = 100;
+
+  int DESCRIPTION_LIMIT = 255;
 }

@@ -55,17 +55,19 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionParts;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
-import org.kalypso.model.wspm.pdb.db.mapping.Events;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
-import org.kalypso.model.wspm.pdb.db.mapping.PointKinds;
-import org.kalypso.model.wspm.pdb.db.mapping.Points;
-import org.kalypso.model.wspm.pdb.db.mapping.Roughnesses;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
-import org.kalypso.model.wspm.pdb.db.mapping.Vegetations;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixations;
+import org.kalypso.model.wspm.pdb.db.mapping.Point;
+import org.kalypso.model.wspm.pdb.db.mapping.PointKind;
+import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
+import org.kalypso.model.wspm.pdb.db.mapping.RoughnessId;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
+import org.kalypso.model.wspm.pdb.db.mapping.VegetationId;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 
 /**
  * @author Gernot Belger
@@ -150,17 +152,18 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
   private void configureMappings( final Configuration configuration )
   {
     configuration.addAnnotatedClass( Info.class );
-    configuration.addAnnotatedClass( WaterBodies.class );
-    configuration.addAnnotatedClass( States.class );
-    configuration.addAnnotatedClass( Events.class );
-    configuration.addAnnotatedClass( CrossSections.class );
-    configuration.addAnnotatedClass( CrossSectionParts.class );
-    configuration.addAnnotatedClass( Points.class );
-    configuration.addAnnotatedClass( PointKinds.class );
-    configuration.addAnnotatedClass( Roughnesses.class );
-    configuration.addAnnotatedClass( Vegetations.class );
-    configuration.addAnnotatedClass( WaterlevelFixations.class );
-// configuration.addResource( "/org/kalypso/model/wspm/pdb/db/pdbpoint.xml" );
+    configuration.addAnnotatedClass( WaterBody.class );
+    configuration.addAnnotatedClass( State.class );
+    configuration.addAnnotatedClass( Event.class );
+    configuration.addAnnotatedClass( CrossSection.class );
+    configuration.addAnnotatedClass( CrossSectionPart.class );
+    configuration.addAnnotatedClass( Point.class );
+    configuration.addAnnotatedClass( PointKind.class );
+    configuration.addAnnotatedClass( Roughness.class );
+    configuration.addAnnotatedClass( RoughnessId.class );
+    configuration.addAnnotatedClass( Vegetation.class );
+    configuration.addAnnotatedClass( VegetationId.class );
+    configuration.addAnnotatedClass( WaterlevelFixation.class );
   }
 
   @Override

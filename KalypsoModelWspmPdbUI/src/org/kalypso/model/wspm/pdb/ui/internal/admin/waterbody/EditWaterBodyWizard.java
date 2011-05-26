@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
 
 /**
@@ -49,9 +49,9 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.
  */
 public class EditWaterBodyWizard extends Wizard
 {
-  private final WaterBodies m_waterBody;
+  private final WaterBody m_waterBody;
 
-  public EditWaterBodyWizard( final WaterBodies[] existingWaterbodies, final WaterBodies waterBody, final Mode mode )
+  public EditWaterBodyWizard( final WaterBody[] existingWaterbodies, final WaterBody waterBody, final Mode mode )
   {
     m_waterBody = waterBody;
 

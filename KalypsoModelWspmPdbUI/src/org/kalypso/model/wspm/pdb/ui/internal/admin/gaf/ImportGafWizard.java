@@ -51,7 +51,7 @@ import org.eclipse.swt.program.Program;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -62,7 +62,7 @@ public class ImportGafWizard extends Wizard
 {
   private final ImportGafData m_data;
 
-  public ImportGafWizard( final Session session, final States[] existingStates, final String username )
+  public ImportGafWizard( final Session session, final State[] existingState, final String username )
   {
     m_data = new ImportGafData( session, username );
 
@@ -73,7 +73,7 @@ public class ImportGafWizard extends Wizard
 
     addPage( new ImportGafPage( "gaf", m_data ) ); //$NON-NLS-1$
     addPage( new ChooseWaterPage( "waterBody", m_data ) ); //$NON-NLS-1$
-    addPage( new EditStatePage( "state", m_data.getState(), existingStates, Mode.NEW ) ); //$NON-NLS-1$
+    addPage( new EditStatePage( "state", m_data.getState(), existingState, Mode.NEW ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }

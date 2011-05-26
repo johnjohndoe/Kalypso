@@ -62,7 +62,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
  * @author Gernot Belger
@@ -96,11 +96,11 @@ public class StatesViewer
 
     ColumnViewerSorter.setSortState( nameColumn, Boolean.FALSE );
 
-    m_tableInput = new WritableList( new ArrayList<States>(), States.class );
+    m_tableInput = new WritableList( new ArrayList<State>(), State.class );
 
-    refreshStates( null );
+    refreshState( null );
 
-    final IValueProperty nameProperty = BeanProperties.value( States.class, States.PROPERTY_STATE );
+    final IValueProperty nameProperty = BeanProperties.value( State.class, State.PROPERTY_NAME );
 
     final IValueProperty[] labelProperties = new IValueProperty[] { nameProperty };
     ViewerSupport.bind( m_viewer, m_tableInput, labelProperties );
@@ -108,13 +108,13 @@ public class StatesViewer
     return m_viewer;
   }
 
-  public void refreshStates( final String id )
+  public void refreshState( final String id )
   {
     m_tableInput.clear();
-    final List<States> states = Arrays.asList( loadStates() );
+    final List<State> states = Arrays.asList( loadState() );
     m_tableInput.addAll( states );
 
-    final States toSelect = findState( states, id );
+    final State toSelect = findState( states, id );
 
     if( toSelect == null )
       m_viewer.setSelection( StructuredSelection.EMPTY );
@@ -122,14 +122,14 @@ public class StatesViewer
       m_viewer.setSelection( new StructuredSelection( toSelect ) );
   }
 
-  private static States findState( final List<States> states, final String name )
+  private static State findState( final List<State> states, final String name )
   {
     if( name == null )
       return null;
 
-    for( final States state : states )
+    for( final State state : states )
     {
-      if( state.getState().equals( name ) )
+      if( state.getName().equals( name ) )
         return state;
     }
 
@@ -141,19 +141,19 @@ public class StatesViewer
     return m_viewer.getControl();
   }
 
-  protected States[] loadStates( )
+  protected State[] loadState( )
   {
     try
     {
-      final ListOperation<States> operation = new ListOperation<States>( States.class );
+      final ListOperation<State> operation = new ListOperation<State>( State.class );
       new Executor( m_session, operation ).execute();
-      final List<States> states = operation.getList();
-      return states.toArray( new States[states.size()] );
+      final List<State> states = operation.getList();
+      return states.toArray( new State[states.size()] );
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new States[] {};
+      return new State[] {};
     }
   }
 
@@ -162,8 +162,8 @@ public class StatesViewer
     return m_viewer;
   }
 
-  public States[] getExistingStates( )
+  public State[] getExistingState( )
   {
-    return (States[]) m_tableInput.toArray( new States[m_tableInput.size()] );
+    return (State[]) m_tableInput.toArray( new State[m_tableInput.size()] );
   }
 }

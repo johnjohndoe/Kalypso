@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
@@ -63,11 +63,11 @@ public class WaterBodiesFilter extends ViewerFilter
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    if( element instanceof WaterBodies )
+    if( element instanceof WaterBody )
     {
-      final WaterBodies waterBody = (WaterBodies) element;
+      final WaterBody waterBody = (WaterBody) element;
       final String name = waterBody.getName().toLowerCase();
-      final String gkn = waterBody.getWaterBody().toLowerCase();
+      final String gkn = waterBody.getName().toLowerCase();
 
       if( m_gkn != null && !gkn.contains( m_gkn ) )
         return false;

@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.pdb.db.mapping.States;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
 
 /**
@@ -49,15 +49,15 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
  */
 public class EditStateWizard extends Wizard
 {
-  private final States m_state;
+  private final State m_state;
 
-  public EditStateWizard( final States[] existingStates, final States state )
+  public EditStateWizard( final State[] existingState, final State state )
   {
     m_state = state;
 
     setWindowTitle( "Edit State" );
 
-    addPage( new EditStatePage( "editState", m_state, existingStates, Mode.EDIT ) ); //$NON-NLS-1$
+    addPage( new EditStatePage( "editState", m_state, existingState, Mode.EDIT ) ); //$NON-NLS-1$
   }
 
   @Override

@@ -80,7 +80,7 @@ public class PostgisSettings extends HibernateSettings
 
   public PostgisSettings( )
   {
-    super( StringUtils.EMPTY );
+    super( "PostGIS" );
   }
 
   public PostgisSettings( final String name, final PostgisSettings settings )

@@ -47,25 +47,25 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.databinding.validation.TypedValidator;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
  */
 public class UniqueWaterBodyNameValidator extends TypedValidator<String>
 {
-  private final Set<String> m_ids = new HashSet<String>();
+  private final Set<String> m_name = new HashSet<String>();
 
   private final String m_ignoreName;
 
-  public UniqueWaterBodyNameValidator( final WaterBodies[] existingWaterbodies, final String ignoreName )
+  public UniqueWaterBodyNameValidator( final WaterBody[] existingWaterbodies, final String ignoreName )
   {
-    super( String.class, IStatus.WARNING, "A waterbody with the same name already exists" );
+    super( String.class, IStatus.ERROR, "A waterbody with that ID already exists" );
 
     m_ignoreName = ignoreName;
 
-    for( final WaterBodies waterBody : existingWaterbodies )
-      m_ids.add( waterBody.getName() );
+    for( final WaterBody waterBody : existingWaterbodies )
+      m_name.add( waterBody.getName() );
   }
 
   @Override
@@ -74,7 +74,7 @@ public class UniqueWaterBodyNameValidator extends TypedValidator<String>
     if( value.equals( m_ignoreName ) )
       return ValidationStatus.ok();
 
-    if( m_ids.contains( value ) )
+    if( m_name.contains( value ) )
       fail();
 
     return ValidationStatus.ok();

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 26.05.2011 15:15:33 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Event" table="event">
+        <id name="id" type="int">
+            <column name="id" precision="8" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="waterBody" class="WaterBody" fetch="select">
+            <column name="water_body" precision="8" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="name" length="100" not-null="true" unique="true" />
+        </property>
+        <property name="creationDate" type="timestamp">
+            <column name="creation_date" length="22" not-null="true" />
+        </property>
+        <property name="editingDate" type="timestamp">
+            <column name="editing_date" length="22" not-null="true" />
+        </property>
+        <property name="editingUser" type="string">
+            <column name="editing_user" length="50" not-null="true" />
+        </property>
+        <property name="measurementDate" type="timestamp">
+            <column name="measurement_date" length="22" />
+        </property>
+        <property name="source" type="string">
+            <column name="source" />
+        </property>
+        <property name="type" type="string">
+            <column name="type" length="50" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+        <set name="waterlevelFixations" table="waterlevel_fixation" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="event" precision="8" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="WaterlevelFixation" />
+        </set>
+    </class>
+</hibernate-mapping>

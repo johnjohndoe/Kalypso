@@ -62,7 +62,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBodies;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
@@ -101,26 +101,26 @@ public class WaterBodyViewer
     nameColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
     ColumnViewerSorter.registerSorter( nameColumn, new ViewerSorter() );
 
-    m_tableInput = new WritableList( new ArrayList<WaterBodies>(), WaterBodies.class );
+    m_tableInput = new WritableList( new ArrayList<WaterBody>(), WaterBody.class );
 
-    refreshWaterBodies( null );
+    refreshWaterBody( null );
 
-    final IValueProperty nameProperty = BeanProperties.value( WaterBodies.class, WaterBodies.PROPERTY_NAME );
-    final IValueProperty gknProperty = BeanProperties.value( WaterBodies.class, WaterBodies.PROPERTY_WATERBODY );
+    final IValueProperty labelProperty = BeanProperties.value( WaterBody.class, WaterBody.PROPERTY_LABEL );
+    final IValueProperty gknProperty = BeanProperties.value( WaterBody.class, WaterBody.PROPERTY_NAME );
 
-    final IValueProperty[] labelProperties = new IValueProperty[] { gknProperty, nameProperty };
+    final IValueProperty[] labelProperties = new IValueProperty[] { gknProperty, labelProperty };
     ViewerSupport.bind( m_viewer, m_tableInput, labelProperties );
 
     return m_viewer;
   }
 
-  public void refreshWaterBodies( final String id )
+  public void refreshWaterBody( final String name )
   {
     m_tableInput.clear();
-    final List<WaterBodies> waterBodies = Arrays.asList( loadWaterbodies() );
+    final List<WaterBody> waterBodies = Arrays.asList( loadWaterbodies() );
     m_tableInput.addAll( waterBodies );
 
-    final WaterBodies toSelect = findWaterBody( waterBodies, id );
+    final WaterBody toSelect = findWaterBody( waterBodies, name );
 
     if( toSelect == null )
       m_viewer.setSelection( StructuredSelection.EMPTY );
@@ -128,14 +128,14 @@ public class WaterBodyViewer
       m_viewer.setSelection( new StructuredSelection( toSelect ) );
   }
 
-  private static WaterBodies findWaterBody( final List<WaterBodies> waterBodies, final String id )
+  private static WaterBody findWaterBody( final List<WaterBody> waterBodies, final String name )
   {
-    if( id == null )
+    if( name == null )
       return null;
 
-    for( final WaterBodies waterBody : waterBodies )
+    for( final WaterBody waterBody : waterBodies )
     {
-      if( waterBody.getWaterBody().equals( id ) )
+      if( waterBody.getName().equals( name ) )
         return waterBody;
     }
 
@@ -147,19 +147,19 @@ public class WaterBodyViewer
     return m_viewer.getControl();
   }
 
-  protected WaterBodies[] loadWaterbodies( )
+  protected WaterBody[] loadWaterbodies( )
   {
     try
     {
-      final ListOperation<WaterBodies> operation = new ListOperation<WaterBodies>( WaterBodies.class );
+      final ListOperation<WaterBody> operation = new ListOperation<WaterBody>( WaterBody.class );
       new Executor( m_session, operation ).execute();
-      final List<WaterBodies> waterBodies = operation.getList();
-      return waterBodies.toArray( new WaterBodies[waterBodies.size()] );
+      final List<WaterBody> waterBodies = operation.getList();
+      return waterBodies.toArray( new WaterBody[waterBodies.size()] );
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new WaterBodies[] {};
+      return new WaterBody[] {};
     }
   }
 
@@ -168,8 +168,8 @@ public class WaterBodyViewer
     return m_viewer;
   }
 
-  public WaterBodies[] getExistingWaterbodies( )
+  public WaterBody[] getExistingWaterbodies( )
   {
-    return (WaterBodies[]) m_tableInput.toArray( new WaterBodies[m_tableInput.size()] );
+    return (WaterBody[]) m_tableInput.toArray( new WaterBody[m_tableInput.size()] );
   }
 }

@@ -44,7 +44,7 @@ import java.math.BigDecimal;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSections;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 
 /**
  * @author Gernot Belger
@@ -54,10 +54,10 @@ public class PdbComparator extends ViewerComparator
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    if( e1 instanceof CrossSections && e2 instanceof CrossSections )
+    if( e1 instanceof CrossSection && e2 instanceof CrossSection )
     {
-      final CrossSections c1 = (CrossSections) e1;
-      final CrossSections c2 = (CrossSections) e2;
+      final CrossSection c1 = (CrossSection) e1;
+      final CrossSection c2 = (CrossSection) e2;
 
       final BigDecimal s1 = c1.getStation();
       final BigDecimal s2 = c2.getStation();
