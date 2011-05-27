@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="exportStateWizards" name="exportStateWizards" schema="schema/exportStateWizards.exsd"/>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
@@ -37,5 +38,18 @@
             name="Info"
             restorable="true">
       </view>
+   </extension>
+   <extension
+         point="org.kalypso.model.wspm.pdb.ui.exportStateWizards">
+      <wizard
+            class="kalypsomodelwspmpdbui.ImportWizard2"
+            id="KalypsoModelWspmPdbUI.wizard2"
+            name="KalypsoWSPM">
+      </wizard>
+      <wizard
+            class="kalypsomodelwspmpdbui.ImportWizard1"
+            id="KalypsoModelWspmPdbUI.wizard1"
+            name="Tripple">
+      </wizard>
    </extension>
 </plugin>

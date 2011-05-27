@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -138,6 +139,8 @@ public class ConnectionContentControl extends Composite
     byStateAction.setChecked( true );
     m_manager.add( byStateAction );
     m_manager.add( new ByWaterBodyAction( this ) );
+    m_manager.add( new Separator() );
+    m_manager.add( new ExportAction( this ) );
 
     m_manager.update( true );
   }
@@ -179,5 +182,10 @@ public class ConnectionContentControl extends Composite
       if( oldInput instanceof ConnectionInput )
         ((ConnectionInput) oldInput).dispose();
     }
+  }
+
+  public IStructuredSelection getSelection( )
+  {
+    return (IStructuredSelection) m_viewer.getSelection();
   }
 }
