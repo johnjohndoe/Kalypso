@@ -21,11 +21,13 @@ import javax.persistence.TemporalType;
 public class WaterlevelFixation implements java.io.Serializable
 {
 
-  private int id;
+  private BigDecimal id;
 
   private Event event;
 
   private BigDecimal station;
+
+  private com.vividsolutions.jts.geom.Point location;
 
   private Date creationDate;
 
@@ -45,7 +47,7 @@ public class WaterlevelFixation implements java.io.Serializable
   {
   }
 
-  public WaterlevelFixation( final int id, final Event event, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser )
+  public WaterlevelFixation( final BigDecimal id, final Event event, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser )
   {
     this.id = id;
     this.event = event;
@@ -55,11 +57,12 @@ public class WaterlevelFixation implements java.io.Serializable
     this.editingUser = editingUser;
   }
 
-  public WaterlevelFixation( final int id, final Event event, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final BigDecimal waterlevel, final BigDecimal discharge, final String description )
+  public WaterlevelFixation( final BigDecimal id, final Event event, final BigDecimal station, final com.vividsolutions.jts.geom.Point location, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final BigDecimal waterlevel, final BigDecimal discharge, final String description )
   {
     this.id = id;
     this.event = event;
     this.station = station;
+    this.location = location;
     this.creationDate = creationDate;
     this.editingDate = editingDate;
     this.editingUser = editingUser;
@@ -70,13 +73,13 @@ public class WaterlevelFixation implements java.io.Serializable
   }
 
   @Id
-  @Column(name = "id", unique = true, nullable = false, precision = 8, scale = 0)
-  public int getId( )
+  @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
+  public BigDecimal getId( )
   {
     return this.id;
   }
 
-  public void setId( final int id )
+  public void setId( final BigDecimal id )
   {
     this.id = id;
   }
@@ -93,7 +96,7 @@ public class WaterlevelFixation implements java.io.Serializable
     this.event = event;
   }
 
-  @Column(name = "station", nullable = false, precision = 8, scale = 3)
+  @Column(name = "station", nullable = false, precision = 8, scale = 1)
   public BigDecimal getStation( )
   {
     return this.station;
@@ -102,6 +105,17 @@ public class WaterlevelFixation implements java.io.Serializable
   public void setStation( final BigDecimal station )
   {
     this.station = station;
+  }
+
+  @Column(name = "location")
+  public Serializable getLocation( )
+  {
+    return this.location;
+  }
+
+  public void setLocation( final Serializable location )
+  {
+    this.location = location;
   }
 
   @Temporal(TemporalType.TIMESTAMP)

@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 26.05.2011 15:15:33 by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 27.05.2011 13:22:10 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="WaterBody" table="water_body">
-        <id name="id" type="int">
-            <column name="id" precision="8" scale="0" />
+        <id name="id" type="big_decimal">
+            <column name="id" precision="20" scale="0" />
             <generator class="assigned" />
         </id>
         <property name="name" type="string">
@@ -24,13 +24,13 @@
         </property>
         <set name="events" table="event" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="water_body" precision="8" scale="0" not-null="true" />
+                <column name="water_body" precision="20" scale="0" not-null="true" />
             </key>
             <one-to-many class="Event" />
         </set>
         <set name="crossSections" table="cross_section" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="water_body" precision="8" scale="0" not-null="true" />
+                <column name="water_body" precision="20" scale="0" not-null="true" />
             </key>
             <one-to-many class="CrossSection" />
         </set>

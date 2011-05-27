@@ -32,7 +32,7 @@ import com.vividsolutions.jts.geom.LineString;
 public class CrossSection implements java.io.Serializable
 {
 
-  private int id;
+  private BigDecimal id;
 
   private WaterBody waterBody;
 
@@ -60,7 +60,7 @@ public class CrossSection implements java.io.Serializable
   {
   }
 
-  public CrossSection( final int id, final WaterBody waterBody, final State state, final String name, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser )
+  public CrossSection( final BigDecimal id, final WaterBody waterBody, final State state, final String name, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser )
   {
     this.id = id;
     this.waterBody = waterBody;
@@ -72,7 +72,7 @@ public class CrossSection implements java.io.Serializable
     this.editingUser = editingUser;
   }
 
-  public CrossSection( final int id, final WaterBody waterBody, final State state, final String name, final LineString line, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String description, final Set<CrossSectionPart> crossSectionParts )
+  public CrossSection( final BigDecimal id, final WaterBody waterBody, final State state, final String name, final LineString line, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String description, final Set<CrossSectionPart> crossSectionParts )
   {
     this.id = id;
     this.waterBody = waterBody;
@@ -89,15 +89,15 @@ public class CrossSection implements java.io.Serializable
   }
 
   @Id
-  @Column(name = "id", unique = true, nullable = false, precision = 8, scale = 0)
+  @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "crosssection_id_seq")
-  @SequenceGenerator(name = "crosssection_id_seq", sequenceName = "water_body_seq")
-  public int getId( )
+  @SequenceGenerator(name = "crosssection_id_seq", sequenceName = "seq_pdb")
+  public BigDecimal getId( )
   {
     return this.id;
   }
 
-  public void setId( final int id )
+  public void setId( final BigDecimal id )
   {
     this.id = id;
   }
@@ -149,7 +149,7 @@ public class CrossSection implements java.io.Serializable
     this.line = line;
   }
 
-  @Column(name = "station", nullable = false, precision = 8, scale = 3)
+  @Column(name = "station", nullable = false, precision = 8, scale = 1)
   public BigDecimal getStation( )
   {
     return this.station;

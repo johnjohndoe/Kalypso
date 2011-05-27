@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 26.05.2011 15:15:33 by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 27.05.2011 13:22:10 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="Point" table="point">
-        <id name="id" type="int">
-            <column name="id" precision="8" scale="0" />
+        <id name="id" type="big_decimal">
+            <column name="id" precision="20" scale="0" />
             <generator class="assigned" />
         </id>
         <many-to-one name="crossSectionPart" class="CrossSectionPart" fetch="select">
-            <column name="cross_section_part" precision="8" scale="0" not-null="true" />
+            <column name="cross_section_part" precision="20" scale="0" not-null="true" />
         </many-to-one>
         <many-to-one name="roughness" class="Roughness" fetch="select">
             <column name="roughness_point_kind" length="50" />
