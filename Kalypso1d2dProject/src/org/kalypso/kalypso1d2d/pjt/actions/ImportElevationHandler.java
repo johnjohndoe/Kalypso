@@ -84,14 +84,14 @@ public class ImportElevationHandler extends AbstractHandler
     final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
-      /* Always open the manage dtm widget */
+      /* Always open the manage dtm widget - now the widget will be opened after the operation with the wizard */
       final SelectWidgetHandler handler = new SelectWidgetHandler();
       final Map<String, String> newParameterMap = new HashMap<String, String>();
       newParameterMap.put( SelectWidgetHandler.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget" ); //$NON-NLS-1$
       newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" ); //$NON-NLS-1$
       handler.setInitializationData( null, null, newParameterMap );
       final ExecutionEvent exc = new ExecutionEvent( event.getCommand(), newParameterMap, event.getTrigger(), event.getApplicationContext() );
-      handler.execute( exc );
+//      handler.execute( exc );
 
       /* Open import elevation model wizard */
       final ITerrainModel terrainModel = szenarioDataProvider.getModel( ITerrainModel.class );
@@ -116,6 +116,7 @@ public class ImportElevationHandler extends AbstractHandler
         handler.execute( exc );
         return Status.OK_STATUS;
       }
+      handler.execute( exc );
     }
     catch( final CoreException e )
     {
