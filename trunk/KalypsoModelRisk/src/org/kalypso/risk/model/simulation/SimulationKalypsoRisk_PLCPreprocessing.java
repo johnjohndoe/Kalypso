@@ -100,8 +100,8 @@ public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
         folders.add( "PLC" ); //$NON-NLS-1$
         folders.add( "PLC/statusQuo" ); //$NON-NLS-1$
         folders.add( "PLC/statusQuo/raster" ); //$NON-NLS-1$
-        folders.add( "PLC/statusQuo/raster/input" ); //$NON-NLS-1$
-        folders.add( "PLC/statusQuo/raster/output" ); //$NON-NLS-1$
+        //folders.add( "PLC/statusQuo/raster/input" ); //$NON-NLS-1$
+        //folders.add( "PLC/statusQuo/raster/output" ); //$NON-NLS-1$
         folders.add( "PLC/difference" ); //$NON-NLS-1$
         folders.add( "PLC/difference/raster" ); //$NON-NLS-1$
         folders.add( "PLC/difference/raster/output" ); //$NON-NLS-1$
@@ -123,19 +123,19 @@ public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
         final File statusQuoRasterFolderOutput = new File( tmpdir, "PLC/statusQuo/raster/output" ); //$NON-NLS-1$
         if( actualRasterFolderInput.exists() )
         {
-          FileUtils.copyDirectory( actualRasterFolderInput, statusQuoRasterFolderInput );
+          FileUtils.moveDirectory( actualRasterFolderInput, statusQuoRasterFolderInput );
         }
         else
         {
-          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString("SimulationKalypsoRisk_PLCPreprocessing_0") ); //$NON-NLS-1$
+          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "SimulationKalypsoRisk_PLCPreprocessing_0" ) ); //$NON-NLS-1$
         }
         if( actualRasterFolderOutput.exists() )
         {
-          FileUtils.copyDirectory( actualRasterFolderOutput, statusQuoRasterFolderOutput );
+          FileUtils.moveDirectory( actualRasterFolderOutput, statusQuoRasterFolderOutput );
         }
         else
         {
-          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString("SimulationKalypsoRisk_PLCPreprocessing_2") ); //$NON-NLS-1$
+          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "SimulationKalypsoRisk_PLCPreprocessing_2" ) ); //$NON-NLS-1$
         }
         if( actualRasterModel.exists() )
         {
@@ -144,14 +144,13 @@ public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
         }
         else
         {
-          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString("SimulationKalypsoRisk_PLCPreprocessing_1") ); //$NON-NLS-1$
+          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "SimulationKalypsoRisk_PLCPreprocessing_1" ) ); //$NON-NLS-1$
         }
       }
     }
     catch( final IOException e )
     {
-      monitor.setFinishInfo( IStatus.ERROR, e.getLocalizedMessage() );
-//      throw new SimulationException( e.getLocalizedMessage() );
+      throw new SimulationException( "Vorbereiten der Risikodifferenzen fehlgeschlagen.", e );
     }
     resultEater.addResult( OUTPUT_FOLDER, tmpdir );
   }
