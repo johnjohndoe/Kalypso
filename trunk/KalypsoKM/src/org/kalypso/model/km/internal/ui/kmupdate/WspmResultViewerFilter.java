@@ -44,9 +44,9 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultCalculationNode;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultEclipseNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFolderNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultPolynomeCalculationNode;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultProjectNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultQIntervalNode;
 
 /**
@@ -70,7 +70,7 @@ public class WspmResultViewerFilter extends ViewerFilter
   @Override
   public boolean select( Viewer viewer, Object parentElement, Object element )
   {
-    if( element instanceof WspmResultProjectNode )
+    if( element instanceof WspmResultEclipseNode )
       return true;
 
     if( element instanceof WspmResultCalculationNode )
