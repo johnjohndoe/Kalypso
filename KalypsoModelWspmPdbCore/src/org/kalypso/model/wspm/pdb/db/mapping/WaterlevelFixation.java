@@ -107,13 +107,13 @@ public class WaterlevelFixation implements java.io.Serializable
     this.station = station;
   }
 
-  @Column(name = "location")
-  public Serializable getLocation( )
+  @Column(name = "location", columnDefinition = "Geometry")
+  public com.vividsolutions.jts.geom.Point getLocation( )
   {
     return this.location;
   }
 
-  public void setLocation( final Serializable location )
+  public void setLocation( final com.vividsolutions.jts.geom.Point location )
   {
     this.location = location;
   }

@@ -60,8 +60,8 @@ public class Roughness implements java.io.Serializable
 
   @EmbeddedId
   @AttributeOverrides({ @AttributeOverride(name = "pointKind", column = @Column(name = "point_kind", nullable = false, length = 50)),
-    @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
-    public RoughnessId getId( )
+      @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
+  public RoughnessId getId( )
   {
     return this.id;
   }

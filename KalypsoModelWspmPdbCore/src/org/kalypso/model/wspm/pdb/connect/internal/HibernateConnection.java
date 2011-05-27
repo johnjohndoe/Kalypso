@@ -47,6 +47,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
+import org.hibernatespatial.GeometryUserType2;
+import org.hibernatespatial.HBSpatialExtension;
+import org.hibernatespatial.SpatialDialect;
 import org.hibernatespatial.postgis.PostgisDialect;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
 import org.kalypso.model.wspm.pdb.connect.ConnectionUtils;
@@ -113,19 +116,38 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
 
     doConfiguration( configuration );
 
+    configureSpatial( configuration );
+
     configure( configuration );
 
     configureMappings( configuration );
-
-// final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
-// final String[] creationScripts = configuration.generateSchemaCreationScript( dialect );
-// for( final String creationScript : creationScripts )
-// System.out.println( creationScript );
 
     return configuration;
   }
 
   protected abstract void doConfiguration( Configuration configuration );
+
+  protected abstract SpatialDialect createSpatialDialect( );
+
+  private void configureSpatial( final Configuration configuration )
+  {
+    /**
+     * IMPORTANT: statically initialize HBSpatialExtension at this place (with the right context class loader active, so
+     * the pseudo DialectProvider will be found; we will get a NPE else later.
+     */
+    HBSpatialExtension.getDefaultGeomFactory();
+
+    /**
+     * Important: we need to specify the spatial dialect ourself, else hibernatespatial will fall back to a default
+     * spatial dialect.
+     */
+    final SpatialDialect spatialDialect = createSpatialDialect();
+    final GeometryUserType2 geometryUserType = new GeometryUserType2( spatialDialect );
+    configuration.registerTypeOverride( geometryUserType, new String[] { geometryUserType.getClass().getName() } );
+
+    configuration.setProperty( Environment.DIALECT, spatialDialect.getClass().getName() );
+    configuration.setProperty( SPATIAL_DIALECT, spatialDialect.getClass().getName() );
+  }
 
   private void configure( final Configuration configuration )
   {
@@ -151,6 +173,8 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
 
   private void configureMappings( final Configuration configuration )
   {
+    configuration.addPackage( Info.class.getPackage().getName() );
+
     configuration.addAnnotatedClass( Info.class );
     configuration.addAnnotatedClass( WaterBody.class );
     configuration.addAnnotatedClass( State.class );

@@ -20,8 +20,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.Type;
-
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -138,7 +136,6 @@ public class CrossSection implements java.io.Serializable
   }
 
   @Column(name = "line", columnDefinition = "Geometry")
-  @Type(type = "org.hibernatespatial.GeometryUserType")
   public LineString getLine( )
   {
     return this.line;

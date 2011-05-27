@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.connect.internal.postgis;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
+import org.hibernatespatial.SpatialDialect;
 import org.hibernatespatial.postgis.PostgisDialect;
 import org.kalypso.model.wspm.pdb.connect.internal.HibernateConnection;
 
@@ -56,11 +57,15 @@ public class PostGisConnection extends HibernateConnection<PostgisSettings>
   }
 
   @Override
+  protected SpatialDialect createSpatialDialect( )
+  {
+    return new PostgisDialect();
+  }
+
+  @Override
   protected void doConfiguration( final Configuration configuration )
   {
     final PostgisSettings settings = getSettings();
-
-    final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
 
     configuration.setProperty( Environment.DRIVER, org.postgresql.Driver.class.getName() );
 
@@ -70,10 +75,7 @@ public class PostGisConnection extends HibernateConnection<PostgisSettings>
     configuration.setProperty( Environment.USER, settings.getUsername() );
     configuration.setProperty( Environment.PASS, settings.getPassword() );
 
-    configuration.setProperty( Environment.DIALECT, dialect.getClass().getName() );
-    configuration.setProperty( SPATIAL_DIALECT, dialect.getClass().getName() );
-
-    // IN order to use ssl, we nee a way to accept the certificate
+    // In order to use ssl, we need a way to accept the certificate
     // configuration.setProperty( Environment.CONNECTION_PREFIX + ".ssl", Boolean.TRUE.toString() );
   }
 

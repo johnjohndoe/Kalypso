@@ -15,7 +15,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.Type;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants;
 
@@ -98,7 +97,6 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   }
 
   @Column(name = "riverline", columnDefinition = "Geometry")
-  @Type(type = "org.hibernatespatial.GeometryUserType")
   public LineString getRiverline( )
   {
     return this.riverline;

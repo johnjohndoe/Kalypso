@@ -91,7 +91,6 @@ public class PdbTest extends Assert
 
     final WaterBody waterBody = new WaterBody();
     waterBody.setDescription( "Comment" );
-    waterBody.setId( 1 );
     waterBody.setLabel( "GKN" );
     waterBody.setName( "sososo" );
 
