@@ -222,7 +222,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       {
         if( count % 100 == 0 )
         {
-          final String msg = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation.3", count, intersectionList.size() ); //$NON-NLS-1$
+          final String msg = Messages.getString( String.format( "Processing geometry %d of %d geometries", count, intersectionList.size() ) ); //$NON-NLS-1$
           progress.subTask( msg );
           // TODO: belongs to the end of this loop, but there are just too many else's
           // Better: put into sub-method and 'return' instead of 'continue'
