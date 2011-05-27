@@ -24,7 +24,7 @@ import javax.persistence.UniqueConstraint;
 public class Event implements java.io.Serializable
 {
 
-  private int id;
+  private BigDecimal id;
 
   private WaterBody waterBody;
 
@@ -50,7 +50,7 @@ public class Event implements java.io.Serializable
   {
   }
 
-  public Event( final int id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser )
+  public Event( final BigDecimal id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser )
   {
     this.id = id;
     this.waterBody = waterBody;
@@ -60,7 +60,7 @@ public class Event implements java.io.Serializable
     this.editingUser = editingUser;
   }
 
-  public Event( final int id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String type, final String description, final Set<WaterlevelFixation> waterlevelFixations )
+  public Event( final BigDecimal id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String type, final String description, final Set<WaterlevelFixation> waterlevelFixations )
   {
     this.id = id;
     this.waterBody = waterBody;
@@ -76,13 +76,13 @@ public class Event implements java.io.Serializable
   }
 
   @Id
-  @Column(name = "id", unique = true, nullable = false, precision = 8, scale = 0)
-  public int getId( )
+  @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
+  public BigDecimal getId( )
   {
     return this.id;
   }
 
-  public void setId( final int id )
+  public void setId( final BigDecimal id )
   {
     this.id = id;
   }

@@ -1,5 +1,6 @@
 package org.kalypso.model.wspm.pdb.db.mapping;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,7 +29,7 @@ import com.vividsolutions.jts.geom.LineString;
 public class CrossSectionPart implements java.io.Serializable
 {
 
-  private int id;
+  private BigDecimal id;
 
   private CrossSection crossSection;
 
@@ -46,7 +47,7 @@ public class CrossSectionPart implements java.io.Serializable
   {
   }
 
-  public CrossSectionPart( final int id, final CrossSection crossSection, final String name, final String category )
+  public CrossSectionPart( final BigDecimal id, final CrossSection crossSection, final String name, final String category )
   {
     this.id = id;
     this.crossSection = crossSection;
@@ -54,7 +55,7 @@ public class CrossSectionPart implements java.io.Serializable
     this.category = category;
   }
 
-  public CrossSectionPart( final int id, final CrossSection crossSection, final String name, final LineString line, final String category, final String description, final Set<Point> points )
+  public CrossSectionPart( final BigDecimal id, final CrossSection crossSection, final String name, final LineString line, final String category, final String description, final Set<Point> points )
   {
     this.id = id;
     this.crossSection = crossSection;
@@ -66,15 +67,15 @@ public class CrossSectionPart implements java.io.Serializable
   }
 
   @Id
-  @Column(name = "id", unique = true, nullable = false, precision = 8, scale = 0)
+  @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cspart_id_seq")
-  @SequenceGenerator(name = "cspart_id_seq", sequenceName = "water_body_seq")
-  public int getId( )
+  @SequenceGenerator(name = "cspart_id_seq", sequenceName = "seq_pdb")
+  public BigDecimal getId( )
   {
     return this.id;
   }
 
-  public void setId( final int id )
+  public void setId( final BigDecimal id )
   {
     this.id = id;
   }

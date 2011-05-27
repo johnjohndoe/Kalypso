@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 26.05.2011 15:15:33 by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 27.05.2011 13:22:10 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="CrossSectionPart" table="cross_section_part">
-        <id name="id" type="int">
-            <column name="id" precision="8" scale="0" />
+        <id name="id" type="big_decimal">
+            <column name="id" precision="20" scale="0" />
             <generator class="assigned" />
         </id>
         <many-to-one name="crossSection" class="CrossSection" fetch="select">
-            <column name="cross_section" precision="8" scale="0" not-null="true" />
+            <column name="cross_section" precision="20" scale="0" not-null="true" />
         </many-to-one>
         <property name="name" type="string">
             <column name="name" length="50" not-null="true" unique="true" />
@@ -25,7 +25,7 @@
         </property>
         <set name="points" table="point" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="cross_section_part" precision="8" scale="0" not-null="true" />
+                <column name="cross_section_part" precision="20" scale="0" not-null="true" />
             </key>
             <one-to-many class="Point" />
         </set>

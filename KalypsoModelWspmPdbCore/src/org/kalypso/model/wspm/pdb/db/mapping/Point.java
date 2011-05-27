@@ -24,7 +24,7 @@ import org.hibernate.annotations.Type;
 public class Point implements java.io.Serializable
 {
 
-  private int id;
+  private BigDecimal id;
 
   private CrossSectionPart crossSectionPart;
 
@@ -62,7 +62,7 @@ public class Point implements java.io.Serializable
   {
   }
 
-  public Point( final int id, final CrossSectionPart crossSectionPart, final String name, final long consecutiveNum )
+  public Point( final BigDecimal id, final CrossSectionPart crossSectionPart, final String name, final long consecutiveNum )
   {
     this.id = id;
     this.crossSectionPart = crossSectionPart;
@@ -70,7 +70,7 @@ public class Point implements java.io.Serializable
     this.consecutiveNum = consecutiveNum;
   }
 
-  public Point( final int id, final CrossSectionPart crossSectionPart, final Roughness roughness, final Vegetation vegetation, final String name, final com.vividsolutions.jts.geom.Point location, final long consecutiveNum, final String kz, final String hyk, final BigDecimal width, final BigDecimal hight, final BigDecimal roughnessKValue, final BigDecimal roughnessKstValue, final BigDecimal vegetationDp, final BigDecimal vegetationAx, final BigDecimal vegetationAy, final String description )
+  public Point( final BigDecimal id, final CrossSectionPart crossSectionPart, final Roughness roughness, final Vegetation vegetation, final String name, final com.vividsolutions.jts.geom.Point location, final long consecutiveNum, final String kz, final String hyk, final BigDecimal width, final BigDecimal hight, final BigDecimal roughnessKValue, final BigDecimal roughnessKstValue, final BigDecimal vegetationDp, final BigDecimal vegetationAx, final BigDecimal vegetationAy, final String description )
   {
     this.id = id;
     this.crossSectionPart = crossSectionPart;
@@ -92,15 +92,15 @@ public class Point implements java.io.Serializable
   }
 
   @Id
-  @Column(name = "id", unique = true, nullable = false, precision = 8, scale = 0)
+  @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "point_id_seq")
-  @SequenceGenerator(name = "point_id_seq", sequenceName = "water_body_seq")
-  public int getId( )
+  @SequenceGenerator(name = "point_id_seq", sequenceName = "seq_pdb")
+  public BigDecimal getId( )
   {
     return this.id;
   }
 
-  public void setId( final int id )
+  public void setId( final BigDecimal id )
   {
     this.id = id;
   }

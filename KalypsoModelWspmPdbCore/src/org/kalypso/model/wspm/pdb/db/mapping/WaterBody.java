@@ -1,5 +1,6 @@
 package org.kalypso.model.wspm.pdb.db.mapping;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ import com.vividsolutions.jts.geom.LineString;
 @Table(name = "water_body", schema = "pdb_admin", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class WaterBody extends AbstractModelObject implements java.io.Serializable, WaterBodyConstants
 {
-  private int id;
+  private BigDecimal id;
 
   private String name;
 
@@ -45,14 +46,14 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   {
   }
 
-  public WaterBody( final int id, final String name, final String label )
+  public WaterBody( final BigDecimal id, final String name, final String label )
   {
     this.id = id;
     this.name = name;
     this.label = label;
   }
 
-  public WaterBody( final int id, final String name, final LineString riverline, final String label, final String description, final Set<Event> events, final Set<CrossSection> crossSections )
+  public WaterBody( final BigDecimal id, final String name, final LineString riverline, final String label, final String description, final Set<Event> events, final Set<CrossSection> crossSections )
   {
     this.id = id;
     this.name = name;
@@ -64,15 +65,15 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   }
 
   @Id
-  @Column(name = "id", unique = true, nullable = false, precision = 8, scale = 0)
+  @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "waterbody_id_seq")
-  @SequenceGenerator(name = "waterbody_id_seq", sequenceName = "water_body_seq")
-  public int getId( )
+  @SequenceGenerator(name = "waterbody_id_seq", sequenceName = "seq_pdb")
+  public BigDecimal getId( )
   {
     return this.id;
   }
 
-  public void setId( final int id )
+  public void setId( final BigDecimal id )
   {
     final Object oldValue = this.id;
 

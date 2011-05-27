@@ -1,5 +1,6 @@
 package org.kalypso.model.wspm.pdb.db.mapping;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +30,8 @@ public class State extends AbstractModelObject implements java.io.Serializable, 
 {
   private int id;
 
+  private BigDecimal id;
+
   private String name;
 
   private char isstatezero;
@@ -51,7 +54,7 @@ public class State extends AbstractModelObject implements java.io.Serializable, 
   {
   }
 
-  public State( final int id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser )
+  public State( final BigDecimal id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser )
   {
     this.id = id;
     this.name = name;
@@ -61,7 +64,7 @@ public class State extends AbstractModelObject implements java.io.Serializable, 
     this.editingUser = editingUser;
   }
 
-  public State( final int id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String description, final Set<CrossSection> crossSections )
+  public State( final BigDecimal id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String description, final Set<CrossSection> crossSections )
   {
     this.id = id;
     this.name = name;
@@ -76,15 +79,15 @@ public class State extends AbstractModelObject implements java.io.Serializable, 
   }
 
   @Id
-  @Column(name = "id", unique = true, nullable = false, precision = 8, scale = 0)
+  @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "state_id_seq")
-  @SequenceGenerator(name = "state_id_seq", sequenceName = "water_body_seq")
-  public int getId( )
+  @SequenceGenerator(name = "state_id_seq", sequenceName = "seq_pdb")
+  public BigDecimal getId( )
   {
     return this.id;
   }
 
-  public void setId( final int id )
+  public void setId( final BigDecimal id )
   {
     final Object oldValue = this.id;
 
