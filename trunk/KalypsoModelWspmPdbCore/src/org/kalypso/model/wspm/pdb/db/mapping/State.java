@@ -28,8 +28,6 @@ import org.kalypso.model.wspm.pdb.db.constants.StateConstants;
 @Table(name = "state", schema = "pdb_admin", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class State extends AbstractModelObject implements java.io.Serializable, StateConstants
 {
-  private int id;
-
   private BigDecimal id;
 
   private String name;

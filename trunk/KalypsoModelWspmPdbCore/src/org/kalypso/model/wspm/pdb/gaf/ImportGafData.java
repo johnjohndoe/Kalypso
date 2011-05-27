@@ -202,7 +202,7 @@ public class ImportGafData extends AbstractModelObject
     // FIXME: find srid from pdb by srs set here...
 
     // TODO Auto-generated method stub
-    return 31467;
+    return 31468;
   }
 
   public Session getSession( )

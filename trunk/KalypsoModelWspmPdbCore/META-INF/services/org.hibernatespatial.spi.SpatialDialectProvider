@@ -1,2 +1,2 @@
 org.hibernatespatial.postgis.DialectProvider
-#org.hibernatespatial.oracle.DialectProvider
+org.hibernatespatial.oracle.DialectProvider

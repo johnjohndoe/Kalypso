@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.connect.internal.oracle;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
+import org.hibernatespatial.SpatialDialect;
 import org.hibernatespatial.oracle.OracleSpatial10gDialect;
 import org.kalypso.model.wspm.pdb.connect.internal.HibernateConnection;
 
@@ -56,11 +57,15 @@ public class OracleConnection extends HibernateConnection<OracleSettings>
   }
 
   @Override
+  public SpatialDialect createSpatialDialect( )
+  {
+    return new OracleSpatial10gDialect();
+  }
+
+  @Override
   protected void doConfiguration( final Configuration configuration )
   {
     final OracleSettings settings = getSettings();
-
-    final OracleSpatial10gDialect dialect = new OracleSpatial10gDialect();
 
     configuration.setProperty( Environment.DRIVER, oracle.jdbc.OracleDriver.class.getName() );
 
@@ -69,9 +74,6 @@ public class OracleConnection extends HibernateConnection<OracleSettings>
     configuration.setProperty( Environment.URL, connectionUrl );
     configuration.setProperty( Environment.USER, settings.getUsername() );
     configuration.setProperty( Environment.PASS, settings.getPassword() );
-
-    configuration.setProperty( Environment.DIALECT, dialect.getClass().getName() );
-    configuration.setProperty( SPATIAL_DIALECT, dialect.getClass().getName() );
 
 // final OracleConnectInfo connectInfo = getConnectInfo();
 //
