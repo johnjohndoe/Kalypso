@@ -61,11 +61,12 @@ public class WspmPdbUiImages
     GAF_IMPORT("icons/importGAF.gif"), //$NON-NLS-1$
 
     STATE("icons/state.gif"), //$NON-NLS-1$
-    WATER_BODY("icons/waterBody.gif"),
-    CROSS_SECTION("icons/crossSection.gif"),
+    WATER_BODY("icons/waterBody.gif"), //$NON-NLS-1$
+    CROSS_SECTION("icons/crossSection.gif"), //$NON-NLS-1$
 
-    REFRESH_CONTENT_VIEWER("icons/refresh.gif"),
-    PENDING("icons/pending.gif"); //$NON-NLS-1$
+    REFRESH_CONTENT_VIEWER("icons/refresh.gif"), //$NON-NLS-1$
+    PENDING("icons/pending.gif"), //$NON-NLS-1$ 
+    EXPORT("icons/export.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 
