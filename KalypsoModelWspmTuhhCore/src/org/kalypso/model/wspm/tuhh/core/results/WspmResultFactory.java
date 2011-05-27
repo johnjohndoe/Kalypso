@@ -127,7 +127,7 @@ public final class WspmResultFactory
       TuhhWspmProject tuhhWspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
 
       IWspmResultNode rootNode = createResultNode( null, tuhhWspmProject );
-      rootNodes.add( rootNode );
+      rootNodes.add( new WspmResultEclipseNode( project, (WspmResultProjectNode) rootNode ) );
     }
 
     return rootNodes.toArray( new IWspmResultNode[] {} );
