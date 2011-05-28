@@ -77,7 +77,7 @@ public class ImportGafAction extends Action
     m_updateable = updateable;
 
     setText( "GAF Daten importieren..." );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.GAF_IMPORT ) );
+    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.IMPORT ) );
   }
 
   @Override
