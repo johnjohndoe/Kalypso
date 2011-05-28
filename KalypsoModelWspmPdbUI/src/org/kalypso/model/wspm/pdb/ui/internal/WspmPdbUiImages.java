@@ -52,11 +52,11 @@ public class WspmPdbUiImages
 {
   public static enum IMAGE implements ImageKey
   {
-    CONNECT_TO_PDB("icons/connect_pdb.gif"), //$NON-NLS-1$
-    DISCONNECT_FROM_PDB("icons/disconnect_pdb.gif"), //$NON-NLS-1$
+    CONNECT_TO_PDB("icons/led24/connect.png"), //$NON-NLS-1$
+    DISCONNECT_FROM_PDB("icons/led24/disconnect.png"), //$NON-NLS-1$
 
-    PDB_CONNECTED("icons/pdb_connected.gif"), //$NON-NLS-1$
-    PDB_DISCONNECTED("icons/pdb_disconnected.gif"), //$NON-NLS-1$
+    PDB_CONNECTED("icons/led24/connect.png"), //$NON-NLS-1$
+    PDB_DISCONNECTED("icons/led24/disconnect.png"), //$NON-NLS-1$
 
     GAF_IMPORT("icons/importGAF.gif"), //$NON-NLS-1$
 
