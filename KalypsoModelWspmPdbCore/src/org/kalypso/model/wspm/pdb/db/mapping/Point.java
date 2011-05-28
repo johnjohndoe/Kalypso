@@ -205,6 +205,7 @@ public class Point implements java.io.Serializable
     this.width = width;
   }
 
+  // FIXME: change column name in db
   @Column(name = "hight", precision = 8, scale = 4)
   public BigDecimal getHight( )
   {

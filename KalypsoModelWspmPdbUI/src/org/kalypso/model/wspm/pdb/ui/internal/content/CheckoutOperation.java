@@ -44,7 +44,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,16 +59,20 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.gml.serialize.GmlSerializerFeatureProviderFactory;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -88,13 +94,19 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
+    monitor.beginTask( "Loading data from cross section database", 100 );
+
+    monitor.subTask( "Searching for cross sections to checkout..." );
     findCrossSections();
+    ProgressUtilities.worked( monitor, 5 );
 
     // TODO Preview?
 
     // TODO Already exists in local workspace ?
 
-    checkoutCrossSections();
+    checkoutCrossSections( new SubProgressMonitor( monitor, 95 ) );
+
+    ProgressUtilities.done( monitor );
 
     return Status.OK_STATUS;
   }
@@ -127,19 +139,27 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private void checkoutCrossSections( ) throws CoreException
+  private void checkoutCrossSections( final IProgressMonitor monitor ) throws CoreException
   {
+    final List<CrossSection> sortedSections = getSortedSections();
+    monitor.beginTask( "Reading cross sections from database", sortedSections.size() + 10 );
+
     try
     {
+      /* Initialize WSPM project */
+      monitor.subTask( "Initializing WSPM project..." );
       final IPath modelLocation = getProjectLocation();
-
-      // TODO create wspm project
       final TuhhWspmProject wspmProject = initializeProject( modelLocation );
-      // TODO add profiles; add water body / state if necessary
+      ProgressUtilities.worked( monitor, 10 );
 
+      /* Convert the cross sections */
       final CrossSectionInserter inserter = new CrossSectionInserter( wspmProject );
-      for( final CrossSection crossSection : m_crossSections )
+      for( final CrossSection crossSection : sortedSections )
+      {
+        monitor.subTask( String.format( "Converting %s", crossSection.getStation() ) );
         inserter.insert( crossSection );
+        ProgressUtilities.worked( monitor, 1 );
+      }
 
       saveProject( modelLocation, wspmProject );
     }
@@ -173,6 +193,17 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
+    finally
+    {
+      ProgressUtilities.done( monitor );
+    }
+  }
+
+  private List<CrossSection> getSortedSections( )
+  {
+    final ArrayList<CrossSection> list = new ArrayList<CrossSection>( m_crossSections );
+    Collections.sort( list, new ByStationComparator() );
+    return list;
   }
 
   private IPath getProjectLocation( )
@@ -188,7 +219,7 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     final URL modelURL = modelLocation.toFile().toURI().toURL();
 
     final QName rootQName = TuhhWspmProject.QNAME;
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootQName, modelURL, null );
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootQName, modelURL, new GmlSerializerFeatureProviderFactory() );
     return (TuhhWspmProject) workspace.getRootFeature();
   }
 

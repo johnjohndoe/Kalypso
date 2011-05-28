@@ -226,4 +226,17 @@ public class CrossSection implements java.io.Serializable
     this.crossSectionParts = crossSectionParts;
   }
 
+  // Helper accessors
+
+  public CrossSectionPart findPartByCategory( final String category )
+  {
+    final Set<CrossSectionPart> parts = getCrossSectionParts();
+    for( final CrossSectionPart part : parts )
+    {
+      if( category.equals( part.getCategory() ) )
+        return part;
+    }
+
+    return null;
+  }
 }

@@ -21,4 +21,5 @@ Export-Package: org.kalypso.model.wspm.pdb,
  org.kalypso.model.wspm.pdb.db,
  org.kalypso.model.wspm.pdb.db.constants,
  org.kalypso.model.wspm.pdb.db.mapping,
+ org.kalypso.model.wspm.pdb.db.utils,
  org.kalypso.model.wspm.pdb.gaf
