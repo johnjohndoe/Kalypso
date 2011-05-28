@@ -46,6 +46,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -55,12 +56,8 @@ import com.vividsolutions.jts.geom.LineString;
  * 
  * @author Gernot Belger
  */
-public class GafProfile
+public class GafProfile implements IGafConstants
 {
-  private static final String KIND_PROFILE = "P"; //$NON-NLS-1$
-
-  private static final String KIND_WATERLEVEL = "W"; //$NON-NLS-1$
-
   /** Linked in order to preserve original order from graf file */
   private final Map<String, GafPart> m_parts = new LinkedHashMap<String, GafPart>();
 
@@ -112,7 +109,7 @@ public class GafProfile
       if( m_parts.containsKey( kind ) )
       {
         /* Ignore water levels can occur anywhere, thats normal */
-        if( KIND_WATERLEVEL.equals( m_lastKind ) || kind.equals( KIND_WATERLEVEL ) )
+        if( KZ_CATEGORY_WATERLEVEL.equals( m_lastKind ) || kind.equals( KZ_CATEGORY_WATERLEVEL ) )
           return;
 
         final String message = String.format( "discontinuos part of kind '%s'", kind );
@@ -133,7 +130,7 @@ public class GafProfile
   public LineString createLine( )
   {
     /* Normally, the line of the cross section is the line of the profile */
-    final GafPart profilePart = m_parts.get( KIND_PROFILE );
+    final GafPart profilePart = m_parts.get( KZ_CATEGORY_PROFILE );
     if( profilePart != null )
       return profilePart.getLine();
 
