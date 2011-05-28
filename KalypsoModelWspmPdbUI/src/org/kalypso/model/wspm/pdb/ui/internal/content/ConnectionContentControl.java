@@ -140,7 +140,8 @@ public class ConnectionContentControl extends Composite
     m_manager.add( byStateAction );
     m_manager.add( new ByWaterBodyAction( this ) );
     m_manager.add( new Separator() );
-    m_manager.add( new ExportAction( this ) );
+    // m_manager.add( new ExportAction( this ) );
+    m_manager.add( new CheckoutAction( this ) );
 
     m_manager.update( true );
   }
