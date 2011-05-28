@@ -49,4 +49,20 @@ public interface IGafConstants
 
   String KZ_CATEGORY_WATERLEVEL = "W"; //$NON-NLS-1$
 
+  String KZ_CATEGORY_UK = "UK"; //$NON-NLS-1$
+
+  String KZ_CATEGORY_OK = "OK"; //$NON-NLS-1$
+
+  String HYK_PA = "PA"; //$NON-NLS-1$
+
+  String HYK_PE = "PE";//$NON-NLS-1$
+
+  String HYK_LBOK = "LBOK";//$NON-NLS-1$
+
+  String HYK_RBOK = "RBOK";//$NON-NLS-1$
+
+  String HYK_LU = "LU";//$NON-NLS-1$
+
+  String HYK_RU = "RU";//$NON-NLS-1$
+
 }
