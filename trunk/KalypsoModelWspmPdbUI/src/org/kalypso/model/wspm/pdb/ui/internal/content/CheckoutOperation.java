@@ -211,7 +211,7 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     // TODO: move elsewhere...
     final IPath stateLocation = WspmPdbUiPlugin.getDefault().getStateLocation();
     final IPath wspmDataLocation = stateLocation.append( "wspmData" ); //$NON-NLS-1$
-    return wspmDataLocation.append( "modell.gml" ); //$NON-NLS-1$
+    return wspmDataLocation.append( "modell.gmlz" ); //$NON-NLS-1$
   }
 
   private TuhhWspmProject initializeProject( final IPath modelLocation ) throws MalformedURLException, GMLSchemaException
