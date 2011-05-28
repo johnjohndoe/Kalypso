@@ -90,7 +90,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
     return createNewReachForWaterBody( newWater );
   }
 
-  /** Not in waterbody, as we create a TuhhWaterBody */
+  /** Not in waterbody, as we create a TuhhReach */
   public static TuhhReach createNewReachForWaterBody( final WspmWaterBody waterBody ) throws GMLSchemaException
   {
     final TuhhReach tuhhReach = (TuhhReach) FeatureHelper.addFeature( waterBody, WspmWaterBody.QNAME_REACH_MEMBER, new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) ); //$NON-NLS-1$
