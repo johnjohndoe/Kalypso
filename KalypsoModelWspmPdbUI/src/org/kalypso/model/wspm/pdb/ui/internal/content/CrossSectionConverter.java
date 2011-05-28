@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.pdb.db.utils.ConsecutiveNumComparator;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -180,18 +181,30 @@ public class CrossSectionConverter
   {
     final CrossSectionPart ukPart = m_section.findPartByCategory( IGafConstants.KZ_CATEGORY_UK );
     final CrossSectionPart okPart = m_section.findPartByCategory( IGafConstants.KZ_CATEGORY_OK );
-    if( ukPart == null )
-      return;
 
     /* Can we do anything with a OK without UK? Maybe this is always a weir? */
+    if( ukPart == null && okPart == null )
+      return;
 
-    insertPointsAs( ukPart, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-    insertPointsAs( okPart, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    if( ukPart == null )
+    {
+      insertPointsAs( okPart, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
 
-    final BuildingBruecke bridge = new BuildingBruecke( m_profile );
-    bridge.setValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, new Double( 0.0 ) );
-    // setUWheight( profile, bridge, widthPoint );
-    m_profile.addProfileObjects( new IProfileObject[] { bridge } );
+      /* We consider this situation as a weir */
+      final BuildingWehr weir = new BuildingWehr( m_profile );
+      // weir.setValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, new Double( 0.0 ) );
+      m_profile.addProfileObjects( new IProfileObject[] { weir } );
+    }
+    else
+    {
+      insertPointsAs( ukPart, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+      insertPointsAs( okPart, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+
+      final BuildingBruecke bridge = new BuildingBruecke( m_profile );
+      bridge.setValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, new Double( 0.0 ) );
+      // setUWheight( profile, bridge, widthPoint );
+      m_profile.addProfileObjects( new IProfileObject[] { bridge } );
+    }
   }
 
   private Double asDouble( final BigDecimal decimal )
