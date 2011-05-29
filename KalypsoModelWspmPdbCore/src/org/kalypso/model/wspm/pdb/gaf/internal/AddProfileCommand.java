@@ -161,27 +161,23 @@ public class AddProfileCommand implements IPdbOperation
 
     point.setCrossSectionPart( csPart );
 
+    final GafCode codeKZ = gafPoint.getCodeKZ();
     final String name = csPart.getName() + "_" + index;
     point.setName( name );
 
-    // TODO: maybe the warning for this line if it exists
-    point.setDescription( null );
+    point.setDescription( codeKZ.getDescription() );
 
     point.setConsecutiveNum( index );
     point.setHight( gafPoint.getHeight() );
     point.setWidth( gafPoint.getWidth() );
     point.setHyk( gafPoint.getHyk().getHyk() );
-    point.setKz( gafPoint.getCodeKZ().getCode() );
+    point.setKz( codeKZ.getCode() );
 
     final Coordinate coordinate = gafPoint.getCoordinate();
     if( coordinate != null )
     {
       final com.vividsolutions.jts.geom.Point location = m_geometryFactory.createPoint( coordinate );
       point.setLocation( location );
-    }
-    else
-    {
-      System.out.println( "xxx" );
     }
 
     point.setName( gafPoint.getPointId() );
