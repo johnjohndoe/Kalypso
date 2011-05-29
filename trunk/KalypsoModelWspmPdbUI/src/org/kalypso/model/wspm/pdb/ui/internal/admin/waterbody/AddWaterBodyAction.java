@@ -51,7 +51,7 @@ import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.SaveObjectCommand;
+import org.kalypso.model.wspm.pdb.connect.command.SaveObjectOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
@@ -87,7 +87,7 @@ public class AddWaterBodyAction extends UpdateableAction
     {
       try
       {
-        final SaveObjectCommand operation = new SaveObjectCommand( newWaterBody );
+        final SaveObjectOperation operation = new SaveObjectOperation( newWaterBody );
         new Executor( m_session, operation ).execute();
         m_viewer.refreshWaterBody( newWaterBody.getName() );
       }

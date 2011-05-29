@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.connect.command.DeleteObjectOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -90,7 +91,7 @@ public class RemoveStateAction extends UpdateableAction
     if( dialog.open() == Window.OK )
     {
       final Session session = m_page.getSession();
-      final IPdbOperation operation = new RemoveStateOperation( state );
+      final IPdbOperation operation = new DeleteObjectOperation( state );
 
       final ExecutorRunnable runnable = new ExecutorRunnable( session, operation );
       runnable.setOKStatus( new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "State has been successfully removed" ) );

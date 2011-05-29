@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.connect.ConnectionUtils;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -85,18 +85,14 @@ public class ImportGafAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    Session session = null;
     try
     {
-      session = m_connection.openSession();
-      final State[] states = getState( session );
+      final State[] states = getState();
 
-      final String username = m_connection.getSettings().getUsername();
-      final Wizard importWizard = new ImportGafWizard( session, states, username );
+      final Wizard importWizard = new ImportGafWizard( states, m_connection );
       importWizard.setWindowTitle( "Import GAF file" );
       final WizardDialog dialog = new WizardDialog( shell, importWizard );
       final int result = dialog.open();
-      session.close();
       if( result == Window.OK )
         m_updateable.update();
     }
@@ -106,17 +102,23 @@ public class ImportGafAction extends Action
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Error during GAF Import", e );
       new StatusDialog2( shell, status, "GAF Import" ).open();
     }
-    finally
-    {
-      ConnectionUtils.closeSessionQuietly( session );
-    }
   }
 
-  private State[] getState( final Session session ) throws PdbConnectException
+  private State[] getState( ) throws PdbConnectException
   {
-    final ListOperation<State> operation = new ListOperation<State>( State.class );
-    new Executor( session, operation ).execute();
-    final List<State> list = operation.getList();
-    return list.toArray( new State[list.size()] );
+    Session session = null;
+    try
+    {
+      session = m_connection.openSession();
+      final ListOperation<State> operation = new ListOperation<State>( State.class );
+      new Executor( session, operation ).execute();
+      final List<State> list = operation.getList();
+      session.close();
+      return list.toArray( new State[list.size()] );
+    }
+    finally
+    {
+      PdbUtils.closeSessionQuietly( session );
+    }
   }
 }

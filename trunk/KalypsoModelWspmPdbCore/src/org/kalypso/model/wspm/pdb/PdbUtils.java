@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
@@ -67,6 +69,24 @@ public final class PdbUtils
     catch( final PdbConnectException e )
     {
       // ignore quietly
+    }
+  }
+
+  public static void closeSessionQuietly( final Session session )
+  {
+    if( session == null )
+      return;
+
+    if( session.isOpen() )
+      return;
+
+    try
+    {
+      session.close();
+    }
+    catch( final HibernateException e )
+    {
+      // ignored
     }
   }
 }

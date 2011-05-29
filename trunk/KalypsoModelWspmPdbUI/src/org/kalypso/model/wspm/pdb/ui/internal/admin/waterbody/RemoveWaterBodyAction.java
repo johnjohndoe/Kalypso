@@ -50,7 +50,7 @@ import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.DeleteObjectCommand;
+import org.kalypso.model.wspm.pdb.connect.command.DeleteObjectOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
@@ -105,7 +105,7 @@ public class RemoveWaterBodyAction extends UpdateableAction
           return;
 
         final Session session = m_page.getSession();
-        final DeleteObjectCommand operation = new DeleteObjectCommand( waterBody );
+        final DeleteObjectOperation operation = new DeleteObjectOperation( waterBody );
         new Executor( session, operation ).execute();
       }
     }

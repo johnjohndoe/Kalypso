@@ -52,7 +52,7 @@ import org.hibernatespatial.HBSpatialExtension;
 import org.hibernatespatial.SpatialDialect;
 import org.hibernatespatial.postgis.PostgisDialect;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
-import org.kalypso.model.wspm.pdb.connect.ConnectionUtils;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -279,7 +279,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     }
     finally
     {
-      ConnectionUtils.closeSessionQuietly( session );
+      PdbUtils.closeSessionQuietly( session );
     }
   }
 
