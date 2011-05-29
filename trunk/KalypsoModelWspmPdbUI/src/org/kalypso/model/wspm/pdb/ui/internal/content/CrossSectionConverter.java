@@ -116,37 +116,17 @@ public class CrossSectionConverter
       final IRecord record = result.createRecord();
       result.add( record );
 
-      setValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, point.getDescription() );
       setValue( record, IWspmConstants.POINT_PROPERTY_BREITE, asDouble( point.getWidth() ) );
       setValue( record, IWspmConstants.POINT_PROPERTY_HOEHE, asDouble( point.getHight() ) );
 
-      final com.vividsolutions.jts.geom.Point location = point.getLocation();
-      if( location != null )
-      {
-        setValue( record, IWspmConstants.POINT_PROPERTY_RECHTSWERT, location.getX() );
-        setValue( record, IWspmConstants.POINT_PROPERTY_HOCHWERT, location.getY() );
-      }
+      convertStandardProperties( point, record );
 
-      // TODO: add roughness class component
-      // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getRoughness() );
-      setValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, point.getRoughnessKstValue() );
-      setValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, point.getRoughnessKValue() );
-
-      // TODO: add vegetation class component
-      // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getVegetation() );
-      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point.getVegetationAx() );
-      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point.getVegetationAy() );
-      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point.getVegetationDp() );
-
+      // REMARK: we do not add hyk as separate component, it is redundant in any way..., isnt' it?
+      // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getHyk() );
       final String hyk = point.getHyk();
       final String markerType = toMarkerType( hyk );
       if( markerType != null )
         createMarker( record, markerType );
-
-      // TODO: add corresponding components
-      // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getKz() );
-      // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getHyk() );
-      // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getName() );
     }
   }
 
@@ -265,21 +245,37 @@ public class CrossSectionConverter
         record = nearestPoint;
       final boolean isInserted = nearestPoint == null;
 
-      // TODO: check: if we have the same width, but different rw/hw we just forget the old rw/hw here, which is bad...
-      // setValue( record, IWspmConstants.POINT_PROPERTY_BREITE, asDouble( point.getWidth() ) );
-      final com.vividsolutions.jts.geom.Point location = point.getLocation();
-      if( location != null && isInserted )
-      {
-        setValue( record, IWspmConstants.POINT_PROPERTY_RECHTSWERT, location.getX() );
-        setValue( record, IWspmConstants.POINT_PROPERTY_HOCHWERT, location.getY() );
-      }
-
-      setValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, point.getDescription() );
       setValue( record, asComponent, asDouble( point.getHight() ) );
 
-      // TODO: add corresponding components
-      // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getKz() );
-      // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getName() );
+      // TODO: check: if we have the same width, but different rw/hw we just forget the old rw/hw here, which is bad...
+      // TODO: same holds for ID, Code, etc.
+      if( isInserted )
+        convertStandardProperties( point, record );
     }
+  }
+
+  private void convertStandardProperties( final Point point, final IRecord record )
+  {
+    setValue( record, IWspmConstants.POINT_PROPERTY_ID, point.getName() );
+    setValue( record, IWspmConstants.POINT_PROPERTY_CODE, point.getKz() );
+    setValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, point.getDescription() );
+
+    final com.vividsolutions.jts.geom.Point location = point.getLocation();
+    if( location != null )
+    {
+      setValue( record, IWspmConstants.POINT_PROPERTY_RECHTSWERT, location.getX() );
+      setValue( record, IWspmConstants.POINT_PROPERTY_HOCHWERT, location.getY() );
+    }
+
+    // TODO: add roughness class component
+    // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getRoughness() );
+    setValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, point.getRoughnessKstValue() );
+    setValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, point.getRoughnessKValue() );
+
+    // TODO: add vegetation class component
+    // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getVegetation() );
+    setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point.getVegetationAx() );
+    setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point.getVegetationAy() );
+    setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point.getVegetationDp() );
   }
 }
