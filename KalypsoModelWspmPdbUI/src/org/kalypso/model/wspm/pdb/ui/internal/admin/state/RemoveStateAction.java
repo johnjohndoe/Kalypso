@@ -93,7 +93,7 @@ public class RemoveStateAction extends UpdateableAction
       final IPdbOperation operation = new RemoveStateOperation( state );
 
       final ExecutorRunnable runnable = new ExecutorRunnable( session, operation );
-      runnable.setOKStatus( new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "Status was successfully removed" ) );
+      runnable.setOKStatus( new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "State has been successfully removed" ) );
       final IStatus result = RunnableContextHelper.execute( m_page.getWizard().getContainer(), true, false, runnable );
       new StatusDialog2( shell, result, dialogTitle ).open();
     }
