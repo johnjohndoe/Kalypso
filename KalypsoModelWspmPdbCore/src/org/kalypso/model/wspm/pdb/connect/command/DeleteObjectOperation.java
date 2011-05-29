@@ -46,11 +46,11 @@ import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 /**
  * @author Gernot Belger
  */
-public class UpdateObjectCommand implements IPdbOperation
+public class DeleteObjectOperation implements IPdbOperation
 {
   private final Object m_element;
 
-  public UpdateObjectCommand( final Object element )
+  public DeleteObjectOperation( final Object element )
   {
     m_element = element;
   }
@@ -58,12 +58,12 @@ public class UpdateObjectCommand implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return "Update object: " + m_element;
+    return "Delete object: " + m_element;
   }
 
   @Override
   public void execute( final Session session )
   {
-    session.update( m_element );
+    session.delete( m_element );
   }
 }

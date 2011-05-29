@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.gaf;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -66,7 +67,7 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Import GAF", 100 );
 

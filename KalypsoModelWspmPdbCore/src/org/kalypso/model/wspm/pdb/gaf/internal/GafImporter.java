@@ -43,12 +43,16 @@ package org.kalypso.model.wspm.pdb.gaf.internal;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.pdb.PdbUtils;
+import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -74,46 +78,75 @@ public class GafImporter implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final String taskName = String.format( "Reading %s", m_gafFile.getName() );
     monitor.beginTask( taskName, 100 );
 
-    final Session session = m_data.getSession();
+    try
+    {
+      final GafProfile[] profiles = readGaf( new SubProgressMonitor( monitor, 50 ) );
+      importGaf( profiles, new SubProgressMonitor( monitor, 50 ) );
 
+      return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "Successfully imported GAF file" );
+    }
+    finally
+    {
+      ProgressUtilities.done( monitor );
+    }
+  }
+
+  private GafProfile[] readGaf( final IProgressMonitor monitor ) throws CoreException
+  {
     GafReader gafReader = null;
     try
     {
-      final State state = m_data.getState();
-      final WaterBody waterBody = m_data.getWaterBody();
       final int srid = m_data.getSrid();
 
-      final Gaf2Db gaf2db = new Gaf2Db( session, waterBody, state, srid );
-
-      gaf2db.addState();
-
-      gafReader = new GafReader( m_logger, gaf2db );
-      gafReader.read( m_gafFile, new SubProgressMonitor( monitor, 90 ) );
+      gafReader = new GafReader( m_logger, srid );
+      gafReader.read( m_gafFile, monitor );
       gafReader.close();
-
-      return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "Successfully imported GAF file" );
+      return gafReader.getProfiles();
     }
     catch( final IOException e )
     {
       final String message = "Error while reading file";
       m_logger.log( IStatus.ERROR, message, null, e );
-      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
-    }
-    catch( final PdbConnectException e )
-    {
-      final String message = "Failed to write data into database";
-      m_logger.log( IStatus.ERROR, message, null, e );
-      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
+      throw new CoreException( status );
     }
     finally
     {
       if( gafReader != null )
         gafReader.closeQuietly();
+    }
+  }
+
+  private void importGaf( final GafProfile[] profiles, final IProgressMonitor monitor ) throws CoreException
+  {
+    Session session = null;
+    try
+    {
+      session = m_data.getConnection().openSession();
+      final State state = m_data.getState();
+      final WaterBody waterBody = m_data.getWaterBody();
+      final int srid = m_data.getSrid();
+
+      final Gaf2Db gaf2db = new Gaf2Db( waterBody, state, profiles, srid, monitor );
+      new Executor( session, gaf2db ).execute();
+
+      session.close();
+    }
+    catch( final PdbConnectException e )
+    {
+      final String message = "Failed to write data into database";
+      m_logger.log( IStatus.ERROR, message, null, e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
+      throw new CoreException( status );
+    }
+    finally
+    {
+      PdbUtils.closeSessionQuietly( session );
     }
   }
 }

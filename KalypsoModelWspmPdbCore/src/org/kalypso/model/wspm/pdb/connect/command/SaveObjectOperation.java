@@ -38,36 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect;
+package org.kalypso.model.wspm.pdb.connect.command;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**
  * @author Gernot Belger
  */
-public final class ConnectionUtils
+public class SaveObjectOperation implements IPdbOperation
 {
-  private ConnectionUtils( )
+  private final Object m_element;
+
+  public SaveObjectOperation( final Object element )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    m_element = element;
   }
 
-  public static void closeSessionQuietly( final Session session )
+  @Override
+  public String getLabel( )
   {
-    if( session == null )
-      return;
+    return "Save object: " + m_element;
+  }
 
-    if( session.isOpen() )
-      return;
-
-    try
-    {
-      session.close();
-    }
-    catch( final HibernateException e )
-    {
-      // ignored
-    }
+  @Override
+  public void execute( final Session session )
+  {
+    session.save( m_element );
   }
 }

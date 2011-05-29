@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Text;
 import org.hibernate.Session;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.AddWaterBodyAction;
@@ -81,6 +82,8 @@ public class ChooseWaterPage extends WizardPage
 
   private WaterBodyViewer m_waterBodyViewer;
 
+  private Session m_session;
+
   ChooseWaterPage( final String pageName, final ImportGafData data )
   {
     super( pageName );
@@ -92,8 +95,19 @@ public class ChooseWaterPage extends WizardPage
   }
 
   @Override
+  public void dispose( )
+  {
+    PdbUtils.closeSessionQuietly( m_session );
+    m_session.close();
+
+    super.dispose();
+  }
+
+  @Override
   public void createControl( final Composite parent )
   {
+    openSession();
+
     final Composite panel = new Composite( parent, SWT.NONE );
     setControl( panel );
     GridLayoutFactory.swtDefaults().applyTo( panel );
@@ -104,9 +118,21 @@ public class ChooseWaterPage extends WizardPage
     createActions( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
   }
 
+  protected void openSession( )
+  {
+    try
+    {
+      m_session = m_data.getConnection().openSession();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
   private Control createWaterBodyTable( final DatabindingWizardPage binding, final Composite parent )
   {
-    m_waterBodyViewer = new WaterBodyViewer( m_data.getSession() );
+    m_waterBodyViewer = new WaterBodyViewer( m_session );
     final TableViewer waterBodiesViewer = m_waterBodyViewer.createTableViewer( parent );
 
     /* selection -> data */
@@ -174,8 +200,7 @@ public class ChooseWaterPage extends WizardPage
 
   private Control createActions( final Composite panel )
   {
-    final Session session = m_data.getSession();
-    final Action addAction = new AddWaterBodyAction( session, m_waterBodyViewer, "Create New Water Body..." );
+    final Action addAction = new AddWaterBodyAction( m_session, m_waterBodyViewer, "Create New Water Body..." );
     return ActionHyperlink.createHyperlink( null, panel, SWT.NONE, addAction );
   }
 }

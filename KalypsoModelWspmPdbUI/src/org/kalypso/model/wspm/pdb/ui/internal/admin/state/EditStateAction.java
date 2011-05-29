@@ -51,7 +51,7 @@ import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.UpdateObjectCommand;
+import org.kalypso.model.wspm.pdb.connect.command.UpdateObjectOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
@@ -91,7 +91,7 @@ public class EditStateAction extends UpdateableAction
       {
         // FIXME: a bit dubious (also the refresh below). Instead, we should clone the object
         // and edit the clone. Only copy the changed values back, if OK
-        final UpdateObjectCommand operation = new UpdateObjectCommand( selectedItem );
+        final UpdateObjectOperation operation = new UpdateObjectOperation( selectedItem );
         new Executor( session, operation ).execute();
       }
       else

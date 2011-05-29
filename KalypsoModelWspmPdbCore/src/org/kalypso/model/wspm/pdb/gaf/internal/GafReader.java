@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
@@ -92,14 +91,14 @@ public class GafReader
 
   private GafCodes m_gafCodes;
 
-  public GafReader( final GafLogger logger, final Gaf2Db gaf2db )
+  public GafReader( final GafLogger logger, final int srid )
   {
     m_logger = logger;
 
-    m_gafProfiles = new GafProfiles( logger, gaf2db );
+    m_gafProfiles = new GafProfiles( logger, srid );
   }
 
-  public void read( final File gafFile, final IProgressMonitor monitor ) throws IOException, PdbConnectException
+  public void read( final File gafFile, final IProgressMonitor monitor ) throws IOException
   {
     /* Reading gaf with progress stream to show nice progress for large files */
     final long contentLength = gafFile.length();
@@ -133,7 +132,7 @@ public class GafReader
     IOUtils.closeQuietly( m_reader );
   }
 
-  private void readLines( ) throws IOException, PdbConnectException
+  private void readLines( ) throws IOException
   {
     while( m_reader.ready() )
     {
@@ -147,7 +146,7 @@ public class GafReader
     m_gafProfiles.stop();
   }
 
-  private void readLine( final String line ) throws PdbConnectException
+  private void readLine( final String line )
   {
     try
     {
@@ -251,5 +250,10 @@ public class GafReader
       throw new SkipLineException( IStatus.WARNING, String.format( "Unknown Hyk: '%s'; line skipped", hyk ) );
 
     return hykCode;
+  }
+
+  public GafProfile[] getProfiles( )
+  {
+    return m_gafProfiles.getProfiles();
   }
 }

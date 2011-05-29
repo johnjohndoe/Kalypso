@@ -41,13 +41,15 @@
 package org.kalypso.model.wspm.pdb.gaf.internal;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * Assembles all read points into different profiles.
@@ -56,21 +58,23 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class GafProfiles
 {
-  private GafProfile m_currentProfile;
-
   private final Set<BigDecimal> m_committedStations = new HashSet<BigDecimal>();
+
+  private final Collection<GafProfile> m_profiles = new ArrayList<GafProfile>();
+
+  private GafProfile m_currentProfile;
 
   private final GafLogger m_logger;
 
-  private final Gaf2Db m_gaf2db;
+  private final GeometryFactory m_geometryFactory;
 
-  public GafProfiles( final GafLogger logger, final Gaf2Db gaf2db )
+  public GafProfiles( final GafLogger logger, final int srid )
   {
     m_logger = logger;
-    m_gaf2db = gaf2db;
+    m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
   }
 
-  public void addPoint( final GafPoint point ) throws PdbConnectException
+  public void addPoint( final GafPoint point )
   {
     final BigDecimal station = point.getStation();
 
@@ -89,18 +93,17 @@ public class GafProfiles
     m_currentProfile.addPoint( point );
   }
 
-  public void stop( ) throws PdbConnectException
+  public void stop( )
   {
     commitProfile();
   }
 
   private void createProfile( final BigDecimal station )
   {
-    final GeometryFactory geometryFactory = m_gaf2db.getGeometryFactory();
-    m_currentProfile = new GafProfile( station, m_logger, geometryFactory );
+    m_currentProfile = new GafProfile( station, m_logger, m_geometryFactory );
   }
 
-  private void commitProfile( ) throws PdbConnectException
+  private void commitProfile( )
   {
     if( m_currentProfile == null )
       return;
@@ -109,8 +112,13 @@ public class GafProfiles
 
     m_committedStations.add( station );
 
-    m_gaf2db.commitProfile( m_currentProfile );
+    m_profiles.add( m_currentProfile );
 
     m_currentProfile = null;
+  }
+
+  public GafProfile[] getProfiles( )
+  {
+    return m_profiles.toArray( new GafProfile[m_profiles.size()] );
   }
 }

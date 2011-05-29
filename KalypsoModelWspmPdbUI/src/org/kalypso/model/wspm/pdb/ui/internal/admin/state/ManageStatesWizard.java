@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.ConnectionUtils;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
@@ -76,7 +76,7 @@ public class ManageStatesWizard extends Wizard
   @Override
   public void dispose( )
   {
-    ConnectionUtils.closeSessionQuietly( m_session );
+    PdbUtils.closeSessionQuietly( m_session );
 
     super.dispose();
   }

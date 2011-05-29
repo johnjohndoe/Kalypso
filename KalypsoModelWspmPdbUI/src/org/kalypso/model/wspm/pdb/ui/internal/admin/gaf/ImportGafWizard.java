@@ -48,9 +48,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.program.Program;
-import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafOperation;
@@ -62,9 +62,9 @@ public class ImportGafWizard extends Wizard
 {
   private final ImportGafData m_data;
 
-  public ImportGafWizard( final Session session, final State[] existingState, final String username )
+  public ImportGafWizard( final State[] existingState, final IPdbConnection connection )
   {
-    m_data = new ImportGafData( session, username );
+    m_data = new ImportGafData( connection );
 
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() );
     setDialogSettings( settings );

@@ -49,5 +49,5 @@ public interface IPdbOperation
 {
   String getLabel( );
 
-  void execute( Session session );
+  void execute( Session session ) throws PdbConnectException;
 }
