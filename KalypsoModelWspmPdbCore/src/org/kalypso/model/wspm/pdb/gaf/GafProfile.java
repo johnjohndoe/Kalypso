@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.gaf.internal;
+package org.kalypso.model.wspm.pdb.gaf;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
@@ -46,7 +46,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafCode;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafPart;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafPoint;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;

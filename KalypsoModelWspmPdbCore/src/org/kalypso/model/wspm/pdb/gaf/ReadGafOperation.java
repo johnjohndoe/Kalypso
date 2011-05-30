@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.gaf.internal;
+package org.kalypso.model.wspm.pdb.gaf;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,71 +47,71 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.wspm.pdb.PdbUtils;
-import org.kalypso.model.wspm.pdb.connect.Executor;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafReader;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
+ * First stage of gaf reading: open log file, then delegate to next level.
+ * 
  * @author Gernot Belger
  */
-public class GafImporter implements ICoreRunnableWithProgress
+public class ReadGafOperation implements ICoreRunnableWithProgress
 {
-  private final GafLogger m_logger;
-
-  private final File m_gafFile;
-
   private final ImportGafData m_data;
 
-  public GafImporter( final File gafFile, final GafLogger logger, final ImportGafData data )
+  private GafProfile[] m_profiles;
+
+  public ReadGafOperation( final ImportGafData data )
   {
-    m_gafFile = gafFile;
-    m_logger = logger;
     m_data = data;
   }
 
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final String taskName = String.format( "Reading %s", m_gafFile.getName() );
-    monitor.beginTask( taskName, 100 );
+    // Handle log first and separately in order to separate reading errors from log problems
+    GafLogger logger = null;
 
     try
     {
-      final GafProfile[] profiles = readGaf( new SubProgressMonitor( monitor, 50 ) );
-      importGaf( profiles, new SubProgressMonitor( monitor, 50 ) );
+      logger = new GafLogger( m_data.getLogFile() );
 
-      return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "Successfully imported GAF file" );
+      final File gafFile = m_data.getGafFile();
+
+      m_profiles = readGaf( gafFile, logger, monitor );
+
+      return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "Successfully read GAF file" );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Error while writing log file", e );
     }
     finally
     {
-      ProgressUtilities.done( monitor );
+      if( logger != null )
+        logger.close();
     }
   }
 
-  private GafProfile[] readGaf( final IProgressMonitor monitor ) throws CoreException
+  private GafProfile[] readGaf( final File gafFile, final GafLogger logger, final IProgressMonitor monitor ) throws CoreException
   {
     GafReader gafReader = null;
     try
     {
       final int srid = m_data.getSrid();
 
-      gafReader = new GafReader( m_logger, srid );
-      gafReader.read( m_gafFile, monitor );
+      gafReader = new GafReader( logger, srid );
+      gafReader.read( gafFile, monitor );
       gafReader.close();
       return gafReader.getProfiles();
     }
     catch( final IOException e )
     {
       final String message = "Error while reading file";
-      m_logger.log( IStatus.ERROR, message, null, e );
+      logger.log( IStatus.ERROR, message, null, e );
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }
@@ -122,31 +122,8 @@ public class GafImporter implements ICoreRunnableWithProgress
     }
   }
 
-  private void importGaf( final GafProfile[] profiles, final IProgressMonitor monitor ) throws CoreException
+  public GafProfile[] getProfiles( )
   {
-    Session session = null;
-    try
-    {
-      session = m_data.getConnection().openSession();
-      final State state = m_data.getState();
-      final WaterBody waterBody = m_data.getWaterBody();
-      final int srid = m_data.getSrid();
-
-      final Gaf2Db gaf2db = new Gaf2Db( waterBody, state, profiles, srid, monitor );
-      new Executor( session, gaf2db ).execute();
-
-      session.close();
-    }
-    catch( final PdbConnectException e )
-    {
-      final String message = "Failed to write data into database";
-      m_logger.log( IStatus.ERROR, message, null, e );
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
-      throw new CoreException( status );
-    }
-    finally
-    {
-      PdbUtils.closeSessionQuietly( session );
-    }
+    return m_profiles;
   }
 }

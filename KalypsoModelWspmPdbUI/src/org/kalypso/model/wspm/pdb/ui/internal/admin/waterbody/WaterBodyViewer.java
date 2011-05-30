@@ -82,7 +82,7 @@ public class WaterBodyViewer
 
   public TableViewer createTableViewer( final Composite parent )
   {
-    m_viewer = new TableViewer( parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.H_SCROLL );
+    m_viewer = new TableViewer( parent, SWT.BORDER | SWT.FULL_SELECTION );
     final Table table = m_viewer.getTable();
     table.setHeaderVisible( true );
 
