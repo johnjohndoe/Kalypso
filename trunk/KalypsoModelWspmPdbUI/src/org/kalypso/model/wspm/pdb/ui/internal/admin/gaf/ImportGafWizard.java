@@ -40,27 +40,44 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import java.io.File;
+import java.util.Arrays;
 
+import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.IPageChangeProvider;
+import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.program.Program;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafOperation;
+import org.kalypso.model.wspm.pdb.gaf.ReadGafOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
 
 public class ImportGafWizard extends Wizard
 {
+  private final IPageChangedListener m_pageListener = new IPageChangedListener()
+  {
+    @Override
+    public void pageChanged( final PageChangedEvent event )
+    {
+      handlePageChanged( event.getSelectedPage() );
+    }
+  };
+
   private final ImportGafData m_data;
+
+  private final GafProfilesPage m_gafProfilesPage;
 
   public ImportGafWizard( final State[] existingState, final IPdbConnection connection )
   {
@@ -72,10 +89,25 @@ public class ImportGafWizard extends Wizard
     m_data.init( settings );
 
     addPage( new ImportGafPage( "gaf", m_data ) ); //$NON-NLS-1$
+    m_gafProfilesPage = new GafProfilesPage( "profiles", m_data );
+    addPage( m_gafProfilesPage ); //$NON-NLS-1$
     addPage( new ChooseWaterPage( "waterBody", m_data ) ); //$NON-NLS-1$
     addPage( new EditStatePage( "state", m_data.getState(), existingState, Mode.NEW ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
+  }
+
+  @Override
+  public void setContainer( final IWizardContainer container )
+  {
+    final IWizardContainer oldContainer = getContainer();
+    if( oldContainer instanceof IPageChangeProvider )
+      ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageListener );
+
+    super.setContainer( container );
+
+    if( container instanceof IPageChangeProvider )
+      ((IPageChangeProvider) container).addPageChangedListener( m_pageListener );
   }
 
   @Override
@@ -92,31 +124,36 @@ public class ImportGafWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final ImportGafOperation operation = new ImportGafOperation( m_data );
+    final WritableList gafProfiles = m_data.getGafProfiles();
+    final GafProfile[] profiles = (GafProfile[]) gafProfiles.toArray( new GafProfile[gafProfiles.size()] );
+
+    final ImportGafOperation operation = new ImportGafOperation( m_data, profiles );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-
-    // TODO: instead we might show the log during import as a console dialog
-
-    final ImportGafResultDialog resultDialog = new ImportGafResultDialog( getShell(), result, m_data );
-    resultDialog.open();
+    new StatusDialog2( getShell(), result, getWindowTitle() );
 
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
       m_data.store( settings );
 
-    /* Open log */
-    if( m_data.getOpenLog() )
-      openLogFile( m_data.getLogFile() );
-
     return true;
   }
 
-  private void openLogFile( final File logFile )
+  protected void handlePageChanged( final Object selectedPage )
   {
-    if( !Program.launch( logFile.getAbsolutePath(), logFile.getParent() ) )
+    if( selectedPage == m_gafProfilesPage )
     {
-      final String message = String.format( "Failed to open external viewer for: '%s", logFile.getAbsolutePath() );
-      MessageDialog.openWarning( getShell(), "GAF Import", message );
+      final WritableList gafProfiles = m_data.getGafProfiles();
+      /* Prepare for exception */
+      gafProfiles.clear();
+
+      final ReadGafOperation operation = new ReadGafOperation( m_data );
+      final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+      if( !status.isOK() )
+        new StatusDialog2( getShell(), status, getWindowTitle() );
+      else
+        gafProfiles.addAll( Arrays.asList( operation.getProfiles() ) );
+
+      m_gafProfilesPage.updateControl();
     }
   }
 }

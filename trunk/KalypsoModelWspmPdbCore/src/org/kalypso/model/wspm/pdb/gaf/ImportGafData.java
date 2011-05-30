@@ -41,10 +41,12 @@
 package org.kalypso.model.wspm.pdb.gaf;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
@@ -69,14 +71,14 @@ public class ImportGafData extends AbstractModelObject
 
   private File m_gafFile = null;
 
-  private boolean m_openLog = true;
-
   /** We always create a new state when importing a gaf file */
   private final State m_state = new State();
 
   private WaterBody m_waterBody;
 
   private final IPdbConnection m_connection;
+
+  private final WritableList m_gafProfiles = new WritableList( new ArrayList<GafProfile>(), GafProfile.class );
 
   public ImportGafData( final IPdbConnection connection )
   {
@@ -101,9 +103,6 @@ public class ImportGafData extends AbstractModelObject
     final String srs = settings.get( PROPERTY_SRS );
     if( srs != null )
       setSrs( srs );
-
-    if( !StringUtils.isBlank( settings.get( PROPERTY_OPEN_LOG ) ) )
-      setOpenLog( settings.getBoolean( PROPERTY_OPEN_LOG ) );
   }
 
   public void store( final IDialogSettings settings )
@@ -115,7 +114,6 @@ public class ImportGafData extends AbstractModelObject
 
     settings.put( PROPERTY_SRS, m_srs );
     settings.put( PROPERTY_GAF_FILE, gafPath );
-    settings.put( PROPERTY_OPEN_LOG, m_openLog );
   }
 
   public String getSrs( )
@@ -175,20 +173,6 @@ public class ImportGafData extends AbstractModelObject
     return m_state;
   }
 
-  public boolean getOpenLog( )
-  {
-    return m_openLog;
-  }
-
-  public void setOpenLog( final boolean openLog )
-  {
-    final boolean oldValue = m_openLog;
-
-    m_openLog = openLog;
-
-    firePropertyChange( PROPERTY_OPEN_LOG, oldValue, m_openLog );
-  }
-
   public File getLogFile( )
   {
     final File gafFile = getGafFile();
@@ -209,5 +193,10 @@ public class ImportGafData extends AbstractModelObject
   public IPdbConnection getConnection( )
   {
     return m_connection;
+  }
+
+  public WritableList getGafProfiles( )
+  {
+    return m_gafProfiles;
   }
 }

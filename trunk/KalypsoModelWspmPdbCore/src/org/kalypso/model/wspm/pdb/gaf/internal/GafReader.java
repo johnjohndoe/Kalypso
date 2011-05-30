@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 
 /**
  * @author Gernot Belger

@@ -40,16 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafImporter;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.pdb.PdbUtils;
+import org.kalypso.model.wspm.pdb.connect.Executor;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.gaf.internal.Gaf2Db;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
@@ -61,9 +64,12 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
 {
   private final ImportGafData m_data;
 
-  public ImportGafOperation( final ImportGafData data )
+  private final GafProfile[] m_profiles;
+
+  public ImportGafOperation( final ImportGafData data, final GafProfile[] profiles )
   {
     m_data = data;
+    m_profiles = profiles;
   }
 
   @Override
@@ -71,26 +77,31 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
   {
     monitor.beginTask( "Import GAF", 100 );
 
-    // Handle log first and separately in order to separate reading errors from log problems
-    GafLogger logger = null;
-
+    Session session = null;
     try
     {
-      logger = new GafLogger( m_data.getLogFile() );
+      session = m_data.getConnection().openSession();
+      final State state = m_data.getState();
+      final WaterBody waterBody = m_data.getWaterBody();
+      final int srid = m_data.getSrid();
 
-      final File gafFile = m_data.getGafFile();
-      final GafImporter importer = new GafImporter( gafFile, logger, m_data );
-      return importer.execute( monitor );
+      final Gaf2Db gaf2db = new Gaf2Db( waterBody, state, m_profiles, srid, monitor );
+      new Executor( session, gaf2db ).execute();
+
+      session.close();
+
+      return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "Successfully imported GAF file" );
     }
-    catch( final IOException e )
+    catch( final PdbConnectException e )
     {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Error while writing log file", e );
+      final String message = "Failed to write data into database";
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
+      throw new CoreException( status );
     }
     finally
     {
-      if( logger != null )
-        logger.close();
+      ProgressUtilities.done( monitor );
+      PdbUtils.closeSessionQuietly( session );
     }
   }
 }
