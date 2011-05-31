@@ -101,12 +101,12 @@ public class Gaf2Db implements IPdbOperation
 
     for( final GafProfile profile : m_profiles )
     {
-      m_monitor.subTask( String.format( "Converting cross section %s", profile.getStation() ) );
+      m_monitor.subTask( String.format( "converting cross section %s", profile.getStation() ) );
       commitProfile( session, profile );
       m_monitor.worked( 1 );
     }
 
-    m_monitor.subTask( "Writing data into database" );
+    m_monitor.subTask( "writing data into database" );
   }
 
   private void addState( final Session session, final State state )
