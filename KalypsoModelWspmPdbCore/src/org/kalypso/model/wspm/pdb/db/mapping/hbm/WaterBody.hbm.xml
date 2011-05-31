@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 27.05.2011 13:22:10 by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 31.05.2011 11:08:31 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="WaterBody" table="water_body">
         <id name="id" type="big_decimal">
@@ -18,6 +18,9 @@
         </property>
         <property name="label" type="string">
             <column name="label" length="100" not-null="true" />
+        </property>
+        <property name="directionOfStationing" type="string">
+            <column name="direction_of_stationing" length="20" not-null="true" />
         </property>
         <property name="description" type="string">
             <column name="description" />

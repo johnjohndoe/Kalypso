@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 27.05.2011 13:22:10 by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 31.05.2011 11:08:31 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="Point" table="point">
         <id name="id" type="big_decimal">
@@ -28,8 +28,8 @@
         <property name="consecutiveNum" type="long">
             <column name="consecutive_num" precision="11" scale="0" not-null="true" />
         </property>
-        <property name="kz" type="string">
-            <column name="kz" length="50" />
+        <property name="code" type="string">
+            <column name="code" length="50" />
         </property>
         <property name="hyk" type="string">
             <column name="hyk" length="50" />
@@ -37,8 +37,8 @@
         <property name="width" type="big_decimal">
             <column name="width" precision="8" scale="4" />
         </property>
-        <property name="hight" type="big_decimal">
-            <column name="hight" precision="8" scale="4" />
+        <property name="height" type="big_decimal">
+            <column name="height" precision="8" scale="4" />
         </property>
         <property name="roughnessKValue" type="big_decimal">
             <column name="roughness_k_value" precision="8" scale="1" />

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 27.05.2011 13:22:10 by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 31.05.2011 11:08:31 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="WaterlevelFixation" table="waterlevel_fixation">
         <id name="id" type="big_decimal">
@@ -12,7 +12,7 @@
             <column name="event" precision="20" scale="0" not-null="true" />
         </many-to-one>
         <property name="station" type="big_decimal">
-            <column name="station" precision="8" scale="3" not-null="true" />
+            <column name="station" precision="8" scale="1" not-null="true" />
         </property>
         <property name="location" type="serializable">
             <column name="location" />
