@@ -44,7 +44,12 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -100,6 +105,7 @@ public class EditWaterBodyPage extends WizardPage
 
     createNameControls( composite );
     createLabelControls( composite );
+    createDirectionControls( composite );
     createDescriptionControls( composite );
     // private Geometry riverline;
   }
@@ -145,6 +151,21 @@ public class EditWaterBodyPage extends WizardPage
     binder.addTargetAfterGetValidator( new UniqueWaterBodyLabelValidator( m_existingWaterbodies, ignoreLabel ) );
 
     m_binding.bindValue( binder );
+  }
+
+  private void createDirectionControls( final Composite parent )
+  {
+    new Label( parent, SWT.NONE ).setText( "Direction of Stationing" );
+
+    final ComboViewer comboViewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
+    comboViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    comboViewer.setContentProvider( new ArrayContentProvider() );
+    comboViewer.setLabelProvider( new LabelProvider() );
+    comboViewer.setInput( WaterBodyConstants.STATIONING_DIRECTION.values() );
+
+    final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( comboViewer );
+    final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBody.PROPERTY_DIRECTION_OF_STATIONING );
+    m_binding.bindValue( target, model );
   }
 
   private void createDescriptionControls( final Composite parent )

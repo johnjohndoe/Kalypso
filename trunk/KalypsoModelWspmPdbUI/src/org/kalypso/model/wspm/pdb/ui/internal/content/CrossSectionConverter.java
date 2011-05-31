@@ -117,7 +117,7 @@ public class CrossSectionConverter
       result.add( record );
 
       setValue( record, IWspmConstants.POINT_PROPERTY_BREITE, asDouble( point.getWidth() ) );
-      setValue( record, IWspmConstants.POINT_PROPERTY_HOEHE, asDouble( point.getHight() ) );
+      setValue( record, IWspmConstants.POINT_PROPERTY_HOEHE, asDouble( point.getHeight() ) );
 
       convertStandardProperties( point, record );
 
@@ -245,7 +245,7 @@ public class CrossSectionConverter
         record = nearestPoint;
       final boolean isInserted = nearestPoint == null;
 
-      setValue( record, asComponent, asDouble( point.getHight() ) );
+      setValue( record, asComponent, asDouble( point.getHeight() ) );
 
       // TODO: check: if we have the same width, but different rw/hw we just forget the old rw/hw here, which is bad...
       // TODO: same holds for ID, Code, etc.
@@ -257,7 +257,7 @@ public class CrossSectionConverter
   private void convertStandardProperties( final Point point, final IRecord record )
   {
     setValue( record, IWspmConstants.POINT_PROPERTY_ID, point.getName() );
-    setValue( record, IWspmConstants.POINT_PROPERTY_CODE, point.getKz() );
+    setValue( record, IWspmConstants.POINT_PROPERTY_CODE, point.getCode() );
     setValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, point.getDescription() );
 
     final com.vividsolutions.jts.geom.Point location = point.getLocation();
