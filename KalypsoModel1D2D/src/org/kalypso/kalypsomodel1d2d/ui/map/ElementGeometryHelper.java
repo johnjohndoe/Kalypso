@@ -67,7 +67,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;

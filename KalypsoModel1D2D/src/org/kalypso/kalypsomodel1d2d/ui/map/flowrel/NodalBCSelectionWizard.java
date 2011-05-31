@@ -68,7 +68,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -180,7 +180,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
           final AddFeatureCommand command = new AddFeatureCommand( m_workspace, m_parentFeature, m_parentRelation, -1, newFeature, m_selectionManager, true, true )
           {
             /**
-             * @see org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand#process()
+             * @see org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand#process()
              */
             @Override
             public void process( ) throws Exception

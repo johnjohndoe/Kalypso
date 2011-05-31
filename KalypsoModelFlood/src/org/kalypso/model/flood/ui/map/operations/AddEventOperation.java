@@ -34,7 +34,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 

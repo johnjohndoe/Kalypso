@@ -77,7 +77,7 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
