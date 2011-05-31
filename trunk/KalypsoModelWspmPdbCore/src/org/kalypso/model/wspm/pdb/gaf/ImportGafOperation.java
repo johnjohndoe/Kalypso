@@ -64,12 +64,9 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
 {
   private final ImportGafData m_data;
 
-  private final GafProfile[] m_profiles;
-
-  public ImportGafOperation( final ImportGafData data, final GafProfile[] profiles )
+  public ImportGafOperation( final ImportGafData data )
   {
     m_data = data;
-    m_profiles = profiles;
   }
 
   @Override
@@ -85,7 +82,9 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
       final WaterBody waterBody = m_data.getWaterBody();
       final int srid = m_data.getSrid();
 
-      final Gaf2Db gaf2db = new Gaf2Db( waterBody, state, m_profiles, srid, monitor );
+      final GafProfiles profiles = m_data.getProfiles();
+
+      final Gaf2Db gaf2db = new Gaf2Db( waterBody, state, profiles, srid, monitor );
       new Executor( session, gaf2db ).execute();
 
       session.close();

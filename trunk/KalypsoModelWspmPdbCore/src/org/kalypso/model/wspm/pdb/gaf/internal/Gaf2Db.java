@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
+import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -73,11 +74,11 @@ public class Gaf2Db implements IPdbOperation
 
   private final State m_state;
 
-  private final GafProfile[] m_profiles;
+  private final GafProfiles m_profiles;
 
   private final IProgressMonitor m_monitor;
 
-  public Gaf2Db( final WaterBody waterBody, final State state, final GafProfile[] profiles, final int srid, final IProgressMonitor monitor )
+  public Gaf2Db( final WaterBody waterBody, final State state, final GafProfiles profiles, final int srid, final IProgressMonitor monitor )
   {
     m_waterBody = waterBody;
     m_state = state;
@@ -95,11 +96,12 @@ public class Gaf2Db implements IPdbOperation
   @Override
   public void execute( final Session session )
   {
-    m_monitor.beginTask( "Importing cross sections into database", m_profiles.length );
+    final GafProfile[] profiles = m_profiles.getProfiles();
+    m_monitor.beginTask( "Importing cross sections into database", profiles.length );
 
     addState( session, m_state );
 
-    for( final GafProfile profile : m_profiles )
+    for( final GafProfile profile : profiles )
     {
       m_monitor.subTask( String.format( "converting cross section %s", profile.getStation() ) );
       commitProfile( session, profile );
@@ -191,17 +193,20 @@ public class Gaf2Db implements IPdbOperation
 
     point.setCrossSectionPart( csPart );
 
-    final GafCode codeKZ = gafPoint.getCodeKZ();
+    final String readCode = gafPoint.getCode();
+    final String realCode = m_profiles.translateCode( readCode );
+
+    final String readHyk = gafPoint.getCode();
+    final String realHyk = m_profiles.translateHyk( readHyk );
+
     final String name = csPart.getName() + "_" + index;
     point.setName( name );
 
-    point.setDescription( codeKZ.getDescription() );
-
     point.setConsecutiveNum( index );
-    point.setHight( gafPoint.getHeight() );
+    point.setHeight( gafPoint.getHeight() );
     point.setWidth( gafPoint.getWidth() );
-    point.setHyk( gafPoint.getHyk().getHyk() );
-    point.setKz( codeKZ.getCode() );
+    point.setHyk( realHyk );
+    point.setCode( realCode );
 
     final Coordinate coordinate = gafPoint.getCoordinate();
     if( coordinate != null )

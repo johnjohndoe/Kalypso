@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafReader;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
@@ -61,7 +62,7 @@ public class ReadGafOperation implements ICoreRunnableWithProgress
 {
   private final ImportGafData m_data;
 
-  private GafProfile[] m_profiles;
+  private GafProfiles m_profiles;
 
   public ReadGafOperation( final ImportGafData data )
   {
@@ -96,17 +97,18 @@ public class ReadGafOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private GafProfile[] readGaf( final File gafFile, final GafLogger logger, final IProgressMonitor monitor ) throws CoreException
+  private GafProfiles readGaf( final File gafFile, final GafLogger logger, final IProgressMonitor monitor ) throws CoreException
   {
     GafReader gafReader = null;
     try
     {
       final int srid = m_data.getSrid();
+      final GafCodes gafCodes = new GafCodes();
 
-      gafReader = new GafReader( logger, srid );
-      gafReader.read( gafFile, monitor );
+      gafReader = new GafReader( logger, srid, gafCodes );
+      final GafProfiles profiles = gafReader.read( gafFile, monitor );
       gafReader.close();
-      return gafReader.getProfiles();
+      return profiles;
     }
     catch( final IOException e )
     {
@@ -122,7 +124,7 @@ public class ReadGafOperation implements ICoreRunnableWithProgress
     }
   }
 
-  public GafProfile[] getProfiles( )
+  public GafProfiles getProfiles( )
   {
     return m_profiles;
   }

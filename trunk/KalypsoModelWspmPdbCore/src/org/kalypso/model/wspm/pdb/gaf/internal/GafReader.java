@@ -56,14 +56,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.pdb.gaf.GafProfile;
+import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 
 /**
  * @author Gernot Belger
  */
 public class GafReader
 {
-  public class SkipLineException extends RuntimeException
+  public static class SkipLineException extends RuntimeException
   {
     private final int m_severity;
 
@@ -90,23 +90,18 @@ public class GafReader
 
   private int m_badLines;
 
-  private GafCodes m_gafCodes;
-
-  public GafReader( final GafLogger logger, final int srid )
+  public GafReader( final GafLogger logger, final int srid, final GafCodes gafCodes )
   {
     m_logger = logger;
 
-    m_gafProfiles = new GafProfiles( logger, srid );
+    m_gafProfiles = new GafProfiles( logger, srid, gafCodes );
   }
 
-  public void read( final File gafFile, final IProgressMonitor monitor ) throws IOException
+  public GafProfiles read( final File gafFile, final IProgressMonitor monitor ) throws IOException
   {
     /* Reading gaf with progress stream to show nice progress for large files */
     final long contentLength = gafFile.length();
     monitor.beginTask( "Reading GAF", (int) contentLength );
-
-    /* Init codes */
-    m_gafCodes = new GafCodes();
 
     /* Open Reader */
     final InputStream fileStream = new BufferedInputStream( new FileInputStream( gafFile ) );
@@ -120,6 +115,8 @@ public class GafReader
 
     m_logger.log( IStatus.INFO, String.format( "%6d lines read", m_goodLines ), null, null );
     m_logger.log( IStatus.INFO, String.format( "%6d lines skipped", m_badLines ), null, null );
+
+    return m_gafProfiles;
   }
 
   public void close( ) throws IOException
@@ -176,17 +173,14 @@ public class GafReader
     final String pointId = tokens[1];
     final BigDecimal width = asDecimal( items[2], "Width" );
     final BigDecimal height = asDecimal( items[3], "Height" );
-    final String kz = tokens[4].toUpperCase();
+    final String code = tokens[4].toUpperCase();
     final String roughnessClass = tokens[5];
     final String vegetationClass = tokens[6];
     final BigDecimal hw = asDecimal( items[7], "Hochwert" );
     final BigDecimal rw = asDecimal( items[8], "Rechtswert" );
     final String hyk = tokens.length < 10 ? null : tokens[9].toUpperCase();
 
-    final GafCode kzCode = checkKz( kz );
-    final GafCode hykCode = checkHyk( hyk );
-
-    return new GafPoint( station, pointId, width, height, kzCode, roughnessClass, vegetationClass, rw, hw, hykCode );
+    return new GafPoint( station, pointId, width, height, code, roughnessClass, vegetationClass, rw, hw, hyk );
   }
 
   /**
@@ -227,34 +221,5 @@ public class GafReader
 
     final String message = String.format( "Field '%s' is not a number", label );
     throw new SkipLineException( IStatus.ERROR, message );
-  }
-
-  private GafCode checkKz( final String kz )
-  {
-    final GafCode code = m_gafCodes.getCode( kz );
-
-    if( code == null )
-      throw new SkipLineException( IStatus.WARNING, String.format( "Unknown KZ: '%s'; line skipped", kz ) );
-
-    return code;
-  }
-
-  private GafCode checkHyk( final String hyk )
-  {
-    /* Empty string is allowed: no-code */
-    if( StringUtils.isBlank( hyk ) )
-      return GafCodes.NULL_HYK;
-
-    final GafCode hykCode = m_gafCodes.getHykCode( hyk );
-
-    if( hykCode == null )
-      throw new SkipLineException( IStatus.WARNING, String.format( "Unknown Hyk: '%s'; line skipped", hyk ) );
-
-    return hykCode;
-  }
-
-  public GafProfile[] getProfiles( )
-  {
-    return m_gafProfiles.getProfiles();
   }
 }

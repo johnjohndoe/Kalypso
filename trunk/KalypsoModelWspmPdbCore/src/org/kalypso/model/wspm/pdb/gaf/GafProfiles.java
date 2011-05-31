@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.gaf.internal;
+package org.kalypso.model.wspm.pdb.gaf;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -46,8 +46,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.model.wspm.pdb.gaf.GafProfile;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafCode;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafCodes;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafPoint;
+import org.kalypso.model.wspm.pdb.gaf.internal.GafReader;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
@@ -59,9 +64,15 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  */
 public class GafProfiles
 {
+  private final GafCodes m_gafCodes;
+
   private final Set<BigDecimal> m_committedStations = new HashSet<BigDecimal>();
 
   private final Collection<GafProfile> m_profiles = new ArrayList<GafProfile>();
+
+  private final Set<String> m_unknownCodes = new HashSet<String>();
+
+  private final Set<String> m_unknownHyks = new HashSet<String>();
 
   private GafProfile m_currentProfile;
 
@@ -69,15 +80,19 @@ public class GafProfiles
 
   private final GeometryFactory m_geometryFactory;
 
-  public GafProfiles( final GafLogger logger, final int srid )
+
+  public GafProfiles( final GafLogger logger, final int srid, final GafCodes gafCodes )
   {
     m_logger = logger;
+    m_gafCodes = gafCodes;
     m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
   }
 
   public void addPoint( final GafPoint point )
   {
     final BigDecimal station = point.getStation();
+
+    checkPoint( point );
 
     if( m_committedStations.contains( station ) )
     {
@@ -91,7 +106,13 @@ public class GafProfiles
     if( m_currentProfile == null )
       createProfile( station );
 
-    m_currentProfile.addPoint( point );
+    final String code = point.getCode();
+    // FIXME: we need to real code here in order to put the point into the right part...
+    // i.e. we need to rework this in order to allow the user to define other codes here
+    final GafCode gafCode = m_gafCodes.getCode( code );
+    if( gafCode == null )
+      throw new GafReader.SkipLineException( IStatus.WARNING, "Skipping point with unknwon code" );
+    m_currentProfile.addPoint( point, gafCode );
   }
 
   public void stop( )
@@ -121,5 +142,48 @@ public class GafProfiles
   public GafProfile[] getProfiles( )
   {
     return m_profiles.toArray( new GafProfile[m_profiles.size()] );
+  }
+
+  private void checkPoint( final GafPoint point )
+  {
+    checkCode( point.getCode() );
+    checkHyk( point.getHyk() );
+  }
+
+  private void checkCode( final String code )
+  {
+    final GafCode gafCode = m_gafCodes.getCode( code );
+    if( gafCode == null )
+    {
+      m_unknownCodes.add( code );
+      m_logger.log( IStatus.WARNING, String.format( "Unknown Code: '%s'", code ) );
+    }
+  }
+
+  private void checkHyk( final String hyk )
+  {
+    /* Empty string is allowed: no-code */
+    if( StringUtils.isBlank( hyk ) )
+      return;
+
+    final GafCode hykCode = m_gafCodes.getHykCode( hyk );
+
+    if( hykCode == null )
+    {
+      m_unknownHyks.add( hyk );
+      m_logger.log( IStatus.WARNING, String.format( "Unknown Hyk: '%s'", hyk ) );
+    }
+  }
+
+  public String translateCode( final String code )
+  {
+    // TODO Auto-generated method stub
+    return code;
+  }
+
+  public String translateHyk( final String hyk )
+  {
+    // TODO Auto-generated method stub
+    return hyk;
   }
 }
