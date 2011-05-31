@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import java.util.IdentityHashMap;
+import java.util.Map;
+
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
-import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants.STATIONING_DIRECTION;
@@ -69,6 +71,8 @@ public class CrossSectionInserter
 {
   private final TuhhWspmProject m_project;
 
+  private final Map<WspmWaterBody, TuhhReach> m_reaches = new IdentityHashMap<WspmWaterBody, TuhhReach>();
+
   public CrossSectionInserter( final TuhhWspmProject project )
   {
     m_project = project;
@@ -76,8 +80,6 @@ public class CrossSectionInserter
 
   public void insert( final CrossSection section ) throws GMLSchemaException, GM_Exception
   {
-    // TODO: check, if profile is already present in project
-
     final WspmWaterBody waterBody = insertWaterBody( section );
     final TuhhReach reach = insertReach( section, waterBody );
 
@@ -114,6 +116,7 @@ public class CrossSectionInserter
     final WaterBody waterBody = section.getWaterBody();
     final String gkn = waterBody.getName();
 
+    /* If water body with same code exists, we will use it */
     final WspmWaterBody wspmWaterBody = m_project.findWaterByRefNr( gkn );
     if( wspmWaterBody != null )
       return wspmWaterBody;
@@ -136,16 +139,25 @@ public class CrossSectionInserter
 
   private TuhhReach insertReach( final CrossSection section, final WspmWaterBody waterBody ) throws GMLSchemaException
   {
+    // REMARK: we always insert exactly one new reach per checkout, regardless if
+    // a reach with the same name already exists.
+    if( m_reaches.containsKey( waterBody ) )
+      return m_reaches.get( waterBody );
+
     final State state = section.getState();
     final String name = state.getName();
 
-    final WspmReach reach = waterBody.findReachByName( name );
-    if( reach instanceof TuhhReach )
-      return (TuhhReach) reach;
+// final WspmReach reach = waterBody.findReachByName( name );
+// if( reach instanceof TuhhReach )
+// return (TuhhReach) reach;
 
     final TuhhReach newReach = TuhhWspmProject.createNewReachForWaterBody( waterBody );
+    // TODO: maybe make name unique, if already exists (i.e. reach_2)
     newReach.setName( name );
     newReach.setDescription( state.getDescription() );
+
+    m_reaches.put( waterBody, newReach );
+
     return newReach;
   }
 }

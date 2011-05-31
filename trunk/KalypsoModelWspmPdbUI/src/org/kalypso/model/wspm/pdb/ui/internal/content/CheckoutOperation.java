@@ -43,15 +43,12 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.CharEncoding;
 import org.eclipse.core.runtime.CoreException;
@@ -73,10 +70,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmUtils;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.serialize.GmlSerializerFeatureProviderFactory;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Gernot Belger
@@ -87,8 +81,11 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
 
   private final Set<CrossSection> m_crossSections = new HashSet<CrossSection>();
 
-  public CheckoutOperation( final IStructuredSelection selection )
+  private final TuhhWspmProject m_project;
+
+  public CheckoutOperation( final TuhhWspmProject project, final IStructuredSelection selection )
   {
+    m_project = project;
     m_selection = selection;
   }
 
@@ -102,8 +99,6 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     ProgressUtilities.worked( monitor, 5 );
 
     // TODO Preview?
-
-    // TODO Already exists in local workspace ?
 
     checkoutCrossSections( new SubProgressMonitor( monitor, 95 ) );
 
@@ -150,11 +145,10 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
       /* Initialize WSPM project */
       monitor.subTask( "Initializing WSPM project..." );
       final IPath modelLocation = PdbWspmUtils.getModelLocation();
-      final TuhhWspmProject wspmProject = initializeProject( modelLocation );
       ProgressUtilities.worked( monitor, 10 );
 
       /* Convert the cross sections */
-      final CrossSectionInserter inserter = new CrossSectionInserter( wspmProject );
+      final CrossSectionInserter inserter = new CrossSectionInserter( m_project );
       for( final CrossSection crossSection : sortedSections )
       {
         monitor.subTask( String.format( "Converting %s", crossSection.getStation() ) );
@@ -162,7 +156,7 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
         ProgressUtilities.worked( monitor, 1 );
       }
 
-      saveProject( modelLocation, wspmProject );
+      saveProject( modelLocation, m_project );
     }
     catch( final MalformedURLException e )
     {
@@ -205,15 +199,6 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     final ArrayList<CrossSection> list = new ArrayList<CrossSection>( m_crossSections );
     Collections.sort( list, new ByStationComparator() );
     return list;
-  }
-
-  private TuhhWspmProject initializeProject( final IPath modelLocation ) throws MalformedURLException, GMLSchemaException
-  {
-    final URL modelURL = modelLocation.toFile().toURI().toURL();
-
-    final QName rootQName = TuhhWspmProject.QNAME;
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootQName, modelURL, new GmlSerializerFeatureProviderFactory() );
-    return (TuhhWspmProject) workspace.getRootFeature();
   }
 
   private void saveProject( final IPath modelLocation, final TuhhWspmProject project ) throws IOException, GmlSerializeException

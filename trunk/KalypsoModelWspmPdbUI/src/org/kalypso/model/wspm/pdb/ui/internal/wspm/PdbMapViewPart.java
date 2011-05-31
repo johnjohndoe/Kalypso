@@ -40,35 +40,56 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IPath;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IViewSite;
+import org.kalypso.contribs.eclipse.core.resources.FileStorage;
+import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
+import org.kalypso.ui.views.map.MapView;
 
 /**
  * @author Gernot Belger
  */
-public final class PdbWspmUtils
+public class PdbMapViewPart extends MapView
 {
-  public static IPath getDataDirLocation( )
+  public static final String ID = "org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart"; //$NON-NLS-1$
+
+  @Override
+  public void init( final IViewSite site )
   {
-    final IPath stateLocation = WspmPdbUiPlugin.getDefault().getStateLocation();
-    return stateLocation.append( "wspmData" ); //$NON-NLS-1$
+    super.init( site );
+
+    final File mapFile = findMapFile();
+    final IStorage storage = new FileStorage( mapFile );
+    final IStorageEditorInput input = new StorageEditorInput( storage );
+
+    setInput( input );
   }
 
-  public static IPath getModelLocation( )
+  private File findMapFile( )
   {
-    final IPath wspmDataLocation = getDataDirLocation();
-    return wspmDataLocation.append( "modell.gmlz" ); //$NON-NLS-1$
-  }
+    final IPath mapLocation = PdbWspmUtils.getMapLocation();
+    final File mapFile = mapLocation.toFile();
 
-  public static IPath getGmvLocation( )
-  {
-    final IPath wspmDataLocation = getDataDirLocation();
-    return wspmDataLocation.append( "modell.gmv" ); //$NON-NLS-1$
-  }
+    if( !mapFile.exists() )
+    {
+      try
+      {
+        final URL mapTemplateLoction = getClass().getResource( "mapTemplate.gmt" ); //$NON-NLS-1$
+        FileUtils.copyURLToFile( mapTemplateLoction, mapFile );
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
+    }
 
-  public static IPath getMapLocation( )
-  {
-    final IPath dataDirLocation = getDataDirLocation();
-    return dataDirLocation.append( "default.gmt" ); //$NON-NLS-1$
+    return mapFile;
   }
 }

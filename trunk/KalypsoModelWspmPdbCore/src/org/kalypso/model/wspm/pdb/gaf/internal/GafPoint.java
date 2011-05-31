@@ -120,6 +120,8 @@ public class GafPoint
     if( m_rw == null || m_hw == null )
       return null;
 
-    return new Coordinate( m_rw.doubleValue(), m_hw.doubleValue() );
+    final double z = m_height == null ? Coordinate.NULL_ORDINATE : m_height.doubleValue();
+
+    return new Coordinate( m_rw.doubleValue(), m_hw.doubleValue(), z );
   }
 }
