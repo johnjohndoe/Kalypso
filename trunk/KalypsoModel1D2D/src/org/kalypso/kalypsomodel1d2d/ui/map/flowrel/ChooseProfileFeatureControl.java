@@ -83,8 +83,8 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruec
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
-import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
+import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
