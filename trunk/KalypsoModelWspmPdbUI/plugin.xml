@@ -52,4 +52,15 @@
             name="Tripple">
       </wizard>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="true"
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.model.wspm.pdb.ui.internal.wspm.WspmViewPart"
+            id="org.kalypso.model.wspm.pdb.ui.gmvView"
+            name="Local Data"
+            restorable="true">
+      </view>
+   </extension>
 </plugin>
