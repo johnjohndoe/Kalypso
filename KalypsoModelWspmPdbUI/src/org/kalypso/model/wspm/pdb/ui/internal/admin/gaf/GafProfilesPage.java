@@ -45,18 +45,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.beans.PojoProperties;
-import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.jface.databinding.viewers.ViewerSupport;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -68,6 +69,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
+import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 
 /**
@@ -75,6 +77,8 @@ import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
  */
 public class GafProfilesPage extends WizardPage
 {
+  private final WritableList m_profiles = new WritableList( new ArrayList<GafProfile>(), GafProfile.class );
+
   private final ImportGafData m_data;
 
   private TableViewer m_profileViewer;
@@ -122,15 +126,13 @@ public class GafProfilesPage extends WizardPage
     stationColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
     stationColumn.getColumn().setAlignment( SWT.RIGHT );
 
-    ColumnViewerSorter.registerSorter( stationColumn, new ViewerSorter() );
-
-    final IObservableList tableInput = m_data.getGafProfiles();
+    ColumnViewerSorter.registerSorter( stationColumn, new StationViewerSorter() );
 
     final IValueProperty stationProperty = PojoProperties.value( GafProfile.class, "station" ); //$NON-NLS-1$
     final IValueProperty nullProperty = PojoProperties.value( StringUtils.EMPTY );
 
     final IValueProperty[] labelProperties = new IValueProperty[] { nullProperty, stationProperty };
-    ViewerSupport.bind( m_profileViewer, tableInput, labelProperties );
+    ViewerSupport.bind( m_profileViewer, m_profiles, labelProperties );
 
     return table;
   }
@@ -151,6 +153,11 @@ public class GafProfilesPage extends WizardPage
   {
     try
     {
+      m_profiles.clear();
+      final GafProfiles profiles = m_data.getProfiles();
+      if( profiles != null )
+        m_profiles.addAll( Arrays.asList( profiles.getProfiles() ) );
+
       final File logFile = m_data.getLogFile();
       final String logContent = FileUtils.readFileToString( logFile, Charset.defaultCharset().name() );
       m_logView.setText( logContent );
