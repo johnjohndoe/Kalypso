@@ -194,7 +194,7 @@ public class GafReader
         return;
     }
 
-    throw new SkipLineException( IStatus.INFO, "Skpping line" );
+    throw new SkipLineException( IStatus.INFO, "Skipping line" );
   }
 
   private Object[] parseTokens( final String[] tokens )
