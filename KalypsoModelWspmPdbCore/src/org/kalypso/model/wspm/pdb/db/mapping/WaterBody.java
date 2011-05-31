@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,7 +37,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
 
   private String label;
 
-  private String directionOfStationing;
+  private STATIONING_DIRECTION directionOfStationing = STATIONING_DIRECTION.upstream;
 
   private String description;
 
@@ -47,7 +49,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   {
   }
 
-  public WaterBody( final BigDecimal id, final String name, final String label, final String directionOfStationing )
+  public WaterBody( final BigDecimal id, final String name, final String label, final STATIONING_DIRECTION directionOfStationing )
   {
     this.id = id;
     this.name = name;
@@ -55,7 +57,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     this.directionOfStationing = directionOfStationing;
   }
 
-  public WaterBody( final BigDecimal id, final String name, final LineString riverline, final String label, final String directionOfStationing, final String description, final Set<Event> events, final Set<CrossSection> crossSections )
+  public WaterBody( final BigDecimal id, final String name, final LineString riverline, final String label, final STATIONING_DIRECTION directionOfStationing, final String description, final Set<Event> events, final Set<CrossSection> crossSections )
   {
     this.id = id;
     this.name = name;
@@ -131,14 +133,14 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   }
 
   @Column(name = "direction_of_stationing", nullable = false, length = 20)
-  public String getDirectionOfStationing( )
+  @Enumerated(EnumType.STRING)
+  public STATIONING_DIRECTION getDirectionOfStationing( )
   {
     return this.directionOfStationing;
   }
 
-  public void setDirectionOfStationing( final String directionOfStationing )
+  public void setDirectionOfStationing( final STATIONING_DIRECTION directionOfStationing )
   {
-
     final Object oldValue = this.directionOfStationing;
 
     this.directionOfStationing = directionOfStationing;
