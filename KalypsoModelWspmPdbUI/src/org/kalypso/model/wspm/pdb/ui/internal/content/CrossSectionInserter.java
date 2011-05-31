@@ -46,6 +46,7 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants.STATIONING_DIRECTION;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -117,12 +118,15 @@ public class CrossSectionInserter
     if( wspmWaterBody != null )
       return wspmWaterBody;
 
-    // FIXME: we need the direction in the db
     final String name = waterBody.getLabel();
 
     final WspmWaterBody newWspmWaterBody = m_project.createWaterBody( name, true );
     newWspmWaterBody.setRefNr( gkn );
     newWspmWaterBody.setDescription( waterBody.getDescription() );
+
+    final STATIONING_DIRECTION directionOfStationing = waterBody.getDirectionOfStationing();
+    final boolean isDirectionUpstreams = directionOfStationing == WaterBody.STATIONING_DIRECTION.upstream;
+    newWspmWaterBody.setDirectionUpstreams( isDirectionUpstreams );
 
     final GM_Curve centerLine = (GM_Curve) JTSAdapter.wrapWithSrid( waterBody.getRiverline() );
     newWspmWaterBody.setCenterLine( centerLine );
