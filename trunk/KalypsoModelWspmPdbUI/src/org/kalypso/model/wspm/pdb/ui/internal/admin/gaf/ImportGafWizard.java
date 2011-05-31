@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import java.util.Arrays;
-
-import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
@@ -56,7 +53,6 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafOperation;
 import org.kalypso.model.wspm.pdb.gaf.ReadGafOperation;
@@ -89,8 +85,9 @@ public class ImportGafWizard extends Wizard
     m_data.init( settings );
 
     addPage( new ImportGafPage( "gaf", m_data ) ); //$NON-NLS-1$
-    m_gafProfilesPage = new GafProfilesPage( "profiles", m_data );
-    addPage( m_gafProfilesPage ); //$NON-NLS-1$
+    m_gafProfilesPage = new GafProfilesPage( "profiles", m_data ); //$NON-NLS-1$
+    addPage( m_gafProfilesPage );
+    addPage( new GafOptionsPage( "options", m_data ) ); //$NON-NLS-1$
     addPage( new ChooseWaterPage( "waterBody", m_data ) ); //$NON-NLS-1$
     addPage( new EditStatePage( "state", m_data.getState(), existingState, Mode.NEW ) ); //$NON-NLS-1$
 
@@ -124,10 +121,7 @@ public class ImportGafWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final WritableList gafProfiles = m_data.getGafProfiles();
-    final GafProfile[] profiles = (GafProfile[]) gafProfiles.toArray( new GafProfile[gafProfiles.size()] );
-
-    final ImportGafOperation operation = new ImportGafOperation( m_data, profiles );
+    final ImportGafOperation operation = new ImportGafOperation( m_data );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
     new StatusDialog2( getShell(), result, getWindowTitle() );
 
@@ -142,16 +136,15 @@ public class ImportGafWizard extends Wizard
   {
     if( selectedPage == m_gafProfilesPage )
     {
-      final WritableList gafProfiles = m_data.getGafProfiles();
       /* Prepare for exception */
-      gafProfiles.clear();
+      m_data.setProfiles( null );
 
       final ReadGafOperation operation = new ReadGafOperation( m_data );
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
       if( !status.isOK() )
         new StatusDialog2( getShell(), status, getWindowTitle() );
       else
-        gafProfiles.addAll( Arrays.asList( operation.getProfiles() ) );
+        m_data.setProfiles( operation.getProfiles() );
 
       m_gafProfilesPage.updateControl();
     }
