@@ -41,12 +41,10 @@
 package org.kalypso.model.wspm.pdb.gaf;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
@@ -78,7 +76,7 @@ public class ImportGafData extends AbstractModelObject
 
   private final IPdbConnection m_connection;
 
-  private final WritableList m_gafProfiles = new WritableList( new ArrayList<GafProfile>(), GafProfile.class );
+  private GafProfiles m_profiles;
 
   public ImportGafData( final IPdbConnection connection )
   {
@@ -195,8 +193,13 @@ public class ImportGafData extends AbstractModelObject
     return m_connection;
   }
 
-  public WritableList getGafProfiles( )
+  public void setProfiles( final GafProfiles profiles )
   {
-    return m_gafProfiles;
+    m_profiles = profiles;
+  }
+
+  public GafProfiles getProfiles( )
+  {
+    return m_profiles;
   }
 }

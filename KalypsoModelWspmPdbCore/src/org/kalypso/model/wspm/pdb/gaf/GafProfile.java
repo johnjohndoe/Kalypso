@@ -84,16 +84,13 @@ public class GafProfile implements IGafConstants
     return m_station;
   }
 
-  public void addPoint( final GafPoint point )
+  public void addPoint( final GafPoint point, final GafCode code )
   {
     final BigDecimal station = point.getStation();
 
     Assert.isTrue( station.equals( m_station ) );
 
-    final GafCode codeKZ = point.getCodeKZ();
-    Assert.isNotNull( codeKZ );
-
-    final String kind = codeKZ.getKind();
+    final String kind = code.getKind();
 
     checkDiscontinuosPart( kind );
 

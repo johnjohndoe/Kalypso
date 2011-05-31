@@ -59,7 +59,7 @@ public class GafPoint
 
   private final BigDecimal m_height;
 
-  private final GafCode m_kz;
+  private final String m_code;
 
   private final String m_roughnessClass;
 
@@ -69,20 +69,20 @@ public class GafPoint
 
   private final BigDecimal m_hw;
 
-  private final GafCode m_hyk;
+  private final String m_hyk;
 
-  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final GafCode kzCode, final String roughnessClass, final String vegetationClass, final BigDecimal rw, final BigDecimal hw, final GafCode hykCode )
+  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final String code, final String roughnessClass, final String vegetationClass, final BigDecimal rw, final BigDecimal hw, final String hyk )
   {
     m_station = station;
     m_pointId = pointId;
     m_width = width;
     m_height = height;
-    m_kz = kzCode;
+    m_code = code;
     m_roughnessClass = roughnessClass;
     m_vegetationClass = vegetationClass;
     m_rw = rw;
     m_hw = hw;
-    m_hyk = hykCode;
+    m_hyk = hyk;
   }
 
   public String getPointId( )
@@ -95,9 +95,9 @@ public class GafPoint
     return m_station;
   }
 
-  public GafCode getCodeKZ( )
+  public String getCode( )
   {
-    return m_kz;
+    return m_code;
   }
 
   public BigDecimal getWidth( )
@@ -110,7 +110,7 @@ public class GafPoint
     return m_height;
   }
 
-  public GafCode getHyk( )
+  public String getHyk( )
   {
     return m_hyk;
   }
