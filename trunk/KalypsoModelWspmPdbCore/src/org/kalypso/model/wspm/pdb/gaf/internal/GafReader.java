@@ -179,8 +179,8 @@ public class GafReader
     final String kz = tokens[4].toUpperCase();
     final String roughnessClass = tokens[5];
     final String vegetationClass = tokens[6];
-    final BigDecimal rw = asDecimal( items[7], "Rechtswert" );
-    final BigDecimal hw = asDecimal( items[8], "Hochwert" );
+    final BigDecimal hw = asDecimal( items[7], "Hochwert" );
+    final BigDecimal rw = asDecimal( items[8], "Rechtswert" );
     final String hyk = tokens.length < 10 ? null : tokens[9].toUpperCase();
 
     final GafCode kzCode = checkKz( kz );

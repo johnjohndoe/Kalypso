@@ -77,7 +77,7 @@ public class Executor
       m_operation.execute( m_session );
       transaction.commit();
     }
-    catch( final HibernateException e )
+    catch( final Throwable e )
     {
       doRollback( transaction );
 
