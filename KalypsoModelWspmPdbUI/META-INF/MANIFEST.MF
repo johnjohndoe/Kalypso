@@ -13,6 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.commons;bundle-version="10.10.2",
  org.kalypso.core;bundle-version="10.10.2",
  org.kalypso.ui;bundle-version="10.10.2",
- org.kalypso.model.wspm.tuhh.core;bundle-version="10.10.2"
+ org.kalypso.model.wspm.tuhh.core;bundle-version="10.10.2",
+ org.kalypso.model.wspm.ui;bundle-version="10.10.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

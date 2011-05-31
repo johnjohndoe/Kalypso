@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
+import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.info.PdbInfoView;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartViewPart;
+import org.kalypso.model.wspm.ui.view.table.TableView;
+import org.kalypso.ogc.gml.outline.ViewContentOutline;
 import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
 /**
@@ -51,6 +55,11 @@ import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 public class PdbPerspective implements IPerspectiveFactory
 {
   private static final String PDB_GMV_VIEW = "org.kalypso.model.wspm.pdb.ui.gmvView";
+
+  private static final String LEFT_FOLDER = "pdbLeftFolder"; //$NON-NLS-1$
+
+  private static final String OUTLINE_FOLDER = "outlineFolder"; //$NON-NLS-1$
+
   public static String ID = "PdbPerspective"; //$NON-NLS-1$
 
   @Override
@@ -67,29 +76,39 @@ public class PdbPerspective implements IPerspectiveFactory
 
   private void defineLayout( final IPageLayout layout )
   {
-    // FIXME:
-    layout.setFixed( false );
+    layout.setFixed( true );
 
     final String editorArea = layout.getEditorArea();
     layout.setEditorAreaVisible( false );
 
-    /* Add the manager view. */
     layout.addView( PdbView.ID, IPageLayout.LEFT, 0.28f, editorArea );
-    layout.addView( PDB_GMV_VIEW, IPageLayout.BOTTOM, 0.50f, PdbView.ID );
-    layout.addView( PdbInfoView.ID, IPageLayout.RIGHT, 0.72f, editorArea );
+
+    final IFolderLayout outlineFolder = layout.createFolder( OUTLINE_FOLDER, IPageLayout.BOTTOM, 0.50f, PdbView.ID );
+    outlineFolder.addView( PDB_GMV_VIEW );
+    outlineFolder.addView( ViewContentOutline.ID );
+
+    layout.addView( PdbMapViewPart.ID, IPageLayout.RIGHT, 0.72f, editorArea );
+
+    final IFolderLayout leftFolder = layout.createFolder( LEFT_FOLDER, IPageLayout.BOTTOM, 0.66f, PdbMapViewPart.ID );
+    leftFolder.addView( ProfilChartViewPart.ID );
+    leftFolder.addView( TableView.ID );
 
     layout.getViewLayout( PdbView.ID ).setCloseable( false );
     layout.getViewLayout( PdbView.ID ).setMoveable( false );
 
+    layout.getViewLayout( ViewContentOutline.ID ).setCloseable( false );
+    layout.getViewLayout( ViewContentOutline.ID ).setMoveable( false );
+
     layout.getViewLayout( PDB_GMV_VIEW ).setCloseable( false );
     layout.getViewLayout( PDB_GMV_VIEW ).setMoveable( false );
 
-    layout.getViewLayout( PdbInfoView.ID ).setCloseable( false );
-    layout.getViewLayout( PdbInfoView.ID ).setMoveable( false );
+    layout.getViewLayout( PdbMapViewPart.ID ).setCloseable( false );
+    layout.getViewLayout( PdbMapViewPart.ID ).setMoveable( false );
 
-    /* final IFolderLayout folder = */
-    // layout.createFolder( "rest", IPageLayout.RIGHT, 0.72f, editorArea );
-    // folder.addView( MapView.ID );
-    // folder.addView( MapView.ID );
+    layout.getViewLayout( ProfilChartViewPart.ID ).setCloseable( false );
+    layout.getViewLayout( ProfilChartViewPart.ID ).setMoveable( false );
+
+    layout.getViewLayout( TableView.ID ).setCloseable( false );
+    layout.getViewLayout( TableView.ID ).setMoveable( false );
   }
 }

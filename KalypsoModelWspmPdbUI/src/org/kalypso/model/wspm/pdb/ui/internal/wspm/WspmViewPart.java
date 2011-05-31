@@ -54,8 +54,11 @@ import org.eclipse.ui.IViewSite;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.core.jaxb.TemplateUtilities;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.LayerType;
+import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
 import org.kalypso.ui.editor.gmleditor.part.GmvViewPart;
 
 /**
@@ -65,6 +68,8 @@ import org.kalypso.ui.editor.gmleditor.part.GmvViewPart;
  */
 public class WspmViewPart extends GmvViewPart
 {
+  public static final String ID = "org.kalypso.model.wspm.pdb.ui.gmvView"; //$NON-NLS-1$
+
   @Override
   public void init( final IViewSite site )
   {
@@ -111,5 +116,25 @@ public class WspmViewPart extends GmvViewPart
       e.printStackTrace();
       return null;
     }
+  }
+
+  /**
+   * Forces a reload of the underlying data.<br/>
+   * Any changes will be lost.
+   */
+  public void reload( )
+  {
+    final GmlTreeView viewer = getViewer();
+    viewer.reload();
+  }
+
+  public TuhhWspmProject getProject( )
+  {
+    final GmlTreeView viewer = getViewer();
+    final CommandableWorkspace workspace = viewer.getWorkspace();
+    if( workspace == null )
+      return null;
+
+    return (TuhhWspmProject) workspace.getRootFeature();
   }
 }
