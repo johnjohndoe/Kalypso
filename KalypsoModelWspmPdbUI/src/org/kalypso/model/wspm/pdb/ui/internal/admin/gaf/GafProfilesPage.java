@@ -53,11 +53,13 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.jface.databinding.viewers.ViewerSupport;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -135,7 +137,13 @@ public class GafProfilesPage extends WizardPage
 
   private Control createLogView( final Composite parent )
   {
-    m_logView = new Text( parent, SWT.WRAP | SWT.READ_ONLY | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
+    m_logView = new Text( parent, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
+
+    m_logView.setEditable( false );
+
+    final Font textFont = JFaceResources.getFont( JFaceResources.TEXT_FONT );
+    m_logView.setFont( textFont );
+
     return m_logView;
   }
 
