@@ -50,6 +50,7 @@ import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
  */
 public class PdbPerspective implements IPerspectiveFactory
 {
+  private static final String PDB_GMV_VIEW = "org.kalypso.model.wspm.pdb.ui.gmvView";
   public static String ID = "PdbPerspective"; //$NON-NLS-1$
 
   @Override
@@ -74,10 +75,14 @@ public class PdbPerspective implements IPerspectiveFactory
 
     /* Add the manager view. */
     layout.addView( PdbView.ID, IPageLayout.LEFT, 0.28f, editorArea );
+    layout.addView( PDB_GMV_VIEW, IPageLayout.BOTTOM, 0.50f, PdbView.ID );
     layout.addView( PdbInfoView.ID, IPageLayout.RIGHT, 0.72f, editorArea );
 
     layout.getViewLayout( PdbView.ID ).setCloseable( false );
     layout.getViewLayout( PdbView.ID ).setMoveable( false );
+
+    layout.getViewLayout( PDB_GMV_VIEW ).setCloseable( false );
+    layout.getViewLayout( PDB_GMV_VIEW ).setMoveable( false );
 
     layout.getViewLayout( PdbInfoView.ID ).setCloseable( false );
     layout.getViewLayout( PdbInfoView.ID ).setMoveable( false );

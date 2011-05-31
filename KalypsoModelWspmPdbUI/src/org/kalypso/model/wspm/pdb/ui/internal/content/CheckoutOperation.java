@@ -69,6 +69,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmUtils;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -148,7 +149,7 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     {
       /* Initialize WSPM project */
       monitor.subTask( "Initializing WSPM project..." );
-      final IPath modelLocation = getProjectLocation();
+      final IPath modelLocation = PdbWspmUtils.getModelLocation();
       final TuhhWspmProject wspmProject = initializeProject( modelLocation );
       ProgressUtilities.worked( monitor, 10 );
 
@@ -204,14 +205,6 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     final ArrayList<CrossSection> list = new ArrayList<CrossSection>( m_crossSections );
     Collections.sort( list, new ByStationComparator() );
     return list;
-  }
-
-  private IPath getProjectLocation( )
-  {
-    // TODO: move elsewhere...
-    final IPath stateLocation = WspmPdbUiPlugin.getDefault().getStateLocation();
-    final IPath wspmDataLocation = stateLocation.append( "wspmData" ); //$NON-NLS-1$
-    return wspmDataLocation.append( "modell.gmlz" ); //$NON-NLS-1$
   }
 
   private TuhhWspmProject initializeProject( final IPath modelLocation ) throws MalformedURLException, GMLSchemaException
