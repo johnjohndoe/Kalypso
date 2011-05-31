@@ -43,42 +43,14 @@ package org.kalypso.model.wspm.pdb.db.constants;
 /**
  * @author Gernot Belger
  */
-public interface WaterBodyConstants
+public interface EventConstants
 {
-  String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
-
-  String PROPERTY_ID = "id"; //$NON-NLS-1$
-
-  String PROPERTY_NAME = "name"; //$NON-NLS-1$
-
-  String PROPERTY_LABEL = "label"; //$NON-NLS-1$
-
-  String PROPERTY_RIVERLINE = "riverline"; //$NON-NLS-1$
-
-  String PROPERTY_DIRECTION_OF_STATIONING = "directionOfStationing"; //$NON-NLS-1$
-
-  // FIXME: fetch from annotation
-  int NAME_LIMIT = 100;
-
-  int DESCRIPTION_LIMIT = 255;
-
-  public enum STATIONING_DIRECTION
+  public enum TYPE
   {
-    /** Default */
-    upstream("upstreams"),
-    downstream("downstreams");
-
-    private final String m_label;
-
-    private STATIONING_DIRECTION( final String label )
-    {
-      m_label = label;
-    }
-
-    @Override
-    public String toString( )
-    {
-      return m_label;
-    }
+    /**
+     * Default
+     */
+    Measurement,
+    Simulation
   }
 }
