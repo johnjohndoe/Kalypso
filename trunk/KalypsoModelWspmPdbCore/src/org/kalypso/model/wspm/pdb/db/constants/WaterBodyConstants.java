@@ -55,6 +55,8 @@ public interface WaterBodyConstants
 
   String PROPERTY_RIVERLINE = "riverline"; //$NON-NLS-1$
 
+  String PROPERTY_DIRECTION_OF_STATIONING = "direction_of_stationing"; //$NON-NLS-1$
+
   // FIXME: fetch from annotation
   int NAME_LIMIT = 100;
 
