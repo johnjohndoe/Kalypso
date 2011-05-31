@@ -35,6 +35,8 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
 
   private String label;
 
+  private String directionOfStationing;
+
   private String description;
 
   private Set<Event> events = new HashSet<Event>( 0 );
@@ -45,19 +47,21 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   {
   }
 
-  public WaterBody( final BigDecimal id, final String name, final String label )
+  public WaterBody( final BigDecimal id, final String name, final String label, final String directionOfStationing )
   {
     this.id = id;
     this.name = name;
     this.label = label;
+    this.directionOfStationing = directionOfStationing;
   }
 
-  public WaterBody( final BigDecimal id, final String name, final LineString riverline, final String label, final String description, final Set<Event> events, final Set<CrossSection> crossSections )
+  public WaterBody( final BigDecimal id, final String name, final LineString riverline, final String label, final String directionOfStationing, final String description, final Set<Event> events, final Set<CrossSection> crossSections )
   {
     this.id = id;
     this.name = name;
     this.riverline = riverline;
     this.label = label;
+    this.directionOfStationing = directionOfStationing;
     this.description = description;
     this.events = events;
     this.crossSections = crossSections;
@@ -124,6 +128,22 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     this.label = label;
 
     firePropertyChange( PROPERTY_LABEL, oldValue, label );
+  }
+
+  @Column(name = "direction_of_stationing", nullable = false, length = 20)
+  public String getDirectionOfStationing( )
+  {
+    return this.directionOfStationing;
+  }
+
+  public void setDirectionOfStationing( final String directionOfStationing )
+  {
+
+    final Object oldValue = this.directionOfStationing;
+
+    this.directionOfStationing = directionOfStationing;
+
+    firePropertyChange( PROPERTY_DIRECTION_OF_STATIONING, oldValue, directionOfStationing );
   }
 
   @Column(name = "description")
