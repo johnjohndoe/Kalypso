@@ -17,6 +17,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -33,7 +34,7 @@ public class CrossSectionPart implements java.io.Serializable
 
   private String name;
 
-  private LineString line;
+  private Geometry line;
 
   private String category;
 
@@ -102,14 +103,27 @@ public class CrossSectionPart implements java.io.Serializable
   }
 
   @Column(name = "line", columnDefinition = "Geometry")
-  public LineString getLine( )
+  public Geometry getLine( )
   {
     return this.line;
   }
 
-  public void setLine( final LineString line )
+  public void setLine( final Geometry line )
   {
     this.line = line;
+
+// if( line instanceof LineString )
+// this.line = (LineString) line;
+// else if( line == null )
+// this.line = null;
+// else if( line.isEmpty() )
+// {
+// // HACK: if geometry is empty convert to empty LineString so we always have a LineString
+// // REMARK: this is needed, because we get an empty GeometryCollection from the db
+// this.line = line.getFactory().createLineString( (Coordinate[]) null );
+// }
+// else
+// throw new IllegalArgumentException( "'line' must be a LineString or Empty GeometryCollection" );
   }
 
   @Column(name = "category", nullable = false, length = 50)

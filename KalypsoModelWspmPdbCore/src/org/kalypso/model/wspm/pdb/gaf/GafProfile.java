@@ -51,8 +51,8 @@ import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafPart;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafPoint;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Represent point of a gaf file with the same station.
@@ -127,16 +127,16 @@ public class GafProfile implements IGafConstants
     return m_parts.get( kind );
   }
 
-  public LineString createLine( )
+  public Geometry createLine( final String dbType )
   {
     /* Normally, the line of the cross section is the line of the profile */
     final GafPart profilePart = m_parts.get( KZ_CATEGORY_PROFILE );
     if( profilePart != null )
-      return profilePart.getLine();
+      return profilePart.getLine( dbType );
 
     /* Else, if it is only one single part, we use it */
     if( m_parts.size() == 1 )
-      return m_parts.values().iterator().next().getLine();
+      return m_parts.values().iterator().next().getLine( dbType );
 
     /* Don't known what to do now */
     return null;

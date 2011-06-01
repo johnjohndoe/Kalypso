@@ -49,6 +49,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.Executor;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -77,14 +78,16 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     Session session = null;
     try
     {
-      session = m_data.getConnection().openSession();
+      final IPdbConnection connection = m_data.getConnection();
+      final String dbType = connection.getClass().getName();
+      session = connection.openSession();
       final State state = m_data.getState();
       final WaterBody waterBody = m_data.getWaterBody();
       final int srid = m_data.getSrid();
 
       final GafProfiles profiles = m_data.getProfiles();
 
-      final Gaf2Db gaf2db = new Gaf2Db( waterBody, state, profiles, srid, monitor );
+      final Gaf2Db gaf2db = new Gaf2Db( dbType, waterBody, state, profiles, srid, monitor );
       new Executor( session, gaf2db ).execute();
 
       session.close();
