@@ -49,16 +49,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.IWspmTuhhUIConstants;
 import org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 public class NewWspmProjectWizard extends org.kalypso.afgui.wizards.NewProjectWizard
 {
-  public static final String WSPM_TUHH_PROJECT_TEMPLATE_CATEGORY = "org.kalypso.model.wspm.tuhh.projectTemplate"; //$NON-NLS-1$
-
   public NewWspmProjectWizard( )
   {
-    this( WSPM_TUHH_PROJECT_TEMPLATE_CATEGORY, false );
+    this( IWspmTuhhUIConstants.WSPM_TUHH_PROJECT_TEMPLATE_CATEGORY, false );
   }
 
   public NewWspmProjectWizard( final String categoryId, final boolean showTemplatePage )
