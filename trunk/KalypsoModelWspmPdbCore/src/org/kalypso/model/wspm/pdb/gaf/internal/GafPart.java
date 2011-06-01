@@ -44,8 +44,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.operation.valid.IsValidOp;
+import com.vividsolutions.jts.operation.valid.TopologyValidationError;
 
 /**
  * @author Gernot Belger
@@ -74,7 +77,7 @@ public class GafPart
     m_points.add( point );
   }
 
-  public LineString getLine( )
+  public Geometry getLine( final String dbType )
   {
     final Collection<Coordinate> crds = new ArrayList<Coordinate>();
 
@@ -88,13 +91,31 @@ public class GafPart
     final Coordinate[] cs = crds.toArray( new Coordinate[crds.size()] );
 
     // TODO: we should provide log messages here...
-
     if( cs.length < 2 )
-      return null;
+      return createEmptyGeometry( dbType );
 
     final LineString line = m_geometryFactory.createLineString( cs );
-    // TODO: check if line is topologically ok; -> log warning
-    return line;
+
+    final IsValidOp isValidOp = new IsValidOp( line );
+    if( isValidOp.isValid() )
+      return line;
+
+    final TopologyValidationError validationError = isValidOp.getValidationError();
+    System.out.println( validationError.getMessage() );
+    return createEmptyGeometry( dbType );
+  }
+
+  /**
+   * HACK: ugly, due to (probably) bugs in hibernatespatial, oracle does not accept the empty linestring.<br/>
+   * We must return null in that case.
+   */
+  private Geometry createEmptyGeometry( final String dbType )
+  {
+    if( dbType.contains( "Oracle" ) )
+      return null;
+
+    // return m_geometryFactory.createGeometryCollection( null );
+    return m_geometryFactory.createLineString( (Coordinate[]) null );
   }
 
   public GafPoint[] getPoints( )

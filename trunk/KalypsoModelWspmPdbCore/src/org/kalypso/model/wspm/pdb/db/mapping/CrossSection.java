@@ -20,6 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -38,7 +39,7 @@ public class CrossSection implements java.io.Serializable
 
   private String name;
 
-  private LineString line;
+  private Geometry line;
 
   private BigDecimal station;
 
@@ -136,12 +137,12 @@ public class CrossSection implements java.io.Serializable
   }
 
   @Column(name = "line", columnDefinition = "Geometry")
-  public LineString getLine( )
+  public Geometry getLine( )
   {
     return this.line;
   }
 
-  public void setLine( final LineString line )
+  public void setLine( final Geometry line )
   {
     this.line = line;
   }

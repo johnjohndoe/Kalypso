@@ -17,6 +17,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants;
 
@@ -31,15 +32,15 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
 {
   private BigDecimal id;
 
-  private String name;
+  private String name = StringUtils.EMPTY;
 
   private LineString riverline;
 
-  private String label;
+  private String label = StringUtils.EMPTY;
 
   private STATIONING_DIRECTION directionOfStationing = STATIONING_DIRECTION.upstream;
 
-  private String description;
+  private String description = StringUtils.EMPTY;
 
   private Set<Event> events = new HashSet<Event>( 0 );
 
