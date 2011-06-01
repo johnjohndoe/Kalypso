@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,9 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.CharEncoding;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -68,8 +63,6 @@ import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmUtils;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
@@ -144,7 +137,6 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     {
       /* Initialize WSPM project */
       monitor.subTask( "Initializing WSPM project..." );
-      final IPath modelLocation = PdbWspmUtils.getModelLocation();
       ProgressUtilities.worked( monitor, 10 );
 
       /* Convert the cross sections */
@@ -156,30 +148,12 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
         ProgressUtilities.worked( monitor, 1 );
       }
 
-      saveProject( modelLocation, m_project );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Invalid state location", e );
-      throw new CoreException( status );
+      PdbWspmUtils.saveProject( m_project );
     }
     catch( final GMLSchemaException e )
     {
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
-      throw new CoreException( status );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to save WPSM project", e );
-      throw new CoreException( status );
-    }
-    catch( final GmlSerializeException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to save WPSM project", e );
       throw new CoreException( status );
     }
     catch( final GM_Exception e )
@@ -199,12 +173,5 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     final ArrayList<CrossSection> list = new ArrayList<CrossSection>( m_crossSections );
     Collections.sort( list, new ByStationComparator() );
     return list;
-  }
-
-  private void saveProject( final IPath modelLocation, final TuhhWspmProject project ) throws IOException, GmlSerializeException
-  {
-    final File modelFile = modelLocation.toFile();
-    modelFile.getParentFile().mkdirs();
-    GmlSerializer.serializeWorkspace( modelFile, project.getWorkspace(), CharEncoding.UTF_8 );
   }
 }

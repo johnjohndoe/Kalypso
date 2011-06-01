@@ -59,7 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Inserts {@link org.kalypso.model.wspm.pdb.db.mapping.CrossSection}s into a
@@ -93,7 +93,7 @@ public class CrossSectionInserter
     final IProfileFeature newProfile = waterBody.createNewProfile();
     newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
 
-    final LineString line = section.getLine();
+    final Geometry line = section.getLine();
     final String srs = line == null ? null : JTSAdapter.toSrs( line.getSRID() );
     newProfile.setSrsName( srs );
 

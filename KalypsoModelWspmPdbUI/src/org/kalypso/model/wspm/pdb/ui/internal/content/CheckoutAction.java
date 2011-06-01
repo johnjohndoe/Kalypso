@@ -40,11 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -62,9 +57,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.WspmViewPart;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
-import org.kalypso.ogc.gml.serialize.GmlSerializerFeatureProviderFactory;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Gernot Belger
@@ -104,7 +96,7 @@ public class CheckoutAction extends Action
 
     // reload to force reload of tree
     reloadWspmView( page );
-    updateMap( page );
+    updateMap( page, project );
   }
 
   private TuhhWspmProject findProject( final IWorkbenchPage page )
@@ -119,22 +111,7 @@ public class CheckoutAction extends Action
         return project;
     }
 
-    try
-    {
-      /* Project does not yet exist, create on from scratch in memory */
-      final IPath modelLocation = PdbWspmUtils.getModelLocation();
-      final URL modelURL = modelLocation.toFile().toURI().toURL();
-
-      final QName rootQName = TuhhWspmProject.QNAME;
-      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootQName, modelURL, new GmlSerializerFeatureProviderFactory() );
-      return (TuhhWspmProject) workspace.getRootFeature();
-    }
-    catch( final Exception e )
-    {
-      // should never happen
-      e.printStackTrace();
-      return null;
-    }
+    return PdbWspmUtils.createModel();
   }
 
   private void reloadWspmView( final IWorkbenchPage page )
@@ -147,13 +124,13 @@ public class CheckoutAction extends Action
     }
   }
 
-  private void updateMap( final IWorkbenchPage page )
+  private void updateMap( final IWorkbenchPage page, final TuhhWspmProject project )
   {
     final IViewPart view = page.findView( PdbMapViewPart.ID );
     if( view instanceof PdbMapViewPart )
     {
       final PdbMapViewPart wspmView = (PdbMapViewPart) view;
-// wspmView.updateMap();
+      wspmView.updateMap( project );
     }
   }
 }

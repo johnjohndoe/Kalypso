@@ -48,6 +48,7 @@
             allowMultiple="true"
             category="org.kalypso.model.wspm.pdb.ui.viewCategory"
             class="org.kalypso.model.wspm.pdb.ui.internal.wspm.WspmViewPart"
+            icon="icons/wspmView.gif"
             id="org.kalypso.model.wspm.pdb.ui.gmvView"
             name="Local Data"
             restorable="true">
@@ -62,4 +63,138 @@
             restorable="true">
       </view>
    </extension>
+
+   <extension
+         point="org.eclipse.ui.menus">
+        <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart">
+         <separator
+               name="widgets"
+               visible="false">
+         </separator>
+         <command
+               label=""
+               commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles"
+               style="radio">
+         </command>
+         <command
+               commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand"
+               style="radio">
+         </command>
+         <command
+               commandId="org.kalypso.ogc.gml.map.PanToCommand"
+               style="radio">
+         </command>
+         <!--
+         <command
+               commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand"
+               style="radio">
+         </command>
+         -->
+         <separator
+               name="actions"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand"
+               style="push">
+         </command>
+         <command
+               commandId="org.kalypso.ogc.gml.map.FullExtentCommand"
+               style="push">
+         </command>
+         <command
+               commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand"
+               style="push">
+         </command>
+         <command
+               commandId="org.kalypso.ogc.gml.map.ZoomOutCommand"
+               style="push">
+         </command>
+         <dynamic
+               id="org.kalypso.ogc.gml.map.move">
+            <class
+                  class="org.kalypso.contribs.eclipse.ui.actions.DropDownToolbarItem">
+               <parameter
+                     name="command1"
+                     value="org.kalypso.ogc.gml.map.MoveLeftCommand">
+               </parameter>
+               <parameter
+                     name="command2"
+                     value="org.kalypso.ogc.gml.map.MoveUpCommand">
+               </parameter>
+               <parameter
+                     name="command3"
+                     value="org.kalypso.ogc.gml.map.MoveDownCommand">
+               </parameter>
+               <parameter
+                     name="command4"
+                     value="org.kalypso.ogc.gml.map.MoveRightCommand">
+               </parameter>
+            </class>
+         </dynamic>
+         <separator
+               name="mapExport"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.kalypso.ogc.gml.map.Screenshot"
+               style="push">
+         </command>
+         <command
+               commandId="org.kalypso.ogc.gml.map.ExportPdfCommand"
+               style="push">
+         </command>
+      </menuContribution>
+    </extension>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.kalypso.model.wspm.pdb.ui.commands.categories.MapCategory"
+            name="Cross Sections Map Commands">
+      </category>
+      <command
+            categoryId="org.kalypso.model.wspm.pdb.ui.commands.categories.MapCategory"
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles"
+            name="Select Cross Sections">
+      </command>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles">
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.wspm.pdb.ui.internal.wspm.SelectPdbProfilesWidget">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                  value="icons/selectProfileWidget.gif">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                  value="Select Cross Sections">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+                  value="org.kalypso.model.wspm.pdb.ui">
+            </parameter>
+         </class>
+      </handler>
+    </extension>         
+   
+<extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart"
+            class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
+         <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider"/>
+      </factory>
+   </extension>   
+   
 </plugin>
