@@ -79,9 +79,10 @@ public class Executor
     }
     catch( final Throwable e )
     {
+      e.printStackTrace();
+
       doRollback( transaction );
 
-      e.printStackTrace();
       final String message = String.format( "Failed to execute command: %s", m_operation.getLabel() );
       throw new PdbConnectException( message, e );
     }
