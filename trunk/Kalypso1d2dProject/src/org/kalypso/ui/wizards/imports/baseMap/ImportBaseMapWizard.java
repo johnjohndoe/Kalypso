@@ -338,7 +338,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
     //    final String imgHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + sourceLocation.lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     final String imgHref = String.format( "%s#%s", relativeDstPath.toString(), coordinateSystem ); //$NON-NLS-1$
-    final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, type, null, imgHref );
+    final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, type, imgHref );
     mapView.postCommand( command, null );
 
     return true;
@@ -350,13 +350,13 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
     if( !dstFilePath.exists() )
       try
-      {
+    {
         dstFilePath.create( true, true, null );
-      }
-      catch( final CoreException e1 )
-      {
-        e1.printStackTrace();
-      }
+    }
+    catch( final CoreException e1 )
+    {
+      e1.printStackTrace();
+    }
     final File srcFileShape = new File( m_PageImportShp.getSourceLocation().toOSString() );
     final IFile dstFileShape = dstFilePath.getFile( m_PageImportShp.getSourceLocation().lastSegment() );
     File srcFileIndex = null;
@@ -468,7 +468,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
         source.append( "#" ).append( styles.toString() ); //$NON-NLS-1$
         source.append( "#" ).append( provider.toString() ); //$NON-NLS-1$
 
-        final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "wms", null, source.toString() ); //$NON-NLS-1$
+        final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "wms", source.toString() ); //$NON-NLS-1$
         mapView.postCommand( command, null );
       }
       else
@@ -495,7 +495,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
           source.append( "#" ).append( IKalypsoImageProvider.KEY_STYLES ).append( "=" ).append( styleName ); //$NON-NLS-1$ //$NON-NLS-2$
           source.append( "#" ).append( IKalypsoImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID ); //$NON-NLS-1$ //$NON-NLS-2$
 
-          final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() ); //$NON-NLS-1$
+          final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", source.toString() ); //$NON-NLS-1$
           mapView.postCommand( command, null );
         }
       }
