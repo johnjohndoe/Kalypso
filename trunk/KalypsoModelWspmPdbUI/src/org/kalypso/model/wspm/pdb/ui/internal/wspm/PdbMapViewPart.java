@@ -40,56 +40,91 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
-import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IViewSite;
-import org.kalypso.contribs.eclipse.core.resources.FileStorage;
-import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
+import org.kalypso.model.wspm.core.gml.WspmReach;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
+import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.views.map.MapView;
 
 /**
  * @author Gernot Belger
  */
-public class PdbMapViewPart extends MapView
+public class PdbMapViewPart extends MapView implements ISaveablePart
 {
+  @SuppressWarnings("hiding")
   public static final String ID = "org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart"; //$NON-NLS-1$
+
+  public static final String PROPERTY_THEME_REACH = "pdbReach"; //$NON-NLS-1$
 
   @Override
   public void init( final IViewSite site )
   {
     super.init( site );
 
-    final File mapFile = findMapFile();
-    final IStorage storage = new FileStorage( mapFile );
-    final IStorageEditorInput input = new StorageEditorInput( storage );
+    PdbWspmUtils.ensureProject();
+    final IFile mapFile = PdbWspmUtils.ensureMapFile();
 
+    final FileEditorInput input = new FileEditorInput( mapFile );
     setInput( input );
   }
 
-  private File findMapFile( )
+  /* Make sure, that all reaches of the project have a theme in the current map */
+  public void updateMap( final TuhhWspmProject project )
   {
-    final IPath mapLocation = PdbWspmUtils.getMapLocation();
-    final File mapFile = mapLocation.toFile();
+    final GisTemplateMapModell mapModell = getMapModell();
+    final FindReachThemesVisitor visitor = new FindReachThemesVisitor();
+    mapModell.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
 
-    if( !mapFile.exists() )
+    final CompositeCommand compositeCommand = new CompositeCommand( "Add reach themes" );
+
+    final WspmWaterBody[] waterBodies = project.getWaterBodies();
+    for( final WspmWaterBody waterBody : waterBodies )
     {
-      try
+      final WspmReach[] reaches = waterBody.getReaches();
+      for( final WspmReach reach : reaches )
       {
-        final URL mapTemplateLoction = getClass().getResource( "mapTemplate.gmt" ); //$NON-NLS-1$
-        FileUtils.copyURLToFile( mapTemplateLoction, mapFile );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
+        final String reachGmlID = reach.getId();
+        if( !visitor.hasReachTheme( reachGmlID ) )
+        {
+          final AddThemeCommand newTheme = addReachTheme( mapModell, reach );
+          if( newTheme != null )
+            compositeCommand.addCommand( newTheme );
+        }
       }
     }
 
-    return mapFile;
+    postCommand( compositeCommand, null );
+  }
+
+  private AddThemeCommand addReachTheme( final GisTemplateMapModell mapModell, final WspmReach reach )
+  {
+    final String name = reach.getName();
+    final String type = "gml"; //$NON-NLS-1$
+
+    final String featurePath = String.format( "#fid#%s/%s", reach.getId(), TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER.getLocalPart() ); //$NON-NLS-1$
+
+    final String source = IWspmTuhhConstants.FILE_MODELL_GML;
+    final AddThemeCommand command = new AddThemeCommand( mapModell, name, type, featurePath, source );
+    command.addProperty( PROPERTY_THEME_REACH, reach.getId() );
+    command.addProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.FALSE.toString() );
+
+    return command;
+  }
+
+  @SuppressWarnings("rawtypes")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    return super.getAdapter( adapter );
   }
 }

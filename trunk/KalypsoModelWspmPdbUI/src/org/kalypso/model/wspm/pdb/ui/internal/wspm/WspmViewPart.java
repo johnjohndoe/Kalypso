@@ -48,9 +48,10 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.lang.CharEncoding;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewSite;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.core.jaxb.TemplateUtilities;
@@ -75,6 +76,8 @@ public class WspmViewPart extends GmvViewPart
   {
     super.init( site );
 
+    PdbWspmUtils.ensureProject();
+
     final String inputContent = createInput();
 
     final StringStorage storage = new StringStorage( inputContent, null );
@@ -88,8 +91,8 @@ public class WspmViewPart extends GmvViewPart
   {
     try
     {
-      final IPath modelLocation = PdbWspmUtils.getModelLocation();
-      final URL modelURL = modelLocation.toFile().toURI().toURL();
+      final IFile modelFile = PdbWspmUtils.getModelFile();
+      final URL modelURL = ResourceUtilities.createQuietURL( modelFile );
 
       final Gistreeview gistreeview = TemplateUtilities.OF_GISTREEVIEW.createGistreeview();
       final LayerType layerType = TemplateUtilities.OF_TEMPLATE_TYPES.createLayerType();

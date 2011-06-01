@@ -76,7 +76,7 @@ public class PdbPerspective implements IPerspectiveFactory
 
   private void defineLayout( final IPageLayout layout )
   {
-    layout.setFixed( true );
+    layout.setFixed( false );
 
     final String editorArea = layout.getEditorArea();
     layout.setEditorAreaVisible( false );
