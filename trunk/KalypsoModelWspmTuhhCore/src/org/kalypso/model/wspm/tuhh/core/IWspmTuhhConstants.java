@@ -207,6 +207,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   String FILE_WSPTIN = "WspTin.gml";//$NON-NLS-1$
 
+  String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
+
   String FILE_WSPM_GMV = "WSPM.gmv"; //$NON-NLS-1$
 
   String FILE_RESULT_LENGTH_SECTION_GML = "Längsschnitt.gml"; //$NON-NLS-1$
@@ -214,4 +216,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
   String FILE_RESULT_POLYNOME_LENGTH_SECTIONS_GML = "lengthSection_*.gml"; //$NON-NLS-1$
 
   String FILE_PATTERN_POLYNOME_LENGTH_SECTIONS_GML = "lengthSection_(.*).gml"; //$NON-NLS-1$
+
+  String FILE_OVERVIEW_MAP = "Übersichtskarte.gmt"; //$NON-NLS-1$
 }
