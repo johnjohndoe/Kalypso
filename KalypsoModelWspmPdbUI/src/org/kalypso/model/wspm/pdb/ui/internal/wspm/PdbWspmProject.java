@@ -286,6 +286,8 @@ public class PdbWspmProject
       return;
 
     view.setInput( input );
+    // TODO: better name; maybe use project description instead?
+    view.setPartName( m_project.getName() );
   }
 
   private void initMapView( )
