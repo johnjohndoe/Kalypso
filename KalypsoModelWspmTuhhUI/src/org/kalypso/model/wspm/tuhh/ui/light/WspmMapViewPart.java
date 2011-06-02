@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.light;
 
 import org.eclipse.ui.ISaveablePart;
-import org.eclipse.ui.IViewSite;
 import org.kalypso.ui.views.map.MapView;
 
 /**
@@ -50,62 +49,5 @@ import org.kalypso.ui.views.map.MapView;
 public class WspmMapViewPart extends MapView implements ISaveablePart
 {
   @SuppressWarnings("hiding")
-  public static final String ID = "org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart"; //$NON-NLS-1$
-
-  //  public static final String PROPERTY_THEME_REACH = "pdbReach"; //$NON-NLS-1$
-
-  @Override
-  public void init( final IViewSite site )
-  {
-    super.init( site );
-
-// PdbWspmUtils.ensureProject();
-// final IFile mapFile = PdbWspmUtils.ensureMapFile();
-//
-// final FileEditorInput input = new FileEditorInput( mapFile );
-// setInput( input );
-  }
-
-// /* Make sure, that all reaches of the project have a theme in the current map */
-// public void updateMap( final TuhhWspmProject project )
-// {
-// final GisTemplateMapModell mapModell = getMapModell();
-// final FindReachThemesVisitor visitor = new FindReachThemesVisitor();
-// mapModell.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
-//
-// final CompositeCommand compositeCommand = new CompositeCommand( "Add reach themes" );
-//
-// final WspmWaterBody[] waterBodies = project.getWaterBodies();
-// for( final WspmWaterBody waterBody : waterBodies )
-// {
-// final WspmReach[] reaches = waterBody.getReaches();
-// for( final WspmReach reach : reaches )
-// {
-// final String reachGmlID = reach.getId();
-// if( !visitor.hasReachTheme( reachGmlID ) )
-// {
-// final AddThemeCommand newTheme = addReachTheme( mapModell, reach );
-// if( newTheme != null )
-// compositeCommand.addCommand( newTheme );
-// }
-// }
-// }
-//
-// postCommand( compositeCommand, null );
-// }
-//
-// private AddThemeCommand addReachTheme( final GisTemplateMapModell mapModell, final WspmReach reach )
-// {
-// final String name = reach.getName();
-//    final String type = "gml"; //$NON-NLS-1$
-//
-//    final String featurePath = String.format( "#fid#%s/%s", reach.getId(), TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER.getLocalPart() ); //$NON-NLS-1$
-//
-// final String source = IWspmTuhhConstants.FILE_MODELL_GML;
-// final AddThemeCommand command = new AddThemeCommand( mapModell, name, type, featurePath, source );
-// command.addProperty( PROPERTY_THEME_REACH, reach.getId() );
-// command.addProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.FALSE.toString() );
-//
-// return command;
-// }
+  public static final String ID = "org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart"; //$NON-NLS-1$
 }

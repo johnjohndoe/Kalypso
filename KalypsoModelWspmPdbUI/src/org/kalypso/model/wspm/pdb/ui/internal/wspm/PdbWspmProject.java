@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
@@ -47,23 +48,27 @@ import java.net.URL;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
+import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.afgui.wizards.NewProjectData;
 import org.kalypso.afgui.wizards.UnpackProjectTemplateOperation;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
@@ -80,6 +85,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.IWspmTuhhUIConstants;
 import org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule;
 import org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart;
+import org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart;
 import org.kalypso.ogc.gml.PoolGmlWorkspaceProvider;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.gistreeview.Gistreeview;
@@ -92,6 +98,8 @@ import org.kalypso.template.types.LayerType;
  */
 public class PdbWspmProject
 {
+  public static final String PROPERTY_THEME_REACH = "pdbReach"; //$NON-NLS-1$
+
   private static final String WSPM_PROJECT_NAME = "PDBWspmData"; //$NON-NLS-1$
 
   private PoolGmlWorkspaceProvider m_provider;
@@ -217,6 +225,9 @@ public class PdbWspmProject
     initGmvView();
     monitor.worked( 50 );
 
+    initMapView();
+    monitor.worked( 50 );
+
     // TODO: open and update map in map view
 
     monitor.done();
@@ -277,59 +288,52 @@ public class PdbWspmProject
     view.setInput( input );
   }
 
-  // /**
-  // * Forces a reload of the underlying data.<br/>
-  // * Any changes will be lost.
-  // */
-  // public void reload( )
-  // {
-  // final GmlTreeView viewer = getViewer();
-  // viewer.reload();
-  // }
+  private void initMapView( )
+  {
+    final IFile mapFile = ensureMapFile();
+    final FindViewRunnable<WspmMapViewPart> runnable = new FindViewRunnable<WspmMapViewPart>( WspmMapViewPart.ID, m_site );
+    final WspmMapViewPart view = runnable.execute();
+    if( view == null )
+      return;
 
-  // public static IFile ensureMapFile( )
-// {
-// final IFile mapFile = getMapFile();
-// if( mapFile.exists() )
-// return mapFile;
-//
-// try
-// {
-// final File mapJavaFile = mapFile.getLocation().toFile();
-//      final URL mapData = getClass().class.getResource( "mapTemplate.gmt" ); //$NON-NLS-1$
-// FileUtils.copyURLToFile( mapData, mapJavaFile );
-//
-// mapFile.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
-// }
-// catch( final IOException e )
-// {
-// e.printStackTrace();
-// }
-// catch( final CoreException e )
-// {
-// e.printStackTrace();
-// }
-//
-// return mapFile;
-// }
+    view.setInput( new FileEditorInput( mapFile ) );
+  }
 
+  private  IFile ensureMapFile( )
+  {
+    final IFile mapFile = getMapFile();
+    if( mapFile.exists() )
+      return mapFile;
 
-// protected static IProject getProject( )
-// {
-// final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-// return root.getProject( WSPM_PROJECT_NAME );
-// }
+    try
+    {
+      final File mapJavaFile = mapFile.getLocation().toFile();
+      final URL mapData = getClass().getResource( "mapTemplate.gmt" ); //$NON-NLS-1$
+      FileUtils.copyURLToFile( mapData, mapJavaFile );
+
+      mapFile.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
+
+    return mapFile;
+  }
 
   private IFile getModelFile( )
   {
     return m_project.getFile( IWspmTuhhConstants.FILE_MODELL_GML );
   }
 
-// public static IFile getMapFile( )
-// {
-// final IProject project = getProject();
-//    return project.getFile( "PDB.gmt" ); //$NON-NLS-1$
-// }
+  private IFile getMapFile( )
+  {
+    return m_project.getFile( "PDB.gmt" ); //$NON-NLS-1$
+  }
 
   public TuhhWspmProject getWspmProject( )
   {
@@ -351,22 +355,47 @@ public class PdbWspmProject
     m_provider.save( monitor );
   }
 
-// public static TuhhWspmProject createModel( )
+// /* Make sure, that all reaches of the project have a theme in the current map */
+// public void updateMap( final TuhhWspmProject project )
 // {
-// try
-// {
-// ensureProject();
+// final GisTemplateMapModell mapModell = getMapModell();
+// final FindReachThemesVisitor visitor = new FindReachThemesVisitor();
+// mapModell.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
 //
-// final IFile modelFile = getModelFile();
+// final CompositeCommand compositeCommand = new CompositeCommand( "Add reach themes" );
 //
-// final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelFile );
-// return (TuhhWspmProject) workspace.getRootFeature();
-// }
-// catch( final Exception e )
+// final WspmWaterBody[] waterBodies = project.getWaterBodies();
+// for( final WspmWaterBody waterBody : waterBodies )
 // {
-// e.printStackTrace();
-// return null;
+// final WspmReach[] reaches = waterBody.getReaches();
+// for( final WspmReach reach : reaches )
+// {
+// final String reachGmlID = reach.getId();
+// if( !visitor.hasReachTheme( reachGmlID ) )
+// {
+// final AddThemeCommand newTheme = addReachTheme( mapModell, reach );
+// if( newTheme != null )
+// compositeCommand.addCommand( newTheme );
 // }
+// }
+// }
+//
+// postCommand( compositeCommand, null );
+// }
+//
+// private AddThemeCommand addReachTheme( final GisTemplateMapModell mapModell, final WspmReach reach )
+// {
+// final String name = reach.getName();
+//   final String type = "gml"; //$NON-NLS-1$
+//
+//   final String featurePath = String.format( "#fid#%s/%s", reach.getId(), TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER.getLocalPart() ); //$NON-NLS-1$
+//
+// final String source = IWspmTuhhConstants.FILE_MODELL_GML;
+// final AddThemeCommand command = new AddThemeCommand( mapModell, name, type, featurePath, source );
+// command.addProperty( PROPERTY_THEME_REACH, reach.getId() );
+// command.addProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.FALSE.toString() );
+//
+// return command;
 // }
 
 }

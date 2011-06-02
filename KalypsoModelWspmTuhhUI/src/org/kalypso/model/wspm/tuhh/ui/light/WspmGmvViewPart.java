@@ -49,5 +49,5 @@ import org.kalypso.ui.editor.gmleditor.part.GmvViewPart;
  */
 public class WspmGmvViewPart extends GmvViewPart
 {
-  public static final String ID = "org.kalypso.model.wspm.tuhh.ui.light.internal.WspmGmvViewPart"; //$NON-NLS-1$
+  public static final String ID = "org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart"; //$NON-NLS-1$
 }

@@ -106,15 +106,6 @@
       </handler>
     </extension>         
    
-    <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart"
-            class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
-         <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider"/>
-      </factory>
-   </extension>   
-
     <extension point="org.eclipse.ui.menus">
         <menuContribution locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
             <separator name="outline" visible="false"/>
