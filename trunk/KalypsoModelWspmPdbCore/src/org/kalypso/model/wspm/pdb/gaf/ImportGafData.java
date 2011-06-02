@@ -54,7 +54,10 @@ import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.internal.Coefficients;
+import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.referencing.FactoryException;
 
 /**
  * @author Gernot Belger
@@ -206,11 +209,6 @@ public class ImportGafData extends AbstractModelObject
     return new File( gafFile.getAbsolutePath() + ".log" );
   }
 
-  public int getSrid( )
-  {
-    return m_info.getSRID();
-  }
-
   public IPdbConnection getConnection( )
   {
     return m_connection;
@@ -229,5 +227,11 @@ public class ImportGafData extends AbstractModelObject
   public Coefficients getCoefficients( )
   {
     return m_coefficients;
+  }
+
+  public JTSTransformer getTransformer( ) throws FactoryException
+  {
+    final int sourceSRID = JTSAdapter.toSrid( m_srs );
+    return new JTSTransformer( sourceSRID, m_info.getSRID() );
   }
 }

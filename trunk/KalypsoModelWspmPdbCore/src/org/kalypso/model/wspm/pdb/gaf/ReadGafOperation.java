@@ -53,6 +53,11 @@ import org.kalypso.model.wspm.pdb.gaf.internal.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafReader;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.transformation.transformer.JTSTransformer;
+import org.opengis.referencing.FactoryException;
+
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * First stage of gaf reading: open log file, then delegate to next level.
@@ -103,11 +108,12 @@ public class ReadGafOperation implements ICoreRunnableWithProgress
     GafReader gafReader = null;
     try
     {
-      final int srid = m_data.getSrid();
+      final JTSTransformer transformer = m_data.getTransformer();
+      final GeometryFactory geometryFactory = new GeometryFactory( new PrecisionModel(), transformer.getTargetSRID() );
       final GafCodes gafCodes = new GafCodes();
       final Coefficients coefficients = m_data.getCoefficients();
 
-      gafReader = new GafReader( logger, srid, gafCodes, coefficients );
+      gafReader = new GafReader( logger, gafCodes, coefficients, transformer, geometryFactory );
       final GafProfiles profiles = gafReader.read( gafFile, monitor );
       gafReader.close();
       return profiles;
@@ -115,6 +121,13 @@ public class ReadGafOperation implements ICoreRunnableWithProgress
     catch( final IOException e )
     {
       final String message = "Error while reading file";
+      logger.log( IStatus.ERROR, message, null, e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
+      throw new CoreException( status );
+    }
+    catch( final FactoryException e )
+    {
+      final String message = "Failed to initialize coordinate transformer";
       logger.log( IStatus.ERROR, message, null, e );
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );

@@ -57,6 +57,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
+import org.kalypso.transformation.transformer.JTSTransformer;
+
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * @author Gernot Belger
@@ -90,11 +93,17 @@ public class GafReader
 
   private int m_badLines;
 
-  public GafReader( final GafLogger logger, final int srid, final GafCodes gafCodes, final Coefficients coefficients )
+  private final JTSTransformer m_transformer;
+
+  private final GeometryFactory m_geometryFactory;
+
+  public GafReader( final GafLogger logger, final GafCodes gafCodes, final Coefficients coefficients, final JTSTransformer transformer, final GeometryFactory geometryFactory )
   {
     m_logger = logger;
+    m_transformer = transformer;
+    m_geometryFactory = geometryFactory;
 
-    m_gafProfiles = new GafProfiles( logger, srid, gafCodes, coefficients );
+    m_gafProfiles = new GafProfiles( logger, gafCodes, coefficients, geometryFactory );
   }
 
   public GafProfiles read( final File gafFile, final IProgressMonitor monitor ) throws IOException
@@ -180,7 +189,7 @@ public class GafReader
     final BigDecimal rw = asDecimal( items[8], "Rechtswert" );
     final String hyk = tokens.length < 10 ? null : tokens[9].toUpperCase();
 
-    return new GafPoint( station, pointId, width, height, code, roughnessClass, vegetationClass, rw, hw, hyk );
+    return new GafPoint( station, pointId, width, height, code, roughnessClass, vegetationClass, rw, hw, hyk, m_transformer, m_geometryFactory );
   }
 
   /**

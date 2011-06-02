@@ -42,7 +42,10 @@ package org.kalypso.model.wspm.pdb.gaf.internal;
 
 import java.math.BigDecimal;
 
+import org.kalypso.transformation.transformer.JTSTransformer;
+
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * represents one line of a gaf file
@@ -71,7 +74,11 @@ public class GafPoint
 
   private final String m_hyk;
 
-  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final String code, final String roughnessClass, final String vegetationClass, final BigDecimal rw, final BigDecimal hw, final String hyk )
+  private final JTSTransformer m_transformer;
+
+  private final GeometryFactory m_geometryFactory;
+
+  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final String code, final String roughnessClass, final String vegetationClass, final BigDecimal rw, final BigDecimal hw, final String hyk, final JTSTransformer transformer, final GeometryFactory geometryFactory )
   {
     m_station = station;
     m_pointId = pointId;
@@ -83,6 +90,8 @@ public class GafPoint
     m_rw = rw;
     m_hw = hw;
     m_hyk = hyk;
+    m_transformer = transformer;
+    m_geometryFactory = geometryFactory;
   }
 
   public String getPointId( )
@@ -115,14 +124,15 @@ public class GafPoint
     return m_hyk;
   }
 
-  public Coordinate getCoordinate( )
+  public Coordinate getCoordinate( ) throws Exception
   {
     if( m_rw == null || m_hw == null )
       return null;
 
     final double z = m_height == null ? Coordinate.NULL_ORDINATE : m_height.doubleValue();
 
-    return new Coordinate( m_rw.doubleValue(), m_hw.doubleValue(), z );
+    final Coordinate coordinate = new Coordinate( m_rw.doubleValue(), m_hw.doubleValue(), z );
+    return m_transformer.transform( coordinate );
   }
 
   public String getRoughnessClass( )
@@ -133,5 +143,14 @@ public class GafPoint
   public String getVegetationClass( )
   {
     return m_vegetationClass;
+  }
+
+  public com.vividsolutions.jts.geom.Point getPoint( ) throws Exception
+  {
+    final Coordinate coordinate = getCoordinate();
+    if( coordinate == null )
+      return null;
+
+    return m_geometryFactory.createPoint( coordinate );
   }
 }

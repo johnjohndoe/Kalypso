@@ -55,7 +55,6 @@ import org.kalypso.model.wspm.pdb.gaf.internal.GafPoint;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafReader;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * Assembles all read points into different profiles.
@@ -78,11 +77,11 @@ public class GafProfiles
 
   private final GafPointCheck m_pointChecker;
 
-  public GafProfiles( final GafLogger logger, final int srid, final GafCodes gafCodes, final Coefficients coefficients )
+  public GafProfiles( final GafLogger logger, final GafCodes gafCodes, final Coefficients coefficients, final GeometryFactory geometryFactory )
   {
     m_logger = logger;
     m_gafCodes = gafCodes;
-    m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
+    m_geometryFactory = geometryFactory;
     m_pointChecker = new GafPointCheck( gafCodes, coefficients, logger );
   }
 

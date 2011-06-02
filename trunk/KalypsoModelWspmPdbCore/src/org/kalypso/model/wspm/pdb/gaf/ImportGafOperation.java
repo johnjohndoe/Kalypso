@@ -84,12 +84,11 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
       session = connection.openSession();
       final State state = m_data.getState();
       final WaterBody waterBody = m_data.getWaterBody();
-      final int srid = m_data.getSrid();
       final Coefficients coefficients = m_data.getCoefficients();
 
       final GafProfiles profiles = m_data.getProfiles();
 
-      final Gaf2Db gaf2db = new Gaf2Db( dbType, waterBody, state, profiles, srid, coefficients, monitor );
+      final Gaf2Db gaf2db = new Gaf2Db( dbType, waterBody, state, profiles, coefficients, monitor );
       new Executor( session, gaf2db ).execute();
 
       session.close();
