@@ -52,6 +52,10 @@ import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
  */
 public class Coefficients
 {
+  private static final String UNKNOWN_ROUGHNESS = "-1"; //$NON-NLS-1$
+
+  private static final String UNKNOWN_VEGETATION = "-1"; //$NON-NLS-1$
+
   private final RoughnessInfo m_roughnessInfo;
 
   private final VegetationInfo m_vegetationInfo;
@@ -70,5 +74,21 @@ public class Coefficients
   public Vegetation getVegetation( final String vegetationClass )
   {
     return m_vegetationInfo.getCoefficient( vegetationClass );
+  }
+
+  public Roughness getRoughnessOrUnknown( final String roughnessClass )
+  {
+    final Roughness roughness = getRoughness( roughnessClass );
+    if( roughness == null )
+      return getRoughness( UNKNOWN_ROUGHNESS );
+    return roughness;
+  }
+
+  public Vegetation getVegetationOrUnknown( final String vegetationClass )
+  {
+    final Vegetation vegetation = getVegetation( vegetationClass );
+    if( vegetation == null )
+      return getVegetation( UNKNOWN_VEGETATION );
+    return vegetation;
   }
 }
