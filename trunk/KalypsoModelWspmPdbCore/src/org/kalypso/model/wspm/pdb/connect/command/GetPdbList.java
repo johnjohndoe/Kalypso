@@ -43,7 +43,9 @@ package org.kalypso.model.wspm.pdb.connect.command;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
@@ -51,9 +53,19 @@ import org.hibernate.Session;
 public final class GetPdbList
 {
   @SuppressWarnings("unchecked")
-  public static <T> List<T> getList( final Session session, final Class<T> type )
+  public static <T> List<T> getList( final Session session, final Class<T> type ) throws PdbConnectException
   {
-    final Criteria criteria = session.createCriteria( type );
-    return criteria.list();
+    try
+    {
+      final Criteria criteria = session.createCriteria( type );
+      return criteria.list();
+    }
+    catch( final HibernateException e )
+    {
+      e.printStackTrace();
+
+      final String message = String.format( "Failed to retreive: %s", type.getName() );
+      throw new PdbConnectException( message, e );
+    }
   }
 }

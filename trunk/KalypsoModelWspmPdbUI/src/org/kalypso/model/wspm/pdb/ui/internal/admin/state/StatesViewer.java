@@ -59,9 +59,8 @@ import org.eclipse.swt.widgets.Table;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
-import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
@@ -145,9 +144,7 @@ public class StatesViewer
   {
     try
     {
-      final ListOperation<State> operation = new ListOperation<State>( State.class );
-      new Executor( m_session, operation ).execute();
-      final List<State> states = operation.getList();
+      final List<State> states = GetPdbList.getList( m_session, State.class );
       return states.toArray( new State[states.size()] );
     }
     catch( final PdbConnectException e )

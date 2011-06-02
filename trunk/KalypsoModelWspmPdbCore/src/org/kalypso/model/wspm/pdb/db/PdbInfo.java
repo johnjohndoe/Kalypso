@@ -66,9 +66,16 @@ public class PdbInfo
 
   public PdbInfo( final Session session )
   {
-    final List<Info> list = GetPdbList.getList( session, Info.class );
-    for( final Info property : list )
-      m_properties.put( property.getKey(), property.getValue() );
+    try
+    {
+      final List<Info> list = GetPdbList.getList( session, Info.class );
+      for( final Info property : list )
+        m_properties.put( property.getKey(), property.getValue() );
+    }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   public String getVersion( )
