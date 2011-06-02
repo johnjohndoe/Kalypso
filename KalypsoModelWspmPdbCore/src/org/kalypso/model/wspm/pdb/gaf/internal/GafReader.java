@@ -90,11 +90,11 @@ public class GafReader
 
   private int m_badLines;
 
-  public GafReader( final GafLogger logger, final int srid, final GafCodes gafCodes )
+  public GafReader( final GafLogger logger, final int srid, final GafCodes gafCodes, final Coefficients coefficients )
   {
     m_logger = logger;
 
-    m_gafProfiles = new GafProfiles( logger, srid, gafCodes );
+    m_gafProfiles = new GafProfiles( logger, srid, gafCodes, coefficients );
   }
 
   public GafProfiles read( final File gafFile, final IProgressMonitor monitor ) throws IOException

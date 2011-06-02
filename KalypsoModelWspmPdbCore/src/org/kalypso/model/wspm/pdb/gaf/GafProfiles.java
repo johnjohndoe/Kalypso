@@ -46,8 +46,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.model.wspm.pdb.gaf.internal.Coefficients;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafCode;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
@@ -70,29 +70,27 @@ public class GafProfiles
 
   private final Collection<GafProfile> m_profiles = new ArrayList<GafProfile>();
 
-  private final Set<String> m_unknownCodes = new HashSet<String>();
-
-  private final Set<String> m_unknownHyks = new HashSet<String>();
-
   private GafProfile m_currentProfile;
 
   private final GafLogger m_logger;
 
   private final GeometryFactory m_geometryFactory;
 
+  private final GafPointCheck m_pointChecker;
 
-  public GafProfiles( final GafLogger logger, final int srid, final GafCodes gafCodes )
+  public GafProfiles( final GafLogger logger, final int srid, final GafCodes gafCodes, final Coefficients coefficients )
   {
     m_logger = logger;
     m_gafCodes = gafCodes;
     m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
+    m_pointChecker = new GafPointCheck( gafCodes, coefficients, logger );
   }
 
   public void addPoint( final GafPoint point )
   {
     final BigDecimal station = point.getStation();
 
-    checkPoint( point );
+    m_pointChecker.check( point );
 
     if( m_committedStations.contains( station ) )
     {
@@ -142,37 +140,6 @@ public class GafProfiles
   public GafProfile[] getProfiles( )
   {
     return m_profiles.toArray( new GafProfile[m_profiles.size()] );
-  }
-
-  private void checkPoint( final GafPoint point )
-  {
-    checkCode( point.getCode() );
-    checkHyk( point.getHyk() );
-  }
-
-  private void checkCode( final String code )
-  {
-    final GafCode gafCode = m_gafCodes.getCode( code );
-    if( gafCode == null )
-    {
-      m_unknownCodes.add( code );
-      m_logger.log( IStatus.WARNING, String.format( "Unknown Code: '%s'", code ) );
-    }
-  }
-
-  private void checkHyk( final String hyk )
-  {
-    /* Empty string is allowed: no-code */
-    if( StringUtils.isBlank( hyk ) )
-      return;
-
-    final GafCode hykCode = m_gafCodes.getHykCode( hyk );
-
-    if( hykCode == null )
-    {
-      m_unknownHyks.add( hyk );
-      m_logger.log( IStatus.WARNING, String.format( "Unknown Hyk: '%s'", hyk ) );
-    }
   }
 
   public String translateCode( final String code )

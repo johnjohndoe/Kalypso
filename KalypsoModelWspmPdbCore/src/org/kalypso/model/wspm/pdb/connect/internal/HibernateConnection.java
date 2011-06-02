@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.internal;
 
-import java.util.List;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -52,12 +50,8 @@ import org.hibernatespatial.HBSpatialExtension;
 import org.hibernatespatial.SpatialDialect;
 import org.hibernatespatial.postgis.PostgisDialect;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
-import org.kalypso.model.wspm.pdb.PdbUtils;
-import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
-import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
@@ -259,88 +253,6 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
       m_sessionFactory = null;
     }
   }
-
-// private void checkConnection( ) throws PdbConnectException
-// {
-// if( !isConnected() )
-// throw new PdbConnectException( "PDB connection is not open" );
-// }
-
-  @Override
-  public PdbInfo getInfo( ) throws PdbConnectException
-  {
-    final Session session = openSession();
-    try
-    {
-      final ListOperation<Info> operation = new ListOperation<Info>( Info.class );
-      new Executor( session, operation ).execute();
-      final List<Info> properties = operation.getList();
-      return new PdbInfo( properties );
-    }
-    finally
-    {
-      PdbUtils.closeSessionQuietly( session );
-    }
-  }
-
-// private void addObject( final Object object ) throws PdbConnectException
-// {
-// final IPdbOperation operation = new AddObjectOperation( object );
-// executeCommand( operation );
-// }
-
-// @Override
-// public void addPoint( final Points onePoint ) throws PdbConnectException
-// {
-// addObject( onePoint );
-// }
-
-// @Override
-// public List<WaterBodies> getWaterBodies( ) throws PdbConnectException
-// {
-// return getList( WaterBodies.class );
-// }
-
-// @Override
-// public void addWaterBody( final WaterBodies waterBody ) throws PdbConnectException
-// {
-// checkConnection();
-//
-// addObject( waterBody );
-// }
-
-// @Override
-// public void addState( final States state ) throws PdbConnectException
-// {
-// final Date now = new Date();
-// state.setCreationDate( now );
-// state.setEditingDate( now );
-// state.setEditingUser( getSettings().getUsername() );
-//
-// checkConnection();
-//
-// addObject( state );
-// }
-
-// @Override
-// public void addCrossSection( final CrossSections crossSection ) throws PdbConnectException
-// {
-// checkConnection();
-//
-// addObject( crossSection );
-// }
-
-// @Override
-// public List<States> getStates( ) throws PdbConnectException
-// {
-// return getList( States.class );
-// }
-
-// @Override
-// public void addCrossSectionPart( final CrossSectionParts csPart ) throws PdbConnectException
-// {
-// addObject( csPart );
-// }
 
   @Override
   public Session openSession( ) throws PdbConnectException

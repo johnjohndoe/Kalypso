@@ -38,22 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.command;
+package org.kalypso.model.wspm.pdb.gaf.internal;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
+import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 
 /**
+ * Helper class that allows to access {@link org.kalypso.model.wspm.pdb.db.mapping.Roughness} and
+ * {@link org.kalypso.model.wspm.pdb.db.mapping.Vegetation}.
+ * 
  * @author Gernot Belger
  */
-public final class GetPdbList
+public class Coefficients
 {
-  @SuppressWarnings("unchecked")
-  public static <T> List<T> getList( final Session session, final Class<T> type )
+  private final RoughnessInfo m_roughnessInfo;
+
+  private final VegetationInfo m_vegetationInfo;
+
+  public Coefficients( final Session session, final String kind )
   {
-    final Criteria criteria = session.createCriteria( type );
-    return criteria.list();
+    m_roughnessInfo = new RoughnessInfo( session, kind );
+    m_vegetationInfo = new VegetationInfo( session, kind );
+  }
+
+  public Roughness getRoughness( final String roughnessClass )
+  {
+    return m_roughnessInfo.getCoefficient( roughnessClass );
+  }
+
+  public Vegetation getVegetation( final String vegetationClass )
+  {
+    return m_vegetationInfo.getCoefficient( vegetationClass );
   }
 }

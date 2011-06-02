@@ -38,22 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.command;
-
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.Session;
+package org.kalypso.model.wspm.pdb.db.mapping;
 
 /**
  * @author Gernot Belger
  */
-public final class GetPdbList
+public interface Coefficient
 {
-  @SuppressWarnings("unchecked")
-  public static <T> List<T> getList( final Session session, final Class<T> type )
-  {
-    final Criteria criteria = session.createCriteria( type );
-    return criteria.list();
-  }
+  CoefficientId getId( );
 }

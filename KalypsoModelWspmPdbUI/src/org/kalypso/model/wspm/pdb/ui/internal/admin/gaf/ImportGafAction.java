@@ -54,11 +54,11 @@ import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.PdbUtils;
-import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
@@ -89,7 +89,10 @@ public class ImportGafAction extends Action
     {
       final State[] states = getState();
 
-      final Wizard importWizard = new ImportGafWizard( states, m_connection );
+      final ImportGafData data = new ImportGafData( m_connection );
+      data.initFromDb();
+
+      final Wizard importWizard = new ImportGafWizard( states, data );
       importWizard.setWindowTitle( "Import GAF file" );
       final WizardDialog dialog = new WizardDialog( shell, importWizard );
       final int result = dialog.open();
@@ -110,11 +113,10 @@ public class ImportGafAction extends Action
     try
     {
       session = m_connection.openSession();
-      final ListOperation<State> operation = new ListOperation<State>( State.class );
-      new Executor( session, operation ).execute();
-      final List<State> list = operation.getList();
+      final List<State> list = GetPdbList.getList( session, State.class );
+      final State[] states = list.toArray( new State[list.size()] );
       session.close();
-      return list.toArray( new State[list.size()] );
+      return states;
     }
     finally
     {

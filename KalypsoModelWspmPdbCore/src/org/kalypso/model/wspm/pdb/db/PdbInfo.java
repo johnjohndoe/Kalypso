@@ -43,6 +43,10 @@ package org.kalypso.model.wspm.pdb.db;
 import java.util.List;
 import java.util.Properties;
 
+import org.hibernate.Session;
+import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
 
 /**
@@ -50,18 +54,49 @@ import org.kalypso.model.wspm.pdb.db.mapping.Info;
  */
 public class PdbInfo
 {
-  private final String VERSION = "Version"; //$NON-NLS-1$
+  public static final int UNKNOWN_SRID = -1;
+
+  private static final Object CURRENT_VERSION = "0.0.1"; //$NON-NLS-1$
+
+  private final String PROPERTY_VERSION = "Version"; //$NON-NLS-1$
+
+  private final String PROPERTY_SRID = "SRID"; //$NON-NLS-1$
 
   private final Properties m_properties = new Properties();
 
-  public PdbInfo( final List<Info> allInfo )
+  public PdbInfo( final Session session )
   {
-    for( final Info property : allInfo )
+    final List<Info> list = GetPdbList.getList( session, Info.class );
+    for( final Info property : list )
       m_properties.put( property.getKey(), property.getValue() );
   }
 
   public String getVersion( )
   {
-    return m_properties.getProperty( VERSION );
+    return m_properties.getProperty( PROPERTY_VERSION );
+  }
+
+  public int getSRID( )
+  {
+    final String property = m_properties.getProperty( PROPERTY_SRID, Integer.toString( UNKNOWN_SRID ) );
+    return NumberUtils.parseQuietInt( property, UNKNOWN_SRID );
+  }
+
+  public void validate( ) throws PdbConnectException
+  {
+    final String version = getVersion();
+    if( !CURRENT_VERSION.equals( version ) )
+    {
+      final String message = String.format( "Unknown Version of PDB: %s (should be %s)", version, CURRENT_VERSION );
+      throw new PdbConnectException( message );
+    }
+
+
+    final int srid = getSRID();
+    if( UNKNOWN_SRID == srid )
+    {
+      final String message = String.format( "Failed to determine SRID: %s", m_properties.get( PROPERTY_SRID ) );
+      throw new PdbConnectException( message );
+    }
   }
 }

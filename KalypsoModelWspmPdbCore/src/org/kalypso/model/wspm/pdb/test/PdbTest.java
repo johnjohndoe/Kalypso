@@ -78,9 +78,11 @@ public class PdbTest extends Assert
     final IPdbConnection connection = connectInfo.createConnection();
     connection.connect();
 
-    final PdbInfo info = connection.getInfo();
-    final String version = info.getVersion();
-    System.out.println( "Version=" + version );
+    final Session session = connection.openSession();
+
+    final PdbInfo info = new PdbInfo( session );
+    System.out.println( "Version=" + info.getVersion() );
+    System.out.println( "SRID=" + info.getSRID() );
 
 // final Point onePoint = new Point();
 // // FIXME
@@ -109,79 +111,8 @@ public class PdbTest extends Assert
 // state.setName( "DER EINE" );
 // state.setSource( "nix" );
 
-    final Session session = connection.openSession();
     final AddObjectOperation operation = new AddObjectOperation( waterBody );
     new Executor( session, operation ).execute();
     session.close();
   }
-
-// // @Test
-// public void testPdb2( )
-// {
-// final Configuration configuration = new Configuration();
-//
-// configuration.setProperty( "hibernate.order_updates", "true" );
-//
-// // FIXME: why does this not work???
-// // configuration.setProperty( "hibernate.hbm2dll.auto", "create" );
-// // configuration.setProperty( "org.hibernate.tool.hbm2ddl", "debug" );
-//
-// configuration.setProperty( "connection.pool_size", "1" );
-// configuration.setProperty( "current_session_context_class", "thread" );
-// configuration.setProperty( "cache.provider_class", "org.hibernate.cache.NoCacheProvider" );
-//
-// // TODO: via tracing
-// configuration.setProperty( "show_sql", "true" );
-//
-// final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
-//
-// configuration.setProperty( "hibernate.connection.driver_class", org.postgresql.Driver.class.getName() );
-//
-// final String connectionUrl = "jdbc:postgresql://map.bjoernsen.de:5432/pdb";
-//
-// configuration.setProperty( "hibernate.connection.url", connectionUrl );
-// configuration.setProperty( "hibernate.connection.username", "pdb_admin" );
-// configuration.setProperty( "hibernate.connection.password", "pdb_admin" );
-//
-// configuration.setProperty( "hibernate.dialect", dialect.getClass().getName() );
-// configuration.setProperty( "hibernate.spatial.dialect", dialect.getClass().getName() );
-//
-// final ClassLoader classLoader = getClass().getClassLoader();
-// Thread.currentThread().setContextClassLoader( classLoader );
-//
-// configuration.addAnnotatedClass( Info.class );
-// // FIXME
-// // configuration.addAnnotatedClass( PdbPoint.class );
-// configuration.addResource( "/org/kalypso/model/wspm/pdb/db/pdbpoint.xml", classLoader );
-//
-//
-// final String[] creationScripts = configuration.generateSchemaCreationScript( dialect );
-// for( final String creationScript : creationScripts )
-// System.out.println( creationScript );
-//
-// final SessionFactory sessionFactory = configuration.buildSessionFactory();
-//
-// final Session session = sessionFactory.openSession();
-//
-// final Transaction transaction = session.beginTransaction();
-// final List<Info> allInfo = session.createQuery( String.format( "from %s", Info.class.getName() ) ).list();
-// transaction.commit();
-//
-// final PdbInfo info = new PdbInfo( allInfo );
-//
-// final String version = info.getVersion();
-// System.out.println( "Version=" + version );
-//
-// final Transaction transaction2 = session.beginTransaction();
-//
-// final Point onePoint = new Point();
-// onePoint.setPoint( "" + System.currentTimeMillis() );
-// onePoint.setLocation( new GeometryFactory().createPoint( new Coordinate( 3.14, 2.79 ) ) );
-// session.save( onePoint );
-// transaction2.commit();
-//
-// session.flush();
-// session.close();
-// }
-
 }

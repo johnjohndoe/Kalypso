@@ -20,9 +20,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "roughness", schema = "pdb_admin")
-public class Roughness implements java.io.Serializable
+public class Roughness implements java.io.Serializable, Coefficient
 {
-
   private RoughnessId id;
 
   private PointKind pointKind;
@@ -58,10 +57,11 @@ public class Roughness implements java.io.Serializable
     this.points = points;
   }
 
+  @Override
   @EmbeddedId
   @AttributeOverrides({ @AttributeOverride(name = "pointKind", column = @Column(name = "point_kind", nullable = false, length = 50)),
-      @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
-  public RoughnessId getId( )
+    @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
+    public RoughnessId getId( )
   {
     return this.id;
   }

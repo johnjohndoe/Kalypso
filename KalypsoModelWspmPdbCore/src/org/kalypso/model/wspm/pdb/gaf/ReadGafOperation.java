@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.pdb.gaf.internal.Coefficients;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafCodes;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
 import org.kalypso.model.wspm.pdb.gaf.internal.GafReader;
@@ -104,8 +105,9 @@ public class ReadGafOperation implements ICoreRunnableWithProgress
     {
       final int srid = m_data.getSrid();
       final GafCodes gafCodes = new GafCodes();
+      final Coefficients coefficients = m_data.getCoefficients();
 
-      gafReader = new GafReader( logger, srid, gafCodes );
+      gafReader = new GafReader( logger, srid, gafCodes, coefficients );
       final GafProfiles profiles = gafReader.read( gafFile, monitor );
       gafReader.close();
       return profiles;
