@@ -38,13 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.light.internal;
+package org.kalypso.model.wspm.tuhh.ui.light;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart;
-import org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartViewPart;
 import org.kalypso.model.wspm.ui.view.table.TableView;
 import org.kalypso.ogc.gml.outline.ViewContentOutline;

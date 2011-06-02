@@ -280,7 +280,7 @@
 
    <extension point="org.eclipse.ui.perspectives">
       <perspective 
-            class="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmLightPerspective"
+            class="org.kalypso.model.wspm.tuhh.ui.light.WspmLightPerspective"
             icon="icons/obj16/wspmLight.gif"
             id="WspmLightPerspective"
             name="WSPM">
