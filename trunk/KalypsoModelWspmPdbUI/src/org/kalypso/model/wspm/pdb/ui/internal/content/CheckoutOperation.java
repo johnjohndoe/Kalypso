@@ -61,7 +61,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmUtils;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
@@ -74,9 +74,9 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
 
   private final Set<CrossSection> m_crossSections = new HashSet<CrossSection>();
 
-  private final TuhhWspmProject m_project;
+  private final PdbWspmProject m_project;
 
-  public CheckoutOperation( final TuhhWspmProject project, final IStructuredSelection selection )
+  public CheckoutOperation( final PdbWspmProject project, final IStructuredSelection selection )
   {
     m_project = project;
     m_selection = selection;
@@ -86,6 +86,8 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Loading data from cross section database", 100 );
+
+    // TODO: save dirty project data; ask user to do so..
 
     monitor.subTask( "Searching for cross sections to checkout..." );
     findCrossSections();
@@ -135,12 +137,9 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
 
     try
     {
-      /* Initialize WSPM project */
-      monitor.subTask( "Initializing WSPM project..." );
-      ProgressUtilities.worked( monitor, 10 );
-
       /* Convert the cross sections */
-      final CrossSectionInserter inserter = new CrossSectionInserter( m_project );
+      final TuhhWspmProject project = m_project.getWspmProject();
+      final CrossSectionInserter inserter = new CrossSectionInserter( project );
       for( final CrossSection crossSection : sortedSections )
       {
         monitor.subTask( String.format( "Converting %s", crossSection.getStation() ) );
@@ -148,7 +147,7 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
         ProgressUtilities.worked( monitor, 1 );
       }
 
-      PdbWspmUtils.saveProject( m_project );
+      m_project.saveProject( new SubProgressMonitor( monitor, 10 ) );
     }
     catch( final GMLSchemaException e )
     {

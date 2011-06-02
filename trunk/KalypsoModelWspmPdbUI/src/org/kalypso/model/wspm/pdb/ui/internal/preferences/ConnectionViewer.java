@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.ConnectionAdminControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ConnectionContentControl;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
  * @author Gernot Belger
@@ -71,11 +72,14 @@ public class ConnectionViewer extends Composite
 
   private ConnectionContentControl m_contentViewer;
 
-  public ConnectionViewer( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection )
+  private final PdbWspmProject m_project;
+
+  public ConnectionViewer( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection, final PdbWspmProject project )
   {
     super( parent, SWT.NONE );
 
     m_connection = connection;
+    m_project = project;
 
     toolkit.adapt( this );
     GridLayoutFactory.swtDefaults().applyTo( this );
@@ -104,7 +108,7 @@ public class ConnectionViewer extends Composite
     group.setText( "Inhalt" );
     group.setLayout( new FillLayout() );
 
-    m_contentViewer = new ConnectionContentControl( toolkit, group, m_connection );
+    m_contentViewer = new ConnectionContentControl( toolkit, group, m_connection, m_project );
 
     return group;
   }

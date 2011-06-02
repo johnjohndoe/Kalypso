@@ -45,14 +45,11 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
  * @author Gernot Belger
@@ -75,22 +72,19 @@ public class CheckoutAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    final IWorkbenchPage page = window.getActivePage();
-
     final IStructuredSelection selection = m_control.getSelection();
 
     // FIXME: save changes in project (ask user!)
     // REMARK: project will be saved second time by the checkout operation
 
-    final TuhhWspmProject project = null;// findProject( page );
+    final PdbWspmProject project = m_control.getProject();
 
     final ICoreRunnableWithProgress operation = new CheckoutOperation( project, selection );
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     if( !status.isOK() )
       new StatusDialog2( shell, status, getText() ).open();
 
-    // reload to force reload of tree
+    // FIXME: reload to force reload of tree
 // reloadWspmView( page );
 // updateMap( page, project );
   }

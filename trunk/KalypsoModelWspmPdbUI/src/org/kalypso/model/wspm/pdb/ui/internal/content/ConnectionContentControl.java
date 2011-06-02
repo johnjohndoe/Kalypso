@@ -59,6 +59,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
  * @author Gernot Belger
@@ -80,9 +81,13 @@ public class ConnectionContentControl extends Composite
 
   private ToolBarManager m_manager;
 
-  public ConnectionContentControl( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection )
+  private final PdbWspmProject m_project;
+
+  public ConnectionContentControl( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection, final PdbWspmProject project )
   {
     super( parent, SWT.NONE );
+
+    m_project = project;
 
     m_refreshJob = new RefreshContentJob( connection );
     m_refreshJob.setUser( true );
@@ -188,5 +193,10 @@ public class ConnectionContentControl extends Composite
   public IStructuredSelection getSelection( )
   {
     return (IStructuredSelection) m_viewer.getSelection();
+  }
+
+  public PdbWspmProject getProject( )
+  {
+    return m_project;
   }
 }
