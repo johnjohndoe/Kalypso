@@ -107,6 +107,7 @@ public class RestrictedActionBarAdvisor extends ActionBarAdvisor
 
   // private IContributionItem m_perspectivesShortlistContribution;
 
+  // FIXME: it would be nice to get rid of the 'Other Items' but not the whole ShowView menu...
   private IContributionItem m_viewShortListContribution;
 
   // private IWorkbenchAction m_savePerspectiveAction;
@@ -125,19 +126,23 @@ public class RestrictedActionBarAdvisor extends ActionBarAdvisor
 
   private IWorkbenchAction m_introAction;
 
+  private final boolean m_introHidden;
+
   /**
    * The constructor.
    */
-  public RestrictedActionBarAdvisor( IActionBarConfigurer configurer )
+  public RestrictedActionBarAdvisor( final IActionBarConfigurer configurer )
   {
     super( configurer );
+
+    m_introHidden = KalypsoModelApplication.getIntroBehavior() == IntroBehavior.never;
   }
 
   /**
    * @see org.eclipse.ui.application.ActionBarAdvisor#makeActions(org.eclipse.ui.IWorkbenchWindow)
    */
   @Override
-  protected void makeActions( IWorkbenchWindow window )
+  protected void makeActions( final IWorkbenchWindow window )
   {
     /*
      * Creates the actions and registers them. Registering is needed to ensure that key bindings work. The corresponding
@@ -201,11 +206,15 @@ public class RestrictedActionBarAdvisor extends ActionBarAdvisor
     register( m_preferencesAction );
 
     /* Actions and ContributionItems for the help menu. */
-    m_introAction = ActionFactory.INTRO.create( window );
+    if( !m_introHidden )
+    {
+      m_introAction = ActionFactory.INTRO.create( window );
+      register( m_introAction );
+    }
+
     m_helpContentsAction = ActionFactory.HELP_CONTENTS.create( window );
     m_aboutAction = ActionFactory.ABOUT.create( window );
 
-    register( m_introAction );
     register( m_helpContentsAction );
     register( m_aboutAction );
   }
@@ -214,16 +223,16 @@ public class RestrictedActionBarAdvisor extends ActionBarAdvisor
    * @see org.eclipse.ui.application.ActionBarAdvisor#fillMenuBar(org.eclipse.jface.action.IMenuManager)
    */
   @Override
-  protected void fillMenuBar( IMenuManager menuBar )
+  protected void fillMenuBar( final IMenuManager menuBar )
   {
     // MenuManager fileMenu = new MenuManager( IDEWorkbenchMessages.Workbench_file, IWorkbenchActionConstants.M_FILE );
     // MenuManager newMenu = new MenuManager( IDEWorkbenchMessages.Workbench_new, ActionFactory.NEW.getId() );
     // MenuManager editMenu = new MenuManager( IDEWorkbenchMessages.Workbench_edit, IWorkbenchActionConstants.M_EDIT );
-    MenuManager windowMenu = new MenuManager( IDEWorkbenchMessages.Workbench_window, IWorkbenchActionConstants.M_WINDOW );
+    final MenuManager windowMenu = new MenuManager( IDEWorkbenchMessages.Workbench_window, IWorkbenchActionConstants.M_WINDOW );
     // MenuManager openPerspectiveMenu = new MenuManager( IDEWorkbenchMessages.Workbench_openPerspective,
     // "openPerspective" );
-    MenuManager showViewMenu = new MenuManager( IDEWorkbenchMessages.Workbench_showView, "showView" );
-    MenuManager helpMenu = new MenuManager( IDEWorkbenchMessages.Workbench_help, IWorkbenchActionConstants.M_HELP );
+    final MenuManager showViewMenu = new MenuManager( IDEWorkbenchMessages.Workbench_showView, "showView" );
+    final MenuManager helpMenu = new MenuManager( IDEWorkbenchMessages.Workbench_help, IWorkbenchActionConstants.M_HELP );
 
     /* The file menu. */
     // menuBar.add( fileMenu );
@@ -292,7 +301,8 @@ public class RestrictedActionBarAdvisor extends ActionBarAdvisor
     /* The help menu. */
     menuBar.add( helpMenu );
     helpMenu.add( new GroupMarker( IWorkbenchActionConstants.HELP_START ) );
-    helpMenu.add( m_introAction ); //
+    if( !m_introHidden )
+      helpMenu.add( m_introAction ); //
     helpMenu.add(new Separator("group.main.ext")); //$NON-NLS-1$
     helpMenu.add( m_helpContentsAction );
     helpMenu.add(new GroupMarker("group.tutorials")); //$NON-NLS-1$
@@ -303,7 +313,7 @@ public class RestrictedActionBarAdvisor extends ActionBarAdvisor
     // about should always be at the bottom
     helpMenu.add(new Separator("group.about")); //$NON-NLS-1$
 
-    ActionContributionItem aboutItem = new ActionContributionItem(m_aboutAction);
+    final ActionContributionItem aboutItem = new ActionContributionItem(m_aboutAction);
     aboutItem.setVisible(!Util.isMac());
     helpMenu.add( m_aboutAction );
     helpMenu.add(new GroupMarker("group.about.ext")); //$NON-NLS-1$

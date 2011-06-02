@@ -42,6 +42,7 @@ package org.kalypso.model.product.application;
 
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.internal.ide.application.DelayedEventsProcessor;
+import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.contribs.eclipse.ide.application.IDEApplicationCopy;
 
 /**
@@ -64,12 +65,32 @@ public class KalypsoModelApplication extends IDEApplicationCopy
   private static final String SYSPROP_EXPERT_MODE = "kalypso.model.product.expert"; //$NON-NLS-1$
 
   /**
+   * If set, this perspective is forced to be open on startup. Default to the Workflow perspective.
+   */
+  private static final String SYSPROP_INITIAL_PERSPECTIVE = "kalypso.model.product.perspective"; //$NON-NLS-1$
+
+  /**
+   * How we handle the intro. Allowed values are 'always' (default), 'never', 'eclipse' (eclipse default behavior). If
+   * set, the intro (Welcome View) is never shown
+   */
+  private static final String SYSPROP_INTOR_BEHAVIOUR = "kalypso.model.product.intro"; //$NON-NLS-1$
+
+  /**
    * @see org.kalypso.model.product.application.IDEApplicationCopy#createWorkbenchAdvisor(org.eclipse.ui.internal.ide.application.DelayedEventsProcessor)
    */
   @Override
   protected WorkbenchAdvisor createWorkbenchAdvisor( final DelayedEventsProcessor processor )
   {
+    final String initialPerspective = System.getProperty( SYSPROP_INITIAL_PERSPECTIVE, Perspective.ID );
+
     final boolean isExpert = Boolean.getBoolean( SYSPROP_EXPERT_MODE );
-    return new KalypsoModelWorkbenchAdvisor( processor, !isExpert );
+
+    return new KalypsoModelWorkbenchAdvisor( processor, !isExpert, initialPerspective );
+  }
+
+  public static IntroBehavior getIntroBehavior( )
+  {
+    final String introBehaviorName = System.getProperty( SYSPROP_INTOR_BEHAVIOUR, IntroBehavior.always.name() );
+    return IntroBehavior.valueOf( introBehaviorName );
   }
 }
