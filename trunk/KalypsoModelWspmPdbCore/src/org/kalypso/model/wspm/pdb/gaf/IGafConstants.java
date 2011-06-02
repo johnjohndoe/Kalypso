@@ -65,4 +65,5 @@ public interface IGafConstants
 
   String HYK_RU = "RU";//$NON-NLS-1$
 
+  String POINT_KIND_GAF = "GAF"; //$NON-NLS-1$
 }

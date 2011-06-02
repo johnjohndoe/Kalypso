@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.pdb.connect;
 
 import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.db.PdbInfo;
 
 /**
  * @author Gernot Belger
@@ -57,8 +56,6 @@ public interface IPdbConnection
   void close( ) throws PdbConnectException;
 
   Session openSession( ) throws PdbConnectException;
-
-  PdbInfo getInfo( ) throws PdbConnectException;
 
   String getLabel( );
 }

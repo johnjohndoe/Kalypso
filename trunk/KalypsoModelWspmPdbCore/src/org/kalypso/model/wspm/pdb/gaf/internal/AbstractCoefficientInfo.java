@@ -38,22 +38,58 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.command;
+package org.kalypso.model.wspm.pdb.gaf.internal;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.kalypso.contribs.java.util.Arrays;
+import org.kalypso.model.wspm.pdb.db.mapping.Coefficient;
+import org.kalypso.model.wspm.pdb.db.mapping.CoefficientId;
 
 /**
  * @author Gernot Belger
  */
-public final class GetPdbList
+public class AbstractCoefficientInfo<T extends Coefficient>
 {
-  @SuppressWarnings("unchecked")
-  public static <T> List<T> getList( final Session session, final Class<T> type )
+  private final Map<String, T> m_definitions = new HashMap<String, T>();
+
+  private final Class<T> m_type;
+
+  public AbstractCoefficientInfo( final Session session, final Class<T> type, final String kind )
   {
-    final Criteria criteria = session.createCriteria( type );
-    return criteria.list();
+    m_type = type;
+
+    final T[] allData = loadDefinition( session, kind );
+    hashDefinitions( allData );
+  }
+
+  private T[] loadDefinition( final Session session, final String kind )
+  {
+    final Criteria criteria = session.createCriteria( m_type );
+    criteria.add( Restrictions.eq( "id.pointKind", kind ) );
+    // criteria.createAlias( "id", "id", Criteria.LEFT_JOIN, Restrictions.eq( "point_kind", kind ) );
+    final List<T> list = criteria.list();
+
+    return Arrays.toArray( list, m_type );
+  }
+
+  private void hashDefinitions( final T[] allData )
+  {
+    for( final T definition : allData )
+    {
+      final CoefficientId id = definition.getId();
+      final String name = id.getName();
+      m_definitions.put( name, definition );
+    }
+  }
+
+  public T getCoefficient( final String name )
+  {
+    return m_definitions.get( name );
   }
 }

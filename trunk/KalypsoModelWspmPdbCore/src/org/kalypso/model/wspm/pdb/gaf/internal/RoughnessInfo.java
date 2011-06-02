@@ -38,22 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.command;
+package org.kalypso.model.wspm.pdb.gaf.internal;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 
 /**
+ * Helper that holds the current state of roughness of the db.
+ * 
  * @author Gernot Belger
  */
-public final class GetPdbList
+public class RoughnessInfo extends AbstractCoefficientInfo<Roughness>
 {
-  @SuppressWarnings("unchecked")
-  public static <T> List<T> getList( final Session session, final Class<T> type )
+  public RoughnessInfo( final Session session, final String kind )
   {
-    final Criteria criteria = session.createCriteria( type );
-    return criteria.list();
+    super( session, Roughness.class, kind );
   }
 }

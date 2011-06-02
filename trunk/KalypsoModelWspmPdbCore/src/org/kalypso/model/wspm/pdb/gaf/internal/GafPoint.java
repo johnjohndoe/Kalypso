@@ -124,4 +124,14 @@ public class GafPoint
 
     return new Coordinate( m_rw.doubleValue(), m_hw.doubleValue(), z );
   }
+
+  public String getRoughnessClass( )
+  {
+    return m_roughnessClass;
+  }
+
+  public String getVegetationClass( )
+  {
+    return m_vegetationClass;
+  }
 }

@@ -147,10 +147,6 @@ public class CrossSectionInserter
     final State state = section.getState();
     final String name = state.getName();
 
-// final WspmReach reach = waterBody.findReachByName( name );
-// if( reach instanceof TuhhReach )
-// return (TuhhReach) reach;
-
     final TuhhReach newReach = TuhhWspmProject.createNewReachForWaterBody( waterBody );
     // TODO: maybe make name unique, if already exists (i.e. reach_2)
     newReach.setName( name );

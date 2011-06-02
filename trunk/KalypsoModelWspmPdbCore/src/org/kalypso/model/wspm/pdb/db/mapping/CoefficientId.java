@@ -38,22 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.command;
-
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.Session;
+package org.kalypso.model.wspm.pdb.db.mapping;
 
 /**
+ * Commoon interface for all cross section coefficient-id's.
+ * 
  * @author Gernot Belger
  */
-public final class GetPdbList
+public interface CoefficientId
 {
-  @SuppressWarnings("unchecked")
-  public static <T> List<T> getList( final Session session, final Class<T> type )
-  {
-    final Criteria criteria = session.createCriteria( type );
-    return criteria.list();
-  }
+  String getPointKind( );
+
+  String getName( );
 }

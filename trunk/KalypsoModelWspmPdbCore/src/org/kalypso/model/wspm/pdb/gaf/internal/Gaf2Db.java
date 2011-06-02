@@ -41,13 +41,11 @@
 package org.kalypso.model.wspm.pdb.gaf.internal;
 
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
@@ -84,12 +82,15 @@ public class Gaf2Db implements IPdbOperation
 
   private final String m_dbType;
 
-  public Gaf2Db( final String dbType, final WaterBody waterBody, final State state, final GafProfiles profiles, final int srid, final IProgressMonitor monitor )
+  private final Coefficients m_coefficients;
+
+  public Gaf2Db( final String dbType, final WaterBody waterBody, final State state, final GafProfiles profiles, final int srid, final Coefficients coefficients, final IProgressMonitor monitor )
   {
     m_dbType = dbType;
     m_waterBody = waterBody;
     m_state = state;
     m_profiles = profiles;
+    m_coefficients = coefficients;
     m_monitor = monitor;
     m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
   }
@@ -106,33 +107,16 @@ public class Gaf2Db implements IPdbOperation
     final GafProfile[] profiles = m_profiles.getProfiles();
     m_monitor.beginTask( "Importing cross sections into database", profiles.length );
 
-    final Roughness[] allRoughness = loadRoughness( session );
-    final Vegetation[] allVegetation = loadVegetation( session );
-
     addState( session, m_state );
 
     for( final GafProfile profile : profiles )
     {
       m_monitor.subTask( String.format( "converting cross section %s", profile.getStation() ) );
-      commitProfile( session, m_dbType, profile, allRoughness, allVegetation );
+      commitProfile( session, m_dbType, profile );
       m_monitor.worked( 1 );
     }
 
     m_monitor.subTask( "writing data into database" );
-  }
-
-  private Roughness[] loadRoughness( final Session session )
-  {
-    // FIXME: only get roughness of kind 'GAF'
-    final List<Roughness> list = GetPdbList.getList( session, Roughness.class );
-    return list.toArray( new Roughness[list.size()] );
-  }
-
-  private Vegetation[] loadVegetation( final Session session )
-  {
-    // FIXME: only get vegetation of kind 'GAF'
-    final List<Vegetation> list = GetPdbList.getList( session, Vegetation.class );
-    return list.toArray( new Vegetation[list.size()] );
   }
 
   private void addState( final Session session, final State state )
@@ -144,7 +128,7 @@ public class Gaf2Db implements IPdbOperation
     session.save( m_state );
   }
 
-  private void commitProfile( final Session session, final String dbType, final GafProfile profile, final Roughness[] allRoughness, final Vegetation[] allVegetation )
+  private void commitProfile( final Session session, final String dbType, final GafProfile profile )
   {
     final CrossSection crossSection = commitCrossSection( session, dbType, profile );
 
@@ -161,7 +145,7 @@ public class Gaf2Db implements IPdbOperation
       for( int j = 0; j < points.length; j++ )
       {
         final GafPoint gafPoint = points[j];
-        commitPoint( session, csPart, gafPoint, j, allRoughness, allVegetation );
+        commitPoint( session, csPart, gafPoint, j );
       }
     }
   }
@@ -217,7 +201,7 @@ public class Gaf2Db implements IPdbOperation
     return csPart;
   }
 
-  private void commitPoint( final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index, final Roughness[] allRoughness, final Vegetation[] allVegetation )
+  private void commitPoint( final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index )
   {
     final Point point = new Point();
 
@@ -248,17 +232,16 @@ public class Gaf2Db implements IPdbOperation
 
     point.setName( gafPoint.getPointId() );
 
+    final Roughness roughness = m_coefficients.getRoughness( gafPoint.getRoughnessClass() );
+    point.setRoughness( roughness );
+    point.setRoughnessKstValue( roughness.getKstValue() );
+    point.setRoughnessKValue( roughness.getKValue() );
 
-    // FIXME: implement roughness
-    point.setRoughness( allRoughness[0] );
-    point.setRoughnessKstValue( null );
-    point.setRoughnessKValue( null );
-
-    // FIXME: implement vegetation
-    point.setVegetation( allVegetation[0] );
-    point.setVegetationAx( null );
-    point.setVegetationAy( null );
-    point.setVegetationDp( null );
+    final Vegetation vegetation = m_coefficients.getVegetation( gafPoint.getVegetationClass() );
+    point.setVegetation( vegetation );
+    point.setVegetationAx( vegetation.getAx() );
+    point.setVegetationAy( vegetation.getAy() );
+    point.setVegetationDp( vegetation.getDp() );
 
     session.save( point );
   }

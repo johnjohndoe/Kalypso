@@ -48,7 +48,9 @@ import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**
  * @author Gernot Belger
+ * @deprecated
  */
+@Deprecated
 public class ListOperation<T> implements IPdbOperation
 {
   private final Class<T> m_type;

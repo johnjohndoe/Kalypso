@@ -43,13 +43,17 @@ package org.kalypso.model.wspm.pdb.gaf;
 import java.io.File;
 import java.util.Date;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.gaf.internal.Coefficients;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
@@ -77,6 +81,10 @@ public class ImportGafData extends AbstractModelObject
   private final IPdbConnection m_connection;
 
   private GafProfiles m_profiles;
+
+  private Coefficients m_coefficients;
+
+  private PdbInfo m_info;
 
   public ImportGafData( final IPdbConnection connection )
   {
@@ -112,6 +120,24 @@ public class ImportGafData extends AbstractModelObject
 
     settings.put( PROPERTY_SRS, m_srs );
     settings.put( PROPERTY_GAF_FILE, gafPath );
+  }
+
+  public void initFromDb( ) throws PdbConnectException
+  {
+    Session session = null;
+    try
+    {
+      session = m_connection.openSession();
+
+      m_coefficients = new Coefficients( session, IGafConstants.POINT_KIND_GAF );
+      m_info = new PdbInfo( session );
+
+      session.close();
+    }
+    finally
+    {
+      PdbUtils.closeSessionQuietly( session );
+    }
   }
 
   public String getSrs( )
@@ -162,7 +188,7 @@ public class ImportGafData extends AbstractModelObject
       final String stateSource = String.format( "Importiert aus: %s", filename );
       m_state.setSource( stateSource );
 
-      m_state.setName( FilenameUtils.removeExtension( filename ) );
+      m_state.setName( filename );
     }
   }
 
@@ -182,10 +208,7 @@ public class ImportGafData extends AbstractModelObject
 
   public int getSrid( )
   {
-    // FIXME: find srid from pdb by srs set here...
-
-    // TODO Auto-generated method stub
-    return 31468;
+    return m_info.getSRID();
   }
 
   public IPdbConnection getConnection( )
@@ -201,5 +224,10 @@ public class ImportGafData extends AbstractModelObject
   public GafProfiles getProfiles( )
   {
     return m_profiles;
+  }
+
+  public Coefficients getCoefficients( )
+  {
+    return m_coefficients;
   }
 }
