@@ -235,6 +235,9 @@ public class PdbView extends ViewPart
     m_form.setImage( getFormImage() );
     m_form.setText( getFormTitel() );
 
+    /* After each connect, we re-initialize the pdb project and its perspective */
+    initializePerspective();
+
     final boolean isConnected = m_pdbConnection != null;
 
     m_connectAction.setEnabled( !isConnected );
@@ -244,9 +247,6 @@ public class PdbView extends ViewPart
       new ConnectionViewer( m_toolkit, body, m_pdbConnection, m_wspmProject );
     else
       createNonConnectedControl( body );
-
-    /* After each connect, we re-initialize the pdb project and its perspective */
-    initializePerspective();
 
     m_form.layout();
   }

@@ -69,6 +69,7 @@ import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.wizards.NewProjectData;
 import org.kalypso.afgui.wizards.UnpackProjectTemplateOperation;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
@@ -286,8 +287,20 @@ public class PdbWspmProject
       return;
 
     view.setInput( input );
+
     // TODO: better name; maybe use project description instead?
-    view.setPartName( m_project.getName() );
+    final String name = m_project.getName();
+    final UIJob job = new UIJob( StringUtils.EMPTY )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        view.setPartName( name );
+        return Status.OK_STATUS;
+      }
+    };
+    job.setSystem( true );
+    job.schedule();
   }
 
   private void initMapView( )
@@ -356,6 +369,57 @@ public class PdbWspmProject
 
     m_provider.save( monitor );
   }
+
+  public void updateViews( )
+  {
+    // FIXME: reload to force reload of tree
+    // reloadWspmView( page );
+    // updateMap( page, project );
+
+  }
+
+  public CommandableWorkspace getWorkspace( )
+  {
+    if( m_provider == null )
+      return null;
+
+    return m_provider.getWorkspace();
+  }
+
+// private TuhhWspmProject findProject( final IWorkbenchPage page )
+// {
+// final IViewPart view = page.findView( WspmGmvViewPart.ID );
+// if( view instanceof WspmGmvViewPart )
+// {
+// final WspmGmvViewPart wspmView = (WspmGmvViewPart) view;
+// final TuhhWspmProject project = wspmView.getProject();
+// /* If project already exists, just return it */
+// if( project != null )
+// return project;
+// }
+//
+// return PdbWspmUtils.createModel();
+// }
+//
+// private void reloadWspmView( final IWorkbenchPage page )
+// {
+// final IViewPart view = page.findView( WspmGmvViewPart.ID );
+// if( view instanceof WspmGmvViewPart )
+// {
+// final WspmGmvViewPart wspmView = (WspmGmvViewPart) view;
+// wspmView.reload();
+// }
+// }
+//
+// private void updateMap( final IWorkbenchPage page, final TuhhWspmProject project )
+// {
+// final IViewPart view = page.findView( WspmMapViewPart.ID );
+// if( view instanceof WspmMapViewPart )
+// {
+// final WspmMapViewPart wspmView = (WspmMapViewPart) view;
+// wspmView.updateMap( project );
+// }
+// }
 
 // /* Make sure, that all reaches of the project have a theme in the current map */
 // public void updateMap( final TuhhWspmProject project )

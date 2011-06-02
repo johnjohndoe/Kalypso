@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -63,6 +64,9 @@ import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
@@ -147,6 +151,9 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
         ProgressUtilities.worked( monitor, 1 );
       }
 
+      final CommandableWorkspace workspace = m_project.getWorkspace();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, (Feature) null, (Feature) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      workspace.postCommand( new EmptyCommand( null, false ) );
       m_project.saveProject( new SubProgressMonitor( monitor, 10 ) );
     }
     catch( final GMLSchemaException e )
@@ -156,6 +163,12 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
       throw new CoreException( status );
     }
     catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
+    catch( final Exception e )
     {
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
