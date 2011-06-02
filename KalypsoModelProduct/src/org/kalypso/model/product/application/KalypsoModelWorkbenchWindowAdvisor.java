@@ -41,8 +41,8 @@
 package org.kalypso.model.product.application;
 
 import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -50,19 +50,20 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
 import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
-import org.eclipse.ui.intro.IIntroManager;
-import org.kalypso.afgui.perspective.Perspective;
-import org.kalypso.model.product.i18n.Messages;
+import org.eclipse.ui.internal.util.PrefUtil;
 
 /**
  * @author Gernot Belger
  */
+@SuppressWarnings("restriction")
 public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 {
   /**
    * True, if access is restricted.
    */
   private final boolean m_restrictedAccess;
+
+  private final String m_defaultPerspective;
 
   /**
    * The constructor.
@@ -73,11 +74,12 @@ public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
    *          If true, only the model-product perspective will be available to the user. Toolbar and perspective bar
    *          will be hidden.
    */
-  public KalypsoModelWorkbenchWindowAdvisor( final IWorkbenchWindowConfigurer configurer, final boolean restrictedAccess )
+  public KalypsoModelWorkbenchWindowAdvisor( final IWorkbenchWindowConfigurer configurer, final boolean restrictedAccess, final String defaultPerspective )
   {
     super( configurer );
 
     m_restrictedAccess = restrictedAccess;
+    m_defaultPerspective = defaultPerspective;
   }
 
   /**
@@ -108,14 +110,14 @@ public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
       final IWorkbenchPage activePage = window.getActivePage();
 
       /* Make sure the default perspective is open. */
-      final IPerspectiveDescriptor defaultPerpDesc = window.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId( Perspective.ID );
+      final IPerspectiveDescriptor defaultPerpDesc = window.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId( m_defaultPerspective );
       activePage.setPerspective( defaultPerpDesc );
 
       /* Close all other perspectives */
       final IPerspectiveDescriptor[] openPerspectives = activePage.getOpenPerspectives();
       for( final IPerspectiveDescriptor perspectiveDescriptor : openPerspectives )
       {
-        if( !perspectiveDescriptor.getId().equals( Perspective.ID ) )
+        if( !perspectiveDescriptor.getId().equals( m_defaultPerspective ) )
           activePage.closePerspective( perspectiveDescriptor, true, false );
       }
     }
@@ -138,24 +140,40 @@ public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
     configurer.setShowStatusLine( true );
 
     /* Set the title. */
-    configurer.setTitle( Messages.getString( "org.kalypso.model.product.application.KalypsoModelWorkbenchWindowAdvisor.0" ) ); //$NON-NLS-1$
+//    configurer.setTitle( Messages.getString( "org.kalypso.model.product.application.KalypsoModelWorkbenchWindowAdvisor.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#openIntro()
-   */
   @Override
-  @SuppressWarnings("restriction")
   public void openIntro( )
   {
-    /* Open the welcome page not in stand by mode. */
-    IWorkbench workbench = getWindowConfigurer().getWorkbenchConfigurer().getWorkbench();
-    IIntroManager introManager = workbench.getIntroManager();
-    introManager.showIntro( null, false );
+    handleIntroBehavior();
+
+    super.openIntro();
 
     /* Always start with the main page. */
-    IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
+    final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
     if( model != null )
       model.setCurrentPageId( "rootPage" ); //$NON-NLS-1$
+  }
+
+  private void handleIntroBehavior( )
+  {
+    final IntroBehavior intro = KalypsoModelApplication.getIntroBehavior();
+    switch( intro )
+    {
+      case always:
+        PrefUtil.getAPIPreferenceStore().setValue( IWorkbenchPreferenceConstants.SHOW_INTRO, true );
+        break;
+
+      case never:
+        PrefUtil.getAPIPreferenceStore().setValue( IWorkbenchPreferenceConstants.SHOW_INTRO, false );
+        break;
+
+      case eclipse:
+        // nothing to do
+        break;
+    }
+
+    PrefUtil.saveAPIPrefs();
   }
 }

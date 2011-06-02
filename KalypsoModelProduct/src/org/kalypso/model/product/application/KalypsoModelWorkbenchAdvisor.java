@@ -47,7 +47,6 @@ import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.application.DelayedEventsProcessor;
-import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.contribs.eclipse.ide.application.KalypsoWorkbenchAdvisor;
 
 /**
@@ -61,25 +60,25 @@ public class KalypsoModelWorkbenchAdvisor extends KalypsoWorkbenchAdvisor
    */
   private final boolean m_restrictedAccess;
 
+  private final String m_initialPerspectiveId;
+
   /**
    * @param restrictedAccess
    *          See
    *          {@link KalypsoModelWorkbenchWindowAdvisor#KalypsoModelWorkbenchWindowAdvisor(KalypsoModelWorkbenchAdvisor, IWorkbenchWindowConfigurer, boolean)}
    */
-  public KalypsoModelWorkbenchAdvisor( final DelayedEventsProcessor processor, final boolean restrictedAccess )
+  public KalypsoModelWorkbenchAdvisor( final DelayedEventsProcessor processor, final boolean restrictedAccess, final String initialPerspective )
   {
     super( processor );
 
     m_restrictedAccess = restrictedAccess;
+    m_initialPerspectiveId = initialPerspective;
   }
 
-  /**
-   * @see org.eclipse.ui.application.WorkbenchAdvisor#getInitialWindowPerspectiveId()
-   */
   @Override
   public String getInitialWindowPerspectiveId( )
   {
-    return Perspective.ID;
+    return m_initialPerspectiveId;
   }
 
   /**
@@ -88,7 +87,7 @@ public class KalypsoModelWorkbenchAdvisor extends KalypsoWorkbenchAdvisor
   @Override
   public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor( final IWorkbenchWindowConfigurer configurer )
   {
-    return new KalypsoModelWorkbenchWindowAdvisor( configurer, m_restrictedAccess );
+    return new KalypsoModelWorkbenchWindowAdvisor( configurer, m_restrictedAccess, m_initialPerspectiveId );
   }
 
   /**
