@@ -232,12 +232,12 @@ public class Gaf2Db implements IPdbOperation
 
     point.setName( gafPoint.getPointId() );
 
-    final Roughness roughness = m_coefficients.getRoughness( gafPoint.getRoughnessClass() );
+    final Roughness roughness = m_coefficients.getRoughnessOrUnknown( gafPoint.getRoughnessClass() );
     point.setRoughness( roughness );
     point.setRoughnessKstValue( roughness.getKstValue() );
     point.setRoughnessKValue( roughness.getKValue() );
 
-    final Vegetation vegetation = m_coefficients.getVegetation( gafPoint.getVegetationClass() );
+    final Vegetation vegetation = m_coefficients.getVegetationOrUnknown( gafPoint.getVegetationClass() );
     point.setVegetation( vegetation );
     point.setVegetationAx( vegetation.getAx() );
     point.setVegetationAy( vegetation.getAy() );
