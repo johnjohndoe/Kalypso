@@ -76,7 +76,7 @@ public class UniqueStateNameValidator extends TypedValidator<String>
   @Override
   protected IStatus doValidate( final String value ) throws CoreException
   {
-    if( value.equals( m_ignoreName ) )
+    if( value != null && value.equals( m_ignoreName ) )
       return Status.OK_STATUS;
 
     if( m_names.contains( value ) )

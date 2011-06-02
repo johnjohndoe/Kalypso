@@ -84,43 +84,6 @@ public class CheckoutAction extends Action
     if( !status.isOK() )
       new StatusDialog2( shell, status, getText() ).open();
 
-    // FIXME: reload to force reload of tree
-// reloadWspmView( page );
-// updateMap( page, project );
+    project.updateViews();
   }
-
-// private TuhhWspmProject findProject( final IWorkbenchPage page )
-// {
-// final IViewPart view = page.findView( WspmGmvViewPart.ID );
-// if( view instanceof WspmGmvViewPart )
-// {
-// final WspmGmvViewPart wspmView = (WspmGmvViewPart) view;
-// final TuhhWspmProject project = wspmView.getProject();
-// /* If project already exists, just return it */
-// if( project != null )
-// return project;
-// }
-//
-// return PdbWspmUtils.createModel();
-// }
-//
-// private void reloadWspmView( final IWorkbenchPage page )
-// {
-// final IViewPart view = page.findView( WspmGmvViewPart.ID );
-// if( view instanceof WspmGmvViewPart )
-// {
-// final WspmGmvViewPart wspmView = (WspmGmvViewPart) view;
-// wspmView.reload();
-// }
-// }
-//
-// private void updateMap( final IWorkbenchPage page, final TuhhWspmProject project )
-// {
-// final IViewPart view = page.findView( WspmMapViewPart.ID );
-// if( view instanceof WspmMapViewPart )
-// {
-// final WspmMapViewPart wspmView = (WspmMapViewPart) view;
-// wspmView.updateMap( project );
-// }
-// }
 }
