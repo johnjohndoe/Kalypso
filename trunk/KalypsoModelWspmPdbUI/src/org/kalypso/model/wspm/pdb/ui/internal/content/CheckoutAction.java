@@ -45,7 +45,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -53,9 +52,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
-import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart;
-import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmUtils;
-import org.kalypso.model.wspm.pdb.ui.internal.wspm.WspmViewPart;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 
 /**
@@ -87,7 +83,7 @@ public class CheckoutAction extends Action
     // FIXME: save changes in project (ask user!)
     // REMARK: project will be saved second time by the checkout operation
 
-    final TuhhWspmProject project = findProject( page );
+    final TuhhWspmProject project = null;// findProject( page );
 
     final ICoreRunnableWithProgress operation = new CheckoutOperation( project, selection );
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
@@ -95,42 +91,42 @@ public class CheckoutAction extends Action
       new StatusDialog2( shell, status, getText() ).open();
 
     // reload to force reload of tree
-    reloadWspmView( page );
-    updateMap( page, project );
+// reloadWspmView( page );
+// updateMap( page, project );
   }
 
-  private TuhhWspmProject findProject( final IWorkbenchPage page )
-  {
-    final IViewPart view = page.findView( WspmViewPart.ID );
-    if( view instanceof WspmViewPart )
-    {
-      final WspmViewPart wspmView = (WspmViewPart) view;
-      final TuhhWspmProject project = wspmView.getProject();
-      /* If project already exists, just return it */
-      if( project != null )
-        return project;
-    }
-
-    return PdbWspmUtils.createModel();
-  }
-
-  private void reloadWspmView( final IWorkbenchPage page )
-  {
-    final IViewPart view = page.findView( WspmViewPart.ID );
-    if( view instanceof WspmViewPart )
-    {
-      final WspmViewPart wspmView = (WspmViewPart) view;
-      wspmView.reload();
-    }
-  }
-
-  private void updateMap( final IWorkbenchPage page, final TuhhWspmProject project )
-  {
-    final IViewPart view = page.findView( PdbMapViewPart.ID );
-    if( view instanceof PdbMapViewPart )
-    {
-      final PdbMapViewPart wspmView = (PdbMapViewPart) view;
-      wspmView.updateMap( project );
-    }
-  }
+// private TuhhWspmProject findProject( final IWorkbenchPage page )
+// {
+// final IViewPart view = page.findView( WspmGmvViewPart.ID );
+// if( view instanceof WspmGmvViewPart )
+// {
+// final WspmGmvViewPart wspmView = (WspmGmvViewPart) view;
+// final TuhhWspmProject project = wspmView.getProject();
+// /* If project already exists, just return it */
+// if( project != null )
+// return project;
+// }
+//
+// return PdbWspmUtils.createModel();
+// }
+//
+// private void reloadWspmView( final IWorkbenchPage page )
+// {
+// final IViewPart view = page.findView( WspmGmvViewPart.ID );
+// if( view instanceof WspmGmvViewPart )
+// {
+// final WspmGmvViewPart wspmView = (WspmGmvViewPart) view;
+// wspmView.reload();
+// }
+// }
+//
+// private void updateMap( final IWorkbenchPage page, final TuhhWspmProject project )
+// {
+// final IViewPart view = page.findView( WspmMapViewPart.ID );
+// if( view instanceof WspmMapViewPart )
+// {
+// final WspmMapViewPart wspmView = (WspmMapViewPart) view;
+// wspmView.updateMap( project );
+// }
+// }
 }

@@ -38,12 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.preferences;
+package org.kalypso.model.wspm.tuhh.ui.light.internal;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartViewPart;
 import org.kalypso.model.wspm.ui.view.table.TableView;
 import org.kalypso.ogc.gml.outline.ViewContentOutline;
@@ -52,15 +51,15 @@ import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 /**
  * @author Gernot Belger
  */
-public class PdbPerspective implements IPerspectiveFactory
+public class WspmLightPerspective implements IPerspectiveFactory
 {
-  private static final String PDB_GMV_VIEW = "org.kalypso.model.wspm.pdb.ui.gmvView";
+  private static final String LEFT_FOLDER = "wspmLightFolder"; //$NON-NLS-1$
 
-  private static final String LEFT_FOLDER = "pdbLeftFolder"; //$NON-NLS-1$
+  private static final String RIGHT_FOLDER = "wspmRightFolder"; //$NON-NLS-1$
 
-  private static final String OUTLINE_FOLDER = "outlineFolder"; //$NON-NLS-1$
+  private static final String OUTLINE_FOLDER = "wspmLightOutlineFolder"; //$NON-NLS-1$
 
-  public static String ID = "PdbPerspective"; //$NON-NLS-1$
+  public static String ID = "WspmLightPerspective"; //$NON-NLS-1$
 
   @Override
   public void createInitialLayout( final IPageLayout layout )
@@ -81,34 +80,34 @@ public class PdbPerspective implements IPerspectiveFactory
     final String editorArea = layout.getEditorArea();
     layout.setEditorAreaVisible( false );
 
-    layout.addView( PdbView.ID, IPageLayout.LEFT, 0.28f, editorArea );
+    final IFolderLayout leftFolder = layout.createFolder( LEFT_FOLDER, IPageLayout.LEFT, 0.28f, editorArea );
+    leftFolder.addView( WspmGmvViewPart.ID );
 
-    final IFolderLayout outlineFolder = layout.createFolder( OUTLINE_FOLDER, IPageLayout.BOTTOM, 0.50f, PdbView.ID );
-    outlineFolder.addView( PDB_GMV_VIEW );
+    final IFolderLayout outlineFolder = layout.createFolder( OUTLINE_FOLDER, IPageLayout.BOTTOM, 0.50f, LEFT_FOLDER );
     outlineFolder.addView( ViewContentOutline.ID );
 
-    layout.addView( PdbMapViewPart.ID, IPageLayout.RIGHT, 0.72f, editorArea );
+    layout.addView( WspmMapViewPart.ID, IPageLayout.RIGHT, 0.72f, editorArea );
 
-    final IFolderLayout leftFolder = layout.createFolder( LEFT_FOLDER, IPageLayout.BOTTOM, 0.66f, PdbMapViewPart.ID );
-    leftFolder.addView( ProfilChartViewPart.ID );
-    leftFolder.addView( TableView.ID );
-
-    layout.getViewLayout( PdbView.ID ).setCloseable( false );
-    layout.getViewLayout( PdbView.ID ).setMoveable( false );
+    final IFolderLayout rightFolder = layout.createFolder( RIGHT_FOLDER, IPageLayout.BOTTOM, 0.66f, WspmMapViewPart.ID );
+    rightFolder.addView( ProfilChartViewPart.ID );
+    rightFolder.addView( TableView.ID );
 
     layout.getViewLayout( ViewContentOutline.ID ).setCloseable( false );
-    layout.getViewLayout( ViewContentOutline.ID ).setMoveable( false );
-
-    layout.getViewLayout( PDB_GMV_VIEW ).setCloseable( false );
-    layout.getViewLayout( PDB_GMV_VIEW ).setMoveable( false );
-
-    layout.getViewLayout( PdbMapViewPart.ID ).setCloseable( false );
-    layout.getViewLayout( PdbMapViewPart.ID ).setMoveable( false );
+    // layout.getViewLayout( ViewContentOutline.ID ).setMoveable( false );
 
     layout.getViewLayout( ProfilChartViewPart.ID ).setCloseable( false );
-    layout.getViewLayout( ProfilChartViewPart.ID ).setMoveable( false );
+    // layout.getViewLayout( ProfilChartViewPart.ID ).setMoveable( false );
+
+    layout.getViewLayout( WspmGmvViewPart.ID ).setCloseable( false );
+    layout.getViewLayout( WspmMapViewPart.ID ).setMoveable( false );
+
+    layout.getViewLayout( WspmMapViewPart.ID ).setCloseable( false );
+    layout.getViewLayout( WspmMapViewPart.ID ).setMoveable( false );
+
+    layout.getViewLayout( ProfilChartViewPart.ID ).setCloseable( false );
+    // layout.getViewLayout( ProfilChartViewPart.ID ).setMoveable( false );
 
     layout.getViewLayout( TableView.ID ).setCloseable( false );
-    layout.getViewLayout( TableView.ID ).setMoveable( false );
+    // layout.getViewLayout( TableView.ID ).setMoveable( false );
   }
 }

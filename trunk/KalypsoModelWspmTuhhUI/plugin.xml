@@ -277,6 +277,16 @@
             project="true">
       </wizard>
    </extension>
+
+   <extension point="org.eclipse.ui.perspectives">
+      <perspective 
+            class="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmLightPerspective"
+            icon="icons/obj16/wspmLight.gif"
+            id="WspmLightPerspective"
+            name="WSPM">
+      </perspective>
+   </extension>
+   
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension targetID="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory">
@@ -651,7 +661,29 @@
            commandId="org.kalypso.model.wspm.ui.commands.toggleKeepChannelRoughnessPreference">
      </handler>
   </extension>
-
-	
-      
+  <extension point="org.eclipse.ui.views">
+      <category
+            id="org.kalypso.model.wspm.tuhh.ui.light.viewCategory"
+            name="Cross Section Database"
+            parentCategory="org.kalypso.ui.kalypso">
+      </category>
+      <view
+            allowMultiple="false"
+            category="org.kalypso.model.wspm.tuhh.ui.light.viewCategory"
+            class="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmGmvViewPart"
+            icon="icons/obj16/wspwin16.gif"
+            id="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmGmvViewPart"
+            name="WSPM Data"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="org.kalypso.model.wspm.tuhh.ui.light.viewCategory"
+            class="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart"
+            icon="icons/obj16/kalypso_gmt.gif"
+            id="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart"
+            name="Map"
+            restorable="true">
+      </view>
+  </extension>
 </plugin>

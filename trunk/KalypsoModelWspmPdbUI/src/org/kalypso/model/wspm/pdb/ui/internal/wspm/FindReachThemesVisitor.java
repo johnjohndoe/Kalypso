@@ -58,7 +58,7 @@ public class FindReachThemesVisitor implements IKalypsoThemeVisitor
   @Override
   public boolean visit( final IKalypsoTheme theme )
   {
-    final String reachGmlId = theme.getProperty( PdbMapViewPart.PROPERTY_THEME_REACH, null );
+    final String reachGmlId = "$";// theme.getProperty( WspmMapViewPart.PROPERTY_THEME_REACH, null );
     if( reachGmlId != null && theme instanceof IKalypsoFeatureTheme )
       m_reaches.put( reachGmlId, (IKalypsoFeatureTheme) theme );
 
