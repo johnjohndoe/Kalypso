@@ -46,6 +46,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
@@ -56,10 +57,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * Writes a gaf profile into the database.
@@ -70,7 +68,7 @@ public class Gaf2Db implements IPdbOperation
 {
   private final WaterBody m_waterBody;
 
-  private final GeometryFactory m_geometryFactory;
+// private final GeometryFactory m_geometryFactory;
 
   private int m_profileCount = 0;
 
@@ -84,7 +82,7 @@ public class Gaf2Db implements IPdbOperation
 
   private final Coefficients m_coefficients;
 
-  public Gaf2Db( final String dbType, final WaterBody waterBody, final State state, final GafProfiles profiles, final int srid, final Coefficients coefficients, final IProgressMonitor monitor )
+  public Gaf2Db( final String dbType, final WaterBody waterBody, final State state, final GafProfiles profiles, final Coefficients coefficients, final IProgressMonitor monitor )
   {
     m_dbType = dbType;
     m_waterBody = waterBody;
@@ -92,7 +90,6 @@ public class Gaf2Db implements IPdbOperation
     m_profiles = profiles;
     m_coefficients = coefficients;
     m_monitor = monitor;
-    m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
   }
 
   @Override
@@ -102,21 +99,29 @@ public class Gaf2Db implements IPdbOperation
   }
 
   @Override
-  public void execute( final Session session )
+  public void execute( final Session session ) throws PdbConnectException
   {
-    final GafProfile[] profiles = m_profiles.getProfiles();
-    m_monitor.beginTask( "Importing cross sections into database", profiles.length );
-
-    addState( session, m_state );
-
-    for( final GafProfile profile : profiles )
+    try
     {
-      m_monitor.subTask( String.format( "converting cross section %s", profile.getStation() ) );
-      commitProfile( session, m_dbType, profile );
-      m_monitor.worked( 1 );
-    }
+      final GafProfile[] profiles = m_profiles.getProfiles();
+      m_monitor.beginTask( "Importing cross sections into database", profiles.length );
 
-    m_monitor.subTask( "writing data into database" );
+      addState( session, m_state );
+
+      for( final GafProfile profile : profiles )
+      {
+        m_monitor.subTask( String.format( "converting cross section %s", profile.getStation() ) );
+        commitProfile( session, m_dbType, profile );
+        m_monitor.worked( 1 );
+      }
+
+      m_monitor.subTask( "writing data into database" );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed to write data into database", e );
+    }
   }
 
   private void addState( final Session session, final State state )
@@ -128,7 +133,7 @@ public class Gaf2Db implements IPdbOperation
     session.save( m_state );
   }
 
-  private void commitProfile( final Session session, final String dbType, final GafProfile profile )
+  private void commitProfile( final Session session, final String dbType, final GafProfile profile ) throws Exception
   {
     final CrossSection crossSection = commitCrossSection( session, dbType, profile );
 
@@ -150,16 +155,12 @@ public class Gaf2Db implements IPdbOperation
     }
   }
 
-  private CrossSection commitCrossSection( final Session session, final String dbType, final GafProfile profile )
+  private CrossSection commitCrossSection( final Session session, final String dbType, final GafProfile profile ) throws Exception
   {
     final CrossSection crossSection = new CrossSection();
 
     final String id = m_state.getName() + "_" + m_profileCount++;
     crossSection.setName( id );
-
-    // TODO: what to set into comment?
-    // Log entries of this station?
-    // or comment of state
 
     crossSection.setState( m_state );
     crossSection.setWaterBody( m_waterBody );
@@ -182,7 +183,7 @@ public class Gaf2Db implements IPdbOperation
     return crossSection;
   }
 
-  private CrossSectionPart commitPart( final Session session, final String dbType, final CrossSection crossSection, final GafPart part, final int index )
+  private CrossSectionPart commitPart( final Session session, final String dbType, final CrossSection crossSection, final GafPart part, final int index ) throws Exception
   {
     final CrossSectionPart csPart = new CrossSectionPart();
 
@@ -201,7 +202,7 @@ public class Gaf2Db implements IPdbOperation
     return csPart;
   }
 
-  private void commitPoint( final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index )
+  private void commitPoint( final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index ) throws Exception
   {
     final Point point = new Point();
 
@@ -223,12 +224,7 @@ public class Gaf2Db implements IPdbOperation
     point.setHyk( realHyk );
     point.setCode( realCode );
 
-    final Coordinate coordinate = gafPoint.getCoordinate();
-    if( coordinate != null )
-    {
-      final com.vividsolutions.jts.geom.Point location = m_geometryFactory.createPoint( coordinate );
-      point.setLocation( location );
-    }
+    point.setLocation( gafPoint.getPoint() );
 
     point.setName( gafPoint.getPointId() );
 

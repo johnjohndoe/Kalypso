@@ -77,7 +77,7 @@ public class GafPart
     m_points.add( point );
   }
 
-  public Geometry getLine( final String dbType )
+  public Geometry getLine( final String dbType ) throws Exception
   {
     final Collection<Coordinate> crds = new ArrayList<Coordinate>();
 
