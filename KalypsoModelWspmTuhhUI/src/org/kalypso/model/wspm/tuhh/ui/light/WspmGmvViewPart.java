@@ -50,4 +50,10 @@ import org.kalypso.ui.editor.gmleditor.part.GmvViewPart;
 public class WspmGmvViewPart extends GmvViewPart
 {
   public static final String ID = "org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart"; //$NON-NLS-1$
+
+  @Override
+  public void setPartName( final String partName )
+  {
+    super.setPartName( partName );
+  }
 }
