@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="exportStateWizards" name="exportStateWizards" schema="schema/exportStateWizards.exsd"/>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
@@ -10,16 +9,6 @@
             id="WspmPdbPreferencePage"
             name="Cross Section Database">
       </page>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbPerspective"
-            fixed="true"
-            icon="icons/pdb.gif"
-            id="PdbPerspective"
-            name="Profildatenbank">
-      </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -37,36 +26,11 @@
             name="Profildatenbank"
             restorable="true">
       </view>
-      <view
-            class="org.kalypso.model.wspm.pdb.ui.internal.admin.info.PdbInfoView"
-            icon="icons/infoView.gif"
-            id="PdbInfoView"
-            name="Info"
-            restorable="true">
-      </view>
-      <view
-            allowMultiple="true"
-            category="org.kalypso.model.wspm.pdb.ui.viewCategory"
-            class="org.kalypso.model.wspm.pdb.ui.internal.wspm.WspmViewPart"
-            icon="icons/wspmView.gif"
-            id="org.kalypso.model.wspm.pdb.ui.gmvView"
-            name="Local Data"
-            restorable="true">
-      </view>
-      <view
-            allowMultiple="false"
-            category="org.kalypso.model.wspm.pdb.ui.viewCategory"
-            class="org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart"
-            icon="icons/kalypso_gmt.gif"
-            id="org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart"
-            name="Map"
-            restorable="true">
-      </view>
    </extension>
 
    <extension
          point="org.eclipse.ui.menus">
-        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart">
+        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart">
              <separator name="widgets" visible="false"/>
              <command label="" commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles" style="radio"/>
              <command commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" style="radio"/>
@@ -145,14 +109,14 @@
     <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart"
+            adaptableType="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart"
             class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
          <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider"/>
       </factory>
    </extension>   
 
     <extension point="org.eclipse.ui.menus">
-        <menuContribution locationURI="toolbar:org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart.outline">
+        <menuContribution locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart.outline">
             <separator name="outline" visible="false"/>
             <command commandId="org.kalypso.ui.map.outline.command.CollapseOutline" style="push"/>
         
@@ -170,10 +134,27 @@
             <separator name="additions" visible="true"/>
         </menuContribution>
 
-        <menuContribution locationURI="popup:org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbMapViewPart.outline">
+        <menuContribution locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart.outline">
             <command commandId="org.kalypso.ui.views.outline.LegendExport" style="push"/>
             <separator name="additions" visible="false"/>
         </menuContribution>
+    </extension>
+    <extension
+          point="org.eclipse.ui.perspectiveExtensions">
+       <perspectiveExtension
+             targetID="WspmLightPerspective">
+          <view
+                closeable="false"
+                id="PdbView"
+                minimized="false"
+                moveable="false"
+                relationship="stack"
+                relative="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmGmvViewPart"
+                showTitle="true"
+                standalone="false"
+                visible="true">
+          </view>
+       </perspectiveExtension>
     </extension>
 
    
