@@ -59,9 +59,8 @@ import org.eclipse.swt.widgets.Table;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
-import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
@@ -151,9 +150,7 @@ public class WaterBodyViewer
   {
     try
     {
-      final ListOperation<WaterBody> operation = new ListOperation<WaterBody>( WaterBody.class );
-      new Executor( m_session, operation ).execute();
-      final List<WaterBody> waterBodies = operation.getList();
+      final List<WaterBody> waterBodies = GetPdbList.getList( m_session, WaterBody.class );
       return waterBodies.toArray( new WaterBody[waterBodies.size()] );
     }
     catch( final PdbConnectException e )

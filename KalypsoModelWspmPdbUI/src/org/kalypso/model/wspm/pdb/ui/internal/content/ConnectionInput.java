@@ -44,9 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.ListOperation;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
@@ -73,9 +72,7 @@ public class ConnectionInput
   {
     try
     {
-      final ListOperation<State> operation = new ListOperation<State>( State.class );
-      new Executor( m_session, operation ).execute();
-      return operation.getList();
+      return GetPdbList.getList( m_session, State.class );
     }
     catch( final PdbConnectException e )
     {
@@ -88,9 +85,7 @@ public class ConnectionInput
   {
     try
     {
-      final ListOperation<WaterBody> operation = new ListOperation<WaterBody>( WaterBody.class );
-      new Executor( m_session, operation ).execute();
-      return operation.getList();
+      return GetPdbList.getList( m_session, WaterBody.class );
     }
     catch( final PdbConnectException e )
     {
