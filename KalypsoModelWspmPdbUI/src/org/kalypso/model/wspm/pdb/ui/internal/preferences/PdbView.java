@@ -56,18 +56,24 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.InitPdbDataOperation;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
  * @author Gernot Belger
@@ -99,6 +105,8 @@ public class PdbView extends ViewPart
   private IPdbConnection m_pdbConnection;
 
   private String m_autoConnectName = null;
+
+  private PdbWspmProject m_wspmProject;
 
   public PdbView( )
   {
@@ -233,11 +241,14 @@ public class PdbView extends ViewPart
     m_disconnectAction.setEnabled( isConnected );
 
     if( isConnected )
-      new ConnectionViewer( m_toolkit, body, m_pdbConnection );
+      new ConnectionViewer( m_toolkit, body, m_pdbConnection, m_wspmProject );
     else
       createNonConnectedControl( body );
 
     m_form.layout();
+
+    /* After each connect, we re-initialize the pdb project and its perspective */
+    initializePerspective();
   }
 
   private void createNonConnectedControl( final Composite parent )
@@ -263,5 +274,26 @@ public class PdbView extends ViewPart
   String getAutoConnectName( )
   {
     return m_autoConnectName;
+  }
+
+  private void initializePerspective( )
+  {
+    if( m_wspmProject != null )
+      m_wspmProject.dispose();
+    m_wspmProject = null;
+
+    if( m_pdbConnection == null )
+      return;
+
+    final IWorkbenchPartSite site = getSite();
+
+    m_wspmProject = new PdbWspmProject( site );
+
+    final InitPdbDataOperation operation = new InitPdbDataOperation( m_wspmProject );
+    final IProgressService progressService = (IProgressService) site.getService( IProgressService.class );
+    final IStatus status = ProgressUtilities.busyCursorWhile( progressService, operation, "Failed to initialize PDB project data" );
+
+    if( !status.isOK() )
+      new StatusDialog2( site.getShell(), status, "Initialize PDB data" ).open();
   }
 }

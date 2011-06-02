@@ -51,6 +51,8 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
+ * FIXME: move to wpsm light
+ * 
  * @author Gernot Belger
  */
 public class SelectPdbProfilesWidget extends SelectFeatureWidget

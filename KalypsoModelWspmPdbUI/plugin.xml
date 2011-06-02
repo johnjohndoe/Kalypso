@@ -30,7 +30,7 @@
 
    <extension
          point="org.eclipse.ui.menus">
-        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart">
+        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart">
              <separator name="widgets" visible="false"/>
              <command label="" commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles" style="radio"/>
              <command commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" style="radio"/>
@@ -109,14 +109,14 @@
     <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart"
+            adaptableType="org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart"
             class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
          <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider"/>
       </factory>
    </extension>   
 
     <extension point="org.eclipse.ui.menus">
-        <menuContribution locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart.outline">
+        <menuContribution locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
             <separator name="outline" visible="false"/>
             <command commandId="org.kalypso.ui.map.outline.command.CollapseOutline" style="push"/>
         
@@ -134,7 +134,7 @@
             <separator name="additions" visible="true"/>
         </menuContribution>
 
-        <menuContribution locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart.outline">
+        <menuContribution locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
             <command commandId="org.kalypso.ui.views.outline.LegendExport" style="push"/>
             <separator name="additions" visible="false"/>
         </menuContribution>
@@ -149,7 +149,7 @@
                 minimized="false"
                 moveable="false"
                 relationship="stack"
-                relative="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmGmvViewPart"
+                relative="org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart"
                 showTitle="true"
                 standalone="false"
                 visible="true">
