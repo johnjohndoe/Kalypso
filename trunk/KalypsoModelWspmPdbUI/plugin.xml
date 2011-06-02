@@ -30,7 +30,9 @@
 
    <extension
          point="org.eclipse.ui.menus">
-        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart">
+        <menuContribution
+              allPopups="false"
+              locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart">
              <separator name="widgets" visible="false"/>
              <command label="" commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles" style="radio"/>
              <command commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" style="radio"/>
@@ -49,6 +51,7 @@
              <command commandId="org.kalypso.ogc.gml.map.FullExtentCommand" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.ZoomOutCommand" style="push"/>
+             <!--
              <dynamic id="org.kalypso.ogc.gml.map.move">
                 <class
                       class="org.kalypso.contribs.eclipse.ui.actions.DropDownToolbarItem">
@@ -58,6 +61,7 @@
                    <parameter name="command4" value="org.kalypso.ogc.gml.map.MoveRightCommand"/>
                 </class>
              </dynamic>
+             -->
              <command commandId="org.kalypso.ogc.gml.map.ExtentHistoryPrevCommand" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.ExtentHistoryNextCommand" style="push"/>
 

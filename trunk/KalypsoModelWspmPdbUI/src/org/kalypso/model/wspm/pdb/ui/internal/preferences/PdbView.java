@@ -245,10 +245,10 @@ public class PdbView extends ViewPart
     else
       createNonConnectedControl( body );
 
-    m_form.layout();
-
     /* After each connect, we re-initialize the pdb project and its perspective */
     initializePerspective();
+
+    m_form.layout();
   }
 
   private void createNonConnectedControl( final Composite parent )
