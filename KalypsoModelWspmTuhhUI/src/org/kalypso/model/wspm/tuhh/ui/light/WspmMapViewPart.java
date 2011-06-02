@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.light.internal;
+package org.kalypso.model.wspm.tuhh.ui.light;
 
 import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IViewSite;

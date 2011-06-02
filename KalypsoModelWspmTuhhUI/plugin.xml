@@ -670,7 +670,7 @@
       <view
             allowMultiple="false"
             category="org.kalypso.model.wspm.tuhh.ui.light.viewCategory"
-            class="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmGmvViewPart"
+            class="org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart"
             icon="icons/obj16/wspwin16.gif"
             id="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmGmvViewPart"
             name="WSPM Data"
@@ -679,7 +679,7 @@
       <view
             allowMultiple="false"
             category="org.kalypso.model.wspm.tuhh.ui.light.viewCategory"
-            class="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart"
+            class="org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart"
             icon="icons/obj16/kalypso_gmt.gif"
             id="org.kalypso.model.wspm.tuhh.ui.light.internal.WspmMapViewPart"
             name="Map"
