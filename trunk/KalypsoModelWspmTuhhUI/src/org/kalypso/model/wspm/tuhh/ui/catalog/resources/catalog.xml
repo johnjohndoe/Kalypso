@@ -9,6 +9,9 @@
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:featureview:default"
 		uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState.gft" />
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:swtimage:default"
+		uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState.gif" />
 
 	<!-- {org.kalypso.model.wspm.tuhh}ProfileMarker -->
 	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileMarker:sld:default"

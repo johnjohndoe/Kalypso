@@ -90,6 +90,7 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.IWspmTuhhUIConstants;
 import org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule;
@@ -265,6 +266,7 @@ public class PdbWspmProject
         final GMLContentProvider contentProvider = gmlView.getContentProvider();
         contentProvider.setShowAssociations( false );
         contentProvider.setShowChildreOverride( TuhhReach.QNAME_TUHH_REACH, Boolean.TRUE );
+        contentProvider.setShowChildreOverride( TuhhReachProfileSegment.QNAME_PROFILEREACHSEGMENT, Boolean.FALSE );
         final TreeViewer treeViewer = gmlView.getTreeViewer();
         final ViewerFilter pdbGmlFilter = new PdbWspmGmlFilter();
         treeViewer.setFilters( new ViewerFilter[] { pdbGmlFilter } );
