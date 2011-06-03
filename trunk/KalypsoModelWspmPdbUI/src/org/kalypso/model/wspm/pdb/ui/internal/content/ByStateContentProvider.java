@@ -54,6 +54,13 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
  */
 public class ByStateContentProvider implements ITreeContentProvider
 {
+  private final boolean m_showCrossSections;
+
+  public ByStateContentProvider( final boolean showCrossSections )
+  {
+    m_showCrossSections = showCrossSections;
+  }
+
   @Override
   public Object[] getElements( final Object inputElement )
   {
@@ -83,6 +90,9 @@ public class ByStateContentProvider implements ITreeContentProvider
   {
     if( element instanceof State )
     {
+      if( !m_showCrossSections )
+        return false;
+
       final Set<CrossSection> children = ((State) element).getCrossSections();
       return !children.isEmpty();
     }
@@ -95,8 +105,11 @@ public class ByStateContentProvider implements ITreeContentProvider
   {
     if( parentElement instanceof State )
     {
-      final Set<CrossSection> children = ((State) parentElement).getCrossSections();
-      return children.toArray( new CrossSection[children.size()] );
+      if( m_showCrossSections )
+      {
+        final Set<CrossSection> children = ((State) parentElement).getCrossSections();
+        return children.toArray( new CrossSection[children.size()] );
+      }
     }
 
     return ArrayUtils.EMPTY_OBJECT_ARRAY;

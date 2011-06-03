@@ -63,6 +63,6 @@ public class ByStateAction extends Action
   public void run( )
   {
     if( isChecked() )
-      m_control.setContentProvider( new ByStateContentProvider() );
+      m_control.setContentProvider( new ByStateContentProvider( false ) );
   }
 }

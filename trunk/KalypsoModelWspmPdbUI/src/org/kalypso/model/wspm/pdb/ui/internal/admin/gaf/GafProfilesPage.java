@@ -56,6 +56,7 @@ import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.jface.databinding.viewers.ViewerSupport;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
@@ -66,6 +67,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
@@ -115,12 +117,9 @@ public class GafProfilesPage extends WizardPage
 
     table.addControlListener( new ColumnsResizeControlListener() );
 
-    final TableViewerColumn nullColumn = new TableViewerColumn( m_profileViewer, SWT.BORDER );
-    nullColumn.getColumn().setResizable( false );
-    nullColumn.getColumn().setMoveable( false );
-    nullColumn.getColumn().setData( ColumnsResizeControlListener.DATA_FIXED_COL_WIDTH, 0 );
+    ColumnViewerUtil.createEmptyColumn( m_profileViewer ).setLabelProvider( new ColumnLabelProvider() );
 
-    final TableViewerColumn stationColumn = new TableViewerColumn( m_profileViewer, SWT.BORDER );
+    final TableViewerColumn stationColumn = new TableViewerColumn( m_profileViewer, SWT.NONE );
     stationColumn.getColumn().setText( "Station" );
     stationColumn.getColumn().setResizable( false );
     stationColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
