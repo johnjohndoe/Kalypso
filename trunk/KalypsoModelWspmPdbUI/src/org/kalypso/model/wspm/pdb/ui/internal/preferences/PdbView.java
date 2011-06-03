@@ -168,7 +168,7 @@ public class PdbView extends ViewPart
   private String getFormTitel( )
   {
     if( m_pdbConnection == null )
-      return "PDB not connected";
+      return "<Not Connected>";
 
     final String label = m_pdbConnection.getLabel();
     return String.format( "%s", label );

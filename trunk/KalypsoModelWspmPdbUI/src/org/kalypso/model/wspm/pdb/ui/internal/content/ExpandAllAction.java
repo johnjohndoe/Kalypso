@@ -68,6 +68,7 @@ public class ExpandAllAction extends Action
       final ICommandService cs = (ICommandService) locator.getService( ICommandService.class );
       final Command cmd = cs.getCommand( IWorkbenchCommandConstants.NAVIGATE_EXPAND_ALL );
       setText( cmd.getName() );
+      setToolTipText( cmd.getDescription() );
 
       final ICommandImageService cis = (ICommandImageService) locator.getService( ICommandImageService.class );
       final ImageDescriptor collapseAllImage = cis.getImageDescriptor( IWorkbenchCommandConstants.NAVIGATE_EXPAND_ALL, ICommandImageService.TYPE_DEFAULT, ICommandImageService.IMAGE_STYLE_TOOLBAR );

@@ -40,18 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.ConnectionAdminControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ConnectionContentControl;
+import org.kalypso.model.wspm.pdb.ui.internal.content.filter.StateFilterControl;
+import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
@@ -82,35 +86,66 @@ public class ConnectionViewer extends Composite
     m_project = project;
 
     toolkit.adapt( this );
-    GridLayoutFactory.swtDefaults().applyTo( this );
+    GridLayoutFactory.fillDefaults().applyTo( this );
 
     createAdminGroup( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     createPdbView( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final StructuredViewer contentViewer = m_contentViewer.getViewer();
+    createSearchControls( toolkit, this, contentViewer ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
   }
 
   private Control createAdminGroup( final FormToolkit toolkit, final Composite parent )
   {
-    final Group group = new Group( parent, SWT.NONE );
-    toolkit.adapt( group );
+    final Section section = toolkit.createSection( parent, Section.DESCRIPTION | Section.TITLE_BAR | Section.TWISTIE );
     // TODO: nur zeigen, wenn der user admin rechte hat
-    group.setText( "Administration" );
-    group.setLayout( new FillLayout() );
+    section.setText( "Administration" );
+    section.setDescription( "This section allows to administrate the cross section database." );
+    section.setLayout( new FillLayout() );
 
-    new ConnectionAdminControl( toolkit, group, m_connection, m_updateable );
+    final ConnectionAdminControl adminControl = new ConnectionAdminControl( toolkit, section, m_connection, m_updateable );
 
-    return group;
+    section.setClient( adminControl );
+
+    return section;
   }
 
   private Control createPdbView( final FormToolkit toolkit, final Composite parent )
   {
-    final Group group = new Group( parent, SWT.NONE );
-    toolkit.adapt( group );
-    group.setText( "Inhalt" );
-    group.setLayout( new FillLayout() );
+    final Section section = toolkit.createSection( parent, Section.DESCRIPTION | Section.TITLE_BAR );
+    section.setText( "Content" );
+    section.setDescription( "Contents of the cross section database." );
+    section.setLayout( new FillLayout() );
 
-    m_contentViewer = new ConnectionContentControl( toolkit, group, m_connection, m_project );
+    m_contentViewer = new ConnectionContentControl( toolkit, section, m_connection, m_project );
 
-    return group;
+    section.setClient( m_contentViewer );
+
+    return section;
+  }
+
+  private Control createSearchControls( final FormToolkit toolkit, final Composite parent, final StructuredViewer viewer )
+  {
+    final Section section = toolkit.createSection( parent, Section.TITLE_BAR | Section.DESCRIPTION | Section.TWISTIE );
+    section.setText( "Search" );
+    section.setDescription( "Edit search fields to filter visible items." );
+    section.setLayout( new FillLayout() );
+
+    final Composite panel = toolkit.createComposite( section );
+    GridLayoutFactory.swtDefaults().applyTo( panel );
+
+    section.setClient( panel );
+
+    final WaterBodyFilterControl waterFilterControl = new WaterBodyFilterControl( toolkit, panel );
+    waterFilterControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    waterFilterControl.setViewer( viewer );
+
+    toolkit.createLabel( panel, StringUtils.EMPTY, SWT.HORIZONTAL | SWT.SEPARATOR ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final StateFilterControl stateFilterControl = new StateFilterControl( toolkit, panel );
+    stateFilterControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    stateFilterControl.setViewer( viewer );
+
+    return section;
   }
 
   protected void handleUpdate( )

@@ -52,16 +52,18 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.dialogs.WorkbenchPreferenceDialog;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 
 /**
  * @author Gernot Belger
@@ -90,26 +92,35 @@ public class NonConnectedControl extends Composite
     m_view = view;
 
     toolkit.adapt( this );
-    GridLayoutFactory.swtDefaults().applyTo( this );
+    GridLayoutFactory.fillDefaults().applyTo( this );
 
     m_binding = new DataBindingContext();
 
     createSettingsChooser( toolkit, this );
-    createAutoConnectCheck( toolkit, this );
-    createSettingsConfigHyperlink( this );
+
+    final Composite lowerPanel = toolkit.createComposite( this );
+    GridLayoutFactory.swtDefaults().applyTo( lowerPanel );
+    lowerPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    createAutoConnectCheck( toolkit, lowerPanel );
+    createSettingsConfigHyperlink( lowerPanel );
 
     updateControl();
   }
 
   private void createSettingsChooser( final FormToolkit toolkit, final Composite parent )
   {
-    final Group group = new Group( parent, SWT.V_SCROLL );
-    group.setLayout( new FillLayout() );
-    group.setText( "Available Settings" );
-    toolkit.adapt( group );
-    group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final Section section = toolkit.createSection( parent, Section.TITLE_BAR | Section.DESCRIPTION );
+    section.setLayout( new FillLayout() );
+    section.setText( "Available Settings" );
+    section.setDescription( "Open a cross section database or configure a new connection." );
 
-    m_form = m_toolkit.createScrolledForm( group );
+    toolkit.adapt( section );
+    section.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    m_form = m_toolkit.createScrolledForm( section );
+
+    section.setClient( m_form );
+
     final Composite body = m_form.getBody();
     GridLayoutFactory.swtDefaults().applyTo( body );
 
@@ -118,7 +129,7 @@ public class NonConnectedControl extends Composite
 
   private void createAutoConnectCheck( final FormToolkit toolkit, final Composite parent )
   {
-    final Button button = toolkit.createButton( parent, "Connect automatically on startup", SWT.CHECK );
+    final Button button = toolkit.createButton( parent, "Auto connect on startup", SWT.CHECK );
     button.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final ISWTObservableValue target = SWTObservables.observeSelection( button );
@@ -139,6 +150,7 @@ public class NonConnectedControl extends Composite
         updateControl();
       }
     };
+    action.setImageDescriptor( WspmPdbUiImages.getImageDescriptor( IMAGE.CONNECT_TO_PDB ) );
 
     final ImageHyperlink hyperlink = ActionHyperlink.createHyperlink( m_toolkit, parent, SWT.NONE, action );
     hyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
