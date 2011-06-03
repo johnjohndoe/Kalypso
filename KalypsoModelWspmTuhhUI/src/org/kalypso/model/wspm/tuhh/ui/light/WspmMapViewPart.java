@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.light;
 
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISaveablePart;
 import org.kalypso.ui.views.map.MapView;
 
@@ -50,4 +51,12 @@ public class WspmMapViewPart extends MapView implements ISaveablePart
 {
   @SuppressWarnings("hiding")
   public static final String ID = "org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart"; //$NON-NLS-1$
+
+  @Override
+  public synchronized void createPartControl( final Composite parent )
+  {
+    super.createPartControl( parent );
+
+    getMapPanel().setUseFullSelection( true );
+  }
 }
