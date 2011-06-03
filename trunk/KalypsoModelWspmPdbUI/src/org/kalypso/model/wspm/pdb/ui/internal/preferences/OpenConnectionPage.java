@@ -94,7 +94,6 @@ public class OpenConnectionPage extends WizardPage
   {
     final DataBindingContext binding = new DataBindingContext();
 
-
     final Composite composite = new Composite( parent, SWT.NONE );
     setControl( composite );
     GridLayoutFactory.swtDefaults().numColumns( 1 ).applyTo( composite );

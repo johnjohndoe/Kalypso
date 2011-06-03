@@ -40,18 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
-import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.PdbSettings;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
 
 /**
  * @author Gernot Belger
@@ -60,43 +57,37 @@ public class ConnectPdbAction extends Action
 {
   private final PdbView m_view;
 
-  public ConnectPdbAction( final PdbView view )
+  private final IPdbSettings m_settings;
+
+  public ConnectPdbAction( final PdbView view, final IPdbSettings settings )
   {
-    super( "Open Connection..." );
+    super( String.format( "%s - %s", settings.getName(), settings.toString() ) );
+
+    setImageDescriptor( settings.getImage() );
 
     m_view = view;
+    m_settings = settings;
 
-    final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.CONNECT_TO_PDB );
-    setImageDescriptor( image );
+// final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.CONNECT_TO_PDB );
+// setImageDescriptor( image );
   }
 
   @Override
   public void runWithEvent( final Event event )
   {
-    final OpenConnectionData data = new OpenConnectionData();
-    try
-    {
-      final String autoConnect = m_view.getAutoConnectName();
-      final boolean isAutoConnect = !StringUtils.isBlank( autoConnect );
-      data.setAutoConnect( isAutoConnect );
-      final IPdbSettings autoSettings = PdbSettings.getSettings( autoConnect );
-      data.setSettings( autoSettings );
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-    }
-
     final Shell shell = m_view.getSite().getShell();
-    final OpenConnectWizard wizard = new OpenConnectWizard( data );
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    if( dialog.open() == Window.OK )
-    {
-      final String autoConnectName = wizard.getAutoConnectName();
-      m_view.setAutoConnect( autoConnectName );
 
-      final IPdbConnection connection = wizard.getConnection();
-      m_view.setConnection( connection );
+    final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( m_settings, false );
+
+    final IStatus result = ProgressUtilities.busyCursorWhile( operation );
+    if( !result.isOK() )
+    {
+      new StatusDialog2( shell, result, "Open Connection" ).open();
+      m_view.setConnection( null );
+      return;
     }
+
+    final IPdbConnection connection = operation.getConnection();
+    m_view.setConnection( connection );
   }
 }
