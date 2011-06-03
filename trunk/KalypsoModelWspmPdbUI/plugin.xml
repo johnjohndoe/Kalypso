@@ -151,6 +151,12 @@
           </view>
        </perspectiveExtension>
     </extension>
+    <extension
+          point="org.eclipse.ui.startup">
+       <startup
+             class="org.kalypso.model.wspm.pdb.ui.internal.PdbStartup">
+       </startup>
+    </extension>
 
    
 </plugin>

@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -56,6 +57,8 @@ public class WspmPdbUiPlugin extends AbstractUIPlugin
   private static WspmPdbUiPlugin plugin;
 
   private PluginImageProvider m_imgProvider = null;
+
+  private PdbWspmProject m_wspmProject;
 
   @Override
   public void start( final BundleContext context ) throws Exception
@@ -75,6 +78,12 @@ public class WspmPdbUiPlugin extends AbstractUIPlugin
 
     plugin = null;
 
+    if( m_wspmProject != null )
+    {
+      m_wspmProject.dispose();
+      m_wspmProject = null;
+    }
+
     m_imgProvider.resetTmpFiles();
     m_imgProvider = null;
   }
@@ -92,5 +101,15 @@ public class WspmPdbUiPlugin extends AbstractUIPlugin
   public PluginImageProvider getImageProvider( )
   {
     return m_imgProvider;
+  }
+
+  public synchronized void setWspmProject( final PdbWspmProject wspmProject )
+  {
+    m_wspmProject = wspmProject;
+  }
+
+  public synchronized PdbWspmProject getWspmProject( )
+  {
+    return m_wspmProject;
   }
 }

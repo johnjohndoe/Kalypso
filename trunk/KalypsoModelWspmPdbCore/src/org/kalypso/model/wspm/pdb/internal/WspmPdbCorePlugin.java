@@ -90,7 +90,7 @@ public class WspmPdbCorePlugin extends Plugin implements BundleActivator
    * 
    * @return The currently configured connections for pdb.
    */
-  public synchronized IPdbSettings[] getSettings( ) throws PdbConnectException
+  public IPdbSettings[] getSettings( ) throws PdbConnectException
   {
     return new PdbSettingsReader().readConnections( getConnectionPreferences() );
   }
@@ -99,7 +99,7 @@ public class WspmPdbCorePlugin extends Plugin implements BundleActivator
    * Sets the connections for pdb. The connections will be immediately persisted and can be accessed after workbench
    * restart.
    */
-  public synchronized void setConnections( final IPdbSettings[] connections ) throws PdbConnectException
+  public void setConnections( final IPdbSettings[] connections ) throws PdbConnectException
   {
     new PdbSettingsWriter( connections ).writeConnections( getConnectionPreferences() );
   }

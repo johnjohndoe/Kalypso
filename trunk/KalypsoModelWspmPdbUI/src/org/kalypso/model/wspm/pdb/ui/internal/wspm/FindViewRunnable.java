@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.IWorkbenchWindow;
 
 /**
  * Helps to access a view in the ui thread.
@@ -54,19 +54,19 @@ public class FindViewRunnable<T extends IViewPart> implements Runnable
 {
   private final String m_viewID;
 
-  private final IWorkbenchSite m_site;
-
   private T m_view;
 
-  public FindViewRunnable( final String viewID, final IWorkbenchSite site )
+  private final IWorkbenchWindow m_window;
+
+  public FindViewRunnable( final String viewID, final IWorkbenchWindow window )
   {
     m_viewID = viewID;
-    m_site = site;
+    m_window = window;
   }
 
   public T execute( )
   {
-    final Display display = m_site.getShell().getDisplay();
+    final Display display = m_window.getShell().getDisplay();
     display.syncExec( this );
     return m_view;
   }
@@ -75,7 +75,7 @@ public class FindViewRunnable<T extends IViewPart> implements Runnable
   @Override
   public void run( )
   {
-    final IWorkbenchPage page = m_site.getWorkbenchWindow().getActivePage();
+    final IWorkbenchPage page = m_window.getActivePage();
     m_view = (T) page.findView( m_viewID );
   }
 }
