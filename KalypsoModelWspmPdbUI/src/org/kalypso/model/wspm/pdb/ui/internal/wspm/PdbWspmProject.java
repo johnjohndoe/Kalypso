@@ -97,21 +97,25 @@ import org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule;
 import org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart;
 import org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.PoolGmlWorkspaceProvider;
+import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ogc.gml.mapmodel.visitor.ThemeUsedForMaxExtentPredicate;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Encapsulates the data project of a pdb connection.
@@ -367,7 +371,7 @@ public class PdbWspmProject
 
     view.setInput( new FileEditorInput( mapFile ) );
 
-    // TODO: we should make sure, that the map is in sync with the project data (one theme per state)
+    updateMap();
   }
 
   private IFile ensureMapFile( )
@@ -426,7 +430,7 @@ public class PdbWspmProject
     m_provider.save( monitor );
   }
 
-  public void updateViews( final Feature[] toSelect )
+  public void updateViews( final TuhhReach[] toSelect )
   {
     /* Bring gmv view to top and select changed features */
     final FindViewRunnable<WspmGmvViewPart> gmvRunnable = new FindViewRunnable<WspmGmvViewPart>( WspmGmvViewPart.ID, m_site );
@@ -445,7 +449,19 @@ public class PdbWspmProject
       }
     }
 
-    // updateMap();
+    /* Jump to freshly downloaded items */
+    final FindViewRunnable<WspmMapViewPart> mapRunnable = new FindViewRunnable<WspmMapViewPart>( WspmMapViewPart.ID, m_site );
+    final WspmMapViewPart mapView = mapRunnable.execute();
+    if( mapView == null )
+      return;
+
+    final GisTemplateMapModell mapModell = mapView.getMapModell();
+    final FindReachThemesVisitor findReachesVisitor = new FindReachThemesVisitor();
+    mapModell.accept( findReachesVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+    final IKalypsoFeatureTheme[] themes = findReachesVisitor.getThemes( toSelect );
+    final GM_Envelope fullExtent = MapModellHelper.calculateExtent( themes, new ThemeUsedForMaxExtentPredicate() );
+    final ChangeExtentCommand command = new ChangeExtentCommand( mapView.getMapPanel(), fullExtent );
+    mapView.postCommand( command, null );
   }
 
   public CommandableWorkspace getWorkspace( )
