@@ -56,6 +56,8 @@ public class OpenConnectionData extends AbstractModelObject
 
   private boolean m_autoConnect = false;
 
+  private String m_autoConnectName;
+
   public boolean getAutoConnect( )
   {
     return m_autoConnect;
@@ -82,5 +84,15 @@ public class OpenConnectionData extends AbstractModelObject
     m_settings = settings;
 
     firePropertyChange( PROPERTY_SETTINGS, oldValue, settings );
+  }
+
+  public void setAutoConnectName( final String autoConnectName )
+  {
+    m_autoConnectName = autoConnectName;
+  }
+
+  public String getAutoConnectName( )
+  {
+    return m_autoConnectName;
   }
 }

@@ -49,8 +49,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -63,7 +61,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -84,8 +81,6 @@ public class PdbView extends ViewPart
 
   private static final String MEMENTO_AUTOCONNECT = "autoconnect.name"; //$NON-NLS-1$
 
-  private final Action m_connectAction = new ConnectPdbAction( this );
-
   private final Action m_disconnectAction = new DisconnectPdbAction( this );
 
   private final UIJob m_updateControlJob = new UIJob( "Update pdb view" )
@@ -104,7 +99,7 @@ public class PdbView extends ViewPart
 
   private IPdbConnection m_pdbConnection;
 
-  private String m_autoConnectName = null;
+  private final OpenConnectionData m_autoConnectData = new OpenConnectionData();
 
   private PdbWspmProject m_wspmProject;
 
@@ -119,7 +114,12 @@ public class PdbView extends ViewPart
     super.init( site, memento );
 
     if( memento != null )
-      m_autoConnectName = memento.getString( MEMENTO_AUTOCONNECT );
+    {
+      final String autoConnectName = memento.getString( MEMENTO_AUTOCONNECT );
+      final boolean isAutoConnect = !StringUtils.isBlank( autoConnectName );
+      m_autoConnectData.setAutoConnectName( autoConnectName );
+      m_autoConnectData.setAutoConnect( isAutoConnect );
+    }
   }
 
   @Override
@@ -128,7 +128,10 @@ public class PdbView extends ViewPart
     super.saveState( memento );
 
     if( memento != null )
-      memento.putString( MEMENTO_AUTOCONNECT, m_autoConnectName );
+    {
+      if( m_autoConnectData.getAutoConnect() )
+        memento.putString( MEMENTO_AUTOCONNECT, m_autoConnectData.getAutoConnectName() );
+    }
   }
 
   @Override
@@ -143,7 +146,6 @@ public class PdbView extends ViewPart
     m_form.setText( getFormTitel() );
 
     final IToolBarManager formToolbar = m_form.getToolBarManager();
-    formToolbar.add( m_connectAction );
     formToolbar.add( m_disconnectAction );
     formToolbar.update( true );
 
@@ -169,17 +171,17 @@ public class PdbView extends ViewPart
       return "PDB not connected";
 
     final String label = m_pdbConnection.getLabel();
-    return String.format( "Connected with '%s'", label );
+    return String.format( "%s", label );
   }
 
   private void startAutoConnect( )
   {
     /* If we do not auto-connect -> update control and show that we are not connected */
-    if( StringUtils.isBlank( m_autoConnectName ) )
+    if( !m_autoConnectData.getAutoConnect() )
       return;
 
     /* Start auto-connection */
-    final PdbConnectJob autoConnector = new PdbConnectJob( m_autoConnectName );
+    final PdbConnectJob autoConnector = new PdbConnectJob( m_autoConnectData.getAutoConnectName() );
     autoConnector.setUser( true );
 
     autoConnector.addJobChangeListener( new JobChangeAdapter()
@@ -223,6 +225,8 @@ public class PdbView extends ViewPart
     }
 
     m_pdbConnection = connection;
+    final String settingsName = m_pdbConnection == null ? null : m_pdbConnection.getSettings().getName();
+    m_autoConnectData.setAutoConnectName( settingsName );
 
     m_updateControlJob.schedule();
   }
@@ -240,40 +244,19 @@ public class PdbView extends ViewPart
 
     final boolean isConnected = m_pdbConnection != null;
 
-    m_connectAction.setEnabled( !isConnected );
     m_disconnectAction.setEnabled( isConnected );
 
     if( isConnected )
       new ConnectionViewer( m_toolkit, body, m_pdbConnection, m_wspmProject );
     else
-      createNonConnectedControl( body );
+      new NonConnectedControl( m_toolkit, body, m_autoConnectData, this );
 
     m_form.layout();
-  }
-
-  private void createNonConnectedControl( final Composite parent )
-  {
-    final Composite panel = m_toolkit.createComposite( parent );
-    GridLayoutFactory.swtDefaults().applyTo( panel );
-
-    m_toolkit.createLabel( panel, "Not connected to database" );
-
-    ActionHyperlink.createHyperlink( m_toolkit, panel, SWT.NONE, m_connectAction );
-  }
-
-  void setAutoConnect( final String autoConnectName )
-  {
-    m_autoConnectName = autoConnectName;
   }
 
   IPdbConnection getConnection( )
   {
     return m_pdbConnection;
-  }
-
-  String getAutoConnectName( )
-  {
-    return m_autoConnectName;
   }
 
   private void initializePerspective( )
