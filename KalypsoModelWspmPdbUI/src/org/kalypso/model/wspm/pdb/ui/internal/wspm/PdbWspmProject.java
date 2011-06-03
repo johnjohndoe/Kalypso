@@ -64,8 +64,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.part.FileEditorInput;
@@ -80,17 +83,27 @@ import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.model.wspm.core.gml.WspmReach;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.IWspmTuhhUIConstants;
 import org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule;
 import org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart;
 import org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.PoolGmlWorkspaceProvider;
+import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.LayerType;
+import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Encapsulates the data project of a pdb connection.
@@ -229,8 +242,6 @@ public class PdbWspmProject
     initMapView();
     monitor.worked( 50 );
 
-    // TODO: open and update map in map view
-
     monitor.done();
   }
 
@@ -312,9 +323,11 @@ public class PdbWspmProject
       return;
 
     view.setInput( new FileEditorInput( mapFile ) );
+
+    // TODO: we should make sure, that the map is in sync with the project data (one theme per state)
   }
 
-  private  IFile ensureMapFile( )
+  private IFile ensureMapFile( )
   {
     final IFile mapFile = getMapFile();
     if( mapFile.exists() )
@@ -370,12 +383,30 @@ public class PdbWspmProject
     m_provider.save( monitor );
   }
 
-  public void updateViews( )
+  public void updateViews( final Feature[] toSelect )
   {
-    // FIXME: reload to force reload of tree
-    // reloadWspmView( page );
-    // updateMap( page, project );
+    /* Bring gmv view to top and select changed features */
+    final FindViewRunnable<WspmGmvViewPart> gmvRunnable = new FindViewRunnable<WspmGmvViewPart>( WspmGmvViewPart.ID, m_site );
+    final WspmGmvViewPart gmvView = gmvRunnable.execute();
+    if( gmvView != null )
+    {
+      try
+      {
+        final IWorkbenchPage page = m_site.getWorkbenchWindow().getActivePage();
+        page.showView( WspmGmvViewPart.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
+        gmvView.getSite().getSelectionProvider().setSelection( new StructuredSelection( toSelect ) );
+      }
+      catch( final PartInitException e )
+      {
+        e.printStackTrace();
+      }
+    }
 
+    /* Update map */
+    final FindViewRunnable<WspmMapViewPart> mapRunnable = new FindViewRunnable<WspmMapViewPart>( WspmMapViewPart.ID, m_site );
+    final WspmMapViewPart mapView = mapRunnable.execute();
+    if( mapView != null )
+      updateMap( mapView );
   }
 
   public CommandableWorkspace getWorkspace( )
@@ -386,82 +417,56 @@ public class PdbWspmProject
     return m_provider.getWorkspace();
   }
 
-// private TuhhWspmProject findProject( final IWorkbenchPage page )
-// {
-// final IViewPart view = page.findView( WspmGmvViewPart.ID );
-// if( view instanceof WspmGmvViewPart )
-// {
-// final WspmGmvViewPart wspmView = (WspmGmvViewPart) view;
-// final TuhhWspmProject project = wspmView.getProject();
-// /* If project already exists, just return it */
-// if( project != null )
-// return project;
-// }
-//
-// return PdbWspmUtils.createModel();
-// }
-//
-// private void reloadWspmView( final IWorkbenchPage page )
-// {
-// final IViewPart view = page.findView( WspmGmvViewPart.ID );
-// if( view instanceof WspmGmvViewPart )
-// {
-// final WspmGmvViewPart wspmView = (WspmGmvViewPart) view;
-// wspmView.reload();
-// }
-// }
-//
-// private void updateMap( final IWorkbenchPage page, final TuhhWspmProject project )
-// {
-// final IViewPart view = page.findView( WspmMapViewPart.ID );
-// if( view instanceof WspmMapViewPart )
-// {
-// final WspmMapViewPart wspmView = (WspmMapViewPart) view;
-// wspmView.updateMap( project );
-// }
-// }
+  /* Make sure, that all reaches of the project have a theme in the current map */
+  public void updateMap( final WspmMapViewPart mapView )
+  {
+    final GisTemplateMapModell mapModell = mapView.getMapModell();
+    final FindReachThemesVisitor findReachesVisitor = new FindReachThemesVisitor();
+    mapModell.accept( findReachesVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
 
-// /* Make sure, that all reaches of the project have a theme in the current map */
-// public void updateMap( final TuhhWspmProject project )
-// {
-// final GisTemplateMapModell mapModell = getMapModell();
-// final FindReachThemesVisitor visitor = new FindReachThemesVisitor();
-// mapModell.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
-//
-// final CompositeCommand compositeCommand = new CompositeCommand( "Add reach themes" );
-//
-// final WspmWaterBody[] waterBodies = project.getWaterBodies();
-// for( final WspmWaterBody waterBody : waterBodies )
-// {
-// final WspmReach[] reaches = waterBody.getReaches();
-// for( final WspmReach reach : reaches )
-// {
-// final String reachGmlID = reach.getId();
-// if( !visitor.hasReachTheme( reachGmlID ) )
-// {
-// final AddThemeCommand newTheme = addReachTheme( mapModell, reach );
-// if( newTheme != null )
-// compositeCommand.addCommand( newTheme );
-// }
-// }
-// }
-//
-// postCommand( compositeCommand, null );
-// }
-//
-// private AddThemeCommand addReachTheme( final GisTemplateMapModell mapModell, final WspmReach reach )
-// {
-// final String name = reach.getName();
-//   final String type = "gml"; //$NON-NLS-1$
-//
-//   final String featurePath = String.format( "#fid#%s/%s", reach.getId(), TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER.getLocalPart() ); //$NON-NLS-1$
-//
-// final String source = IWspmTuhhConstants.FILE_MODELL_GML;
-// final AddThemeCommand command = new AddThemeCommand( mapModell, name, type, featurePath, source );
-// command.addProperty( PROPERTY_THEME_REACH, reach.getId() );
-// command.addProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.FALSE.toString() );
-//
-// return command;
-// }
+    final CompositeCommand compositeCommand = new CompositeCommand( "Add reach themes" );
 
+    final TuhhWspmProject project = getWspmProject();
+    final WspmWaterBody[] waterBodies = project.getWaterBodies();
+
+    /* Remove obsolete themes */
+    final ObsoleteReachThemesVisitor obsoleteReachesVisitor = new ObsoleteReachThemesVisitor( project );
+    mapModell.accept( obsoleteReachesVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+    final IKalypsoTheme[] obsoleteThemes = obsoleteReachesVisitor.getObsoleteThemes();
+    for( final IKalypsoTheme theme : obsoleteThemes )
+      compositeCommand.addCommand( new RemoveThemeCommand( mapModell, theme, true ) );
+
+    /* Add necessary themes */
+    for( final WspmWaterBody waterBody : waterBodies )
+    {
+      final WspmReach[] reaches = waterBody.getReaches();
+      for( final WspmReach reach : reaches )
+      {
+        final String reachGmlID = reach.getId();
+        if( !findReachesVisitor.hasReachTheme( reachGmlID ) )
+        {
+          final AddThemeCommand newTheme = addReachTheme( mapModell, reach );
+          if( newTheme != null )
+            compositeCommand.addCommand( newTheme );
+        }
+      }
+    }
+
+    mapView.postCommand( compositeCommand, null );
+  }
+
+  private AddThemeCommand addReachTheme( final GisTemplateMapModell mapModell, final WspmReach reach )
+  {
+    final String name = reach.getName();
+    final String type = "gml"; //$NON-NLS-1$
+
+    final String featurePath = String.format( "#fid#%s/%s", reach.getId(), TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER.getLocalPart() ); //$NON-NLS-1$
+
+    final String source = IWspmTuhhConstants.FILE_MODELL_GML;
+    final AddThemeCommand command = new AddThemeCommand( mapModell, name, type, featurePath, source );
+    command.addProperty( PROPERTY_THEME_REACH, reach.getId() );
+    command.addProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.FALSE.toString() );
+
+    return command;
+  }
 }

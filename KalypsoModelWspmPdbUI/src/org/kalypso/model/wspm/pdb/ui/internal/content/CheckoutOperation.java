@@ -57,12 +57,14 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -79,6 +81,8 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
   private final Set<CrossSection> m_crossSections = new HashSet<CrossSection>();
 
   private final PdbWspmProject m_project;
+
+  private TuhhReach[] m_changedReaches;
 
   public CheckoutOperation( final PdbWspmProject project, final IStructuredSelection selection )
   {
@@ -151,8 +155,11 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
         ProgressUtilities.worked( monitor, 1 );
       }
 
+      m_changedReaches = inserter.getInsertedReches();
+      final WspmWaterBody[] changedWaterBodies = getChangedParents( m_changedReaches );
+
       final CommandableWorkspace workspace = m_project.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, (Feature) null, (Feature) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, changedWaterBodies, m_changedReaches, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       workspace.postCommand( new EmptyCommand( null, false ) );
       m_project.saveProject( new SubProgressMonitor( monitor, 10 ) );
     }
@@ -180,10 +187,25 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     }
   }
 
+  private WspmWaterBody[] getChangedParents( final TuhhReach[] changedReaches )
+  {
+    final Set<WspmWaterBody> result = new HashSet<WspmWaterBody>();
+
+    for( final TuhhReach reach : changedReaches )
+      result.add( reach.getWaterBody() );
+
+    return result.toArray( new WspmWaterBody[result.size()] );
+  }
+
   private List<CrossSection> getSortedSections( )
   {
     final ArrayList<CrossSection> list = new ArrayList<CrossSection>( m_crossSections );
     Collections.sort( list, new ByStationComparator() );
     return list;
+  }
+
+  public Feature[] getNewReaches( )
+  {
+    return m_changedReaches;
   }
 }
