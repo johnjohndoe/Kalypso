@@ -101,6 +101,8 @@ public class PdbView extends ViewPart
 
   private PdbWspmProject m_wspmProject;
 
+  private boolean m_autoConnectWasDone = false;
+
   public PdbView( )
   {
     m_updateControlJob.setSystem( true );
@@ -151,8 +153,6 @@ public class PdbView extends ViewPart
     body.setLayout( new FillLayout() );
 
     updateControl();
-
-    startAutoConnect();
   }
 
   private Image getFormImage( )
@@ -165,6 +165,9 @@ public class PdbView extends ViewPart
 
   private String getFormTitel( )
   {
+    if( m_wspmProject == null )
+      return "<Not Initialized>";
+
     if( m_pdbConnection == null )
       return "<Not Connected>";
 
@@ -174,6 +177,11 @@ public class PdbView extends ViewPart
 
   private void startAutoConnect( )
   {
+    if( m_autoConnectWasDone == true )
+      return;
+
+    m_autoConnectWasDone = true;
+
     /* If we do not auto-connect -> update control and show that we are not connected */
     if( !m_autoConnectData.getAutoConnect() )
       return;
@@ -234,11 +242,11 @@ public class PdbView extends ViewPart
     final Composite body = m_form.getBody();
     ControlUtils.disposeChildren( body );
 
-    m_form.setImage( getFormImage() );
-    m_form.setText( getFormTitel() );
-
     /* After each connect, we re-initialize the pdb project and its perspective */
     m_wspmProject = WspmPdbUiPlugin.getDefault().getWspmProject();
+
+    m_form.setImage( getFormImage() );
+    m_form.setText( getFormTitel() );
 
     final boolean isConnected = m_pdbConnection != null;
 
@@ -251,12 +259,15 @@ public class PdbView extends ViewPart
     else
       new NonConnectedControl( m_toolkit, body, m_autoConnectData, this );
 
+    if( m_wspmProject != null && !isConnected )
+      startAutoConnect();
+
     m_form.layout();
   }
 
   private void createNoWspmProjectControl( final FormToolkit toolkit, final Composite parent )
   {
-    toolkit.createLabel( parent, "WSPM project not initialized" );
+    toolkit.createComposite( parent );
   }
 
   IPdbConnection getConnection( )
