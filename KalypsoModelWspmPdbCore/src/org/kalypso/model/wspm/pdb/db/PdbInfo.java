@@ -64,18 +64,11 @@ public class PdbInfo
 
   private final Properties m_properties = new Properties();
 
-  public PdbInfo( final Session session )
+  public PdbInfo( final Session session ) throws PdbConnectException
   {
-    try
-    {
-      final List<Info> list = GetPdbList.getList( session, Info.class );
-      for( final Info property : list )
-        m_properties.put( property.getKey(), property.getValue() );
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-    }
+    final List<Info> list = GetPdbList.getList( session, Info.class );
+    for( final Info property : list )
+      m_properties.put( property.getKey(), property.getValue() );
   }
 
   public String getVersion( )

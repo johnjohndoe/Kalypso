@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -91,8 +92,9 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
 
     if( element instanceof State )
     {
-      final Set<CrossSection> children = ((State) element).getCrossSections();
-      return !children.isEmpty();
+      return false;
+      // final Set<CrossSection> children = ((State) element).getCrossSections();
+      // return !children.isEmpty();
     }
 
     return false;
@@ -104,16 +106,26 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
     if( parentElement instanceof WaterBody )
     {
       final Set<CrossSection> children = ((WaterBody) parentElement).getCrossSections();
-      return children.toArray( new CrossSection[children.size()] );
+      return getStates( children );
+      // return children.toArray( new CrossSection[children.size()] );
     }
 
     if( parentElement instanceof State )
     {
-      final Set<CrossSection> children = ((State) parentElement).getCrossSections();
-      return children.toArray( new CrossSection[children.size()] );
+      // final Set<CrossSection> children = ((State) parentElement).getCrossSections();
+      // return children.toArray( new CrossSection[children.size()] );
     }
 
     return ArrayUtils.EMPTY_OBJECT_ARRAY;
+  }
+
+  private Object[] getStates( final Set<CrossSection> crossSections )
+  {
+    final Set<State> states = new HashSet<State>();
+    for( final CrossSection crossSection : crossSections )
+      states.add( crossSection.getState() );
+
+    return states.toArray( new State[states.size()] );
   }
 
   @Override

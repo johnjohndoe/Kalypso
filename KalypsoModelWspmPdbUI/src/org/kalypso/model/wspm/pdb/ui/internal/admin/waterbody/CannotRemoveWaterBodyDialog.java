@@ -90,7 +90,7 @@ public class CannotRemoveWaterBodyDialog extends MessageDialog
     viewer.getControl().setLayoutData( data );
 
     viewer.setLabelProvider( new PdbLabelProvider() );
-    viewer.setContentProvider( new ByStateContentProvider() );
+    viewer.setContentProvider( new ByStateContentProvider( true ) );
     viewer.setComparator( new PdbComparator() );
 
     final State[] allState = findAllState( m_waterBody );

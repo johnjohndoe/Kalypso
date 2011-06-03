@@ -88,7 +88,7 @@ public class RemoveStateDialog extends MessageDialog
     viewer.getControl().setLayoutData( data );
 
     viewer.setLabelProvider( new PdbLabelProvider() );
-    viewer.setContentProvider( new ByStateContentProvider() );
+    viewer.setContentProvider( new ByStateContentProvider( true ) );
     viewer.setComparator( new PdbComparator() );
 
     viewer.setInput( m_state.getCrossSections() );

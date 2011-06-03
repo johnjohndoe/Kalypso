@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import org.apache.commons.lang.ObjectUtils;
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
@@ -52,7 +52,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 /**
  * @author Gernot Belger
  */
-public class PdbLabelProvider extends LabelProvider
+public class PdbLabelProvider extends ColumnLabelProvider
 {
   public static final String PENDING = "Pending...";
 

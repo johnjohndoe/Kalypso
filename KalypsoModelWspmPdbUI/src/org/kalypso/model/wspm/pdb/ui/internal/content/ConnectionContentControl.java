@@ -49,14 +49,17 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
@@ -126,10 +129,19 @@ public class ConnectionContentControl extends Composite
   private Control createTree( final FormToolkit toolkit, final Composite parent )
   {
     final Tree tree = toolkit.createTree( parent, SWT.NONE );
+    tree.setHeaderVisible( true );
     m_viewer = new TreeViewer( tree );
 
-    m_viewer.setLabelProvider( new PdbLabelProvider() );
-    setContentProvider( new ByStateContentProvider() );
+    final TreeViewerColumn nameViewerColumn = new TreeViewerColumn( m_viewer, SWT.LEFT );
+    final TreeColumn nameColumn = nameViewerColumn.getColumn();
+    nameColumn.setResizable( false );
+    nameColumn.setMoveable( false );
+    nameColumn.setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+    nameViewerColumn.setLabelProvider( new PdbLabelProvider() );
+
+    tree.addControlListener( new ColumnsResizeControlListener() );
+
+    setContentProvider( new ByStateContentProvider( false ) );
     m_viewer.setComparator( new PdbComparator() );
 
     return tree;
