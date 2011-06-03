@@ -47,13 +47,17 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.ui.internal.content.filter.StateFilterControl;
 
 /**
  * @author Gernot Belger
@@ -85,8 +89,12 @@ public class ManageStatesPage extends WizardPage
     setControl( panel );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
 
+    final Composite tablePanel = new Composite( panel, SWT.NONE );
+    GridLayoutFactory.fillDefaults().applyTo( tablePanel );
+    tablePanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     m_viewer = new StatesViewer( m_session );
-    final TableViewer tableViewer = m_viewer.createTableViewer( panel );
+    final TableViewer tableViewer = m_viewer.createTableViewer( tablePanel );
     m_viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     tableViewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -100,6 +108,8 @@ public class ManageStatesPage extends WizardPage
       }
     } );
 
+    createSearchFields( tablePanel, tableViewer ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+
     final UpdateableAction[] actions = createActions();
     final Composite actionPanel = new Composite( panel, SWT.NONE );
     actionPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ) );
@@ -112,6 +122,17 @@ public class ManageStatesPage extends WizardPage
     }
 
     updateActions();
+  }
+
+  private Control createSearchFields( final Composite parent, final TableViewer viewer )
+  {
+    final Group panel = new Group( parent, SWT.NONE );
+    panel.setLayout( new FillLayout() );
+    panel.setText( "Search" );
+
+    new StateFilterControl( null, panel ).setViewer( viewer );
+
+    return panel;
   }
 
   private UpdateableAction[] createActions( )

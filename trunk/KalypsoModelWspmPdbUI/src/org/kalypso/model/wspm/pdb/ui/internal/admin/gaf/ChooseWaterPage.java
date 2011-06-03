@@ -152,7 +152,7 @@ public class ChooseWaterPage extends WizardPage
   {
     final Group panel = new Group( parent, SWT.NONE );
     panel.setLayout( new FillLayout() );
-    panel.setText( "Filter" );
+    panel.setText( "Search" );
 
     m_waterBodyFilterControl = new WaterBodyFilterControl( null, panel );
 
