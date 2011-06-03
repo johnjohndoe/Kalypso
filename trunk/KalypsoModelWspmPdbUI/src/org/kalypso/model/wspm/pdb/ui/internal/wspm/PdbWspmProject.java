@@ -445,7 +445,7 @@ public class PdbWspmProject
       }
     }
 
-    updateMap();
+    // updateMap();
   }
 
   public CommandableWorkspace getWorkspace( )
