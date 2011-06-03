@@ -97,6 +97,13 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
   public void init( final IWorkbench workbench )
   {
     m_tableInput = getTableInput();
+
+    /* Init secure storage */
+    for( final IPdbSettings settings : m_tableInput )
+    {
+
+    }
+
     if( m_tableInput.size() > 0 )
       m_selectedItem = m_tableInput.get( 0 );
   }

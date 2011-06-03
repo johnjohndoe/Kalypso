@@ -216,7 +216,7 @@ public class OracleSettings extends HibernateSettings
     final Set<String> names = m_properties.stringPropertyNames();
     for( final String name : names )
     {
-      final boolean encrypt = false;// PROPERTY_PASSWORD.equals( name );
+      final boolean encrypt = PROPERTY_PASSWORD.equals( name );
       final String value = m_properties.getProperty( name );
       preferences.put( name, value, encrypt );
     }
