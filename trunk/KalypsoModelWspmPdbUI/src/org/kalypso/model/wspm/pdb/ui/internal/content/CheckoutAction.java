@@ -45,11 +45,11 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
@@ -79,11 +79,12 @@ public class CheckoutAction extends Action
 
     final PdbWspmProject project = m_control.getProject();
 
-    final ICoreRunnableWithProgress operation = new CheckoutOperation( project, selection );
+    final CheckoutOperation operation = new CheckoutOperation( project, selection );
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     if( !status.isOK() )
       new StatusDialog2( shell, status, getText() ).open();
 
-    project.updateViews();
+    final Feature[] toSelect = operation.getNewReaches();
+    project.updateViews( toSelect );
   }
 }

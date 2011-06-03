@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -155,5 +156,11 @@ public class CrossSectionInserter
     m_reaches.put( waterBody, newReach );
 
     return newReach;
+  }
+
+  public TuhhReach[] getInsertedReches( )
+  {
+    final Collection<TuhhReach> values = m_reaches.values();
+    return values.toArray( new TuhhReach[values.size()] );
   }
 }
