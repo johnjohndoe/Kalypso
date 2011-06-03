@@ -66,6 +66,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.content.filter.StateFilterControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
@@ -109,6 +110,7 @@ public class ConnectionContentControl extends Composite
     createToolbar( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createTree( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createWaterSearchFields( toolkit, this, m_viewer ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    createStatesSearchFields( toolkit, this, m_viewer ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createActions();
 
     refresh();
@@ -178,9 +180,23 @@ public class ConnectionContentControl extends Composite
     return group;
   }
 
+  private Control createStatesSearchFields( final FormToolkit toolkit, final Composite parent, final TreeViewer viewer )
+  {
+    final Group group = new Group( parent, SWT.NONE );
+    toolkit.adapt( group );
+    group.setText( "Search - States" );
+    group.setLayout( new FillLayout() );
+
+    final StateFilterControl filterControl = new StateFilterControl( toolkit, group );
+    filterControl.setViewer( viewer );
+
+    return group;
+  }
+
   private void createActions( )
   {
     m_manager.add( new RefreshAction( this ) );
+    m_manager.add( new ExpandAllAction( m_viewer ) );
     m_manager.add( new CollapseAllAction( m_viewer ) );
     m_manager.add( new Separator() );
     // final ByStateAction byStateAction = new ByStateAction( this );
