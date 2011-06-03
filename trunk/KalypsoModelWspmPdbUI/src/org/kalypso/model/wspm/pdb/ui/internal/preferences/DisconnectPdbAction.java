@@ -58,6 +58,8 @@ public class DisconnectPdbAction extends Action
 
     m_view = view;
 
+    setToolTipText( "Disconnect from Database" );
+
     final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.DISCONNECT_FROM_PDB );
     setImageDescriptor( image );
   }
