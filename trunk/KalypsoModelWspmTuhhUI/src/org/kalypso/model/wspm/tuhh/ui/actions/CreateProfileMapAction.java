@@ -101,7 +101,7 @@ public class CreateProfileMapAction extends ActionDelegate implements IObjectAct
       if( selectedObject instanceof Feature )
       {
         final Feature feature = (Feature) selectedObject;
-        final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
+        final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( TuhhReach.QNAME_MEMBER_REACHSEGMENT );
         selectedProfiles.put( feature, rt );
       }
     }

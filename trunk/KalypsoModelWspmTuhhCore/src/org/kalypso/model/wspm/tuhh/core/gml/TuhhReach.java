@@ -81,13 +81,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhConstants, IProfileSelectionProvider
 {
-  private static final QName QNAME_WATER_BODY_LINK_MEMBER = new QName( NS_WSPM_TUHH, "waterBodyLinkMember" ); //$NON-NLS-1$
+  public static final QName QNAME_MEMBER_WATER_BODY_LINK = new QName( NS_WSPM_TUHH, "waterBodyLinkMember" ); //$NON-NLS-1$
 
   public final static QName QNAME_TUHH_REACH = new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ); //$NON-NLS-1$
 
-  private static final QName QNAME_MARKER_MEMBER = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "markerMember" ); //$NON-NLS-1$
+  public static final QName QNAME_MEMBER_MARKER = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "markerMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_REACHSEGMENTMEMBER = new QName( NS_WSPM_TUHH, "reachSegmentMember" ); //$NON-NLS-1$
+  public static final QName QNAME_MEMBER_REACHSEGMENT = new QName( NS_WSPM_TUHH, "reachSegmentMember" ); //$NON-NLS-1$
 
   public TuhhReach( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -101,7 +101,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   {
     try
     {
-      final Feature feature = FeatureHelper.addFeature( this, QNAME_PROP_REACHSEGMENTMEMBER, new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ); //$NON-NLS-1$
+      final Feature feature = FeatureHelper.addFeature( this, QNAME_MEMBER_REACHSEGMENT, new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ); //$NON-NLS-1$
       final TuhhReachProfileSegment tuhhProfilesegment = (TuhhReachProfileSegment) feature;
 
       // set default values
@@ -140,26 +140,26 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 
   public void setWaterBody( final WspmWaterBody body )
   {
-    final IPropertyType waterProp = getFeatureType().getProperty( QNAME_WATER_BODY_LINK_MEMBER );
+    final IPropertyType waterProp = getFeatureType().getProperty( QNAME_MEMBER_WATER_BODY_LINK );
     setProperty( waterProp, body.getId() );
   }
 
   public WspmWaterBody getWaterBody( )
   {
-    final Object body = getProperty( QNAME_WATER_BODY_LINK_MEMBER );
+    final Object body = getProperty( QNAME_MEMBER_WATER_BODY_LINK );
 
     return (WspmWaterBody) FeatureHelper.resolveLinkedFeature( getWorkspace(), body );
   }
 
   public FeatureList getReachSegmentList( )
   {
-    return (FeatureList) getProperty( QNAME_PROP_REACHSEGMENTMEMBER );
+    return (FeatureList) getProperty( QNAME_MEMBER_REACHSEGMENT );
   }
 
   public void recreateMarkerList( )
   {
     final IFeatureType featureType = getFeatureType();
-    final IRelationType markerRT = (IRelationType) featureType.getProperty( QNAME_MARKER_MEMBER );
+    final IRelationType markerRT = (IRelationType) featureType.getProperty( QNAME_MEMBER_MARKER );
 
     final FeatureList list = (FeatureList) getProperty( markerRT );
     list.clear();

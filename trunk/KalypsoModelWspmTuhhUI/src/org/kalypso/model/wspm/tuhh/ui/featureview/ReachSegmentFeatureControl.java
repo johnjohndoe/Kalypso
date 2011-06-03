@@ -211,7 +211,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
         m_viewer.setInput( new Object[] {} );
       else
       {
-        final List< ? > profiles = (List< ? >) waterBody.getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
+        final List< ? > profiles = (List< ? >) waterBody.getProperty( WspmWaterBody.QNAME_MEMBER_PROFILE );
         m_viewer.setInput( profiles );
       }
     }
@@ -240,7 +240,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
   {
     final Collection<TuhhReachProfileSegment> segments = new ArrayList<TuhhReachProfileSegment>( profileFeatures.length );
 
-    final FeatureList segmentList = (FeatureList) reach.getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
+    final FeatureList segmentList = (FeatureList) reach.getProperty( TuhhReach.QNAME_MEMBER_REACHSEGMENT );
 
     for( final IProfileFeature profileFeature : profileFeatures )
     {

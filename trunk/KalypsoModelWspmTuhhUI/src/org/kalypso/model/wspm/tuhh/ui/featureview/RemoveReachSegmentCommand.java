@@ -87,7 +87,7 @@ public class RemoveReachSegmentCommand implements ICommand
   @Override
   public void process( ) throws Exception
   {
-    final FeatureList segmentList = (FeatureList) m_reach.getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
+    final FeatureList segmentList = (FeatureList) m_reach.getProperty( TuhhReach.QNAME_MEMBER_REACHSEGMENT );
 
     final Feature[] removedFeatures = new Feature[m_segments.length];
     for( int i = 0; i < m_segments.length; i++ )
