@@ -65,6 +65,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchSite;
@@ -103,6 +105,8 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
+import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -247,13 +251,34 @@ public class PdbWspmProject
 
   private void initGmvView( )
   {
+    final FindViewRunnable<WspmGmvViewPart> runnable = new FindViewRunnable<WspmGmvViewPart>( WspmGmvViewPart.ID, m_site );
+    final WspmGmvViewPart gmvView = runnable.execute();
+    if( gmvView == null )
+      return;
+
+    final Runnable setFilterOp = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        final GmlTreeView gmlView = gmvView.getTreeView();
+        final GMLContentProvider contentProvider = gmlView.getContentProvider();
+        contentProvider.setShowAssociations( false );
+        contentProvider.setShowChildreOverride( TuhhReach.QNAME_TUHH_REACH, Boolean.TRUE );
+        final TreeViewer treeViewer = gmlView.getTreeViewer();
+        final ViewerFilter pdbGmlFilter = new PdbWspmGmlFilter();
+        treeViewer.setFilters( new ViewerFilter[] { pdbGmlFilter } );
+      }
+    };
+    gmvView.getSite().getShell().getDisplay().syncExec( setFilterOp );
+
     final String inputContent = createGmvInput();
 
     final StringStorage storage = new StringStorage( inputContent, null );
     storage.setName( "Local Data" );
 
     final IStorageEditorInput input = new StorageEditorInput( storage );
-    setGmvInput( input );
+    setGmvInput( gmvView, input );
   }
 
   private String createGmvInput( )
@@ -290,14 +315,9 @@ public class PdbWspmProject
     }
   }
 
-  private void setGmvInput( final IStorageEditorInput input )
+  private void setGmvInput( final WspmGmvViewPart gmvView, final IStorageEditorInput input )
   {
-    final FindViewRunnable<WspmGmvViewPart> runnable = new FindViewRunnable<WspmGmvViewPart>( WspmGmvViewPart.ID, m_site );
-    final WspmGmvViewPart view = runnable.execute();
-    if( view == null )
-      return;
-
-    view.setInput( input );
+    gmvView.setInput( input );
 
     // TODO: better name; maybe use project description instead?
     final String name = m_project.getName();
@@ -306,7 +326,7 @@ public class PdbWspmProject
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        view.setPartName( name );
+        gmvView.setPartName( name );
         return Status.OK_STATUS;
       }
     };
@@ -460,7 +480,7 @@ public class PdbWspmProject
     final String name = reach.getName();
     final String type = "gml"; //$NON-NLS-1$
 
-    final String featurePath = String.format( "#fid#%s/%s", reach.getId(), TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER.getLocalPart() ); //$NON-NLS-1$
+    final String featurePath = String.format( "#fid#%s/%s", reach.getId(), TuhhReach.QNAME_MEMBER_REACHSEGMENT.getLocalPart() ); //$NON-NLS-1$
 
     final String source = IWspmTuhhConstants.FILE_MODELL_GML;
     final AddThemeCommand command = new AddThemeCommand( mapModell, name, type, featurePath, source );
