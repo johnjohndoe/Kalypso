@@ -64,12 +64,10 @@ public class ConnectPdbAction extends Action
     super( String.format( "%s - %s", settings.getName(), settings.toString() ) );
 
     setImageDescriptor( settings.getImage() );
+    setToolTipText( "Connect to Database" );
 
     m_view = view;
     m_settings = settings;
-
-// final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.CONNECT_TO_PDB );
-// setImageDescriptor( image );
   }
 
   @Override
