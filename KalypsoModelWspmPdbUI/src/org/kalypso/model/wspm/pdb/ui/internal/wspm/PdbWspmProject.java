@@ -109,6 +109,9 @@ import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * Encapsulates the data project of a pdb connection.
@@ -121,11 +124,21 @@ public class PdbWspmProject
 
   private static final String WSPM_PROJECT_NAME = "PDBWspmData"; //$NON-NLS-1$
 
+  private final ModellEventListener m_modelListener = new ModellEventListener()
+  {
+    @Override
+    public void onModellChange( final ModellEvent modellEvent )
+    {
+      handleModelChange( modellEvent );
+    }
+  };
+
   private PoolGmlWorkspaceProvider m_provider;
 
   private IProject m_project;
 
   private final IWorkbenchSite m_site;
+
 
   public PdbWspmProject( final IWorkbenchSite site )
   {
@@ -135,7 +148,13 @@ public class PdbWspmProject
   public void dispose( )
   {
     if( m_provider != null )
+    {
+      final CommandableWorkspace workspace = m_provider.getWorkspace();
+      if( workspace != null )
+        workspace.removeModellListener( m_modelListener );
+
       m_provider.dispose();
+    }
     m_provider = null;
   }
 
@@ -157,6 +176,8 @@ public class PdbWspmProject
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to load wspm data" );
       throw new CoreException( status );
     }
+
+    m_provider.getWorkspace().addModellListener( m_modelListener );
 
     /* set data to views */
     initPerspective( new SubProgressMonitor( monitor, 34 ) );
@@ -424,11 +445,7 @@ public class PdbWspmProject
       }
     }
 
-    /* Update map */
-    final FindViewRunnable<WspmMapViewPart> mapRunnable = new FindViewRunnable<WspmMapViewPart>( WspmMapViewPart.ID, m_site );
-    final WspmMapViewPart mapView = mapRunnable.execute();
-    if( mapView != null )
-      updateMap( mapView );
+    updateMap();
   }
 
   public CommandableWorkspace getWorkspace( )
@@ -440,8 +457,13 @@ public class PdbWspmProject
   }
 
   /* Make sure, that all reaches of the project have a theme in the current map */
-  public void updateMap( final WspmMapViewPart mapView )
+  private void updateMap( )
   {
+    final FindViewRunnable<WspmMapViewPart> mapRunnable = new FindViewRunnable<WspmMapViewPart>( WspmMapViewPart.ID, m_site );
+    final WspmMapViewPart mapView = mapRunnable.execute();
+    if( mapView == null )
+      return;
+
     final GisTemplateMapModell mapModell = mapView.getMapModell();
     final FindReachThemesVisitor findReachesVisitor = new FindReachThemesVisitor();
     mapModell.accept( findReachesVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
@@ -475,6 +497,8 @@ public class PdbWspmProject
     }
 
     mapView.postCommand( compositeCommand, null );
+
+    mapView.doSave( new NullProgressMonitor() );
   }
 
   private AddThemeCommand addReachTheme( final GisTemplateMapModell mapModell, final WspmReach reach )
@@ -486,9 +510,17 @@ public class PdbWspmProject
 
     final String source = IWspmTuhhConstants.FILE_MODELL_GML;
     final AddThemeCommand command = new AddThemeCommand( mapModell, name, type, featurePath, source );
+    command.setShouldActivateTheme( false );
+
     command.addProperty( PROPERTY_THEME_REACH, reach.getId() );
     command.addProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.FALSE.toString() );
 
     return command;
+  }
+
+  protected void handleModelChange( final ModellEvent modellEvent )
+  {
+    if( modellEvent instanceof FeatureStructureChangeModellEvent )
+      updateMap();
   }
 }
