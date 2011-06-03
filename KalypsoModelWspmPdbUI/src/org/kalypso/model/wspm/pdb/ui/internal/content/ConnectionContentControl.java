@@ -48,26 +48,25 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.internal.content.filter.StateFilterControl;
-import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
@@ -88,11 +87,11 @@ public class ConnectionContentControl extends Composite
 
   private TreeViewer m_viewer;
 
-  private ToolBarManager m_manager;
+  private final ToolBarManager m_manager;
 
   private final PdbWspmProject m_project;
 
-  public ConnectionContentControl( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection, final PdbWspmProject project )
+  public ConnectionContentControl( final FormToolkit toolkit, final Section parent, final IPdbConnection connection, final PdbWspmProject project )
   {
     super( parent, SWT.NONE );
 
@@ -107,11 +106,14 @@ public class ConnectionContentControl extends Composite
 
     ControlUtils.addDisposeListener( this );
 
+    m_manager = new ToolBarManager( SWT.FLAT | SWT.SHADOW_OUT );
+
     createToolbar( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createTree( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    createWaterSearchFields( toolkit, this, m_viewer ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    createStatesSearchFields( toolkit, this, m_viewer ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createActions();
+
+    final CheckoutAction checkoutAction = new CheckoutAction( this );
+    ActionHyperlink.createHyperlink( toolkit, this, SWT.PUSH, checkoutAction ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     refresh();
   }
@@ -126,8 +128,6 @@ public class ConnectionContentControl extends Composite
 
   private Control createToolbar( final FormToolkit toolkit, final Composite parent )
   {
-    m_manager = new ToolBarManager( SWT.FLAT | SWT.SHADOW_IN );
-
     final ToolBar toolBar = m_manager.createControl( parent );
     toolkit.adapt( toolBar );
     return toolBar;
@@ -167,31 +167,7 @@ public class ConnectionContentControl extends Composite
     return tree;
   }
 
-  private Control createWaterSearchFields( final FormToolkit toolkit, final Composite parent, final TreeViewer viewer )
-  {
-    final Group group = new Group( parent, SWT.NONE );
-    toolkit.adapt( group );
-    group.setText( "Search - Water Bodies" );
-    group.setLayout( new FillLayout() );
 
-    final WaterBodyFilterControl filterControl = new WaterBodyFilterControl( toolkit, group );
-    filterControl.setViewer( viewer );
-
-    return group;
-  }
-
-  private Control createStatesSearchFields( final FormToolkit toolkit, final Composite parent, final TreeViewer viewer )
-  {
-    final Group group = new Group( parent, SWT.NONE );
-    toolkit.adapt( group );
-    group.setText( "Search - States" );
-    group.setLayout( new FillLayout() );
-
-    final StateFilterControl filterControl = new StateFilterControl( toolkit, group );
-    filterControl.setViewer( viewer );
-
-    return group;
-  }
 
   private void createActions( )
   {
@@ -203,9 +179,9 @@ public class ConnectionContentControl extends Composite
     // byStateAction.setChecked( true );
     // m_manager.add( byStateAction );
     // m_manager.add( new ByWaterBodyAction( this ) );
-    m_manager.add( new Separator() );
+// m_manager.add( new Separator() );
     // m_manager.add( new ExportAction( this ) );
-    m_manager.add( new CheckoutAction( this ) );
+// m_manager.add( new CheckoutAction( this ) );
 
     m_manager.update( true );
   }
@@ -257,5 +233,10 @@ public class ConnectionContentControl extends Composite
   public PdbWspmProject getProject( )
   {
     return m_project;
+  }
+
+  public StructuredViewer getViewer( )
+  {
+    return m_viewer;
   }
 }

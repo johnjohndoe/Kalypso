@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
@@ -62,8 +63,8 @@ public class CheckoutAction extends Action
   {
     m_control = control;
 
-    setText( "Checkout" );
-    setToolTipText( "Load the selected profiles into the local workspace." );
+    setText( "Download selected items" );
+    setToolTipText( "Download the selected items into the local workspace." );
     setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.IMPORT ) );
   }
 
@@ -73,6 +74,12 @@ public class CheckoutAction extends Action
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
     final IStructuredSelection selection = m_control.getSelection();
+    if( selection.isEmpty() )
+    {
+      final String message = "Please select at least one item in the tree.";
+      MessageDialog.openInformation( shell, getText(), message );
+      return;
+    }
 
     // FIXME: save changes in project (ask user!)
     // REMARK: project will be saved second time by the checkout operation
