@@ -69,7 +69,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
@@ -141,12 +141,11 @@ public class PdbWspmProject
 
   private IProject m_project;
 
-  private final IWorkbenchSite m_site;
+  private final IWorkbenchWindow m_window;
 
-
-  public PdbWspmProject( final IWorkbenchSite site )
+  public PdbWspmProject( final IWorkbenchWindow window )
   {
-    m_site = site;
+    m_window = window;
   }
 
   public void dispose( )
@@ -277,7 +276,7 @@ public class PdbWspmProject
 
   private void initGmvView( )
   {
-    final FindViewRunnable<WspmGmvViewPart> runnable = new FindViewRunnable<WspmGmvViewPart>( WspmGmvViewPart.ID, m_site );
+    final FindViewRunnable<WspmGmvViewPart> runnable = new FindViewRunnable<WspmGmvViewPart>( WspmGmvViewPart.ID, m_window );
     final WspmGmvViewPart gmvView = runnable.execute();
     if( gmvView == null )
       return;
@@ -364,12 +363,19 @@ public class PdbWspmProject
   private void initMapView( )
   {
     final IFile mapFile = ensureMapFile();
-    final FindViewRunnable<WspmMapViewPart> runnable = new FindViewRunnable<WspmMapViewPart>( WspmMapViewPart.ID, m_site );
+    final FindViewRunnable<WspmMapViewPart> runnable = new FindViewRunnable<WspmMapViewPart>( WspmMapViewPart.ID, m_window );
     final WspmMapViewPart view = runnable.execute();
     if( view == null )
       return;
 
-    view.setInput( new FileEditorInput( mapFile ) );
+    view.getSite().getShell().getDisplay().asyncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        view.setInput( new FileEditorInput( mapFile ) );
+      }
+    } );
 
     updateMap();
   }
@@ -433,13 +439,13 @@ public class PdbWspmProject
   public void updateViews( final TuhhReach[] toSelect )
   {
     /* Bring gmv view to top and select changed features */
-    final FindViewRunnable<WspmGmvViewPart> gmvRunnable = new FindViewRunnable<WspmGmvViewPart>( WspmGmvViewPart.ID, m_site );
+    final FindViewRunnable<WspmGmvViewPart> gmvRunnable = new FindViewRunnable<WspmGmvViewPart>( WspmGmvViewPart.ID, m_window );
     final WspmGmvViewPart gmvView = gmvRunnable.execute();
     if( gmvView != null )
     {
       try
       {
-        final IWorkbenchPage page = m_site.getWorkbenchWindow().getActivePage();
+        final IWorkbenchPage page = m_window.getActivePage();
         page.showView( WspmGmvViewPart.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
         gmvView.getSite().getSelectionProvider().setSelection( new StructuredSelection( toSelect ) );
       }
@@ -450,7 +456,7 @@ public class PdbWspmProject
     }
 
     /* Jump to freshly downloaded items */
-    final FindViewRunnable<WspmMapViewPart> mapRunnable = new FindViewRunnable<WspmMapViewPart>( WspmMapViewPart.ID, m_site );
+    final FindViewRunnable<WspmMapViewPart> mapRunnable = new FindViewRunnable<WspmMapViewPart>( WspmMapViewPart.ID, m_window );
     final WspmMapViewPart mapView = mapRunnable.execute();
     if( mapView == null )
       return;
@@ -475,12 +481,15 @@ public class PdbWspmProject
   /* Make sure, that all reaches of the project have a theme in the current map */
   private void updateMap( )
   {
-    final FindViewRunnable<WspmMapViewPart> mapRunnable = new FindViewRunnable<WspmMapViewPart>( WspmMapViewPart.ID, m_site );
+    final FindViewRunnable<WspmMapViewPart> mapRunnable = new FindViewRunnable<WspmMapViewPart>( WspmMapViewPart.ID, m_window );
     final WspmMapViewPart mapView = mapRunnable.execute();
     if( mapView == null )
       return;
 
     final GisTemplateMapModell mapModell = mapView.getMapModell();
+    if( mapModell == null )
+      return;
+
     final FindReachThemesVisitor findReachesVisitor = new FindReachThemesVisitor();
     mapModell.accept( findReachesVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
 
