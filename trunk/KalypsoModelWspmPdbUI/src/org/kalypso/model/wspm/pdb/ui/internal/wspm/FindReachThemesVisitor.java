@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
@@ -74,5 +76,19 @@ public class FindReachThemesVisitor implements IKalypsoThemeVisitor
   {
     final Collection<IKalypsoFeatureTheme> values = m_reaches.values();
     return values.toArray( new IKalypsoFeatureTheme[values.size()] );
+  }
+
+  public IKalypsoFeatureTheme[] getThemes( final TuhhReach[] reaches )
+  {
+    final Collection<IKalypsoFeatureTheme> themes = new ArrayList<IKalypsoFeatureTheme>( reaches.length );
+
+    for( final TuhhReach reach : reaches )
+    {
+      final String id = reach.getId();
+      if( m_reaches.containsKey( id ) )
+        themes.add( m_reaches.get( id ) );
+    }
+
+    return themes.toArray( new IKalypsoFeatureTheme[themes.size()] );
   }
 }

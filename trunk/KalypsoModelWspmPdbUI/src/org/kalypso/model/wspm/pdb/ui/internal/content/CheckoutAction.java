@@ -50,7 +50,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 
 /**
  * @author Gernot Belger
@@ -91,7 +91,7 @@ public class CheckoutAction extends Action
     if( !status.isOK() )
       new StatusDialog2( shell, status, getText() ).open();
 
-    final Feature[] toSelect = operation.getNewReaches();
+    final TuhhReach[] toSelect = operation.getNewReaches();
     project.updateViews( toSelect );
   }
 }

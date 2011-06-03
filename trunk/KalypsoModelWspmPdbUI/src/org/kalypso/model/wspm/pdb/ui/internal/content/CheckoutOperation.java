@@ -67,7 +67,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
@@ -204,7 +203,7 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     return list;
   }
 
-  public Feature[] getNewReaches( )
+  public TuhhReach[] getNewReaches( )
   {
     return m_changedReaches;
   }
