@@ -38,9 +38,10 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
+package org.kalypso.model.wspm.pdb.ui.internal.content.filter;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -50,14 +51,25 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
  */
 public class WaterBodiesFilter extends ViewerFilter
 {
-  private final String m_gkn;
+  public static final String PROPERTY_GKN = "gkn"; //$NON-NLS-1$
 
-  private final String m_name;
+  public static final String PROPERTY_NAME = "name"; //$NON-NLS-1$
+
+  private String m_gkn;
+
+  private String m_name;
+
+  private StructuredViewer m_viewer = null;
 
   public WaterBodiesFilter( final String gkn, final String name )
   {
     m_gkn = StringUtils.isBlank( gkn ) ? null : gkn.toLowerCase();
     m_name = StringUtils.isBlank( name ) ? null : name.toLowerCase();
+  }
+
+  public void setViewer( final StructuredViewer viewer )
+  {
+    m_viewer = viewer;
   }
 
   @Override
@@ -66,17 +78,42 @@ public class WaterBodiesFilter extends ViewerFilter
     if( element instanceof WaterBody )
     {
       final WaterBody waterBody = (WaterBody) element;
-      final String name = waterBody.getName().toLowerCase();
+      final String name = waterBody.getLabel().toLowerCase();
       final String gkn = waterBody.getName().toLowerCase();
 
-      if( m_gkn != null && !gkn.contains( m_gkn ) )
+      if( !StringUtils.isBlank( m_gkn ) && !gkn.contains( m_gkn ) )
         return false;
 
-      if( m_name != null && !name.contains( m_name ) )
+      if( !StringUtils.isBlank( m_name ) && !name.contains( m_name ) )
         return false;
     }
 
     return true;
   }
 
+  public String getGkn( )
+  {
+    return m_gkn;
+  }
+
+  public String getName( )
+  {
+    return m_name;
+  }
+
+  public void setGkn( final String gkn )
+  {
+    m_gkn = gkn;
+
+    if( m_viewer != null )
+      m_viewer.refresh();
+  }
+
+  public void setName( final String name )
+  {
+    m_name = name;
+
+    if( m_viewer != null )
+      m_viewer.refresh();
+  }
 }

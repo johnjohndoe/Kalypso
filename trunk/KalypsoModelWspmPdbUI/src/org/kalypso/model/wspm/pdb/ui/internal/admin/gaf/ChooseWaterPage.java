@@ -48,19 +48,13 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.hibernate.Session;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
@@ -68,8 +62,8 @@ import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.AddWaterBodyAction;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyStrings;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
 import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
@@ -83,6 +77,8 @@ public class ChooseWaterPage extends WizardPage
   private WaterBodyViewer m_waterBodyViewer;
 
   private Session m_session;
+
+  private WaterBodyFilterControl m_waterBodyFilterControl;
 
   ChooseWaterPage( final String pageName, final ImportGafData data )
   {
@@ -108,14 +104,20 @@ public class ChooseWaterPage extends WizardPage
   {
     openSession();
 
+    m_waterBodyViewer = new WaterBodyViewer( m_session );
+
     final Composite panel = new Composite( parent, SWT.NONE );
     setControl( panel );
     GridLayoutFactory.swtDefaults().applyTo( panel );
 
     final DatabindingWizardPage binding = new DatabindingWizardPage( this, null );
-    createSearchFields( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createWaterBodyTable( binding, panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    createSearchFields( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createActions( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    /* Hook search fields with viewer */
+    final TableViewer viewer = m_waterBodyViewer.getViewer();
+    m_waterBodyFilterControl.setViewer( viewer );
   }
 
   protected void openSession( )
@@ -132,7 +134,6 @@ public class ChooseWaterPage extends WizardPage
 
   private Control createWaterBodyTable( final DatabindingWizardPage binding, final Composite parent )
   {
-    m_waterBodyViewer = new WaterBodyViewer( m_session );
     final TableViewer waterBodiesViewer = m_waterBodyViewer.createTableViewer( parent );
 
     /* selection -> data */
@@ -150,52 +151,12 @@ public class ChooseWaterPage extends WizardPage
   private Control createSearchFields( final Composite parent )
   {
     final Group panel = new Group( parent, SWT.NONE );
+    panel.setLayout( new FillLayout() );
     panel.setText( "Filter" );
-    GridLayoutFactory.swtDefaults().numColumns( 6 ).applyTo( panel );
 
-    new Label( panel, SWT.NONE ).setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
-
-    final Text gknField = new Text( panel, SWT.SINGLE | SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
-    gknField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-
-    new Label( panel, SWT.NONE ).setText( WaterBodyStrings.STR_NAME );
-
-    final Text nameField = new Text( panel, SWT.SEARCH | SWT.ICON_SEARCH );
-    nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-
-    nameField.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetDefaultSelected( final SelectionEvent e )
-      {
-        if( e.detail == SWT.ICON_CANCEL )
-          nameField.setText( "" ); //$NON-NLS-1$
-      }
-    } );
-
-    final ModifyListener searchListener = new ModifyListener()
-    {
-      @Override
-      public void modifyText( final ModifyEvent e )
-      {
-        final String gknSearch = gknField.getText();
-        final String nameSearch = nameField.getText();
-
-        updateSearch( gknSearch, nameSearch );
-      }
-    };
-
-    gknField.addModifyListener( searchListener );
-    nameField.addModifyListener( searchListener );
+    m_waterBodyFilterControl = new WaterBodyFilterControl( null, panel );
 
     return panel;
-  }
-
-  protected void updateSearch( final String gknSearch, final String nameSearch )
-  {
-    final ViewerFilter filter = new WaterBodiesFilter( gknSearch, nameSearch );
-    final TableViewer viewer = m_waterBodyViewer.getViewer();
-    viewer.setFilters( new ViewerFilter[] { filter } );
   }
 
   private Control createActions( final Composite panel )

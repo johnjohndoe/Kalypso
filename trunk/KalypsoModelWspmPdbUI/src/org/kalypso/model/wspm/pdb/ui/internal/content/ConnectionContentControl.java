@@ -50,18 +50,23 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
+import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
@@ -103,6 +108,7 @@ public class ConnectionContentControl extends Composite
 
     createToolbar( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createTree( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    createWaterSearchFields( toolkit, this, m_viewer ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createActions();
 
     refresh();
@@ -116,7 +122,6 @@ public class ConnectionContentControl extends Composite
     super.dispose();
   }
 
-
   private Control createToolbar( final FormToolkit toolkit, final Composite parent )
   {
     m_manager = new ToolBarManager( SWT.FLAT | SWT.SHADOW_IN );
@@ -128,23 +133,49 @@ public class ConnectionContentControl extends Composite
 
   private Control createTree( final FormToolkit toolkit, final Composite parent )
   {
-    final Tree tree = toolkit.createTree( parent, SWT.NONE );
+    final Tree tree = toolkit.createTree( parent, SWT.FULL_SELECTION | SWT.MULTI );
     tree.setHeaderVisible( true );
     m_viewer = new TreeViewer( tree );
+    m_viewer.setAutoExpandLevel( 2 );
 
     final TreeViewerColumn nameViewerColumn = new TreeViewerColumn( m_viewer, SWT.LEFT );
     final TreeColumn nameColumn = nameViewerColumn.getColumn();
+    nameColumn.setText( "Name" );
     nameColumn.setResizable( false );
     nameColumn.setMoveable( false );
     nameColumn.setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
     nameViewerColumn.setLabelProvider( new PdbLabelProvider() );
+    ColumnViewerSorter.registerSorter( nameViewerColumn, new ViewerComparator() );
+    ColumnViewerSorter.setSortState( nameViewerColumn, false );
+
+    final TreeViewerColumn measurementDateViewerColumn = new TreeViewerColumn( m_viewer, SWT.LEFT );
+    final TreeColumn measurementDateColumn = measurementDateViewerColumn.getColumn();
+    measurementDateColumn.setText( "Measurement" );
+    measurementDateColumn.setResizable( false );
+    measurementDateColumn.setMoveable( false );
+    measurementDateColumn.setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+    measurementDateViewerColumn.setLabelProvider( new PdbMeasurementLabelProvider() );
+    ColumnViewerSorter.registerSorter( measurementDateViewerColumn, new PdbMeasurementDateComparator() );
 
     tree.addControlListener( new ColumnsResizeControlListener() );
 
-    setContentProvider( new ByStateContentProvider( false ) );
+    setContentProvider( new ByWaterBodyContentProvider() );
     m_viewer.setComparator( new PdbComparator() );
 
     return tree;
+  }
+
+  private Control createWaterSearchFields( final FormToolkit toolkit, final Composite parent, final TreeViewer viewer )
+  {
+    final Group group = new Group( parent, SWT.NONE );
+    toolkit.adapt( group );
+    group.setText( "Search - Water Bodies" );
+    group.setLayout( new FillLayout() );
+
+    final WaterBodyFilterControl filterControl = new WaterBodyFilterControl( toolkit, group );
+    filterControl.setViewer( viewer );
+
+    return group;
   }
 
   private void createActions( )
@@ -152,10 +183,10 @@ public class ConnectionContentControl extends Composite
     m_manager.add( new RefreshAction( this ) );
     m_manager.add( new CollapseAllAction( m_viewer ) );
     m_manager.add( new Separator() );
-    final ByStateAction byStateAction = new ByStateAction( this );
-    byStateAction.setChecked( true );
-    m_manager.add( byStateAction );
-    m_manager.add( new ByWaterBodyAction( this ) );
+    // final ByStateAction byStateAction = new ByStateAction( this );
+    // byStateAction.setChecked( true );
+    // m_manager.add( byStateAction );
+    // m_manager.add( new ByWaterBodyAction( this ) );
     m_manager.add( new Separator() );
     // m_manager.add( new ExportAction( this ) );
     m_manager.add( new CheckoutAction( this ) );
