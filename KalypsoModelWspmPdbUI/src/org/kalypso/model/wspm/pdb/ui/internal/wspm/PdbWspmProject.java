@@ -345,14 +345,12 @@ public class PdbWspmProject
   {
     gmvView.setInput( input );
 
-    // TODO: better name; maybe use project description instead?
-    final String name = m_project.getName();
     final UIJob job = new UIJob( StringUtils.EMPTY )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        gmvView.setPartName( name );
+        gmvView.setPartName( "Local Data" );
         return Status.OK_STATUS;
       }
     };

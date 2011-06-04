@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
@@ -51,7 +53,7 @@ import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.UpdateObjectOperation;
+import org.kalypso.model.wspm.pdb.connect.command.FlushOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
@@ -64,10 +66,13 @@ public class EditStateAction extends UpdateableAction
 
   private final StatesViewer m_viewer;
 
-  public EditStateAction( final ManageStatesPage page, final StatesViewer viewer )
+  private final String m_username;
+
+  public EditStateAction( final ManageStatesPage page, final StatesViewer viewer, final String username )
   {
     m_viewer = viewer;
     m_page = page;
+    m_username = username;
 
     setText( "&Edit..." );
   }
@@ -78,25 +83,22 @@ public class EditStateAction extends UpdateableAction
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
     final Session session = m_page.getSession();
-    final State[] existingWaterbodies = m_viewer.getExistingState();
+    final State[] existingStates = m_viewer.getExistingState();
 
     final State selectedItem = m_page.getSelectedItem();
+    final State clone = cloneForEdit( selectedItem );
 
-    final EditStateWizard wizard = new EditStateWizard( existingWaterbodies, selectedItem );
+    final EditStateWizard wizard = new EditStateWizard( existingStates, clone );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     try
     {
       if( dialog.open() == Window.OK )
       {
-        // FIXME: a bit dubious (also the refresh below). Instead, we should clone the object
-        // and edit the clone. Only copy the changed values back, if OK
-        final UpdateObjectOperation operation = new UpdateObjectOperation( selectedItem );
+        uncloneData( selectedItem, clone );
+
+        final FlushOperation operation = new FlushOperation();
         new Executor( session, operation ).execute();
-      }
-      else
-      {
-        session.refresh( selectedItem );
       }
     }
     catch( final PdbConnectException e )
@@ -107,6 +109,28 @@ public class EditStateAction extends UpdateableAction
     }
 
     m_viewer.refreshState( selectedItem.getName() );
+  }
+
+  private State cloneForEdit( final State other )
+  {
+    return new State( other.getId(), other.getName(), other.getIsstatezero(), other.getCreationDate(), other.getEditingDate(), other.getEditingUser(), other.getMeasurementDate(), other.getSource(), other.getDescription(), null );
+  }
+
+  /**
+   * Copy the edited data back into the persistent object.
+   */
+  private void uncloneData( final State original, final State clone )
+  {
+    original.setName( clone.getName() );
+    original.setIsstatezero( clone.getIsstatezero() );
+    original.setCreationDate( clone.getCreationDate() );
+    original.setMeasurementDate( clone.getMeasurementDate() );
+    original.setSource( clone.getSource() );
+    original.setDescription( clone.getDescription() );
+
+    // Automatically change editing data and user
+    original.setEditingDate( new Date() );
+    original.setEditingUser( m_username );
   }
 
   @Override

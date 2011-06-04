@@ -51,7 +51,7 @@ import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.UpdateObjectOperation;
+import org.kalypso.model.wspm.pdb.connect.command.FlushOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
@@ -83,7 +83,9 @@ public class EditWaterBodyAction extends UpdateableAction
 
     final WaterBody selectedItem = m_page.getSelectedItem();
 
-    final EditWaterBodyWizard wizard = new EditWaterBodyWizard( existingWaterbodies, selectedItem, Mode.EDIT );
+    final WaterBody clone = cloneForEdit( selectedItem );
+
+    final EditWaterBodyWizard wizard = new EditWaterBodyWizard( existingWaterbodies, clone, Mode.EDIT );
     wizard.setWindowTitle( "Edit Water Body" );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
@@ -91,14 +93,10 @@ public class EditWaterBodyAction extends UpdateableAction
     {
       if( dialog.open() == Window.OK )
       {
-        // FIXME: a bit dubious (also the refresh below). Instead, we should clone the object
-        // and edit the clone. Only copy the changed values back, if OK
-        final UpdateObjectOperation operation = new UpdateObjectOperation( selectedItem );
+        uncloneData( selectedItem, clone );
+
+        final FlushOperation operation = new FlushOperation();
         new Executor( session, operation ).execute();
-      }
-      else
-      {
-        session.refresh( selectedItem );
       }
     }
     catch( final PdbConnectException e )
@@ -109,6 +107,26 @@ public class EditWaterBodyAction extends UpdateableAction
     }
 
     m_viewer.refreshWaterBody( selectedItem.getName() );
+  }
+
+  private WaterBody cloneForEdit( final WaterBody other )
+  {
+    final WaterBody clone = new WaterBody( other.getId(), other.getName(), other.getLabel(), other.getDirectionOfStationing() );
+    clone.setDescription( other.getDescription() );
+    clone.setRiverline( other.getRiverline() );
+    return clone;
+  }
+
+  /**
+   * Copy the edited data back into the persistent object.
+   */
+  private void uncloneData( final WaterBody original, final WaterBody clone )
+  {
+    original.setName( clone.getName() );
+    original.setLabel( clone.getLabel() );
+    original.setDescription( clone.getDescription() );
+    original.setDirectionOfStationing( clone.getDirectionOfStationing() );
+    original.setRiverline( clone.getRiverline() );
   }
 
   @Override

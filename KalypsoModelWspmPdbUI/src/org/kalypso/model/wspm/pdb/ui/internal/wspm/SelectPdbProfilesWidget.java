@@ -64,10 +64,6 @@ public class SelectPdbProfilesWidget extends SelectFeatureWidget
     super( "Select Cross Section", "Select Cross Sections in the Map", QNAMES_TO_SELECT, TuhhReachProfileSegment.PROPERTY_PROFILE_LOCATION );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.IMapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {

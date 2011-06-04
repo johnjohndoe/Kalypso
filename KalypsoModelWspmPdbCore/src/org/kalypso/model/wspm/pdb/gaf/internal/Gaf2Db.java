@@ -68,8 +68,6 @@ public class Gaf2Db implements IPdbOperation
 {
   private final WaterBody m_waterBody;
 
-// private final GeometryFactory m_geometryFactory;
-
   private int m_profileCount = 0;
 
   private final State m_state;

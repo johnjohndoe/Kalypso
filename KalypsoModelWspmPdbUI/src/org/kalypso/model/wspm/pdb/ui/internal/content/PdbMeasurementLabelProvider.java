@@ -40,12 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
@@ -53,25 +49,13 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
  */
 public class PdbMeasurementLabelProvider extends ColumnLabelProvider
 {
-  private final DateFormat m_format;
-
-  public PdbMeasurementLabelProvider( )
-  {
-    m_format = DateFormat.getDateInstance( DateFormat.MEDIUM );
-    m_format.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-  }
-
   @Override
   public String getText( final Object element )
   {
     if( element instanceof State )
     {
       final State state = (State) element;
-      final Date measurementDate = state.getMeasurementDate();
-      if( measurementDate == null )
-        return null;
-
-      return m_format.format( measurementDate );
+      return state.getMeasurementDateFormatted();
     }
 
     return StringUtils.EMPTY;

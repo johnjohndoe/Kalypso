@@ -38,39 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.db.constants;
+package org.kalypso.model.wspm.pdb.connect.command;
+
+import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**
+ * Just flushes the session.
+ * 
  * @author Gernot Belger
  */
-public interface StateConstants
+public class FlushOperation implements IPdbOperation
 {
-  String PROPERTY_SOURCE = "source"; //$NON-NLS-1$ 
+  @Override
+  public String getLabel( )
+  {
+    return "Flush session";
+  }
 
-  String PROPERTY_ID = "id"; //$NON-NLS-1$
-
-  String PROPERTY_NAME = "name"; //$NON-NLS-1$
-
-  String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
-
-  String PROPERTY_ISSTATEZERO = "isstatezero"; //$NON-NLS-1$
-
-  String PROPERTY_CREATIONDATE = "creationDate"; //$NON-NLS-1$
-
-  String PROPERTY_EDITINGDATE = "editingDate"; //$NON-NLS-1$
-
-  String PROPERTY_EDITINGUSER = "editingUser"; //$NON-NLS-1$
-
-  String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
-
-  String PROPERTY_MEASUREMENTDATE_FORMATTED = "measurementDateFormatted"; //$NON-NLS-1$
-
-  int NAME_LIMIT = 100;
-
-  int COMMENT_LIMIT = 256;
-
-  public static final char ZERO_STATE_ON = 'T';
-
-  public static final char ZERO_STATE_OFF = 'F';
-
+  @Override
+  public void execute( final Session session )
+  {
+    session.flush();
+  }
 }

@@ -48,20 +48,26 @@ import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.jface.databinding.viewers.ViewerSupport;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.hibernate.Session;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.ui.internal.content.PdbLabelProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.content.PdbMeasurementDateComparator;
+import org.kalypso.model.wspm.pdb.ui.internal.content.PdbMeasurementLabelProvider;
 
 /**
  * @author Gernot Belger
@@ -87,11 +93,8 @@ public class StatesViewer
 
     table.addControlListener( new ColumnsResizeControlListener() );
 
-    final TableViewerColumn nameColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
-    nameColumn.getColumn().setText( "Name" );
-    nameColumn.getColumn().setResizable( false );
-    nameColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
-    ColumnViewerSorter.registerSorter( nameColumn, new ViewerSorter() );
+    final ViewerColumn nameColumn = createNameColumn( m_viewer, false );
+    createMeasurementDateColumn( m_viewer, false );
 
     ColumnViewerSorter.setSortState( nameColumn, Boolean.FALSE );
 
@@ -100,8 +103,9 @@ public class StatesViewer
     refreshState( null );
 
     final IValueProperty nameProperty = BeanProperties.value( State.class, State.PROPERTY_NAME );
+    final IValueProperty measurementProperty = BeanProperties.value( State.class, State.PROPERTY_MEASUREMENTDATE_FORMATTED );
 
-    final IValueProperty[] labelProperties = new IValueProperty[] { nameProperty };
+    final IValueProperty[] labelProperties = new IValueProperty[] { nameProperty, measurementProperty };
     ViewerSupport.bind( m_viewer, m_tableInput, labelProperties );
 
     return m_viewer;
@@ -162,5 +166,38 @@ public class StatesViewer
   public State[] getExistingState( )
   {
     return (State[]) m_tableInput.toArray( new State[m_tableInput.size()] );
+  }
+
+  public static ViewerColumn createNameColumn( final ColumnViewer viewer, final boolean setLabelProvider )
+  {
+    final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    final ViewerColumnItem column = new ViewerColumnItem( nameColumn );
+    column.setText( "Name" );
+    column.setResizable( false );
+    column.setMoveable( false );
+    column.setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+
+    if( setLabelProvider )
+      nameColumn.setLabelProvider( new PdbLabelProvider() );
+
+    ColumnViewerSorter.registerSorter( nameColumn, new ViewerComparator() );
+    return nameColumn;
+  }
+
+  public static ViewerColumn createMeasurementDateColumn( final ColumnViewer viewer, final boolean setLabelProvider )
+  {
+    final ViewerColumn measurementDateColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    final ViewerColumnItem column = new ViewerColumnItem( measurementDateColumn );
+    column.setText( "Measurement" );
+    column.setResizable( false );
+    column.setMoveable( false );
+    column.setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+
+    if( setLabelProvider )
+      measurementDateColumn.setLabelProvider( new PdbMeasurementLabelProvider() );
+
+    ColumnViewerSorter.registerSorter( measurementDateColumn, new PdbMeasurementDateComparator() );
+
+    return null;
   }
 }
