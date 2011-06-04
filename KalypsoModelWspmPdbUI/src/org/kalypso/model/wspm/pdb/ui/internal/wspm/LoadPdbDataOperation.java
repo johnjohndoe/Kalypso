@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.IWspmTuhhUIConstants;
 import org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule;
+import org.kalypso.ogc.gml.PoolFeaturesProvider;
 import org.kalypso.ogc.gml.PoolGmlWorkspaceProvider;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
@@ -94,7 +95,7 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
     monitor.subTask( "Loading WSPM data..." );
     final URL projectLocation = ResourceUtilities.createQuietURL( project );
     final IPoolableObjectType key = new PoolableObjectType( "gml", IWspmTuhhConstants.FILE_MODELL_GML, projectLocation ); //$NON-NLS-1$
-    final PoolGmlWorkspaceProvider provider = new PoolGmlWorkspaceProvider( key );
+    final PoolFeaturesProvider provider = new PoolFeaturesProvider( key, StringUtils.EMPTY );
     final TuhhWspmProject wspmProject = waitForworkspaceLoad( provider, new SubProgressMonitor( monitor, 50 ) );
     if( wspmProject == null )
     {
@@ -160,7 +161,7 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private TuhhWspmProject waitForworkspaceLoad( final PoolGmlWorkspaceProvider provider, final IProgressMonitor monitor )
+  private TuhhWspmProject waitForworkspaceLoad( final PoolFeaturesProvider provider, final IProgressMonitor monitor )
   {
     monitor.beginTask( "Loading project data", IProgressMonitor.UNKNOWN );
 

@@ -45,6 +45,7 @@ import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PerspectiveAdapter;
@@ -64,6 +65,20 @@ import org.kalypso.model.wspm.tuhh.ui.light.WspmLightPerspective;
  */
 public class PdbStartup implements IStartup
 {
+  private final IWorkbenchListener m_workbenchListener = new IWorkbenchListener()
+  {
+    @Override
+    public boolean preShutdown( final IWorkbench workbench, final boolean forced )
+    {
+      return handlePreShutdown();
+    }
+
+    @Override
+    public void postShutdown( final IWorkbench workbench )
+    {
+    }
+  };
+
   final IPerspectiveListener m_perspectiveListener = new PerspectiveAdapter()
   {
     @Override
@@ -77,6 +92,7 @@ public class PdbStartup implements IStartup
   public void earlyStartup( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
+    workbench.addWorkbenchListener( m_workbenchListener );
 
     workbench.getDisplay().asyncExec( new Runnable()
     {
@@ -84,6 +100,7 @@ public class PdbStartup implements IStartup
       public void run( )
       {
         final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+
 
         final IPerspectiveDescriptor perspective = window.getActivePage().getPerspective();
         final String id = perspective.getId();
@@ -93,6 +110,15 @@ public class PdbStartup implements IStartup
           window.addPerspectiveListener( m_perspectiveListener );
       }
     } );
+  }
+
+  protected boolean handlePreShutdown( )
+  {
+    final PdbWspmProject wspmProject = WspmPdbUiPlugin.getDefault().getWspmProject();
+    if( wspmProject == null )
+      return true;
+
+    return wspmProject.saveProject( false );
   }
 
   protected void handlePerspectiveActivated( final IWorkbenchPage page, final IPerspectiveDescriptor perspective )
