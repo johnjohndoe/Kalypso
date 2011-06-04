@@ -762,17 +762,11 @@
     </extension>
 
      <extension point="org.eclipse.ui.menus">
-        <menuContribution
-              allPopups="false"
-              locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart">
-           <separator
-                 name="data"
-                 visible="false">
-           </separator>
-           <command
-                 commandId="org.kalypso.ui.gmvtree.command.saveData"
-                 style="push">
-           </command>
+        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart">
+           <separator name="data" visible="false"/>
+           <command commandId="org.kalypso.ui.gmvtree.command.exportData" style="push"/>
+           <command commandId="org.kalypso.ui.gmvtree.command.reloadData" style="push"/>
+           <command commandId="org.kalypso.ui.gmvtree.command.saveData" style="push"/>
         </menuContribution>
      </extension>
   
