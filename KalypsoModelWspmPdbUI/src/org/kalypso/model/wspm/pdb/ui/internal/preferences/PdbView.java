@@ -45,8 +45,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.graphics.Image;
@@ -62,8 +60,13 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.PdbSettings;
+import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -187,20 +190,32 @@ public class PdbView extends ViewPart
       return;
 
     /* Start auto-connection */
-    final PdbConnectJob autoConnector = new PdbConnectJob( m_autoConnectData.getAutoConnectName() );
-    autoConnector.setUser( true );
+    final String settingsName = m_autoConnectData.getAutoConnectName();
+    final IStatus result = doConnect( settingsName );
+    if( !result.isOK() )
+      new StatusDialog2( getSite().getShell(), result, "Auto Connect" );
+  }
 
-    autoConnector.addJobChangeListener( new JobChangeAdapter()
+  private IStatus doConnect( final String settingsName )
+  {
+    try
     {
-      @Override
-      public void done( final IJobChangeEvent event )
+      final IPdbSettings settings = PdbSettings.getSettings( settingsName );
+      final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
+      final IStatus result = ProgressUtilities.busyCursorWhile( operation );
+      if( result.isOK() )
       {
-        final IPdbConnection connection = autoConnector.getConnection();
+        final IPdbConnection connection = operation.getConnection();
         setConnection( connection );
       }
-    } );
 
-    autoConnector.schedule();
+      return result;
+    }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to auto connect ot database", e );
+    }
   }
 
   @Override
