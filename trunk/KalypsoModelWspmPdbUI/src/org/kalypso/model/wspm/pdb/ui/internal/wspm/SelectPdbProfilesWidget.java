@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -57,6 +62,8 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
  */
 public class SelectPdbProfilesWidget extends SelectFeatureWidget
 {
+  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+
   private static final QName[] QNAMES_TO_SELECT = new QName[] { TuhhReachProfileSegment.QNAME_PROFILEREACHSEGMENT };
 
   public SelectPdbProfilesWidget( )
@@ -88,4 +95,19 @@ public class SelectPdbProfilesWidget extends SelectFeatureWidget
     return visitor.getThemes();
   }
 
+  @Override
+  public void paint( final Graphics g )
+  {
+    super.paint( g );
+
+    final IMapPanel panel = getMapPanel();
+    if( panel == null )
+      return;
+
+    final Rectangle bounds = panel.getScreenBounds();
+    final String tooltip = getToolTip();
+
+    m_toolTipRenderer.setTooltip( tooltip ); //$NON-NLS-1$
+    m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+  }
 }
