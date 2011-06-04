@@ -65,6 +65,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
     m_imageProvider.resetTmpFiles();
 
     // force plug-in to start
+    // FIXME: Dangerous: do not call this stuff in plugin-start method -> rather start a job to do it...
     final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     m_szenarioController = new SzenarioController();
     dataProvider.addScenarioDataListener( m_szenarioController );
@@ -106,7 +107,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   {
     return getDefault().m_imageProvider;
   }
-  
+
   public static final int getPreferences_themeInfoPrecision( )
   {
     final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
