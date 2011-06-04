@@ -733,7 +733,9 @@
              <command commandId="org.kalypso.ogc.gml.map.ExportPdfCommand" style="push"/>
           </menuContribution>
     
-        <menuContribution locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
+        <menuContribution
+              allPopups="false"
+              locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
             <separator name="outline" visible="false"/>
             <command commandId="org.kalypso.ui.map.outline.command.CollapseOutline" style="push"/>
         
@@ -751,10 +753,27 @@
             <separator name="additions" visible="true"/>
         </menuContribution>
 
-        <menuContribution locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
+        <menuContribution
+              allPopups="false"
+              locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
             <command commandId="org.kalypso.ui.views.outline.LegendExport" style="push"/>
             <separator name="additions" visible="false"/>
         </menuContribution>
     </extension>
+
+     <extension point="org.eclipse.ui.menus">
+        <menuContribution
+              allPopups="false"
+              locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart">
+           <separator
+                 name="data"
+                 visible="false">
+           </separator>
+           <command
+                 commandId="org.kalypso.ui.gmvtree.command.saveData"
+                 style="push">
+           </command>
+        </menuContribution>
+     </extension>
   
 </plugin>

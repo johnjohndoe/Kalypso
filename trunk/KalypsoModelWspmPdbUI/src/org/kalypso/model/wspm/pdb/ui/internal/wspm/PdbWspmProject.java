@@ -332,8 +332,11 @@ public class PdbWspmProject
 
       return busyCursorWhile( operation, title, "Failed to save local data" );
     }
-    else if( reloadOnNo && result == 1 )
+    else if( result == 1 )
     {
+      if( !reloadOnNo )
+        return true;
+
       final PoolFeaturesProvider provider = m_provider;
       final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
       {
