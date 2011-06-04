@@ -81,10 +81,12 @@ public class CheckoutAction extends Action
       return;
     }
 
-    // FIXME: save changes in project (ask user!)
-    // REMARK: project will be saved second time by the checkout operation
+    // TODO: ask, if all local data should be replaced (or at least an existing copy of the reach should be replaced)
 
     final PdbWspmProject project = m_control.getProject();
+    /* Ask user to save project and do nothing on cancel */
+    if( !project.saveProject( true ) )
+      return;
 
     final CheckoutOperation operation = new CheckoutOperation( project, selection );
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );

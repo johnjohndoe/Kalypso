@@ -160,7 +160,7 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
       final CommandableWorkspace workspace = m_project.getWorkspace();
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, changedWaterBodies, m_changedReaches, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       workspace.postCommand( new EmptyCommand( null, false ) );
-      m_project.saveProject( new SubProgressMonitor( monitor, 10 ) );
+      m_project.doSave( new SubProgressMonitor( monitor, 10 ) );
     }
     catch( final GMLSchemaException e )
     {

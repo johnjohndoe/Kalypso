@@ -47,11 +47,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -60,9 +68,11 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart;
 import org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IFeaturesProvider;
+import org.kalypso.ogc.gml.IFeaturesProviderListener;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.PoolGmlWorkspaceProvider;
+import org.kalypso.ogc.gml.PoolFeaturesProvider;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
@@ -73,7 +83,6 @@ import org.kalypso.ogc.gml.mapmodel.visitor.ThemeUsedForMaxExtentPredicate;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -87,16 +96,16 @@ public class PdbWspmProject
 
   static final String WSPM_PROJECT_NAME = "PDBWspmData"; //$NON-NLS-1$
 
-  private final ModellEventListener m_modelListener = new ModellEventListener()
+  private final IFeaturesProviderListener m_modelListener = new IFeaturesProviderListener()
   {
     @Override
-    public void onModellChange( final ModellEvent modellEvent )
+    public void featuresChanged( final IFeaturesProvider source, final ModellEvent modellEvent )
     {
       handleModelChange( modellEvent );
     }
   };
 
-  private PoolGmlWorkspaceProvider m_provider;
+  private PoolFeaturesProvider m_provider;
 
   private IProject m_project;
 
@@ -111,10 +120,7 @@ public class PdbWspmProject
   {
     if( m_provider != null )
     {
-      final CommandableWorkspace workspace = m_provider.getWorkspace();
-      if( workspace != null )
-        workspace.removeModellListener( m_modelListener );
-
+      m_provider.removeFeaturesProviderListener( m_modelListener );
       m_provider.dispose();
     }
     m_provider = null;
@@ -152,7 +158,7 @@ public class PdbWspmProject
     return (TuhhWspmProject) workspace.getRootFeature();
   }
 
-  public void saveProject( final IProgressMonitor monitor ) throws CoreException
+  public void doSave( final IProgressMonitor monitor ) throws CoreException
   {
     if( m_provider == null )
       return;
@@ -281,11 +287,81 @@ public class PdbWspmProject
     return m_project;
   }
 
-  void setData( final PoolGmlWorkspaceProvider provider, final IProject project )
+  void setData( final PoolFeaturesProvider provider, final IProject project )
   {
     m_provider = provider;
     m_project = project;
 
-    m_provider.getWorkspace().addModellListener( m_modelListener );
+    m_provider.addFeaturesProviderListener( m_modelListener );
+  }
+
+  /**
+   * checks if the data should be save, and asks the user what to do.<br/>
+   * 
+   * @param If
+   *          set to <code>true</code>, the data will be reloaded if the user chooses 'NO'.
+   * @return <code>false</code>, if the user cancels the operation.
+   */
+  public boolean saveProject( final boolean reloadOnNo )
+  {
+    if( m_provider == null )
+      return true;
+
+    final boolean dirty = m_provider.isDirty();
+    if( !dirty )
+      return true;
+
+    final Shell shell = m_window.getShell();
+    final String title = "Save Local Data";
+    final String message = "Local WSPM data has been modified. Save changes?";
+    final String[] buttonLabels = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL };
+    final MessageDialog dialog = new MessageDialog( shell, title, null, message, MessageDialog.QUESTION_WITH_CANCEL, buttonLabels, 0 );
+    final int result = dialog.open();
+
+    if( result == 0 )
+    {
+      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+      {
+        @Override
+        public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+        {
+          doSave( monitor );
+          return Status.OK_STATUS;
+        }
+      };
+
+      return busyCursorWhile( operation, title, "Failed to save local data" );
+    }
+    else if( reloadOnNo && result == 1 )
+    {
+      final PoolFeaturesProvider provider = m_provider;
+      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+      {
+        @Override
+        public IStatus execute( final IProgressMonitor monitor )
+        {
+          provider.reload( true );
+          return Status.OK_STATUS;
+        }
+      };
+      return busyCursorWhile( operation, title, "Failed to reload local data" );
+    }
+    else if( result == 2 )
+      return false;
+
+    throw new IllegalStateException();
+  }
+
+  private boolean busyCursorWhile( final ICoreRunnableWithProgress operation, final String title, final String errorMessage )
+  {
+    final IProgressService progressService = (IProgressService) m_window.getService( IProgressService.class );
+    final IStatus status = ProgressUtilities.busyCursorWhile( progressService, operation, errorMessage );
+    if( status.isOK() )
+      return true;
+
+    final Shell shell = m_window.getShell();
+    new StatusDialog2( shell, status, title );
+    /* Do not close workbench on error */
+    return false;
   }
 }
