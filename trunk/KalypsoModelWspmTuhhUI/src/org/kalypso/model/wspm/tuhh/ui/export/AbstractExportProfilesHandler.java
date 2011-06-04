@@ -43,12 +43,13 @@ package org.kalypso.model.wspm.tuhh.ui.export;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.model.wspm.tuhh.ui.actions.ProfileHandlerUtils;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * Abstract handler that should be used for exporting profiles.
@@ -57,19 +58,17 @@ import org.kalypso.model.wspm.ui.action.ProfileSelection;
  */
 public abstract class AbstractExportProfilesHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public final Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getProfileSelectionOrShowMessage( event );
-
     if( !checkPrerequisites( shell, event ) )
       return null;
 
-    final IWizard exportProfileWizard = createWizard( event, profileSelection );
+    final ISelection selection = HandlerUtil.getCurrentSelection( event );
+
+    final IWorkbenchWizard exportProfileWizard = createWizard();
+    exportProfileWizard.init( PlatformUI.getWorkbench(), (IStructuredSelection) selection );
 
     /* show wizard */
     final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileWizard );
@@ -91,5 +90,5 @@ public abstract class AbstractExportProfilesHandler extends AbstractHandler
     return true;
   }
 
-  protected abstract IWizard createWizard( ExecutionEvent event, final ProfileSelection selection ) throws ExecutionException;
+  protected abstract IWorkbenchWizard createWizard( );
 }

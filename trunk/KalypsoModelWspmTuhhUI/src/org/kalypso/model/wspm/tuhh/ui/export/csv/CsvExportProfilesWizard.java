@@ -46,6 +46,8 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -62,7 +64,6 @@ import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportColumnsPage.OUTPUT_TYPE;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.results.IResultInterpolationSettings;
 import org.kalypso.observation.result.IComponent;
 
@@ -75,15 +76,19 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
   private static final String EXTENSION = "csv"; //$NON-NLS-1$
 
-  private final ExportFileChooserPage m_profileFileChooserPage;
+  private ExportFileChooserPage m_profileFileChooserPage;
 
-  private final CsvExportColumnsPage m_columnsPage;
+  private CsvExportColumnsPage m_columnsPage;
 
-  public CsvExportProfilesWizard( final ProfileSelection selection )
+  public CsvExportProfilesWizard( )
   {
-    super( selection );
-
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
+  }
+
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    super.init( workbench, selection );
 
     setShowResultInterpolationSettings( true );
 
@@ -98,7 +103,7 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
     addPage( m_profileFileChooserPage );
 
-    m_columnsPage = new CsvExportColumnsPage( selection );
+    m_columnsPage = new CsvExportColumnsPage( getProfileSelection() );
     addPage( m_columnsPage );
   }
 

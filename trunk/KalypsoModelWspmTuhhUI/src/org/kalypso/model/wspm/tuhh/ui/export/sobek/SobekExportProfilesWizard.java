@@ -48,27 +48,36 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author kimwerner
  */
 public class SobekExportProfilesWizard extends ExportProfilesWizard
 {
-  private final SobekProfileExportFileChooserPage m_profileFileChooserPage;
+  private SobekProfileExportFileChooserPage m_profileFileChooserPage;
 
-  public SobekExportProfilesWizard( final ProfileSelection selection )
+  public SobekExportProfilesWizard( )
   {
-    super( selection );
-
     setHelpAvailable( false );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
+   */
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    super.init( workbench, selection );
 
     m_profileFileChooserPage = new SobekProfileExportFileChooserPage();
     addPage( m_profileFileChooserPage );

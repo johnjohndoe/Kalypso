@@ -769,5 +769,65 @@
            <command commandId="org.kalypso.ui.gmvtree.command.saveData" style="push"/>
         </menuContribution>
      </extension>
-  
+     <extension
+           point="org.kalypso.ui.gmlExportWizards">
+        <category
+              id="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+              name="WSPM">
+        </category>
+        <category
+              id="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards.shape"
+              name="ESRI Shape"
+              parentCategory="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards">
+        </category>
+        <wizard
+              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards/org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards.shape"
+              class="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard"
+              icon="icons/elcl16/exportProfilLine.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard"
+              name="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.name">
+           <description>%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.description</description>
+        </wizard>
+        <wizard
+              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesWizard"
+              icon="icons/elcl16/export_csv.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesWizard"
+              name="%command.name.0">
+           <description>%command.description</description>
+        </wizard>
+        <wizard
+              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
+              icon="icons/elcl16/export_plotter.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
+              name="%command.name.2">
+           <description>%command.description.1</description>
+        </wizard>
+        <wizard
+              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportProfilesWizard"
+              icon="icons/elcl16/export_plotter.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportProfilesWizard"
+              name="%command.name.6">
+           <description>Converts the selected profiles into the .prf format and opens them in WspWin Plotter.</description>
+        </wizard>
+        <wizard
+              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesWizard"
+              icon="icons/elcl16/export_prf.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesWizard"
+              name="%command.name.3">
+           <description>%command.description.2</description>
+        </wizard>
+
+        <wizard
+              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesWizard"
+              icon="icons/elcl16/export_sobek.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesWizard"
+              name="%command.name.1">
+           <description>%command.description.0</description>
+        </wizard>
+     </extension>
 </plugin>
