@@ -47,7 +47,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
@@ -61,7 +64,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kimwerner
  */
-public abstract class ExportProfilesWizard extends Wizard
+public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchWizard
 {
   protected static final String STR_CHOOSE_EXPORT_FILE_TITLE = Messages.getString("ExportProfilesWizard_0"); //$NON-NLS-1$
 
@@ -69,21 +72,33 @@ public abstract class ExportProfilesWizard extends Wizard
 
   protected static final String STR_EXPORT_FILE_GROUP_TEXT = Messages.getString("ExportProfilesWizard_2"); //$NON-NLS-1$
 
-  private final ProfilesChooserPage m_profileChooserPage;
+  private ProfilesChooserPage m_profileChooserPage;
 
-  public ExportProfilesWizard( final ProfileSelection selection )
+  private ProfileSelection m_profileSelection;
+
+  public ExportProfilesWizard( )
   {
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString("ExportProfilesWizard_3") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ExportProfilesWizard_3" ) ); //$NON-NLS-1$
+  }
 
-    final Feature[] profiles = selection.getProfiles();
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    m_profileSelection = new ProfileSelection( selection );
+    final Feature[] profiles = m_profileSelection.getProfiles();
 
-    final Feature[] selectedProfiles = selection.getSelectedProfiles();
+    final Feature[] selectedProfiles = m_profileSelection.getSelectedProfiles();
 
-    final String pageMessage = Messages.getString("ExportProfilesWizard_4"); //$NON-NLS-1$
+    final String pageMessage = Messages.getString( "ExportProfilesWizard_4" ); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( pageMessage, profiles, new Object[0], selectedProfiles, 1, false );
 
     addPage( m_profileChooserPage );
+  }
+
+  protected ProfileSelection getProfileSelection( )
+  {
+    return m_profileSelection;
   }
 
   public void setShowResultInterpolationSettings( final boolean showResultInterpolationSettings )

@@ -40,23 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author Gernot Belger
  */
 public class SobekExportProfilesHandler extends AbstractExportProfilesHandler
 {
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler#createWizard(org.eclipse.core.commands.ExecutionEvent,
-   *      org.kalypso.model.wspm.ui.action.ProfileSelection)
-   */
   @Override
-  protected IWizard createWizard( final ExecutionEvent event, final ProfileSelection selection )
+  protected IWorkbenchWizard createWizard( )
   {
-    return new SobekExportProfilesWizard( selection );
+    return new SobekExportProfilesWizard();
   }
 }

@@ -47,7 +47,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbench;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.LngSink;
@@ -55,7 +57,6 @@ import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.wspwin.core.Plotter;
 
 /**
@@ -67,13 +68,17 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
 
   private static final String EXTENSION = "lng"; //$NON-NLS-1$
 
-  final private LngExportFileChooserPage m_profileFileChooserPage;
+  private LngExportFileChooserPage m_profileFileChooserPage;
 
-  public LngExportProfilesWizard( final ProfileSelection selection )
+  public LngExportProfilesWizard( )
   {
-    super( selection );
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
+  }
 
-    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    super.init( workbench, selection );
 
     final FileChooserDelegateSave saveDelegate = new FileChooserDelegateSave();
     saveDelegate.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
