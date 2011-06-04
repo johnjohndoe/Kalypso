@@ -1,6 +1,7 @@
 package org.kalypso.model.wspm.pdb.db.mapping;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,9 +17,12 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.constants.StateConstants;
 
 /**
@@ -28,6 +32,12 @@ import org.kalypso.model.wspm.pdb.db.constants.StateConstants;
 @Table(name = "state", schema = "pdb_admin", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class State extends AbstractModelObject implements java.io.Serializable, StateConstants
 {
+  private static final DateFormat DATE_FORMAT = DateFormat.getDateInstance( DateFormat.MEDIUM );
+  static
+  {
+    DATE_FORMAT.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+  }
+
   private BigDecimal id;
 
   private String name;
@@ -178,13 +188,25 @@ public class State extends AbstractModelObject implements java.io.Serializable, 
     return this.measurementDate;
   }
 
+  @Transient
+  public String getMeasurementDateFormatted( )
+  {
+    final Date measurementDate = getMeasurementDate();
+    if( measurementDate == null )
+      return StringUtils.EMPTY;
+
+    return DATE_FORMAT.format( measurementDate );
+  }
+
   public void setMeasurementDate( final Date measurementDate )
   {
     final Object oldValue = this.measurementDate;
+    final Object oldFormat = getMeasurementDateFormatted();
 
     this.measurementDate = measurementDate;
 
     firePropertyChange( PROPERTY_MEASUREMENTDATE, oldValue, measurementDate );
+    firePropertyChange( PROPERTY_MEASUREMENTDATE_FORMATTED, oldFormat, getMeasurementDateFormatted() );
   }
 
   @Column(name = "source")

@@ -50,15 +50,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
@@ -67,6 +65,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
@@ -140,24 +139,10 @@ public class ConnectionContentControl extends Composite
     m_viewer = new TreeViewer( tree );
     m_viewer.setAutoExpandLevel( 2 );
 
-    final TreeViewerColumn nameViewerColumn = new TreeViewerColumn( m_viewer, SWT.LEFT );
-    final TreeColumn nameColumn = nameViewerColumn.getColumn();
-    nameColumn.setText( "Name" );
-    nameColumn.setResizable( false );
-    nameColumn.setMoveable( false );
-    nameColumn.setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
-    nameViewerColumn.setLabelProvider( new PdbLabelProvider() );
-    ColumnViewerSorter.registerSorter( nameViewerColumn, new ViewerComparator() );
-    ColumnViewerSorter.setSortState( nameViewerColumn, false );
+    final ViewerColumn nameColumn = StatesViewer.createNameColumn( m_viewer, true );
+    StatesViewer.createMeasurementDateColumn( m_viewer, true );
 
-    final TreeViewerColumn measurementDateViewerColumn = new TreeViewerColumn( m_viewer, SWT.LEFT );
-    final TreeColumn measurementDateColumn = measurementDateViewerColumn.getColumn();
-    measurementDateColumn.setText( "Measurement" );
-    measurementDateColumn.setResizable( false );
-    measurementDateColumn.setMoveable( false );
-    measurementDateColumn.setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
-    measurementDateViewerColumn.setLabelProvider( new PdbMeasurementLabelProvider() );
-    ColumnViewerSorter.registerSorter( measurementDateViewerColumn, new PdbMeasurementDateComparator() );
+    ColumnViewerSorter.setSortState( nameColumn, false );
 
     tree.addControlListener( new ColumnsResizeControlListener() );
 
@@ -166,8 +151,6 @@ public class ConnectionContentControl extends Composite
 
     return tree;
   }
-
-
 
   private void createActions( )
   {
@@ -179,9 +162,9 @@ public class ConnectionContentControl extends Composite
     // byStateAction.setChecked( true );
     // m_manager.add( byStateAction );
     // m_manager.add( new ByWaterBodyAction( this ) );
-// m_manager.add( new Separator() );
+    // m_manager.add( new Separator() );
     // m_manager.add( new ExportAction( this ) );
-// m_manager.add( new CheckoutAction( this ) );
+    // m_manager.add( new CheckoutAction( this ) );
 
     m_manager.update( true );
   }

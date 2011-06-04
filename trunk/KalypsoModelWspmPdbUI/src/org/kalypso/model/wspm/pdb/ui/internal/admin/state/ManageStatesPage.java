@@ -72,9 +72,13 @@ public class ManageStatesPage extends WizardPage
 
   private StatesViewer m_viewer;
 
-  protected ManageStatesPage( final String pageName, final Session session )
+  private final String m_username;
+
+  protected ManageStatesPage( final String pageName, final Session session, final String username )
   {
     super( pageName );
+
+    m_username = username;
 
     setTitle( "Manage State" );
     setDescription( "Manage the State of the Cross Section Database" );
@@ -138,7 +142,7 @@ public class ManageStatesPage extends WizardPage
   private UpdateableAction[] createActions( )
   {
     m_actions = new UpdateableAction[2];
-    m_actions[0] = new EditStateAction( this, m_viewer );
+    m_actions[0] = new EditStateAction( this, m_viewer, m_username );
     m_actions[1] = new RemoveStateAction( this, m_viewer );
 
     return m_actions;

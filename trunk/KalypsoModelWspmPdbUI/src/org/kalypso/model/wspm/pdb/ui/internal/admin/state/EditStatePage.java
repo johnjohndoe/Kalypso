@@ -174,19 +174,19 @@ public class EditStatePage extends WizardPage
     final DateTime dateField = new DateTime( parent, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN );
     dateField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final DateTime timeField = new DateTime( parent, SWT.TIME | SWT.SHORT );
-    timeField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+// final DateTime timeField = new DateTime( parent, SWT.TIME | SWT.SHORT );
+// timeField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final Calendar cal = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     cal.setTime( m_state.getMeasurementDate() );
     final DateTimeSelectionProperty selectionProperty = new DateTimeSelectionProperty( cal );
 
-    final IObservableValue dateTarget = selectionProperty.observe( dateField );
-    final IObservableValue timeTarget = selectionProperty.observe( timeField );
-
     final IObservableValue model = BeansObservables.observeValue( m_state, State.PROPERTY_MEASUREMENTDATE );
 
+    final IObservableValue dateTarget = selectionProperty.observe( dateField );
     m_binding.bindValue( dateTarget, model );
-    m_binding.bindValue( timeTarget, model );
+
+    // final IObservableValue timeTarget = selectionProperty.observe( timeField );
+    // m_binding.bindValue( timeTarget, model );
   }
 }

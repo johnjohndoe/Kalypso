@@ -57,7 +57,9 @@ public class ManageStatesWizard extends Wizard
   {
     m_session = openSession( connection );
 
-    addPage( new ManageStatesPage( "states", m_session ) ); //$NON-NLS-1$
+    final String username = connection.getSettings().getUsername();
+
+    addPage( new ManageStatesPage( "states", m_session, username ) ); //$NON-NLS-1$
   }
 
   private Session openSession( final IPdbConnection connection )
