@@ -59,6 +59,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
@@ -203,11 +204,8 @@ public class PdbView extends ViewPart
       final IPdbSettings settings = PdbSettings.getSettings( settingsName );
       final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
       final IStatus result = ProgressUtilities.busyCursorWhile( operation );
-      if( result.isOK() )
-      {
-        final IPdbConnection connection = operation.getConnection();
-        setConnection( connection );
-      }
+      final IPdbConnection connection = operation.getConnection();
+      setConnection( connection, result );
 
       return result;
     }
@@ -225,9 +223,11 @@ public class PdbView extends ViewPart
       m_form.setFocus();
   }
 
-  synchronized void setConnection( final IPdbConnection connection )
+  synchronized void setConnection( final IPdbConnection connection, final IStatus status )
   {
     Assert.isTrue( connection == null || connection.isConnected() );
+
+    setStatus( status );
 
     /* If same instance -> nothing to do */
     if( connection == m_pdbConnection )
@@ -250,6 +250,11 @@ public class PdbView extends ViewPart
     m_autoConnectData.setAutoConnectName( settingsName );
 
     m_updateControlJob.schedule();
+  }
+
+  private void setStatus( final IStatus status )
+  {
+    MessageUtilitites.setMessage( m_form, status );
   }
 
   protected void updateControl( )

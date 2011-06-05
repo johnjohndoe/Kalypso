@@ -120,5 +120,15 @@
        <command commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState" style="push"/>
     </menuContribution>
   </extension>
+  <extension
+        point="org.kalypso.ui.gmlExportWizards">
+     <wizard
+           category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+           class="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
+           icon="icons/exportLocalAsWspm.gif"
+           id="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
+           name="KalypsoWSPM">
+     </wizard>
+  </extension>
    
 </plugin>
