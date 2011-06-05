@@ -44,7 +44,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.commons.eclipse.core.resources.ProjectUtilities;
 
 /**
  * Project Nature for 1d 2d simulation, requires {@link org.kalypso.afgui.ScenarioHandlingProjectNature}
