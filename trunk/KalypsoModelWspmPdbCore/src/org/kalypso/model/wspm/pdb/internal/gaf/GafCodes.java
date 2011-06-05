@@ -38,30 +38,57 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect;
+package org.kalypso.model.wspm.pdb.internal.gaf;
 
-import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
-import org.kalypso.model.wspm.pdb.internal.connect.AbstractSettings;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.contribs.java.util.PropertiesUtilities;
 
 /**
+ * Represents the 'Kennziffer' (KZ) of a gaf file.
+ * 
  * @author Gernot Belger
  */
-public class SettingsNameValue extends TypedObservableValue<IPdbSettings, String>
+public class GafCodes
 {
-  public SettingsNameValue( final IPdbSettings source )
+  public static final GafCode NULL_HYK = new GafCode( StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY );
+
+  private final Map<String, GafCode> m_codes = new HashMap<String, GafCode>();
+
+  private final Map<String, GafCode> m_hykCodes = new HashMap<String, GafCode>();
+
+  public GafCodes( ) throws IOException
   {
-    super( source, String.class );
+    final Properties properties = PropertiesUtilities.load( getClass().getResource( "kz.properties" ) );
+    for( final String key : properties.stringPropertyNames() )
+    {
+      final String value = properties.getProperty( key );
+      final GafCode gafCode = new GafCode(key, value);
+
+      m_codes.put( gafCode.getCode(), gafCode );
+      m_hykCodes.put( gafCode.getHyk(), gafCode );
+
+      m_hykCodes.put( StringUtils.EMPTY, NULL_HYK );
+    }
   }
 
-  @Override
-  public void doSetValueTyped( final IPdbSettings source, final String value )
+  public GafCode getCode( final String kz )
   {
-    ((AbstractSettings) source).setName( value );
+    if( "x".equalsIgnoreCase( kz ) ) //$NON-NLS-1$
+      return m_codes.get( "PP" ); //$NON-NLS-1$
+
+    return m_codes.get( kz );
   }
 
-  @Override
-  public String doGetValueTyped( final IPdbSettings source )
+  public GafCode getHykCode( final String hyk )
   {
-    return source.getName();
+    if( "x".equalsIgnoreCase( hyk ) ) //$NON-NLS-1$
+      return NULL_HYK;
+
+    return m_codes.get( hyk );
   }
 }

@@ -38,29 +38,57 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.gaf;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.kalypso.contribs.java.util.Arrays;
+import org.kalypso.model.wspm.pdb.db.mapping.Coefficient;
+import org.kalypso.model.wspm.pdb.db.mapping.CoefficientId;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshAction extends Action
+public class AbstractCoefficientInfo<T extends Coefficient>
 {
-  private final ConnectionContentControl m_control;
+  private final Map<String, T> m_definitions = new HashMap<String, T>();
 
-  public RefreshAction( final ConnectionContentControl control )
+  private final Class<T> m_type;
+
+  public AbstractCoefficientInfo( final Session session, final Class<T> type, final String kind )
   {
-    m_control = control;
+    m_type = type;
 
-    setText( "Refresh" );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
+    final T[] allData = loadDefinition( session, kind );
+    hashDefinitions( allData );
   }
 
-  @Override
-  public void run( )
+  private T[] loadDefinition( final Session session, final String kind )
   {
-    m_control.refresh( null );
+    final Criteria criteria = session.createCriteria( m_type );
+    criteria.add( Restrictions.eq( "id.pointKind", kind ) );
+    @SuppressWarnings("unchecked")
+    final List<T> list = criteria.list();
+    return Arrays.toArray( list, m_type );
+  }
+
+  private void hashDefinitions( final T[] allData )
+  {
+    for( final T definition : allData )
+    {
+      final CoefficientId id = definition.getId();
+      final String name = id.getName();
+      m_definitions.put( name, definition );
+    }
+  }
+
+  public T getCoefficient( final String name )
+  {
+    return m_definitions.get( name );
   }
 }

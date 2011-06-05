@@ -47,14 +47,14 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
-import org.kalypso.model.wspm.pdb.gaf.internal.Coefficients;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafCode;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafCodes;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafPoint;
+import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafCode;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafLogger;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafPoint;
 
 /**
- * Checks various attributes of a {@link org.kalypso.model.wspm.pdb.gaf.internal.GafPoint}.
+ * Checks various attributes of a {@link org.kalypso.model.wspm.pdb.internal.gaf.GafPoint}.
  * 
  * @author Gernot Belger
  */

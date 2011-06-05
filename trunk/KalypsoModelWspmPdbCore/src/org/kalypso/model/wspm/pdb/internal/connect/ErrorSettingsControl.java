@@ -38,29 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.connect;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.kalypso.core.status.StatusComposite;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshAction extends Action
+public class ErrorSettingsControl implements IPdbSettingsControl
 {
-  private final ConnectionContentControl m_control;
+  private final StatusComposite m_statusControl;
 
-  public RefreshAction( final ConnectionContentControl control )
+  public ErrorSettingsControl( @SuppressWarnings("unused") final DataBindingContext binding, final Composite parent, final IStatus status )
   {
-    m_control = control;
-
-    setText( "Refresh" );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
+    m_statusControl = new StatusComposite( null, parent, StatusComposite.DETAILS );
+    m_statusControl.setStatus( status );
   }
 
   @Override
-  public void run( )
+  public Control getControl( )
   {
-    m_control.refresh( null );
+    return m_statusControl;
+  }
+
+  @Override
+  public ImageDescriptor getPageImage( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

@@ -45,9 +45,9 @@ import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.internal.PdbSettingsReader;
-import org.kalypso.model.wspm.pdb.connect.internal.PdbSettingsRegistry;
-import org.kalypso.model.wspm.pdb.connect.internal.PdbSettingsWriter;
+import org.kalypso.model.wspm.pdb.internal.connect.PdbSettingsReader;
+import org.kalypso.model.wspm.pdb.internal.connect.PdbSettingsRegistry;
+import org.kalypso.model.wspm.pdb.internal.connect.PdbSettingsWriter;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 

@@ -53,9 +53,9 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.gaf.internal.Coefficients;
-import org.kalypso.model.wspm.pdb.gaf.internal.Gaf2Db;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
+import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
 
 /**
  * First stage of gaf importing: open log file, then delegate to next level.

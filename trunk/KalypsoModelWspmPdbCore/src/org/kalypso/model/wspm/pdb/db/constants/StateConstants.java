@@ -69,8 +69,7 @@ public interface StateConstants
 
   int COMMENT_LIMIT = 256;
 
-  public static final char ZERO_STATE_ON = 'T';
+  public static final char ZERO_STATE_ON = 'T'; //$NON-NLS-1$
 
-  public static final char ZERO_STATE_OFF = 'F';
-
+  public static final char ZERO_STATE_OFF = 'F'; //$NON-NLS-1$
 }

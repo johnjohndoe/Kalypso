@@ -45,6 +45,7 @@ import java.net.URL;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -126,7 +127,10 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
 
       final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( PdbWspmProject.WSPM_PROJECT_NAME );
       if( project.isOpen() )
+      {
+        project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 100 ) );
         return project;
+      }
 
       if( project.exists() )
       {

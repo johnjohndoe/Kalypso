@@ -108,4 +108,18 @@ public class ConnectionInput
   {
     return m_waterBodies.toArray( new WaterBody[m_waterBodies.size()] );
   }
+
+  public State getState( final String name )
+  {
+    if( name == null )
+      return null;
+
+    for( final State state : m_states )
+    {
+      if( name.equals( state.getName() ) )
+        return state;
+    }
+
+    return null;
+  }
 }

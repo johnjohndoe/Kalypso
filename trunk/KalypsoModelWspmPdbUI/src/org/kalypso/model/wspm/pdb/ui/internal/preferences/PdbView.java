@@ -52,6 +52,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
@@ -106,6 +107,8 @@ public class PdbView extends ViewPart
   private PdbWspmProject m_wspmProject;
 
   private boolean m_autoConnectWasDone = false;
+
+  private ConnectionViewer m_connectionViewer;
 
   public PdbView( )
   {
@@ -259,6 +262,7 @@ public class PdbView extends ViewPart
 
   protected void updateControl( )
   {
+    m_connectionViewer = null;
     final Composite body = m_form.getBody();
     ControlUtils.disposeChildren( body );
 
@@ -275,7 +279,7 @@ public class PdbView extends ViewPart
     if( m_wspmProject == null )
       createNoWspmProjectControl( m_toolkit, body );
     else if( isConnected )
-      new ConnectionViewer( m_toolkit, body, m_pdbConnection, m_wspmProject );
+      m_connectionViewer = new ConnectionViewer( m_toolkit, body, m_pdbConnection, m_wspmProject );
     else
       new NonConnectedControl( m_toolkit, body, m_autoConnectData, this );
 
@@ -304,5 +308,25 @@ public class PdbView extends ViewPart
       return;
 
     view.updateControl();
+  }
+
+  public static void reloadViewAndBringtoTop( final IWorkbenchWindow window, final String stateToSelect )
+  {
+    /* Do not restore, do not update if not created yet */
+    final FindViewRunnable<PdbView> runnable = new FindViewRunnable<PdbView>( PdbView.ID, window, false );
+    final PdbView view = runnable.execute();
+    if( view == null )
+      return;
+
+    final IWorkbenchPage page = window.getActivePage();
+    page.activate( view );
+
+    view.reload( stateToSelect );
+  }
+
+  private void reload( final String stateToSelect )
+  {
+    if( m_connectionViewer != null )
+      m_connectionViewer.reload( stateToSelect );
   }
 }

@@ -48,11 +48,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.pdb.gaf.internal.Coefficients;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafCodes;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafReader;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafLogger;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafReader;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.opengis.referencing.FactoryException;
 

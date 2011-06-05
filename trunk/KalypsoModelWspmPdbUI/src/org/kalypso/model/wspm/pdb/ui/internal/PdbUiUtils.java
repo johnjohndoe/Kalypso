@@ -38,29 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbView;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.FindViewRunnable;
+
 
 /**
+ * General helper stuff for PDB-UI
+ * 
  * @author Gernot Belger
  */
-public class RefreshAction extends Action
+public final class PdbUiUtils
 {
-  private final ConnectionContentControl m_control;
-
-  public RefreshAction( final ConnectionContentControl control )
+  private PdbUiUtils( )
   {
-    m_control = control;
-
-    setText( "Refresh" );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
+    throw new UnsupportedOperationException();
   }
 
-  @Override
-  public void run( )
+  public static IPdbConnection getConnectionChecked( final IWorkbenchWindow window ) throws ExecutionException
   {
-    m_control.refresh( null );
+    final PdbView view = new FindViewRunnable<PdbView>( PdbView.ID, window, true ).execute();
+    if( view == null )
+      throw new ExecutionException( "Failed to find Cross Section Database View" );
+
+    final IPdbConnection connection = view.getConnection();
+    if( connection == null )
+      throw new ExecutionException( "Not connected to database" );
+
+    return connection;
   }
 }

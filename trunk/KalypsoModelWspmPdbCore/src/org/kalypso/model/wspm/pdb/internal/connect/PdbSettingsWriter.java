@@ -38,29 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.connect;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.StorageException;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshAction extends Action
+public class PdbSettingsWriter
 {
-  private final ConnectionContentControl m_control;
+  private final IPdbSettings[] m_connections;
 
-  public RefreshAction( final ConnectionContentControl control )
+  public PdbSettingsWriter( final IPdbSettings[] connections )
   {
-    m_control = control;
-
-    setText( "Refresh" );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
+    m_connections = connections;
   }
 
-  @Override
-  public void run( )
+  public void writeConnections( final ISecurePreferences preferences ) throws PdbConnectException
   {
-    m_control.refresh( null );
+    try
+    {
+      serializeConnections( preferences );
+    }
+    catch( final StorageException e )
+    {
+      throw new PdbConnectException( "Failed to write connections into secure storage", e );
+    }
+  }
+
+  protected void serializeConnections( final ISecurePreferences preferences ) throws StorageException
+  {
+    preferences.clear();
+    final String[] childrenNames = preferences.childrenNames();
+    for( final String childName : childrenNames )
+      preferences.node( childName ).removeNode();
+
+    int count = 0;
+    for( final IPdbSettings settings : m_connections )
+    {
+      final ISecurePreferences childNode = preferences.node( "" + count++ );
+      childNode.put( PdbSettingsRegistry.PROPERTY_TYPE, settings.getType(), false );
+      childNode.put( PdbSettingsRegistry.PROPERTY_NAME, settings.getName(), false );
+
+      settings.saveState( childNode );
+    }
   }
 }

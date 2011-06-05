@@ -40,9 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStateData;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStateWorker;
 
 /**
  * Uploads local WSPM data into the cross section database.
@@ -53,9 +59,14 @@ public class CheckinStateWizard extends Wizard
 {
   private final CheckinStateData m_data;
 
-  public CheckinStateWizard( final CheckinStateData data )
+  private final IPdbConnection m_connection;
+
+  private IStatus m_status;
+
+  public CheckinStateWizard( final CheckinStateData data, final IPdbConnection connection )
   {
     m_data = data;
+    m_connection = connection;
 
     addPage( new CheckinStateChooseElementsPage( "chooseElements", m_data ) ); //$NON-NLS-1$
     addPage( new EditStatePage( "editState", m_data.getState(), m_data.getExistingStates(), Mode.NEW ) ); //$NON-NLS-1$
@@ -64,14 +75,18 @@ public class CheckinStateWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
+    m_data.commitCheckedElements();
 
-    /* Find profiles to check-in (by waterbody) */
+    final CheckinStateWorker operation = new CheckinStateWorker( m_data, m_connection );
+    m_status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    if( !m_status.isOK() )
+      new StatusDialog2( getShell(), m_status, getWindowTitle() ).open();
 
-    // In one transaction:
-    /* Add state */
-    /* Convert to csdb profiles */
+    return m_status.isOK();
+  }
 
-    // TODO Auto-generated method stub
-    return false;
+  IStatus getStatus( )
+  {
+    return m_status;
   }
 }

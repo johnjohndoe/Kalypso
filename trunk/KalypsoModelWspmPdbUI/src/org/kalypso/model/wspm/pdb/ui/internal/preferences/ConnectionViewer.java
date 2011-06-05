@@ -68,7 +68,7 @@ public class ConnectionViewer extends Composite
     @Override
     public void update( )
     {
-      handleUpdate();
+      reload( null );
     }
   };
 
@@ -148,9 +148,9 @@ public class ConnectionViewer extends Composite
     return section;
   }
 
-  protected void handleUpdate( )
+  public void reload( final String stateToSelect )
   {
     if( m_contentViewer != null )
-      m_contentViewer.refresh();
+      m_contentViewer.refresh( stateToSelect );
   }
 }

@@ -38,29 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.connect.oracle;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshAction extends Action
+class OracleSettingsPropertyValue extends TypedObservableValue<OracleSettings, String>
 {
-  private final ConnectionContentControl m_control;
+  private final String m_property;
 
-  public RefreshAction( final ConnectionContentControl control )
+  public OracleSettingsPropertyValue( final OracleSettings source, final String property )
   {
-    m_control = control;
+    super( source, String.class );
 
-    setText( "Refresh" );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
+    m_property = property;
   }
 
   @Override
-  public void run( )
+  public void doSetValueTyped( final OracleSettings source, final String value )
   {
-    m_control.refresh( null );
+    source.setProperty( m_property, value );
+  }
+
+  @Override
+  public String doGetValueTyped( final OracleSettings source )
+  {
+    return source.getProperty( m_property );
   }
 }
