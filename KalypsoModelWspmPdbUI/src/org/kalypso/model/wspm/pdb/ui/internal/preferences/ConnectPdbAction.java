@@ -79,13 +79,9 @@ public class ConnectPdbAction extends Action
 
     final IStatus result = ProgressUtilities.busyCursorWhile( operation );
     if( !result.isOK() )
-    {
       new StatusDialog2( shell, result, "Open Connection" ).open();
-      m_view.setConnection( null );
-      return;
-    }
 
     final IPdbConnection connection = operation.getConnection();
-    m_view.setConnection( connection );
+    m_view.setConnection( connection, result );
   }
 }

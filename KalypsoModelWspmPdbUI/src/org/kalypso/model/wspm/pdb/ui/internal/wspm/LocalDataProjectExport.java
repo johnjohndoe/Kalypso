@@ -38,36 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.preferences;
+package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Event;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.core.projecthandle.local.exportwizard.WizardProjectExport;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
  */
-public class DisconnectPdbAction extends Action
+public class LocalDataProjectExport extends WizardProjectExport
 {
-  private final PdbView m_view;
-
-  public DisconnectPdbAction( final PdbView view )
+  public LocalDataProjectExport( )
   {
-    super( "Close Connection" );
+    super( WspmPdbUiPlugin.getDefault().getWspmProject().getProject() );
 
-    m_view = view;
+    setWindowTitle( "Export as KalypsoWSPM Project" );
 
-    setToolTipText( "Disconnect from Database" );
-
-    final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.DISCONNECT_FROM_PDB );
-    setImageDescriptor( image );
-  }
-
-  @Override
-  public void runWithEvent( final Event event )
-  {
-    m_view.setConnection( null, Status.OK_STATUS );
+    setUseTargetNameAsProjectName( true );
   }
 }
