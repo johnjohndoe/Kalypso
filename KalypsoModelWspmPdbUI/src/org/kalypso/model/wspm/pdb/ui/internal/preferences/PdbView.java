@@ -297,7 +297,8 @@ public class PdbView extends ViewPart
 
   public static void updateView( final IWorkbenchWindow window )
   {
-    final FindViewRunnable<PdbView> runnable = new FindViewRunnable<PdbView>( PdbView.ID, window );
+    /* Do not restore, do not update if not created yet */
+    final FindViewRunnable<PdbView> runnable = new FindViewRunnable<PdbView>( PdbView.ID, window, false );
     final PdbView view = runnable.execute();
     if( view == null )
       return;
