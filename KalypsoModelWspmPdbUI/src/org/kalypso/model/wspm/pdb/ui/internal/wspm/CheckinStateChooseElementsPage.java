@@ -59,6 +59,7 @@ import org.kalypso.commons.databinding.DataSetBinder;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStateData;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
@@ -118,7 +119,7 @@ public class CheckinStateChooseElementsPage extends WizardPage
     treeViewer.setInput( m_data.getProject() );
 
     final IViewerObservableSet target = ViewersObservables.observeCheckedElements( treeViewer, Set.class );
-    final IObservableSet model = m_data.getCheckedElements();
+    final IObservableSet model = m_data.getCheckedSet();
 
     final DataSetBinder binder = new DataSetBinder( target, model );
     binder.apply( m_binding );

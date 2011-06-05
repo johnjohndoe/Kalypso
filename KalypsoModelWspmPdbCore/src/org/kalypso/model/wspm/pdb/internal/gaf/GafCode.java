@@ -38,29 +38,71 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.gaf;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 
 /**
+ * Represents the 'Kennziffer' (KZ) of a gaf file.
+ * 
  * @author Gernot Belger
  */
-public class RefreshAction extends Action
+public class GafCode
 {
-  private final ConnectionContentControl m_control;
+  private final String m_key;
 
-  public RefreshAction( final ConnectionContentControl control )
+  private final String m_dbCode;
+
+  private final String m_description;
+
+  private final String m_hyk;
+
+  private final String m_kind;
+
+  public GafCode( final String key, final String value )
   {
-    m_control = control;
+    m_key = key;
 
-    setText( "Refresh" );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
+    final String[] tokens = value.split( ";", 4 );
+    m_dbCode = tokens[0];
+    m_description = tokens[1];
+    m_hyk = tokens[2];
+    m_kind = tokens[3];
   }
 
-  @Override
-  public void run( )
+  public GafCode( final String key, final String dbCode, final String description, final String hyk, final String kind )
   {
-    m_control.refresh( null );
+    m_key = key;
+    m_dbCode = dbCode;
+    m_description = description;
+    m_hyk = hyk;
+    m_kind = kind;
+  }
+
+  public String getDbCode( )
+  {
+    return m_dbCode;
+  }
+
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  public String getHyk( )
+  {
+    return m_hyk;
+  }
+
+  public String getCode( )
+  {
+    return m_key;
+  }
+
+  /**
+   * Classifies the point in different kinds of points; each kind representing one cross section part.
+   */
+  public String getKind( )
+  {
+    return m_kind;
   }
 }

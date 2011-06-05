@@ -38,29 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.gaf;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 
 /**
+ * Helper that holds the current state of vegetation of the db.
+ * 
  * @author Gernot Belger
  */
-public class RefreshAction extends Action
+public class VegetationInfo extends AbstractCoefficientInfo<Vegetation>
 {
-  private final ConnectionContentControl m_control;
-
-  public RefreshAction( final ConnectionContentControl control )
+  public VegetationInfo( final Session session, final String kind )
   {
-    m_control = control;
-
-    setText( "Refresh" );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
-  }
-
-  @Override
-  public void run( )
-  {
-    m_control.refresh( null );
+    super( session, Vegetation.class, kind );
   }
 }

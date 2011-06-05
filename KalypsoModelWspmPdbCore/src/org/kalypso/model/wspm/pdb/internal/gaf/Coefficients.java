@@ -38,69 +38,57 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.gaf;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
+import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 
 /**
+ * Helper class that allows to access {@link org.kalypso.model.wspm.pdb.db.mapping.Roughness} and
+ * {@link org.kalypso.model.wspm.pdb.db.mapping.Vegetation}.
+ * 
  * @author Gernot Belger
  */
-public class RefreshContentJob extends Job
+public class Coefficients
 {
-  private final IPdbConnection m_connection;
+  private static final String UNKNOWN_ROUGHNESS = "-1"; //$NON-NLS-1$
 
-  private ConnectionInput m_input;
+  private static final String UNKNOWN_VEGETATION = "-1"; //$NON-NLS-1$
 
-  private String m_stateToSelect;
+  private final RoughnessInfo m_roughnessInfo;
 
-  public RefreshContentJob( final IPdbConnection connection )
+  private final VegetationInfo m_vegetationInfo;
+
+  public Coefficients( final Session session, final String kind )
   {
-    super( "Refresh..." );
-
-    m_connection = connection;
+    m_roughnessInfo = new RoughnessInfo( session, kind );
+    m_vegetationInfo = new VegetationInfo( session, kind );
   }
 
-  @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  public Roughness getRoughness( final String roughnessClass )
   {
-    monitor.beginTask( "Refresh...", IProgressMonitor.UNKNOWN );
-
-    try
-    {
-      final Session session = m_connection.openSession();
-      m_input = new ConnectionInput( session );
-      return Status.OK_STATUS;
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to connect to database", e );
-    }
-    finally
-    {
-      monitor.done();
-    }
+    return m_roughnessInfo.getCoefficient( roughnessClass );
   }
 
-  public ConnectionInput getInput( )
+  public Vegetation getVegetation( final String vegetationClass )
   {
-    return m_input;
+    return m_vegetationInfo.getCoefficient( vegetationClass );
   }
 
-  public void setStateToSelect( final String stateToSelect )
+  public Roughness getRoughnessOrUnknown( final String roughnessClass )
   {
-    m_stateToSelect = stateToSelect;
+    final Roughness roughness = getRoughness( roughnessClass );
+    if( roughness == null )
+      return getRoughness( UNKNOWN_ROUGHNESS );
+    return roughness;
   }
 
-  public String getStateToSelect( )
+  public Vegetation getVegetationOrUnknown( final String vegetationClass )
   {
-    return m_stateToSelect;
+    final Vegetation vegetation = getVegetation( vegetationClass );
+    if( vegetation == null )
+      return getVegetation( UNKNOWN_VEGETATION );
+    return vegetation;
   }
 }

@@ -53,7 +53,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.gaf.internal.Coefficients;
+import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;

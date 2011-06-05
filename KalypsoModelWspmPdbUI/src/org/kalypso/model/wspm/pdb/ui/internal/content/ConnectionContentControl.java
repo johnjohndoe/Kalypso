@@ -48,6 +48,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
@@ -65,6 +66,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
@@ -114,7 +116,7 @@ public class ConnectionContentControl extends Composite
     final CheckoutAction checkoutAction = new CheckoutAction( this );
     ActionHyperlink.createHyperlink( toolkit, this, SWT.PUSH, checkoutAction ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    refresh();
+    refresh( null );
   }
 
   @Override
@@ -174,12 +176,13 @@ public class ConnectionContentControl extends Composite
     m_viewer.setContentProvider( provider );
   }
 
-  public void refresh( )
+  public void refresh( final String stateToSelect )
   {
     m_refreshJob.cancel();
 
     resetInput();
 
+    m_refreshJob.setStateToSelect( stateToSelect );
     m_refreshJob.schedule( 100 );
   }
 
@@ -200,6 +203,11 @@ public class ConnectionContentControl extends Composite
     {
       final ConnectionInput input = m_refreshJob.getInput();
       ViewerUtilities.setInput( m_viewer, input, true );
+
+      final String stateToSelect = m_refreshJob.getStateToSelect();
+      final State state = input.getState( stateToSelect );
+      if( state != null )
+        ViewerUtilities.setSelection( m_viewer, new StructuredSelection( state ), true, true );
     }
     finally
     {

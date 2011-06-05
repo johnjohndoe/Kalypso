@@ -38,29 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
-
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+package org.kalypso.model.wspm.pdb.internal.connect;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshAction extends Action
+public abstract class HibernateSettings extends AbstractSettings
 {
-  private final ConnectionContentControl m_control;
-
-  public RefreshAction( final ConnectionContentControl control )
-  {
-    m_control = control;
-
-    setText( "Refresh" );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
-  }
+  protected static final String DEFAULT_DBNAME = "kalypso_pdb"; //$NON-NLS-1$;
 
   @Override
-  public void run( )
+  public abstract String getUsername( );
+
+  public HibernateSettings( final String name )
   {
-    m_control.refresh( null );
+    super( name );
   }
 }

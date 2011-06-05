@@ -38,29 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.connect;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.StorageException;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshAction extends Action
+public class PdbSettingsReader
 {
-  private final ConnectionContentControl m_control;
-
-  public RefreshAction( final ConnectionContentControl control )
+  public IPdbSettings[] readConnections( final ISecurePreferences preferences ) throws PdbConnectException
   {
-    m_control = control;
-
-    setText( "Refresh" );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
+    try
+    {
+      return doRead( preferences );
+    }
+    catch( final StorageException e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed to access secure storage for pdb connections", e );
+    }
   }
 
-  @Override
-  public void run( )
+  private IPdbSettings[] doRead( final ISecurePreferences preferences ) throws StorageException
   {
-    m_control.refresh( null );
+    final Collection<IPdbSettings> connections = new ArrayList<IPdbSettings>();
+
+    final PdbSettingsRegistry registry = WspmPdbCorePlugin.getDefault().getConnectionRegistry();
+
+    final String[] names = preferences.childrenNames();
+    for( final String name : names )
+    {
+      final ISecurePreferences childPreferences = preferences.node( name );
+      final IPdbSettings settings = registry.readSettings( childPreferences );
+      connections.add( settings );
+    }
+
+    return connections.toArray( new IPdbSettings[connections.size()] );
   }
 }

@@ -38,29 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.connect;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshAction extends Action
+public abstract class AbstractSettings implements IPdbSettings
 {
-  private final ConnectionContentControl m_control;
+  private String m_name;
 
-  public RefreshAction( final ConnectionContentControl control )
+  public AbstractSettings( final String name )
   {
-    m_control = control;
+    m_name = name;
+  }
 
-    setText( "Refresh" );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
+  public final void setName( final String name )
+  {
+    m_name = name;
   }
 
   @Override
-  public void run( )
+  public final String getName( )
   {
-    m_control.refresh( null );
+    return m_name;
   }
 }

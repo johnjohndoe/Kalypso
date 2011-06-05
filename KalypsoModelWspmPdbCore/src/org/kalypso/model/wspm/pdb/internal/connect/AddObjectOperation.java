@@ -38,29 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.connect;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshAction extends Action
+public class AddObjectOperation implements IPdbOperation
 {
-  private final ConnectionContentControl m_control;
+  private final Object m_object;
 
-  public RefreshAction( final ConnectionContentControl control )
+  public AddObjectOperation( final Object object )
   {
-    m_control = control;
-
-    setText( "Refresh" );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
+    m_object = object;
   }
 
   @Override
-  public void run( )
+  public String getLabel( )
   {
-    m_control.refresh( null );
+    return String.format( "Save object to pdb: %s", m_object );
+  }
+
+  @Override
+  public void execute( final Session session )
+  {
+    session.save( m_object );
   }
 }

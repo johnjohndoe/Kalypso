@@ -46,10 +46,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafCode;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafPart;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafPoint;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafCode;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafLogger;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafPart;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafPoint;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;

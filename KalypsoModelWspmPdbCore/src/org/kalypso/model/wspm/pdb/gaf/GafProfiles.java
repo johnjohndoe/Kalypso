@@ -47,12 +47,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.model.wspm.pdb.gaf.internal.Coefficients;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafCode;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafCodes;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafLogger;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafPoint;
-import org.kalypso.model.wspm.pdb.gaf.internal.GafReader;
+import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafCode;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafLogger;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafPoint;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafReader;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 

@@ -42,9 +42,9 @@ package org.kalypso.model.wspm.pdb.connect;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.pdb.connect.internal.ErrorSettings;
-import org.kalypso.model.wspm.pdb.connect.internal.PdbSettingsRegistry;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.connect.ErrorSettings;
+import org.kalypso.model.wspm.pdb.internal.connect.PdbSettingsRegistry;
 
 /**
  * Access to the configured connections.

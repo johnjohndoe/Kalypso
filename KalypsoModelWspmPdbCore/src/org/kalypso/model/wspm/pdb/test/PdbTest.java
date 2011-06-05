@@ -47,10 +47,10 @@ import org.junit.Test;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.internal.AddObjectOperation;
-import org.kalypso.model.wspm.pdb.connect.internal.oracle.OracleSettings;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.internal.connect.AddObjectOperation;
+import org.kalypso.model.wspm.pdb.internal.connect.oracle.OracleSettings;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
