@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -54,14 +55,17 @@ public class FindViewRunnable<T extends IViewPart> implements Runnable
 {
   private final String m_viewID;
 
-  private T m_view;
-
   private final IWorkbenchWindow m_window;
 
-  public FindViewRunnable( final String viewID, final IWorkbenchWindow window )
+  private final boolean m_restore;
+
+  private T m_view;
+
+  public FindViewRunnable( final String viewID, final IWorkbenchWindow window, final boolean restoreView )
   {
     m_viewID = viewID;
     m_window = window;
+    m_restore = restoreView;
   }
 
   public T execute( )
@@ -76,6 +80,7 @@ public class FindViewRunnable<T extends IViewPart> implements Runnable
   public void run( )
   {
     final IWorkbenchPage page = m_window.getActivePage();
-    m_view = (T) page.findView( m_viewID );
+    final IViewReference viewReference = page.findViewReference( m_viewID );
+    m_view = (T) viewReference.getView( m_restore );
   }
 }

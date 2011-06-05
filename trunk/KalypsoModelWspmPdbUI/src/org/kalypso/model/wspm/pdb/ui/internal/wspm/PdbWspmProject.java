@@ -276,9 +276,9 @@ public class PdbWspmProject
       updateMap();
   }
 
-  public <T extends IViewPart> T findView( final String id )
+  <T extends IViewPart> T findView( final String id )
   {
-    final FindViewRunnable<T> runnable = new FindViewRunnable<T>( id, m_window );
+    final FindViewRunnable<T> runnable = new FindViewRunnable<T>( id, m_window, true );
     return runnable.execute();
   }
 
