@@ -208,7 +208,7 @@ public class Gaf2Db implements IPdbOperation
     final String readCode = gafPoint.getCode();
     final String realCode = m_profiles.translateCode( readCode );
 
-    final String readHyk = gafPoint.getCode();
+    final String readHyk = gafPoint.getHyk();
     final String realHyk = m_profiles.translateHyk( readHyk );
 
     final String name = csPart.getName() + "_" + index;
