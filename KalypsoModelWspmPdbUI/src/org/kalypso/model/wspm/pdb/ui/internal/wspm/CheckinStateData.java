@@ -40,50 +40,63 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
+import java.util.Arrays;
+
+import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.observable.set.WritableSet;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
 
 /**
- * Helps to access a view in the ui thread.
- * 
  * @author Gernot Belger
  */
-public class FindViewRunnable<T extends IViewPart> implements Runnable
+public class CheckinStateData
 {
-  private final String m_viewID;
+  private final IObservableSet m_checkedElements = new WritableSet();
 
-  private final IWorkbenchWindow m_window;
+  private final State m_state = new State();
 
-  private final boolean m_restore;
+  private final GmlTreeView m_gmlViewer;
 
-  private T m_view;
+  private final State[] m_existingStates;
 
-  public FindViewRunnable( final String viewID, final IWorkbenchWindow window, final boolean restoreView )
+  private final WaterBody[] m_existingWaterBodies;
+
+  public CheckinStateData( final GmlTreeView gmlViewer, final State[] existingStates, final WaterBody[] existingWaterbodies )
   {
-    m_viewID = viewID;
-    m_window = window;
-    m_restore = restoreView;
+    m_gmlViewer = gmlViewer;
+    m_existingStates = existingStates;
+    m_existingWaterBodies = existingWaterbodies;
+
+    final IStructuredSelection selection = gmlViewer.getSelection();
+    final Object[] checkedElements = selection.toArray();
+    m_checkedElements.addAll( Arrays.asList( checkedElements ) );
   }
 
-  public T execute( )
+  public State getState( )
   {
-    final Display display = m_window.getShell().getDisplay();
-    display.syncExec( this );
-    return m_view;
+    return m_state;
   }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public void run( )
+  public State[] getExistingStates( )
   {
-    final IWorkbenchPage page = m_window.getActivePage();
-    final IViewReference viewReference = page.findViewReference( m_viewID );
-    if( viewReference == null )
-      m_view = null;
-    else
-      m_view = (T) viewReference.getView( m_restore );
+    return m_existingStates;
+  }
+
+  public WaterBody[] getExistingWaterBodies( )
+  {
+    return m_existingWaterBodies;
+  }
+
+  public Object getProject( )
+  {
+    return m_gmlViewer.getTreeViewer().getInput();
+  }
+
+  public IObservableSet getCheckedElements( )
+  {
+    return m_checkedElements;
   }
 }

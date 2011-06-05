@@ -290,7 +290,7 @@ public class PdbView extends ViewPart
     toolkit.createComposite( parent );
   }
 
-  IPdbConnection getConnection( )
+  public IPdbConnection getConnection( )
   {
     return m_pdbConnection;
   }

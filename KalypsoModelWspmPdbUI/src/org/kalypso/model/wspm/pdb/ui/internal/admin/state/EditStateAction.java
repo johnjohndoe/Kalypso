@@ -82,6 +82,7 @@ public class EditStateAction extends UpdateableAction
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
+    // FIXME: we should not reuse the same state the whole time
     final Session session = m_page.getSession();
     final State[] existingStates = m_viewer.getExistingState();
 

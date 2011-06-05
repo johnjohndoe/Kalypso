@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -178,7 +179,9 @@ public class EditStatePage extends WizardPage
 // timeField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final Calendar cal = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
-    cal.setTime( m_state.getMeasurementDate() );
+    final Date measurementDate = m_state.getMeasurementDate();
+    if( measurementDate != null )
+      cal.setTime( measurementDate );
     final DateTimeSelectionProperty selectionProperty = new DateTimeSelectionProperty( cal );
 
     final IObservableValue model = BeansObservables.observeValue( m_state, State.PROPERTY_MEASUREMENTDATE );
