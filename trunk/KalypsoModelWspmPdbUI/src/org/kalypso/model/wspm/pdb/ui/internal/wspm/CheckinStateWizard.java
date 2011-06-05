@@ -40,50 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
 
 /**
- * Helps to access a view in the ui thread.
+ * Uploads local WSPM data into the cross section database.
  * 
  * @author Gernot Belger
  */
-public class FindViewRunnable<T extends IViewPart> implements Runnable
+public class CheckinStateWizard extends Wizard
 {
-  private final String m_viewID;
+  private final CheckinStateData m_data;
 
-  private final IWorkbenchWindow m_window;
-
-  private final boolean m_restore;
-
-  private T m_view;
-
-  public FindViewRunnable( final String viewID, final IWorkbenchWindow window, final boolean restoreView )
+  public CheckinStateWizard( final CheckinStateData data )
   {
-    m_viewID = viewID;
-    m_window = window;
-    m_restore = restoreView;
+    m_data = data;
+
+    addPage( new CheckinStateChooseElementsPage( "chooseElements", m_data ) ); //$NON-NLS-1$
+    addPage( new EditStatePage( "editState", m_data.getState(), m_data.getExistingStates(), Mode.NEW ) ); //$NON-NLS-1$
   }
 
-  public T execute( )
-  {
-    final Display display = m_window.getShell().getDisplay();
-    display.syncExec( this );
-    return m_view;
-  }
-
-  @SuppressWarnings("unchecked")
   @Override
-  public void run( )
+  public boolean performFinish( )
   {
-    final IWorkbenchPage page = m_window.getActivePage();
-    final IViewReference viewReference = page.findViewReference( m_viewID );
-    if( viewReference == null )
-      m_view = null;
-    else
-      m_view = (T) viewReference.getView( m_restore );
+
+    /* Find profiles to check-in (by waterbody) */
+
+    // In one transaction:
+    /* Add state */
+    /* Convert to csdb profiles */
+
+    // TODO Auto-generated method stub
+    return false;
   }
 }

@@ -78,6 +78,7 @@ public class StatesViewer
 
   private WritableList m_tableInput;
 
+  // FIXME: we should not leave the session all the time open... better to have the connection and reopen session
   private final Session m_session;
 
   public StatesViewer( final Session session )
