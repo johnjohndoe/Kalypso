@@ -297,7 +297,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
       final String comment = getStringValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, StringUtils.EMPTY );
       final BigDecimal width = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BREITE, null );
       final BigDecimal height = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_HOEHE, null );
-      final String code = getStringValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, IGafConstants.CODE_PP );
+      final String code = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, IGafConstants.CODE_PP );
       final String hyk = toHyk( code );
 
       final GM_Point curve = WspmGeometryUtilities.createLocation( profil, record, profilSRS );
@@ -358,7 +358,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
       return null;
 
     /* The hyk is always the same as the code itself */
-    return code;
+    return hykCode.getHyk();
   }
 
   private String getStringValue( final IRecord record, final String componentId, final String defaultValue )

@@ -149,7 +149,10 @@ public class GafProfiles
 
   public String translateHyk( final String hyk )
   {
-    // TODO Auto-generated method stub
-    return hyk;
+    final GafCode hykCode = m_gafCodes.getHykCode( hyk );
+    if( hykCode != null )
+      return hykCode.getHyk();
+
+    return null;
   }
 }
