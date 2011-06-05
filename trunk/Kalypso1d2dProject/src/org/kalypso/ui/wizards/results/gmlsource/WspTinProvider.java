@@ -65,7 +65,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.views.ScenarioContentProvider;
-import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.commons.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeControlListener;
 import org.kalypso.core.gml.provider.GmlSource;
