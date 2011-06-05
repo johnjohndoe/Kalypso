@@ -56,6 +56,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.hibernate.Session;
+import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.wspm.pdb.PdbUtils;
@@ -64,8 +66,6 @@ import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.AddWaterBodyAction;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
-import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
 /**
  * @author Gernot Belger

@@ -58,6 +58,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -66,8 +68,6 @@ import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.connect.SettingsNameValue;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
-import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
 /**
  * A {@link org.eclipse.jface.dialogs.IDialogPage} that edits the parameters of one {@link IPdbSettings}.

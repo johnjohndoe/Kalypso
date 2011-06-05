@@ -55,16 +55,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.conversion.FileToStringConverter;
 import org.kalypso.commons.databinding.conversion.StringToFileConverter;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.FileValueSelectionListener;
 import org.kalypso.commons.databinding.validation.FileIsFileValidator;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
-import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
 /**
  * @author Gernot Belger

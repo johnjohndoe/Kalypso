@@ -56,11 +56,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
 /**
  * @author Gernot Belger

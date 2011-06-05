@@ -55,13 +55,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.DateTimeSelectionProperty;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.UniqueStateNameValidator;
-import org.kalypso.ui.editor.styleeditor.binding.DataBinder;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingWizardPage;
 
 /**
  * @author Gernot Belger
