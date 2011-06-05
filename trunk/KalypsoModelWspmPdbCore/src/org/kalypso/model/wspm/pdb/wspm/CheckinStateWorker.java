@@ -130,8 +130,11 @@ public class CheckinStateWorker implements ICoreRunnableWithProgress
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Failed to initialize GAF codes", e );
       throw new CoreException( status );
     }
+    finally
+    {
+      monitor.done();
+    }
 
-    monitor.done();
     return Status.OK_STATUS;
   }
 
