@@ -68,6 +68,8 @@ public class CheckinStateWizard extends Wizard
     m_data = data;
     m_connection = connection;
 
+    setNeedsProgressMonitor( true );
+
     addPage( new CheckinStateChooseElementsPage( "chooseElements", m_data ) ); //$NON-NLS-1$
     addPage( new EditStatePage( "editState", m_data.getState(), m_data.getExistingStates(), Mode.NEW ) ); //$NON-NLS-1$
   }

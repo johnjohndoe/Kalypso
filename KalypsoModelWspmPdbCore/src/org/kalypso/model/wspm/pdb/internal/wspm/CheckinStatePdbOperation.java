@@ -41,14 +41,11 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.hibernate.Session;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -56,32 +53,25 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
-import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.PrecisionModel;
@@ -91,9 +81,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  */
 public class CheckinStatePdbOperation implements IPdbOperation
 {
-  private static final String STR_FAILED_TO_CONVERT_GEOMETRY = "Failed to convert geometry";
-
-  private static final BigDecimal VEGETATION_0 = new BigDecimal( 0 );
+  static final String STR_FAILED_TO_CONVERT_GEOMETRY = "Failed to convert geometry";
 
   private final Map<String, WaterBody> m_waterBodies = new HashMap<String, WaterBody>();
 
@@ -157,6 +145,8 @@ public class CheckinStatePdbOperation implements IPdbOperation
       uploadProfile( session, feature );
       m_monitor.worked( 1 );
     }
+
+    m_monitor.subTask( "transferng data into database..." );
   }
 
   private void uploadProfile( final Session session, final IProfileFeature feature ) throws PdbConnectException
@@ -173,7 +163,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     section.setCreationDate( m_state.getCreationDate() );
     section.setEditingDate( m_state.getEditingDate() );
     section.setEditingUser( m_state.getEditingUser() );
-    // TODO: should we reset measurement date?
+    // TODO: should we set measurement date?
     section.setMeasurementDate( m_state.getMeasurementDate() );
 
     /* Data from profile */
@@ -184,9 +174,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     section.setDescription( profil.getComment() );
 
     final String srsName = feature.getSrsName();
-    final CrossSectionPart pPart = createParts( section, profil, srsName );
-    if( pPart != null )
-      section.setLine( pPart.getLine() );
+    createParts( section, profil, srsName );
 
     saveSection( session, section );
   }
@@ -236,34 +224,30 @@ public class CheckinStatePdbOperation implements IPdbOperation
     }
   }
 
-  protected com.vividsolutions.jts.geom.Point toPoint( final GM_Point point ) throws PdbConnectException
-  {
-    try
-    {
-      final GM_Object transformedCurve = m_transformer.transform( point );
-      return (com.vividsolutions.jts.geom.Point) JTSAdapter.export( transformedCurve );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new PdbConnectException( STR_FAILED_TO_CONVERT_GEOMETRY, e );
-    }
-  }
-
-  private CrossSectionPart createParts( final CrossSection section, final IProfil profil, final String profilSRS ) throws PdbConnectException
+  private void createParts( final CrossSection section, final IProfil profil, final String profilSRS ) throws PdbConnectException
   {
     final Set<CrossSectionPart> parts = new HashSet<CrossSectionPart>();
 
     /* Extract profile line */
-    final CrossSectionPart pPart = createProfilePart( profil, profilSRS );
-    if( pPart != null )
+    final CrossSectionPart pPart = builtPart( profil, profilSRS, IWspmConstants.POINT_PROPERTY_HOEHE, IGafConstants.KZ_CATEGORY_PROFILE );
+    if( !isBlank( pPart ) )
+    {
       parts.add( pPart );
-    // section.setLine( toLine( feature ) );
+      section.setLine( pPart.getLine() );
+    }
 
     /* Extract building parts */
-    final CrossSectionPart[] buildingParts = createBuildingParts( profil );
-    for( final CrossSectionPart buildingPart : buildingParts )
-      parts.add( buildingPart );
+    final CrossSectionPart ukPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IGafConstants.KZ_CATEGORY_UK );
+    if( !isBlank( ukPart ) )
+      parts.add( ukPart );
+
+    final CrossSectionPart okPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IGafConstants.KZ_CATEGORY_OK );
+    if( !isBlank( okPart ) )
+      parts.add( okPart );
+
+    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IGafConstants.KZ_CATEGORY_OK );
+    if( !isBlank( okWeirPart ) )
+      parts.add( okWeirPart );
 
     /* extract extra parts */
     final CrossSectionPart[] additionalParts = createAdditionalParts( profil );
@@ -275,135 +259,50 @@ public class CheckinStatePdbOperation implements IPdbOperation
     {
       part.setName( section.getName() + "_" + partCount++ );
       part.setCrossSection( section );
-      // FIXME: no directly, add
       section.getCrossSectionParts().add( part );
     }
-
-    return pPart;
   }
 
-  private CrossSectionPart createProfilePart( final IProfil profil, final String profilSRS ) throws PdbConnectException
+  private boolean isBlank( final CrossSectionPart part )
   {
-    final CrossSectionPart part = new CrossSectionPart();
-    part.setCategory( IGafConstants.KZ_CATEGORY_PROFILE );
+    if( part == null )
+      return true;
 
-    final IRecord[] records = profil.getPoints();
-    final List<Coordinate> lineCrds = new ArrayList<Coordinate>(records.length);
-    for( int i = 0; i < records.length; i++ )
-    {
-      final IRecord record = records[i];
+    return part.getPoints().isEmpty();
+  }
 
-      final String name = getStringValue( record, IWspmConstants.POINT_PROPERTY_ID, StringUtils.EMPTY );
-      final String comment = getStringValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, StringUtils.EMPTY );
-      final BigDecimal width = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BREITE, null );
-      final BigDecimal height = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_HOEHE, null );
-      final String code = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, IGafConstants.CODE_PP );
-      final String hyk = toHyk( code );
-
-      final GM_Point curve = WspmGeometryUtilities.createLocation( profil, record, profilSRS );
-      final com.vividsolutions.jts.geom.Point location = toPoint( curve );
-
-      // FIXME: use real roughness
-      final Roughness roughness = m_coefficients.getRoughnessOrUnknown( null );
-      final BigDecimal kstValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, null );
-      final BigDecimal kValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, null );
-
-      // FIXME: use real vegetation
-      final Vegetation vegetation = m_coefficients.getVegetationOrUnknown( null );
-      final BigDecimal axValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, VEGETATION_0 );
-      final BigDecimal ayValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, VEGETATION_0 );
-      final BigDecimal dpValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, VEGETATION_0 );
-
-      /* Not all point may pass */
-      // TODO: allow point wo geometry?
-      if( height == null )
-        continue;
-
-      final Point point = new Point( null, part, name, i );
-
-      point.setDescription( comment );
-      point.setWidth( width );
-      point.setHeight( height );
-      point.setCode( code );
-      point.setHyk( hyk );
-      point.setLocation( location );
-
-      point.setRoughness( roughness );
-      point.setRoughnessKstValue( kstValue );
-      point.setRoughnessKValue( kValue );
-
-      point.setVegetation( vegetation );
-      point.setVegetationAx( axValue );
-      point.setVegetationAy( ayValue );
-      point.setVegetationDp( dpValue );
-
-      if( location != null )
-        lineCrds.add( location.getCoordinate() );
-
-      part.getPoints().add( point );
-    }
-
-
-    final LineString line = m_geometryFactory.createLineString( lineCrds.toArray( new Coordinate[lineCrds.size()] ) );
-    part.setLine( line );
-
+  private CrossSectionPart builtPart( final IProfil profil, final String profilSRS, final String mainComponentID, final String category ) throws PdbConnectException
+  {
+    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, mainComponentID );
+    partOperation.execute();
+    final CrossSectionPart part = partOperation.getPart();
+    part.setCategory( category );
     return part;
-  }
-
-  private String toHyk( final String code )
-  {
-    /* Just check if it is an existing code */
-    final GafCode hykCode = m_gafCodes.getHykCode( code );
-    if( hykCode == null )
-      return null;
-
-    /* The hyk is always the same as the code itself */
-    return hykCode.getHyk();
-  }
-
-  private String getStringValue( final IRecord record, final String componentId, final String defaultValue )
-  {
-    final TupleResult owner = record.getOwner();
-    final int index = owner.indexOfComponent( componentId );
-    if( index == -1 )
-      return defaultValue;
-
-    final Object value = record.getValue( index );
-    if( value == null )
-      return defaultValue;
-
-    return value.toString();
-  }
-
-  private BigDecimal getDecimalValue( final IRecord record, final String componentId, final BigDecimal defaultValue )
-  {
-    final TupleResult owner = record.getOwner();
-    final int index = owner.indexOfComponent( componentId );
-    if( index == -1 )
-      return defaultValue;
-
-    final Object value = record.getValue( index );
-    if( value == null )
-      return defaultValue;
-
-    if( value instanceof BigDecimal )
-      return (BigDecimal) value;
-
-    if( value instanceof Number )
-      return new BigDecimal( ((Number) value).doubleValue() );
-
-    return defaultValue;
-  }
-
-  private CrossSectionPart[] createBuildingParts( final IProfil profil )
-  {
-    // TODO
-    return new CrossSectionPart[0];
   }
 
   private CrossSectionPart[] createAdditionalParts( final IProfil profil )
   {
     // TODO
     return new CrossSectionPart[0];
+  }
+
+  Coefficients getCoefficients( )
+  {
+    return m_coefficients;
+  }
+
+  GafCodes getGafCodes( )
+  {
+    return m_gafCodes;
+  }
+
+  GeometryFactory getGeometryFactory( )
+  {
+    return m_geometryFactory;
+  }
+
+  IGeoTransformer getTransformer( )
+  {
+    return m_transformer;
   }
 }
