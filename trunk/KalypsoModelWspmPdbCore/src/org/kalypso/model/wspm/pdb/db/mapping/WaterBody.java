@@ -15,12 +15,16 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -34,7 +38,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
 
   private String name = StringUtils.EMPTY;
 
-  private LineString riverline;
+  private Geometry riverline;
 
   private String label = StringUtils.EMPTY;
 
@@ -58,7 +62,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     this.directionOfStationing = directionOfStationing;
   }
 
-  public WaterBody( final BigDecimal id, final String name, final LineString riverline, final String label, final STATIONING_DIRECTION directionOfStationing, final String description, final Set<Event> events, final Set<CrossSection> crossSections )
+  public WaterBody( final BigDecimal id, final String name, final Geometry riverline, final String label, final STATIONING_DIRECTION directionOfStationing, final String description, final Set<Event> events, final Set<CrossSection> crossSections )
   {
     this.id = id;
     this.name = name;
@@ -104,12 +108,12 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   }
 
   @Column(name = "riverline", columnDefinition = "Geometry")
-  public LineString getRiverline( )
+  public Geometry getRiverline( )
   {
     return this.riverline;
   }
 
-  public void setRiverline( final LineString riverline )
+  public void setRiverline( final Geometry riverline )
   {
     final Object oldValue = this.riverline;
 
@@ -184,5 +188,23 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   public void setCrossSections( final Set<CrossSection> crossSections )
   {
     this.crossSections = crossSections;
+  }
+
+  @Transient
+  public LineString getRiverlineAsLine( )
+  {
+    if( riverline instanceof LineString )
+      return (LineString) riverline;
+
+    if( riverline == null )
+      return null;
+
+    if( riverline instanceof GeometryCollection )
+    {
+      Assert.isTrue( riverline.isEmpty() );
+      return null;
+    }
+
+    return null;
   }
 }
