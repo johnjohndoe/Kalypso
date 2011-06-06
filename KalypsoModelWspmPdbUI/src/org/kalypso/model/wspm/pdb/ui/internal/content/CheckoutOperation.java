@@ -99,6 +99,8 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     monitor.subTask( "Searching for cross sections to checkout..." );
     findCrossSections();
     ProgressUtilities.worked( monitor, 5 );
+    if( m_crossSections.isEmpty() )
+      return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, "No cross sections found in selection." );
 
     // TODO Preview?
 
