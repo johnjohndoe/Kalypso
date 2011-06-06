@@ -42,12 +42,15 @@ package org.kalypso.model.wspm.pdb.ui.internal;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
+import org.eclipse.ui.internal.WorkbenchImages;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey;
 
 /**
  * Convenience class for storing references to image descriptors used by the readme tool.
  */
+@SuppressWarnings("restriction")
 public class WspmPdbUiImages
 {
   public static enum IMAGE implements ImageKey
@@ -96,4 +99,6 @@ public class WspmPdbUiImages
     final PluginImageProvider imageProvider = WspmPdbUiPlugin.getDefault().getImageProvider();
     return imageProvider.getImage( image );
   }
+
+  public static final ImageDescriptor IMG_WIZBAN_IMPORT_WIZ = WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ );
 }

@@ -51,7 +51,7 @@ import org.eclipse.jface.databinding.viewers.ViewerSupport;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -92,13 +92,13 @@ public class WaterBodyViewer
     gknColumn.getColumn().setResizable( false );
     gknColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
 
-    ColumnViewerSorter.registerSorter( gknColumn, new ViewerSorter() );
+    ColumnViewerSorter.registerSorter( gknColumn, new ViewerComparator() );
 
     final TableViewerColumn nameColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     nameColumn.getColumn().setText( WaterBodyStrings.STR_NAME );
     nameColumn.getColumn().setResizable( false );
     nameColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
-    ColumnViewerSorter.registerSorter( nameColumn, new ViewerSorter() );
+    ColumnViewerSorter.registerSorter( nameColumn, new ViewerComparator() );
 
     m_tableInput = new WritableList( new ArrayList<WaterBody>(), WaterBody.class );
 
