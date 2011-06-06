@@ -84,7 +84,7 @@ public class CheckinPartOperation
 
   private final String m_profilSRS;
 
-  private final String m_mainComponentID;
+  private final String m_heightComponentID;
 
   private final Coefficients m_coefficients;
 
@@ -102,7 +102,7 @@ public class CheckinPartOperation
     m_transformer = stateOperation.getTransformer();
     m_profil = profil;
     m_profilSRS = profilSRS;
-    m_mainComponentID = mainComponentID;
+    m_heightComponentID = mainComponentID;
   }
 
   public CrossSectionPart getPart( )
@@ -121,12 +121,12 @@ public class CheckinPartOperation
       final String name = getStringValue( record, IWspmConstants.POINT_PROPERTY_ID, StringUtils.EMPTY );
       final String comment = getStringValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, StringUtils.EMPTY );
       final BigDecimal width = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BREITE, null );
-      final BigDecimal height = getDecimalValue( record, m_mainComponentID, null );
+      final BigDecimal height = getDecimalValue( record, m_heightComponentID, null );
       final String code = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, IGafConstants.CODE_PP );
       final String hyk = toHyk( code );
 
-      final GM_Point curve = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS );
-      final com.vividsolutions.jts.geom.Point location = toPoint( curve );
+      final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, m_heightComponentID );
+      final com.vividsolutions.jts.geom.Point location = toPoint( loc );
 
       // FIXME: use real roughness
       final Roughness roughness = m_coefficients.getRoughnessOrUnknown( null );
@@ -168,8 +168,16 @@ public class CheckinPartOperation
       m_part.getPoints().add( point );
     }
 
-    final LineString line = m_geometryFactory.createLineString( lineCrds.toArray( new Coordinate[lineCrds.size()] ) );
-    m_part.setLine( line );
+    final int size = lineCrds.size();
+    if( size == 1 )
+    {
+      System.out.println( "oups" );
+    }
+    else
+    {
+      final LineString line = m_geometryFactory.createLineString( lineCrds.toArray( new Coordinate[size] ) );
+      m_part.setLine( line );
+    }
   }
 
   private String toHyk( final String code )
