@@ -4,9 +4,8 @@
     <Title>Profilsegment (TU-HH)</Title>
     <FeatureTypeName>{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState</FeatureTypeName>
     <Rule>
-        <Name>default</Name>
-        <Title>default</Title>
-        <Abstract>default</Abstract>
+        <Name>profileLine</Name>
+        <Title>Profillinie</Title>
         <MinScaleDenominator>0.0</MinScaleDenominator>
         <MaxScaleDenominator>9.9999999901E8</MaxScaleDenominator>
 		<TextSymbolizer>
@@ -62,8 +61,8 @@
         </LineSymbolizer>
     </Rule>
     <Rule>
-		<Name>Durchfluß Bereiche</Name>
-		<Title>Durchfluß Bereiche</Title>
+		<Name>Durchfluss Bereiche</Name>
+		<Title>Durchfluss Bereiche</Title>
 		<Abstract />
 		<MinScaleDenominator>0.0</MinScaleDenominator>
 		<MaxScaleDenominator>9.9999999901E8</MaxScaleDenominator>

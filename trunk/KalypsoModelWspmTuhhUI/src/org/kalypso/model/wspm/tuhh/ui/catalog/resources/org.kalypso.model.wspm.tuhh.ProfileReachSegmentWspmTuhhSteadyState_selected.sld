@@ -4,9 +4,8 @@
     <Title>Profilsegment (TU-HH)</Title>
     <FeatureTypeName>{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState</FeatureTypeName>
     <Rule>
-        <Name>default</Name>
-        <Title>default</Title>
-        <Abstract>default</Abstract>
+        <Name>profileLine</Name>
+        <Title>Profillinie</Title>
 		<TextSymbolizer>
 			<Geometry>
 		    	<ogc:PropertyName>profileLocation</ogc:PropertyName>
@@ -42,14 +41,14 @@
                 </Stroke>
 		  	</Halo>
 		</TextSymbolizer>
-        <LineSymbolizer uom="meter">
+        <LineSymbolizer uom="pixel">
             <Geometry>
                 <ogc:PropertyName>profileLocation</ogc:PropertyName>
             </Geometry>
             <Stroke>
                 <CssParameter name="stroke">#669933</CssParameter>
                 <CssParameter name="stroke-width">3.0</CssParameter>
-                <CssParameter name="stroke-linejoin">mitre</CssParameter>
+                <CssParameter name="stroke-linejoin">round</CssParameter>
                 <CssParameter name="stroke-opacity">1.0</CssParameter>
                 <CssParameter name="stroke-linecap">butt</CssParameter>
                 <CssParameter name="stroke-arrow-type">line</CssParameter>
