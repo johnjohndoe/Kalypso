@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
@@ -48,6 +47,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
@@ -96,7 +97,7 @@ public class ConnectionViewer extends Composite
 
   private Control createAdminGroup( final FormToolkit toolkit, final Composite parent )
   {
-    final Section section = toolkit.createSection( parent, Section.DESCRIPTION | Section.TITLE_BAR | Section.TWISTIE );
+    final Section section = toolkit.createSection( parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
     // TODO: nur zeigen, wenn der user admin rechte hat
     section.setText( "Administration" );
     section.setDescription( "This section allows to administrate the cross section database." );
@@ -111,8 +112,8 @@ public class ConnectionViewer extends Composite
 
   private Control createPdbView( final FormToolkit toolkit, final Composite parent )
   {
-    final Section section = toolkit.createSection( parent, Section.DESCRIPTION | Section.TITLE_BAR );
-    section.setText( "Content" );
+    final Section section = toolkit.createSection( parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR );
+    section.setText( "Contents" );
     section.setDescription( "Contents of the cross section database." );
     section.setLayout( new FillLayout() );
 
@@ -125,24 +126,32 @@ public class ConnectionViewer extends Composite
 
   private Control createSearchControls( final FormToolkit toolkit, final Composite parent, final StructuredViewer viewer )
   {
-    final Section section = toolkit.createSection( parent, Section.TITLE_BAR | Section.DESCRIPTION | Section.TWISTIE );
+    final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
     section.setText( "Search" );
     section.setDescription( "Edit search fields to filter visible items." );
     section.setLayout( new FillLayout() );
 
     final Composite panel = toolkit.createComposite( section );
-    GridLayoutFactory.swtDefaults().applyTo( panel );
+    GridLayoutFactory.fillDefaults().extendedMargins( 0, 0, 0, 5 ).applyTo( panel );
 
     section.setClient( panel );
 
-    final WaterBodyFilterControl waterFilterControl = new WaterBodyFilterControl( toolkit, panel );
-    waterFilterControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final Group waterGroup = new Group( panel, SWT.NONE );
+    toolkit.adapt( waterGroup );
+    waterGroup.setLayout( new FillLayout() );
+    waterGroup.setText( "Water Bodies" );
+    waterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    final WaterBodyFilterControl waterFilterControl = new WaterBodyFilterControl( toolkit, waterGroup );
     waterFilterControl.setViewer( viewer );
 
-    toolkit.createLabel( panel, StringUtils.EMPTY, SWT.HORIZONTAL | SWT.SEPARATOR ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final Group stateGroup = new Group( panel, SWT.NONE );
+    toolkit.adapt( stateGroup );
+    stateGroup.setLayout( new FillLayout() );
+    stateGroup.setText( "States" );
+    stateGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    final StateFilterControl stateFilterControl = new StateFilterControl( toolkit, panel );
-    stateFilterControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final StateFilterControl stateFilterControl = new StateFilterControl( toolkit, stateGroup );
     stateFilterControl.setViewer( viewer );
 
     return section;
