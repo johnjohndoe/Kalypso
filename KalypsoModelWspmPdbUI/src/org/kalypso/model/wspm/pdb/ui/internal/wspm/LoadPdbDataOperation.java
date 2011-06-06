@@ -113,7 +113,6 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
 
     monitor.done();
 
-
     return Status.OK_STATUS;
   }
 
@@ -179,6 +178,9 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
         if( PoolGmlWorkspaceProvider.LOADING_STATUS != status )
         {
           final CommandableWorkspace workspace = provider.getWorkspace();
+          if( workspace == null )
+            return null;
+
           return (TuhhWspmProject) workspace.getRootFeature();
         }
 
