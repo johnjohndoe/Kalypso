@@ -132,7 +132,7 @@ public class CrossSectionInserter
     final boolean isDirectionUpstreams = directionOfStationing == WaterBody.STATIONING_DIRECTION.upstream;
     newWspmWaterBody.setDirectionUpstreams( isDirectionUpstreams );
 
-    final GM_Curve centerLine = (GM_Curve) JTSAdapter.wrapWithSrid( waterBody.getRiverline() );
+    final GM_Curve centerLine = (GM_Curve) JTSAdapter.wrapWithSrid( waterBody.getRiverlineAsLine() );
     newWspmWaterBody.setCenterLine( centerLine );
 
     return newWspmWaterBody;
