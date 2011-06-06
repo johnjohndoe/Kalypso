@@ -51,13 +51,13 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.SelectAllFocusListener;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyStrings;
 
 /**
  * Helper that allow to search for specific water bodies.
@@ -70,6 +70,8 @@ public class WaterBodyFilterControl extends Composite
 
   private final DataBindingContext m_binding;
 
+  private final Color m_yellow;
+
   public WaterBodyFilterControl( final FormToolkit toolkit, final Composite parent )
   {
     super( parent, SWT.NONE );
@@ -77,12 +79,24 @@ public class WaterBodyFilterControl extends Composite
     if( toolkit != null )
       toolkit.adapt( this );
 
+    m_yellow = new Color( parent.getDisplay(), StateFilterControl.YELLOW );
+
+    ControlUtils.addDisposeListener( this );
+
     m_filter = new WaterBodiesFilter( StringUtils.EMPTY, StringUtils.EMPTY );
 
-    GridLayoutFactory.swtDefaults().numColumns( 6 ).applyTo( this );
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( true ).applyTo( this );
     m_binding = new DataBindingContext();
 
     createContents( toolkit, this );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    m_yellow.dispose();
+
+    super.dispose();
   }
 
   public void setViewer( final StructuredViewer viewer )
@@ -99,11 +113,9 @@ public class WaterBodyFilterControl extends Composite
 
   private void createGknField( final FormToolkit toolkit, final Composite parent )
   {
-    final Label label = new Label( parent, SWT.NONE );
-    label.setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
-
     final Text gknField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
-    gknField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    gknField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    gknField.setMessage( "Search Gewässerkennziffer" );
     gknField.addFocusListener( new SelectAllFocusListener() );
 
     addResetListener( gknField );
@@ -113,19 +125,16 @@ public class WaterBodyFilterControl extends Composite
     m_binding.bindValue( target, model );
 
     if( toolkit != null )
-    {
-      toolkit.adapt( label, false, false );
       toolkit.adapt( gknField, true, true );
-    }
+
+    gknField.setBackground( m_yellow );
   }
 
   private void createNameField( final FormToolkit toolkit, final Composite parent )
   {
-    final Label label = new Label( parent, SWT.NONE );
-    label.setText( WaterBodyStrings.STR_NAME );
-
     final Text nameField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
-    nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    nameField.setMessage( "Search Name" );
     nameField.addFocusListener( new SelectAllFocusListener() );
 
     addResetListener( nameField );
@@ -135,10 +144,9 @@ public class WaterBodyFilterControl extends Composite
     m_binding.bindValue( target, model );
 
     if( toolkit != null )
-    {
-      toolkit.adapt( label, false, false );
       toolkit.adapt( nameField, true, true );
-    }
+
+    nameField.setBackground( m_yellow );
   }
 
   private void addResetListener( final Text field )

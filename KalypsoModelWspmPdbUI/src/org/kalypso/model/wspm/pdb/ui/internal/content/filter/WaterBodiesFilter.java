@@ -63,8 +63,8 @@ public class WaterBodiesFilter extends ViewerFilter
 
   public WaterBodiesFilter( final String gkn, final String name )
   {
-    m_gkn = StringUtils.isBlank( gkn ) ? null : gkn.toLowerCase();
-    m_name = StringUtils.isBlank( name ) ? null : name.toLowerCase();
+    setGkn( gkn );
+    setName( name );
   }
 
   public void setViewer( final StructuredViewer viewer )
@@ -103,7 +103,7 @@ public class WaterBodiesFilter extends ViewerFilter
 
   public void setGkn( final String gkn )
   {
-    m_gkn = gkn;
+    m_gkn = StringUtils.isBlank( gkn ) ? null : gkn.toLowerCase();
 
     if( m_viewer != null )
       m_viewer.refresh();
@@ -111,7 +111,7 @@ public class WaterBodiesFilter extends ViewerFilter
 
   public void setName( final String name )
   {
-    m_name = name;
+    m_name = StringUtils.isBlank( name ) ? null : name.toLowerCase();
 
     if( m_viewer != null )
       m_viewer.refresh();
