@@ -83,7 +83,7 @@ public class WspmLightPerspective implements IPerspectiveFactory
     final IFolderLayout leftFolder = layout.createFolder( LEFT_FOLDER, IPageLayout.LEFT, 0.28f, editorArea );
     leftFolder.addView( WspmGmvViewPart.ID );
 
-    final IFolderLayout outlineFolder = layout.createFolder( OUTLINE_FOLDER, IPageLayout.BOTTOM, 0.50f, LEFT_FOLDER );
+    final IFolderLayout outlineFolder = layout.createFolder( OUTLINE_FOLDER, IPageLayout.BOTTOM, 0.70f, LEFT_FOLDER );
     outlineFolder.addView( ViewContentOutline.ID );
 
     layout.addView( WspmMapViewPart.ID, IPageLayout.RIGHT, 0.72f, editorArea );
