@@ -85,6 +85,8 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final Map<String, WaterBody> m_waterBodies = new HashMap<String, WaterBody>();
 
+  private final Map<String, IProfileFeature> m_csNames = new HashMap<String, IProfileFeature>();
+
   private final IProgressMonitor m_monitor;
 
   private final State m_state;
@@ -93,7 +95,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final IGeoTransformer m_transformer;
 
-  private final int m_crosssectionCount = 0;
+  private int m_crosssectionCount = 0;
 
   private final Coefficients m_coefficients;
 
@@ -146,7 +148,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
       m_monitor.worked( 1 );
     }
 
-    m_monitor.subTask( "transferng data into database..." );
+    m_monitor.subTask( "transfering data into database..." );
   }
 
   private void uploadProfile( final Session session, final IProfileFeature feature ) throws PdbConnectException
@@ -170,7 +172,16 @@ public class CheckinStatePdbOperation implements IPdbOperation
     final BigDecimal station = getStation( feature );
     section.setStation( station );
     // FIXME: eigentlich sollte der name erhalten bleiben
-    section.setName( m_state.getName() + "_" + profil.getName() + "_" + m_crosssectionCount );
+    final String name = m_state.getName() + "_" + profil.getName() + "_" + m_crosssectionCount++;
+
+    if( m_csNames.containsKey( name ) )
+    {
+      System.out.println( "xxx" );
+    }
+
+    m_csNames.put( name, feature );
+
+    section.setName( name );
     section.setDescription( profil.getComment() );
 
     final String srsName = feature.getSrsName();
