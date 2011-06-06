@@ -16,7 +16,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.model.wspm.tuhh.core;bundle-version="10.10.2";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Import-Package: javax.persistence
 Export-Package: org.kalypso.model.wspm.pdb,
  org.kalypso.model.wspm.pdb.connect,
  org.kalypso.model.wspm.pdb.connect.command,
