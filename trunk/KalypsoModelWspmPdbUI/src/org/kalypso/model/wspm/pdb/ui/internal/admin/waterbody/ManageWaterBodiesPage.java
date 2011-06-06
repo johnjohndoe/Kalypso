@@ -138,11 +138,11 @@ public class ManageWaterBodiesPage extends WizardPage
 
   private UpdateableAction[] createActions( )
   {
-    m_actions = new UpdateableAction[4];
+    m_actions = new UpdateableAction[3];
     m_actions[0] = new AddWaterBodyAction( m_session, m_viewer, "&New..." );
     m_actions[1] = new EditWaterBodyAction( this, m_viewer );
     m_actions[2] = new RemoveWaterBodyAction( this, m_viewer );
-    m_actions[3] = new ImportWaterBodiesAction( this, m_viewer );
+    // m_actions[3] = new ImportWaterBodiesAction( this, m_viewer );
 
     return m_actions;
   }
