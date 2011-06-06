@@ -494,9 +494,9 @@
 								referenced profile-observation.
 							</appinfo>
 							<documentation xml:lang="de">
-								<label>Durchfluß</label>
-								<tooltip>Durchfluß</tooltip>
-								<description>Durchfluß</description>
+								<label>Durchfluss</label>
+								<tooltip>Durchfluss</tooltip>
+								<description>Durchfluss</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Profile throughput location</label>
