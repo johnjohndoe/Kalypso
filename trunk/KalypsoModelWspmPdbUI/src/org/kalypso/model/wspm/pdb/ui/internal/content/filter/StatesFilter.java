@@ -59,7 +59,7 @@ public class StatesFilter extends ViewerFilter
 
   public StatesFilter( final String name )
   {
-    m_name = StringUtils.isBlank( name ) ? null : name.toLowerCase();
+    setName( name );
   }
 
   public void setViewer( final StructuredViewer viewer )
@@ -89,7 +89,7 @@ public class StatesFilter extends ViewerFilter
 
   public void setName( final String name )
   {
-    m_name = name;
+    m_name = StringUtils.isBlank( name ) ? null : name.toLowerCase();
 
     if( m_viewer != null )
       m_viewer.refresh();

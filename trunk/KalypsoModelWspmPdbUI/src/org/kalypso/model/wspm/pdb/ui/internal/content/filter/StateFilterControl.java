@@ -51,11 +51,13 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.SelectAllFocusListener;
 
 /**
@@ -65,9 +67,13 @@ import org.kalypso.contribs.eclipse.swt.widgets.SelectAllFocusListener;
  */
 public class StateFilterControl extends Composite
 {
+  static final RGB YELLOW = new RGB( 255, 255, 230 );
+
   private final StatesFilter m_filter;
 
   private final DataBindingContext m_binding;
+
+  private final Color m_yellow;
 
   public StateFilterControl( final FormToolkit toolkit, final Composite parent )
   {
@@ -76,12 +82,24 @@ public class StateFilterControl extends Composite
     if( toolkit != null )
       toolkit.adapt( this );
 
+    m_yellow = new Color( parent.getDisplay(), YELLOW );
+
+    ControlUtils.addDisposeListener( this );
+
     m_filter = new StatesFilter( StringUtils.EMPTY );
 
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( this );
+    GridLayoutFactory.swtDefaults().numColumns( 1 ).applyTo( this );
     m_binding = new DataBindingContext();
 
     createContents( toolkit, this );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    m_yellow.dispose();
+
+    super.dispose();
   }
 
   public void setViewer( final StructuredViewer viewer )
@@ -97,11 +115,9 @@ public class StateFilterControl extends Composite
 
   private void createNameField( final FormToolkit toolkit, final Composite parent )
   {
-    final Label label = new Label( parent, SWT.NONE );
-    label.setText( "Name" );
-
     final Text nameField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
     nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    nameField.setMessage( "Search Name" );
     nameField.addFocusListener( new SelectAllFocusListener() );
 
     addResetListener( nameField );
@@ -111,10 +127,9 @@ public class StateFilterControl extends Composite
     m_binding.bindValue( target, model );
 
     if( toolkit != null )
-    {
-      toolkit.adapt( label, false, false );
       toolkit.adapt( nameField, true, true );
-    }
+
+    nameField.setBackground( m_yellow );
   }
 
   private void addResetListener( final Text field )
