@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect;
 
+import java.sql.SQLException;
+
 import org.hibernate.HibernateException;
+import org.hibernate.JDBCException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -79,12 +82,48 @@ public class Executor
     }
     catch( final Throwable e )
     {
-      e.printStackTrace();
+      final PdbConnectException pce = logError( e );
 
       doRollback( transaction );
 
+      throw pce;
+    }
+  }
+
+  private PdbConnectException logError( final Throwable e )
+  {
+    if( e instanceof HibernateException )
+      return logHibernateException( (HibernateException) e );
+    else
+    {
+      e.printStackTrace();
       final String message = String.format( "Failed to execute command: %s", m_operation.getLabel() );
-      throw new PdbConnectException( message, e );
+      return new PdbConnectException( message, e );
+    }
+  }
+
+  private PdbConnectException logHibernateException( final HibernateException e )
+  {
+    if( e instanceof JDBCException )
+    {
+      final JDBCException je = (JDBCException) e;
+      final SQLException sqlException = je.getSQLException();
+      logSQLException(sqlException);
+    }
+
+    e.printStackTrace();
+
+    final String message = String.format( "Failed to execute command: %s", m_operation.getLabel() );
+    return new PdbConnectException( message, e );
+  }
+
+  private void logSQLException( final SQLException sqlException )
+  {
+    SQLException nextException = sqlException;
+    while( nextException != null )
+    {
+      System.out.println( nextException.getMessage() );
+      nextException = nextException.getNextException();
     }
   }
 
