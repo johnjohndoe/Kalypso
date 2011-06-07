@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wspwin.core.prf;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 
@@ -127,6 +129,21 @@ public class DataBlockWriter
       }
       buffer.append( line.length > 1 ? line[1] : "" ); //$NON-NLS-1$
       pw.println( buffer.toString().trim().substring( 1 ) );
+    }
+  }
+
+  public void store( final File targetFile ) throws IOException
+  {
+    PrintWriter pw = null;
+    pw = new PrintWriter( targetFile );
+    try
+    {
+      store( pw );
+      pw.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( pw );
     }
   }
 }
