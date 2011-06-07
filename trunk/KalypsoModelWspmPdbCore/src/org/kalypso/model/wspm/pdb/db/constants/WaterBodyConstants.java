@@ -57,6 +57,8 @@ public interface WaterBodyConstants
 
   String PROPERTY_DIRECTION_OF_STATIONING = "directionOfStationing"; //$NON-NLS-1$
 
+  String PROPERTY_RANK = "rank"; //$NON-NLS-1$
+
   // FIXME: fetch from annotation
   int NAME_LIMIT = 100;
 

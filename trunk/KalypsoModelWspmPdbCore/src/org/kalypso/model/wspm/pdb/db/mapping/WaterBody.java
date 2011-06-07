@@ -46,6 +46,8 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
 
   private String description = StringUtils.EMPTY;
 
+  private Integer rank;
+
   private Set<Event> events = new HashSet<Event>( 0 );
 
   private Set<CrossSection> crossSections = new HashSet<CrossSection>( 0 );
@@ -62,13 +64,14 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     this.directionOfStationing = directionOfStationing;
   }
 
-  public WaterBody( final BigDecimal id, final String name, final Geometry riverline, final String label, final STATIONING_DIRECTION directionOfStationing, final String description, final Set<Event> events, final Set<CrossSection> crossSections )
+  public WaterBody( final BigDecimal id, final String name, final Geometry riverline, final String label, final STATIONING_DIRECTION directionOfStationing, final Integer rank, final String description, final Set<Event> events, final Set<CrossSection> crossSections )
   {
     this.id = id;
     this.name = name;
     this.riverline = riverline;
     this.label = label;
     this.directionOfStationing = directionOfStationing;
+    this.rank = rank;
     this.description = description;
     this.events = events;
     this.crossSections = crossSections;
@@ -151,6 +154,21 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     this.directionOfStationing = directionOfStationing;
 
     firePropertyChange( PROPERTY_DIRECTION_OF_STATIONING, oldValue, directionOfStationing );
+  }
+
+  @Column(name = "rank")
+  public Integer getRank( )
+  {
+    return this.rank;
+  }
+
+  public void setRank( final Integer rank )
+  {
+    final Object oldValue = this.rank;
+
+    this.rank = rank;
+
+    firePropertyChange( PROPERTY_RANK, oldValue, rank );
   }
 
   @Column(name = "description")
