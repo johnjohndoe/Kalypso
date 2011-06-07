@@ -50,6 +50,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -132,6 +133,9 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
         return toNumber( decimal, type );
       }
     }
+
+    if( type.isAssignableFrom( String.class ) )
+      return type.cast( ObjectUtils.toString( value ) );
 
     /* Will throw an ClassCastException, that is intended */
     return type.cast( value );
@@ -237,7 +241,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public String getObjectType( )
   {
-    return getProperty( "OBJECT_TYPE", String.class, "Unknown" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return getProperty( "OBJECT_TYPE", String.class, "21" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
@@ -280,16 +284,6 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#hasPhotos()
-   */
-  @Override
-  public boolean hasPhotos( )
-  {
-    final String[] imageNames = getImageNames();
-    return imageNames.length > 0;
-  }
-
   private String[] getPhotoNames( final File photoDir )
   {
     final String[] imageNames = getImageNames();
@@ -304,6 +298,8 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     final String pNam = getPNam();
 
     final FilenameFilter jpgFilter = new PrefixSuffixFilter( pNam, ".jpg" ); //$NON-NLS-1$
+// new WildcardFileFilter( pNam + "*.jpg" , IOCase.INSENSITIVE );
+
 //    final FilenameFilter gifFilter = new PrefixSuffixFilter( pNam, ".gif" ); //$NON-NLS-1$
 //    final FilenameFilter pngFilter = new PrefixSuffixFilter( pNam, ".png" ); //$NON-NLS-1$
 
@@ -338,16 +334,20 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public String getProfileComment( )
   {
-    // FIXME
     final Date date = getDate();
     final String dateText = date == null ? "-" : DateFormat.getDateInstance( DateFormat.MEDIUM ).format( date ); //$NON-NLS-1$
-// final String dateText = (String) m_feature.getProperty( "DATUM" );
 
     final String pnam = getPNam();
 
-    final String pdfUrl = getPdfUrl();
+    final StringBuilder builder = new StringBuilder();
+    builder.append( String.format( "Gew-ID: %s%nProfilname: %s%nErster Punkt: %s%nErster Obj_Typ: %s%n", getRiverId(), pnam, getComment(), getObjectType() ) ); //$NON-NLS-1$
+    builder.append( String.format( "Aufgenommen am: %s", dateText ) ); //$NON-NLS-1$
 
-    return String.format( "Gew-ID: %s%nProfilname: %s%nErster Punkt: %s%nErster Obj_Typ: %s%nAufgenommen am: %s%nPDF: %s ", getRiverId(), pnam, getComment(), getObjectType(), dateText, pdfUrl ); //$NON-NLS-1$
+    final String pdfUrl = getPdfUrl();
+    if( pdfUrl != null )
+      builder.append( String.format( "%nPDF: %s ", pdfUrl ) ); //$NON-NLS-1$
+
+    return builder.toString();
   }
 
   private String getPdfUrl( )
@@ -355,6 +355,8 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     final File contextDir = getContextDir( m_pdfContext );
     final String pNam = getPNam();
     final File pdfFile = new File( contextDir, pNam + ".pdf" ); //$NON-NLS-1$
+    if( !pdfFile.exists() )
+      return null;
 
     try
     {
@@ -364,7 +366,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      return ""; //$NON-NLS-1$
+      return null; //$NON-NLS-1$
     }
   }
 

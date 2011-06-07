@@ -231,14 +231,4 @@ public class BridgePoint implements IWProfPoint
   {
     return m_wprofPoint.getValue();
   }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#hasPhotos()
-   */
-  @Override
-  public boolean hasPhotos( )
-  {
-    return m_wprofPoint.hasPhotos();
-  }
-
 }

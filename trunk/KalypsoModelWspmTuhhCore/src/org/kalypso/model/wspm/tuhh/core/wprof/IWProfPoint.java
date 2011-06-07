@@ -87,6 +87,4 @@ public interface IWProfPoint
   String getRiverName( );
 
   Feature getFeature( );
-
-  boolean hasPhotos( );
 }
