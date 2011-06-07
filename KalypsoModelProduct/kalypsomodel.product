@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="11.6.0.qualifier" useFeatures="true" includeLaunchers="false">
+<product name="Kalypso" id="org.kalypso.model.product.product" application="org.kalypso.model.product.kalypsomodelapplication" version="11.6.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/KalypsoModelProduct/etc/aboutKalypso.gif"/>
@@ -26,7 +26,8 @@
       startupForegroundColor="000000" />
    <launcher name="kalypso">
       <solaris/>
-      <win useIco="false">
+      <win useIco="true">
+         <ico path="/KalypsoModelProduct/etc/launchericons/launchericons.ico"/>
          <bmp
             winSmallHigh="/KalypsoModelProduct/etc/launchericons/icon_16_32.bmp"
             winSmallLow="/KalypsoModelProduct/etc/launchericons/icon_16_8.bmp"
