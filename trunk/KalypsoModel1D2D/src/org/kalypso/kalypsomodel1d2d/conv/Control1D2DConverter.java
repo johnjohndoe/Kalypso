@@ -312,7 +312,7 @@ public class Control1D2DConverter
       final Double axAy = rClass.getAxAy();
       final Double dp = rClass.getDp();
 
-      if( ks == null )
+      if( ks == null || ks.isNaN())
       {
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.7", rClass.getName() );//$NON-NLS-1$
         throw new CoreException( StatusUtilities.createErrorStatus( msg ) );

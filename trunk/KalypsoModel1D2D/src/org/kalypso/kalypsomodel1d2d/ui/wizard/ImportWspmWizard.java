@@ -145,8 +145,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class ImportWspmWizard extends Wizard implements IWizard
 {
-  private static final double SEARCH_DISTANCE = 0.01;
-
   private static final DateFormat DF = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
 
   private final List<Feature> m_discModelAdds = new ArrayList<Feature>();
@@ -408,7 +406,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         }
         else
         {
-          flowRel = addTeschke( flowRelModel, node, qresult, profilesByStation );
+          flowRel = FlowRelationUtilitites.addTeschke( flowRelModel, node, qresult, profilesByStation );
         }
 
         if( flowRel != null )
@@ -437,52 +435,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return Status.OK_STATUS;
   }
 
-  private static IFlowRelation1D addTeschke( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final SortedMap<BigDecimal, IProfileFeature> profilesByStation ) throws Exception
-  {
-    final BigDecimal station = qresult.getStation();
-
-    // check if there is already teschkeRel on that position; if it is, just replace it with the new one
-    // TODO: inform user about it
-    final IFlowRelationship[] existingFlowRels = flowRelModel.findFlowrelationships( node.getPoint().getPosition(), SEARCH_DISTANCE );
-
-    ITeschkeFlowRelation flowRel = null;
-    for( final IFlowRelationship existingFlowrel : existingFlowRels )
-    {
-      if( existingFlowrel instanceof ITeschkeFlowRelation )
-      {
-        final ITeschkeFlowRelation teschke = (ITeschkeFlowRelation) existingFlowrel;
-        final BigDecimal teschkeStation = teschke.getStation();
-        if( station.equals( teschkeStation ) )
-        {
-          flowRel = teschke;
-          break;
-        }
-      }
-    }
-
-    if( flowRel == null )
-    {
-      /* create new flow relation at node position */
-      flowRel = flowRelModel.addNew( ITeschkeFlowRelation.QNAME, ITeschkeFlowRelation.class );
-      flowRel.setPosition( node.getPoint() );
-      flowRel.setStation( station );
-    }
-
-    /* relink profile to corresponding profile in profile network */
-    final IProfileFeature wspmProfile = profilesByStation.get( station );
-    if( wspmProfile != null )
-      flowRel.setProfileLink( "terrain.gml#" + wspmProfile.getId() ); //$NON-NLS-1$
-
-    /* copy results into new flow relation */
-
-    // Round to 5 fraction digits TODO: why? This should already be done in WSPM?
-    flowRel.setSlope( qresult.getSlope().setScale( 5, BigDecimal.ROUND_HALF_UP ).doubleValue() );
-
-    FlowRelationshipCalcOperation.copyTeschkeData( flowRel, qresult );
-
-    return flowRel;
-  }
-
+ 
   private static IBuildingFlowRelation addBuilding( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final IFE1D2DNode downStreamNode, final IFE1D2DNode upStreamNode ) throws CoreException
   {
     final IObservation<TupleResult> qresultBuildingObs = qresult.getBuildingObservation( false );
@@ -502,7 +455,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final GM_Position oldBuildingPos = GeometryUtilities.createGM_PositionAtCenter( downStreamPosition, upStreamPosition );
 
     // check if there is already a relation on that position; if it is, just replace it with the new one
-    final IFlowRelationship[] existingFlowRels = flowRelModel.findFlowrelationships( oldBuildingPos, SEARCH_DISTANCE );
+    final IFlowRelationship[] existingFlowRels = flowRelModel.findFlowrelationships( oldBuildingPos, FlowRelationUtilitites.SEARCH_DISTANCE );
     IBuildingFlowRelation existingRelation = null;
     for( final IFlowRelationship existingFlowrel : existingFlowRels )
     {
@@ -641,7 +594,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint, crs );
 
       // if there is already a node, do not create it again
-      final IFE1D2DNode existingNode = discretisationModel.findNode( point, SEARCH_DISTANCE );
+      final IFE1D2DNode existingNode = discretisationModel.findNode( point, FlowRelationUtilitites.SEARCH_DISTANCE );
 
       final IFE1D2DNode node;
       if( existingNode == null )
@@ -669,7 +622,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         // if there is already an element between those two nodes, do not create it again
         // for example, it is possible that both last nodes are existing nodes so element was there
         boolean found = false;
-        final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, SEARCH_DISTANCE );
+        final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, FlowRelationUtilitites.SEARCH_DISTANCE );
         final List<IFE1D2DElement> list = discretisationModel.getElements().query( reqEnvelope );
         for( final IFE1D2DElement element : list )
         {

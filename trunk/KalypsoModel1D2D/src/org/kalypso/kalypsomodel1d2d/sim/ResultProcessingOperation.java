@@ -133,7 +133,9 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
       final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 
-      m_calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
+      m_calcUnitMeta = m_resultManager.getCalcUnitMeta();
+      if( m_calcUnitMeta == null )
+        m_calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
 
       m_originalStepsToDelete = findStepsToDelete( m_calcUnitMeta, m_bean );
 

@@ -50,6 +50,8 @@ import org.eclipse.core.resources.IFolder;
  */
 public class KalypsoModel1D2DHelper
 {
+  public static final Double DOUBLE_IGNORE_VALUE = -9999.;
+  
   private KalypsoModel1D2DHelper( )
   {
     throw new UnsupportedOperationException( "Helper class, do not instantiate." ); //$NON-NLS-1$
