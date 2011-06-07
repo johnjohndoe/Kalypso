@@ -48,10 +48,10 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 
@@ -68,23 +68,16 @@ import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.WspWinHelper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -95,7 +88,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class WspWinExporter
 {
-
   public WspWinExporter( )
   {
     // will not be instantiated
@@ -116,7 +108,6 @@ public class WspWinExporter
         final IResource resource = modelGml.next();
         if( resource instanceof IFile )
         {
-          // TODO: ensure that resource is a GML file?
           // read gml workspace
           final URL modelGmlUrl = ResourceUtilities.createURL( resource );
 
@@ -130,8 +121,6 @@ public class WspWinExporter
           // process only WspmProject features
           if( QNameUtilities.equals( featureName, IWspmConstants.NS_WSPMPROJ, "WspmProject" ) ) //$NON-NLS-1$
           {
-            // TODO: sicherstellen, dass es sich um ein TU-HH-Modell handelt?
-
             // load (initialize) WspmProject
             monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.3" ) + resource.getName() + Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
             final TuhhWspmProject wspmProject = (TuhhWspmProject) gmlWrkSpce.getRootFeature();
@@ -191,7 +180,8 @@ public class WspWinExporter
     final File batFile = new File( dir, "kalypso-1D.ini" ); //$NON-NLS-1$
     final File zustFile = new File( profDir, "zustand.001" ); //$NON-NLS-1$
     final File qwtFile = new File( profDir, "qwert.001" ); //$NON-NLS-1$
-    final File psiFile = new File( profDir, "zustand.psi" ); //$NON-NLS-1$
+    // TODO: what is the purpose of the psi file? energy loss? -> implement it
+    // final File psiFile = new File( profDir, "zustand.psi" ); //$NON-NLS-1$
 
     final TuhhReach reach = calculation.getReach();
     if( reach == null )
@@ -203,10 +193,11 @@ public class WspWinExporter
     if( profileSegments.length == 0 )
       throw new IllegalArgumentException( Messages.getString("WspWinExporter.1") ); //$NON-NLS-1$
 
-    final boolean isDirectionUpstreams = reach.isDirectionUpstreams();
+    final TuhhStationRange stationRange = new TuhhStationRange( calculation );
 
-    write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile );
-    write1DTuhhZustand( calculation, isDirectionUpstreams, zustFile, psiFile );
+    write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile, stationRange );
+
+    write1DTuhhZustand( calculation, stationRange, zustFile );
     if( calculation.getCalcMode() == MODE.WATERLEVEL )
     {
       final IRunOffEvent runOffEvent = calculation.getRunOffEvent();
@@ -220,11 +211,11 @@ public class WspWinExporter
         throw new IllegalArgumentException( error );
       }
 
-      write1DTuhhRunOff( runOffEvent, qwtFile );
+      write1DTuhhRunOff( runOffEvent, qwtFile, stationRange );
     }
   }
 
-  private static void write1DTuhhRunOff( final IRunOffEvent runOffEvent, final File qwtFile ) throws IOException
+  private static void write1DTuhhRunOff( final IRunOffEvent runOffEvent, final File qwtFile, final TuhhStationRange stationRange ) throws IOException
   {
     final SortedMap<BigDecimal, BigDecimal> values = runOffEvent.getDischargeTable();
 
@@ -235,6 +226,7 @@ public class WspWinExporter
 
       pw = new PrintWriter( new BufferedWriter( new FileWriter( qwtFile ) ) );
 
+      final int exportSign = stationRange.getExportSign();
       final String runoffName = runOffEvent.getName();
       final String cleanRunoffName = cleanupRunoffName( runoffName );
       pw.print( cleanRunoffName );
@@ -247,9 +239,9 @@ public class WspWinExporter
         final BigDecimal station = entry.getKey();
         final BigDecimal runOff = entry.getValue();
 
-        pw.print( Double.toString( station.doubleValue() ) );
+        pw.print( station.doubleValue() * exportSign );
         pw.print( " " ); //$NON-NLS-1$
-        pw.print( Double.toString( runOff.doubleValue() ) );
+        pw.print( runOff.doubleValue() );
         pw.println();
       }
     }
@@ -264,7 +256,7 @@ public class WspWinExporter
     return runoffName.replaceAll( "( |,|\\.)", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  private static void write1DTuhhSteuerparameter( final TuhhCalculation calculation, final File batFile, final File zustFile, final File qwtFile ) throws IOException
+  private static void write1DTuhhSteuerparameter( final TuhhCalculation calculation, final File batFile, final File zustFile, final File qwtFile, final TuhhStationRange stationRange ) throws IOException
   {
     final MODE calcMode = calculation.getCalcMode();
 
@@ -279,8 +271,7 @@ public class WspWinExporter
       pw.format( "# %s%n", SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT ).format( new Date() ) ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
-      // TODO: normally instead of the projekt path, also a '.' should work.
-      pw.format( "PROJEKTPFAD=%s%n", zustFile.getParentFile().getParentFile().getAbsolutePath() ); //$NON-NLS-1$
+      pw.format( "PROJEKTPFAD=%s%n", "." ); //$NON-NLS-1$ //$NON-NLS-2$
       pw.format( "STRANGDATEI=%s%n", zustFile.getName() ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
@@ -292,7 +283,6 @@ public class WspWinExporter
 
       pw.format( "BERECHNUNGSMODUS=%s%n", calcMode.name() ); //$NON-NLS-1$
 
-      // TODO: passt das zum RK?
       pw.format( "%n" ); //$NON-NLS-1$
       pw.format( "# mögliche Werte:%n" ); //$NON-NLS-1$
       pw.format( "# DARCY_WEISBACH_OHNE_FORMEINFLUSS%n" ); //$NON-NLS-1$
@@ -301,8 +291,9 @@ public class WspWinExporter
       pw.format( "FLIESSGESETZ=%s%n", calculation.getFliessgesetz().name() ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
-      pw.format( "ANFANGSSTATION=%s%n", Double.toString( calculation.getStartStation().doubleValue() ) ); //$NON-NLS-1$
-      pw.format( "ENDSTATION=%s%n", Double.toString( calculation.getEndStation().doubleValue() ) ); //$NON-NLS-1$
+
+      pw.format( Locale.US, "ANFANGSSTATION=%s%n", stationRange.getExportFrom() ); //$NON-NLS-1$
+      pw.format( Locale.US, "ENDSTATION=%s%n", stationRange.getExportTo() ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
       pw.format( "# mögliche Werte%n" ); //$NON-NLS-1$
@@ -312,7 +303,7 @@ public class WspWinExporter
       pw.format( "ART_RANDBEDINGUNG=%s%n", calculation.getStartKind().name() ); //$NON-NLS-1$
       final Double startWaterlevel = calculation.getStartWaterlevel();
       if( startWaterlevel != null )
-        pw.format( "ANFANGSWASSERSPIEGEL=%s%n", Double.toString( startWaterlevel ) ); //$NON-NLS-1$
+        pw.format( Locale.US, "ANFANGSWASSERSPIEGEL=%s%n", startWaterlevel ); //$NON-NLS-1$
       final BigDecimal startSlope = calculation.getStartSlope();
       if( startSlope != null )
         pw.format( "GEFAELLE=%s%n", startSlope ); //$NON-NLS-1$
@@ -352,13 +343,13 @@ public class WspWinExporter
       pw.format( "%n" ); //$NON-NLS-1$
       final Double minQ = calculation.getMinQ();
       if( minQ != null )
-        pw.format( "MIN_Q=%s%n", Double.toString( minQ ) ); //$NON-NLS-1$
+        pw.format( Locale.US, "MIN_Q=%s%n", minQ  ); //$NON-NLS-1$
       final Double maxQ = calculation.getMaxQ();
       if( maxQ != null )
-        pw.format( "MAX_Q=%s%n", Double.toString( maxQ ) ); //$NON-NLS-1$
+        pw.format( Locale.US, "MAX_Q=%s%n", maxQ ); //$NON-NLS-1$
       final Double qstep = calculation.getQStep();
       if( qstep != null )
-        pw.format( "DELTA_Q=%s%n", Double.toString( qstep ) ); //$NON-NLS-1$
+        pw.format( Locale.US, "DELTA_Q=%s%n", qstep ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
       // Einheit des Durchflusses wird standardmäßig festgelegt
@@ -377,90 +368,9 @@ public class WspWinExporter
 
   }
 
-  private final static String getRoughnessForFG( final FLIESSGESETZ fg )
+  private static void write1DTuhhZustand( final TuhhCalculation calculation, final TuhhStationRange stationRange, final File zustFile ) throws IOException
   {
-    if( FLIESSGESETZ.DARCY_WEISBACH_MIT_FORMEINFLUSS.equals( fg ) )
-      return (IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS);
-    else if( FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS.equals( fg ) )
-      return (IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS);
-    else if( FLIESSGESETZ.MANNING_STRICKLER.equals( fg ) )
-      return (IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST);
-    else
-      return ""; //$NON-NLS-1$
-  }
-
-  private static void write1DTuhhZustand( final TuhhCalculation calculation, final boolean isDirectionUpstreams, final File zustFile, final File psiFile ) throws IOException
-  {
-    final TuhhReach reach = calculation.getReach();
-    final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
-
-    final TuhhStationRange stationRange = new TuhhStationRange( calculation, isDirectionUpstreams );
-    final TuhhSegmentStationComparator stationComparator = new TuhhSegmentStationComparator( isDirectionUpstreams );
-
-    Arrays.sort( segments, stationComparator );
-
-    PrintWriter zustWriter = null;
-    PrintWriter psiWriter = null;
-    try
-    {
-      zustFile.getParentFile().mkdirs();
-      zustWriter = new PrintWriter( new BufferedWriter( new FileWriter( zustFile ) ) );
-
-      psiFile.getParentFile().mkdirs();
-      psiWriter = new PrintWriter( new BufferedWriter( new FileWriter( psiFile ) ) );
-
-      int fileCount = 0;
-      for( final TuhhReachProfileSegment segment : segments )
-      {
-        PrintWriter prfWriter = null;
-        try
-        {
-          final BigDecimal station = segment.getStation();
-
-          if( stationRange.isOutside( station ) )
-            continue;
-
-          final IProfileFeature profileMember = segment.getProfileMember();
-
-          final String prfName = "Profil_" + fileCount++ + ".prf"; //$NON-NLS-1$ //$NON-NLS-2$
-
-          zustWriter.print( prfName );
-          zustWriter.print( " " ); //$NON-NLS-1$
-          // TODO mindestens 4, besser 5 Nachkommastellen?
-          zustWriter.println( station );
-
-          final IProfil profil = profileMember.getProfil();
-          profil.setStation( station.doubleValue() );
-
-          final File outPrfFile = new File( zustFile.getParentFile(), prfName );
-          prfWriter = new PrintWriter( outPrfFile );
-          final IProfilSink ps = new PrfSink( getRoughnessForFG( calculation.getFliessgesetz() ) );
-          ps.write( new IProfil[] { profil }, prfWriter );
-          prfWriter.flush();
-          prfWriter.close();
-        }
-        finally
-        {
-          IOUtils.closeQuietly( prfWriter );
-        }
-        prfWriter.close();
-      }
-
-      if( fileCount == 0 )
-      {
-        final String error = String.format( Messages.getString("WspWinExporter.4") ); //$NON-NLS-1$
-        throw new IllegalArgumentException( error );
-      }
-
-      zustWriter.flush();
-      zustWriter.close();
-      psiWriter.flush();
-      psiWriter.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( zustWriter );
-      IOUtils.closeQuietly( psiWriter );
-    }
+    final TuhhZustandWriter zustandWriter = new TuhhZustandWriter( calculation, stationRange );
+    zustandWriter.write( zustFile );
   }
 }
