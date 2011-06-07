@@ -34,6 +34,8 @@ public class Vegetation implements java.io.Serializable, Coefficient
 
   private String label;
 
+  private String source;
+
   private String description;
 
   private Set<Point> points = new HashSet<Point>( 0 );
@@ -51,7 +53,7 @@ public class Vegetation implements java.io.Serializable, Coefficient
     this.ay = ay;
   }
 
-  public Vegetation( final VegetationId id, final PointKind pointKind, final BigDecimal dp, final BigDecimal ax, final BigDecimal ay, final String label, final String description, final Set<Point> points )
+  public Vegetation( final VegetationId id, final PointKind pointKind, final BigDecimal dp, final BigDecimal ax, final BigDecimal ay, final String label, final String source, final String description, final Set<Point> points )
   {
     this.id = id;
     this.pointKind = pointKind;
@@ -59,6 +61,7 @@ public class Vegetation implements java.io.Serializable, Coefficient
     this.ax = ax;
     this.ay = ay;
     this.label = label;
+    this.source = source;
     this.description = description;
     this.points = points;
   }
@@ -66,8 +69,8 @@ public class Vegetation implements java.io.Serializable, Coefficient
   @Override
   @EmbeddedId
   @AttributeOverrides({ @AttributeOverride(name = "pointKind", column = @Column(name = "point_kind", nullable = false, length = 50)),
-    @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
-    public VegetationId getId( )
+      @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
+  public VegetationId getId( )
   {
     return this.id;
   }
@@ -131,6 +134,17 @@ public class Vegetation implements java.io.Serializable, Coefficient
   public void setLabel( final String label )
   {
     this.label = label;
+  }
+
+  @Column(name = "source", length = 255)
+  public String getSource( )
+  {
+    return this.source;
+  }
+
+  public void setSource( final String source )
+  {
+    this.source = source;
   }
 
   @Column(name = "description")

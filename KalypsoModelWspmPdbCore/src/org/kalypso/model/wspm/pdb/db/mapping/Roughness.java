@@ -32,6 +32,10 @@ public class Roughness implements java.io.Serializable, Coefficient
 
   private String label;
 
+  private String source;
+
+  private String validity;
+
   private String description;
 
   private Set<Point> points = new HashSet<Point>( 0 );
@@ -46,13 +50,15 @@ public class Roughness implements java.io.Serializable, Coefficient
     this.pointKind = pointKind;
   }
 
-  public Roughness( final RoughnessId id, final PointKind pointKind, final BigDecimal KValue, final BigDecimal kstValue, final String label, final String description, final Set<Point> points )
+  public Roughness( final RoughnessId id, final PointKind pointKind, final BigDecimal KValue, final BigDecimal kstValue, final String label, final String source, final String validity, final String description, final Set<Point> points )
   {
     this.id = id;
     this.pointKind = pointKind;
     this.KValue = KValue;
     this.kstValue = kstValue;
     this.label = label;
+    this.source = source;
+    this.validity = validity;
     this.description = description;
     this.points = points;
   }
@@ -60,8 +66,8 @@ public class Roughness implements java.io.Serializable, Coefficient
   @Override
   @EmbeddedId
   @AttributeOverrides({ @AttributeOverride(name = "pointKind", column = @Column(name = "point_kind", nullable = false, length = 50)),
-    @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
-    public RoughnessId getId( )
+      @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
+  public RoughnessId getId( )
   {
     return this.id;
   }
@@ -114,6 +120,28 @@ public class Roughness implements java.io.Serializable, Coefficient
   public void setLabel( final String label )
   {
     this.label = label;
+  }
+
+  @Column(name = "source", length = 255)
+  public String getSource( )
+  {
+    return this.source;
+  }
+
+  public void setSource( final String source )
+  {
+    this.source = source;
+  }
+
+  @Column(name = "validity", length = 255)
+  public String getValidity( )
+  {
+    return this.validity;
+  }
+
+  public void setValidity( final String validity )
+  {
+    this.validity = validity;
   }
 
   @Column(name = "description")
