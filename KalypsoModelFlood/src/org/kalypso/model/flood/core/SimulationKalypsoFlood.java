@@ -192,7 +192,7 @@ public class SimulationKalypsoFlood implements ISimulation
         throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.17" ), null ) ); //$NON-NLS-1$
 
       progress.setWorkRemaining( events.size() * 2 );
-      Date lStart1 = new Date();
+      final Date lStart1 = new Date();
       for( final IRunoffEvent event : markedEvents )
       {
         progress.subTask( String.format( STR_EREIGNIS_xS, event.getName() ) );
@@ -257,11 +257,11 @@ public class SimulationKalypsoFlood implements ISimulation
 
   private IStatus processVolume( final IRunoffEvent event, final IFloodVolumePolygon volumePolygon, final ICoverageCollection terrainCoverages, final IProgressMonitor monitor ) throws SimulationException, GeoGridException, GM_Exception
   {
-    IFeatureBindingCollection<ICoverage> terrainCoveragesList = terrainCoverages.getCoverages();
+    final IFeatureBindingCollection<ICoverage> terrainCoveragesList = terrainCoverages.getCoverages();
     final SubMonitor progress = SubMonitor.convert( monitor, terrainCoveragesList.size() * 2 );
 
     final BigDecimal volumeValue = volumePolygon.getVolume();
-    String volumeName = volumePolygon.getName();
+    final String volumeName = volumePolygon.getName();
 
     final String noValueMsg = String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.2" ), volumeName ); //$NON-NLS-1$
     final IStatus noValueStatus = StatusUtilities.createStatus( IStatus.WARNING, noValueMsg, null );
@@ -293,7 +293,7 @@ public class SimulationKalypsoFlood implements ISimulation
         {
           geoGrid = new BinaryGeoGridReader( geoGrid, ((RectifiedGridCoverageGeoGrid) geoGrid).getGridURL() );
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           e.printStackTrace();
         }
@@ -397,7 +397,7 @@ public class SimulationKalypsoFlood implements ISimulation
     final double targetDiff = Math.abs( currentVolume - targetVolume );
     progress.subTask( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.22", currentWsp, targetDiff ) ); //$NON-NLS-1$
 
-    String msg = String.format( "min: (%.3f/%.1f) max: (%.3f/%.1f) current: (%.3f/%.1f)", minWsp, minVol, maxWsp, maxVol, currentWsp, currentVolume ); //$NON-NLS-1$
+    final String msg = String.format( "min: (%.3f/%.1f) max: (%.3f/%.1f) current: (%.3f/%.1f)", minWsp, minVol, maxWsp, maxVol, currentWsp, currentVolume ); //$NON-NLS-1$
     System.out.println( msg );
 
     if( targetDiff < VOLUME_EPS )
@@ -415,7 +415,7 @@ public class SimulationKalypsoFlood implements ISimulation
    */
   private double calcVolume( final GM_Object volumeGmObject, final ICoverageCollection terrainCollection, final double currentWsp, final IProgressMonitor monitor ) throws SimulationException
   {
-    IFeatureBindingCollection<ICoverage> terrainCoverages = terrainCollection.getCoverages();
+    final IFeatureBindingCollection<ICoverage> terrainCoverages = terrainCollection.getCoverages();
     final SubMonitor progress = SubMonitor.convert( monitor, terrainCoverages.size() );
 
     try
@@ -434,7 +434,7 @@ public class SimulationKalypsoFlood implements ISimulation
           {
             geoGrid = new BinaryGeoGridReader( geoGrid, ((RectifiedGridCoverageGeoGrid) geoGrid).getGridURL() );
           }
-          catch( IOException e )
+          catch( final IOException e )
           {
             e.printStackTrace();
           }
@@ -463,7 +463,7 @@ public class SimulationKalypsoFlood implements ISimulation
   private void processEvent( final IFloodModel model, final File eventFolder, final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
   {
     final ICoverageCollection terrainModel = model.getTerrainModel();
-    IFeatureBindingCollection<ICoverage> terrainCoverages = terrainModel.getCoverages();
+    final IFeatureBindingCollection<ICoverage> terrainCoverages = terrainModel.getCoverages();
     final SubMonitor progress = SubMonitor.convert( monitor, terrainCoverages.size() );
 
     // TODO: shouldn't we filter by the event?
@@ -479,7 +479,7 @@ public class SimulationKalypsoFlood implements ISimulation
      * org.kalypso.model.flood.handlers.ProcessFloodModelHandler), we are asking user to delete or to keep existing
      * results; so, we cannot just throw an exception here! What to do?
      */
-    IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
+    final IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
     if( resultCoveragesList.size() != 0 )
     {
       // FIXME @dejan multiple processing of process chain leads to this exception // hotfix: clear list
