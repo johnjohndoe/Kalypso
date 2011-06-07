@@ -72,26 +72,4 @@ public class QIntervallResultCollection extends Feature_Impl
 
     return m_intervals;
   }
-
-// /** Creates new QResult and adds it to this collection. */
-// public QIntervallResult createQResult( ) throws Exception
-// {
-// final GMLWorkspace workspace = getWorkspace();
-// final IGMLSchema schema = workspace.getGMLSchema();
-//
-// final IRelationType resultRelation = (IRelationType) getFeatureType().getProperty(
-// QNAME_P_QIntervallResultCollection_resultMember );
-//
-// final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
-//
-// final Feature resultFeature = workspace.createFeature( this, resultRelation, ftQIntervallResult );
-// workspace.addFeatureAsComposition( this, resultRelation, -1, resultFeature );
-//
-// return (QIntervallResult) resultFeature;
-// }
-//
-// public List< ? > getQResultFeatures( )
-// {
-// return (List< ? >) getProperty( QNAME_P_QIntervallResultCollection_resultMember );
-// }
 }
