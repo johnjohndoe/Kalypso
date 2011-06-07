@@ -148,7 +148,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
       m_monitor.worked( 1 );
     }
 
-    m_monitor.subTask( "transfering data into database..." );
+    m_monitor.subTask( "transferring data into database..." );
   }
 
   private void uploadProfile( final Session session, final IProfileFeature feature ) throws PdbConnectException
