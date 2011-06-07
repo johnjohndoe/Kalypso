@@ -4,7 +4,7 @@
 	<Title>%fts_node_title=Geometrie</Title>
 	<Rule>
 		<Name>rule_Ort</Name>
-		<Title>%rule_Ort_title=Geoemtrie</Title>
+		<Title>%rule_Ort_title</Title>
 		<PointSymbolizer uom="pixel">
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -73,7 +73,7 @@
 	</Rule>
 	<Rule>
 		<Name>rule_Pegel</Name>
-		<Title>%rule_Pegel_title=Pegel</Title>
+		<Title>%rule_Pegel_title</Title>
 		<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 			<ogc:Not>
 				<ogc:PropertyIsNull>
