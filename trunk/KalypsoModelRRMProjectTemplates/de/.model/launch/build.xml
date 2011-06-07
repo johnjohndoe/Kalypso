@@ -191,13 +191,13 @@
 	<target name="setBasicModel" description="Ersetzt das Basismodell durch das Modell in der Rechenvariante">
 		<echo message="Rechenvariante als Basismodell übernehmen: ${calc.dir}" />
 
-		<copy file="${calc.dir}/calcCase.gml" tofile="${project.dir}/modell.gml" />
+		<copy file="${calc.dir}/calcCase.gml" tofile="${project.dir}/modell.gml" overwrite="true"/>
 		<eclipse.refreshLocal resource="${project.path}/modell.gml" depth="one" />
 		<!--
         <copy file="${calc.dir}/calcHydrotop.gml" tofile="${project.dir}/hydrotop.gml" />
         -->
 		
-		<copy file="${calc.dir}/calcParameter.gml" tofile="${project.dir}/parameter.gml" />
+		<copy file="${calc.dir}/calcParameter.gml" tofile="${project.dir}/parameter.gml" overwrite="true"/>
 		<eclipse.refreshLocal resource="${project.path}/parameter.gml" depth="one" />
 	</target>
 	<!--
