@@ -207,7 +207,7 @@ public class ResultMetaInfoViewer extends Viewer
     // dateFormat.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
     dateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
-    final ICalcUnitResultMeta calcUnitResult = getCalcUnitResultMeta( result );
+    final ICalcUnitResultMeta calcUnitResult = ResultMeta1d2dHelper.getCalcUnitResultMeta( result );
     if( calcUnitResult != null )
     {
       calcUnitName = calcUnitResult.getName();
@@ -385,24 +385,6 @@ public class ResultMetaInfoViewer extends Viewer
       if( parent != null )
       {
         return getScenarioResultMeta( parent );
-      }
-    }
-    return null;
-  }
-
-  /**
-   * gets the CalcUnitResultMeta as the papa of all steps
-   */
-  private static ICalcUnitResultMeta getCalcUnitResultMeta( final IResultMeta result )
-  {
-    if( result instanceof ICalcUnitResultMeta )
-      return (ICalcUnitResultMeta) result;
-    else
-    {
-      final IResultMeta parent = result.getParent();
-      if( parent != null )
-      {
-        return getCalcUnitResultMeta( parent );
       }
     }
     return null;
