@@ -260,29 +260,29 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       final IRecord newRecord = tuples.createRecord();
 
       newRecord.setValue( dateComp, DATATYPE_FACTORY.newXMLGregorianCalendar( calendar ) );
-      newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      newRecord.setValue( velocityComp, new BigDecimal( absoluteVelocity ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( velocityComp, new BigDecimal( absoluteVelocity ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       if( discharge != null )
 
-        newRecord.setValue( dischargeComp, new BigDecimal( discharge ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+        newRecord.setValue( dischargeComp, new BigDecimal( discharge ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       else
-        newRecord.setValue( dischargeComp, new BigDecimal( 0.0 ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+        newRecord.setValue( dischargeComp, new BigDecimal( 0.0 ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
 
       // Wave parameter
 
       if( lDoubleHsig != null && !Double.isNaN( lDoubleHsig ) )
-        newRecord.setValue( waveHsigComp, new BigDecimal( lDoubleHsig ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+        newRecord.setValue( waveHsigComp, new BigDecimal( lDoubleHsig ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       else
         System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
 
       if( lDoublePer != null && !Double.isNaN( lDoublePer ) )
-        newRecord.setValue( wavePerComp, new BigDecimal( lDoublePer ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+        newRecord.setValue( wavePerComp, new BigDecimal( lDoublePer ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       else
         System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
 
       if( lDoubleDir != null && !Double.isNaN( lDoubleDir ) )
-        newRecord.setValue( waveDirComp, new BigDecimal( lDoubleDir ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+        newRecord.setValue( waveDirComp, new BigDecimal( lDoubleDir ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       else
         System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
 

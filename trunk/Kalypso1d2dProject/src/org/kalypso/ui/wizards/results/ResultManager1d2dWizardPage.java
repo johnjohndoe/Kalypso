@@ -241,7 +241,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
 
               try
               {
-                resultManager = new ResultManager( actResult, fileObjSWANResult, m_modelProvider, m_geoLog );
+                resultManager = new ResultManager( actResult, fileObjSWANResult, m_modelProvider, m_geoLog, ResultMeta1d2dHelper.getCalcUnitResultMeta( stepResult ) );
               }
               catch( final CoreException e )
               {
