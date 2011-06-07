@@ -169,30 +169,44 @@ public class RMA10S2GmlConv
         continue;
       if( line.startsWith( "FP" ) ) //$NON-NLS-1$
         interpreteNodeLine( line );
-      if( line.startsWith( "FE" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "FE" ) ) //$NON-NLS-1$
         interpreteElementLine( line );
-      if( line.startsWith( "AR" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "AR" ) ) //$NON-NLS-1$
         interpreteArcLine( line );
-      if( line.startsWith( "RK" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "RK" ) ) //$NON-NLS-1$
       {
         // still not implemented
       }
-      if( line.startsWith( Messages.getString("RMA10S2GmlConv.4") ) ) //$NON-NLS-1$
+      else if( line.startsWith( "VA" ) ) //$NON-NLS-1$
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_VA );
-      if( line.startsWith( "VO" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "VO" ) ) //$NON-NLS-1$
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_VO );
-      if( line.startsWith( "GA" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "GA" ) ) //$NON-NLS-1$
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_GA );
-      if( line.startsWith( "GO" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "GO" ) ) //$NON-NLS-1$
         interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_GO );
-      if( line.startsWith( Messages.getString("RMA10S2GmlConv.8") ) ) //$NON-NLS-1$
+      else if( line.startsWith( "DA" ) ) //$NON-NLS-1$
         interpreteTimeLine( line );
-      if( line.startsWith( "TL" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "TL" ) ) //$NON-NLS-1$
         interprete1d2dJunctionElement( line );
-      if( line.startsWith( "ZU" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "ZU" ) ) //$NON-NLS-1$
         interpreteNodeInformationLine( line );
-      if( line.startsWith( "JE" ) ) //$NON-NLS-1$
+      else if( line.startsWith( "JE" ) ) //$NON-NLS-1$
         interpreteJunctionInformationLine( line );
+      else if( line.startsWith( "MM" ) ) //$NON-NLS-1$
+        interpretePolynomeMinMaxLine( line );
+      else if( line.startsWith( "PRA" ) ) //$NON-NLS-1$
+        interpretePolynomialRangesLine( line );
+      else if( line.startsWith( "AP" ) ) //$NON-NLS-1$
+        interpreteSplittedPolynomialsLine( line );
+      else if( line.startsWith( "PRQ" ) ) //$NON-NLS-1$
+        interpretePolynomialRangesLine( line );
+      else if( line.startsWith( "QP" ) ) //$NON-NLS-1$
+        interpreteSplittedPolynomialsLine( line );
+      else if( line.startsWith( "PRB" ) ) //$NON-NLS-1$
+        interpretePolynomialRangesLine( line );
+      else if( line.startsWith( "ALP" ) ) //$NON-NLS-1$
+        interpreteSplittedPolynomialsLine( line );
       
       else if( VERBOSE_MODE )
         System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.1" ) + line ); //$NON-NLS-1$
@@ -201,6 +215,86 @@ public class RMA10S2GmlConv
     // signal parsing stop
     m_handler.end();
 
+  }
+
+  private void interpreteSplittedPolynomialsLine( String line )
+  {
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
+
+    try
+    {
+      int lIntStartMaxes = 3;
+      final String lStrPolyKind = lStringParser.getSub( 0 ); 
+      final int lIntNodeId = Integer.parseInt( lStringParser.getSub( 1 ) );
+      final int lIntAmountRanges = Integer.parseInt( lStringParser.getSub( 2 ) );
+      final List<Double> lListPolyAreaMaxRanges = new ArrayList<Double>();
+      Double lDoubleSlope = null;
+      if( lStrPolyKind.equalsIgnoreCase( "QP" ) ){ //$NON-NLS-1$
+        try{
+          lDoubleSlope = Double.parseDouble( lStringParser.getSub( 3 ) );
+          lIntStartMaxes++;
+        }
+        catch (Exception e) {
+        } 
+      }
+      for( int i = lIntStartMaxes; i < lStringParser.getIntSepCounter(); ++i )
+      {
+        lListPolyAreaMaxRanges.add( Double.parseDouble( lStringParser.getSub( i ) ) );
+      }
+      m_handler.handle1dSplittedPolynomialsInformation( line, lStrPolyKind, lIntNodeId, lIntAmountRanges, lListPolyAreaMaxRanges, lDoubleSlope );
+    }
+    catch( final NumberFormatException e )
+    {
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+    }
+    
+  }
+
+  private void interpretePolynomialRangesLine( String line )
+  {
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
+
+    try
+    {
+      final String lStrPolyKind = lStringParser.getSub( 0 ); 
+      final int lIntNodeId = Integer.parseInt( lStringParser.getSub( 1 ) );
+      final int lIntAmountRanges = Integer.parseInt( lStringParser.getSub( 2 ) );
+      final List<Double> lListPolyAreaMaxRanges = new ArrayList<Double>();
+
+      for( int i = 3; i < lStringParser.getIntSepCounter(); ++i )
+      {
+        lListPolyAreaMaxRanges.add( Double.parseDouble( lStringParser.getSub( i ) ) );
+      }
+      m_handler.handle1dPolynomialRangesInformation( line, lStrPolyKind, lIntNodeId, lIntAmountRanges, lListPolyAreaMaxRanges );
+    }
+    catch( final NumberFormatException e )
+    {
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+    }
+    
+  }
+
+  private void interpretePolynomeMinMaxLine( String line )
+  {
+    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" ); //$NON-NLS-1$
+    if( lStringParser.getIntSepCounter() == 4 )
+    {
+      try
+      {
+        lStringParser.getFirstSub();
+        final int id = Integer.parseInt( lStringParser.getNextSub() );
+        final double min = Double.parseDouble( lStringParser.getNextSub() );
+        final double max = Double.parseDouble( lStringParser.getNextSub() );
+        m_handler.handle1dPolynomeMinMax( line, id, min, max );
+      }
+      catch( final NumberFormatException e )
+      {
+        m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+      }
+    }
+    else
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+    
   }
 
   // this form of parsing was used on all types of lines from the result line
@@ -303,7 +397,16 @@ public class RMA10S2GmlConv
         // TODO: the value '-9999' represents the NODATA-value, should be discussed
         if( elevation == -9999 )
           elevation = Double.NaN;
-        m_handler.handleNode( line, id, easting, northing, elevation );
+        if( lStringParser.getIntSepCounter() == 6 ){
+          try{
+            m_handler.handleNode( line, id, easting, northing, elevation, Double.parseDouble( lStringParser.getSub( 5 ) ) );
+          }
+          catch (Exception e) {
+          }
+        }
+        else{
+          m_handler.handleNode( line, id, easting, northing, elevation );
+        }
       }
       catch( final NumberFormatException e )
       {
@@ -489,6 +592,16 @@ public class RMA10S2GmlConv
       }
       else
       {
+        if( lStringParser.getIntSepCounter() == 5 )
+        {
+          lStringParser.getFirstSub();
+          final int id = Integer.parseInt( lStringParser.getNextSub() );
+          final int currentRougthnessClassID = Integer.parseInt( lStringParser.getNextSub() );
+          final int previousRoughnessClassID = Integer.parseInt( lStringParser.getNextSub() );
+          //used for export import functionality of 2dWeir elements
+          final int intWeirDirection = Integer.parseInt( lStringParser.getNextSub() );
+          m_handler.handleElement( line, id, currentRougthnessClassID, previousRoughnessClassID, intWeirDirection );
+        }
         if( lStringParser.getIntSepCounter() == 4 )
         {
           lStringParser.getFirstSub();

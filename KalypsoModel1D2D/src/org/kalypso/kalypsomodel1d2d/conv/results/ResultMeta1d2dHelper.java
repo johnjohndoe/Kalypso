@@ -112,7 +112,7 @@ public class ResultMeta1d2dHelper
 
   public static final String FULL_DATE_TIME_FORMAT_RESULT_STEP = "dd.MM.yyyy_HH_mm_ss_SSS_z"; //$NON-NLS-1$
 
-  public static final String STR_THEME_NAME_SEPARATOR = ", ";
+  public static final String STR_THEME_NAME_SEPARATOR = ", "; //$NON-NLS-1$
 
   public static final String ORIGINAL_2D_FILE_NAME = "original.2d"; //$NON-NLS-1$
 
@@ -120,7 +120,7 @@ public class ResultMeta1d2dHelper
 
   public static final String RMA_RAW_DATA_META_NAME = "RMA-Rohdaten"; //$NON-NLS-1$
 
-  public static final String TIME_STEP_PREFIX = "timestep-";
+  public static final String TIME_STEP_PREFIX = "timestep-"; //$NON-NLS-1$
 
   // TODO: remove!
   private static IFolder getScenarioFolder( )
@@ -221,7 +221,7 @@ public class ResultMeta1d2dHelper
         catch( Exception e )
         {
           IOFileFilter lNoDirFilter = FalseFileFilter.INSTANCE;
-          WildcardFileFilter lFilter = new WildcardFileFilter( new String[] { "*" } );
+          WildcardFileFilter lFilter = new WildcardFileFilter( new String[] { "*" } ); //$NON-NLS-1$
           final Collection< ? > files = FileUtils.listFiles( resource.getLocation().toFile(), lFilter, lNoDirFilter );
           for( final Object lFile : files )
           {
@@ -250,7 +250,7 @@ public class ResultMeta1d2dHelper
         for( int i = 0; i < children.length; i++ )
         {
           if( !children[i].getName().toLowerCase().contains( ORIGINAL_2D_FILE_NAME ) )
-          { 
+          {
             try
             {
               final IResource resourceChild = ResourceUtilities.findFileFromURL( children[i].toURI().toURL() );
@@ -262,7 +262,7 @@ public class ResultMeta1d2dHelper
               {
                 if( resourceChild != null )
                   resourceChild.delete( true, new NullProgressMonitor() );
-                children[ i ].delete();
+                children[i].delete();
               }
             }
             catch( MalformedURLException e )
@@ -646,7 +646,7 @@ public class ResultMeta1d2dHelper
             // if( kftName.equals( resultNameNode ) || kftName.equals( resultNameIso ) || kftName.equals(
             // resultNameIsoOld ) || kftName.equals( resultNameArea ) )
             if( kftName != null && kftName.contains( docResult.getName().trim().toLowerCase() ) && kftName.contains( calcUnitMeta.getName().trim().toLowerCase() )
-                && (kftName.contains( stepResult.getName().trim().toLowerCase() ) || kftName.contains( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.10" ) )) )
+                && (kftName.contains( stepResult.getName().trim().toLowerCase() ) || kftName.contains( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.10" ) )) ) //$NON-NLS-1$
             {
               final RemoveThemeCommand removeThemeCommand = new RemoveThemeCommand( modell, kft );
               commandTarget.postCommand( removeThemeCommand, null );
@@ -667,7 +667,7 @@ public class ResultMeta1d2dHelper
   {
     return docResult.getName()
         + STR_THEME_NAME_SEPARATOR
-        + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.8" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$ //$NON-NLS-2$
+        + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.8" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$
   }
 
   // /**
@@ -685,7 +685,7 @@ public class ResultMeta1d2dHelper
   {
     return docResult.getName()
         + STR_THEME_NAME_SEPARATOR
-        + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.11" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$ //$NON-NLS-2$
+        + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.11" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$
   }
 
   /**
@@ -906,21 +906,21 @@ public class ResultMeta1d2dHelper
   {
     int iCount = 0;
     String lNewName = ""; //$NON-NLS-1$
-    StringTokenizer lStrTokenizer = new StringTokenizer( oldThemeName.trim(), STR_THEME_NAME_SEPARATOR.trim() ); //$NON-NLS-1$
+    StringTokenizer lStrTokenizer = new StringTokenizer( oldThemeName.trim(), STR_THEME_NAME_SEPARATOR.trim() );
     while( lStrTokenizer.hasMoreTokens() )
     {
       if( iCount++ != 1 )
       {
-        lNewName += (lStrTokenizer.nextToken()); //$NON-NLS-1$
+        lNewName += (lStrTokenizer.nextToken()); 
       }
       else
       {
-        lNewName += (resolveResultTypeFromSldFileName( sldFileName, strType ));//$NON-NLS-2$
+        lNewName += (resolveResultTypeFromSldFileName( sldFileName, strType ));
         lStrTokenizer.nextToken();
       }
       if( lStrTokenizer.hasMoreTokens() )
       {
-        lNewName += STR_THEME_NAME_SEPARATOR.trim(); //$NON-NLS-1$
+        lNewName += STR_THEME_NAME_SEPARATOR.trim();
       }
     }
     return lNewName;
@@ -945,6 +945,59 @@ public class ResultMeta1d2dHelper
   public static String getDefaultStyleFileName( final String styleType, final String resDocumentName )
   {
     return "default" + styleType + resDocumentName + "Style.sld"; //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  public static boolean containsTerrain( final IStepResultMeta stepResultMeta )
+  {
+    for( final IResultMeta resultMetaStep : stepResultMeta.getParent().getChildren() )
+    {
+      if( resultMetaStep instanceof IDocumentResultMeta )
+      {
+        if( documentResultContainsTerrain( resultMetaStep ) )
+          return true;
+      }
+
+      for( final IResultMeta resultMeta : resultMetaStep.getChildren() )
+      {
+        if( resultMeta instanceof IDocumentResultMeta )
+        {
+          if( documentResultContainsTerrain( resultMeta ) )
+            return true;
+        }
+      }
+    }
+    
+    return false;
+  }
+
+  public static boolean documentResultContainsTerrain( final IResultMeta resultMeta )
+  {
+    final IDocumentResultMeta documentResult = (IDocumentResultMeta) resultMeta;
+    final DOCUMENTTYPE documentType = documentResult.getDocumentType();
+
+    if( documentType == DOCUMENTTYPE.tinTerrain )
+    {
+      return true;
+    }
+    return false;
+  }
+  
+  /**
+   * gets the CalcUnitResultMeta as the papa of all steps
+   */
+  public static ICalcUnitResultMeta getCalcUnitResultMeta( final IResultMeta result )
+  {
+    if( result instanceof ICalcUnitResultMeta )
+      return (ICalcUnitResultMeta) result;
+    else
+    {
+      final IResultMeta parent = result.getParent();
+      if( parent != null )
+      {
+        return getCalcUnitResultMeta( parent );
+      }
+    }
+    return null;
   }
 
 }

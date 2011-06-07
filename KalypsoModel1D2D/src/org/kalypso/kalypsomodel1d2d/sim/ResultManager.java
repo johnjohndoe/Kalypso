@@ -139,6 +139,8 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private final TupleResult m_timeSteps;
 
+  private ICalcUnitResultMeta m_calcUnitMeta = null;
+
   public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
     this( fileObjectRMA, fileObjectSWAN, caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class ), caseDataProvider.getModel( IControlModelGroup.class.getName(), IControlModelGroup.class ).getModel1D2DCollection().getActiveControlModel(), caseDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class ), caseDataProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class ), geoLog );
@@ -163,6 +165,12 @@ public class ResultManager implements ISimulation1D2DConstants
 
     final IObservation<TupleResult> obs = controlModel.getTimeSteps();
     m_timeSteps = obs.getResult();
+  }
+
+  public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog, final ICalcUnitResultMeta calcUnitResultMeta ) throws CoreException
+  {
+    this( fileObjectRMA, fileObjectSWAN, caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class ), caseDataProvider.getModel( IControlModelGroup.class.getName(), IControlModelGroup.class ).getModel1D2DCollection().getActiveControlModel(), caseDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class ), caseDataProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class ), geoLog );
+    m_calcUnitMeta = calcUnitResultMeta;
   }
 
   public IStatus processResults( final ICalcUnitResultMeta calcUnitMeta, final boolean doFullEvaluate, final IProgressMonitor monitor )
@@ -569,6 +577,11 @@ public class ResultManager implements ISimulation1D2DConstants
   public final Map<Date, FileObject> getDateFileMap( )
   {
     return m_mapDateFile;
+  }
+
+  public ICalcUnitResultMeta getCalcUnitMeta( )
+  {
+    return m_calcUnitMeta ;
   }
 
 }

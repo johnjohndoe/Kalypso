@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -51,8 +53,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -71,6 +76,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 @SuppressWarnings("unchecked")
 public class FlowRelationUtilitites
 {
+  public static final double SEARCH_DISTANCE = 0.01;
   /**
    * Helper class, don't instantiate.
    */
@@ -387,6 +393,57 @@ public class FlowRelationUtilitites
       return pIntDirectionOfEdges == 1? 1: 3;
     }
     return -1;
+  }
+  
+  public static IFlowRelation1D addTeschke( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final SortedMap<BigDecimal, IProfileFeature> profilesByStation ) throws Exception
+  {
+    return addTeschke( flowRelModel, node, qresult, profilesByStation, SEARCH_DISTANCE );
+  }
+  
+  public static IFlowRelation1D addTeschke( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final SortedMap<BigDecimal, IProfileFeature> profilesByStation, final double searchDistance ) throws Exception
+  {
+    final BigDecimal station = qresult.getStation();
+
+    // check if there is already teschkeRel on that position; if it is, just replace it with the new one
+    // TODO: inform user about it
+    final IFlowRelationship[] existingFlowRels = flowRelModel.findFlowrelationships( node.getPoint().getPosition(), searchDistance );
+
+    ITeschkeFlowRelation flowRel = null;
+    for( final IFlowRelationship existingFlowrel : existingFlowRels )
+    {
+      if( existingFlowrel instanceof ITeschkeFlowRelation )
+      {
+        final ITeschkeFlowRelation teschke = (ITeschkeFlowRelation) existingFlowrel;
+        final BigDecimal teschkeStation = teschke.getStation();
+        if( station.equals( teschkeStation ) )
+        {
+          flowRel = teschke;
+          break;
+        }
+      }
+    }
+
+    if( flowRel == null )
+    {
+      /* create new flow relation at node position */
+      flowRel = flowRelModel.addNew( ITeschkeFlowRelation.QNAME, ITeschkeFlowRelation.class );
+      flowRel.setPosition( node.getPoint() );
+      flowRel.setStation( station );
+    }
+
+    /* relink profile to corresponding profile in profile network */
+    final IProfileFeature wspmProfile = profilesByStation.get( station );
+    if( wspmProfile != null )
+      flowRel.setProfileLink( "terrain.gml#" + wspmProfile.getId() ); //$NON-NLS-1$
+
+    /* copy results into new flow relation */
+
+    // Round to 5 fraction digits TODO: why? This should already be done in WSPM?
+    flowRel.setSlope( qresult.getSlope().setScale( 5, BigDecimal.ROUND_HALF_UP ).doubleValue() );
+
+    FlowRelationshipCalcOperation.copyTeschkeData( flowRel, qresult );
+
+    return flowRel;
   }
 
 }
