@@ -49,6 +49,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.CalculationReibConstWspmTuhhSteadyState;
@@ -102,33 +103,40 @@ public final class WspmResultFactory
    * 
    * @return The root nodes.
    */
-  public static final IWspmResultNode[] createRootNodes( ) throws Exception
+  public static final IWspmResultNode[] createRootNodes( final IProgressMonitor monitor ) throws Exception
   {
-    List<IWspmResultNode> rootNodes = new ArrayList<IWspmResultNode>();
+    final List<IWspmResultNode> rootNodes = new ArrayList<IWspmResultNode>();
 
-    IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    IWorkspaceRoot root = workspace.getRoot();
-    IProject[] projects = root.getProjects();
-    for( IProject project : projects )
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IWorkspaceRoot root = workspace.getRoot();
+    final IProject[] projects = root.getProjects();
+
+    monitor.beginTask( "Searching WSPM projects", projects.length );
+
+    for( final IProject project : projects )
     {
       if( !project.isOpen() )
         continue;
 
-      IFile wspmFile = project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
+      final IFile wspmFile = project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
       if( !wspmFile.exists() )
         continue;
 
-      IFile modelFile = project.getFile( "modell.gml" ); //$NON-NLS-1$
+      final IFile modelFile = project.getFile( "modell.gml" ); //$NON-NLS-1$
       if( !modelFile.exists() )
         continue;
 
-      URL modelURL = ResourceUtilities.createURL( modelFile );
-      GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );
-      TuhhWspmProject tuhhWspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
+      final URL modelURL = ResourceUtilities.createURL( modelFile );
+      final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );
+      final TuhhWspmProject tuhhWspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
 
-      IWspmResultNode rootNode = createResultNode( null, tuhhWspmProject );
+      final IWspmResultNode rootNode = createResultNode( null, tuhhWspmProject );
       rootNodes.add( new WspmResultEclipseNode( project, (WspmResultProjectNode) rootNode ) );
+
+      monitor.worked( 1 );
     }
+
+    monitor.done();
 
     return rootNodes.toArray( new IWspmResultNode[] {} );
   }

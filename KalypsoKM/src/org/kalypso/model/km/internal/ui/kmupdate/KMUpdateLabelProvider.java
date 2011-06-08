@@ -50,9 +50,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class KMUpdateLabelProvider extends LabelProvider
 {
-  /**
-   * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-   */
   @Override
   public String getText( final Object element )
   {

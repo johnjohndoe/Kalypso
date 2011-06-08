@@ -195,10 +195,12 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     final IFeatureBindingCollection<KMParameter> kmParameter = kmChannel.getParameters();
     // TODO: make it more general - not reduced to 5
     // TODO: always remove all existing features and add new ones
-    final int max = 5;
+
+    // FIXME
+// final int max = 5;
     final int paramCount = kmParameter.size();
-    if( paramCount != max )
-      return new IStatus[] { new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.38" ) ) }; //$NON-NLS-1$
+// if( paramCount != max )
+//      return new IStatus[] { new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.38" ) ) }; //$NON-NLS-1$
 
     final IKMValue[] values = profileSet.getKMValues( paramCount );
 
