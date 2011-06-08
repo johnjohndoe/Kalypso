@@ -210,10 +210,7 @@ public class Hydrotop extends Feature_Impl implements IHydrotope
       final Feature[] otherSuds = other.getSuds();
       for( int i = 0; i < suds.length; i++ )
       {
-        if( suds[i] instanceof XLinkedFeature_Impl && otherSuds[i] instanceof XLinkedFeature_Impl )
-          eq &= ((XLinkedFeature_Impl) suds[i]).getFeatureId().equals( ((XLinkedFeature_Impl) otherSuds[i]).getFeatureId() );
-        else
-          return false;
+        eq &= suds[i].equals( otherSuds[i] );
       }
       return eq;
     }
