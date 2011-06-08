@@ -41,19 +41,15 @@
 package org.kalypso.model.km.internal.ui.kmupdate;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
 
 /**
  * @author Gernot Belger
  */
-public class ProfileStationSorter extends ViewerSorter
+public class ProfileStationSorter extends ViewerComparator
 {
-  /**
-   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
