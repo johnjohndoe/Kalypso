@@ -47,7 +47,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.km.internal.KMPlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -77,7 +77,7 @@ public class KMUpdateHandler extends AbstractHandler
     final CommandableWorkspace workspace = FeatureSelection.getWorkspace( feature );
 
     final KMUpdateWizard kmWizard = new KMUpdateWizard( workspace, FeatureSelection );
-    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KMPlugin.getDefault(), "kmUpdateAction" ); //$NON-NLS-1$
+    final IDialogSettings dialogSettings = DialogSettingsUtils.getDialogSettings( KMPlugin.getDefault(), "kmUpdateAction" ); //$NON-NLS-1$
     kmWizard.setDialogSettings( dialogSettings );
 
     final WizardDialog2 dialog = new WizardDialog2( shell, kmWizard );
