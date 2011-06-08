@@ -170,13 +170,13 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
         Logger.getAnonymousLogger().log( Level.WARNING, "Could not copy SLD file. Reason: " + e.getLocalizedMessage() );
       }
 
-      FileUtils.copyFileToDirectory( statisticsFile, riskFolder );
-      FileUtils.copyDirectoryToDirectory( riskStatusQuoRasterFolderInput, riskFolderStatusQuo );
-      FileUtils.copyDirectoryToDirectory( riskStatusQuoRasterFolderOutput, riskFolderStatusQuo );
-      FileUtils.copyDirectoryToDirectory( riskCalculatedRasterFolderInput, riskFolderCalculated );
-      FileUtils.copyDirectoryToDirectory( riskCalculatedRasterFolderOutput, riskFolderCalculated );
-      FileUtils.copyDirectoryToDirectory( riskDifferenceRasterFolderOutput, riskFolderDifference );
-      FileUtils.copyDirectoryToDirectory( naResultsFolder, naFolder );
+      FileUtils.moveFileToDirectory( statisticsFile, riskFolder, false );
+      FileUtils.moveDirectoryToDirectory( riskStatusQuoRasterFolderInput, riskFolderStatusQuo, false );
+      FileUtils.moveDirectoryToDirectory( riskStatusQuoRasterFolderOutput, riskFolderStatusQuo, false );
+      FileUtils.moveDirectoryToDirectory( riskCalculatedRasterFolderInput, riskFolderCalculated, false );
+      FileUtils.moveDirectoryToDirectory( riskCalculatedRasterFolderOutput, riskFolderCalculated, false );
+      FileUtils.moveDirectoryToDirectory( riskDifferenceRasterFolderOutput, riskFolderDifference, false );
+      FileUtils.moveDirectoryToDirectory( naResultsFolder, naFolder, false );
 
     }
     catch( final Exception e )
