@@ -63,9 +63,9 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.km.internal.binding.KMBindingUtils;
-import org.kalypso.model.km.internal.core.AbstractProfileDataSet;
 import org.kalypso.model.km.internal.core.ProfileData;
-import org.kalypso.model.km.internal.core.ProfileFactory;
+import org.kalypso.model.km.internal.core.ProfileDataSet;
+import org.kalypso.model.km.internal.core.ProfileObservationReader;
 import org.kalypso.model.km.internal.i18n.Messages;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
@@ -105,7 +105,7 @@ public class KMViewer
   /**
    * The abstract profile data set.
    */
-  private AbstractProfileDataSet m_profileSet;
+  private ProfileDataSet m_profileSet;
 
   /**
    * The input.
@@ -132,13 +132,13 @@ public class KMViewer
    * @param parent
    *          The parent composite.
    */
-  public void createControls( Composite parent )
+  public void createControls( final Composite parent )
   {
     /* Set a layout to the parent. */
     parent.setLayout( new GridLayout( 3, false ) );
 
     /* Create a empty label. */
-    Label emptyLabel = new Label( parent, SWT.NONE );
+    final Label emptyLabel = new Label( parent, SWT.NONE );
     emptyLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
     /* Create a text. */
@@ -146,7 +146,7 @@ public class KMViewer
     m_labelText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     /* Create a empty label. */
-    Label emptyLabel1 = new Label( parent, SWT.NONE );
+    final Label emptyLabel1 = new Label( parent, SWT.NONE );
     emptyLabel1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
     /* Create a widget for asking for a file. */
@@ -164,7 +164,7 @@ public class KMViewer
     } );
 
     /* Create a label. */
-    Label startLabel = new Label( parent, SWT.NONE );
+    final Label startLabel = new Label( parent, SWT.NONE );
     startLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     startLabel.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.2" ) ); //$NON-NLS-1$
 
@@ -173,11 +173,11 @@ public class KMViewer
     m_startText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     /* Create a empty label. */
-    Label emptyLabel2 = new Label( parent, SWT.NONE );
+    final Label emptyLabel2 = new Label( parent, SWT.NONE );
     emptyLabel2.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
     /* Create a label. */
-    Label endLabel = new Label( parent, SWT.NONE );
+    final Label endLabel = new Label( parent, SWT.NONE );
     endLabel.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.3" ) ); //$NON-NLS-1$
     endLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
@@ -186,11 +186,11 @@ public class KMViewer
     m_endText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     /* Create a empty label. */
-    Label emptyLabel3 = new Label( parent, SWT.NONE );
+    final Label emptyLabel3 = new Label( parent, SWT.NONE );
     emptyLabel3.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
     /* Create a label. */
-    Label profilesLabel = new Label( parent, SWT.NONE );
+    final Label profilesLabel = new Label( parent, SWT.NONE );
     profilesLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false ) );
     profilesLabel.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.4" ) ); //$NON-NLS-1$
 
@@ -209,14 +209,14 @@ public class KMViewer
     // ColumnViewerSorter.registerSorter( labelColumn, new ProfileNameSorter() );
 
     /* Create a table viewer column. */
-    TableViewerColumn stationColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
+    final TableViewerColumn stationColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
     stationColumn.setLabelProvider( new ProfileStationLabelProvider() );
     stationColumn.getColumn().setText( Messages.getString( "KMViewer_1" ) ); //$NON-NLS-1$
     stationColumn.getColumn().setWidth( 100 );
     ColumnViewerSorter.registerSorter( stationColumn, new ProfileStationSorter() );
 
     /* Create a table viewer column. */
-    TableViewerColumn validColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
+    final TableViewerColumn validColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
     validColumn.setLabelProvider( new ProfileValidLabelProvider( this ) );
     validColumn.getColumn().setText( Messages.getString( "KMViewer_2" ) ); //$NON-NLS-1$
     validColumn.getColumn().setWidth( 200 );
@@ -255,10 +255,10 @@ public class KMViewer
   {
     try
     {
-      KalininMiljukovType input = getInput();
+      final KalininMiljukovType input = getInput();
       if( input != null )
       {
-        double km = NumberUtils.parseQuietDouble( m_startText.getText() );
+        final double km = NumberUtils.parseQuietDouble( m_startText.getText() );
         if( Double.isNaN( km ) )
           input.setKmStart( null );
         else
@@ -268,7 +268,7 @@ public class KMViewer
       updateProfileList();
       updateControls();
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
     }
@@ -278,10 +278,10 @@ public class KMViewer
   {
     try
     {
-      KalininMiljukovType input = getInput();
+      final KalininMiljukovType input = getInput();
       if( input != null )
       {
-        double km = NumberUtils.parseQuietDouble( m_endText.getText() );
+        final double km = NumberUtils.parseQuietDouble( m_endText.getText() );
         if( Double.isNaN( km ) )
           input.setKmEnd( null );
         else
@@ -291,17 +291,17 @@ public class KMViewer
       updateProfileList();
       updateControls();
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
     }
   }
 
-  protected void handleDirectoryFieldSelected( IStructuredSelection selection )
+  protected void handleDirectoryFieldSelected( final IStructuredSelection selection )
   {
-    String path = (String) selection.getFirstElement();
+    final String path = (String) selection.getFirstElement();
 
-    KalininMiljukovType input = getInput();
+    final KalininMiljukovType input = getInput();
     if( input != null )
       input.setPath( path );
 
@@ -309,17 +309,17 @@ public class KMViewer
 
     if( m_profileSet != null && input != null )
     {
-      Double oldKmStart = input.getKmStart();
+      final Double oldKmStart = input.getKmStart();
       if( oldKmStart == null )
       {
-        double startPosition = m_profileSet.getStartPosition() / 1000d;
+        final double startPosition = m_profileSet.getStartPosition() / 1000d;
         input.setKmStart( startPosition );
       }
 
-      Double oldKmEnd = input.getKmEnd();
+      final Double oldKmEnd = input.getKmEnd();
       if( oldKmEnd == null )
       {
-        double endPosition = m_profileSet.getEndPosition() / 1000d;
+        final double endPosition = m_profileSet.getEndPosition() / 1000d;
         input.setKmEnd( endPosition );
       }
     }
@@ -335,29 +335,29 @@ public class KMViewer
 
   private void updateProfileList( )
   {
-    KalininMiljukovType input = getInput();
+    final KalininMiljukovType input = getInput();
     if( input == null )
       return;
 
-    List<Profile> profileList = input.getProfile();
+    final List<Profile> profileList = input.getProfile();
     profileList.clear();
 
     if( m_profileSet == null )
       return;
 
-    Double kmStart = input.getKmStart();
-    Double kmEnd = input.getKmEnd();
+    final Double kmStart = input.getKmStart();
+    final Double kmEnd = input.getKmEnd();
 
-    ProfileData[] allProfiles = m_profileSet.getAllProfiles();
-    for( ProfileData pd : allProfiles )
+    final ProfileData[] allProfiles = m_profileSet.getAllProfiles();
+    for( final ProfileData pd : allProfiles )
     {
-      String file = pd.getFile();
-      double position = pd.getPosition();
-      double station = position / 1000.0;
+      final String file = pd.getFile();
+      final double position = pd.getPosition();
+      final double station = position / 1000.0;
 
       if( (kmStart == null || kmStart <= station) && (kmEnd == null || station <= kmEnd) )
       {
-        Profile profileData = KMBindingUtils.OF.createKalininMiljukovTypeProfile();
+        final Profile profileData = KMBindingUtils.OF.createKalininMiljukovTypeProfile();
         profileData.setFile( file );
         profileData.setPositionKM( position );
         profileData.setEnabled( pd.isValidForKalypso() == null );
@@ -368,7 +368,7 @@ public class KMViewer
 
   private void updateControls( )
   {
-    KalininMiljukovType input = getInput();
+    final KalininMiljukovType input = getInput();
     if( input == null )
     {
       // TODO: title + label
@@ -383,9 +383,9 @@ public class KMViewer
     }
     else
     {
-      Double kmStart = input.getKmStart();
-      Double kmEnd = input.getKmEnd();
-      String path = input.getPath();
+      final Double kmStart = input.getKmStart();
+      final Double kmEnd = input.getKmEnd();
+      final String path = input.getPath();
 
       m_dirField.setSelection( new StructuredSelection( path ) );
 
@@ -406,17 +406,25 @@ public class KMViewer
     }
 
     m_profileListViewer.refresh();
-    TableColumn[] columns = m_profileListViewer.getTable().getColumns();
-    for( TableColumn column : columns )
+    final TableColumn[] columns = m_profileListViewer.getTable().getColumns();
+    for( final TableColumn column : columns )
       column.pack();
   }
 
-  private void readProfileSet( String path )
+  private void readProfileSet( final String path )
   {
     if( !StringUtils.isBlank( path ) )
     {
-      m_profileSet = ProfileFactory.createProfileObservationSet( new Path( path ), Double.NaN, Double.NaN );
-
+      try
+      {
+        final ProfileObservationReader reader = new ProfileObservationReader( new Path( path ) );
+        m_profileSet = reader.getDataSet( Double.NaN, Double.NaN );
+      }
+      catch( final Exception e )
+      {
+        // TODO: error handling
+        e.printStackTrace();
+      }
       return;
     }
 
@@ -429,14 +437,14 @@ public class KMViewer
     if( oldInput != null )
     {
       /* Keep checked elements. */
-      List<Profile> profiles = oldInput.getProfile();
-      for( Profile profile2 : profiles )
+      final List<Profile> profiles = oldInput.getProfile();
+      for( final Profile profile2 : profiles )
         profile2.setEnabled( false );
 
-      Object[] checkedElements = m_profileListViewer.getCheckedElements();
-      for( Object object : checkedElements )
+      final Object[] checkedElements = m_profileListViewer.getCheckedElements();
+      for( final Object object : checkedElements )
       {
-        for( Profile profile : profiles )
+        for( final Profile profile : profiles )
         {
           if( object == profile )
             profile.setEnabled( true );
@@ -449,7 +457,7 @@ public class KMViewer
     if( m_profileListViewer != null )
       m_profileListViewer.setInput( kmType );
 
-    String path = m_input == null ? null : m_input.getPath();
+    final String path = m_input == null ? null : m_input.getPath();
     readProfileSet( path );
     updateControls();
   }
@@ -459,10 +467,10 @@ public class KMViewer
     if( m_profileSet == null )
       return null;
 
-    String file = profile.getFile();
+    final String file = profile.getFile();
 
-    ProfileData[] data = m_profileSet.getAllProfiles();
-    for( ProfileData profileData : data )
+    final ProfileData[] data = m_profileSet.getAllProfiles();
+    for( final ProfileData profileData : data )
     {
       if( file.equals( profileData.getFile() ) )
         return profileData;
@@ -471,31 +479,31 @@ public class KMViewer
     return null;
   }
 
-  public void setInput( String label, KalininMiljukovType km )
+  public void setInput( final String label, final KalininMiljukovType km )
   {
     m_labelText.setText( label );
 
-    KalininMiljukovType oldInput = getInput();
+    final KalininMiljukovType oldInput = getInput();
 
     inputChanged( oldInput, km );
   }
 
-  public String getValidMessage( Profile profile )
+  public String getValidMessage( final Profile profile )
   {
-    ProfileData data = findData( profile );
+    final ProfileData data = findData( profile );
     if( data == null )
       return StringUtils.EMPTY;
 
-    String valid = data.isValidForKalypso();
+    final String valid = data.isValidForKalypso();
     if( valid == null )
       return Messages.getString( "org.kalypso.model.km.ProfileData.10" ); //$NON-NLS-1$
 
     return valid;
   }
 
-  public boolean isValid( Profile profile )
+  public boolean isValid( final Profile profile )
   {
-    ProfileData data = findData( profile );
+    final ProfileData data = findData( profile );
     if( data == null )
       return false;
 

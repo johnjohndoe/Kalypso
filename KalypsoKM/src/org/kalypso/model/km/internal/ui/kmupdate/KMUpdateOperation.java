@@ -63,9 +63,9 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
 import org.kalypso.model.km.internal.KMPlugin;
-import org.kalypso.model.km.internal.core.AbstractProfileDataSet;
 import org.kalypso.model.km.internal.core.IKMValue;
-import org.kalypso.model.km.internal.core.ProfileFactory;
+import org.kalypso.model.km.internal.core.ProfileDataSet;
+import org.kalypso.model.km.internal.core.ProfileObservationReader;
 import org.kalypso.model.km.internal.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -185,9 +185,9 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
       return new IStatus[] { status };
     }
 
-    // TODO HACK: In the profile observation set all files are the same...
-    final AbstractProfileDataSet profileSet = ProfileFactory.createProfileObservationSet( paths[0], kmStart, kmEnd );
-    final IKMValue[] values = profileSet.getKMValues();
+    // HACK: In the profile observation set all files are the same...
+    final ProfileObservationReader reader = new ProfileObservationReader( paths[0] );
+    final ProfileDataSet profileSet = reader.getDataSet( 1000d * kmStart, 1000d * kmEnd );
 
     m_featureChanges.add( new FeatureChange( kmChannel, kmKMStartPT, km.getKmStart() ) );
     m_featureChanges.add( new FeatureChange( kmChannel, kmKMEndPT, km.getKmEnd() ) );
@@ -196,8 +196,11 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     // TODO: make it more general - not reduced to 5
     // TODO: always remove all existing features and add new ones
     final int max = 5;
-    if( kmParameter.size() != max )
+    final int paramCount = kmParameter.size();
+    if( paramCount != max )
       return new IStatus[] { new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.38" ) ) }; //$NON-NLS-1$
+
+    final IKMValue[] values = profileSet.getKMValues( paramCount );
 
     final IStatusCollector paramLog = new StatusCollector( KMPlugin.getID() );
     for( int i = 0; i < kmParameter.size(); i++ )
@@ -205,38 +208,44 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
       final KMParameter kmParameterFE = kmParameter.get( i );
       final IKMValue value = values[i];
 
-      final IStatusCollector valueLog = new StatusCollector( KMPlugin.getID() );
-
-      final double k = roundValue( value.getK(), 4 );
-      validate( k, Messages.getString( "KMUpdateOperation_6" ), valueLog ); //$NON-NLS-1$
-
-      final double n = roundValue( value.getN(), 4 );
-      final double nValid = validateN( n, Messages.getString( "KMUpdateOperation_7" ), valueLog ); //$NON-NLS-1$
-
-      final double kForeland = roundValue( value.getKForeland(), 4 );
-      validate( kForeland, Messages.getString( "KMUpdateOperation_8" ), valueLog ); //$NON-NLS-1$
-
-      final double nForeland = roundValue( value.getNForeland(), 4 );
-      final double nForelandValid = validateN( nForeland, Messages.getString( "KMUpdateOperation_9" ), valueLog ); //$NON-NLS-1$
-
-      final double qSum = roundValue( value.getQSum(), 3 );
-      validate( qSum, Messages.getString( "KMUpdateOperation_10" ), valueLog ); //$NON-NLS-1$
-
-      final double alpha = roundValue( value.getAlpha(), 3 );
-      validate( alpha, Messages.getString( "KMUpdateOperation_11" ), valueLog ); //$NON-NLS-1$
-
-      m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RKF, k ) ); //$NON-NLS-1$
-      m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RKV, kForeland ) ); //$NON-NLS-1$
-      m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RNF, nValid ) ); //$NON-NLS-1$
-      m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RNV, nForelandValid ) ); //$NON-NLS-1$
-      m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_QRK, qSum ) ); //$NON-NLS-1$
-      m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_C, alpha ) ); //$NON-NLS-1$
-
-      final String msg = String.format( "%d. %s", i + 1, value );//$NON-NLS-1$
-      paramLog.add( valueLog.asMultiStatus( msg ) );
+      final IStatus log = writeValue( kmParameterFE, value, i );
+      paramLog.add( log );
     }
 
     return paramLog.getAllStati();
+  }
+
+  private IStatus writeValue( final KMParameter kmParameterFE, final IKMValue value, final int index )
+  {
+    final IStatusCollector valueLog = new StatusCollector( KMPlugin.getID() );
+
+    final double k = roundValue( value.getK(), 4 );
+    validate( k, Messages.getString( "KMUpdateOperation_6" ), valueLog ); //$NON-NLS-1$
+
+    final double n = roundValue( value.getN(), 4 );
+    final double nValid = validateN( n, Messages.getString( "KMUpdateOperation_7" ), valueLog ); //$NON-NLS-1$
+
+    final double kForeland = roundValue( value.getKForeland(), 4 );
+    validate( kForeland, Messages.getString( "KMUpdateOperation_8" ), valueLog ); //$NON-NLS-1$
+
+    final double nForeland = roundValue( value.getNForeland(), 4 );
+    final double nForelandValid = validateN( nForeland, Messages.getString( "KMUpdateOperation_9" ), valueLog ); //$NON-NLS-1$
+
+    final double qSum = roundValue( value.getQSum(), 3 );
+    validate( qSum, Messages.getString( "KMUpdateOperation_10" ), valueLog ); //$NON-NLS-1$
+
+    final double alpha = roundValue( value.getAlpha(), 3 );
+    validate( alpha, Messages.getString( "KMUpdateOperation_11" ), valueLog ); //$NON-NLS-1$
+
+    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RKF, k ) ); //$NON-NLS-1$
+    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RKV, kForeland ) ); //$NON-NLS-1$
+    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RNF, nValid ) ); //$NON-NLS-1$
+    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RNV, nForelandValid ) ); //$NON-NLS-1$
+    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_QRK, qSum ) ); //$NON-NLS-1$
+    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_C, alpha ) ); //$NON-NLS-1$
+
+    final String msg = String.format( "%d. %s", index + 1, value );//$NON-NLS-1$
+    return valueLog.asMultiStatus( msg );
   }
 
   private double validateN( final double n, final String label, final IStatusCollector valueLog )
@@ -269,13 +278,13 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
 
   private IPath[] getPaths( final KalininMiljukovType km )
   {
-    List<IPath> list = new ArrayList<IPath>();
-    List<Profile> profiles = km.getProfile();
-    for( Profile profile : profiles )
+    final List<IPath> list = new ArrayList<IPath>();
+    final List<Profile> profiles = km.getProfile();
+    for( final Profile profile : profiles )
     {
       if( profile.isEnabled() )
       {
-        Path path = new Path( profile.getFile() );
+        final Path path = new Path( profile.getFile() );
         list.add( path );
       }
     }
