@@ -32,7 +32,6 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.suds.PlaningArea;

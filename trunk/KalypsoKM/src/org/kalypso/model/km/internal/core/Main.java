@@ -39,8 +39,10 @@ public class Main
       if( !path.exists() )
         throw new Exception( Messages.getString( "org.kalypso.model.km.Main.16" ) + path.toString() ); //$NON-NLS-1$
       System.out.println();
-      final ProfileDataSet pSet = ProfileFactory.createProfileSet( path, kmStart, kmEnd );
-      final IKMValue[] kmValues = pSet.getKMValues();
+
+      final KMFilesReader reader = new KMFilesReader( path );
+      final ProfileDataSet pSet = reader.getDataSet( kmStart, kmEnd );
+      final IKMValue[] kmValues = pSet.getKMValues( 5 );
       System.out.println( Messages.getString( "org.kalypso.model.km.Main.17" ) ); //$NON-NLS-1$
       for( final IKMValue value : kmValues )
       {

@@ -83,7 +83,6 @@ class MultiKMValue extends AbstractKMValue
   @Override
   public double getK( )
   {
-
     return m_k;
   }
 
@@ -110,5 +109,4 @@ class MultiKMValue extends AbstractKMValue
   {
     return m_qForeland;
   }
-
 }
