@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -51,6 +52,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -62,12 +64,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.km.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultQIntervalNode;
 
 /**
+ * FIXME: remove this. Use databinding, we do not need all this terible overhead.
+ * 
  * @author Andreas Doemming (original)
  * @author Holger Albert (modified)
  */
@@ -76,7 +81,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
   /**
    * The listeners.
    */
-  private List<ISelectionChangedListener> m_listeners;
+  private final List<ISelectionChangedListener> m_listeners;
 
   /**
    * The text field.
@@ -88,64 +93,32 @@ public class DirectoryFieldWidget implements ISelectionProvider
    */
   private Button m_button;
 
-  /**
-   * The constructor.
-   * 
-   * @param parent
-   *          The parent composite.
-   * @param label
-   *          The text of the label, which is placed before the text field.
-   * @param tooltip
-   *          The tooltip of the label, which is placed before the text field.
-   * @param sp1
-   *          The control consists of 3 columns. This is the colspan of the first one. Check your your layout. It must
-   *          have at least 3 columns and the number of columns must match the sum of sp1, sp2 and sp3.
-   * @param sp2
-   *          The control consists of 3 columns. This is the colspan of the second one. Check your your layout. It must
-   *          have at least 3 columns and the number of columns must match the sum of sp1, sp2 and sp3.
-   * @param sp3
-   *          The control consists of 3 columns. This is the colspan of the third one. Check your your layout. It must
-   *          have at least 3 columns and the number of columns must match the sum of sp1, sp2 and sp3.
-   */
-  public DirectoryFieldWidget( Composite parent, String label, String tooltip, int sp1, int sp2, int sp3 )
+  private IWspmResultNode[] m_rootNodes;
+
+  private final IWizardContainer m_context;
+
+  public DirectoryFieldWidget( final Composite parent, final IWizardContainer context )
   {
+    m_context = context;
     m_listeners = new ArrayList<ISelectionChangedListener>();
     m_text = null;
     m_button = null;
 
-    createControls( parent, label, tooltip, sp1, sp2, sp3 );
+    createControls( parent );
   }
 
-  /**
-   * This function creates the controls.
-   * 
-   * @param parent
-   *          The parent composite.
-   * @param label
-   *          The text of the label, which is placed before the text field.
-   * @param tooltip
-   *          The tooltip of the label, which is placed before the text field.
-   * @param sp1
-   *          The control consists of 3 columns. This is the colspan of the first one. Check your your layout. It must
-   *          have at least 3 columns and the number of columns must match the sum of sp1, sp2 and sp3.
-   * @param sp2
-   *          The control consists of 3 columns. This is the colspan of the second one. Check your your layout. It must
-   *          have at least 3 columns and the number of columns must match the sum of sp1, sp2 and sp3.
-   * @param sp3
-   *          The control consists of 3 columns. This is the colspan of the third one. Check your your layout. It must
-   *          have at least 3 columns and the number of columns must match the sum of sp1, sp2 and sp3.
-   */
-  private void createControls( final Composite parent, String label, String tooltip, int sp1, int sp2, int sp3 )
+  private void createControls( final Composite parent )
   {
     /* Create a label. */
-    Label label1 = new Label( parent, SWT.NONE );
-    label1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false, sp1, 1 ) );
-    label1.setText( label );
-    label1.setToolTipText( tooltip );
+    final Label label1 = new Label( parent, SWT.NONE );
+    label1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+
+    label1.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.1" ) );
+    label1.setToolTipText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.0" ) );
 
     /* Create a text. */
     m_text = new Text( parent, SWT.BORDER );
-    m_text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, sp2, 1 ) );
+    m_text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_text.setToolTipText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.0" ) ); //$NON-NLS-1$
     m_text.setEditable( false );
 
@@ -165,7 +138,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
     /* Create a button. */
     m_button = new Button( parent, SWT.NONE );
     m_button.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.1" ) ); //$NON-NLS-1$
-    m_button.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false, sp3, 1 ) );
+    m_button.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     m_button.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -179,29 +152,36 @@ public class DirectoryFieldWidget implements ISelectionProvider
     } );
   }
 
-  protected void handleBrowseClicked( Display display )
+  protected void handleBrowseClicked( final Display display )
   {
-    try
+    final IWspmResultNode[] rootNodes = readNodes();
+    final BrowseWspmDialog dialog = new BrowseWspmDialog( display.getActiveShell(), rootNodes );
+    final int open = dialog.open();
+    if( open != Window.OK )
+      return;
+
+    final IWspmResultNode selectedNode = dialog.getSelectedNode();
+    if( !(selectedNode instanceof WspmResultQIntervalNode) )
+      return;
+
+    final IPath path = (IPath) selectedNode.getObject();
+    m_text.setText( path.toString() );
+
+    fireSelectionChangeEvent();
+  }
+
+  protected IWspmResultNode[] readNodes( )
+  {
+    if( m_rootNodes == null )
     {
-      IWspmResultNode rootNodes[] = WspmResultFactory.createRootNodes();
-      BrowseWspmDialog dialog = new BrowseWspmDialog( display.getActiveShell(), rootNodes );
-      int open = dialog.open();
-      if( open != Window.OK )
-        return;
-
-      IWspmResultNode selectedNode = dialog.getSelectedNode();
-      if( !(selectedNode instanceof WspmResultQIntervalNode) )
-        return;
-
-      IPath path = (IPath) selectedNode.getObject();
-      m_text.setText( path.toString() );
-
-      fireSelectionChangeEvent();
+      final ReadNodesOperation operation = new ReadNodesOperation();
+      final IStatus status = RunnableContextHelper.execute( m_context, true, false, operation );
+      m_rootNodes = operation.getNodes();
+      if( !status.isOK() )
+        new StatusDialog( m_context.getShell(), status, "Read Profile Data" );
     }
-    catch( Exception ex )
-    {
-      ex.printStackTrace();
-    }
+
+    return m_rootNodes;
   }
 
   /**
@@ -209,14 +189,11 @@ public class DirectoryFieldWidget implements ISelectionProvider
    */
   protected void fireSelectionChangeEvent( )
   {
-    SelectionChangedEvent event = new SelectionChangedEvent( this, getSelection() );
-    for( ISelectionChangedListener listener : m_listeners )
+    final SelectionChangedEvent event = new SelectionChangedEvent( this, getSelection() );
+    for( final ISelectionChangedListener listener : m_listeners )
       listener.selectionChanged( event );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
   @Override
   public ISelection getSelection( )
   {
@@ -227,7 +204,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
   @Override
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_listeners.add( listener );
   }
@@ -236,7 +213,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
   @Override
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_listeners.remove( listener );
   }
@@ -245,14 +222,14 @@ public class DirectoryFieldWidget implements ISelectionProvider
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     if( selection.isEmpty() )
       m_text.setText( "" ); //$NON-NLS-1$
 
     if( selection instanceof IStructuredSelection )
     {
-      Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+      final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
       if( firstElement instanceof String )
         m_text.setText( (String) firstElement );
     }
@@ -264,7 +241,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
    * @param enabled
    *          True for enabled and false for disabled.
    */
-  public void setEnabled( boolean enabled )
+  public void setEnabled( final boolean enabled )
   {
     m_button.setEnabled( enabled );
   }

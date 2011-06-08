@@ -43,13 +43,14 @@ package org.kalypso.model.km.internal.ui.kmupdate;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -59,13 +60,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.km.internal.binding.KMBindingUtils;
 import org.kalypso.model.km.internal.core.ProfileData;
 import org.kalypso.model.km.internal.core.ProfileDataSet;
-import org.kalypso.model.km.internal.core.ProfileObservationReader;
 import org.kalypso.model.km.internal.i18n.Messages;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
@@ -112,18 +114,11 @@ public class KMViewer
    */
   private KalininMiljukovType m_input;
 
-  /**
-   * The constructor.
-   */
-  public KMViewer( )
+  private final IWizardContainer m_context;
+
+  public KMViewer( final IWizardContainer context )
   {
-    m_labelText = null;
-    m_dirField = null;
-    m_startText = null;
-    m_endText = null;
-    m_profileListViewer = null;
-    m_profileSet = null;
-    m_input = null;
+    m_context = context;
   }
 
   /**
@@ -150,12 +145,9 @@ public class KMViewer
     emptyLabel1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
     /* Create a widget for asking for a file. */
-    m_dirField = new DirectoryFieldWidget( parent, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.1" ), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.0" ), 1, 1, 1 ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_dirField = new DirectoryFieldWidget( parent, m_context ); //$NON-NLS-1$ //$NON-NLS-2$
     m_dirField.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      /**
-       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-       */
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -328,6 +320,22 @@ public class KMViewer
     updateControls();
   }
 
+  private void readProfileSet( final String path )
+  {
+    /* Prevents dead lock during construction of page */
+    if( StringUtils.isBlank( path ) )
+    {
+      m_profileSet = null;
+      return;
+    }
+
+    final ProfileSetReadOperation operation = new ProfileSetReadOperation( path );
+    final IStatus status = RunnableContextHelper.execute( m_context, true, false, operation );
+    m_profileSet = operation.getProfileSet();
+    if( !status.isOK() )
+      new StatusDialog( m_context.getShell(), status, "Read Profile Data" );
+  }
+
   private KalininMiljukovType getInput( )
   {
     return m_input;
@@ -411,26 +419,6 @@ public class KMViewer
       column.pack();
   }
 
-  private void readProfileSet( final String path )
-  {
-    if( !StringUtils.isBlank( path ) )
-    {
-      try
-      {
-        final ProfileObservationReader reader = new ProfileObservationReader( new Path( path ) );
-        m_profileSet = reader.getDataSet( Double.NaN, Double.NaN );
-      }
-      catch( final Exception e )
-      {
-        // TODO: error handling
-        e.printStackTrace();
-      }
-      return;
-    }
-
-    m_profileSet = null;
-  }
-
   private void inputChanged( final KalininMiljukovType oldInput, final KalininMiljukovType kmType )
   {
     // TODO: Check this stuff here...
@@ -458,7 +446,9 @@ public class KMViewer
       m_profileListViewer.setInput( kmType );
 
     final String path = m_input == null ? null : m_input.getPath();
+
     readProfileSet( path );
+
     updateControls();
   }
 

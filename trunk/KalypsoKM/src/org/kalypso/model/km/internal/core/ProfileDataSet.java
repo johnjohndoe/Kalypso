@@ -129,45 +129,52 @@ public class ProfileDataSet
   public IKMValue[] getKMValues( final int paramCount )
   {
     final IKMValue[] kmMerged = getMergedParams();
+    final int qBordvollIndex = findQBordvoll( kmMerged );
 
-    final int[] qIndices = buildMapping( paramCount );
+    final int[] qIndices = buildMapping( paramCount, qBordvollIndex );
     final IKMValue[] result = new IKMValue[paramCount];
     for( int i = 0; i < result.length; i++ )
       result[i] = kmMerged[qIndices[i]];
     return result;
   }
 
+  private int findQBordvoll( final IKMValue[] kmMerged )
+  {
+    for( int i = 0; i < kmMerged.length; i++ )
+    {
+      if( kmMerged[i].getKForeland() > 0 )
+        return i;
+    }
+
+    return -1;
+  }
+
   /**
    * Calculates which paramCount-index maps to which q-index.
    */
-  private int[] buildMapping( final int paramCount )
+  private int[] buildMapping( final int paramCount, final int qBordvollIndex )
   {
-    // FIXME: find q-bordvoll (mean of all q bordvolls of all profiles weighted by length)
-
-    // FIXME: find index of q-bordvoll
-
-    // FIXME: separate into two block: half before and half after q bordvoll
-
-    // FIXME: map indices
-
     final int numberQ = getNumberQ();
+    final int maxIndexQ = numberQ - 1;
 
-    // Calculate for the number of discharges (at the moment always 5)
+    final int middleParamIndex = (int) ((paramCount / 2.0f));
 
-    // TODO: dubious 2: we interpolate the index ?! Instead we should divide the q-range by 5, and use these q's!
-    // Use the 5 discharges as follows: first,(first+middle)/2,middle,middle+last)/2,last
-    final int interval = (numberQ - 1) / 4;
-
-    // REMARK: as we just pick existing discharges, interpolation actually makes no sense; maybe, later, if we really
-    // pick intermediate discharges, we should interpolate again
     final int[] qIndices = new int[paramCount];
-    qIndices[0] = 0;
-    qIndices[1] = 1 * interval;
-    qIndices[2] = 2 * interval;
-    qIndices[3] = 3 * interval;
-    qIndices[paramCount - 1] = numberQ - 1;
+
+    buildMapping( qIndices, 0, middleParamIndex, 0, qBordvollIndex );
+    buildMapping( qIndices, middleParamIndex, paramCount, qBordvollIndex, numberQ );
+
+    qIndices[paramCount - 1] = maxIndexQ;
 
     return qIndices;
+  }
+
+  private void buildMapping( final int[] qIndices, final int paramFrom, final int paramTo, final int qIndexFrom, final int qIndexTo )
+  {
+    final double interval = ((double) qIndexTo - qIndexFrom - 1) / (paramTo - paramFrom - 1);
+
+    for( int i = 0; i < paramTo - paramFrom; i++ )
+      qIndices[i + paramFrom] = qIndexFrom + (int) (i * interval);
   }
 
   /**
