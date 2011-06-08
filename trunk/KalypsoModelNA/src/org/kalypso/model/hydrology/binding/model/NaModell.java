@@ -52,7 +52,6 @@ import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -68,10 +67,6 @@ public class NaModell extends Feature_Impl
 
   private static final QName MEMBER_CATCHMENT_COLLECTION = new QName( NS_NAMODELL, "CatchmentCollectionMember" ); //$NON-NLS-1$
 
-  /**
-   * @deprecated Should not be used outside of this class.
-   */
-  @Deprecated
   public static final QName MEMBER_CATCHMENT = new QName( NS_NAMODELL, "catchmentMember" ); //$NON-NLS-1$
 
   private static final QName MEMBER_CHANNEL_COLLECTION = new QName( NS_NAMODELL, "ChannelCollectionMember" ); //$NON-NLS-1$
@@ -155,15 +150,5 @@ public class NaModell extends Feature_Impl
     }
 
     return m_nodes;
-  }
-
-  /**
-   * @deprecated Use {@link #getCatchments()} instead.
-   */
-  @Deprecated
-  public FeatureList getCatchmentsList( )
-  {
-    final Feature catchmentsMember = getProperty( MEMBER_CATCHMENT_COLLECTION, Feature.class );
-    return (FeatureList) catchmentsMember.getProperty( MEMBER_CATCHMENT );
   }
 }

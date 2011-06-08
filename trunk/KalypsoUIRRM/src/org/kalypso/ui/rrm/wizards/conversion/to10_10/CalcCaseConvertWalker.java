@@ -55,7 +55,7 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
  * 
  * @author Gernot Belger
  */
-public class CalcCaseConvertWalker extends DirectoryWalker
+public class CalcCaseConvertWalker extends DirectoryWalker<File>
 {
   private final File m_sourceDir;
 
@@ -76,9 +76,8 @@ public class CalcCaseConvertWalker extends DirectoryWalker
     return collector.toArray( new File[collector.size()] );
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  protected boolean handleDirectory( final File directory, final int depth, @SuppressWarnings("rawtypes") final Collection results )
+  protected boolean handleDirectory( final File directory, final int depth, final Collection<File> results )
   {
     /* Just ignore non calculation dirs. Needs to return true, as we may come from further up. */
     if( !isCalculationDirectory( directory ) )
@@ -99,5 +98,4 @@ public class CalcCaseConvertWalker extends DirectoryWalker
 
     return new File( directory, ModelNature.CONTROL_NAME ).isFile();
   }
-
 }
