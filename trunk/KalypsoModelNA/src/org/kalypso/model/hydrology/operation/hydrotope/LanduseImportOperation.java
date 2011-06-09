@@ -199,24 +199,34 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
             /* add sud members */
             for( GM_Surface< ? > surface : existingGeometry.getAllSurfaces() )
             {
-              GM_Object intersection = geometry.intersection( surface );
-              if( intersection instanceof GM_Surface )
+              try
               {
-                intersection = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { (GM_Surface< ? >) intersection }, intersection.getCoordinateSystem() );
-              }
-              
-              if( intersection instanceof GM_MultiSurface && ((GM_MultiSurface) intersection).getArea() > 0.01)
-              {
-                // clone existing landuse
-                final Landuse clonedLanduse = landusesOut.addNew( Landuse.QNAME );
-                clonedLanduse.setGeometry( (GM_MultiSurface) intersection );
-                clonedLanduse.setCorrSealing( existingLanduse.getCorrSealing() );
-                clonedLanduse.setDescription( "cloned" );
-                clonedLanduse.setDrainageType( existingLanduse.getDrainageType() );
-                clonedLanduse.setLanduse( existingLanduse.getLanduse() );
-                clonedLanduse.setName( existingLanduse.getName() );
+                GM_Object intersection = geometry.intersection( surface );
 
-                addSudsToLanduse( suds, clonedLanduse );
+                if( intersection instanceof GM_Surface )
+                {
+                  intersection = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { (GM_Surface< ? >) intersection }, intersection.getCoordinateSystem() );
+                }
+
+                if( intersection instanceof GM_MultiSurface && ((GM_MultiSurface) intersection).getArea() > 0.01 )
+                {
+                  // clone existing landuse
+                  final Landuse clonedLanduse = landusesOut.addNew( Landuse.QNAME );
+                  clonedLanduse.setGeometry( (GM_MultiSurface) intersection );
+                  clonedLanduse.setCorrSealing( existingLanduse.getCorrSealing() );
+                  clonedLanduse.setDescription( "cloned" );
+                  clonedLanduse.setDrainageType( existingLanduse.getDrainageType() );
+                  clonedLanduse.setLanduse( existingLanduse.getLanduse() );
+                  clonedLanduse.setName( existingLanduse.getName() );
+
+                  addSudsToLanduse( suds, clonedLanduse );
+                }
+              }
+              catch( final Exception e )
+              {
+                //TODO: if this happens, ignore
+                // probably the discarded area is very small
+                e.printStackTrace();
               }
             }
           }
