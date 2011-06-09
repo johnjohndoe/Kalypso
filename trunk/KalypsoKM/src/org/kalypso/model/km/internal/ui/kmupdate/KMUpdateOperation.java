@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -60,6 +61,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
 import org.kalypso.model.km.internal.KMPlugin;
@@ -67,9 +69,11 @@ import org.kalypso.model.km.internal.core.IKMValue;
 import org.kalypso.model.km.internal.core.ProfileDataSet;
 import org.kalypso.model.km.internal.core.ProfileObservationReader;
 import org.kalypso.model.km.internal.i18n.Messages;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -81,7 +85,7 @@ import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
  */
 public class KMUpdateOperation implements ICoreRunnableWithProgress
 {
-  private final List<FeatureChange> m_featureChanges = new ArrayList<FeatureChange>();
+  private final CompositeCommand m_commands = new CompositeCommand( "KM-Parameter erzeugen" );
 
   private final Map<KMChannel, KalininMiljukovType> m_channels;
 
@@ -93,9 +97,6 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     m_channels = channels;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
@@ -105,12 +106,10 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     if( calculationStatus.matches( IStatus.ERROR ) )
       return calculationStatus;
 
-    final FeatureChange[] change = m_featureChanges.toArray( new FeatureChange[m_featureChanges.size()] );
-    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_workspace, change );
     try
     {
       monitor.subTask( Messages.getString( "KMUpdateOperation_0" ) ); //$NON-NLS-1$
-      m_workspace.postCommand( command );
+      m_workspace.postCommand( m_commands );
       ProgressUtilities.worked( monitor, 10 );
     }
     catch( final Exception e )
@@ -189,37 +188,49 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     final ProfileObservationReader reader = new ProfileObservationReader( paths[0] );
     final ProfileDataSet profileSet = reader.getDataSet( 1000d * kmStart, 1000d * kmEnd );
 
-    m_featureChanges.add( new FeatureChange( kmChannel, kmKMStartPT, km.getKmStart() ) );
-    m_featureChanges.add( new FeatureChange( kmChannel, kmKMEndPT, km.getKmEnd() ) );
+    addCommand( new ChangeFeatureCommand( kmChannel, kmKMStartPT, km.getKmStart() ) );
+    addCommand( new ChangeFeatureCommand( kmChannel, kmKMEndPT, km.getKmEnd() ) );
 
     final IFeatureBindingCollection<KMParameter> kmParameter = kmChannel.getParameters();
-    // TODO: make it more general - not reduced to 5
-    // TODO: always remove all existing features and add new ones
 
-    // FIXME
-// final int max = 5;
-    final int paramCount = kmParameter.size();
-// if( paramCount != max )
-//      return new IStatus[] { new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.38" ) ) }; //$NON-NLS-1$
+    removeExistingParameters( kmParameter );
+
+    // TODO: get number of parameters from user
+    final int paramCount = 5;
 
     final IKMValue[] values = profileSet.getKMValues( paramCount );
 
     final IStatusCollector paramLog = new StatusCollector( KMPlugin.getID() );
-    for( int i = 0; i < kmParameter.size(); i++ )
+    for( int i = 0; i < paramCount; i++ )
     {
-      final KMParameter kmParameterFE = kmParameter.get( i );
       final IKMValue value = values[i];
-
-      final IStatus log = writeValue( kmParameterFE, value, i );
+      final IStatus log = writeValue( kmChannel, value, i );
       paramLog.add( log );
     }
 
     return paramLog.getAllStati();
   }
 
-  private IStatus writeValue( final KMParameter kmParameterFE, final IKMValue value, final int index )
+  private void removeExistingParameters( final IFeatureBindingCollection<KMParameter> params )
+  {
+    for( final KMParameter kmParameter : params )
+      addCommand( new DeleteFeatureCommand( kmParameter ) );
+  }
+
+  private void addCommand( final ICommand command )
+  {
+    m_commands.addCommand( command );
+  }
+
+  private IStatus writeValue( final KMChannel kmChannel, final IKMValue value, final int index )
   {
     final IStatusCollector valueLog = new StatusCollector( KMPlugin.getID() );
+
+    final IFeatureType kmParamFT = m_workspace.getGMLSchema().getFeatureType( KMParameter.FEATURE_KM_PARAMETER );
+    final IRelationType kmParamRT = (IRelationType) kmChannel.getFeatureType().getProperty( KMChannel.MEMBER_PARAMETER );
+
+    final AddFeatureCommand addCommand = new AddFeatureCommand( m_workspace, kmParamFT, kmChannel, kmParamRT, -1, -1 );
+    m_commands.addCommand( addCommand );
 
     final double k = roundValue( value.getK(), 4 );
     validate( k, Messages.getString( "KMUpdateOperation_6" ), valueLog ); //$NON-NLS-1$
@@ -239,12 +250,12 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     final double alpha = roundValue( value.getAlpha(), 3 );
     validate( alpha, Messages.getString( "KMUpdateOperation_11" ), valueLog ); //$NON-NLS-1$
 
-    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RKF, k ) ); //$NON-NLS-1$
-    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RKV, kForeland ) ); //$NON-NLS-1$
-    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RNF, nValid ) ); //$NON-NLS-1$
-    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_RNV, nForelandValid ) ); //$NON-NLS-1$
-    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_QRK, qSum ) ); //$NON-NLS-1$
-    m_featureChanges.add( new FeatureChange( kmParameterFE, KMParameter.PROP_C, alpha ) ); //$NON-NLS-1$
+    addCommand.setProperty( KMParameter.PROP_RKF, k );
+    addCommand.setProperty( KMParameter.PROP_RKV, kForeland );
+    addCommand.setProperty( KMParameter.PROP_RNF, nValid );
+    addCommand.setProperty( KMParameter.PROP_RNV, nForelandValid );
+    addCommand.setProperty( KMParameter.PROP_QRK, qSum );
+    addCommand.setProperty( KMParameter.PROP_C, alpha );
 
     final String msg = String.format( "%d. %s", index + 1, value );//$NON-NLS-1$
     return valueLog.asMultiStatus( msg );
