@@ -456,8 +456,8 @@
 					<element name="endkm" type="double" minOccurs="0"/>
 					<element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5"/>
 					<!--    Optimierung   -->
-					<element name="faktorRkf" type="double" minOccurs="1"/>
-					<element name="faktorRnf" type="double" minOccurs="1"/>
+					<element name="faktorRkf" type="double" minOccurs="1" nillable="true"/>
+					<element name="faktorRnf" type="double" minOccurs="1" nillable="true"/>
 				</sequence>
 			</extension>
 		</complexContent>
