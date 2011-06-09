@@ -1,49 +1,49 @@
 package org.kalypso.model.km.internal.core;
 
 /**
- * Eine Reihe der KM-Dateien.
+ * Eine Zeile der KM-Dateien.
  */
 public class Row
 {
   /**
    * The heigth of the waterlevel.
    */
-  private double m_hNN;
+  private final double m_hNN;
 
   /**
    * The runoff of the main channel.
    */
-  private double m_q;
+  private final double m_q;
 
   /**
    * The runoff of the foreland.
    */
-  private double m_qf;
+  private final double m_qf;
 
   /**
    * The area of the main channel.
    */
-  private double m_a;
+  private final double m_a;
 
   /**
    * The area of the foreland.
    */
-  private double m_af;
+  private final double m_af;
 
   /**
    * The width of the main channel.
    */
-  private double m_w;
+  private final double m_w;
 
   /**
    * The width of the foreland.
    */
-  private double m_wf;
+  private final double m_wf;
 
   /**
    * The slope.
    */
-  private double m_i;
+  private final double m_i;
 
   public Row( final double hNN, final double q, final double qf, final double a, final double af, final double w, final double wf, final double i )
   {
@@ -64,7 +64,7 @@ public class Row
   public String toString( )
   {
     return "" + m_hNN + " " + m_q + " " + m_qf + " " + m_a + " " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-        + m_af + " " + m_w + " " + m_wf + " " + m_i; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    + m_af + " " + m_w + " " + m_wf + " " + m_i + " (" + getQfull() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
   }
 
   public double getHNN( )
@@ -113,7 +113,7 @@ public class Row
     return m_q / getQfull();
   }
 
-  private double getQfull( )
+  public double getQfull( )
   {
     return m_q + m_qf;
   }

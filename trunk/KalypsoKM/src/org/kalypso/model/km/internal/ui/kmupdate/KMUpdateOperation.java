@@ -250,11 +250,11 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     final double alpha = roundValue( value.getAlpha(), 3 );
     validate( alpha, Messages.getString( "KMUpdateOperation_11" ), valueLog ); //$NON-NLS-1$
 
-    addCommand.setProperty( KMParameter.PROP_RKF, k );
-    addCommand.setProperty( KMParameter.PROP_RKV, kForeland );
-    addCommand.setProperty( KMParameter.PROP_RNF, nValid );
-    addCommand.setProperty( KMParameter.PROP_RNV, nForelandValid );
     addCommand.setProperty( KMParameter.PROP_QRK, qSum );
+    addCommand.setProperty( KMParameter.PROP_RKF, k );
+    addCommand.setProperty( KMParameter.PROP_RNF, nValid );
+    addCommand.setProperty( KMParameter.PROP_RKV, kForeland );
+    addCommand.setProperty( KMParameter.PROP_RNV, nForelandValid );
     addCommand.setProperty( KMParameter.PROP_C, alpha );
 
     final String msg = String.format( "%d. %s", index + 1, value );//$NON-NLS-1$
