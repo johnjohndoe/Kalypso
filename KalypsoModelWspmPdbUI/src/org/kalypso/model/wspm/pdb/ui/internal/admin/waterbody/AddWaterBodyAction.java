@@ -85,7 +85,7 @@ public class AddWaterBodyAction extends UpdateableAction
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
     final WaterBody newWaterBody = new WaterBody();
-    newWaterBody.setRiverline( createLine() );
+    // newWaterBody.setRiverline( createLine() );
 
     final EditWaterBodyWizard wizard = new EditWaterBodyWizard( m_viewer.getExistingWaterbodies(), newWaterBody, Mode.NEW );
     wizard.setWindowTitle( "Create New Water Body" );

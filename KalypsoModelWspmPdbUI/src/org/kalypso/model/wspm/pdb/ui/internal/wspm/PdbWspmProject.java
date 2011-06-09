@@ -176,7 +176,8 @@ public class PdbWspmProject
       {
         final IWorkbenchPage page = m_window.getActivePage();
         page.showView( WspmGmvViewPart.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
-        gmvView.getSite().getSelectionProvider().setSelection( new StructuredSelection( toSelect ) );
+        if( toSelect != null )
+          gmvView.getSite().getSelectionProvider().setSelection( new StructuredSelection( toSelect ) );
       }
       catch( final PartInitException e )
       {
