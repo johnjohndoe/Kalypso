@@ -105,7 +105,7 @@ public class WspmTuhhPostProcessor
   private void addResult( final String id, final File file, final String title ) throws SimulationException
   {
     final String message = String.format( "- %s", title ); //$NON-NLS-1$
-    final String error = String.format( Messages.getString("WspmTuhhPostProcessor.1"), title ); //$NON-NLS-1$
+    final String error = String.format( Messages.getString( "WspmTuhhPostProcessor.1" ), title ); //$NON-NLS-1$
 
     // FIXME: what about optional files?
     if( file != null && file.exists() )
@@ -181,13 +181,11 @@ public class WspmTuhhPostProcessor
     if( !lsResult.isOK() )
       m_log.log( false, lsResult.toString() );
 
-    // TODO: check this error handling
-    if( lsResult.getSeverity() == IStatus.ERROR )
+    if( lsResult.matches( IStatus.ERROR ) )
     {
       m_log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.21" ) ); //$NON-NLS-1$
       m_log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22" ) ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22" ) ); //$NON-NLS-1$
-      return;
+      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22" ) ); //$NON-NLS-1$
     }
 
     if( m_log.checkCanceled() )
@@ -197,14 +195,12 @@ public class WspmTuhhPostProcessor
     if( processedLengthSections.length < 1 )
     {
       m_log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.23" ), new Object[0] ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.23" ) ); //$NON-NLS-1$
-      return;
+      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.23" ) ); //$NON-NLS-1$
     }
     else if( processedLengthSections.length > 1 )
     {
       m_log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.24" ), new Object[0] ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.24" ) ); //$NON-NLS-1$
-      return;
+      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.24" ) ); //$NON-NLS-1$
     }
 
     final ResultLengthSection processedLS = processedLengthSections[0];
@@ -294,7 +290,7 @@ public class WspmTuhhPostProcessor
       final File resultDir = processor.processPolynomes();
       runoffReader.readPolynomeResults( polynomeTmpDir, resultDir, m_log, m_resultEater );
     }
-    
+
     runoffReader.createSumComponents();
     runoffReader.createResult( m_resultEater );
 
