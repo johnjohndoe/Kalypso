@@ -58,6 +58,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -187,8 +188,9 @@ public class KMViewer
     profilesLabel.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.4" ) ); //$NON-NLS-1$
 
     /* Create a checkbox table viewer. */
-    m_profileListViewer = CheckboxTableViewer.newCheckList( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
-    m_profileListViewer.getTable().setHeaderVisible( true );
+    m_profileListViewer = CheckboxTableViewer.newCheckList( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.HIDE_SELECTION | SWT.FULL_SELECTION );
+    final Table table = m_profileListViewer.getTable();
+    table.setHeaderVisible( true );
     m_profileListViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
     m_profileListViewer.setContentProvider( new KMViewerContentProvider() );
     m_profileListViewer.setCheckStateProvider( new KMViewerCheckStateProvider( this ) );
@@ -201,20 +203,24 @@ public class KMViewer
     // ColumnViewerSorter.registerSorter( labelColumn, new ProfileNameSorter() );
 
     /* Create a table viewer column. */
-    final TableViewerColumn stationColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
-    stationColumn.setLabelProvider( new ProfileStationLabelProvider() );
-    stationColumn.getColumn().setText( Messages.getString( "KMViewer_1" ) ); //$NON-NLS-1$
-    stationColumn.getColumn().setWidth( 100 );
-    ColumnViewerSorter.registerSorter( stationColumn, new ProfileStationSorter() );
+    final TableViewerColumn stationViewerColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
+    stationViewerColumn.setLabelProvider( new ProfileStationLabelProvider() );
+    final TableColumn stationColumn = stationViewerColumn.getColumn();
+    stationColumn.setText( Messages.getString( "KMViewer_1" ) ); //$NON-NLS-1$
+    stationColumn.setResizable( false );
+    stationColumn.setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+    ColumnViewerSorter.registerSorter( stationViewerColumn, new ProfileStationSorter() );
 
     /* Create a table viewer column. */
-    final TableViewerColumn validColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
-    validColumn.setLabelProvider( new ProfileValidLabelProvider( this ) );
-    validColumn.getColumn().setText( Messages.getString( "KMViewer_2" ) ); //$NON-NLS-1$
-    validColumn.getColumn().setWidth( 200 );
+    final TableViewerColumn validViewerColumn = new TableViewerColumn( m_profileListViewer, SWT.LEFT );
+    validViewerColumn.setLabelProvider( new ProfileValidLabelProvider( this ) );
+    final TableColumn validColumn = validViewerColumn.getColumn();
+    validColumn.setText( Messages.getString( "KMViewer_2" ) ); //$NON-NLS-1$
+    stationColumn.setResizable( false );
+    validColumn.setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
 
     /* Make sure, the columns are properly resized. */
-    m_profileListViewer.getTable().addControlListener( new ColumnsResizeControlListener() );
+    table.addControlListener( new ColumnsResizeControlListener() );
 
     /* Add a listener. */
     m_startText.addFocusListener( new FocusAdapter()
@@ -232,9 +238,6 @@ public class KMViewer
     /* Add a listener. */
     m_endText.addFocusListener( new FocusAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-       */
       @Override
       public void focusLost( final FocusEvent e )
       {
@@ -379,7 +382,6 @@ public class KMViewer
     final KalininMiljukovType input = getInput();
     if( input == null )
     {
-      // TODO: title + label
       m_labelText.setText( Messages.getString( "KMViewer_3" ) ); //$NON-NLS-1$
       m_dirField.setSelection( StructuredSelection.EMPTY );
       m_dirField.setEnabled( false );
@@ -414,9 +416,6 @@ public class KMViewer
     }
 
     m_profileListViewer.refresh();
-    final TableColumn[] columns = m_profileListViewer.getTable().getColumns();
-    for( final TableColumn column : columns )
-      column.pack();
   }
 
   private void inputChanged( final KalininMiljukovType oldInput, final KalininMiljukovType kmType )

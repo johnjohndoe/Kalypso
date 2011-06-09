@@ -190,9 +190,6 @@ public class KMUpdateWizardPage extends WizardPage
     setControl( main );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
-   */
   @Override
   public boolean isPageComplete( )
   {
@@ -340,7 +337,7 @@ public class KMUpdateWizardPage extends WizardPage
       return;
     }
 
-    m_kmViewer.setInput( "", null ); //$NON-NLS-1$
+    m_kmViewer.setInput( StringUtils.EMPTY, null );
   }
 
   protected void handleConfigButtonClicked( final Text text, final int style )
