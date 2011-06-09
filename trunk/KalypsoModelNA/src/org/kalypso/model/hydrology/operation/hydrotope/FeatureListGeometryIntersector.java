@@ -230,7 +230,7 @@ public class FeatureListGeometryIntersector
           {
             try
             {
-              final Geometry intersection = featurePolygon.intersection( candidatePolygon ).buffer( 0 );
+              final Geometry intersection = featurePolygon.intersection( candidatePolygon );
               for( int n = 0; n < intersection.getNumGeometries(); n++ )
               {
                 final Geometry geometryN = intersection.getGeometryN( n );

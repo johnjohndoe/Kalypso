@@ -61,6 +61,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
+import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.suds.AbstractSud;
 import org.kalypso.model.hydrology.internal.ModelNA;
@@ -69,7 +70,10 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Imports landuse into a 'landuse.gml' file from another gml-workspace (probably a shape-file).
@@ -127,9 +131,10 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
     final int size = m_inputDescriptor.size();
     final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.0" ), size + 10 ); //$NON-NLS-1$
 
+    final IFeatureBindingCollection<Landuse> landusesOut = m_output.getLanduses();
     if( m_importType == ImportType.CLEAR_OUTPUT )
     {
-      final IFeatureBindingCollection<Landuse> landuses = m_output.getLanduses();
+      final IFeatureBindingCollection<Landuse> landuses = landusesOut;
       landuses.clear();
     }
 
@@ -169,12 +174,51 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
         {
           final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
 
+          // the follwing code is largely copied from LandeuseCollection#importLanduse
+
           // Handle existing landuses that intersect the new one
-          final List<Landuse> existingLanduses = m_output.getLanduses().query( geometry.getEnvelope() );
-          for( final Landuse landuse : existingLanduses )
+          final List<Landuse> existingLanduses = landusesOut.query( geometry.getEnvelope() );
+          for( final Landuse existingLanduse : existingLanduses )
           {
+            final GM_MultiSurface existingGeometry = existingLanduse.getGeometry();
+
+            final GM_MultiSurface difference = PolygonIntersectionHelper.createDifference( geometry, existingGeometry );
+            if( difference != null )
+            {// TODO: check if area of difference is > 0!
+              existingLanduse.setGeometry( difference );
+              final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.LanduseCollection.3", existingLanduse.getId(), label ); //$NON-NLS-1$
+              log.add( IStatus.INFO, message );
+            }
+            else
+            {
+              landusesOut.remove( existingLanduse );
+              final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.LanduseCollection.4", existingLanduse.getId(), label ); //$NON-NLS-1$
+              log.add( IStatus.INFO, message );
+            }
+
             /* add sud members */
-            addSudsToLanduse( suds, landuse );
+            for( GM_Surface< ? > surface : existingGeometry.getAllSurfaces() )
+            {
+              GM_Object intersection = geometry.intersection( surface );
+              if( intersection instanceof GM_Surface )
+              {
+                intersection = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { (GM_Surface< ? >) intersection }, intersection.getCoordinateSystem() );
+              }
+              
+              if( intersection instanceof GM_MultiSurface && ((GM_MultiSurface) intersection).getArea() > 0.01)
+              {
+                // clone existing landuse
+                final Landuse clonedLanduse = landusesOut.addNew( Landuse.QNAME );
+                clonedLanduse.setGeometry( (GM_MultiSurface) intersection );
+                clonedLanduse.setCorrSealing( existingLanduse.getCorrSealing() );
+                clonedLanduse.setDescription( "cloned" );
+                clonedLanduse.setDrainageType( existingLanduse.getDrainageType() );
+                clonedLanduse.setLanduse( existingLanduse.getLanduse() );
+                clonedLanduse.setName( existingLanduse.getName() );
+
+                addSudsToLanduse( suds, clonedLanduse );
+              }
+            }
           }
         }
         else
