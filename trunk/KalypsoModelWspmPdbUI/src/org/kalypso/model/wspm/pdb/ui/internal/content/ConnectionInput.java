@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
@@ -96,7 +97,8 @@ public class ConnectionInput
 
   public void dispose( )
   {
-    m_session.close();
+    // TODO: error handling
+    PdbUtils.closeSessionQuietly( m_session );
   }
 
   public State[] getState( )
