@@ -56,14 +56,14 @@ public class KMFilesReader implements IKMReader
 
     for( final File file : m_profileFiles )
     {
-      final ProfileData qwProfile = createQWProfile( file, stationFrom, stationTo );
+      final ProfileData qwProfile = createQWProfile( file );
       factory.addProfileData( qwProfile );
     }
 
     return factory.createProfileDataSet();
   }
 
-  private ProfileData createQWProfile( final File file, final double min, final double max ) throws IOException
+  private ProfileData createQWProfile( final File file ) throws IOException
   {
     final FileReader fileReader = new FileReader( file );
     final LineNumberReader lineReader = new LineNumberReader( fileReader );
@@ -79,7 +79,7 @@ public class KMFilesReader implements IKMReader
       if( kmMatcher.matches() )
       {
         final double meter = 1000d * Double.parseDouble( kmMatcher.group( 1 ) );
-        wqProfile = new ProfileData( file.getAbsolutePath(), min, max, meter );
+        wqProfile = new ProfileData( file.getAbsolutePath(), meter );
         continue;
       }
       final Matcher tableMatcher = PATTERN_TABLE.matcher( line );

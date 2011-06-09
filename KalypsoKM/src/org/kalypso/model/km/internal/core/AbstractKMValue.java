@@ -5,7 +5,7 @@ import java.util.Formatter;
 abstract class AbstractKMValue implements IKMValue
 {
   @Override
-  public double getQSum( )
+  public final double getQSum( )
   {
     return getQ() + getQForeland();
   }

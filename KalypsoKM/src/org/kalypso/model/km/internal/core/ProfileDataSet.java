@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.core;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.model.km.internal.KMPlugin;
+
 
 /**
  * A set of {@link ProfileData}
@@ -77,8 +82,7 @@ public class ProfileDataSet
       final ProfileData data = profileData[i];
       final ProfileData prevProfile = i == 0 || size == 1 ? null : profileData[i - 1];
       final ProfileData nextProfile = i + 1 < size ? profileData[i + 1] : null;
-      final double range = data.calculateRange( prevProfile, nextProfile );
-      data.setRange( range );
+      data.calculateLength( prevProfile, nextProfile );
     }
 
     /* Are there already a start and end position given? */
@@ -91,8 +95,8 @@ public class ProfileDataSet
     else if( size > 0 )
     {
       /* Calculate the start and end position. */
-      m_startPosition = profileData[0].getPosition();
-      m_endPosition = profileData[size - 1].getPosition();
+      m_startPosition = profileData[0].getStation();
+      m_endPosition = profileData[size - 1].getStation();
     }
     else
     {
@@ -126,70 +130,83 @@ public class ProfileDataSet
     return m_endPosition;
   }
 
-  public IKMValue[] getKMValues( final int paramCount )
+  public IKMValue[] getKMValues( final int paramCount ) throws CoreException
   {
-    final IKMValue[] kmMerged = getMergedParams();
-    final int qBordvollIndex = findQBordvoll( kmMerged );
+    final double qBordvoll = findQBordvoll();
 
-    final int[] qIndices = buildMapping( paramCount, qBordvollIndex );
+    final int[] qIndices = buildMapping( paramCount + 1, qBordvoll );
     final IKMValue[] result = new IKMValue[paramCount];
-    for( int i = 0; i < result.length; i++ )
-      result[i] = kmMerged[qIndices[i]];
-    return result;
-  }
-
-  private int findQBordvoll( final IKMValue[] kmMerged )
-  {
-    for( int i = 0; i < kmMerged.length; i++ )
+    final int middleParamIndex = getMiddleParamIndex( paramCount + 1 );
+    for( int i = 0; i < paramCount; i++ )
     {
-      if( kmMerged[i].getKForeland() > 0 )
-        return i;
+      final IKMValue mergedKM = getMergedKM( qIndices[i], qIndices[i + 1] );
+      // HACKY: as we are using a mean qbordvoll, we get nForeland and kForeland values below the qBordvollIndex.
+      // We force those to 0.0; TODO: check if correct.
+      if( i < middleParamIndex )
+        result[i] = new NoForelandKMValue( mergedKM );
+      else
+        result[i] = mergedKM;
     }
-
-    return -1;
+    return result;
   }
 
   /**
    * Calculates which paramCount-index maps to which q-index.
    */
-  private int[] buildMapping( final int paramCount, final int qBordvollIndex )
+  private int[] buildMapping( final int paramCount, final double qBordvoll ) throws CoreException
   {
+    final int qBordvollIndex = findQBordvollIndex( qBordvoll );
+    if( qBordvollIndex == -1 )
+    {
+      fail( "Mittleres Q-Bordvoll (%.3f) ausserhalb des berechneten Bereichs. WSPM Neubrechnnug notwendig.", qBordvoll );
+      // TODO: error
+      return null;
+    }
+
     final int numberQ = getNumberQ();
     final int maxIndexQ = numberQ - 1;
 
-    final int middleParamIndex = (int) ((paramCount / 2.0f));
+    final int middleParamIndex = getMiddleParamIndex( paramCount );
 
     final int[] qIndices = new int[paramCount];
 
-    buildMapping( qIndices, 0, middleParamIndex, 0, qBordvollIndex );
-    buildMapping( qIndices, middleParamIndex, paramCount, qBordvollIndex, numberQ );
+    if( !buildMapping( qIndices, 0, middleParamIndex, 0, qBordvollIndex + 1 ) )
+      fail( "Nicht ausreichend Abflusswerte unterhalb von Q-Bordvoll (%.3f) vorhanden. WSPM Neubrechnnug mit kleinerem Q-min notwendig.", qBordvoll );
+
+    if( !buildMapping( qIndices, middleParamIndex - 1, paramCount, qBordvollIndex, numberQ ) )
+      fail( "Nicht ausreichend Abflusswerte oberhalb von Q-Bordvoll (%.3f) vorhanden. WSPM Neubrechnnug mit größerem Q-max notwendig.", qBordvoll );
 
     qIndices[paramCount - 1] = maxIndexQ;
 
     return qIndices;
   }
 
-  private void buildMapping( final int[] qIndices, final int paramFrom, final int paramTo, final int qIndexFrom, final int qIndexTo )
+  private void fail( final String format, final double qBordvoll ) throws CoreException
+  {
+    final String message = String.format( format, qBordvoll );
+    final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), message );
+    throw new CoreException( status );
+  }
+
+  protected int getMiddleParamIndex( final int paramCount )
+  {
+    final int middleParamIndex = (int) ((paramCount / 2.0f));
+    return middleParamIndex;
+  }
+
+  private boolean buildMapping( final int[] qIndices, final int paramFrom, final int paramTo, final int qIndexFrom, final int qIndexTo )
   {
     final double interval = ((double) qIndexTo - qIndexFrom - 1) / (paramTo - paramFrom - 1);
 
+    if( interval < 1.0 )
+      return false;
+
     for( int i = 0; i < paramTo - paramFrom; i++ )
       qIndices[i + paramFrom] = qIndexFrom + (int) (i * interval);
+    return true;
   }
 
-  /**
-   * Generates one kmValue for each q by combining for each q all parameters of all profiles.
-   */
-  private IKMValue[] getMergedParams( )
-  {
-    final int numKMValues = getNumberQ();
-    final IKMValue[] kmMerged = new IKMValue[numKMValues];
-    for( int indexQ = 0; indexQ < numKMValues; indexQ++ )
-      kmMerged[indexQ] = getKMValue( indexQ );
-    return kmMerged;
-  }
-
-  protected int getNumberQ( )
+  private int getNumberQ( )
   {
     final ProfileData data = m_profileData[0];
     final int numKMValues = data.getNumberKMValues();
@@ -197,19 +214,55 @@ public class ProfileDataSet
   }
 
   /**
-   * This function collects KMValues for one discharge (indexQ) over all profiles.
+   * This function collects KMValues between two selected discharges over all profiles.
    * 
-   * @param indexQ
-   *          The index of the discharge.
-   * @return The km values.
+   * @param indexQfrom
+   *          Lower index of the discharge.
+   * @param indexQto
+   *          Upper index of the discharge.
+   * @return The km values derived between the given two discharge values.
    */
-  private IKMValue getKMValue( final int indexQ )
+  private IKMValue getMergedKM( final int indexQfrom, final int indexQto )
   {
     final IKMValue[] profileKMs = new IKMValue[m_profileData.length];
 
     for( int i = 0; i < profileKMs.length; i++ )
-      profileKMs[i] = m_profileData[i].getKMValue( indexQ );
+      profileKMs[i] = m_profileData[i].getKMValue( indexQfrom, indexQto );
 
     return new MultiKMValue( profileKMs );
+  }
+
+  /**
+   * Returns the index of qBordvoll. We are currently using the index of the biggest q below qBordvoll
+   */
+  private int findQBordvollIndex( final double qBordvoll )
+  {
+    return m_profileData[0].getQBordvollIndex( qBordvoll );
+  }
+
+  /**
+   * This function calculates qBordvoll
+   */
+  private double findQBordvoll( )
+  {
+    final double[] qBordvoll = new double[m_profileData.length];
+    final double[] length = new double[m_profileData.length];
+    for( int i = 0; i < m_profileData.length; i++ )
+    {
+      final ProfileData profileData = m_profileData[i];
+      qBordvoll[i] = profileData.findQBordvoll();
+      length[i] = profileData.getLength();
+    }
+
+    /* calculate mean q bordvoll (weighted by length) */
+    double completeLength = 0.0;
+    double meanQbordvoll = 0.0;
+    for( int i = 0; i < qBordvoll.length; i++ )
+    {
+      completeLength += length[i];
+      meanQbordvoll += qBordvoll[i] * length[i];
+    }
+
+    return meanQbordvoll / completeLength;
   }
 }

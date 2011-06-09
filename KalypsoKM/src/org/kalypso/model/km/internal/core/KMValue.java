@@ -82,7 +82,11 @@ class KMValue extends AbstractKMValue
     // Distribution factor
     m_alpha = 1 - qmForeland / (qm + qmForeland);
     m_length = length;
+
+    // FIXME: probably wrong... depends on how the calculation core treats the table of parameters...., probably it's
+    // the upper or lower bound instead...
     m_q = qm;
+
     m_qf = qmForeland;
     m_k = ki;
     m_n = n;
@@ -135,5 +139,4 @@ class KMValue extends AbstractKMValue
   {
     return m_qf;
   }
-
 }

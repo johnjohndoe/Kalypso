@@ -105,7 +105,7 @@ public class ProfileObservationReader implements IKMReader
       final IObservation<TupleResult> observation = qIntervallResult.getOrCreatePointsObservation();
 
       /* Create the profile data. */
-      final ProfileData profileData = createProfileData( station, slope, observation, stationFrom, stationTo );
+      final ProfileData profileData = createProfileData( station, slope, observation );
 
       /* Add the profile data. */
       factory.addProfileData( profileData );
@@ -125,7 +125,7 @@ public class ProfileObservationReader implements IKMReader
    *          The source observation.
    * @return The profile data.
    */
-  private ProfileData createProfileData( final BigDecimal station, final BigDecimal slope, final IObservation<TupleResult> observation, final double stationFrom, final double stationTo )
+  private ProfileData createProfileData( final BigDecimal station, final BigDecimal slope, final IObservation<TupleResult> observation )
   {
     /* Memory for the reows. */
     final List<Row> rows = new ArrayList<Row>();
@@ -160,7 +160,7 @@ public class ProfileObservationReader implements IKMReader
     }
 
     /* Create the profile data. */
-    final ProfileData profileData = new ProfileData( m_path.toString(), stationFrom, stationTo, 1000d * station.doubleValue() );
+    final ProfileData profileData = new ProfileData( m_path.toString(), 1000d * station.doubleValue() );
     profileData.set( rows.toArray( new Row[] {} ) );
 
     return profileData;

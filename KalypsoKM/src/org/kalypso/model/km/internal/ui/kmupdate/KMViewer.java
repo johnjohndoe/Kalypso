@@ -363,7 +363,7 @@ public class KMViewer
     for( final ProfileData pd : allProfiles )
     {
       final String file = pd.getFile();
-      final double position = pd.getPosition();
+      final double position = pd.getStation();
       final double station = position / 1000.0;
 
       if( (kmStart == null || kmStart <= station) && (kmEnd == null || station <= kmEnd) )

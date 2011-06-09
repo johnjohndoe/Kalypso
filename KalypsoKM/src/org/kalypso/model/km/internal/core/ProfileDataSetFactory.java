@@ -84,8 +84,8 @@ class ProfileDataSetFactory
   {
     if( !Double.isNaN( m_startPosition ) && !Double.isNaN( m_endPosition ) )
     {
-      final double profilePos = qwProfile.getPosition();
-      if( m_startPosition <= profilePos && profilePos <= m_endPosition )
+      final double station = qwProfile.getStation();
+      if( m_startPosition <= station && station <= m_endPosition )
         m_profileSort.add( qwProfile );
     }
     else

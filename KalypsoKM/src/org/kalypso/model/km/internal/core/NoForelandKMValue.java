@@ -41,62 +41,62 @@
 package org.kalypso.model.km.internal.core;
 
 /**
- * Just represents a discharge value, used to sorting.
+ * @author Gernot Belger
  */
-class DummyKMValue extends AbstractKMValue
+public class NoForelandKMValue extends AbstractKMValue
 {
-  private final double m_q;
+  private final IKMValue m_delegate;
 
-  public DummyKMValue( final double q )
+  public NoForelandKMValue( final IKMValue delegate )
   {
-    m_q = q;
+    m_delegate = delegate;
   }
 
   @Override
   public double getLength( )
   {
-    return 0;
+    return m_delegate.getLength();
   }
 
   @Override
   public double getAlpha( )
   {
-    return 0;
+    return 1.0;
   }
 
   @Override
   public double getK( )
   {
-    return 0;
+    return m_delegate.getK();
   }
 
   @Override
   public double getN( )
   {
-    return 0;
+    return m_delegate.getN();
   }
 
   @Override
   public double getKForeland( )
   {
-    return 0;
+    return 0.0;
   }
 
   @Override
   public double getNForeland( )
   {
-    return 0;
+    return 0.0;
   }
 
   @Override
   public double getQ( )
   {
-    return m_q;
+    return m_delegate.getQSum();
   }
 
   @Override
   public double getQForeland( )
   {
-    return 0;
+    return 0.0;
   }
 }
