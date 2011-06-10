@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Group;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
 
@@ -72,9 +73,13 @@ public class ManageWaterBodiesPage extends WizardPage
 
   private final Session m_session;
 
-  protected ManageWaterBodiesPage( final String pageName, final Session session )
+  private final IPdbConnection m_connection;
+
+  protected ManageWaterBodiesPage( final String pageName, final IPdbConnection connection, final Session session )
   {
     super( pageName );
+
+    m_connection = connection;
 
     setTitle( "Manage Water Bodies" );
     setDescription( "Manage the Water Bodies of the Cross Section Database" );
@@ -138,11 +143,11 @@ public class ManageWaterBodiesPage extends WizardPage
 
   private UpdateableAction[] createActions( )
   {
-    m_actions = new UpdateableAction[3];
+    m_actions = new UpdateableAction[4];
     m_actions[0] = new AddWaterBodyAction( m_session, m_viewer, "&New..." );
     m_actions[1] = new EditWaterBodyAction( this, m_viewer );
     m_actions[2] = new RemoveWaterBodyAction( this, m_viewer );
-    // m_actions[3] = new ImportWaterBodiesAction( this, m_viewer );
+    m_actions[3] = new ImportWaterBodiesAction( this, m_viewer );
 
     return m_actions;
   }
@@ -168,5 +173,10 @@ public class ManageWaterBodiesPage extends WizardPage
   Session getSession( )
   {
     return m_session;
+  }
+
+  public IPdbConnection getConnection( )
+  {
+    return m_connection;
   }
 }

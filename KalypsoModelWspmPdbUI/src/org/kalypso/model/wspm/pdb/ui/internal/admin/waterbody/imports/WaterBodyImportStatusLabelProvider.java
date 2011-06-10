@@ -40,54 +40,62 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.hibernate.Session;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.pdb.connect.Executor;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.kalypso.core.status.StatusComposite;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesData.INSERTION_MODE;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
  */
-public class ImportWaterBodiesOperation implements ICoreRunnableWithProgress
+public class WaterBodyImportStatusLabelProvider extends ColumnLabelProvider
 {
-  private final ImportWaterBodiesData m_data;
+  private final Set<String> m_names = new HashSet<String>();
 
-  private final WaterBody[] m_waterBodies;
+  private final Map<WaterBody, IStatus> m_waterBodyStatus;
 
-  public ImportWaterBodiesOperation( final WaterBody[] waterBodies, final ImportWaterBodiesData data )
+  public WaterBodyImportStatusLabelProvider( final WaterBody[] extistingWaterBodies, final Map<WaterBody, IStatus> waterBodyStatus )
   {
-    m_waterBodies = waterBodies;
-    m_data = data;
+    m_waterBodyStatus = waterBodyStatus;
+    for( final WaterBody waterBody : extistingWaterBodies )
+      m_names.add( waterBody.getName() );
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
+  public String getText( final Object element )
   {
-    final INSERTION_MODE insertionMode = m_data.getInsertionMode();
+    final IStatus status = getStatus( element );
+    return status.getMessage();
+  }
 
-    final IPdbConnection connection = m_data.getConnection();
-    Session session = null;
-    try
-    {
-      session = connection.openSession();
-      final IPdbOperation operation = new WaterBodiesInsertOperation( m_waterBodies, insertionMode, monitor );
-      new Executor( session, operation ).execute();
-      session.close();
-    }
-    catch( final Exception e )
-    {
-      throw new InvocationTargetException( e );
-    }
+  @Override
+  public Image getImage( final Object element )
+  {
+    final IStatus status = getStatus( element );
+    return StatusComposite.getStatusImage( status );
+  }
 
-    monitor.done();
+  private IStatus getStatus( final Object element )
+  {
+    if( element instanceof WaterBody )
+    {
+      final WaterBody water = (WaterBody) element;
+      final String name = water.getName();
+      if( m_names.contains( name ) )
+        return new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, "Element exists" );
+
+      // TODO: rather create combined status? Column will be too big...
+
+      if( m_waterBodyStatus.containsKey( water ) )
+        return m_waterBodyStatus.get( water );
+    }
 
     return Status.OK_STATUS;
   }

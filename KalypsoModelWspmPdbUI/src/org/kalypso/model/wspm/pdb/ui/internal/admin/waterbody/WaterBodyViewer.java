@@ -82,23 +82,8 @@ public class WaterBodyViewer
   public TableViewer createTableViewer( final Composite parent )
   {
     m_viewer = new TableViewer( parent, SWT.BORDER | SWT.FULL_SELECTION );
-    final Table table = m_viewer.getTable();
-    table.setHeaderVisible( true );
 
-    table.addControlListener( new ColumnsResizeControlListener() );
-
-    final TableViewerColumn gknColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
-    gknColumn.getColumn().setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
-    gknColumn.getColumn().setResizable( false );
-    gknColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
-
-    ColumnViewerSorter.registerSorter( gknColumn, new ViewerComparator() );
-
-    final TableViewerColumn nameColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
-    nameColumn.getColumn().setText( WaterBodyStrings.STR_NAME );
-    nameColumn.getColumn().setResizable( false );
-    nameColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
-    ColumnViewerSorter.registerSorter( nameColumn, new ViewerComparator() );
+    configureViewer( m_viewer, false );
 
     m_tableInput = new WritableList( new ArrayList<WaterBody>(), WaterBody.class );
 
@@ -111,6 +96,30 @@ public class WaterBodyViewer
     ViewerSupport.bind( m_viewer, m_tableInput, labelProperties );
 
     return m_viewer;
+  }
+
+  public static void configureViewer( final TableViewer viewer, final boolean setLabelProvider )
+  {
+    final Table table = viewer.getTable();
+    table.setHeaderVisible( true );
+
+    table.addControlListener( new ColumnsResizeControlListener() );
+
+    final TableViewerColumn gknColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    gknColumn.getColumn().setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
+    gknColumn.getColumn().setResizable( false );
+    gknColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+    if( setLabelProvider )
+      gknColumn.setLabelProvider( new WaterBodyCodeLabelProvider() );
+    ColumnViewerSorter.registerSorter( gknColumn, new ViewerComparator() );
+
+    final TableViewerColumn labelColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    labelColumn.getColumn().setText( WaterBodyStrings.STR_NAME );
+    labelColumn.getColumn().setResizable( false );
+    labelColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+    if( setLabelProvider )
+      labelColumn.setLabelProvider( new WaterBodyLabelLabelProvider() );
+    ColumnViewerSorter.registerSorter( labelColumn, new ViewerComparator() );
   }
 
   public void refreshWaterBody( final String name )
