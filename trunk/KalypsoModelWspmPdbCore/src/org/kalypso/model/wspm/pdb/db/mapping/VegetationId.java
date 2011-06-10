@@ -23,6 +23,7 @@ public class VegetationId implements java.io.Serializable, CoefficientId
     this.name = name;
   }
 
+  @Override
   @Column(name = "point_kind", nullable = false, length = 50)
   public String getPointKind( )
   {
@@ -34,6 +35,7 @@ public class VegetationId implements java.io.Serializable, CoefficientId
     this.pointKind = pointKind;
   }
 
+  @Override
   @Column(name = "name", nullable = false, length = 50)
   public String getName( )
   {

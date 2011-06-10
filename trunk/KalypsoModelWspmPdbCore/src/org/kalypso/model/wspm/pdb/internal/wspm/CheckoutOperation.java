@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,8 +62,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -79,11 +78,11 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
 
   private final Set<CrossSection> m_crossSections = new HashSet<CrossSection>();
 
-  private final PdbWspmProject m_project;
+  private final IPdbWspmProject m_project;
 
   private TuhhReach[] m_changedReaches;
 
-  public CheckoutOperation( final PdbWspmProject project, final IStructuredSelection selection )
+  public CheckoutOperation( final IPdbWspmProject project, final IStructuredSelection selection )
   {
     m_project = project;
     m_selection = selection;
@@ -100,7 +99,7 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     findCrossSections();
     ProgressUtilities.worked( monitor, 5 );
     if( m_crossSections.isEmpty() )
-      return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, "No cross sections found in selection." );
+      return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "No cross sections found in selection." );
 
     // TODO Preview?
 
@@ -167,19 +166,19 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     catch( final GMLSchemaException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
