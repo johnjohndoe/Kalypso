@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
+import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
@@ -52,6 +53,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
@@ -80,6 +82,7 @@ public class ImportWaterBodiesWizard extends Wizard
 
     setWindowTitle( "Import Water Bodies" );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
+    setNeedsProgressMonitor( true );
 
     m_shapeFilePage = new SelectShapeFilePage( "selectPage", "Select Shape File", WspmPdbUiImages.IMG_WIZBAN_IMPORT_WIZ ); //$NON-NLS-1$
     m_shapeFilePage.setDescription( "Select the shape file of river lines on this page." );
@@ -124,8 +127,11 @@ public class ImportWaterBodiesWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final ICoreRunnableWithProgress operation = new ImportWaterBodiesOperation( m_data );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    final WritableSet selectedWaterBodies = m_data.getSelectedWaterBodies();
+    final WaterBody[] waterBodies = (WaterBody[]) selectedWaterBodies.toArray( new WaterBody[selectedWaterBodies.size()] );
+
+    final ICoreRunnableWithProgress operation = new ImportWaterBodiesOperation( waterBodies, m_data );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
     {
       new StatusDialog2( getShell(), status, getWindowTitle() );

@@ -57,7 +57,7 @@ public class ManageWaterBodiesWizard extends Wizard
   {
     m_session = openSession( connection );
 
-    addPage( new ManageWaterBodiesPage( "waterBodies", m_session ) ); //$NON-NLS-1$
+    addPage( new ManageWaterBodiesPage( "waterBodies", connection, m_session ) ); //$NON-NLS-1$
   }
 
   private Session openSession( final IPdbConnection connection )

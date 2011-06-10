@@ -40,52 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesData;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard;
 
 /**
  * @author Gernot Belger
  */
-public class ImportWaterBodiesAction extends UpdateableAction
+public class WaterBodyCodeLabelProvider extends ColumnLabelProvider
 {
-  private final ManageWaterBodiesPage m_page;
-
-  private final WaterBodyViewer m_viewer;
-
-  public ImportWaterBodiesAction( final ManageWaterBodiesPage page, final WaterBodyViewer viewer )
-  {
-    m_page = page;
-    m_viewer = viewer;
-
-    setText( "&Import..." );
-  }
-
   @Override
-  protected boolean checkEnabled( )
+  public String getText( final Object element )
   {
-    return true;
-  }
+    if( element instanceof WaterBody )
+      return ((WaterBody) element).getName();
 
-  @Override
-  public void runWithEvent( final Event event )
-  {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    final WaterBody[] existingWaterbodies = m_viewer.getExistingWaterbodies();
-    final IPdbConnection connection = m_page.getConnection();
-
-    final ImportWaterBodiesData data = new ImportWaterBodiesData( connection, existingWaterbodies );
-    final Wizard wizard = new ImportWaterBodiesWizard( data );
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    if( dialog.open() != Window.CANCEL )
-      m_viewer.refreshWaterBody( null );
+    return super.getText( element );
   }
 }

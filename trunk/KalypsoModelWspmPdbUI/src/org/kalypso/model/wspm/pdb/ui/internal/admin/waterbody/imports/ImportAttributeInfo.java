@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 import org.eclipse.jface.viewers.ComboViewer;
+import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
@@ -49,14 +50,20 @@ import org.kalypso.shape.dbf.IDBFField;
 /**
  * @author Gernot Belger
  */
-public class ImportAttributeInfo
+public class ImportAttributeInfo extends AbstractModelObject
 {
-  public static IDBFField FIELD_NOT_SET;
+  public static final String PROPERTY_ENABLEMENT = "enablement"; //$NON-NLS-1$
+
+  public static final String PROPERTY_DEFAULT_VALUE = "defaultValue"; //$NON-NLS-1$
+
+  public static String PROPERTY_FIELD = "field"; //$NON-NLS-1$
+
+  public static IDBFField FIELD_USE_DEFAULT;
   static
   {
     try
     {
-      FIELD_NOT_SET = new DBFField( "<Not Set>", FieldType.C, (short) 1, (short) 0 );
+      FIELD_USE_DEFAULT = new DBFField( "<Eingabe>", FieldType.C, (short) 1, (short) 0 );
     }
     catch( final DBaseException e )
     {
@@ -70,7 +77,9 @@ public class ImportAttributeInfo
 
   private final boolean m_optional;
 
-  private final IDBFField m_field = FIELD_NOT_SET;
+  private IDBFField m_field = FIELD_USE_DEFAULT;
+
+  private Object m_defaultValue;
 
   public ImportAttributeInfo( final String property, final ComboViewer viewer, final boolean optional )
   {
@@ -84,8 +93,48 @@ public class ImportAttributeInfo
     return m_viewer;
   }
 
+  public boolean getEnablement( )
+  {
+    return m_field == FIELD_USE_DEFAULT;
+  }
+
+  public Object getDefaultValue( )
+  {
+    return m_defaultValue;
+  }
+
+  public void setDefaultValue( final Object defaultValue )
+  {
+    final Object oldValue = m_defaultValue;
+
+    m_defaultValue = defaultValue;
+
+    firePropertyChange( PROPERTY_DEFAULT_VALUE, oldValue, m_defaultValue );
+  }
+
+  public void setField( final IDBFField field )
+  {
+    final IDBFField oldField = m_field;
+    final boolean oldEnablement = getEnablement();
+
+    m_field = field;
+
+    firePropertyChange( PROPERTY_FIELD, oldField, field );
+    firePropertyChange( PROPERTY_ENABLEMENT, oldEnablement, getEnablement() );
+  }
+
   public IDBFField getField( )
   {
     return m_field;
+  }
+
+  public boolean isOptional( )
+  {
+    return m_optional;
+  }
+
+  public String getProperty( )
+  {
+    return m_property;
   }
 }
