@@ -211,7 +211,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     if( station == null )
       return null;
 
-    return station.movePointRight( 4 );
+    return station.movePointRight( 3 );
   }
 
   private WaterBody findWaterBody( final IProfileFeature feature )

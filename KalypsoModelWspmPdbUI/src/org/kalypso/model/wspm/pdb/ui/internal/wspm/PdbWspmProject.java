@@ -62,6 +62,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.pdb.internal.wspm.IPdbWspmProject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
@@ -90,7 +91,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * 
  * @author Gernot Belger
  */
-public class PdbWspmProject
+public class PdbWspmProject implements IPdbWspmProject
 {
   public static final String PROPERTY_THEME_REACH = "pdbReach"; //$NON-NLS-1$
 
@@ -146,6 +147,7 @@ public class PdbWspmProject
     return m_project.getFile( "PDB.gmt" ); //$NON-NLS-1$
   }
 
+  @Override
   public TuhhWspmProject getWspmProject( )
   {
     if( m_provider == null )
@@ -158,6 +160,7 @@ public class PdbWspmProject
     return (TuhhWspmProject) workspace.getRootFeature();
   }
 
+  @Override
   public void doSave( final IProgressMonitor monitor ) throws CoreException
   {
     if( m_provider == null )
@@ -199,6 +202,7 @@ public class PdbWspmProject
     mapView.postCommand( command, null );
   }
 
+  @Override
   public CommandableWorkspace getWorkspace( )
   {
     if( m_provider == null )
@@ -283,6 +287,7 @@ public class PdbWspmProject
     return runnable.execute();
   }
 
+  @Override
   public IProject getProject( )
   {
     return m_project;

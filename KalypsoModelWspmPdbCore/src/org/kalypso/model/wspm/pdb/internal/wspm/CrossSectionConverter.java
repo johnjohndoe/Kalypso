@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class CrossSectionConverter
 
     final BigDecimal station = m_section.getStation();
     /* [m] -> [km] */
-    m_profile.setStation( station.movePointLeft( 4 ).doubleValue() );
+    m_profile.setStation( station.movePointLeft( 3 ).doubleValue() );
 
     convertP();
     convertBuilding();
