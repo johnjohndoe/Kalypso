@@ -76,7 +76,7 @@
                     </element>
 					<!-- ZR Zufluss falls Zufluss vorhanden -->
 					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="syntheticZuflussZR" type="boolean" default="false" />
+					<element name="syntheticZuflussZR" type="boolean" default="false" nillable="true"/>
 					<!-- branching ab hier aktivieren-->
 					<element name="branchingMember" type="na:BranchingAssociationType" minOccurs="0"/>
 					<element name="riverCode" type="string" />
@@ -87,7 +87,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="qqRelation" type="zmlinline:ZmlInlineQQType"/>
+					<element name="qqRelation" type="zmlinline:ZmlInlineQQType" nillable="true"/>
 					<element name="qqRelatedNode" type="na:NodeLinkType" minOccurs="0" />
 				</sequence>
 			</extension>
@@ -476,8 +476,8 @@
 					<element name="generateResult" type="boolean"/>
 					<element name="downStreamNodeMember_2nd" type="na:NodeLinkType" minOccurs="0"/>
 					<element name="downStreamNodeMember_3rd" type="na:NodeLinkType" minOccurs="0"/>
-					<element name="zmlLinkSeaEvaporation" type="obslink:TimeseriesLinkFeatureProperty"/>
-					<element name="faktorSeaEvaporation" type="double" default="1.0"/>
+					<element name="zmlLinkSeaEvaporation" type="obslink:TimeseriesLinkFeatureProperty" nillable="true"/>
+					<element name="faktorSeaEvaporation" type="double" default="1.0" nillable="true"/>
 				</sequence>
 			</extension>
 		</complexContent>
