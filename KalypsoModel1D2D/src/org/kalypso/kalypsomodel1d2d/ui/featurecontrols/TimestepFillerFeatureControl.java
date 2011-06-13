@@ -54,13 +54,12 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dejan Antanaskovic
  */
-public class TimestepFillerFeatureControl extends AbstractFeatureControl implements IFeatureControl
+public class TimestepFillerFeatureControl extends AbstractFeatureControl
 {
   public TimestepFillerFeatureControl( final Feature feature, final IPropertyType ftp )
   {

@@ -67,7 +67,6 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -76,7 +75,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
  * @author belger
  * @author jung
  */
-public class ReachSegmentFeatureControl extends AbstractFeatureControl implements IFeatureControl
+public class ReachSegmentFeatureControl extends AbstractFeatureControl
 {
   protected final class ChangeCheckstateAction extends Action
   {

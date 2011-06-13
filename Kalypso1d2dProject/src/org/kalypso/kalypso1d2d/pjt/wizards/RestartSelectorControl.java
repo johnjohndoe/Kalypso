@@ -52,13 +52,12 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Dejan Antanaskovic
  * 
  */
-public class RestartSelectorControl extends AbstractFeatureControl implements IFeatureControl
+public class RestartSelectorControl extends AbstractFeatureControl
 {
   public RestartSelectorControl( final Feature feature, final IPropertyType pt )
   {

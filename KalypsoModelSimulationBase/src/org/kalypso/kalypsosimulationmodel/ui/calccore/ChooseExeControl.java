@@ -59,13 +59,12 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author belger
  */
-public class ChooseExeControl extends AbstractFeatureControl implements IFeatureControl
+public class ChooseExeControl extends AbstractFeatureControl
 {
   private final String m_exePattern;
 

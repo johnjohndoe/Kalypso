@@ -50,7 +50,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
@@ -59,11 +58,11 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 /**
  * @author Dejan Antanaskovic
  */
-public class ControlModelNewControl extends AbstractFeatureControl implements IFeatureControl
+public class ControlModelNewControl extends AbstractFeatureControl
 {
   private Button m_button;
 
-  public ControlModelNewControl( Feature feature, IPropertyType ftp )
+  public ControlModelNewControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
   }
@@ -72,9 +71,9 @@ public class ControlModelNewControl extends AbstractFeatureControl implements IF
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
   @Override
-  public void addModifyListener( ModifyListener l )
+  public void addModifyListener( final ModifyListener l )
   {
-    
+
   }
 
   /**
@@ -93,7 +92,7 @@ public class ControlModelNewControl extends AbstractFeatureControl implements IF
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         final Feature parentFeature = getFeature();
         final Object property = parentFeature.getProperty( getFeatureTypeProperty() );
@@ -107,12 +106,12 @@ public class ControlModelNewControl extends AbstractFeatureControl implements IF
           try
           {
             commandableWorkspace.postCommand( command );
-//            KalypsoGisPlugin.getDefault().getPool().saveObject( parentFeature.getWorkspace(), new NullProgressMonitor() );
-//            final FeatureChange change = new FeatureChange(commandableWorkspace.getRootFeature(), parentFeature.getParentRelation(), parentFeature);
-//            final FeatureChange[] changes = new FeatureChange[] {change};
-//            fireFeatureChange( changes );
+            //            KalypsoGisPlugin.getDefault().getPool().saveObject( parentFeature.getWorkspace(), new NullProgressMonitor() );
+            //            final FeatureChange change = new FeatureChange(commandableWorkspace.getRootFeature(), parentFeature.getParentRelation(), parentFeature);
+            //            final FeatureChange[] changes = new FeatureChange[] {change};
+            //            fireFeatureChange( changes );
           }
-          catch( Exception e1 )
+          catch( final Exception e1 )
           {
             // TODO Auto-generated catch block
             e1.printStackTrace();
@@ -136,7 +135,7 @@ public class ControlModelNewControl extends AbstractFeatureControl implements IF
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
   @Override
-  public void removeModifyListener( ModifyListener l )
+  public void removeModifyListener( final ModifyListener l )
   {
   }
 
