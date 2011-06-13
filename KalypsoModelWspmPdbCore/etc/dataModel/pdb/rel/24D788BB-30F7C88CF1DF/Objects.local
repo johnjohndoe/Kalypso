@@ -1,0 +1,24 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<oracle.dbtools.crest.model.design.relational.RelationalDesign>
+   <object objectType="Table" objectID="F4E21864-7EF6-ACB5-6A56-3DDD2316F07F" name="Cross_Section" seqName="seg_0"/>
+   <object objectType="Table" objectID="540AACE6-5BB4-8597-E567-84C1DCF9A1B7" name="Cross_Section_Part" seqName="seg_0"/>
+   <object objectType="Table" objectID="5AA6930F-798F-D719-AEC3-C7601C85E41F" name="Event" seqName="seg_0"/>
+   <object objectType="Table" objectID="E5E99843-BBD5-FF8D-E41C-8AFDC97B13C2" name="Info" seqName="seg_0"/>
+   <object objectType="Table" objectID="3DA05EF6-8262-F352-C262-8AA4295E5B39" name="Point" seqName="seg_0"/>
+   <object objectType="Table" objectID="55D915E9-792F-1653-216C-07F9426EE3D6" name="Point_Kind" seqName="seg_0"/>
+   <object objectType="Table" objectID="3CCF2B02-C750-F9D5-7E37-AF24C657D155" name="Roughness" seqName="seg_0"/>
+   <object objectType="Table" objectID="A2E7E1C2-4855-4398-B97C-6BCC847CC705" name="State" seqName="seg_0"/>
+   <object objectType="Table" objectID="12A7EABE-A17F-B267-E134-CD9DD1C4675A" name="Vegetation" seqName="seg_0"/>
+   <object objectType="Table" objectID="19A8B7ED-7631-2811-B8E7-67DB35D3F55B" name="Water_Body" seqName="seg_0"/>
+   <object objectType="Table" objectID="CB064DCF-E065-1970-5AE4-A89C7FA6C4B8" name="Waterlevel_Fixation" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="A0185C22-8B74-D2C1-6B4B-A864F540AEB4" name="CS_Part__Point" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="7A373A6E-A8D0-F148-1F36-DC200D28EBE3" name="CS__CS_Part" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="95C2FBE7-DB4A-262D-6E3E-9DB2E4B22D9C" name="Event__Waterlevel_Fixation" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="88075677-3CF9-B886-1403-143D0903A1F9" name="Point_Kind__Roughness" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="4504C218-F8C1-7CB1-31A3-29AC26F32CBC" name="Point_Kind__Vegetation" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="AB33E6A6-5183-0894-D764-12B7F4B0778D" name="Roughness__Point" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="2B551C3F-194E-1D9F-22DF-CD5A20012FB6" name="State__CS" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="7D9359E9-6BC9-19D3-0382-2A0E64686C20" name="Vegetation__Point" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="81EB8F8E-5DB9-EE9D-CBD9-626F9D9F2ABD" name="Water_Body__CS" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="832423E9-549D-3EAE-1E6A-30B6BE81E2A8" name="Water_Body__Event" seqName="seg_0"/>
+</oracle.dbtools.crest.model.design.relational.RelationalDesign>
