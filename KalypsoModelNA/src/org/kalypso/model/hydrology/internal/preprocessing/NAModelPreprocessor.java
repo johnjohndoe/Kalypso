@@ -101,7 +101,7 @@ public class NAModelPreprocessor
     return m_idManager;
   }
 
-  public void process( final ISimulationMonitor monitor ) throws NAPreprocessorException, OperationCanceledException
+  public void process( final ISimulationMonitor monitor ) throws NAPreprocessorException
   {
     try
     {
@@ -195,7 +195,7 @@ public class NAModelPreprocessor
     naModellConverter.writeCalibratedFiles( m_relevantElements, m_tsFileManager );
   }
 
-  private void initNetData( final Node rootNode ) throws SimulationException, Exception
+  private void initNetData( final Node rootNode ) throws Exception
   {
     final NaModell naModel = m_simulationData.getNaModel();
     final NAHydrotop hydrotopeCollection = m_simulationData.getHydrotopCollection();
@@ -203,8 +203,8 @@ public class NAModelPreprocessor
     final NAControl metaControl = m_simulationData.getMetaControl();
     final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
 
-    final NetFileAnalyser m_nodeManager = new NetFileAnalyser( rootNode, m_logger, naModel, m_idManager );
-    m_relevantElements = m_nodeManager.analyseNet();
+    final NetFileAnalyser nodeManager = new NetFileAnalyser( rootNode, m_logger, naModel, m_idManager );
+    m_relevantElements = nodeManager.analyseNet();
 
     if( hydrotopeCollection != null )
     {

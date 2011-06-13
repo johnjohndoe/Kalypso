@@ -64,6 +64,7 @@ import org.kalypso.model.hydrology.binding.suds.IGreenRoof;
 import org.kalypso.model.hydrology.binding.suds.ISwale;
 import org.kalypso.model.hydrology.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.LanduseHash;
 import org.kalypso.ogc.sensor.IAxis;
@@ -83,23 +84,31 @@ public class NutzungWriter
     m_nutzungDir = nutzungDir;
   }
 
-  public void writeFile( final Parameter parameter, final HydroHash hydroHash ) throws Exception
+  public void writeFile( final Parameter parameter, final HydroHash hydroHash ) throws IOException, NAPreprocessorException
   {
     if( hydroHash == null )
       return;
 
-    final LanduseHash landuseHash = hydroHash.getLanduseHash();
-    final List<Feature> list = (List<Feature>) parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
-    for( final Feature nutzungFE : list )
+    try
     {
-      final IRelationType rt = (IRelationType) nutzungFE.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK );
-      final Feature linkedIdealLanduseFE = parameter.getWorkspace().resolveLink( nutzungFE, rt );
-      writeFeature( nutzungFE, linkedIdealLanduseFE, landuseHash );
+      final LanduseHash landuseHash = hydroHash.getLanduseHash();
+      final List<Feature> list = (List<Feature>) parameter.getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
+      for( final Feature nutzungFE : list )
+      {
+        final IRelationType rt = (IRelationType) nutzungFE.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_LANDUSE_LINK );
+        final Feature linkedIdealLanduseFE = parameter.getWorkspace().resolveLink( nutzungFE, rt );
+        writeFeature( nutzungFE, linkedIdealLanduseFE, landuseHash );
+      }
+      writeConstantSudsIdealLanduse();
     }
-    writeConstantSudsIdealLanduse();
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+      throw new NAPreprocessorException( "Fehler beim Auslesen der Zeitflächenfunktion", e );
+    }
   }
 
-  private void writeFeature( final Feature feature, final Feature linkedIdealLanduseFE, final LanduseHash landuseHash ) throws Exception
+  private void writeFeature( final Feature feature, final Feature linkedIdealLanduseFE, final LanduseHash landuseHash ) throws IOException, SensorException
   {
     final String nutzName = landuseHash.getLanduseFeatureShortedName( feature.getName() );
     final File outputFile = new File( m_nutzungDir, nutzName + ".nuz" ); //$NON-NLS-1$
@@ -113,7 +122,7 @@ public class NutzungWriter
     IOUtils.closeQuietly( writer );
   }
 
-  private void writeConstantSudsIdealLanduse( ) throws Exception
+  private void writeConstantSudsIdealLanduse( ) throws IOException
   {
     final List<String> resources = new ArrayList<String>();
     // FIXME: constants do not belong in binding

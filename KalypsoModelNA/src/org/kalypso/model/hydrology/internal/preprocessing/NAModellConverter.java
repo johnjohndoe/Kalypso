@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -97,7 +98,7 @@ public class NAModellConverter
     m_logger = logger;
   }
 
-  public void writeUncalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager, final HydroHash hydroHash ) throws Exception
+  public void writeUncalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager, final HydroHash hydroHash ) throws IOException, NAPreprocessorException
   {
     final NaModell naModel = m_data.getNaModel();
     final NAHydrotop hydrotopeCollection = m_data.getHydrotopCollection();

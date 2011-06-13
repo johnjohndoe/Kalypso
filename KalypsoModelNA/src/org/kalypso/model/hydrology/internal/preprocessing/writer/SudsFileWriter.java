@@ -56,10 +56,12 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.suds.Greenroof;
 import org.kalypso.model.hydrology.binding.suds.Swale;
 import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -90,7 +92,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
    * @see org.kalypso.convert.gml2core.AbstractCoreFileWriter#write(java.io.PrintWriter)
    */
   @Override
-  protected void writeContent( final PrintWriter printWriter ) throws Exception
+  protected void writeContent( final PrintWriter printWriter ) throws NAPreprocessorException
   {
     final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     if( m_naModel != null && m_hydrotopeCollection != null && m_sudsWorkspace != null )
@@ -105,97 +107,117 @@ public class SudsFileWriter extends AbstractCoreFileWriter
       // FIXME: separate hashing logic from writing logic
       // FIXME: add the hashing logic into the HydroHash
       for( final IHydrotope hydrotop : hydrotopes )
+        writeSuds( coordinateSystem, sudsMap, catchments, maxPercolationCalculator, hydrotop );
+
+      writeSudsIDs( printWriter, sudsMap );
+    }
+  }
+
+  protected void writeSuds( final String coordinateSystem, final SortedMap<String, TreeMap<String, List<String>>> sudsMap, final IFeatureBindingCollection<Catchment> catchments, final MaxPercolationCalculator maxPercolationCalculator, final IHydrotope hydrotop ) throws NAPreprocessorException
+  {
+    try
+    {
+      if( hydrotop.getSudCollection().size() == 0 )
+        return;
+
+      final GM_Object hydrotopGeometryProperty = hydrotop.getDefaultGeometryPropertyValue();
+      final Geometry hydrotopGeometry = JTSAdapter.export( hydrotopGeometryProperty );
+      final GM_Object hydrotopInteriorPoint = JTSAdapter.wrap( hydrotopGeometry.getInteriorPoint(), coordinateSystem );
+      final List<Catchment> list = catchments.query( hydrotopGeometryProperty.getEnvelope() );
+      for( final Catchment catchment : list )
+        writeCatchment( sudsMap, maxPercolationCalculator, hydrotop, hydrotopInteriorPoint, catchment );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+      final String message = String.format( "Geoemtriefehler an Hydrotop '%s'", hydrotop.getId() );
+      throw new NAPreprocessorException( message, e );
+    }
+  }
+
+  protected void writeCatchment( final SortedMap<String, TreeMap<String, List<String>>> sudsMap, final MaxPercolationCalculator maxPercolationCalculator, final IHydrotope hydrotop, final GM_Object hydrotopInteriorPoint, final Catchment catchment ) throws NAPreprocessorException
+  {
+    if( catchment.getDefaultGeometryPropertyValue().contains( hydrotopInteriorPoint ) )
+    {
+      final String catchmentName = catchment.getName();
+      if( !sudsMap.containsKey( catchmentName ) )
+        sudsMap.put( catchmentName, new TreeMap<String, List<String>>() );
+      final Feature[] sudsArray = hydrotop.getSuds();
+      for( final Feature s : sudsArray )
       {
-        if( hydrotop.getSudCollection().size() > 0 )
+        final Feature f = s instanceof XLinkedFeature_Impl ? ((XLinkedFeature_Impl) s).getFeature() : s;
+        final String key;
+        final List<String> value = new ArrayList<String>();
+        if( f instanceof SwaleInfiltrationDitch )
         {
-          final GM_Object hydrotopGeometryProperty = hydrotop.getDefaultGeometryPropertyValue();
-          final Geometry hydrotopGeometry = JTSAdapter.export( hydrotopGeometryProperty );
-          final GM_Object hydrotopInteriorPoint = JTSAdapter.wrap( hydrotopGeometry.getInteriorPoint(), coordinateSystem );
-          final List<Catchment> list = catchments.query( hydrotopGeometryProperty.getEnvelope() );
-          for( final Catchment catchment : list )
-          {
-            if( catchment.getDefaultGeometryPropertyValue().contains( hydrotopInteriorPoint ) )
-            {
-              final String catchmentName = catchment.getName();
-              if( !sudsMap.containsKey( catchmentName ) )
-                sudsMap.put( catchmentName, new TreeMap<String, List<String>>() );
-              final Feature[] sudsArray = hydrotop.getSuds();
-              for( final Feature s : sudsArray )
-              {
-                final Feature f = s instanceof XLinkedFeature_Impl ? ((XLinkedFeature_Impl) s).getFeature() : s;
-                final String key;
-                final List<String> value = new ArrayList<String>();
-                if( f instanceof SwaleInfiltrationDitch )
-                {
-                  /**
-                   * # Mulden-Rigolen Data for the subcatchment 4500 # Format: # Catchment_NR. MR-Element_Type # Area of
-                   * MR-Element [m²] Landusetyp Soilprofil max.Perkolation [mm/d] Aufteilungsfaktor-Grundwasser[%] #
-                   * diameter-Drainpipe[mm] kf-Drainpipe [mm/d] Slope-Drainpipe [prommille] Roughness Drainpipe [mm]
-                   * width of the MR-Element[m] Nodenumber for the Draindischarge 4500 30 580. MRS_N mrs 2.8E-8 1.0 200.
-                   * 4270. 0.003 2. 1.8 0 # ende MR TG 4500
-                   */
-                  final SwaleInfiltrationDitch suds = (SwaleInfiltrationDitch) f;
-                  key = suds.getElementType();
+          /**
+           * # Mulden-Rigolen Data for the subcatchment 4500 # Format: # Catchment_NR. MR-Element_Type # Area of
+           * MR-Element [m²] Landusetyp Soilprofil max.Perkolation [mm/d] Aufteilungsfaktor-Grundwasser[%] #
+           * diameter-Drainpipe[mm] kf-Drainpipe [mm/d] Slope-Drainpipe [prommille] Roughness Drainpipe [mm] width of
+           * the MR-Element[m] Nodenumber for the Draindischarge 4500 30 580. MRS_N mrs 2.8E-8 1.0 200. 4270. 0.003 2.
+           * 1.8 0 # ende MR TG 4500
+           */
+          final SwaleInfiltrationDitch suds = (SwaleInfiltrationDitch) f;
+          key = suds.getElementType();
 
-                  final double maxPercRate = maxPercolationCalculator.getSudsAverageMaxPercRate( suds );
-                  value.add( String.format( Locale.US, "%s %s %.4g %.4g", suds.getIdealLanduseName(), BodentypWriter.getSwaleSoiltypeName( suds ), maxPercRate, suds.getPercentToGroundwater() ) ); //$NON-NLS-1$
-                  value.add( String.format( Locale.US, "%.1f %.1f %.1f %.4g %.4g 0", (double) suds.getPipeDiameter(), (double) suds.getPipeKfValue(), suds.getPipeSlope() / 1000.0, suds.getPipeRoughness(), suds.getWidth() ) ); //$NON-NLS-1$
-                }
-                else if( f instanceof Swale )
-                {
-                  /**
-                   * Not implemented yet in NA Core
-                   */
-                  final Swale suds = (Swale) f;
-                  key = suds.getElementType();
-
-                  final double maxPercRate = maxPercolationCalculator.getSudsAverageMaxPercRate( suds );
-                  value.add( String.format( Locale.US, "%s %s %.4g %.4g", suds.getIdealLanduseName(), BodentypWriter.getSwaleSoiltypeName( suds ), maxPercRate, suds.getPercentToGroundwater() ) ); //$NON-NLS-1$
-                  value.add( String.format( Locale.US, "%.3f 0", suds.getWidth() ) ); //$NON-NLS-1$
-                }
-                else if( f instanceof Greenroof )
-                {
-                  final Greenroof suds = (Greenroof) f;
-                  key = suds.getElementType();
-
-                  value.add( String.format( Locale.US, "%s %s 2.5E-20 0.0", suds.getIdealLanduseName(), suds.getUsageType().getSoilTypeID() ) ); //$NON-NLS-1$
-
-                  // second line params:
-                  // 1. Drainage pipe diameter [mm]
-                  // 2. Overflow pipe diameter [mm]
-                  // 3. Drainage pipe sand roughness [mm] - fixed to 2.0
-                  // 4. Overflow pipe sand roughness [mm] - fixed to 2.0
-                  // 5. Drainage area per pipe [m2] - fixed to 300.0
-                  // 6. Overflow height of the roof [mm] - max value equals to layer thickness
-                  // 7. Drainage node ID; 0 = default drainage node of the catchment
-                  value.add( String.format( Locale.US, "%.1f %.1f 2.0 2.0 300.0 %.1f 0", new Double( suds.getRainwaterPipeDiameter().toString() ), new Double( suds.getEmergencySpillPipeDiameter().toString() ), new Double( suds.getEmergencySpillHeight().toString() ) ) ); //$NON-NLS-1$
-                }
-                else
-                  continue;
-                // only one instance of certain suds type is allowed per catchment
-                final Map<String, List<String>> map = sudsMap.get( catchmentName );
-                map.put( key, value );
-              }
-            }
-          }
+          final double maxPercRate = maxPercolationCalculator.getSudsAverageMaxPercRate( suds );
+          value.add( String.format( Locale.US, "%s %s %.4g %.4g", suds.getIdealLanduseName(), BodentypWriter.getSwaleSoiltypeName( suds ), maxPercRate, suds.getPercentToGroundwater() ) ); //$NON-NLS-1$
+          value.add( String.format( Locale.US, "%.1f %.1f %.1f %.4g %.4g 0", (double) suds.getPipeDiameter(), (double) suds.getPipeKfValue(), suds.getPipeSlope() / 1000.0, suds.getPipeRoughness(), suds.getWidth() ) ); //$NON-NLS-1$
         }
-      }
+        else if( f instanceof Swale )
+        {
+          /**
+           * Not implemented yet in NA Core
+           */
+          final Swale suds = (Swale) f;
+          key = suds.getElementType();
 
-      for( final String catchment : sudsMap.keySet() )
+          final double maxPercRate = maxPercolationCalculator.getSudsAverageMaxPercRate( suds );
+          value.add( String.format( Locale.US, "%s %s %.4g %.4g", suds.getIdealLanduseName(), BodentypWriter.getSwaleSoiltypeName( suds ), maxPercRate, suds.getPercentToGroundwater() ) ); //$NON-NLS-1$
+          value.add( String.format( Locale.US, "%.3f 0", suds.getWidth() ) ); //$NON-NLS-1$
+        }
+        else if( f instanceof Greenroof )
+        {
+          final Greenroof suds = (Greenroof) f;
+          key = suds.getElementType();
+
+          value.add( String.format( Locale.US, "%s %s 2.5E-20 0.0", suds.getIdealLanduseName(), suds.getUsageType().getSoilTypeID() ) ); //$NON-NLS-1$
+
+          // second line params:
+          // 1. Drainage pipe diameter [mm]
+          // 2. Overflow pipe diameter [mm]
+          // 3. Drainage pipe sand roughness [mm] - fixed to 2.0
+          // 4. Overflow pipe sand roughness [mm] - fixed to 2.0
+          // 5. Drainage area per pipe [m2] - fixed to 300.0
+          // 6. Overflow height of the roof [mm] - max value equals to layer thickness
+          // 7. Drainage node ID; 0 = default drainage node of the catchment
+          value.add( String.format( Locale.US, "%.1f %.1f 2.0 2.0 300.0 %.1f 0", new Double( suds.getRainwaterPipeDiameter().toString() ), new Double( suds.getEmergencySpillPipeDiameter().toString() ), new Double( suds.getEmergencySpillHeight().toString() ) ) ); //$NON-NLS-1$
+        }
+        else
+          continue;
+        // only one instance of certain suds type is allowed per catchment
+        final Map<String, List<String>> map = sudsMap.get( catchmentName );
+        map.put( key, value );
+      }
+    }
+  }
+
+  protected void writeSudsIDs( final PrintWriter printWriter, final SortedMap<String, TreeMap<String, List<String>>> sudsMap )
+  {
+    for( final String catchment : sudsMap.keySet() )
+    {
+      printWriter.format( Locale.US, "# Catchment_NR %s\n", catchment ); //$NON-NLS-1$
+      final SortedMap<String, List<String>> map = sudsMap.get( catchment );
+      for( final String sudsID : map.keySet() )
       {
-        printWriter.format( Locale.US, "# Catchment_NR %s\n", catchment ); //$NON-NLS-1$
-        final SortedMap<String, List<String>> map = sudsMap.get( catchment );
-        for( final String sudsID : map.keySet() )
-        {
-          final List<String> list = map.get( sudsID );
-          if( list == null )
-            continue;
-          printWriter.format( Locale.US, "%s %s\n", catchment, sudsID ); //$NON-NLS-1$
-          for( final String line : list )
-            printWriter.append( line ).append( "\n" ); //$NON-NLS-1$
-        }
-        printWriter.format( Locale.US, "# Ende TG %s\n", catchment ); //$NON-NLS-1$
+        final List<String> list = map.get( sudsID );
+        if( list == null )
+          continue;
+        printWriter.format( Locale.US, "%s %s\n", catchment, sudsID ); //$NON-NLS-1$
+        for( final String line : list )
+          printWriter.append( line ).append( "\n" ); //$NON-NLS-1$
       }
+      printWriter.format( Locale.US, "# Ende TG %s\n", catchment ); //$NON-NLS-1$
     }
   }
 }

@@ -46,6 +46,7 @@ import java.util.logging.Logger;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -74,17 +75,22 @@ public class ZftWriter extends AbstractCoreFileWriter
     m_catchments = catchments;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractWriter#writeContent(java.io.PrintWriter)
-   */
   @Override
-  protected void writeContent( final PrintWriter writer ) throws Exception
+  protected void writeContent( final PrintWriter writer ) throws NAPreprocessorException
   {
-    for( final Catchment catchment : m_catchments )
-      writeCatchment( writer, catchment );
+    try
+    {
+      for( final Catchment catchment : m_catchments )
+        writeCatchment( writer, catchment );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+      throw new NAPreprocessorException( "Fehler beim Auslesen der Zeitflächenfunktion", e );
+    }
   }
 
-  private void writeCatchment( final PrintWriter zftBuffer, final Catchment catchment ) throws Exception
+  private void writeCatchment( final PrintWriter zftBuffer, final Catchment catchment ) throws SensorException
   {
     final int catchmentID = m_idManager.getAsciiID( catchment );
 

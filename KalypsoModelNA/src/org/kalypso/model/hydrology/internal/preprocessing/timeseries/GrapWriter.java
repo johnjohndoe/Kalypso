@@ -108,7 +108,7 @@ public class GrapWriter
     }
   }
 
-  public void writeSyntheticFile( final StringBuffer writer, final Date simulationStart, final Date simulationEnd, final int minutesOfTimeStep ) throws Exception
+  public void writeSyntheticFile( final StringBuffer writer, final Date simulationStart, final Date simulationEnd, final int minutesOfTimeStep ) throws SensorException
   {
     if( simulationStart.after( simulationEnd ) )
       return;

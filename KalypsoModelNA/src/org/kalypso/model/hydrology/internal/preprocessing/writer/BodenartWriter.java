@@ -69,7 +69,7 @@ public class BodenartWriter extends AbstractCoreFileWriter
   }
 
   @Override
-  protected void writeContent( final PrintWriter writer ) throws Exception
+  protected void writeContent( final PrintWriter writer )
   {
     final Feature rootFeature = m_parameterWorkspace.getRootFeature();
     final List< ? > list = (List< ? >) rootFeature.getProperty( NaModelConstants.PARA_SOIL_LAYER_MEMBER );
@@ -111,7 +111,7 @@ public class BodenartWriter extends AbstractCoreFileWriter
       writer.append( "basem kap 6.5 24.0 41.0 1570.0 0.50\n" ); //$NON-NLS-1$    
   }
 
-  private void writeFeature( final PrintWriter writer, final Feature feature ) throws Exception
+  private void writeFeature( final PrintWriter writer, final Feature feature )
   {
     // (name,*)_(typkap,*)_(typwp,*)_(typfk,*)_(typbfm,*)_(typkf,*)_(typbf0,*)
     writer.append( FortranFormatHelper.printf( feature.getName(), "*" ) + " kap " //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
