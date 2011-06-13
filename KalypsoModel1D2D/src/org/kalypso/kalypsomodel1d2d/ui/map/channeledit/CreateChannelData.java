@@ -81,7 +81,6 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.editor.actions.FeatureComparator;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
@@ -95,6 +94,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
+import org.kalypsodeegree_impl.model.feature.FeatureComparator;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
