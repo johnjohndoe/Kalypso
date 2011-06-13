@@ -40,17 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.ui.kmupdate;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.km.internal.KMPlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -68,15 +74,12 @@ public class KMUpdateHandler extends AbstractHandler
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
 
     final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
-    if( !(selection instanceof IFeatureSelection) )
-      throw new ExecutionException( "This handler only works on features" ); //$NON-NLS-1$
 
-    final IFeatureSelection FeatureSelection = (IFeatureSelection) selection;
+    final CommandableWorkspace workspace = findWorkspace( selection );
 
-    final Feature feature = FeatureSelection.getFocusedFeature();
-    final CommandableWorkspace workspace = FeatureSelection.getWorkspace( feature );
+    final Feature[] initialSelection = findInitialSelection(selection);
 
-    final KMUpdateWizard kmWizard = new KMUpdateWizard( workspace, FeatureSelection );
+    final KMUpdateWizard kmWizard = new KMUpdateWizard( workspace, initialSelection );
     final IDialogSettings dialogSettings = DialogSettingsUtils.getDialogSettings( KMPlugin.getDefault(), "kmUpdateAction" ); //$NON-NLS-1$
     kmWizard.setDialogSettings( dialogSettings );
 
@@ -85,6 +88,57 @@ public class KMUpdateHandler extends AbstractHandler
     dialog.open();
 
     return null;
+  }
+
+  private CommandableWorkspace findWorkspace( final ISelection selection ) throws ExecutionException
+  {
+    if( !(selection instanceof IFeatureSelection) )
+      throw new ExecutionException( "This handler only works on features" ); //$NON-NLS-1$
+
+    final IFeatureSelection featureSelection = (IFeatureSelection) selection;
+    final Feature focusFeature = featureSelection.getFocusedFeature();
+    if( focusFeature != null )
+      return findWorkspace( featureSelection, focusFeature );
+
+    final Object firstElement = featureSelection.getFirstElement();
+    if( firstElement instanceof Feature )
+      return findWorkspace( featureSelection, (Feature) firstElement );
+
+    throw new ExecutionException( "Failed to find workspace" ); //$NON-NLS-1$
+  }
+
+  private CommandableWorkspace findWorkspace( final IFeatureSelection featureSelection, final Feature focusFeature ) throws ExecutionException
+  {
+    final CommandableWorkspace workspace = featureSelection.getWorkspace( focusFeature );
+    if( workspace == null )
+      throw new ExecutionException( "Failed to find workspace" ); //$NON-NLS-1$
+
+    final Feature rootFeature = workspace.getRootFeature();
+    if( !(rootFeature instanceof NaModell) )
+      throw new ExecutionException( "This handler only works with a NaModell" ); //$NON-NLS-1$
+
+    return workspace;
+  }
+
+  private Feature[] findInitialSelection( final ISelection selection )
+  {
+    if( selection instanceof IFeatureSelection )
+      return FeatureSelectionHelper.getFeatures( (IFeatureSelection) selection );
+
+    if( selection instanceof IStructuredSelection )
+    {
+      final IStructuredSelection structured = (IStructuredSelection) selection;
+      final Object[] array = structured.toArray();
+      final Collection<Feature> features = new ArrayList<Feature>();
+      for( final Object object : array )
+      {
+        if( object instanceof Feature )
+          features.add( (Feature) object );
+      }
+      return features.toArray( new Feature[features.size()] );
+    }
+
+    return new Feature[0];
   }
 
 }

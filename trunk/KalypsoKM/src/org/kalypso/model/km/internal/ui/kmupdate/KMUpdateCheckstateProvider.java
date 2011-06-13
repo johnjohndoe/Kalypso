@@ -40,47 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.ui.kmupdate;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.viewers.CellLabelProvider;
-import org.eclipse.jface.viewers.ViewerCell;
-
-import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
+import org.eclipse.jface.viewers.ICheckStateProvider;
+import org.kalypso.model.km.internal.binding.KMChannelElement;
 
 /**
  * @author Gernot Belger
  */
-public class ProfileNameLabelProvider extends CellLabelProvider
+public class KMUpdateCheckstateProvider implements ICheckStateProvider
 {
-  /**
-   * @see org.eclipse.jface.viewers.CellLabelProvider#update(org.eclipse.jface.viewers.ViewerCell)
-   */
   @Override
-  public void update( final ViewerCell cell )
+  public boolean isChecked( final Object element )
   {
-    final String file = ((Profile) cell.getElement()).getFile();
-    if( StringUtils.isBlank( file ) )
-      cell.setText( "-" ); //$NON-NLS-1$
-    else
-      cell.setText( new Path( file ).lastSegment() );
-  }
+    if( element instanceof KMChannelElement )
+      return ((KMChannelElement) element).getKMType().isEnabled();
 
-  /**
-   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
-   */
-  @Override
-  public String getToolTipText( final Object element )
-  {
-    return ((Profile) element).getFile();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.CellLabelProvider#useNativeToolTip(java.lang.Object)
-   */
-  @Override
-  public boolean useNativeToolTip( final Object object )
-  {
     return false;
   }
 
+  @Override
+  public boolean isGrayed( final Object element )
+  {
+    return false;
+  }
 }

@@ -43,6 +43,7 @@ package org.kalypso.model.km.internal.ui.kmupdate;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
+import org.kalypso.model.km.internal.binding.KMChannelElement;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -53,10 +54,10 @@ public class KMUpdateLabelProvider extends LabelProvider
   @Override
   public String getText( final Object element )
   {
-    if( !(element instanceof KMChannel) )
+    if( !(element instanceof KMChannelElement) )
       return element.toString();
 
-    final KMChannel channel = (KMChannel) element;
+    final KMChannel channel = ((KMChannelElement) element).getKMChannel();
     final String label = FeatureHelper.getAnnotationValue( channel, IAnnotation.ANNO_LABEL );
 
     return String.format( "%s (ID=#%s)", label, channel.getId() ); //$NON-NLS-1$

@@ -40,34 +40,40 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.ui.kmupdate;
 
-import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.model.km.internal.i18n.Messages;
+import java.math.BigDecimal;
+
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.kalypso.model.km.internal.binding.KMBindingUtils;
+import org.kalypso.model.km.internal.binding.KMChannelElement;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
 
-public class KMViewerLabelProvider extends LabelProvider
+/**
+ * @author Gernot Belger
+ */
+public class KMProfileStationFilter extends ViewerFilter
 {
-  /**
-   * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-   */
+  private KMChannelElement m_element;
+
   @Override
-  public String getText( final Object element )
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    final StringBuffer result = new StringBuffer();
+    if( m_element == null )
+      return true;
+
     if( element instanceof Profile )
     {
       final Profile profile = (Profile) element;
-      final String file = profile.getFile();
-      if( file != null )
-        result.append( file );
-
-      final Double pos = profile.getPositionKM();
-      if( pos != null )
-      {
-        final double positionKM = pos.doubleValue() / 1000d;
-        result.append( "  " + Double.toString( positionKM ) + Messages.getString("org.kalypso.ui.rrm.kmupdate.KMViewer.9") ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
+      final BigDecimal station = profile.getStation();
+      return KMBindingUtils.isBetween( m_element.getKMType(), station );
     }
-    return result.toString();
+
+    return true;
+  }
+
+  public void setInput( final KMChannelElement element )
+  {
+    m_element = element;
   }
 }

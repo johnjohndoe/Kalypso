@@ -10,6 +10,6 @@ final class KMValueComparator implements Comparator<IKMValue>
   @Override
   public int compare( final IKMValue km1, final IKMValue km2 )
   {
-    return Double.compare( km1.getQSum(), km2.getQSum() );
+    return Double.compare( km1.getLowerQ(), km2.getLowerQ() );
   }
 }

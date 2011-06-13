@@ -38,32 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.km.internal.ui.kmupdate;
-
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
-
-import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
+package org.kalypso.model.km.internal.core;
 
 /**
- * @author belger
- *
+ * Represents a pair of n and k.
+ * 
+ * @author Gernot Belger
  */
-public class ProfileNameSorter extends ViewerSorter
+public class NKValue
 {
-  /**
-   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
-  @Override
-  public int compare( final Viewer viewer, final Object e1, final Object e2 )
+  private final double m_n;
+
+  private final double m_k;
+
+  public NKValue( final double n, final double k )
   {
-    final Profile p1 = (Profile) e1;
-    final Profile p2 = (Profile) e2;
+    m_n = n;
+    m_k = k;
+  }
 
-    final String file1 = p1.getFile();
-    final String file2 = p2.getFile();
+  public double getN( )
+  {
+    return m_n;
+  }
 
-    return file1.compareTo( file2 );
+  public double getK( )
+  {
+    return m_k;
+  }
+
+  /**
+   * Adjust this value so that the maximal n value is 30.<br/>
+   * TODO: check if this is right: Setting n to maximum 30 (Prof.Pasche)
+   */
+  public NKValue adjust( )
+  {
+    if( m_n > 30d )
+    {
+      final double prod = m_n * m_k;
+      return new NKValue( 30d, prod / 30d );
+    }
+    else
+      return this;
   }
 }

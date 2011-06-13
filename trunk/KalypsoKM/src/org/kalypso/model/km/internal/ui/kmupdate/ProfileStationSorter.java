@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.ui.kmupdate;
 
+import java.math.BigDecimal;
+
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
@@ -56,9 +58,9 @@ public class ProfileStationSorter extends ViewerComparator
     final Profile p1 = (Profile) e1;
     final Profile p2 = (Profile) e2;
 
-    final Double station1 = p1.getPositionKM();
-    final Double station2 = p2.getPositionKM();
+    final BigDecimal station1 = p1.getStation();
+    final BigDecimal station2 = p2.getStation();
 
-    return Double.compare( station1, station2 );
+    return station1.compareTo( station2 );
   }
 }

@@ -41,7 +41,7 @@
 package org.kalypso.model.km.internal.binding;
 
 import java.io.File;
-import java.util.List;
+import java.math.BigDecimal;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -49,6 +49,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -75,36 +76,30 @@ public final class KMBindingUtils
     throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
-  public static KalininMiljukovGroupType toKMConfiguration( final NaModell naModel )
+  public static KMChannelElement[] createKMElements( final NaModell naModel )
   {
     final KMChannel[] kmChannels = naModel.getKMChannels();
+    final KMChannelElement[] elements = new KMChannelElement[kmChannels.length];
 
-    final KalininMiljukovGroupType kmGroup = OF.createKalininMiljukovGroupType();
-    final List<KalininMiljukovType> kalininMiljukovList = kmGroup.getKalininMiljukov();
+    for( int i = 0; i < elements.length; i++ )
+      elements[i] = createKMForFeature( kmChannels[i] );
 
-    for( final KMChannel channel : kmChannels )
-    {
-      final KalininMiljukovType km = createKMForFeature( channel );
-      kalininMiljukovList.add( km );
-    }
-
-    return kmGroup;
+    return elements;
   }
 
-  private static KalininMiljukovType createKMForFeature( final KMChannel feature )
+  private static KMChannelElement createKMForFeature( final KMChannel channel )
   {
     final KalininMiljukovType km = OF.createKalininMiljukovType();
-    km.setId( feature.getId() );
-    km.setFilePattern( "*km" ); //$NON-NLS-1$
-    km.setPath( "" ); //$NON-NLS-1$
+    km.setId( channel.getId() );
+    km.setFile( StringUtils.EMPTY );
 
-    final Double kmStart = feature.getKMStart();
-    km.setKmStart( kmStart );
+    final Double kmStart = channel.getKMStart();
+    km.setKmStart( kmStart == null ? null : new BigDecimal( kmStart ) );
 
-    final Double propEnd = feature.getKMEnd();
-    km.setKmEnd( propEnd );
+    final Double kmEnd = channel.getKMEnd();
+    km.setKmEnd( kmEnd == null ? null : new BigDecimal( kmEnd ) );
 
-    return km;
+    return new KMChannelElement( channel, km );
   }
 
   public static KalininMiljukovGroupType load( final File file ) throws JAXBException
@@ -145,4 +140,20 @@ public final class KMBindingUtils
     marshaller.marshal( element, file );
   }
 
+  public static boolean isBetween( final KalininMiljukovType kmType, final BigDecimal station )
+  {
+    if( station == null )
+      return true;
+
+    final BigDecimal start = kmType.getKmStart();
+    final BigDecimal end = kmType.getKmEnd();
+
+    if( start != null && station.doubleValue() < start.doubleValue() )
+      return false;
+
+    if( end != null && station.doubleValue() > end.doubleValue() )
+      return false;
+
+    return true;
+  }
 }

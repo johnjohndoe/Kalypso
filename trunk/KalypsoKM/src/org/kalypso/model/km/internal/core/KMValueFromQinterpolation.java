@@ -10,51 +10,61 @@ import org.kalypso.commons.math.LinearEquation.SameXValuesException;
  */
 class KMValueFromQinterpolation extends AbstractKMValue
 {
-  private final double m_q;
+  private final double m_qLowerChannel;
+
+  private final double m_qUpperChannel;
+
+  private final double m_qLowerForeland;
+
+  private final double m_qUpperForeland;
 
   private final double m_aplha;
 
-  private double m_k;
-
-  private double m_kf;
-
-  private double m_n;
-
-  private double m_nf;
-
-  private final double m_qf;
-
   private final double m_length;
 
-  private KMValueFromQinterpolation( final double q, final IKMValue km1, final IKMValue km2 ) throws SameXValuesException
+  private final NKValue m_nkValue;
+
+  private final NKValue m_nkValueForeland;
+
+  private KMValueFromQinterpolation( final double lowerQ, final IKMValue km1, final IKMValue km2 ) throws SameXValuesException
   {
     m_length = km1.getLength();
 
-    final LinearEquation alpha = new LinearEquation( km1.getQSum(), km1.getAlpha(), km2.getQSum(), km2.getAlpha() );
-    m_aplha = alpha.computeY( q );
+    final double lowerQ1 = km1.getLowerQ();
+    final double lowerQ2 = km2.getLowerQ();
 
-    final LinearEquation k = new LinearEquation( km1.getQSum(), km1.getK(), km2.getQSum(), km2.getK() );
-    m_k = k.computeY( q );
+    final LinearEquation qLowerChannel = new LinearEquation( lowerQ1, km1.getLowerQchannel(), lowerQ2, km2.getLowerQchannel() );
+    m_qLowerChannel = qLowerChannel.computeY( lowerQ );
 
-    final LinearEquation kf = new LinearEquation( km1.getQSum(), km1.getKForeland(), km2.getQSum(), km2.getKForeland() );
-    m_kf = kf.computeY( q );
+    final LinearEquation qUpperChannel = new LinearEquation( lowerQ1, km1.getUpperQchannel(), lowerQ2, km2.getUpperQchannel() );
+    m_qUpperChannel = qUpperChannel.computeY( lowerQ );
 
-    final LinearEquation n = new LinearEquation( km1.getQSum(), km1.getN(), km2.getQSum(), km2.getN() );
-    m_n = n.computeY( q );
+    final LinearEquation qLowerForeland = new LinearEquation( lowerQ1, km1.getLowerQforeland(), lowerQ2, km2.getLowerQforeland() );
+    m_qLowerForeland = qLowerForeland.computeY( lowerQ );
 
-    final LinearEquation nf = new LinearEquation( km1.getQSum(), km1.getNForeland(), km2.getQSum(), km2.getNForeland() );
-    m_nf = nf.computeY( q );
+    final LinearEquation qUpperForeland = new LinearEquation( lowerQ1, km1.getUpperQforeland(), lowerQ2, km2.getUpperQforeland() );
+    m_qUpperForeland = qUpperForeland.computeY( lowerQ );
 
-    final LinearEquation qeq = new LinearEquation( km1.getQSum(), km1.getQ(), km2.getQSum(), km2.getQ() );
-    m_q = qeq.computeY( q );
+    final LinearEquation alpha = new LinearEquation( lowerQ1, km1.getAlpha(), lowerQ2, km2.getAlpha() );
+    m_aplha = alpha.computeY( lowerQ );
 
-    final LinearEquation qf = new LinearEquation( km1.getQSum(), km1.getQForeland(), km2.getQSum(), km2.getQForeland() );
-    m_qf = qf.computeY( q );
+    final LinearEquation kEq = new LinearEquation( lowerQ1, km1.getK(), lowerQ2, km2.getK() );
+    final LinearEquation nEq = new LinearEquation( lowerQ1, km1.getN(), lowerQ2, km2.getN() );
 
-//    System.out.println( Messages.getString( "org.kalypso.model.km.KMValueFromQinterpolation.0" ) + q ); //$NON-NLS-1$
-//    System.out.println( Messages.getString( "org.kalypso.model.km.KMValueFromQinterpolation.1" ) + km1 ); //$NON-NLS-1$
-//    System.out.println( Messages.getString( "org.kalypso.model.km.KMValueFromQinterpolation.2" ) + km2 ); //$NON-NLS-1$
-//    System.out.println( Messages.getString( "org.kalypso.model.km.KMValueFromQinterpolation.3" ) + this ); //$NON-NLS-1$
+    final double k = kEq.computeY( lowerQ );
+    final double n = nEq.computeY( lowerQ );
+
+    final LinearEquation kfEQ = new LinearEquation( lowerQ1, km1.getKForeland(), lowerQ2, km2.getKForeland() );
+    final LinearEquation nfEQ = new LinearEquation( lowerQ1, km1.getNForeland(), lowerQ2, km2.getNForeland() );
+
+    final double nf = nfEQ.computeY( lowerQ );
+    final double kf = kfEQ.computeY( lowerQ );
+
+    final NKValue nkValue = new NKValue( n, k );
+    final NKValue nkValueForeland = new NKValue( nf, kf );
+
+    m_nkValue = nkValue.adjust();
+    m_nkValueForeland = nkValueForeland.adjust();
   }
 
   @Override
@@ -72,61 +82,25 @@ class KMValueFromQinterpolation extends AbstractKMValue
   @Override
   public double getK( )
   {
-    return m_k;
+    return m_nkValue.getK();
   }
 
   @Override
   public double getN( )
   {
-
-    return m_n;
+    return m_nkValue.getN();
   }
 
   @Override
   public double getKForeland( )
   {
-
-    return m_kf;
+    return m_nkValueForeland.getK();
   }
 
   @Override
   public double getNForeland( )
   {
-
-    return m_nf;
-  }
-
-  @Override
-  public double getQ( )
-  {
-
-    return m_q;
-  }
-
-  @Override
-  public double getQForeland( )
-  {
-    return m_qf;
-  }
-
-  public void setK( final double k )
-  {
-    m_k = k;
-  }
-
-  public void setKf( final double kf )
-  {
-    m_kf = kf;
-  }
-
-  public void setN( final double n )
-  {
-    m_n = n;
-  }
-
-  public void setNf( final double nf )
-  {
-    m_nf = nf;
+    return m_nkValueForeland.getN();
   }
 
   /**
@@ -141,21 +115,31 @@ class KMValueFromQinterpolation extends AbstractKMValue
 
     final IKMValue km1 = headSet.last();
     final IKMValue km2 = sort.tailSet( value ).first();
-    final KMValueFromQinterpolation strandKMValue = new KMValueFromQinterpolation( q, km1, km2 );
-
-    // TODO: check if this is right: Setting n to maximum 30 (Prof.Pasche)
-    if( strandKMValue.getN() > 30d )
-    {
-      final double prod = strandKMValue.getN() * strandKMValue.getK();
-      strandKMValue.setN( 30d );
-      strandKMValue.setK( prod / 30d );
-    }
-    if( strandKMValue.getNForeland() > 30d )
-    {
-      final double prod = strandKMValue.getNForeland() * strandKMValue.getKForeland();
-      strandKMValue.setNf( 30d );
-      strandKMValue.setKf( prod / 30d );
-    }
-    return strandKMValue;
+    return new KMValueFromQinterpolation( q, km1, km2 );
   }
+
+  @Override
+  public double getLowerQchannel( )
+  {
+    return m_qLowerChannel;
+  }
+
+  @Override
+  public double getUpperQchannel( )
+  {
+    return m_qUpperChannel;
+  }
+
+  @Override
+  public double getLowerQforeland( )
+  {
+    return m_qLowerForeland;
+  }
+
+  @Override
+  public double getUpperQforeland( )
+  {
+    return m_qUpperForeland;
+  }
+
 }

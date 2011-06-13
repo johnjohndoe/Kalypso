@@ -80,13 +80,10 @@ public class ProfileObservationReader implements IKMReader
     m_path = path;
   }
 
-  /**
-   * @see org.kalypso.model.km.internal.core.IKMReader#getDataSet(double, double)
-   */
   @Override
-  public ProfileDataSet getDataSet( final double stationFrom, final double stationTo ) throws Exception
+  public ProfileDataSet getDataSet( ) throws Exception
   {
-    final ProfileDataSetFactory factory = new ProfileDataSetFactory( stationFrom, stationTo );
+    final ProfileDataSetFactory factory = new ProfileDataSetFactory();
 
     /* Load the workspace. */
     final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( m_path );
@@ -160,7 +157,7 @@ public class ProfileObservationReader implements IKMReader
     }
 
     /* Create the profile data. */
-    final ProfileData profileData = new ProfileData( m_path.toString(), 1000d * station.doubleValue() );
+    final ProfileData profileData = new ProfileData( m_path.toString(), station );
     profileData.set( rows.toArray( new Row[] {} ) );
 
     return profileData;

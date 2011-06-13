@@ -44,41 +44,30 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.model.km.internal.binding.KMChannelElement;
 
-import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
 
 public class KMViewerContentProvider implements IStructuredContentProvider
 {
-  /**
-   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-   */
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement instanceof KalininMiljukovType )
+    if( inputElement instanceof KMChannelElement )
     {
-      KalininMiljukovType kmType = (KalininMiljukovType) inputElement;
-      List<Profile> profiles = kmType.getProfile();
-
+      final KMChannelElement element = (KMChannelElement) inputElement;
+      final List<Profile> profiles = element.getKMType().getProfile();
       return profiles.toArray();
     }
 
     return new Object[0];
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
