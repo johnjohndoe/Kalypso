@@ -176,7 +176,7 @@ public class StatesViewer
     column.setText( "Name" );
     column.setResizable( false );
     column.setMoveable( false );
-    column.setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
 
     if( setLabelProvider )
       nameColumn.setLabelProvider( new PdbLabelProvider() );
@@ -192,7 +192,7 @@ public class StatesViewer
     column.setText( "Measurement" );
     column.setResizable( false );
     column.setMoveable( false );
-    column.setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
 
     if( setLabelProvider )
       measurementDateColumn.setLabelProvider( new PdbMeasurementLabelProvider() );

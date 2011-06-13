@@ -43,13 +43,13 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 import java.math.BigDecimal;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 
 /**
  * @author Gernot Belger
  */
-public class StationViewerSorter extends ViewerSorter
+public class StationViewerSorter extends ViewerComparator
 {
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
@@ -58,7 +58,7 @@ public class StationViewerSorter extends ViewerSorter
     final GafProfile g2 = (GafProfile) e2;
 
     final BigDecimal d1 = g1.getStation();
-    final BigDecimal d2 = g1.getStation();
+    final BigDecimal d2 = g2.getStation();
 
     return d1.compareTo( d2 );
   }
