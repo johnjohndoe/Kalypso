@@ -1,0 +1,581 @@
+/Bodentypen:
+/
+/Typ       Tiefe[dm]
+5fS5fS_2     3
+fS      5.0 1.0
+fS      5.0 1.0
+mSfsld2 5.0 0.0
+5fS5fS_1     3
+fS      5.0 1.0
+fS      5.0 1.0
+mSgsld2 5.0 0.0
+3mS7Ls_2     3
+mSld3   3.0 1.0
+Ls3ld3  7.0 1.0
+mSfsld2 5.0 0.0
+4Sl26Ls1     3
+Sl2ld3  4.0 1.0
+Ls2ld3  6.0 1.0
+mSgsld2 5.0 0.0
+4Sl26Ls2a    3
+Sl2ld3  4.0 1.0
+Ls2ld3  6.0 1.0
+mSfsld2 5.0 0.0
+4Sl26Ls3     3
+Sl2ld3  4.0 1.0
+Ls2ld3  6.0 1.0
+mSfsld3 30.0 0.0
+4Sl26Ls5     3
+Sl2ld3  4.0 1.0
+Ls2ld3  6.0 1.0
+mSfsld3 30.0 0.0
+3S227S233    3
+S22     3.0 1.0
+S23     7.0 1.0
+mSfsld3 30.0 0.0
+3S267S273    3
+S26     3.0 1.0
+S27     7.0 1.0
+mSfsld3 30.0 0.0
+3S307S311a   3
+S30     3.0 1.0
+S31     7.0 1.0
+mSgsld2 5.0 0.0
+5Hn5Hn1a     3
+Hn      5.0 1.0
+Hn      5.0 1.0
+mSgsld2 5.0 0.0
+5Hn5Hn2a     3
+Hn      5.0 1.0
+Hn      5.0 1.0
+mSfsld2 5.0 0.0
+5Hn5Hn3      3
+Hn      5.0 1.0
+Hn      5.0 1.0
+mSfsld3 30.0 0.0
+5Ls25Ls21a   3
+Ls2     5.0 1.0
+Ls2     5.0 1.0
+mSgsld2 5.0 0.0
+5Ls25Ls22a   3
+Ls2     5.0 1.0
+Ls2     5.0 1.0
+mSfsld2 5.0 0.0
+5Ls25Ls23    3
+Ls2     5.0 1.0
+Ls2     5.0 1.0
+mSfsld3 30.0 0.0
+5mS5Ls21a    3
+mS      5.0 1.0
+Ls2     5.0 1.0
+mSgsld2 5.0 0.0
+5mS5Ls22a    3
+mS      5.0 1.0
+Ls2     5.0 1.0
+mSfsld2 5.0 0.0
+5mS5Ls23     3
+mS      5.0 1.0
+Ls2     5.0 1.0
+mSfsld3 30.0 0.0
+5mS5mS1a     3
+mS      5.0 1.0
+mS      5.0 1.0
+mSgsld2 5.0 0.0
+5mS5mS2a     3
+mS      5.0 1.0
+mS      5.0 1.0
+mSfsld2 5.0 0.0
+5mS5mS3      3
+mS      5.0 1.0
+mS      5.0 1.0
+mSfsld3 30.0 0.0
+5Tu5Tu2a     3
+Tu      5.0 1.0
+Tu      5.0 1.0
+mSfsld2 5.0 0.0
+5Tu5Tu3      3
+Tu      5.0 1.0
+Tu      5.0 1.0
+mSfsld3 30.0 0.0
+5Ut5Hn1a     3
+Ut      5.0 1.0
+Hn      5.0 1.0
+mSgsld2 5.0 0.0
+5Ut5Hn2a     3
+Ut      5.0 1.0
+Hn      5.0 1.0
+mSfsld2 5.0 0.0
+5Ut5Hn3      3
+Ut      5.0 1.0
+Hn      5.0 1.0
+mSfsld3 30.0 0.0
+mS-Sl2_1     4
+mS-Sl22 8.0 1.0
+mSgsld2 2.0 1.0
+mSgsld2 2.0 1.0
+mSgsld2 1.0 1.0
+Sl2-Ls3_1    4
+Sl2Ls32 8.0 1.0
+mSgsld2 2.0 1.0
+mSgsld2 2.0 1.0
+mSgsld2 1.0 1.0
+Hn-mSfs_1    4
+Hn-mSfs 8.0 1.0
+mSgsld2 2.0 1.0
+mSgsld2 2.0 1.0
+mSgsld2 1.0 1.0
+Hnz4_1       4
+Hnz4SV3 8.0 1.0
+mSgsld2 2.0 0.0
+mSgsld2 2.0 0.0
+mSgsld2 1.0 0.0
+mS-Sl2_2     4
+mS-Sl22 8.0 1.0
+mSfsld2 3.0 1.0
+mSfsld2 2.0 1.0
+Ls4ld3  5.0 0.0
+Sl2_2        4
+Sl2ld2  8.0 1.0
+mSfsld2 3.0 1.0
+mSfsld2 2.0 1.0
+Ls4ld3  5.0 0.0
+Sl2-Ls3_2    4
+Sl2Ls32 8.0 1.0
+mSfsld2 3.0 1.0
+mSfsld2 2.0 1.0
+Ls4ld3  5.0 0.0
+Hn-mSfs_2    4
+Hn-mSfs 8.0 1.0
+mSfsld2 3.0 1.0
+mSfsld2 2.0 1.0
+Ls4ld3  5.0 0.0
+Hnz4_2       4
+Hnz4SV3 8.0 1.0
+mSfsld2 3.0 1.0
+mSfsld2 2.0 1.0
+Ls4ld3  5.0 0.0
+mSfs_3       4
+mSfsld2 8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3  5.0 0.0
+mS-Sl2_3     4
+mS-Sl22 8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3  5.0 0.0
+Sl2_3        4
+Sl2ld2  8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3  5.0 0.0
+Sl2-Ls3_3    4
+Sl2Ls32 8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3  5.0 0.0
+Hn-mSfs_3    4
+Hn-mSfs 8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3  5.0 0.0
+Hnz4_3       4
+Hnz4SV3 8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3  5.0 0.0
+mS-Sl2_4     4
+mS-Sl22 8.0 1.0
+mSfsld2 3.0 1.0
+mSfsld2 2.0 1.0
+Ls4ld3  5.0 0.0
+mS-Sl2_5     4
+mS-Sl22 8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3  5.0 0.0
+Hn-mSfs_5    4
+Hn-mSfs 8.0 1.0
+mSfsld2 10.0 1.0
+mSfsld3 20.0 0.0
+Ls4ld3  5.0 0.0
+1Hn9mSf1b    3
+Hnz4SV3 1.0 1.0
+mSfsld3 9.0 1.0
+mSgsld2 5.0 0.0
+2Hn8mSf1b    3
+Hnz4SV3 2.0 1.0
+mSfsld3 8.0 1.0
+mSgsld2 5.0 0.0
+2Hn8mSf6     3
+Hnz4SV3 2.0 1.0
+mSfsld3 8.0 1.0
+mSgsld2 5.0 0.0
+3mSf7Hn1b    3
+mSfsld2 3.0 1.0
+Hnz4SV3 7.0 1.0
+mSgsld2 5.0 0.0
+4Hn6mSf1a    3
+Hnz4SV3 4.0 1.0
+mSfsld3 6.0 1.0
+mSgsld2 5.0 0.0
+4Hn6mSf6     3
+Hnz4SV3 4.0 1.0
+mSfsld3 6.0 1.0
+mSfsld2 5.0 0.0
+4mSf6Sl21a   3
+mSfsld2 4.0 1.0
+Sl2ld3  6.0 1.0
+mSgsld2 5.0 0.0
+4mSf6Sl27    3
+mSfsld2 4.0 1.0
+Sl2ld3  6.0 1.0
+mSfsld2 5.0 0.0
+4mSf6Xs1a    3
+mSfsld2 4.0 1.0
+Xs      6.0 1.0
+mSgsld2 5.0 0.0
+4mSf6Xs1b    3
+mSfsld2 4.0 1.0
+Xs      6.0 1.0
+mSgsld2 5.0 0.0
+4mSf6Xs6     3
+mSfsld2 4.0 1.0
+Xs      6.0 1.0
+mSfsld2 5.0 0.0
+5gS5gS1a     3
+gSld2   5.0 1.0
+gSld3   5.0 1.0
+mSgsld2 5.0 0.0
+5Hn5Hn1b     3
+Hnz4SV3 5.0 1.0
+Hnz4SV3 5.0 1.0
+mSgsld2 5.0 0.0
+5Hn5Hn2b     3
+Hnz4SV3 5.0 1.0
+Hnz4SV3 5.0 1.0
+mSfsld2 5.0 0.0
+5Hn5Hn6      3
+Hnz4SV3 5.0 1.0
+Hnz4SV3 5.0 1.0
+mSfsld2 5.0 0.0
+5Hn5mSf6     3
+Hnz4SV3 5.0 1.0
+mSfsld3 5.0 1.0
+mSfsld2 5.0 0.0
+5Ls25Ls24    3
+Ls2ld2  5.0 1.0
+Ls2ld3  5.0 1.0
+mSfsld2 5.0 0.0
+5Ls25Ls27    3
+Ls2ld2  5.0 1.0
+Ls2ld3  5.0 1.0
+mSfsld2 5.0 0.0
+5mS5mS4      3
+mSld2   5.0 1.0
+mSld3   5.0 1.0
+mSfsld2 5.0 0.0
+5mS5mS7      3
+mSld2   5.0 1.0
+mSld3   5.0 1.0
+mSfsld2 5.0 0.0
+5mSf5mSf1a   3
+mSfsld2 5.0 1.0
+mSfsld3 5.0 1.0
+mSgsld2 5.0 0.0
+5mSf5mSf1b   3
+mSfsld2 5.0 1.0
+mSfsld3 5.0 1.0
+mSgsld2 5.0 0.0
+5mSf5mSf2a   3
+mSfsld2 5.0 1.0
+mSfsld3 5.0 1.0
+mSfsld2 5.0 0.0
+5mSf5mSf3    3
+mSfsld2 5.0 1.0
+mSfsld3 5.0 1.0
+mSfsld2 5.0 0.0
+5mSf5mSf6    3
+mSfsld2 5.0 1.0
+mSfsld3 5.0 1.0
+mSfsld2 5.0 0.0
+5mSf5mSf7    3
+mSfsld2 5.0 1.0
+mSfsld3 5.0 1.0
+mSfsld2 5.0 0.0
+5Sl25Sl27    3
+Sl2ld2  5.0 1.0
+Sl2ld3  5.0 1.0
+mSfsld2 5.0 0.0
+5Sl35Sl31a   3
+Sl3ld2  5.0 1.0
+Sl3ld3  5.0 1.0
+mSgsld2 5.0 0.0
+5Sl35Sl32a   3
+Sl3ld2  5.0 1.0
+Sl3ld3  5.0 1.0
+mSfsld2 5.0 0.0
+5Sl35Sl33    3
+Sl3ld2  5.0 1.0
+Sl3ld3  5.0 1.0
+mSfsld3 5.0 0.0
+5Su25mSf1a   3
+Su2ld2  5.0 1.0
+mSfsld3 5.0 1.0
+mSgsld2 5.0 0.0
+5Su25mSf1b   3
+Su2ld2  5.0 1.0
+mSfsld3 5.0 1.0
+mSgsld2 5.0 0.0
+5Su25mSf2a   3
+Su2ld2  5.0 1.0
+mSfsld3 5.0 1.0
+mSfsld2 5.0 0.0
+5Su25mSf3    3
+Su2ld2  5.0 1.0
+mSfsld3 5.0 1.0
+mSfsld3 5.0 0.0
+5Su25mSf7    3
+Su2ld2  5.0 1.0
+mSfsld3 5.0 1.0
+mSfsld2 5.0 0.0
+5Su25Su21a   3
+Su2ld2  5.0 1.0
+mSfsld3 5.0 1.0
+mSgsld2 5.0 0.0
+5Su25Su22a   3
+Su2ld2  5.0 1.0
+mSfsld3 5.0 1.0
+mSfsld3 5.0 0.0
+5Su25Su27    3
+Su2ld2  5.0 1.0
+mSfsld3 5.0 1.0
+mSfsld2 5.0 0.0
+2mSf8Hn6     3
+mSfsld2 2.0 1.0
+Hnz4SV3 8.0 1.0
+mSfsld2 5.0 0.0
+3mS7Tt_2     3
+mSld3   3.0 1.0
+Tt      7.0 1.0
+mSfsld2 5.0 0.0
+3S117S12_3   3
+S11     3.0 1.0
+S12     7.0 1.0
+mSfsld3 30.0 0.0
+3S137S14_2   3
+S13     3.0 1.0
+S14     7.0 1.0
+mSfsld2 5.0 0.0
+3S157S16_2   3
+S15     3.0 1.0
+S16     7.0 1.0
+mSfsld2 5.0 0.0
+3S17S2_2     3
+S1      3.0 1.0
+S2      7.0 1.0
+mSfsld2 5.0 0.0
+3S37S4_2     3
+S3      3.0 1.0
+S4      7.0 1.0
+mSfsld2 5.0 0.0
+3S57S6_3     3
+S5      3.0 1.0
+S6      7.0 1.0
+mSfsld3 30.0 0.0
+3S77S8_2     3
+S7      3.0 1.0
+S8      7.0 1.0
+mSfsld2 5.0 0.0
+3S97S10_2    3
+S9      3.0 1.0
+S10     7.0 1.0
+mSfsld2 5.0 0.0
+5Hn5Hn_3     3
+Hn      5.0 1.0
+Hn      5.0 1.0
+mSfsld3 30.0 0.0
+5Ls25Ls2_2   3
+Ls2ld3  5.0 1.0
+Ls2ld3  5.0 1.0
+mSfsld2 5.0 0.0
+5Lu5Lu_2     3
+Lu      5.0 1.0
+Lu      5.0 1.0
+mSfsld2 5.0 0.0
+5mS5mS_2     3
+mSld3   5.0 1.0
+mSld3   5.0 1.0
+mSfsld2 5.0 0.0
+5mSg5mSg_4   3
+mSgsld3 5.0 1.0
+mSgsld3 5.0 1.0
+mSfsld2 5.0 0.0
+5Sl25Sl2_4   3
+Sl2ld3  5.0 1.0
+Sl2ld3  5.0 1.0
+mSfsld2 5.0 0.0
+5Sl45Sl4_5   3
+Sl4ld3  5.0 1.0
+Sl4ld3  5.0 1.0
+mSfsld3 30.0 0.0
+7mS3Lt3_5    3
+mSld3   7.0 1.0
+Lt3ld3  3.0 1.0
+mSfsld3 30.0 0.0
+7Sl23ls2_1   3
+Sl2ld3  7.0 1.0
+Ls2ld3  3.0 1.0
+mSgsld2 5.0 0.0
+7Sl23mS_2    3
+Sl2ld3  7.0 1.0
+mSld3   3.0 1.0
+mSfsld2 5.0 0.0
+7Sl43Lt3_3   3
+Sl4ld3  7.0 1.0
+Lt3ld3  3.0 1.0
+mSfsld3 30.0 0.0
+3Sl47Ls21    3
+Sl4ld3  3.0 1.0
+Ls2ld3  7.0 1.0
+mSgsld2 5.0 0.0
+3Sl47Ls22a   3
+Sl4ld3  3.0 1.0
+Ls2ld3  7.0 1.0
+mSfsld2 5.0 0.0
+3Sl47Ls23    3
+Sl4ld3  3.0 1.0
+Ls2ld3  7.0 1.0
+mSfsld3 30.0 0.0
+3Uls7Tu32a   3
+Ulsld3  3.0 1.0
+Tu3ld3  7.0 1.0
+mSfsld2 5.0 0.0
+3Uls7Tu33    3
+Ulsld3  3.0 1.0
+Tu3ld3  7.0 1.0
+mSfsld3 30.0 0.0
+5mS5mS1      3
+mSld3   5.0 1.0
+mSld3   5.0 1.0
+mSgsld2 5.0 0.0
+5mS5mS5      3
+mSld3   5.0 1.0
+mSld3   5.0 1.0
+mSfsld3 30.0 0.0
+5mSf5mSf1    3
+mSfsld3 5.0 1.0
+mSfsld3 5.0 1.0
+mSgsld2 5.0 0.0
+5mSf5mSf5    3
+mSfsld3 5.0 1.0
+mSfsld3 5.0 1.0
+mSfsld3 30.0 0.0
+5mSg5mSg4    3
+mSgsld3 5.0 1.0
+mSgsld3 5.0 1.0
+mSfsld2 5.0 0.0
+5mSg5mSg5    3
+mSgsld3 5.0 1.0
+mSgsld3 5.0 1.0
+mSfsld3 30.0 0.0
+5Sl25Sl23    3
+Sl2ld3  5.0 1.0
+Sl2ld3  5.0 1.0
+mSfsld3 30.0 0.0
+5Sl45Sl42a   3
+Sl4ld3  5.0 1.0
+Sl4ld3  5.0 1.0
+mSfsld2 5.0 0.0
+5Sl45Sl43    3
+Sl4ld3  5.0 1.0
+Sl4ld3  5.0 1.0
+mSfsld3 30.0 0.0
+7mS3Lt33     3
+mSld3   7.0 1.0
+Lt3ld3  3.0 1.0
+mSfsld3 30.0 0.0
+7mS3Lt34     3
+mSld3   7.0 1.0
+Lt3ld3  3.0 1.0
+mSfsld2 5.0 0.0
+7mS3Lt35     3
+mSld3   7.0 1.0
+Lt3ld3  3.0 1.0
+mSfsld3 30.0 0.0
+7Sl23Ls22a   3
+Sl2ld3  7.0 1.0
+Ls2ld3  3.0 1.0
+mSfsld2 5.0 0.0
+7Sl23Ls23    3
+Sl2ld3  7.0 1.0
+Ls2ld3  3.0 1.0
+mSfsld3 30.0 0.0
+7Sl23Lt32a   3
+Sl2ld3  7.0 1.0
+Lt3ld3  3.0 1.0
+mSfsld2 5.0 0.0
+7Sl23mS2a    3
+Sl2ld3  7.0 1.0
+mSld3   3.0 1.0
+mSfsld2 5.0 0.0
+7Sl23mS3     3
+Sl2ld3  7.0 1.0
+mSld3   3.0 1.0
+mSfsld3 30.0 0.0
+7Sl43mS2a    3
+Sl4ld3  7.0 1.0
+mSld3   3.0 1.0
+mSfsld2 5.0 0.0
+7Sl43mS3     3
+Sl4ld3  7.0 1.0
+mSld3   3.0 1.0
+mSfsld3 30.0 0.0
+3gS7Hn2a     3
+gSld3   3.0 1.0
+Hn      7.0 1.0
+mSfsld2 5.0 0.0
+3gS7Hn3      3
+gSld3   3.0 1.0
+Hn      7.0 1.0
+mSfsld3 30.0 0.0
+grs_ex       3
+GR-stau 2.0 0.0
+Substr  2.0 0.0
+Drain   1.0 0.0
+grs_int      3
+GR-stau 2.0 0.0
+Substr  6.0 0.0
+Drain   1.0 0.0
+mrs          4
+mulde   4.0 0.0
+rein    3.0 0.0
+filter  7.0 0.0
+base    1.0 0.0
+mrs_30       4
+mulde   3.0 0.0
+rein    3.0 0.0
+filter  7.0 0.0
+base    1.0 0.0
+mrs_60       4
+mulde   6.0 0.0
+rein    3.0 0.0
+filter  7.0 0.0
+base    1.0 0.0
+mrs_80       4
+mulde   8.0 0.0
+rein    3.0 0.0
+filter  7.0 0.0
+base    1.0 0.0
+mulde_b      2
+mulde   4.0 0.0
+rein    3.0 0.0
+mulde_30     2
+mulde   3.0 0.0
+rein    3.0 0.0
+mulde_60     2
+mulde   6.0 0.0
+rein    3.0 0.0
+mulde_80     2
+mulde   8.0 0.0
+rein    3.0 0.0
