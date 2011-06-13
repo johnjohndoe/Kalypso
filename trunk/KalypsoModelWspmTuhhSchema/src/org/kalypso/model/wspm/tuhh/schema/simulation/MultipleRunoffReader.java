@@ -47,6 +47,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
@@ -71,6 +73,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureComparator;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -119,7 +122,7 @@ public class MultipleRunoffReader
 
       // REMARK: the way we read km/polynomial files it's bit tricky to get the slope
       // However this is not a problem, as we are calculating we a uniform steady slope,
-      // which is defined ni the calculation
+      // which is defined in the calculation
       final BigDecimal startSlope = m_calculation.getStartSlope();
       final BigDecimal slope = startSlope.setScale( 5, RoundingMode.HALF_UP );
 
@@ -153,6 +156,10 @@ public class MultipleRunoffReader
 
   public void createResult( final ISimulationResultEater resultEater ) throws SimulationException, IOException, GmlSerializeException
   {
+    /* Sort by station before wrinting the result */
+    final Comparator<Object> featureComparator = new FeatureComparator( m_resultCollection, QIntervallResult.QNAME_P_QIntervallResult_station );
+    Collections.sort( m_resultCollection.getQIntervalls(), featureComparator );
+
     final GMLWorkspace workspace = m_resultCollection.getWorkspace();
     GmlSerializer.serializeWorkspace( m_targetGmlFile, workspace, CharEncoding.UTF_8 );
     resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT, m_targetGmlFile );
@@ -167,28 +174,28 @@ public class MultipleRunoffReader
   {
     for( final QIntervallResult qInterval : m_resultCollection.getQIntervalls() )
     {
-      IObservation<TupleResult> observation = qInterval.getOrCreatePointsObservation();
-      TupleResult result = observation.getResult();
-      int indexRunoff = result.indexOfComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
+      final IObservation<TupleResult> observation = qInterval.getOrCreatePointsObservation();
+      final TupleResult result = observation.getResult();
+      final int indexRunoff = result.indexOfComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
       if( indexRunoff < 0 )
       {
-        IComponent targetComponent = qInterval.createPointsComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
+        final IComponent targetComponent = qInterval.createPointsComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
         result.addComponent( targetComponent );
         createSum( result, IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF_CHANNEL, IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF_FLOODPLAIN, IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
       }
 
-      int indexArea = result.indexOfComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA );
+      final int indexArea = result.indexOfComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA );
       if( indexArea < 0 )
       {
-        IComponent targetComponent = qInterval.createPointsComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA );
+        final IComponent targetComponent = qInterval.createPointsComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA );
         result.addComponent( targetComponent );
         createSum( result, IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA_CHANNEL, IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA_FLOODPLAIN, IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA );
       }
 
-      int indexWidth = result.indexOfComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH );
+      final int indexWidth = result.indexOfComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH );
       if( indexWidth < 0 )
       {
-        IComponent targetComponent = qInterval.createPointsComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH );
+        final IComponent targetComponent = qInterval.createPointsComponent( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH );
         result.addComponent( targetComponent );
         createSum( result, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH_CHANNEL, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH_FLOODPLAIN, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH );
       }
@@ -197,17 +204,17 @@ public class MultipleRunoffReader
     }
   }
 
-  private void createSum( TupleResult result, String idOne, String idTwo, String idTarget )
+  private void createSum( final TupleResult result, final String idOne, final String idTwo, final String idTarget )
   {
-    int indexOne = result.indexOfComponent( idOne );
-    int indexTwo = result.indexOfComponent( idTwo );
-    int indexTarget = result.indexOfComponent( idTarget );
+    final int indexOne = result.indexOfComponent( idOne );
+    final int indexTwo = result.indexOfComponent( idTwo );
+    final int indexTarget = result.indexOfComponent( idTarget );
 
-    for( IRecord record : result )
+    for( final IRecord record : result )
     {
-      BigDecimal valueOne = (BigDecimal) record.getValue( indexOne );
-      BigDecimal valueTwo = (BigDecimal) record.getValue( indexTwo );
-      BigDecimal valueTarget = valueOne.add( valueTwo );
+      final BigDecimal valueOne = (BigDecimal) record.getValue( indexOne );
+      final BigDecimal valueTwo = (BigDecimal) record.getValue( indexTwo );
+      final BigDecimal valueTarget = valueOne.add( valueTwo );
       record.setValue( indexTarget, valueTarget );
     }
   }

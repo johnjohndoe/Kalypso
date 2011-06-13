@@ -42,11 +42,8 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.simulation.core.util.LogHelper;
@@ -69,8 +66,6 @@ public class KMFileReader
       IWspmTuhhQIntervallConstants.DICT_COMPONENT_WIDTH_FLOODPLAIN, //
       null };
 
-  private final Map<BigDecimal, QIntervallResult> m_results = new HashMap<BigDecimal, QIntervallResult>();
-
   private final LogHelper m_log;
 
   private final File[] m_inputFiles;
@@ -87,11 +82,6 @@ public class KMFileReader
     m_log = log;
     m_intervalIndex = intervalIndex;
     m_slope = slope;
-  }
-
-  public Map<BigDecimal, QIntervallResult> getQIntervals( )
-  {
-    return m_results;
   }
 
   public void read( )
