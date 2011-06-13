@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" typeID="WspmTuhhV1.0">
+
+	<input id="TIMEOUT" type="xs:int" optional="true"
+		description="Timeout der Berechnung in Minuten. Beendet der Rechenkern die Berechnung nicht nach der angegebenen Anzahl an Minuten, wird die Berechnung abgebrochen." />
+
+	<!-- 
+		Dateien nicht relativ zur Rechenvariante  -->
+	<input id="OVW_MAP_SPECIAL" optional="true" description="Vorlage (*.gml) für Karte im WATERLEVEL-Modus, wird überschrieben durch OVW_MAP_GENERAL" />
+	<!-- 
+		Dateien relativ zur Rechenvariante  -->
+	<input id="MODELL_GML" description="Modelldaten" />
+	<input id="CALC_PATH" type="xs:string" description="Feature-Path zur Berechnung in der Modell.gml" />
+	<input id="EPS_THINNING" type="xs:string" description="Parameter für die Ausdünnung bei Generierung der Bruchkanten" />
+	<input id="OVW_MAP_GENERAL" optional="true" description="allg. Vorlage (*.gml) für Karte im WATERLEVEL-Modus, wird ggf. überschrieben durch OVW_MAP_SPECIAL" />
+	<!-- 
+		Output des Rechenkerns/CalcJobs -->
+	<output id="KernelLog" description="Log of the kernel" />
+	<output id="KernelErr" description="Error log of the kernel" />
+	<output id="SimulationLog" description="Log of the simulation job" />
+	<!-- 
+		Ergebnisse für alle Modi -->
+	<output id="ControlFile" description="Controlfile of the tuhh model" />
+	<output id="BeiwerteAus" description="Output of the tuhh model (Beiwerte.aus)" />
+	<output id="LambdaI" description="Output of the tuhh model (lambda_i.txt)" />
+	<!-- 
+		results for WATERLEVEL mode -->
+	<output id="LengthSectionTab" optional="true" description="Template file to view the laengschnitt.gml as table" />
+	<output id="LengthSectionDiag" optional="true" description="Template file to view the laengschnitt.gml as diagram" />
+	<output id="OvwMap" optional="true" description="Template file to view results as map" />
+	<output id="LengthSection" optional="true" description="Length section output of the tuhh model (laengsschnitt.txt)" />
+	<output id="LengthSectionGml" optional="true" description="Length section output of the tuhh model (laengsschnitt.txt) as observation (*.gml)" />
+	<output id="Bruchkanten" optional="true" description="Bruchkanten.gml" />
+	<output id="WspTin" optional="true" description="WspTin.gml" />
+	<output id="WspTinSld" optional="true" description="WspTin.sld" />
+	<output id="Modellgrenzen" optional="true" description="Modellgrenzen.gml" />
+	<output id="Ueberschwemmungslinie" optional="true" description="Überschwemmungslinie.gml" />
+	<!-- 
+		results for WATERLEVEL and BANKFUL UNIFORM mode -->
+	<output id="resultList" optional="true" description="Ergebnis.list (TAB-Datei)" />
+	<!-- 
+		results for BANKFUL UNIFORM mode -->
+	<output id="bfLengthSection" optional="true" description="*.qb1" />
+	<!-- 
+		results for BANKFUL NONUNIFORM mode -->
+	<output id="resultListsNonUni" optional="true" description="Ergebnislisten für jeden Abfluss (*.tab)" />
+	<output id="qIntervallResultGml" optional="true" description="Detailergebnisse der Polynomermittlung - Datendatei."/>
+	<output id="qIntervallResultGmv" optional="true" description="Detailergebnisse der Polynomermittlung - Vorlagendatei."/>
+	<output id="polynomeLog" optional="true" description="Logdatei der Polynomermittlung."/>
+</modelspec>
