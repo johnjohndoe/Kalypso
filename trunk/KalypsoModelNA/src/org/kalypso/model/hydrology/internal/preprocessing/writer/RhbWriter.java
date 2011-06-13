@@ -49,6 +49,7 @@ import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -56,7 +57,6 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.simulation.core.SimulationException;
 
 /**
  * @author doemming
@@ -79,14 +79,25 @@ public class RhbWriter extends AbstractCoreFileWriter
    * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractWriter#writeContent(java.io.PrintWriter)
    */
   @Override
-  protected void writeContent( final PrintWriter writer ) throws Exception
+  protected void writeContent( final PrintWriter writer ) throws NAPreprocessorException
   {
     for( final NetElement element : m_channels )
-      writeFeature( element.getChannel(), writer );
+    {
+      final Channel channel = element.getChannel();
+      try
+      {
+        writeFeature( channel, writer );
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+        throw new NAPreprocessorException( String.format( "Fehler beim Auslesen der WQV-Beziehung für Strang '%s'", channel.getName() ), e );
+      }
+    }
   }
 
   // FIXME: better error handling!
-  private void writeFeature( final Channel channel, final PrintWriter writer ) throws SensorException, SimulationException
+  private void writeFeature( final Channel channel, final PrintWriter writer ) throws NAPreprocessorException, SensorException
   {
     if( channel instanceof StorageChannel ) //$NON-NLS-1$
     {
@@ -140,17 +151,17 @@ public class RhbWriter extends AbstractCoreFileWriter
    * @param rhbBuffer
    * @throws SensorException
    */
-  private void writeWVQ( final StorageChannel storageChannel, final PrintWriter writer ) throws SensorException, SimulationException
+  private void writeWVQ( final StorageChannel storageChannel, final PrintWriter writer ) throws NAPreprocessorException, SensorException
   {
     final String channelName = storageChannel.getName();
     final IObservation observation = storageChannel.getWVQObservation();
     if( observation == null )
-      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.manager.ChannelManager.2", channelName ) ); //$NON-NLS-1$
+      throw new NAPreprocessorException( Messages.getString( "org.kalypso.convert.namodel.manager.ChannelManager.2", channelName ) ); //$NON-NLS-1$
 
     final ITupleModel values = observation.getValues( null );
     final int size = values.size();
     if( size > 24 )
-      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.manager.ChannelManager.33", channelName ) );
+      throw new NAPreprocessorException( Messages.getString( "org.kalypso.convert.namodel.manager.ChannelManager.33", channelName ) );
 
     writer.format( Locale.US, "%4d\n", size ); //$NON-NLS-1$
 

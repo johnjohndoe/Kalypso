@@ -46,6 +46,7 @@ import java.io.PrintWriter;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 
 /**
  * @author Dejan Antanaskovic
@@ -64,17 +65,13 @@ abstract class AbstractCoreFileWriter
     return m_logger;
   }
 
-  public final void write( final File outputFile ) throws IOException
+  public final void write( final File outputFile ) throws IOException, NAPreprocessorException
   {
     final PrintWriter writer = new PrintWriter( outputFile );
     try
     {
       writeContent( writer );
       writer.close();
-    }
-    catch( final Exception e )
-    {
-      handleError( e );
     }
     finally
     {
@@ -83,12 +80,5 @@ abstract class AbstractCoreFileWriter
     }
   }
 
-  protected abstract void writeContent( final PrintWriter writer ) throws Exception;
-
-  private void handleError( final Exception e ) throws IOException
-  {
-    final String message = e.getMessage();
-    m_logger.severe( message );
-    throw new IOException( message, e );
-  }
+  protected abstract void writeContent( final PrintWriter writer ) throws IOException, NAPreprocessorException;
 }

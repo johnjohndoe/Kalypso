@@ -41,6 +41,7 @@
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Date;
@@ -65,6 +66,7 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.model.nodes.Verzweigung;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.model.hydrology.internal.preprocessing.timeseries.GrapWriter;
@@ -144,7 +146,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
    * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractCoreFileWriter#writeContent(java.io.PrintWriter)
    */
   @Override
-  protected void writeContent( final PrintWriter writer ) throws Exception
+  protected void writeContent( final PrintWriter writer ) throws IOException, NAPreprocessorException
   {
     final NetElement[] channels = m_relevantElements.getChannels();
     for( final NetElement netElement : channels )
@@ -158,13 +160,21 @@ public class NetFileWriter extends AbstractCoreFileWriter
       netElement.writeRootChannel( writer, virtualChannelId );
     }
 
-    final Node[] nodeCollector = m_relevantElements.getNodes();
-    writer.append( "99999\n" ); //$NON-NLS-1$
-    appendNodeList( nodeCollector, writer );
-    writer.append( "99999\n" ); //$NON-NLS-1$
+    try
+    {
+      final Node[] nodeCollector = m_relevantElements.getNodes();
+      writer.append( "99999\n" ); //$NON-NLS-1$
+      appendNodeList( nodeCollector, writer );
+      writer.append( "99999\n" ); //$NON-NLS-1$
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+      throw new NAPreprocessorException( "Fehler beim Zugriff auf die Knotenliste", e );
+    }
   }
 
-  private void appendNodeList( final Node[] nodes, final PrintWriter netBuffer ) throws Exception, Exception
+  private void appendNodeList( final Node[] nodes, final PrintWriter netBuffer ) throws IOException, SensorException
   {
     // FIXME: theses nodes do not contain the branching nodes
 
@@ -240,7 +250,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     return bean;
   }
 
-  private ZuflussBean appendZuflussStuff( final Node node ) throws Exception
+  private ZuflussBean appendZuflussStuff( final Node node ) throws SensorException, IOException
   {
     // TODO: like this, only one branching can be used at the same time. Also, braching and zufluss cannot appear at
     // the same time. Is both intented? Isn't kalypso-na able to do more?
@@ -255,7 +265,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     return new ZuflussBean( 0, 0, 0, 0, 0, Double.NaN, null );
   }
 
-  private ZuflussBean appendZuflussLink( final Node node, final TimeseriesLinkType zuflussLink ) throws Exception
+  private ZuflussBean appendZuflussLink( final Node node, final TimeseriesLinkType zuflussLink ) throws SensorException, IOException
   {
     final ZuflussBean bean = new ZuflussBean( 0, 0, 0, 5, 0, Double.NaN, null );
 

@@ -60,6 +60,7 @@ import org.kalypso.model.hydrology.binding.suds.IGreenRoof.EUsageType;
 import org.kalypso.model.hydrology.binding.suds.ISwale;
 import org.kalypso.model.hydrology.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -112,7 +113,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
   }
 
   @Override
-  protected void writeContent( final PrintWriter buffer ) throws Exception
+  protected void writeContent( final PrintWriter buffer )
   {
     final Parameter parameter = (Parameter) m_parameterWorkspace.getRootFeature();
     final IFeatureBindingCollection<Soiltype> soiltypes = parameter.getSoiltypes();
@@ -212,7 +213,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
   /**
    * Returns the predefined soil type name for given swale
    */
-  public static final String getSwaleSoiltypeName( final IAbstractSwale swale ) throws Exception
+  public static final String getSwaleSoiltypeName( final IAbstractSwale swale ) throws NAPreprocessorException
   {
     final Double profileThickness = swale.getProfileThickness();
     if( swale instanceof ISwale )
@@ -239,6 +240,6 @@ public class BodentypWriter extends AbstractCoreFileWriter
         return "mrs_80"; //$NON-NLS-1$
       return "mrs"; //$NON-NLS-1$
     }
-    throw new Exception( "Unknown swale type, class: " + swale.getClass().getCanonicalName() ); //$NON-NLS-1$
+    throw new NAPreprocessorException( "Unknown swale type, class: " + swale.getClass().getCanonicalName() ); //$NON-NLS-1$
   }
 }

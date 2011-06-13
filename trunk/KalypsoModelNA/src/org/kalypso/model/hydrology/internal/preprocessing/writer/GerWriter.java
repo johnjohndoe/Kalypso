@@ -83,11 +83,8 @@ public class GerWriter extends AbstractCoreFileWriter
     m_channels = channels;
   }
 
-  /**
-   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractWriter#writeContent(java.io.PrintWriter)
-   */
   @Override
-  protected void writeContent( final PrintWriter writer ) throws Exception
+  protected void writeContent( final PrintWriter writer )
   {
     for( final Entry<NetElement, Integer> rootChannel : m_rootChannels )
     {
@@ -99,7 +96,7 @@ public class GerWriter extends AbstractCoreFileWriter
       writeChannel( writer, element.getChannel() );
   }
 
-  private void writeChannel( final PrintWriter writer, final Channel channel ) throws Exception
+  private void writeChannel( final PrintWriter writer, final Channel channel )
   {
     final int channelID = m_idManager.getAsciiID( channel );
     writer.format( "%d\n", channelID ); //$NON-NLS-1$
@@ -120,6 +117,9 @@ public class GerWriter extends AbstractCoreFileWriter
     else if( channel instanceof StorageChannel )
     {
       final TimeseriesLinkType link = ((StorageChannel) channel).getSeaEvaporationTimeseriesLink();
+
+      // FIXME: this distinction is probably too soft; we want to always use HRB however, so meaybe not a problem
+
       writer.println( link == null ? STORAGECHANNEL : STORAGECHANNEL_HRB );
     }
     else

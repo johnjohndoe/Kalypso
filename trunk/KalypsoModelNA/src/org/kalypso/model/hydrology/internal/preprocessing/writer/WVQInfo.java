@@ -44,37 +44,20 @@ class WVQInfo
 {
   private final String m_formattedObservation;
 
-// private final double m_vMax;
-//
-// private final double m_vMin;
-
   private final int m_numberOfEntries;
 
-  protected WVQInfo( final String formattedObservation, @SuppressWarnings("unused") final double vMax, @SuppressWarnings("unused") final double vMin, final int numberOfEntries )
+  WVQInfo( final String formattedObservation, final int numberOfEntries )
   {
     m_formattedObservation = formattedObservation;
-// m_vMax = vMax;
-// m_vMin = vMin;
     m_numberOfEntries = numberOfEntries;
   }
 
-  protected String getFormattedObservation( )
+  String getFormattedObservation( )
   {
     return m_formattedObservation;
   }
 
-// // TODO: to discuss: usage of min/max from the timeserie, or those explicitly defined by user in user interface
-// protected double getMaxVolume( )
-// {
-// return m_vMax;
-// }
-//
-// protected double getMinVolume( )
-// {
-// return m_vMin;
-// }
-
-  protected int getNumberOfEntries( )
+  int getNumberOfEntries( )
   {
     return m_numberOfEntries;
   }
