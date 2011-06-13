@@ -89,13 +89,25 @@ public class NoForelandKMValue extends AbstractKMValue
   }
 
   @Override
-  public double getQ( )
+  public double getLowerQchannel( )
   {
-    return m_delegate.getQSum();
+    return m_delegate.getLowerQ();
   }
 
   @Override
-  public double getQForeland( )
+  public double getUpperQchannel( )
+  {
+    return m_delegate.getUpperQ();
+  }
+
+  @Override
+  public double getLowerQforeland( )
+  {
+    return 0.0;
+  }
+
+  @Override
+  public double getUpperQforeland( )
   {
     return 0.0;
   }

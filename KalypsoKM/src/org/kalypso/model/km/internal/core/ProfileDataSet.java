@@ -40,11 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.core;
 
+import java.math.BigDecimal;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.km.internal.KMPlugin;
-
 
 /**
  * A set of {@link ProfileData}
@@ -53,57 +54,80 @@ import org.kalypso.model.km.internal.KMPlugin;
  */
 public class ProfileDataSet
 {
-  /**
-   * The start position (the first station). In meters!
-   */
-  private final double m_startPosition;
-
-  /**
-   * The end position (the last station). In meters!
-   */
-  private final double m_endPosition;
-
   private final ProfileData[] m_profileData;
 
-  /**
-   * @param startPosition
-   *          The start position (the first station). In meters!
-   * @param endPosition
-   *          The end position (the last station). In meters!
-   */
-  public ProfileDataSet( final ProfileData[] profileData, final double startPosition, final double endPosition )
+  public ProfileDataSet( final ProfileData[] profileData )
   {
     m_profileData = profileData;
+  }
 
+  void calculateProfileLengths( )
+  {
     /* Calculate the ranges. */
-    final int size = profileData.length;
+    final int size = m_profileData.length;
     for( int i = 0; i < size; i++ )
     {
-      final ProfileData data = profileData[i];
-      final ProfileData prevProfile = i == 0 || size == 1 ? null : profileData[i - 1];
-      final ProfileData nextProfile = i + 1 < size ? profileData[i + 1] : null;
-      data.calculateLength( prevProfile, nextProfile );
-    }
-
-    /* Are there already a start and end position given? */
-    if( !Double.isNaN( startPosition ) && !Double.isNaN( endPosition ) )
-    {
-      m_startPosition = startPosition;
-      m_endPosition = endPosition;
-      return;
-    }
-    else if( size > 0 )
-    {
-      /* Calculate the start and end position. */
-      m_startPosition = profileData[0].getStation();
-      m_endPosition = profileData[size - 1].getStation();
-    }
-    else
-    {
-      m_startPosition = Double.NaN;
-      m_endPosition = Double.NaN;
+      final ProfileData profile = m_profileData[i];
+      final ProfileData prevProfile = i == 0 || size == 1 ? null : m_profileData[i - 1];
+      final ProfileData nextProfile = i + 1 < size ? m_profileData[i + 1] : null;
+      final double length = calculateLength( profile, prevProfile, nextProfile );
+      profile.setLength( length );
     }
   }
+
+  private double calculateLength( final ProfileData profile, final ProfileData prevProfile, final ProfileData nextProfile )
+  {
+    final BigDecimal station = profile.getStation();
+
+    /*
+     * Distinguish profiles with identical stations from profile sets with one single profile (the latter gets NaN, the
+     * first case 0.0)
+     */
+    if( nextProfile == null && prevProfile == null )
+      return Double.NaN;
+
+    final double resultMax = findHalfLength( station, nextProfile );
+    final double resultMin = findHalfLength( station, prevProfile );
+
+    return (resultMax - resultMin) * 1000.0;
+  }
+
+  private double findHalfLength( final BigDecimal station, final ProfileData nextProfile )
+  {
+    if( nextProfile == null )
+      return station.doubleValue();
+
+    final BigDecimal nextStation = nextProfile.getStation();
+    return (station.doubleValue() + nextStation.doubleValue()) / 2d;
+  }
+
+  public double getQBordvoll( )
+  {
+    /* Only in this case we have one degenerate profile with length = NaN */
+    if( m_profileData.length == 1 )
+      return m_profileData[0].getLength();
+
+    final double[] qBordvoll = new double[m_profileData.length];
+    final double[] length = new double[m_profileData.length];
+    for( int i = 0; i < m_profileData.length; i++ )
+    {
+      final ProfileData profileData = m_profileData[i];
+      qBordvoll[i] = profileData.findQBordvoll();
+      length[i] = profileData.getLength();
+    }
+
+    /* calculate mean q bordvoll (weighted by length) */
+    double completeLength = 0.0;
+    double meanQbordvoll = 0.0;
+    for( int i = 0; i < qBordvoll.length; i++ )
+    {
+      completeLength += length[i];
+      meanQbordvoll += qBordvoll[i] * length[i];
+    }
+
+    return meanQbordvoll / completeLength;
+  }
+
 
   public ProfileData[] getAllProfiles( )
   {
@@ -111,37 +135,41 @@ public class ProfileDataSet
   }
 
   /**
-   * This function returns the start position (the first station). In meters!
+   * This function returns the start position (the first station).
    * 
-   * @return The start position (the first station). In meters!
+   * @return The start position (the first station).
    */
-  public double getStartPosition( )
+  public BigDecimal getStartStation( )
   {
-    return m_startPosition;
+    if( m_profileData.length == 0 )
+      return null;
+
+    return m_profileData[0].getStation();
   }
 
   /**
-   * This function returns the end position (the last station). In meters!
+   * This function returns the end position (the last station).
    * 
-   * @return The end position (the last station). In meters!
+   * @return The end position (the last station).
    */
-  public double getEndPosition( )
+  public BigDecimal getEndStation( )
   {
-    return m_endPosition;
+    if( m_profileData.length == 0 )
+      return null;
+
+    return m_profileData[m_profileData.length - 1].getStation();
   }
 
-  public IKMValue[] getKMValues( final int paramCount ) throws CoreException
+  public IKMValue[] getKMValues( final double fullLength, final int paramCount ) throws CoreException
   {
-    final double qBordvoll = findQBordvoll();
-
-    final int[] qIndices = buildMapping( paramCount + 1, qBordvoll );
+    final int[] qIndices = buildMapping( paramCount + 1 );
     final IKMValue[] result = new IKMValue[paramCount];
     final int middleParamIndex = getMiddleParamIndex( paramCount + 1 );
     for( int i = 0; i < paramCount; i++ )
     {
-      final IKMValue mergedKM = getMergedKM( qIndices[i], qIndices[i + 1] );
-      // HACKY: as we are using a mean qbordvoll, we get nForeland and kForeland values below the qBordvollIndex.
-      // We force those to 0.0; TODO: check if correct.
+      final IKMValue mergedKM = getMergedKM( fullLength, qIndices[i], qIndices[i + 1] );
+      // REMARK: as we are using a mean qbordvoll, we get nForeland and kForeland values below the qBordvollIndex.
+      // We force those to 0.0;
       if( i < middleParamIndex )
         result[i] = new NoForelandKMValue( mergedKM );
       else
@@ -153,15 +181,12 @@ public class ProfileDataSet
   /**
    * Calculates which paramCount-index maps to which q-index.
    */
-  private int[] buildMapping( final int paramCount, final double qBordvoll ) throws CoreException
+  private int[] buildMapping( final int paramCount ) throws CoreException
   {
+    final double qBordvoll = getQBordvoll();
     final int qBordvollIndex = findQBordvollIndex( qBordvoll );
     if( qBordvollIndex == -1 )
-    {
-      fail( "Mittleres Q-Bordvoll (%.3f) ausserhalb des berechneten Bereichs. WSPM Neubrechnnug notwendig.", qBordvoll );
-      // TODO: error
-      return null;
-    }
+      throw fail( "Mittleres Q-Bordvoll (%.3f) ausserhalb des berechneten Bereichs. WSPM Neubrechnnug notwendig.", qBordvoll );
 
     final int numberQ = getNumberQ();
     final int maxIndexQ = numberQ - 1;
@@ -170,25 +195,25 @@ public class ProfileDataSet
 
     final int[] qIndices = new int[paramCount];
 
-    if( !buildMapping( qIndices, 0, middleParamIndex, 0, qBordvollIndex + 1 ) )
-      fail( "Nicht ausreichend Abflusswerte unterhalb von Q-Bordvoll (%.3f) vorhanden. WSPM Neubrechnnug mit kleinerem Q-min notwendig.", qBordvoll );
+    if( !buildMapping( qIndices, 0, middleParamIndex, 0, qBordvollIndex ) )
+      throw fail( "Nicht ausreichend Abflusswerte unterhalb von Q-Bordvoll (%.3f) vorhanden. Verringern Sie die Q-Schrittweite oder das minimale Q.", qBordvoll );
 
-    if( !buildMapping( qIndices, middleParamIndex - 1, paramCount, qBordvollIndex, numberQ ) )
-      fail( "Nicht ausreichend Abflusswerte oberhalb von Q-Bordvoll (%.3f) vorhanden. WSPM Neubrechnnug mit größerem Q-max notwendig.", qBordvoll );
+    if( !buildMapping( qIndices, middleParamIndex, paramCount, qBordvollIndex, numberQ ) )
+      throw fail( "Nicht ausreichend Abflusswerte oberhalb von Q-Bordvoll (%.3f) vorhanden. Verringern Sie die Q-Schrittweite oder vergößern Sie das maximale Q.", qBordvoll );
 
     qIndices[paramCount - 1] = maxIndexQ;
 
     return qIndices;
   }
 
-  private void fail( final String format, final double qBordvoll ) throws CoreException
+  private CoreException fail( final String format, final double qBordvoll )
   {
     final String message = String.format( format, qBordvoll );
     final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), message );
-    throw new CoreException( status );
+    return new CoreException( status );
   }
 
-  protected int getMiddleParamIndex( final int paramCount )
+  private int getMiddleParamIndex( final int paramCount )
   {
     final int middleParamIndex = (int) ((paramCount / 2.0f));
     return middleParamIndex;
@@ -220,15 +245,26 @@ public class ProfileDataSet
    *          Lower index of the discharge.
    * @param indexQto
    *          Upper index of the discharge.
+   * @param fullLength
+   *          The full length of this calculated strand. The profile length will be adjusted so that their complete
+   *          length will we of this same full length.
    * @return The km values derived between the given two discharge values.
    */
-  private IKMValue getMergedKM( final int indexQfrom, final int indexQto )
+  private IKMValue getMergedKM( final double fullLength, final int indexQfrom, final int indexQto )
   {
+    /* Only in this case we have one single degenerate profile with length NaN. */
+    if( m_profileData.length == 1 && Double.isNaN( m_profileData[0].getLength() ) )
+      return m_profileData[0].getKMValue( fullLength, indexQfrom, indexQto );
+
+    double profileFullLength = 0;
+    for( final ProfileData element : m_profileData )
+      profileFullLength += element.getLength();
+
+    final double lengthFactor = fullLength / profileFullLength;
+
     final IKMValue[] profileKMs = new IKMValue[m_profileData.length];
-
     for( int i = 0; i < profileKMs.length; i++ )
-      profileKMs[i] = m_profileData[i].getKMValue( indexQfrom, indexQto );
-
+      profileKMs[i] = m_profileData[i].getKMValue( lengthFactor, indexQfrom, indexQto );
     return new MultiKMValue( profileKMs );
   }
 
@@ -238,31 +274,5 @@ public class ProfileDataSet
   private int findQBordvollIndex( final double qBordvoll )
   {
     return m_profileData[0].getQBordvollIndex( qBordvoll );
-  }
-
-  /**
-   * This function calculates qBordvoll
-   */
-  private double findQBordvoll( )
-  {
-    final double[] qBordvoll = new double[m_profileData.length];
-    final double[] length = new double[m_profileData.length];
-    for( int i = 0; i < m_profileData.length; i++ )
-    {
-      final ProfileData profileData = m_profileData[i];
-      qBordvoll[i] = profileData.findQBordvoll();
-      length[i] = profileData.getLength();
-    }
-
-    /* calculate mean q bordvoll (weighted by length) */
-    double completeLength = 0.0;
-    double meanQbordvoll = 0.0;
-    for( int i = 0; i < qBordvoll.length; i++ )
-    {
-      completeLength += length[i];
-      meanQbordvoll += qBordvoll[i] * length[i];
-    }
-
-    return meanQbordvoll / completeLength;
   }
 }

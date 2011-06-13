@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -12,6 +13,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 public class KMFilesReader implements IKMReader
 {
@@ -50,9 +52,9 @@ public class KMFilesReader implements IKMReader
   }
 
   @Override
-  public ProfileDataSet getDataSet( final double stationFrom, final double stationTo ) throws IOException
+  public ProfileDataSet getDataSet( ) throws IOException
   {
-    final ProfileDataSetFactory factory = new ProfileDataSetFactory( stationFrom, stationTo );
+    final ProfileDataSetFactory factory = new ProfileDataSetFactory();
 
     for( final File file : m_profileFiles )
     {
@@ -78,8 +80,8 @@ public class KMFilesReader implements IKMReader
       final Matcher kmMatcher = PATTERN_HEAD.matcher( line );
       if( kmMatcher.matches() )
       {
-        final double meter = 1000d * Double.parseDouble( kmMatcher.group( 1 ) );
-        wqProfile = new ProfileData( file.getAbsolutePath(), meter );
+        final BigDecimal station = NumberUtils.parseBigDecimal( kmMatcher.group( 1 ) );
+        wqProfile = new ProfileData( file.getAbsolutePath(), station );
         continue;
       }
       final Matcher tableMatcher = PATTERN_TABLE.matcher( line );

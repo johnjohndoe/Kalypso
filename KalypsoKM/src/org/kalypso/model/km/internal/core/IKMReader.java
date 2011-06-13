@@ -45,5 +45,5 @@ package org.kalypso.model.km.internal.core;
  */
 public interface IKMReader
 {
-  ProfileDataSet getDataSet( double stationFrom, double stationTo ) throws Exception;
+  ProfileDataSet getDataSet( ) throws Exception;
 }

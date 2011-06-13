@@ -38,20 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.km.internal.ui.kmupdate;
+package org.kalypso.model.km.internal.core;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -65,9 +59,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
 import org.kalypso.model.km.internal.KMPlugin;
-import org.kalypso.model.km.internal.core.IKMValue;
-import org.kalypso.model.km.internal.core.ProfileDataSet;
-import org.kalypso.model.km.internal.core.ProfileObservationReader;
+import org.kalypso.model.km.internal.binding.KMChannelElement;
 import org.kalypso.model.km.internal.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
@@ -78,7 +70,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
-import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
 
 /**
  * @author Gernot Belger
@@ -87,11 +78,11 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
 {
   private final CompositeCommand m_commands = new CompositeCommand( "KM-Parameter erzeugen" );
 
-  private final Map<KMChannel, KalininMiljukovType> m_channels;
+  private final KMChannelElement[] m_channels;
 
   private final CommandableWorkspace m_workspace;
 
-  public KMUpdateOperation( final CommandableWorkspace workspace, final Map<KMChannel, KalininMiljukovType> channels )
+  public KMUpdateOperation( final CommandableWorkspace workspace, final KMChannelElement[] channels )
   {
     m_workspace = workspace;
     m_channels = channels;
@@ -100,7 +91,7 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.21" ), m_channels.size() + 10 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.21" ), m_channels.length + 10 ); //$NON-NLS-1$
 
     final IStatus calculationStatus = calculateKM( monitor );
     if( calculationStatus.matches( IStatus.ERROR ) )
@@ -126,22 +117,29 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
   {
     final StatusCollector problems = new StatusCollector( KMPlugin.getID() );
 
-    for( final Entry<KMChannel, KalininMiljukovType> entry : m_channels.entrySet() )
+    for( final KMChannelElement element : m_channels )
     {
-      final KMChannel channel = entry.getKey();
-      final KalininMiljukovType km = entry.getValue();
+      final KMChannel channel = element.getKMChannel();
 
       final String label = FeatureHelper.getAnnotationValue( channel, IAnnotation.ANNO_LABEL );
       monitor.subTask( String.format( "%s...", label ) ); //$NON-NLS-1$
 
       try
       {
-        final IStatus result = updateChannelData( label, channel, km );
+        final IStatus result = updateChannelData( label, element );
         problems.add( result );
+      }
+      catch( final CoreException ce )
+      {
+        final IStatus status = ce.getStatus();
+        final String message = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.22", label ); //$NON-NLS-1$
+        problems.add( new MultiStatus( KMPlugin.getID(), 0, new IStatus[] { status }, message, null ) );
       }
       catch( final Exception e )
       {
-        problems.add( IStatus.ERROR, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.22", label ), e ); //$NON-NLS-1$
+        e.printStackTrace();
+        final String message = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.22", label ); //$NON-NLS-1$
+        problems.add( IStatus.ERROR, message, e );
       }
 
       ProgressUtilities.worked( monitor, 1 );
@@ -150,21 +148,27 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     return problems.asMultiStatus( Messages.getString( "KMUpdateOperation_3" ) ); //$NON-NLS-1$
   }
 
-  private IStatus updateChannelData( final String label, final KMChannel kmChannel, final KalininMiljukovType km ) throws Exception
+  private IStatus updateChannelData( final String label, final KMChannelElement element ) throws Exception
   {
-    final IStatus[] result = calculateChannel( kmChannel, km );
+    final IStatus[] result = calculateChannel( element );
     return new MultiStatus( KMPlugin.getID(), 0, result, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.20", label ), null ); //$NON-NLS-1$
   }
 
-  private IStatus[] calculateChannel( final KMChannel kmChannel, final KalininMiljukovType km ) throws Exception
+  private IStatus[] calculateChannel( final KMChannelElement element ) throws Exception
   {
+    // REMARK: At the moment, it is hard-coded in Kalypso-NA to use exactly 5 parameters
+    // We should change that in Kalypso-NA and get number of parameters from the user
+    final int paramCount = 5;
+
     final IFeatureType kmFT = m_workspace.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
 
     final IPropertyType kmKMStartPT = kmFT.getProperty( KMChannel.PROP_KMSTART );
     final IPropertyType kmKMEndPT = kmFT.getProperty( KMChannel.PROP_KMEND );
 
-    final Double kmStart = km.getKmStart();
-    final Double kmEnd = km.getKmEnd();
+    final KalininMiljukovType km = element.getKMType();
+
+    final BigDecimal kmStart = km.getKmStart();
+    final BigDecimal kmEnd = km.getKmEnd();
     // FIXME: should already have been validated in dialog
     if( kmStart == null || kmEnd == null )
     {
@@ -176,31 +180,28 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
       final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.36" ) ); //$NON-NLS-1$
       return new IStatus[] { status };
     }
-    // TODO: also better validate in dialog
-    final IPath[] paths = getPaths( km );
-    if( paths.length == 0 )
+
+    final ProfileDataSet profileSet = element.getEnabledSet();
+    if( profileSet.getAllProfiles().length == 0 )
     {
       final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.37" ) ); //$NON-NLS-1$
       return new IStatus[] { status };
     }
 
-    // HACK: In the profile observation set all files are the same...
-    final ProfileObservationReader reader = new ProfileObservationReader( paths[0] );
-    final ProfileDataSet profileSet = reader.getDataSet( 1000d * kmStart, 1000d * kmEnd );
-
-    addCommand( new ChangeFeatureCommand( kmChannel, kmKMStartPT, km.getKmStart() ) );
-    addCommand( new ChangeFeatureCommand( kmChannel, kmKMEndPT, km.getKmEnd() ) );
-
+    final KMChannel kmChannel = element.getKMChannel();
     final IFeatureBindingCollection<KMParameter> kmParameter = kmChannel.getParameters();
 
+    final double lengthOfStrand = Math.abs( kmChannel.getKMStart().doubleValue() - kmChannel.getKMEnd().doubleValue() ) * 1000.0;
+
+    final IKMValue[] values = profileSet.getKMValues( lengthOfStrand, paramCount );
+    final IStatusCollector paramLog = new StatusCollector( KMPlugin.getID() );
+    final double qBordvoll = profileSet.getQBordvoll();
+    paramLog.add( IStatus.OK, "mittleres Q Bordvoll: %.3f", null, qBordvoll );
+
+    addCommand( new ChangeFeatureCommand( kmChannel, kmKMStartPT, kmStart.doubleValue() ) );
+    addCommand( new ChangeFeatureCommand( kmChannel, kmKMEndPT, kmEnd.doubleValue() ) );
     removeExistingParameters( kmParameter );
 
-    // TODO: get number of parameters from user
-    final int paramCount = 5;
-
-    final IKMValue[] values = profileSet.getKMValues( paramCount );
-
-    final IStatusCollector paramLog = new StatusCollector( KMPlugin.getID() );
     for( int i = 0; i < paramCount; i++ )
     {
       final IKMValue value = values[i];
@@ -244,7 +245,9 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     final double nForeland = roundValue( value.getNForeland(), 4 );
     final double nForelandValid = validateN( nForeland, Messages.getString( "KMUpdateOperation_9" ), valueLog ); //$NON-NLS-1$
 
-    final double qSum = roundValue( value.getQSum(), 3 );
+    // REMARK: using the lower sum value: this is in sync with Kalypso-NA implementation: Kalypso-NA uses the
+    // coefficients of the next lower q in the parameter set.
+    final double qSum = roundValue( value.getLowerQ(), 3 );
     validate( qSum, Messages.getString( "KMUpdateOperation_10" ), valueLog ); //$NON-NLS-1$
 
     final double alpha = roundValue( value.getAlpha(), 3 );
@@ -287,21 +290,5 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
 
     final BigDecimal decimal = new BigDecimal( value ).setScale( scale, BigDecimal.ROUND_HALF_UP );
     return decimal.doubleValue();
-  }
-
-  private IPath[] getPaths( final KalininMiljukovType km )
-  {
-    final List<IPath> list = new ArrayList<IPath>();
-    final List<Profile> profiles = km.getProfile();
-    for( final Profile profile : profiles )
-    {
-      if( profile.isEnabled() )
-      {
-        final Path path = new Path( profile.getFile() );
-        list.add( path );
-      }
-    }
-
-    return list.toArray( new IPath[list.size()] );
   }
 }

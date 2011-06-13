@@ -73,7 +73,7 @@ public class ProfileSetReadOperation implements ICoreRunnableWithProgress
     try
     {
       final ProfileObservationReader reader = new ProfileObservationReader( new Path( m_path ) );
-      m_profileSet = reader.getDataSet( Double.NaN, Double.NaN );
+      m_profileSet = reader.getDataSet();
     }
     catch( final Exception e )
     {

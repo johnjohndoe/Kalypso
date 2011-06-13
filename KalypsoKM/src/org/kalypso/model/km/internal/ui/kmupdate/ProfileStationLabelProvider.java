@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.ui.kmupdate;
 
-import org.eclipse.jface.viewers.CellLabelProvider;
+import java.math.BigDecimal;
+
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ViewerCell;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
@@ -48,31 +50,12 @@ import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
 /**
  * @author Gernot Belger
  */
-public class ProfileStationLabelProvider extends CellLabelProvider
+public class ProfileStationLabelProvider extends ColumnLabelProvider
 {
-  /**
-   * @see org.eclipse.jface.viewers.CellLabelProvider#update(org.eclipse.jface.viewers.ViewerCell)
-   */
   @Override
   public void update( final ViewerCell cell )
   {
-    final Double station = ((Profile) cell.getElement()).getPositionKM();
-    cell.setText( String.format( "%.4f", station / 1000.0 ) ); //$NON-NLS-1$
+    final BigDecimal station = ((Profile) cell.getElement()).getStation();
+    cell.setText( String.format( "%.4f", station ) ); //$NON-NLS-1$
   }
-
-  @Override
-  public String getToolTipText( final Object element )
-  {
-    return ((Profile) element).getFile();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.CellLabelProvider#useNativeToolTip(java.lang.Object)
-   */
-  @Override
-  public boolean useNativeToolTip( final Object object )
-  {
-    return false;
-  }
-
 }

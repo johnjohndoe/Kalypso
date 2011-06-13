@@ -41,8 +41,9 @@ public class Main
       System.out.println();
 
       final KMFilesReader reader = new KMFilesReader( path );
-      final ProfileDataSet pSet = reader.getDataSet( kmStart, kmEnd );
-      final IKMValue[] kmValues = pSet.getKMValues( 5 );
+      final ProfileDataSet pSet = reader.getDataSet();
+      final double length = Math.abs( kmEnd - kmStart ) * 1000.0;
+      final IKMValue[] kmValues = pSet.getKMValues( length, 5 );
       System.out.println( Messages.getString( "org.kalypso.model.km.Main.17" ) ); //$NON-NLS-1$
       for( final IKMValue value : kmValues )
       {

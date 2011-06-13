@@ -1,18 +1,30 @@
 package org.kalypso.model.km.internal.core;
 
+import java.math.BigDecimal;
+
 import org.kalypso.model.km.internal.i18n.Messages;
 
 public class ProfileData
 {
-  private final double m_station;
+  /**
+   * Station [km]
+   */
+  private final BigDecimal m_station;
 
   private Row[] m_rows;
 
   private final String m_file;
 
+  /**
+   * Length [m]
+   */
   private double m_length;
 
-  public ProfileData( final String file, final double station )
+  /**
+   * @param station
+   *          This profiles station [km]
+   */
+  public ProfileData( final String file, final BigDecimal station )
   {
     m_file = file;
     m_station = station;
@@ -21,16 +33,6 @@ public class ProfileData
   public String getFile( )
   {
     return m_file;
-  }
-
-  public void calculateLength( final ProfileData prevProfile, final ProfileData nextProfile )
-  {
-    final double station = getStation();
-
-    final double resultMax = nextProfile == null ? station : (station + nextProfile.getStation()) / 2d;
-    final double resultMin = prevProfile == null ? station : (station + prevProfile.getStation()) / 2d;
-
-    m_length = resultMax - resultMin;
   }
 
   public double getLength( )
@@ -51,7 +53,7 @@ public class ProfileData
     return result.toString();
   }
 
-  public double getStation( )
+  public BigDecimal getStation( )
   {
     return m_station;
   }
@@ -66,9 +68,24 @@ public class ProfileData
     return m_rows.length - 1;
   }
 
-  public IKMValue getKMValue( final int indexQfrom, final int indexQto )
+  /**
+   * @param lengthFactor
+   *          The length factor is used to adjust the real length of the profile, in order to give the sum of all
+   *          profile the length of the calculated strand, even if we calculate with a subsection of all profiles. If
+   *          only one profile is present, the factor should be exactly the length of the section, we wil use this
+   *          length for the singular profile.
+   */
+  public IKMValue getKMValue( final double lengthFactor, final int indexQfrom, final int indexQto )
   {
-    return new KMValue( getLength(), m_rows[indexQfrom], m_rows[indexQto] );
+    final double length = getLength();
+
+    double adjustedLength;
+    if( Double.isNaN( length ) )
+      adjustedLength = lengthFactor;
+    else
+      adjustedLength = length * lengthFactor;
+
+    return new KMValue( adjustedLength, m_rows[indexQfrom], m_rows[indexQto] );
   }
 
   public String isValidForKalypso( )
@@ -131,5 +148,10 @@ public class ProfileData
     }
 
     return -1;
+  }
+
+  void setLength( final double length )
+  {
+    m_length = length;
   }
 }

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.ui.kmupdate;
 
-import org.eclipse.jface.viewers.CellLabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ViewerCell;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
@@ -48,7 +48,7 @@ import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType.Profile;
 /**
  * @author Gernot Belger
  */
-public class ProfileValidLabelProvider extends CellLabelProvider
+public class ProfileValidLabelProvider extends ColumnLabelProvider
 {
   private final KMViewer m_kmViewer;
 
@@ -67,20 +67,4 @@ public class ProfileValidLabelProvider extends CellLabelProvider
     final String message = m_kmViewer.getValidMessage( profile );
     cell.setText( message.toString() );
   }
-
-  @Override
-  public String getToolTipText( final Object element )
-  {
-    return ((Profile) element).getFile();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.CellLabelProvider#useNativeToolTip(java.lang.Object)
-   */
-  @Override
-  public boolean useNativeToolTip( final Object object )
-  {
-    return false;
-  }
-
 }

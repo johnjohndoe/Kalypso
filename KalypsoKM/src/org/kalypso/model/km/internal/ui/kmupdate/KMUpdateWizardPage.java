@@ -42,18 +42,20 @@ package org.kalypso.model.km.internal.ui.kmupdate;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -74,14 +76,13 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.km.internal.KMPlugin;
 import org.kalypso.model.km.internal.binding.KMBindingUtils;
+import org.kalypso.model.km.internal.binding.KMChannelElement;
+import org.kalypso.model.km.internal.core.KMUpdateOperation;
 import org.kalypso.model.km.internal.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovGroupType;
@@ -109,7 +110,7 @@ public class KMUpdateWizardPage extends WizardPage
   /**
    * The selected features.
    */
-  private final Feature[] m_features;
+  private final Feature[] m_selectedFeatures;
 
   /**
    * The channel list viewer.
@@ -120,11 +121,6 @@ public class KMUpdateWizardPage extends WizardPage
    * The KM viewer.
    */
   private KMViewer m_kmViewer = null;
-
-  /**
-   * The KM group (data model).
-   */
-  private KalininMiljukovGroupType m_kmGroup;
 
   /**
    * The configuration path.
@@ -139,18 +135,14 @@ public class KMUpdateWizardPage extends WizardPage
    * @param selection
    *          The selected features.
    */
-  public KMUpdateWizardPage( final CommandableWorkspace workspace, final IFeatureSelection selection )
+  public KMUpdateWizardPage( final CommandableWorkspace workspace, final Feature[] initialSelection )
   {
     super( "kmPage", Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.0" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Initialize the members. */
     m_workspace = workspace;
     m_naModel = (NaModell) workspace.getRootFeature();
-    m_features = FeatureSelectionHelper.getFeatures( selection );
-    m_channelListViewer = null;
-    m_kmViewer = null;
-    m_kmGroup = null;
-    m_configPath = null;
+    m_selectedFeatures = initialSelection;
 
     /* Set the description. */
     setDescription( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.1" ) ); //$NON-NLS-1$
@@ -193,7 +185,8 @@ public class KMUpdateWizardPage extends WizardPage
   @Override
   public boolean isPageComplete( )
   {
-    return m_channelListViewer.getCheckedElements().length > 0;
+    final KMChannelElement[] selectedChannels = getSelectedChannels();
+    return super.isPageComplete() && selectedChannels.length > 0;
   }
 
   /**
@@ -206,7 +199,12 @@ public class KMUpdateWizardPage extends WizardPage
   private CheckboxTableViewer createChannelListViewer( final Composite parent )
   {
     /* Get the km channels of the NA model. */
-    final KMChannel[] kmChannels = m_naModel.getKMChannels();
+    final KMChannelElement[] elements = KMBindingUtils.createKMElements( m_naModel );
+    for( final KMChannelElement element : elements )
+    {
+      if( ArrayUtils.contains( m_selectedFeatures, element.getKMChannel() ) )
+        element.getKMType().setEnabled( true );
+    }
 
     /* Create a checkbox table viewer. */
     final CheckboxTableViewer channelListViewer = CheckboxTableViewer.newCheckList( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
@@ -214,7 +212,8 @@ public class KMUpdateWizardPage extends WizardPage
     /* Configure it. */
     channelListViewer.setContentProvider( new ArrayContentProvider() );
     channelListViewer.setLabelProvider( new KMUpdateLabelProvider() );
-    channelListViewer.setInput( kmChannels );
+    channelListViewer.setCheckStateProvider( new KMUpdateCheckstateProvider() );
+    channelListViewer.setInput( elements );
 
     /* Add a listener. */
     channelListViewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -223,19 +222,28 @@ public class KMUpdateWizardPage extends WizardPage
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        handleChannelListChanged( selection );
+        handleChannelListChanged( selection, false );
+      }
+    } );
+
+    channelListViewer.addCheckStateListener( new ICheckStateListener()
+    {
+      @Override
+      public void checkStateChanged( final CheckStateChangedEvent event )
+      {
+        final KMChannelElement element = (KMChannelElement) event.getElement();
+        element.getKMType().setEnabled( event.getChecked() );
       }
     } );
 
     /* If there are selected features, select the first one. */
-    if( m_features.length > 0 )
+    if( m_selectedFeatures.length > 0 )
     {
       /* Select the first selected feature. */
-      channelListViewer.setSelection( new StructuredSelection( m_features[0] ) );
-
-      /* Check all selected features. */
-      channelListViewer.setCheckedElements( m_features );
+      channelListViewer.setSelection( new StructuredSelection( m_selectedFeatures[0] ) );
     }
+
+    channelListViewer.update( elements, null );
 
     return channelListViewer;
   }
@@ -308,36 +316,28 @@ public class KMUpdateWizardPage extends WizardPage
     } );
 
     /* Create the KM group. */
-    m_kmGroup = KMBindingUtils.toKMConfiguration( m_naModel );
     m_channelListViewer.refresh();
     m_channelListViewer.setSelection( StructuredSelection.EMPTY );
-
-    /* If there is a config path set, load it. */
-    if( !StringUtils.isBlank( m_configPath ) )
-      loadAs( m_configPath );
 
     return configComposite;
   }
 
-  protected void handleChannelListChanged( final IStructuredSelection selection )
+  protected void handleChannelListChanged( final IStructuredSelection selection, final boolean forceUpdate )
   {
     if( m_kmViewer == null )
       return;
 
     final Object firstElement = selection.getFirstElement();
-    if( firstElement instanceof KMChannel )
+    if( firstElement instanceof KMChannelElement )
     {
-      final KMChannel channel = (KMChannel) firstElement;
-      final String fid = channel.getId();
-      final KalininMiljukovType km = getForID( fid );
-
+      final KMChannelElement element = ((KMChannelElement) firstElement);
       final KMUpdateLabelProvider labelProvider = new KMUpdateLabelProvider();
-      final String label = labelProvider.getText( channel );
-      m_kmViewer.setInput( label, km );
+      final String label = labelProvider.getText( element );
+      m_kmViewer.setInput( label, element, forceUpdate );
       return;
     }
 
-    m_kmViewer.setInput( StringUtils.EMPTY, null );
+    m_kmViewer.setInput( StringUtils.EMPTY, null, forceUpdate );
   }
 
   protected void handleConfigButtonClicked( final Text text, final int style )
@@ -389,7 +389,14 @@ public class KMUpdateWizardPage extends WizardPage
   {
     try
     {
-      KMBindingUtils.save( m_kmGroup, new File( path ) );
+      final KalininMiljukovGroupType groupType = KMBindingUtils.OF.createKalininMiljukovGroupType();
+      final List<KalininMiljukovType> kmTypes = groupType.getKalininMiljukov();
+
+      final KMChannelElement[] elements = getInput();
+      for( final KMChannelElement element : elements )
+        kmTypes.add( element.getKMType() );
+
+      KMBindingUtils.save( groupType, new File( path ) );
 
       return true;
     }
@@ -406,44 +413,53 @@ public class KMUpdateWizardPage extends WizardPage
     }
   }
 
+  private KMChannelElement[] getInput( )
+  {
+    return (KMChannelElement[]) m_channelListViewer.getInput();
+  }
+
   private void applyKMGroup( final KalininMiljukovGroupType loadedGroup )
   {
+    final IStructuredSelection oldSelection = (IStructuredSelection) m_channelListViewer.getSelection();
+
     final List<KalininMiljukovType> loadedKalininMiljukov = loadedGroup.getKalininMiljukov();
     for( final KalininMiljukovType loadedKmType : loadedKalininMiljukov )
     {
       final String id = loadedKmType.getId();
-      final KalininMiljukovType kmType = getForID( id );
+      final KMChannelElement element = getForID( id );
+      final KalininMiljukovType kmType = element.getKMType();
       if( kmType != null )
       {
         /* Copy values in the km type of the km group, which is created in the wizard. */
-        kmType.setFilePattern( loadedKmType.getFilePattern() );
-        kmType.setPath( loadedKmType.getPath() );
+        kmType.setFile( loadedKmType.getFile() );
         kmType.setKmStart( loadedKmType.getKmStart() );
         kmType.setKmEnd( loadedKmType.getKmEnd() );
         kmType.setRiverName( loadedKmType.getRiverName() );
+        kmType.setEnabled( loadedKmType.isEnabled() );
 
-        /* Clear old profiles. */
+        /* Replace profiles. */
         final List<Profile> profiles = kmType.getProfile();
         profiles.clear();
-
-        /* Add new profiles. */
         final List<Profile> loadedProfiles = loadedKmType.getProfile();
         profiles.addAll( loadedProfiles );
+
+        element.loadData( getContainer() );
       }
     }
+
+    m_channelListViewer.refresh();
+
+    handleChannelListChanged( oldSelection, true );
   }
 
-  private KalininMiljukovType getForID( final String fid )
+  private KMChannelElement getForID( final String fid )
   {
-    if( m_kmGroup == null )
-      return null;
-
-    final List<KalininMiljukovType> kalininMiljukov = m_kmGroup.getKalininMiljukov();
-    for( final Object element : kalininMiljukov )
+    final KMChannelElement[] elements = getInput();
+    for( final KMChannelElement element : elements )
     {
-      final KalininMiljukovType km = (KalininMiljukovType) element;
+      final KalininMiljukovType km = element.getKMType();
       if( fid.equals( km.getId() ) )
-        return km;
+        return element;
     }
 
     return null;
@@ -464,24 +480,22 @@ public class KMUpdateWizardPage extends WizardPage
     return StringUtils.isBlank( m_configPath ) || saveAs( m_configPath );
   }
 
-  public Map<KMChannel, KalininMiljukovType> getSelectedChannels( )
+  public KMChannelElement[] getSelectedChannels( )
   {
-    final Object[] checkedElements = m_channelListViewer.getCheckedElements();
-    final Map<KMChannel, KalininMiljukovType> channels = new HashMap<KMChannel, KalininMiljukovType>();
-
-    for( final Object checkedElement : checkedElements )
+    final Collection<KMChannelElement> channels = new ArrayList<KMChannelElement>();
+    final KMChannelElement[] input = getInput();
+    for( final KMChannelElement element : input )
     {
-      final KMChannel channel = (KMChannel) checkedElement;
-      final KalininMiljukovType km = getForID( channel.getId() );
-      channels.put( channel, km );
+      if( element.getKMType().isEnabled() )
+        channels.add( element );
     }
 
-    return Collections.unmodifiableMap( channels );
+    return channels.toArray( new KMChannelElement[channels.size()] );
   }
 
   public KMUpdateOperation createOperation( )
   {
-    final Map<KMChannel, KalininMiljukovType> checkedChannels = getSelectedChannels();
+    final KMChannelElement[] checkedChannels = getSelectedChannels();
     return new KMUpdateOperation( m_workspace, checkedChannels );
   }
 }

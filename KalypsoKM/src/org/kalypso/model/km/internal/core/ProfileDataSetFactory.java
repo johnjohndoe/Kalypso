@@ -56,45 +56,16 @@ class ProfileDataSetFactory
    */
   private final SortedSet<ProfileData> m_profileSort = new TreeSet<ProfileData>( new ProfileDataComparator() );
 
-  /**
-   * The start position (the first station). In meters!
-   */
-  private final double m_startPosition;
-
-  /**
-   * The end position (the last station). In meters!
-   */
-  private final double m_endPosition;
-
-  /**
-   * The constructor.
-   * 
-   * @param startPosition
-   *          The start position (the first station). In meters!
-   * @param endPosition
-   *          The end position (the last station). In meters!
-   */
-  public ProfileDataSetFactory( final double startPosition, final double endPosition )
-  {
-    m_startPosition = startPosition;
-    m_endPosition = endPosition;
-  }
-
   public void addProfileData( final ProfileData qwProfile )
   {
-    if( !Double.isNaN( m_startPosition ) && !Double.isNaN( m_endPosition ) )
-    {
-      final double station = qwProfile.getStation();
-      if( m_startPosition <= station && station <= m_endPosition )
-        m_profileSort.add( qwProfile );
-    }
-    else
-      m_profileSort.add( qwProfile );
+    m_profileSort.add( qwProfile );
   }
 
   public ProfileDataSet createProfileDataSet( )
   {
     final ProfileData[] profileData = m_profileSort.toArray( new ProfileData[m_profileSort.size()] );
-    return new ProfileDataSet( profileData, m_startPosition, m_endPosition );
+    final ProfileDataSet profileDataSet = new ProfileDataSet( profileData );
+    profileDataSet.calculateProfileLengths();
+    return profileDataSet;
   }
 }

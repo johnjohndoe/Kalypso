@@ -54,8 +54,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -123,17 +121,17 @@ public class DirectoryFieldWidget implements ISelectionProvider
     m_text.setEditable( false );
 
     /* Add a listener. */
-    m_text.addFocusListener( new FocusAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-       */
-      @Override
-      public void focusLost( final FocusEvent e )
-      {
-        fireSelectionChangeEvent();
-      }
-    } );
+// m_text.addFocusListener( new FocusAdapter()
+// {
+// /**
+// * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
+// */
+// @Override
+// public void focusLost( final FocusEvent e )
+// {
+// fireSelectionChangeEvent();
+// }
+// } );
 
     /* Create a button. */
     m_button = new Button( parent, SWT.NONE );
