@@ -1,0 +1,162 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="0355F253-0579-6FE3-90BB-950B175FBD5E" directorySegmentName="seg_0" name="Roughness">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-26 09:28:50 UTC</createdTime>
+   <changedBy>thuel2</changedBy>
+   <changedTime>2011-05-26 09:28:51 UTC</changedTime>
+   <generatorID>F918C2D5-A991-197A-232D-DB50525D9467</generatorID>
+   <ownerDesignName>pdb</ownerDesignName>
+   <pkName>Roughness PK</pkName>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Column</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <columns>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Name" id="5DF7FA3B-913D-B922-AD15-5293A5BFA983">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 09:28:50 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:28:50 UTC</changedTime>
+         <generatorID>B55455A0-3297-3DDE-9B5D-2B9C69E0E8B6</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>50</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="K_Value" id="3550EF02-6BF9-20C0-0473-D128B0A6103F">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 09:28:50 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:28:50 UTC</changedTime>
+         <comment>[mm]</comment>
+         <generatorID>D9783E67-9102-6F4C-EAF7-033CC92CD9F4</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>2</use>
+         <distinctType>1DD8D1FE-B3A1-45B7-DB08-CE16350D2874</distinctType>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>8</dataTypePrecision>
+         <dataTypeScale>1</dataTypeScale>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Kst_Value" id="8BA2585C-71A1-75BB-5E05-A5B9EBD25CF8">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 09:28:50 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:28:50 UTC</changedTime>
+         <comment>[m^.33/s]</comment>
+         <generatorID>DBF880A2-0AC1-F7C6-F914-FABAA75C40C7</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>2</use>
+         <distinctType>D1C0019C-9F55-E84B-1E76-A36FC6052F6D</distinctType>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>8</dataTypePrecision>
+         <dataTypeScale>1</dataTypeScale>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Label" id="6F3EDD22-0747-E837-1090-4FF721E0CAE2">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 09:28:50 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:28:50 UTC</changedTime>
+         <generatorID>26FE62E6-46A9-0890-0F87-6E1251902335</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>2</use>
+         <distinctType>BF2E0260-2A64-9538-0B5F-9BDD527B4E28</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>100</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Description" id="B7DB11A9-5EA4-F898-5368-1499C863A77F">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 09:28:50 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:28:50 UTC</changedTime>
+         <generatorID>34008CB4-C6A7-A640-0D19-6AE73DD7FB36</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>2</use>
+         <distinctType>B3BBFFC0-261E-2785-8C3A-A260662720FD</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>255</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Point_Kind" id="F5E59DDD-9D58-36FB-FEDD-6238B434DF52">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 09:28:50 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:28:50 UTC</changedTime>
+         <generatorID>7231709D-BDB4-2093-C436-83D7D7B0F325</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>50</dataTypeSize>
+         <delegate>7BED002D-B155-4677-0564-F03F26FF6700</delegate>
+         <previousColumn>false</previousColumn>
+         <associations>
+            <colAssociation fkAssociation="09B0DA41-C7B9-7CF6-C11F-CA13A853348B" referredColumn="7BED002D-B155-4677-0564-F03F26FF6700"/>
+         </associations>
+      </Column>
+   </columns>
+   <indexes>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="CEFF4806-579E-348D-79C7-0C2FCCFC830F" name="Roughness PK">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 09:28:50 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:28:50 UTC</changedTime>
+         <generatorID>DC42384F-73B8-60E2-9263-4C00EACC048B</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <pk>true</pk>
+         <indexState>Primary Constraint</indexState>
+         <indexColumnUsage>
+            <colUsage columnID="F5E59DDD-9D58-36FB-FEDD-6238B434DF52"/>
+            <colUsage columnID="5DF7FA3B-913D-B922-AD15-5293A5BFA983"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="94EB48E1-D7EF-2D90-A395-85812A398DBE" name="Point_Kind__Roughness">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-26 09:28:51 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-26 09:28:51 UTC</changedTime>
+         <generatorID>9B51D5FB-A9D2-CEC3-BA7F-CF2689C0A4EE</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <indexColumnUsage>
+            <colUsage columnID="F5E59DDD-9D58-36FB-FEDD-6238B434DF52"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+   </indexes>
+</Table>
