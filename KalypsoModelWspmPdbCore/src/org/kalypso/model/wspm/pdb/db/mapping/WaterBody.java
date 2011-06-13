@@ -225,4 +225,16 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
 
     return null;
   }
+
+  /**
+   * Copy all (simple) properties of the given water body into this instance.
+   */
+  public void setAll( final WaterBody waterBody )
+  {
+    setDescription( waterBody.getDescription() );
+    setDirectionOfStationing( waterBody.getDirectionOfStationing() );
+    setLabel( waterBody.getLabel() );
+    setName( waterBody.getName() );
+    setRiverline( waterBody.getRiverline() );
+  }
 }
