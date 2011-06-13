@@ -29,17 +29,11 @@
       </wizard>
    </extension>
    
-   <!-- 
    <extension
          point="org.kalypso.module.kalypsoModule">
     <module
             class="org.kalypso.ui.rrm.extension.KalypsoModuleRRM">
       </module>
-   </extension>
-   -->
-   
-   <extension point="org.kalypso.module.kalypsoModule">
-      <module class="org.kalypso.ui.rrm.extension.KalypsoModuleRRM"/>
    </extension>
    
   <!-- Commands for the map outline -->
@@ -277,5 +271,12 @@
        point="org.kalypso.module.conversion">
     <projectconversion module="KalypsRrmModel" class="org.kalypso.ui.rrm.wizards.conversion.RrmProjectConverterFactory"/>
  </extension> 
+
+     <extension
+           point="org.kalypso.ui.typeHandlers">
+        <typeHandler
+              factory="org.kalypso.ui.rrm.internal.gml.GuiTypeHandlerFactory">
+        </typeHandler>
+     </extension>
    
 </plugin>

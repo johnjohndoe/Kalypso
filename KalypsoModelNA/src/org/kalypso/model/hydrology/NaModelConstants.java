@@ -42,6 +42,8 @@ package org.kalypso.model.hydrology;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+
 /**
  * @author doemming
  */
@@ -251,4 +253,15 @@ public interface NaModelConstants
 
   /** Suds */
   QName SUDS_PROP_SUDS_MEMBER = new QName( NS_NASUDS, "sudMember" ); //$NON-NLS-1$
+
+  String[] TA_AXES = new String[] { ITimeseriesConstants.TYPE_HOURS, ITimeseriesConstants.TYPE_NORM };
+
+  String[] WTKCLAI_AXES = new String[] { ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_LAI, ITimeseriesConstants.TYPE_WT, ITimeseriesConstants.TYPE_KC };
+
+  String[] WVQ_AXES = new String[] { ITimeseriesConstants.TYPE_NORMNULL, ITimeseriesConstants.TYPE_VOLUME, ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_Q2,
+      ITimeseriesConstants.TYPE_RUNOFF_Q3 };
+
+  String[] TN_AXES = new String[] { ITimeseriesConstants.TYPE_MIN, ITimeseriesConstants.TYPE_RAINFALL };
+
+  String[] QQ_AXES = new String[] { ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_RHB };
 }
