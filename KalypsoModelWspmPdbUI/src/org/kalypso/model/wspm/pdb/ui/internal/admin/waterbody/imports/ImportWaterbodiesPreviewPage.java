@@ -125,7 +125,7 @@ public class ImportWaterbodiesPreviewPage extends WizardPage implements IUpdatea
     final TableViewerColumn validColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     validColumn.getColumn().setText( "Status" );
     validColumn.getColumn().setResizable( false );
-    validColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+    ColumnsResizeControlListener.setMinimumPackWidth( validColumn.getColumn() );
     ColumnViewerSorter.registerSorter( validColumn, new ViewerComparator() );
     validColumn.setLabelProvider( new WaterBodyImportStatusLabelProvider( m_data.getExistingWaterBodies(), m_waterBodyStatus ) );
 

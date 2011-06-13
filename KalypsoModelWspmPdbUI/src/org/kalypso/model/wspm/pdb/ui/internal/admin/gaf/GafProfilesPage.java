@@ -122,7 +122,8 @@ public class GafProfilesPage extends WizardPage
     final TableViewerColumn stationColumn = new TableViewerColumn( m_profileViewer, SWT.NONE );
     stationColumn.getColumn().setText( "Station" );
     stationColumn.getColumn().setResizable( false );
-    stationColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+    ColumnsResizeControlListener.setMinimumPackWidth( stationColumn.getColumn() );
+
     stationColumn.getColumn().setAlignment( SWT.RIGHT );
 
     ColumnViewerSorter.registerSorter( stationColumn, new StationViewerSorter() );

@@ -108,7 +108,7 @@ public class WaterBodyViewer
     final TableViewerColumn gknColumn = new TableViewerColumn( viewer, SWT.LEFT );
     gknColumn.getColumn().setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
     gknColumn.getColumn().setResizable( false );
-    gknColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+    ColumnsResizeControlListener.setMinimumPackWidth( gknColumn.getColumn() );
     if( setLabelProvider )
       gknColumn.setLabelProvider( new WaterBodyCodeLabelProvider() );
     ColumnViewerSorter.registerSorter( gknColumn, new ViewerComparator() );
@@ -116,7 +116,7 @@ public class WaterBodyViewer
     final TableViewerColumn labelColumn = new TableViewerColumn( viewer, SWT.LEFT );
     labelColumn.getColumn().setText( WaterBodyStrings.STR_NAME );
     labelColumn.getColumn().setResizable( false );
-    labelColumn.getColumn().setData( ColumnsResizeControlListener.DATA_MIN_COL_WIDTH, ColumnsResizeControlListener.MIN_COL_WIDTH_PACK );
+    ColumnsResizeControlListener.setMinimumPackWidth( labelColumn.getColumn() );
     if( setLabelProvider )
       labelColumn.setLabelProvider( new WaterBodyLabelLabelProvider() );
     ColumnViewerSorter.registerSorter( labelColumn, new ViewerComparator() );
