@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		This file is part of Kalypso Copyright (c) 2008 by Björnsen Beratende
+		Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers),
+		http://www.bjoernsen.de Technische Universität Hamburg-Harburg,
+		Institut für Wasserbau, Hamburg, Germany (Technical University
+		Hamburg-Harburg, Institute of River and Coastal Engineering),
+		http://www.tu-harburg.de/wb/ Kalypso is free software: you can
+		redistribute it and/or modify it under the terms of the GNU Lesser
+		General Public License (LGPL) as published by the Free Software
+		Foundation, either version 3 of the License, or (at your option) any
+		later version. Kalypso is distributed in the hope that it will be
+		useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+		Lesser General Public License for more details. You should have
+		received a copy of the GNU Lesser General Public License along with
+		Kalypso. If not, see <http://www.gnu.org/licenses/>.
+	-->
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:kr_common="http://www.tu-harburg.de/wb/kalypso/risk/schemata/common"
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/common"
+	elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml"
+		schemaLocation="http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd" />
+	<!--
+		_________________________________________________________________________________________
+		ELEMENTS
+		_________________________________________________________________________________________
+	-->
+	<element name="DicDefinition" type="kr_common:DicDefinitionType"
+		substitutionGroup="gml:Definition">
+		<!-- Annotation from Catalog -->
+	</element>
+	<element name="inscriptionMember" type="kr_common:InscriptionPropertyType">
+		<annotation>
+			<documentation> Inscriptions
+                        </documentation>
+		</annotation>
+	</element>
+	<element name="Inscriptions" type="kr_common:InscriptionType"
+		substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation> Inscription
+                        </documentation>
+		</annotation>
+	</element>
+	<!--
+		_________________________________________________________________________________________
+		TYPES
+		_________________________________________________________________________________________
+	-->
+	<complexType name="EmptyFeatureBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType">
+				<!-- Force id attribute, because Kalypso needs it -->
+				<attribute ref="gml:id" use="required" />
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="DicDefinitionType">
+		<complexContent>
+			<extension base="gml:DefinitionType" />
+		</complexContent>
+	</complexType>
+	<complexType name="InscriptionPropertyType">
+		<sequence>
+			<element ref="kr_common:Inscriptions" />
+		</sequence>
+	</complexType>
+	<complexType name="InscriptionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="language" type="kr_common:LanguagePropertyType"
+						nillable="false" />
+					<element name="label" type="string" nillable="false" />
+					<element name="tooltip" type="string" nillable="false" />
+					<element name="descriptionString" type="string" nillable="false" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--
+		_________________________________________________________________________________________
+		PROPERTY TYPES for references to dictionary entries
+		_________________________________________________________________________________________
+	-->
+	<complexType name="LanguagePropertyType">
+		<annotation>
+			<appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:documentReference><![CDATA[urn:ogc:gml:dict:kalypso:risk:model:languages]]></kapp:documentReference>
+			</appinfo>
+		</annotation>
+		<sequence minOccurs="0" maxOccurs="0">
+			<element ref="kr_common:DicDefinition">
+				<!-- Annotation from Catalog -->
+			</element>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
+	</complexType>
+</schema>
