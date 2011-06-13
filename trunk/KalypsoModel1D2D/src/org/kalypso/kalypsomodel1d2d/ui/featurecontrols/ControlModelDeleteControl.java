@@ -51,7 +51,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -59,11 +58,11 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 /**
  * @author Dejan Antanaskovic
  */
-public class ControlModelDeleteControl extends AbstractFeatureControl implements IFeatureControl
+public class ControlModelDeleteControl extends AbstractFeatureControl
 {
   private Button m_button;
 
-  public ControlModelDeleteControl( Feature feature, IPropertyType ftp )
+  public ControlModelDeleteControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
   }
@@ -72,7 +71,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
   @Override
-  public void addModifyListener( ModifyListener l )
+  public void addModifyListener( final ModifyListener l )
   {
   }
 
@@ -92,7 +91,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         if( MessageDialog.openConfirm( parent.getShell(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControl.1"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControl.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
         {
@@ -116,7 +115,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
               commandableWorkspace.postCommand( command );
               // commandManager.postCommand( command );
             }
-            catch( Exception e1 )
+            catch( final Exception e1 )
             {
               // TODO Auto-generated catch block
               e1.printStackTrace();
@@ -143,7 +142,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
   @Override
-  public void removeModifyListener( ModifyListener l )
+  public void removeModifyListener( final ModifyListener l )
   {
   }
 
