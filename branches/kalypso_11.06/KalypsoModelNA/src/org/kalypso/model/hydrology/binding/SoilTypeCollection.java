@@ -95,22 +95,7 @@ public class SoilTypeCollection extends Feature_Impl
     {
       switch( importType )
       {
-        case DELETE_INTERSECTING:
-        {
-          m_soilTypes.remove( existingPedology );
-          final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.1", existingPedology.getId() ); //$NON-NLS-1$
-          log.add( IStatus.WARNING, message );
-        }
-          break;
-
-        case IGNORE_INTERSECTING:
-        {
-          final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.2", label ); //$NON-NLS-1$
-          log.add( IStatus.WARNING, message );
-        }
-          return null;
-
-        case INTERSECT:
+        case DIFFERENCE:
         {
           final GM_MultiSurface existingGeometry = existingPedology.getGeometry();
           final GM_MultiSurface difference = PolygonIntersectionHelper.createDifference( geometry, existingGeometry );

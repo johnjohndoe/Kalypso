@@ -44,17 +44,19 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.binding.suds.AbstractSud;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Binding class for rrmLanduse:LanduseCollection's
@@ -84,60 +86,123 @@ public class LanduseCollection extends Feature_Impl
    * 
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
-  public Landuse importLanduse( final String label, final GM_MultiSurface geometry, final ImportType importType, final IStatusCollector log )
+  public void importLanduse( final ImportType importType, final String name, final GM_MultiSurface geometry, final String description, final Double corrSealing, final String drainageType, final String landuseRef, final AbstractSud[] suds )
   {
-    if( geometry == null )
-      return null;
-
     // Handle existing landuses that intersect the new one
     final List<Landuse> existingLanduses = m_landuses.query( geometry.getEnvelope() );
-    for( final Landuse existingLanduse : existingLanduses )
+
+    switch( importType )
     {
-      switch( importType )
+      case DIFFERENCE:
       {
-        case DELETE_INTERSECTING:
+        for( final Landuse existingLanduse : existingLanduses )
         {
-          m_landuses.remove( existingLanduse );
-          final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.LanduseCollection.1", existingLanduse.getId() ); //$NON-NLS-1$
-          log.add( IStatus.WARNING, message );
+          clipExistingLanduse( existingLanduse, geometry );
         }
-          break;
+        // go on to CLEAR_OUTPUT and add the new landuse
+      }
 
-        case IGNORE_INTERSECTING:
-        {
-          final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.LanduseCollection.2", label ); //$NON-NLS-1$
-          log.add( IStatus.WARNING, message );
-        }
-          return null;
+      case CLEAR_OUTPUT:
+      {
+        final Landuse landuse = m_landuses.addNew( Landuse.QNAME );
+        landuse.setName( name );
+        landuse.setGeometry( geometry );
+        landuse.setDescription( description );
+        landuse.setCorrSealing( corrSealing );
+        landuse.setDrainageType( drainageType );
+        addLanduseLink( landuseRef, landuse );
+        addSudsToLanduse( suds, landuse );
+        return;
+      }
 
-        case INTERSECT:
+      case UPDATE:
+      {
+        for( final Landuse existingLanduse : existingLanduses )
         {
+          // first remember geometry, then clip
           final GM_MultiSurface existingGeometry = existingLanduse.getGeometry();
-          final GM_MultiSurface difference = PolygonIntersectionHelper.createDifference( geometry, existingGeometry );
-          if( difference != null )
-          {// TODO: check if area of difference is > 0!
-            existingLanduse.setGeometry( difference );
-            final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.LanduseCollection.3", existingLanduse.getId(), label ); //$NON-NLS-1$
-            log.add( IStatus.INFO, message );
-          }
-          else
+          clipExistingLanduse( existingLanduse, geometry );
+
+          final GM_MultiSurface intersection = PolygonIntersectionHelper.createIntersection( geometry, existingGeometry );
+          if( intersection != null && intersection.getArea() > 0.01 )
           {
-            m_landuses.remove( existingLanduse );
-            final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.LanduseCollection.4", existingLanduse.getId(), label ); //$NON-NLS-1$
-            log.add( IStatus.INFO, message );
+            // clone existing landuse
+            final Landuse landuse = m_landuses.addNew( Landuse.QNAME );
+            landuse.setGeometry( intersection );
+
+            if( corrSealing != null )
+              landuse.setCorrSealing( corrSealing );
+            else
+              landuse.setCorrSealing( existingLanduse.getCorrSealing() );
+
+            if( description != null )
+              landuse.setDescription( description );
+            else
+              landuse.setDescription( existingLanduse.getDescription() );
+
+            if( drainageType != null )
+              landuse.setDrainageType( drainageType );
+            else
+              landuse.setDrainageType( existingLanduse.getDrainageType() );
+
+            if( landuseRef != null )
+              addLanduseLink( landuseRef, landuse );
+            else
+              landuse.setLanduse( existingLanduse.getLanduse() );
+
+            if( name != null )
+              landuse.setName( name );
+            else
+              landuse.setName( existingLanduse.getName() );
+
+            if( suds != null )
+              addSudsToLanduse( suds, landuse );
+            else
+              addSudsToLanduse( existingLanduse.getSuds(), landuse );
           }
         }
-
-        case CLEAR_OUTPUT:
-          // nothing to do, we add all landuses
-          break;
       }
     }
+  }
 
-    // Create new landuse
-    final Landuse landuse = m_landuses.addNew( Landuse.QNAME );
-    landuse.setName( label );
-    landuse.setGeometry( geometry );
-    return landuse;
+  private void addLanduseLink( final String landuseRef, final Landuse landuse )
+  {
+    final String href = "parameter.gml#" + landuseRef; //$NON-NLS-1$
+    final IGMLSchema schema = getWorkspace().getGMLSchema();
+    final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) ); //$NON-NLS-1$
+    final IRelationType pt = (IRelationType) schema.getFeatureType( Landuse.QNAME ).getProperty( Landuse.QNAME_PROP_LANDUSE );
+    final XLinkedFeature_Impl landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
+    landuse.setLanduse( landuseXLink );
+  }
+
+  private void clipExistingLanduse( final Landuse existingLanduse, final GM_MultiSurface geometry )
+  {
+    final GM_MultiSurface existingGeometry = existingLanduse.getGeometry();
+    final GM_MultiSurface difference = PolygonIntersectionHelper.createDifference( geometry, existingGeometry );
+    if( difference != null && difference.getArea() > 0.01 )
+    {
+      existingLanduse.setGeometry( difference );
+    }
+    else
+    {
+      m_landuses.remove( existingLanduse );
+    }
+  }
+
+  private void addSudsToLanduse( final Feature[] suds, final Landuse landuse )
+  {
+    final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
+    final GMLWorkspace landuseWorkspace = landuse.getWorkspace();
+    final IGMLSchema landuseSchmea = landuseWorkspace.getGMLSchema();
+
+    for( final Feature sud : suds )
+    {
+      final IRelationType rt = (IRelationType) landuseSchmea.getFeatureType( Landuse.QNAME_PROP_SUD_MEMBERS );
+      final IFeatureType ft = sud.getFeatureType();
+      final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
+
+      final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
+      sudCollection.add( lnk );
+    }
   }
 }
