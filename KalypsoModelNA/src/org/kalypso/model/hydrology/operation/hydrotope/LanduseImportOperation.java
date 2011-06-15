@@ -140,10 +140,6 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
 
     ProgressUtilities.worked( progess, 10 );
 
-    final IGMLSchema schema = m_output.getWorkspace().getGMLSchema();
-    final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) ); //$NON-NLS-1$
-    final IRelationType pt = (IRelationType) schema.getFeatureType( Landuse.QNAME ).getProperty( Landuse.QNAME_PROP_LANDUSE );
-
     final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
     // traverse input workspace and import all single input landuses, if the landuse class exists
     for( int i = 0; i < size; i++ )
@@ -174,91 +170,21 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
         {
           final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
 
-          // the follwing code is largely copied from LandeuseCollection#importLanduse
-
-          // Handle existing landuses that intersect the new one
-          final List<Landuse> existingLanduses = landusesOut.query( geometry.getEnvelope() );
-          for( final Landuse existingLanduse : existingLanduses )
-          {
-            final GM_MultiSurface existingGeometry = existingLanduse.getGeometry();
-
-            final GM_MultiSurface difference = PolygonIntersectionHelper.createDifference( geometry, existingGeometry );
-            if( difference != null )
-            {// TODO: check if area of difference is > 0!
-              existingLanduse.setGeometry( difference );
-              final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.LanduseCollection.3", existingLanduse.getId(), label ); //$NON-NLS-1$
-              log.add( IStatus.INFO, message );
-            }
-            else
-            {
-              landusesOut.remove( existingLanduse );
-              final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.LanduseCollection.4", existingLanduse.getId(), label ); //$NON-NLS-1$
-              log.add( IStatus.INFO, message );
-            }
-
-            /* add sud members */
-            for( GM_Surface< ? > surface : existingGeometry.getAllSurfaces() )
-            {
-              try
-              {
-                GM_Object intersection = geometry.intersection( surface );
-
-                if( intersection instanceof GM_Surface )
-                {
-                  intersection = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { (GM_Surface< ? >) intersection }, intersection.getCoordinateSystem() );
-                }
-
-                if( intersection instanceof GM_MultiSurface && ((GM_MultiSurface) intersection).getArea() > 0.01 )
-                {
-                  // clone existing landuse
-                  final Landuse clonedLanduse = landusesOut.addNew( Landuse.QNAME );
-                  clonedLanduse.setGeometry( (GM_MultiSurface) intersection );
-                  clonedLanduse.setCorrSealing( existingLanduse.getCorrSealing() );
-                  clonedLanduse.setDescription( "cloned" );
-                  clonedLanduse.setDrainageType( existingLanduse.getDrainageType() );
-                  clonedLanduse.setLanduse( existingLanduse.getLanduse() );
-                  clonedLanduse.setName( existingLanduse.getName() );
-
-                  addSudsToLanduse( suds, clonedLanduse );
-                }
-              }
-              catch( final Exception e )
-              {
-                //TODO: if this happens, ignore
-                // probably the discarded area is very small
-                e.printStackTrace();
-              }
-            }
-          }
+          m_output.importLanduse( ImportType.UPDATE, label, geometry, null, null, null, null, suds );
         }
         else
         {
-          final Landuse landuse = m_output.importLanduse( label, geometry, m_importType, log );
-          if( landuse != null )
+          final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
+          final String desc = m_inputDescriptor.getDescription( i );
+          final double corrSealing = m_inputDescriptor.getSealingCorrectionFactor( i );
+          final String drainageType = m_inputDescriptor.getDrainageType( i );
+          final String landuseRef = m_landuseClasses.getReference( landuseclass );
+          if( landuseRef == null )
           {
-            final String desc = m_inputDescriptor.getDescription( i );
-            final double corrSealing = m_inputDescriptor.getSealingCorrectionFactor( i );
-            final String drainageType = m_inputDescriptor.getDrainageType( i );
-            final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
-
-            landuse.setDescription( desc );
-            landuse.setCorrSealing( corrSealing );
-            landuse.setDrainageType( drainageType );
-
-            addSudsToLanduse( suds, landuse );
-
-            final String landuseRef = m_landuseClasses.getReference( landuseclass );
-            if( landuseRef == null )
-            {
-              final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
-              throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
-            }
-
-            final String href = "parameter.gml#" + landuseRef; //$NON-NLS-1$
-            final XLinkedFeature_Impl landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
-
-            landuse.setLanduse( landuseXLink );
+            final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
+            throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
           }
+          m_output.importLanduse( m_importType, label, geometry, desc, corrSealing, drainageType, landuseRef, suds );
         }
       }
       catch( final CoreException e )
