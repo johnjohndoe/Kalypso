@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -85,7 +86,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final Map<String, WaterBody> m_waterBodies = new HashMap<String, WaterBody>();
 
-  private final Map<String, IProfileFeature> m_csNames = new HashMap<String, IProfileFeature>();
+  private final PDBNameGenerator m_sectionNames = new PDBNameGenerator();
 
   private final IProgressMonitor m_monitor;
 
@@ -94,8 +95,6 @@ public class CheckinStatePdbOperation implements IPdbOperation
   private final IProfileFeature[] m_profiles;
 
   private final IGeoTransformer m_transformer;
-
-  private int m_crosssectionCount = 0;
 
   private final Coefficients m_coefficients;
 
@@ -171,15 +170,15 @@ public class CheckinStatePdbOperation implements IPdbOperation
     /* Data from profile */
     final BigDecimal station = getStation( feature );
     section.setStation( station );
-    // FIXME: eigentlich sollte der name erhalten bleiben
-    final String name = m_state.getName() + "_" + profil.getName() + "_" + m_crosssectionCount++;
+    final String name = profil.getName();
 
-    if( m_csNames.containsKey( name ) )
+    /* Check for uniqueness of profile name */
+    // TODO: handle case, where profile come from different states (and have hence potentially the same profile names)
+    if( !m_sectionNames.addUniqueName( name ) )
     {
-      System.out.println( "xxx" );
+      final String message = String.format( "Name of profile (station %s) is not unique within the state: %s", station, name );
+      throw new PdbConnectException( message );
     }
-
-    m_csNames.put( name, feature );
 
     section.setName( name );
     section.setDescription( profil.getComment() );
@@ -265,10 +264,12 @@ public class CheckinStatePdbOperation implements IPdbOperation
     for( final CrossSectionPart additionalPart : additionalParts )
       parts.add( additionalPart );
 
-    int partCount = 0;
+    final PDBNameGenerator partNameGenerator = new PDBNameGenerator();
     for( final CrossSectionPart part : parts )
     {
-      part.setName( section.getName() + "_" + partCount++ );
+      /* Instead of preserving the existing part name, we recreate it by the same system as when importing gaf */
+      final String uniquePartName = partNameGenerator.createUniqueName( part.getCategory() );
+      part.setName( uniquePartName );
       part.setCrossSection( section );
       section.getCrossSectionParts().add( part );
     }
