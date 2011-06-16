@@ -47,7 +47,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Iterator;
@@ -60,12 +60,14 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -82,6 +84,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.WspWinHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author thuel2
@@ -154,7 +157,7 @@ public class WspWinExporter
       }
       catch( final Throwable t )
       {
-        final String message = String.format( Messages.getString("WspWinExporter.0"), t.getLocalizedMessage() ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "WspWinExporter.0" ), t.getLocalizedMessage() ); //$NON-NLS-1$
         return new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message, t );
       }
       finally
@@ -172,7 +175,7 @@ public class WspWinExporter
    * @param context
    *          Context to resolve links inside the gml structure.
    */
-  public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir ) throws IOException
+  public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir ) throws IOException, CoreException
   {
     dir.mkdirs();
 
@@ -191,7 +194,7 @@ public class WspWinExporter
 
     final TuhhReachProfileSegment[] profileSegments = reach.getReachProfileSegments();
     if( profileSegments.length == 0 )
-      throw new IllegalArgumentException( Messages.getString("WspWinExporter.1") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "WspWinExporter.1" ) ); //$NON-NLS-1$
 
     final TuhhStationRange stationRange = new TuhhStationRange( calculation );
 
@@ -207,7 +210,7 @@ public class WspWinExporter
       final WspmWaterBody runoffWater = runOffEvent.getParent();
       if( runoffWater != reachWater )
       {
-        final String error = String.format( Messages.getString("WspWinExporter.2"), runOffEvent.getName(), runoffWater.getName(), reach.getName(), reachWater.getName() ); //$NON-NLS-1$
+        final String error = String.format( Messages.getString( "WspWinExporter.2" ), runOffEvent.getName(), runoffWater.getName(), reach.getName(), reachWater.getName() ); //$NON-NLS-1$
         throw new IllegalArgumentException( error );
       }
 
@@ -215,9 +218,16 @@ public class WspWinExporter
     }
   }
 
-  private static void write1DTuhhRunOff( final IRunOffEvent runOffEvent, final File qwtFile, final TuhhStationRange stationRange ) throws IOException
+  private static void write1DTuhhRunOff( final IRunOffEvent runOffEvent, final File qwtFile, final TuhhStationRange stationRange ) throws IOException, CoreException
   {
     final SortedMap<BigDecimal, BigDecimal> values = runOffEvent.getDischargeTable();
+
+    if( values.isEmpty() )
+    {
+      final String message = String.format( "No dischare values in discharge event '%s' found.", FeatureHelper.getAnnotationValue( runOffEvent, IAnnotation.ANNO_LABEL ) );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message );
+      throw new CoreException( status );
+    }
 
     PrintWriter pw = null;
     try
@@ -268,7 +278,7 @@ public class WspWinExporter
       pw = new Formatter( batFile );
 
       pw.format( "# %s%n", calculation.getName() ); //$NON-NLS-1$
-      pw.format( "# %s%n", SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT ).format( new Date() ) ); //$NON-NLS-1$
+      pw.format( "# %s%n", DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ).format( new Date() ) ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
       pw.format( "PROJEKTPFAD=%s%n", "." ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -343,7 +353,7 @@ public class WspWinExporter
       pw.format( "%n" ); //$NON-NLS-1$
       final Double minQ = calculation.getMinQ();
       if( minQ != null )
-        pw.format( Locale.US, "MIN_Q=%s%n", minQ  ); //$NON-NLS-1$
+        pw.format( Locale.US, "MIN_Q=%s%n", minQ ); //$NON-NLS-1$
       final Double maxQ = calculation.getMaxQ();
       if( maxQ != null )
         pw.format( Locale.US, "MAX_Q=%s%n", maxQ ); //$NON-NLS-1$
