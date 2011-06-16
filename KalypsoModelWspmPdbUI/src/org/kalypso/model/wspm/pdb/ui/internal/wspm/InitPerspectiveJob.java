@@ -120,8 +120,8 @@ public class InitPerspectiveJob extends Job
         final GmlTreeView gmlView = gmvView.getTreeView();
         final GMLContentProvider contentProvider = gmlView.getContentProvider();
         contentProvider.setShowAssociations( false );
-        contentProvider.setShowChildreOverride( TuhhReach.QNAME_TUHH_REACH, Boolean.TRUE );
-        contentProvider.setShowChildreOverride( TuhhReachProfileSegment.QNAME_PROFILEREACHSEGMENT, Boolean.FALSE );
+        contentProvider.setShowChildrenOverride( TuhhReach.QNAME_TUHH_REACH, Boolean.TRUE );
+        contentProvider.setShowChildrenOverride( TuhhReachProfileSegment.QNAME_PROFILEREACHSEGMENT, Boolean.FALSE );
         final TreeViewer treeViewer = gmlView.getTreeViewer();
         final ViewerFilter pdbGmlFilter = new PdbWspmGmlFilter();
         treeViewer.setFilters( new ViewerFilter[] { pdbGmlFilter } );
