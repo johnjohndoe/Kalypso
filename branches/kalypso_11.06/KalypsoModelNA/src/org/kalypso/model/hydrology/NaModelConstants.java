@@ -258,10 +258,15 @@ public interface NaModelConstants
 
   String[] WTKCLAI_AXES = new String[] { ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_LAI, ITimeseriesConstants.TYPE_WT, ITimeseriesConstants.TYPE_KC };
 
+  // FIXME: remove types Q2 and Q3 -> instead create axis with type Q, but different names. We also need the colors for
+  // each name
   String[] WVQ_AXES = new String[] { ITimeseriesConstants.TYPE_NORMNULL, ITimeseriesConstants.TYPE_VOLUME, ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_Q2,
       ITimeseriesConstants.TYPE_RUNOFF_Q3 };
 
   String[] TN_AXES = new String[] { ITimeseriesConstants.TYPE_MIN, ITimeseriesConstants.TYPE_RAINFALL };
 
   String[] QQ_AXES = new String[] { ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_RHB };
+
+  String NAMESPACE_ZML_INLINE = "inline.zml.kalypso.org"; //$NON-NLS-1$
+
 }

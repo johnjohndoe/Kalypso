@@ -477,7 +477,14 @@
 					<element name="downStreamNodeMember_2nd" type="na:NodeLinkType" minOccurs="0"/>
 					<element name="downStreamNodeMember_3rd" type="na:NodeLinkType" minOccurs="0"/>
 					<element name="zmlLinkSeaEvaporation" type="obslink:TimeseriesLinkFeatureProperty" nillable="true"/>
-					<element name="faktorSeaEvaporation" type="double" default="1.0" nillable="true"/>
+					<element name="faktorSeaEvaporation" default="1.0" nillable="true">
+                        <simpleType>
+                            <restriction base="double" >
+                                <minInclusive value="0.0"/>
+                                <maxInclusive value="1.0"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
 				</sequence>
 			</extension>
 		</complexContent>

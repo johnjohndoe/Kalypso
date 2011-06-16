@@ -26,6 +26,7 @@ Export-Package: org.kalypso.model.hydrology,
  org.kalypso.model.hydrology.binding.model.nodes.helper,
  org.kalypso.model.hydrology.binding.parameter,
  org.kalypso.model.hydrology.binding.suds,
+ org.kalypso.model.hydrology.gml,
  org.kalypso.model.hydrology.operation.hydrotope,
  org.kalypso.model.hydrology.project,
  org.kalypso.model.hydrology.util.optimize
