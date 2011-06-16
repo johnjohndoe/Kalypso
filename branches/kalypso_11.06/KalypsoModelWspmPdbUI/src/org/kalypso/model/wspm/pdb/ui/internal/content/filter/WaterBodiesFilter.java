@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
 
 /**
  * @author Gernot Belger
@@ -75,6 +76,19 @@ public class WaterBodiesFilter extends ViewerFilter
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
+    if( element instanceof WaterBodyTreeNode )
+    {
+      final WaterBodyTreeNode node = (WaterBodyTreeNode) element;
+      final WaterBody waterBody = node.getWaterBody();
+      final String gkn = waterBody.getName().toLowerCase();
+
+      if( !StringUtils.isBlank( m_gkn ) && !gkn.startsWith( m_gkn ) && !m_gkn.startsWith( gkn ) )
+        return false;
+
+      if( !StringUtils.isBlank( m_name ) && !node.containsChildWithName( m_name ) )
+        return false;
+    }
+
     if( element instanceof WaterBody )
     {
       final WaterBody waterBody = (WaterBody) element;

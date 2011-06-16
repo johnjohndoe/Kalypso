@@ -41,15 +41,14 @@
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
 
 /**
  * @author Gernot Belger
@@ -61,11 +60,12 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
   {
     if( inputElement instanceof ConnectionInput )
     {
-      final WaterBody[] waterBodies = ((ConnectionInput) inputElement).getWaterBody();
-      if( ArrayUtils.isEmpty( waterBodies ) )
+      final WaterBodyTreeNode rootNode = ((ConnectionInput) inputElement).getRootNode();
+      final Object[] allChildren = rootNode.getAllChildren();
+      if( ArrayUtils.isEmpty( allChildren ) )
         return new Object[] { PdbLabelProvider.EMPTY_WATER_BODY };
 
-      return waterBodies;
+      return allChildren;
     }
 
     if( inputElement instanceof Object[] )
@@ -83,19 +83,15 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
   @Override
   public boolean hasChildren( final Object element )
   {
-    // FIXME: we want a artificial step here: the states of the crosssections contained inside the wb
-    if( element instanceof WaterBody )
+    if( element instanceof WaterBodyTreeNode )
     {
-      final Set<CrossSection> children = ((WaterBody) element).getCrossSections();
-      return !children.isEmpty();
+      final WaterBodyTreeNode node = (WaterBodyTreeNode) element;
+      final Object[] allChildren = node.getAllChildren();
+      return !Arrays.isEmpty( allChildren );
     }
 
     if( element instanceof State )
-    {
       return false;
-      // final Set<CrossSection> children = ((State) element).getCrossSections();
-      // return !children.isEmpty();
-    }
 
     return false;
   }
@@ -103,29 +99,14 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
   @Override
   public Object[] getChildren( final Object parentElement )
   {
-    if( parentElement instanceof WaterBody )
+    if( parentElement instanceof WaterBodyTreeNode )
     {
-      final Set<CrossSection> children = ((WaterBody) parentElement).getCrossSections();
-      return getStates( children );
-      // return children.toArray( new CrossSection[children.size()] );
-    }
-
-    if( parentElement instanceof State )
-    {
-      // final Set<CrossSection> children = ((State) parentElement).getCrossSections();
-      // return children.toArray( new CrossSection[children.size()] );
+      final WaterBodyTreeNode node = (WaterBodyTreeNode) parentElement;
+      final Object[] allChildren = node.getAllChildren();
+      return allChildren;
     }
 
     return ArrayUtils.EMPTY_OBJECT_ARRAY;
-  }
-
-  private Object[] getStates( final Set<CrossSection> crossSections )
-  {
-    final Set<State> states = new HashSet<State>();
-    for( final CrossSection crossSection : crossSections )
-      states.add( crossSection.getState() );
-
-    return states.toArray( new State[states.size()] );
   }
 
   @Override

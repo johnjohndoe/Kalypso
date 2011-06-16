@@ -38,31 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
-import org.eclipse.jface.action.Action;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
 
 /**
  * @author Gernot Belger
  */
-public class ByWaterBodyAction extends Action
+public class PdbNameComparator extends ViewerComparator
 {
-  private final ConnectionContentControl m_control;
-
-  public ByWaterBodyAction( final ConnectionContentControl control )
+  @Override
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    super( "By Water Body", AS_RADIO_BUTTON );
+    final String n1 = getName( e1 );
+    final String n2 = getName( e2 );
 
-    m_control = control;
-
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.WATER_BODY ) );
+    return n1.compareTo( n2 );
   }
 
-  @Override
-  public void run( )
+  private String getName( final Object element )
   {
-    if( isChecked() )
-      m_control.setContentProvider( new ByWaterBodyContentProvider() );
+    if( element instanceof WaterBodyTreeNode )
+      return getName( ((WaterBodyTreeNode) element).getWaterBody() );
+
+    if( element instanceof WaterBody )
+      return ((WaterBody) element).getLabel();
+
+    if( element instanceof State )
+      return ((State) element).getName();
+
+    return element.toString();
   }
 }

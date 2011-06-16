@@ -51,7 +51,6 @@ import org.eclipse.jface.databinding.viewers.ViewerSupport;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -62,6 +61,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.PdbNameComparator;
 
 /**
  * @author Gernot Belger
@@ -100,6 +100,8 @@ public class WaterBodyViewer
 
   public static void configureViewer( final TableViewer viewer, final boolean setLabelProvider )
   {
+    viewer.setUseHashlookup( true );
+
     final Table table = viewer.getTable();
     table.setHeaderVisible( true );
 
@@ -111,7 +113,7 @@ public class WaterBodyViewer
     ColumnsResizeControlListener.setMinimumPackWidth( gknColumn.getColumn() );
     if( setLabelProvider )
       gknColumn.setLabelProvider( new WaterBodyCodeLabelProvider() );
-    ColumnViewerSorter.registerSorter( gknColumn, new ViewerComparator() );
+    ColumnViewerSorter.registerSorter( gknColumn, new PdbGknComparator() );
 
     final TableViewerColumn labelColumn = new TableViewerColumn( viewer, SWT.LEFT );
     labelColumn.getColumn().setText( WaterBodyStrings.STR_NAME );
@@ -119,7 +121,7 @@ public class WaterBodyViewer
     ColumnsResizeControlListener.setMinimumPackWidth( labelColumn.getColumn() );
     if( setLabelProvider )
       labelColumn.setLabelProvider( new WaterBodyLabelLabelProvider() );
-    ColumnViewerSorter.registerSorter( labelColumn, new ViewerComparator() );
+    ColumnViewerSorter.registerSorter( labelColumn, new PdbNameComparator() );
   }
 
   public void refreshWaterBody( final String name )

@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.Image;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 
@@ -63,6 +64,12 @@ public class PdbLabelProvider extends ColumnLabelProvider
   @Override
   public String getText( final Object element )
   {
+    if( element instanceof WaterBodyTreeNode )
+    {
+      final WaterBodyTreeNode node = (WaterBodyTreeNode) element;
+      return node.getLabel();
+    }
+
     if( element instanceof WaterBody )
     {
       final WaterBody waterBody = (WaterBody) element;
@@ -81,7 +88,7 @@ public class PdbLabelProvider extends ColumnLabelProvider
   @Override
   public Image getImage( final Object element )
   {
-    if( element instanceof WaterBody )
+    if( element instanceof WaterBody || element instanceof WaterBodyTreeNode )
       return WspmPdbUiImages.getImage( IMAGE.WATER_BODY );
 
     if( element instanceof State )
