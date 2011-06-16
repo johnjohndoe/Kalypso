@@ -749,6 +749,7 @@
             <command commandId="org.kalypso.ui.map.outline.command.ZoomToSelectedTheme" style="push"/>
 
             <separator name="style" visible="true"/>
+            <command commandId="org.kalypso.ui.map.outline.command.OpenStyleDialog" style="push"/>
 
             <separator name="additions" visible="true"/>
         </menuContribution>
