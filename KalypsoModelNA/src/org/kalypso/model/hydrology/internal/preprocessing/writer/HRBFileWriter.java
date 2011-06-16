@@ -101,7 +101,8 @@ public class HRBFileWriter extends AbstractCoreFileWriter
         final int overflowNode3ID = getNodeID( channel.getOverflowNode3() );
 
         writer.format( Locale.ENGLISH, "SPEICHER %7d %7d %7d %7d  %s\n", channelID, overflowNode1ID, overflowNode2ID, overflowNode3ID, asciiTS ); //$NON-NLS-1$
-        // TODO: what, if factor is not set? Throw exception
+        // TODO: what, if factor is not set? TODO: set to 1.0
+
         writer.format( Locale.ENGLISH, "Fakt_SeeV %.2f\n", channel.getSeaEvaporationFactor() ); //$NON-NLS-1$
         writer.format( Locale.ENGLISH, "text;text\n" ); //$NON-NLS-1$
 
@@ -216,7 +217,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     {
       if( Double.isNaN( defaultValue ) )
       {
-        final String message = String.format( "Missing required axis for WVQ values." );
+        final String message = String.format( "Missing required axis for WVQ values" );
         throw new SensorException( message );
       }
 

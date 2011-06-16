@@ -136,14 +136,12 @@ public class RhbWriter extends AbstractCoreFileWriter
 
   private int getOverflowNodeID( final Channel channel, final Node downstreamNode )
   {
-    // Ueberlaufknoten optional
+    // Überlaufknoten optional
     final Node overflowNode = ((StorageChannel) channel).getOverflowNode();
-    final int overflowNodeID;
     if( overflowNode == null || overflowNode == downstreamNode )
-      overflowNodeID = 0;
+      return 0;
     else
-      overflowNodeID = m_idManager.getAsciiID( overflowNode );
-    return overflowNodeID;
+      return m_idManager.getAsciiID( overflowNode );
   }
 
   /**
