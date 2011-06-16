@@ -729,6 +729,10 @@
              <command commandId="org.kalypso.ogc.gml.map.ExtentHistoryNextCommand" style="push"/>
 
              <separator name="mapExport" visible="true"/>
+             <command
+                   commandId="org.kalypso.ogc.gml.map.ExportClipboardCommand"
+                   style="push">
+             </command>
              <command commandId="org.kalypso.ogc.gml.map.Screenshot" style="push"/>
              <command commandId="org.kalypso.ogc.gml.map.ExportPdfCommand" style="push"/>
           </menuContribution>
