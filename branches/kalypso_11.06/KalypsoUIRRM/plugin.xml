@@ -36,8 +36,12 @@
       </module>
    </extension>
    
-  <!-- Commands for the map outline -->
+  <!-- Commands for the map or map outline -->
 	<extension point="org.eclipse.ui.commands">
+	    <!-- Map -->
+	    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.EditRelationsCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label" description="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.tooltip"/>
+	    
+	    <!-- Map Outline -->
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportLanduse" name="%command.name.0"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportPedology" name="%command.name.1"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportGeology" name="%command.name.2"/>
@@ -48,6 +52,8 @@
 	</extension>
 
 	 <extension  point="org.eclipse.ui.commandImages">
+	    <image commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" disabledIcon="icons/commands/edit_relation_gray.gif" icon="icons/commands/edit_relation.gif" />
+	 
 	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportLanduse" icon="icons/landuseImport.gif"/>
 	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportPedology" icon="icons/pedologyImport.gif"/>
 	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportGeology" icon="icons/geologyImport.gif"/>
@@ -55,6 +61,21 @@
 	 </extension>
 
 	<extension point="org.eclipse.ui.handlers">
+        <handler commandId="org.kalypso.ogc.gml.map.EditRelationsCommand">
+            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+                <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ui.rrm.internal.map.editRelation.EditRelationWidget" />
+            </class>
+            <enabledWhen>
+                <with variable="activeMapPanel">
+                    <or>
+                        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tuhh.de/kalypsoNA}Node" />
+                        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tuhh.de/kalypsoNA}_Channel" />
+                        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tuhh.de/kalypsoNA}Catchment" />
+                    </or>
+                </with>
+            </enabledWhen>
+        </handler>
+	
 		<handler commandId="org.kalypso.ui.map.outline.command.RRMImportLanduse" class="org.kalypso.ui.rrm.action.RRMImportLanduseHandler">
 			<activeWhen>
 				<reference definitionId="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected"/>
@@ -270,13 +291,25 @@
   <extension
        point="org.kalypso.module.conversion">
     <projectconversion module="KalypsRrmModel" class="org.kalypso.ui.rrm.wizards.conversion.RrmProjectConverterFactory"/>
- </extension> 
+   </extension> 
 
-     <extension
-           point="org.kalypso.ui.typeHandlers">
-        <typeHandler
-              factory="org.kalypso.ui.rrm.internal.gml.GuiTypeHandlerFactory">
-        </typeHandler>
-     </extension>
+   <extension point="org.kalypso.ui.typeHandlers">
+        <typeHandler factory="org.kalypso.ui.rrm.internal.gml.GuiTypeHandlerFactory"/>
+   </extension>
+
+   <extension point="org.eclipse.ui.menus">
+        <menuContribution locationURI="menu:org.kalypso.ui.menus.mapMenu?before=widgetAdditions">
+            <command commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" style="radio"/>
+        </menuContribution>
+        <menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?before=widgetAdditions">
+            <command commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" style="radio">
+                <visibleWhen checkEnabled="false">
+                    <with variable="activeEditorId">
+                        <equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+                    </with>
+                </visibleWhen>
+            </command>
+        </menuContribution>
+   </extension>
    
 </plugin>

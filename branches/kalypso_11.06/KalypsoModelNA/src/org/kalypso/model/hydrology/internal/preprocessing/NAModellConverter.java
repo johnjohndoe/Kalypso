@@ -66,7 +66,6 @@ import org.kalypso.model.hydrology.internal.preprocessing.writer.HydrotopeWriter
 import org.kalypso.model.hydrology.internal.preprocessing.writer.LzsimWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NetFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.NutzungWriter;
-import org.kalypso.model.hydrology.internal.preprocessing.writer.RhbWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.SnowtypWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.SudsFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
@@ -120,15 +119,15 @@ public class NAModellConverter
     final TsFileWriter tsWriter = new TsFileWriter( synthNWorkspace, metaControl, naOptimize, channels, zmlContext, tsFileManager, m_logger );
     tsWriter.write( m_asciiDirs.klimaDatDir );
 
-    // HACK: for performance optimisation: if the zft file already exists, we assume it is ok and just return
+    // HACK: for performance optimization: if the zft file already exists, we assume it is ok and just return
     if( !m_asciiDirs.zftFile.exists() )
     {
       final ZftWriter zftWriter = new ZftWriter( m_idManager, m_logger, catchments );
       zftWriter.write( m_asciiDirs.zftFile );
     }
 
-    final RhbWriter rhbWriter = new RhbWriter( m_idManager, channels, m_logger );
-    rhbWriter.write( m_asciiDirs.rhbFile );
+// final RhbWriter rhbWriter = new RhbWriter( m_idManager, channels, m_logger );
+// rhbWriter.write( m_asciiDirs.rhbFile );
 
     final BodenartWriter bodenartManager = new BodenartWriter( parameterWorkspace, m_logger );
     bodenartManager.write( m_asciiDirs.bodenartFile );
@@ -142,7 +141,7 @@ public class NAModellConverter
     final SudsFileWriter sudsFileWriter = new SudsFileWriter( naModel, hydrotopeCollection, sudsWorkspace, m_logger );
     sudsFileWriter.write( m_asciiDirs.swaleAndTrenchFile );
 
-    final HRBFileWriter hrbFileWriter = new HRBFileWriter( naModel.getStorageChannels(), m_idManager, m_asciiDirs.klimaDatDir, m_logger );
+    final HRBFileWriter hrbFileWriter = new HRBFileWriter( channels, m_idManager, m_asciiDirs.klimaDatDir, m_logger );
     hrbFileWriter.write( m_asciiDirs.hrbFile );
 
     if( hydroHash != null )

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,44 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.model;
 
-import javax.xml.namespace.QName;
+package org.kalypso.ui.rrm.internal.map.editRelation;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * Binding class for {http://www.tuhh.de/kalypsoNA}grundwasserabfluss.
+ * class IEditRelationType
  * 
- * @author Gernot Belger
+ * created by
+ * 
+ * @author doemming (12.05.2005)
  */
-public class Grundwasserabfluss extends AbstractNaModelElement
+public interface IEditRelationType
 {
-  public static final QName FEATURE_GRUNDWASSERABFLUSS = new QName( NS_NAMODELL, "grundwasserabfluss" ); //$NON-NLS-1$
+  public abstract boolean fitsTypes( IFeatureType f1, IFeatureType f2 );
 
-  public static final QName LINK_NGWZU = new QName( NS_NAMODELL, "ngwzu" ); //$NON-NLS-1$
+  public abstract String getFitProblems( GMLWorkspace workspace, Feature f1, Feature f2, boolean isAddMode );
 
-  private static final QName PROP_GWWI = new QName( NS_NAMODELL, "gwwi" ); //$NON-NLS-1$
+  public abstract IFeatureType getDestFT();
 
-  public Grundwasserabfluss( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
-
-  public Catchment getNgwzu( )
-  {
-    return (Catchment) FeatureHelper.resolveLink( this, LINK_NGWZU, true );
-  }
-
-  public double getGwwi( )
-  {
-    return getDoubleProperty( PROP_GWWI, 0.0 );
-  }
-
-  public Catchment getParrent( )
-  {
-    return (Catchment) super.getParent();
-  }
+  public abstract IFeatureType getSrcFT();
 }

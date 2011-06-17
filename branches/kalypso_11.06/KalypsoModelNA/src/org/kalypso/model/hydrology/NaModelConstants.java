@@ -143,16 +143,7 @@ public interface NaModelConstants
 
   /** namodell.xsd */
 
-// channels
-  QName KM_CHANNEL_KMSTART = new QName( NS_NAMODELL, "startkm" ); //$NON-NLS-1$
-
-  QName KM_CHANNEL_KMEND = new QName( NS_NAMODELL, "endkm" ); //$NON-NLS-1$
-
-  // catchments
-
   QName BODENKORREKTUR_MEMBER = new QName( NS_NAMODELL, "bodenkorrekturmember" ); //$NON-NLS-1$
-
-  QName GRUNDWASSERABFLUSS_MEMBER = new QName( NS_NAMODELL, "grundwasserabflussMember" ); //$NON-NLS-1$
 
   QName STATNPARA_MEMBER = new QName( NS_SYNTHN, "statNParameterMember" ); //$NON-NLS-1$
 
