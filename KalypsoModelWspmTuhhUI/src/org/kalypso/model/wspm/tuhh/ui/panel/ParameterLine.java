@@ -55,8 +55,8 @@ import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
@@ -93,9 +93,11 @@ public class ParameterLine
     m_valueText.setEnabled( m_devider != null );
 
     final BuildingWehr weir = WspmProfileHelper.getBuilding( m_profile, BuildingWehr.class );
-
-    // FIXME: how to handle several coefficients?
-    final Double coefficientValue = (Double) weir.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+    final Double coefficientValue;
+    if( devider.getId().getId().equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
+      coefficientValue = (Double) devider.getIntepretedValue();
+    else
+      coefficientValue = (Double) weir.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
     if( coefficientValue != null )
       m_valueText.setText( String.format( "%.4f", coefficientValue ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -144,10 +146,11 @@ public class ParameterLine
     else
       m_valueText.setText( String.format( "%.4f", valueToSet ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    /* Update weir coefficient */
-    // FIXME: how to handle several coefficients?
-    final IProfilChange change = new ProfileObjectEdit( weir, weir.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), valueToSet );
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.11" ), m_profile, change, true ); //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.11" ), m_profile, true ); //$NON-NLS-1$
+    if( m_devider.getId().getId().equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
+      operation.addChange( new PointMarkerEdit( m_devider, valueToSet ) );
+    else
+      operation.addChange( new ProfileObjectEdit( weir, weir.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), valueToSet ) );
     new ProfilOperationJob( operation ).schedule();
   }
 }

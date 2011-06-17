@@ -164,7 +164,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     final GridData gD = new GridData( SWT.FILL, SWT.FILL, true, true );
     // gD.exclude = true;
     m_chartComposite.getPlot().setLayoutData( gD );
-    m_chartComposite.getChartModel().getBehaviour().setHideUnusedAxes( true );
+    m_chartComposite.getChartModel().getBehaviour().setHideUnusedAxes( false );
 
     m_chartComposite.getChartModel().getLayerManager().addListener( new AbstractLayerManagerEventListener()
     {
@@ -179,7 +179,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     } );
 
     updateLayer();
-
+   
     return m_chartComposite.getPlot();
   }
 
@@ -503,7 +503,10 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       {
         final IProfilChartLayer[] profileLayers = m_layerProvider.createLayers( m_profile, null );
         for( final IProfilChartLayer layer : profileLayers )
+        {
+          layer.setVisible( true );
           lm.addLayer( layer );
+        }
       }
 
       restoreStatePosition( lm, positions );
