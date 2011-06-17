@@ -46,7 +46,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPhenomenonConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -268,8 +267,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
     if( layerID.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
     {
-      return new VegetationTheme( profil, new IProfilChartLayer[] { new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ),
-          new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) }, cmLeft, m_lsp );
+      return new VegetationTheme( profil, new IProfilChartLayer[] { new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX,false ),
+          new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY,false ), new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP,false ) }, cmLeft, m_lsp );
     }
     else if( layerID.equals( IWspmConstants.LAYER_GEOKOORDINATEN ) )
     {
@@ -305,7 +304,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
           new PointsLineLayer( layerID + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, m_lsp ), //$NON-NLS-1$
           new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_WEHR, m_lsp, 30, false ) };
 
-      return new BuildingWeirTheme( profil, subLayers, cmLeft );
+      return new BuildingWeirTheme( profil, subLayers, cmLeft,cmScreen );
     }
     else if( layerID.equals( IWspmTuhhConstants.LAYER_TUBES ) )
       return new BuildingTubesTheme( profil, new IProfilChartLayer[] { new CulvertLayer( profil, m_lsp ) }, cmLeft );
