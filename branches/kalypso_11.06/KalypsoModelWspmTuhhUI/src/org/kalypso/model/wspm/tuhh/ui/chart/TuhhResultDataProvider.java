@@ -11,7 +11,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.model.wspm.ui.view.chart.layer.IWspLayerData;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 

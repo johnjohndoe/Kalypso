@@ -47,7 +47,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
-import org.kalypso.model.wspm.ui.view.chart.layer.IWspLayerDataElement;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerDataElement;
 
 /**
  * @author Gernot Belger
