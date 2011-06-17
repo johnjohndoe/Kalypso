@@ -40,19 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
-import java.util.List;
-
+import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ui.editor.gmleditor.command.AddRelationCommand;
+import org.kalypso.ui.editor.gmleditor.command.RemoveRelationCommand;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
  */
-public class LightRelationType implements org.kalypso.ui.rrm.internal.map.editRelation.IEditRelationType
+public class LightRelationType implements IEditRelationType
 {
   protected final IFeatureType m_srcFT;
 
@@ -68,54 +68,32 @@ public class LightRelationType implements org.kalypso.ui.rrm.internal.map.editRe
   }
 
   @Override
-  public boolean fitsTypes( final IFeatureType f1, final IFeatureType f2 )
+  public String getFitProblems( final Feature f1, final Feature f2, final EditRelationMode mode )
   {
-    return m_srcFT.equals( f1 ) && m_destFT.equals( f2 );
-  }
+    final Feature[] existingLinks = f1.getWorkspace().resolveLinks( f1, m_link );
 
-  @Override
-  public String getFitProblems( final GMLWorkspace workspace, final Feature f1, final Feature f2, final boolean isAddMode )
-  {
-
-    final boolean exists = workspace.isExistingRelation( f1, f2, m_link );
-
-    if( !isAddMode )
-      return exists ? null : Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.0" ); //$NON-NLS-1$
-    // add mode:
-    else if( exists )
+    switch( mode )
     {
-      return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.1" ); //$NON-NLS-1$
-    }
-    return getFitProblemsfromOccurency( f1, isAddMode );
-  }
-
-  public String getFitProblemsfromOccurency( final Feature f1, final boolean isAddMode )
-  {
-    final String ftLabel = f1.getFeatureType().getAnnotation().getLabel();
-    final String linkLabel = m_link.getAnnotation().getLabel();
-
-    final Object property = f1.getProperty( m_link );
-    final int max = m_link.getMaxOccurs();
-    if( isAddMode )
-    {
-      switch( max )
-      {
-        case IPropertyType.UNBOUND_OCCURENCY:
+      case REMOVE:
+        if( ArrayUtils.contains( existingLinks, f2 ) )
           return null;
-        case 1:
-          return property == null ? null : ftLabel + "." + linkLabel + Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.3" ); //$NON-NLS-1$ //$NON-NLS-2$
-        default:
-          return ((List< ? >) property).size() + 1 < max ? null : ftLabel + "." + linkLabel + Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.5" ) + max + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      }
+        else
+          return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.0" );
+
+      case ADD:
+        if( ArrayUtils.contains( existingLinks, f2 ) )
+          return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.1" ); //$NON-NLS-1$
+        else
+        {
+          final int maxOccurs = m_link.getMaxOccurs();
+          if( existingLinks.length >= maxOccurs )
+            return "Maximum number of relations reached";
+          else
+            return null;
+        }
     }
-    // else remove mode:
-    switch( max )
-    {
-      case 1:
-        return property != null ? null : ftLabel + "." + linkLabel + Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.8" ); //$NON-NLS-1$ //$NON-NLS-2$
-      default: // minOccurs should not be validated here.
-        return ((List< ? >) property).size() > 0 ? null : ftLabel + "." + linkLabel + Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.10" ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
+
+    throw new IllegalArgumentException();
   }
 
   @Override
@@ -139,5 +117,17 @@ public class LightRelationType implements org.kalypso.ui.rrm.internal.map.editRe
   public IFeatureType getSrcFT( )
   {
     return m_srcFT;
+  }
+
+  @Override
+  public ICommand getRemoveCommand( final Feature sourceFeature, final Feature targetFeature )
+  {
+    return new RemoveRelationCommand( sourceFeature, getLink(), targetFeature );
+  }
+
+  @Override
+  public ICommand getAddCommand( final Feature sourceFeature, final Feature targetFeature )
+  {
+    return new AddRelationCommand( sourceFeature, getLink(), 0, targetFeature );
   }
 }

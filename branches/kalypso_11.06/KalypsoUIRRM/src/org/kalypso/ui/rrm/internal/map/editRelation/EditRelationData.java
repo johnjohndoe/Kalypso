@@ -40,20 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * @author Gernot Belger
@@ -66,44 +58,25 @@ public class EditRelationData extends AbstractModelObject
 
   public static final String PROPERTY_INFO_TO = "infoTo"; //$NON-NLS-1$
 
-  public static final String PROPERTY_PROBLEM_MESSAGE = "problemMessage"; //$NON-NLS-1$
-
   public static final String PROPERTY_INPUT = "input"; //$NON-NLS-1$
 
-  private final Set<Object> m_checkedElements = new HashSet<Object>();
-
-  public static enum MODE
-  {
-    ADD(Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.0" )), //$NON-NLS-1$
-    REMOVE(Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.1" )); //$NON-NLS-1$
-
-    private final String m_label;
-
-    private MODE( final String label )
-    {
-      m_label = label;
-    }
-
-    @Override
-    public String toString( )
-    {
-      return m_label;
-    }
-  }
-
-  private MODE m_modificationMode = MODE.ADD;
+  private EditRelationMode m_modificationMode = EditRelationMode.ADD;
 
   private String m_infoFrom = StringUtils.EMPTY;
 
   private String m_infoTo = StringUtils.EMPTY;
-
-  private String m_problemMessage = StringUtils.EMPTY;
 
   private Feature m_sourceFeature = null;
 
   private Feature m_targetFeature = null;
 
   private EditRelationInput m_input = null;
+
+  private FeatureList m_allowedSourceFeatures = null;
+
+  private FeatureList m_allowedTargetFeatures = null;
+
+  private IEditRelationType m_relation;
 
   public EditRelationInput getInput( )
   {
@@ -117,16 +90,18 @@ public class EditRelationData extends AbstractModelObject
     m_input = input;
 
     firePropertyChange( PROPERTY_INPUT, oldValue, m_input );
+
+    recalculateAllowedFeatures();
   }
 
-  public MODE getModificationMode( )
+  public EditRelationMode getModificationMode( )
   {
     return m_modificationMode;
   }
 
-  public void setModificationMode( final MODE modificationMode )
+  public void setModificationMode( final EditRelationMode modificationMode )
   {
-    final MODE oldValue = m_modificationMode;
+    final EditRelationMode oldValue = m_modificationMode;
 
     m_modificationMode = modificationMode;
 
@@ -144,11 +119,6 @@ public class EditRelationData extends AbstractModelObject
   public String getInfoTo( )
   {
     return m_infoTo;
-  }
-
-  public String getProblemMessage( )
-  {
-    return m_problemMessage;
   }
 
   public void setInfoFrom( final String infoFrom )
@@ -169,42 +139,14 @@ public class EditRelationData extends AbstractModelObject
     firePropertyChange( PROPERTY_INFO_TO, oldValue, m_infoTo );
   }
 
-  public void setProblemMessage( final String problemMessage )
+  public void setRelation( final IEditRelationType relation )
   {
-    final String oldValue = m_problemMessage;
-
-    m_problemMessage = problemMessage;
-
-    firePropertyChange( PROPERTY_PROBLEM_MESSAGE, oldValue, m_problemMessage );
+    m_relation = relation;
   }
 
-  public boolean isChecked( final Object element )
+  public IEditRelationType getRelation( )
   {
-    return m_checkedElements.contains( element );
-  }
-
-  public void setChecked( final Object element, final boolean checked )
-  {
-    if( checked )
-      m_checkedElements.add( element );
-    else
-      m_checkedElements.remove( element );
-  }
-
-  Object[] getCheckedElements( )
-  {
-    return m_checkedElements.toArray();
-  }
-
-  public org.kalypso.ui.rrm.internal.map.editRelation.IEditRelationType[] getCheckedRelations( )
-  {
-    final List<org.kalypso.ui.rrm.internal.map.editRelation.IEditRelationType> result = new ArrayList<org.kalypso.ui.rrm.internal.map.editRelation.IEditRelationType>();
-    for( final Object element : m_checkedElements )
-    {
-      if( element instanceof org.kalypso.ui.rrm.internal.map.editRelation.IEditRelationType )
-        result.add( (org.kalypso.ui.rrm.internal.map.editRelation.IEditRelationType) element );
-    }
-    return result.toArray( new org.kalypso.ui.rrm.internal.map.editRelation.IEditRelationType[result.size()] );
+    return m_relation;
   }
 
   public Feature getSourceFeature( )
@@ -222,81 +164,40 @@ public class EditRelationData extends AbstractModelObject
     m_sourceFeature = sourceFeature;
     m_targetFeature = targetFeature;
 
-    final String valid = validateSourceAndTarget();
-    if( valid == null )
-      setProblemMessage( StringUtils.EMPTY );
-    else
-      setProblemMessage( valid );
-
     updateInfoText();
-  }
-
-  private String validateSourceAndTarget( )
-  {
-    final StringBuilder fitProblems = new StringBuilder();
-    final List<IEditRelationType> fitList = getFitList( fitProblems );
-    if( fitProblems.length() != 0 )
-      return fitProblems.toString();
-
-    if( fitList.isEmpty() )
-    {
-      // not valid but no message
-      return StringUtils.EMPTY;
-    }
-
-    if( m_sourceFeature == m_targetFeature )
-      return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.5" ); //$NON-NLS-1$
-
-    /* Valid */
-    return null;
   }
 
   void updateInfoText( )
   {
-    setInfoFrom( getFeatureLabel( m_sourceFeature ) );
-    setInfoTo( getFeatureLabel( m_targetFeature ) );
+    setInfoFrom( EditRelationUtils.getFeatureLabel( m_sourceFeature ) );
+    setInfoTo( EditRelationUtils.getFeatureLabel( m_targetFeature ) );
   }
 
-  private static String getFeatureLabel( final Feature feature )
+  public FeatureList getAllowedSourceFeatures( )
   {
-    if( feature == null )
-      return "<none>";
-    else
-      return FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+    return m_allowedSourceFeatures;
   }
 
-  /**
-   * @see LightRelationType that fit to the selected features
-   */
-  public List<IEditRelationType> getFitList( final StringBuilder fitProblems )
+  public FeatureList getAllowedTargetFeatures( )
   {
-    final List<IEditRelationType> fitList = new ArrayList<IEditRelationType>();
+    return m_allowedTargetFeatures;
+  }
 
-    if( m_input == null || !(m_input instanceof IKalypsoFeatureTheme) )
-      return fitList;
+  void recalculateAllowedFeatures( )
+  {
+    m_allowedSourceFeatures = null;
+    m_allowedTargetFeatures = null;
 
-    if( m_sourceFeature == null || m_targetFeature == null )
-      return fitList;
+    if( m_input == null || m_relation == null )
+      return;
 
-    final IFeatureType sourceFT = m_sourceFeature.getFeatureType();
-    final IFeatureType targetFT = m_targetFeature.getFeatureType();
+    final NaModell naModel = m_input.getNaModel();
+    final IEditRelationType relation = getRelation();
 
-    final GMLWorkspace workspace = ((IKalypsoFeatureTheme) m_input).getWorkspace();
-    final IEditRelationType[] relations = getCheckedRelations();
-    final MODE mode = getModificationMode();
-    for( final IEditRelationType relation : relations )
-    {
-      if( relation.fitsTypes( sourceFT, targetFT ) )
-      {
-        final String problem = relation.getFitProblems( workspace, m_sourceFeature, m_targetFeature, mode == MODE.ADD );
-        if( problem == null )
-          fitList.add( relation );
-        else
-          fitProblems.append( problem );
-      }
-    }
-    if( fitList.isEmpty() && fitProblems.length() == 0 )
-      fitProblems.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.4" ) ); //$NON-NLS-1$
-    return fitList;
+    final FindAllowedFeaturesVisitor visitor = new FindAllowedFeaturesVisitor( relation );
+    m_input.getWorkspace().accept( visitor, naModel, FeatureVisitor.DEPTH_INFINITE );
+
+    m_allowedSourceFeatures = visitor.getSourceFeatures();
+    m_allowedTargetFeatures = visitor.getTargetFeatures();
   }
 }

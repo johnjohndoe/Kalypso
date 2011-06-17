@@ -2,104 +2,92 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree_impl.model.sort.SplitSort;
 
 /**
- * @author doemming
+ * @author Gernot Belger
  */
-public class EditRelationOptionsContentProvider implements ITreeContentProvider
+public class FindAllowedFeaturesVisitor implements FeatureVisitor
 {
-  private EditRelationInput m_input;
+  private final FeatureList m_sourceFeatures = new SplitSort( null, null );
 
-  @Override
-  public void dispose( )
+  private final FeatureList m_targetFeatures = new SplitSort( null, null );
+
+  private final IEditRelationType m_relation;
+
+  public FindAllowedFeaturesVisitor( final IEditRelationType relation )
   {
-    // nothing to do
+    m_relation = relation;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
+  public boolean visit( final Feature f )
   {
-    if( newInput instanceof EditRelationInput )
-      m_input = (EditRelationInput) newInput;
-    else
-      m_input = null;
+    final IFeatureType featureType = f.getFeatureType();
+
+    final IFeatureType sourceType = m_relation.getSrcFT();
+    final IFeatureType targetType = m_relation.getDestFT();
+
+    if( GMLSchemaUtilities.substitutes( featureType, sourceType.getQName() ) )
+      m_sourceFeatures.add( f );
+
+    if( GMLSchemaUtilities.substitutes( featureType, targetType.getQName() ) )
+      m_targetFeatures.add( f );
+
+    return true;
   }
 
-  @Override
-  public Object[] getElements( final Object inputElement )
+  public FeatureList getSourceFeatures( )
   {
-    if( inputElement instanceof EditRelationInput )
-      return ((EditRelationInput) inputElement).getElements();
-
-    return new Object[0];
+    return m_sourceFeatures;
   }
 
-  @Override
-  public Object[] getChildren( final Object parentElement )
+  public FeatureList getTargetFeatures( )
   {
-    if( parentElement instanceof IFeatureType )
-      return m_input.getChildren( parentElement );
-
-    return ArrayUtils.EMPTY_OBJECT_ARRAY;
-  }
-
-  @Override
-  public boolean hasChildren( final Object element )
-  {
-    if( element == null )
-      return false;
-
-    return getChildren( element ).length > 0;
-  }
-
-  @Override
-  public Object getParent( final Object element )
-  {
-    if( element instanceof IEditRelationType )
-      return m_input.getParent( (IEditRelationType) element );
-
-    return ArrayUtils.EMPTY_OBJECT_ARRAY;
+    return m_targetFeatures;
   }
 }

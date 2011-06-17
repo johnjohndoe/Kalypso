@@ -40,29 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
-import org.eclipse.jface.viewers.ICheckStateProvider;
+import org.kalypso.ui.rrm.i18n.Messages;
 
-/**
- * @author Gernot Belger
- */
-public class EditRelationCheckStateProvider implements ICheckStateProvider
+public enum EditRelationMode
 {
-  private final EditRelationData m_data;
+  ADD(Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.0" )), //$NON-NLS-1$
+  REMOVE(Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.1" )); //$NON-NLS-1$
 
-  public EditRelationCheckStateProvider( final EditRelationData data )
+  private final String m_label;
+
+  private EditRelationMode( final String label )
   {
-    m_data = data;
+    m_label = label;
   }
 
   @Override
-  public boolean isChecked( final Object element )
+  public String toString( )
   {
-    return m_data.isChecked( element );
-  }
-
-  @Override
-  public boolean isGrayed( final Object element )
-  {
-    return false;
+    return m_label;
   }
 }
