@@ -99,6 +99,9 @@ public class RhbWriter extends AbstractCoreFileWriter
   // FIXME: better error handling!
   private void writeFeature( final Channel channel, final PrintWriter writer ) throws NAPreprocessorException, SensorException
   {
+    if( true )
+      return;
+
     if( channel instanceof StorageChannel ) //$NON-NLS-1$
     {
       final StorageChannel storageChannel = (StorageChannel) channel;

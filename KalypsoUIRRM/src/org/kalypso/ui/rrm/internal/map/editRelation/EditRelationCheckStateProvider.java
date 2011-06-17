@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,44 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding.model;
+package org.kalypso.ui.rrm.internal.map.editRelation;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.eclipse.jface.viewers.ICheckStateProvider;
 
 /**
- * Binding class for {http://www.tuhh.de/kalypsoNA}grundwasserabfluss.
- * 
  * @author Gernot Belger
  */
-public class Grundwasserabfluss extends AbstractNaModelElement
+public class EditRelationCheckStateProvider implements ICheckStateProvider
 {
-  public static final QName FEATURE_GRUNDWASSERABFLUSS = new QName( NS_NAMODELL, "grundwasserabfluss" ); //$NON-NLS-1$
+  private final EditRelationData m_data;
 
-  public static final QName LINK_NGWZU = new QName( NS_NAMODELL, "ngwzu" ); //$NON-NLS-1$
-
-  private static final QName PROP_GWWI = new QName( NS_NAMODELL, "gwwi" ); //$NON-NLS-1$
-
-  public Grundwasserabfluss( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public EditRelationCheckStateProvider( final EditRelationData data )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    m_data = data;
   }
 
-  public Catchment getNgwzu( )
+  @Override
+  public boolean isChecked( final Object element )
   {
-    return (Catchment) FeatureHelper.resolveLink( this, LINK_NGWZU, true );
+    return m_data.isChecked( element );
   }
 
-  public double getGwwi( )
+  @Override
+  public boolean isGrayed( final Object element )
   {
-    return getDoubleProperty( PROP_GWWI, 0.0 );
-  }
-
-  public Catchment getParrent( )
-  {
-    return (Catchment) super.getParent();
+    return false;
   }
 }
