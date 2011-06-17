@@ -62,30 +62,23 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 public class VerticalLineLayerProvider extends AbstractLayerProvider
 {
   /**
-   * The constructor.
-   */
-  public VerticalLineLayerProvider( )
-  {
-  }
-
-  /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  public IChartLayer getLayer( URL context )
+  public IChartLayer getLayer( final URL context )
   {
-    IParameterContainer pc = getParameterContainer();
-    String featureKey = pc.getParameterValue( "featureKey", null );
-    String propertyNameStr = pc.getParameterValue( "propertyName", null );
-    QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
+    final IParameterContainer pc = getParameterContainer();
+    final String featureKey = pc.getParameterValue( "featureKey", null );
+    final String propertyNameStr = pc.getParameterValue( "propertyName", null );
+    final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
     if( propertyName == null )
       return null;
 
-    Feature baseFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
+    final Feature baseFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
     if( baseFeature == null )
       return null;
 
-    BigDecimal bankfullHeight = (BigDecimal) baseFeature.getProperty( propertyName );
+    final BigDecimal bankfullHeight = (BigDecimal) baseFeature.getProperty( propertyName );
     if( bankfullHeight == null )
       return null;
 
