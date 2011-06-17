@@ -40,19 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Grundwasserabfluss;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.channels.IChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
@@ -63,29 +61,30 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
  */
 public class EditRelationInput
 {
-  private final Map<IEditRelationType, IFeatureType> m_parentCache = new HashMap<IEditRelationType, IFeatureType>();
-
-  private final Map<IFeatureType, IEditRelationType[]> m_childCache = new LinkedHashMap<IFeatureType, IEditRelationType[]>();
-
   private final CommandableWorkspace m_workspace;
+
+  private final IEditRelationType[] m_elements;
 
   public EditRelationInput( final CommandableWorkspace workspace )
   {
     m_workspace = workspace;
 
-    addLightRelationType( IChannel.FEATURE_CHANNEL, IChannel.PROPERTY_LINKED_DOWNSTREAM_NODE, INode.FEATURE_NODE );
+    final Collection<IEditRelationType> elements = new ArrayList<IEditRelationType>();
+    elements.add( addLightRelationType( IChannel.FEATURE_CHANNEL, IChannel.PROPERTY_LINKED_DOWNSTREAM_NODE, INode.FEATURE_NODE ) );
 
-    addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_CHANNEL, IChannel.FEATURE_CHANNEL );
-    addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_IZKN_NODE, INode.FEATURE_NODE );
-    addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_OVERFLOW_NODE, INode.FEATURE_NODE );
-    addHeavyRelationType( Catchment.FEATURE_CATCHMENT, Catchment.PROPLIST_GRUNDWASSERABFLUSS_MEMBER, Grundwasserabfluss.FEATURE_GRUNDWASSERABFLUSS, Grundwasserabfluss.LINK_NGWZU, Catchment.FEATURE_CATCHMENT );
+    elements.add( addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_CHANNEL, IChannel.FEATURE_CHANNEL ) );
+    elements.add( addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_IZKN_NODE, INode.FEATURE_NODE ) );
+    elements.add( addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_OVERFLOW_NODE, INode.FEATURE_NODE ) );
+    elements.add( addHeavyRelationType( Catchment.FEATURE_CATCHMENT, Catchment.PROPLIST_GRUNDWASSERABFLUSS_MEMBER, Grundwasserabfluss.FEATURE_GRUNDWASSERABFLUSS, Grundwasserabfluss.LINK_NGWZU, Catchment.FEATURE_CATCHMENT ) );
 
-    addLightRelationType( INode.FEATURE_NODE, INode.PROPERTY_LINKED_DOWNSTREAMCHANNEL, IChannel.FEATURE_CHANNEL );
-    addLightRelationType( INode.FEATURE_NODE, INode.PROPERTY_QQ_RELATED_NODE, INode.FEATURE_NODE );
-    addHeavyRelationType( INode.FEATURE_NODE, INode.MEMBER_BRANCHING, BranchingWithNode.QNAME_FEATURE, BranchingWithNode.QN_BRANCHING_NODE_MEMBER, INode.FEATURE_NODE );
+    elements.add( addLightRelationType( INode.FEATURE_NODE, INode.PROPERTY_LINKED_DOWNSTREAMCHANNEL, IChannel.FEATURE_CHANNEL ) );
+    elements.add( addLightRelationType( INode.FEATURE_NODE, INode.PROPERTY_QQ_RELATED_NODE, INode.FEATURE_NODE ) );
+    elements.add( addHeavyRelationType( INode.FEATURE_NODE, INode.MEMBER_BRANCHING, BranchingWithNode.QNAME_FEATURE, BranchingWithNode.QN_BRANCHING_NODE_MEMBER, INode.FEATURE_NODE ) );
+
+    m_elements = elements.toArray( new IEditRelationType[elements.size()] );
   }
 
-  private void addLightRelationType( final QName source, final QName relation, final QName target )
+  private LightRelationType addLightRelationType( final QName source, final QName relation, final QName target )
   {
     final IGMLSchema gmlSchema = m_workspace.getGMLSchema();
 
@@ -93,53 +92,34 @@ public class EditRelationInput
     final IRelationType relationType = (IRelationType) sourceType.getProperty( relation );
     final IFeatureType targetType = gmlSchema.getFeatureType( target );
 
-    addRelation( new LightRelationType( sourceType, relationType, targetType ) );
+    return new LightRelationType( sourceType, relationType, targetType );
   }
 
-  private void addHeavyRelationType( final QName source, final QName relation1, final QName middle, final QName relation2, final QName target )
+  private HeavyRelationType addHeavyRelationType( final QName source, final QName relation1, final QName middle, final QName relation2, final QName target )
   {
     final IGMLSchema gmlSchema = m_workspace.getGMLSchema();
 
     final IFeatureType sourceType = gmlSchema.getFeatureType( source );
     final IRelationType relationType1 = (IRelationType) sourceType.getProperty( relation1 );
     final IFeatureType middleType = gmlSchema.getFeatureType( middle );
-    final IRelationType relationType2 = (IRelationType) sourceType.getProperty( relation2 );
+    final IRelationType relationType2 = (IRelationType) middleType.getProperty( relation2 );
     final IFeatureType targetType = gmlSchema.getFeatureType( target );
 
-    addRelation( new HeavyRelationType( sourceType, relationType1, middleType, relationType2, targetType ) );
+    return new HeavyRelationType( sourceType, relationType1, middleType, relationType2, targetType );
   }
 
-  private void addRelation( final IEditRelationType relationType )
+  public IEditRelationType[] getElements( )
   {
-    final IFeatureType sourceFT = relationType.getSrcFT();
-    m_parentCache.put( relationType, sourceFT );
-
-    final IEditRelationType[] currentChildren = m_childCache.get( sourceFT );
-    final IEditRelationType[] newChildren = addChild( currentChildren, relationType );
-    m_childCache.put( sourceFT, newChildren );
+    return m_elements;
   }
 
-  private IEditRelationType[] addChild( final IEditRelationType[] currentChildren, final IEditRelationType relationType )
+  public NaModell getNaModel( )
   {
-    if( currentChildren == null )
-      return new IEditRelationType[] { relationType };
-
-    return (IEditRelationType[]) ArrayUtils.add( currentChildren, relationType );
+    return (NaModell) m_workspace.getRootFeature();
   }
 
-  public Object[] getElements( )
+  public CommandableWorkspace getWorkspace( )
   {
-    final Set<IFeatureType> keySet = m_childCache.keySet();
-    return keySet.toArray( new IFeatureType[keySet.size()] );
-  }
-
-  public Object[] getChildren( final Object parentElement )
-  {
-    return m_childCache.get( parentElement );
-  }
-
-  public Object getParent( final IEditRelationType element )
-  {
-    return m_parentCache.get( element );
+    return m_workspace;
   }
 }

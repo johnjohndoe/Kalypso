@@ -44,25 +44,30 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeViewerUtilities;
-import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeVisiterAbortException;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ui.rrm.i18n.Messages;
 
 /**
@@ -70,18 +75,19 @@ import org.kalypso.ui.rrm.i18n.Messages;
  */
 public class EditRelationViewer extends Composite
 {
-  private final EditRelationOptionsContentProvider m_contentProvider = new EditRelationOptionsContentProvider();
-
-  private final EditRelationOptionsLabelProvider m_labelProvider = new EditRelationOptionsLabelProvider();
-
   private final DataBindingContext m_binding;
 
   private final EditRelationData m_data;
+
+  private ScrolledForm m_radioControl;
+
+  private final FormToolkit m_toolkit;
 
   public EditRelationViewer( final Composite parent, final FormToolkit toolkit, final EditRelationData data )
   {
     super( parent, SWT.NONE );
 
+    m_toolkit = toolkit;
     m_data = data;
 
     toolkit.adapt( this );
@@ -92,47 +98,25 @@ public class EditRelationViewer extends Composite
     createModeCombo( this, toolkit );
     createInfoControls( this, toolkit );
     createTree( this, toolkit );
+
+    final IObservableValue inputValue = BeansObservables.observeValue( data, EditRelationData.PROPERTY_INPUT );
+    inputValue.addValueChangeListener( new IValueChangeListener()
+    {
+      @Override
+      public void handleValueChange( final ValueChangeEvent event )
+      {
+        updateControl();
+      }
+    } );
+
+    updateControl();
   }
 
   private void createTree( final Composite parent, final FormToolkit toolkit )
   {
-    final CheckboxTreeViewer viewer = new CheckboxTreeViewer( parent );
-    final Control treeControl = viewer.getControl();
-    toolkit.adapt( treeControl, true, true );
-    treeControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
-    viewer.setContentProvider( m_contentProvider );
-    viewer.setLabelProvider( m_labelProvider );
-    viewer.setCheckStateProvider( new EditRelationCheckStateProvider( m_data ) );
-
-    viewer.setAutoExpandLevel( 2 );
-
-    final EditRelationData data = m_data;
-    final EditRelationOptionsContentProvider contentProvider = m_contentProvider;
-    viewer.addCheckStateListener( new ICheckStateListener()
-    {
-      @Override
-      public void checkStateChanged( final CheckStateChangedEvent event )
-      {
-        final Object element = event.getElement();
-
-        final boolean checked = event.getChecked();
-        try
-        {
-          TreeViewerUtilities.accept( contentProvider, element, new SetCheckedTreeVisitor( checked, data ) );
-        }
-        catch( final TreeVisiterAbortException ex )
-        {
-          ex.printStackTrace();
-        }
-
-        viewer.refresh( element, true );
-      }
-    } );
-
-    final IObservableValue target = ViewersObservables.observeInput( viewer );
-    final IObservableValue model = BeansObservables.observeValue( m_data, EditRelationData.PROPERTY_INPUT );
-
-    m_binding.bindValue( target, model );
+    m_radioControl = toolkit.createScrolledForm( parent );
+    m_radioControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
+    m_radioControl.getBody().setLayout( new GridLayout() );
   }
 
   private void createModeCombo( final Composite parent, final FormToolkit toolkit )
@@ -146,7 +130,7 @@ public class EditRelationViewer extends Composite
 
     viewer.setLabelProvider( new LabelProvider() );
     viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setInput( EditRelationData.MODE.values() );
+    viewer.setInput( EditRelationMode.values() );
 
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
     final IObservableValue model = BeansObservables.observeValue( m_data, EditRelationData.PROPERTY_MODIFICATION_MODE );
@@ -159,10 +143,7 @@ public class EditRelationViewer extends Composite
     createInfo( parent, toolkit, EditRelationData.PROPERTY_INFO_FROM );
 
     toolkit.createLabel( parent, Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.17" ) ); //$NON-NLS-1$
-    createInfo( parent, toolkit, EditRelationData.PROPERTY_INFO_FROM );
-
-    toolkit.createLabel( parent, Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.25" ) ); //$NON-NLS-1$
-    createInfo( parent, toolkit, EditRelationData.PROPERTY_PROBLEM_MESSAGE );
+    createInfo( parent, toolkit, EditRelationData.PROPERTY_INFO_TO );
   }
 
   private void createInfo( final Composite parent, final FormToolkit toolkit, final String property )
@@ -173,5 +154,63 @@ public class EditRelationViewer extends Composite
     final ISWTObservableValue target = SWTObservables.observeText( field );
     final IObservableValue model = BeansObservables.observeValue( m_data, property );
     m_binding.bindValue( target, model );
+  }
+
+  protected void updateControl( )
+  {
+    final EditRelationData data = m_data;
+    final EditRelationInput input = data.getInput();
+
+    final Composite body = m_radioControl.getBody();
+    ControlUtils.disposeChildren( body );
+
+    if( input == null )
+      return;
+
+    final IEditRelationType[] elements = input.getElements();
+    final EditRelationOptionsLabelProvider labelProvider = new EditRelationOptionsLabelProvider();
+    IFeatureType lastSourceType = null;
+    for( final IEditRelationType relation : elements )
+    {
+      /* Separator between different source types */
+      final IFeatureType sourceType = relation.getSrcFT();
+      if( lastSourceType != null && sourceType != lastSourceType )
+      {
+        final Label separator = m_toolkit.createLabel( body, StringUtils.EMPTY, SWT.SEPARATOR | SWT.HORIZONTAL );
+        separator.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      }
+
+      /* Radio button for each relation */
+      final String label = labelProvider.getText( relation );
+      final Button button = m_toolkit.createButton( body, label, SWT.RADIO );
+      if( relation == elements[0] )
+      {
+        button.setSelection( true );
+        data.setRelation( relation );
+      }
+
+      button.addSelectionListener( new SelectionAdapter()
+      {
+        @Override
+        public void widgetSelected( final SelectionEvent e )
+        {
+          handleRelationSelection( relation );
+        }
+
+        @Override
+        public void widgetDefaultSelected( final SelectionEvent e )
+        {
+          handleRelationSelection( relation );
+        }
+      } );
+
+      lastSourceType = sourceType;
+    }
+  }
+
+  protected void handleRelationSelection( final IEditRelationType relation )
+  {
+    m_data.setRelation( relation );
+    m_data.recalculateAllowedFeatures();
   }
 }

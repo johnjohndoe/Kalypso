@@ -41,9 +41,9 @@
 
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * class IEditRelationType
@@ -54,11 +54,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public interface IEditRelationType
 {
-  public abstract boolean fitsTypes( IFeatureType f1, IFeatureType f2 );
+  String getFitProblems( Feature f1, Feature f2, EditRelationMode mode );
 
-  public abstract String getFitProblems( GMLWorkspace workspace, Feature f1, Feature f2, boolean isAddMode );
+  IFeatureType getDestFT( );
 
-  public abstract IFeatureType getDestFT();
+  IFeatureType getSrcFT( );
 
-  public abstract IFeatureType getSrcFT();
+  ICommand getRemoveCommand( Feature sourceFeature, Feature targetFeature );
+
+  ICommand getAddCommand( Feature sourceFeature, Feature targetFeature );
 }

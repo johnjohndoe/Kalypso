@@ -40,8 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ui.editor.gmleditor.command.AddHeavyRelationshipCommand;
+import org.kalypso.ui.editor.gmleditor.command.RemoveHeavyRelationCommand;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -49,7 +55,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author doemming
  */
-public class HeavyRelationType implements org.kalypso.ui.rrm.internal.map.editRelation.IEditRelationType
+public class HeavyRelationType implements IEditRelationType
 {
   private final LightRelationType m_relationType1;
 
@@ -61,32 +67,35 @@ public class HeavyRelationType implements org.kalypso.ui.rrm.internal.map.editRe
     m_relationType2 = new LightRelationType( ft2, linkFTP2, ft3 );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#fitsTypes(org.kalypsodeegree.model.feature.IFeatureType,
-   *      org.kalypsodeegree.model.feature.IFeatureType)
-   */
   @Override
-  public boolean fitsTypes( final IFeatureType f1, final IFeatureType f2 )
+  public String getFitProblems( final Feature f1, final Feature f2, final EditRelationMode mode )
   {
-    return m_relationType1.getSrcFT().equals( f1 ) && m_relationType2.getDestFT().equals( f2 );
-  }
+    final Feature[][] existingRelations = findExistingRelations( f1 );
+    final Feature[] featureRelation = findRelation( existingRelations, f2 );
+    final boolean exists = featureRelation != null;
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#getFitProblems(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.Feature, boolean)
-   */
-  @Override
-  public String getFitProblems( final GMLWorkspace workspace, final Feature f1, final Feature f2, final boolean isAddMode )
-  {
-    final FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace, this );
-    visitor.visit( f1 );
-    final boolean exists = visitor.relationExistsTo( f2 );
-    if( !isAddMode )
-      return exists ? null : Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.0" ); //$NON-NLS-1$
-    // is addmode:
-    if( exists )
-      return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.1" ); //$NON-NLS-1$
-    return m_relationType1.getFitProblemsfromOccurency( f1, isAddMode );
+    switch( mode )
+    {
+      case ADD:
+        if( exists )
+          return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.1" ); //$NON-NLS-1$
+        else
+        {
+          final int maxOccurs = getLink1().getMaxOccurs();
+          if( existingRelations.length >= maxOccurs )
+            return "Maximum number of relations reached";
+          else
+            return null;
+        }
+
+      case REMOVE:
+        if( exists )
+          return null;
+        else
+          return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.0" );
+    }
+
+    throw new IllegalArgumentException();
   }
 
   /**
@@ -120,5 +129,58 @@ public class HeavyRelationType implements org.kalypso.ui.rrm.internal.map.editRe
   public IFeatureType getBodyFT( )
   {
     return m_relationType1.getDestFT();
+  }
+
+  private Feature[][] findExistingRelations( final Feature sourceFeature )
+  {
+    final List<Feature[]> results = new ArrayList<Feature[]>();
+    final IRelationType link1Name = getLink1();
+    final IRelationType link2Name = getLink2();
+    final Feature[] props1 = sourceFeature.getWorkspace().resolveLinks( sourceFeature, link1Name );
+    for( final Feature feature1 : props1 )
+    {
+      if( feature1.getFeatureType().equals( getBodyFT() ) )
+      {
+        final Feature[] props2 = feature1.getWorkspace().resolveLinks( feature1, link2Name );
+        for( final Feature feature2 : props2 )
+        {
+          if( feature2.getFeatureType().equals( getDestFT() ) )
+            results.add( new Feature[] { sourceFeature, feature1, feature2 } );
+        }
+      }
+    }
+
+    return results.toArray( new Feature[results.size()][] );
+  }
+
+  private Feature[] findRelation( final Feature[][] existingRelations, final Feature f2 )
+  {
+    for( final Feature[] features : existingRelations )
+    {
+      if( features[2] == f2 )
+        return features;
+    }
+
+    return null;
+  }
+
+  @Override
+  public ICommand getRemoveCommand( final Feature sourceFeature, final Feature targetFeature )
+  {
+    final Feature[][] findExistingRelations = findExistingRelations( sourceFeature );
+    final Feature[] relation = findRelation( findExistingRelations, targetFeature );
+    if( relation == null )
+      throw new IllegalStateException();
+
+    final GMLWorkspace workspace = sourceFeature.getWorkspace();
+
+    return new RemoveHeavyRelationCommand( workspace, sourceFeature, getLink1(), relation[1], getLink2(), targetFeature );
+  }
+
+  @Override
+  public ICommand getAddCommand( final Feature sourceFeature, final Feature targetFeature )
+  {
+    final GMLWorkspace workspace = sourceFeature.getWorkspace();
+    return new AddHeavyRelationshipCommand( workspace, sourceFeature, getLink1(), getBodyFT(), getLink2(), targetFeature );
   }
 }
