@@ -49,10 +49,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * Layer provider which provides a {@link TupleResultLineChartLayer} on a feature based observation.
@@ -76,8 +74,6 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    final IChartModel chartModel = getModel();
-
     final IParameterContainer pc = getParameterContainer();
 
     final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
@@ -94,16 +90,9 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
     if( feature == null )
       return null;
 
-    final String domainAxisId = getDomainAxisId();
-    final String valueAxisId = getTargetAxisId();
-
-    final IAxis domAxis = chartModel.getMapperRegistry().getAxis( domainAxisId );
-
     final String domainComponentId = pc.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String valueComponentId = pc.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String classComponentId = pc.getParameterValue( "classComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IAxis valAxis = chartModel.getMapperRegistry().getAxis( valueAxisId );
 
     final BuildingParameterLayer icl = new BuildingParameterLayer( feature, domainComponentId, valueComponentId, classComponentId, getStyleSet() );
 
