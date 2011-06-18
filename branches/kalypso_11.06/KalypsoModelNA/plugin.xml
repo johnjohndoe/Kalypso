@@ -84,6 +84,22 @@
         </virtualProperty>
         <virtualProperty
               allowSubstitution="true"
+              feature="{http://www.tuhh.de/kalypsoNA}Catchment"
+              function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
+              isList="false"
+              qname="{virtual}link_grundwasserabflussMember"
+              value="{http://www.opengis.net/gml}LineString">
+           <property
+                 name="relation"
+                 value="{http://www.tuhh.de/kalypsoNA}grundwasserabflussMember">
+           </property>
+           <property
+                 name="relation2"
+                 value="{http://www.tuhh.de/kalypsoNA}ngwzu">
+           </property>
+        </virtualProperty>
+        <virtualProperty
+              allowSubstitution="true"
               feature="{http://www.tuhh.de/kalypsoNA}StorageChannel"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               isList="false"
@@ -120,18 +136,6 @@
         </virtualProperty>
         <virtualProperty
               allowSubstitution="true"
-              feature="{http://www.tuhh.de/kalypsoNA}Catchment"
-              function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
-              isList="false"
-              qname="{virtual}link_grundwasserabflussMember"
-              value="{http://www.opengis.net/gml}LineString">
-           <property
-                 name="relation"
-                 value="{http://www.tuhh.de/kalypsoNA}grundwasserabflussMember">
-           </property>
-        </virtualProperty>
-        <virtualProperty
-              allowSubstitution="true"
               feature="{http://www.tuhh.de/kalypsoNA}Node"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               isList="false"
@@ -146,12 +150,27 @@
               allowSubstitution="true"
               feature="{http://www.tuhh.de/kalypsoNA}Node"
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
+              qname="{virtual}link_qqRelatedNode"
+              value="{http://www.opengis.net/gml}LineString">
+           <property
+                 name="relation"
+                 value="{http://www.tuhh.de/kalypsoNA}qqRelatedNode">
+           </property>
+        </virtualProperty>
+        <virtualProperty
+              allowSubstitution="true"
+              feature="{http://www.tuhh.de/kalypsoNA}Node"
+              function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               isList="false"
               qname="{virtual}link_branchingMember"
               value="{http://www.opengis.net/gml}LineString">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}branchingMember">
+           </property>
+           <property
+                 name="relation2"
+                 value="{http://www.tuhh.de/kalypsoNA}branchingNodeMember">
            </property>
         </virtualProperty>
      </extension>

@@ -43,6 +43,8 @@ package org.kalypso.ui.rrm.internal.map.editRelation;
 import java.util.List;
 
 import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -114,5 +116,17 @@ public final class EditRelationUtils
       return "<none>";
     else
       return FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+  }
+
+  public static String getLabel( final IRelationType link )
+  {
+    final IAnnotation annotation = link.getAnnotation();
+    return annotation.getLabel();
+  }
+
+  public static String getLabel( final IFeatureType type )
+  {
+    final IAnnotation annotation = type.getAnnotation();
+    return annotation.getValue( IAnnotation.ANNO_NAME );
   }
 }

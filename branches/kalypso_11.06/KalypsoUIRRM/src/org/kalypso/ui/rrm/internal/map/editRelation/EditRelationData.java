@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
-import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypsodeegree.model.feature.Feature;
@@ -54,17 +53,9 @@ public class EditRelationData extends AbstractModelObject
 {
   public static final String PROPERTY_MODIFICATION_MODE = "modificationMode"; //$NON-NLS-1$
 
-  public static final String PROPERTY_INFO_FROM = "infoFrom"; //$NON-NLS-1$
-
-  public static final String PROPERTY_INFO_TO = "infoTo"; //$NON-NLS-1$
-
   public static final String PROPERTY_INPUT = "input"; //$NON-NLS-1$
 
   private EditRelationMode m_modificationMode = EditRelationMode.ADD;
-
-  private String m_infoFrom = StringUtils.EMPTY;
-
-  private String m_infoTo = StringUtils.EMPTY;
 
   private Feature m_sourceFeature = null;
 
@@ -111,34 +102,6 @@ public class EditRelationData extends AbstractModelObject
     setFeatures( null, null );
   }
 
-  public String getInfoFrom( )
-  {
-    return m_infoFrom;
-  }
-
-  public String getInfoTo( )
-  {
-    return m_infoTo;
-  }
-
-  public void setInfoFrom( final String infoFrom )
-  {
-    final String oldValue = m_infoFrom;
-
-    m_infoFrom = infoFrom;
-
-    firePropertyChange( PROPERTY_INFO_FROM, oldValue, m_infoFrom );
-  }
-
-  public void setInfoTo( final String infoTo )
-  {
-    final String oldValue = m_infoTo;
-
-    m_infoTo = infoTo;
-
-    firePropertyChange( PROPERTY_INFO_TO, oldValue, m_infoTo );
-  }
-
   public void setRelation( final IEditRelationType relation )
   {
     m_relation = relation;
@@ -163,14 +126,6 @@ public class EditRelationData extends AbstractModelObject
   {
     m_sourceFeature = sourceFeature;
     m_targetFeature = targetFeature;
-
-    updateInfoText();
-  }
-
-  void updateInfoText( )
-  {
-    setInfoFrom( EditRelationUtils.getFeatureLabel( m_sourceFeature ) );
-    setInfoTo( EditRelationUtils.getFeatureLabel( m_targetFeature ) );
   }
 
   public FeatureList getAllowedSourceFeatures( )

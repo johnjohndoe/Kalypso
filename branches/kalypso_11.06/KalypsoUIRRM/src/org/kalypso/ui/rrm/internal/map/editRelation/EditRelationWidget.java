@@ -40,8 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Composite;
@@ -52,6 +55,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.WidgetCursors;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
@@ -79,6 +83,10 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
   private EditRelationOperation m_performRunner = null;
 
+  private Cursor m_addCursor;
+
+  private Cursor m_removeCursor;
+
   public EditRelationWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
@@ -90,6 +98,15 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   public EditRelationWidget( )
   {
     super( Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.2" ), StringUtils.EMPTY ); //$NON-NLS-1$
+
+    m_data.addPropertyChangeListener( EditRelationData.PROPERTY_MODIFICATION_MODE, new PropertyChangeListener()
+    {
+      @Override
+      public void propertyChange( final PropertyChangeEvent evt )
+      {
+        updateCursor();
+      }
+    } );
   }
 
   @Override
@@ -206,5 +223,33 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   {
     m_data.setFeatures( null, null );
     repaintMap();
+  }
+
+  protected void updateCursor( )
+  {
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    final Cursor cursor = getCursor();
+    mapPanel.setCursor( cursor );
+  }
+
+  private Cursor getCursor( )
+  {
+    switch( m_data.getModificationMode() )
+    {
+      case ADD:
+        if( m_addCursor == null )
+          m_addCursor = WidgetCursors.createAddCursor();
+        return m_addCursor;
+
+      case REMOVE:
+        if( m_removeCursor == null )
+          m_removeCursor = WidgetCursors.createRemoveCursor();
+        return m_removeCursor;
+
+    }
+    return null;
   }
 }

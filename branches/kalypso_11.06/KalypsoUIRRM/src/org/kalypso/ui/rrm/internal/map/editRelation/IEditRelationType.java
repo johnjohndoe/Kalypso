@@ -41,26 +41,25 @@
 
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * class IEditRelationType
+ * Represents a relation between NA elements.
  * 
- * created by
- * 
- * @author doemming (12.05.2005)
+ * @author Andreas von Dömming
  */
 public interface IEditRelationType
 {
-  String getFitProblems( Feature f1, Feature f2, EditRelationMode mode );
+  String validate( Feature f1, Feature f2, EditRelationMode mode );
 
-  IFeatureType getDestFT( );
+  IFeatureType getSourceType( );
 
-  IFeatureType getSrcFT( );
+  IFeatureType getTargetType( );
+
+  ICommand getAddCommand( Shell shell, Feature sourceFeature, Feature targetFeature );
 
   ICommand getRemoveCommand( Feature sourceFeature, Feature targetFeature );
-
-  ICommand getAddCommand( Feature sourceFeature, Feature targetFeature );
 }

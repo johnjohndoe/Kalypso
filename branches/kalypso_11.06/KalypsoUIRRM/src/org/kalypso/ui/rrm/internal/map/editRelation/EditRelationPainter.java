@@ -116,7 +116,7 @@ public class EditRelationPainter
       return null;
 
     final EditRelationMode mode = m_data.getModificationMode();
-    return relation.getFitProblems( sourceFeature, targetFeature, mode );
+    return relation.validate( sourceFeature, targetFeature, mode );
   }
 
   private void paintCenter( final Graphics g, final GeoTransform projection, final GM_Point center, final boolean isError )
