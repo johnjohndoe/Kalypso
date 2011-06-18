@@ -101,7 +101,7 @@ public class EditRelationOperation implements Runnable
       return;
 
     final EditRelationMode mode = m_data.getModificationMode();
-    if( relation.getFitProblems( sourceFeature, targetFeature, mode ) != null )
+    if( relation.validate( sourceFeature, targetFeature, mode ) != null )
       return;
 
     final CommandableWorkspace workspace = input.getWorkspace();
@@ -109,7 +109,7 @@ public class EditRelationOperation implements Runnable
     {
       case ADD:
       {
-        final ICommand command = relation.getAddCommand( sourceFeature, targetFeature );
+        final ICommand command = relation.getAddCommand( m_shell, sourceFeature, targetFeature );
         executeCommand( workspace, command, "Add Relation" );
         break;
       }
@@ -130,7 +130,8 @@ public class EditRelationOperation implements Runnable
   {
     try
     {
-      workspace.postCommand( command );
+      if( command != null )
+        workspace.postCommand( command );
     }
     catch( final Exception e )
     {

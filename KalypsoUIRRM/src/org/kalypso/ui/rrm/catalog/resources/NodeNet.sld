@@ -19,6 +19,22 @@
 		</LineSymbolizer>
 	</Rule>
 	<Rule>
+		<Name>rule_qqRelatedNode</Name>
+		<Title>%rule_qqRelatedNode_title</Title>
+		<LineSymbolizer>
+			<Geometry>
+				<ogc:PropertyName>link_qqRelatedNode</ogc:PropertyName>
+			</Geometry>
+			<Stroke>
+				<CssParameter name="stroke">#22b14C</CssParameter>
+				<CssParameter name="stroke-width">2.0</CssParameter>
+				<CssParameter name="stroke-linejoin">mitre</CssParameter>
+				<CssParameter name="stroke-opacity">1.0</CssParameter>
+				<CssParameter name="stroke-linecap">butt</CssParameter>
+			</Stroke>
+		</LineSymbolizer>
+	</Rule>
+	<Rule>
 		<Name>rule_overflow</Name>
 		<Title>%rule_overflow</Title>
 		<LineSymbolizer>

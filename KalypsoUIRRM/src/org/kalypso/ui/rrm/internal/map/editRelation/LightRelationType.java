@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.map.editRelation;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -54,58 +55,72 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class LightRelationType implements IEditRelationType
 {
-  protected final IFeatureType m_srcFT;
+  protected final IFeatureType m_sourceType;
 
-  protected final IFeatureType m_destFT;
+  protected final IFeatureType m_targetType;
 
   private final IRelationType m_link;
 
-  public LightRelationType( final IFeatureType srcFT, final IRelationType link, final IFeatureType destFT )
+  public LightRelationType( final IFeatureType sourceType, final IRelationType link, final IFeatureType targetType )
   {
-    m_srcFT = srcFT;
-    m_destFT = destFT;
+    m_sourceType = sourceType;
+    m_targetType = targetType;
     m_link = link;
   }
 
   @Override
-  public String getFitProblems( final Feature f1, final Feature f2, final EditRelationMode mode )
+  public String validate( final Feature source, final Feature target, final EditRelationMode mode )
   {
-    final Feature[] existingLinks = f1.getWorkspace().resolveLinks( f1, m_link );
+    final Feature[] existingLinks = source.getWorkspace().resolveLinks( source, m_link );
 
     switch( mode )
     {
       case REMOVE:
-        if( ArrayUtils.contains( existingLinks, f2 ) )
-          return null;
-        else
-          return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.0" );
+        return validateRemove( target, existingLinks );
 
       case ADD:
-        if( ArrayUtils.contains( existingLinks, f2 ) )
-          return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.1" ); //$NON-NLS-1$
-        else
-        {
-          final int maxOccurs = m_link.getMaxOccurs();
-          if( existingLinks.length >= maxOccurs )
-            return "Maximum number of relations reached";
-          else
-            return null;
-        }
+        return validateAdd( target, existingLinks );
     }
 
     throw new IllegalArgumentException();
   }
 
-  @Override
-  public String toString( )
+  protected String validateAdd( final Feature target, final Feature[] existingLinks )
   {
-    return m_srcFT.getAnnotation().getLabel() + " > " + m_destFT.getAnnotation().getLabel(); //$NON-NLS-1$
+    if( ArrayUtils.contains( existingLinks, target ) )
+      return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.1" ); //$NON-NLS-1$
+
+    final int maxOccurs = m_link.getMaxOccurs();
+    if( existingLinks.length == 1 && maxOccurs == 1 )
+      return Messages.getString( "org.kalypso.ui.rrm.internal.map.editRelation.LightRelationType.0" ); //$NON-NLS-1$
+
+    if( existingLinks.length >= maxOccurs )
+      return Messages.getString( "org.kalypso.ui.rrm.internal.map.editRelation.LightRelationType.1" ); //$NON-NLS-1$
+
+    return null;
+  }
+
+  protected String validateRemove( final Feature target, final Feature[] existingLinks )
+  {
+    if( !ArrayUtils.contains( existingLinks, target ) )
+      return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.0" ); //$NON-NLS-1$
+
+    return null;
   }
 
   @Override
-  public IFeatureType getDestFT( )
+  public String toString( )
   {
-    return m_destFT;
+    final Object sourceLabel = EditRelationUtils.getLabel( getSourceType() );
+    final String linkLabel = EditRelationUtils.getLabel( getLink() );
+
+    return String.format( "%s \u21D2 %s", sourceLabel, linkLabel );
+  }
+
+  @Override
+  public IFeatureType getTargetType( )
+  {
+    return m_targetType;
   }
 
   public IRelationType getLink( )
@@ -114,9 +129,9 @@ public class LightRelationType implements IEditRelationType
   }
 
   @Override
-  public IFeatureType getSrcFT( )
+  public IFeatureType getSourceType( )
   {
-    return m_srcFT;
+    return m_sourceType;
   }
 
   @Override
@@ -126,7 +141,7 @@ public class LightRelationType implements IEditRelationType
   }
 
   @Override
-  public ICommand getAddCommand( final Feature sourceFeature, final Feature targetFeature )
+  public ICommand getAddCommand( final Shell shell, final Feature sourceFeature, final Feature targetFeature )
   {
     return new AddRelationCommand( sourceFeature, getLink(), 0, targetFeature );
   }

@@ -70,16 +70,17 @@ public class EditRelationInput
     m_workspace = workspace;
 
     final Collection<IEditRelationType> elements = new ArrayList<IEditRelationType>();
-    elements.add( addLightRelationType( IChannel.FEATURE_CHANNEL, IChannel.PROPERTY_LINKED_DOWNSTREAM_NODE, INode.FEATURE_NODE ) );
-
-    elements.add( addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_CHANNEL, IChannel.FEATURE_CHANNEL ) );
-    elements.add( addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_IZKN_NODE, INode.FEATURE_NODE ) );
-    elements.add( addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_OVERFLOW_NODE, INode.FEATURE_NODE ) );
-    elements.add( addHeavyRelationType( Catchment.FEATURE_CATCHMENT, Catchment.PROPLIST_GRUNDWASSERABFLUSS_MEMBER, Grundwasserabfluss.FEATURE_GRUNDWASSERABFLUSS, Grundwasserabfluss.LINK_NGWZU, Catchment.FEATURE_CATCHMENT ) );
 
     elements.add( addLightRelationType( INode.FEATURE_NODE, INode.PROPERTY_LINKED_DOWNSTREAMCHANNEL, IChannel.FEATURE_CHANNEL ) );
     elements.add( addLightRelationType( INode.FEATURE_NODE, INode.PROPERTY_QQ_RELATED_NODE, INode.FEATURE_NODE ) );
-    elements.add( addHeavyRelationType( INode.FEATURE_NODE, INode.MEMBER_BRANCHING, BranchingWithNode.QNAME_FEATURE, BranchingWithNode.QN_BRANCHING_NODE_MEMBER, INode.FEATURE_NODE ) );
+    elements.add( addHeavyRelationType( INode.FEATURE_NODE, INode.MEMBER_BRANCHING, BranchingWithNode.FEATURE_BRANCHING_WITH_NODE, BranchingWithNode.QN_BRANCHING_NODE_MEMBER, INode.FEATURE_NODE ) );
+
+    elements.add( addLightRelationType( IChannel.FEATURE_CHANNEL, IChannel.PROPERTY_LINKED_DOWNSTREAM_NODE, INode.FEATURE_NODE ) );
+
+    elements.add( addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_CHANNEL, IChannel.FEATURE_CHANNEL ) );
+    elements.add( addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_OVERFLOW_NODE, INode.FEATURE_NODE ) );
+    elements.add( addHeavyRelationType( Catchment.FEATURE_CATCHMENT, Catchment.PROPLIST_GRUNDWASSERABFLUSS_MEMBER, Grundwasserabfluss.FEATURE_GRUNDWASSERABFLUSS, Grundwasserabfluss.LINK_NGWZU, Catchment.FEATURE_CATCHMENT ) );
+    elements.add( addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_IZKN_NODE, INode.FEATURE_NODE ) );
 
     m_elements = elements.toArray( new IEditRelationType[elements.size()] );
   }

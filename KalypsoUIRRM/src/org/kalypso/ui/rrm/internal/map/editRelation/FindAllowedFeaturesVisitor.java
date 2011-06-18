@@ -69,8 +69,8 @@ public class FindAllowedFeaturesVisitor implements FeatureVisitor
   {
     final IFeatureType featureType = f.getFeatureType();
 
-    final IFeatureType sourceType = m_relation.getSrcFT();
-    final IFeatureType targetType = m_relation.getDestFT();
+    final IFeatureType sourceType = m_relation.getSourceType();
+    final IFeatureType targetType = m_relation.getTargetType();
 
     if( GMLSchemaUtilities.substitutes( featureType, sourceType.getQName() ) )
       m_sourceFeatures.add( f );

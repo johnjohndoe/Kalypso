@@ -46,8 +46,6 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -63,12 +61,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ui.rrm.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -96,7 +92,6 @@ public class EditRelationViewer extends Composite
     m_binding = new DataBindingContext();
 
     createModeCombo( this, toolkit );
-    createInfoControls( this, toolkit );
     createTree( this, toolkit );
 
     final IObservableValue inputValue = BeansObservables.observeValue( data, EditRelationData.PROPERTY_INPUT );
@@ -137,25 +132,6 @@ public class EditRelationViewer extends Composite
     m_binding.bindValue( target, model );
   }
 
-  private void createInfoControls( final Composite parent, final FormToolkit toolkit )
-  {
-    toolkit.createLabel( parent, Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.11" ) ); //$NON-NLS-1$
-    createInfo( parent, toolkit, EditRelationData.PROPERTY_INFO_FROM );
-
-    toolkit.createLabel( parent, Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.17" ) ); //$NON-NLS-1$
-    createInfo( parent, toolkit, EditRelationData.PROPERTY_INFO_TO );
-  }
-
-  private void createInfo( final Composite parent, final FormToolkit toolkit, final String property )
-  {
-    final Text field = toolkit.createText( parent, StringUtils.EMPTY, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP ); //$NON-NLS-1$
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
-    final ISWTObservableValue target = SWTObservables.observeText( field );
-    final IObservableValue model = BeansObservables.observeValue( m_data, property );
-    m_binding.bindValue( target, model );
-  }
-
   protected void updateControl( )
   {
     final EditRelationData data = m_data;
@@ -168,21 +144,18 @@ public class EditRelationViewer extends Composite
       return;
 
     final IEditRelationType[] elements = input.getElements();
-    final EditRelationOptionsLabelProvider labelProvider = new EditRelationOptionsLabelProvider();
     IFeatureType lastSourceType = null;
     for( final IEditRelationType relation : elements )
     {
       /* Separator between different source types */
-      final IFeatureType sourceType = relation.getSrcFT();
+      final IFeatureType sourceType = relation.getSourceType();
       if( lastSourceType != null && sourceType != lastSourceType )
       {
         final Label separator = m_toolkit.createLabel( body, StringUtils.EMPTY, SWT.SEPARATOR | SWT.HORIZONTAL );
         separator.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       }
 
-      /* Radio button for each relation */
-      final String label = labelProvider.getText( relation );
-      final Button button = m_toolkit.createButton( body, label, SWT.RADIO );
+      final Button button = m_toolkit.createButton( body, relation.toString(), SWT.RADIO );
       if( relation == elements[0] )
       {
         button.setSelection( true );
@@ -206,6 +179,8 @@ public class EditRelationViewer extends Composite
 
       lastSourceType = sourceType;
     }
+
+    m_radioControl.reflow( true );
   }
 
   protected void handleRelationSelection( final IEditRelationType relation )

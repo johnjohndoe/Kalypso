@@ -41,6 +41,8 @@
 package org.kalypso.convert.namodel.schema.functions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +70,8 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
 {
   private QName m_linkName;
 
+  private QName m_link2Name;
+
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
@@ -76,6 +80,9 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
   {
     final String linkNameString = properties.get( "relation" ); //$NON-NLS-1$
     m_linkName = QName.valueOf( linkNameString );
+
+    final String link2NameString = properties.get( "relation2" ); //$NON-NLS-1$
+    m_link2Name = link2NameString == null ? null : QName.valueOf( link2NameString );
   }
 
   /**
@@ -91,19 +98,22 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
 
     try
     {
-      final GM_Object srcGeo = feature.getDefaultGeometryProperty();
+      final GM_Object srcGeo = feature.getDefaultGeometryPropertyValue();
       if( srcGeo == null )
         return null;
 
-      final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( m_linkName );
+      final Feature[] relatedFeaturs = findRelatedFeatures( feature );
 
-      final GetGeomDestinationFeatureVisitor visitor = new GetGeomDestinationFeatureVisitor( workspace, rt, 2 );
-      visitor.visit( feature );
-
-      final GM_Object[] destGeo = visitor.getGeometryDestinations();
       final List<GM_Curve> curves = new ArrayList<GM_Curve>();
-      for( final GM_Object element : destGeo )
-        curves.add( createArrowLineString( srcGeo.getCentroid(), element.getCentroid(), 0.8, 0.01 ) );
+      for( final Feature relatedFeature : relatedFeaturs )
+      {
+        final GM_Object targetGeom = relatedFeature.getDefaultGeometryPropertyValue();
+        if( targetGeom != null )
+        {
+          final GM_Point targetCenter = targetGeom.getCentroid();
+          curves.add( createArrowLineString( srcGeo.getCentroid(), targetCenter, 0.8, 0.01 ) );
+        }
+      }
       return GeometryFactory.createGM_MultiCurve( curves.toArray( new GM_Curve[curves.size()] ) );
     }
     catch( final GM_Exception e )
@@ -111,6 +121,27 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
       e.printStackTrace();
       return null;
     }
+  }
+
+  private Feature[] findRelatedFeatures( final Feature feature )
+  {
+    final GMLWorkspace workspace = feature.getWorkspace();
+    final IRelationType link1 = (IRelationType) feature.getFeatureType().getProperty( m_linkName );
+    final Feature[] targetFeatures = workspace.resolveLinks( feature, link1 );
+    if( m_link2Name == null )
+      return targetFeatures;
+
+    /* Heavy relation indirect into 2nd feature */
+    final Collection<Feature> result = new ArrayList<Feature>();
+    for( final Feature bodyFeature : targetFeatures )
+    {
+      /* Could be another workspace */
+      final GMLWorkspace targetWorkspace = feature.getWorkspace();
+      final IRelationType link2 = (IRelationType) bodyFeature.getFeatureType().getProperty( m_link2Name );
+      final Feature[] target2Features = targetWorkspace.resolveLinks( bodyFeature, link2 );
+      result.addAll( Arrays.asList( target2Features ) );
+    }
+    return result.toArray( new Feature[result.size()] );
   }
 
   private static GM_Curve createArrowLineString( final GM_Point srcP, final GM_Point targetP, final double weightLength, final double weightWidth ) throws GM_Exception
