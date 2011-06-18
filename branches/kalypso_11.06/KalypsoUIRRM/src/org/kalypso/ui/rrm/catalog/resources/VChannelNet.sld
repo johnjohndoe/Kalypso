@@ -43,6 +43,10 @@
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>
 				<CssParameter name="stroke-linecap">butt</CssParameter>
+                <CssParameter name="stroke-arrow-type">line</CssParameter>
+                <CssParameter name="stroke-arrow-widget">open</CssParameter>
+                <CssParameter name="stroke-arrow-alignment">end</CssParameter>
+                <CssParameter name="stroke-arrow-size">35</CssParameter>
 			</Stroke>
 		</LineSymbolizer>
 		<TextSymbolizer>
@@ -53,32 +57,32 @@
 				<ogc:PropertyName>name</ogc:PropertyName>
 			</Label>
 			<Font>
-				<CssParameter name="font-family" />
 				<CssParameter name="font-color">#000000</CssParameter>
-				<CssParameter name="font-size">10.0</CssParameter>
+				<CssParameter name="font-size">12.0</CssParameter>
 				<CssParameter name="font-style">normal</CssParameter>
 				<CssParameter name="font-weight">normal</CssParameter>
 			</Font>
 			<LabelPlacement>
-				<LinePlacement>
-					<PerpendicularOffset>above</PerpendicularOffset>
-					<LineWidth>2</LineWidth>
-					<Gap>10</Gap>
-				</LinePlacement>
+                <LinePlacement>
+                    <PerpendicularOffset>center</PerpendicularOffset>
+                    <LineWidth>2</LineWidth>
+                    <Gap>10</Gap>
+                </LinePlacement>
 			</LabelPlacement>
-			<Halo>
-				<Fill>
-					<CssParameter name="fill-opacity">0.3</CssParameter>
-					<CssParameter name="fill">#20d6df</CssParameter>
-				</Fill>
-				<Stroke>
-					<CssParameter name="stroke">#000000</CssParameter>
-					<CssParameter name="stroke-width">1.0</CssParameter>
-					<CssParameter name="stroke-linejoin">round</CssParameter>
-					<CssParameter name="stroke-opacity">1.0</CssParameter>
-					<CssParameter name="stroke-linecap">square</CssParameter>
-				</Stroke>
-			</Halo>
+            <Halo>
+                <Radius>3</Radius>      
+                <Fill>
+                    <CssParameter name="fill-opacity">1.0</CssParameter>
+                    <CssParameter name="fill">#20d6df</CssParameter>
+                </Fill>
+                <Stroke>
+                    <CssParameter name="stroke">#000000</CssParameter>
+                    <CssParameter name="stroke-width">2.0</CssParameter>
+                    <CssParameter name="stroke-linejoin">round</CssParameter>
+                    <CssParameter name="stroke-opacity">1.0</CssParameter>
+                    <CssParameter name="stroke-linecap">square</CssParameter>
+                </Stroke>
+            </Halo>
 		</TextSymbolizer>
 	</Rule>
 </FeatureTypeStyle>
