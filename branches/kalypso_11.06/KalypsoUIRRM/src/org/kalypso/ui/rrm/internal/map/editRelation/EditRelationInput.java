@@ -52,6 +52,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Grundwasserabfluss;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.channels.IChannel;
+import org.kalypso.model.hydrology.binding.model.channels.IStorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -76,6 +77,10 @@ public class EditRelationInput
     elements.add( addHeavyRelationType( INode.FEATURE_NODE, INode.MEMBER_BRANCHING, BranchingWithNode.FEATURE_BRANCHING_WITH_NODE, BranchingWithNode.QN_BRANCHING_NODE_MEMBER, INode.FEATURE_NODE ) );
 
     elements.add( addLightRelationType( IChannel.FEATURE_CHANNEL, IChannel.PROPERTY_LINKED_DOWNSTREAM_NODE, INode.FEATURE_NODE ) );
+
+    elements.add( addLightRelationType( IStorageChannel.FEATURE_STORAGE_CHANNEL, IStorageChannel.PROPERTY_DOWNSTREAM_NODE, INode.FEATURE_NODE ) );
+    elements.add( addLightRelationType( IStorageChannel.FEATURE_STORAGE_CHANNEL, IStorageChannel.PROPERTY_DOWNSTREAM_NODE_2, INode.FEATURE_NODE ) );
+    elements.add( addLightRelationType( IStorageChannel.FEATURE_STORAGE_CHANNEL, IStorageChannel.PROPERTY_DOWNSTREAM_NODE_3, INode.FEATURE_NODE ) );
 
     elements.add( addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_CHANNEL, IChannel.FEATURE_CHANNEL ) );
     elements.add( addLightRelationType( Catchment.FEATURE_CATCHMENT, Catchment.LINK_OVERFLOW_NODE, INode.FEATURE_NODE ) );
