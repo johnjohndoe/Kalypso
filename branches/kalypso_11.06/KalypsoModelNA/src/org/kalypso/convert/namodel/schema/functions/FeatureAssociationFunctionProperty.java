@@ -146,16 +146,9 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
 
   private static GM_Curve createArrowLineString( final GM_Point srcP, final GM_Point targetP, final double weightLength, final double weightWidth ) throws GM_Exception
   {
-    final double dx = targetP.getX() - srcP.getX();
-    final double dy = targetP.getY() - srcP.getY();
-
     final GM_Position p1 = srcP.getPosition();
     final GM_Position p4 = targetP.getPosition();
-    final GM_Position p2 = GeometryFactory.createGM_Position( p1.getX() + weightLength * dx, p1.getY() + weightLength * dy );
-    final GM_Position p3 = GeometryFactory.createGM_Position( p2.getX() + weightWidth * dy, p2.getY() - weightWidth * dx );
-    final GM_Position p5 = GeometryFactory.createGM_Position( p2.getX() - weightWidth * dy, p2.getY() + weightWidth * dx );
-
-    final GM_Position[] pos = new GM_Position[] { p1, p2, p3, p4, p5, p2 };
+    final GM_Position[] pos = new GM_Position[] { p1, p4 };
     return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
   }
 
