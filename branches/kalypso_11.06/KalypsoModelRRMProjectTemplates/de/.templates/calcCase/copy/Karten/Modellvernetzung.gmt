@@ -32,7 +32,6 @@
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
         <mapv:layer visible="true" name="Grundwasser - Vernetzung" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_5" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
-            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:fts_groundwaterNet:rule:rule_geometry</templ:legendicon>
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="GroundwaterNet" linktype="sld" xlink:actuate="onRequest" xlink:href="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:groundwaterNet" xlink:type="simple"/>
             <templ:property name="deleteable">false</templ:property>
