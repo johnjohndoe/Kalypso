@@ -119,6 +119,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   {
     m_editRelationViewer = new EditRelationViewer( parent, toolkit, m_data );
     refreshSettings();
+    updateCursor();
 
     m_performRunner = new EditRelationOperation( m_data, parent.getShell(), this );
 
@@ -131,6 +132,17 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     super.activate( commandPoster, mapPanel );
 
     refreshSettings();
+  }
+
+  @Override
+  public void finish( )
+  {
+    super.finish();
+
+    /* FIXME: should be handled by framework */
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel != null )
+      mapPanel.setCursor( Cursor.getDefaultCursor() );
   }
 
   @Override
