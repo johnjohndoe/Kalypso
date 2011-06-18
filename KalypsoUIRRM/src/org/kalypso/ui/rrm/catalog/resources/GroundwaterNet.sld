@@ -10,11 +10,15 @@
 				<ogc:PropertyName>link_grundwasserabflussMember</ogc:PropertyName>
 			</Geometry>
 			<Stroke>
-				<CssParameter name="stroke">#c0c0c0</CssParameter>
+				<CssParameter name="stroke">#a0a0a0</CssParameter>
 				<CssParameter name="stroke-width">2.0</CssParameter>
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>
 				<CssParameter name="stroke-linecap">butt</CssParameter>
+                <CssParameter name="stroke-arrow-type">line</CssParameter>
+                <CssParameter name="stroke-arrow-widget">open</CssParameter>
+                <CssParameter name="stroke-arrow-alignment">end</CssParameter>
+                <CssParameter name="stroke-arrow-size">35</CssParameter>
 			</Stroke>
 		</LineSymbolizer>
 	</Rule>
