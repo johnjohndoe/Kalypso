@@ -111,7 +111,7 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
         if( targetGeom != null )
         {
           final GM_Point targetCenter = targetGeom.getCentroid();
-          curves.add( createArrowLineString( srcGeo.getCentroid(), targetCenter, 0.8, 0.01 ) );
+          curves.add( createArrowLineString( srcGeo.getCentroid(), targetCenter ) );
         }
       }
       return GeometryFactory.createGM_MultiCurve( curves.toArray( new GM_Curve[curves.size()] ) );
@@ -144,7 +144,7 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
     return result.toArray( new Feature[result.size()] );
   }
 
-  private static GM_Curve createArrowLineString( final GM_Point srcP, final GM_Point targetP, final double weightLength, final double weightWidth ) throws GM_Exception
+  private static GM_Curve createArrowLineString( final GM_Point srcP, final GM_Point targetP ) throws GM_Exception
   {
     final GM_Position p1 = srcP.getPosition();
     final GM_Position p4 = targetP.getPosition();
