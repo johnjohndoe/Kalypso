@@ -44,16 +44,44 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * @author Gernot Belger
  */
 public class ZmlWQVInlineTypeHandler extends ZmlInlineTypeHandler
 {
+  // AXIS-NAMES: NOT translatable, because the axes are mapped with these names.
+  // In order to translate, tweak the table/chart instead.
+  public static final String AXIS_NAME_ABGABE_1 = "1. Abgabe"; //$NON-NLS-1$
+
+  public static final String AXIS_NAME_ABGABE_2 = "2. Abgabe"; //$NON-NLS-1$
+
+  public static final String AXIS_NAME_ABFLUSS = "Abfluss"; //$NON-NLS-1$
+
   private static final String ZML_INLINE_WVQ_TYPE = "ZmlInlineWVQType"; //$NON-NLS-1$
 
   public ZmlWQVInlineTypeHandler( )
   {
-    super( new QName( NaModelConstants.NAMESPACE_ZML_INLINE, ZML_INLINE_WVQ_TYPE ), NaModelConstants.WVQ_AXES );
+    super( new QName( NaModelConstants.NAMESPACE_ZML_INLINE, ZML_INLINE_WVQ_TYPE ), null );
+  }
+
+  @Override
+  public IAxis[] createAxes( )
+  {
+    final String unit = TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_RUNOFF );
+    final Class< ? > dataClass = TimeseriesUtils.getDataClass( ITimeseriesConstants.TYPE_RUNOFF );
+
+    final IAxis[] axes = new IAxis[5];
+    axes[0] = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_NORMNULL, true );
+    axes[1] = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_VOLUME, false );
+    axes[2] = new DefaultAxis( AXIS_NAME_ABFLUSS, ITimeseriesConstants.TYPE_RUNOFF, unit, dataClass, false );
+    axes[3] = new DefaultAxis( AXIS_NAME_ABGABE_1, ITimeseriesConstants.TYPE_RUNOFF, unit, dataClass, false );
+    axes[4] = new DefaultAxis( AXIS_NAME_ABGABE_2, ITimeseriesConstants.TYPE_RUNOFF, unit, dataClass, false );
+
+    return axes;
   }
 }
