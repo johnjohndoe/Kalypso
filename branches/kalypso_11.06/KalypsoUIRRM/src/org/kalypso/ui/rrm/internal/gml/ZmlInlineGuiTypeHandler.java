@@ -32,6 +32,8 @@ package org.kalypso.ui.rrm.internal.gml;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
@@ -54,11 +56,9 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.view.observationDialog.ClipboardExportAction;
 import org.kalypso.ogc.sensor.view.observationDialog.ClipboardImportAction;
 import org.kalypso.ogc.sensor.view.observationDialog.IObservationAction;
-import org.kalypso.ogc.sensor.view.observationDialog.NewObservationAction;
 import org.kalypso.ogc.sensor.view.observationDialog.RemoveObservationAction;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.ControlType;
@@ -76,6 +76,11 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   public ZmlInlineGuiTypeHandler( final ZmlInlineTypeHandler typeHandler )
   {
     m_typeHandler = typeHandler;
+  }
+
+  protected ZmlInlineTypeHandler getTypeHandler( )
+  {
+    return m_typeHandler;
   }
 
   @Override
@@ -136,20 +141,13 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     return marshallingHandler.parseType( text );
   }
 
-  protected String[] getAxisTypes( )
-  {
-    return m_typeHandler.getAxisTypes();
-  }
-
   public IObservationAction[] getObservationActions( )
   {
-    final String[] axisTypes = getAxisTypes();
-
     final Collection<IObservationAction> actions = new ArrayList<IObservationAction>();
 
     actions.add( getNewObservationAction() );
     actions.add( new RemoveObservationAction() );
-    actions.add( new ClipboardImportAction( axisTypes ) );
+    actions.add( new ClipboardImportAction( m_typeHandler ) );
     actions.add( new ClipboardExportAction() );
 
     return actions.toArray( new IObservationAction[actions.size()] );
@@ -157,7 +155,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
 
   protected IObservationAction getNewObservationAction( )
   {
-    return new NewObservationAction( getAxisTypes() );
+    return new NewObservationAction( m_typeHandler );
   }
 
   /**
@@ -173,10 +171,11 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
 
     final ITupleModel model = o.getValues( null );
 
-    final String[] axisTypes = getAxisTypes();
-    final IAxis[] newAxis = TimeseriesUtils.createDefaultAxes( axisTypes, true );
+    final IAxis[] newAxis = m_typeHandler.createAxes();
 
     final CopyObservationVisitor visitor = new CopyObservationVisitor( newAxis );
+    final Map<String, String> nameMapping = createCheckObservationNameMapping();
+    visitor.setNameMapping( nameMapping );
     model.accept( visitor );
 
     /* copy the rest */
@@ -187,5 +186,15 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     final Object[][] values = visitor.getValues();
     final SimpleTupleModel newModel = new SimpleTupleModel( newAxis, values );
     return new SimpleObservation( href, name, metadata, newModel );
+  }
+
+  /**
+   * Additional name mapping that allows to read and check old time series.<br/>
+   * The mapping maps old axis-names to new ones.<br/>
+   * The default implementation returns the empty map.
+   */
+  protected Map<String, String> createCheckObservationNameMapping( )
+  {
+    return Collections.emptyMap();
   }
 }

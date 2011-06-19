@@ -42,7 +42,6 @@ package org.kalypso.ui.rrm.internal.gml;
 
 import org.kalypso.model.hydrology.gml.ZmlWtKcLaiInlineTypeHandler;
 import org.kalypso.ogc.sensor.view.observationDialog.IObservationAction;
-import org.kalypso.ogc.sensor.view.observationDialog.NewIdealLanduseAction;
 
 /**
  * @author Gernot Belger
@@ -57,6 +56,7 @@ public class ZmlWtKcLaiInlineGuiTypeHandler extends ZmlInlineGuiTypeHandler
   @Override
   protected IObservationAction getNewObservationAction( )
   {
-    return new NewIdealLanduseAction( getAxisTypes() );
+    final ZmlWtKcLaiInlineTypeHandler typeHandler = (ZmlWtKcLaiInlineTypeHandler) getTypeHandler();
+    return new NewIdealLanduseAction( typeHandler );
   }
 }

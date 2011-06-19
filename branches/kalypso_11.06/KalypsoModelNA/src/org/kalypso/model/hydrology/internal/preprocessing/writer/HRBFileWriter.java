@@ -52,6 +52,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.gml.ZmlWQVInlineTypeHandler;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
@@ -182,11 +183,11 @@ public class HRBFileWriter extends AbstractCoreFileWriter
       final IAxis[] axisList = observation.getAxes();
       final IAxis axisNN = ObservationUtilities.findAxisByTypeNoEx( axisList, ITimeseriesConstants.TYPE_NORMNULL );
       final IAxis axisV = ObservationUtilities.findAxisByTypeNoEx( axisList, ITimeseriesConstants.TYPE_VOLUME );
-      final IAxis axisQ = ObservationUtilities.findAxisByTypeNoEx( axisList, ITimeseriesConstants.TYPE_RUNOFF );
+      final IAxis axisQ = ObservationUtilities.findAxisByNameNoEx( axisList, ZmlWQVInlineTypeHandler.AXIS_NAME_ABFLUSS );
 
       // these are optional
-      final IAxis axisQ2 = ObservationUtilities.findAxisByTypeNoEx( axisList, ITimeseriesConstants.TYPE_RUNOFF_Q2 );
-      final IAxis axisQ3 = ObservationUtilities.findAxisByTypeNoEx( axisList, ITimeseriesConstants.TYPE_RUNOFF_Q3 );
+      final IAxis axisQ2 = ObservationUtilities.findAxisByNameNoEx( axisList, ZmlWQVInlineTypeHandler.AXIS_NAME_ABGABE_1 );
+      final IAxis axisQ3 = ObservationUtilities.findAxisByNameNoEx( axisList, ZmlWQVInlineTypeHandler.AXIS_NAME_ABGABE_2 );
 
       final ITupleModel values = observation.getValues( null );
       final int count = values.size();

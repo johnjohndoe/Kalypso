@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.gml;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.kalypso.model.hydrology.gml.ZmlWQVInlineTypeHandler;
 
 /**
@@ -50,5 +53,24 @@ public class ZmlWQVInlineGuiTypeHandler extends ZmlInlineGuiTypeHandler
   public ZmlWQVInlineGuiTypeHandler( final ZmlWQVInlineTypeHandler typeHandler )
   {
     super( typeHandler );
+  }
+
+  /**
+   * Additional name mapping that allows to read and check old time series.<br/>
+   * The mapping maps old axis-names to new ones.<br/>
+   * The default implementation returns the empty map.
+   */
+  @Override
+  protected Map<String, String> createCheckObservationNameMapping( )
+  {
+    final Map<String, String> map = new HashMap<String, String>();
+
+    // Makes definitions of first prototype readable. Probably safe to remove once the new WQV stuff is established
+    // (i.e. in next version after 11.06).
+    // Do NOT trasnlate these axis names
+    map.put( "2ter Abfluss", ZmlWQVInlineTypeHandler.AXIS_NAME_ABGABE_1 ); //$NON-NLS-1$
+    map.put( "3ter Abfluss", ZmlWQVInlineTypeHandler.AXIS_NAME_ABGABE_2 ); //$NON-NLS-2$
+
+    return map;
   }
 }

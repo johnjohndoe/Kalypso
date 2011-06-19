@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.gml;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -58,6 +59,8 @@ public class CopyObservationVisitor implements ITupleModelVisitor
   private final Collection<Object[]> m_values = new ArrayList<Object[]>();
 
   private final IAxis[] m_targetAxis;
+
+  private Map<String, String> m_nameMapping;
 
   public CopyObservationVisitor( final IAxis[] targetAxis )
   {
@@ -91,11 +94,33 @@ public class CopyObservationVisitor implements ITupleModelVisitor
   private IAxis findSourceAxis( final IAxis targetAxis, final ITupleModelValueContainer container )
   {
     final IAxis[] axes = container.getAxes();
-    return ObservationUtilities.findAxisByNameNoEx( axes, targetAxis.getName() );
+    final String targetName = targetAxis.getName();
+    final IAxis sourceAxis = ObservationUtilities.findAxisByNameNoEx( axes, targetName );
+    if( sourceAxis != null )
+      return sourceAxis;
+
+    /* Maybe we have a mapping for his axis? */
+    for( final IAxis oldAxis : axes )
+    {
+      final String oldName = oldAxis.getName();
+      if( m_nameMapping.containsKey( oldName ) )
+      {
+        final String newName = m_nameMapping.get( oldName );
+        if( targetName.equals( newName ) )
+          return oldAxis;
+      }
+    }
+
+    return null;
   }
 
   public Object[][] getValues( )
   {
     return m_values.toArray( new Object[m_values.size()][] );
+  }
+
+  public void setNameMapping( final Map<String, String> nameMapping )
+  {
+    m_nameMapping = nameMapping;
   }
 }
