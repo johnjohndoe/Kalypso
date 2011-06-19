@@ -168,6 +168,9 @@ public class NaPreprocessingTest
     /* Fetch the expected results */
     asciiExpectedDir.mkdir();
     ZipUtilities.unzip( getClass().getResource( baseResourceLocation + "/expectedAscii.zip" ), asciiExpectedDir ); //$NON-NLS-1$
+    // FIXED: make sure this directory always exists, as this will always exist in the results; but we cannot unzip an
+    // empty directory...
+    new File( asciiExpectedDir, "lzsim" ).mkdirs();
 
     checkDifferences( asciiExpectedDir, asciiDir );
 
