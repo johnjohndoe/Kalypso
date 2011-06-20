@@ -74,7 +74,6 @@ import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.filters.NonCalcUnitResultViewerFilter;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -95,7 +94,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
 
   private IKalypsoLayerModell m_mapModell;
 
-  private ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
+  private ICaseDataProvider<Feature> m_dataProvider;
 
   public SelectCalcUnitForHydrographWizard( )
   {
@@ -168,7 +167,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
   }
 
   // FIXME: please let the pool handle the saving!!!
-  private void saveModel( final ICalcUnitResultMeta calcUnitResult, final IFeatureWrapper2 hydrograph ) throws GmlSerializeException, CoreException, IOException
+  private void saveModel( final ICalcUnitResultMeta calcUnitResult, final Feature hydrograph ) throws GmlSerializeException, CoreException, IOException
   {
     // get a path
     final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" ); //$NON-NLS-1$
@@ -176,7 +175,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
 
     final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml" ); //$NON-NLS-1$
 
-    final Feature feature = hydrograph.getFeature();
+    final Feature feature = hydrograph;
     OutputStreamWriter writer = null;
     try
     {
@@ -227,7 +226,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    m_dataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_dataProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     try
     {

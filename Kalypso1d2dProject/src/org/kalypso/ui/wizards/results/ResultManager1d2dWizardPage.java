@@ -287,9 +287,9 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                 List< String > lListResultsToRemove = new ArrayList<String>();
                 lListResultsToRemove.addAll( Arrays.asList( processingOperation.getOriginalStepsToDelete() ) );
                 if( lListResultsToRemove.size() == 0 ){
-                  lListResultsToRemove.add( stepResult.getGmlID() );
+                  lListResultsToRemove.add( stepResult.getId() );
                 }
-                lListResultsToRemove = removeAllOthersStepWithDate( lListResultsToRemove, stepResult.getGmlID() );
+                lListResultsToRemove = removeAllOthersStepWithDate( lListResultsToRemove, stepResult.getId() );
 
                 final String[] lResultsToRemove = lListResultsToRemove.toArray( new String[ lListResultsToRemove.size() ] );
 
