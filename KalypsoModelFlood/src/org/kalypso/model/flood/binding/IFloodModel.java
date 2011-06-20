@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
@@ -64,8 +64,8 @@ public interface IFloodModel extends IModel
 
   // get Events
 
-  public IFeatureWrapperCollection<IFloodPolygon> getPolygons( );
+  public IFeatureBindingCollection<IFloodPolygon> getPolygons( );
 
-  public IFeatureWrapperCollection<IRunoffEvent> getEvents( );
+  public IFeatureBindingCollection<IRunoffEvent> getEvents( );
 
 }

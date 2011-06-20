@@ -46,7 +46,7 @@ import java.util.List;
 import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Thomas Jung
@@ -65,7 +65,7 @@ public class FloodPolygonHelper
    * @return an array of {@link IFloodPolygon}, that is valid for the given event
    * 
    */
-  public static IFloodPolygon[] getPolygonsForEvent( final IRunoffEvent event, final IFeatureWrapperCollection<IFloodPolygon> polygons )
+  public static IFloodPolygon[] getPolygonsForEvent( final IRunoffEvent event, final IFeatureBindingCollection<IFloodPolygon> polygons )
   {
     /* collect all polygons, that are valid for the selected event */
     final List<IFloodPolygon> polygonList = new LinkedList<IFloodPolygon>();
@@ -74,7 +74,7 @@ public class FloodPolygonHelper
     for( final IFloodPolygon floodPolygon : polygons )
     {
       // get the feature
-      final Feature polygonFeature = floodPolygon.getFeature();
+      final Feature polygonFeature = floodPolygon;
 
       // get the event, the polygon is valid for
       final IRunoffEvent runoffEvent = (IRunoffEvent) polygonFeature.getProperty( IFloodPolygon.QNAME_PROP_EVENT );
@@ -100,7 +100,7 @@ public class FloodPolygonHelper
    * @return {@link SortedFloodPolygonMap}
    * 
    */
-  public static SortedFloodPolygonMap getSortedPolygonsForEvent( final IRunoffEvent event, final IFeatureWrapperCollection<IFloodPolygon> polygons )
+  public static SortedFloodPolygonMap getSortedPolygonsForEvent( final IRunoffEvent event, final IFeatureBindingCollection<IFloodPolygon> polygons )
   {
     final IFloodPolygon[] polygonsForEvent = getPolygonsForEvent( event, polygons );
 
@@ -124,7 +124,7 @@ public class FloodPolygonHelper
    * @return {@link SortedFloodPolygonMap}
    * 
    */
-  public static SortedFloodPolygonMap getSortedPolygons( final IFeatureWrapperCollection<IFloodPolygon> polygons )
+  public static SortedFloodPolygonMap getSortedPolygons( final IFeatureBindingCollection<IFloodPolygon> polygons )
   {
     final SortedFloodPolygonMap map = new SortedFloodPolygonMap();
 

@@ -162,7 +162,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
               final Feature parent = feature.getParent().getParent();
               if( parent != null )
               {
-                if( parent.getId().equals( event.getGmlID() ) )
+                if( parent.getId().equals( event.getId() ) )
                 {
                   wspThemes.removeTheme( kalypsoTheme );
                 }

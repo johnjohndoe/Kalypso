@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.binding;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -47,8 +49,8 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FloodClipPolygon extends AbstractFloodPolygon implements IFloodClipPolygon
 {
-  public FloodClipPolygon( Feature featureToBind )
+  public FloodClipPolygon( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, IFloodClipPolygon.QNAME );
+    super( parent, parentRelation, ft, id, propValues );
   }
 }

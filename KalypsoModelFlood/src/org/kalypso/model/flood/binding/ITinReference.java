@@ -47,7 +47,7 @@ import java.util.Date;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  * @author Gernot Belger
  * @author Thomas Jung
  */
-public interface ITinReference extends IFeatureWrapper2
+public interface ITinReference extends Feature
 {
   enum SOURCETYPE
   {
