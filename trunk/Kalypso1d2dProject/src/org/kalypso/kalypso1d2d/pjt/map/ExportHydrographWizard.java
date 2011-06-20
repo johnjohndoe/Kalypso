@@ -35,6 +35,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 public class ExportHydrographWizard extends Wizard
@@ -59,7 +60,7 @@ public class ExportHydrographWizard extends Wizard
 
   private boolean m_boolValid = true;
 
-  private IHydrographCollection m_hydrographs;
+  private IFeatureBindingCollection<IHydrograph> m_hydrographs;
 
   private IHydrograph m_selectedHydrograph;
 
@@ -86,7 +87,7 @@ public class ExportHydrographWizard extends Wizard
   public ExportHydrographWizard( final IHydrographCollection hydrographs, final IHydrograph selectedHydrograph )
   {
     setWindowTitle( "Hydrograph Export Wizard" ); //$NON-NLS-1$
-    m_hydrographs = hydrographs;
+    m_hydrographs = hydrographs.getHydrographs();
     m_selectedHydrograph = selectedHydrograph;
     // exclude in normal case the depth
     m_setExclusion.add( 2 );
@@ -225,11 +226,11 @@ public class ExportHydrographWizard extends Wizard
     List<Feature> lListHydrographs = new ArrayList<Feature>();
     if( !m_exportHydrographWizardPage.getBtnCheckButtonOnlySelection().getSelection() )
     {
-      lListHydrographs.addAll( m_hydrographs.getWrappedList() );
+      lListHydrographs.addAll( m_hydrographs.getFeatureList() );
     }
     else
     {
-      lListHydrographs.add( lSelectedHydrograph.getFeature() );
+      lListHydrographs.add( lSelectedHydrograph);
     }
 
     m_mapDateStringsToPrint = new HashMap<XMLGregorianCalendar, String>();

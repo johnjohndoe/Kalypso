@@ -161,10 +161,10 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             ITerrainElevationModelSystem temSys = ImportElevationWizard.this.m_terrainModel.getTerrainElevationModelSystem();
             if( temSys == null )
             {
-              temSys = new TerrainElevationModelSystem( ImportElevationWizard.this.m_terrainModel );
+              temSys =  ImportElevationWizard.this.m_terrainModel.getTerrainElevationModelSystem();
             }
 
-            final GMLWorkspace workspace = temSys.getFeature().getWorkspace();
+            final GMLWorkspace workspace = temSys.getWorkspace();
 
             // Decoding the White Spaces present in the File Paths.
             final File modelFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile() );
@@ -193,8 +193,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               nativeTEMRelPath = getUTF_DecodedFile( dstFileTif ).toString();
             }
 //            final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-            final ITerrainElevationModel tem = new NativeTerrainElevationModelWrapper( temSys, nativeTEMRelPath );
-
+            final NativeTerrainElevationModelWrapper tem = (NativeTerrainElevationModelWrapper) temSys.getTerrainElevationModels().addNew( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
+            tem.setFile( nativeTEMRelPath );
+            
             // TODO introduce in the first page a name imput field and gets the
             // name from there
 
@@ -221,8 +222,8 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               tem.setCoordinateSystem( selectedCoordinateSystem );
             }
 
-            final Feature temFeature = tem.getFeature();
-            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys.getFeature(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            final Feature temFeature = tem;
+            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys, temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getParent(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
             final SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();

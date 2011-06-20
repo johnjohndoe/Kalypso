@@ -50,7 +50,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -66,7 +65,7 @@ public class CreateHydrographWidget extends AbstractCreateHydrographWidget
   }
 
   @Override
-  protected IHydrograph createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
+  protected IHydrograph createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
   {
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IHydrograph.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
@@ -81,17 +80,17 @@ public class CreateHydrographWidget extends AbstractCreateHydrographWidget
     return hydrograph;
   }
 
+
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d,
-   *      org.kalypsodeegree.model.geometry.GM_Point, double)
+   * @see org.kalypso.kalypso1d2d.pjt.map.AbstractCreateHydrographWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d, org.kalypsodeegree.model.geometry.GM_Point, double)
    */
   @Override
-  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     return findModelNodeFromPosition( discModel, currentPos, grabDistance );
   }
 
-  private static IFeatureWrapper2 findModelNodeFromPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  private static Feature findModelNodeFromPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     return discModel.findNode( currentPos, grabDistance );
   }

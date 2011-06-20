@@ -83,7 +83,7 @@ import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
@@ -188,7 +188,7 @@ public class ConfigureLengthSectionWizard extends Wizard
           {
             final IStepResultMeta stepResult = (IStepResultMeta) resultMeta;
 
-            final IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
+            final IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
             for( final IResultMeta child : children )
             {
               // get all documents
@@ -227,7 +227,7 @@ public class ConfigureLengthSectionWizard extends Wizard
             if( parent instanceof ICalcUnitResultMeta )
             {
               final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) parent;
-              final IFeatureWrapperCollection<IResultMeta> calcUniChildren = calcUnitResult.getChildren();
+              final IFeatureBindingCollection<IResultMeta> calcUniChildren = calcUnitResult.getChildren();
               for( final IResultMeta child : calcUniChildren )
               {
                 if( child instanceof IDocumentResultMeta )
