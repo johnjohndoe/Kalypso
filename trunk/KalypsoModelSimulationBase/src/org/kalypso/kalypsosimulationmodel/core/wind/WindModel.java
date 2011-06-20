@@ -40,42 +40,44 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.wind;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * @author ig
  */
 public class WindModel extends VersionedModel implements IWindModel
 {
-  private final IFeatureWrapperCollection< IWindDataModelSystem > m_windSystems;
-  
-  public WindModel( final Feature featureToBind )
+  public WindModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, QNAME_WIND_MODEL );
-    m_windSystems = 
-      new FeatureWrapperCollection<IWindDataModelSystem>( featureToBind, IWindDataModelSystem.class, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_WIND_ELE_SYS );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
-  public IFeatureWrapperCollection<IWindDataModelSystem> getWindDataModelSystems( )
+  private final IFeatureBindingCollection<IWindDataModelSystem> m_windSystems = new FeatureBindingCollection<IWindDataModelSystem>( this, IWindDataModelSystem.class, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_WIND_ELE_SYS );
+
+  @Override
+  public IFeatureBindingCollection<IWindDataModelSystem> getWindDataModelSystems( )
   {
     return m_windSystems;
-//    final Feature feature = (Feature) getFeature().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_WIND_ELE_SYS );
-    
-//    final Object[] features = getFeature().getProperties();
-//
-//    if( features == null )
-//    {
-//      return null;
-//    }
-//    else
-//    {
-//      IFeatureWrapperCollection< IWindDataModelSystem > lWindSystems = new FeatureWrapperCollection<IWindDataModelSystem>();
-//      return (IFeatureWrapperCollection<IWindDataModelSystem>) feature.getAdapter( IWindDataModelSystem.class );
-//    }
+    // final Feature feature = (Feature) getFeature().getProperty(
+    // KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_WIND_ELE_SYS );
+
+    // final Object[] features = getFeature().getProperties();
+    //
+    // if( features == null )
+    // {
+    // return null;
+    // }
+    // else
+    // {
+    // IFeatureWrapperCollection< IWindDataModelSystem > lWindSystems = new
+    // FeatureWrapperCollection<IWindDataModelSystem>();
+    // return (IFeatureWrapperCollection<IWindDataModelSystem>) feature.getAdapter( IWindDataModelSystem.class );
+    // }
   }
 
 }

@@ -347,7 +347,7 @@ public class SLDHelper
 
       final Operation operation = new PropertyIsLikeOperation( new PropertyName( styleProperty.getLocalPart(), null ), new Literal( ruleName ), '*', '$', '/' );
       final Filter filter = new ComplexFilter( operation );
-      rule.setName( styledFeature.getGmlID() );
+      rule.setName( styledFeature.getId() );
       rule.setTitle( ruleName );
       rule.setAbstract( ruleName );
       rule.setFilter( filter );

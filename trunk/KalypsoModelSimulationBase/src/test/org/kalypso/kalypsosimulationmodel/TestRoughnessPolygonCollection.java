@@ -82,7 +82,7 @@ public class TestRoughnessPolygonCollection extends TestCase
       fail( "aaa" ); //$NON-NLS-1$
     }
 
-    m_polygonCollection = new RoughnessPolygonCollection( feature, IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
+    m_polygonCollection = new RoughnessPolygonCollection( feature);
     List<IRoughnessPolygon> polygons = m_polygonCollection.selectRoughnessPolygons( point.getPosition() );
     System.out.println( "" ); //$NON-NLS-1$
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
@@ -95,7 +95,7 @@ public class TestRoughnessPolygonCollection extends TestCase
     System.out.println( Messages.getString( "TestRoughnessPolygonCollection.14" ) ); //$NON-NLS-1$
     for( int i = 0; i < polygons.size(); i++ )
     {
-      System.out.println( (i + 1) + ". - " + polygons.get( i ).getGmlID() ); //$NON-NLS-1$
+      System.out.println( (i + 1) + ". - " + polygons.get( i ).getId() ); //$NON-NLS-1$
     }
 
     if( polygons.size() == 0 )
@@ -113,7 +113,7 @@ public class TestRoughnessPolygonCollection extends TestCase
     System.out.println( Messages.getString( "TestRoughnessPolygonCollection.13" ) ); //$NON-NLS-1$
     for( int i = 0; i < polygonsList.size(); i++ )
     {
-      System.out.println( (i + 1) + ". - " + polygonsList.get( i ).getGmlID() ); //$NON-NLS-1$
+      System.out.println( (i + 1) + ". - " + polygonsList.get( i ).getId() ); //$NON-NLS-1$
     }
 
     if( polygonsList.size() == 0 )

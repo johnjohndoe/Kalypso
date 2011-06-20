@@ -1,21 +1,22 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * This class represents a wbr:roughnessClsCorrection element.
  *
  * @author Patrice Congo
  */
-public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRoughnessClsCorrection
+public class RoughnessClsCorrection extends Feature_Impl implements IRoughnessClsCorrection
 {
-  public RoughnessClsCorrection( final Feature feature )
+
+  protected RoughnessClsCorrection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( feature, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS_CORRECTION );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   // /**
@@ -34,7 +35,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   // try
   // {
   // this.feature = FeatureHelper.addFeature( parentFeature, propQName,
-  // KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS_CORRECTION );
+  // WBR_F_ROUGHNESS_CORRECTION );
   //
   // }
   // catch( final GMLSchemaException ex )
@@ -42,7 +43,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   //
   // throw new IllegalArgumentException( "Property " + propQName + //$NON-NLS-1$
   // Messages.getString( "RoughnessClsCorrection.3" ) + //$NON-NLS-1$
-  // KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS, ex );
+  // WBR_F_ROUGHNESS, ex );
   // }
   // }
 
@@ -96,7 +97,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   @Override
   public double getAxAyCor( )
   {
-    final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY_COR, Double.class );
+    final Double property = getProperty( WBR_PROP_AXAY_COR, Double.class );
     if( property == null )
       return Double.NaN;
 
@@ -106,7 +107,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   @Override
   public double getMarshCor( )
   {
-    final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_MARSH_COR, Double.class );
+    final Double property = getProperty( WBR_PROP_MARSH_COR, Double.class );
     if( property == null )
       return Double.NaN;
 
@@ -119,7 +120,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   @Override
   public double getDpCor( )
   {
-    final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP_COR, Double.class );
+    final Double property = getProperty( WBR_PROP_DP_COR, Double.class );
     if( property == null )
       return Double.NaN;
 
@@ -132,7 +133,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   @Override
   public double getEddyCor( )
   {
-    final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_COR, Double.class );
+    final Double property = getProperty( WBR_PROP_EDDY_COR, Double.class );
     if( property == null )
       return Double.NaN;
 
@@ -145,7 +146,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   @Override
   public double getKsCor( )
   {
-    final Double property = getProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS_COR, Double.class );
+    final Double property = getProperty( WBR_PROP_KS_COR, Double.class );
     if( property == null )
       return Double.NaN;
 
@@ -159,7 +160,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   public void setAxAyCor( final double axayCor ) throws IllegalArgumentException
   {
     Assert.throwIAEOnLessThan0( axayCor, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection.6" ) ); //$NON-NLS-1$
-    getFeature().setProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY_COR, axayCor );
+    setProperty( WBR_PROP_AXAY_COR, axayCor );
   }
 
   /**
@@ -169,7 +170,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   public void setDpCor( final double dpCor ) throws IllegalArgumentException
   {
     Assert.throwIAEOnLessThan0( dpCor, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection.7" ) ); //$NON-NLS-1$
-    getFeature().setProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP_COR, dpCor );
+    setProperty( WBR_PROP_DP_COR, dpCor );
   }
 
   /**
@@ -179,7 +180,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   public void setEddyCor( final double eddyCor ) throws IllegalArgumentException
   {
     Assert.throwIAEOnLessThan0( eddyCor, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection.8" ) ); //$NON-NLS-1$
-    getFeature().setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_COR, eddyCor );
+    setProperty( WBR_PROP_EDDY_COR, eddyCor );
   }
 
   /**
@@ -189,7 +190,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   public void setKsCor( final double ksCor ) throws IllegalArgumentException
   {
     Assert.throwIAEOnLessThan0( ksCor, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection.9" ) ); //$NON-NLS-1$
-    getFeature().setProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS_COR, ksCor );
+    setProperty( WBR_PROP_KS_COR, ksCor );
   }
 
   /**
@@ -199,7 +200,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   public void setMarshCor( final double marshCor ) throws IllegalArgumentException
   {
     Assert.throwIAEOnLessThan0( marshCor, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection.10" ) ); //$NON-NLS-1$
-    getFeature().setProperty( KalypsoModelRoughnessConsts.WBR_PROP_MARSH_COR, marshCor );
+    setProperty( WBR_PROP_MARSH_COR, marshCor );
   }
 
   /**
@@ -222,7 +223,7 @@ public class RoughnessClsCorrection extends AbstractFeatureBinder implements IRo
   {
     final StringBuffer buf = new StringBuffer( 64 );
     buf.append( "RoughnessClsCorrection" ); //$NON-NLS-1$
-    final String id = getFeature().getId();
+    final String id = getId();
     if( id != null )
     {
       buf.append( '.' );

@@ -43,8 +43,8 @@ package org.kalypso.kalypsosimulationmodel.core.wind;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 /**
@@ -54,9 +54,10 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
  * 
  * @author ig
  */
-public interface IWindDataModelSystem extends IFeatureWrapper2
+public interface IWindDataModelSystem extends Feature
 {
-
+  public static final QName SIM_BASE_F_WIND_ELE_SYS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "WindDataModelSystem" ); //$NON-NLS-1$
+  
   public final static QName QNAME_PROP_ORIGIN_X = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "originX" ); //$NON-NLS-1$
 
   public final static QName QNAME_PROP_ORIGIN_Y = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "originY" ); //$NON-NLS-1$
@@ -78,7 +79,7 @@ public interface IWindDataModelSystem extends IFeatureWrapper2
    * To get all wind data models in that system
    * @return all the wind data models in this system
    */
-  public IFeatureWrapperCollection<IWindDataModel> getWindDataModels();
+  public IFeatureBindingCollection<IWindDataModel> getWindDataModels();
 
   public RectifiedGridDomain getGridDescriptor( );
   

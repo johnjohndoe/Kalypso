@@ -42,38 +42,35 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Patrice Congo
  * @author Madanagopal
  * 
  */
-public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder implements ITerrainElevationModel, IFeatureWrapper2
+public class GridCoverageElevationModelWrapper extends Feature_Impl implements ITerrainElevationModel
 {
+
   public static final QName SIM_BASE_PROP_GRID_COVERAGE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "gridCoverage" ); //$NON-NLS-1$
 
   public static final QName SIM_BASE_F_GRID_COVERAGE_ELE_MODEL_WRAPPER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "GridCoverageElevationModelWrapper" ); //$NON-NLS-1$
 
   private final IGeoGrid doubleRaster;
 
-  public GridCoverageElevationModelWrapper( final Feature featureToBind ) throws Exception
+  public GridCoverageElevationModelWrapper( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    this( featureToBind, SIM_BASE_F_GRID_COVERAGE_ELE_MODEL_WRAPPER );
-  }
-
-  public GridCoverageElevationModelWrapper( final Feature featureToBind, final QName qnameToBind ) throws Exception
-  {
-    super( featureToBind, qnameToBind );
-    final Feature coverageFeature = (Feature) featureToBind.getProperty( SIM_BASE_PROP_GRID_COVERAGE );
+    super( parent, parentRelation, ft, id, propValues );
+    final Feature coverageFeature = (Feature) getProperty( SIM_BASE_PROP_GRID_COVERAGE );
     doubleRaster = new RectifiedGridCoverageGeoGrid( coverageFeature );
   }
 

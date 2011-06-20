@@ -40,17 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Interface to be implemented by class representing 
- * a substitute of simBase:_TerrainElevationModel
+ * Interface to be implemented by class representing a substitute of simBase:_TerrainElevationModel
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
- *@author Patrice Congo
- *
+ * @author Patrice Congo
+ * 
  */
-public interface ITerrainElevationModel extends IFeatureWrapper2, IElevationProvider
+public interface ITerrainElevationModel extends Feature, IElevationProvider
 {
-  
+
 }

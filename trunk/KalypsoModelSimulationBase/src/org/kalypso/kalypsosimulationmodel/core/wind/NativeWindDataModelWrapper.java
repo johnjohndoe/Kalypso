@@ -41,8 +41,6 @@
 package org.kalypso.kalypsosimulationmodel.core.wind;
 
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 
@@ -53,7 +51,10 @@ import org.deegree.framework.util.Pair;
 import org.eclipse.core.resources.IFile;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
@@ -70,93 +71,63 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
  */
 public class NativeWindDataModelWrapper extends WindDataModel implements INativeWindDataModelWrapper
 {
-  private final IWindDataProvider m_windDataProvider;
+  public NativeWindDataModelWrapper( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
 
-  private IWindDataModelSystem m_windDataModelSystem;
-
-  private final IFile m_file;
-
-  private Date m_date = null;
+  private IWindDataProvider m_windDataProvider;
 
   /**
    * Creates a new {@link NativeWindDataModelWrapper} as child of the given parent and link to it by the prop of the
    * given name. The native source path is also set
    */
   @SuppressWarnings("deprecation")
-  private static final Feature createFeature( final Feature parentFeature, final QName propQName, final String sourceName, final Date date ) throws Exception
+  private static final INativeWindDataModelWrapper createFeature( final Feature parentFeature, final QName propQName, final String sourceName, final Date date ) throws Exception
   {
     final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
-    String lStrDate = ( new Date() ).toGMTString();
-    final Feature newFeature = Util.createFeatureAsProperty( parentFeature, propQName, KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, new Object[] { sourceName,
-        gregorianCalendar, parentFeature.getName() + " imported on " + lStrDate }, new QName[] { KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME, QNAME_PROP_DATE, Feature.QN_DESCRIPTION } );
-    return newFeature;
+    String lStrDate = (new Date()).toGMTString();
+    final Feature newFeature = Util.createFeatureAsProperty( parentFeature, propQName, SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, new Object[] { sourceName, gregorianCalendar,
+        parentFeature.getName() + " imported on " + lStrDate }, new QName[] { KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME, QNAME_PROP_DATE, Feature.QN_DESCRIPTION } );
+    return (INativeWindDataModelWrapper) newFeature;
   }
 
-  public NativeWindDataModelWrapper( final IWindDataModelSystem pWindDataModelSystem, final String sourceName, final Date date ) throws Exception
+  public static final INativeWindDataModelWrapper createFeatureForTEMSystem( final IWindDataModelSystem pWindDataModelSystem, final String sourceName, final Date date ) throws Exception
   {
-    this( createFeatureForTEMSystem( pWindDataModelSystem, sourceName, date ) );
-    m_windDataModelSystem = pWindDataModelSystem;
+    return createFeature( pWindDataModelSystem, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_MODEL, sourceName, date );
   }
 
-  private static final Feature createFeatureForTEMSystem( final IWindDataModelSystem pWindDataModelSystem, final String sourceName, final Date date ) throws Exception
-  {
-    return createFeature( pWindDataModelSystem.getFeature(), KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_MODEL, sourceName, date );
-  }
-
-  public NativeWindDataModelWrapper( final Feature featureToBind ) throws Exception
-  {
-    super( featureToBind, KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER );
-
-    final String sourceName = (String) featureToBind.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME );
-    if( sourceName == null )
-    {
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.windmodel.NativeWindDataModelWrapper.2" ) ); //$NON-NLS-1$
-    }
-
-    // m_strCrs = (String) featureToBind.getProperty( QNAME_PROP_CRS );
-    //
-    try
-    {
-      Feature lFeatureWindDataModelSystem = featureToBind.getParent();
-      m_windDataModelSystem = (IWindDataModelSystem) lFeatureWindDataModelSystem.getAdapter( IWindDataModelSystem.class );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    m_date = DateUtilities.toDate( (XMLGregorianCalendar) featureToBind.getProperty( QNAME_PROP_DATE ) );
-
-    final URL sourceURL = makeSourceURL( sourceName, featureToBind.getWorkspace().getContext() );
-
-    m_file = ResourceUtilities.findFileFromURL( sourceURL );
-    m_windDataProvider = NativeWindDataModelHelper.getWindDataModel( m_file.getLocation().toFile(), getGridDescriptor() );
-  }
-
-  private final URL makeSourceURL( final String sourceName, final URL worspaceContex ) throws URISyntaxException, MalformedURLException
+  private final URL makeSourceURL( final String sourceName, final URL worspaceContex )
   {
     try
     {
-      final URL sourceUrl = new URL( sourceName );
-      final URI uri = sourceUrl.toURI();
-      if( uri.isAbsolute() )
-      {
-        return uri.toURL();
-      }
-      else
-      {
-        final URL absURL = new URL( worspaceContex, sourceName );
-        return absURL;
-      }
+      return UrlResolverSingleton.resolveUrl( worspaceContex, sourceName );
     }
     catch( final MalformedURLException e )
     {
-      return new URL( worspaceContex, sourceName );
+      e.printStackTrace();
     }
+    return null;
   }
 
   public IWindDataProvider getWindDataProvider( )
   {
+    if( m_windDataProvider != null )
+      return m_windDataProvider;
+
+    final IFile file = getSourceFile();
+    if( file == null )
+    {
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.windmodel.NativeWindDataModelWrapper.2" ) ); //$NON-NLS-1$
+    }
+    try
+    {
+      m_windDataProvider = NativeWindDataModelHelper.getWindDataModel( file.getLocation().toFile(), getGridDescriptor() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
     return m_windDataProvider;
   }
 
@@ -165,7 +136,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
    */
   public GM_Envelope getBoundingBox( )
   {
-    return m_windDataProvider.getBoundingBox();
+    return getWindDataProvider().getBoundingBox();
   }
 
   /**
@@ -173,7 +144,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
    */
   public String getCoordinateSystem( ) throws Exception
   {
-    return m_windDataProvider.getCoordinateSystem();
+    return getWindDataProvider().getCoordinateSystem();
   }
 
   /**
@@ -181,7 +152,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
    */
   public void setCoordinateSystem( final String coordinateSystem )
   {
-    m_windDataProvider.setCoordinateSystem( coordinateSystem );
+    getWindDataProvider().setCoordinateSystem( coordinateSystem );
   }
 
   /**
@@ -190,7 +161,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   @Override
   public IWindDataModelSystem getWindDataModelSystem( )
   {
-    return m_windDataModelSystem;
+    return (IWindDataModelSystem) getParent();
   }
 
   /**
@@ -199,7 +170,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   @Override
   public Pair<Double, Double> getWindAsSpeedAndDirection( GM_Point location )
   {
-    return m_windDataProvider.getWindAsSpeedAndDirection( location );
+    return getWindDataProvider().getWindAsSpeedAndDirection( location );
   }
 
   /**
@@ -208,7 +179,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   @Override
   public Pair<Double, Double> getWindAsVector( GM_Point location )
   {
-    return m_windDataProvider.getWindAsVector( location );
+    return getWindDataProvider().getWindAsVector( location );
   }
 
   /**
@@ -217,7 +188,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   @Override
   public IGeoGrid getDataAsGrid( )
   {
-    return m_windDataProvider.getDataAsGrid();
+    return getWindDataProvider().getDataAsGrid();
   }
 
   /**
@@ -226,7 +197,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   @Override
   public RectifiedGridDomain getGridDescriptor( ) throws Exception
   {
-    return m_windDataModelSystem.getGridDescriptor();
+    return getWindDataModelSystem().getGridDescriptor();
   }
 
   /**
@@ -235,7 +206,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   @Override
   public boolean isRegularGrid( )
   {
-    return m_windDataProvider.isRegularGrid();
+    return getWindDataProvider().isRegularGrid();
   }
 
   /**
@@ -247,7 +218,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
     URL lUrlDataFile = null;
     try
     {
-      lUrlDataFile = m_file.getLocationURI().toURL();
+      lUrlDataFile = getSourceFile().getLocationURI().toURL();
     }
     catch( Exception e )
     {
@@ -261,7 +232,8 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   @Override
   public Date getDateStep( )
   {
-    return m_date != null? m_date: m_windDataProvider.getDateStep();
+    final Date date = DateUtilities.toDate( (XMLGregorianCalendar) getProperty( QNAME_PROP_DATE ) );
+    return date != null ? date : getWindDataProvider().getDateStep();
   }
 
   /**
@@ -270,7 +242,13 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   @Override
   public IFile getSourceFile( )
   {
-    return m_file;
+    final String sourceName = (String) getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME );
+
+    // why using urls and file? We live in an eclipse workspace! Use IRources
+    final URL sourceURL = makeSourceURL( sourceName, this.getWorkspace().getContext() );
+    final IFile file = ResourceUtilities.findFileFromURL( sourceURL );
+
+    return file;
   }
 
 }

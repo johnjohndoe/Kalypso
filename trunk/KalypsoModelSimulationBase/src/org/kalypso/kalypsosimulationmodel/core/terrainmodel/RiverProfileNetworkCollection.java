@@ -5,17 +5,27 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.util.List;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public class RiverProfileNetworkCollection extends FeatureWrapperCollection<IRiverProfileNetwork> implements IRiverProfileNetworkCollection
+public class RiverProfileNetworkCollection extends Feature_Impl implements IRiverProfileNetworkCollection
 {
-  public RiverProfileNetworkCollection( final Feature feature )
+  private final IFeatureBindingCollection<IRiverProfileNetwork> m_riverProfileNetworks = new FeatureBindingCollection<IRiverProfileNetwork>( this, IRiverProfileNetwork.class, IRiverProfileNetworkCollection.QNAME_PROP_PROFILE_NETWORK );
+
+  public RiverProfileNetworkCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( feature, IRiverProfileNetwork.class, IRiverProfileNetworkCollection.QNAME_PROP_PROFILE_NETWORK );
+    super( parent, parentRelation, ft, id, propValues );
+  }
+  
+  public IFeatureBindingCollection<IRiverProfileNetwork> getRiverProfileNetworks( )
+  {
+    return m_riverProfileNetworks;
   }
 
   @Override

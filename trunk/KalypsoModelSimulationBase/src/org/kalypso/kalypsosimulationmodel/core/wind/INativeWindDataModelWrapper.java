@@ -52,7 +52,8 @@ import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
  */
 public interface INativeWindDataModelWrapper extends IWindDataModel
 {
-
+  public static final QName SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "NativeWindDataModelWrapper" ); //$NON-NLS-1$
+  
   public final static QName QNAME_PROP_DATE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "stepDateTime" ); //$NON-NLS-1$
 
   /**
