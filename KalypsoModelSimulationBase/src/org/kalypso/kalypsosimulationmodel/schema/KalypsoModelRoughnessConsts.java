@@ -24,24 +24,6 @@ public class KalypsoModelRoughnessConsts
 
   public static final QName WBR_PROP_CHARACTV = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "charactV" ); //$NON-NLS-1$
 
-  // //corrections
-  public static final QName WBR_F_ROUGHNESS_CORRECTION = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "RoughnessClsCorrection" ); //$NON-NLS-1$
-
-  public static final QName WBR_PROP_KS_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "ksCor" ); //$NON-NLS-1$
-
-  public static final QName WBR_PROP_AXAY_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "axayCor" ); //$NON-NLS-1$
-
-  public static final QName WBR_PROP_DP_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "dpCor" ); //$NON-NLS-1$
-
-  public static final QName WBR_PROP_EDDY_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "eddyCor" ); //$NON-NLS-1$
-
-  public static final QName WBR_PROP_MARSH_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "marshCor" ); //$NON-NLS-1$
-
-  // roughness collection
-  public static final QName WBR_F_ROUGHNESS_CLS_COLLECTION = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "RoughnessClsCollection" ); //$NON-NLS-1$
-
-  public static final QName WBR_PROP_ROUGHNESS_CLS_MEMBER = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughnessClsMember" ); //$NON-NLS-1$
-
   // colorStyle
 
   public static final QName WBR_PROP_COLOR_STYLE = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "colorStyle" ); //$NON-NLS-1$

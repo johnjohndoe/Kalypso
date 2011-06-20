@@ -42,56 +42,40 @@ package org.kalypso.kalypsosimulationmodel.core;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.IModel;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author kurzbach
  * 
  */
-public class VersionedModel extends AbstractFeatureBinder implements IFeatureWrapper2
+public class VersionedModel extends Feature_Impl implements IModel
 {
   public static final QName SIM_BASE_PROP_VERSION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "version" ); //$NON-NLS-1$
 
   private static final String VERSION_0_0 = "0.0"; //$NON-NLS-1$
 
-  private String m_version;
-
-  public VersionedModel( final Feature featureToBind, final QName qnameToBind )
+  public VersionedModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, qnameToBind );
-    String property = null;
-    try
-    {
-      property = (String) featureToBind.getProperty( SIM_BASE_PROP_VERSION );
-    }
-    catch( final Exception e )
-    {
-      // FIXME: NONONONONOOJ: never just catch an empty exception ( at least without comment!)
-      // Pleeeeease: why no tjsut test if the property exists...!
-    }
-
-    if( property == null )
-    {
-      // create version property
-      setVersion( VERSION_0_0 );
-    }
-    else
-    {
-      m_version = property;
-    }
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   public String getVersion( )
   {
-    return m_version;
+    final String property = (String) getProperty( SIM_BASE_PROP_VERSION );
+    if( property == null )
+    {
+      return VERSION_0_0;
+    }
+    return property;
   }
 
   public void setVersion( final String version )
   {
-    m_version = version;
     setProperty( SIM_BASE_PROP_VERSION, version );
   }
 

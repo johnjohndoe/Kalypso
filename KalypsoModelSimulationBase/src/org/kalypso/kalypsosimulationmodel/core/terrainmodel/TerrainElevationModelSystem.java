@@ -42,16 +42,15 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.Util;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -60,58 +59,24 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author Patrice Congo
  * @author Madanagopal
  */
-public class TerrainElevationModelSystem extends AbstractFeatureBinder implements ITerrainElevationModelSystem
+public class TerrainElevationModelSystem extends Feature_Impl implements ITerrainElevationModelSystem
 {
   public static final QName SIM_BASE_F_TERRAIN_ELE_SYS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "TerrainElevationModelSystem" ); //$NON-NLS-1$
 
   public static final QName SIM_BASE_PROP_TERRAIN_ELE_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "terrainElevationModel" ); //$NON-NLS-1$
 
-  private final IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels;
+  private final IFeatureBindingCollection<ITerrainElevationModel> terrainElevationModels = new FeatureBindingCollection<ITerrainElevationModel>( this, ITerrainElevationModel.class, SIM_BASE_PROP_TERRAIN_ELE_MODEL );
 
-  /**
-   * Creates a {@link TerrainElevationModelSystem} object binding the given feature. the given feature must be
-   * substitutable to simBase:TerrainelevationModel
-   * 
-   * @throws IllegalArgumentException
-   *           if featureToBind is null or not substitutable to simBase:TerrainElevationModel
-   */
-  public TerrainElevationModelSystem( final Feature featureToBind ) throws IllegalArgumentException
+  public TerrainElevationModelSystem( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, SIM_BASE_F_TERRAIN_ELE_SYS );
-    terrainElevationModels = new FeatureWrapperCollection<ITerrainElevationModel>( featureToBind, ITerrainElevationModel.class, SIM_BASE_PROP_TERRAIN_ELE_MODEL );
-
-  }
-
-  public TerrainElevationModelSystem( final ITerrainModel terrainModel ) throws IllegalArgumentException
-  {
-    this( createTEMSysForTerrainModel( terrainModel ) );
-  }
-
-  /**
-   * Creates or return a new feature for the give n terrian model
-   */
-  private static final Feature createTEMSysForTerrainModel( final ITerrainModel terrainModel )
-  {
-    Assert.throwIAEOnNullParam( terrainModel, "terrainModel" ); //$NON-NLS-1$
-    final ITerrainElevationModelSystem temSys = terrainModel.getTerrainElevationModelSystem();
-    if( temSys != null )
-    {
-      return temSys.getFeature();
-    }
-    else
-    {
-      final Feature parentFeature = terrainModel.getFeature();
-      final Feature newFeature = Util.createFeatureAsProperty( parentFeature, TerrainModel.SIM_BASE_PROP_TERRAIN_ELE_SYS, SIM_BASE_F_TERRAIN_ELE_SYS );
-
-      return newFeature;
-    }
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem#getTerrainElevationModels()
    */
   @Override
-  public IFeatureWrapperCollection<ITerrainElevationModel> getTerrainElevationModels( )
+  public IFeatureBindingCollection<ITerrainElevationModel> getTerrainElevationModels( )
   {
     return terrainElevationModels;
   }

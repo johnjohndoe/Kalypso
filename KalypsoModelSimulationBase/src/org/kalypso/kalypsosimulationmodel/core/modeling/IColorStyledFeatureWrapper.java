@@ -41,13 +41,13 @@
 package org.kalypso.kalypsosimulationmodel.core.modeling;
 
 import org.eclipse.swt.graphics.RGB;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dejan Antanaskovic
  * 
  */
-public interface IColorStyledFeatureWrapper extends IFeatureWrapper2
+public interface IColorStyledFeatureWrapper extends Feature
 {
   public void setColorStyle( final RGB rgb );
 

@@ -1,6 +1,9 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Interface for klasses representing the roughness feature of the type wbr:Roughness
@@ -8,8 +11,22 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * @author Patrice Congo
  * 
  */
-public interface IRoughnessClsCorrection extends IFeatureWrapper2
+public interface IRoughnessClsCorrection extends Feature
 {
+  // //corrections
+  public static final QName WBR_F_ROUGHNESS_CORRECTION = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "RoughnessClsCorrection" ); //$NON-NLS-1$
+
+  public static final QName WBR_PROP_KS_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "ksCor" ); //$NON-NLS-1$
+
+  public static final QName WBR_PROP_AXAY_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "axayCor" ); //$NON-NLS-1$
+
+  public static final QName WBR_PROP_DP_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "dpCor" ); //$NON-NLS-1$
+
+  public static final QName WBR_PROP_EDDY_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "eddyCor" ); //$NON-NLS-1$
+
+  public static final QName WBR_PROP_MARSH_COR = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "marshCor" ); //$NON-NLS-1$
+
+  
   public static enum RoughnessCorConfigConsistency
   {
     ILLEGAL_VALUE_KS_COR,

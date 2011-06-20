@@ -1,47 +1,24 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.afgui.model.Util;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Default implementation for {@link IRoughnessCls} which serves as a wrapper arround a wbd:Roughness feature
  *
  * @author Patrice Congo
  */
-public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
+public class RoughnessCls extends Feature_Impl implements IRoughnessCls
 {
-  /**
-   * Create a Roughness object wrapping the given feature.
-   *
-   * @param feature
-   *          - the wbr:Roughness feature to wrapped
-   * @throw IllegalArgumentException if feature is null or is note a wbr:Roughness feature
-   */
-  public RoughnessCls( final Feature featureToBind ) throws IllegalArgumentException
-  {
-    super( featureToBind, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
-  }
 
-  /**
-   * This constructor creates {@link RoughnessCls} based on a wbr:RoughnessCls feature which is created as child of the
-   * given parent feaure and linked to it by the property of the type specified by the argument propQName.
-   *
-   * @param parentFeature
-   *          the parent feature for the new wbr:Roughness class
-   * @param propQName
-   *          the Q-name of the linking property type
-   * @throws IllegalArgumentException
-   *           if workspace is null or the roughness collection is not part of the workspace
-   */
-  public RoughnessCls( final Feature parentFeature, final QName propQName ) throws IllegalArgumentException
+  public RoughnessCls( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( Util.createFeatureAsProperty( parentFeature, propQName, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS ), KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /*
@@ -147,7 +124,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   @Override
   public void setAxAy( final double axay ) throws IllegalArgumentException
   {
-    final Feature feature = getFeature();
+    final Feature feature = this;
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY, axay );
   }
 
@@ -158,7 +135,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   @Override
   public void setDp( final double dp ) throws IllegalArgumentException
   {
-    final Feature feature = getFeature();
+    final Feature feature = this;
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP, dp );
   }
 
@@ -169,28 +146,28 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   @Override
   public void setEddyXX( final double eddy ) throws IllegalArgumentException
   {
-    final Feature feature = getFeature();
+    final Feature feature = this;
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, eddy );
   }
 
   @Override
   public void setEddyYX( final double eddy ) throws IllegalArgumentException
   {
-    final Feature feature = getFeature();
+    final Feature feature = this;
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, eddy );
   }
 
   @Override
   public void setEddyXY( final double eddy ) throws IllegalArgumentException
   {
-    final Feature feature = getFeature();
+    final Feature feature = this;
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, eddy );
   }
 
   @Override
   public void setEddyYY( final double eddy ) throws IllegalArgumentException
   {
-    final Feature feature = getFeature();
+    final Feature feature = this;
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, eddy );
   }
 
@@ -201,7 +178,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   @Override
   public void setKs( final double ks ) throws IllegalArgumentException
   {
-    final Feature feature = getFeature();
+    final Feature feature = this;
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS, ks );
   }
 
@@ -212,7 +189,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   @Override
   public void setMarsh( final double marsh ) throws IllegalArgumentException
   {
-    final Feature feature = getFeature();
+    final Feature feature = this;
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV, marsh );
   }
 
@@ -240,7 +217,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
     if( check != RoughnessConfigConsistency.OK )
       return check;
 
-    final Feature feature = getFeature();
+    final Feature feature = this;
     feature.setProperty( Feature.QN_NAME, name );
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS, ks );
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP, dp );
@@ -290,7 +267,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   {
     final StringBuffer buf = new StringBuffer( 64 );
     buf.append( "RoughnessCls" ); //$NON-NLS-1$
-    final String id = getGmlID();
+    final String id = getId();
     if( id != null )
       buf.append( '{' ).append( id ).append( '}' );
     buf.append( "[name=" ).append( getName() ); //$NON-NLS-1$
@@ -308,7 +285,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   @Override
   public RGB getColorStyle( )
   {
-    return (RGB) getFeature().getProperty( KalypsoModelRoughnessConsts.WBR_PROP_COLOR_STYLE );
+    return (RGB) getProperty( KalypsoModelRoughnessConsts.WBR_PROP_COLOR_STYLE );
   }
 
   /**

@@ -8,7 +8,6 @@ import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
@@ -16,7 +15,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * 
  * @author Dejan Antanaskovic, Patrice Congo
  */
-public interface IRoughnessPolygon extends IFeatureWrapper2
+public interface IRoughnessPolygon extends Feature
 {
   public static final QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon" ); //$NON-NLS-1$
 
