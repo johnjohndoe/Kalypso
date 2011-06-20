@@ -47,9 +47,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
@@ -58,11 +58,11 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITeschkeFlowRelation
 {
-  private final IFeatureWrapperCollection<IPolynomial1D> m_polynomes = new FeatureWrapperCollection<IPolynomial1D>( getFeature(), IPolynomial1D.class, QNAME_PROP_POLYNOMES );
+  private final IFeatureBindingCollection<IPolynomial1D> m_polynomes = new FeatureBindingCollection<IPolynomial1D>( this, IPolynomial1D.class, QNAME_PROP_POLYNOMES );
 
-  public TeschkeFlowRelation( final Feature featureToBind )
+  public TeschkeFlowRelation( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, ITeschkeFlowRelation.QNAME );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -71,7 +71,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   @Override
   public BigDecimal getStation( )
   {
-    return (BigDecimal) getFeature().getProperty( QNAME_PROP_STATION );
+    return (BigDecimal) getProperty( QNAME_PROP_STATION );
   }
 
   /**
@@ -80,7 +80,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   @Override
   public void setStation( final BigDecimal station )
   {
-    getFeature().setProperty( QNAME_PROP_STATION, station );
+    setProperty( QNAME_PROP_STATION, station );
   }
 
   /**
@@ -98,7 +98,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   @Override
   public double getSlope( )
   {
-    final BigDecimal slope = (BigDecimal) getFeature().getProperty( QNAME_PROP_SLOPE );
+    final BigDecimal slope = (BigDecimal) getProperty( QNAME_PROP_SLOPE );
     if( slope == null )
       return Double.NaN;
 
@@ -112,7 +112,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   public void setSlope( final double slope )
   {
     final BigDecimal slopeDec = new BigDecimal( slope ).setScale( 5, BigDecimal.ROUND_HALF_UP );
-    getFeature().setProperty( QNAME_PROP_SLOPE, slopeDec );
+    setProperty( QNAME_PROP_SLOPE, slopeDec );
   }
 
   /**
@@ -121,7 +121,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   @Override
   public IProfileFeature getProfile( )
   {
-    final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.resolveLink( getFeature(), QNAME_PROP_PROFILE, true );
+    final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.resolveLink( this, QNAME_PROP_PROFILE, true );
 
     return profileFeature;
   }
@@ -132,7 +132,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   @Override
   public void setProfileLink( final String profileRef )
   {
-    final Feature feature = getFeature();
+    final Feature feature = this;
 
     final IRelationType profileRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_PROFILE );
     final IFeatureType profileFT = profileRelation.getTargetFeatureType();

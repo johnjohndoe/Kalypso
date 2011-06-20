@@ -60,7 +60,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -150,18 +150,18 @@ public class CalcUnitOps
    * To get the parent units of the given unit inside the specified model
    * 
    * @param calculationUnit
-   *            the calculation unit which parents are to be search
+   *          the calculation unit which parents are to be search
    * @param model1d2d
-   *            the model where to look for the parent units
+   *          the model where to look for the parent units
    * @return a collection containing the parent unit of the given model1d2d
    * @throws IllegalArgumentException
-   *             if any argument is null
+   *           if any argument is null
    */
   public static final Collection<ICalculationUnit1D2D> getParentUnit( final ICalculationUnit calculationUnit, final IFEDiscretisationModel1d2d model1d2d ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
-    final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
+    final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
     final Collection<ICalculationUnit1D2D> parents = new ArrayList<ICalculationUnit1D2D>();
     for( final IFE1D2DComplexElement ce : complexElements )
     {
@@ -181,16 +181,16 @@ public class CalcUnitOps
    * To get the all calculation units of the given discretisation model
    * 
    * @param model1d2d
-   *            the discretisation model
+   *          the discretisation model
    * @return a collection containing the calculation unit of the dicretisation model
    * @throws IllegalArgumentException
-   *             if the argument model1d2d is null
+   *           if the argument model1d2d is null
    */
   public static final List<ICalculationUnit> getModelCalculationUnits( final IFEDiscretisationModel1d2d model1d2d ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
     final List<ICalculationUnit> calUnits = new ArrayList<ICalculationUnit>();
-    final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
+    final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
     for( final IFE1D2DComplexElement ce : complexElements )
     {
       if( ce instanceof ICalculationUnit )
@@ -205,9 +205,9 @@ public class CalcUnitOps
    * Tests whether a given boundary is a boundary line of the specified calculation unit.
    * 
    * @param boundaryLine
-   *            the boundary line to assert
+   *          the boundary line to assert
    * @param calUnit
-   *            the calculation unit which stream boundary is to be tested
+   *          the calculation unit which stream boundary is to be tested
    * @return true if the provided boundary line is a boundary of the given calculation unit otherwise false.
    */
   public static final boolean isBoundaryLineOf( final IFELine continuityLine, final ICalculationUnit calUnit )
@@ -219,7 +219,7 @@ public class CalcUnitOps
    * To get the bounding box of the given calculation unit.
    * 
    * @param calUnit
-   *            the calculation which bounding box is to be get
+   *          the calculation which bounding box is to be get
    * @return an {@link GM_Envelope} representing the bounding box of the calculation unit.
    * 
    */
@@ -229,14 +229,14 @@ public class CalcUnitOps
     final LinkedList<GM_Envelope> contributingBBox = new LinkedList<GM_Envelope>();
 
     // collect all contributing bboxes
-    contributingBBox.add( calUnit.getElements().getWrappedList().getBoundingBox() );
+    contributingBBox.add( calUnit.getElements().getFeatureList().getBoundingBox() );
     if( calUnit instanceof ICalculationUnit1D2D )
     {
       final LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>( ((ICalculationUnit1D2D) calUnit).getChangedSubUnits() );
       while( !subUnits.isEmpty() )
       {
         final ICalculationUnit removed = subUnits.remove( 0 );
-        contributingBBox.add( removed.getElements().getWrappedList().getBoundingBox() );
+        contributingBBox.add( removed.getElements().getFeatureList().getBoundingBox() );
         if( removed instanceof ICalculationUnit1D2D )
         {
           subUnits.addAll( ((ICalculationUnit1D2D) removed).getChangedSubUnits() );
@@ -274,17 +274,17 @@ public class CalcUnitOps
    * Answer whether an element is part of the calculation unit.
    * 
    * @param unit
-   *            the calculation unit
+   *          the calculation unit
    * @param element
    */
   public static final boolean isFiniteElementOf( final ICalculationUnit unit, final IFE1D2DElement element )
   {
     Assert.throwIAEOnNullParam( unit, "unit" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
-    final IFeatureWrapperCollection<IFE1D2DComplexElement> containers = element.getContainers();
+    final IFeatureBindingCollection<IFE1D2DComplexElement> containers = element.getContainers();
     final List list = new ArrayList<String>();
     for( int i = 0; i < containers.size(); i++ )
-      list.add( (containers.get( i )).getGmlID() );
+      list.add( (containers.get( i )).getId() );
     // return containers.contains( unit );
 
     final LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>();
@@ -294,7 +294,7 @@ public class CalcUnitOps
       final ICalculationUnit currentSubUnit = subUnits.remove( 0 );
       if( currentSubUnit instanceof ICalculationUnit1D2D )
         subUnits.addAll( ((ICalculationUnit1D2D) currentSubUnit).getChangedSubUnits() );
-      if( list.contains( currentSubUnit.getGmlID() ) )
+      if( list.contains( currentSubUnit.getId() ) )
         return true;
     }
     return false;
@@ -304,30 +304,30 @@ public class CalcUnitOps
    * Answer whether a boundary condition is assign to the given calculation unit
    * 
    * @param unit
-   *            the possible target calculation unit
+   *          the possible target calculation unit
    * @param bCondition
-   *            the boundary condition to test for assignment
+   *          the boundary condition to test for assignment
    * @return true if the boundary condition is assign to the calculation unit otherwise false.
    * @throws IllegalArgumentException
-   *             if unit or bCondition is null or unit does not have a model 1d 2d as parent feature
+   *           if unit or bCondition is null or unit does not have a model 1d 2d as parent feature
    * 
    */
   public static final boolean isBoundaryConditionOf( final ICalculationUnit unit, final IBoundaryCondition bCondition )
   {
-    final List parents = (List) bCondition.getFeature().getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
-    return parents.contains( unit.getGmlID() );
+    final List parents = (List) bCondition.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
+    return parents.contains( unit.getId() );
   }
 
   /**
    * Returns all boundary condition assign to the specified unit found in the passed list of boundary conditions
    * 
    * @param conditions
-   *            the list of boundary condition
+   *          the list of boundary condition
    * @param unit
-   *            the calculation unit which boundary conditions are being collected
+   *          the calculation unit which boundary conditions are being collected
    * @return a list of boundary condition assigned to the calculation unit
    * @throws IllegalArgumentException
-   *             if condition or unit is null or grabDistance is less than 0
+   *           if condition or unit is null or grabDistance is less than 0
    */
   public static final List<IBoundaryCondition> getBoundaryConditions( final Collection<IFlowRelationship> conditions, final ICalculationUnit unit )
   {
@@ -342,15 +342,15 @@ public class CalcUnitOps
    * Counts the number of boundary conditions assigned to the calculation unit.
    * 
    * @param conditions
-   *            the collection condition to test
+   *          the collection condition to test
    * @param unit
-   *            the target calculation unit
+   *          the target calculation unit
    * @param grabDistance
-   *            the grab distance for geometry searching
+   *          the grab distance for geometry searching
    * @return a integer representing the number of boundary contions in the collection which has been assigned to the
    *         calculation unit
    * @throws IllegalArgumentException
-   *             if condition or unit is null or grabDistance is less than 0
+   *           if condition or unit is null or grabDistance is less than 0
    * 
    */
   public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit unit, final IBoundaryCondition.BOUNDARY_TYPE typeToCount )
@@ -364,8 +364,9 @@ public class CalcUnitOps
 
     return count;
   }
-  
-  public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit unit  ){
+
+  public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit unit )
+  {
     return countAssignedBoundaryConditions( conditions, unit, IBoundaryCondition.BOUNDARY_TYPE.HydroBoundary );
   }
 
@@ -374,7 +375,7 @@ public class CalcUnitOps
     if( calcUnit instanceof ICalculationUnit1D2D )
     {
       final ICalculationUnit1D2D calcUnit1d2d = (ICalculationUnit1D2D) calcUnit;
-      IFeatureWrapperCollection<ICalculationUnit> subUnits = calcUnit1d2d.getChangedSubUnits();
+      IFeatureBindingCollection<ICalculationUnit> subUnits = calcUnit1d2d.getChangedSubUnits();
       for( final ICalculationUnit subUnit : subUnits )
       {
         ICalculationUnit unit = findSubUnit( subUnit, element );

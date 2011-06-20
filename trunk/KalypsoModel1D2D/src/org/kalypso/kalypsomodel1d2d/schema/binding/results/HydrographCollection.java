@@ -48,7 +48,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -58,28 +57,31 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Gernot Belger
  * @author Thomas Jung
  */
-public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> implements IHydrographCollection
+public class HydrographCollection extends Feature_Impl implements IHydrographCollection
 {
+  private final IFeatureBindingCollection<IHydrograph> m_hydrographs = new FeatureBindingCollection<IHydrograph>( this, IHydrograph.class, QNAME_PROP_HYDROGRAPH_MEMBER );
 
-  public HydrographCollection( final Feature featureCol )
+  public HydrographCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    this( featureCol, IHydrograph.class, IHydrographCollection.QNAME_PROP_HYDROGRAPH_MEMBER );
+    super( parent, parentRelation, ft, id, propValues );
   }
-
-  public HydrographCollection( final Feature featureCol, final Class<IHydrograph> fwClass, final QName featureMemberProp )
+  
+  public IFeatureBindingCollection<IHydrograph> getHydrographs( )
   {
-    super( featureCol, fwClass, featureMemberProp );
+    return m_hydrographs;
   }
 
   @Override
@@ -113,7 +115,7 @@ public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> 
   @SuppressWarnings("unchecked")
   private List<Feature> findFeatures( GM_Position position, double searchRectWidth )
   {
-    final FeatureList nodeList = getWrappedList();
+    final FeatureList nodeList = m_hydrographs.getFeatureList();
     final double posX = position.getX();
     final double posY = position.getY();
     final double searchWidthHalf = searchRectWidth / 2;
@@ -129,7 +131,7 @@ public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> 
   @Override
   public Map<IPath, Date> getResults( )
   {
-    final Feature feature = getFeature();
+    final Feature feature = this;
     FeatureList resultFeatures = (FeatureList) feature.getProperty( QNAME_PROP_RESULT_MEMBER );
 
     if( resultFeatures == null )
@@ -154,9 +156,10 @@ public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> 
   @Override
   public void setResults( final Map<IPath, Date> resultMap ) throws Exception
   {
-    final GMLWorkspace workspace = getFeature().getWorkspace();
+    final Feature parentFeature = this;
+    final GMLWorkspace workspace = parentFeature.getWorkspace();
 
-    final IRelationType relation = (IRelationType) getFeature().getFeatureType().getProperty( QNAME_PROP_RESULT_MEMBER );
+    final IRelationType relation = (IRelationType) parentFeature.getFeatureType().getProperty( QNAME_PROP_RESULT_MEMBER );
     final IFeatureType featureType = relation.getTargetFeatureType();
 
     final Set<Entry<IPath, Date>> entrySet = resultMap.entrySet();
@@ -170,13 +173,13 @@ public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> 
       final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
 
       /* Create the feature. */
-      final Feature feature = workspace.createFeature( getFeature(), relation, featureType );
+      final Feature feature = workspace.createFeature( parentFeature, relation, featureType );
 
       /* set the values */
       feature.setProperty( QNAME_PROP_RESULT_MEMBER_PATH, pathString );
       feature.setProperty( QNAME_PROP_RESULT_MEMBER_DATE, gregorianCalendar );
 
-      workspace.addFeatureAsComposition( getFeature(), relation, 0, feature );
+      workspace.addFeatureAsComposition( parentFeature, relation, 0, feature );
     }
   }
 }

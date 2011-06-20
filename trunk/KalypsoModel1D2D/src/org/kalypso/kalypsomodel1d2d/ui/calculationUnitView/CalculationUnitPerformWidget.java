@@ -74,7 +74,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -147,7 +147,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       m_dataModel.setData( ICommonKeys.KEY_DATA_PROVIDER, modelProvider );
@@ -177,7 +177,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       // command manager since it is used in the dirty pool object framework
       // the commandable workspace of the target theme is taken
       // TODO: that cannot work, as the models workspace is not a commandable workspace
-      m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, model.getFeature().getWorkspace() );
+      m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, model.getWorkspace() );
 
       m_dataModel.setData( ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, this );
       m_dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( model ) );
@@ -383,7 +383,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
     }
 
   }
- 
+
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
    */

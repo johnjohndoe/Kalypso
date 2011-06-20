@@ -63,8 +63,8 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -102,17 +102,17 @@ public class RoughnessAssignService extends Job
     try
     {
       final List<IFE1D2DElement> elementsInWorkarea = (m_workArea != null) ? m_model1d2d.getElements().query( m_workArea ) : m_model1d2d.getElements();
-      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.kalypsomodel1d2d.services.RoughnessAssignService.0"), elementsInWorkarea.size() ); //$NON-NLS-1$
-// ProgressUtilities.worked( progress, 0 );
+      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.kalypsomodel1d2d.services.RoughnessAssignService.0" ), elementsInWorkarea.size() ); //$NON-NLS-1$
+      // ProgressUtilities.worked( progress, 0 );
       m_changesDiscretisationModel.clear();
       for( final IFE1D2DElement element : elementsInWorkarea )
       {
         assignRoughness( monitor, element );
-//        if( monitor.isCanceled() )
-//          return Status.CANCEL_STATUS;
+        // if( monitor.isCanceled() )
+        // return Status.CANCEL_STATUS;
         // TODO: do not cancel, does not work well with work area...
         // TODO: change this stuff, so that we have a queue of elements to be worked on
-// ProgressUtilities.worked( progress, 1 );
+        // ProgressUtilities.worked( progress, 1 );
         progress.worked( 1 );
       }
     }
@@ -123,7 +123,7 @@ public class RoughnessAssignService extends Job
     }
     finally
     {
-      monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.services.RoughnessAssignService.1") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.services.RoughnessAssignService.1" ) ); //$NON-NLS-1$
       fireEvents();
       monitor.done();
     }
@@ -155,8 +155,8 @@ public class RoughnessAssignService extends Job
     Double correctionParameterDP = null;
     for( int i = 0; i < m_roughnessPolygonCollections.size(); i++ )
     {
-// if( monitor.isCanceled() )
-// throw new CoreException( Status.CANCEL_STATUS );
+      // if( monitor.isCanceled() )
+      // throw new CoreException( Status.CANCEL_STATUS );
 
       final IRoughnessPolygonCollection roughnessPolygonCollection = m_roughnessPolygonCollections.get( i );
       final List<IRoughnessPolygon> matchedRoughness = roughnessPolygonCollection.query( position );
@@ -206,7 +206,7 @@ public class RoughnessAssignService extends Job
             final IRoughnessCls roughnessCls = roughnessPolygon.getRoughnessCls();
             if( roughnessCls != null )
             {
-              roughnessClsID = roughnessCls.getGmlID();
+              roughnessClsID = roughnessCls.getId();
               roughnessStyle = roughnessPolygon.getRoughnessStyle();
               missingRoughnessClsID = false;
             }
@@ -237,11 +237,11 @@ public class RoughnessAssignService extends Job
   {
     if( m_changesDiscretisationModel.size() > 0 )
     {
-      final GMLWorkspace workspace = m_model1d2d.getFeature().getWorkspace();
+      final GMLWorkspace workspace = m_model1d2d.getWorkspace();
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext context = handlerService.getCurrentState();
-      final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final RoughnessAssignCommand command = new RoughnessAssignCommand( workspace, m_changesDiscretisationModel.toArray( new FeatureChange[m_changesDiscretisationModel.size()] ) );
       try
       {

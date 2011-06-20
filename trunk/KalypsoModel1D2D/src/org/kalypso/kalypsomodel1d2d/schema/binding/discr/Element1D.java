@@ -42,12 +42,12 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -60,14 +60,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends FE1D2DElement<CT, ET> implements IElement1D<CT, ET>
 {
-  public Element1D( final Feature featureToBind )
+  public Element1D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    this( featureToBind, IElement1D.QNAME, (Class<CT>) IFE1D2DComplexElement.class/* IRiverChannel1D.class */);
-  }
-
-  public Element1D( final Feature featureToBind, final QName featureQName, final Class<CT> complexElementClass )
-  {
-    super( featureToBind, featureQName, complexElementClass );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -76,13 +71,12 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public ET getEdge( )
   {
-    final Feature feature = getFeature();
-    final Object property = feature.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE/* QNAME_PROPS_DIRECTED_EDGE */);
-    final Feature edgeFeature = FeatureHelper.getFeature( feature.getWorkspace(), property );
+    final Object property = getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
+    final Feature edgeFeature = FeatureHelper.getFeature( this.getWorkspace(), property );
     if( edgeFeature == null )
       return null;
 
-    return (ET) edgeFeature.getAdapter( IFE1D2DEdge.class );
+    return (ET) edgeFeature;
   }
 
   /**
@@ -92,7 +86,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   public void setEdge( final IFE1D2DEdge edge )
   {
     final IFE1D2DEdge oldEdge = getEdge();
-    final String gmlID = getGmlID();
+    final String gmlID = getId();
     if( oldEdge != null )
     {
       for( ; oldEdge.getContainers().remove( gmlID ); )
@@ -101,18 +95,17 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
       }
     }
 
-    final Feature feature = getFeature();
     if( edge == null )
     {
-      feature.setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, null );
+      setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, null );
     }
     else
     {
-      final String linkToEdge = edge.getGmlID();
-      feature.setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, linkToEdge );
+      final String linkToEdge = edge.getId();
+      setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, linkToEdge );
 
-      final IFeatureWrapperCollection containers = edge.getContainers();
-      final FeatureList wrappedList = containers.getWrappedList();
+      final IFeatureBindingCollection containers = edge.getContainers();
+      final FeatureList wrappedList = containers.getFeatureList();
       // TODO: only add if not already present.
       // May the containers contain me twice?
 
@@ -123,7 +116,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
       }
     }
     // Setting the edge causes the envelope to become invalid
-    feature.invalidEnvelope();
+    this.invalidEnvelope();
   }
 
   /**
@@ -182,7 +175,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public String getRoughnessClsID( )
   {
-    final Object property = getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID );
+    final Object property = getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID );
     if( property == null )
       return ""; //$NON-NLS-1$
     return property.toString();
@@ -194,7 +187,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public Double getRoughnessCorrectionAxAy( )
   {
-    return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY );
+    return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY );
   }
 
   /**
@@ -203,7 +196,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public Double getRoughnessCorrectionDP( )
   {
-    return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP );
+    return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP );
   }
 
   /**
@@ -212,7 +205,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public Double getRoughnessCorrectionKS( )
   {
-    return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS );
+    return (Double) getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS );
   }
 
   /**
@@ -221,7 +214,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public String getRoughnessStyle( )
   {
-    return getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE ).toString();
+    return getProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE ).toString();
   }
 
   /**
@@ -230,7 +223,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public void setRoughnessClsID( final String value )
   {
-    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID, value );
+    setProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID, value );
   }
 
   /**
@@ -239,7 +232,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public void setRoughnessCorrectionAxAy( final Double value )
   {
-    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY, value );
+    setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY, value );
   }
 
   /**
@@ -248,7 +241,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public void setRoughnessCorrectionDP( final Double value )
   {
-    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP, value );
+    setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP, value );
   }
 
   /**
@@ -257,7 +250,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public void setRoughnessCorrectionKS( final Double value )
   {
-    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS, value );
+    setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS, value );
   }
 
   /**
@@ -266,7 +259,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   @Override
   public void setRoughnessStyle( final String value )
   {
-    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE, value );
+    setProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE, value );
   }
 
 }

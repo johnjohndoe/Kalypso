@@ -52,7 +52,7 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
       final Double roughnessCorrectionAXAY = polyElement.getRoughnessCorrectionAxAy();
       final Double roughnessCorrectionDP = polyElement.getRoughnessCorrectionDP();
 
-      final Feature roughnessFeature = roughnessModel.getFeature().getWorkspace().getFeature( roughnessClsID );
+      final Feature roughnessFeature = roughnessModel.getWorkspace().getFeature( roughnessClsID );
       if( roughnessFeature == null )
         formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.4"), roughnessClsID ); //$NON-NLS-1$
 

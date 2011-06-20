@@ -93,7 +93,7 @@ public class AssignNodeElevationFaceComponent
 {
   /**
    * @author Thomas Jung
-   *
+   * 
    */
   private final class ICellModifierImplementation implements ICellModifier
   {
@@ -231,7 +231,7 @@ public class AssignNodeElevationFaceComponent
         final ChangeIFeatureWrapper2NameCmd cmd = new ChangeIFeatureWrapper2NameCmd( node, (String) value )
         {
           /**
-           * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd#process()
+           * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeFeatureNameCmd#process()
            */
           @Override
           public void process( ) throws Exception
@@ -301,7 +301,7 @@ public class AssignNodeElevationFaceComponent
         {
           String name = ((INativeTerrainElevationModelWrapper) newValue).getName();
           if( name == null )
-            name = ((INativeTerrainElevationModelWrapper) newValue).getGmlID();
+            name = ((INativeTerrainElevationModelWrapper) newValue).getId();
           m_inputText.setText( name );
         }
       }

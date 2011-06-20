@@ -72,6 +72,16 @@ public interface ITransitionElement extends IAbstractJunction
     };
 
     abstract String getValue( );
+
+    public static TRANSITION_TYPE fromValue( String value )
+    {
+      if( TYPE2D1D.getValue().equals( value ) )
+        return TYPE2D1D;
+      else if( TYPE1D2D.getValue().equals( value ) )
+        return TYPE1D2D;
+      else
+        return null;
+    }
   }
 
   public void setTransitionType( final TRANSITION_TYPE transitionType );

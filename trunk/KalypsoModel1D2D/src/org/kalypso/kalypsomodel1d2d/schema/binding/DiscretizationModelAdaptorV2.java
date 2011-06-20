@@ -21,7 +21,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -88,7 +88,7 @@ public class DiscretizationModelAdaptorV2 implements IModelAdaptor
       final GM_Surface<GM_Polygon> surface = GeometryFactory.createGM_PolyhedralSurface( new GM_Polygon[0], KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
       final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) model.getAdapter( IFEDiscretisationModel1d2d.class );
-      final IFeatureWrapperCollection<IFE1D2DElement> elements2 = discModel.getElements();
+      final IFeatureBindingCollection<IFE1D2DElement> elements2 = discModel.getElements();
       for( IFE1D2DElement element : elements2 )
       {
         if( element instanceof PolyElement )

@@ -45,6 +45,8 @@ import java.util.Date;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -54,10 +56,10 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class StepResultMeta extends ResultMeta implements IStepResultMeta
 {
-
-  public StepResultMeta( final Feature featureToBind )
+ 
+  public StepResultMeta( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, IStepResultMeta.QNAME );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -67,7 +69,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   public Date getStepTime( )
   {
     // may be null for 'steady' or 'max' steps.
-    return DateUtilities.toDate( (XMLGregorianCalendar) getFeature().getProperty( QNAME_PROP_STEP_TIME ) );
+    return DateUtilities.toDate( (XMLGregorianCalendar) getProperty( QNAME_PROP_STEP_TIME ) );
   }
 
   /**
@@ -78,7 +80,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   {
     try
     {
-      final String value = (String) getFeature().getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE );
+      final String value = (String) getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE );
       return value == null || value.isEmpty() ? STEPTYPE.error : STEPTYPE.valueOf( value );
     }
     catch( IllegalArgumentException e )
@@ -95,7 +97,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   @Override
   public boolean isRestart( )
   {
-    return (Boolean) getFeature().getProperty( QNAME_PROP_STEP_IS_RESTART );
+    return (Boolean) getProperty( QNAME_PROP_STEP_IS_RESTART );
   }
 
   /**
@@ -104,7 +106,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   @Override
   public void setRestart( final boolean setRestart )
   {
-    getFeature().setProperty( QNAME_PROP_STEP_IS_RESTART, setRestart );
+    setProperty( QNAME_PROP_STEP_IS_RESTART, setRestart );
   }
 
   /**
@@ -114,7 +116,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   public void setStepTime( final Date stepTime )
   {
     final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( stepTime );
-    getFeature().setProperty( QNAME_PROP_STEP_TIME, gregorianCalendar );
+    setProperty( QNAME_PROP_STEP_TIME, gregorianCalendar );
   }
 
   /**
@@ -123,7 +125,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   @Override
   public void setStepType( final STEPTYPE stepType )
   {
-    getFeature().setProperty( QNAME_PROP_STEP_TYPE, stepType.name() );
+    setProperty( QNAME_PROP_STEP_TYPE, stepType.name() );
   }
 
 }

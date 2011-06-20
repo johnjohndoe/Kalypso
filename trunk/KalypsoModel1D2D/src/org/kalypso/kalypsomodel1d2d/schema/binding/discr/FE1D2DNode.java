@@ -5,59 +5,35 @@ import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * The default implementation of {@link IFE1D2DNode} based on {@link AbstractFeatureBinder} to bind wb1d2d:Node elements
+ * The default implementation of {@link IFE1D2DNode} based on {@link Feature_Impl} to bind wb1d2d:Node elements
  *
  * @author Gernot Belger, Patrice Congo
  */
-public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
+public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
 {
   /** Edges that contains this node */
-  private final FeatureWrapperCollection m_containers;
+  private final IFeatureBindingCollection<IFENetItem> m_containers = new FeatureBindingCollection<IFENetItem>( this, IFENetItem.class, WB1D2D_PROP_NODE_CONTAINERS );
 
-  /**
-   * Creates a new node object that binds the given feature.
-   *
-   * @param featureToBind
-   *            the feature to bind
-   * @see FE1D2DNode#FE1D2DNode(Feature, QName)
-   * @throws IllegalArgumentException
-   *             if the passed feature does not substitutes to wb1d2d:Node
-   */
-  public FE1D2DNode( final Feature featureToBind )
+  public FE1D2DNode( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-
-    final Object prop = featureToBind.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
-
-    if( prop == null )
-    {
-      // create the property that is still missing
-      m_containers = new FeatureWrapperCollection( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS, IFE1D2DEdge.class );
-    }
-    else
-    {
-      // just wrapped the existing one
-      m_containers = new FeatureWrapperCollection( featureToBind, IFE1D2DEdge.class, IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
-    }
-    m_containers.addSecondaryWrapper( IFELine.class );
-    // TODO: does this collection really may contain 1D-Elements??
-    m_containers.addSecondaryWrapper( IElement1D.class );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   @Override
   public GM_Point getPoint( )
   {
-    return (GM_Point) getFeature().getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
+    return (GM_Point) getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
   }
 
   @Override
@@ -66,24 +42,19 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
     if( point.getCoordinateSystem() == null )
       throw new IllegalStateException();
     
-    getFeature().setProperty( IFE1D2DNode.WB1D2D_PROP_POINT, point );
+    setProperty( IFE1D2DNode.WB1D2D_PROP_POINT, point );
   }
 
-  public static FE1D2DNode createNode( final IFEDiscretisationModel1d2d discModel )
+  public static IFE1D2DNode createNode( final IFEDiscretisationModel1d2d discModel )
   {
-    final Feature parentFeature = discModel.getFeature();
-    final IFeatureType parentFT = parentFeature.getFeatureType();
-    final IRelationType parentNodeProperty = (IRelationType) parentFT.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
-    final IFeatureType nodeType = parentFT.getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    final Feature nodeFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentNodeProperty, nodeType );
-    return new FE1D2DNode( nodeFeature );
+    return discModel.getNodes().addNew( IFE1D2DNode.QNAME );
   }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFENode#getContainers()
    */
   @Override
-  public IFeatureWrapperCollection getContainers( )
+  public IFeatureBindingCollection<IFENetItem> getContainers( )
   {
     return m_containers;
   }
@@ -107,7 +78,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
       else if( element instanceof IFE1D2DEdge )
       {
         final IFE1D2DEdge edge = (IFE1D2DEdge) element;
-        final IFeatureWrapperCollection edgeContainers = edge.getContainers();
+        final IFeatureBindingCollection edgeContainers = edge.getContainers();
         for( final Object edgeContainer : edgeContainers )
         {
           if( edgeContainer instanceof IFE1D2DElement )
@@ -126,14 +97,14 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   public List<IFE1D2DNode> getNeighbours( )
   {
     final List<IFE1D2DNode> list = new ArrayList<IFE1D2DNode>();
-    final IFeatureWrapperCollection nodeContainers = getContainers();
+    final IFeatureBindingCollection<IFENetItem> nodeContainers = getContainers();
     for( final Object container : nodeContainers )
     {
       if( container instanceof IFE1D2DEdge )
       {
-        final IFeatureWrapperCollection<IFE1D2DNode> nodes = ((IFE1D2DEdge) container).getNodes();
+        final IFeatureBindingCollection<IFE1D2DNode> nodes = ((IFE1D2DEdge) container).getNodes();
         for( final IFE1D2DNode node : nodes )
-          if( !getGmlID().equals( node.getGmlID() ) )
+          if( !getId().equals( node.getId() ) )
             list.add( node );
       }
     }
@@ -147,7 +118,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   public void addContainer( String linkRef )
   {
     linkRef = Assert.throwIAEOnNullOrEmpty( linkRef );
-    final FeatureList wrappedList = m_containers.getWrappedList();
+    final FeatureList wrappedList = m_containers.getFeatureList();
     if( !wrappedList.contains( linkRef ) )
       wrappedList.add( linkRef );
   }
@@ -160,17 +131,27 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   {
     final StringBuffer buf = new StringBuffer( 128 );
     buf.append( "FE1D2DNode" ); //$NON-NLS-1$
-    buf.append( getGmlID() );
+    buf.append( getId() );
     buf.append( '[' );
     buf.append( getPoint() );
     // edges
-    final IFeatureWrapperCollection containers = getContainers();
+    final IFeatureBindingCollection<IFENetItem> containers = getContainers();
     buf.append( "{Edges=" ); //$NON-NLS-1$
     for( int i = 0; i < containers.size(); i++ )
       if( containers.get( i ) instanceof IFE1D2DEdge )
-        buf.append( ((IFE1D2DEdge) containers.get( i )).getGmlID() );
+        buf.append( ((IFE1D2DEdge) containers.get( i )).getId() );
     buf.append( '}' );
     buf.append( ']' );
     return buf.toString();
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem#recalculateElementGeometry()
+   */
+  @Override
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

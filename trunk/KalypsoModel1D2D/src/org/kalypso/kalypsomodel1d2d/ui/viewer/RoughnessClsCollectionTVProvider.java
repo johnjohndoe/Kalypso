@@ -42,11 +42,11 @@ package org.kalypso.kalypsomodel1d2d.ui.viewer;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Stateless {@link IStructuredContentProvider} for 
- * {@link IFeatureWrapperCollection} 
+ * {@link IFeatureBindingCollection} 
  *  
  * @author Patrice Congo
  * @author Madanagopal
@@ -61,9 +61,9 @@ public class RoughnessClsCollectionTVProvider implements IStructuredContentProvi
   @Override
   public Object[] getElements( Object inputElement )
   {
-    if(inputElement instanceof IFeatureWrapperCollection)
+    if(inputElement instanceof IFeatureBindingCollection)
     {
-      return ((IFeatureWrapperCollection)inputElement).toArray();
+      return ((IFeatureBindingCollection)inputElement).toArray();
     }
     else
     {

@@ -56,7 +56,7 @@ import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -127,7 +127,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#getCreatedFeatures()
    */
-  public List<IFeatureWrapper2> getCreatedFeatures( )
+  public List<Feature> getCreatedFeatures( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -276,7 +276,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
 
       default:
 
-        System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.DifferenceResultModel1d2dHandler.8") ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DifferenceResultModel1d2dHandler.8" ) ); //$NON-NLS-1$
         break;
     }
 
@@ -347,7 +347,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   {
     m_formatter.format( "%s%n", lineString ); //$NON-NLS-1$
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#start()
    */
@@ -359,53 +359,58 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTimeDependentAdditionalResult(java.lang.String, int, double, double, double, org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTimeDependentAdditionalResult(java.lang.String,
+   *      int, double, double, double, org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES)
    */
   @Override
   public void handleTimeDependentAdditionalResult( String lineString, int id, double vx, double vy, double depth, RESULTLINES resultlines )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomialRangesInformation(java.lang.String, java.lang.String, int, int, java.util.List)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomialRangesInformation(java.lang.String,
+   *      java.lang.String, int, int, java.util.List)
    */
   @Override
   public void handle1dPolynomialRangesInformation( String line, String lStrPolyKind, int lIntNodeId, int lIntAmountRanges, List<Double> lListPolyAreaMaxRanges )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomeMinMax(java.lang.String, int, double, double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomeMinMax(java.lang.String, int,
+   *      double, double)
    */
   @Override
   public void handle1dPolynomeMinMax( String line, int id, double min, double max )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dSplittedPolynomialsInformation(java.lang.String, java.lang.String, int, int, java.util.List, java.lang.Double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dSplittedPolynomialsInformation(java.lang.String,
+   *      java.lang.String, int, int, java.util.List, java.lang.Double)
    */
   @Override
   public void handle1dSplittedPolynomialsInformation( String line, String lStrPolyKind, int lIntNodeId, int lIntAmountRanges, List<Double> lListPolyAreaMaxRanges, Double lIntSlope )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double, double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double,
+   *      double, double)
    */
   @Override
   public void handleNode( String line, int id, double easting, double northing, double elevation, double stationName )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

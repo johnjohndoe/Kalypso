@@ -46,14 +46,14 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.conv.results.ArcResult;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author jung
  * 
  */
-public interface INodeResult extends IFeatureWrapper2
+public interface INodeResult extends Feature
 {
   public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" ); //$NON-NLS-1$
 

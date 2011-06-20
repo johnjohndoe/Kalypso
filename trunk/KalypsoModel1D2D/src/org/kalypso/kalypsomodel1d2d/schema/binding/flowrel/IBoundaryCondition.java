@@ -49,17 +49,19 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
 public interface IBoundaryCondition extends IFlowRelationship
 {
-  public static enum BOUNDARY_TYPE{
+  public static enum BOUNDARY_TYPE
+  {
     HydroBoundary,
     WavesBoundary
   }
+
   public static final String PARENT_TYPE_ELEMENT1D2D = "ELEMENT1D2D"; //$NON-NLS-1$
 
   public static final String PARENT_TYPE_NODE1D2D = "NODE1D2D"; //$NON-NLS-1$
@@ -92,19 +94,19 @@ public interface IBoundaryCondition extends IFlowRelationship
 
   public IObservation<TupleResult> getObservation( );
 
-//  public double getStationaryCondition( );
+  // public double getStationaryCondition( );
   public String getStationaryCondition( );
 
   public double getInflowVelocity( );
-  
-  public void setInflowVelocity(final double value);
 
-//  public void setStationaryCondition( double statCond );
+  public void setInflowVelocity( final double value );
+
+  // public void setStationaryCondition( double statCond );
   public void setStationaryCondition( final String statCond );
 
   public BigInteger getDirection( );
 
-  public void setDirection( final BigInteger value);
+  public void setDirection( final BigInteger value );
 
   public Boolean isAbsolute( );
 
@@ -114,7 +116,7 @@ public interface IBoundaryCondition extends IFlowRelationship
 
   public void setHasDirection( final Boolean value );
 
-  public void setParentElement( final IFeatureWrapper2 parentElement );
+  public void setParentElement( final Feature parentElement );
 
   public String getParentElementID( );
 
@@ -123,6 +125,6 @@ public interface IBoundaryCondition extends IFlowRelationship
   public List<String> getParentCalculationUnitIDs( );
 
   public boolean isMemberOf( final String calculationUnitId );
-  
-  public BOUNDARY_TYPE getBoundaryType();
+
+  public BOUNDARY_TYPE getBoundaryType( );
 }

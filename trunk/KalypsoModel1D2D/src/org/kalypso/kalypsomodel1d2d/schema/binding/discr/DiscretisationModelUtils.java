@@ -46,7 +46,6 @@ import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -81,7 +80,7 @@ public class DiscretisationModelUtils
 
   /**
    */
-  public static IFeatureWrapper2 findModelElementForBC( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  public static Feature findModelElementForBC( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
 
     // We want to select nodes, but if the node is the first to be selected, that line will never be selected
@@ -127,9 +126,9 @@ public class DiscretisationModelUtils
    * 
    * @return <code>null</code>, if the parent feature of the given item is not a discretisation model.
    */
-  public static IFEDiscretisationModel1d2d modelForItem( final IFeatureWrapper2 modelItem )
+  public static IFEDiscretisationModel1d2d modelForItem( final Feature modelItem )
   {
-    final Feature parent = modelItem.getFeature().getParent();
+    final Feature parent = modelItem.getParent();
     return (IFEDiscretisationModel1d2d) parent.getAdapter( IFEDiscretisationModel1d2d.class );
   }
 

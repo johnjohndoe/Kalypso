@@ -61,16 +61,19 @@ import test.org.kalypso.kalypsosimulationmodel.TestWorkspaces;
  */
 public class RoughnessClsCollectionView extends ViewPart
 {
-  public static final String ID=
-        "org.kalypso.kalypsomodel1d2d.viewer.RoughnessClsCollectionView"; //$NON-NLS-1$
+  public static final String ID = "org.kalypso.kalypsomodel1d2d.viewer.RoughnessClsCollectionView"; //$NON-NLS-1$
+
   private Composite root;
+
   private TableViewer tableViewer;
+
   private RoughnessClsCollectionTVProvider contenClsCollectionTVProvider;
+
   private RoughnessClsLabelProvider labelProvider;
-  
+
   public RoughnessClsCollectionView( )
   {
-    
+
   }
 
   /**
@@ -82,91 +85,79 @@ public class RoughnessClsCollectionView extends ViewPart
     createBaseContainersBottomToolbars( parent );
   }
 
-  private void createBaseContainersBottomToolbars(Composite parent)
-    {
-        
-        root = new Composite(parent,SWT.FILL);
-        root.setLayout(new FillLayout());
-        
-        
-        
-        Table table = 
-            new Table(root,SWT.FILL);
-        makeTableColumns( table );
-        tableViewer= new TableViewer(table);
-       
-        //providers
-        contenClsCollectionTVProvider= 
-              new RoughnessClsCollectionTVProvider();
-        tableViewer.setContentProvider( 
-              contenClsCollectionTVProvider);
-        
-        labelProvider= 
-              new RoughnessClsLabelProvider();
-        tableViewer.setLabelProvider( labelProvider );
-        tableViewer.setInput( 
-                getTestCollection());
-        
-        
-    }
-  
-  private static final void makeTableColumns(Table table)
+  private void createBaseContainersBottomToolbars( Composite parent )
   {
-    table.setHeaderVisible(true);
-    table.setLinesVisible(true);
-    
-    // "Severity","ThreadID","Date","Time","Application","Message"
-    TableColumn column = new TableColumn(table, SWT.LEFT);
-    column.setText("Name"); //$NON-NLS-1$
-    column.setWidth(400);
 
-    column = new TableColumn(table, SWT.LEFT);
-    column.setText ("ks"); //$NON-NLS-1$
-    column.setWidth(100);
+    root = new Composite( parent, SWT.FILL );
+    root.setLayout( new FillLayout() );
 
-    column = new TableColumn(table, SWT.LEFT);
-    column.setText("axay"); //$NON-NLS-1$
-    column.setWidth(100);
-    
-    column = new TableColumn(table, SWT.LEFT);
-    column.setText("dp"); //$NON-NLS-1$
-    column.setWidth(100);
+    Table table = new Table( root, SWT.FILL );
+    makeTableColumns( table );
+    tableViewer = new TableViewer( table );
+
+    // providers
+    contenClsCollectionTVProvider = new RoughnessClsCollectionTVProvider();
+    tableViewer.setContentProvider( contenClsCollectionTVProvider );
+
+    labelProvider = new RoughnessClsLabelProvider();
+    tableViewer.setLabelProvider( labelProvider );
+    tableViewer.setInput( getTestCollection() );
+
   }
-  
+
+  private static final void makeTableColumns( Table table )
+  {
+    table.setHeaderVisible( true );
+    table.setLinesVisible( true );
+
+    // "Severity","ThreadID","Date","Time","Application","Message"
+    TableColumn column = new TableColumn( table, SWT.LEFT );
+    column.setText( "Name" ); //$NON-NLS-1$
+    column.setWidth( 400 );
+
+    column = new TableColumn( table, SWT.LEFT );
+    column.setText( "ks" ); //$NON-NLS-1$
+    column.setWidth( 100 );
+
+    column = new TableColumn( table, SWT.LEFT );
+    column.setText( "axay" ); //$NON-NLS-1$
+    column.setWidth( 100 );
+
+    column = new TableColumn( table, SWT.LEFT );
+    column.setText( "dp" ); //$NON-NLS-1$
+    column.setWidth( 100 );
+  }
+
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
    */
   @Override
   public void setFocus( )
   {
-    
+
   }
-  
-  /*TODO
-   * remove this method
+
+  /*
+   * TODO remove this method
    */
   /**
    * Only for test remove after
    */
-  private static final IRoughnessClsCollection getTestCollection()
+  private static final IRoughnessClsCollection getTestCollection( )
   {
-       
-        GMLWorkspace workspace=null;
-        
-        try
-        {
-            workspace=
-                GmlSerializer.createGMLWorkspace( 
-                                TestWorkspaces.URL_ROUGHNESS_CLS_COLLECTION_VIEW_TEST, 
-                                null );
-            IRoughnessClsCollection col=
-              new RoughnessClsCollection(workspace.getRootFeature());
-            return col;
-        }
-        catch(Throwable th)
-        {
-            return null;
-        }
+
+    GMLWorkspace workspace = null;
+
+    try
+    {
+      workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_ROUGHNESS_CLS_COLLECTION_VIEW_TEST, null );
+      IRoughnessClsCollection col = (IRoughnessClsCollection) workspace.getRootFeature();
+      return col;
+    }
+    catch( Throwable th )
+    {
+      return null;
+    }
   }
-  
+
 }

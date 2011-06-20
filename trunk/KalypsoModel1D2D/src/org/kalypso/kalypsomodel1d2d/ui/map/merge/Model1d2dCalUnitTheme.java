@@ -60,7 +60,7 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -68,9 +68,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Theme that shows a calculation unit
- *
+ * 
  * @author Patrice Congo
- *
+ * 
  */
 public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 {
@@ -106,7 +106,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   public void dispose( )
   {
     if( m_calcUnit != null )
-      m_calcUnit.getFeature().getWorkspace().removeModellListener( m_modellListener );
+      m_calcUnit.getWorkspace().removeModellListener( m_modellListener );
 
     super.dispose();
   }
@@ -114,7 +114,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   public void setCalculationUnit( final ICalculationUnit calcUnit )
   {
     if( m_calcUnit != null )
-      m_calcUnit.getFeature().getWorkspace().removeModellListener( m_modellListener );
+      m_calcUnit.getWorkspace().removeModellListener( m_modellListener );
 
     m_calUnitDisplayElement = null;
     m_calcUnit = calcUnit;
@@ -122,7 +122,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     if( calcUnit != null )
     {
       m_calUnitDisplayElement = new CalUnitDisplayElement( calcUnit );
-      calcUnit.getFeature().getWorkspace().addModellListener( m_modellListener );
+      calcUnit.getWorkspace().addModellListener( m_modellListener );
     }
 
     fireRepaintRequested( null );
@@ -164,7 +164,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
       final Image img = m_imgIcon.getImage();
       final int yTrans = (int) (m_imgIcon.getIconHeight() / -2.0);
       final int xTrans = (int) (m_imgIcon.getIconWidth() / -2.0);
-      for( final IFeatureWrapper2 bc : m_modelBoundaryConditions )
+      for( final Feature bc : m_modelBoundaryConditions.getFlowRelationsShips() )
       {
         if( bc instanceof IBoundaryCondition )
         {

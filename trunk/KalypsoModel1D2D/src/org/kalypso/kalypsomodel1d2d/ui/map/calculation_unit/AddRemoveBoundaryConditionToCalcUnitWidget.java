@@ -172,7 +172,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
       // boolean calcUnitContainsAnyOfSelectedBCs = false;
       // final ICalculationUnit calcUnit = (ICalculationUnit) m_dataModel.getData(
       // ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      // final String calcUnitID = calcUnit.getGmlID();
+      // final String calcUnitID = calcUnit.getId();
       // for( final Feature feature : selectedFeatures )
       // {
       // final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );

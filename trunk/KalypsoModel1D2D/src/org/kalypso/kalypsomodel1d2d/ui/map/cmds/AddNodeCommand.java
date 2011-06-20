@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -188,7 +188,7 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
     else
     {
       // TODO check broken links issue
-      discretisationModel.getNodes().remove( addedNode.getGmlID() );
+      discretisationModel.getNodes().remove( addedNode.getId() );
       addedNode = null;
     }
 
@@ -213,9 +213,9 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   @Override
-  public IFeatureWrapper2[] getChangedFeature( )
+  public Feature[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { addedNode };
+    return new Feature[] { addedNode };
   }
 
   /**

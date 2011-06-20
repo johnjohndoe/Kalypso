@@ -55,9 +55,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public abstract class AbstractFlowRelation2D extends FlowRelationship implements IFlowRelation2D
 {
-  public AbstractFlowRelation2D( final Feature featureToBind, final QName qname )
+
+  public AbstractFlowRelation2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, qname );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -79,7 +80,7 @@ public abstract class AbstractFlowRelation2D extends FlowRelationship implements
   @Override
   public void setCalculation( final TuhhCalculation calculation )
   {
-    final Feature flowRelFeature = getFeature();
+    final Feature flowRelFeature = this;
     final GMLWorkspace flowRelworkspace = flowRelFeature.getWorkspace();
     final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( IFlowRelation2D.QNAME );
     final IRelationType calcRT = (IRelationType) flowRelFT.getProperty( IFlowRelation2D.QNAME_PROP_TUHH_CALCULATION );

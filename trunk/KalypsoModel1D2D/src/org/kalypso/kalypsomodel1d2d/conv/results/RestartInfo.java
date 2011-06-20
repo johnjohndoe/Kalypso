@@ -42,18 +42,21 @@ package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Dejan Antanaskovic
  * 
  */
-public class RestartInfo extends AbstractFeatureBinder implements IRestartInfo
+public class RestartInfo extends Feature_Impl implements IRestartInfo
 {
-  public RestartInfo( final Feature featureToBind )
+
+  public RestartInfo( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, IRestartInfo.QNAME );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -62,7 +65,7 @@ public class RestartInfo extends AbstractFeatureBinder implements IRestartInfo
   @Override
   public String getCalculationUnitID( )
   {
-    return (String) getFeature().getProperty( IRestartInfo.QNAME_PROP_CALC_UNIT_ID );
+    return (String) getProperty( IRestartInfo.QNAME_PROP_CALC_UNIT_ID );
   }
 
   /**
@@ -71,7 +74,7 @@ public class RestartInfo extends AbstractFeatureBinder implements IRestartInfo
   @Override
   public String getStepResultMetaID( )
   {
-    return (String) getFeature().getProperty( IRestartInfo.QNAME_PROP_STEP_RESULT_ID );
+    return (String) getProperty( IRestartInfo.QNAME_PROP_STEP_RESULT_ID );
   }
 
   /**
@@ -80,7 +83,7 @@ public class RestartInfo extends AbstractFeatureBinder implements IRestartInfo
   @Override
   public IPath getRestartFilePath( )
   {
-    final String path = (String) getFeature().getProperty( IRestartInfo.QNAME_PROP_RESULT_FILE_PATH );
+    final String path = (String) getProperty( IRestartInfo.QNAME_PROP_RESULT_FILE_PATH );
     if( path == null )
       return null;
     return Path.fromPortableString( path );
@@ -92,7 +95,7 @@ public class RestartInfo extends AbstractFeatureBinder implements IRestartInfo
   @Override
   public void setCalculationUnitID( final String gmlID )
   {
-    getFeature().setProperty( IRestartInfo.QNAME_PROP_CALC_UNIT_ID, gmlID );
+    setProperty( IRestartInfo.QNAME_PROP_CALC_UNIT_ID, gmlID );
   }
 
   /**
@@ -101,16 +104,16 @@ public class RestartInfo extends AbstractFeatureBinder implements IRestartInfo
   @Override
   public void setStepResultMetaID( final String gmlID )
   {
-    getFeature().setProperty( IRestartInfo.QNAME_PROP_STEP_RESULT_ID, gmlID );
+    setProperty( IRestartInfo.QNAME_PROP_STEP_RESULT_ID, gmlID );
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo#setRestartFilePath(java.lang.String)
    */
   @Override
   public void setRestartFilePath( final String filePath )
   {
-    getFeature().setProperty( IRestartInfo.QNAME_PROP_RESULT_FILE_PATH, filePath );
+    setProperty( IRestartInfo.QNAME_PROP_RESULT_FILE_PATH, filePath );
   }
 
 }

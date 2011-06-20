@@ -65,8 +65,7 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -90,7 +89,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   private final boolean m_ignoreMapSelection = false;
 
-  private final ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
+  private final ICaseDataProvider<Feature> m_dataProvider;
 
   @SuppressWarnings("unchecked")
   private List<IFE1D2DNode> m_selectedNodeList;
@@ -102,7 +101,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    m_dataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_dataProvider = (ICaseDataProvider<Feature>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
   }
 
   public void setMapModell( final IMapModell mapModell )
@@ -245,7 +244,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setSelectedNode( nodes );
   }
 
-  public final IFeatureWrapperCollection<ITerrainElevationModel> getTerrainElevationModels( )
+  public final IFeatureBindingCollection<ITerrainElevationModel> getTerrainElevationModels( )
   {
     final ITerrainElevationModelSystem elevationModelSystem = getElevationModelSystem();
     if( elevationModelSystem == null )

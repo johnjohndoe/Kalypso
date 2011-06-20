@@ -46,7 +46,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -61,7 +61,7 @@ public interface ICalculationUnit1D2D extends ICoupledCalculationUnit
 
   public static final QName WB1D2D_PROP_CALC_UNIT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "calculationUnit" ); //$NON-NLS-1$
 
-  public IFeatureWrapperCollection<ICalculationUnit> getChangedSubUnits( );
+  public IFeatureBindingCollection<ICalculationUnit> getChangedSubUnits( );
 
   public List<IFENetItem> query( final GM_Envelope envelope );
 }

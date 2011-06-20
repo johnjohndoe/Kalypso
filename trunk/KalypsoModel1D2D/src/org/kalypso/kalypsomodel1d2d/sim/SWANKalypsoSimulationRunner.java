@@ -165,7 +165,7 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
         restartInfos = Collections.emptyList();
 
       // generate input files
-      final ExecutePreSWANKalypso executePreSWANKalypso = new ExecutePreSWANKalypso( m_serviceEndpoint, restartInfos, m_controlModel.getCalculationUnit().getGmlID(), m_uriRMACalcPath );
+      final ExecutePreSWANKalypso executePreSWANKalypso = new ExecutePreSWANKalypso( m_serviceEndpoint, restartInfos, m_controlModel.getCalculationUnit().getId(), m_uriRMACalcPath );
 
       m_wpsRequest = executePreSWANKalypso.getWpsRequest();
       final IStatus preStatus = executePreSWANKalypso.run( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );

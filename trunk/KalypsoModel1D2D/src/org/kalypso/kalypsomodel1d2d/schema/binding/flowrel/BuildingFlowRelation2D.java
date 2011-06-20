@@ -63,9 +63,10 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D implements IBuildingFlowRelation2D
 {
-  public BuildingFlowRelation2D( final Feature featureToBind, final QName qname )
+
+  public BuildingFlowRelation2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, qname ); 
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -74,7 +75,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
   @Override
   public KIND2D getKind( )
   {
-    final Integer kindInt = (Integer) getFeature().getProperty( QNAME_PROP_KIND );
+    final Integer kindInt = (Integer) getProperty( QNAME_PROP_KIND );
     if( kindInt == null )
       return null;
 
@@ -102,7 +103,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
 
   private Feature getObservationFeature( )
   {
-    return (Feature) getFeature().getProperty( QNAME_PROP_OBSERVATION );
+    return (Feature) getProperty( QNAME_PROP_OBSERVATION );
   }
 
   /**
@@ -122,7 +123,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
     final Feature obsFeature;
     if( obsFeatureIfPresent == null )
     {
-      final Feature feature = getFeature();
+      final Feature feature = this;
       final GMLWorkspace workspace = feature.getWorkspace();
       final IRelationType parentRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_OBSERVATION );
       obsFeature = workspace.createFeature( feature, parentRelation, parentRelation.getTargetFeatureType(), -1 );
@@ -171,7 +172,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
   @Override
   public int getDirection( )
   {
-    return ((BigInteger) getFeature().getProperty( QNAME_PROP_DIRECTION )).intValue();
+    return ((BigInteger) getProperty( QNAME_PROP_DIRECTION )).intValue();
   }
 
   /**
@@ -180,7 +181,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
   @Override
   public void setDirection( final int degrees )
   {
-    getFeature().setProperty( QNAME_PROP_DIRECTION, BigInteger.valueOf( degrees ) );
+    setProperty( QNAME_PROP_DIRECTION, BigInteger.valueOf( degrees ) );
   }
 
   /**
@@ -204,7 +205,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
   @Override
   public IProfileFeature getProfile( )
   {
-    final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.resolveLink( getFeature(), QNAME_PROP_PROFILE, true );
+    final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.resolveLink( this, QNAME_PROP_PROFILE, true );
     return profileFeature;
   }
 
@@ -214,7 +215,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
   @Override
   public void setProfileLink( final String profileRef )
   {
-    final Feature feature = getFeature();
+    final Feature feature = this;
 
     final IRelationType profileRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_PROFILE );
     final IFeatureType profileFT = profileRelation.getTargetFeatureType();
