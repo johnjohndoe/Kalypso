@@ -1,60 +1,63 @@
 package org.kalypso.risk.model.schema.binding;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.utils.FunctionParserCache;
 import org.kalypso.risk.plugin.KalypsoRiskDebug;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
-public class LandusePolygon extends AbstractFeatureBinder implements ILandusePolygon
+public class LandusePolygon extends Feature_Impl implements ILandusePolygon
 {
+  public LandusePolygon( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
+
   private long m_statisticsNumberOfRasterCells = 0;
 
   private double m_statisticsAverageAnnualDamage = 0.0;
 
-  public LandusePolygon( final Feature featureToBind )
-  {
-    super( featureToBind, QNAME );
-  }
 
   @Override
   public void setGeometry( final GM_Surface< ? > surface )
   {
-    getFeature().setProperty( ILandusePolygon.PROPERTY_GEOMETRY, surface );
+    setProperty( ILandusePolygon.PROPERTY_GEOMETRY, surface );
   }
 
   @Override
   public void setStyleType( final String styleType )
   {
-    getFeature().setProperty( ILandusePolygon.PROPERTY_SLDSTYLE, styleType );
+    setProperty( ILandusePolygon.PROPERTY_SLDSTYLE, styleType );
   }
 
   @Override
   public String getStyleType( )
   {
-    final Object styleProp = getFeature().getProperty( ILandusePolygon.PROPERTY_SLDSTYLE );
+    final Object styleProp = getProperty( ILandusePolygon.PROPERTY_SLDSTYLE );
     return (styleProp != null && styleProp != "") ? styleProp.toString() : "_DEFAULT_STYLE_"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
   public void setLanduseClass( final Feature landuseClassFeature )
   {
-    getFeature().setProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS, landuseClassFeature );
+    setProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS, landuseClassFeature );
   }
 
   @Override
   public Integer getLanduseClassOrdinalNumber( )
   {
-    return (Integer) getFeature().getProperty( ILandusePolygon.PROPERTY_ORDNUMBER );
+    return (Integer) getProperty( ILandusePolygon.PROPERTY_ORDNUMBER );
   }
 
   @Override
   public Boolean isUrbanLanduseType( )
   {
-    final Object isUrbanTypeProperty = getFeature().getProperty( ILandusePolygon.PROPERTY_ISURBANTYPE );
+    final Object isUrbanTypeProperty = getProperty( ILandusePolygon.PROPERTY_ISURBANTYPE );
     if( isUrbanTypeProperty instanceof Boolean )
       return (Boolean) isUrbanTypeProperty;
     else
@@ -64,7 +67,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   @Override
   public boolean contains( final GM_Position position )
   {
-    return getFeature().getDefaultGeometryPropertyValue().contains( position );
+    return getDefaultGeometryPropertyValue().contains( position );
   }
 
   @Override
@@ -130,12 +133,12 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   private String getDamageFunctionProp( )
   {
-    return (String) getFeature().getProperty( ILandusePolygon.PROPERTY_DAMAGE_FUNCTION );
+    return (String) getProperty( ILandusePolygon.PROPERTY_DAMAGE_FUNCTION );
   }
 
   private Object getAssetValueProp( )
   {
-    return getFeature().getProperty( ILandusePolygon.PROPERTY_ASSET_VALUE );
+    return getProperty( ILandusePolygon.PROPERTY_ASSET_VALUE );
   }
 
   private Double getAssetValue( )
@@ -163,11 +166,11 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   @Override
   public ILanduseClass getLanduseClass( final IRasterizationControlModel model )
   {
-    final Object property = getFeature().getProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS );
+    final Object property = getProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS );
     // TODO: use the workspace of the bound feature, no need for the model to be given as parameter...
-    final Feature feature = FeatureHelper.resolveLinkedFeature( model.getFeature().getWorkspace(), property );
+    final Feature feature = FeatureHelper.resolveLinkedFeature( model.getWorkspace(), property );
 
-    return new LanduseClass( feature );
+    return (ILanduseClass) feature;
   }
 
 }

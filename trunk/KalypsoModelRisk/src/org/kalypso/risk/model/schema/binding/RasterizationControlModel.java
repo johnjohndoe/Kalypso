@@ -6,39 +6,31 @@ import java.util.List;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.xmlbeans.impl.common.Levenshtein;
 import org.kalypso.afgui.model.UnversionedModel;
-import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 public class RasterizationControlModel extends UnversionedModel implements IRasterizationControlModel
 {
-  private final FeatureList m_landuseClassesFeatureList;
-
-  private final List<ILanduseClass> m_landuseClasses;
-
-  private final FeatureWrapperCollection<IAssetValueClass> m_assetValueClasses;
-
-  private final FeatureWrapperCollection<IDamageFunction> m_damageFunctions;
-
-  private final FeatureWrapperCollection<IRiskZoneDefinition> m_riskZoneDefinitions;
-
-  public RasterizationControlModel( final Feature featureToBind )
+  public RasterizationControlModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, IRasterizationControlModel.QNAME );
-    m_landuseClassesFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
-    m_landuseClasses = new ArrayList<ILanduseClass>();
-    for( final Object object : m_landuseClassesFeatureList )
-      m_landuseClasses.add( (ILanduseClass) ((Feature) object).getAdapter( ILanduseClass.class ) );
-
-    m_assetValueClasses = new FeatureWrapperCollection<IAssetValueClass>( getFeature(), IAssetValueClass.class, IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
-    m_damageFunctions = new FeatureWrapperCollection<IDamageFunction>( getFeature(), IDamageFunction.class, IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );
-    m_riskZoneDefinitions = new FeatureWrapperCollection<IRiskZoneDefinition>( getFeature(), IRiskZoneDefinition.class, IRasterizationControlModel.PROPERTY_RISKZONE_DEFINITION_MEMBER );
-
+    super( parent, parentRelation, ft, id, propValues );
+    m_landuseClasses = new FeatureBindingCollection<ILanduseClass>( this, ILanduseClass.class, IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
+    m_assetValueClasses = new FeatureBindingCollection<IAssetValueClass>( this, IAssetValueClass.class, IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
+    m_damageFunctions = new FeatureBindingCollection<IDamageFunction>( this, IDamageFunction.class, IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );
+    m_riskZoneDefinitions = new FeatureBindingCollection<IRiskZoneDefinition>( this, IRiskZoneDefinition.class, IRasterizationControlModel.PROPERTY_RISKZONE_DEFINITION_MEMBER );
   }
+
+  private final FeatureBindingCollection<ILanduseClass> m_landuseClasses;
+
+  private final FeatureBindingCollection<IAssetValueClass> m_assetValueClasses;
+
+  private final FeatureBindingCollection<IDamageFunction> m_damageFunctions;
+
+  private final FeatureBindingCollection<IRiskZoneDefinition> m_riskZoneDefinitions;
 
   @Override
   public List<ILanduseClass> getLanduseClassesList( )
@@ -49,19 +41,8 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   @Override
   public ILanduseClass createNewLanduseClass( )
   {
-    try
-    {
-      final Feature feature = FeatureHelper.createFeatureForListProp( m_landuseClassesFeatureList, ILanduseClass.QNAME, -1 );
-      final ILanduseClass landuseClass = (ILanduseClass) feature.getAdapter( ILanduseClass.class );
-      m_landuseClasses.add( landuseClass );
-      return landuseClass;
-    }
-    catch( final GMLSchemaException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return null;
-    }
+    final ILanduseClass landuseClass = m_landuseClasses.addNew( LanduseClass.QNAME );
+    return landuseClass;
   }
 
   @Override
@@ -142,7 +123,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
     final List<String> list = new ArrayList<String>();
     for( final ILanduseClass landuseClass : m_landuseClasses )
       if( landuseClass.getName().equals( landuseClassName ) )
-        list.add( landuseClass.getGmlID() );
+        list.add( landuseClass.getId() );
     return list;
   }
 
@@ -204,7 +185,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   @Override
   public Feature getStatisticObsFeature( )
   {
-    return (Feature) getFeature().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
+    return (Feature) getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
   }
 
   /**

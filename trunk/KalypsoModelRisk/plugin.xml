@@ -88,33 +88,6 @@
     </catalog>
  </extension>
  <extension
-       id="org.kalypso.core.adapters"
-       name="KalypsoRisk adapter factory"
-       point="org.eclipse.core.runtime.adapters">
-    <factory
-          adaptableType="org.kalypsodeegree.model.feature.Feature"
-          class="org.kalypso.risk.model.schema.KalypsoRiskFeatureFactory">
-       <adapter type="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.IVectorDataModel"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.IRasterDataModel"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.ILanduseClass"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygonCollection"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygon"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.IAssetValueClass"/>
-       <adapter
-             type="org.kalypso.risk.model.schema.binding.IDamageFunction">
-       </adapter>
-       <adapter
-             type="org.kalypso.risk.model.schema.binding.IAdministrationUnit">
-       </adapter>
-       <adapter
-             type="org.kalypso.risk.model.schema.binding.IRiskZoneDefinition">
-       </adapter>
-    </factory>
- </extension>
- <extension
        point="org.kalypso.afgui.scenarioData">
     <dataSet
           id="org.kalypso.risk">
@@ -280,6 +253,56 @@
       <feature
             class="org.kalypso.risk.model.schema.binding.AnnualCoverage"
             qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel}AnnualCoverage">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.RasterDataModel"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel}RasterDataModel">
+      </feature>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.risk.model.schema.binding.AdministrationUnit"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}AdministrationUnit">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.AssetValueClass"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}AssetValueClass">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.DamageFunction"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}DamageFunction">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.LanduseClass"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}LanduseClass">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.RasterizationControlModel"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}RasterizationControlModel">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.RiskLanduseStatistic"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}StatisticClass">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.RiskZoneDefinition"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel}RiskZoneDefinition">
+      </feature>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.risk.model.schema.binding.LandusePolygon"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel}Polygon">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.LandusePolygonCollection"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel}PolygonCollection">
+      </feature>
+      <feature
+            class="org.kalypso.risk.model.schema.binding.VectorDataModel"
+            qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel}VectorDataModel">
       </feature>
    </extension>
 </plugin>

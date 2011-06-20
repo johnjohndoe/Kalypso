@@ -50,7 +50,7 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
 
       RiskModelHelper.addEventThemes( m_wspThemes, m_coverageCollection );
 
-      final GMLWorkspace workspace = m_model.getFeature().getWorkspace();
+      final GMLWorkspace workspace = m_model.getWorkspace();
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_coverageCollection.getOwner(), new Feature[] { m_coverageCollection }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       m_provider.postCommand( IRasterDataModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       m_provider.saveModel( IRasterDataModel.class.getName(), new SubProgressMonitor( monitor, 1 ) );

@@ -57,7 +57,7 @@ import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -313,7 +313,7 @@ public class ParallelDamageCalculationManager
 
   SequentialBinaryGeoGridWriter m_writer;
 
-  IFeatureWrapperCollection<ILandusePolygon> m_polygonCollection;
+  IFeatureBindingCollection<ILandusePolygon> m_polygonCollection;
 
   List<ILanduseClass> m_landuseClasses;
 
@@ -339,7 +339,7 @@ public class ParallelDamageCalculationManager
 
   protected IGeoTransformer m_geoTransformer;
 
-  public ParallelDamageCalculationManager( final SequentialBinaryGeoGridReader inputGridReader, final SequentialBinaryGeoGridWriter outputGridWriter, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final List<ILanduseClass> landuseClasses, final int returnPeriod, final double cellSize )
+  public ParallelDamageCalculationManager( final SequentialBinaryGeoGridReader inputGridReader, final SequentialBinaryGeoGridWriter outputGridWriter, final IFeatureBindingCollection<ILandusePolygon> polygonCollection, final List<ILanduseClass> landuseClasses, final int returnPeriod, final double cellSize )
   {
     m_linesRead = 0;
     m_reader = inputGridReader;

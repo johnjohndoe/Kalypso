@@ -54,7 +54,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
     {
       monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.7" ) ); //$NON-NLS-1$
 
-      final GMLWorkspace workspace = m_rasterDataModel.getFeature().getWorkspace();
+      final GMLWorkspace workspace = m_rasterDataModel.getWorkspace();
 
       final IFeatureBindingCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = m_rasterDataModel.getWaterlevelCoverageCollection();
       for( final AsciiRasterInfo asciiRasterInfo : m_rasterInfos )

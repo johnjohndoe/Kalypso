@@ -199,8 +199,8 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
         newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
 
         /* fireModellEvent to redraw a map */
-        final GMLWorkspace workspace = rasterModel.getFeature().getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModel.getFeature(), new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        final GMLWorkspace workspace = rasterModel.getWorkspace();
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModel, new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
 
       // statistics...
@@ -228,7 +228,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
     /* task: create an observation */
-    final Feature controlModelFeature = controlModel.getFeature();
+    final Feature controlModelFeature = controlModel;
     final CommandableWorkspace workspace = new CommandableWorkspace( controlModelFeature.getWorkspace() );
 
     final IPropertyType property = controlModelFeature.getFeatureType().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
