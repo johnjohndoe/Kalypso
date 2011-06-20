@@ -58,7 +58,7 @@ import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -76,7 +76,7 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
 
   private Coordinate m_offsetY;
 
-  private IFeatureWrapperCollection<ILandusePolygon> m_polygonCollection;
+  private IFeatureBindingCollection<ILandusePolygon> m_polygonCollection;
 
   private List<ILanduseClass> m_landuseClasses;
 
@@ -90,7 +90,7 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
 
   private IGeoTransformer m_geoTransformer;
 
-  public RiskSpecificDamageGrid( IGeoGrid inputGrid, URL pUrl, IFeatureWrapperCollection<ILandusePolygon> polygonCollection, List<ILanduseClass> landuseClasses, double cellSize, int returnPeriod ) throws IOException, GeoGridException, UnknownCRSException, TransformationException
+  public RiskSpecificDamageGrid( IGeoGrid inputGrid, URL pUrl, IFeatureBindingCollection<ILandusePolygon> polygonCollection, List<ILanduseClass> landuseClasses, double cellSize, int returnPeriod ) throws IOException, GeoGridException, UnknownCRSException, TransformationException
   {
     super( inputGrid, pUrl );
 

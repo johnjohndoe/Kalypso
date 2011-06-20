@@ -61,13 +61,13 @@ import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
+import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -80,7 +80,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private final Collection<IAnnualCoverageCollection> m_annualCoverageCollection;
 
-  private final IFeatureWrapperCollection<ILandusePolygon> m_landusePolygonCollection;
+  private final IFeatureBindingCollection<ILandusePolygon> m_landusePolygonCollection;
 
   private final List<ILanduseClass> m_landuseClassesList;
 
@@ -108,7 +108,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private final IGeoTransformer m_geoTransformer;
 
-  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureBindingCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
+  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureBindingCollection<IAnnualCoverageCollection> annualCoverageCollection, final ILandusePolygonCollection landusePolygonCollection, final List<ILanduseClass> landuseClassesList, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
   {
     super( resultGrid );
     m_riskZoneDefinitionsList = riskZoneDefinitionsList;
@@ -128,7 +128,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
     m_annualCoverageCollection = covMap.values();
 
-    m_landusePolygonCollection = landusePolygonCollection;
+    m_landusePolygonCollection = landusePolygonCollection.getLandusePolygonCollection();
     m_landuseClassesList = landuseClassesList;
     m_gridMap = new HashMap<String, List<BinaryGeoGridReader>>();
 

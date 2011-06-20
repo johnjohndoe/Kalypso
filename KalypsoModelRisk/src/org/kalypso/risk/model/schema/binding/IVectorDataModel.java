@@ -4,7 +4,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 public interface IVectorDataModel extends IModel
 {
@@ -16,5 +16,5 @@ public interface IVectorDataModel extends IModel
 
   public QName PROPERTY_ADMINISTRATION_UNIT_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "administrationUnitsPolygonCollection" ); //$NON-NLS-1$
 
-  public IFeatureWrapperCollection<ILandusePolygon> getLandusePolygonCollection( );
+  public ILandusePolygonCollection getLandusePolygonCollection( );
 }

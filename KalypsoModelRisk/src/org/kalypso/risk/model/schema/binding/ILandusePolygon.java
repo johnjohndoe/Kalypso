@@ -4,11 +4,10 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
-public interface ILandusePolygon extends IFeatureWrapper2
+public interface ILandusePolygon extends Feature
 {
   public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "Polygon" ); //$NON-NLS-1$
 

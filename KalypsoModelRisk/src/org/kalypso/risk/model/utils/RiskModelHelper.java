@@ -70,7 +70,6 @@ import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -189,7 +188,7 @@ public class RiskModelHelper
    * @throws Exception
    */
   // TODO: nor more used, remove!?
-  public static IAnnualCoverageCollection createSpecificDamageCoverages( final IFolder scenarioFolder, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final List<ILanduseClass> landuseClassesList ) throws Exception
+  public static IAnnualCoverageCollection createSpecificDamageCoverages( final IFolder scenarioFolder, final IFeatureBindingCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final List<ILanduseClass> landuseClassesList ) throws Exception
   {
     final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
 
@@ -419,7 +418,7 @@ public class RiskModelHelper
    *          landuse polygons that give the landuse class ordinal number
    * @throws Exception
    */
-  public static IStatus doRasterLanduse( final IFolder scenarioFolder, final ICoverageCollection inputCoverages, final ICoverageCollection outputCoverages, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IProgressMonitor monitor )
+  public static IStatus doRasterLanduse( final IFolder scenarioFolder, final ICoverageCollection inputCoverages, final ICoverageCollection outputCoverages, final IFeatureBindingCollection<ILandusePolygon> polygonCollection, final IProgressMonitor monitor )
   {
     try
     {
@@ -845,8 +844,8 @@ public class RiskModelHelper
 
     /* ------ */
     // TODO: maybe save other models?
-    final Feature f1 = (Feature) rasterDataModel.getFeature().getProperty( IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
-    final GMLWorkspace workspace = rasterDataModel.getFeature().getWorkspace();
+    final Feature f1 = (Feature) rasterDataModel.getProperty( IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
+    final GMLWorkspace workspace = rasterDataModel.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, f1, createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     riskDataProvider.postCommand( IRasterDataModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.20" ), false ) ); //$NON-NLS-1$
     riskDataProvider.saveModel( IRasterDataModel.class.getName(), new NullProgressMonitor() );

@@ -5,14 +5,21 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
-public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
+public class LanduseClass extends Feature_Impl implements ILanduseClass
 {
+  public LanduseClass( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
+
   final List<IRiskLanduseStatistic> m_statList = new ArrayList<IRiskLanduseStatistic>();
 
   private double m_statisticsAverageAnnualDamage;
@@ -21,116 +28,113 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
 
   private double m_cellSize = Double.NaN;
 
-  public LanduseClass( final Feature featureToBind )
-  {
-    super( featureToBind, QNAME );
-  }
+ 
 
   @Override
   public void setName( final String name )
   {
-    getFeature().setProperty( ILanduseClass.PROP_NAME, name );
+    setProperty( ILanduseClass.PROP_NAME, name );
   }
 
   @Override
   public void setDescription( final String desc )
   {
-    getFeature().setProperty( ILanduseClass.PROP_DESCRIPTION, desc );
+    setProperty( ILanduseClass.PROP_DESCRIPTION, desc );
   }
 
   @Override
   public String getName( )
   {
-    return (String) getFeature().getProperty( ILanduseClass.PROP_NAME );
+    return (String) getProperty( ILanduseClass.PROP_NAME );
   }
 
   @Override
   public String getDescription( )
   {
-    return (String) getFeature().getProperty( ILanduseClass.PROP_DESCRIPTION );
+    return (String) getProperty( ILanduseClass.PROP_DESCRIPTION );
   }
 
   @Override
   public RGB getColorStyle( )
   {
-    return (RGB) getFeature().getProperty( ILanduseClass.PROP_COLOR_STYLE );
+    return (RGB) getProperty( ILanduseClass.PROP_COLOR_STYLE );
   }
 
   @Override
   public void setColorStyle( final RGB rgb )
   {
-    getFeature().setProperty( ILanduseClass.PROP_COLOR_STYLE, rgb );
+    setProperty( ILanduseClass.PROP_COLOR_STYLE, rgb );
   }
 
   @Override
   public void setOrdinalNumber( int value )
   {
-    getFeature().setProperty( ILanduseClass.PROP_ORDINAL_NUMBER, value );
+    setProperty( ILanduseClass.PROP_ORDINAL_NUMBER, value );
   }
 
   @Override
   public int getOrdinalNumber( )
   {
-    final Integer value = (Integer) getFeature().getProperty( ILanduseClass.PROP_ORDINAL_NUMBER );
+    final Integer value = (Integer) getProperty( ILanduseClass.PROP_ORDINAL_NUMBER );
     return value == null ? 0 : value.intValue();
   }
 
   @Override
   public double getMaxAnnualDamage( )
   {
-    final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_MAX_DAMAGE );
+    final Double value = (Double) getProperty( ILanduseClass.PROP_MAX_DAMAGE );
     return value == null ? 0 : value.intValue();
   }
 
   @Override
   public double getMinAnnualDamage( )
   {
-    final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_MIN_DAMAGE );
+    final Double value = (Double) getProperty( ILanduseClass.PROP_MIN_DAMAGE );
     return value == null ? Double.MAX_VALUE : value.intValue();
   }
 
   @Override
   public double getTotalDamage( )
   {
-    final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_TOTAL_DAMAGE );
+    final Double value = (Double) getProperty( ILanduseClass.PROP_TOTAL_DAMAGE );
     return value == null ? 0 : value.intValue();
   }
 
   @Override
   public double getAverageAnnualDamage( )
   {
-    final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_ANNUAL_AVERAGE_DAMAGE );
+    final Double value = (Double) getProperty( ILanduseClass.PROP_ANNUAL_AVERAGE_DAMAGE );
     return value == null ? 0 : value.doubleValue();
   }
 
   @Override
   public void setMaxAnnualDamage( double value )
   {
-    getFeature().setProperty( ILanduseClass.PROP_MAX_DAMAGE, value );
+    setProperty( ILanduseClass.PROP_MAX_DAMAGE, value );
   }
 
   @Override
   public void setMinAnnualDamage( double value )
   {
-    getFeature().setProperty( ILanduseClass.PROP_MIN_DAMAGE, value );
+    setProperty( ILanduseClass.PROP_MIN_DAMAGE, value );
   }
 
   @Override
   public void setTotalDamage( double value )
   {
-    getFeature().setProperty( ILanduseClass.PROP_TOTAL_DAMAGE, value );
+    setProperty( ILanduseClass.PROP_TOTAL_DAMAGE, value );
   }
 
   @Override
   public void setAverageAnnualDamage( double value )
   {
-    getFeature().setProperty( ILanduseClass.PROP_ANNUAL_AVERAGE_DAMAGE, value );
+    setProperty( ILanduseClass.PROP_ANNUAL_AVERAGE_DAMAGE, value );
   }
 
   @Override
   public String getDamageFunctionGmlID( )
   {
-    final Object property = getFeature().getProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK );
+    final Object property = getProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK );
     if( property != null && property instanceof XLinkedFeature_Impl )
       return ((XLinkedFeature_Impl) property).getFeatureId();
     return ""; //$NON-NLS-1$
@@ -139,16 +143,16 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   @Override
   public void setDamageFunction( final IDamageFunction damageFunction )
   {
-    final String xFeaturePath = IRasterizationControlModel.MODEL_FILENAME_GML + "#" + damageFunction.getGmlID(); //$NON-NLS-1$
-    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( getFeature(), damageFunction.getFeature().getParentRelation(), damageFunction.getFeature().getFeatureType(), xFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    getFeature().setProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK, xFeature );
+    final String xFeaturePath = IRasterizationControlModel.MODEL_FILENAME_GML + "#" + damageFunction.getId(); //$NON-NLS-1$
+    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( this, damageFunction.getParentRelation(), damageFunction.getFeatureType(), xFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    setProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK, xFeature );
   }
 
   @Override
   public IAssetValueClass getAssetValue( )
   {
-    final Object property = getFeature().getProperty( ILanduseClass.PROP_ASSET_VALUE_LINK );
-    Feature assetFeature = FeatureHelper.resolveLinkedFeature( getFeature().getWorkspace(), property );
+    final Object property = getProperty( ILanduseClass.PROP_ASSET_VALUE_LINK );
+    Feature assetFeature = FeatureHelper.resolveLinkedFeature( getWorkspace(), property );
     if( assetFeature == null )
       return null;
 
@@ -162,9 +166,9 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   @Override
   public void setAssetValue( IAssetValueClass assetValueClass )
   {
-    final String xFeaturePath = IRasterizationControlModel.MODEL_FILENAME_GML + "#" + assetValueClass.getGmlID(); //$NON-NLS-1$
-    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( getFeature(), assetValueClass.getFeature().getParentRelation(), assetValueClass.getFeature().getFeatureType(), xFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    getFeature().setProperty( ILanduseClass.PROP_ASSET_VALUE_LINK, xFeature );
+    final String xFeaturePath = IRasterizationControlModel.MODEL_FILENAME_GML + "#" + assetValueClass.getId(); //$NON-NLS-1$
+    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( this, assetValueClass.getParentRelation(), assetValueClass.getFeatureType(), xFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    setProperty( ILanduseClass.PROP_ASSET_VALUE_LINK, xFeature );
   }
 
   /**
@@ -197,7 +201,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   {
     final List<IRiskLanduseStatistic> statList = new ArrayList<IRiskLanduseStatistic>();
 
-    final FeatureList list = (FeatureList) getFeature().getProperty( ILanduseClass.PROP_DAMAGE_STATISTIC_LIST );
+    final FeatureList list = (FeatureList) getProperty( ILanduseClass.PROP_DAMAGE_STATISTIC_LIST );
     for( Object object : list )
     {
       if( object instanceof Feature )
@@ -225,7 +229,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   @Override
   public IRiskLanduseStatistic createNewStatisticEntry( )
   {
-    final FeatureList list = (FeatureList) getFeature().getProperty( ILanduseClass.PROP_DAMAGE_STATISTIC_LIST );
+    final FeatureList list = (FeatureList) getProperty( ILanduseClass.PROP_DAMAGE_STATISTIC_LIST );
 
     try
     {
@@ -316,7 +320,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   public void clearStatisticEntries( )
   {
     m_statList.clear();
-    final FeatureList list = (FeatureList) getFeature().getProperty( ILanduseClass.PROP_DAMAGE_STATISTIC_LIST );
+    final FeatureList list = (FeatureList) getProperty( ILanduseClass.PROP_DAMAGE_STATISTIC_LIST );
     list.clear();
   }
 }
