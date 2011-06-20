@@ -42,34 +42,37 @@ package org.kalypso.model.wspm.tuhh.core.gml;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public class TuhhMarker extends AbstractFeatureBinder implements IWspmTuhhConstants
+public class TuhhMarker extends Feature_Impl implements IWspmTuhhConstants
 {
+  public TuhhMarker( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
+
   public final static QName QNAME_MARKER = new QName( NS_WSPM_TUHH, "ProfileMarker" ); //$NON-NLS-1$
 
   private static final QName QNAME_PROP_TYPE = new QName( NS_WSPM_TUHH, "type" ); //$NON-NLS-1$
 
   private static final QName QNAME_PROP_LOCATION = new QName( NS_WSPM_TUHH, "location" ); //$NON-NLS-1$
 
-  public TuhhMarker( final Feature featureToBind )
-  {
-    super( featureToBind, QNAME_MARKER );
-  }
+  
 
   public void setType( final String type )
   {
-    getFeature().setProperty( QNAME_PROP_TYPE, type );
+    setProperty( QNAME_PROP_TYPE, type );
   }
 
   public void setLocation( final GM_Point location )
   {
-    getFeature().setProperty( QNAME_PROP_LOCATION, location );
+    setProperty( QNAME_PROP_LOCATION, location );
   }
 }

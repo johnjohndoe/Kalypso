@@ -103,6 +103,26 @@
             class="org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment"
             qname="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState">
       </feature>
+      <feature
+            class="org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties"
+            qname="{org.kalypso.model.wspm.tuhh}CalcPolynomes">
+      </feature>
+      <feature
+            class="org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState"
+            qname="{org.kalypso.model.wspm.tuhh}CalculationWspmTuhhSteadyState">
+      </feature>
+      <feature
+            class="org.kalypso.model.wspm.tuhh.core.gml.TuhhMarker"
+            qname="{org.kalypso.model.wspm.tuhh}ProfileMarker">
+      </feature>
+      <feature
+            class="org.kalypso.model.wspm.tuhh.core.gml.TuhhReach"
+            qname="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+      </feature>
+      <feature
+            class="org.kalypso.model.wspm.tuhh.core.gml.CalculationReibConstWspmTuhhSteadyState"
+            qname="{org.kalypso.model.wspm.tuhh}CalculationReibConstWspmTuhhSteadyState">
+      </feature>
    </extension>
    <extension
          point="org.kalypso.model.wspm.core.profileObjectProvider">
