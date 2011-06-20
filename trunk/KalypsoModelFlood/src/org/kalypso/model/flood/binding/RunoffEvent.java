@@ -42,26 +42,26 @@ package org.kalypso.model.flood.binding;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Thomas Jung
  */
-public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
+public class RunoffEvent extends Feature_Impl implements IRunoffEvent
 {
-  private final FeatureWrapperCollection<ITinReference> m_tinReferences;
+  private final FeatureBindingCollection<ITinReference> m_tinReferences;
 
-  public RunoffEvent( final Feature featureToBind )
+  public RunoffEvent( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, IRunoffEvent.QNAME );
-
-    m_tinReferences = new FeatureWrapperCollection<ITinReference>( featureToBind, ITinReference.class, QNAME_PROP_TIN_MEMBER );
+    super( parent, parentRelation, ft, id, propValues );
+    m_tinReferences = new FeatureBindingCollection<ITinReference>( this, ITinReference.class, QNAME_PROP_TIN_MEMBER );
   }
 
   /**
@@ -70,7 +70,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   @Override
   public ICoverageCollection getResultCoverages( )
   {
-    final Feature coveragesFeature = (Feature) getFeature().getProperty( QNAME_PROP_RESULT_COVERAGES );
+    final Feature coveragesFeature = (Feature) getProperty( QNAME_PROP_RESULT_COVERAGES );
     if( coveragesFeature == null )
       return internal_createResultCoverages();
 
@@ -94,9 +94,9 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
 
   private ICoverageCollection internal_createResultCoverages( )
   {
-    final IRelationType relationType = (IRelationType) getFeature().getFeatureType().getProperty( QNAME_PROP_RESULT_COVERAGES );
-    final GMLWorkspace workspace = getFeature().getWorkspace();
-    final Feature newFeature = workspace.createFeature( getFeature(), relationType, relationType.getTargetFeatureType() );
+    final IRelationType relationType = (IRelationType) getFeatureType().getProperty( QNAME_PROP_RESULT_COVERAGES );
+    final GMLWorkspace workspace = getWorkspace();
+    final Feature newFeature = workspace.createFeature( this, relationType, relationType.getTargetFeatureType() );
     final ICoverageCollection newCollection = (ICoverageCollection) newFeature.getAdapter( ICoverageCollection.class );
     setResultCoverages( newCollection );
     return newCollection;
@@ -106,7 +106,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
    * @see org.kalypso.model.flood.binding.IRunoffEvent#getTins()
    */
   @Override
-  public IFeatureWrapperCollection<ITinReference> getTins( )
+  public IFeatureBindingCollection<ITinReference> getTins( )
   {
     return m_tinReferences;
   }
@@ -117,7 +117,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   @Override
   public IPath getDataPath( )
   {
-    final String path = (String) getFeature().getProperty( QNAME_PROP_DATAPATH );
+    final String path = (String) getProperty( QNAME_PROP_DATAPATH );
     if( path == null )
       return null;
 
@@ -127,7 +127,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   @Override
   public void setDataPath( final IPath path )
   {
-    getFeature().setProperty( QNAME_PROP_DATAPATH, path.toPortableString() );
+    setProperty( QNAME_PROP_DATAPATH, path.toPortableString() );
   }
 
   /**
@@ -136,7 +136,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   @Override
   public void setResultCoverages( final ICoverageCollection collection )
   {
-    getFeature().setProperty( QNAME_PROP_RESULT_COVERAGES, collection );
+    setProperty( QNAME_PROP_RESULT_COVERAGES, collection );
   }
 
   /**
@@ -145,7 +145,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   @Override
   public boolean isMarkedForProcessing( )
   {
-    final Boolean value = (Boolean) getFeature().getProperty( QNAME_PROP_MARKEDFORPROCESSING );
+    final Boolean value = (Boolean) getProperty( QNAME_PROP_MARKEDFORPROCESSING );
     return value == null ? false : value.booleanValue();
   }
 
@@ -155,7 +155,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   @Override
   public void setMarkedForProcessing( final boolean value )
   {
-    getFeature().setProperty( QNAME_PROP_MARKEDFORPROCESSING, value );
+    setProperty( QNAME_PROP_MARKEDFORPROCESSING, value );
   }
 
   /**
@@ -164,7 +164,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   @Override
   public Integer getReturnPeriod( )
   {
-    return (Integer) getFeature().getProperty( QNAME_PROP_RETURN_PERIOD );
+    return (Integer) getProperty( QNAME_PROP_RETURN_PERIOD );
   }
 
   /**
@@ -173,6 +173,6 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   @Override
   public void setReturnPeriod( final Integer value )
   {
-    getFeature().setProperty( QNAME_PROP_RETURN_PERIOD, value );
+    setProperty( QNAME_PROP_RETURN_PERIOD, value );
   }
 }

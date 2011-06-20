@@ -76,7 +76,6 @@ import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -131,7 +130,7 @@ public class FloodModelProcess
   private void processVolumes( final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
   {
     final ICoverageCollection terrainModel = m_model.getTerrainModel();
-    final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
+    final IFeatureBindingCollection<IFloodPolygon> polygons = m_model.getPolygons();
 
     /* Filter Volume Polygon */
     final List<IFloodVolumePolygon> volumePolygons = new ArrayList<IFloodVolumePolygon>( polygons.size() );
@@ -255,7 +254,7 @@ public class FloodModelProcess
     IFeatureBindingCollection<ICoverage> terrainCoverages = terrainModel.getCoverages();
     final SubMonitor progress = SubMonitor.convert( monitor, terrainCoverages.size() * 100 );
     // TODO: shouldn't we filter by the event?
-    final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
+    final IFeatureBindingCollection<IFloodPolygon> polygons = m_model.getPolygons();
 
     /* check for existing result coverages */
     final ICoverageCollection resultCoverages = event.getResultCoverages();
@@ -272,7 +271,7 @@ public class FloodModelProcess
 
       // final IGeoGrid terrainGrid = GeoGridUtilities.toGrid( terrainCoverage );
       final RectifiedGridCoverageGeoGrid inputGrid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( terrainCoverage );
-      final IFeatureWrapperCollection<ITinReference> tins = event.getTins();
+      final IFeatureBindingCollection<ITinReference> tins = event.getTins();
 
       // final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins, polygons, event );
       final SequentialBinaryGeoGridReader inputGridReader = new FloodDiffGrid( inputGrid, inputGrid.getGridURL(), tins, polygons, event );
@@ -314,7 +313,7 @@ public class FloodModelProcess
   // TODO: does not work like that, as we need a feature wrapper collection later to query the list
   // private IFloodPolygon[] getPolygons( final IRunoffEvent event )
   // {
-  // final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
+  // final IFeatureBindingCollection<IFloodPolygon> polygons = m_model.getPolygons();
   //
   // final List<IFloodPolygon> filteredPolygons = new ArrayList<IFloodPolygon>();
   //

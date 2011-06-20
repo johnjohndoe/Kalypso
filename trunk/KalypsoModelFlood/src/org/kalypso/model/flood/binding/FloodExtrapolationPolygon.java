@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.binding;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -48,9 +50,10 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class FloodExtrapolationPolygon extends AbstractFloodPolygon implements IFloodExtrapolationPolygon
 {
-  public FloodExtrapolationPolygon( Feature featureToBind )
+
+  public FloodExtrapolationPolygon( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, IFloodExtrapolationPolygon.QNAME );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**

@@ -50,23 +50,26 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
  */
-public class TinReference extends AbstractFeatureBinder implements ITinReference
+public class TinReference extends Feature_Impl implements ITinReference
 {
-  public TinReference( final Feature featureToBind )
+
+  public TinReference( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, QNAME );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -86,7 +89,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   @Override
   public GM_TriangulatedSurface getTin( )
   {
-    return (GM_TriangulatedSurface) getFeature().getProperty( QNAME_PROP_TIN );
+    return (GM_TriangulatedSurface) getProperty( QNAME_PROP_TIN );
   }
 
   /**
@@ -124,7 +127,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
     if( path == null )
       return null;
 
-    final GMLWorkspace workspace = getFeature().getWorkspace();
+    final GMLWorkspace workspace = getWorkspace();
 
     return new GMLXPath( path, workspace.getNamespaceContext() );
   }
@@ -141,7 +144,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
 
     try
     {
-      final GMLWorkspace workspace = getFeature().getWorkspace();
+      final GMLWorkspace workspace = getWorkspace();
       return new URL( workspace.getContext(), uri );
     }
     catch( final MalformedURLException e )
@@ -216,7 +219,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   @Override
   public IRunoffEvent getRunoffEvent( )
   {
-    final Feature parent = getFeature().getParent();
+    final Feature parent = getParent();
     if( parent == null )
       return null;
 
@@ -229,7 +232,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   @Override
   public SOURCETYPE getSourceType( )
   {
-    final String value = (String) getFeature().getProperty( QNAME_PROP_SOURCE_TYPE );
+    final String value = (String) getProperty( QNAME_PROP_SOURCE_TYPE );
     return SOURCETYPE.valueOf( value );
   }
 
@@ -239,7 +242,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   @Override
   public void setSourceType( final SOURCETYPE type )
   {
-    getFeature().setProperty( QNAME_PROP_SOURCE_TYPE, type.name() );
+    setProperty( QNAME_PROP_SOURCE_TYPE, type.name() );
   }
 
   /**
