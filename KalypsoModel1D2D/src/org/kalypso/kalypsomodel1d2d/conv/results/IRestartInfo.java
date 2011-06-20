@@ -44,13 +44,13 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dejan Antanaskovic
  * 
  */
-public interface IRestartInfo extends IFeatureWrapper2
+public interface IRestartInfo extends Feature
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "RestartInfo" ); //$NON-NLS-1$
 

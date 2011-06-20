@@ -51,7 +51,6 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -125,11 +124,11 @@ public class ChangeDiscretiationModelCommand implements ICommand
       try
       {
         command.process();
-        for( final IFeatureWrapper2 changedFeature : command.getChangedFeature() )
+        for( final Feature changedFeature : command.getChangedFeature() )
         {
           if( changedFeature != null )
           {
-            final Feature wrappedFeature = changedFeature.getFeature();
+            final Feature wrappedFeature = changedFeature;
             if( wrappedFeature != null )
             {
               changedFeatures.add( wrappedFeature );
@@ -154,11 +153,11 @@ public class ChangeDiscretiationModelCommand implements ICommand
         try
         {
           command.process();
-          for( final IFeatureWrapper2 changedFeature : command.getChangedFeature() )
+          for( final Feature changedFeature : command.getChangedFeature() )
           {
             if( changedFeature != null )
             {
-              final Feature wrappedFeature = changedFeature.getFeature();
+              final Feature wrappedFeature = changedFeature;
               if( wrappedFeature != null )
               {
                 changedFeatures.add( wrappedFeature );
@@ -181,11 +180,11 @@ public class ChangeDiscretiationModelCommand implements ICommand
 
     for( final IFE1D2DEdge edge : m_model1d2d.getEdges() )
     {
-      edge.getFeature().invalidEnvelope();
+      edge.invalidEnvelope();
     }
-    m_model1d2d.getEdges().getWrappedList().invalidate();
-    m_model1d2d.getElements().getWrappedList().invalidate();
-    // model1d2d.getNodes().getWrappedList().invalidate();
+    m_model1d2d.getEdges().getFeatureList().invalidate();
+    m_model1d2d.getElements().getFeatureList().invalidate();
+    // model1d2d.getNodes().getFeatureList().invalidate();
     fireStructureChange( changedFeatures );
   }
 
@@ -193,7 +192,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
   {
     final Feature[] changedFeaturesArray = new Feature[changedFeatures.size()];
     changedFeatures.toArray( changedFeaturesArray );
-    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_model1d2d.getFeature(), changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_model1d2d, changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**

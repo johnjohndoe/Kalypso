@@ -44,8 +44,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.deegree.model.spatialschema.GeometryException;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.results.ArcResult;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -73,11 +81,11 @@ public class SimpleNodeResult implements INodeResult
   private double m_dvxdtPrevStep;
 
   private double m_dvydtPrevStep;
-  
+
   private double m_waveHsig;
-  
+
   private double m_waveDir;
-  
+
   private double m_wavePer;
 
   private double m_depth;
@@ -296,7 +304,7 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   * @see org.kalypsodeegree.model.feature.binding.Feature#getDescription()
    */
   @Override
   public String getDescription( )
@@ -305,16 +313,16 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getGmlID()
+   * @see org.kalypsodeegree.model.feature.binding.Feature#getId()
    */
   @Override
-  public String getGmlID( )
+  public String getId( )
   {
     throw new UnsupportedOperationException();
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   * @see org.kalypsodeegree.model.feature.binding.Feature#getName()
    */
   @Override
   public String getName( )
@@ -323,16 +331,7 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getFeature()
-   */
-  @Override
-  public Feature getFeature( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.binding.Feature#setDescription(java.lang.String)
    */
   @Override
   public void setDescription( final String desc )
@@ -341,7 +340,7 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.binding.Feature#setName(java.lang.String)
    */
   @Override
   public void setName( final String name )
@@ -432,7 +431,7 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
+   * @see org.kalypsodeegree.model.feature.binding.Feature#getLocation()
    */
   @Override
   public GM_Object getLocation( )
@@ -441,7 +440,7 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
+   * @see org.kalypsodeegree.model.feature.binding.Feature#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
    */
   @Override
   public void setLocation( final GM_Object location )
@@ -714,6 +713,256 @@ public class SimpleNodeResult implements INodeResult
   {
     m_dvydtPrevStep = dvydtPrevStep;
   }
-  
-  
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getProperty(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  @Override
+  public Object getProperty( IPropertyType propertyType )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getGeometryProperties()
+   */
+  @Override
+  public GM_Object[] getGeometryProperties( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getDefaultGeometryProperty()
+   */
+  @Override
+  public GM_Object getDefaultGeometryProperty( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getEnvelope()
+   */
+  @Override
+  public GM_Envelope getEnvelope( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getWorkspace()
+   */
+  @Override
+  public GMLWorkspace getWorkspace( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getParent()
+   */
+  @Override
+  public Feature getParent( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getParentRelation()
+   */
+  @Override
+  public IRelationType getParentRelation( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#setProperty(org.kalypso.gmlschema.property.IPropertyType,
+   *      java.lang.Object)
+   */
+  @Override
+  public void setProperty( IPropertyType propertyType, Object value )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#setProperty(javax.xml.namespace.QName, java.lang.Object)
+   */
+  @Override
+  public void setProperty( QName propQName, Object value )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getProperty(java.lang.String)
+   */
+  @Override
+  public Object getProperty( String propLocalName )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#setProperty(java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void setProperty( String propLocalName, Object value )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getProperty(javax.xml.namespace.QName)
+   */
+  @Override
+  public Object getProperty( QName propQName )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
+   */
+  @Override
+  public void setWorkspace( GMLWorkspace workspace )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#invalidEnvelope()
+   */
+  @Override
+  public void invalidEnvelope( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( Class adapter )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
+   */
+  @Override
+  public QName getQualifiedName( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
+   */
+  @Override
+  public void setId( String fid )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getFeatureType()
+   */
+  @Override
+  public IFeatureType getFeatureType( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  @Override
+  public void setFeatureType( IFeatureType ft )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getProperties()
+   */
+  @Override
+  public Object[] getProperties( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
+   */
+  @Override
+  public GM_Object[] getGeometryPropertyValues( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
+   */
+  @Override
+  public GM_Object getDefaultGeometryPropertyValue( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
+   */
+  @Override
+  public GM_Envelope getBoundedBy( ) throws GeometryException
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
+   */
+  @Override
+  public Feature getOwner( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
+   */
+  @Override
+  public void setEnvelopesUpdated( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
 }

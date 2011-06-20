@@ -55,7 +55,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 @SuppressWarnings("unchecked")
 /*
@@ -75,7 +75,7 @@ public class ModelOps
 
   public static final IElement1D createElement1d( IFEDiscretisationModel1d2d model1d2d, IFE1D2DEdge edge )
   {
-    final IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
+    final IFeatureBindingCollection<IFE1D2DElement> elements = model1d2d.getElements();
     final IElement1D element = elements.addNew( IElement1D.QNAME, IElement1D.class );
 
     element.setEdge( edge );
@@ -93,11 +93,11 @@ public class ModelOps
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ops.ModelOps.2" ) + EDGE_NUM ); //$NON-NLS-1$
     }
 
-    IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
+    IFeatureBindingCollection<IFE1D2DElement> elements = model1d2d.getElements();
     final IPolyElement polyElement = elements.addNew( IPolyElement.QNAME, IPolyElement.class );
 
     // sortElementEdges( polyElement );
-    String elementID = polyElement.getGmlID();
+    String elementID = polyElement.getId();
     for( IFE1D2DEdge edge : edges )
     {
       edge.addContainer( elementID );
@@ -113,9 +113,9 @@ public class ModelOps
     if( !(element instanceof IPolyElement) )
       return;
 
-    final IFeatureWrapperCollection edgeFeatureCollection = ((IPolyElement) element).getEdges();
-    final IFeatureWrapperCollection<IFE1D2DEdge> edges = edgeFeatureCollection;
-    final FeatureList edgeFeatureList = edges.getWrappedList();
+    final IFeatureBindingCollection edgeFeatureCollection = ((IPolyElement) element).getEdges();
+    final IFeatureBindingCollection<IFE1D2DEdge> edges = edgeFeatureCollection;
+    final FeatureList edgeFeatureList = edges.getFeatureList();
 
     edgeFeatureList.clear();
 
@@ -128,13 +128,13 @@ public class ModelOps
     // just select the first node
     IFE1D2DEdge edge = edges.remove( 0 );
     IFE1D2DNode nodeEnd = edge.getNode( 0 );
-    edgeFeatureList.add( edge.getGmlID() );
+    edgeFeatureList.add( edge.getId() );
 
     while( !edges.isEmpty() )
     {
       for( final IFE1D2DEdge nextEdge : edges )
       {
-        final IFeatureWrapperCollection<IFE1D2DNode> nodes = nextEdge.getNodes();
+        final IFeatureBindingCollection<IFE1D2DNode> nodes = nextEdge.getNodes();
         final IFE1D2DNode node0 = nodes.get( 0 );
         final IFE1D2DNode node1 = nodes.get( 1 );
         if( node0.equals( nodeEnd ) )
@@ -152,11 +152,11 @@ public class ModelOps
       }
       if( edges.remove( edge ) )
       {
-        edgeFeatureList.add( edge.getGmlID() );
+        edgeFeatureList.add( edge.getId() );
       }
       else
       {
-        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ops.ModelOps.3" , edge, edges ) ); //$NON-NLS-1$
+        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ops.ModelOps.3", edge, edges ) ); //$NON-NLS-1$
       }
     }
   }

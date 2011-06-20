@@ -2,7 +2,7 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.util.List;
 
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * The handler interface for RMA·Kalypso model element. Class implementing this interface can be set to handle parsing
@@ -57,7 +57,7 @@ public interface IFEModelElementHandler
    */
   public void handleError( String lineString, EReadError errorHints );
 
-  public List<IFeatureWrapper2> getCreatedFeatures( );
+  public List<Feature> getCreatedFeatures( );
 
   public void addImporter( IDiscModelImporter importer );
 

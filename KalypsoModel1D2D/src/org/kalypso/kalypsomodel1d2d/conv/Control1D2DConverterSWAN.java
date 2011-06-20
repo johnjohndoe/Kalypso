@@ -171,8 +171,8 @@ public class Control1D2DConverterSWAN
     m_doubleShiftY = shiftY;
 
     /* Initialize boundary conditions */
-    final String calculationUnit = controlModel.getCalculationUnit().getGmlID();
-    for( final IFlowRelationship relationship : flowModel )
+    final String calculationUnit = controlModel.getCalculationUnit().getId();
+    for( final IFlowRelationship relationship : flowModel.getFlowRelationsShips() )
     {
       if( relationship instanceof IBoundaryCondition )
       {
@@ -316,7 +316,7 @@ public class Control1D2DConverterSWAN
         "COORD %s\n" + //$NON-NLS-1$
         "$\n", //$NON-NLS-1$
 
-    m_controlModel.getDescription(), m_version.toString(), m_controlModel.getGmlID(), m_strTimeFrom, m_strTimeTo, ((new Date()).toGMTString()), // date
+    m_controlModel.getDescription(), m_version.toString(), m_controlModel.getId(), m_strTimeFrom, m_strTimeTo, ((new Date()).toGMTString()), // date
     // and time of actual simulation run
     0.0, // TODO: check if the default see level can be other
     m_strStationary, COORD ); // TODO: check if we have some different coordinates as Cartesian

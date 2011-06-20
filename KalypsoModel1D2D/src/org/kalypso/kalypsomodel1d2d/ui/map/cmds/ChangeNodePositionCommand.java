@@ -49,8 +49,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -137,28 +136,28 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
     m_node.setPoint( position );
 
     final List<Feature> changedFeatures = new ArrayList<Feature>( 10 );
-    changedFeatures.add( m_node.getFeature() );
+    changedFeatures.add( m_node );
 
     if( m_fireEventsForDependendElements )
     {
       /* Edges etc. */
-      final IFeatureWrapperCollection<IFeatureWrapper2> containers = m_node.getContainers();
-      for( final IFeatureWrapper2 featureWrapper2 : containers )
+      final IFeatureBindingCollection<Feature> containers = m_node.getContainers();
+      for( final Feature featureWrapper2 : containers )
       {
-        changedFeatures.add( featureWrapper2.getFeature() );
-        featureWrapper2.getFeature().setEnvelopesUpdated();
+        changedFeatures.add( featureWrapper2 );
+        featureWrapper2.setEnvelopesUpdated();
       }
 
       /* Elements */
       final IFE1D2DElement[] elements = m_node.getElements();
       for( final IFE1D2DElement element : elements )
       {
-        changedFeatures.add( element.getFeature() );
-        element.getFeature().setEnvelopesUpdated();
+        changedFeatures.add( element );
+        element.setEnvelopesUpdated();
       }
     }
 
-    final GMLWorkspace workspace = m_discretisationModel.getFeature().getWorkspace();
+    final GMLWorkspace workspace = m_discretisationModel.getWorkspace();
     workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, changedFeatures.toArray( new Feature[changedFeatures.size()] ) ) );
   }
 
@@ -184,9 +183,9 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   @Override
-  public IFeatureWrapper2[] getChangedFeature( )
+  public Feature[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { m_node };
+    return new Feature[] { m_node };
   }
 
   /**

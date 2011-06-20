@@ -290,7 +290,7 @@ public class IterationInfoSWAN implements IIterationInfo
       String strActDateSWAN = (String) stepNrObj;
       return SWANDataConverterHelper.getDateForStepFromString( strActDateSWAN.trim() );
     }
-    else if( stepNrObj == null )
+    else if( stepNrObj == null && m_strActDate != null)
     {
       return SWANDataConverterHelper.getDateForStepFromString( m_strActDate.trim() );
     }

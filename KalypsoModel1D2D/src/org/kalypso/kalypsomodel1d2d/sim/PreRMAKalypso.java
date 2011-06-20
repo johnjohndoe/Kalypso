@@ -47,7 +47,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -147,10 +147,10 @@ public class PreRMAKalypso implements ISimulation
         final String calcUnitID = (String) inputProvider.getInputForID( INPUT_CALCULATION_UNIT_ID );
         if( calculationUnit instanceof ICalculationUnit1D2D )
         {
-          final IFeatureWrapperCollection<ICalculationUnit> changedSubUnits = ((ICalculationUnit1D2D) calculationUnit).getChangedSubUnits();
+          final IFeatureBindingCollection<ICalculationUnit> changedSubUnits = ((ICalculationUnit1D2D) calculationUnit).getChangedSubUnits();
           for( final ICalculationUnit subUnit : changedSubUnits )
           {
-            if( subUnit.getGmlID().equals( calcUnitID ) )
+            if( subUnit.getId().equals( calcUnitID ) )
               calculationUnit = subUnit;
           }
         }

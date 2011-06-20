@@ -52,8 +52,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
@@ -101,9 +100,9 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
   {
     // TODO check if such a line already exists (with same nodes etc...)
     
-    final Feature parentFeature = m_model.getFeature();
+    final Feature parentFeature = m_model;
     final GMLWorkspace workspace = parentFeature.getWorkspace();
-    final IFeatureWrapperCollection<IFELine> continuityLines = m_model.getContinuityLines();
+    final IFeatureBindingCollection<IFELine> continuityLines = m_model.getContinuityLines();
 
     if( m_lineElementQName.equals( IContinuityLine1D.QNAME ) )
       m_line = continuityLines.addNew( m_lineElementQName, IContinuityLine1D.class );
@@ -112,9 +111,9 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
     
     final List<IFE1D2DNode> nodes = m_line.createFullNodesList( m_nodeList );
     for( int i = 0; i < nodes.size(); i++ )
-      nodes.get( i ).addContainer( m_line.getGmlID() );
-    m_line.getFeature().invalidEnvelope();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, m_line.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      nodes.get( i ).addContainer( m_line.getId() );
+    m_line.invalidEnvelope();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, m_line, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     m_processed = true;
   }
 
@@ -146,9 +145,9 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   @Override
-  public IFeatureWrapper2[] getChangedFeature( )
+  public Feature[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { m_line };
+    return new Feature[] { m_line };
   }
 
   /**

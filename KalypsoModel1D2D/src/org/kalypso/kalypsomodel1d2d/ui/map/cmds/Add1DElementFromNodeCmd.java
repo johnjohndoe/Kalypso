@@ -48,7 +48,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Undoable Add 1D fe element command from add node cmds
@@ -181,12 +181,12 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
   }
 
   /**
-   * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand#getChangedFeature()
    */
   @Override
-  public IFeatureWrapper2[] getChangedFeature( )
+  public Feature[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { addedElement };
+    return new Feature[] { addedElement };
   }
 
   /**

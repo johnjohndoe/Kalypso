@@ -46,7 +46,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Gernot Belger
@@ -64,7 +63,7 @@ public class CreateBridgeFlowrelationWidget extends AbstractCreateFlowrelationWi
    *      org.kalypso.gmlschema.feature.IFeatureType)
    */
   @Override
-  protected IBridgeFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
+  protected IBridgeFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
   {
     // TODO: use newAdd method in FeatureWrapperCollection instead?
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IBridgeFlowRelation.QNAME );
@@ -82,7 +81,7 @@ public class CreateBridgeFlowrelationWidget extends AbstractCreateFlowrelationWi
 //   *      org.kalypsodeegree.model.geometry.GM_Point, double)
 //   */
 //  @Override
-//  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+//  protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
 //  {
 //    return discModel.find1DElement( currentPos, grabDistance );
 //  }

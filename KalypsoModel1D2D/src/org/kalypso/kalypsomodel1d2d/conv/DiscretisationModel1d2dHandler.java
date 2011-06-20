@@ -93,7 +93,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -172,8 +172,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     m_model = model;
     m_flowModel = pFlowRelationshipModel;
-    m_workspace = model.getFeature().getWorkspace();
-    m_flowWorkspace = pFlowRelationshipModel.getFeature().getWorkspace();
+    m_workspace = model.getWorkspace();
+    m_flowWorkspace = pFlowRelationshipModel.getWorkspace();
     m_cmdWorkspace2d = pCommandableWorkspace2d;
     m_positionProvider = positionProvider;
     m_setNotInsertedNodes = new HashSet<Integer>();
@@ -205,24 +205,24 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     int lIntCountCreated = createFlowRels1d();
 
-    final Feature[] lAllElementsFlow = m_flowModel.getWrappedList().toFeatures();
+    final Feature[] lAllElementsFlow = m_flowModel.getFlowRelationsShips().getFeatureList().toFeatures();
     if( lIntCountCreated > 0 && lAllElementsFlow.length > 0 )
     {
-      m_flowWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_flowWorkspace, m_flowModel.getFeature(), lAllElementsFlow, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );//
+      m_flowWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_flowWorkspace, m_flowModel, lAllElementsFlow, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );//
       m_setModelClassesToSetDirty.add( IFlowRelationshipModel.class );
     }
 
-    m_flowModel.getWrappedList().invalidate();
+    m_flowModel.getFlowRelationsShips().getFeatureList().invalidate();
 
     final Feature[] lElementsToRemove = getElementsWithoutGeometry();
     final Set<Feature> lMidleNodesToRemove = getMidleNodeFeaturesToRemove();
-    final Feature[] lAllElements = m_model.getElements().getWrappedList().toFeatures();
+    final Feature[] lAllElements = m_model.getElements().getFeatureList().toFeatures();
 
     if( lAllElements.length > 0 )
     {
       m_setModelClassesToSetDirty.add( IFEDiscretisationModel1d2d.class );
     }
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), lAllElements, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model, lAllElements, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     removeElements( lElementsToRemove );
     removeMiddleNodes( lMidleNodesToRemove );
@@ -236,7 +236,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     createFlowRels2d();
     if( m_listNewFlowElements.size() > 0 )
     {
-      m_flowWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_flowWorkspace, m_flowModel.getFeature(), m_listNewFlowElements.toArray( new Feature[m_listNewFlowElements.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );//
+      m_flowWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_flowWorkspace, m_flowModel, m_listNewFlowElements.toArray( new Feature[m_listNewFlowElements.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );//
       m_setModelClassesToSetDirty.add( IFlowRelationshipModel.class );
     }
 
@@ -245,9 +245,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       m_setModelClassesToSetDirty.add( IFEDiscretisationModel1d2d.class );
     }
 
-    m_model.getNodes().getWrappedList().invalidate();
-    m_model.getEdges().getWrappedList().invalidate();
-    m_model.getElements().getWrappedList().invalidate();
+    m_model.getNodes().getFeatureList().invalidate();
+    m_model.getEdges().getFeatureList().invalidate();
+    m_model.getElements().getFeatureList().invalidate();
 
   }
 
@@ -255,8 +255,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     // middle nodes are not assigned to arcs, so they are without container.
     // so middle nodes can be removed directly
-    m_model.getNodes().removeAllAtOnce( lMidleNodesToRemove );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), lMidleNodesToRemove.toArray( new Feature[lMidleNodesToRemove.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    m_model.getNodes().removeAll( lMidleNodesToRemove );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model, lMidleNodesToRemove.toArray( new Feature[lMidleNodesToRemove.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   private Set<Feature> getMidleNodeFeaturesToRemove( )
@@ -268,7 +268,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       IFE1D2DNode lNode = getNode( lIntMidleNodeRMAId );
       if( lNode == null )
         continue;
-      lSetToRemove.add( lNode.getFeature() );
+      lSetToRemove.add( lNode );
     }
     return lSetToRemove;
   }
@@ -364,7 +364,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
           lListResBck.add( lNodeBckAct.getPoint() );
           lNodeBckPrev = lNodeBckAct;
         }
-        lListElementsToRemove.add( lPoly.getFeature() );
+        lListElementsToRemove.add( lPoly );
         lPolyPrev = lPoly;
       }
 
@@ -410,7 +410,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       // cleanup and update
       if( pListElementsIdsRma.size() > 1 )
       {
-        m_listNewPolysWithWeir.add( lNewPoly.getFeature() );
+        m_listNewPolysWithWeir.add( lNewPoly );
         removeElements( lListElementsToRemove.toArray( new Feature[lListElementsToRemove.size()] ) );
       }
     }
@@ -422,7 +422,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     for( final IFE1D2DEdge lEdge : lPoly.getEdges() )
     {
-      if( lEdge.getGmlID().equals( pEdgeToSkip.getGmlID() ) )
+      if( lEdge.getId().equals( pEdgeToSkip.getId() ) )
         continue;
       final IFE1D2DNode lNode0 = lEdge.getNode( 0 );
       final IFE1D2DNode lNode1 = lEdge.getNode( 1 );
@@ -459,14 +459,14 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   private Feature createNewFlowrelation( final IPolyElement pPoly, final int pIntDegrees )
   {
     GM_Position flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( pPoly );
-    final Feature parentFeature = m_flowModel.getFeature();
-    final IRelationType parentRelation = m_flowModel.getWrappedList().getParentFeatureTypeProperty();
+    final Feature parentFeature = m_flowModel;
+    final IRelationType parentRelation = m_flowModel.getFlowRelationsShips().getFeatureList().getParentFeatureTypeProperty();
     final IFlowRelationship flowRel = createNew2dWeirFeature( m_flowWorkspace, parentFeature, parentRelation, pIntDegrees );
 
     final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     flowRel.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
 
-    return flowRel.getFeature();
+    return flowRel;
   }
 
   /**
@@ -527,8 +527,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       e.printStackTrace();
     }
 
-    m_model.getElements().removeAllAtOnce( Arrays.asList( elementsToRemove ) );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), elementsToRemove, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    m_model.getElements().removeAll( Arrays.asList( elementsToRemove ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model, elementsToRemove, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   private Feature[] getElementsWithoutGeometry( )
@@ -541,7 +541,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
         final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) lElement).getGeometry();
         if( eleGeom == null )
         {
-          lSetToRemove.add( lElement.getFeature() );
+          lSetToRemove.add( lElement );
         }
       }
     }
@@ -585,7 +585,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       edge = FE1D2DEdge.createFromModel( m_model, node1, node2 );
     }
-    final String gmlID = edge.getGmlID();
+    final String gmlID = edge.getId();
     m_edgesNameConversionMap.put( id, gmlID );
     if( elementLeftID == elementRightID )
     {
@@ -611,9 +611,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final void maybeAddEdgeToElement( final int rmaID, final IFE1D2DEdge edge )
   {
-    final String edgeId = edge.getGmlID();
+    final String edgeId = edge.getId();
 
-    final IFeatureWrapperCollection lContainers = edge.getContainers();
+    final IFeatureBindingCollection lContainers = edge.getContainers();
     int iCountPolyElements = 0;
     for( int i = 0; i < lContainers.size(); ++i )
     {
@@ -625,9 +625,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
         {
           final String gmlID = m_elementsNameConversionMap.get( rmaID );
 
-          if( gmlID == null && !m_elementsNameConversionMap.values().contains( ((IPolyElement) lFeature).getGmlID() ) )
+          if( gmlID == null && !m_elementsNameConversionMap.values().contains( ((IPolyElement) lFeature).getId() ) )
           {
-            m_elementsNameConversionMap.put( rmaID, ((IPolyElement) lFeature).getGmlID() );
+            m_elementsNameConversionMap.put( rmaID, ((IPolyElement) lFeature).getId() );
           }
         }
       }
@@ -669,7 +669,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     if( element != null )
     {
       // add edge to element and element to edge
-      final String elementId = element.getGmlID();
+      final String elementId = element.getId();
       element.addEdge( edgeId );
       edge.addContainer( elementId );
       if( rmaID != 0 )
@@ -695,7 +695,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       {
         element1d = ModelOps.createElement1d( m_model, edge );
       }
-      m_elementsNameConversionMap.put( rmaID, element1d.getGmlID() );
+      m_elementsNameConversionMap.put( rmaID, element1d.getId() );
     }
   }
 
@@ -768,7 +768,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       // new node, create
       node = m_model.createNode( nodeLocation, -1, NOT_CREATED );
     }
-    m_nodesNameConversionMap.put( id, node.getGmlID() );
+    m_nodesNameConversionMap.put( id, node.getId() );
   }
 
   /**

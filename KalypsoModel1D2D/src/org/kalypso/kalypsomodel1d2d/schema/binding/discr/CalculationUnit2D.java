@@ -40,11 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import javax.xml.namespace.QName;
-
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Default implementation of {@link ICalculationUnit2D}
@@ -52,17 +51,12 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings("unchecked")
 public class CalculationUnit2D extends CalculationUnit implements ICalculationUnit2D
 {
-  public CalculationUnit2D( final Feature featureToBind )
-  {
-    this( featureToBind, ICalculationUnit2D.QNAME, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS, IFENetItem.class );
-  }
 
-  public CalculationUnit2D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<IFENetItem> wrapperClass )
+  public CalculationUnit2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -73,7 +67,7 @@ public class CalculationUnit2D extends CalculationUnit implements ICalculationUn
   {
     boolean isPolyElementOrBoundaryLine = (element instanceof IPolyElement) || (element instanceof IContinuityLine2D);
     if( !isPolyElementOrBoundaryLine )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D.0") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D.0" ) ); //$NON-NLS-1$
     return super.addElementAsRef( element );
   }
 

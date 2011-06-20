@@ -109,7 +109,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
     }
 
-    final List<IBoundaryCondition> bConditions_ = CalcUnitOps.getBoundaryConditions( m_flowRelationship, calc );
+    final List<IBoundaryCondition> bConditions_ = CalcUnitOps.getBoundaryConditions( m_flowRelationship.getFlowRelationsShips(), calc );
     boolean foundEndBLine = false;
     for( final IBoundaryCondition condition_ : bConditions_ )
     {
@@ -142,7 +142,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   private void invariant_CheckEachBLhasBC( final List<IProblem> invariantErrorMessages, final ICalculationUnit calcUnit )
   {
     final List<IFELine> continuityLine2Ds = calcUnit.getContinuityLines();
-    final List<IBoundaryCondition> boundaryConditions = CalcUnitOps.getBoundaryConditions( m_flowRelationship, calcUnit );
+    final List<IBoundaryCondition> boundaryConditions = CalcUnitOps.getBoundaryConditions( m_flowRelationship.getFlowRelationsShips(), calcUnit );
 
     for( final IFELine line : continuityLine2Ds )
     {

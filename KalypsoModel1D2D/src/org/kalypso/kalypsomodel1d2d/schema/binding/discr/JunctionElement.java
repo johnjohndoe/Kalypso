@@ -43,41 +43,31 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-public class JunctionElement extends AbstractFeatureBinder implements IJunctionElement
+public class JunctionElement extends Feature_Impl implements IJunctionElement
 {
-  private FeatureWrapperCollection<IFELine> m_continuityLines;
 
-  public JunctionElement( final Feature featureToBind )
-  {
-    this( featureToBind, IJunctionElement.QNAME );
-  }
+  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<IFELine>( this, IFELine.class, PROP_CONTI_LINES );
 
-  public JunctionElement( final Feature featureToBind, final QName qnameToBind )
+  public JunctionElement( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, qnameToBind );
-    final Object prop = featureToBind.getProperty( IJunctionElement.PROP_CONTI_LINES );
-    if( prop == null )
-      m_continuityLines = new FeatureWrapperCollection<IFELine>( featureToBind, IJunctionElement.QNAME, IJunctionElement.PROP_CONTI_LINES, IFELine.class );
-    else
-      m_continuityLines = new FeatureWrapperCollection<IFELine>( featureToBind, IFELine.class, IJunctionElement.PROP_CONTI_LINES );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -133,7 +123,7 @@ public class JunctionElement extends AbstractFeatureBinder implements IJunctionE
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#getElements()
    */
   @Override
-  public IFeatureWrapperCollection<IFENetItem> getElements( )
+  public IFeatureBindingCollection<IFENetItem> getElements( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -164,10 +154,10 @@ public class JunctionElement extends AbstractFeatureBinder implements IJunctionE
         if( !allLinesFound )
           break;
         lineFound = false;
-        final String myLineGmlID = myLine.getGmlID();
+        final String myLineGmlID = myLine.getId();
         for( final IFELine calcUnitLine : calcUnitContinuityLines )
         {
-          if( calcUnitLine.getGmlID().equals( myLineGmlID ) )
+          if( calcUnitLine.getId().equals( myLineGmlID ) )
           {
             lineFound = true;
             break;

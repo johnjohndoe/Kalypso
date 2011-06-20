@@ -170,7 +170,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
     progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.7" ) ); //$NON-NLS-1$
 
-//    final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getGmlID() );
+//    final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getId() );
 
     /* If no results available yet, nothing to do. */
     if( m_calcUnitMeta == null )

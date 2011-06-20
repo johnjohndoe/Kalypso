@@ -45,68 +45,65 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
-
-
 /**
- * Undoable command that changes the name of 
- * of an {@link IFeatureWrapper2} 
+ * Undoable command that changes the name of of an {@link Feature}
  * 
  * @author Patrice Congo
- *
+ * 
  */
 @SuppressWarnings("unchecked")
 public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeCommand
 {
-  
-  
+
   private String oldName;
-  
-  private final IFeatureWrapper2 featureToRename;
-  
+
+  private final Feature featureToRename;
+
   private final String newName;
-  
+
   /**
    * Sets to true to indicate process done
    */
   private boolean changed = false;
 
-
-  
   /**
    * Creates a Calculation unit of the given q-name
-   * @param cuFeatureQName the q-name of the calculation unit to create
-   * @param model1d2d the model that should hold the new calculation unit
-   * @param name a name for the calculation unit if one has to be set or null
-   * @param description text describing the calculation unit or null
-   * @throws IllegalArgumentException if cuFeatureQName or model1d2d is null
+   * 
+   * @param cuFeatureQName
+   *          the q-name of the calculation unit to create
+   * @param model1d2d
+   *          the model that should hold the new calculation unit
+   * @param name
+   *          a name for the calculation unit if one has to be set or null
+   * @param description
+   *          text describing the calculation unit or null
+   * @throws IllegalArgumentException
+   *           if cuFeatureQName or model1d2d is null
    */
   @SuppressWarnings("hiding")
-  public ChangeIFeatureWrapper2NameCmd(
-              IFeatureWrapper2 featureToRename,
-              String newName )
+  public ChangeIFeatureWrapper2NameCmd( Feature featureToRename, String newName )
   {
-    Assert.throwIAEOnNullParam( featureToRename, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd.0") ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( newName, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd.1") ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( featureToRename, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeFeatureNameCmd.0" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( newName, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeFeatureNameCmd.1" ) ); //$NON-NLS-1$
     this.featureToRename = featureToRename;
     this.newName = newName;
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   @Override
-  public IFeatureWrapper2[] getChangedFeature( )
+  public Feature[] getChangedFeature( )
   {
     if( changed )
     {
-      return new IFeatureWrapper2[]{featureToRename };
+      return new Feature[] { featureToRename };
     }
     else
     {
-      return new IFeatureWrapper2[]{};
+      return new Feature[] {};
     }
   }
 
@@ -125,7 +122,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd.2"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeFeatureNameCmd.2" ); //$NON-NLS-1$
   }
 
   /**
@@ -136,9 +133,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
   {
     return true;
   }
-  
-  
-  
+
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
@@ -150,7 +145,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
       changed = true;
       oldName = featureToRename.getName();
       featureToRename.setName( newName );
-      fireProcessChanges( );
+      fireProcessChanges();
     }
     catch( Exception e )
     {
@@ -159,25 +154,20 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
     }
 
   }
-  
-  
+
   /**
    * 
-   * @param calculationUnit the added or removed calculation unit
-   * @param added true if the calculation unit was added false otherwise
+   * @param calculationUnit
+   *          the added or removed calculation unit
+   * @param added
+   *          true if the calculation unit was added false otherwise
    */
   private final void fireProcessChanges( )
   {
-    final int changedType= FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE;
-    
-    GMLWorkspace workspace = featureToRename.getFeature().getWorkspace();
-    FeatureStructureChangeModellEvent event = 
-        new FeatureStructureChangeModellEvent(
-            workspace, 
-            featureToRename.getFeature().getParent(), 
-            new Feature[]{featureToRename.getFeature()}, 
-            changedType
-            );
+    final int changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE;
+
+    GMLWorkspace workspace = featureToRename.getWorkspace();
+    FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, featureToRename.getParent(), new Feature[] { featureToRename }, changedType );
     workspace.fireModellEvent( event );
   }
 
@@ -200,7 +190,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
   public void undo( ) throws Exception
   {
     featureToRename.setDescription( oldName );
-    fireProcessChanges( );
+    fireProcessChanges();
   }
 
 }

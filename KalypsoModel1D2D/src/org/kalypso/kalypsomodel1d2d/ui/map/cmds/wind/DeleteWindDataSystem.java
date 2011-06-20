@@ -44,7 +44,7 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Command for deleting a wind data system
@@ -72,11 +72,11 @@ public class DeleteWindDataSystem implements IFeatureChangeCommand
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand#getChangedFeature()
    */
-  public IFeatureWrapper2[] getChangedFeature( )
+  public Feature[] getChangedFeature( )
   {
     if( m_done )
     {
-      return new IFeatureWrapper2[] { m_windModel };
+      return new Feature[] { m_windModel };
     }
     return null;
   }

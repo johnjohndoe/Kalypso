@@ -45,7 +45,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Unduable add edge command.
@@ -122,7 +122,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
   {
     if( addedEdge != null )
     {
-      model.getEdges().remove( addedEdge.getFeature() );
+      model.getEdges().remove( addedEdge );
       // TODO remove edges from node add method to node interface
     }
   }
@@ -131,9 +131,9 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   @Override
-  public IFeatureWrapper2[] getChangedFeature( )
+  public Feature[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { addedEdge };
+    return new Feature[] { addedEdge };
   }
 
   /**

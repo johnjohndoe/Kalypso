@@ -64,8 +64,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -130,7 +129,7 @@ public class GeometryRecalculator
   @SuppressWarnings("unchecked")
   private void addToNodes( final IFE1D2DNode node )
   {
-    final Feature feature = node.getFeature();
+    final Feature feature = node;
     if( m_nodeList.contains( feature ) )
       return;
     addToDiscretisationModelChanges( node );
@@ -138,15 +137,15 @@ public class GeometryRecalculator
     m_nodesAdded = true;
   }
 
-  private void addToDiscretisationModelChanges( final IFeatureWrapper2 element )
+  private void addToDiscretisationModelChanges( final Feature element )
   {
-    final Feature feature = element.getFeature();
+    final Feature feature = element;
     if( m_discretisationModelChanges.contains( feature ) )
       return;
     feature.invalidEnvelope();
     m_discretisationModelChanges.add( feature );
     final String featureID = feature.getId();
-    for( final Object object : m_flowRelCollection.getWrappedList() )
+    for( final Object object : m_flowRelCollection.getFlowRelationsShips() )
     {
       final IBoundaryCondition boundaryCondition = (IBoundaryCondition) ((Feature) object).getAdapter( IBoundaryCondition.class );
       if( boundaryCondition != null )
@@ -159,9 +158,9 @@ public class GeometryRecalculator
     }
   }
 
-  private void addToFlowRelationshipsModelChanges( final IBoundaryCondition boundaryCondition, final IFeatureWrapper2 element )
+  private void addToFlowRelationshipsModelChanges( final IBoundaryCondition boundaryCondition, final Feature element )
   {
-    final Feature feature = boundaryCondition.getFeature();
+    final Feature feature = boundaryCondition;
     if( m_flowRelationshipsModelChanges.contains( feature ) )
       return;
     feature.invalidEnvelope();
@@ -169,28 +168,28 @@ public class GeometryRecalculator
     if( element instanceof IFELine )
     {
       int countBCs = 0;
-      for( final Object bcFeature : m_flowRelCollection.getWrappedList() )
+      for( final Object bcFeature : m_flowRelCollection.getFlowRelationsShips() )
       {
         final IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
-        if( bc.getParentElementID().equals( element.getGmlID() ) )
+        if( bc.getParentElementID().equals( element.getId() ) )
           countBCs++;
       }
       int i = 0;
-      for( final Object bcFeature : m_flowRelCollection.getWrappedList() )
+      for( final Object bcFeature : m_flowRelCollection.getFlowRelationsShips() )
       {
         final IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
-        if( bc.getParentElementID().equals( element.getGmlID() ) )
+        if( bc.getParentElementID().equals( element.getId() ) )
         {
           final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( element, countBCs, ++i );
           bc.setPosition( GeometryFactory.createGM_Point( position.getX(), position.getY(), crs ) );
-          m_flowRelationshipsModelChanges.add( bc.getFeature() );
+          m_flowRelationshipsModelChanges.add( bc );
         }
       }
     }
     else
     {
       boundaryCondition.setPosition( GeometryFactory.createGM_Point( FlowRelationUtilitites.getFlowPositionFromElement( element ), crs ) );
-      m_flowRelationshipsModelChanges.add( boundaryCondition.getFeature() );
+      m_flowRelationshipsModelChanges.add( boundaryCondition );
     }
     m_flowRelationshipsModelChanges.add( feature );
   }
@@ -204,9 +203,9 @@ public class GeometryRecalculator
       for( final Feature feature : m_nodeList )
       {
         final IFE1D2DNode node = (IFE1D2DNode) feature.getAdapter( IFE1D2DNode.class );
-        final IFeatureWrapperCollection<IFeatureWrapper2> containers = node.getContainers();
+        final IFeatureBindingCollection<Feature> containers = node.getContainers();
 
-        for( final IFeatureWrapper2 container : containers )
+        for( final Feature container : containers )
         {
           if( container instanceof IFELine )
           {
@@ -226,8 +225,8 @@ public class GeometryRecalculator
           else if( container instanceof IFE1D2DEdge )
           {
             final IFE1D2DEdge edge = (IFE1D2DEdge) container;
-            final IFeatureWrapperCollection<IFeatureWrapper2> edgeContainers = edge.getContainers();
-            for( final IFeatureWrapper2 edgeContainer : edgeContainers )
+            final IFeatureBindingCollection<Feature> edgeContainers = edge.getContainers();
+            for( final Feature edgeContainer : edgeContainers )
               addToDiscretisationModelChanges( container );
           }
           addToDiscretisationModelChanges( container );
@@ -254,7 +253,7 @@ public class GeometryRecalculator
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       if( !m_flowRelationshipsModelChanges.isEmpty() )

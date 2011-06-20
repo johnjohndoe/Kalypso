@@ -40,16 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
  * @author Gernot Belger, ig
  */
 public class WeirFlowRelation2D extends BuildingFlowRelation2D implements IWeirFlowRelation2D
 {
-  public WeirFlowRelation2D( final Feature featureToBind )
+
+  public WeirFlowRelation2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, IWeirFlowRelation2D.QNAME );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
 }

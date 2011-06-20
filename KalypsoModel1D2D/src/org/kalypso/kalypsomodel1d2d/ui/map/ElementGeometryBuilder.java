@@ -68,7 +68,6 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -124,7 +123,7 @@ public class ElementGeometryBuilder
    * REMARK: No validity check is done here. Call {@link #checkNewNode(Object)} before a new node is added.
    */
   //  public ICommand addNode( final GM_Point node ) throws Exception
-  public final IFeatureWrapper2 addNode( final GM_Point node, final CompositeCommand command  ) throws Exception
+  public final Feature addNode( final GM_Point node, final CompositeCommand command  ) throws Exception
   {
     m_nodes.add( node );
     removeDuplicates( m_nodes );
@@ -141,14 +140,14 @@ public class ElementGeometryBuilder
    * 
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
-  public final IFeatureWrapper2 finish( final CompositeCommand command ) throws Exception
+  public final Feature finish( final CompositeCommand command ) throws Exception
   {
     final CommandableWorkspace workspace = m_nodeTheme.getWorkspace();
     final FeatureList featureList = m_nodeTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
 
     /* Initialize elements needed for edges and elements */
-    final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
+    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature;
 
     return ElementGeometryHelper.createAdd2dElement( command, workspace, discModel, m_nodes );
   }

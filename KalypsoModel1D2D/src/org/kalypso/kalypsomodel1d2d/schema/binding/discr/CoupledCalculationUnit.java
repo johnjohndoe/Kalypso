@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -54,9 +52,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class CoupledCalculationUnit extends CalculationUnit implements ICoupledCalculationUnit
 {
-  public CoupledCalculationUnit( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<IFENetItem> wrapperClass )
+
+  public CoupledCalculationUnit( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -65,7 +64,7 @@ public class CoupledCalculationUnit extends CalculationUnit implements ICoupledC
   @Override
   public boolean isCoupledSimulation( )
   {
-    return FeatureHelper.booleanIsTrue( getFeature(), WB1D2D_PROP_COUPLED_SIMULATION, false );
+    return FeatureHelper.booleanIsTrue( this, WB1D2D_PROP_COUPLED_SIMULATION, false );
   }
 
   /**

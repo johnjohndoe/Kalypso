@@ -42,50 +42,24 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-public class TransitionElement extends AbstractFeatureBinder implements ITransitionElement
+public class TransitionElement extends Feature_Impl implements ITransitionElement
 {
-  private FeatureWrapperCollection<IFELine> m_continuityLines;
+  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<IFELine>( this, IFELine.class, PROP_CONTI_LINES );
 
-  private ITransitionElement.TRANSITION_TYPE m_transition_type;
-
-  public TransitionElement( final Feature featureToBind )
+  public TransitionElement( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    this( featureToBind, ITransitionElement.QNAME );
-  }
-
-  public TransitionElement( final Feature featureToBind, final QName qnameToBind )
-  {
-    super( featureToBind, qnameToBind );
-    // m_continuityLines = (List<IFELine>) featureToBind.getProperty( ITransitionElement.PROP_CONTI_LINES );
-    final Object prop = featureToBind.getProperty( ITransitionElement.PROP_CONTI_LINES );
-    if( prop == null )
-      m_continuityLines = new FeatureWrapperCollection<IFELine>( featureToBind, ITransitionElement.QNAME, ITransitionElement.PROP_CONTI_LINES, IFELine.class );
-    else
-      m_continuityLines = new FeatureWrapperCollection<IFELine>( featureToBind, IFELine.class, ITransitionElement.PROP_CONTI_LINES );
-    final Object property = getFeature().getProperty( ITransitionElement.PROP_TRANSITION_TYPE );
-    if( property == null )
-      m_transition_type = TRANSITION_TYPE.TYPE1D2D;
-    else
-    {
-      if( TRANSITION_TYPE.TYPE2D1D.getValue().equals( property ) )
-        m_transition_type = TRANSITION_TYPE.TYPE2D1D;
-      else
-        // type1D2D is default value... 
-        m_transition_type = TRANSITION_TYPE.TYPE1D2D;
-    }
-
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -141,7 +115,7 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#getElements()
    */
   @Override
-  public IFeatureWrapperCollection<IFENetItem> getElements( )
+  public IFeatureBindingCollection<IFENetItem> getElements( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -172,10 +146,10 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
         if( !allLinesFound )
           break;
         lineFound = false;
-        final String myLineGmlID = myLine.getGmlID();
+        final String myLineGmlID = myLine.getId();
         for( final IFELine calcUnitLine : calcUnitContinuityLines )
         {
-          if( calcUnitLine.getGmlID().equals( myLineGmlID ) )
+          if( calcUnitLine.getId().equals( myLineGmlID ) )
           {
             lineFound = true;
             break;
@@ -189,16 +163,18 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
   }
 
   @Override
-  public ITransitionElement.TRANSITION_TYPE getTransitionType( )
+  public TRANSITION_TYPE getTransitionType( )
   {
-    return m_transition_type;
+    final String property = (String) getProperty( PROP_TRANSITION_TYPE );
+    if( property == null )
+      return TRANSITION_TYPE.TYPE1D2D;
+    return TRANSITION_TYPE.fromValue( property );
   }
 
   @Override
-  public void setTransitionType( final ITransitionElement.TRANSITION_TYPE transition_type )
+  public void setTransitionType( final TRANSITION_TYPE transition_type )
   {
-    m_transition_type = transition_type;
-    getFeature().setProperty( ITransitionElement.PROP_TRANSITION_TYPE, m_transition_type.getValue() );
+    setProperty( PROP_TRANSITION_TYPE, transition_type.getValue() );
   }
 
 }

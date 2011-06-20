@@ -430,7 +430,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
 
       if( lListAdded.size() > 0 )
       {
-        final Feature feature = m_discModel.getFeature();
+        final Feature feature = m_discModel;
         final GMLWorkspace workspace = feature.getWorkspace();
         FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, feature, lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
         workspace.fireModellEvent( changeEvent );
@@ -457,12 +457,12 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     lListRes.addAll( createNodesAndEdges( discModel, lListEdges, lListPoints ) );
 
     final IPolyElement element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
-    lListRes.add( element2d.getFeature() );
+    lListRes.add( element2d );
     for( final IFE1D2DEdge lEdge : lListEdges )
     {
       // add edge to element and element to edge
-      final String elementId = element2d.getGmlID();
-      element2d.addEdge( lEdge.getGmlID() );
+      final String elementId = element2d.getId();
+      element2d.addEdge( lEdge.getId() );
       lEdge.addContainer( elementId );
     }
 
@@ -496,7 +496,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
           return new ArrayList<Feature>();
         }
         m_nodesNameConversionMap.put( lPoint.getPosition(), actNode );
-        lListRes.add( actNode.getFeature() );
+        lListRes.add( actNode );
       }
 
       if( iCountNodes > 0 )
@@ -510,10 +510,10 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
         else
         {
           edge = FE1D2DEdge.createFromModel( discModel, lastNode, actNode );
-          lListRes.add( edge.getFeature() );
+          lListRes.add( edge );
         }
         lListEdges.add( edge );
-        // final String gmlID = edge.getGmlID();
+        // final String gmlID = edge.getId();
       }
       iCountNodes++;
       lastNode = actNode;

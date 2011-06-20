@@ -86,7 +86,7 @@ import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -114,7 +114,7 @@ public class WindDataModelSystemEditorComponent
         if( name != null )
           return name;
         else
-          return ((IWindDataModelSystem) element).getGmlID();
+          return ((IWindDataModelSystem) element).getId();
       }
       else if( element instanceof IWindDataModel )
       {
@@ -124,7 +124,7 @@ public class WindDataModelSystemEditorComponent
         if( name != null )
           return name;
         else
-          return ((IWindDataModel) element).getGmlID();
+          return ((IWindDataModel) element).getId();
       }
       else
         throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.0" ) + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ 
@@ -180,9 +180,8 @@ public class WindDataModelSystemEditorComponent
       int i = 0;
       for( final IWindDataModelSystem lWindDataModelSystem : lListSystems )
       {
-        lWindDataModelSystem.getFeature();
         lWindDataModelSystem.setOrder( i );
-        m_arrInternalWindSystemsFeatures[i++] = lWindDataModelSystem.getFeature();
+        m_arrInternalWindSystemsFeatures[i++] = lWindDataModelSystem;
       }
     }
     catch( Exception e )
@@ -214,7 +213,7 @@ public class WindDataModelSystemEditorComponent
           return new Object[] {};
 
         final IWindModel lWindModel = (IWindModel) inputElement;
-        final IFeatureWrapperCollection<IWindDataModelSystem> lWindSystems = lWindModel.getWindDataModelSystems();
+        final IFeatureBindingCollection<IWindDataModelSystem> lWindSystems = lWindModel.getWindDataModelSystems();
         if( lWindSystems == null )
           return new Object[] {};
 
@@ -319,7 +318,7 @@ public class WindDataModelSystemEditorComponent
           return new Object[] {};
 
         final IWindDataModelSystem lWindSystem = (IWindDataModelSystem) inputElement;
-        final IFeatureWrapperCollection<IWindDataModel> lWindModels = lWindSystem.getWindDataModels();
+        final IFeatureBindingCollection<IWindDataModel> lWindModels = lWindSystem.getWindDataModels();
         if( lWindModels == null )
           return new Object[] {};
 
@@ -477,7 +476,7 @@ public class WindDataModelSystemEditorComponent
         {
           final IWindDataModel firstElement = (IWindDataModel) selection.getFirstElement();
           m_dataModel.setWindDataModel( firstElement );
-          IWindDataModelSystem lWindSystemParent = (IWindDataModelSystem) firstElement.getFeature().getParent().getAdapter( IWindDataModelSystem.class );
+          IWindDataModelSystem lWindSystemParent = (IWindDataModelSystem) firstElement.getParent().getAdapter( IWindDataModelSystem.class );
           m_descriptionText.setText( firstElement.getDateStep().toString() + "\n" + lWindSystemParent.getDescription() );//$NON-NLS-1$
           m_descriptionText.setToolTipText( lWindSystemParent.getDescription() + "\n" + firstElement.getDateStep().toString() );//$NON-NLS-1$
           m_descriptionText.redraw();
@@ -495,9 +494,9 @@ public class WindDataModelSystemEditorComponent
   public void refreshActualWindView( final IWindDataModelSystem pWindDataModelSystem, final IWindDataModel pWindDataModel )
   {
     WindDataWidgetDataModel.setSelectedWindSystem( pWindDataModelSystem );
-    WindDataWidgetDataModel.setActualWindDataModel( pWindDataModelSystem.getGmlID(), pWindDataModel );
+    WindDataWidgetDataModel.setActualWindDataModel( pWindDataModelSystem.getId(), pWindDataModel );
 
-    m_dataModel.getWindTheme().getWorkspace().fireModellEvent( new FeatureStructureChangeModellEvent( m_dataModel.getWindTheme().getWorkspace(), ((IWindModel) m_dataModel.getData( IWindModel.class.toString() )).getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
+    m_dataModel.getWindTheme().getWorkspace().fireModellEvent( new FeatureStructureChangeModellEvent( m_dataModel.getWindTheme().getWorkspace(), ((IWindModel) m_dataModel.getData( IWindModel.class.toString() )), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
 
     m_dataModel.getMapPanel().repaintMap();
   }
@@ -566,7 +565,7 @@ public class WindDataModelSystemEditorComponent
       final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
       if( firstElement instanceof IWindDataModelSystem )
       {
-        final IFeatureWrapperCollection<IWindDataModelSystem> windModels = m_windModel.getWindDataModelSystems();
+        final IFeatureBindingCollection<IWindDataModelSystem> windModels = m_windModel.getWindDataModelSystems();
         if( windModels == null )
           return;
 

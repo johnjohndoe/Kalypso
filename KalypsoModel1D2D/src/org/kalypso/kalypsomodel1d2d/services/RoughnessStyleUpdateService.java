@@ -136,7 +136,7 @@ public class RoughnessStyleUpdateService extends Job
       final IRoughnessClsCollection collection = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
 
       final List<Layer> layers = new ArrayList<Layer>();
-      layers.add( SLDHelper.polygonStyleLayer( POLYGON_LAYER_NAME, collection, geomPropertyName, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, POLYGON_STYLE_NAME, POLYGON_STYLE_TITLE, monitor ) );
+      layers.add( SLDHelper.polygonStyleLayer( POLYGON_LAYER_NAME, collection.getRoughnessClasses(), geomPropertyName, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, POLYGON_STYLE_NAME, POLYGON_STYLE_TITLE, monitor ) );
 
       // TODO: make optional via preferences?
       // layers.add( SLDHelper.textlabelStyleLayer( LABEL_LAYER_NAME, geomPropertyName,

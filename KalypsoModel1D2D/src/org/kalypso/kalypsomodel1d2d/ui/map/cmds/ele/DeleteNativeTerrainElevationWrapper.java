@@ -44,7 +44,7 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Command for deleting a native terrain elevation model wrapper
@@ -73,11 +73,11 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand#getChangedFeature()
    */
   @Override
-  public IFeatureWrapper2[] getChangedFeature( )
+  public Feature[] getChangedFeature( )
   {
     if( m_done )
     {
-      return new IFeatureWrapper2[] { m_elevationModel };
+      return new Feature[] { m_elevationModel };
     }
     return null;
   }
@@ -110,7 +110,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
     {
       return;
     }
-    m_terrainElevationModelSystem.getTerrainElevationModels().remove( m_elevationModel.getFeature() );
+    m_terrainElevationModelSystem.getTerrainElevationModels().remove( m_elevationModel );
   }
 
   /**

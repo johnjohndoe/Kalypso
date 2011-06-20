@@ -50,7 +50,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Command to remove an edge without container and inverted edge
@@ -107,8 +107,8 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
     for( final Feature lFeature : m_setToRemove )
     {
       IFE1D2DEdge lEdgeToDelete = (IFE1D2DEdge) lFeature.getAdapter( IFE1D2DEdge.class );
-      final String edgeID = lEdgeToDelete.getGmlID();
-      lSetEdgesIds.add( lEdgeToDelete.getFeature() );
+      final String edgeID = lEdgeToDelete.getId();
+      lSetEdgesIds.add( lEdgeToDelete );
       final List< IFE1D2DNode > nodes = lEdgeToDelete.getNodes();
       lSetNodesInvolved.addAll( nodes );
       
@@ -117,31 +117,31 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
       if( middleNode != null )
       {
         lSetNodesInvolved.add( middleNode );
-        lSetNodesFeaturesInvolved.add( middleNode.getFeature() );
-        lSetNodesIdsInvolved.add( middleNode.getGmlID() );
+        lSetNodesFeaturesInvolved.add( middleNode );
+        lSetNodesIdsInvolved.add( middleNode.getId() );
       }
       
       for( final IFE1D2DNode node : nodes )
-        node.getContainers().getWrappedList().remove( edgeID );
+        node.getContainers().getFeatureList().remove( edgeID );
     }
     
     for( final IFE1D2DNode node : lSetNodesInvolved )
     {
-      IFeatureWrapperCollection lActNodeContainers = node.getContainers();
+      IFeatureBindingCollection lActNodeContainers = node.getContainers();
       if( lActNodeContainers == null || lActNodeContainers.isEmpty() || m_setToRemove.containsAll( lActNodeContainers ) ){
-        lSetNodesFeaturesInvolved.add( node.getFeature() );
-        lSetNodesIdsInvolved.add( node.getFeature().getId() );
+        lSetNodesFeaturesInvolved.add( node );
+        lSetNodesIdsInvolved.add( node.getId() );
       }
     }
-    m_model1d2d.getEdges().removeAllAtOnce( lSetEdgesIds );
-    m_model1d2d.getNodes().removeAllAtOnce( lSetNodesFeaturesInvolved );
-    m_model1d2d.getNodes().removeAllRefsAtOnce( lSetNodesIdsInvolved );
+    m_model1d2d.getEdges().removeAll( lSetEdgesIds );
+    m_model1d2d.getNodes().removeAll( lSetNodesFeaturesInvolved );
+    m_model1d2d.getNodes().removeAll( lSetNodesIdsInvolved );
   }
 
   public void addEdgeToRemove( IFE1D2DEdge edgeToRemove )
   {
     if( edgeToRemove != null ) 
-      m_setToRemove.add( edgeToRemove.getFeature() );
+      m_setToRemove.add( edgeToRemove );
   }
 
   /**

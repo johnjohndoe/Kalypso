@@ -359,7 +359,7 @@ public class TempGrid
 
     if( lListAdded.size() > 0 )
     {
-      final FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel.getFeature(), lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+      final FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel, lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
       workspace.fireModellEvent( changeEvent );
       Logger.getLogger( TempGrid.class.getName() ).log( Level.INFO, "Model event fired: " + changeEvent ); //$NON-NLS-1$
     }
@@ -392,7 +392,7 @@ public class TempGrid
     try
     {
       newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), null, ring.getCoordinateSystem() );
-      lListFoundPolyElements = discModel.getElements().query( newSurface, false );
+      lListFoundPolyElements = discModel.getElements().query( newSurface, IFE1D2DElement.PROP_GEOMETRY, false );
     }
     catch( final GM_Exception e )
     {
@@ -427,12 +427,12 @@ public class TempGrid
     lListRes.addAll( createNodesAndEdges( discModel, lListEdges, lListPoses ) );
 
     element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
-    lListRes.add( element2d.getFeature() );
+    lListRes.add( element2d );
     for( final IFE1D2DEdge< ? , ? > lEdge : lListEdges )
     {
       // add edge to element and element to edge
-      final String elementId = element2d.getGmlID();
-      element2d.addEdge( lEdge.getGmlID() );
+      final String elementId = element2d.getId();
+      element2d.addEdge( lEdge.getId() );
       lEdge.addContainer( elementId );
     }
 
@@ -461,7 +461,7 @@ public class TempGrid
           return new ArrayList<Feature>();
 
         lNodesNameConversionMap.put( lPoint.getPosition(), actNode );
-        lListRes.add( actNode.getFeature() );
+        lListRes.add( actNode );
       }
 
       nodes.add( actNode );
@@ -478,7 +478,7 @@ public class TempGrid
       if( existingEdge == null )
       {
         edge = FE1D2DEdge.createFromModel( discModel, node1, node2 );
-        lListRes.add( edge.getFeature() );
+        lListRes.add( edge );
       }
       else
         edge = existingEdge;

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -47,16 +49,16 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public class Hydrograph extends AbstractFeatureBinder implements IHydrograph
+public class Hydrograph extends Feature_Impl implements IHydrograph
 {
-  public Hydrograph( final Feature featureToBind )
+  public Hydrograph( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
-    super( featureToBind, QNAME );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   /**
@@ -65,7 +67,7 @@ public class Hydrograph extends AbstractFeatureBinder implements IHydrograph
   @Override
   public GM_Object getLocation( )
   {
-    final GM_Object location = (GM_Object) getFeature().getProperty( QNAME_PROP_LOCATION );
+    final GM_Object location = (GM_Object) getProperty( QNAME_PROP_LOCATION );
     if( location == null )
       return null;
 
@@ -78,19 +80,19 @@ public class Hydrograph extends AbstractFeatureBinder implements IHydrograph
   @Override
   public void setLocation( final GM_Point point )
   {
-    getFeature().setProperty( QNAME_PROP_LOCATION, point );
+    setProperty( QNAME_PROP_LOCATION, point );
   }
 
   @Override
   public IObservation<TupleResult> initializeObservation( final String domainComponentUrn, final String valueComponentUrn )
   {
-    final Feature obsFeature = getFeature();
+    final Feature obsFeature = this;
 
     // if( domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals(
     // Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
-    // getFeature().setProperty( QNAME_P_DIRECTION, new BigInteger( "0" ) );
+    // setProperty( QNAME_P_DIRECTION, new BigInteger( "0" ) );
     // else
-    // getFeature().setProperty( QNAME_P_DIRECTION, null );
+    // setProperty( QNAME_P_DIRECTION, null );
 
     final String[] componentUrns = new String[] { domainComponentUrn, valueComponentUrn };
     final IComponent[] components = new IComponent[componentUrns.length];
@@ -110,13 +112,13 @@ public class Hydrograph extends AbstractFeatureBinder implements IHydrograph
   @Override
   public void setObservation( final IObservation<TupleResult> obs )
   {
-    ObservationFeatureFactory.toFeature( obs, getFeature() );
+    ObservationFeatureFactory.toFeature( obs, this );
   }
 
   @Override
   public IObservation<TupleResult> getObservation( )
   {
-    return ObservationFeatureFactory.toObservation( getFeature() );
+    return ObservationFeatureFactory.toObservation( this );
   }
 
 }

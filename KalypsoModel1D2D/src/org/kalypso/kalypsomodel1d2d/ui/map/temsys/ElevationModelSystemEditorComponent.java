@@ -81,7 +81,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 /**
  * 
  * @author Madanagopal
@@ -107,7 +107,7 @@ public class ElevationModelSystemEditorComponent
         if( name != null )
           return name;
         else
-          return ((ITerrainElevationModel) element).getGmlID();
+          return ((ITerrainElevationModel) element).getId();
       }
       else
         throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.0" ) + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.1" ) + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -160,7 +160,7 @@ public class ElevationModelSystemEditorComponent
           return new Object[] {};
 
         final ITerrainElevationModelSystem tems = (ITerrainElevationModelSystem) inputElement;
-        final IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels = tems.getTerrainElevationModels();
+        final IFeatureBindingCollection<ITerrainElevationModel> terrainElevationModels = tems.getTerrainElevationModels();
         if( terrainElevationModels == null )
           return new Object[] {};
 
@@ -413,7 +413,7 @@ public class ElevationModelSystemEditorComponent
       final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
       if( firstElement instanceof ITerrainElevationModel )
       {
-        final IFeatureWrapperCollection<ITerrainElevationModel> elevationModels = m_dataModel.getTerrainElevationModels();
+        final IFeatureBindingCollection<ITerrainElevationModel> elevationModels = m_dataModel.getTerrainElevationModels();
         if( elevationModels == null )
           return;
 

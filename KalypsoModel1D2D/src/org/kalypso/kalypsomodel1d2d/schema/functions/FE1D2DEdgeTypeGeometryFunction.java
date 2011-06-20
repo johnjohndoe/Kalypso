@@ -16,7 +16,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -54,10 +54,10 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction
 
     if( IFE1D2DEdge.QNAME.equals( featureQName ) )
     {
-      final FE1D2DEdge edge = new FE1D2DEdge( feature );
+      final FE1D2DEdge edge = (FE1D2DEdge) feature;
       try
       {
-        return edge.recalculateEgdeGeometry();
+        return edge.recalculateElementGeometry();
       }
       catch( final GM_Exception e )
       {
@@ -97,7 +97,7 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction
           final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
           if( edge != null )
           {
-            final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
+            final IFeatureBindingCollection<IFE1D2DNode> nodes = edge.getNodes();
             if( nodes.size() == 2 )
             {
               System.out.println( "Node set:" + lineString.getStartPoint().distance( nodes.get( 0 ).getPoint() ) ); //$NON-NLS-1$

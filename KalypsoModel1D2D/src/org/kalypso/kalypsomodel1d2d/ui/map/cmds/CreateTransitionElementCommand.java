@@ -48,7 +48,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement.TRAN
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 public class CreateTransitionElementCommand implements IDiscrModel1d2dChangeCommand
@@ -94,7 +93,7 @@ public class CreateTransitionElementCommand implements IDiscrModel1d2dChangeComm
         m_transitionElement.addElementAsRef( m_line1D );
         m_transitionElement.addElementAsRef( m_line2D );
         m_transitionElement.setTransitionType( m_transitionType );
-        final Feature feature = m_transitionElement.getFeature();
+        final Feature feature = m_transitionElement;
         feature.invalidEnvelope();
         final GMLWorkspace workspace = feature.getWorkspace();
         workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, feature.getParent(), feature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
@@ -135,9 +134,9 @@ public class CreateTransitionElementCommand implements IDiscrModel1d2dChangeComm
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   @Override
-  public IFeatureWrapper2[] getChangedFeature( )
+  public Feature[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { m_transitionElement };
+    return new Feature[] { m_transitionElement };
   }
 
   /**

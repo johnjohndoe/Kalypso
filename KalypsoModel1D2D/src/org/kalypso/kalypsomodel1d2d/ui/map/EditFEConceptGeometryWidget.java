@@ -249,7 +249,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
         final IFlowRelationship lBuilding = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) element, m_flowRelModel );
         if( lBuilding != null )
         {
-          m_mapElementWithFlowRelationship.put( element.getGmlID(), lBuilding );
+          m_mapElementWithFlowRelationship.put( element.getId(), lBuilding );
         }
       }
     }
@@ -263,12 +263,12 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     {
       if( element instanceof IPolyElement )
       {
-        final IFlowRelationship lBuilding = m_mapElementWithFlowRelationship.get( element.getGmlID() );
+        final IFlowRelationship lBuilding = m_mapElementWithFlowRelationship.get( element.getId() );
         if( lBuilding != null )
         {
           final GM_Position lFlowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( element );
           final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-          final ChangeFeatureCommand lChangeFeatureCommand = new ChangeFeatureCommand( lBuilding.getFeature(), lBuilding.getFeature().getFeatureType().getProperty( IFlowRelationship.QNAME_PROP_POSITION ), GeometryFactory.createGM_Point( lFlowPositionFromElement, crs ) );
+          final ChangeFeatureCommand lChangeFeatureCommand = new ChangeFeatureCommand( lBuilding, lBuilding.getFeatureType().getProperty( IFlowRelationship.QNAME_PROP_POSITION ), GeometryFactory.createGM_Point( lFlowPositionFromElement, crs ) );
           try
           {
             m_flowWorkspace.postCommand( lChangeFeatureCommand );

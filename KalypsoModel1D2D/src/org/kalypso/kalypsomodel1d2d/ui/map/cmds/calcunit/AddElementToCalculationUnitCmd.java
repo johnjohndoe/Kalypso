@@ -52,7 +52,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -93,17 +92,17 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   @Override
-  public IFeatureWrapper2[] getChangedFeature( )
+  public Feature[] getChangedFeature( )
   {
     if( added )
     {
-      List<IFeatureWrapper2> changed = new ArrayList<IFeatureWrapper2>();
+      List<Feature> changed = new ArrayList<Feature>();
       changed.addAll( Arrays.asList( m_elementsToAdd ) );
-      return changed.toArray( new IFeatureWrapper2[changed.size()] );
+      return changed.toArray( new Feature[changed.size()] );
     }
     else
     {
-      return new IFeatureWrapper2[] {};
+      return new Feature[] {};
     }
   }
 
@@ -185,15 +184,15 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
   private final void fireProcessChanges( )
   {
     List<Feature> features = new ArrayList<Feature>( m_elementsToAdd.length * 2 );
-    features.add( m_calculationUnit.getFeature() );
+    features.add( m_calculationUnit );
     for( IFE1D2DElement ele : m_elementsToAdd )
-      features.add( ele.getFeature() );
+      features.add( ele );
 
-    GMLWorkspace workspace = m_calculationUnit.getFeature().getWorkspace();
+    GMLWorkspace workspace = m_calculationUnit.getWorkspace();
     FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
 
     // workspace,
-    m_model1d2d.getFeature(),// Feature parentFeature,
+    m_model1d2d,// Feature parentFeature,
     features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
     FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD// final int changeType
     );
