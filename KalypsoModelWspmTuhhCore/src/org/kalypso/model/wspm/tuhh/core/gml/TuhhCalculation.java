@@ -416,7 +416,7 @@ public abstract class TuhhCalculation extends Feature_Impl implements IWspmConst
     if( polyFeature == null )
       return null;
 
-    return new PolynomeProperties( polyFeature );
+    return  (PolynomeProperties) polyFeature;
   }
 
   public String getVersion( )

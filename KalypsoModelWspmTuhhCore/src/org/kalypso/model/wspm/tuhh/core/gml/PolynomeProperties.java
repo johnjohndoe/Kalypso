@@ -44,16 +44,22 @@ import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * The special polynome properties from the REIB_CONST calc-type.
  * 
  * @author Gernot Belger
  */
-public class PolynomeProperties extends AbstractFeatureBinder
+public class PolynomeProperties extends Feature_Impl
 {
+  public PolynomeProperties( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
+
   private static final QName QNAME_PROP_ALPHALIMIT = new QName( TuhhCalculation.NS_WSPM_TUHH, "alphaLimit" ); //$NON-NLS-1$
 
   private static final QName QNAME_PROP_INGORE_OUTLIER = new QName( TuhhCalculation.NS_WSPM_TUHH, "ignoreOutlier" ); //$NON-NLS-1$
@@ -78,11 +84,6 @@ public class PolynomeProperties extends AbstractFeatureBinder
   {
     bordvoll,
     slopeChange;
-  }
-
-  public PolynomeProperties( final Feature featureToBind )
-  {
-    super( featureToBind, QNAME );
   }
 
   public void setDeegree( final int degree )
