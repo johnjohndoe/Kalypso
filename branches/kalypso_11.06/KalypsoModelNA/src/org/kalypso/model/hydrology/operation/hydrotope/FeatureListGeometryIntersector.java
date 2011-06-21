@@ -156,7 +156,7 @@ public class FeatureListGeometryIntersector
         }
         catch( final Exception e )
         {
-          m_log.add( StatusUtilities.createStatus( IStatus.WARNING, "Problem bei Feature " + feature.getName(), e ) );
+          m_log.add( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("FeatureListGeometryIntersector.3") + feature.getName(), e ) ); //$NON-NLS-1$
         }
       }
       sizeMap.put( featureList, polyCount );
@@ -193,7 +193,7 @@ public class FeatureListGeometryIntersector
       {
         if( count % 10 == 0 )
         {
-          final String msg = Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", count, countSourceFeatures, countTargetFeatures, layer + 1 );
+          final String msg = Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", count, countSourceFeatures, countTargetFeatures, layer + 1 ); //$NON-NLS-1$
           progress.subTask( msg ); //$NON-NLS-1$
           childProgress.worked( 10 );
         }
@@ -250,7 +250,7 @@ public class FeatureListGeometryIntersector
                 {
                   // intersection has failed, we cannot use this geometry
                   // calculate error?
-                  m_log.add( StatusUtilities.createStatus( IStatus.ERROR, "Problem bei der Verschneidung von \n" + featurePolygon + "\n" + candidatePolygon, e2 ) );
+                  m_log.add( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("FeatureListGeometryIntersector.5") + featurePolygon + "\n" + candidatePolygon, e2 ) ); //$NON-NLS-1$ //$NON-NLS-2$
                   continue;
                 }
               }
@@ -271,7 +271,7 @@ public class FeatureListGeometryIntersector
             }
             catch( final Throwable e )
             {
-              m_log.add( StatusUtilities.createStatus( IStatus.WARNING, "Mögliches Problem bei der Verschneidung von \n" + featurePolygon + "\n" + candidatePolygon, e ) );
+              m_log.add( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("FeatureListGeometryIntersector.4") + featurePolygon + "\n" + candidatePolygon, e ) ); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             for( int n = 0; n < intersection.getNumGeometries(); n++ )
@@ -293,7 +293,7 @@ public class FeatureListGeometryIntersector
       }
       sourcePolygons = resultGeometryList;
     }
-    m_log.add( StatusUtilities.createStatus( IStatus.INFO, "Gesamter Flächenfehler bei der Verschneidung: " + totalAreaDiscarded, null ) );
+    m_log.add( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("FeatureListGeometryIntersector.9") + totalAreaDiscarded, null ) ); //$NON-NLS-1$
     return resultGeometryList;
   }
 }

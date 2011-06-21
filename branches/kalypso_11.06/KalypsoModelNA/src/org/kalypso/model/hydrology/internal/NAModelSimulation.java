@@ -92,7 +92,7 @@ public class NAModelSimulation
 
   public boolean runSimulation( final ISimulationMonitor monitor ) throws Exception
   {
-    monitor.setMessage( "Simulation wird gestartet..." );
+    monitor.setMessage( Messages.getString("NAModelSimulation.3") ); //$NON-NLS-1$
     preprocess( m_simulationData, monitor );
     if( monitor.isCanceled() )
       return false;

@@ -81,14 +81,14 @@ public class Test_Intersection extends TestCase
 {
   public void test( ) throws Exception
   {
-    final File catchmentGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\modell.gml" );
-    final File landuseGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\landuse.gml" );
-    final File pedologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\pedologie.gml" );
-    final File geologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\geologie.gml" );
+    final File catchmentGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\modell.gml" ); //$NON-NLS-1$
+    final File landuseGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\landuse.gml" ); //$NON-NLS-1$
+    final File pedologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\pedologie.gml" ); //$NON-NLS-1$
+    final File geologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\geologie.gml" ); //$NON-NLS-1$
 
-    final File template = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\hydrotop.gml" );
+    final File template = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\hydrotop.gml" ); //$NON-NLS-1$
 // final File template = new File( "D:\\eclipse_runtime_Connector\\01-Kollau-NA-PlanerClient\\template.gml" );
-    final File outputGML = new File( "d:\\temp\\__test_output_" + new Date().getTime() + ".gml" );
+    final File outputGML = new File( "d:\\temp\\__test_output_" + new Date().getTime() + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
     if( outputGML.exists() )
       outputGML.delete();
     outputGML.createNewFile();
@@ -156,11 +156,11 @@ public class Test_Intersection extends TestCase
         if( landuse == null )
           continue;
         final Object landuseClassLink = landuse.getLanduse();
-        String value = "";
+        String value = ""; //$NON-NLS-1$
         if( landuseClassLink instanceof XLinkedFeature_Impl )
           value = ((XLinkedFeature_Impl) landuseClassLink).getFeatureId();
         else
-          value = landuseClassLink.toString().substring( landuseClassLink.toString().indexOf( "#" ) + 1 );
+          value = landuseClassLink.toString().substring( landuseClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
         hydrotop.setLanduse( value );
         final double corrSealing = landuse.getCorrSealing() * catchment.getCorrSealing();
         hydrotop.setCorrSealing( corrSealing );
@@ -185,11 +185,11 @@ public class Test_Intersection extends TestCase
           continue;
 
         final Object soiltypeClassLink = soilType.getSoilType();
-        String value = "";
+        String value = ""; //$NON-NLS-1$
         if( soiltypeClassLink instanceof XLinkedFeature_Impl )
           value = ((XLinkedFeature_Impl) soiltypeClassLink).getFeatureId();
         else
-          value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 );
+          value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
 
         hydrotop.setSoilType( value );
       }
@@ -217,7 +217,7 @@ public class Test_Intersection extends TestCase
       hydrotop.setGeometry( (GM_MultiSurface) JTSAdapter.wrap( JTSAdapter.jtsFactory.createMultiPolygon( new Polygon[] { (Polygon) geometry } ) ) );
     }
 
-    GmlSerializer.serializeWorkspace( outputGML, outputWS, "UTF-8" );
+    GmlSerializer.serializeWorkspace( outputGML, outputWS, "UTF-8" ); //$NON-NLS-1$
   }
 
 }

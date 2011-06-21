@@ -47,8 +47,8 @@ import java.util.regex.Pattern;
  */
 public enum ENACoreResultsFormat
 {
-  FMT_2_1_AND_OLDER("yyMMdd", Pattern.compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" )), //$NON-NLS-1$
-  FMT_2_2_AND_NEWER("yyyyMMdd", Pattern.compile( ".+simulationszeitraum.+([0-9]{8}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" )); //$NON-NLS-1$
+  FMT_2_1_AND_OLDER("yyMMdd", Pattern.compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" )), //$NON-NLS-1$ //$NON-NLS-2$
+  FMT_2_2_AND_NEWER("yyyyMMdd", Pattern.compile( ".+simulationszeitraum.+([0-9]{8}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" )); //$NON-NLS-1$ //$NON-NLS-2$
 
   private final Pattern m_simulationPeriodPattern;
 
