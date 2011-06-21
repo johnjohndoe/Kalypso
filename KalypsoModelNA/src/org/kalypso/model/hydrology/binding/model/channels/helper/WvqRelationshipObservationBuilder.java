@@ -44,6 +44,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.hydrology.gml.ZmlWQVInlineTypeHandler;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
@@ -51,6 +52,7 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * @author Dirk Kuch
@@ -59,11 +61,11 @@ public class WvqRelationshipObservationBuilder
 {
   Set<WvqRelationshipRow> m_rows = new TreeSet<WvqRelationshipRow>( WvqRelationshipRow.COMPARATOR );
 
-  private DefaultAxis m_axisWaterLevel;
+  private IAxis m_axisWaterLevel;
 
-  private DefaultAxis m_axisDischarge;
+  private IAxis m_axisDischarge;
 
-  private DefaultAxis m_axisVolume;
+  private IAxis m_axisVolume;
 
   public void addRow( final double waterLevel, final double discharge, final double volumne )
   {
@@ -84,15 +86,18 @@ public class WvqRelationshipObservationBuilder
   private IAxis getVolumeAxis( )
   {
     if( Objects.isNull( m_axisVolume ) )
-      m_axisVolume = new DefaultAxis( "Volumen", ITimeseriesConstants.TYPE_VOLUME, "m³", Double.class, true ); //$NON-NLS-2$
-
+      m_axisVolume = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_VOLUME, false );
     return m_axisVolume;
   }
 
   private IAxis getDischargeAxis( )
   {
     if( Objects.isNull( m_axisDischarge ) )
-      m_axisDischarge = new DefaultAxis( "Abfluss", ITimeseriesConstants.TYPE_RUNOFF, "m³/s", Double.class, true ); //$NON-NLS-2$
+    {
+      final String unit = TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_RUNOFF );
+      final Class< ? > dataClass = TimeseriesUtils.getDataClass( ITimeseriesConstants.TYPE_RUNOFF );
+      m_axisDischarge = new DefaultAxis( ZmlWQVInlineTypeHandler.AXIS_NAME_ABFLUSS, ITimeseriesConstants.TYPE_RUNOFF, unit, dataClass, false );
+    }
 
     return m_axisDischarge;
   }
@@ -100,7 +105,7 @@ public class WvqRelationshipObservationBuilder
   private IAxis getWaterLevelAxis( )
   {
     if( Objects.isNull( m_axisWaterLevel ) )
-      m_axisWaterLevel = new DefaultAxis( "(Wasserstands)Höhe", ITimeseriesConstants.TYPE_NORMNULL, "m_NN", Double.class, true ); //$NON-NLS-2$
+      m_axisWaterLevel = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_NORMNULL, true );
 
     return m_axisWaterLevel;
   }
