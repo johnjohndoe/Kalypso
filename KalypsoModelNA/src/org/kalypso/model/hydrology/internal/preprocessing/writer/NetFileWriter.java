@@ -66,6 +66,7 @@ import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.model.nodes.Verzweigung;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
@@ -170,7 +171,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     catch( final SensorException e )
     {
       e.printStackTrace();
-      throw new NAPreprocessorException( "Fehler beim Zugriff auf die Knotenliste", e );
+      throw new NAPreprocessorException( Messages.getString("NetFileWriter_0"), e ); //$NON-NLS-1$
     }
   }
 
@@ -371,7 +372,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
       return new ZuflussBean( 0, 0, 1, 0, 0, queb, branchNode );
     }
 
-    throw new IllegalArgumentException( "Illegal branching type: " + branching.getClass() );
+    throw new IllegalArgumentException( "Illegal branching type: " + branching.getClass() ); //$NON-NLS-1$
   }
 
   private String getZuflussEingabeDateiString( final Feature nodeFE )

@@ -31,6 +31,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -361,7 +362,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
     catch( final Exception e )
     {
       setStatus( STATUS.ERROR, e.getLocalizedMessage() );
-      throw new SimulationException( "Problem bei der Differenzenbildung", e );
+      throw new SimulationException( Messages.getString("NA_PostprocessingJob_0"), e ); //$NON-NLS-1$
     }
     resultEater.addResult( "OutputFolder", tmpdir ); //$NON-NLS-1$
     setStatus( STATUS.OK, "Success" ); //$NON-NLS-1$

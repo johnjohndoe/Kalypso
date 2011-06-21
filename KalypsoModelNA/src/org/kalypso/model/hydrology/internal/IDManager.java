@@ -149,7 +149,7 @@ public class IDManager
     }
     catch( final IOException e )
     {
-      throw new SimulationException( "Failed to dump idManager", e );
+      throw new SimulationException( "Failed to dump idManager", e ); //$NON-NLS-1$
     }
     finally
     {

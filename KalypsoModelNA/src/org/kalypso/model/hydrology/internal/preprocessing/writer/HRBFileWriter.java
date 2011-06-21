@@ -54,6 +54,7 @@ import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.gml.ZmlWQVInlineTypeHandler;
 import org.kalypso.model.hydrology.internal.IDManager;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.ogc.sensor.IAxis;
@@ -121,7 +122,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
 
     if( wvqObservation == null )
     {
-      final String message = String.format( "WVQ-Relationship is not set for storage '%s'", channelName );
+      final String message = String.format( Messages.getString("HRBFileWriter_0"), channelName ); //$NON-NLS-1$
       throw new NAPreprocessorException( message );
     }
 
@@ -171,7 +172,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new NAPreprocessorException( "Failed to write sea evaporation time series", e );
+      throw new NAPreprocessorException( Messages.getString("HRBFileWriter_1"), e ); //$NON-NLS-1$
     }
   }
 
@@ -206,7 +207,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     catch( final SensorException e )
     {
       e.printStackTrace();
-      throw new NAPreprocessorException( String.format( "Fehler beim Auslesen der WVQ-Beziehung an Strang '%s'", channelName ) );
+      throw new NAPreprocessorException( String.format( Messages.getString("HRBFileWriter_2"), channelName ) ); //$NON-NLS-1$
     }
   }
 
@@ -220,7 +221,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     {
       if( Double.isNaN( defaultValue ) )
       {
-        final String message = String.format( "Missing required axis for WVQ values" );
+        final String message = String.format( Messages.getString("HRBFileWriter_3") ); //$NON-NLS-1$
         throw new SensorException( message );
       }
 
@@ -231,7 +232,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     if( value instanceof Number )
       return ((Number) value).doubleValue();
 
-    final String message = String.format( "WVQ value not set for axis '%s' at row '%d'", axis.getName(), row );
+    final String message = String.format( Messages.getString("HRBFileWriter_4"), axis.getName(), row ); //$NON-NLS-1$
     throw new SensorException( message );
   }
 }

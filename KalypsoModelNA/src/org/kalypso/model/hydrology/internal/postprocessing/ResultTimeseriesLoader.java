@@ -121,7 +121,7 @@ public class ResultTimeseriesLoader
     if( qgsFiles.length == 0 )
       return;
 
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" ); //$NON-NLS-2$
+    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" );  //$NON-NLS-1$//$NON-NLS-2$
 
     final BlockTimeSeries ts = new BlockTimeSeries(m_resultsFormat);
     ts.importBlockFile( qgsFiles[0] );
@@ -153,7 +153,7 @@ public class ResultTimeseriesLoader
     }
 
     final String suffix = descriptor.name();
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" ); //$NON-NLS-2$
+    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" );  //$NON-NLS-1$//$NON-NLS-2$
 
     final String resultPathRelative = generateResultPath( resultFeature, descriptor );
 
@@ -275,7 +275,7 @@ public class ResultTimeseriesLoader
     // FIXME: Arrg! Is this really possible to happen? Most probably something else is wrong. We should not
     // do such terrible things here!
     m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.136", resultPathRelative ) ); //$NON-NLS-1$
-    final String extra = "(ID" + Integer.toString( m_idManager.getAsciiID( resultFeature ) ).trim() + ")";
+    final String extra = "(ID" + Integer.toString( m_idManager.getAsciiID( resultFeature ) ).trim() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     final String resultPath = DefaultPathGenerator.generateResultPathFor( resultFeature, suffix, extra ); //$NON-NLS-1$ //$NON-NLS-2$
     m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.140", resultPath ) ); //$NON-NLS-1$
 

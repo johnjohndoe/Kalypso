@@ -71,7 +71,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NaPostProcessor
 {
-  private static final String STRING_RESULT_SUCCESSFUL_1 = "berechnung wurde ohne fehler beendet";
+  private static final String STRING_RESULT_SUCCESSFUL_1 = "berechnung wurde ohne fehler beendet"; //$NON-NLS-1$
 
   private static final String STRING_RESULT_SUCCESSFUL_2 = Messages.getString( "NaPostProcessor.1" ); //$NON-NLS-1$
 
@@ -180,14 +180,14 @@ public class NaPostProcessor
     }
     if( m_isSucceeded )
     {
-      final Pattern versionPattern = Pattern.compile( ".*\\*+[ \\t]+VERS\\.[ \\t]+(\\d+\\.\\d+)\\.\\d+[ \\t\\w\\.:]+\\*+.*" );
+      final Pattern versionPattern = Pattern.compile( ".*\\*+[ \\t]+VERS\\.[ \\t]+(\\d+\\.\\d+)\\.\\d+[ \\t\\w\\.:]+\\*+.*" ); //$NON-NLS-1$
       for( int i = 0; i < logContent.size(); i++ )
       {
         final String line = logContent.get( i );
         final Matcher matcher = versionPattern.matcher( line );
         if( matcher.matches() )
         {
-          final String[] strings = matcher.group( 1 ).split( "\\." );
+          final String[] strings = matcher.group( 1 ).split( "\\." ); //$NON-NLS-1$
           if( Integer.parseInt( strings[0] ) > 2 )
           {
             m_coreResultsFormat = ENACoreResultsFormat.FMT_2_2_AND_NEWER;
@@ -246,7 +246,7 @@ public class NaPostProcessor
     {
       try
       {
-        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.220", bilFile.getName() ) );
+        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.220", bilFile.getName() ) ); //$NON-NLS-1$
         final File resultFile = new File( resultDirs.bilanzDir, "Bilanz.txt" ); //$NON-NLS-1$ 
         FileUtils.copyFile( bilFile, resultFile );
       }
@@ -255,7 +255,7 @@ public class NaPostProcessor
         final String inputPath = outWeNatDir.getName() + bilFile.getName();
         e.printStackTrace();
 
-        final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.224", inputPath, e.getLocalizedMessage() );
+        final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.224", inputPath, e.getLocalizedMessage() ); //$NON-NLS-1$
         m_logger.severe( msg );
       }
     }

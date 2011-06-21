@@ -143,7 +143,7 @@ public class TsFileWriter
       catch( final Exception e )
       {
         e.printStackTrace();
-        final String message = String.format( "Fehler beim Schreiben der Zeitreihen für Teilgebiet '%s'", catchment.getName() );
+        final String message = String.format( Messages.getString("TsFileWriter.0"), catchment.getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( message, e );
       }
     }
@@ -165,11 +165,11 @@ public class TsFileWriter
 
       final TimeseriesLinkType linkT = catchment.getTemperatureLink();
       final File targetFileT = m_tsFileManager.getTemperaturEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-      writeExtTimeseries( targetFileT, linkT, m_zmlContext, ITimeseriesConstants.TYPE_TEMPERATURE, "1.0", simulationRange );
+      writeExtTimeseries( targetFileT, linkT, m_zmlContext, ITimeseriesConstants.TYPE_TEMPERATURE, "1.0", simulationRange ); //$NON-NLS-1$
 
       final TimeseriesLinkType linkV = catchment.getEvaporationLink();
       final File targetFileV = m_tsFileManager.getVerdunstungEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-      writeExtTimeseries( targetFileV, linkV, m_zmlContext, ITimeseriesConstants.TYPE_EVAPORATION, "0.5", simulationRange );
+      writeExtTimeseries( targetFileV, linkV, m_zmlContext, ITimeseriesConstants.TYPE_EVAPORATION, "0.5", simulationRange ); //$NON-NLS-1$
     }
   }
 

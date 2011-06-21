@@ -53,7 +53,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
  */
 public class ZmlQQInlineTypeHandler extends ZmlInlineTypeHandler
 {
-  private static final QName TYPE_NAME = new QName( NaModelConstants.NAMESPACE_ZML_INLINE, "ZmlInlineQQType" );
+  private static final QName TYPE_NAME = new QName( NaModelConstants.NAMESPACE_ZML_INLINE, "ZmlInlineQQType" ); //$NON-NLS-1$
 
   public ZmlQQInlineTypeHandler( )
   {

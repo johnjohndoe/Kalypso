@@ -68,6 +68,7 @@ import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.simulation.INaSimulationRunnable;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -128,11 +129,11 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     m_data = data;
     m_logger = logger;
 
-    m_optimizeRunDir = new File( m_tmpDir, "optimizeRun" );
+    m_optimizeRunDir = new File( m_tmpDir, "optimizeRun" ); //$NON-NLS-1$
     // Debug purpose only: copy of best ascii files
     m_bestOptimizeRunDir = null; // new File( m_tmpDir, "bestRun" );
-    m_bestResultDir = new File( m_tmpDir, "bestResult" );
-    m_bestOptimizedFile = new File( m_tmpDir, "bestOptimizeConfig.gml" );
+    m_bestResultDir = new File( m_tmpDir, "bestResult" ); //$NON-NLS-1$
+    m_bestOptimizedFile = new File( m_tmpDir, "bestOptimizeConfig.gml" ); //$NON-NLS-1$
     m_simDirs = new NaSimulationDirs( m_optimizeRunDir );
   }
 
@@ -144,7 +145,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
   @Override
   public boolean run( final ISimulationMonitor monitor ) throws SimulationException
   {
-    monitor.setMessage( "Loading simulation data..." );
+    monitor.setMessage( Messages.getString("NAOptimizingJob_3") ); //$NON-NLS-1$
 
     final NAControl metaControl = m_data.getMetaControl();
     final Date optimizationStartDate = metaControl.getOptimizationStart();
@@ -183,14 +184,14 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     }
     catch( final OperationCanceledException e )
     {
-      final String msg = "Simulation canceled by user";
+      final String msg = Messages.getString("NAOptimizingJob_4"); //$NON-NLS-1$
       m_logger.log( Level.INFO, msg );
       monitor.setFinishInfo( IStatus.CANCEL, msg );
       return false;
     }
     catch( final Exception exception )
     {
-      final String msg = "Unexpected error during simulation";
+      final String msg = Messages.getString("NAOptimizingJob_5"); //$NON-NLS-1$
       m_logger.log( Level.SEVERE, msg, exception );
       return false;
     }
@@ -202,7 +203,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
   private boolean runFirst( final ISimulationMonitor monitor ) throws Exception
   {
-    final NACalculationLogger naCalculationLogger = new NACalculationLogger( new File( m_tmpDir, "logRun_" + m_counter ) );
+    final NACalculationLogger naCalculationLogger = new NACalculationLogger( new File( m_tmpDir, "logRun_" + m_counter ) ); //$NON-NLS-1$
 
     final Logger logger = naCalculationLogger.getLogger();
 

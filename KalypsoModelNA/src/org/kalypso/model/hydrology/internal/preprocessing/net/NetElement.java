@@ -182,7 +182,7 @@ public class NetElement
 
     // append upstream node:
     final int upstreamNodeID = upstreamNode == null ? ANFANGSKNOTEN : m_idManager.getAsciiID( upstreamNode );
-    netBuffer.append( String.format( "%8d", upstreamNodeID ) );
+    netBuffer.append( String.format( "%8d", upstreamNodeID ) ); //$NON-NLS-1$
 
     // append downstream node:
     final int downstreamNodeID = m_idManager.getAsciiID( downstreamNode );

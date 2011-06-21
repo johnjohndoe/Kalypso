@@ -107,7 +107,7 @@ public class LzsimWriter
     }
     catch( final Exception e )
     {
-      final String msg = String.format( "Failed to write Kalypso-NA ASCII start condition: %s", e.getLocalizedMessage() );
+      final String msg = String.format( Messages.getString("LzsimWriter.2"), e.getLocalizedMessage() ); //$NON-NLS-1$
       throw new NAPreprocessorException( msg, e );
     }
   }
@@ -172,7 +172,7 @@ public class LzsimWriter
     }
     catch( final IOException e )
     {
-      final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.55", iniChannel.getId() );
+      final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.55", iniChannel.getId() ); //$NON-NLS-1$
       throw new SimulationException( msg, e );
     }
   }
@@ -220,7 +220,7 @@ public class LzsimWriter
       if( iniCatchment == null )
       {
         // FIXME: better? only log...
-        final String msg = String.format( "Missing start condition for catchment: %s", catchmentID );
+        final String msg = String.format( Messages.getString("LzsimWriter.5"), catchmentID ); //$NON-NLS-1$
         throw new SimulationException( msg );
       }
       else
@@ -262,13 +262,13 @@ public class LzsimWriter
         for( final Double bof : bofs )
           writer.format( Locale.US, "%7.2f", bof ); //$NON-NLS-1$
 
-        writer.append( "\n" );
+        writer.append( "\n" ); //$NON-NLS-1$
       }
       writer.close();
     }
     catch( final IOException e )
     {
-      final String msg = String.format( "Failed to write initial condition for channel %s", iniCatchment.getNaCatchmentID() );
+      final String msg = String.format( Messages.getString("LzsimWriter.7"), iniCatchment.getNaCatchmentID() ); //$NON-NLS-1$
       throw new SimulationException( msg, e );
     }
     finally
@@ -308,7 +308,7 @@ public class LzsimWriter
       final IniHyd iniHyd = iniHydHash.get( naHydrotopID );
       if( iniHyd == null )
       {
-        System.out.println( "oups" );
+        System.out.println( "oups" ); //$NON-NLS-1$
       }
       iniHydMap.put( localID, iniHyd );
     }

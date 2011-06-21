@@ -64,6 +64,7 @@ import org.kalypso.model.hydrology.binding.suds.IGreenRoof;
 import org.kalypso.model.hydrology.binding.suds.ISwale;
 import org.kalypso.model.hydrology.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.LanduseHash;
@@ -104,7 +105,7 @@ public class NutzungWriter
     catch( final SensorException e )
     {
       e.printStackTrace();
-      throw new NAPreprocessorException( "Fehler beim Auslesen der Zeitflächenfunktion", e );
+      throw new NAPreprocessorException( Messages.getString("NutzungWriter_0"), e ); //$NON-NLS-1$
     }
   }
 

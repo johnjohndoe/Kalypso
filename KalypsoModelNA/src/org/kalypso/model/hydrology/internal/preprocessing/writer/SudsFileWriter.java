@@ -56,6 +56,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.suds.Greenroof;
 import org.kalypso.model.hydrology.binding.suds.Swale;
 import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -130,7 +131,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      final String message = String.format( "Geoemtriefehler an Hydrotop '%s'", hydrotop.getId() );
+      final String message = String.format( Messages.getString("SudsFileWriter_0"), hydrotop.getId() ); //$NON-NLS-1$
       throw new NAPreprocessorException( message, e );
     }
   }
