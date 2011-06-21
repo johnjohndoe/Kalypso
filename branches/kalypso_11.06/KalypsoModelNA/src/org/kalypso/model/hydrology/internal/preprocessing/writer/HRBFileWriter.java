@@ -198,7 +198,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
         final double q = getAsDouble( values, axisQ, row, Double.NaN );
         final double q2 = getAsDouble( values, axisQ2, row, 0.0 );
         final double q3 = getAsDouble( values, axisQ3, row, 0.0 );
-        buffer.append( String.format( Locale.ENGLISH, "%12.2f %16.6f %13.3f %13.3f %13.3f\n", w, v, q, q2, q3 ) );
+        buffer.append( String.format( Locale.ENGLISH, "%12.2f %16.6f %13.3f %13.3f %13.3f\n", w, v, q, q2, q3 ) ); //$NON-NLS-1$
       }
 
       return new WVQInfo( buffer.toString(), count );
