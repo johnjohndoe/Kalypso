@@ -121,7 +121,7 @@ public class KMChannelElement
     if( StringUtils.isBlank( path ) )
     {
       m_profileSet = null;
-      final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString("KMChannelElement.1"), null ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString("KMChannelElement.1") ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
@@ -134,7 +134,7 @@ public class KMChannelElement
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString("KMChannelElement.2"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), "Failed to read profile data", e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
