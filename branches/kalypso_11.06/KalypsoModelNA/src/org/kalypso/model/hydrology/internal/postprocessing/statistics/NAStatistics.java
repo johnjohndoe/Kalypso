@@ -77,7 +77,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class NAStatistics
+public class NAStatistics implements INaStatistics
 {
   /**
    * Comparator that ensures to write the statistical entries in alphabetical order.
@@ -203,12 +203,12 @@ public class NAStatistics
   private IAxis[] createAxes( )
   {
     final List<IAxis> resultAxisList = new ArrayList<IAxis>();
-    resultAxisList.add( new DefaultAxis( "NODE_ID", ITimeseriesConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "STATION", ITimeseriesConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "DATE", ITimeseriesConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "DISCHARGE", ITimeseriesConstants.TYPE_RUNOFF, TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
-    resultAxisList.add( new DefaultAxis( "PATH", ITimeseriesConstants.TYPE_DESCRIPTION, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    resultAxisList.add( new DefaultAxis( "VOLUME", ITimeseriesConstants.TYPE_VOLUME, TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_VOLUME ), Double.class, false ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( AXIS_NODE_ID, ITimeseriesConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$ 
+    resultAxisList.add( new DefaultAxis( AXIS_STATION, ITimeseriesConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ 
+    resultAxisList.add( new DefaultAxis( AXIS_DATE, ITimeseriesConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ 
+    resultAxisList.add( new DefaultAxis( AXIS_DISCHARGE, ITimeseriesConstants.TYPE_RUNOFF, TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( AXIS_PATH, ITimeseriesConstants.TYPE_DESCRIPTION, "", String.class, false ) ); //$NON-NLS-1$ 
+    resultAxisList.add( new DefaultAxis( AXIS_VOLUME, ITimeseriesConstants.TYPE_VOLUME, TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_VOLUME ), Double.class, false ) ); //$NON-NLS-1$
     return resultAxisList.toArray( new IAxis[resultAxisList.size()] );
   }
 

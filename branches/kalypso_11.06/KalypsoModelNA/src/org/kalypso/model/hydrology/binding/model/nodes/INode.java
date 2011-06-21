@@ -136,4 +136,8 @@ public interface INode extends INaModelFeature
   GM_Point getPosition( );
 
   Point getJtsPosition( ) throws GM_Exception;
+
+  String getRiverCode( );
+
+  Double getRiverKm( );
 }

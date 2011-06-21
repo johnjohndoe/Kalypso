@@ -232,4 +232,30 @@ public class Node extends AbstractNaModelElement implements INode
 
     return null;
   }
+
+  /**
+   * @see org.kalypso.model.hydrology.binding.model.nodes.INode#getRiverCode()
+   */
+  @Override
+  public String getRiverCode( )
+  {
+    final Object property = getProperty( PROPERTY_RIVER_CODE );
+    if( property instanceof String )
+      return (String) property;
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.hydrology.binding.model.nodes.INode#getRiverKm()
+   */
+  @Override
+  public Double getRiverKm( )
+  {
+    final Object property = getProperty( PROPERTY_RIVER_KM );
+    if( property instanceof Double )
+      return (Double) property;
+
+    return null;
+  }
 }
