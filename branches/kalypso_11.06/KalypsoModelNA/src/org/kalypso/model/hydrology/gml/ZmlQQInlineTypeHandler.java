@@ -44,6 +44,9 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * @author Gernot Belger
@@ -54,6 +57,25 @@ public class ZmlQQInlineTypeHandler extends ZmlInlineTypeHandler
 
   public ZmlQQInlineTypeHandler( )
   {
-    super( TYPE_NAME, NaModelConstants.QQ_AXES );
+    super( TYPE_NAME, null );
+  }
+
+  @Override
+  public IAxis[] createAxes( )
+  {
+    final IAxis[] axes = new IAxis[2];
+    axes[0] = createDischargeAxis();
+    axes[1] = createRHBdischargeAxis();
+    return axes;
+  }
+
+  public static IAxis createRHBdischargeAxis( )
+  {
+    return TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_RUNOFF_RHB );
+  }
+
+  public static IAxis createDischargeAxis( )
+  {
+    return TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_RUNOFF );
   }
 }

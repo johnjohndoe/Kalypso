@@ -43,16 +43,14 @@ package org.kalypso.model.hydrology.binding.model.channels.helper;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.hydrology.gml.ZmlWQVInlineTypeHandler;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * @author Dirk Kuch
@@ -80,24 +78,20 @@ public class WvqRelationshipObservationBuilder
       model.addTuple( new Object[] { row.getWaterLevel(), row.getDischarge(), row.getVolumne() } );
     }
 
-    return new SimpleObservation( "", "", new MetadataList(), model );
+    return new SimpleObservation( StringUtils.EMPTY, StringUtils.EMPTY, new MetadataList(), model );
   }
 
   private IAxis getVolumeAxis( )
   {
     if( Objects.isNull( m_axisVolume ) )
-      m_axisVolume = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_VOLUME, false );
+      m_axisVolume = ZmlWQVInlineTypeHandler.createVolumeAxis();
     return m_axisVolume;
   }
 
   private IAxis getDischargeAxis( )
   {
     if( Objects.isNull( m_axisDischarge ) )
-    {
-      final String unit = TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_RUNOFF );
-      final Class< ? > dataClass = TimeseriesUtils.getDataClass( ITimeseriesConstants.TYPE_RUNOFF );
-      m_axisDischarge = new DefaultAxis( ZmlWQVInlineTypeHandler.AXIS_NAME_ABFLUSS, ITimeseriesConstants.TYPE_RUNOFF, unit, dataClass, false );
-    }
+      m_axisDischarge = ZmlWQVInlineTypeHandler.createRunoffAxis();
 
     return m_axisDischarge;
   }
@@ -105,7 +99,7 @@ public class WvqRelationshipObservationBuilder
   private IAxis getWaterLevelAxis( )
   {
     if( Objects.isNull( m_axisWaterLevel ) )
-      m_axisWaterLevel = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_NORMNULL, true );
+      m_axisWaterLevel = ZmlWQVInlineTypeHandler.createWaterlevelAxis();
 
     return m_axisWaterLevel;
   }
