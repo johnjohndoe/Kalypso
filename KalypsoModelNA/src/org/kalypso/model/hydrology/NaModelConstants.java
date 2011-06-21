@@ -100,7 +100,7 @@ public interface NaModelConstants
 
   String IN_OPTIMIZE_ID = "Optimize"; //$NON-NLS-1$
 
-  String IN_OPTIMIZE_FEATURE_PATH_ID = "OptimizeFeaturePath";
+  String IN_OPTIMIZE_FEATURE_PATH_ID = "OptimizeFeaturePath"; //$NON-NLS-1$
 
   String IN_SYNTHN_ID = "synthNiederschlag"; //$NON-NLS-1$
 
@@ -250,8 +250,6 @@ public interface NaModelConstants
   String[] WTKCLAI_AXES = new String[] { ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_LAI, ITimeseriesConstants.TYPE_WT, ITimeseriesConstants.TYPE_KC };
 
   String[] TN_AXES = new String[] { ITimeseriesConstants.TYPE_MIN, ITimeseriesConstants.TYPE_RAINFALL };
-
-  String[] QQ_AXES = new String[] { ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_RHB };
 
   String NAMESPACE_ZML_INLINE = "inline.zml.kalypso.org"; //$NON-NLS-1$
 

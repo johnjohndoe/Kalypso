@@ -78,10 +78,27 @@ public class ZmlWQVInlineTypeHandler extends ZmlInlineTypeHandler
     final IAxis[] axes = new IAxis[5];
     axes[0] = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_NORMNULL, true );
     axes[1] = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_VOLUME, false );
-    axes[2] = new DefaultAxis( AXIS_NAME_ABFLUSS, ITimeseriesConstants.TYPE_RUNOFF, unit, dataClass, false );
+    axes[2] = createRunoffAxis();
     axes[3] = new DefaultAxis( AXIS_NAME_ABGABE_1, ITimeseriesConstants.TYPE_RUNOFF, unit, dataClass, false );
     axes[4] = new DefaultAxis( AXIS_NAME_ABGABE_2, ITimeseriesConstants.TYPE_RUNOFF, unit, dataClass, false );
 
     return axes;
+  }
+
+  public static IAxis createRunoffAxis( )
+  {
+    final String unit = TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_RUNOFF );
+    final Class< ? > dataClass = TimeseriesUtils.getDataClass( ITimeseriesConstants.TYPE_RUNOFF );
+    return new DefaultAxis( ZmlWQVInlineTypeHandler.AXIS_NAME_ABFLUSS, ITimeseriesConstants.TYPE_RUNOFF, unit, dataClass, false );
+  }
+
+  public static IAxis createVolumeAxis( )
+  {
+    return TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_VOLUME, false );
+  }
+
+  public static IAxis createWaterlevelAxis( )
+  {
+    return TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_NORMNULL, true );
   }
 }
