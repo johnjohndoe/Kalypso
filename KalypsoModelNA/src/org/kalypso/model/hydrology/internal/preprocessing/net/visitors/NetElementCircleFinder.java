@@ -73,7 +73,7 @@ public class NetElementCircleFinder
       else if( listToHere.contains( linkNetElement ) )
       {
         // an other circle
-        System.out.println( Messages.getString( "org.kalypso.model.hydrology.internal.preprocessing.net.NetElementCircleFinder.0" ) + listToHere.toString() + " : " + linkNetElement ); //$NON-NLS-1$ //$NON-NLS-2$
+        System.out.println( Messages.getString( "org.kalypso.convert.namodel.net.NetElementCircleFinder.0" ) + listToHere.toString() + " : " + linkNetElement ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else
       {

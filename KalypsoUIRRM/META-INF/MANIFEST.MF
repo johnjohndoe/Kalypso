@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KalypsoUIRRM Plug-in
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.kalypso.ui.rrm; singleton:=true
 Bundle-Version: 10.10.3.qualifier
 Bundle-Activator: org.kalypso.ui.rrm.KalypsoUIRRMPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
