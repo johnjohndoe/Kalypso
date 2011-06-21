@@ -111,8 +111,8 @@ public class DirectoryFieldWidget implements ISelectionProvider
     final Label label1 = new Label( parent, SWT.NONE );
     label1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
 
-    label1.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.1" ) );
-    label1.setToolTipText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.0" ) );
+    label1.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.1" ) ); //$NON-NLS-1$
+    label1.setToolTipText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.0" ) ); //$NON-NLS-1$
 
     /* Create a text. */
     m_text = new Text( parent, SWT.BORDER );
@@ -176,7 +176,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
       final IStatus status = RunnableContextHelper.execute( m_context, true, false, operation );
       m_rootNodes = operation.getNodes();
       if( !status.isOK() )
-        new StatusDialog( m_context.getShell(), status, "Read Profile Data" );
+        new StatusDialog( m_context.getShell(), status, Messages.getString("DirectoryFieldWidget.2") ); //$NON-NLS-1$
     }
 
     return m_rootNodes;
