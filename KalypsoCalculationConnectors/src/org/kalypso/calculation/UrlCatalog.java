@@ -1,6 +1,5 @@
 package org.kalypso.calculation;
 
-
 import java.net.URL;
 import java.util.Map;
 

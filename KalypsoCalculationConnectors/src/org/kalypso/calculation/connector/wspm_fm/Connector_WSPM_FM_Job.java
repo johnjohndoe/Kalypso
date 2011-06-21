@@ -9,14 +9,16 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Path;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_WSPM_FM;
+import org.kalypso.calculation.connector.utils.Connectors;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.AbstractInternalStatusJob;
 import org.kalypso.simulation.core.ISimulation;
@@ -51,44 +53,31 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final URL wspmTinFileURL = (URL) inputProvider.getInputForID( MODELSPEC_CONNECTOR_WSPM_FM.WSPM_TinFile.name() );
-    final URL wspmModelURL = (URL) inputProvider.getInputForID( MODELSPEC_CONNECTOR_WSPM_FM.WSPM_Model.name() );
-    final URL fmModelURL = (URL) inputProvider.getInputForID( MODELSPEC_CONNECTOR_WSPM_FM.FM_Model.name() );
 
-    final String runOffEventID = inputProvider.getInputForID( MODELSPEC_CONNECTOR_WSPM_FM.WSPM_RunoffEventID.name() ).toString();
-    boolean deleteExistingRunoffEvents = false;
-    if( inputProvider.hasID( MODELSPEC_CONNECTOR_WSPM_FM.OPT_DeleteExistingRunoffEvents.name() ) )
+    final GMLWorkspace wspmTinFile = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_WSPM_FM.WSPM_TinFile.name() );
+    final GMLWorkspace wspmModel = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_WSPM_FM.WSPM_Model.name() );
+    final GMLWorkspace fmModel = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_WSPM_FM.FM_Model.name() );
+
+    final IRunOffEvent runOffEvent = Connectors.findRunOffEvent( wspmModel, inputProvider );
+    if( Objects.isNull( runOffEvent ) )
+      throw new SimulationException( "Undefined WSPM runoff event ID specified." );
+
+    final boolean deleteExistingRunoffEvents = deleteRunOffEvents( inputProvider );
+
+    Integer returnPeriod = runOffEvent.getAnnuality();
+    if( returnPeriod == null )
     {
-      final String pathString = inputProvider.getInputForID( MODELSPEC_CONNECTOR_WSPM_FM.OPT_DeleteExistingRunoffEvents.name() ).toString();
-      deleteExistingRunoffEvents = Boolean.parseBoolean( pathString.substring( pathString.lastIndexOf( "/" ) + 1 ) ); //$NON-NLS-1$
+      // TODO: throw an Exception here?
+      returnPeriod = 1;
     }
 
     try
     {
-      final GMLWorkspace wspmTinFile = GmlSerializer.createGMLWorkspace( wspmTinFileURL, null );
-      final GMLWorkspace wspmModel = GmlSerializer.createGMLWorkspace( wspmModelURL, null );
-      final GMLWorkspace fmModel = GmlSerializer.createGMLWorkspace( fmModelURL, null );
+
       final File fmOutputFile = File.createTempFile( "outTempFM", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$ 
 
       // final File fmEventsFolder = new File(((URL)
       // inputProvider.getInputForID(MODELSPEC_CONNECTOR_WSPM_FM.FM_EventsFolder.name())).toExternalForm());
-
-      Integer returnPeriod = null;
-      final IFeatureType wspmRunoffEventFeatureType = wspmModel.getGMLSchema().getFeatureType( new QName( IWspmConstants.NS_WSPMRUNOFF, "RunOffEvent" ) ); //$NON-NLS-1$
-      final Feature[] wspmRunoffEvents = wspmModel.getFeatures( wspmRunoffEventFeatureType );
-      for( final Feature feature : wspmRunoffEvents )
-      {
-        if( runOffEventID.equals( feature.getId() ) )
-        {
-          returnPeriod = (Integer) feature.getProperty( new QName( IWspmConstants.NS_WSPMRUNOFF, "returnPeriod" ) ); //$NON-NLS-1$
-          break;
-        }
-      }
-      if( returnPeriod == null )
-      {
-        // TODO: throw an Exception here?
-        returnPeriod = 1;
-      }
 
       final Feature wspmTinRootFeature = wspmTinFile.getRootFeature();
       final IFloodModel floodModel = (IFloodModel) fmModel.getRootFeature().getAdapter( IFloodModel.class );
@@ -100,7 +89,9 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
           final ICoverageCollection coverages = event.getResultCoverages();
           final IFeatureBindingCollection<ICoverage> coveragesList = coverages.getCoverages();
           for( final ICoverage coverage : coveragesList )
+          {
             CoverageManagementHelper.deleteGridFile( coverage );
+          }
         }
         floodModelEvents.clear();
       }
@@ -114,7 +105,9 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
       for( final IFloodPolygon polygon : floodModel.getPolygons() )
       {
         if( deleteExistingRunoffEvents )
+        {
           polygon.getEvents().clear();
+        }
         polygon.getEvents().addRef( newRunoffEvent );
       }
       final ITinReference tinReference = newRunoffEvent.getTins().addNew( ITinReference.QNAME );
@@ -144,7 +137,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
       tinReference.setMax( BigDecimal.valueOf( max ) );
       tinReference.setMin( BigDecimal.valueOf( min ) );
       tinReference.setSourceFeaturePath( sourceFeaturePath );
-      tinReference.setSourceLocation( wspmTinFileURL );
+      tinReference.setSourceLocation( Connectors.getURL( inputProvider, MODELSPEC_CONNECTOR_WSPM_FM.WSPM_TinFile.name() ) );
       tinReference.setUpdateDate( date.toGregorianCalendar().getTime() );
       tinReference.setSourceType( SOURCETYPE.gml );
       GmlSerializer.serializeWorkspace( fmOutputFile, fmModel, "UTF-8" ); //$NON-NLS-1$
@@ -159,5 +152,16 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
       setStatus( STATUS.ERROR, e.getLocalizedMessage() );
       e.printStackTrace();
     }
+  }
+
+  private boolean deleteRunOffEvents( final ISimulationDataProvider inputProvider ) throws SimulationException
+  {
+    if( inputProvider.hasID( MODELSPEC_CONNECTOR_WSPM_FM.OPT_DeleteExistingRunoffEvents.name() ) )
+    {
+      final String pathString = inputProvider.getInputForID( MODELSPEC_CONNECTOR_WSPM_FM.OPT_DeleteExistingRunoffEvents.name() ).toString();
+      return Boolean.parseBoolean( pathString.substring( pathString.lastIndexOf( "/" ) + 1 ) ); //$NON-NLS-1$
+    }
+
+    return false;
   }
 }
