@@ -561,8 +561,8 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the first bank drawing */
     final Button drawFirstBankButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
     m_buttonList.add( drawFirstBankButton );
-    
-    GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
+
+    final GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
     layoutDataFirstButton.minimumWidth = 25;
     drawFirstBankButton.setVisible( true );
     drawFirstBankButton.setLayoutData( layoutDataFirstButton );
@@ -726,7 +726,7 @@ public class CreateMainChannelComposite extends Composite
     final GridData gridDataSpinner = new GridData();
     gridDataSpinner.horizontalAlignment = SWT.RIGHT;
     spinNumBankIntersections.setLayoutData( gridDataSpinner );
-    
+
     return bankSection;
   }
 
@@ -794,7 +794,7 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the wspm-profile selection */
     final Button chooseProfilesButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
     m_buttonList.add( chooseProfilesButton );
-    GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
+    final GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
     layoutDataFirstButton.minimumWidth = 25;
     chooseProfilesButton.setLayoutData( layoutDataFirstButton );
     chooseProfilesButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
@@ -977,17 +977,16 @@ public class CreateMainChannelComposite extends Composite
         }
       }
       final int zOrder = mngr.getLayerPosition( overlayLayer );
-      final int last = mngr.getLayers().length - 1;
-      if( zOrder < last )
-        mngr.moveLayerToPosition( overlayLayer, last );
+      if( zOrder > 0 )
+        mngr.moveLayerToPosition( overlayLayer, 0 );
 
       final IChartComposite chartComposite = profilChartView.getChartComposite();
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT, new DragZoomOutHandler( chartComposite ) ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN, new DragZoomInHandler( chartComposite ) ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN, new DragPanHandler( chartComposite ) ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EDIT, new DragEditHandler( chartComposite ) ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE, new MaximizeHandler() ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE, new ExportHandler() ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE, new MaximizeHandler( chartComposite ) ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE, new ExportHandler( chartComposite ) ) );
       ChartUtilities.maximize( profilChartView.getChart().getChartModel() );
 
       final IAction action = new Action( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.44" ), IAction.AS_PUSH_BUTTON ) //$NON-NLS-1$

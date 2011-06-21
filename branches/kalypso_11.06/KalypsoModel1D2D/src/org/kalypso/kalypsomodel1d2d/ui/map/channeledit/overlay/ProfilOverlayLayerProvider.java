@@ -61,10 +61,7 @@ public class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
   public IProfilChartLayer[] createLayers( final IProfil profil, final Object result )
   {
     final List<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
-    final ProfilOverlayLayer overlay = new ProfilOverlayLayer( profil, getLsp() );
-    overlay.setCoordinateMapper( new CoordinateMapper( getDomainAxis(), getTargetAxisLeft() ) );
-    layers.add( overlay );
-
+    
     final IProfilChartLayer[] superLayers = super.createLayers( profil, result );
     for( final IProfilChartLayer layer : superLayers )
     {
@@ -72,7 +69,9 @@ public class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
       layer.lockLayer( true );
       layers.add( layer );
     }
-
+    final ProfilOverlayLayer overlay = new ProfilOverlayLayer( profil, getLsp() );
+    overlay.setCoordinateMapper( new CoordinateMapper( getDomainAxis(), getTargetAxisLeft() ) );
+    layers.add( overlay );
    
     return layers.toArray( new IProfilChartLayer[layers.size()] );
   }
