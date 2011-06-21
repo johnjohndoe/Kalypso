@@ -48,6 +48,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -55,7 +56,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class EditRelationOperation implements Runnable
 {
-  private static final String STR_TITLE_REMOVE_RELATION = "Remove Relation";
+  private static final String STR_TITLE_REMOVE_RELATION = Messages.getString("EditRelationOperation_0"); //$NON-NLS-1$
 
   private final EditRelationData m_data;
 
@@ -110,13 +111,13 @@ public class EditRelationOperation implements Runnable
       case ADD:
       {
         final ICommand command = relation.getAddCommand( m_shell, sourceFeature, targetFeature );
-        executeCommand( workspace, command, "Add Relation" );
+        executeCommand( workspace, command, Messages.getString("EditRelationOperation_1") ); //$NON-NLS-1$
         break;
       }
 
       case REMOVE:
       {
-        if( !MessageDialog.openConfirm( m_shell, STR_TITLE_REMOVE_RELATION, "Remove this relation?" ) )
+        if( !MessageDialog.openConfirm( m_shell, STR_TITLE_REMOVE_RELATION, Messages.getString("EditRelationOperation_2") ) ) //$NON-NLS-1$
           return;
 
         final ICommand command = relation.getRemoveCommand( sourceFeature, targetFeature );

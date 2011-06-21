@@ -62,13 +62,13 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class EditRelationPainter
 {
-  private final SLDPainter2 m_centerPainter = new SLDPainter2( new URL[] { getClass().getResource( "pointHover.sld" ) } );
+  private final SLDPainter2 m_centerPainter = new SLDPainter2( new URL[] { getClass().getResource( "pointHover.sld" ) } ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_centerErrorPainter = new SLDPainter2( new URL[] { getClass().getResource( "pointHoverError.sld" ) } );
+  private final SLDPainter2 m_centerErrorPainter = new SLDPainter2( new URL[] { getClass().getResource( "pointHoverError.sld" ) } ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_arrowPainter = new SLDPainter2( new URL[] { getClass().getResource( "arrowHover.sld" ) } );
+  private final SLDPainter2 m_arrowPainter = new SLDPainter2( new URL[] { getClass().getResource( "arrowHover.sld" ) } ); //$NON-NLS-1$
 
-  private final SLDPainter2 m_arrowErrorPainter = new SLDPainter2( new URL[] { getClass().getResource( "arrowHoverError.sld" ) } );
+  private final SLDPainter2 m_arrowErrorPainter = new SLDPainter2( new URL[] { getClass().getResource( "arrowHoverError.sld" ) } ); //$NON-NLS-1$
 
   private final ToolTipRenderer m_sourceTooltip = ToolTipRenderer.createStandardTooltip();
 
