@@ -49,6 +49,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.km.internal.KMPlugin;
 import org.kalypso.model.km.internal.core.ProfileDataSet;
 import org.kalypso.model.km.internal.core.ProfileObservationReader;
+import org.kalypso.model.km.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -78,7 +79,7 @@ public class ProfileSetReadOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KMPlugin.getID(), "Failed to read profile data", e );
+      return new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString("ProfileSetReadOperation_0"), e ); //$NON-NLS-1$
     }
     finally
     {
