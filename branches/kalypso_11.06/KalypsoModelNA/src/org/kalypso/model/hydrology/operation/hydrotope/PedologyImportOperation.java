@@ -115,7 +115,7 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final int size = m_inputDescriptor.size();
-    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.PedologyImportOperation.0" ), size + 10 ); //$NON-NLS-1$
+    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.0" ), size + 10 ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<SoilType> soilTypes = m_output.getSoilTypes();
     if( m_importType == ImportType.CLEAR_OUTPUT )

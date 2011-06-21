@@ -40,10 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -55,25 +51,14 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
-import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.suds.AbstractSud;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Imports landuse into a 'landuse.gml' file from another gml-workspace (probably a shape-file).
@@ -201,23 +186,6 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
     }
 
     return Status.OK_STATUS;
-  }
-
-  private void addSudsToLanduse( final AbstractSud[] suds, final Landuse landuse )
-  {
-    final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
-    final GMLWorkspace landuseWorkspace = landuse.getWorkspace();
-    final IGMLSchema landuseSchmea = landuseWorkspace.getGMLSchema();
-
-    for( final Feature sud : suds )
-    {
-      final IRelationType rt = (IRelationType) landuseSchmea.getFeatureType( Landuse.QNAME_PROP_SUD_MEMBERS );
-      final IFeatureType ft = sud.getFeatureType();
-      final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
-
-      final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
-      sudCollection.add( lnk );
-    }
   }
 
 }
