@@ -85,7 +85,7 @@ public class HeavyRelationType implements IEditRelationType
     final String bodyLinkLabel = EditRelationUtils.getLabel( getLink1() );
     final String targetLabel = EditRelationUtils.getLabel( getTargetType() );
 
-    return String.format( "%s \u21D2 (%s) \u21D2 %s", sourceLabel, bodyLinkLabel, targetLabel );
+    return String.format( "%s \u21D2 (%s) \u21D2 %s", sourceLabel, bodyLinkLabel, targetLabel ); //$NON-NLS-1$
   }
 
   @Override
@@ -126,7 +126,7 @@ public class HeavyRelationType implements IEditRelationType
   protected String validateRemove( final boolean exists )
   {
     if( !exists )
-      return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.0" );
+      return Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.0" ); //$NON-NLS-1$
 
     return null;
   }
@@ -240,8 +240,8 @@ public class HeavyRelationType implements IEditRelationType
     dialog.setContentProvider( new ArrayContentProvider() );
     dialog.setInput( substituts );
     dialog.setLabelProvider( labelProvider );
-    dialog.setMessage( "Please choose which kind of relation should be created:" );
-    dialog.setTitle( "Create Relation" );
+    dialog.setMessage( Messages.getString("HeavyRelationType.2") ); //$NON-NLS-1$
+    dialog.setTitle( Messages.getString("HeavyRelationType.3") ); //$NON-NLS-1$
     dialog.setInitialSelections( new Object[] { substituts[0] } );
     if( dialog.open() == Window.CANCEL )
       return null;

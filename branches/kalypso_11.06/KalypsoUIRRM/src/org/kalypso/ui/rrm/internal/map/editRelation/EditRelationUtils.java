@@ -45,6 +45,7 @@ import java.util.List;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -113,7 +114,7 @@ public final class EditRelationUtils
   static String getFeatureLabel( final Feature feature )
   {
     if( feature == null )
-      return "<none>";
+      return Messages.getString("EditRelationUtils_0"); //$NON-NLS-1$
     else
       return FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
   }

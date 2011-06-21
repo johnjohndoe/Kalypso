@@ -69,7 +69,7 @@ public class ZmlWQVInlineGuiTypeHandler extends ZmlInlineGuiTypeHandler
     // (i.e. in next version after 11.06).
     // Do NOT trasnlate these axis names
     map.put( "2ter Abfluss", ZmlWQVInlineTypeHandler.AXIS_NAME_ABGABE_1 ); //$NON-NLS-1$
-    map.put( "3ter Abfluss", ZmlWQVInlineTypeHandler.AXIS_NAME_ABGABE_2 ); //$NON-NLS-2$
+    map.put( "3ter Abfluss", ZmlWQVInlineTypeHandler.AXIS_NAME_ABGABE_2 ); //$NON-NLS-1$
 
     return map;
   }

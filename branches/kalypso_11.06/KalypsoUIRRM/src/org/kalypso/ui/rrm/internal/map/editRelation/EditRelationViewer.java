@@ -65,6 +65,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.ui.rrm.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -116,7 +117,7 @@ public class EditRelationViewer extends Composite
 
   private void createModeCombo( final Composite parent, final FormToolkit toolkit )
   {
-    toolkit.createLabel( parent, "Edit Mode" );
+    toolkit.createLabel( parent, Messages.getString("EditRelationViewer_0") ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     final Control control = viewer.getControl();

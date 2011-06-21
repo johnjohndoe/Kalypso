@@ -92,8 +92,8 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
     catch( final SensorException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to check existing observation", e );
-      new StatusDialog2( shell, status, "Open Observation Dialog" ).open();
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("ZmlInlineFeatureDialog.0"), e ); //$NON-NLS-1$
+      new StatusDialog2( shell, status, Messages.getString("ZmlInlineFeatureDialog.1") ).open(); //$NON-NLS-1$
     }
 
     final IObservationAction[] actions = m_typeHandler.getObservationActions();
