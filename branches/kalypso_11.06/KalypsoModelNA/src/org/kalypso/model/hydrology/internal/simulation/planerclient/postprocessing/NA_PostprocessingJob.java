@@ -93,7 +93,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
     public DischargeData( final double valueMaximum, final Date dateMaximum, final double volume )
     {
       // round maximum value to 2 digits
-      m_valueMaximum = Math.round( valueMaximum * 100 ) / 100;
+      m_valueMaximum = Math.round( valueMaximum * 100 ) / 100.0;
 
       // round date to minutes
       m_dateMaximum = (Date) dateMaximum.clone();
@@ -345,7 +345,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         dataList.add( izMax.getDateMaximumFormatted() );
         dataList.add( calcMax.getValueMaximum() );
         dataList.add( calcMax.getDateMaximumFormatted() );
-        dataList.add( Math.abs( izMax.getValueMaximum() - calcMax.getValueMaximum() ) );
+        dataList.add( (int) Math.abs( izMax.getValueMaximum() - calcMax.getValueMaximum() ) );
         dataList.add( calcMax.getDateMaximum().compareTo( izMax.getDateMaximum() ) );
         dataList.add( izMax.getVolume() );
         dataList.add( calcMax.getVolume() );
