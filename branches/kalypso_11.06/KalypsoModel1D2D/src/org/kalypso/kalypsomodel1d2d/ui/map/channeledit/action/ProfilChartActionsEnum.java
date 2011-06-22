@@ -40,17 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.action;
 
-import java.util.Collections;
-
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.ISources;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ProfilChartView;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
@@ -145,43 +137,6 @@ public enum ProfilChartActionsEnum
       {
         if( chartHandler != null )
           profilView.getPlotDragHandler().activatePlotHandler( chartHandler );
-      }
-    };
-
-    action.setToolTipText( chartAction.getTooltip() );
-    action.setImageDescriptor( chartAction.getEnabledImage() );
-    action.setDisabledImageDescriptor( chartAction.getDisabledImage() );
-
-    return action;
-  }
-
-  public static IAction createAction( final ProfilChartView profilView, final ProfilChartActionsEnum chartAction, final AbstractHandler chartHandler )
-  {
-    final int style = chartAction.getStyle();
-    final String label = chartAction.toString();
-
-    final IAction action = new Action( label, style )
-    {
-      /**
-       * @see org.eclipse.jface.action.Action#run()
-       */
-      @Override
-      public void run( )
-      {
-        final EvaluationContext context = new EvaluationContext( null, this );
-        context.addVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME, profilView );
-        if( profilView != null && profilView.getChart() != null )
-          context.addVariable( ISources.ACTIVE_SHELL_NAME, profilView.getChart().getPlot().getDisplay().getActiveShell() );
-        final ExecutionEvent event = new ExecutionEvent( null, Collections.EMPTY_MAP, null, context );
-
-        try
-        {
-          chartHandler.execute( event );
-        }
-        catch( final ExecutionException e )
-        {
-          throw new RuntimeException( e );
-        }
       }
     };
 
