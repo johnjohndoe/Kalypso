@@ -170,6 +170,9 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
         continue;
 
       // convert to screen-point
+
+      // FIXME: this does not work correct
+
       final int x = xAxis.numericToScreen( domainValue );
       final int y = yAxis.numericToScreen( targetValue );
       final Point pos = new Point( x, y );
@@ -438,14 +441,6 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   }
 
   /**
-   * @see org.kalypso.chart.framework.model.layer.IEditableChartLayer#setActivePoint(java.lang.Object)
-   */
-  public void setActivePoint( final Object data )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
    */
   @Override
@@ -505,5 +500,4 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     // TODO Auto-generated method stub
 
   }
-
 }
