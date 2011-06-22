@@ -76,7 +76,7 @@ public class NaModelCalcJob implements ISimulation
 
     try
     {
-      monitor.setMessage( Messages.getString("NaModelCalcJob.0") ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString( "NaModelCalcJob.0" ) ); //$NON-NLS-1$
       data = NaSimulationDataFactory.load( dataProvider );
 
       runnable = createRunnable( data, tmpdir );
@@ -108,13 +108,18 @@ public class NaModelCalcJob implements ISimulation
     final File resultDir = runnable.getResultDir();
     final File optimizeResult = runnable.getOptimizeResult();
 
-    if( resultDir.isDirectory() && optimizeResult != null && optimizeResult.isFile() )
-    {
+    if( resultDir.exists() )
       resultEater.addResult( NaModelConstants.OUT_ZML, resultDir );
-      resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, optimizeResult );
-    }
     else
-      throw new SimulationException( Messages.getString("NaModelCalcJob.1") ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "NaModelCalcJob.2" ) ); //$NON-NLS-1$
+
+    if( optimizeResult != null )
+    {
+      if( optimizeResult.exists() )
+        resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, optimizeResult );
+      else
+        throw new SimulationException( Messages.getString( "NaModelCalcJob.1" ) ); //$NON-NLS-1$
+    }
   }
 
   private INaSimulationRunnable createRunnable( final INaSimulationData data, final File tmpdir ) throws Exception

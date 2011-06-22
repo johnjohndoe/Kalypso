@@ -122,7 +122,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
 
     if( wvqObservation == null )
     {
-      final String message = String.format( Messages.getString("HRBFileWriter_0"), channelName ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "HRBFileWriter_0" ), channelName ); //$NON-NLS-1$
       throw new NAPreprocessorException( message );
     }
 
@@ -172,7 +172,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new NAPreprocessorException( Messages.getString("HRBFileWriter_1"), e ); //$NON-NLS-1$
+      throw new NAPreprocessorException( Messages.getString( "HRBFileWriter_1" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -207,7 +207,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     catch( final SensorException e )
     {
       e.printStackTrace();
-      throw new NAPreprocessorException( String.format( Messages.getString("HRBFileWriter_2"), channelName ) ); //$NON-NLS-1$
+      throw new NAPreprocessorException( String.format( Messages.getString( "HRBFileWriter_2" ), channelName ) ); //$NON-NLS-1$
     }
   }
 
@@ -221,7 +221,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     {
       if( Double.isNaN( defaultValue ) )
       {
-        final String message = String.format( Messages.getString("HRBFileWriter_3") ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "HRBFileWriter_3" ) ); //$NON-NLS-1$
         throw new SensorException( message );
       }
 
@@ -232,7 +232,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     if( value instanceof Number )
       return ((Number) value).doubleValue();
 
-    final String message = String.format( Messages.getString("HRBFileWriter_4"), axis.getName(), row ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "HRBFileWriter_4" ), axis.getName(), row ); //$NON-NLS-1$
     throw new SensorException( message );
   }
 }
