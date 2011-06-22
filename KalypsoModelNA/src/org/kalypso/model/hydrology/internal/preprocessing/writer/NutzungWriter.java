@@ -105,7 +105,7 @@ public class NutzungWriter
     catch( final SensorException e )
     {
       e.printStackTrace();
-      throw new NAPreprocessorException( Messages.getString("NutzungWriter_0"), e ); //$NON-NLS-1$
+      throw new NAPreprocessorException( Messages.getString( "NutzungWriter_0" ), e ); //$NON-NLS-1$
     }
   }
 

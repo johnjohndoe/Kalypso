@@ -156,7 +156,7 @@ public class FeatureListGeometryIntersector
         }
         catch( final Exception e )
         {
-          m_log.add( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("FeatureListGeometryIntersector.3") + feature.getName(), e ) ); //$NON-NLS-1$
+          m_log.add( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "FeatureListGeometryIntersector.0", feature.getName() ), e ) ); //$NON-NLS-1$
         }
       }
       sizeMap.put( featureList, polyCount );
@@ -164,14 +164,14 @@ public class FeatureListGeometryIntersector
 
     // sort by real number of polygons
     Collections.sort( m_sourceLayers, new Comparator<List<Feature>>()
-    {
+        {
 
       @Override
       public int compare( final List<Feature> o1, final List<Feature> o2 )
       {
         return sizeMap.get( o1 ) - sizeMap.get( o2 );
       }
-    } );
+        } );
 
     final Iterator<List<Feature>> sourceListIterator = m_sourceLayers.iterator();
     final List<Feature> sourceList = sourceListIterator.next();

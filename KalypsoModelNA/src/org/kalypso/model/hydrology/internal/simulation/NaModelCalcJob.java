@@ -108,14 +108,14 @@ public class NaModelCalcJob implements ISimulation
     final File resultDir = runnable.getResultDir();
     final File optimizeResult = runnable.getOptimizeResult();
 
-    if( resultDir.exists() )
+    if( resultDir.isDirectory() )
       resultEater.addResult( NaModelConstants.OUT_ZML, resultDir );
     else
-      throw new SimulationException( Messages.getString( "NaModelCalcJob.2" ) ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "NaModelCalcJob.1" ) ); //$NON-NLS-1$
 
     if( optimizeResult != null )
     {
-      if( optimizeResult.exists() )
+      if( optimizeResult.isFile() )
         resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, optimizeResult );
       else
         throw new SimulationException( Messages.getString( "NaModelCalcJob.1" ) ); //$NON-NLS-1$

@@ -71,9 +71,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NaPostProcessor
 {
-  private static final String STRING_RESULT_SUCCESSFUL_1 = "berechnung wurde ohne fehler beendet"; //$NON-NLS-1$
+  private static final String VERSION_PATTERN = ".*\\*+[ \\t]+VERS\\.[ \\t]+(\\d+\\.\\d+)\\.\\d+[ \\t\\w\\.:]+\\*+.*"; //$NON-NLS-1$
 
-  private static final String STRING_RESULT_SUCCESSFUL_2 = Messages.getString( "NaPostProcessor.1" ); //$NON-NLS-1$
+  private static final String STRING_RESULT_SUCCESSFUL_1 = "berechnung wurde ohne fehler beendet"; //$NON-NLS-1$
 
   private static final String FILENAME_OUTPUT_RES = "output.res"; //$NON-NLS-1$
 
@@ -81,15 +81,13 @@ public class NaPostProcessor
 
   private final GMLWorkspace m_modelWorkspace;
 
-  private boolean m_isSucceeded;
-
   private final NAModellControl m_naControl;
 
   private final HydroHash m_hydroHash;
 
   private final IDManager m_idManager;
 
-  private ENACoreResultsFormat m_coreResultsFormat = ENACoreResultsFormat.FMT_2_2_AND_NEWER;
+  private ENACoreResultsFormat m_coreResultsFormat;
 
   public NaPostProcessor( final IDManager idManager, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final HydroHash hydroHash )
   {
@@ -109,8 +107,6 @@ public class NaPostProcessor
     copyNaExeLogs( asciiDirs, currentResultDirs );
 
     checkSuccessAndResultsFormat( asciiDirs );
-    if( !m_isSucceeded )
-      return;
 
     final NAStatistics statistics = loadTSResults( asciiDirs.outWeNatDir, simDirs.currentResultDir );
     statistics.writeStatistics( simDirs.currentResultDir, currentResultDirs.reportDir );
@@ -163,54 +159,55 @@ public class NaPostProcessor
    * Checks if the calculation was successful or not; if yes, checks for the results file version. Starting from NA core
    * 2.2 dates for block time series are written as YYYYMMDD, older versions are using YYMMDD format.
    */
-  private void checkSuccessAndResultsFormat( final NaAsciiDirs asciiDirs )
+  private void checkSuccessAndResultsFormat( final NaAsciiDirs asciiDirs ) throws NaPostProcessingException
   {
     final List<String> logContent = readOutputRes( asciiDirs.startDir );
     if( logContent == null || logContent.size() == 0 )
-    {
-      m_isSucceeded = false;
-      return;
-    }
-    for( int i = logContent.size() - 1; i >= 0; i-- )
+      throw new NaPostProcessingException( Messages.getString("NaPostProcessor.0") ); //$NON-NLS-1$
+
+    checkLogForSuccess( logContent );
+
+    m_coreResultsFormat = findCoreResultsFormat( logContent );
+  }
+
+  private ENACoreResultsFormat findCoreResultsFormat( final List<String> logContent )
+  {
+    final Pattern versionPattern = Pattern.compile( VERSION_PATTERN );
+    for( int i = 0; i < logContent.size(); i++ )
     {
       final String line = logContent.get( i );
-      m_isSucceeded = line.contains( STRING_RESULT_SUCCESSFUL_1 ) || line.contains( STRING_RESULT_SUCCESSFUL_2 );
-      if( m_isSucceeded )
-        break;
-    }
-    if( m_isSucceeded )
-    {
-      final Pattern versionPattern = Pattern.compile( ".*\\*+[ \\t]+VERS\\.[ \\t]+(\\d+\\.\\d+)\\.\\d+[ \\t\\w\\.:]+\\*+.*" ); //$NON-NLS-1$
-      for( int i = 0; i < logContent.size(); i++ )
+      final Matcher matcher = versionPattern.matcher( line );
+      if( matcher.matches() )
       {
-        final String line = logContent.get( i );
-        final Matcher matcher = versionPattern.matcher( line );
-        if( matcher.matches() )
+        final String[] strings = matcher.group( 1 ).split( "\\." ); //$NON-NLS-1$
+        if( Integer.parseInt( strings[0] ) > 2 )
+          return ENACoreResultsFormat.FMT_2_2_AND_NEWER;
+
+        if( Integer.parseInt( strings[0] ) == 2 )
         {
-          final String[] strings = matcher.group( 1 ).split( "\\." ); //$NON-NLS-1$
-          if( Integer.parseInt( strings[0] ) > 2 )
-          {
-            m_coreResultsFormat = ENACoreResultsFormat.FMT_2_2_AND_NEWER;
-          }
-          else if( Integer.parseInt( strings[0] ) == 2 )
-          {
-            if( Integer.parseInt( strings[1] ) >= 2 )
-            {
-              m_coreResultsFormat = ENACoreResultsFormat.FMT_2_2_AND_NEWER;
-            }
-            else
-            {
-              m_coreResultsFormat = ENACoreResultsFormat.FMT_2_1_AND_OLDER;
-            }
-          }
+          if( Integer.parseInt( strings[1] ) >= 2 )
+            return ENACoreResultsFormat.FMT_2_2_AND_NEWER;
           else
-          {
-            m_coreResultsFormat = ENACoreResultsFormat.FMT_2_1_AND_OLDER;
-          }
-          break;
+            return ENACoreResultsFormat.FMT_2_1_AND_OLDER;
         }
+
+        return ENACoreResultsFormat.FMT_2_1_AND_OLDER;
       }
     }
+
+    return ENACoreResultsFormat.FMT_2_2_AND_NEWER;
+  }
+
+  private void checkLogForSuccess( final List<String> logContent ) throws NaPostProcessingException
+  {
+    for( int i = logContent.size() - 1; i >= 0; i-- )
+    {
+      final String line = logContent.get( i ).toLowerCase();
+      if( line.contains( STRING_RESULT_SUCCESSFUL_1 ) )
+        return;
+    }
+
+    throw new NaPostProcessingException( Messages.getString("NaPostProcessor.1") ); //$NON-NLS-1$
   }
 
   private List<String> readOutputRes( final File startDir )
@@ -224,11 +221,6 @@ public class NaPostProcessor
       e.printStackTrace();
       return null;
     }
-  }
-
-  public boolean isSucceeded( )
-  {
-    return m_isSucceeded;
   }
 
   /** kopiere statistische Ergebnis-Dateien */
