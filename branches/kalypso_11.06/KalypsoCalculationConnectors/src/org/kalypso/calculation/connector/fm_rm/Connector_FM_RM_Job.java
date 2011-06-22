@@ -52,7 +52,6 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-
     final GMLWorkspace fmModel = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_FM_RM.FM_Model.name() );
     final GMLWorkspace rmModel = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_FM_RM.RM_Model.name() );
 
@@ -93,6 +92,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
               final File eventFile = new File( fmScenarioFolderAbsolutePath.concat( fileType.getFileName() ) );
               if( eventFile.exists() && eventFile.isFile() )
               {
+                // TODO local or server based calculation chain? server based -> move files to destination directory
                 FileUtils.copyFileToDirectory( eventFile, rmInputRasterFolder );
                 fileType.setFileName( rmInputRasterFolderRelativePath.concat( eventFile.getName() ) );
               }
