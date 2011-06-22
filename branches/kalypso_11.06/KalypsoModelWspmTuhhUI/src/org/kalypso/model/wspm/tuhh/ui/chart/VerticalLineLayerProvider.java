@@ -68,8 +68,8 @@ public class VerticalLineLayerProvider extends AbstractLayerProvider
   public IChartLayer getLayer( final URL context )
   {
     final IParameterContainer pc = getParameterContainer();
-    final String featureKey = pc.getParameterValue( "featureKey", null );
-    final String propertyNameStr = pc.getParameterValue( "propertyName", null );
+    final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
+    final String propertyNameStr = pc.getParameterValue( "propertyName", null ); //$NON-NLS-1$
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
     if( propertyName == null )
       return null;
@@ -82,6 +82,6 @@ public class VerticalLineLayerProvider extends AbstractLayerProvider
     if( bankfullHeight == null )
       return null;
 
-    return new VerticalLineLayer( this, getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ), new BigDecimal[] { bankfullHeight } );
+    return new VerticalLineLayer( this, getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ), new BigDecimal[] { bankfullHeight } ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

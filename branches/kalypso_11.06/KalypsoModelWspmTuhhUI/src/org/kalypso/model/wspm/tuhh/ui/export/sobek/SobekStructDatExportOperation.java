@@ -81,7 +81,7 @@ public class SobekStructDatExportOperation extends AbstractSobekStructExportOper
 
     if( profileObject instanceof BuildingBruecke )
     {
-      getFormatter().format( Locale.US, "STRU id '%s' nm '%s' dd '%s' stru%n", structId, profileName, structId );
+      getFormatter().format( Locale.US, "STRU id '%s' nm '%s' dd '%s' stru%n", structId, profileName, structId ); //$NON-NLS-1$
       return true;
     }
 

@@ -224,7 +224,7 @@ public class WspWinExporter
 
     if( values.isEmpty() )
     {
-      final String message = String.format( "No dischare values in discharge event '%s' found.", FeatureHelper.getAnnotationValue( runOffEvent, IAnnotation.ANNO_LABEL ) );
+      final String message = String.format( Messages.getString("WspWinExporter.3"), FeatureHelper.getAnnotationValue( runOffEvent, IAnnotation.ANNO_LABEL ) ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message );
       throw new CoreException( status );
     }

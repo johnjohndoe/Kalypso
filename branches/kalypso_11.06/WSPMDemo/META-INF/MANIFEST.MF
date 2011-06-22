@@ -1,9 +1,9 @@
 Manifest-Version: 1.0 
 Bundle-ManifestVersion: 2
-Bundle-Name: WSPMDemo Plug-in
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.project.demo;singleton:=true
 Bundle-Version: 10.10.3.qualifier
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.kalypso.contribs.eclipseplatform
 Bundle-Localization: plugin
 
