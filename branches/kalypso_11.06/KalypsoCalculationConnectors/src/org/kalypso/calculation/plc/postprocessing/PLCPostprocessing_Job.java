@@ -89,9 +89,18 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       final IRasterDataModel riskDifferenceRasterDataModel = (IRasterDataModel) riskDifferenceRasterDataModelWS.getRootFeature().getAdapter( IRasterDataModel.class );
 
       // adding representative (HQ100) inundation coverages to the model
+      int highestReturnPeriod = 1;
       for( final IAnnualCoverageCollection coverageCollection : riskStatusQuoRasterDataModel.getWaterlevelCoverageCollection() )
       {
-        if( coverageCollection.getReturnPeriod() == 100 )
+        final int returnPeriod = coverageCollection.getReturnPeriod();
+        if( returnPeriod > highestReturnPeriod )
+        {
+          highestReturnPeriod = returnPeriod;
+        }
+      }
+      for( final IAnnualCoverageCollection coverageCollection : riskStatusQuoRasterDataModel.getWaterlevelCoverageCollection() )
+      {
+        if( coverageCollection.getReturnPeriod() == highestReturnPeriod )
         {
           final IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
           for( final ICoverage coverage : coverages )
@@ -103,7 +112,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       }
       for( final IAnnualCoverageCollection coverageCollection : riskCalculatedRasterDataModel.getWaterlevelCoverageCollection() )
       {
-        if( coverageCollection.getReturnPeriod() == 100 )
+        if( coverageCollection.getReturnPeriod() == highestReturnPeriod )
         {
           final IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
           for( final ICoverage coverage : coverages )
@@ -115,7 +124,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       }
       for( final IAnnualCoverageCollection coverageCollection : riskDifferenceRasterDataModel.getWaterlevelCoverageCollection() )
       {
-        if( coverageCollection.getReturnPeriod() == 100 )
+        if( coverageCollection.getReturnPeriod() == highestReturnPeriod )
         {
           final IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
           for( final ICoverage coverage : coverages )
