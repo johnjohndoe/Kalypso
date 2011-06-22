@@ -69,6 +69,7 @@ import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
 import org.kalypso.model.hydrology.internal.NaSimulationDirs;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessingException;
 import org.kalypso.model.hydrology.internal.simulation.INaSimulationRunnable;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -145,7 +146,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
   @Override
   public boolean run( final ISimulationMonitor monitor ) throws SimulationException
   {
-    monitor.setMessage( Messages.getString("NAOptimizingJob_3") ); //$NON-NLS-1$
+    monitor.setMessage( Messages.getString( "NAOptimizingJob_3" ) ); //$NON-NLS-1$
 
     final NAControl metaControl = m_data.getMetaControl();
     final Date optimizationStartDate = metaControl.getOptimizationStart();
@@ -176,22 +177,28 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     {
       if( m_counter == 0 )
         // FIXME: if first run fails, we cannot 'runAgain', as the processor may not be initialized.
-        m_lastSucceeded = runFirst( monitor );
+        runFirst( monitor );
       else
-        m_lastSucceeded = runAgain( monitor );
+        runAgain( monitor );
 
+      m_lastSucceeded = true;
+      return m_lastSucceeded;
+    }
+    catch( final NaPostProcessingException e )
+    {
+      m_lastSucceeded = false;
       return m_lastSucceeded;
     }
     catch( final OperationCanceledException e )
     {
-      final String msg = Messages.getString("NAOptimizingJob_4"); //$NON-NLS-1$
+      final String msg = Messages.getString( "NAOptimizingJob_4" ); //$NON-NLS-1$
       m_logger.log( Level.INFO, msg );
       monitor.setFinishInfo( IStatus.CANCEL, msg );
       return false;
     }
     catch( final Exception exception )
     {
-      final String msg = Messages.getString("NAOptimizingJob_5"); //$NON-NLS-1$
+      final String msg = Messages.getString( "NAOptimizingJob_5" ); //$NON-NLS-1$
       m_logger.log( Level.SEVERE, msg, exception );
       return false;
     }
@@ -201,7 +208,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     }
   }
 
-  private boolean runFirst( final ISimulationMonitor monitor ) throws Exception
+  private void runFirst( final ISimulationMonitor monitor ) throws Exception
   {
     final NACalculationLogger naCalculationLogger = new NACalculationLogger( new File( m_tmpDir, "logRun_" + m_counter ) ); //$NON-NLS-1$
 
@@ -210,7 +217,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     try
     {
       m_simulation = new NAModelSimulation( m_simDirs, m_data, logger );
-      return m_simulation.runSimulation( monitor );
+      m_simulation.runSimulation( monitor );
     }
     finally
     {
@@ -218,10 +225,10 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     }
   }
 
-  private boolean runAgain( final ISimulationMonitor monitor ) throws Exception
+  private void runAgain( final ISimulationMonitor monitor ) throws Exception
   {
     final NAOptimize optimize = m_data.getNaOptimize();
-    return m_simulation.rerunForOptimization( optimize, monitor );
+    m_simulation.rerunForOptimization( optimize, monitor );
   }
 
   /**

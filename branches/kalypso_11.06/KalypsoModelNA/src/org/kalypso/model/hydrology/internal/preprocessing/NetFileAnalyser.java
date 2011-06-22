@@ -137,19 +137,19 @@ public class NetFileAnalyser
 
         if( upstreamNodeChannel == null )
         {
-          final String message = String.format( Messages.getString("NetFileAnalyser_0"), upStreamNode.getName() ); //$NON-NLS-1$
+          final String message = String.format( Messages.getString( "NetFileAnalyser_0" ), upStreamNode.getName() ); //$NON-NLS-1$
           throw new SimulationException( message );
         }
 
         if( downStreamChannelFE == null )
         {
-          final String message = String.format( Messages.getString("NetFileAnalyser_1"), upStreamNode.getName() ); //$NON-NLS-1$
+          final String message = String.format( Messages.getString( "NetFileAnalyser_1" ), upStreamNode.getName() ); //$NON-NLS-1$
           throw new SimulationException( message );
         }
 
         if( upstreamNodeChannel == downStreamChannelFE )
         {
-          logWarning( Messages.getString("NetFileAnalyser_2"), upstreamNodeChannel ); //$NON-NLS-1$
+          logWarning( Messages.getString( "NetFileAnalyser_2" ), upstreamNodeChannel ); //$NON-NLS-1$
           // FIXME: shouldn't we throw an exception here?
           continue;
         }
@@ -167,20 +167,20 @@ public class NetFileAnalyser
       final Node downStreamNode = channel.getDownstreamNode();
       if( downStreamNode == null )
       {
-        logWarning( Messages.getString("NetFileAnalyser_3"), channel ); //$NON-NLS-1$
+        logWarning( Messages.getString( "NetFileAnalyser_3" ), channel ); //$NON-NLS-1$
         continue;
       }
 
       final Channel downStreamChannel = downStreamNode.getDownstreamChannel();
       if( downStreamChannel == null )
       {
-        logWarning( Messages.getString("NetFileAnalyser_4"), downStreamNode ); //$NON-NLS-1$
+        logWarning( Messages.getString( "NetFileAnalyser_4" ), downStreamNode ); //$NON-NLS-1$
         continue;
       }
       // set dependency
       if( channel == downStreamChannel )
       {
-        logWarning( Messages.getString("NetFileAnalyser_5"), channel ); //$NON-NLS-1$
+        logWarning( Messages.getString( "NetFileAnalyser_5" ), channel ); //$NON-NLS-1$
         continue;
       }
 
@@ -218,7 +218,7 @@ public class NetFileAnalyser
       final Channel upstreamChannel = catchment.getChannel();
       if( upstreamChannel == null )
       {
-        logWarning( Messages.getString("NetFileAnalyser_6"), catchment ); //$NON-NLS-1$
+        logWarning( Messages.getString( "NetFileAnalyser_6" ), catchment ); //$NON-NLS-1$
         continue;
       }
 
@@ -245,20 +245,20 @@ public class NetFileAnalyser
         final Catchment downStreamCatchmentFE = abflussFE.getNgwzu();
         if( downStreamCatchmentFE == null )
         {
-          logWarning( Messages.getString("NetFileAnalyser_7"), abflussFE ); //$NON-NLS-1$
+          logWarning( Messages.getString( "NetFileAnalyser_7" ), abflussFE ); //$NON-NLS-1$
           continue;
         }
         final Channel downStreamChannelFE = downStreamCatchmentFE.getChannel();
         if( downStreamChannelFE == null )
         {
-          logWarning( Messages.getString("NetFileAnalyser_8"), downStreamCatchmentFE ); //$NON-NLS-1$
+          logWarning( Messages.getString( "NetFileAnalyser_8" ), downStreamCatchmentFE ); //$NON-NLS-1$
           continue;
         }
 
         final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
         if( downStreamElement == null )
         {
-          logWarning( Messages.getString("NetFileAnalyser_9"), downStreamCatchmentFE ); //$NON-NLS-1$
+          logWarning( Messages.getString( "NetFileAnalyser_9" ), downStreamCatchmentFE ); //$NON-NLS-1$
           continue;
         }
 
@@ -313,18 +313,18 @@ public class NetFileAnalyser
    */
   private static String getLogLabel( final Feature netElement )
   {
-    final String defaultName = String.format( Messages.getString("NetFileAnalyser_10"), netElement.getId() ); //$NON-NLS-1$
+    final String defaultName = String.format( Messages.getString( "NetFileAnalyser_10" ), netElement.getId() ); //$NON-NLS-1$
     final String gmlName = netElement.getName();
     final String name = StringUtils.isBlank( gmlName ) ? defaultName : gmlName;
 
     if( netElement instanceof Catchment )
-      return String.format( Messages.getString("NetFileAnalyser_11"), name ); //$NON-NLS-1$
+      return String.format( Messages.getString( "NetFileAnalyser_11" ), name ); //$NON-NLS-1$
 
     if( netElement instanceof Channel )
-      return String.format( Messages.getString("NetFileAnalyser_12"), name ); //$NON-NLS-1$
+      return String.format( Messages.getString( "NetFileAnalyser_12" ), name ); //$NON-NLS-1$
 
     if( netElement instanceof Node )
-      return String.format( Messages.getString("NetFileAnalyser_13"), name ); //$NON-NLS-1$
+      return String.format( Messages.getString( "NetFileAnalyser_13" ), name ); //$NON-NLS-1$
 
     return name;
   }

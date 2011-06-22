@@ -171,7 +171,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     catch( final SensorException e )
     {
       e.printStackTrace();
-      throw new NAPreprocessorException( Messages.getString("NetFileWriter_0"), e ); //$NON-NLS-1$
+      throw new NAPreprocessorException( Messages.getString( "NetFileWriter_0" ), e ); //$NON-NLS-1$
     }
   }
 

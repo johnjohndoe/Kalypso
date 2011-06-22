@@ -175,7 +175,7 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     if( soiltypeByName != null )
       return soilTypeID;
 
-    final String msg = String.format( Messages.getString("HydrotopeWriter.1"), soilTypeID, hydrotop.getId() ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "HydrotopeWriter.0" ), soilTypeID, hydrotop.getId() ); //$NON-NLS-1$
     throw new NAPreprocessorException( msg );
   }
 

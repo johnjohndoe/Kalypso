@@ -87,7 +87,7 @@ public class ZftWriter extends AbstractCoreFileWriter
     catch( final SensorException e )
     {
       e.printStackTrace();
-      throw new NAPreprocessorException( Messages.getString("ZftWriter_0"), e ); //$NON-NLS-1$
+      throw new NAPreprocessorException( Messages.getString( "ZftWriter_0" ), e ); //$NON-NLS-1$
     }
   }
 
