@@ -62,11 +62,6 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
-import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
-import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
-import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
-import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
-import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
@@ -75,12 +70,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
-import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IPlotHandler;
@@ -122,45 +112,9 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     m_listener.add( l );
   }
 
-//  private void setDefaultAxis( final IMapperRegistry mr )
-//  {
-//    final AxisRendererConfig configDom = new AxisRendererConfig();
-//    final IAxisRenderer aRendDom = new ExtendedAxisRenderer( "rendDom", POSITION.BOTTOM, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
-//
-//    final AxisRendererConfig configLR = new AxisRendererConfig();
-//    configLR.axisInsets = new Insets( 5, 0, 0, 0 );
-//    final IAxisRenderer aRendL = new ExtendedAxisRenderer( "rendL", POSITION.LEFT, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
-//    final IAxisRenderer aRendR = new ExtendedAxisRenderer( "rendL", POSITION.RIGHT, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
-//
-//    final IAxis domainAxis = new GenericLinearAxis( "ID_AXIS_DOMAIN", POSITION.BOTTOM, null, aRendDom );//$NON-NLS-1$
-//    final AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
-//    domainAxis.setPreferredAdjustment( aaDom );
-//
-//    final IAxis targetAxisLeft = new GenericLinearAxis( "ID_AXIS_LEFT", POSITION.LEFT, null, aRendL );//$NON-NLS-1$
-//    final AxisAdjustment aaLeft = new AxisAdjustment( 15, 75, 10 );
-//    targetAxisLeft.setPreferredAdjustment( aaLeft );
-//
-//    final IAxis targetAxisRight = new GenericLinearAxis( "ID_AXIS_RIGHT", POSITION.RIGHT, null, aRendR );//$NON-NLS-1$
-//    final AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
-//    targetAxisRight.setPreferredAdjustment( aaRight );
-//
-//    domainAxis.setLabel( "[m]" ); //$NON-NLS-1$
-//
-//    targetAxisLeft.setLabel( "[m+NN]" ); //$NON-NLS-1$
-//    targetAxisRight.setLabel( "[KS]" ); //$NON-NLS-1$
-//
-//    mr.addMapper( domainAxis );
-//    mr.addMapper( targetAxisLeft );
-//    mr.addMapper( targetAxisRight );
-//  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.IProfilView#createControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   public Control createControl( final Composite parent )
   {
-    m_chartComposite = new ChartImageComposite( parent, parent.getStyle(), new ChartModel(), new RGB( 255, 255, 255 ) );
+    m_chartComposite = new ChartImageComposite( parent, SWT.BORDER, new ChartModel(), new RGB( 255, 255, 255 ) );
     final GridData gD = new GridData( SWT.FILL, SWT.FILL, true, true );
     // gD.exclude = true;
     m_chartComposite.getPlot().setLayoutData( gD );
@@ -179,7 +133,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     } );
 
     updateLayer();
-   
+
     return m_chartComposite.getPlot();
   }
 
