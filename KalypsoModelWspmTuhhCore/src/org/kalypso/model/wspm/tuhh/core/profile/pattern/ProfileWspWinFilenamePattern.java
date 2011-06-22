@@ -25,7 +25,7 @@ public final class ProfileWspWinFilenamePattern extends AbstractProfileStringPat
       return null;
 
     final double station = profile.getStation();
-    return String.format( "%.4f", station ).replace( '.', '+' ).replace( ' ', '0' );
+    return String.format( "%.4f", station ).replace( '.', '+' ).replace( ' ', '0' ); //$NON-NLS-1$
   }
 
   /**

@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -111,7 +112,7 @@ public final class WspmResultFactory
     final IWorkspaceRoot root = workspace.getRoot();
     final IProject[] projects = root.getProjects();
 
-    monitor.beginTask( "Searching WSPM projects", projects.length );
+    monitor.beginTask( Messages.getString("WspmResultFactory_0"), projects.length ); //$NON-NLS-1$
 
     for( final IProject project : projects )
     {

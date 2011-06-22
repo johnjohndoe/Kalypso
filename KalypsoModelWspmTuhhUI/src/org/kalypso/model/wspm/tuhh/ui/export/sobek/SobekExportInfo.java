@@ -339,7 +339,7 @@ public class SobekExportInfo
       return new MessageProvider( Messages.getString( "SobekProfileExportFileChooserPage_10" ), IMessageProvider.WARNING ); //$NON-NLS-1$
 
     if( StringUtils.isBlank( m_namePattern ) )
-      return new MessageProvider( "Bitte geben Sie ein das Muster für den Namen ein", IMessageProvider.WARNING );
+      return new MessageProvider( Messages.getString("SobekExportInfo.0"), IMessageProvider.WARNING ); //$NON-NLS-1$
 
     if( StringUtils.isBlank( m_idSuffix ) )
       return new MessageProvider( Messages.getString( "SobekProfileExportFileChooserPage.5" ), IMessageProvider.WARNING ); //$NON-NLS-1$

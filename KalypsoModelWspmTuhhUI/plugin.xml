@@ -283,7 +283,7 @@
             class="org.kalypso.model.wspm.tuhh.ui.light.WspmLightPerspective"
             icon="icons/obj16/wspmLight.gif"
             id="WspmLightPerspective"
-            name="WSPM">
+            name="%perspective.name">
       </perspective>
    </extension>
    
@@ -664,7 +664,7 @@
   <extension point="org.eclipse.ui.views">
       <category
             id="org.kalypso.model.wspm.tuhh.ui.light.viewCategory"
-            name="WSPM"
+            name="%category.name"
             parentCategory="org.kalypso.ui.kalypso">
       </category>
       <view
@@ -673,7 +673,7 @@
             class="org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart"
             icon="icons/obj16/wspwin16.gif"
             id="org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart"
-            name="WSPM Data"
+            name="%view.name"
             restorable="true">
       </view>
       <view
@@ -682,7 +682,7 @@
             class="org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart"
             icon="icons/obj16/kalypso_gmt.gif"
             id="org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart"
-            name="Map"
+            name="%view.name.0"
             restorable="true">
       </view>
   </extension>
@@ -778,11 +778,11 @@
            point="org.kalypso.ui.gmlExportWizards">
         <category
               id="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
-              name="WSPM">
+              name="%category.name.0">
         </category>
         <category
               id="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards.shape"
-              name="ESRI Shape"
+              name="%category.name.1"
               parentCategory="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards">
         </category>
         <wizard
@@ -815,7 +815,7 @@
               icon="icons/elcl16/export_plotter.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportProfilesWizard"
               name="%command.name.6">
-           <description>Converts the selected profiles into the .prf format and opens them in WspWin Plotter.</description>
+           <description>%wizard.description</description>
         </wizard>
         <wizard
               category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"

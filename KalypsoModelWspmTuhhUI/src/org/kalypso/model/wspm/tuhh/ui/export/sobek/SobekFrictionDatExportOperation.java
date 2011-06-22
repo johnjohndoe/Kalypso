@@ -149,7 +149,7 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
     final double friction = calculateFriction( profil, from, to );
 
     if( Double.isNaN( friction ) )
-      System.out.println( "Oups" );
+      System.out.println( "Oups" ); //$NON-NLS-1$
 
     return new SobekFrictionZone( from, to, frictionType, friction, label );
   }

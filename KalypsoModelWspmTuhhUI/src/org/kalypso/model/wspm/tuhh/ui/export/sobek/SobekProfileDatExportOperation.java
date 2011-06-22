@@ -91,7 +91,7 @@ public class SobekProfileDatExportOperation extends AbstractSobekFileExportOpera
     final double rs = getHeight( surfacePoints[0] );
     final double ls = getHeight( surfacePoints[1] );
 
-    getFormatter().format( Locale.US, "CRSN id '%s' di '%s' rl %d  rs %.2f ls %.2f crsn%n", id, id, rl, rs, ls );
+    getFormatter().format( Locale.US, "CRSN id '%s' di '%s' rl %d  rs %.2f ls %.2f crsn%n", id, id, rl, rs, ls ); //$NON-NLS-1$
   }
 
   private double getHeight( final IRecord point )

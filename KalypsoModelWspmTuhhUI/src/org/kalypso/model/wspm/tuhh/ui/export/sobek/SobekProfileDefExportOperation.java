@@ -183,7 +183,7 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
     }
 
     /* Only for testing purposes: write tube geometry into shape file */
-    final File tempDir = new File( getInfo().getTargetDir(), "struct" );
+    final File tempDir = new File( getInfo().getTargetDir(), "struct" ); //$NON-NLS-1$
     tempDir.mkdirs();
     final String shapeFileName = "struct_";//$NON-NLS-1$
 
