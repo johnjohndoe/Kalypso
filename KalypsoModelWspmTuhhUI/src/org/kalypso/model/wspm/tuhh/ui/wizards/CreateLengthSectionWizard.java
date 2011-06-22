@@ -177,7 +177,7 @@ public class CreateLengthSectionWizard extends Wizard
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final IGMLSchema schema = schemaCatalog.getSchema( new QName( "http://www.opengis.net/om", "Observation" ).getNamespaceURI(), gmlVersion ); //$NON-NLS-1$ //$NON-NLS-2$
     final IFeatureType rootFeatureType = schema.getFeatureType( new QName( "http://www.opengis.net/om", "Observation" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final Feature rootFeature = FeatureFactory.createFeature( null, null, Messages.getString("CreateLengthSectionWizard.1"), rootFeatureType, true ); //$NON-NLS-1$
+    final Feature rootFeature = FeatureFactory.createFeature( null, null, "LengthSectionResult", rootFeatureType, true ); //$NON-NLS-1$
     final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, null, new GmlSerializerFeatureProviderFactory(), null );
 
     final IProfil[] profiles = extractProfiles( profilFeatures );
