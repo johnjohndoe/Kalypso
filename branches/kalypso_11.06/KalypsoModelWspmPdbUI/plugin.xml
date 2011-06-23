@@ -134,8 +134,45 @@
            <enablement>
            <!-- FIXME: instead: rootFeature is wspm model --> 
            <!-- AND: we are in WSM light mode... -->
-              <reference definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles"/>
+              <and>
+                 <test
+                       property="org.kalypso.model.wspm.pdb.ui.localData.localProjectPresent">
+                 </test>
+                 <with
+                       variable="activePart">
+                    <instanceof
+                          value="org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart">
+                    </instanceof>
+                 </with>
+                 <with
+                       variable="selection">
+                    <iterate
+                          ifEmpty="false"
+                          operator="or">
+                       <test
+                             property="org.kalypso.ui.test.gmleditor.rootQName"
+                             value="{org.kalypso.model.wspmproj}WspmProject">
+                       </test>
+                    </iterate>
+                 </with>
+                 <with
+                       variable="activeWorkbenchWindow.activePerspective">
+                    <equals
+                          value="WspmLightPerspective">
+                    </equals>
+                 </with>
+              </and>
            </enablement>
         </wizardEnablement>
+  </extension>
+  <extension
+        point="org.eclipse.core.expressions.propertyTesters">
+     <propertyTester
+           class="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataPropertyTest"
+           id="org.kalypso.model.wspm.pdb.ui.propertyTester"
+           namespace="org.kalypso.model.wspm.pdb.ui.localData"
+           properties="localProjectPresent"
+           type="java.lang.Object">
+     </propertyTester>
   </extension>   
 </plugin>
