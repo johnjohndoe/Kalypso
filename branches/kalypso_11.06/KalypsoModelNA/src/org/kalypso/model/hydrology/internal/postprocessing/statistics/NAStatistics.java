@@ -185,8 +185,10 @@ public class NAStatistics implements INaStatistics
   static String getNodeDescription( final Feature feature )
   {
     final String featureDescription = feature.getDescription();
+    // make sure the description is not empty, this will create a problem when parsing the
+    // observation later using StringUtilities.splitString()
     if( StringUtils.isBlank( featureDescription ) )
-      return "";//$NON-NLS-1$
+      return feature.getName();
 
     return featureDescription;
   }
