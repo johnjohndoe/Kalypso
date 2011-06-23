@@ -769,24 +769,25 @@
      <extension point="org.eclipse.ui.menus">
         <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart">
            <separator name="data" visible="false"/>
-           <command commandId="org.kalypso.ui.gmvtree.command.exportData" style="push"/>
+           <command commandId="org.kalypso.ui.command.export" style="push"/>
            <command commandId="org.kalypso.ui.gmvtree.command.reloadData" style="push"/>
            <command commandId="org.kalypso.ui.gmvtree.command.saveData" style="push"/>
         </menuContribution>
      </extension>
      <extension
-           point="org.kalypso.ui.gmlExportWizards">
+           point="org.kalypso.ui.exportWizards">
         <category
-              id="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
-              name="%category.name.0">
+              id="org.kalypso.model.wspm.tuhh.ui.profileExport"
+              name="Profle"
+              parentCategory="org.kalypso.ui.exportWizards">
         </category>
         <category
               id="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards.shape"
               name="%category.name.1"
-              parentCategory="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards">
+              parentCategory="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport">
         </category>
         <wizard
-              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards/org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards.shape"
+              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport/org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards.shape"
               class="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard"
               icon="icons/elcl16/exportProfilLine.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard"
@@ -794,7 +795,7 @@
            <description>%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.description</description>
         </wizard>
         <wizard
-              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport"
               class="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesWizard"
               icon="icons/elcl16/export_csv.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesWizard"
@@ -802,7 +803,7 @@
            <description>%command.description</description>
         </wizard>
         <wizard
-              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport"
               class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
               icon="icons/elcl16/export_plotter.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
@@ -810,7 +811,7 @@
            <description>%command.description.1</description>
         </wizard>
         <wizard
-              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport"
               class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportProfilesWizard"
               icon="icons/elcl16/export_plotter.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportProfilesWizard"
@@ -818,7 +819,7 @@
            <description>%wizard.description</description>
         </wizard>
         <wizard
-              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport"
               class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesWizard"
               icon="icons/elcl16/export_prf.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesWizard"
@@ -827,12 +828,56 @@
         </wizard>
 
         <wizard
-              category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport"
               class="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesWizard"
               icon="icons/elcl16/export_sobek.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesWizard"
               name="%command.name.1">
            <description>%command.description.0</description>
         </wizard>
+     </extension>
+     <extension
+           point="org.kalypso.contribs.eclipsercp.wizardEnablement">
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard">
+           <enablement>
+              <reference
+                    definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+              </reference></enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
      </extension>
 </plugin>
