@@ -120,15 +120,22 @@
        <command commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState" style="push"/>
     </menuContribution>
   </extension>
-  <extension
-        point="org.kalypso.ui.gmlExportWizards">
+  <extension point="org.kalypso.ui.exportWizards">
      <wizard
-           category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+           category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport"
            class="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
            icon="icons/exportLocalAsWspm.gif"
            id="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
            name="KalypsoWSPM">
      </wizard>
   </extension>
-   
+  <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
+        <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport">
+           <enablement>
+           <!-- FIXME: instead: rootFeature is wspm model --> 
+           <!-- AND: we are in WSM light mode... -->
+              <reference definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles"/>
+           </enablement>
+        </wizardEnablement>
+  </extension>   
 </plugin>
