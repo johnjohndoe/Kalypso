@@ -61,29 +61,11 @@
 		      </enabledWhen>
 		   </handler>
           <handler
-                class="org.kalypso.model.wspm.tuhh.ui.actions.CreateLengthSectionHandler"
-                commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport">
-             <enabledWhen>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-                </reference>
-             </enabledWhen>
-          </handler>
-          <handler
                 class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportHandler"
                 commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport">
              <enabledWhen>
                 <reference
                       definitionId="org.kalypso.chart.ui.chartEditorActive">
-                </reference>
-             </enabledWhen>
-          </handler>
-          <handler
-                class="org.kalypso.model.wspm.tuhh.ui.actions.interpolation.InterpolateProfileHandler"
-                commandId="org.kalypso.model.wspm.ui.command.profile.interpolation">
-             <enabledWhen>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
                 </reference>
              </enabledWhen>
           </handler>
@@ -353,16 +335,6 @@
     </menuContribution>
     <menuContribution
           locationURI="popup:org.kalypso.model.wspm.ui.profileChange?after=additions">
-       <command commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport" style="push">
-          <visibleWhen
-                checkEnabled="true">
-          </visibleWhen>
-       </command>
-       <command commandId="org.kalypso.model.wspm.ui.command.profile.interpolation" style="push">
-          <visibleWhen
-                checkEnabled="true">
-          </visibleWhen>
-       </command>
       <command commandId="org.kalypso.model.wspm.tuhh.ui.command.profile.simplify" style="push">
          <visibleWhen
                checkEnabled="true">
@@ -401,19 +373,9 @@
           description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description">
     </command>
     <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-          description="%command.description.4"
-          id="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
-          name="%command.name.5">
-    </command>
-    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
 	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
 	       name="%command.name.7">
 	</command>
-    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-          description="%command.description.6"
-          id="org.kalypso.model.wspm.ui.command.profile.interpolation"
-          name="%command.name.9">
-    </command>
    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
         description="%command.description.7"
         id="org.kalypso.model.wspm.tuhh.ui.command.profile.simplify"
@@ -433,14 +395,6 @@
   </extension>
   <extension
         point="org.eclipse.ui.commandImages">
-     <image
-           commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
-           icon="icons/elcl16/profile_create_lengthSection.gif">
-     </image>
-     <image
-           commandId="org.kalypso.model.wspm.ui.command.profile.interpolation"
-           icon="icons/elcl16/interpolateProfile.gif">
-     </image>
      <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
   </extension>
   <extension
@@ -655,6 +609,21 @@
               <description>%command.description.3</description>
         </wizard>
      </extension>
+     <extension point="org.kalypso.gml.ui.toolWizards">
+        <wizard
+              class="org.kalypso.model.wspm.tuhh.ui.actions.interpolation.InterpolationWizard"
+              id="org.kalypso.model.wspm.tuhh.ui.actions.interpolation.InterpolationWizard"
+              icon="icons/elcl16/interpolateProfile.gif"
+              name="%command.name.9">
+              <description>%command.description.6</description>
+        </wizard>
+        <wizard class="org.kalypso.model.wspm.tuhh.ui.wizards.CreateLengthSectionWizard"
+              id="org.kalypso.model.wspm.tuhh.ui.wizards.CreateLengthSectionWizard"
+              icon="icons/elcl16/profile_create_lengthSection.gif"
+              name="%command.name.5">
+              <description>%command.description.4</description>
+        </wizard>
+     </extension>
      <extension
            point="org.kalypso.contribs.eclipsercp.wizardEnablement">
         <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard">
@@ -698,8 +667,7 @@
                 </reference>
            </enablement>
         </wizardEnablement>
-        <wizardEnablement
-              wizardID="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard">
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard">
            <enablement>
                 <with variable="selection">
                        <iterate ifEmpty="false" operator="and">
@@ -711,6 +679,20 @@
                           </test>
                        </iterate>
                 </with>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.wizards.CreateLengthSectionWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.actions.interpolation.InterpolationWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
            </enablement>
         </wizardEnablement>
      </extension>

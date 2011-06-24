@@ -44,6 +44,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -91,4 +92,12 @@ public final class ProfileHandlerUtils
     return new ProfileSelection( selection );
   }
 
+  public static ProfileSelection getSelectionChecked( final IStructuredSelection selection )
+  {
+    final ProfileSelection profileSelection = new ProfileSelection( selection );
+    if( profileSelection.hasProfiles() )
+      return profileSelection;
+
+    throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler.0" ) ); //$NON-NLS-1$
+  }
 }
