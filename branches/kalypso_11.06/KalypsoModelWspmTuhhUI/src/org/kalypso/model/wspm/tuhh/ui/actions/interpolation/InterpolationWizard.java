@@ -40,32 +40,113 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.actions.interpolation;
 
+import java.math.BigDecimal;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.util.ProfileInterpolation;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.actions.ProfileHandlerUtils;
+import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class InterpolationWizard extends Wizard
+public class InterpolationWizard extends Wizard implements IWorkbenchWizard
 {
-  private final InterpolationStationPage m_stationPage;
+  private InterpolationStationPage m_stationPage;
 
-  public InterpolationWizard( final InterpolationStationData data )
+  private WspmWaterBody m_waterBody;
+
+  private TuhhReach m_reach;
+
+  private InterpolationStationData m_interpolationData;
+
+  private ProfileSelection m_profileSelection;
+
+  public InterpolationWizard( )
   {
-    m_stationPage = new InterpolationStationPage( "stationPage", data ); //$NON-NLS-1$
-    addPage( m_stationPage );
-
     setNeedsProgressMonitor( false );
     setHelpAvailable( false );
     setWindowTitle( Messages.getString("InterpolationWizard_0") ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    m_profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
+
+    final Feature container = m_profileSelection.getContainer();
+
+    m_waterBody = ProfileUiUtils.findWaterbody( container );
+    if( m_waterBody == null )
+      throw new IllegalStateException( Messages.getString( "InterpolateProfileHandler_0" ) ); //$NON-NLS-1$
+
+    m_reach = ProfileUiUtils.findReach( container );
+
+    final IProfileFeature[] profiles = m_profileSelection.getProfiles();
+    m_interpolationData = new InterpolationStationData( profiles );
+
+    m_stationPage = new InterpolationStationPage( "stationPage", m_interpolationData ); //$NON-NLS-1$
+    addPage( m_stationPage );
+  }
+
   @Override
   public boolean performFinish( )
   {
+    try
+    {
+      doInterpolation( m_waterBody, m_reach, m_interpolationData );
+
+      final CommandableWorkspace workspace = m_profileSelection.getWorkspace();
+      workspace.postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$
+    }
+    catch( final CoreException e )
+    {
+      new StatusDialog( getShell(), e.getStatus(), getWindowTitle() ).open();
+    }
+    catch( final Exception e )
+    {
+      // will never happen
+      e.printStackTrace();
+    }
+
     return true;
+  }
+
+  private void doInterpolation( final WspmWaterBody waterBody, final TuhhReach reach, final InterpolationStationData interpolationData ) throws CoreException
+  {
+    try
+    {
+      final IProfil previousProfile = interpolationData.getPreviousProfile().getProfil();
+      final IProfil nextProfile = interpolationData.getNextProfile().getProfil();
+      final BigDecimal newStation = interpolationData.getNewStation();
+      final boolean onlyRiverChannel = interpolationData.getOnlyChannel();
+
+      final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile, nextProfile, onlyRiverChannel );
+      final IProfil newProfile = interpolation.interpolate( newStation, previousProfile.getType() );
+
+      ProfileUiUtils.addNewProfileAndFireEvents( newProfile, waterBody, reach );
+    }
+    catch( final Exception e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "InterpolateProfileHandler_2" ), e ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
   }
 }

@@ -59,8 +59,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
@@ -76,6 +79,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.LengthSectionCreator;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.actions.ProfileHandlerUtils;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
@@ -90,32 +94,29 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
- * FIXME: use the LengthSectionExportPage?
- * 
- * @author kimwerner
+ * @author Kim Werner
  */
-public class CreateLengthSectionWizard extends Wizard
+public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizard
 {
-  final private ProfilesChooserPage m_profileChooserPage;
+  private ProfilesChooserPage m_profileChooserPage;
 
-  final private GMLWorkspace m_workspace;
+  private GMLWorkspace m_workspace;
 
-  public CreateLengthSectionWizard( final ProfileSelection profileSelection )
+  public CreateLengthSectionWizard( )
   {
-    m_workspace = profileSelection.getWorkspace();
-
+    setWindowTitle( Messages.getString( "CreateLengthSectionHandler_0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
-    final String description = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.2" ); //$NON-NLS-1$
-    m_profileChooserPage = new ProfilesChooserPage( description, profileSelection, false );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
-  public void addPages( )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    super.addPages();
+    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
+
+    m_workspace = profileSelection.getWorkspace();
+
+    final String description = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.2" ); //$NON-NLS-1$
+    m_profileChooserPage = new ProfilesChooserPage( description, profileSelection, false );
     addPage( m_profileChooserPage );
   }
 
