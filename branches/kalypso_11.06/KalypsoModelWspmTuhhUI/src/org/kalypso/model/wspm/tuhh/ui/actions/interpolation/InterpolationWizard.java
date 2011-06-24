@@ -57,10 +57,10 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.util.ProfileInterpolation;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.model.wspm.tuhh.ui.actions.ProfileHandlerUtils;
 import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
