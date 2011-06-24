@@ -61,25 +61,6 @@
 		      </enabledWhen>
 		   </handler>
           <handler
-                class="org.kalypso.model.wspm.tuhh.ui.imports.ImportWProfHandler"
-                commandId="org.kalypso.model.wspm.tuhh.ui.commands.importWProf">
-                     <enabledWhen>
-                        <with
-                              variable="selection">
-                               <iterate
-                                     ifEmpty="false"
-                                     operator="and">
-                                  <test
-                                        args="property"
-                                        forcePluginActivation="false"
-                                        property="org.kalypso.ui.test.gmleditor.qname"
-                                        value="{org.kalypso.model.wspm}WaterBody">
-                                  </test>
-                               </iterate>
-                        </with>
-                     </enabledWhen>
-          </handler>
-          <handler
                 class="org.kalypso.model.wspm.tuhh.ui.actions.CreateLengthSectionHandler"
                 commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport">
              <enabledWhen>
@@ -370,16 +351,6 @@
 		</visibleWhen>
      </command>
     </menuContribution>
-        <menuContribution
-          locationURI="popup:org.kalypso.gml.ui.imports?after=additions">
-       <command
-             commandId="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
-             style="push">
-          <visibleWhen
-                checkEnabled="true">
-          </visibleWhen>
-       </command>
-    </menuContribution>
     <menuContribution
           locationURI="popup:org.kalypso.model.wspm.ui.profileChange?after=additions">
        <command commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport" style="push">
@@ -430,11 +401,6 @@
           description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description">
     </command>
     <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-          description="%command.description.3"
-          id="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
-          name="%command.name.4">
-    </command>
-    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
           description="%command.description.4"
           id="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
           name="%command.name.5">
@@ -467,10 +433,6 @@
   </extension>
   <extension
         point="org.eclipse.ui.commandImages">
-     <image
-           commandId="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
-           icon="icons/elcl16/import_wprof.gif">
-     </image>
      <image
            commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
            icon="icons/elcl16/profile_create_lengthSection.gif">
@@ -684,6 +646,16 @@
         </wizard>
      </extension>
      <extension
+           point="org.kalypso.ui.importWizards">
+        <wizard
+              class="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard"
+              id="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard"
+              icon="icons/elcl16/import_wprof.gif"
+              name="%command.name.4">
+              <description>%command.description.3</description>
+        </wizard>
+     </extension>
+     <extension
            point="org.kalypso.contribs.eclipsercp.wizardEnablement">
         <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard">
            <enablement>
@@ -724,6 +696,21 @@
                 <reference
                       definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
                 </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement
+              wizardID="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard">
+           <enablement>
+                <with variable="selection">
+                       <iterate ifEmpty="false" operator="and">
+                          <test
+                                args="property"
+                                forcePluginActivation="false"
+                                property="org.kalypso.ui.test.gmleditor.qname"
+                                value="{org.kalypso.model.wspm}WaterBody">
+                          </test>
+                       </iterate>
+                </with>
            </enablement>
         </wizardEnablement>
      </extension>
