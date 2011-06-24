@@ -613,7 +613,7 @@
         <menuContribution
               allPopups="false"
               locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart.outline">
-            <command commandId="org.kalypso.ui.views.outline.LegendExport" style="push"/>
+            <command commandId="org.kalypso.ui.command.export" style="push"/>
             <separator name="additions" visible="false"/>
         </menuContribution>
     </extension>
