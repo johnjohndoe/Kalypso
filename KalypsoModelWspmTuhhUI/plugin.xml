@@ -61,42 +61,6 @@
 		      </enabledWhen>
 		   </handler>
           <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesHandler"
-                commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv">
-             <enabledWhen>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-                </reference>
-             </enabledWhen>
-          </handler>
-          <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesHandler"
-                commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek">
-             <enabledWhen>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-                </reference>
-             </enabledWhen>
-          </handler>
-          <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesHandler"
-                commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng">
-             <enabledWhen>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-                </reference>
-             </enabledWhen>
-          </handler>
-          <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesHandler"
-                commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf">
-             <enabledWhen>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-                </reference>
-             </enabledWhen>
-          </handler>
-          <handler
                 class="org.kalypso.model.wspm.tuhh.ui.imports.ImportWProfHandler"
                 commandId="org.kalypso.model.wspm.tuhh.ui.commands.importWProf">
                      <enabledWhen>
@@ -125,29 +89,11 @@
              </enabledWhen>
           </handler>
           <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportHandler"
-                commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter">
-             <enabledWhen>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-                </reference>
-             </enabledWhen>
-          </handler>
-          <handler
                 class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportHandler"
                 commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport">
              <enabledWhen>
                 <reference
                       definitionId="org.kalypso.chart.ui.chartEditorActive">
-                </reference>
-             </enabledWhen>
-          </handler>
-          <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineHandler"
-                commandId="org.kalypso.model.wspm.ui.command.profile.LineShapeExport">
-             <enabledWhen>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
                 </reference>
              </enabledWhen>
           </handler>
@@ -435,54 +381,6 @@
        </command>
     </menuContribution>
     <menuContribution
-          locationURI="popup:org.kalypso.gml.ui.exports?after=additions">
-       <command
-             commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf"
-             style="push">
-          <visibleWhen
-                checkEnabled="true">
-          </visibleWhen>
-       </command>
-       <command
-             commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
-             style="push">
-          <visibleWhen
-                checkEnabled="true">
-          </visibleWhen>
-       </command>
-       <command
-             commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng"
-             style="push">
-          <visibleWhen
-                checkEnabled="true">
-          </visibleWhen>
-       </command>
-       <command
-             commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek"
-             style="push">
-          <visibleWhen
-                checkEnabled="true">
-          </visibleWhen>
-       </command>
-       <command
-             commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv"
-             style="push">
-          <visibleWhen
-                checkEnabled="true">
-          </visibleWhen>
-       </command>
-    </menuContribution>
-    <menuContribution
-          locationURI="popup:org.kalypso.gml.ui.exports.shape?after=additions">
-       <command
-             commandId="org.kalypso.model.wspm.ui.command.profile.LineShapeExport"
-             style="push">
-          <visibleWhen
-                checkEnabled="true">
-          </visibleWhen>
-       </command>
-    </menuContribution>
-    <menuContribution
           locationURI="popup:org.kalypso.model.wspm.ui.profileChange?after=additions">
        <command commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport" style="push">
           <visibleWhen
@@ -532,26 +430,6 @@
           description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description">
     </command>
     <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-          description="%command.description"
-          id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv"
-          name="%command.name.0">
-    </command>
-    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-          description="%command.description.0"
-          id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek"
-          name="%command.name.1">
-    </command>
-    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-          description="%command.description.1"
-          id="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng"
-          name="%command.name.2">
-    </command>
-    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-          description="%command.description.2"
-          id="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf"
-          name="%command.name.3">
-    </command>
-    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
           description="%command.description.3"
           id="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
           name="%command.name.4">
@@ -562,14 +440,9 @@
           name="%command.name.5">
     </command>
     <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-          id="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
-          name="%command.name.6">
-    </command>
-    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
 	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
 	       name="%command.name.7">
 	</command>
-    <command id="org.kalypso.model.wspm.ui.command.profile.LineShapeExport" name="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.name" description="%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.description"/>
     <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
           description="%command.description.6"
           id="org.kalypso.model.wspm.ui.command.profile.interpolation"
@@ -595,34 +468,13 @@
   <extension
         point="org.eclipse.ui.commandImages">
      <image
-           commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesCsv"
-           icon="icons/elcl16/export_csv.gif">
-     </image>
-     <image
-           commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesSobek"
-           icon="icons/elcl16/export_sobek.gif">
-     </image>
-     <image
-           commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportProfilesLng"
-           icon="icons/elcl16/export_plotter.gif">
-     </image>
-     <image
            commandId="org.kalypso.model.wspm.tuhh.ui.commands.importWProf"
            icon="icons/elcl16/import_wprof.gif">
-     </image>
-     <image
-           commandId="org.kalypso.model.wspm.tuhh.ui.commands.exportPrf"
-           icon="icons/elcl16/export_prf.gif">
      </image>
      <image
            commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
            icon="icons/elcl16/profile_create_lengthSection.gif">
      </image>
-     <image
-           commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
-           icon="icons/elcl16/export_plotter.gif">
-     </image>
-     <image commandId="org.kalypso.model.wspm.ui.command.profile.LineShapeExport" icon="icons/elcl16/exportProfilLine.gif"/>
      <image
            commandId="org.kalypso.model.wspm.ui.command.profile.interpolation"
            icon="icons/elcl16/interpolateProfile.gif">
@@ -777,17 +629,12 @@
      <extension
            point="org.kalypso.ui.exportWizards">
         <category
-              id="org.kalypso.model.wspm.tuhh.ui.profileExport"
-              name="Profle"
-              parentCategory="org.kalypso.ui.exportWizards">
-        </category>
-        <category
-              id="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards.shape"
-              name="%category.name.1"
-              parentCategory="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport">
+              id="profileExportWizards"
+              name="Fremdformate"
+              parentCategory="exportWizards">
         </category>
         <wizard
-              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport/org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards.shape"
+              category="exportWizards/shapeExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard"
               icon="icons/elcl16/exportProfilLine.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.shape.ExportProfileLineWizard"
@@ -795,7 +642,7 @@
            <description>%org.kalypso.model.wspm.ui.command.profile.LineShapeExport.description</description>
         </wizard>
         <wizard
-              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport"
+              category="exportWizards/profileExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesWizard"
               icon="icons/elcl16/export_csv.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportProfilesWizard"
@@ -803,7 +650,7 @@
            <description>%command.description</description>
         </wizard>
         <wizard
-              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport"
+              category="exportWizards/profileExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
               icon="icons/elcl16/export_plotter.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
@@ -811,7 +658,7 @@
            <description>%command.description.1</description>
         </wizard>
         <wizard
-              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport"
+              category="exportWizards/profileExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportProfilesWizard"
               icon="icons/elcl16/export_plotter.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PlotterExportProfilesWizard"
@@ -819,7 +666,7 @@
            <description>%wizard.description</description>
         </wizard>
         <wizard
-              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport"
+              category="exportWizards/profileExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesWizard"
               icon="icons/elcl16/export_prf.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.PrfExportProfilesWizard"
@@ -828,7 +675,7 @@
         </wizard>
 
         <wizard
-              category="org.kalypso.ui.exportWizards/org.kalypso.model.wspm.tuhh.ui.profileExport"
+              category="exportWizards/profileExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesWizard"
               icon="icons/elcl16/export_sobek.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekExportProfilesWizard"

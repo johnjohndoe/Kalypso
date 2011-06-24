@@ -42,11 +42,15 @@ package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import java.io.File;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -57,6 +61,7 @@ import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.wspwin.core.Plotter;
 
 public class PlotterExportProfilesWizard extends ExportProfilesWizard
 {
@@ -85,6 +90,27 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
     m_resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
     m_resultPage.setShowComponentChooser( false );
     addPage( m_resultPage );
+
+    checkPlotterExe();
+  }
+
+  private void checkPlotterExe( )
+  {
+    final UIJob job = new UIJob( StringUtils.EMPTY )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        if( !Plotter.checkPlotterExe( getShell() ) )
+        {
+          MessageDialog.openWarning( getShell(), getWindowTitle(), "Unable to find plotter.exe, export cancelled." );
+          getShell().close();
+        }
+
+        return Status.OK_STATUS;
+      }
+    };
+    job.schedule();
   }
 
   /**
@@ -107,5 +133,4 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
     if( !export.isOK() )
       throw new CoreException( export );
   }
-
 }

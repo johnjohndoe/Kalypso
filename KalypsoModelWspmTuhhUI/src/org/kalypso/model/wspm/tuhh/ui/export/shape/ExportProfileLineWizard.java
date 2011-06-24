@@ -59,9 +59,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.gml.ui.commands.exportshape.ExportShapeHandler;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapeOperation;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapePage;
+import org.kalypso.gml.ui.commands.exportshape.ExportShapeUtils;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
@@ -114,7 +114,7 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
 
   private String getFilename( final ProfileSelection profileSelection, final ISelection selection )
   {
-    final String fileName = ExportShapeHandler.findFileName( selection );
+    final String fileName = ExportShapeUtils.guessExportFileName( selection );
     if( !StringUtils.isEmpty( fileName ) )
       return fileName;
 
