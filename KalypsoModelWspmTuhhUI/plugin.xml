@@ -355,6 +355,7 @@
           name="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.name"
           description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description">
     </command>
+    <category id="org.kalypso.mode.wspm.ui.profile.commands" name="%category.name.1"/>
     <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
 	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
 	       name="%command.name.7">
