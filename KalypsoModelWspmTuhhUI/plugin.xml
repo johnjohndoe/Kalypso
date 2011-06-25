@@ -525,7 +525,7 @@
            point="org.kalypso.ui.exportWizards">
         <category
               id="profileExportWizards"
-              name="Fremdformate"
+              name="%category.name.2"
               parentCategory="exportWizards">
         </category>
         <wizard
