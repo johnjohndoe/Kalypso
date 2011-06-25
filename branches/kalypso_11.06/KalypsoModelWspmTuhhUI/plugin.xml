@@ -18,20 +18,6 @@
                style="push"
                tooltip="%org.kalypso.model.wspm.calcTuhhAction.tooltip"/>
       </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="org.kalypso.model.wspm.tuhh.ui.objectContribution.showProfile"
-            objectClass="org.kalypsodeegree.model.feature.Feature">
-         <filter
-               name="featureType"
-               value="org.kalypso.model.wspm.tuhh#ProfileReachSegmentWspmTuhhSteadyState"/>
-         <action
-               class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               icon="icons/obj16/openProfile.gif"
-               id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               label="%org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
-      </objectContribution>
             <objectContribution
             adaptable="false"
             id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.feature.tuhhreach"
@@ -346,6 +332,25 @@
 			<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive"/>
 		</enabledWhen>
    </handler>
+   <handler class="org.kalypso.model.wspm.ui.action.ShowProfileHandler" commandId="org.kalypso.model.wspm.ui.commands.ShowProfile">
+      <enabledWhen>
+         <and>
+             <not>
+                 <with variable="activeWorkbenchWindow.activePerspective">
+                    <equals value="WspmLightPerspective"/>
+                 </with>
+             </not>
+             <with variable="selection">
+                <iterate ifEmpty="false" operator="and">
+                   <or>
+                     <test property="org.kalypso.ui.test.gmleditor.qname" value="{org.kalypso.model.wspmprofile}Profile"/>
+                     <test property="org.kalypso.ui.test.gmleditor.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
+                   </or>
+                </iterate>
+             </with>
+         </and>
+      </enabledWhen>
+   </handler>
   </extension>
 
   <extension point="org.eclipse.ui.commands">
@@ -515,10 +520,17 @@
 
      <extension point="org.eclipse.ui.menus">
         <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart">
-           <separator name="data" visible="false"/>
+           <command
+                 commandId="org.kalypso.gml.ui.toolWizards"
+                 style="push">
+           </command>
            <command commandId="org.kalypso.ui.command.export" style="push"/>
+           <separator name="data" visible="true"/>
            <command commandId="org.kalypso.ui.gmvtree.command.reloadData" style="push"/>
            <command commandId="org.kalypso.ui.gmvtree.command.saveData" style="push"/>
+           <separator
+                 name="additions">
+           </separator>
         </menuContribution>
      </extension>
      <extension
