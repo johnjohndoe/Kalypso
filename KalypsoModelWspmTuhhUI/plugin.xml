@@ -343,8 +343,8 @@
              <with variable="selection">
                 <iterate ifEmpty="false" operator="and">
                    <or>
-                     <test property="org.kalypso.ui.test.gmleditor.qname" value="{org.kalypso.model.wspmprofile}Profile"/>
-                     <test property="org.kalypso.ui.test.gmleditor.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
+                     <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspmprofile}Profile"/>
+                     <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
                    </or>
                 </iterate>
              </with>
@@ -668,12 +668,7 @@
            <enablement>
                 <with variable="selection">
                        <iterate ifEmpty="false" operator="and">
-                          <test
-                                args="property"
-                                forcePluginActivation="false"
-                                property="org.kalypso.ui.test.gmleditor.qname"
-                                value="{org.kalypso.model.wspm}WaterBody">
-                          </test>
+                          <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody"/>
                        </iterate>
                 </with>
            </enablement>
