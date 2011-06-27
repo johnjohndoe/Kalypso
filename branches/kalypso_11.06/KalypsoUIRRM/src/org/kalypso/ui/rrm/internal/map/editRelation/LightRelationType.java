@@ -114,7 +114,7 @@ public class LightRelationType implements IEditRelationType
     final Object sourceLabel = EditRelationUtils.getLabel( getSourceType() );
     final String linkLabel = EditRelationUtils.getLabel( getLink() );
 
-    return String.format( "%s \u21D2 %s", sourceLabel, linkLabel ); //$NON-NLS-1$
+    return String.format( "%s \u2192 %s", sourceLabel, linkLabel ); //$NON-NLS-1$
   }
 
   @Override

@@ -117,7 +117,7 @@ public class EditRelationViewer extends Composite
 
   private void createModeCombo( final Composite parent, final FormToolkit toolkit )
   {
-    toolkit.createLabel( parent, Messages.getString("EditRelationViewer_0") ); //$NON-NLS-1$
+    toolkit.createLabel( parent, Messages.getString( "EditRelationViewer_0" ) ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     final Control control = viewer.getControl();
