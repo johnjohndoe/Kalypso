@@ -86,15 +86,17 @@ public class SaveBuildingParameterHandler extends AbstractHandler implements IEl
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
         final BuildingParameterLayer layer = EditBuildingParameterMouseHandler.findLayer( chart.getChartModel() );
-        layer.saveData( monitor );
-
-        ChartHandlerUtilities.updateElements( part );
+        if( layer != null )
+        {
+          layer.saveData( monitor );
+          ChartHandlerUtilities.updateElements( part );
+        }
         return Status.OK_STATUS;
       }
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( shell, "", Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.SaveBuildingParameterHandler.1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, "", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.SaveBuildingParameterHandler.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }
