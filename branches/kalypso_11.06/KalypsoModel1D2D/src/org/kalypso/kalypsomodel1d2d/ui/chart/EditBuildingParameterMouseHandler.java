@@ -87,7 +87,8 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
   public void mouseDoubleClick( final MouseEvent e )
   {
     final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
-    final EditInfo info = layer.getEditInfo( new Point( e.x, e.y ) );
+    final Point plotPoint = getChart().screen2plotPoint(new Point( e.x, e.y ) );
+    final EditInfo info = layer.getEditInfo(plotPoint );
 
     if( info.getData() != null )
       layer.delete( info );
@@ -100,7 +101,8 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
   public void mouseDown( final MouseEvent e )
   {
     final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
-    final EditInfo editInfo = layer.getEditInfo( new Point( e.x, e.y ) );
+    final Point plotPoint = getChart().screen2plotPoint(new Point( e.x, e.y ) );
+    final EditInfo editInfo = layer.getEditInfo(plotPoint );
     if( editInfo != null && editInfo.getData() != null )
       m_info = editInfo;
   }
@@ -111,22 +113,24 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
   @Override
   public void mouseMove( final MouseEvent e )
   {
-    final Point point = new Point( e.x, e.y );
+    final Point point =  getChart().screen2plotPoint(new Point( e.x, e.y ) );
 
     // Show tooltip
     final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
     final EditInfo info = layer.getEditInfo( point );
     // HACK/TODO: this is ugly and should not be necessary: there should be another mechanism, so that mouse handler can
     // draw tooltips (or other things) on the map.
-    final Control ctrl = (Control) e.getSource();
+   // final Control ctrl = (Control) e.getSource();
     if( info == null )
     {
-      ctrl.setCursor( e.display.getSystemCursor( SWT.CURSOR_ARROW ) );
+      setCursor( SWT.CURSOR_ARROW  );
+     // ctrl.setCursor( e.display.getSystemCursor( SWT.CURSOR_ARROW ) );
       layer.setTooltip( null, null );
     }
     else
     {
-      ctrl.setCursor( e.display.getSystemCursor( SWT.CURSOR_HAND ) );
+      setCursor( SWT.CURSOR_ARROW );
+ //     ctrl.setCursor( e.display.getSystemCursor( SWT.CURSOR_HAND ) );
 
       if( info.getData() == null )
         layer.setTooltip( info.getText() + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.EditBuildingParameterMouseHandler.0" ), point ); //$NON-NLS-1$
@@ -155,7 +159,7 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
         final Control ctrl = (Control) e.getSource();
         final Rectangle bounds = ctrl.getBounds();
         final int zoomFactor = 3;
-        final Point point = editInfo.getPosition();
+        final Point point = getChart().plotPoint2screen( editInfo.getPosition());
         final Point zoomMin = new Point( point.x - bounds.width / zoomFactor, point.y - bounds.height / zoomFactor );
         final Point zoomMax = new Point( point.x + bounds.width / zoomFactor, point.y + bounds.height / zoomFactor );
 
