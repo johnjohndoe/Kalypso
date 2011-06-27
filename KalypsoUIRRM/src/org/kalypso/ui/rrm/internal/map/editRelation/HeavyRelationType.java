@@ -85,7 +85,7 @@ public class HeavyRelationType implements IEditRelationType
     final String bodyLinkLabel = EditRelationUtils.getLabel( getLink1() );
     final String targetLabel = EditRelationUtils.getLabel( getTargetType() );
 
-    return String.format( "%s \u21D2 (%s) \u21D2 %s", sourceLabel, bodyLinkLabel, targetLabel ); //$NON-NLS-1$
+    return String.format( "%s \u2192 (%s) \u2192 %s", sourceLabel, bodyLinkLabel, targetLabel ); //$NON-NLS-1$
   }
 
   @Override
