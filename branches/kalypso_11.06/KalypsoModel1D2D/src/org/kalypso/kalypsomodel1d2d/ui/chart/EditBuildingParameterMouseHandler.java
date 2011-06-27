@@ -142,11 +142,14 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
   public void mouseUp( final MouseEvent e )
   {
     final EditInfo info = m_info;
+
+    final Point plotPoint = getChart().screen2plotPoint(new Point( e.x, e.y ) );
+
     if( info == null )
     {
       // Klick on cross-point?
       final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
-      final EditInfo editInfo = layer.getEditInfo( new Point( e.x, e.y ) );
+      final EditInfo editInfo = layer.getEditInfo(plotPoint );
       if( editInfo != null && editInfo.getData() == null )
       {
         final Control ctrl = (Control) e.getSource();
@@ -169,6 +172,6 @@ public class EditBuildingParameterMouseHandler extends AbstractChartHandler
     m_info = null;
 
     final BuildingParameterLayer layer = findLayer( getChart().getChartModel() );
-    layer.edit( new Point( e.x, e.y ), info );
+    layer.edit( plotPoint, info );
   }
 }

@@ -4,7 +4,7 @@
   xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <Chart id="ls">
-    <Title>%TITLE%</Title>
+    <Title horizontalTextAnchor="CENTER" insetBottom="5">%TITLE%</Title>
     <Description>%DESCRIPTION%</Description>
     <Layers>
       <Layer id="soil">
@@ -216,7 +216,7 @@
             <Parameter name="inset_tick" value="2" />
             <Parameter name="inset_label" value="2" />
             <Parameter name="tick_length" value="5" />
-            <Parameter name="hide_cut" value="true" />
+            <Parameter name="hide_cut" value="false" />
             <Parameter name="gap" value="5" />
           </Parameters>
         </Provider>
