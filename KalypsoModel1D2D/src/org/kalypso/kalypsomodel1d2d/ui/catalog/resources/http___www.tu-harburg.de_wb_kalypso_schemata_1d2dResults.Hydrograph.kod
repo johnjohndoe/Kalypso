@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
 
 	<Chart id="runoffChart">
-		<Title>Ganglinie</Title>
+		<Title horizontalTextAnchor="CENTER">Ganglinie</Title>
 		<Description>Berechnungsergebnisse</Description>
 		<Layers>
 			<Layer visible="true" id="gridLayer">
