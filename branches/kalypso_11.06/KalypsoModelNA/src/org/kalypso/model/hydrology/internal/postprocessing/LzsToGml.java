@@ -71,6 +71,7 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -177,9 +178,9 @@ public class LzsToGml
       readLzsFile( fileReader, catchment, iniCatchment );
       fileReader.close();
     }
-    catch( final Exception e )
+    catch( final IOException e )
     {
-      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", asciiID, catchment.getName() ) ); //$NON-NLS-1$ 
+      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", asciiID, catchment.getName() ), e ); //$NON-NLS-1$ 
     }
     finally
     {
