@@ -49,7 +49,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
@@ -60,6 +63,9 @@ import org.kalypso.model.hydrology.operation.hydrotope.DefaultLanduseClassDelega
 import org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation;
 import org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.InputDescriptor;
 import org.kalypso.model.hydrology.operation.hydrotope.LanduseShapeInputDescriptor;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
@@ -69,7 +75,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Dejan Antanaskovic
  */
-public class ImportLanduseWizard extends Wizard
+public class ImportLanduseWizard extends Wizard implements IWorkbenchWizard
 {
   private final static String PROPERTY_LANDUSE = Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.12" ); //$NON-NLS-1$
 
@@ -79,18 +85,25 @@ public class ImportLanduseWizard extends Wizard
 
   protected ImportShapeWizardPage m_wizardPage;
 
-  private final FeatureList m_featureList;
+  private FeatureList m_featureList;
 
-  public ImportLanduseWizard( final FeatureList featureList )
+  public ImportLanduseWizard( )
   {
-    m_featureList = featureList;
-
     setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
+  }
+
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    final IKalypsoTheme[] themes = MapHandlerUtils.getSelectedThemes( selection );
+    if( themes.length != 1 )
+      throw new IllegalArgumentException();
+
+    m_featureList = ((IKalypsoFeatureTheme) themes[0]).getFeatureList();
 
     final String[] properties = new String[] { PROPERTY_LANDUSE, PROPERTY_SEALING_FACTOR, PROPERTY_DRAINAGE_TYPE };
     m_wizardPage = new ImportShapeWizardPage( "shapePage", properties ); //$NON-NLS-1$
-
     m_wizardPage.setDescription( Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.3" ) ); //$NON-NLS-1$
 
     addPage( m_wizardPage );

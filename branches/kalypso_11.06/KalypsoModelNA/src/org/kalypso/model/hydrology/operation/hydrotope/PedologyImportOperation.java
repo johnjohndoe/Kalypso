@@ -47,7 +47,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -141,13 +140,13 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
         final String soilTypeRef = m_soilTypes.get( soilTypeLink );
         if( soilTypeRef == null )
         {
-          final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.PedologyImportOperation.2", soilTypeLink, i + 1 ); //$NON-NLS-1$
+          final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.2", soilTypeLink, i + 1 ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
         if( geometry == null )
         {
-          final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.PedologyImportOperation.3", label ); //$NON-NLS-1$
+          final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.3", label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
         else
@@ -180,7 +179,6 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
       ProgressUtilities.worked( progess, 1 );
     }
 
-    return Status.OK_STATUS;
+    return log.asMultiStatusOrOK( "Fehler beim Pedologieimport", "Pedology successfully imported" );
   }
-
 }
