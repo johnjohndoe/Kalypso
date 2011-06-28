@@ -71,6 +71,7 @@ import org.kalypso.model.hydrology.internal.preprocessing.writer.SudsFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TimeseriesFileManager;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.TsFileWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.writer.ZftWriter;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -97,7 +98,7 @@ public class NAModellConverter
     m_logger = logger;
   }
 
-  public void writeUncalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager, final HydroHash hydroHash ) throws IOException, NAPreprocessorException
+  public void writeUncalibratedFiles( final RelevantNetElements relevantElements, final TimeseriesFileManager tsFileManager, final HydroHash hydroHash ) throws IOException, NAPreprocessorException, SimulationException
   {
     final NaModell naModel = m_data.getNaModel();
     final NAHydrotop hydrotopeCollection = m_data.getHydrotopCollection();

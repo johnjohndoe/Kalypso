@@ -180,7 +180,7 @@ public class LzsToGml
     }
     catch( final IOException e )
     {
-      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", asciiID, catchment.getName() ), e ); //$NON-NLS-1$ 
+      m_logger.warning( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", catchment.getName()) ); //$NON-NLS-1$
     }
     finally
     {
