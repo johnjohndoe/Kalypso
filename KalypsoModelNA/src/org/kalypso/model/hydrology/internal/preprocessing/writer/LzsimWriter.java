@@ -99,17 +99,17 @@ public class LzsimWriter
     m_logger = logger;
   }
 
-  public void writeLzsimFiles( final File lzsimDir ) throws NAPreprocessorException
+  public void writeLzsimFiles( final File lzsimDir ) throws SimulationException
   {
-    try
-    {
+//    try
+//    {
       doWriteLzsimFiles( lzsimDir );
-    }
-    catch( final Exception e )
-    {
-      final String msg = String.format( Messages.getString("LzsimWriter.2"), e.getLocalizedMessage() ); //$NON-NLS-1$
-      throw new NAPreprocessorException( msg, e );
-    }
+//    }
+//    catch( final Exception e )
+//    {
+//      final String msg = String.format( Messages.getString("LzsimWriter.2"), e.getLocalizedMessage() ); //$NON-NLS-1$
+//      throw new NAPreprocessorException( msg, e );
+//    }
   }
 
   private void doWriteLzsimFiles( final File lzsimDir ) throws SimulationException
@@ -220,7 +220,7 @@ public class LzsimWriter
       if( iniCatchment == null )
       {
         // FIXME: better? only log...
-        final String msg = String.format( Messages.getString("LzsimWriter.5"), catchmentID ); //$NON-NLS-1$
+        final String msg = Messages.getString("LzsimWriter.5", catchment.getName() ); //$NON-NLS-1$
         throw new SimulationException( msg );
       }
       else

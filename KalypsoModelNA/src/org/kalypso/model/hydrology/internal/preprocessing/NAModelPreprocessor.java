@@ -101,7 +101,7 @@ public class NAModelPreprocessor
     return m_idManager;
   }
 
-  public void process( final ISimulationMonitor monitor ) throws NAPreprocessorException
+  public void process( final ISimulationMonitor monitor ) throws NAPreprocessorException, SimulationException
   {
     try
     {
@@ -109,6 +109,9 @@ public class NAModelPreprocessor
     }
     catch( final NAPreprocessorException e )
     {
+      throw e;
+    }
+    catch( final SimulationException e ) {
       throw e;
     }
     catch( final Exception e )
