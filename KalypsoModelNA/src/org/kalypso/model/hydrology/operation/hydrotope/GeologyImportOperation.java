@@ -147,11 +147,16 @@ public class GeologyImportOperation implements ICoreRunnableWithProgress
       {
         log.add( e.getStatus() );
       }
+      catch( final NumberFormatException e )
+      {
+        final String message = String.format( "Lesefehler bei Feature %d", i + 1 );
+        final Status status = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, message, e );
+        log.add( status );
+      }
 
       ProgressUtilities.worked( progess, 1 );
     }
 
-    return Status.OK_STATUS;
+    return log.asMultiStatusOrOK( "Fehler beim Geologieimport", "Geology successfully imported" );
   }
-
 }

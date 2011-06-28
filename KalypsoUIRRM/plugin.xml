@@ -42,9 +42,6 @@
 	    <command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.EditRelationsCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label" description="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.tooltip"/>
 	    
 	    <!-- Map Outline -->
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportLanduse" name="%command.name.0"/>
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportPedology" name="%command.name.1"/>
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMImportGeology" name="%command.name.2"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" name="%command.name.3"/>
 		<!--
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.model.rrm.ui.map.outline.command.FixHydrotopes" name="Fix Hydrotopes" description="Fixes old hydrotope files (i.e. sets links to catchments)"/>
@@ -54,9 +51,6 @@
 	 <extension  point="org.eclipse.ui.commandImages">
 	    <image commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" disabledIcon="icons/commands/edit_relation_gray.gif" icon="icons/commands/edit_relation.gif" />
 	 
-	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportLanduse" icon="icons/landuseImport.gif"/>
-	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportPedology" icon="icons/pedologyImport.gif"/>
-	    <image commandId="org.kalypso.ui.map.outline.command.RRMImportGeology" icon="icons/geologyImport.gif"/>
 	    <image commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" icon="icons/geologyImport.gif"/>
 	 </extension>
 
@@ -76,21 +70,6 @@
             </enabledWhen>
         </handler>
 	
-		<handler commandId="org.kalypso.ui.map.outline.command.RRMImportLanduse" class="org.kalypso.ui.rrm.action.RRMImportLanduseHandler">
-			<activeWhen>
-				<reference definitionId="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected"/>
-			</activeWhen>
-		</handler>
-		<handler commandId="org.kalypso.ui.map.outline.command.RRMImportPedology" class="org.kalypso.ui.rrm.action.RRMImportPedologyHandler">
-			<activeWhen>
-				<reference definitionId="org.kalypso.ui.rrm.definition.onePedologyThemeSelected"/>
-			</activeWhen>
-		</handler>
-		<handler commandId="org.kalypso.ui.map.outline.command.RRMImportGeology" class="org.kalypso.ui.rrm.action.RRMImportGeologyHandler">
-			<activeWhen>
-				<reference definitionId="org.kalypso.ui.rrm.definition.oneGeologyThemeSelected"/>
-			</activeWhen>
-		</handler>
 		<handler commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" class="org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler">
 			<activeWhen>
 				<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>
@@ -311,5 +290,44 @@
             </command>
         </menuContribution>
    </extension>
-   
+   <extension point="org.kalypso.ui.importWizards">
+      <wizard
+            class="org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizard"
+            id="org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizard"
+            name="%command.name.0">
+      </wizard>
+      <wizard
+            class="org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard"
+            id="org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard"
+            name="%command.name.1">
+      </wizard>
+      <wizard
+            class="org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizard"
+            id="org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizard"
+            name="%command.name.2">
+      </wizard>
+   </extension>
+   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
+      <wizardEnablement
+            wizardID="org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizard">
+         <enablement>
+            <reference definitionId="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected">
+            </reference>
+         </enablement>
+      </wizardEnablement>
+      <wizardEnablement
+            wizardID="org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard">
+         <enablement>
+            <reference definitionId="org.kalypso.ui.rrm.definition.onePedologyThemeSelected">
+            </reference>
+         </enablement>
+      </wizardEnablement>
+      <wizardEnablement
+            wizardID="org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizard">
+         <enablement>
+            <reference definitionId="org.kalypso.ui.rrm.definition.oneGeologyThemeSelected">
+            </reference>
+         </enablement>
+      </wizardEnablement>
+   </extension>
 </plugin>
