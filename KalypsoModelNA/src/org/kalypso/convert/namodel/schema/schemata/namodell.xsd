@@ -480,8 +480,7 @@
 					<element name="faktorSeaEvaporation" default="1.0" nillable="true">
                         <simpleType>
                             <restriction base="double" >
-                                <minInclusive value="0.0"/>
-                                <maxInclusive value="1.0"/>
+                                <minExclusive value="0.0"/>
                             </restriction>
                         </simpleType>
                     </element>
