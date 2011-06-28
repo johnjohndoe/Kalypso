@@ -99,6 +99,11 @@
     <gft:validatorlabel property="rrm:hvvsqd" visible="true" style="SWT.NONE">
       <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" />
     </gft:validatorlabel>
+  </gft:group>
+
+  <gft:group style="SWT.NONE" text="%rhbchannel.gft.rhboptionalparameters">
+    <gft:gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL"/>
+    <gft:gridLayout numColumns="3" />
 
     <gft:label property="rrm:iknotNodeMember" visible="true" style="SWT.NONE">
       <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.CENTER" />
