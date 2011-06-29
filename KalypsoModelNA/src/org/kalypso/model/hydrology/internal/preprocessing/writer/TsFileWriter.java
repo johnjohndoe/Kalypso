@@ -292,7 +292,7 @@ public class TsFileWriter
           final List< ? > statNParameterList = (List< ? >) statNFE.getProperty( NaModelConstants.STATNPARA_MEMBER );
           for( final Object object : statNParameterList )
           {
-            final Catchment fe = (Catchment) object;
+            final Feature fe = (Feature) object;
             final String annuality = Double.toString( 1d / (Double) fe.getProperty( NaModelConstants.STATN_PROP_XJAH ) );
             if( annuality.equals( annualityKey.toString() ) )
             {
