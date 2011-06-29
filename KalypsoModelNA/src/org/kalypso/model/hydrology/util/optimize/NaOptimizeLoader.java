@@ -66,9 +66,9 @@ import org.w3c.dom.NodeList;
  */
 public class NaOptimizeLoader
 {
-  private static final String STR_UNABLE_TO_FIND_NA_OPTIMIZE_CONFIG_FOR_PATH_S = Messages.getString("NaOptimizeLoader_0"); //$NON-NLS-1$
+  private static final String STR_UNABLE_TO_FIND_NA_OPTIMIZE_CONFIG_FOR_PATH_S = Messages.getString( "NaOptimizeLoader_0" ); //$NON-NLS-1$
 
-  private static final String STR_FEHLER_BEI_LESEN_DER_OPTIMIERUNGSKONFIGURATION = Messages.getString("NaOptimizeLoader_1"); //$NON-NLS-1$
+  private static final String STR_FEHLER_BEI_LESEN_DER_OPTIMIERUNGSKONFIGURATION = Messages.getString( "NaOptimizeLoader_1" ); //$NON-NLS-1$
 
   private final URL m_optimizeDataLocation;
 

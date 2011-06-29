@@ -88,7 +88,7 @@ public class PedologyShapeInputDescriptor implements InputDescriptor
   @Override
   public String getDescription( final int index )
   {
-    return Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.PedologyShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
   }
 
   /**

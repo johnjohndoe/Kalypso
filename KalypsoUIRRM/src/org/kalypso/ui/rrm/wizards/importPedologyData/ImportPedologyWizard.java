@@ -48,6 +48,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.CharEncoding;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -157,7 +158,7 @@ public class ImportPedologyWizard extends Wizard implements IWorkbenchWizard
         return false;
 
       final File outputFile = pedologyFile.getLocation().toFile();
-      GmlSerializer.serializeWorkspace( outputFile, pedologyWorkspace, "UTF-8" ); //$NON-NLS-1$
+      GmlSerializer.serializeWorkspace( outputFile, pedologyWorkspace, CharEncoding.UTF_8 );
       pedologyFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
     }
     catch( final Exception e )

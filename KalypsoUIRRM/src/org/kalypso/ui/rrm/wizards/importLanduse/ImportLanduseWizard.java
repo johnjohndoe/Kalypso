@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.wizards.importLanduse;
 
 import java.io.File;
 
+import org.apache.commons.lang.CharEncoding;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -146,7 +147,7 @@ public class ImportLanduseWizard extends Wizard implements IWorkbenchWizard
           return false;
 
         final File outputFile = landuseFile.getLocation().toFile();
-        GmlSerializer.serializeWorkspace( outputFile, landuseWorkspace, "UTF-8" ); //$NON-NLS-1$
+        GmlSerializer.serializeWorkspace( outputFile, landuseWorkspace, CharEncoding.UTF_8 );
         landuseFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
 
         return true;
