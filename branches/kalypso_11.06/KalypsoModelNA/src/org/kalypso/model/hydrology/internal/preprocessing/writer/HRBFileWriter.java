@@ -51,7 +51,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.gml.ZmlWQVInlineTypeHandler;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -107,8 +107,8 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     final int channelID = m_idManager.getAsciiID( channel );
 
     final int overflowNode1ID = getNodeID( channel.getOverflowNode() );
-    final int overflowNode2ID = getNodeID( channel.getOverflowNode2() );
-    final int overflowNode3ID = getNodeID( channel.getOverflowNode3() );
+    final int overflowNode2ID = getNodeID( channel.getOutletNode1() );
+    final int overflowNode3ID = getNodeID( channel.getOutletNode2() );
 
     writer.format( Locale.ENGLISH, "SPEICHER %7d %7d %7d %7d  %s\n", channelID, overflowNode1ID, overflowNode2ID, overflowNode3ID, asciiTS ); //$NON-NLS-1$
     writer.format( Locale.ENGLISH, "Fakt_SeeV %.2f\n", channel.getSeaEvaporationFactor() ); //$NON-NLS-1$
@@ -135,7 +135,7 @@ public class HRBFileWriter extends AbstractCoreFileWriter
     writer.format( Locale.ENGLISH, "ENDE\n" ); //$NON-NLS-1$
   }
 
-  private int getNodeID( final Node overflowNode1 )
+  private int getNodeID( final INode overflowNode1 )
   {
     if( overflowNode1 == null )
       return 0;

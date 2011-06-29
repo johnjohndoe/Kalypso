@@ -43,7 +43,7 @@ package org.kalypso.model.hydrology.binding.model.channels;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 
@@ -79,11 +79,11 @@ public interface IStorageChannel extends IChannel
 
   double getInitialCapacity( );
 
-  Node getOverflowNode( );
+  INode getOverflowNode( );
 
-  Node getOverflowNode2( );
+  INode getOutletNode1( );
 
-  Node getOverflowNode3( );
+  INode getOutletNode2( );
 
   double getSeaEvaporationFactor( );
 

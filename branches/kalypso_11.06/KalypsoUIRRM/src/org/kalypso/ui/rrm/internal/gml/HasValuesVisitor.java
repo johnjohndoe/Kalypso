@@ -40,60 +40,64 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.gml;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.core.status.StatusComposite;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
-import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.commons.exception.CancelVisitorException;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * @author Gernot Belger
  */
-public class StorageChannelValidateFeatureControl extends AbstractFeatureControl
+public class HasValuesVisitor implements IObservationVisitor
 {
-  private StatusComposite m_statusComposite;
+  private final IAxis m_axis;
 
-  public StorageChannelValidateFeatureControl( final Feature feature, final IPropertyType ftp )
+  private boolean m_hasValues = false;
+
+  private boolean m_axisMissing = false;
+
+  public HasValuesVisitor( final IAxis axis )
   {
-    super( feature, ftp );
+    m_axis = axis;
   }
 
   @Override
-  public Control createControl( final FormToolkit toolkit, final Composite parent, final int style )
+  public void visit( final IObservationValueContainer container ) throws CancelVisitorException
   {
-    m_statusComposite = new StatusComposite( toolkit, parent, style );
-    updateControl();
-    return m_statusComposite;
+    if( m_axis == null )
+    {
+      m_axisMissing = true;
+      throw new CancelVisitorException();
+    }
+
+    try
+    {
+      final Object value = container.get( m_axis );
+      if( value instanceof Number )
+      {
+        final double num = ((Number) value).doubleValue();
+        if( !Double.isNaN( num ) && !Double.isInfinite( num ) && num > 0.0 )
+          m_hasValues = true;
+      }
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
+
+    if( m_hasValues )
+      throw new CancelVisitorException();
+
   }
 
-
-  @Override
-  public void updateControl( )
+  public boolean hasValues( )
   {
-    final IStatus status = validateStorageChannel();
-    m_statusComposite.setStatus( status );
+    return m_hasValues;
   }
 
-  private IStatus validateStorageChannel( )
+  public boolean isAxisMissing( )
   {
-    final Feature feature = getFeature();
-    if( !(feature instanceof StorageChannel) )
-      return Status.OK_STATUS;
-
-    final StorageChannel channel = (StorageChannel) feature;
-
-    final StorageChannelValidator validator = new StorageChannelValidator( channel );
-    return validator.validate();
-  }
-
-  @Override
-  public boolean isValid( )
-  {
-    return true;
+    return m_axisMissing;
   }
 }
