@@ -55,6 +55,7 @@ import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Branching;
 import org.kalypso.model.hydrology.binding.model.nodes.BranchingWithNode;
+import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -195,7 +196,7 @@ public class NetFileAnalyser
     {
       if( channel instanceof StorageChannel )
       {
-        final Node overflowNode = ((StorageChannel) channel).getOverflowNode();
+        final INode overflowNode = ((StorageChannel) channel).getOverflowNode();
         if( overflowNode != null )
         {
           final Channel downstreamChannel = overflowNode.getDownstreamChannel();

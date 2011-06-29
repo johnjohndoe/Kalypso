@@ -42,6 +42,7 @@ package org.kalypso.model.hydrology.binding.model.channels;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -78,21 +79,21 @@ public class StorageChannel extends Channel implements IStorageChannel
   }
 
   @Override
-  public Node getOverflowNode( )
+  public INode getOverflowNode( )
   {
     return (Node) FeatureHelper.resolveLink( this, PROPERTY_DOWNSTREAM_NODE, true );
   }
 
   @Override
-  public Node getOverflowNode2( )
+  public INode getOutletNode1( )
   {
-    return (Node) FeatureHelper.resolveLink( this, PROPERTY_DOWNSTREAM_NODE_2, true );
+    return (INode) FeatureHelper.resolveLink( this, PROPERTY_DOWNSTREAM_NODE_2, true );
   }
 
   @Override
-  public Node getOverflowNode3( )
+  public INode getOutletNode2( )
   {
-    return (Node) FeatureHelper.resolveLink( this, PROPERTY_DOWNSTREAM_NODE_3, true );
+    return (INode) FeatureHelper.resolveLink( this, PROPERTY_DOWNSTREAM_NODE_3, true );
   }
 
   @Override
