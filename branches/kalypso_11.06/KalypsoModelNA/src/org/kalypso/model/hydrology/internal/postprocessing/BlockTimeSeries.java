@@ -181,11 +181,10 @@ public class BlockTimeSeries
       else if( synthM.matches() )
       {
         // synthetisches Ereignis hat kein Anfangsdatum, daher wird 01.01.2000 angenommen!
-        final String sDate = "000101"; //$NON-NLS-1$
-        final String sTime = "0"; //$NON-NLS-1$
+        final Calendar startCal = m_dateFormat.getCalendar();
+        startCal.set( 2000, 1, 1, 0, 0 );
+        
         final String sStep = synthM.group( 3 );
-
-        final Calendar startCal = parseDate24( sDate, sTime );
         final Duration timestep = parseDuration( sStep );
         return new BlockTimeStep( startCal, timestep );
       }
