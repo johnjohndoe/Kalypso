@@ -99,10 +99,17 @@
     <gft:validatorlabel property="rrm:hvvsqd" visible="true" style="SWT.NONE">
       <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" />
     </gft:validatorlabel>
+
+    <gft:label property="rrm:hvvsqd" text="%rhbchannel.gft.rhbvalidatelabel" visible="true" style="SWT.NONE">
+      <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.CENTER" />
+    </gft:label>
+    <gft:extensioncontrol style="SWT.SEARCH" property="rrm:hvvsqd" extension-id=".StorageChannelValidateFeatureControl">
+      <gft:gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.CENTER" horizontalSpan="2"/>
+    </gft:extensioncontrol>
   </gft:group>
 
   <gft:group style="SWT.NONE" text="%rhbchannel.gft.rhboptionalparameters">
-    <gft:gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL"/>
+    <gft:gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
     <gft:gridLayout numColumns="3" />
 
     <gft:label property="rrm:iknotNodeMember" visible="true" style="SWT.NONE">
