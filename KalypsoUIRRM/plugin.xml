@@ -330,4 +330,11 @@
          </enablement>
       </wizardEnablement>
    </extension>
+   <extension
+         point="org.kalypso.ui.featureViewExtensionControl">
+      <extensionControl
+            class="org.kalypso.ui.rrm.internal.gml.StorageChannelValidateControlFactory"
+            id=".StorageChannelValidateFeatureControl">
+      </extensionControl>
+   </extension>
 </plugin>
