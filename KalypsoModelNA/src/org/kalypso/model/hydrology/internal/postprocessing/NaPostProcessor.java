@@ -64,6 +64,7 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -159,11 +160,11 @@ public class NaPostProcessor
    * Checks if the calculation was successful or not; if yes, checks for the results file version. Starting from NA core
    * 2.2 dates for block time series are written as YYYYMMDD, older versions are using YYMMDD format.
    */
-  private void checkSuccessAndResultsFormat( final NaAsciiDirs asciiDirs ) throws NaPostProcessingException
+  private void checkSuccessAndResultsFormat( final NaAsciiDirs asciiDirs ) throws SimulationException
   {
     final List<String> logContent = readOutputRes( asciiDirs.startDir );
     if( logContent == null || logContent.size() == 0 )
-      throw new NaPostProcessingException( Messages.getString("NaPostProcessor.0") ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("NaPostProcessor.0") ); //$NON-NLS-1$
 
     checkLogForSuccess( logContent );
 
@@ -198,7 +199,7 @@ public class NaPostProcessor
     return ENACoreResultsFormat.FMT_2_2_AND_NEWER;
   }
 
-  private void checkLogForSuccess( final List<String> logContent ) throws NaPostProcessingException
+  private void checkLogForSuccess( final List<String> logContent ) throws SimulationException
   {
     for( int i = logContent.size() - 1; i >= 0; i-- )
     {
@@ -207,7 +208,7 @@ public class NaPostProcessor
         return;
     }
 
-    throw new NaPostProcessingException( Messages.getString("NaPostProcessor.1") ); //$NON-NLS-1$
+    throw new SimulationException( Messages.getString("NaPostProcessor.1") ); //$NON-NLS-1$
   }
 
   private List<String> readOutputRes( final File startDir )

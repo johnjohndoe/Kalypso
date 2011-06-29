@@ -81,8 +81,6 @@ public class NaModelCalcJob implements ISimulation
 
       runnable = createRunnable( data, tmpdir );
       /* final boolean success = */runnable.run( monitor );
-      // FIXME: what to do of not succeeded?
-      publishResults( resultEater, runnable );
     }
     catch( final SimulationException e )
     {
@@ -95,6 +93,8 @@ public class NaModelCalcJob implements ISimulation
     }
     finally
     {
+      // FIXME: what to do of not succeeded?
+      publishResults( resultEater, runnable );
       if( data != null )
         data.dispose();
     }
