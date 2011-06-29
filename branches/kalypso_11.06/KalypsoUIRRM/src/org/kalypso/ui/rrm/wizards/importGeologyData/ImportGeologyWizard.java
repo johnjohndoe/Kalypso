@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.wizards.importGeologyData;
 
 import java.io.File;
 
+import org.apache.commons.lang.CharEncoding;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -133,7 +134,7 @@ public class ImportGeologyWizard extends Wizard implements IWorkbenchWizard
         return false;
 
       final File outputFile = geologyFile.getLocation().toFile();
-      GmlSerializer.serializeWorkspace( outputFile, workspace, "UTF-8" ); //$NON-NLS-1$
+      GmlSerializer.serializeWorkspace( outputFile, workspace, CharEncoding.UTF_8 );
       geologyFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
     }
     catch( final Exception e )
