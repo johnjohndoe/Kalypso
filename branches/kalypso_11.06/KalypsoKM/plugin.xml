@@ -37,9 +37,12 @@
    
 <extension point="org.eclipse.ui.menus">
     <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=gmlToolsStart">
-      <command
-            commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters"
-            style="push">
+      <command commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters" style="push">
+         <visibleWhen checkEnabled="true"/>
+      </command>
+    </menuContribution>
+    <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.featureview.views.FeatureView">
+      <command commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters" style="push">
          <visibleWhen checkEnabled="true"/>
       </command>
     </menuContribution>
