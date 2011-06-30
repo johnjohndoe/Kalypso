@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.kalypso.risk
 Bundle-SymbolicName: org.kalypso.risk;singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-Activator: org.kalypso.risk.plugin.KalypsoRiskPlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
@@ -11,11 +11,11 @@ Require-Bundle: org.kalypso.ui.addlayer,
  org.kalypso.ModelSimulationBase,
  org.kalypso.contribs.ogc31,
  org.kalypso.gml.ui,
- org.junit;resolution:=optional,
  org.kalypso.simulation.core,
  org.kalypso.simulation.ui,
  org.kalypso.project.database.client,
- org.kalypso.module;bundle-version="2.3.0"
+ org.kalypso.module,
+ org.junit;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.risk.extension,
  org.kalypso.risk.model.actions.dataImport.waterdepth,
