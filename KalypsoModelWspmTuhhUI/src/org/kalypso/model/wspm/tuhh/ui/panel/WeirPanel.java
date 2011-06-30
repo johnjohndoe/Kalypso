@@ -159,7 +159,6 @@ public class WeirPanel extends AbstractProfilView
 
     m_wehrEnd = new DeviderLine( m_toolkit, panel, rightTF, false, profile );
     updateControls();
-    panel.layout( true, true );
     return panel;
   }
 
@@ -173,38 +172,33 @@ public class WeirPanel extends AbstractProfilView
     if( building == null )
       return;
 
-    // FIXME: this is too weak! Maybe a marker has been added/removed -> we need to re-create the DeviderLine's in that
-    // case!
-
     final IComponent objProp = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
     final String id = (String) building.getValue( objProp );
     if( id != null )
       m_wehrart.setSelection( new StructuredSelection( id ) );
     m_wehrStart.refresh();
     m_wehrEnd.refresh();
+    updateDeviderGroup( profile );
+    m_deviderGroup.getParent().layout( true, true );
+  }
 
+  private final void updateDeviderGroup( final IProfil profile )
+  {
+    final Control[] ctrls = m_deviderGroup.getChildren();
+    for( final Control ctrl : ctrls )
+    {
+      if( !ctrl.isDisposed() )
+        ctrl.dispose();
+    }
     final IComponent cmpWehrTrenner = profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
     final IProfilPointMarker[] deviders = profile.getPointMarkerFor( cmpWehrTrenner );
-    if( deviders.length * 2 != m_deviderGroup.getChildren().length )
+
+    for( final IProfilPointMarker devider : deviders )
     {
-      for( final Control ctrl : m_deviderGroup.getChildren() )
-      {
-        if( ctrl != null && !ctrl.isDisposed() )
-          ctrl.dispose();
-      }
-
-      for( final IProfilPointMarker devider : deviders )
-      {
-        new DeviderLine( m_toolkit, m_deviderGroup, devider, true, profile );
-        new ParameterLine( m_toolkit, m_deviderGroup, devider, true, profile );
-      }
+      final DeviderLine devLine = new DeviderLine( m_toolkit, m_deviderGroup, devider, true, profile );
+      devLine.refresh();
+      new ParameterLine( m_toolkit, m_deviderGroup, devider, true, profile );
     }
-
-    // FIXME: all this layout makes no real sense. However, we would like to reflow the ScrolledForm this panel is
-    // contained in
-    // ergo -> we need to be able to fire an event in order to reflow/relayout the From.
-
-    m_deviderGroup.getParent().layout();
   }
 
   @Override

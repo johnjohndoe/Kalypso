@@ -80,19 +80,19 @@ public class OptimizeTest
 {
   public OptimizeTest( )
   {
-    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
+    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" ); //$NON-NLS-1$
   }
 
   @Test
   // @Ignore
   public void testOptimize( ) throws Exception
   {
-    final File tmpDir = FileUtilities.createNewTempDir( "optimizeTest" );
-    final File dataDir = new File( tmpDir, "inputData" );
+    final File tmpDir = FileUtilities.createNewTempDir( "optimizeTest" ); //$NON-NLS-1$
+    final File dataDir = new File( tmpDir, "inputData" ); //$NON-NLS-1$
     dataDir.mkdirs();
-    final File simulationDir = new File( tmpDir, "simulation" );
+    final File simulationDir = new File( tmpDir, "simulation" ); //$NON-NLS-1$
     simulationDir.mkdirs();
-    final File expectedResultsDir = new File( dataDir, "Ergebnisse/Aktuell_Soll" );
+    final File expectedResultsDir = new File( dataDir, "Ergebnisse/Aktuell_Soll" ); //$NON-NLS-1$
 
     final ISimulationDataProvider dataProvider = prepareData( dataDir );
     final NAOptimizingJob optimizeJob = doOptimizeRun( simulationDir, dataProvider );
@@ -103,7 +103,7 @@ public class OptimizeTest
 
   private ISimulationDataProvider prepareData( final File dataDir ) throws SimulationException, IOException
   {
-    final URL dataLocation = getClass().getResource( "resources/weisseElster_optimize/gmlInput.zip" );
+    final URL dataLocation = getClass().getResource( "resources/weisseElster_optimize/gmlInput.zip" ); //$NON-NLS-1$
     ZipUtilities.unzip( dataLocation, dataDir );
 
     final NaModelCalcJob naModelCalcJob = new NaModelCalcJob();
@@ -118,35 +118,35 @@ public class OptimizeTest
     final Collection<SimulationDataPath> pathes = new ArrayList<SimulationDataPath>();
 
     // Hm, copied from the build.xml.... must be updated if something changes there....
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_META_ID, ".calculation" ) );
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_MODELL_ID, "modell.gml" ) );
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_CONTROL_ID, ".expertControl_optimize.gml" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_META_ID, ".calculation" ) ); //$NON-NLS-1$
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_MODELL_ID, "modell.gml" ) ); //$NON-NLS-1$
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_CONTROL_ID, ".expertControl_optimize.gml" ) ); //$NON-NLS-1$
 // pathes.add( new SimulationDataPath( NaModelConstants.IN_HYDROTOP_ID, "hydrotop.gml" ) );
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_PARAMETER_ID, "parameter.gml" ) );
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_PREPROCESSED_ASCII, "preprocessedAscii.zip" ) );
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_OPTIMIZECONF_ID, ".sce.xml" ) );
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_OPTIMIZE_ID, "optimize.gml" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_PARAMETER_ID, "parameter.gml" ) ); //$NON-NLS-1$
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_PREPROCESSED_ASCII, "preprocessedAscii.zip" ) ); //$NON-NLS-1$
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_OPTIMIZECONF_ID, ".sce.xml" ) ); //$NON-NLS-1$
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_OPTIMIZE_ID, "optimize.gml" ) ); //$NON-NLS-1$
 // pathes.add( new SimulationDataPath( NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, "id( 'root' )" ) );
 
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_RAINFALL_ID, "Niederschlag" ) );
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_KLIMA_DIR_ID, "Klima" ) );
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_PEGEL_DIR, "Pegel" ) );
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_RESULTS_DIR_ID, "Ergebnisse" ) );
-    pathes.add( new SimulationDataPath( NaModelConstants.IN_LZSIM_IN_ID, "Anfangswerte" ) );
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_RAINFALL_ID, "Niederschlag" ) ); //$NON-NLS-1$
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_KLIMA_DIR_ID, "Klima" ) ); //$NON-NLS-1$
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_PEGEL_DIR, "Pegel" ) ); //$NON-NLS-1$
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_RESULTS_DIR_ID, "Ergebnisse" ) ); //$NON-NLS-1$
+    pathes.add( new SimulationDataPath( NaModelConstants.IN_LZSIM_IN_ID, "Anfangswerte" ) ); //$NON-NLS-1$
 
     return pathes.toArray( new SimulationDataPath[pathes.size()] );
   }
 
   private NAOptimizingJob doOptimizeRun( final File tmpDir, final ISimulationDataProvider dataProvider ) throws Exception
   {
-    final File monitorFile = new File( tmpDir, "monitor.out" );
+    final File monitorFile = new File( tmpDir, "monitor.out" ); //$NON-NLS-1$
     final PrintStream monitorOut = new PrintStream( monitorFile );
     INaSimulationData data = null;
 
     try
     {
-      final ISimulationMonitor monitor = new TestSimulationMonitor( monitorOut, "Optimize-Test: " );
-      final File logFile = new File( tmpDir, "optimizeTest.log" );
+      final ISimulationMonitor monitor = new TestSimulationMonitor( monitorOut, "Optimize-Test: " ); //$NON-NLS-1$
+      final File logFile = new File( tmpDir, "optimizeTest.log" ); //$NON-NLS-1$
       final Logger logger = createLogger( logFile );
 
       data = NaSimulationDataFactory.load( dataProvider );
@@ -158,7 +158,7 @@ public class OptimizeTest
       data.dispose();
 
       if( !succeeded )
-        Assert.fail( "Optimization failed" );
+        Assert.fail( "Optimization failed" ); //$NON-NLS-1$
 
       return optimizeJob;
     }
@@ -175,13 +175,13 @@ public class OptimizeTest
   {
     final File resultsDir = optimizeJob.getResultDir();
     final File optimizeFile = optimizeJob.getOptimizeResult();
-    final File expectedOptimizeFile = new File( expectedResultsDir.getParent(), "optimizedBean.xml" );
+    final File expectedOptimizeFile = new File( expectedResultsDir.getParent(), "optimizedBean.xml" ); //$NON-NLS-1$
 
-    final File actualResultsDir = new File( resultsDir, "Aktuell" );
+    final File actualResultsDir = new File( resultsDir, "Aktuell" ); //$NON-NLS-1$
 
     /* Remove files that connot be compared (change each time) */
-    new File( actualResultsDir, "Log/calculation.log" ).delete();
-    new File( actualResultsDir, "Log/output.zip" ).delete();
+    new File( actualResultsDir, "Log/calculation.log" ).delete(); //$NON-NLS-1$
+    new File( actualResultsDir, "Log/output.zip" ).delete(); //$NON-NLS-1$
 
     NaPreprocessingTest.checkDifferences( expectedOptimizeFile, optimizeFile );
     NaPreprocessingTest.checkDifferences( expectedResultsDir, actualResultsDir );

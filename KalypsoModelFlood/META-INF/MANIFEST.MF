@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelFlood Plug-in
 Bundle-SymbolicName: org.kalypso.model.flood;singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-Activator: org.kalypso.model.flood.KalypsoModelFloodPlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
@@ -13,13 +13,13 @@ Require-Bundle: org.kalypso.ui,
  org.kalypso.model1d2d,
  org.kalypso.gml.processes,
  org.kalypso.risk,
- org.kalypso.simulation.ui;bundle-version="0.0.1",
- org.kalypso.project.database.client;bundle-version="1.0.0",
- org.kalypso.contribs.ogc31;bundle-version="1.0.0",
+ org.kalypso.simulation.ui,
+ org.kalypso.project.database.client,
+ org.kalypso.contribs.ogc31,
  org.kalypso.model.flood.project.demo;resolution:=optional,
  org.kalypso.model.flood.project.demo1d2d;resolution:=optional,
  org.kalypso.model.flood.project.template,
- org.kalypso.module;bundle-version="2.3.0"
+ org.kalypso.module
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.model.flood.binding,

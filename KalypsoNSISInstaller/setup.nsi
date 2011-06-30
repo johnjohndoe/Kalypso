@@ -8,8 +8,8 @@ Name Kalypso
 !define REGKEY "SOFTWARE\$(^Name)"
 
 # version number, which is used for builtin pathes and menu entries.
-!define VERSION 10.10.3
-!define DATE 20110512
+!define VERSION 11.6.0
+!define DATE 20110630
 
 !define COMPANY BCE
 !define URL http://kalypso.bjoernsen.de
@@ -98,7 +98,7 @@ InstallDir $PROGRAMFILES\Kalypso
 CRCCheck on
 XPStyle on
 ShowInstDetails hide
-VIProductVersion 10.10.3.20110512
+VIProductVersion 11.6.0.20110630
 
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductName Kalypso
@@ -119,32 +119,32 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} LegalCopyright ""
 ShowUninstDetails hide
 
 # Eine mehrsprachige Warnmeldung, wenn das Verzeichnis bereits existiert.
-LangString warndir ${LANG_ENGLISH} "The directory you have choosen already exists. Existing files will be overwritten. Do you still want to continue?"
-LangString warndir ${LANG_GERMAN} "Das Verzeichnis, das Sie ausgewählt haben existiert bereits. Existierende Dateien werden überschrieben. Möchten Sie dennoch fortfahren?"
+LangString warndir ${LANG_ENGLISH} "The directory you have chosen already exists. Existing files will be overwritten. Do you still want to continue?"
+LangString warndir ${LANG_GERMAN} "Das Verzeichnis, das Sie ausgewählt haben, existiert bereits. Existierende Dateien werden überschrieben. Möchten Sie dennoch fortfahren?"
 
 # Eine mehrsprachige Warnmeldung, wenn es bereits eine Installation in diesem Verzeichnis gibt.
 LangString warninst ${LANG_ENGLISH} "Found Kalypso in this folder. You should delete it first. Continuing will overwrite existing files. Do you still want to continue?"
-LangString warninst ${LANG_GERMAN} "Kalypso in diesem Verzeichnis gefunden. Sie sollten es zunächst löschen. Wenn Sie fortfahren werden existierende Dateien überschrieben. Möchten Sie dennoch fortfahren?"
+LangString warninst ${LANG_GERMAN} "Kalypso in diesem Verzeichnis gefunden. Sie sollten es zunächst löschen. Wenn Sie fortfahren, werden existierende Dateien überschrieben. Möchten Sie dennoch fortfahren?"
 
 # Eine mehrsprachige Warnmeldung, wenn es keine Installation in dem Ordner gibt, in dem Uninstall aufgerufen wurde.
-LangString warninst2 ${LANG_ENGLISH} "In this folder exists no correct copy of Kalypso. Aborting ..."
-LangString warninst2 ${LANG_GERMAN} "In diesem Verzeichnis existiert keine korrekte Kopie von Kalypso. Abbruch ..."
+LangString warninst2 ${LANG_ENGLISH} "There is no correct installation of Kalypso in this folder. Aborting..."
+LangString warninst2 ${LANG_GERMAN} "In diesem Verzeichnis existiert keine korrekte Kopie von Kalypso. Abbruch..."
 
 # Eine mehrsprachige Warnmeldung, dass ein kritischer Pfad ausgewählt wurde.
-LangString warninst3 ${LANG_ENGLISH} "You can't select the directories: $PROGRAMFILES, $WINDIR"
-LangString warninst3 ${LANG_GERMAN} "Die Verzeichnisse können nicht gewählt werden: $PROGRAMFILES, $WINDIR"
+LangString warninst3 ${LANG_ENGLISH} "You cannot select the following directories: $PROGRAMFILES, $WINDIR"
+LangString warninst3 ${LANG_GERMAN} "Die folgenden Verzeichnisse können nicht gewählt werden: $PROGRAMFILES, $WINDIR"
 
 # Eine mehrsprachige Warnmeldung, dass ein kritischer Pfad gelöscht werden soll.
-LangString warninst4 ${LANG_ENGLISH} "The directories $PROGRAMFILES, $WINDIR cannot be deleted. Abort ..."
-LangString warninst4 ${LANG_GERMAN} "Die Verzeichnisse $PROGRAMFILES, $WINDIR können nicht gelöscht werden. Abbruch ..."
+LangString warninst4 ${LANG_ENGLISH} "The directories $PROGRAMFILES, $WINDIR cannot be deleted. Aborting..."
+LangString warninst4 ${LANG_GERMAN} "Die Verzeichnisse $PROGRAMFILES, $WINDIR können nicht gelöscht werden. Abbruch..."
 
 # Eine mehrsprachige Warnmeldung, wenn die kalypso_uninstall.ini nicht gefunden wurde.
-LangString noini ${LANG_ENGLISH} "Configuration of the delete assistant not found. Aborting ..."
-LangString noini ${LANG_GERMAN} "Die Konfiguration des Lösch-Assistenten wurde nicht gefunden. Abbruch ..."
+LangString noini ${LANG_ENGLISH} "Configuration of the deinstallation assistant not found. Aborting..."
+LangString noini ${LANG_GERMAN} "Die Konfiguration des Lösch-Assistenten wurde nicht gefunden. Abbruch..."
 
 # Eine mehrsprachige Warnmeldung, falls ein Wert aus der INI nicht gelesen werden konnte.
-LangString errini ${LANG_ENGLISH} "The configuration of the delete assistant is not valid. Aborting ..."
-LangString errini ${LANG_GERMAN} "Die Konfiguration des Lösch-Assistenten ist nicht gültig. Abbruch ..."
+LangString errini ${LANG_ENGLISH} "The configuration of the deinstallation assistant is not valid. Aborting..."
+LangString errini ${LANG_GERMAN} "Die Konfiguration des Lösch-Assistenten ist nicht gültig. Abbruch..."
 
 # Anzeige für die selbstgebaute Optionen-Seite.
 LangString opt_title ${LANG_ENGLISH} "Options"
@@ -153,17 +153,17 @@ LangString opt_title ${LANG_GERMAN} "Optionen"
 LangString opt_text ${LANG_ENGLISH} "Please select your options."
 LangString opt_text ${LANG_GERMAN} "Bitte wählen Sie Ihre Optionen."
 
-LangString opt_page1 ${LANG_ENGLISH} "Add icon to desktop"
-LangString opt_page1 ${LANG_GERMAN} "Icon auf dem Desktop erstellen"
+LangString opt_page1 ${LANG_ENGLISH} "Add icon to desktop."
+LangString opt_page1 ${LANG_GERMAN} "Icon auf dem Desktop erstellen."
 
-LangString opt_page2 ${LANG_ENGLISH} "Add icon to quickstart"
-LangString opt_page2 ${LANG_GERMAN} "Icon in der Schnellstart-Leiste erstellen"
+LangString opt_page2 ${LANG_ENGLISH} "Add icon to quickstart."
+LangString opt_page2 ${LANG_GERMAN} "Icon in der Schnellstart-Leiste erstellen."
 
-LangString opt_page3 ${LANG_ENGLISH} "Add icons to startmenu"
-LangString opt_page3 ${LANG_GERMAN} "Icons im Startmenü erzeugen"
+LangString opt_page3 ${LANG_ENGLISH} "Add icons to startmenu."
+LangString opt_page3 ${LANG_GERMAN} "Icons im Startmenü erzeugen."
 
 # Fehler, falls beim Ändern der config.ini etwas schief gelaufen ist.
-LangString err1 ${LANG_ENGLISH} "Error: The neccessary changes to the configuration/config.ini or kalypso_uninstall.ini could not be made."
+LangString err1 ${LANG_ENGLISH} "Error: The necessary changes to the configuration/config.ini or kalypso_uninstall.ini could not be made."
 LangString err1 ${LANG_GERMAN} "Fehler: Die notwendigen Änderungen an der configuration/config.ini oder kalypso_uninstall.ini konnten nicht durchgeführt werden."
 
 # Die Sektionen.

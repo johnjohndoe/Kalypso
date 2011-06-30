@@ -69,7 +69,7 @@ public class SimulationVisitor extends NetElementVisitor
 
   /**
    * @throws Exception
-   * @see org.kalypso.model.hydrology.internal.preprocessing.net.visitors.NetElementVisitor#visit(org.kalypso.model.hydrology.internal.preprocessing.net.NetElement)
+   * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.model.hydrology.internal.preprocessing.net.NetElement)
    */
   @Override
   public boolean visit( final NetElement netElement ) throws SimulationException
@@ -98,7 +98,7 @@ public class SimulationVisitor extends NetElementVisitor
   {
     if( m_cycleTest.contains( netElement ) )
     {
-      final String warning = Messages.getString( "org.kalypso.model.hydrology.internal.preprocessing.net.visitors.SimulationVisitor.0" ); //$NON-NLS-1$
+      final String warning = Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.0" ); //$NON-NLS-1$
       final StringBuffer b = new StringBuffer( warning );
       System.out.println( warning + netElement ); //$NON-NLS-1$
 
@@ -106,10 +106,10 @@ public class SimulationVisitor extends NetElementVisitor
       // TODO: Better output handling, in this way it is not easy to find the circle
       final NetElementCircleFinder circlefinder = new NetElementCircleFinder( netElement );
       final List<NetElement>[] circleList = circlefinder.findCircle();
-      b.append( Messages.getString( "org.kalypso.model.hydrology.internal.preprocessing.net.visitors.SimulationVisitor.2", netElement ) + ":\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      b.append( Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.2", netElement ) + ":\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       for( final List<NetElement> element : circleList )
-        b.append( Messages.getString( "org.kalypso.model.hydrology.internal.preprocessing.net.visitors.SimulationVisitor.4", element ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+        b.append( Messages.getString( "org.kalypso.convert.namodel.net.visitors.SimulationVisitor.4", element ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       log( b.toString() );
       throw new SimulationException( b.toString() );

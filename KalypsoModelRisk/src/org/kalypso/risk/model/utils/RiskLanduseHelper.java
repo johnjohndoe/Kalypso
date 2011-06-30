@@ -70,7 +70,7 @@ import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -180,7 +180,7 @@ public class RiskLanduseHelper
           newDamageFunction.setName( entry.getName() );
           newDamageFunction.setDescription( "[Import from " + externalProjectName + "] " + entry.getDescription() ); //$NON-NLS-1$ //$NON-NLS-2$
           newDamageFunction.setFunction( entry.getFunction() );
-          damageFunctionsGmlIDsMap.put( entry.getId(), newDamageFunction.getId() );
+          damageFunctionsGmlIDsMap.put( entry.getGmlID(), newDamageFunction.getGmlID() );
         }
       }
 
@@ -196,9 +196,9 @@ public class RiskLanduseHelper
           newLanduseClass.setColorStyle( entry.getColorStyle() );
           final String damageFunctionGmlID = damageFunctionsGmlIDsMap.get( entry.getDamageFunctionGmlID() );
           for( final IDamageFunction damageFunction : controlModel.getDamageFunctionsList() )
-            if( damageFunction.getId().equals( damageFunctionGmlID ) )
+            if( damageFunction.getGmlID().equals( damageFunctionGmlID ) )
               newLanduseClass.setDamageFunction( damageFunction );
-          landuseClassesGmlIDsMap.put( entry.getId(), newLanduseClass.getId() );
+          landuseClassesGmlIDsMap.put( entry.getGmlID(), newLanduseClass.getGmlID() );
         }
       }
       for( final Feature importedFeature : assetValueClassesFeatureList )
@@ -324,7 +324,7 @@ public class RiskLanduseHelper
     }
   }
 
-  public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List< ? > shapeFeatureList, final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
+  public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List< ? > shapeFeatureList, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
   {
     monitor.subTask( Messages.getString( "org.kalypso.risk.model.utils.ImportLanduseWizard.9" ) ); //$NON-NLS-1$
     final List<Feature> createdFeatures = new ArrayList<Feature>();
@@ -347,9 +347,9 @@ public class RiskLanduseHelper
         {
           final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
           polygon.setGeometry( surface );
-          polygon.setLanduseClass( getLanduseClassByName( polygon, shpPropertyValue, landuseClassesList ) );
-          polygon.setEnvelopesUpdated();
-          createdFeatures.add( polygon );
+          polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), shpPropertyValue, landuseClassesList ) );
+          polygon.getFeature().setEnvelopesUpdated();
+          createdFeatures.add( polygon.getFeature() );
           // style and landuse class ordinal number will be set automatically (property functions)
         }
       }
@@ -357,10 +357,10 @@ public class RiskLanduseHelper
       {
         final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
         polygon.setGeometry( (GM_Surface< ? >) shpGeometryProperty );
-        polygon.setLanduseClass( getLanduseClassByName( polygon, shpPropertyValue, landuseClassesList ) );
+        polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), shpPropertyValue, landuseClassesList ) );
         // polygon.setStyleType( shpPropertyValue );
-        polygon.setEnvelopesUpdated();
-        createdFeatures.add( polygon );
+        polygon.getFeature().setEnvelopesUpdated();
+        createdFeatures.add( polygon.getFeature() );
       }
       else
         throw new RuntimeException( Messages.getString( "org.kalypso.risk.model.utils.ImportLanduseWizard.4" ) + shpGeometryProperty.getClass().getName() ); //$NON-NLS-1$
@@ -378,8 +378,8 @@ public class RiskLanduseHelper
         final ILanduseClass landuseClass = (ILanduseClass) object;
         if( landuseClass.getName().equals( className ) )
         {
-          final String xlinkedFeaturePath = linkedFeaturePath + landuseClass.getId();
-          final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, landuseClass.getParentRelation(), landuseClass.getFeatureType(), xlinkedFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+          final String xlinkedFeaturePath = linkedFeaturePath + landuseClass.getGmlID();
+          final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, landuseClass.getFeature().getParentRelation(), landuseClass.getFeature().getFeatureType(), xlinkedFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
           return linkedFeature_Impl;
         }
       }
@@ -407,7 +407,7 @@ public class RiskLanduseHelper
     final ILanduseClass[] classes = conrolModel.getLanduseClassesList().toArray( new ILanduseClass[] {} );
 
     final Set<ILanduseClass> myTypes = new LinkedHashSet<ILanduseClass>();
-    for( final ILandusePolygon polygon : vectorModel.getLandusePolygonCollection().getLandusePolygonCollection() )
+    for( final ILandusePolygon polygon : vectorModel.getLandusePolygonCollection() )
     {
       final ILanduseClass landuse = polygon.getLanduseClass( conrolModel );
       for( final ILanduseClass c : classes )

@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -61,33 +65,58 @@ public final class PolygonIntersectionHelper
   {
     /** Delete all existing features */
     CLEAR_OUTPUT,
-    /** Delete all existing features, that intersect with any existing one (produces a warning) */
-    DELETE_INTERSECTING,
-    /** Ignore all imported features, that intersect with any existing one (produces warning) */
-    IGNORE_INTERSECTING,
     /**
-     * from existing features, intersecting imported features are removed;
+     * existing features are clipped on imported feature's geometry, adds one new feature
      */
-    INTERSECT
+    DIFFERENCE,
+    /**
+     * existing features are split by imported feature's geometry and updated with its properties
+     */
+    UPDATE
   }
 
   /**
-   * Creates the difference for the {@link ImportType#INTERSECT} import type. Anything not resulting in a surface is
+   * Creates the difference for the {@link ImportType#DIFFERENCE} import type. Anything not resulting in a surface is
    * ignored.
    */
   public static GM_MultiSurface createDifference( final GM_MultiSurface geometry, final GM_MultiSurface existingGeometry )
   {
     final GM_Object difference = existingGeometry.difference( geometry );
-    if( difference instanceof GM_MultiSurface )
-      return (GM_MultiSurface) difference;
+    return toMultiSurfaceOrNull( difference );
+  }
 
-    if( difference instanceof GM_Surface )
+  /**
+   * Creates the intersection for the {@link ImportType#UPDATE} import type. Anything not resulting in a surface is
+   * ignored.
+   */
+  public static GM_MultiSurface createIntersection( final GM_MultiSurface geometry, final GM_MultiSurface existingGeometry )
+  {
+    final GM_Object intersection = existingGeometry.intersection( geometry );
+    return toMultiSurfaceOrNull( intersection );
+  }
+
+  private static GM_MultiSurface toMultiSurfaceOrNull( final GM_Object geometry )
+  {
+    if( geometry instanceof GM_MultiSurface )
+      return (GM_MultiSurface) geometry;
+    else if( geometry instanceof GM_Surface )
     {
-      final GM_Surface< ? > surface = (GM_Surface< ? >) difference;
-      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, difference.getCoordinateSystem() );
+      final GM_Surface< ? > surface = (GM_Surface< ? >) geometry;
+      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, geometry.getCoordinateSystem() );
     }
-
-    /* Ignore all another cases */
+    else if( geometry instanceof GM_MultiPrimitive )
+    {
+      final GM_Object[] all = ((GM_MultiPrimitive) geometry).getAll();
+      final List<GM_Surface< ? >> outputList = new ArrayList<GM_Surface< ? >>( all.length );
+      for( final GM_Object gm_Object : all )
+      {
+        if( gm_Object instanceof GM_Surface )
+        {
+          outputList.add( (GM_Surface< ? >) gm_Object );
+        }
+      }
+      return GeometryFactory.createGM_MultiSurface( outputList.toArray( new GM_Surface< ? >[outputList.size()] ), geometry.getCoordinateSystem() );
+    }
     return null;
   }
 }

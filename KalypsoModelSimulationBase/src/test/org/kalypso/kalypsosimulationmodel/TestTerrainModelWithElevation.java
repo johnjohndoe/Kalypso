@@ -73,7 +73,7 @@ public class TestTerrainModelWithElevation extends TestCase
 
       assertNull( Messages.getString( "TestTerrainModelWithElevation.0" ), itrModel.getTerrainElevationModelSystem() ); //$NON-NLS-1$
 
-      final ITerrainElevationModelSystem itrEleSystem =  itrModel.getTerrainElevationModelSystem() ;
+      final ITerrainElevationModelSystem itrEleSystem = new TerrainElevationModelSystem( itrModel );
 
       for( int i = 0; i < 10; i++ )
       {

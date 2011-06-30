@@ -40,29 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 
 /**
  * @author Gernot Belger
  */
-public class NodeResultCollection extends Feature_Impl implements INodeResultCollection
+public class NodeResultCollection extends FeatureWrapperCollection<INodeResult> implements INodeResultCollection
 {
-  private final IFeatureBindingCollection<INodeResult> m_nodeResults = new FeatureBindingCollection<INodeResult>( this, INodeResult.class, QNAME_PROP_NODERESULT_MEMBER );
-
-  public NodeResultCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public NodeResultCollection( final Feature featureCol )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureCol, INodeResult.class, QNAME_PROP_NODERESULT_MEMBER );
   }
 
-  public IFeatureBindingCollection<INodeResult> getNodeResults( )
-  {
-    return m_nodeResults;
-  }
 }

@@ -68,7 +68,7 @@ public class TestOP extends TestCase
     }
     Feature rFeature = workspace.getRootFeature();
 /*    FE1D2DEdge edge = new FE1D2DEdge( rFeature );
-    IFeatureBindingCollection<IFE1D2DElement> container = edge.getContainers();
+    IFeatureWrapperCollection<IFE1D2DElement> container = edge.getContainers();
     assertEquals( 3, container.size() );
 
     IFE1D2DElement element = container.get( 0 );
@@ -96,11 +96,11 @@ public class TestOP extends TestCase
 //      // gml:FeatureCollection
 //
 //      FE1D2DEdge edge = new FE1D2DEdge( root, TestWorkspaces.GML_PROP_FEATURE_MEMBER );
-//      IFeatureBindingCollection<IFE1D2DNode> nodes = edge.getNodes();
+//      IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
 //
 //      assertEquals( 0, nodes.size() );
 //
-//      IFeatureBindingCollection<IFE1D2DElement> elements = edge.getContainers();
+//      IFeatureWrapperCollection<IFE1D2DElement> elements = edge.getContainers();
 //
 //      assertEquals( 0, elements.size() );
 //

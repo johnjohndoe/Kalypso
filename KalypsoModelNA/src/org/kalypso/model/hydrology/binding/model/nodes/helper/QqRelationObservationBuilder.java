@@ -43,13 +43,13 @@ package org.kalypso.model.hydrology.binding.model.nodes.helper;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.hydrology.gml.ZmlQQInlineTypeHandler;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
@@ -59,9 +59,9 @@ public class QqRelationObservationBuilder
 {
   Set<QqRelationRow> m_rows = new TreeSet<QqRelationRow>( QqRelationRow.COMPARATOR );
 
-  private DefaultAxis m_axisRetentionBasinDischarge;
+  private IAxis m_axisRetentionBasinDischarge;
 
-  private DefaultAxis m_axisDischarge;
+  private IAxis m_axisDischarge;
 
   public void addRow( final double discharge, final double dischargeRetentionBasin )
   {
@@ -76,13 +76,13 @@ public class QqRelationObservationBuilder
       model.addTuple( new Object[] { row.getDischarge(), row.getDischargeRetentionBasin() } );
     }
 
-    return new SimpleObservation( "", "", new MetadataList(), model );
+    return new SimpleObservation( StringUtils.EMPTY, StringUtils.EMPTY, new MetadataList(), model );
   }
 
   private IAxis getDischargeAxis( )
   {
     if( Objects.isNull( m_axisDischarge ) )
-      m_axisDischarge = new DefaultAxis( "Abfluss", ITimeseriesConstants.TYPE_RUNOFF, "m³/s", Double.class, true ); //$NON-NLS-2$
+      m_axisDischarge = ZmlQQInlineTypeHandler.createDischargeAxis();
 
     return m_axisDischarge;
   }
@@ -90,7 +90,7 @@ public class QqRelationObservationBuilder
   private IAxis getRetentionBasinDichargeAxis( )
   {
     if( Objects.isNull( m_axisRetentionBasinDischarge ) )
-      m_axisRetentionBasinDischarge = new DefaultAxis( "RHB Abfluss", ITimeseriesConstants.TYPE_RUNOFF_RHB, "m³/s", Double.class, true ); //$NON-NLS-2$
+      m_axisRetentionBasinDischarge = ZmlQQInlineTypeHandler.createRHBdischargeAxis();
 
     return m_axisRetentionBasinDischarge;
   }

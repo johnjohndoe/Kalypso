@@ -72,13 +72,13 @@ public class TestRoughnessClsCollection_2 extends TestCase
     }
 
     final Feature root = workspace.getRootFeature();
-    final RoughnessClsCollection roughnessClsList = (RoughnessClsCollection) root;
-    final Iterator<IRoughnessCls> itr = roughnessClsList.getRoughnessClasses().iterator();
+    final RoughnessClsCollection roughnessClsList = new RoughnessClsCollection( root );
+    final Iterator<IRoughnessCls> itr = roughnessClsList.iterator();
 
     while( itr.hasNext() )
     {
       final IRoughnessCls ir = itr.next();
-      System.out.println( ir.getId() );
+      System.out.println( ir.getGmlID() );
     }
 
     // assertEquals( "ColName1", rcc.getName() );

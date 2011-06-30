@@ -82,7 +82,7 @@ public class NaPreprocessingTest
   @Before
   public void init( )
   {
-    System.setProperty( IKalypsoCoreConstants.CONFIG_PROPERTY_TIMEZONE, "GMT+1" );
+    System.setProperty( IKalypsoCoreConstants.CONFIG_PROPERTY_TIMEZONE, "GMT+1" ); //$NON-NLS-1$
   }
 
   @Test
@@ -168,6 +168,9 @@ public class NaPreprocessingTest
     /* Fetch the expected results */
     asciiExpectedDir.mkdir();
     ZipUtilities.unzip( getClass().getResource( baseResourceLocation + "/expectedAscii.zip" ), asciiExpectedDir ); //$NON-NLS-1$
+    // FIXED: make sure this directory always exists, as this will always exist in the results; but we cannot unzip an
+    // empty directory...
+    new File( asciiExpectedDir, "lzsim" ).mkdirs(); //$NON-NLS-1$
 
     checkDifferences( asciiExpectedDir, asciiDir );
 

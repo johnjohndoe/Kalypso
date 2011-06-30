@@ -93,7 +93,7 @@ public class QIntervalReader
     catch( final Exception e )
     {
       e.printStackTrace();
-      m_log.log( e, "Failed to read polynome results" );
+      m_log.log( e, Messages.getString("QIntervalReader.0") ); //$NON-NLS-1$
       ProgressUtilities.done( monitor );
     }
   }

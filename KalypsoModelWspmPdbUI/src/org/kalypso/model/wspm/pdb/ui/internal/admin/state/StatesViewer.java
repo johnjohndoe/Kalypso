@@ -52,7 +52,6 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -181,7 +180,7 @@ public class StatesViewer
     if( setLabelProvider )
       nameColumn.setLabelProvider( new PdbLabelProvider() );
 
-    ColumnViewerSorter.registerSorter( nameColumn, new ViewerComparator() );
+    ColumnViewerSorter.registerSorter( nameColumn, new PdbNameComparator() );
     return nameColumn;
   }
 

@@ -100,7 +100,7 @@ public interface NaModelConstants
 
   String IN_OPTIMIZE_ID = "Optimize"; //$NON-NLS-1$
 
-  String IN_OPTIMIZE_FEATURE_PATH_ID = "OptimizeFeaturePath";
+  String IN_OPTIMIZE_FEATURE_PATH_ID = "OptimizeFeaturePath"; //$NON-NLS-1$
 
   String IN_SYNTHN_ID = "synthNiederschlag"; //$NON-NLS-1$
 
@@ -143,16 +143,7 @@ public interface NaModelConstants
 
   /** namodell.xsd */
 
-// channels
-  QName KM_CHANNEL_KMSTART = new QName( NS_NAMODELL, "startkm" ); //$NON-NLS-1$
-
-  QName KM_CHANNEL_KMEND = new QName( NS_NAMODELL, "endkm" ); //$NON-NLS-1$
-
-  // catchments
-
   QName BODENKORREKTUR_MEMBER = new QName( NS_NAMODELL, "bodenkorrekturmember" ); //$NON-NLS-1$
-
-  QName GRUNDWASSERABFLUSS_MEMBER = new QName( NS_NAMODELL, "grundwasserabflussMember" ); //$NON-NLS-1$
 
   QName STATNPARA_MEMBER = new QName( NS_SYNTHN, "statNParameterMember" ); //$NON-NLS-1$
 
@@ -258,10 +249,8 @@ public interface NaModelConstants
 
   String[] WTKCLAI_AXES = new String[] { ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_LAI, ITimeseriesConstants.TYPE_WT, ITimeseriesConstants.TYPE_KC };
 
-  String[] WVQ_AXES = new String[] { ITimeseriesConstants.TYPE_NORMNULL, ITimeseriesConstants.TYPE_VOLUME, ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_Q2,
-      ITimeseriesConstants.TYPE_RUNOFF_Q3 };
-
   String[] TN_AXES = new String[] { ITimeseriesConstants.TYPE_MIN, ITimeseriesConstants.TYPE_RAINFALL };
 
-  String[] QQ_AXES = new String[] { ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_RHB };
+  String NAMESPACE_ZML_INLINE = "inline.zml.kalypso.org"; //$NON-NLS-1$
+
 }

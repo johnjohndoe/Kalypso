@@ -41,19 +41,10 @@
 package org.kalypso.model.hydrology.operation.hydrotope;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
-import org.kalypso.model.hydrology.internal.ModelNA;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
@@ -62,18 +53,11 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
  * 
  * @author Gernot Belger, Dejan Antanaskovic
  */
-public class GeologyImportOperation implements ICoreRunnableWithProgress
+public class GeologyImportOperation extends AbstractImportOperation
 {
-  public static interface InputDescriptor
+  public static interface InputDescriptor extends AbstractImportOperation.InputDescriptor
   {
-    /** Number of elements contained in this descriptor. All other methods allow for indices in the range 0..size-1 */
-    int size( ) throws CoreException;
-
-    String getName( int index );
-
     String getDescription( int index );
-
-    GM_MultiSurface getGeometry( int index ) throws CoreException;
 
     double getMaxPerkulationsRate( int index ) throws CoreException;
 
@@ -92,66 +76,30 @@ public class GeologyImportOperation implements ICoreRunnableWithProgress
    */
   public GeologyImportOperation( final InputDescriptor inputDescriptor, final GeologyCollection output, final ImportType importType )
   {
+    super( inputDescriptor );
+
     m_inputDescriptor = inputDescriptor;
     m_output = output;
     m_importType = importType;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  protected void init( )
   {
-    final int size = m_inputDescriptor.size();
-    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.GeologyImportOperation.0" ), size + 10 ); //$NON-NLS-1$
-
     final IFeatureBindingCollection<Geology> geologies = m_output.getGeologies();
     if( m_importType == ImportType.CLEAR_OUTPUT )
       geologies.clear();
-
-    ProgressUtilities.worked( progess, 10 );
-
-    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
-    // traverse input workspace and import all single input geologies, if the geology class exists
-    for( int i = 0; i < size; i++ )
-    {
-      try
-      {
-        final String label = m_inputDescriptor.getName( i );
-        final GM_MultiSurface geometry = m_inputDescriptor.getGeometry( i );
-
-        if( geometry == null )
-        {
-          final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.GeologyImportOperation.1", label ); //$NON-NLS-1$
-          log.add( IStatus.ERROR, message );
-        }
-        else
-        {
-          final IStatus isValidTop = TopologyChecker.checkTopology( geometry, label );
-          if( !isValidTop.isOK() )
-          {
-            log.add( isValidTop );
-          }
-        }
-
-        final Geology geology = m_output.importGeology( label, geometry, m_importType, log );
-        if( geology != null )
-        {
-          geology.setDescription( m_inputDescriptor.getDescription( i ) );
-          geology.setMaxPerkulationsRate( m_inputDescriptor.getMaxPerkulationsRate( i ) );
-          geology.setGWFactor( m_inputDescriptor.getGWFactor( i ) );
-        }
-      }
-      catch( final CoreException e )
-      {
-        log.add( e.getStatus() );
-      }
-
-      ProgressUtilities.worked( progess, 1 );
-    }
-
-    return Status.OK_STATUS;
   }
 
+  @Override
+  protected void importRow( final int i, final String label, final GM_MultiSurface geometry, final IStatusCollector log ) throws CoreException
+  {
+    final Geology geology = m_output.importGeology( label, geometry, m_importType, log );
+    if( geology != null )
+    {
+      geology.setDescription( m_inputDescriptor.getDescription( i ) );
+      geology.setMaxPerkulationsRate( m_inputDescriptor.getMaxPerkulationsRate( i ) );
+      geology.setGWFactor( m_inputDescriptor.getGWFactor( i ) );
+    }
+  }
 }

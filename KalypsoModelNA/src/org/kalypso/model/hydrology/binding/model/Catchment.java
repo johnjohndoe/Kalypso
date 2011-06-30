@@ -64,15 +64,15 @@ public class Catchment extends AbstractNaModelElement
 
   public static final QName FEATURE_CATCHMENT = new QName( NS_NAMODELL, "Catchment" ); //$NON-NLS-1$
 
-  private static final QName LINK_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" ); //$NON-NLS-1$
+  public static final QName LINK_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" ); //$NON-NLS-1$
 
-  private static final QName LINK_OVERFLOW_NODE = new QName( NS_NAMODELL, "izkn_vers" ); //$NON-NLS-1$
+  public static final QName LINK_OVERFLOW_NODE = new QName( NS_NAMODELL, "izkn_vers" ); //$NON-NLS-1$
 
   public static final QName LINK_IZKN_NODE = new QName( NS_NAMODELL, "izkn" ); //$NON-NLS-1$
 
   private static final QName PROPLIST_BODENKORREKTUR_MEMBER = new QName( NS_NAMODELL, "bodenkorrekturmember" ); //$NON-NLS-1$
 
-  private static final QName PROPLIST_GRUNDWASSERABFLUSS_MEMBER = new QName( NS_NAMODELL, "grundwasserabflussMember" ); //$NON-NLS-1$
+  public static final QName PROPLIST_GRUNDWASSERABFLUSS_MEMBER = new QName( NS_NAMODELL, "grundwasserabflussMember" ); //$NON-NLS-1$
 
   private static final QName PROP_GEOM = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 

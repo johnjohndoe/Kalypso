@@ -58,7 +58,6 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
@@ -101,7 +100,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
   {
     final IGeoLog geoLog = initGeoLog();
     final Date startTime = geoLog.getStartTime();
-    final String calcUnitId = calculationUnit.getId();
+    final String calcUnitId = calculationUnit.getGmlID();
 
     final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
 
@@ -141,7 +140,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
   private void initResultMeta( final ICalculationUnit calculationUnit, final Date startTime, final SzenarioDataProvider caseDataProvider ) throws CoreException
   {
     final IScenarioResultMeta scenarioResultMeta = caseDataProvider.getModel( IScenarioResultMeta.class );
-    final ICalcUnitResultMeta existingCalcUnitMeta = scenarioResultMeta.findCalcUnitMetaResult( calculationUnit.getId() );
+    final ICalcUnitResultMeta existingCalcUnitMeta = scenarioResultMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
     final ICalcUnitResultMeta calcUnitMeta;
     if( existingCalcUnitMeta == null )
       calcUnitMeta = scenarioResultMeta.getChildren().addNew( ICalcUnitResultMeta.QNAME, ICalcUnitResultMeta.class );
@@ -149,10 +148,10 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
       calcUnitMeta = existingCalcUnitMeta;
 
     calcUnitMeta.setCalcStartTime( startTime );
-    calcUnitMeta.setCalcUnit( calculationUnit.getId() );
+    calcUnitMeta.setCalcUnit( calculationUnit.getGmlID() );
     calcUnitMeta.setName( calculationUnit.getName() );
     calcUnitMeta.setDescription( calculationUnit.getDescription() );
-    calcUnitMeta.setPath( new Path( calculationUnit.getId() ) );
+    calcUnitMeta.setPath( new Path( calculationUnit.getGmlID() ) );
     calcUnitMeta.setCalcEndTime( new Date() );
 
     // Add geo log to calcMeta as document
@@ -191,8 +190,8 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
   {
     final IControlModel1D2D controlModel = findControlModel( controlModelGroup, calcUnitId );
 
-    final IControlModel1D2DCollection feature = controlModelGroup.getModel1D2DCollection();
-    final FeatureChange change = new FeatureChange( feature, feature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL ), controlModel.getId() );
+    final Feature feature = controlModelGroup.getModel1D2DCollection().getFeature();
+    final FeatureChange change = new FeatureChange( feature, feature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL ), controlModel.getGmlID() );
     final ChangeFeaturesCommand command = new ChangeFeaturesCommand( feature.getWorkspace(), new FeatureChange[] { change } );
     try
     {
@@ -207,13 +206,12 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
 
   protected static IControlModel1D2D findControlModel( final IControlModelGroup controlModelGroup, final String calcUnitId )
   {
-    final IControlModel1D2DCollection model1d2dCollection = controlModelGroup.getModel1D2DCollection();
-    for( final IControlModel1D2D controlModel : model1d2dCollection.getControlModels() )
+    for( final IControlModel1D2D controlModel : controlModelGroup.getModel1D2DCollection() )
     {
       final ICalculationUnit currentCalcUnit = controlModel.getCalculationUnit();
       if( currentCalcUnit != null )
       {
-        if( calcUnitId.equals( currentCalcUnit.getId() ) )
+        if( calcUnitId.equals( currentCalcUnit.getGmlID() ) )
         {
           return controlModel;
         }

@@ -24,7 +24,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -215,7 +215,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
     try
     {
       final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-      Feature lNewParentFeature = null;
+      IFeatureWrapper2 lNewParentFeature = null;
       if( newNode instanceof GM_Point )
       {
         lNewParentFeature = m_builder.addNode( (GM_Point) newNode, command );
@@ -260,7 +260,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
     try
     {
       final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-      final Feature lNewParentFeature = m_builder.finish( command );
+      final IFeatureWrapper2 lNewParentFeature = m_builder.finish( command );
       if( command != null && lNewParentFeature != null )
         m_nodeTheme.getWorkspace().postCommand( command );
     }

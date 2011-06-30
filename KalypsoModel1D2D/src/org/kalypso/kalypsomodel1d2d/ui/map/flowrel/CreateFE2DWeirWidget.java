@@ -73,6 +73,7 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -96,7 +97,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
   private IMapPanel m_mapPanel;
 
-  Feature m_newParentFeature = null;
+  IFeatureWrapper2 m_newParentFeature = null;
 
   private boolean m_warning;
 
@@ -300,7 +301,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
    *      org.kalypsodeegree.model.geometry.GM_Point, double)
    */
   @Override
-  protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     return null;
     // return discModel.find2DElement( currentPos, grabDistance );
@@ -346,7 +347,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     }
   }
 
-  public final Feature getNewParentFeature( )
+  public final IFeatureWrapper2 getNewParentFeature( )
   {
     return m_newParentFeature;
   }
@@ -436,10 +437,10 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#createNewFeature(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.relation.IRelationType,
-   *      org.kalypsodeegree.model.feature.binding.Feature)
+   *      org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
   @Override
-  protected IFlowRelationship createNewFeature( CommandableWorkspace workspace, Feature parentFeature, IRelationType parentRelation, Feature modelElement )
+  protected IFlowRelationship createNewFeature( CommandableWorkspace workspace, Feature parentFeature, IRelationType parentRelation, IFeatureWrapper2 modelElement )
   {
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IWeirFlowRelation2D.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT, -1 );

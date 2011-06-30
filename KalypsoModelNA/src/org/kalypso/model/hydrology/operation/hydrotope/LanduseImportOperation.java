@@ -40,58 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.hydrotope;
 
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
-import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.suds.AbstractSud;
-import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Imports landuse into a 'landuse.gml' file from another gml-workspace (probably a shape-file).
  * 
  * @author Gernot Belger
  */
-public class LanduseImportOperation implements ICoreRunnableWithProgress
+public class LanduseImportOperation extends AbstractImportOperation
 {
-  public static interface InputDescriptor
+  public static interface InputDescriptor extends AbstractImportOperation.InputDescriptor
   {
-    /** Number of elements contained in this descriptor. All other methods allow for indices in the range 0..size-1 */
-    int size( ) throws CoreException;
-
-    String getName( int index );
-
     String getDescription( int index );
-
-    GM_MultiSurface getGeometry( int index ) throws CoreException;
 
     String getLanduseclass( int index ) throws CoreException;
 
@@ -116,182 +86,54 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
    */
   public LanduseImportOperation( final InputDescriptor inputDescriptor, final LanduseCollection output, final ILanduseClassDelegate landuseClasses, final ImportType importType )
   {
+    super( inputDescriptor );
+
     m_inputDescriptor = inputDescriptor;
     m_output = output;
     m_landuseClasses = landuseClasses;
     m_importType = importType;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  protected void init( )
   {
-    final int size = m_inputDescriptor.size();
-    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.0" ), size + 10 ); //$NON-NLS-1$
-
     final IFeatureBindingCollection<Landuse> landusesOut = m_output.getLanduses();
     if( m_importType == ImportType.CLEAR_OUTPUT )
     {
       final IFeatureBindingCollection<Landuse> landuses = landusesOut;
       landuses.clear();
     }
-
-    ProgressUtilities.worked( progess, 10 );
-
-    final IGMLSchema schema = m_output.getWorkspace().getGMLSchema();
-    final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) ); //$NON-NLS-1$
-    final IRelationType pt = (IRelationType) schema.getFeatureType( Landuse.QNAME ).getProperty( Landuse.QNAME_PROP_LANDUSE );
-
-    final IStatusCollector log = new StatusCollector( ModelNA.PLUGIN_ID );
-    // traverse input workspace and import all single input landuses, if the landuse class exists
-    for( int i = 0; i < size; i++ )
-    {
-      try
-      {
-        final String label = m_inputDescriptor.getName( i );
-        final GM_MultiSurface geometry = m_inputDescriptor.getGeometry( i );
-        if( geometry == null )
-        {
-          final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.3", label ); //$NON-NLS-1$
-          log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
-        }
-        else
-        {
-          final IStatus isValidTop = TopologyChecker.checkTopology( geometry, label );
-          if( !isValidTop.isOK() )
-          {
-            log.add( isValidTop );
-          }
-        }
-
-        // find landuse-class
-        final String landuseclass = m_inputDescriptor.getLanduseclass( i );
-
-        // if there is no landuse class, we just update the original landuses with suds information
-        if( landuseclass == null )
-        {
-          final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
-
-          // the follwing code is largely copied from LandeuseCollection#importLanduse
-
-          // Handle existing landuses that intersect the new one
-          final List<Landuse> existingLanduses = landusesOut.query( geometry.getEnvelope() );
-          for( final Landuse existingLanduse : existingLanduses )
-          {
-            final GM_MultiSurface existingGeometry = existingLanduse.getGeometry();
-
-            final GM_MultiSurface difference = PolygonIntersectionHelper.createDifference( geometry, existingGeometry );
-            if( difference != null )
-            {// TODO: check if area of difference is > 0!
-              existingLanduse.setGeometry( difference );
-              final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.LanduseCollection.3", existingLanduse.getId(), label ); //$NON-NLS-1$
-              log.add( IStatus.INFO, message );
-            }
-            else
-            {
-              landusesOut.remove( existingLanduse );
-              final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.LanduseCollection.4", existingLanduse.getId(), label ); //$NON-NLS-1$
-              log.add( IStatus.INFO, message );
-            }
-
-            /* add sud members */
-            for( GM_Surface< ? > surface : existingGeometry.getAllSurfaces() )
-            {
-              try
-              {
-                GM_Object intersection = geometry.intersection( surface );
-
-                if( intersection instanceof GM_Surface )
-                {
-                  intersection = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { (GM_Surface< ? >) intersection }, intersection.getCoordinateSystem() );
-                }
-
-                if( intersection instanceof GM_MultiSurface && ((GM_MultiSurface) intersection).getArea() > 0.01 )
-                {
-                  // clone existing landuse
-                  final Landuse clonedLanduse = landusesOut.addNew( Landuse.QNAME );
-                  clonedLanduse.setGeometry( (GM_MultiSurface) intersection );
-                  clonedLanduse.setCorrSealing( existingLanduse.getCorrSealing() );
-                  clonedLanduse.setDescription( "cloned" );
-                  clonedLanduse.setDrainageType( existingLanduse.getDrainageType() );
-                  clonedLanduse.setLanduse( existingLanduse.getLanduse() );
-                  clonedLanduse.setName( existingLanduse.getName() );
-
-                  addSudsToLanduse( suds, clonedLanduse );
-                }
-              }
-              catch( final Exception e )
-              {
-                //TODO: if this happens, ignore
-                // probably the discarded area is very small
-                e.printStackTrace();
-              }
-            }
-          }
-        }
-        else
-        {
-          final Landuse landuse = m_output.importLanduse( label, geometry, m_importType, log );
-          if( landuse != null )
-          {
-            final String desc = m_inputDescriptor.getDescription( i );
-            final double corrSealing = m_inputDescriptor.getSealingCorrectionFactor( i );
-            final String drainageType = m_inputDescriptor.getDrainageType( i );
-            final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
-
-            landuse.setDescription( desc );
-            landuse.setCorrSealing( corrSealing );
-            landuse.setDrainageType( drainageType );
-
-            addSudsToLanduse( suds, landuse );
-
-            final String landuseRef = m_landuseClasses.getReference( landuseclass );
-            if( landuseRef == null )
-            {
-              final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
-              throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
-            }
-
-            final String href = "parameter.gml#" + landuseRef; //$NON-NLS-1$
-            final XLinkedFeature_Impl landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
-
-            landuse.setLanduse( landuseXLink );
-          }
-        }
-      }
-      catch( final CoreException e )
-      {
-        log.add( e.getStatus() );
-      }
-
-      ProgressUtilities.worked( progess, 1 );
-    }
-
-    if( !log.isEmpty() )
-    {
-      return new MultiStatus( "org.kalypso.NACalcJob", -1, log.toArray( new IStatus[] {} ), Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    return Status.OK_STATUS;
   }
 
-  private void addSudsToLanduse( final AbstractSud[] suds, final Landuse landuse )
+  @Override
+  protected void importRow( final int i, final String label, final GM_MultiSurface geometry, final IStatusCollector log ) throws CoreException
   {
-    final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
-    final GMLWorkspace landuseWorkspace = landuse.getWorkspace();
-    final IGMLSchema landuseSchmea = landuseWorkspace.getGMLSchema();
+    // find landuse-class
+    final String landuseclass = m_inputDescriptor.getLanduseclass( i );
 
-    for( final Feature sud : suds )
+    // if there is no landuse class, we just update the original landuses with suds information
+    if( landuseclass == null )
     {
-      final IRelationType rt = (IRelationType) landuseSchmea.getFeatureType( Landuse.QNAME_PROP_SUD_MEMBERS );
-      final IFeatureType ft = sud.getFeatureType();
-      final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
+      // FIXME: is this a hack just for Planer-Client?? In that case -> do error handling in case of 'normal' landuse
+      // import, else the user never gets an error message here...!
 
-      final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
-      sudCollection.add( lnk );
+      final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
+
+      m_output.importLanduse( ImportType.UPDATE, label, geometry, null, null, null, null, suds );
+    }
+    else
+    {
+      final AbstractSud[] suds = m_inputDescriptor.getSuds( i );
+      final String desc = m_inputDescriptor.getDescription( i );
+      final double corrSealing = m_inputDescriptor.getSealingCorrectionFactor( i );
+      final String drainageType = m_inputDescriptor.getDrainageType( i );
+      final String landuseRef = m_landuseClasses.getReference( landuseclass );
+      if( landuseRef == null )
+      {
+        final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2", landuseclass, i + 1 ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+      }
+      m_output.importLanduse( m_importType, label, geometry, desc, corrSealing, drainageType, landuseRef, suds );
     }
   }
-
 }

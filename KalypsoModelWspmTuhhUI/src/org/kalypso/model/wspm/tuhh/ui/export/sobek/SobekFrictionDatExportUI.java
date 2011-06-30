@@ -94,7 +94,7 @@ public class SobekFrictionDatExportUI
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( 3, false ) );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    group.setText( "Rauheit" );
+    group.setText( Messages.getString("SobekFrictionDatExportUI.0") ); //$NON-NLS-1$
 
     createRoughnessCombo( group );
     createZoneChooser( group );

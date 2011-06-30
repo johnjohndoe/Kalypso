@@ -15,7 +15,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.preferences.IKalypsoDeegreePreferences;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -183,8 +183,8 @@ public class DataContainer
     // final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getRoughnessDatabaseLocationURL(), null );
     // final IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );
     // final IRoughnessClsCollection collection = Util.getModel( IRoughnessClsCollection.class );
-    for( int i = 0; i < roughnessClsCollection.getRoughnessClasses().size(); i++ )
-      m_roughnessStaticCollectionMap.put( roughnessClsCollection.getRoughnessClasses().get( i ).getName(), roughnessClsCollection.getRoughnessClasses().get( i ).getId() );
+    for( int i = 0; i < roughnessClsCollection.size(); i++ )
+      m_roughnessStaticCollectionMap.put( roughnessClsCollection.get( i ).getName(), roughnessClsCollection.get( i ).getGmlID() );
   }
 
   public final String getProjectBaseFolder( )
@@ -255,7 +255,7 @@ public class DataContainer
     return m_model;
   }
 
-  public IFeatureBindingCollection<IRoughnessLayer> getRoughnessLayerCollection( )
+  public IFeatureWrapperCollection<IRoughnessLayer> getRoughnessLayerCollection( )
   {
     return m_model.getRoughnessLayerCollection();
   }
@@ -264,7 +264,7 @@ public class DataContainer
   {
     if( m_roughnessLayer != null )
       return m_roughnessLayer;
-    final IFeatureBindingCollection<IRoughnessLayer> roughnessLayerCollection = getRoughnessLayerCollection();
+    final IFeatureWrapperCollection<IRoughnessLayer> roughnessLayerCollection = getRoughnessLayerCollection();
     for( final IRoughnessLayer roughnessLayer : roughnessLayerCollection )
       if( roughnessLayer.isBasicLayer() == m_isBasicLayer )
         return m_roughnessLayer = roughnessLayer;

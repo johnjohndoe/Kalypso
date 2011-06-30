@@ -13,6 +13,38 @@
    </extension>
    
    <extension
+         id="org.kalypso.core.adapters"
+         name="Kalypso Simulation-Base Adapter Factory"
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory">
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.wind.IWindModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection"/>
+      
+      </factory>
+      
+      <!--factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory">
+         <adapter type="org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D"/>
+      </factory-->
+      
+   </extension>   
+   <extension
          point="org.kalypso.deegree.functionProperty">
       <function
             class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
@@ -56,76 +88,6 @@
     <extensionControl class="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory"
       					id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
     </extensionControl>
-   </extension>
-   <extension
-         point="org.kalypso.deegree.featureBinding">
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationshipModel"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}FlowRelationshipModel">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetwork"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RiverProfileNetwork">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetworkCollection"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RiverProfileNetworkCollection">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessLayer"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessLayer">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}TerrainModel">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}TerrainElevationModelSystem">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}NativeTerrainElevationModelWrapper">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.GridCoverageElevationModelWrapper"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}GridCoverageElevationModelWrapper">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.wind.WindModel"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}WindModel">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.wind.NativeWindDataModelWrapper"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}NativeWindDataModelWrapper">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.wind.WindDataModelSystem"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}WindDataModelSystem">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetworkCollection"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RiverProfileNetworkCollection">
-      </feature>
-   </extension>
-   <extension
-         point="org.kalypso.deegree.featureBinding">
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/roughness}RoughnessCls">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/roughness}RoughnessClsCorrection">
-      </feature>
-      <feature
-            class="org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection"
-            qname="{http://www.tu-harburg.de/wb/kalypso/schemata/roughness}RoughnessClsCollection">
-      </feature>
    </extension>
 
 </plugin>

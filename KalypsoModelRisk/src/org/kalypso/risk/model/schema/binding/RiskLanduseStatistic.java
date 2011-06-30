@@ -42,22 +42,15 @@ package org.kalypso.risk.model.schema.binding;
 
 import java.math.BigDecimal;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author Thomas Jung
  * 
  */
-public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseStatistic, Comparable<IRiskLanduseStatistic>
+public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRiskLanduseStatistic, Comparable<IRiskLanduseStatistic>
 {
-
-  public RiskLanduseStatistic( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
 
   private int m_numberOfEntries = 0;
 
@@ -75,6 +68,10 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
 
   private BigDecimal m_cellSize = null;
 
+  public RiskLanduseStatistic( final Feature featureToBind )
+  {
+    super( featureToBind, QNAME );
+  }
 
   /**
    * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getAverageDamage()
@@ -82,7 +79,7 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
   @Override
   public BigDecimal getAverageDamage( )
   {
-    return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_AVERAGE_DAMAGE );
+    return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_AVERAGE_DAMAGE );
   }
 
   /**
@@ -91,7 +88,7 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
   @Override
   public BigDecimal getDamageSum( )
   {
-    return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_DAMAGE_SUM );
+    return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_DAMAGE_SUM );
   }
 
   /**
@@ -100,7 +97,7 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
   @Override
   public BigDecimal getMaxDamage( )
   {
-    return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_MAX_DAMAGE );
+    return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_MAX_DAMAGE );
   }
 
   /**
@@ -109,7 +106,7 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
   @Override
   public BigDecimal getMinDamage( )
   {
-    return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_MIN_DAMAGE );
+    return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_MIN_DAMAGE );
   }
 
   /**
@@ -118,7 +115,7 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
   @Override
   public int getReturnPeriod( )
   {
-    final Integer value = (Integer) getProperty( IRiskLanduseStatistic.PROPERTY_RETURN_PERIOD );
+    final Integer value = (Integer) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_RETURN_PERIOD );
     return value == null ? 0 : value.intValue();
   }
 
@@ -142,10 +139,10 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
 
   public void update( )
   {
-    setProperty( IRiskLanduseStatistic.PROPERTY_MIN_DAMAGE, m_min );
-    setProperty( IRiskLanduseStatistic.PROPERTY_MAX_DAMAGE, m_max );
-    setProperty( IRiskLanduseStatistic.PROPERTY_AVERAGE_DAMAGE, m_average );
-    setProperty( IRiskLanduseStatistic.PROPERTY_DAMAGE_SUM, m_sum );
+    getFeature().setProperty( IRiskLanduseStatistic.PROPERTY_MIN_DAMAGE, m_min );
+    getFeature().setProperty( IRiskLanduseStatistic.PROPERTY_MAX_DAMAGE, m_max );
+    getFeature().setProperty( IRiskLanduseStatistic.PROPERTY_AVERAGE_DAMAGE, m_average );
+    getFeature().setProperty( IRiskLanduseStatistic.PROPERTY_DAMAGE_SUM, m_sum );
   }
 
   @Override
@@ -154,11 +151,11 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
     /* calculate the landuse area [m²] */
     final double totalArea = m_cellSize.doubleValue() * m_numberOfEntries;
     final BigDecimal totalAreaValue = new BigDecimal( totalArea ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-    setProperty( IRiskLanduseStatistic.PROPERTY_FLOODED_AREA, totalAreaValue );
+    getFeature().setProperty( IRiskLanduseStatistic.PROPERTY_FLOODED_AREA, totalAreaValue );
 
     /* calculate the total damage [€] */
     final BigDecimal totalDamage = m_average.multiply( totalAreaValue );
-    setProperty( IRiskLanduseStatistic.PROPERTY_TOTAL_DAMAGE, totalDamage );
+    getFeature().setProperty( IRiskLanduseStatistic.PROPERTY_TOTAL_DAMAGE, totalDamage );
   }
 
   @Override
@@ -173,7 +170,7 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
   @Override
   public void setReturnPeriod( final int returnPeriod )
   {
-    setProperty( IRiskLanduseStatistic.PROPERTY_RETURN_PERIOD, returnPeriod );
+    getFeature().setProperty( IRiskLanduseStatistic.PROPERTY_RETURN_PERIOD, returnPeriod );
   }
 
   /**
@@ -182,7 +179,7 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
   @Override
   public BigDecimal getTotalDamage( )
   {
-    return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_TOTAL_DAMAGE );
+    return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_TOTAL_DAMAGE );
   }
 
   /**
@@ -220,7 +217,7 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
   @Override
   public BigDecimal getFloodedArea( )
   {
-    return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_FLOODED_AREA );
+    return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_FLOODED_AREA );
   }
 
 }

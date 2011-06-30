@@ -71,7 +71,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.service.wps.client.WPSRequest;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Gernot Belger
@@ -265,7 +265,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
       {
         // if coupled simulation is selected, display one iteration composite per subunit
         final ICalculationUnit1D2D calculationUnit1D2D = (ICalculationUnit1D2D) calculationUnit;
-        final IFeatureBindingCollection<ICalculationUnit> subUnits = calculationUnit1D2D.getChangedSubUnits();
+        final IFeatureWrapperCollection<ICalculationUnit> subUnits = calculationUnit1D2D.getChangedSubUnits();
 
         final int numSubunits = subUnits.size();
         m_iterGroup.setLayout( new GridLayout( (int) Math.ceil( numSubunits / 2.0 ), true ) );

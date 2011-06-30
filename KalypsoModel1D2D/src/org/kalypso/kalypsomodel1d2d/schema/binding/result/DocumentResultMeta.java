@@ -44,8 +44,6 @@ import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
@@ -58,9 +56,9 @@ import org.kalypsodeegree.model.feature.Feature;
 public class DocumentResultMeta extends ResultMeta implements IDocumentResultMeta
 {
 
-  public DocumentResultMeta( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public DocumentResultMeta( Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, IDocumentResultMeta.QNAME );
   }
 
   /**
@@ -69,7 +67,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public DOCUMENTTYPE getDocumentType( )
   {
-    final String value = (String) getProperty( QNAME_PROP_DOCUMENT_TYPE );
+    final String value = (String) getFeature().getProperty( QNAME_PROP_DOCUMENT_TYPE );
     return DOCUMENTTYPE.valueOf( value );
   }
 
@@ -79,7 +77,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public void setDocumentType( DOCUMENTTYPE documentType )
   {
-    setProperty( QNAME_PROP_DOCUMENT_TYPE, documentType.name() );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_TYPE, documentType.name() );
   }
 
   /**
@@ -88,7 +86,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMaxValue( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE );
   }
 
   /**
@@ -97,7 +95,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMinValue( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE );
 
   }
 
@@ -108,7 +106,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   public void setMaxValue( BigDecimal maxValue )
   {
     final BigDecimal maxValueDec = maxValue.setScale( 3, BigDecimal.ROUND_HALF_UP );
-    setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE, maxValueDec );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE, maxValueDec );
   }
 
   /**
@@ -118,7 +116,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   public void setMinValue( BigDecimal minValue )
   {
     final BigDecimal minValueDec = minValue.setScale( 3, BigDecimal.ROUND_HALF_UP );
-    setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE, minValueDec );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE, minValueDec );
   }
 
   /**
@@ -136,12 +134,12 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
       BigDecimal minWaterlevel = new BigDecimal( minMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       BigDecimal minVelo = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
 
-      setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_DEPTH, minDepth );
-      setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_VELO, minVelo );
-      setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WATERLEVEL, minWaterlevel );
-      setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_DEPTH, maxDepth );
-      setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_VELO, maxVelo );
-      setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WATERLEVEL, maxWaterlevel );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_DEPTH, minDepth );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_VELO, minVelo );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WATERLEVEL, minWaterlevel );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_DEPTH, maxDepth );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_VELO, maxVelo );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WATERLEVEL, maxWaterlevel );
     }
     catch( Exception e )
     {
@@ -152,10 +150,10 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
       BigDecimal maxWaveHsig = new BigDecimal( minMaxCatcher.getMaxWaveHsig() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       BigDecimal minWaveHsig = new BigDecimal( minMaxCatcher.getMinWaveHsig() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       BigDecimal minWavePer = new BigDecimal( minMaxCatcher.getMinWavePer() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_HSIG, minWaveHsig );
-      setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_PER, minWavePer );
-      setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_HSIG, maxWaveHsig );
-      setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_PER, maxWavePer );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_HSIG, minWaveHsig );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_PER, minWavePer );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_HSIG, maxWaveHsig );
+      getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_PER, maxWavePer );
       
     }
     catch( Exception e )
@@ -173,7 +171,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
     try
     {
       final QName qMinForType = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValue" + type ); //$NON-NLS-1$
-      return (BigDecimal) getProperty( qMinForType );
+      return (BigDecimal) getFeature().getProperty( qMinForType );
     }
     catch( Exception e )
     {
@@ -190,7 +188,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
     try
     {
       final QName qMaxForType = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValue" + type ); //$NON-NLS-1$
-      return (BigDecimal) getProperty( qMaxForType );
+      return (BigDecimal) getFeature().getProperty( qMaxForType );
     }
     catch( Exception e )
     {
@@ -204,7 +202,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMinValueVelo( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_VELO );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_VELO );
   }
 
   /**
@@ -213,7 +211,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMaxValueDepth( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_DEPTH );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_DEPTH );
   }
 
   /**
@@ -222,7 +220,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMaxValueVelo( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_VELO );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_VELO );
   }
 
   /**
@@ -231,7 +229,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMaxValueWaterlevel( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WATERLEVEL );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WATERLEVEL );
   }
 
   /**
@@ -240,7 +238,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMaxValueWaveHsig( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_HSIG );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_HSIG );
   }
 
   /**
@@ -249,7 +247,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMaxValueWavePer( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_PER );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE_WAVE_PER );
   }
 
   /**
@@ -258,7 +256,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMinValueDepth( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_DEPTH );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_DEPTH );
   }
 
   /**
@@ -267,7 +265,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMinValueWaterlevel( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WATERLEVEL );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WATERLEVEL );
   }
 
   /**
@@ -276,7 +274,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMinValueWaveHsig( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_HSIG );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_HSIG );
   }
 
   /**
@@ -285,7 +283,7 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   @Override
   public BigDecimal getMinValueWavePer( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_PER );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE_WAVE_PER );
   }
 
 }

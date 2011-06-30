@@ -55,7 +55,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.BinaryGeoGridReader;
@@ -86,6 +85,7 @@ import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.graphics.transformation.GeoTransformUtils;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -177,7 +177,7 @@ public class SimulationKalypsoFlood implements ISimulation
       ProgressUtilities.worked( monitor, 100 );
 
       /* Find events to be calculated */
-      final IFeatureBindingCollection<IRunoffEvent> events = model.getEvents();
+      final IFeatureWrapperCollection<IRunoffEvent> events = model.getEvents();
       final List<IRunoffEvent> markedEvents = new ArrayList<IRunoffEvent>();
       for( final IRunoffEvent event : events )
       {
@@ -191,7 +191,6 @@ public class SimulationKalypsoFlood implements ISimulation
         throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.17" ), null ) ); //$NON-NLS-1$
 
       progress.setWorkRemaining( events.size() * 2 );
-      final Date lStart1 = new Date();
       for( final IRunoffEvent event : markedEvents )
       {
         progress.subTask( String.format( STR_EREIGNIS_xS, event.getName() ) );
@@ -202,7 +201,6 @@ public class SimulationKalypsoFlood implements ISimulation
 
         processEvent( model, eventFolder, event, progress.newChild( 1 ) );
       }
-      System.out.println( "Risk simulation: " + ((new Date()).getTime() - lStart1.getTime()) ); //$NON-NLS-1$
 
       return modelWorkspace;
     }
@@ -224,7 +222,7 @@ public class SimulationKalypsoFlood implements ISimulation
   private IStatus processVolumes( final IFloodModel model, final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
   {
     final ICoverageCollection terrainModel = model.getTerrainModel();
-    final IFeatureBindingCollection<IFloodPolygon> polygons = model.getPolygons();
+    final IFeatureWrapperCollection<IFloodPolygon> polygons = model.getPolygons();
 
     /* Filter Volume Polygon */
     final List<IFloodVolumePolygon> volumePolygons = new ArrayList<IFloodVolumePolygon>( polygons.size() );
@@ -466,7 +464,7 @@ public class SimulationKalypsoFlood implements ISimulation
     final SubMonitor progress = SubMonitor.convert( monitor, terrainCoverages.size() );
 
     // TODO: shouldn't we filter by the event?
-    final IFeatureBindingCollection<IFloodPolygon> polygons = model.getPolygons();
+    final IFeatureWrapperCollection<IFloodPolygon> polygons = model.getPolygons();
 
     /* check for existing result coverages */
     // TODO: existing result should be removed! IMPORTANT: also remove underlying grid-files
@@ -488,17 +486,18 @@ public class SimulationKalypsoFlood implements ISimulation
 
     // final IFolder eventFolder = eventsFolder.getFolder( event.getDataPath().toPortableString() );
 
-    for( final ICoverage terrainCoverage : terrainCoverages )
+    for( int i = 0; i < terrainCoverages.size(); i++ )
     {
+      final ICoverage terrainCoverage = terrainCoverages.get( i );
       progress.subTask( String.format( STR_EREIGNIS_xS_FLIESSTIEFENERMITTLUNG_xS, event.getName(), terrainCoverage.getName() ) );
 
       // final IGeoGrid terrainGrid = GeoGridUtilities.toGrid( terrainCoverage );
-      // final IFeatureBindingCollection<ITinReference> tins = event.getTins();
+      // final IFeatureWrapperCollection<ITinReference> tins = event.getTins();
       //
       // final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins, polygons, event );
 
       final RectifiedGridCoverageGeoGrid inputGrid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( terrainCoverage );
-      final IFeatureBindingCollection<ITinReference> tins = event.getTins();
+      final IFeatureWrapperCollection<ITinReference> tins = event.getTins();
 
       // create sequential grid reader
       // final SequentialBinaryGeoGridReader inputGridReader = new FloodDiffGrid( terrainGrid, tins, polygons, event );
@@ -508,9 +507,7 @@ public class SimulationKalypsoFlood implements ISimulation
       // generate unique name for grid file
       final File resultsFolder = new File( eventFolder, "results" ); //$NON-NLS-1$
       resultsFolder.mkdir();
-      final String uniqueFileName = FileUtilities.createNewUniqueFileName( "grid", ".ascbin", resultsFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      final File outputCoverageFile = new File( resultsFolder, uniqueFileName );
+      final File outputCoverageFile = new File( resultsFolder, String.format( "HQ%d_%02d.bin", event.getReturnPeriod(), i ) ); //$NON-NLS-1$
 
       final String fileName = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + event.getDataPath() + "/results/" + outputCoverageFile.getName();//$NON-NLS-1$
 
@@ -531,7 +528,7 @@ public class SimulationKalypsoFlood implements ISimulation
   // TODO: does not work like that, as we need a feature wrapper collection later to query the list
   // private IFloodPolygon[] getPolygons( final IRunoffEvent event )
   // {
-  // final IFeatureBindingCollection<IFloodPolygon> polygons = m_model.getPolygons();
+  // final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
   //
   // final List<IFloodPolygon> filteredPolygons = new ArrayList<IFloodPolygon>();
   //

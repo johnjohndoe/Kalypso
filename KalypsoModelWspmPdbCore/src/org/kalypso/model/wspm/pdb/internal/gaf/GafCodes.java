@@ -80,6 +80,8 @@ public class GafCodes
   {
     if( "x".equalsIgnoreCase( kz ) ) //$NON-NLS-1$
       return m_codes.get( "PP" ); //$NON-NLS-1$
+    if( "PWSP".equalsIgnoreCase( kz ) ) //$NON-NLS-1$
+      return m_codes.get( "PP" ); //$NON-NLS-1$
 
     return m_codes.get( kz );
   }

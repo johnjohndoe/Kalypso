@@ -42,8 +42,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -51,12 +49,13 @@ import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -68,19 +67,19 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 @SuppressWarnings("unchecked")
 public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDiscretisationModel1d2d
 {
-  private final IFeatureBindingCollection<IFE1D2DElement> m_elements = new FeatureBindingCollection<IFE1D2DElement>( this, IFE1D2DElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
+  private final IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
 
-  private final IFeatureBindingCollection<IFE1D2DEdge> m_edges = new FeatureBindingCollection<IFE1D2DEdge>( this, IFE1D2DEdge.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
+  private final IFeatureWrapperCollection<IFE1D2DEdge> m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( getFeature(), IFE1D2DEdge.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
 
-  private final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<IFE1D2DNode>( this, IFE1D2DNode.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
+  private final IFeatureWrapperCollection<IFE1D2DNode> m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( getFeature(), IFE1D2DNode.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
 
-  private final IFeatureBindingCollection<IFELine> m_continuityLines = new FeatureBindingCollection<IFELine>( this, IFELine.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_CONTINUITY_LINES );
+  private final IFeatureWrapperCollection<IFELine> m_continuityLines = new FeatureWrapperCollection<IFELine>( getFeature(), IFELine.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_CONTINUITY_LINES );
 
-  private final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = new FeatureBindingCollection<IFE1D2DComplexElement>( this, IFE1D2DComplexElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
+  private final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = new FeatureWrapperCollection<IFE1D2DComplexElement>( getFeature(), IFE1D2DComplexElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
 
-  public FE1D2DDiscretisationModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public FE1D2DDiscretisationModel( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, IFEDiscretisationModel1d2d.QNAME );
   }
 
   /**
@@ -90,8 +89,8 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   @Override
   public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
-    final IFeatureBindingCollection<Feature> containers = node0.getContainers();
-    for( final Feature featureWrapper : containers )
+    final IFeatureWrapperCollection containers = node0.getContainers();
+    for( final IFeatureWrapper2 featureWrapper : (IFeatureWrapperCollection< ? >) containers )
     {
       if( featureWrapper instanceof IFE1D2DEdge )
       {
@@ -111,25 +110,25 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#getComplexElements()
    */
   @Override
-  public IFeatureBindingCollection<IFE1D2DComplexElement> getComplexElements( )
+  public IFeatureWrapperCollection<IFE1D2DComplexElement> getComplexElements( )
   {
     return complexElements;
   }
 
   @Override
-  public final IFeatureBindingCollection<IFE1D2DElement> getElements( )
+  public final IFeatureWrapperCollection<IFE1D2DElement> getElements( )
   {
     return m_elements;
   }
 
   @Override
-  public IFeatureBindingCollection<IFE1D2DNode> getNodes( )
+  public IFeatureWrapperCollection<IFE1D2DNode> getNodes( )
   {
     return m_nodes;
   }
 
   @Override
-  public IFeatureBindingCollection<IFE1D2DEdge> getEdges( )
+  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( )
   {
     return m_edges;
   }
@@ -165,7 +164,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
     }
     else
     {
-      // FeatureList nodeList = m_nodes.getFeatureList();
+      // FeatureList nodeList = m_nodes.getWrappedList();
 
       node = m_nodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, IFE1D2DNode.class );
       node.setPoint( nodeLocation );
@@ -177,12 +176,12 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d#findNode(org.kalypsodeegree.model.geometry.GM_Point,
    *      double)
-   * 
+   *      
    */
   @Override
   public IFE1D2DNode findNode( final GM_Point nodeLocation, final double searchRectWidth )
   {
-    final FeatureList nodeList = m_nodes.getFeatureList();
+    final FeatureList nodeList = m_nodes.getWrappedList();
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( nodeLocation, searchRectWidth );
     final List<Feature> foundNodes = nodeList.query( reqEnvelope, null );
     if( foundNodes.isEmpty() )
@@ -195,18 +194,17 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       {
         if( feature == null )
           continue; // TODO: this is a non-test: it should never happen, so we shouldnt test it here...
-        final IFE1D2DNode currentNode = (IFE1D2DNode) feature;
+        final IFE1D2DNode currentNode = new FE1D2DNode( feature );
         final GM_Point point = currentNode.getPoint();
         if( point == null )
-          throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel.0" ) + currentNode ); //$NON-NLS-1$
-
-        /**
-         * calculating the distance only between two nodes(simple operation) should not be done with vividsolutions
+          throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel.0") + currentNode ); //$NON-NLS-1$
+        
+        /** 
+         * calculating the distance only between two nodes(simple operation) should not be done with vividsolutions 
+         * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl.distance( final GM_Object gmo )
+         * huge and complex computing of distance between two geometries of any kind
          * 
-         * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl.distance( final GM_Object gmo ) huge and complex
-         *      computing of distance between two geometries of any kind
-         * 
-         *      replaced by local simple and fast implementation
+         * replaced by local simple and fast implementation 
          */
         final double currentDistance = calculateDistance2d( nodeLocation, point );
         if( minDistance > currentDistance )
@@ -226,15 +224,13 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
 
   private double calculateDistance2d( final GM_Point firstPoint, final GM_Point secondPoint )
   {
-    try
-    {
+    try{
       double dx = firstPoint.getX() - secondPoint.getX();
       double dy = firstPoint.getY() - secondPoint.getY();
-
-      return Math.sqrt( dx * dx + dy * dy );
+      
+      return Math.sqrt(dx * dx + dy * dy);
     }
-    catch( Exception e )
-    {
+    catch (Exception e) {
       return Double.MAX_VALUE;
     }
   }
@@ -254,15 +250,20 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   @Override
   public <T extends IFENetItem> T findElement( final GM_Point position, final double grabDistance, final Class<T> elementClass )
   {
+    final FeatureList modelList = m_elements.getWrappedList();
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
-    final List<IFE1D2DElement> foundElements = m_elements.query( reqEnvelope );
+    final List<Feature> foundElements = modelList.query( reqEnvelope, null );
     double min = Double.MAX_VALUE;
     T nearest = null;
-    for( final IFE1D2DElement current : foundElements )
+    for( final Feature feature : foundElements )
     {
-      if( elementClass.isInstance( current ))
+      if( feature == null )
+        continue; // This should never happen!
+
+      final IFENetItem current = (IFENetItem) feature.getAdapter( elementClass );
+      if( current != null )
       {
-        final GM_Object geometryFromNetItem = current.getDefaultGeometryPropertyValue();
+        final GM_Object geometryFromNetItem = geometryFromNetItem( current );
         if( geometryFromNetItem != null )
         {
           final double curDist = position.distance( geometryFromNetItem );
@@ -280,7 +281,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   @Override
   public IFE1D2DEdge findEdge( final GM_Point position, final double grabDistance )
   {
-    final FeatureList modelList = m_edges.getFeatureList();
+    final FeatureList modelList = m_edges.getWrappedList();
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
     final List<Feature> foundEdges = modelList.query( reqEnvelope, null );
     double min = Double.MAX_VALUE;
@@ -306,6 +307,14 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       }
     }
     return nearest;
+  }
+  
+  /**
+   * Returns the geometry of the given item of the net.
+   */
+  private GM_Object geometryFromNetItem( final IFENetItem netItem )
+  {
+     return netItem.getFeature().getDefaultGeometryPropertyValue();
   }
 
   /**
@@ -363,7 +372,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d#getContinuityLines()
    */
   @Override
-  public IFeatureBindingCollection<IFELine> getContinuityLines( )
+  public IFeatureWrapperCollection<IFELine> getContinuityLines( )
   {
     return m_continuityLines;
   }

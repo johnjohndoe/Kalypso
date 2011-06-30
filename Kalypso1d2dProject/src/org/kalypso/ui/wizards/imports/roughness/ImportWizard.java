@@ -30,6 +30,7 @@ import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -76,7 +77,7 @@ public class ImportWizard extends Wizard implements INewWizard
     m_selection = selection;
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<Feature> szenarioDataProvider = (ICaseDataProvider<Feature>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) workbenchWindow.getActivePage().findView( MapView.ID );
     // if( mapView == null )
@@ -169,10 +170,10 @@ public class ImportWizard extends Wizard implements INewWizard
         final List<IRoughnessPolygon> polygons = collection.getRoughnessPolygons();
         for( final IRoughnessPolygon polygon : polygons )
         {
-          changedFeatures.add( polygon );
+          changedFeatures.add( polygon.getFeature() );
         }
       }
-      final GMLWorkspace workspace = m_data.getModel().getWorkspace();
+      final GMLWorkspace workspace = m_data.getModel().getFeature().getWorkspace();
       workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, changedFeatures.toArray( new Feature[changedFeatures.size()] ) ) );
 
     }

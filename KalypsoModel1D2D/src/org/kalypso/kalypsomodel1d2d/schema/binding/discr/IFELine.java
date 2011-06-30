@@ -47,7 +47,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 public interface IFELine extends IFENetItem
@@ -58,7 +58,7 @@ public interface IFELine extends IFENetItem
 
   public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
 
-  public IFeatureBindingCollection<IFE1D2DComplexElement>  getContainers( );
+  public IFeatureWrapperCollection getContainers( );
 
   public List<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException;
 

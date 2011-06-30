@@ -144,6 +144,7 @@
         <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="1" />
+            <Parameter name="hide_cut" value="false" />
           </Parameters>
         </Provider>
       </AxisRenderer>
@@ -282,6 +283,7 @@
         <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="1" />
+            <Parameter name="hide_cut" value="false" />
           </Parameters>
         </Provider>
       </AxisRenderer>
@@ -421,6 +423,7 @@
         <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="1" />
+            <Parameter name="hide_cut" value="false" />
           </Parameters>
         </Provider>
       </AxisRenderer>
@@ -649,6 +652,7 @@
         <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="1" />
+            <Parameter name="hide_cut" value="false" />
           </Parameters>
         </Provider>
       </AxisRenderer>
@@ -862,6 +866,7 @@
         <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="1" />
+            <Parameter name="hide_cut" value="false" />
           </Parameters>
         </Provider>
       </AxisRenderer>
@@ -1075,6 +1080,7 @@
         <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="1" />
+            <Parameter name="hide_cut" value="false" />
           </Parameters>
         </Provider>
       </AxisRenderer>

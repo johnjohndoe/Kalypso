@@ -2,24 +2,26 @@ package org.kalypso.risk.model.schema.binding;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
-public class LandusePolygonCollection extends Feature_Impl implements ILandusePolygonCollection
+public class LandusePolygonCollection extends FeatureWrapperCollection<ILandusePolygon> implements ILandusePolygonCollection
 {
-  public LandusePolygonCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  private final IFeatureWrapperCollection<ILandusePolygon> m_landusePolygons = new FeatureWrapperCollection<ILandusePolygon>( getFeature(), ILandusePolygon.class, ILandusePolygonCollection.PROPERTY_POLYGON_MEMBER );
+
+  public LandusePolygonCollection( final Feature featureCol )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    this( featureCol, ILandusePolygon.class, ILandusePolygonCollection.PROPERTY_POLYGON_MEMBER );
   }
 
-  private final IFeatureBindingCollection<ILandusePolygon> m_landusePolygons = new FeatureBindingCollection<ILandusePolygon>( this, ILandusePolygon.class, ILandusePolygonCollection.PROPERTY_POLYGON_MEMBER );
+  public LandusePolygonCollection( final Feature featureCol, final Class<ILandusePolygon> fwClass, final QName featureMemberProp )
+  {
+    super( featureCol, fwClass, featureMemberProp );
+  }
 
   @Override
-  public IFeatureBindingCollection<ILandusePolygon> getLandusePolygonCollection( )
+  public IFeatureWrapperCollection<ILandusePolygon> getLandusePolygonCollection( )
   {
     return m_landusePolygons;
   }

@@ -399,7 +399,7 @@ public class ProcessResultsJob extends Job
 
       for( final ICalculationUnit1D calcUnit : calcUnits )
       {
-        final File lsObsFile = new File( m_outputDir, "lengthSection_" + calcUnit.getId() + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+        final File lsObsFile = new File( m_outputDir, "lengthSection_" + calcUnit.getGmlID() + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final IObservation<TupleResult> lsObs = lsHandler.getObservation( calcUnit );
         final GMLWorkspace lsObsWorkspace = lsHandler.getWorkspace( calcUnit );
@@ -579,7 +579,7 @@ public class ProcessResultsJob extends Job
   // */
   // private boolean existsTerrain( final ICalcUnitResultMeta calcUnitResult )
   // {
-  // final IFeatureBindingCollection<IResultMeta> children = calcUnitResult.getChildren();
+  // final IFeatureWrapperCollection<IResultMeta> children = calcUnitResult.getChildren();
   // for( final IResultMeta resultMeta : children )
   // {
   // if( resultMeta instanceof IDocumentResultMeta )

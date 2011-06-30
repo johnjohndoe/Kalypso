@@ -50,6 +50,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -78,7 +79,7 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
     return null;
   }
@@ -118,8 +119,8 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
     {
       if( !m_done )
       {
-        final List parentCalcUnits = (List) m_boundaryCondition.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
-        m_done = parentCalcUnits.remove( m_calculationUnit.getId() );
+        final List parentCalcUnits = (List) m_boundaryCondition.getFeature().getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
+        m_done = parentCalcUnits.remove( m_calculationUnit.getGmlID() );
         fireProcessChanges();
       }
     }
@@ -131,17 +132,17 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
 
   private final void fireProcessChanges( )
   {
-    final Feature calUnitFeature = m_calculationUnit;
-    final Feature model1d2dFeature = m_model1d2d;
+    final Feature calUnitFeature = m_calculationUnit.getFeature();
+    final Feature model1d2dFeature = m_model1d2d.getFeature();
     List<Feature> features = new ArrayList<Feature>();
     features.add( calUnitFeature );
-    features.add( m_boundaryCondition );
+    features.add( m_boundaryCondition.getFeature() );
 
     GMLWorkspace calUnitWorkspace = calUnitFeature.getWorkspace();
     FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( calUnitWorkspace, model1d2dFeature, features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     calUnitWorkspace.fireModellEvent( event );
 
-    final Feature bcFeature = m_boundaryCondition;
+    final Feature bcFeature = m_boundaryCondition.getFeature();
     GMLWorkspace bcWorkspace = bcFeature.getWorkspace();
     FeatureStructureChangeModellEvent bcEvent = new FeatureStructureChangeModellEvent( bcWorkspace, bcFeature.getParent(), new Feature[] { bcFeature }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     bcWorkspace.fireModellEvent( bcEvent );

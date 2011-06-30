@@ -29,6 +29,54 @@
       name="StaticModelBBoxFunc" />
   </extension>
 
+  <extension id="org.kalypso.core.adapters" name="Kalypso Model 1D 2D Adapter Factory" point="org.eclipse.core.runtime.adapters">
+    <factory adaptableType="org.kalypsodeegree.model.feature.Feature" class="org.kalypso.kalypsomodel1d2d.schema.binding.KalypsoModel1D2DFeatureFactory">
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d" />
+      <adapter type="org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator" />
+      <adapter type="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IAbstractJunction" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult" />
+      <adapter type="org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta" />
+      <adapter type="org.kalypso.kalypsosimulationmodel.core.modeling.IModel" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection" />
+      <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection" />
+      <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph" />
+    </factory>
+  </extension>
 
   <extension point="org.kalypso.core.catalogContribution">
     <catalogContribution class="org.kalypso.kalypsomodel1d2d.schema.KalypsoModel1D2DCatalogContribution"
@@ -793,140 +841,5 @@
            class="org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo"
            id="org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo">
      </themeInfo>
-  </extension>
-  <extension
-        point="org.kalypso.deegree.featureBinding">
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}CalculationUnit1D">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}CalculationUnit2D">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D2D"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}CalculationUnit1D2D">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine1D">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine2D">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}DiscretisationModel">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Edge">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Node">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.JunctionElement"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionElement">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.discr.TransitionElement"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BridgeFlowRelation"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}BridgeFlowRelation">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.KingFlowRelation"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}KingFlowRelation">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.TeschkeFlowRelation"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TeschkeFlowRelation">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.WeirFlowRelation"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}WeirFlowRelation">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.WeirFlowRelation2D"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}WeirFlowRelation2D">
-     </feature>
-  </extension>
-  <extension
-        point="org.kalypso.deegree.featureBinding">
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BoundaryCondition"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition">
-     </feature>
-  </extension>
-  <extension
-        point="org.kalypso.deegree.featureBinding">
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl}ControlModel">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModelGroup"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl}ControlModelGroup">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl}ControlModelCollection">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.conv.results.RestartInfo"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl}RestartInfo">
-     </feature>
-  </extension>
-  <extension
-        point="org.kalypso.deegree.featureBinding">
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResultMeta}StepResultMeta">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.result.ScenarioResultMeta"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResultMeta}ScenarioResultMeta">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.result.DocumentResultMeta"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResultMeta}DocumentResultMeta">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.result.CalcUnitResultMeta"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResultMeta}CalculationUnitResultMeta">
-     </feature>
-  </extension>
-  <extension
-        point="org.kalypso.deegree.featureBinding">
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}NodeResult">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.results.Hydrograph"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.results.HydrographCollection"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}HydrographCollection">
-     </feature>
-     <feature
-           class="org.kalypso.kalypsomodel1d2d.schema.binding.results.NodeResultCollection"
-           qname="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}NodeResultCollection">
-     </feature>
   </extension>
 </plugin>

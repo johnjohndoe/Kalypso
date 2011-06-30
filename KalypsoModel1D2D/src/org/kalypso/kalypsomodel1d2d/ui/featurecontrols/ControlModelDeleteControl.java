@@ -100,7 +100,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl
           if( property instanceof XLinkedFeature_Impl )
           {
             final CommandableWorkspace commandableWorkspace = new CommandableWorkspace( parentFeature.getWorkspace() );
-            final Feature fLinked = ((XLinkedFeature_Impl) property);
+            final Feature fLinked = ((XLinkedFeature_Impl) property).getFeature();
 
             /**
              * XLinkedFeature_Impl's method getFeature will not return the instance from the collection (GM_envelope is

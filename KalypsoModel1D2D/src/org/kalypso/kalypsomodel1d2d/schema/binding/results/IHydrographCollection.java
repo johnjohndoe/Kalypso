@@ -47,8 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
@@ -56,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * @author Thomas Jung
  * 
  */
-public interface IHydrographCollection extends Feature
+public interface IHydrographCollection extends IFeatureWrapperCollection<IHydrograph>
 {
   public final static QName QNAME_PROP_HYDROGRAPH_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "hydrographMember" ); //$NON-NLS-1$
 
@@ -72,8 +71,6 @@ public interface IHydrographCollection extends Feature
 
   public IHydrograph findHydrograph( final GM_Position position, final double searchRectWidth );
 
-  public IFeatureBindingCollection<IHydrograph> getHydrographs( );
-  
   /**
    * sets the paths to the result files that have to be processed
    */

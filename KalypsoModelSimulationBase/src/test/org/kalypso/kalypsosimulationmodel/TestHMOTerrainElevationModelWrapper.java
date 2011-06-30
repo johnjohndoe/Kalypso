@@ -65,7 +65,7 @@ public class TestHMOTerrainElevationModelWrapper extends TestCase
     {
       workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_TEST_HMO_3_TRI, null );
       final Feature rcFeature = workspace.getRootFeature();
-      final NativeTerrainElevationModelWrapper hmo = (NativeTerrainElevationModelWrapper) rcFeature;
+      final NativeTerrainElevationModelWrapper hmo = new NativeTerrainElevationModelWrapper( rcFeature );
 
       // point 0 0
       double elevation = hmo.getElevation( makePoint( 0, 0 ) );

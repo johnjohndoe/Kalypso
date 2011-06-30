@@ -8,7 +8,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
@@ -48,14 +48,14 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
         if( discrModel != null )
         {
 
-          final IFeatureBindingCollection<IFE1D2DNode> nodes = discrModel.getNodes();
+          final IFeatureWrapperCollection<IFE1D2DNode> nodes = discrModel.getNodes();
           if( nodes.isEmpty() )
           {
             geometry = null;
           }
           else
           {
-            final GM_Envelope bbox = nodes.getFeatureList().getBoundingBox();
+            final GM_Envelope bbox = nodes.getWrappedList().getBoundingBox();
             String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
             if( crs == null )
               crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();

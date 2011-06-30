@@ -133,14 +133,14 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
 
       final Map<GM_Point, IObservation<TupleResult>> obsMap = new HashMap<GM_Point, IObservation<TupleResult>>();
 
-      for( final IHydrograph hydrograph : m_hydrographs.getHydrographs() )
+      for( final IHydrograph hydrograph : m_hydrographs )
       {
 
         final GM_Object location = hydrograph.getLocation();
         if( location instanceof GM_Point )
         {
           final GM_Point point = (GM_Point) location;
-          final Feature wrappedFeature = hydrograph;
+          final Feature wrappedFeature = hydrograph.getFeature();
           final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( wrappedFeature );
 
           /* clear existing results */
@@ -182,12 +182,12 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
         final Feature feature = w.getRootFeature();
         final INodeResultCollection nodeResultCollection = (INodeResultCollection) feature.getAdapter( INodeResultCollection.class );
 
-        final FeatureList nodeList = nodeResultCollection.getNodeResults().getFeatureList();
+        final FeatureList nodeList = nodeResultCollection.getWrappedList();
 
         int hyd = 0;
 
         /* get the hydrograph locations and observations */
-        for( final IHydrograph hydrograph : m_hydrographs.getHydrographs() )
+        for( final IHydrograph hydrograph : m_hydrographs )
         {
           hyd++;
 
@@ -197,7 +197,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
             final GM_Point point = (GM_Point) location;
 
             // TODO: check for right time zone
-            progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.2", count, resultSize, date.toString(), hyd, m_hydrographs.getHydrographs().size() ) ); //$NON-NLS-1$
+            progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.2", count, resultSize, date.toString(), hyd, m_hydrographs.size() ) ); //$NON-NLS-1$
             addResult( obsMap, calendar, nodeList, point );
           }
         }
@@ -294,10 +294,10 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
   private void saveToHydrographFeature( final Map<GM_Point, IObservation<TupleResult>> obsMap )
   {
     /* save the obs in the feature */
-    for( final IHydrograph hydrograph : m_hydrographs.getHydrographs() )
+    for( final IHydrograph hydrograph : m_hydrographs )
     {
       final GM_Object location = hydrograph.getLocation();
-      final Feature feature = hydrograph;
+      final Feature feature = hydrograph.getFeature();
       if( location instanceof GM_Point )
       {
         final GM_Point point = (GM_Point) location;

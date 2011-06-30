@@ -102,7 +102,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -285,7 +285,7 @@ public class ResultMeta1d2dHelper
    */
   public static IStatus removeResultMetaFileWithChidren( final IResultMeta resultMeta ) throws CoreException
   {
-    final IFeatureBindingCollection<IResultMeta> children = resultMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = resultMeta.getChildren();
 
     /* delete children */
     for( final IResultMeta child : children )
@@ -424,7 +424,7 @@ public class ResultMeta1d2dHelper
   {
     final Set<String> toDelete = new HashSet<String>( Arrays.asList( idsToDelete ) );
 
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.3" ), children.size() ); //$NON-NLS-1$
 
@@ -434,7 +434,7 @@ public class ResultMeta1d2dHelper
     {
       monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.4" ) + child.getName() ); //$NON-NLS-1$
 
-      if( toDelete.contains( child.getId() ) )
+      if( toDelete.contains( child.getGmlID() ) )
       {
         stati.add( removeResult( child, includeOriginal ) );
       }
@@ -449,7 +449,7 @@ public class ResultMeta1d2dHelper
   {
     final Set<Date> toDelete = new HashSet<Date>( Arrays.asList( stepsToDelete ) );
 
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.3" ), children.size() ); //$NON-NLS-1$
 
@@ -483,7 +483,7 @@ public class ResultMeta1d2dHelper
   {
     final Set<Date> toDelete = new HashSet<Date>( Arrays.asList( stepsToDelete ) );
 
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.3" ), children.size() ); //$NON-NLS-1$
 
@@ -538,7 +538,7 @@ public class ResultMeta1d2dHelper
    */
   public static Date[] getStepDates( final ICalcUnitResultMeta calcUnitMeta )
   {
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     final Set<Date> dates = new HashSet<Date>();
     for( final IResultMeta child : children )
@@ -571,7 +571,7 @@ public class ResultMeta1d2dHelper
 
   public static Map<String, Date> getAllIDs( final ICalcUnitResultMeta calcUnitMeta )
   {
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     final HashMap<String, Date> ids = new HashMap<String, Date>();
     for( final IResultMeta child : children )
@@ -609,7 +609,7 @@ public class ResultMeta1d2dHelper
         }
       }
 
-      ids.put( child.getId(), l_date );
+      ids.put( child.getGmlID(), l_date );
     }
 
     return ids;
@@ -620,7 +620,7 @@ public class ResultMeta1d2dHelper
     final IKalypsoTheme[] allThemes = modell.getAllThemes();
 
     final IResultMeta calcUnitMeta = stepResult.getParent();
-    final IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
 
     for( final IResultMeta stepChild : children )
     {
@@ -660,7 +660,7 @@ public class ResultMeta1d2dHelper
   public static String getNodeResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta, final String strType )
   {
     return docResult.getName() + STR_THEME_NAME_SEPARATOR + strType + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR
-        + stepResult.getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
+        + stepResult.getFeature().getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
   }
 
   public static String getIsolineResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
@@ -855,7 +855,7 @@ public class ResultMeta1d2dHelper
     {
       return stepResultMeta.getFullPath();
     }
-    final IFeatureBindingCollection<IResultMeta> children = stepResultMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = stepResultMeta.getChildren();
     for( final IResultMeta child : children.toArray( new IResultMeta[children.size()] ) )
     {
       if( child instanceof IStepResultMeta )
@@ -883,7 +883,7 @@ public class ResultMeta1d2dHelper
    */
   public static IPath getSavedSWANRawResultData( final ICalcUnitResultMeta calcUnitMeta )
   {
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
     for( final IResultMeta child : children.toArray( new IResultMeta[children.size()] ) )
     {
       if( child instanceof IStepResultMeta )

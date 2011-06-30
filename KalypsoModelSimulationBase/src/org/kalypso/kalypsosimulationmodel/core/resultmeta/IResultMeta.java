@@ -46,11 +46,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public interface IResultMeta extends IModel
 {
@@ -74,7 +74,7 @@ public interface IResultMeta extends IModel
 
   public IResultMeta getParent( );
 
-  public IFeatureBindingCollection<IResultMeta> getChildren( );
+  public IFeatureWrapperCollection<IResultMeta> getChildren( );
 
   public void removeChild( final IResultMeta result );
 

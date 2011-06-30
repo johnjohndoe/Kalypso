@@ -43,12 +43,13 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author Madanagopal
  */
+@SuppressWarnings("unchecked")
 public class ProblemDescriptor implements IProblem
 {
   private String m_messageDescription;
@@ -57,9 +58,9 @@ public class ProblemDescriptor implements IProblem
 
   private ICalculationUnit m_calculationUnit;
 
-  private final Feature m_featureToFocus;
+  private final IFeatureWrapper2 m_featureToFocus;
 
-  public ProblemDescriptor( final String name, final String messageDescription, final ICalculationUnit calculationUnit, final Feature featureToFocus )
+  public ProblemDescriptor( final String name, final String messageDescription, final ICalculationUnit calculationUnit, final IFeatureWrapper2 featureToFocus )
   {
     m_name = name;
     m_messageDescription = messageDescription;
@@ -139,10 +140,10 @@ public class ProblemDescriptor implements IProblem
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setFocusOn(org.kalypsodeegree.model.feature.binding.Feature)
+   * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setFocusOn(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
   @Override
-  public Feature showFocusOn( )
+  public IFeatureWrapper2 showFocusOn( )
   {
     return m_featureToFocus;
   }

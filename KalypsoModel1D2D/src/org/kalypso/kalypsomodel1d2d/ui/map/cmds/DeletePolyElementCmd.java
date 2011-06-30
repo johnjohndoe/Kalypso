@@ -53,7 +53,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Command for deleting one element. The change event has to fired from outside!
@@ -105,26 +106,26 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
     for( final Feature lFeature : m_setFeaturesToRemove )
     {
       IPolyElement lElement = (IPolyElement) lFeature.getAdapter( IPolyElement.class );
-      final String elementID = lElement.getId();
+      final String elementID = lElement.getGmlID();
 
       // delete link to complex elements
       final List<IFE1D2DComplexElement> parentComplexElements = lElement.getContainers();
       for( final IFE1D2DComplexElement complexElement : parentComplexElements )
       {
         complexElement.getElements().remove( elementID );
-        m_changedFeatureList.add( complexElement );
+        m_changedFeatureList.add( complexElement.getFeature() );
       }
-      m_changedFeatureList.add( lElement );
+      m_changedFeatureList.add( lElement.getFeature() );
 
       // delete link to edges and the edges itself (with the nodes)
-      final IFeatureBindingCollection<IFE1D2DEdge> edges = lElement.getEdges();
+      final IFeatureWrapperCollection<IFE1D2DEdge> edges = lElement.getEdges();
       for( final IFE1D2DEdge edge : edges )
       {
-        final FeatureList containers = edge.getContainers().getFeatureList();
+        final FeatureList containers = edge.getContainers().getWrappedList();
         final List< IPolyElement > lListContainers = edge.getContainers();
         boolean lBoolContainsAll = true;
         for( final IPolyElement lFeatureAct: lListContainers ){
-          if( !m_setFeaturesToRemove.contains( lFeatureAct ) ){
+          if( !m_setFeaturesToRemove.contains( lFeatureAct.getFeature() ) ){
             lBoolContainsAll = false;
             break;
           }
@@ -133,20 +134,20 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
           remEdgeCmd.addEdgeToRemove( edge );
         }
         containers.remove( elementID );
-        m_changedFeatureList.add( edge );
+        m_changedFeatureList.add( edge.getFeature() );
 
-        final IFeatureBindingCollection nodes = edge.getNodes();
+        final IFeatureWrapperCollection nodes = edge.getNodes();
         for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
         {
-          Feature featureWrapper = (Feature) iterator.next();
-          Feature wrappedFeature = featureWrapper;
+          IFeatureWrapper2 featureWrapper = (IFeatureWrapper2) iterator.next();
+          Feature wrappedFeature = featureWrapper.getFeature();
           m_changedFeatureList.add( wrappedFeature );
         }
       }
     }
     remEdgeCmd.process();
     // delete element from model
-    m_model1d2d.getElements().removeAll( m_setFeaturesToRemove );
+    m_model1d2d.getElements().removeAllAtOnce( m_setFeaturesToRemove );
   }
 
   /**
@@ -171,13 +172,13 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
     return null;
-//    Feature[] lFeaturesChanged = new Feature[ m_setFeatureToRemove.size() ];
+//    IFeatureWrapper2[] lFeaturesChanged = new IFeatureWrapper2[ m_setFeatureToRemove.size() ];
 //    int i = 0;
 //    for( final IPolyElement lElement: m_setFeatureToRemove ){
-//      lFeaturesChanged[ i++ ] = (Feature) lElement;
+//      lFeaturesChanged[ i++ ] = (IFeatureWrapper2) lElement.getFeature();
 //    }
 //    return lFeaturesChanged;
   }

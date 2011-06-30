@@ -169,7 +169,7 @@ public class CalculationUnitLogComponent
       {
         if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) && newValue instanceof ICalculationUnit )
         {
-          final IStatusCollection list = findGeoStatusCollection( (ICalculationUnit) newValue );
+          final List<IGeoStatus> list = findGeoStatusCollection( (ICalculationUnit) newValue );
           if( list == null || list.isEmpty() )
           {
             table.setVisible( false );
@@ -224,14 +224,14 @@ public class CalculationUnitLogComponent
     }
   }
 
-  protected IStatusCollection findGeoStatusCollection( final ICalculationUnit calcUnit )
+  protected List<IGeoStatus> findGeoStatusCollection( final ICalculationUnit calcUnit )
   {
     try
     {
       final SzenarioDataProvider dataProvider = (SzenarioDataProvider) m_dataModel.getData( ICaseDataProvider.class, ICommonKeys.KEY_DATA_PROVIDER );
       final IContainer scenarioFolder = dataProvider.getScenarioFolder();
       final IScenarioResultMeta scenarioMeta = dataProvider.getModel( IScenarioResultMeta.class );
-      final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getId() );
+      final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getGmlID() );
       if( calcUnitMeta == null )
         return null;
 
@@ -241,7 +241,7 @@ public class CalculationUnitLogComponent
         return null;
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( logResource ), null );
-      return (IStatusCollection) workspace.getRootFeature().getAdapter( IStatusCollection.class );
+      return (List<IGeoStatus>) workspace.getRootFeature().getAdapter( IStatusCollection.class );
     }
     catch( final Throwable e )
     {

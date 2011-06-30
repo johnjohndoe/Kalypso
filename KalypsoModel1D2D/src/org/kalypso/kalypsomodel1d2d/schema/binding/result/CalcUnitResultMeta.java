@@ -47,13 +47,11 @@ import java.util.List;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
@@ -61,48 +59,47 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMeta
 {
-
-  public CalcUnitResultMeta( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public CalcUnitResultMeta( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, ICalcUnitResultMeta.QNAME );
   }
 
   @Override
   public void setCalcStartTime( final Date startTime )
   {
     final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( startTime );
-    setProperty( QNAME_PROP_CALC_START_TIME, gregorianCalendar );
+    getFeature().setProperty( QNAME_PROP_CALC_START_TIME, gregorianCalendar );
   }
 
   @Override
   public Date getCalcStartTime( )
   {
-    return DateUtilities.toDate( (XMLGregorianCalendar) getProperty( QNAME_PROP_CALC_START_TIME ) );
+    return DateUtilities.toDate( (XMLGregorianCalendar) getFeature().getProperty( QNAME_PROP_CALC_START_TIME ) );
   }
 
   @Override
   public void setCalcEndTime( final Date endTime )
   {
     final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( endTime );
-    setProperty( QNAME_PROP_CALC_END_TIME, gregorianCalendar );
+    getFeature().setProperty( QNAME_PROP_CALC_END_TIME, gregorianCalendar );
   }
 
   @Override
   public Date getCalcEndTime( )
   {
-    return DateUtilities.toDate( (XMLGregorianCalendar) getProperty( QNAME_PROP_CALC_END_TIME ) );
+    return DateUtilities.toDate( (XMLGregorianCalendar) getFeature().getProperty( QNAME_PROP_CALC_END_TIME ) );
   }
 
   @Override
   public String getCalcUnit( )
   {
-    return (String) getProperty( QNAME_PROP_CALC_UNIT_ID );
+    return (String) getFeature().getProperty( QNAME_PROP_CALC_UNIT_ID );
   }
 
   @Override
   public void setCalcUnit( final String calcUnitID )
   {
-    setProperty( QNAME_PROP_CALC_UNIT_ID, calcUnitID );
+    getFeature().setProperty( QNAME_PROP_CALC_UNIT_ID, calcUnitID );
   }
 
   /**
@@ -117,7 +114,7 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
   @Override
   public boolean containsChildType( final DOCUMENTTYPE type )
   {
-    final IFeatureBindingCollection<IResultMeta> children = getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = getChildren();
     for( IResultMeta child : children )
     {
       if( child instanceof IDocumentResultMeta )
@@ -138,7 +135,7 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
   @Override
   public IDocumentResultMeta getDocument( DOCUMENTTYPE type )
   {
-    final IFeatureBindingCollection<IResultMeta> children = getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = getChildren();
     for( IResultMeta child : children )
     {
       if( child instanceof IDocumentResultMeta )
@@ -163,7 +160,7 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
     List<IResultMeta> documentList = new LinkedList<IResultMeta>();
 
     /* get all Node Documents */
-    IFeatureBindingCollection<IResultMeta> calcUnitChildren = getChildren();
+    IFeatureWrapperCollection<IResultMeta> calcUnitChildren = getChildren();
 
     for( IResultMeta calcUnitChild : calcUnitChildren )
     {
@@ -171,7 +168,7 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
       {
         IStepResultMeta stepResult = (IStepResultMeta) calcUnitChild;
 
-        IFeatureBindingCollection<IResultMeta> StepChildren = stepResult.getChildren();
+        IFeatureWrapperCollection<IResultMeta> StepChildren = stepResult.getChildren();
         for( IResultMeta StepChild : StepChildren )
         {
           if( StepChild instanceof IDocumentResultMeta )

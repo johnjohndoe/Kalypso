@@ -81,8 +81,8 @@ public class SobekShapePoint
     final String basePath = shapeFileBase.getAbsolutePath();
 
     final IDBFField[] fields = new IDBFField[2];
-    fields[0] = new DBFField( "ID", FieldType.C, (short) 128, (short) 0 );
-    fields[1] = new DBFField( "NAME", FieldType.C, (short) 128, (short) 0 );
+    fields[0] = new DBFField( "ID", FieldType.C, (short) 128, (short) 0 ); //$NON-NLS-1$
+    fields[1] = new DBFField( "NAME", FieldType.C, (short) 128, (short) 0 ); //$NON-NLS-1$
 
     m_shapeFile = ShapeFile.create( basePath, ShapeType.POINTZ, Charset.defaultCharset(), fields );
   }

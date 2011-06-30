@@ -91,7 +91,7 @@ public class Dejan_Test_Gml2RMA10s extends TestCase
       fail( TestUtils.getStackTraceAsString( e ) );
     }
 
-    FE1D2DDiscretisationModel sourceModel = (FE1D2DDiscretisationModel) workspace.getRootFeature();
+    FE1D2DDiscretisationModel sourceModel = new FE1D2DDiscretisationModel( workspace.getRootFeature() );
 
     try
     {

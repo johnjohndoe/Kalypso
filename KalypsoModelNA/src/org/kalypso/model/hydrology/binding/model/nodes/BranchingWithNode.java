@@ -53,6 +53,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public abstract class BranchingWithNode extends Branching
 {
+  public static final QName FEATURE_BRANCHING_WITH_NODE = new QName( NS_NAMODELL, "_BranchingWithNode" ); //$NON-NLS-1$
+
   public static final QName QN_BRANCHING_NODE_MEMBER = new QName( NS_NAMODELL, "branchingNodeMember" ); //$NON-NLS-1$
 
   public BranchingWithNode( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )

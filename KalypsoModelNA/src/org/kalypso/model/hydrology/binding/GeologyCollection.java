@@ -95,22 +95,7 @@ public class GeologyCollection extends Feature_Impl
     {
       switch( importType )
       {
-        case DELETE_INTERSECTING:
-        {
-          m_geologyMembers.remove( existingMember );
-          final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.GeologyCollection.1", existingMember.getId() ); //$NON-NLS-1$
-          log.add( IStatus.WARNING, message );
-        }
-          break;
-
-        case IGNORE_INTERSECTING:
-        {
-          final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.GeologyCollection.2", label ); //$NON-NLS-1$
-          log.add( IStatus.WARNING, message );
-        }
-          return null;
-
-        case INTERSECT:
+        case DIFFERENCE:
         {
           final GM_MultiSurface existingGeometry = existingMember.getGeometry();
           final GM_MultiSurface difference = PolygonIntersectionHelper.createDifference( geometry, existingGeometry );

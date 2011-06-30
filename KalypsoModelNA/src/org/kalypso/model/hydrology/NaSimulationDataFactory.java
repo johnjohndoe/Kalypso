@@ -44,6 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.kalypso.model.hydrology.internal.NaSimulationData;
+import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.util.optimize.NaOptimizeLoader;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataUtils;
@@ -87,7 +88,7 @@ public final class NaSimulationDataFactory
     }
     catch( final Exception e )
     {
-      throw new SimulationException( "Failed to load simulation data", e );
+      throw new SimulationException( Messages.getString("NaSimulationDataFactory_0"), e ); //$NON-NLS-1$
     }
   }
 
@@ -104,7 +105,7 @@ public final class NaSimulationDataFactory
     }
     catch( final MalformedURLException e )
     {
-      throw new SimulationException( "Failed to read start condition file", e );
+      throw new SimulationException( Messages.getString("NaSimulationDataFactory_1"), e ); //$NON-NLS-1$
     }
   }
 }

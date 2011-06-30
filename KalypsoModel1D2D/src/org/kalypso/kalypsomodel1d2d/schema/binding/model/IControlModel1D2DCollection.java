@@ -43,9 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface for classes representing the feature collection c1d2d:ControModelCollection
@@ -53,11 +51,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
  * @author Dejan Antanaskovic
  * 
  */
-public interface IControlModel1D2DCollection extends Feature
+public interface IControlModel1D2DCollection extends IFeatureWrapperCollection<IControlModel1D2D>
 {
   public static final QName QNAME_PROP = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" ); //$NON-NLS-1$
-  
-  public FeatureBindingCollection<IControlModel1D2D> getControlModels( );
 
   public void setActiveControlModel( IControlModel1D2D newControlModel );
 

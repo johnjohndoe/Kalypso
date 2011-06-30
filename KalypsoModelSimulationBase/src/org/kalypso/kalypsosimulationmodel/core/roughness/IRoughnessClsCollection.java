@@ -2,24 +2,34 @@ package org.kalypso.kalypsosimulationmodel.core.roughness;
 
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.afgui.model.IModel;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface to be implemented by classes representing a wbr:RoughnessCollection elemenent
  * 
  * @author Patrice Congo
  */
-public interface IRoughnessClsCollection extends IModel
+public interface IRoughnessClsCollection extends IFeatureWrapperCollection<IRoughnessCls>, IModel
 {
-  // roughness collection
-  public static final QName WBR_F_ROUGHNESS_CLS_COLLECTION = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "RoughnessClsCollection" ); //$NON-NLS-1$
+  /**
+   * To get the name the roughness collection
+   * 
+   * @return the name of the roughness collection
+   */
+  @Override
+  public String getName( );
 
-  public static final QName WBR_PROP_ROUGHNESS_CLS_MEMBER = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughnessClsMember" ); //$NON-NLS-1$
-
+  /**
+   * To set the name of the roughness collection
+   * 
+   * @param name
+   *          the new name for the roughness collection
+   * @throws IllegalArgumentException
+   *           if name is null or an empty string
+   */
+  @Override
+  public void setName( String name ) throws IllegalArgumentException;
 
   /**
    * Select all rougthness in the collection with a name matching the the given regular expression
@@ -29,7 +39,5 @@ public interface IRoughnessClsCollection extends IModel
    * @return
    */
   public List<IRoughnessCls> selectRoughnessByName( String nameRegExp );
-  
-  public IFeatureBindingCollection<IRoughnessCls> getRoughnessClasses( );
 
 }

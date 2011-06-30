@@ -60,7 +60,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -82,7 +82,7 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
 
   private ICommandTarget m_commandTarget;
 
-  private ICaseDataProvider<Feature> m_modelProvider;
+  private ICaseDataProvider<IFeatureWrapper2> m_modelProvider;
 
   private ResultManager1d2dWizardPage m_selectResultWizardPage;
 
@@ -140,7 +140,7 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    m_modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?

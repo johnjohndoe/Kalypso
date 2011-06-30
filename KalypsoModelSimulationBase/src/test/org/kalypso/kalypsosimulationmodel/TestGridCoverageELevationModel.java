@@ -51,47 +51,57 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Madan
- * 
+ *
  */
 public class TestGridCoverageELevationModel extends TestCase
 {
-
-  // private final double none = -9999.0;
-
-  public void testLoadingFromGML( )
+  
+ // private final double none = -9999.0;
+  
+  public void testLoadingFromGML()
   {
-    GMLWorkspace workspace = null;
-
-    try
-    {
-      workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_GC_SMALL_ASC, null );
-      Feature rootFeature = workspace.getRootFeature();
-      GridCoverageElevationModelWrapper eleModel = (GridCoverageElevationModelWrapper) rootFeature;
-      for( int i = 0; i < 10; i++ )
-      {
-        for( int j = 0; j < 10; j++ )
+        GMLWorkspace workspace=null;
+        
+        try
         {
-          if( i == j )
-          {
-            GM_Point curPoint = GeometryFactory.createGM_Point( 5 * i + 1, 5 * j + 1, TestWorkspaces.getGaussKrueger() );
-            double ele = eleModel.getElevation( curPoint );
-            assertEquals( "i=" + i + " j=" + j + Messages.getString( "TestGridCoverageELevationModel.2" ) + ele, i * j * 1.000, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-          }
-          else
-          {
-            GM_Point curPoint = GeometryFactory.createGM_Point( 5 * i + 1, 5 * j + 1, TestWorkspaces.getGaussKrueger() );
-            double ele = eleModel.getElevation( curPoint );
-            assertEquals( "i=" + i + " j=" + j + " ele=" + ele, Double.NaN, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          }
+            workspace=
+                GmlSerializer.createGMLWorkspace( 
+                                TestWorkspaces.URL_GC_SMALL_ASC, 
+                                null );
+            Feature rootFeature=workspace.getRootFeature();
+            GridCoverageElevationModelWrapper eleModel=
+              new GridCoverageElevationModelWrapper(rootFeature);
+            for(int i=0;i<10;i++)
+            {
+              for(int j=0;j<10;j++)
+              {
+                if(i==j)
+                {
+                  GM_Point curPoint = 
+                    GeometryFactory.createGM_Point( 
+                      5*i+1,5*j+1, TestWorkspaces.getGaussKrueger() );
+                  double ele=eleModel.getElevation( curPoint  );
+                  assertEquals(
+                      "i="+i+" j="+j+Messages.getString("TestGridCoverageELevationModel.2")+ele,i*j*1.000,ele); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                  
+                }
+                else
+                {
+                  GM_Point curPoint = 
+                    GeometryFactory.createGM_Point( 
+                      5*i+1,5*j+1, TestWorkspaces.getGaussKrueger() );
+                  double ele=eleModel.getElevation( curPoint  );
+                  assertEquals(
+                      "i="+i+" j="+j+" ele="+ele,Double.NaN,ele); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                }
+              }
+            }
         }
-      }
-    }
-    catch( Throwable th )
-    {
-      fail( TestUtils.getStackTraceAsString( th ) );
-    }
-
+        catch(Throwable th)
+        {
+            fail(TestUtils.getStackTraceAsString(th));
+        }
+        
   }
 
 }

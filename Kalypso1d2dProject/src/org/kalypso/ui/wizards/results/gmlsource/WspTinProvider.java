@@ -79,7 +79,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.ResultMetaInfoViewer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
@@ -255,7 +255,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
           m_workspace.add( workspace );
           final IResultMeta rootMeta = (IResultMeta) workspace.getRootFeature().getAdapter( IResultMeta.class );
 
-          final IFeatureBindingCollection<IResultMeta> metaChildren = rootMeta.getChildren();
+          final IFeatureWrapperCollection<IResultMeta> metaChildren = rootMeta.getChildren();
 
           final List<IResultMeta> wspChildren = filterMetaChildren( metaChildren );
 
@@ -345,7 +345,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       }
     }
 
-    final IFeatureBindingCollection<IResultMeta> children = resultMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = resultMeta.getChildren();
     for( final IResultMeta child : children )
     {
       final IResultMeta childsWspDoc = findFirstWspTinMetaChild( child );

@@ -42,8 +42,6 @@ package org.kalypso.model.flood.binding;
 
 import java.math.BigDecimal;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -51,10 +49,9 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FloodVolumePolygon extends AbstractFloodPolygon implements IFloodVolumePolygon
 {
-
-  public FloodVolumePolygon( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public FloodVolumePolygon( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, IFloodVolumePolygon.QNAME );
   }
 
   /**

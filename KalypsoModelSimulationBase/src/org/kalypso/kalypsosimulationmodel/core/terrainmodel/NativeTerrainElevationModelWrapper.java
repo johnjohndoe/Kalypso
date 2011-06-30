@@ -42,24 +42,26 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
+import org.kalypso.afgui.model.Util;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Provide the implementation of {@link ITerrainElevationModel} for simBase:NativeTerrainElevationModelWrapper model.
  * This class collaborates with ...
- * 
+ *
  * @author Madanagopal
  * @author Patrice Congo
  * 
@@ -72,45 +74,76 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
 
   public static final QName SIM_BASE_PROP_FILE_NAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "fileName" ); //$NON-NLS-1$
 
-  private IElevationProvider m_elevationProvider;
+  private final IElevationProvider m_elevationProvider;
 
-  public NativeTerrainElevationModelWrapper( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  private final IFile m_file;
+
+  /**
+   * Creates a new {@link NativeTerrainElevationModelWrapper} as child of the given parent and link to it by the prop of
+   * the given name. The native source path is also set
+   */
+  private static final Feature createFeature( final Feature parentFeature, final QName propQName, String sourceName )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    Assert.throwIAEOnNullParam( parentFeature, "parentFeature" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( propQName, "propQName" ); //$NON-NLS-1$
+    sourceName = Assert.throwIAEOnNullOrEmpty( sourceName );
+
+    final Feature newFeature = Util.createFeatureAsProperty( parentFeature, propQName, SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER, new Object[] { sourceName }, new QName[] { SIM_BASE_PROP_FILE_NAME } );
+
+    // newFeature.setProperty(
+    // KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME, sourceName );
+
+    return newFeature;
   }
 
-  public IElevationProvider getElevationProvider( )
+  public NativeTerrainElevationModelWrapper( final ITerrainElevationModelSystem terrainElevationModelSystem, final String sourceName ) throws IllegalArgumentException, IOException, URISyntaxException
   {
-    if( m_elevationProvider != null )
-      return m_elevationProvider;
+    this( createFeatureForTEMSystem( terrainElevationModelSystem, sourceName ) );
+  }
 
-    final IFile file = getSourceFile();
-    if( file == null )
+  private static final Feature createFeatureForTEMSystem( final ITerrainElevationModelSystem terrainElevationModelSystem, final String sourceName )
+  {
+    return createFeature( terrainElevationModelSystem.getFeature(), TerrainElevationModelSystem.SIM_BASE_PROP_TERRAIN_ELE_MODEL, sourceName );
+  }
+
+  public NativeTerrainElevationModelWrapper( final Feature featureToBind ) throws IllegalArgumentException, IOException, URISyntaxException
+  {
+    super( featureToBind, SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
+
+    final String sourceName = (String) featureToBind.getProperty( SIM_BASE_PROP_FILE_NAME );
+    if( sourceName == null )
     {
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper.2" ) ); //$NON-NLS-1$
     }
-    try
-    {
-      m_elevationProvider = NativeTerrainElevationModelFactory.getTerrainElevationModel( file.getLocation().toFile() );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-    return m_elevationProvider;
+
+    // why using urls and file? We live in an eclipse workspace! Use IRources
+    final URL sourceURL = makeSourceURL( sourceName, featureToBind.getWorkspace().getContext() );
+
+    m_file = ResourceUtilities.findFileFromURL( sourceURL );
+    m_elevationProvider = NativeTerrainElevationModelFactory.getTerrainElevationModel( m_file.getLocation().toFile() );
   }
 
-  private final URL makeSourceURL( final String sourceName, final URL worspaceContex )
+  private final URL makeSourceURL( final String sourceName, final URL worspaceContex ) throws URISyntaxException, MalformedURLException
   {
     try
     {
-      return UrlResolverSingleton.resolveUrl( worspaceContex, sourceName );
+      final URL sourceUrl = new URL( sourceName );
+      final URI uri = sourceUrl.toURI();
+      if( uri.isAbsolute() )
+      {
+        return uri.toURL();
+      }
+      else
+      {
+        final URL absURL = new URL( worspaceContex, sourceName );
+        return absURL;
+      }
     }
     catch( final MalformedURLException e )
     {
-      e.printStackTrace();
+      // e.printStackTrace();
+      return new URL( worspaceContex, sourceName );
     }
-    return null;
   }
 
   /**
@@ -119,7 +152,12 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   @Override
   public double getElevation( final GM_Point location )
   {
-    return getElevationProvider().getElevation( location );
+    return m_elevationProvider.getElevation( location );
+  }
+
+  public IElevationProvider getElevationProvider( )
+  {
+    return m_elevationProvider;
   }
 
   /**
@@ -128,7 +166,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   @Override
   public GM_Envelope getBoundingBox( )
   {
-    return getElevationProvider().getBoundingBox();
+    return m_elevationProvider.getBoundingBox();
   }
 
   /**
@@ -137,7 +175,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   @Override
   public String getCoordinateSystem( )
   {
-    return getElevationProvider().getCoordinateSystem();
+    return m_elevationProvider.getCoordinateSystem();
   }
 
   /**
@@ -146,7 +184,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   @Override
   public double getMaxElevation( )
   {
-    return getElevationProvider().getMaxElevation();
+    return m_elevationProvider.getMaxElevation();
   }
 
   /**
@@ -155,7 +193,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   @Override
   public double getMinElevation( )
   {
-    return getElevationProvider().getMinElevation();
+    return m_elevationProvider.getMinElevation();
   }
 
   /**
@@ -164,18 +202,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   @Override
   public IFile getSourceFile( )
   {
-    final String sourceName = (String) getProperty( SIM_BASE_PROP_FILE_NAME );
-
-    // why using urls and file? We live in an eclipse workspace! Use IRources
-    final URL sourceURL = makeSourceURL( sourceName, this.getWorkspace().getContext() );
-    final IFile file = ResourceUtilities.findFileFromURL( sourceURL );
-
-    return file;
-  }
-
-  public void setFile( String filename )
-  {
-    setProperty( SIM_BASE_PROP_FILE_NAME, filename );
+    return m_file;
   }
 
   /**

@@ -41,12 +41,10 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
 import org.eclipse.core.runtime.Path;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
@@ -54,9 +52,14 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMeta
 {
-  public ScenarioResultMeta( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  private static final String ERGEBNISSE = "Ergebnisse"; //$NON-NLS-1$
+
+  private static final String RESULTS = "results"; //$NON-NLS-1$
+
+  public ScenarioResultMeta( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, IScenarioResultMeta.QNAME );
+
     // set the path and the name of the scenarioResultMeta
     // TODO: better place for this: while creation of a new scenario!!
     // right now, it is set to the following values:
@@ -65,17 +68,13 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
     setName( ERGEBNISSE );
   }
 
-  private static final String ERGEBNISSE = "Ergebnisse"; //$NON-NLS-1$
-
-  private static final String RESULTS = "results"; //$NON-NLS-1$
-
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta#findCalcUnitMetaResult(java.lang.String)
    */
   @Override
   public ICalcUnitResultMeta findCalcUnitMetaResult( final String calcUnitGmlID )
   {
-    final IFeatureBindingCollection<IResultMeta> children = getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = getChildren();
     for( final IResultMeta resultMeta : children )
     {
       if( resultMeta instanceof ICalcUnitResultMeta )

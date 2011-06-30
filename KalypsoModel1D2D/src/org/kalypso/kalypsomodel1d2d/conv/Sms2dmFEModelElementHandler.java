@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -117,7 +117,7 @@ public class Sms2dmFEModelElementHandler implements IFEModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.I2dmModelElementHandler#getCreatedFeatures()
    */
   @Override
-  public List<Feature> getCreatedFeatures( )
+  public List<IFeatureWrapper2> getCreatedFeatures( )
   {
     // TODO Auto-generated method stub
     return null;

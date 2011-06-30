@@ -47,8 +47,13 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.IProfileCreatorStrategy;
@@ -57,6 +62,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.SoilOnlyProfileCr
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.TuhhProfileWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.WProfImportOperation;
 import org.kalypso.model.wspm.tuhh.core.wprof.BCEShapeWPRofContentProviderFactory;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -64,22 +70,39 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 /**
  * @author Gernot Belger
  */
-public class WProfImportWizard extends Wizard
+public class WProfImportWizard extends Wizard implements IWorkbenchWizard
 {
   private final BCEShapeWPRofContentProviderFactory m_pointFactory = new BCEShapeWPRofContentProviderFactory();
 
-  private final TuhhWspmProject m_targetProject;
+  private TuhhWspmProject m_targetProject;
 
-  private final WProfImportFilePage m_wprofFilePage;
+  private WProfImportFilePage m_wprofFilePage;
 
-  private final CommandableWorkspace m_workspace;
+  private CommandableWorkspace m_workspace;
 
-  private final WProfOptionsPage m_wprofMarkerPage;
+  private WProfOptionsPage m_wprofMarkerPage;
 
-  private final WProfPropertyPage m_wprofPropertyPage;
+  private WProfPropertyPage m_wprofPropertyPage;
 
-  public WProfImportWizard( final CommandableWorkspace workspace, final TuhhWspmProject targetProject )
+  public WProfImportWizard( )
   {
+    final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), "tuhhWProfImport" ); //$NON-NLS-1$
+    setDialogSettings( settings );
+
+    setWindowTitle( Messages.getString( "WProfImportWizard_4" ) ); //$NON-NLS-1$
+    setNeedsProgressMonitor( true );
+  }
+
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    final WspmTuhhProjectSelection projectSelection = new WspmTuhhProjectSelection( selection );
+    if( !projectSelection.hasProject() )
+      throw new IllegalArgumentException( Messages.getString( "ImportWProfHandler_1" ) ); //$NON-NLS-1$
+
+    final CommandableWorkspace workspace = projectSelection.getWorkspace();
+    final TuhhWspmProject targetProject = projectSelection.getProject();
+
     m_workspace = workspace;
     m_targetProject = targetProject;
 
@@ -97,17 +120,11 @@ public class WProfImportWizard extends Wizard
     final Properties defaultSpecification = m_pointFactory.getDefaultSpecification();
     m_wprofPropertyPage = new WProfPropertyPage( "wprofPropertyPage", defaultSpecification ); //$NON-NLS-1$
 
-    setWindowTitle( Messages.getString("WProfImportWizard_4") ); //$NON-NLS-1$
-    setNeedsProgressMonitor( true );
-
     addPage( m_wprofFilePage );
     addPage( m_wprofMarkerPage );
     addPage( m_wprofPropertyPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {

@@ -126,13 +126,13 @@ public class GebWriter extends AbstractCoreFileWriter
       // TODO: copy the we999 into the inp.dat folder or stop calculation!
     }
     else
-      writer.append( "we_nat.zft\n" );
+      writer.append( "we_nat.zft\n" ); //$NON-NLS-1$
 
     writer.append( "we.hyd\n" ); //$NON-NLS-1$
 
     // 7
     // (snowtype,a15)(ftem,*)_(fver,*)
-    writer.format( "%-15s%s %s\n", catchment.getSnowtype(), catchment.getFtem(), catchment.getFver() );
+    writer.format( "%-15s%s %s\n", catchment.getSnowtype(), catchment.getFtem(), catchment.getFver() ); //$NON-NLS-1$
 
     // 8
     writeBodenKorrektur( writer, catchment );
@@ -171,7 +171,7 @@ public class GebWriter extends AbstractCoreFileWriter
     if( izknNode == null )
       writer.append( " 0\n" ); //$NON-NLS-1$
     else
-      writer.append( String.format( Locale.US, " %4d\n", m_idManager.getAsciiID( izknNode ) ) );
+      writer.append( String.format( Locale.US, " %4d\n", m_idManager.getAsciiID( izknNode ) ) ); //$NON-NLS-1$
 
     // KommentarZeile
     writer.append( "ende gebietsdatensatz\n" ); //$NON-NLS-1$//$NON-NLS-2$

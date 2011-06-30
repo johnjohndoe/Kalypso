@@ -89,7 +89,7 @@ public class SobekExportTest extends Assert
   {
     m_platformEncoding = Charset.defaultCharset().name();
 
-    m_targetDir = FileUtilities.createNewTempDir( "sobekExportText" );
+    m_targetDir = FileUtilities.createNewTempDir( "sobekExportText" ); //$NON-NLS-1$
 
     m_info = new SobekExportInfo( null, null );
     m_info.setIdPattern( "<Name>" ); //$NON-NLS-1$

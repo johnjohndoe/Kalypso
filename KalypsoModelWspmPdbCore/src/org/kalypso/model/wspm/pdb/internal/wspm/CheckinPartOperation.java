@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -112,6 +113,9 @@ public class CheckinPartOperation
 
   public void execute( ) throws PdbConnectException
   {
+    // Name must be unique within each part
+    final PDBNameGenerator nameGenerator = new PDBNameGenerator();
+
     final IRecord[] records = m_profil.getPoints();
     final List<Coordinate> lineCrds = new ArrayList<Coordinate>( records.length );
     for( int i = 0; i < records.length; i++ )
@@ -140,11 +144,13 @@ public class CheckinPartOperation
       final BigDecimal dpValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, VEGETATION_0 );
 
       /* Not all point may pass */
-      // TODO: allow point wo geometry?
+      // TODO: allow point without geometry?
       if( height == null )
         continue;
 
-      final Point point = new Point( null, m_part, name, i );
+      /* Keep old point name if possible, else create a new unique one */
+      final String uniquePointName = nameGenerator.createUniqueName( name );
+      final Point point = new Point( null, m_part, uniquePointName, i );
 
       point.setDescription( comment );
       point.setWidth( width );

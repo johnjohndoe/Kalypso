@@ -4,39 +4,61 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.kalypso.afgui.model.UnversionedModel;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import javax.xml.namespace.QName;
+
+import org.kalypso.afgui.model.IModel;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Patrice Congo
  */
-public class RoughnessClsCollection extends UnversionedModel implements IRoughnessClsCollection
+public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessCls> implements IRoughnessClsCollection
 {
 
-  private final IFeatureBindingCollection<IRoughnessCls> m_roughnessClasses = new FeatureBindingCollection<IRoughnessCls>( this, IRoughnessCls.class, WBR_PROP_ROUGHNESS_CLS_MEMBER );
-
-  public RoughnessClsCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  /**
+   * @param featureCol
+   * @param fwClass
+   */
+  public RoughnessClsCollection( final Feature featureCol )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureCol, IRoughnessCls.class, KalypsoModelRoughnessConsts.WBR_PROP_ROUGHNESS_CLS_MEMBER );
+  }
 
+  /**
+   * @param parentFeature
+   * @param propQName
+   * @throws IllegalArgumentException
+   */
+  public RoughnessClsCollection( final Feature parentFeature, final QName propQName ) throws IllegalArgumentException
+  {
+    super( parentFeature, propQName, KalypsoModelRoughnessConsts.WBR_PROP_ROUGHNESS_CLS_MEMBER, IRoughnessCls.class );
+  }
+
+  @Override
+  public String getName( )
+  {
+    return NamedFeatureHelper.getName( getFeature() );
   }
 
   @Override
   public List<IRoughnessCls> selectRoughnessByName( final String nameRegExp )
   {
     final Pattern p = Pattern.compile( nameRegExp );
-    final List<IRoughnessCls> rcList = new ArrayList<IRoughnessCls>( m_roughnessClasses.size() );
+    final List<IRoughnessCls> rcList = new ArrayList<IRoughnessCls>( size() );
     String name;
     Matcher matcher;
 
-    for( final IRoughnessCls rc : m_roughnessClasses )
+    for( final IRoughnessCls rc : this )
     {
       name = rc.getName();
       if( name != null )
@@ -50,10 +72,21 @@ public class RoughnessClsCollection extends UnversionedModel implements IRoughne
     }
     return rcList;
   }
-  
+
   @Override
-  public IFeatureBindingCollection<IRoughnessCls> getRoughnessClasses( )
+  public void setName( String name ) throws IllegalArgumentException
   {
-    return m_roughnessClasses;
+    name = Assert.throwIAEOnNullOrEmpty( name );
+    final Feature wrappedFeature = getFeature();
+    FeatureHelper.addProperty( wrappedFeature, Feature.QN_NAME, Arrays.asList( new String[] { name } ) );
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.modeling.IModel#getVersion()
+   */
+  @Override
+  public String getVersion( )
+  {
+    return IModel.NO_VERSION;
   }
 }

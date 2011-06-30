@@ -320,7 +320,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
       viewer.setInput( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.9" ) ) ); //$NON-NLS-1$
     else
     {
-      viewer.setInput( m_model.getWorkspace() );
+      viewer.setInput( m_model.getFeature().getWorkspace() );
 
       final GMLXPathSegment segment = GMLXPathSegment.forQName( IRasterDataModel.QNAME );
       final GMLXPath pathToModel = new GMLXPath( segment );

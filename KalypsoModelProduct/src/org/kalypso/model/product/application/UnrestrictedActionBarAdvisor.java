@@ -52,9 +52,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.actions.ContributionItemFactory;
+import org.eclipse.ui.actions.NewWizardMenu;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
+import org.eclipse.ui.ide.IDEActionFactory;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
+import org.eclipse.ui.internal.ide.actions.QuickMenuAction;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of the actions added to a workbench window.
@@ -83,11 +86,15 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
 
   private IWorkbenchAction m_printAction;
 
+  private IWorkbenchAction m_renameAction;
+
+  private IWorkbenchAction m_refreshAction;
+
+  private IWorkbenchAction m_openWorkspaceAction;
+
   private IWorkbenchAction m_propertiesAction;
 
-  private IContributionItem m_reopenEditorsContribution;
-
-  private IWorkbenchAction m_exitAction;
+  private IWorkbenchAction m_quitAction;
 
   private IWorkbenchAction m_undoAction;
 
@@ -127,9 +134,24 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
 
   private IWorkbenchAction m_newWizardAction;
 
+  private IWorkbenchAction m_importResourcesAction;
+
+  private IWorkbenchAction m_exportResourcesAction;
+
+  // contribution items
+  // @issue should obtain from ContributionItemFactory
+  private NewWizardMenu newWizardMenu;
+
+  private QuickMenuAction newQuickMenu;
+
   public UnrestrictedActionBarAdvisor( final IActionBarConfigurer configurer )
   {
     super( configurer );
+  }
+
+  private IWorkbenchWindow getWindow( )
+  {
+    return getActionBarConfigurer().getWindowConfigurer().getWindow();
   }
 
   /**
@@ -168,12 +190,25 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
     m_printAction = ActionFactory.PRINT.create( window );
     register( m_printAction );
 
+    m_renameAction = ActionFactory.RENAME.create( window );
+    register( m_renameAction );
+
+    m_refreshAction = ActionFactory.REFRESH.create( window );
+    register( m_refreshAction );
+
+    m_openWorkspaceAction = IDEActionFactory.OPEN_WORKSPACE.create( window );
+    register( m_openWorkspaceAction );
+
+    m_importResourcesAction = ActionFactory.IMPORT.create( window );
+    register( m_importResourcesAction );
+
+    m_exportResourcesAction = ActionFactory.EXPORT.create( window );
+    register( m_exportResourcesAction );
+
     m_propertiesAction = ActionFactory.PROPERTIES.create( window );
 
-    m_reopenEditorsContribution = ContributionItemFactory.REOPEN_EDITORS.create( window );
-
-    m_exitAction = ActionFactory.QUIT.create( window );
-    register( m_exitAction );
+    m_quitAction = ActionFactory.QUIT.create( window );
+    register( m_quitAction );
 
     /* Actions and ContributionItems for the edit menu. */
     m_undoAction = ActionFactory.UNDO.create( window );
@@ -228,6 +263,17 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
 
     m_aboutAction = ActionFactory.ABOUT.create( window );
     register( m_aboutAction );
+
+    final String newQuickMenuId = "org.eclipse.ui.file.newQuickMenu"; //$NON-NLS-1$
+    newQuickMenu = new QuickMenuAction( newQuickMenuId )
+    {
+      @Override
+      protected void fillMenu( final IMenuManager menu )
+      {
+        menu.add( new NewWizardMenu( window ) );
+      }
+    };
+    register( newQuickMenu );
   }
 
   /**
@@ -236,38 +282,12 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
   @Override
   protected void fillMenuBar( final IMenuManager menuBar )
   {
-    final MenuManager fileMenu = new MenuManager( IDEWorkbenchMessages.Workbench_file, IWorkbenchActionConstants.M_FILE );
-    final MenuManager newMenu = new MenuManager( IDEWorkbenchMessages.Workbench_new, ActionFactory.NEW.getId() );
+    menuBar.add( createFileMenu() );
     final MenuManager editMenu = new MenuManager( IDEWorkbenchMessages.Workbench_edit, IWorkbenchActionConstants.M_EDIT );
     final MenuManager windowMenu = new MenuManager( IDEWorkbenchMessages.Workbench_window, IWorkbenchActionConstants.M_WINDOW );
     final MenuManager openPerspectiveMenu = new MenuManager( IDEWorkbenchMessages.Workbench_openPerspective, "openPerspective" );
     final MenuManager showViewMenu = new MenuManager( IDEWorkbenchMessages.Workbench_showView, "showView" );
     final MenuManager helpMenu = new MenuManager( IDEWorkbenchMessages.Workbench_help, IWorkbenchActionConstants.M_HELP );
-
-    /* The file menu. */
-    menuBar.add( fileMenu );
-    fileMenu.add( new GroupMarker( IWorkbenchActionConstants.FILE_START ) );
-    fileMenu.add( newMenu );
-    newMenu.add( m_newWizardAction );
-    fileMenu.add( new GroupMarker( IWorkbenchActionConstants.NEW_EXT ) );
-    fileMenu.add( new Separator() );
-    fileMenu.add( m_closeAction );
-    fileMenu.add( m_closeAllAction );
-    fileMenu.add( new GroupMarker( IWorkbenchActionConstants.CLOSE_EXT ) );
-    fileMenu.add( new Separator() );
-    fileMenu.add( m_saveAction );
-    fileMenu.add( m_saveAsAction );
-    fileMenu.add( m_saveAllAction );
-    fileMenu.add( new GroupMarker( IWorkbenchActionConstants.SAVE_EXT ) );
-    fileMenu.add( new Separator() );
-    fileMenu.add( m_printAction );
-    fileMenu.add( new GroupMarker( IWorkbenchActionConstants.PRINT_EXT ) );
-    fileMenu.add( new Separator() );
-    fileMenu.add( m_propertiesAction );
-    fileMenu.add( m_reopenEditorsContribution );
-    fileMenu.add( new Separator() );
-    fileMenu.add( m_exitAction );
-    fileMenu.add( new GroupMarker( IWorkbenchActionConstants.FILE_END ) );
 
     /* The edit menu. */
     menuBar.add( editMenu );
@@ -312,19 +332,91 @@ public class UnrestrictedActionBarAdvisor extends ActionBarAdvisor
     menuBar.add( helpMenu );
     helpMenu.add( new GroupMarker( IWorkbenchActionConstants.HELP_START ) );
     helpMenu.add( m_introAction ); //
-    helpMenu.add(new Separator("group.main.ext")); //$NON-NLS-1$
+    helpMenu.add( new Separator( "group.main.ext" ) ); //$NON-NLS-1$
     helpMenu.add( m_helpContentsAction );
-    helpMenu.add(new GroupMarker("group.tutorials")); //$NON-NLS-1$
-    helpMenu.add(new GroupMarker("group.tools")); //$NON-NLS-1$
-    helpMenu.add(new Separator("group.updates")); //$NON-NLS-1$
+    helpMenu.add( new GroupMarker( "group.tutorials" ) ); //$NON-NLS-1$
+    helpMenu.add( new GroupMarker( "group.tools" ) ); //$NON-NLS-1$
+    helpMenu.add( new Separator( "group.updates" ) ); //$NON-NLS-1$
     helpMenu.add( new GroupMarker( IWorkbenchActionConstants.HELP_END ) );
-    helpMenu.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS));
+    helpMenu.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
     // about should always be at the bottom
-    helpMenu.add(new Separator("group.about")); //$NON-NLS-1$
+    helpMenu.add( new Separator( "group.about" ) ); //$NON-NLS-1$
 
-    ActionContributionItem aboutItem = new ActionContributionItem(m_aboutAction);
-    aboutItem.setVisible(!Util.isMac());
+    final ActionContributionItem aboutItem = new ActionContributionItem( m_aboutAction );
+    aboutItem.setVisible( !Util.isMac() );
     helpMenu.add( m_aboutAction );
-    helpMenu.add(new GroupMarker("group.about.ext")); //$NON-NLS-1$
+    helpMenu.add( new GroupMarker( "group.about.ext" ) ); //$NON-NLS-1$
+  }
+
+  /**
+   * Creates and returns the File menu.
+   */
+  private MenuManager createFileMenu( )
+  {
+    final MenuManager menu = new MenuManager( IDEWorkbenchMessages.Workbench_file, IWorkbenchActionConstants.M_FILE );
+
+    menu.add( new GroupMarker( IWorkbenchActionConstants.FILE_START ) );
+
+    // create the New submenu, using the same id for it as the New action
+    {
+      final String newText = IDEWorkbenchMessages.Workbench_new;
+      final String newId = ActionFactory.NEW.getId();
+      final MenuManager newMenu = new MenuManager( newText, newId );
+      newMenu.setActionDefinitionId( "org.eclipse.ui.file.newQuickMenu" ); //$NON-NLS-1$
+      newMenu.add( new Separator( newId ) );
+      this.newWizardMenu = new NewWizardMenu( getWindow() );
+      newMenu.add( this.newWizardMenu );
+      newMenu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+      menu.add( newMenu );
+    }
+
+    menu.add( new GroupMarker( IWorkbenchActionConstants.NEW_EXT ) );
+    menu.add( new Separator() );
+
+    menu.add( m_closeAction );
+    menu.add( m_closeAllAction );
+    menu.add( new GroupMarker( IWorkbenchActionConstants.CLOSE_EXT ) );
+    menu.add( new Separator() );
+
+    menu.add( m_saveAction );
+    menu.add( m_saveAsAction );
+    menu.add( m_saveAllAction );
+    // menu.add( getRevertItem() );
+    menu.add( new Separator() );
+    // menu.add( getMoveItem() );
+    menu.add( m_renameAction );
+    menu.add( m_refreshAction );
+    menu.add( new GroupMarker( IWorkbenchActionConstants.SAVE_EXT ) );
+    menu.add( new Separator() );
+
+    menu.add( m_printAction );
+    menu.add( new GroupMarker( IWorkbenchActionConstants.PRINT_EXT ) );
+    menu.add( new Separator() );
+
+    menu.add( m_openWorkspaceAction );
+    menu.add( new GroupMarker( IWorkbenchActionConstants.OPEN_EXT ) );
+    menu.add( new Separator() );
+    menu.add( m_importResourcesAction );
+    menu.add( m_exportResourcesAction );
+    menu.add( new GroupMarker( IWorkbenchActionConstants.IMPORT_EXT ) );
+    menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+
+    menu.add( new Separator() );
+    menu.add( m_propertiesAction );
+
+    menu.add( ContributionItemFactory.REOPEN_EDITORS.create( getWindow() ) );
+    menu.add( new GroupMarker( IWorkbenchActionConstants.MRU ) );
+    menu.add( new Separator() );
+
+    // If we're on OS X we shouldn't show this command in the File menu. It
+    // should be invisible to the user. However, we should not remove it -
+    // the carbon UI code will do a search through our menu structure
+    // looking for it when Cmd-Q is invoked (or Quit is chosen from the
+    // application menu.
+    final ActionContributionItem quitItem = new ActionContributionItem( m_quitAction );
+    quitItem.setVisible( !Util.isMac() );
+    menu.add( quitItem );
+    menu.add( new GroupMarker( IWorkbenchActionConstants.FILE_END ) );
+    return menu;
   }
 }

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.kalypso.kalypso1d2d.pjt
 Bundle-SymbolicName: org.kalypso.kalypso1d2d.pjt;singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-Activator: org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
@@ -23,13 +23,13 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.simulation.ui,
  de.openali.odysseus.chart.factory,
  de.openali.odysseus.chart.ui,
- org.kalypso.project.database;bundle-version="1.0.0",
- org.kalypso.project.database.client;bundle-version="1.0.0",
+ org.kalypso.project.database,
+ org.kalypso.project.database.client,
  org.kalypso.model.1d2d.project.1d2d_demo;resolution:=optional,
  org.kalypso.model.1d2d.project.2d_demo;resolution:=optional,
  org.kalypso.model.1d2d.project.template,
- org.kalypso.module;bundle-version="2.3.0",
- org.kalypso.ui.observationimport;bundle-version="10.10.1"
+ org.kalypso.module,
+ org.kalypso.ui.observationimport
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.ui.wizards.imports.baseMap,
  org.kalypso.ui.wizards.imports.elevationmodel,

@@ -99,8 +99,8 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
    */
   protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures, final IProfil[] profiles ) throws Exception
   {
-    final IRiverProfileNetwork network = networkCollection.getRiverProfileNetworks().addNew( IRiverProfileNetwork.QNAME );
-    final Feature networkFeature = network;
+    final IRiverProfileNetwork network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
+    final Feature networkFeature = network.getFeature();
     addedFeatures.add( networkFeature );
 
     /* Set user friendly name and description */

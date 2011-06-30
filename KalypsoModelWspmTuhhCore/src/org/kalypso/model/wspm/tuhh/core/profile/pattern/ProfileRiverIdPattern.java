@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -50,7 +51,7 @@ public class ProfileRiverIdPattern extends AbstractProfileStringPattern
 {
   public ProfileRiverIdPattern( )
   {
-    super( "River-ID", "River-Id" ); //$NON-NLS-1$
+    super( "River-ID", Messages.getString("ProfileRiverIdPattern_0") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

@@ -101,7 +101,9 @@ public class ManageWaterBodiesPage extends WizardPage
 
     // Table
     final TableViewer tableViewer = m_viewer.createTableViewer( tablePanel );
-    m_viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final GridData tableData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    tableData.heightHint = 250;
+    m_viewer.getControl().setLayoutData( tableData );
 
     tableViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {

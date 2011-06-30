@@ -70,7 +70,7 @@ public class KMFileReader
 
   private final File[] m_inputFiles;
 
-  private final Pattern m_stationAndBankfullPattern = Pattern.compile( "(.*)(\\QStation [km]\\E)(.*)(\\QBordvolle Hoehe [mNN]\\E)" );
+  private final Pattern m_stationAndBankfullPattern = Pattern.compile( "(.*)(\\QStation [km]\\E)(.*)(\\QBordvolle Hoehe [mNN]\\E)" ); //$NON-NLS-1$
 
   private final QIntervalIndex m_intervalIndex;
 

@@ -36,7 +36,7 @@ public final class ProfileStationPattern extends AbstractPatternInput<IProfilePa
       return StringUtils.EMPTY;
 
     final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( value );
-    return String.format( "%s", bigStation );
+    return String.format( "%s", bigStation ); //$NON-NLS-1$
   }
 
   @Override

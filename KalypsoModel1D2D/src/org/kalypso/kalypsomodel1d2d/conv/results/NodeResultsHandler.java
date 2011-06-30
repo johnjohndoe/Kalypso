@@ -53,6 +53,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -88,6 +89,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -213,7 +215,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#getCreatedFeatures()
    */
-  public List<Feature> getCreatedFeatures( )
+  public List<IFeatureWrapper2> getCreatedFeatures( )
   {
     return null;
   }
@@ -532,7 +534,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     if( area == null )
     {
-      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18", nodeResult.getId(), station.doubleValue() ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18", nodeResult.getGmlID(), station.doubleValue() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg );
     }
 
@@ -582,11 +584,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         break;
 
       /* check, if node was already handled for lengthsection */
-      if( !m_lengthsection1dNodes.contains( nodes[i].getId() ) )
+      if( !m_lengthsection1dNodes.contains( nodes[i].getGmlID() ) )
       {
         handleLengthSectionData( nodes[i], flowRelation1d, calcUnit );
         // TODO: right now, no consequences of the returned status
-        m_lengthsection1dNodes.add( nodes[i].getId() );
+        m_lengthsection1dNodes.add( nodes[i].getGmlID() );
       }
 
       final IProfileFeature profile = flowRelation1d.getProfile();
@@ -1298,7 +1300,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       m_resultWorkspace.addFeatureAsComposition( parentFeature, parentRelation, -1, feature );
 
       /* Remember node result for additional result data */
-      final GMLNodeResult result = (GMLNodeResult) feature;
+      final GMLNodeResult result = new GMLNodeResult( feature );
       m_nodeIndex.put( id, result );
 
       /* Fill node result with data */

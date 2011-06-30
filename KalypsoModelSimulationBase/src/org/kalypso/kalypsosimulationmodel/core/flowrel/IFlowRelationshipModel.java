@@ -44,19 +44,16 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Interface for classes representing a simBase:FlowRelationshipModel
- * 
+ *
  * @author Gernot Belger
  */
-public interface IFlowRelationshipModel extends IModel
+public interface IFlowRelationshipModel extends IFeatureWrapperCollection<IFlowRelationship>, IModel
 {
-  public static final QName OP1D2D_F_FLOWRELATIONSHIPS_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "FlowRelationshipModel" ); //$NON-NLS-1$
-  
   public static final QName QNAME_PROP_FLOW_REL_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "flowRelationshipMember" ); //$NON-NLS-1$
 
   public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth );
@@ -68,6 +65,4 @@ public interface IFlowRelationshipModel extends IModel
    * considered.
    */
   public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchDistance, final Class< ? extends IFlowRelationshipModel>[] flowRelationTypes );
-  
-  public IFeatureBindingCollection<IFlowRelationship> getFlowRelationsShips( );
 }

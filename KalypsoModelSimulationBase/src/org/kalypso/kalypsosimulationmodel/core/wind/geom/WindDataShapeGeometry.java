@@ -8,7 +8,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.kalypsosimulationmodel.core.wind.INativeWindDataModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModel;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
@@ -47,7 +46,7 @@ public class WindDataShapeGeometry extends FeaturePropertyFunction
     {
       final IFeatureType featureType = feature.getFeatureType();
       QName featureQName = featureType.getQName();
-      if( IWindDataModelSystem.SIM_BASE_F_WIND_ELE_SYS.equals( featureQName ) )
+      if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS.equals( featureQName ) )
       {
         // System.out.println( "WindDataShapeGeometry::getting shape: " + KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS + "::" + feature );
         // transform the bounding box into a curve and return it
@@ -66,11 +65,11 @@ public class WindDataShapeGeometry extends FeaturePropertyFunction
 
         return curve;
       }
-      else if( INativeWindDataModelWrapper.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER.equals( featureQName ) )
+      else if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER.equals( featureQName ) )
       {
         // transform the bounding box into a curve and return it
         IWindDataModel lWindDataModel = (IWindDataModel) feature.getAdapter( IWindDataModel.class );
-        IWindDataModelSystem lWindDataModelSystem = (IWindDataModelSystem) lWindDataModel.getParent().getAdapter( IWindDataModelSystem.class );
+        IWindDataModelSystem lWindDataModelSystem = (IWindDataModelSystem) lWindDataModel.getFeature().getParent().getAdapter( IWindDataModelSystem.class );
 
         GM_Envelope bBox = lWindDataModelSystem.getGridDescriptor().getGM_Envelope( lWindDataModelSystem.getGridDescriptor().getCoordinateSystem() );// getBoundingBox();
         GM_Position min = bBox.getMin();

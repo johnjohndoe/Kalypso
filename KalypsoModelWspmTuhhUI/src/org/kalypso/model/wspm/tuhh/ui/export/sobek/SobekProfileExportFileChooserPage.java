@@ -189,7 +189,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
     final FileChooserGroup dirChooser = m_info.getDirChooser();
     dirChooser.setDialogSettings( getDialogSettings() );
 
-    dirChooser.setLabel( "Export Directory" );
+    dirChooser.setLabel( Messages.getString("SobekProfileExportFileChooserPage.2") ); //$NON-NLS-1$
 
     dirChooser.createControlsInGrid( idPanel );
   }
@@ -197,8 +197,8 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   private void createNamePatternControl( final Composite parent )
   {
     final Label patternLabel = new Label( parent, SWT.NONE );
-    patternLabel.setText( "Name-Pattern" );
-    patternLabel.setToolTipText( "This pattern is used to generate sobek profile names" );
+    patternLabel.setText( Messages.getString("SobekProfileExportFileChooserPage.6") ); //$NON-NLS-1$
+    patternLabel.setToolTipText( Messages.getString("SobekProfileExportFileChooserPage.7") ); //$NON-NLS-1$
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

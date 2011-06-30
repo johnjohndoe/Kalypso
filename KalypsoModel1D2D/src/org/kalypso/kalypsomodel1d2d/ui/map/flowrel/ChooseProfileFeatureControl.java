@@ -195,9 +195,9 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
       final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
       final ITerrainModel terrainModel = dataProvider.getModel( ITerrainModel.class );
 
-      final GMLWorkspace root = terrainModel.getWorkspace();
+      final GMLWorkspace root = terrainModel.getFeature().getWorkspace();
       final GMLContentProvider cp = new GMLContentProvider( false, false );
-      cp.setRootPath( new GMLXPath( terrainModel.getRiverProfileNetworkCollection() ) );
+      cp.setRootPath( new GMLXPath( terrainModel.getRiverProfileNetworkCollection().getFeature() ) );
       final TreeSingleSelectionDialog treeSelectionDialog = new TreeSingleSelectionDialog( shell, root, cp, new GMLLabelProvider(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.2" ) ); //$NON-NLS-1$
 
       if( realProfileFeature != null )
@@ -214,9 +214,9 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
       final String profileRef = "terrain.gml#" + newProfileLink.getId(); //$NON-NLS-1$
       if( flowRel instanceof ITeschkeFlowRelation )
       {
-        final IRelationType pt = (IRelationType) flowRel.getFeatureType().getProperty( ITeschkeFlowRelation.QNAME_PROP_PROFILE );
+        final IRelationType pt = (IRelationType) flowRel.getFeature().getFeatureType().getProperty( ITeschkeFlowRelation.QNAME_PROP_PROFILE );
         final Feature newLinkFeature = new XLinkedFeature_Impl( feature, pt, pt.getTargetFeatureType(), profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-        fireFeatureChange( new ChangeFeatureCommand( flowRel, pt, newLinkFeature ) );
+        fireFeatureChange( new ChangeFeatureCommand( flowRel.getFeature(), pt, newLinkFeature ) );
       }
       else if( flowRel instanceof IBuildingFlowRelation )
       {
@@ -233,9 +233,9 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
             MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.13" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           else
           {
-            final IRelationType pt = (IRelationType) flowRel.getFeatureType().getProperty( IBuildingFlowRelation.QNAME_PROP_PROFILE );
+            final IRelationType pt = (IRelationType) flowRel.getFeature().getFeatureType().getProperty( IBuildingFlowRelation.QNAME_PROP_PROFILE );
             final Feature newLinkFeature = new XLinkedFeature_Impl( feature, pt, pt.getTargetFeatureType(), profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-            fireFeatureChange( new ChangeFeatureCommand( flowRel, pt, newLinkFeature ) );
+            fireFeatureChange( new ChangeFeatureCommand( flowRel.getFeature(), pt, newLinkFeature ) );
           }
         }
       }
@@ -247,10 +247,10 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
       //          MessageDialog.openWarning( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.9"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.10") ); //$NON-NLS-1$ //$NON-NLS-2$
       // else
       // {
-      // final IRelationType pt = (IRelationType) flowRel.getFeatureType().getProperty(
+      // final IRelationType pt = (IRelationType) flowRel.getFeature().getFeatureType().getProperty(
       // IBuildingFlowRelation2D.QNAME_PROP_PROFILE );
       //          final Feature newLinkFeature = new XLinkedFeature_Impl( feature, pt, pt.getTargetFeatureType(), profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-      // fireFeatureChange( new ChangeFeatureCommand( flowRel, pt, newLinkFeature ) );
+      // fireFeatureChange( new ChangeFeatureCommand( flowRel.getFeature(), pt, newLinkFeature ) );
       // }
       // }
 
@@ -290,7 +290,7 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
     if( profileFeature == null )
       return null;
 
-    final Feature realProfileFeature = ((XLinkedFeature_Impl) profileFeature);
+    final Feature realProfileFeature = ((XLinkedFeature_Impl) profileFeature).getFeature();
     return realProfileFeature;
   }
 

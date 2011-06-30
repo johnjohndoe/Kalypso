@@ -31,25 +31,27 @@ package org.kalypso.ui.rrm.internal.gml;
 
 import java.util.Collection;
 
-import javax.xml.namespace.QName;
-
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
-import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
-import org.kalypso.ogc.sensor.view.observationDialog.ClipboardExportAction;
-import org.kalypso.ogc.sensor.view.observationDialog.ClipboardImportAction;
-import org.kalypso.ogc.sensor.view.observationDialog.NewIdealLanduseAction;
-import org.kalypso.ogc.sensor.view.observationDialog.NewObservationAction;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.view.observationDialog.IObservationAction;
+import org.kalypso.ogc.sensor.view.observationDialog.ObservationViewer;
 import org.kalypso.ogc.sensor.view.observationDialog.ObservationViewerDialog;
-import org.kalypso.ogc.sensor.view.observationDialog.RemoveObservationAction;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author kuepfer
@@ -62,13 +64,13 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
 
   private FeatureChange m_change = null;
 
-  private static ZmlInlineTypeHandler m_typeHandler;
+  private static ZmlInlineGuiTypeHandler m_typeHandler;
 
-  public ZmlInlineFeatureDialog( final Feature feature, final IPropertyType ftp, final ZmlInlineTypeHandler handler )
+  public ZmlInlineFeatureDialog( final Feature feature, final IPropertyType ftp, final ZmlInlineGuiTypeHandler typeHandler )
   {
     m_feature = feature;
     m_ftp = ftp;
-    m_typeHandler = handler;
+    m_typeHandler = typeHandler;
   }
 
   @Override
@@ -76,30 +78,30 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
   {
     m_change = null;
 
-    final QName typeName = m_typeHandler.getTypeName();
-
-    final String[] axisTypes = m_typeHandler.getAxisTypes();
-
     final ObservationViewerDialog dialog = new ObservationViewerDialog( shell, false );
-    // Dies ist ein hässlicher hack!
-    // TODO Definition eines Extension points für den ObservationViewerDialog damit für jeden TypeHandler
-    // der Dialog configuriert werden kann, oder ist dies hier anders gedacht ?? CK
-    // Extension Point müsste z.B. im eine Methode wie newObservation(Shell parent) im Interface haben
-    // die eine IObservation zurück gibt
-    if( typeName.getLocalPart().equals( "ZmlInlineIdealKcWtLaiType" ) ) //$NON-NLS-1$
-      dialog.addObservationAction( new NewIdealLanduseAction( axisTypes ) );
-    else
-      dialog.addObservationAction( new NewObservationAction( axisTypes ) );
+    dialog.setViewerStyle( ObservationViewer.HIDE_PROPERTIES );
 
-    dialog.addObservationAction( new RemoveObservationAction() );
-    dialog.addObservationAction( new ClipboardImportAction( axisTypes ) );
-    dialog.addObservationAction( new ClipboardExportAction() );
+    final String windowTitle = getWindowTitle();
+    dialog.setWindowTitle( windowTitle );
+
+    try
+    {
+      final Object o = getDialogInput();
+      dialog.setInput( o );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("ZmlInlineFeatureDialog.0"), e ); //$NON-NLS-1$
+      new StatusDialog2( shell, status, Messages.getString("ZmlInlineFeatureDialog.1") ).open(); //$NON-NLS-1$
+    }
+
+    final IObservationAction[] actions = m_typeHandler.getObservationActions();
+    for( final IObservationAction action : actions )
+      dialog.addObservationAction( action );
 
     final IDialogSettings dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
     dialog.setDialogSettings( dialogSettings );
-
-    final Object o = m_feature.getProperty( m_ftp );
-    dialog.setInput( o );
 
     final int open = dialog.open();
     if( !(open == Window.OK) )
@@ -108,6 +110,27 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
     final Object newValue = dialog.getInput();
     m_change = new FeatureChange( m_feature, m_ftp, newValue );
     return open;
+  }
+
+  private String getWindowTitle( )
+  {
+    final String featureLabel = FeatureHelper.getAnnotationValue( m_feature, IAnnotation.ANNO_LABEL );
+    final String propertyLabel = m_ftp.getAnnotation().getLabel();
+
+    return String.format( "%s - %s", featureLabel, propertyLabel );//$NON-NLS-1$
+  }
+
+  private Object getDialogInput( ) throws SensorException
+  {
+    final Object o = m_feature.getProperty( m_ftp );
+    if( o == null )
+      return o;
+
+    if( o instanceof IObservation )
+      return m_typeHandler.checkObservation( (IObservation) o );
+
+    // Error in schema
+    throw new IllegalStateException();
   }
 
   @Override

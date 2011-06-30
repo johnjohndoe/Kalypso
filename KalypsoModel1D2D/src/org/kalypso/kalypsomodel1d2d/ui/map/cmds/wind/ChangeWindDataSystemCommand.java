@@ -61,6 +61,7 @@ import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -131,14 +132,14 @@ public class ChangeWindDataSystemCommand implements ICommand
       try
       {
         command.process();
-        final Feature[] changedFeatures2 = command.getChangedFeature();
+        final IFeatureWrapper2[] changedFeatures2 = command.getChangedFeature();
         if( changedFeatures2 != null )
         {
-          for( final Feature changedFeature : changedFeatures2 )
+          for( final IFeatureWrapper2 changedFeature : changedFeatures2 )
           {
             if( changedFeature != null )
             {
-              final Feature wrappedFeature = changedFeature;
+              final Feature wrappedFeature = changedFeature.getFeature();
               if( wrappedFeature != null )
               {
                 changedFeatures.add( wrappedFeature );
@@ -161,7 +162,7 @@ public class ChangeWindDataSystemCommand implements ICommand
   {
     final Feature[] changedFeaturesArray = new Feature[changedFeatures.size()];
     changedFeatures.toArray( changedFeaturesArray );
-    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_windModel, changedFeaturesArray, m_intEventType ) );
+    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_windModel.getFeature(), changedFeaturesArray, m_intEventType ) );
   }
 
   /**

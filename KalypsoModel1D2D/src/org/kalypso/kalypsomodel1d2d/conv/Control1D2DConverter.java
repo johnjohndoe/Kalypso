@@ -71,8 +71,6 @@ import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit.TYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -95,8 +93,8 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.observation.util.TupleResultIndex;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 
@@ -132,8 +130,8 @@ public class Control1D2DConverter
   private boolean m_isBCTupleResultIndexCached = false;
 
   private final IGeoLog m_log;
-
-  private List<Date> m_listDateSteps = null;
+  
+  private List< Date > m_listDateSteps = null;
 
   private final ICalculationUnit m_calculationUnit;
 
@@ -151,8 +149,8 @@ public class Control1D2DConverter
       m_staticInnerLinesIDProvider = new IdMap();
 
     /* Initialize boundary conditions */
-    final String calculationUnitID = m_calculationUnit.getId();
-    for( final IFlowRelationship relationship : flowModel.getFlowRelationsShips() )
+    final String calculationUnitID = m_calculationUnit.getGmlID();
+    for( final IFlowRelationship relationship : flowModel )
     {
       if( relationship instanceof IBoundaryCondition )
       {
@@ -161,7 +159,7 @@ public class Control1D2DConverter
           m_unitBoundaryConditions.add( boundaryCondition );
       }
     }
-    m_listDateSteps = new ArrayList<Date>();
+    m_listDateSteps = new ArrayList< Date >();
   }
 
   public void writeR10File( final OutputStream outputStream ) throws CoreException, IOException
@@ -222,7 +220,7 @@ public class Control1D2DConverter
     formatter.format( "INSRCORD%s%n", ISimulation1D2DConstants.WIND_RMA10_COORDS_File ); //$NON-NLS-1$
 
     /* We always write a building file, even if it is empty. */
-    //    formatter.format( "INSSTR  %s%n", ISimulation1D2DConstants.SURFACE_TRACTTION_File ); //$NON-NLS-1$
+//    formatter.format( "INSSTR  %s%n", ISimulation1D2DConstants.SURFACE_TRACTTION_File ); //$NON-NLS-1$
 
     formatter.format( "ENDFIL%n" ); //$NON-NLS-1$
 
@@ -303,18 +301,18 @@ public class Control1D2DConverter
    */
   private void writeR10PropertiesDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
-    for( final IRoughnessCls rClass : m_roughnessModel.getRoughnessClasses() )
+    for( final IRoughnessCls rClass : m_roughnessModel )
     {
       final int roughnessAsciiID = m_nativeIDProvider.getConversionID( rClass );
 
       final int iedsw = m_controlModel.getIEDSW();
-      Double[] eddy = rClass.getViscosities( iedsw ); // for empty tbmin* 1000 for all eddies
+      Double[] eddy = rClass.getViscosities( iedsw ); // for empty tbmin* 1000 for all eddies 
       eddy = checkViscosities( eddy );
       final Double ks = rClass.getKs();
       final Double axAy = rClass.getAxAy();
       final Double dp = rClass.getDp();
 
-      if( ks == null || ks.isNaN() )
+      if( ks == null || ks.isNaN())
       {
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.7", rClass.getName() );//$NON-NLS-1$
         throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
@@ -333,19 +331,17 @@ public class Control1D2DConverter
 
   private Double[] checkViscosities( Double[] eddy )
   {
-    Double[] eddyRes = new Double[eddy.length];
+    Double[] eddyRes = new Double[ eddy.length ]; 
     Double lDoubleDefaultViscosity = m_controlModel.getTBMIN();
 
     for( int i = 0; i < eddy.length; i++ )
     {
       Double double1 = eddy[i];
-      if( double1.equals( 0.0 ) )
-      {
-        eddyRes[i] = lDoubleDefaultViscosity * 1000;
+      if( double1.equals( 0.0 ) ){
+        eddyRes[ i ] = lDoubleDefaultViscosity * 1000;
       }
-      else
-      {
-        eddyRes[i] = double1;
+      else{
+        eddyRes[ i ] = double1;
       }
     }
     return eddyRes;
@@ -416,10 +412,10 @@ public class Control1D2DConverter
       if( parentCalculationUnit.getType() == TYPE.TYPE1D2D && ((ICalculationUnit1D2D) parentCalculationUnit).isCoupledSimulation() )
       {
         final ICalculationUnit1D2D calculationUnit1D2D = (ICalculationUnit1D2D) parentCalculationUnit;
-        final IFeatureBindingCollection<ICalculationUnit> changedSubUnits = calculationUnit1D2D.getChangedSubUnits();
+        final IFeatureWrapperCollection<ICalculationUnit> changedSubUnits = calculationUnit1D2D.getChangedSubUnits();
         int in2DCalcUnitCount = 0;
-        final IFeatureBindingCollection<IFE1D2DComplexElement> containers = line.getContainers();
-        for( final Feature calcUnit : containers )
+        final IFeatureWrapperCollection<IFeatureWrapper2> containers = line.getContainers();
+        for( final IFeatureWrapper2 calcUnit : containers )
         {
           if( ((ICalculationUnit) calcUnit).getType() == TYPE.TYPE2D && changedSubUnits.contains( calcUnit ) )
           {
@@ -427,7 +423,7 @@ public class Control1D2DConverter
           }
         }
         if( in2DCalcUnitCount == 2 )
-          formatter.format( "ICL %4d %4d\n", m_staticInnerLinesIDProvider.getOrAdd( line.getId() ), m_nativeIDProvider.getConversionID( line ) ); //$NON-NLS-1$
+          formatter.format( "ICL %4d %4d\n", m_staticInnerLinesIDProvider.getOrAdd( line.getGmlID() ), m_nativeIDProvider.getConversionID( line ) ); //$NON-NLS-1$
       }
 
       FormatterUtils.checkIoException( formatter );
@@ -505,7 +501,7 @@ public class Control1D2DConverter
 
         final XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( indexTime );
         Calendar lastStepCal = cal.toGregorianCalendar();
-        m_listDateSteps.add( DateUtilities.toDate( cal ) );
+        m_listDateSteps.add( DateUtilities.toDate( cal ) );   
         // lastStepCal.setTimeZone( DEFAULT_TIMEZONE );
         int stepCount = 1;
         for( ; iterator.hasNext(); stepCount++ )
@@ -516,7 +512,7 @@ public class Control1D2DConverter
           final String uRVal = ((String) record.getValue( indexRelaxationsFaktor ));
           final XMLGregorianCalendar stepXMLGrCal = (XMLGregorianCalendar) record.getValue( indexTime );
           final Calendar stepCal = stepXMLGrCal.toGregorianCalendar();
-          m_listDateSteps.add( DateUtilities.toDate( stepXMLGrCal ) );
+          m_listDateSteps.add( DateUtilities.toDate( stepXMLGrCal ) );   
           // stepCal.setTimeZone( DEFAULT_TIMEZONE );
           final String unsteadyMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.36", stepCount ); //$NON-NLS-1$
           writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );
@@ -551,7 +547,7 @@ public class Control1D2DConverter
     final int dayOfYear;
     final double ihre;
 
-    // TimeZone displayTimeZone = KalypsoGisPlugin.getDefault().getDisplayTimeZone();
+//    TimeZone displayTimeZone = KalypsoGisPlugin.getDefault().getDisplayTimeZone();
     TimeZone displayTimeZone = KalypsoCorePlugin.getDefault().getTimeZone();
     Calendar kalypsoCalendarStep = Calendar.getInstance( displayTimeZone );
 
@@ -660,7 +656,7 @@ public class Control1D2DConverter
 
         // timeComponent is null for W/Q BCs
         if( timeComponent != null )
-          m_BCTupleResultIndexCache.put( boundaryCondition.getId(), new TupleResultIndex( obsResult, timeComponent ) );
+          m_BCTupleResultIndexCache.put( boundaryCondition.getGmlID(), new TupleResultIndex( obsResult, timeComponent ) );
       }
     }
     m_isBCTupleResultIndexCached = true;
@@ -699,18 +695,15 @@ public class Control1D2DConverter
           }
           else if( stepCal != null )
           {
-            final TupleResultIndex tupleResultIndex = m_BCTupleResultIndexCache.get( boundaryCondition.getId() );
+            final TupleResultIndex tupleResultIndex = m_BCTupleResultIndexCache.get( boundaryCondition.getGmlID() );
             final Number result = (Number) tupleResultIndex.getValue( ordinateComponent, stepCal.getTime() );
             stepValue = (result == null || Double.isNaN( result.doubleValue() )) ? 0.0 : result.doubleValue();
           }
-          else
-          {
-            try
-            {
+          else{
+            try{
               stepValue = Double.parseDouble( boundaryCondition.getStationaryCondition() );
             }
-            catch( Exception e )
-            {
+            catch (Exception e) {
               stepValue = Double.NaN;
             }
           }
@@ -782,15 +775,13 @@ public class Control1D2DConverter
               boundaryCondition.setDirection( new BigInteger( "0" ) ); //$NON-NLS-1$
 
             final int isAbsolute = (isAbsoluteProperty != null && isAbsoluteProperty.booleanValue()) ? 1 : 0;
-            if( boundaryCondition.hasDirection() )
-            {
+            if( boundaryCondition.hasDirection() ){
               double infVel = 0.001;
               try
               {
                 infVel = boundaryCondition.getInflowVelocity();
               }
-              catch( Exception e )
-              {
+              catch (Exception e) {
                 final IGeoStatus status = m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, "Needed absolute value was not defined", boundaryCondition.getLocation(), e );
               }
               formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0, infVel, Math.toRadians( boundaryCondition.getDirection().doubleValue() ) ); //$NON-NLS-1$
@@ -885,44 +876,42 @@ public class Control1D2DConverter
 
     return false;
   }
-
-  // /**
-  // * checks if the given string value contains string of form "0.1 to 0.5" and if it is, parses it and expands it into
-  // according to
-  // * amount of steps values and put them into pListFactors as floats
-  // *
-  // * direct implementation of parsing the relaxation factor
-  // */
-  // private boolean isLoopFomatedFactor( String pStrValue, List<Float> pListFactors, int pIntNumberIterations ) throws
-  // CoreException
-  // {
-  //    final String lStrRegex = "[ \\t]*[0-9][.,][0-9][ \\t]*[tT][oO][ \\t]*[0-9][.,][0-9][ \\t]*"; //$NON-NLS-1$
-  // String lStrToCheck = pStrValue.trim().toLowerCase();
-  // if( Pattern.matches( lStrRegex, lStrToCheck ) ){
-  //      int lIntIndexSep = lStrToCheck.indexOf( "to" ); //$NON-NLS-1$
-  // float lFloatStart = getFloatFromSimpleFloatString( lStrToCheck.substring( 0, lIntIndexSep ).trim() );
-  // float lFloatEnd = getFloatFromSimpleFloatString( lStrToCheck.substring( lIntIndexSep + 2 ).trim() );
-  // if( lFloatStart < 0.0 || lFloatStart > 1.0 || lFloatEnd < 0.0 || lFloatEnd > 1.0 ){
-  //        final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
-  // throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
-  // }
-  // int lIntAllInc = Math.abs( ( int )( lFloatEnd * 10 ) - ( int )( lFloatStart * 10 ) );
-  // int lIntPer = ( pIntNumberIterations / ( lIntAllInc ) );
-  // int lIntIncDone = 0;
-  // float lFloatSignum = Math.signum( lFloatEnd - lFloatStart );
-  // for( int i = 1; i <= pIntNumberIterations; ++i ){
-  // float lFloatRes = (float) ( lFloatStart + 0.1 * lIntIncDone * lFloatSignum );
-  // pListFactors.add( lFloatRes ) ;
-  // if( (i) % lIntPer == 0 && lIntIncDone < lIntAllInc ){
-  // lIntAllInc++;
-  // lIntIncDone++;
-  // }
-  // }
-  // return true;
-  // }
-  //
-  // return false;
-  // }
+  
+//  /**
+//   * checks if the given string value contains string of form "0.1 to 0.5" and if it is, parses it and expands it into according to 
+//   * amount of steps values and put them into pListFactors as floats
+//   *    
+//   * direct implementation of parsing the relaxation factor
+//   */
+//  private boolean isLoopFomatedFactor( String pStrValue, List<Float> pListFactors, int pIntNumberIterations ) throws CoreException
+//  {
+//    final String lStrRegex = "[ \\t]*[0-9][.,][0-9][ \\t]*[tT][oO][ \\t]*[0-9][.,][0-9][ \\t]*"; //$NON-NLS-1$
+//    String lStrToCheck = pStrValue.trim().toLowerCase();
+//    if( Pattern.matches( lStrRegex, lStrToCheck ) ){
+//      int lIntIndexSep = lStrToCheck.indexOf( "to" ); //$NON-NLS-1$
+//      float lFloatStart = getFloatFromSimpleFloatString( lStrToCheck.substring( 0, lIntIndexSep ).trim() );
+//      float lFloatEnd = getFloatFromSimpleFloatString( lStrToCheck.substring( lIntIndexSep + 2 ).trim() );
+//      if( lFloatStart < 0.0 || lFloatStart > 1.0 || lFloatEnd < 0.0 || lFloatEnd > 1.0 ){
+//        final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
+//        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+//      }
+//      int lIntAllInc = Math.abs( ( int )( lFloatEnd * 10 ) - ( int )( lFloatStart * 10 ) );
+//      int lIntPer = ( pIntNumberIterations / ( lIntAllInc ) );
+//      int lIntIncDone = 0;
+//      float lFloatSignum = Math.signum( lFloatEnd - lFloatStart );
+//      for( int i = 1; i <= pIntNumberIterations; ++i ){
+//        float lFloatRes = (float) ( lFloatStart + 0.1 * lIntIncDone * lFloatSignum ); 
+//        pListFactors.add( lFloatRes ) ;
+//        if( (i) % lIntPer == 0 && lIntIncDone < lIntAllInc ){
+//          lIntAllInc++; 
+//          lIntIncDone++;
+//        }
+//      }
+//      return true;
+//    }
+//
+//    return false;
+//  }
 
   /**
    * checks if the given string value contains semicolon separated list of values and if it is parses it into
@@ -983,8 +972,7 @@ public class Control1D2DConverter
    */
   private Date getFirstTimeStep( ) throws CoreException
   {
-    if( m_controlModel.isUnsteadySelected() == false )
-    {
+    if( m_controlModel.isUnsteadySelected() == false ){
       m_listDateSteps.add( new Date() );
       return m_listDateSteps.get( 0 );
     }
@@ -1006,7 +994,7 @@ public class Control1D2DConverter
 
     final TupleResult owner = firstRecord.getOwner();
     final int indexTime = owner.indexOfComponent( compTime );
-    return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( indexTime ) );
+    return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( indexTime ) );  
   }
 
   public LinkedHashMap<Integer, IBoundaryCondition> getBoundaryConditionsIDProvider( )
@@ -1016,7 +1004,8 @@ public class Control1D2DConverter
 
   public final Date[] getListDateSteps( )
   {
-    return m_listDateSteps.toArray( new Date[m_listDateSteps.size()] );
+    return m_listDateSteps.toArray( new Date[ m_listDateSteps.size() ] );
   }
-
+  
+  
 }

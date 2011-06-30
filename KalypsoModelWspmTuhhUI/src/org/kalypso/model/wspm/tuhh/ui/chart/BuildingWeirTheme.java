@@ -81,10 +81,15 @@ public class BuildingWeirTheme extends AbstractProfilTheme
     }
   }
 
-  public BuildingWeirTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public BuildingWeirTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ICoordinateMapper cmDevider )
   {
     super( profil, IWspmTuhhConstants.LAYER_WEHR, TITLE, chartLayers, cm );
-
+    // spezialfall für PointMarker und LineLayer 
+    for( final IChartLayer layer : chartLayers )
+    {
+      if( layer instanceof PointMarkerLayer )
+        layer.setCoordinateMapper( cmDevider );
+    }
   }
 
   /**
@@ -104,6 +109,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
     new ProfilOperationJob( operation ).schedule();
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
    */
@@ -123,6 +129,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
     }
     return cl.toArray( new IChartLayer[] {} );
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
    */

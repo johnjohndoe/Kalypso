@@ -71,7 +71,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -151,13 +151,13 @@ public class RestartSelectWizard extends Wizard implements INewWizard
         continue;
 
       final String stepResultFilePath = restartInfo.getRestartFilePath().toString();
-      final IFeatureBindingCollection<IResultMeta> calcUnitChildren = calcUnitMetaResult.getChildren();
+      final IFeatureWrapperCollection<IResultMeta> calcUnitChildren = calcUnitMetaResult.getChildren();
       for( final IResultMeta calcUnitChild : calcUnitChildren )
       {
         if( calcUnitChild instanceof IStepResultMeta )
         {
           final IStepResultMeta stepResult = (IStepResultMeta) calcUnitChild;
-          final IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
+          final IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
           for( final IResultMeta resultMeta : children )
           {
             if( resultMeta instanceof IDocumentResultMeta )
@@ -200,10 +200,10 @@ public class RestartSelectWizard extends Wizard implements INewWizard
         result.setRestart( true );
         final IRestartInfo restartInfo = m_controlModel.addRestartInfo();
         restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta) result.getParent()).getCalcUnit() );
-        restartInfo.setStepResultMetaID( result.getId());
+        restartInfo.setStepResultMetaID( result.getGmlID() );
 
         // TODO: implement accessing zip file!
-        final IFeatureBindingCollection<IResultMeta> children = result.getChildren();
+        final IFeatureWrapperCollection<IResultMeta> children = result.getChildren();
 
         for( final IResultMeta resultMeta : children )
         {

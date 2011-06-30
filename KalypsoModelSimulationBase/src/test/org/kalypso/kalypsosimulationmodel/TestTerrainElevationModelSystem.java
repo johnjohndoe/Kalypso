@@ -53,55 +53,67 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Madanagopal
  * @author Patrice Congo
- * 
+ *
  */
 public class TestTerrainElevationModelSystem extends TestCase
 {
 
-  public void testWorkspaceLoad( )
+  public void testWorkspaceLoad()
   {
-
-    GMLWorkspace workspace = null;
-
-    try
-    {
-      workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_TEM_SYSREM, null );
-      Feature rcFeature = workspace.getRootFeature();
-      // ITerrainElevationModelSystem temSystem=
-      // (ITerrainElevationModelSystem)rcFeature.getAdapter(
-      // ITerrainElevationModelSystem.class );
-      // TODO test with adapater
-      ITerrainElevationModelSystem temSystem = (ITerrainElevationModelSystem) rcFeature;
-      assertNotNull( Messages.getString( "TestTerrainElevationModelSystem.0" ) + ITerrainElevationModelSystem.class, //$NON-NLS-1$
-      temSystem );
-
-      for( int i = 0; i < 10; i++ )
+          
+      GMLWorkspace workspace=null;
+      
+      try
       {
-        for( int j = 0; j < 10; j++ )
-        {
-          double jFlip = 9 - j;
-          double x = 5 * i + 1 + 13;
-          double y = 5 * jFlip + 1 + 154;
-          if( i == j )
+          workspace=
+              GmlSerializer.createGMLWorkspace( 
+                              TestWorkspaces.URL_TEM_SYSREM, 
+                              null );
+          Feature rcFeature=workspace.getRootFeature();
+//          ITerrainElevationModelSystem temSystem=
+//              (ITerrainElevationModelSystem)rcFeature.getAdapter( 
+//                                              ITerrainElevationModelSystem.class );
+          //TODO test  with adapater
+          ITerrainElevationModelSystem temSystem=
+            new TerrainElevationModelSystem(rcFeature);
+          assertNotNull( 
+              Messages.getString("TestTerrainElevationModelSystem.0")+ITerrainElevationModelSystem.class, //$NON-NLS-1$
+              temSystem );
+          
+          
+          for(int i=0;i<10;i++)
           {
-            GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
-            double ele = temSystem.getElevation( curPoint );
-            assertEquals( "i=" + i + " j=" + j + " ele=" + ele, i * j * 1.000, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
+            for(int j=0;j<10;j++)
+            {
+              double jFlip=9-j;
+              double x=5*i+1+13;
+              double y=5*jFlip+1+154;
+              if(i==j)
+              {
+                GM_Point curPoint = 
+                  GeometryFactory.createGM_Point( 
+                    x, y, TestWorkspaces.getGaussKrueger() );
+                double ele=temSystem.getElevation( curPoint  );
+                assertEquals(
+                    "i="+i+" j="+j+" ele="+ele,i*j*1.000,ele); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                
+              }
+              else
+              {
+                GM_Point curPoint = 
+                  GeometryFactory.createGM_Point( 
+                    x,y, TestWorkspaces.getGaussKrueger() );
+                double ele=temSystem.getElevation( curPoint  );
+                assertEquals(
+                    "i="+i+" j="+j+" ele="+ele,Double.NaN,ele); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              }
+            }
           }
-          else
-          {
-            GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
-            double ele = temSystem.getElevation( curPoint );
-            assertEquals( "i=" + i + " j=" + j + " ele=" + ele, Double.NaN, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          }
-        }
       }
-    }
-    catch( Throwable th )
-    {
-      fail( TestUtils.getStackTraceAsString( th ) );
-    }
+      catch (Throwable th) 
+      {
+        fail(TestUtils.getStackTraceAsString( th ));
+      }
   }
-
+  
 }
