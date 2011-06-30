@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="c1d2d:ControlModelGroup" style="SWT.NONE" xmlns:gft="featureview.template.kalypso.org"
+	xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:gml="http://www.opengis.net/gml">
+	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL"
+		grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="1" marginWidth="0" marginHeight="0"/>
+	<gft:subcomposite property="c1d2d:controlModelCollection" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL"
+			grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+	</gft:subcomposite>
+</gft:featureview>
+

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featuretemplate xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<gft:view typename="om:Observation" style="SWT.NONE" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:gml="http://www.opengis.net/gml"
+		xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ogc="http://www.opengis.net/ogc">
+		<gft:gridData 
+			verticalAlignment="GridData.FILL" 
+			horizontalAlignment="GridData.FILL" 
+			grabExcessVerticalSpace="true" 
+			grabExcessHorizontalSpace="true" />
+		<gft:gridLayout numColumns="1" />
+		
+		<gft:composite style="SWT.NONE">
+			<gft:gridData 
+				horizontalSpan="1" 
+				verticalAlignment="GridData.FILL" 
+				horizontalAlignment="GridData.FILL" 
+				grabExcessVerticalSpace="true"
+				grabExcessHorizontalSpace="true"
+				heightHint="300"/>
+			<gft:gridLayout numColumns="1" />
+			<gft:tabFolder style="SWT.NONE">
+			<gft:gridData 
+				verticalAlignment="GridData.FILL" 
+				horizontalAlignment="GridData.FILL" 
+				grabExcessHorizontalSpace="true" 
+				grabExcessVerticalSpace="true" 
+				horizontalSpan="1" />
+
+			<gft:tabItem>
+				<gft:tabLabel>Diagramm</gft:tabLabel>
+				<gft:extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+					<gft:visibleOperation>
+						<ogc:Not>
+							<ogc:PropertyIsNull>
+								<ogc:PropertyName>om:resultDefinition</ogc:PropertyName>
+							</ogc:PropertyIsNull>
+						</ogc:Not>
+					</gft:visibleOperation>
+					<gft:gridData 
+						horizontalSpan="1" 
+						horizontalAlignment="GridData.FILL" 
+						grabExcessHorizontalSpace="true" 
+						verticalAlignment="GridData.FILL" 
+						grabExcessVerticalSpace="true">
+						<gft:excludeOperation>
+							<ogc:PropertyIsNull>
+								<ogc:PropertyName>om:resultDefinition</ogc:PropertyName>
+							</ogc:PropertyIsNull>
+						</gft:excludeOperation>
+					</gft:gridData>
+					<gft:param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:Lengthsection:default" />
+					<gft:param name="featureKeyName" value="lengthsectionFeatureKey" />
+					<gft:param name="commands" value="org.kalypso.chart.ui.commands.zoomIn;org.kalypso.chart.ui.commands.pan;org.kalypso.chart.ui.commands.maximize;org.kalypso.chart.ui.commands.openOutline" />
+					<gft:param name="commandStyles" value="SWT.RADIO;SWT.RADIO;SWT.PUSH;SWT.PUSH" />
+				</gft:extensioncontrol>
+			</gft:tabItem>
+
+			<gft:tabItem>
+				<gft:tabLabel>Tabelle</gft:tabLabel>
+				<gft:tupleResult property="om:result" tooltip="Längsschnitt" style="SWT.NONE | SWT.MULTI | SWT.FULL_SELECTION">
+					<gft:visibleOperation>
+						<ogc:Not>
+							<ogc:PropertyIsNull>
+								<ogc:PropertyName>om:resultDefinition</ogc:PropertyName>
+							</ogc:PropertyIsNull>
+						</ogc:Not>
+					</gft:visibleOperation>
+					<gft:gridData 
+						horizontalSpan="1" 
+						verticalAlignment="GridData.FILL" 
+						horizontalAlignment="GridData.FILL" 
+						grabExcessVerticalSpace="false"
+						grabExcessHorizontalSpace="true"
+						heightHint="300">
+						<gft:excludeOperation>
+							<ogc:PropertyIsNull>
+								<ogc:PropertyName>om:resultDefinition</ogc:PropertyName>
+							</ogc:PropertyIsNull>
+						</gft:excludeOperation>
+					</gft:gridData>
+					<gft:toolbar>
+						<gft:menuContribution uri="org.kalypso.ui.tupleResult.menus.standardReadOnly"/>
+					</gft:toolbar>
+					<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" editable="false" alignment="SWT.LEFT | SWT.READ_ONLY" displayFormat="%.4f"
+						parseFormat="dd.MM.yyyy HH:mm" />
+					<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.2f"
+						nullFormat="&lt;nicht gesetzt&gt;" />
+					<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.3f"
+						nullFormat="&lt;nicht gesetzt&gt;" />
+					<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.3f"
+						nullFormat="&lt;nicht gesetzt&gt;" />
+					<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" editable="false" alignment="SWT.RIGHT | SWT.READ_ONLY" displayFormat="%.3f"
+						nullFormat="&lt;nicht gesetzt&gt;" />
+				</gft:tupleResult>
+			</gft:tabItem>
+
+		</gft:tabFolder>
+		</gft:composite>
+	</gft:view>
+</gft:featuretemplate>
