@@ -2,15 +2,17 @@ package org.kalypso.kalypso1d2d.extension;
 
 import java.net.URL;
 
-import org.kalypso.afgui.wizards.INewProjectWizard;
-import org.kalypso.afgui.wizards.INewProjectWizardProvider;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.module.AbstractKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
-import org.kalypso.project.database.client.extension.AbstractKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
+import org.kalypso.module.welcome.INewProjectWizard;
+import org.kalypso.module.welcome.INewProjectWizardProvider;
 import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
 
 public class Kalypso1d2dModule extends AbstractKalypsoModule
@@ -44,15 +46,6 @@ public class Kalypso1d2dModule extends AbstractKalypsoModule
   public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( )
   {
     return new Kalypso1d2dWelcomePageFrame();
-  }
-
-  /**
-   * @see org.kalypso.project.database.client.extension.IKalypsoModule#getRemoteDatabaseSettings()
-   */
-  @Override
-  public IKalypsoModuleDatabaseSettings getDatabaseSettings( )
-  {
-    return new Kalypso1d2dRemoteDatabaseSettings();
   }
 
   @Override
@@ -94,6 +87,15 @@ public class Kalypso1d2dModule extends AbstractKalypsoModule
   public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
   {
     return new SzenarioProjectOpenAction( ID );
+  }
+
+  /**
+   * @see org.kalypso.module.IKalypsoModule#acceptProject(org.eclipse.core.resources.IProject)
+   */
+  @Override
+  public boolean acceptProject( final IProject project ) throws CoreException
+  {
+    return Kalypso1D2DProjectNature.isOfThisNature( project );
   }
 
 }

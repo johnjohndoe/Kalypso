@@ -40,13 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.project;
 
-import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.risk.extension.KalypsoRiskModule;
 
 /**
  * @author schrage
  */
-public class KalypsoRiskDemoProjectWizard extends NewProjectWizard
+public class KalypsoRiskDemoProjectWizard extends org.kalypso.afgui.wizards.NewProjectWizard
 {
   public KalypsoRiskDemoProjectWizard( )
   {
