@@ -41,7 +41,7 @@
 package org.kalypso.risk.extension;
 
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalypsoModuleWelcomePageFrame;
+import org.kalypso.module.AbstractKalypsoModuleWelcomePageFrame;
 
 /**
  * @author Dirk Kuch

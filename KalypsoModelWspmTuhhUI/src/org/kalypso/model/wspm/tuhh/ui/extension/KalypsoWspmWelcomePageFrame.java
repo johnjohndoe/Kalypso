@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.extension;
 
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalypsoModuleWelcomePageFrame;
+import org.kalypso.module.AbstractKalypsoModuleWelcomePageFrame;
 
 /**
  * @author Dirk Kuch

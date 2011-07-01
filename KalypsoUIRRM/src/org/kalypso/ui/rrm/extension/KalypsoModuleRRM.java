@@ -3,15 +3,16 @@ package org.kalypso.ui.rrm.extension;
 import java.net.URL;
 import java.util.Collection;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
-import org.kalypso.afgui.wizards.INewProjectWizard;
-import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.afgui.wizards.ProjectConversionWizard;
+import org.kalypso.module.AbstractKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
-import org.kalypso.project.database.client.extension.AbstractKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
-import org.kalypso.project.database.client.ui.composites.SpecialImportProjectAction;
+import org.kalypso.module.welcome.INewProjectWizard;
+import org.kalypso.module.welcome.INewProjectWizardProvider;
+import org.kalypso.module.welcome.SpecialImportProjectAction;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
@@ -47,15 +48,6 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
   public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( )
   {
     return new KalypsoRrmWelcomePageFrame();
-  }
-
-  /**
-   * @see org.kalypso.project.database.client.extension.IKalypsoModule#getRemoteDatabaseSettings()
-   */
-  @Override
-  public IKalypsoModuleDatabaseSettings getDatabaseSettings( )
-  {
-    return new KalypsoRrmRemoteDatabaseSettings();
   }
 
   @Override
@@ -111,6 +103,16 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
   public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
   {
     return new KalypsoRRMOpenAction();
+  }
+
+  /**
+   * @see org.kalypso.module.IKalypsoModule#acceptProject(org.eclipse.core.resources.IProject)
+   */
+  @Override
+  public boolean acceptProject( final IProject project )
+  {
+    final IFile file = project.getFile( "hydrotop.gml" ); //$NON-NLS-1$
+    return file.exists();
   }
 
 }

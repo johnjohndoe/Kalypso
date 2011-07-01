@@ -1,6 +1,5 @@
 package org.kalypso.kalypso1d2d.pjt;
 
-import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule;
 
 /**
@@ -8,7 +7,7 @@ import org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule;
  * 
  * @author Patrice Congo
  */
-public class Kalypso1D2DNewProjectWizard extends NewProjectWizard
+public class Kalypso1D2DNewProjectWizard extends org.kalypso.afgui.wizards.NewProjectWizard
 {
   public final static String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"; //$NON-NLS-1$
 

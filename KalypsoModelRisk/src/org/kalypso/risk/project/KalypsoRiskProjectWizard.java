@@ -1,9 +1,8 @@
 package org.kalypso.risk.project;
 
-import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.risk.extension.KalypsoRiskModule;
 
-public class KalypsoRiskProjectWizard extends NewProjectWizard
+public class KalypsoRiskProjectWizard extends org.kalypso.afgui.wizards.NewProjectWizard
 {
   final static public String ID = "org.kalypso.risk.project.KalypsoRiskProjectWizard"; //$NON-NLS-1$
 
