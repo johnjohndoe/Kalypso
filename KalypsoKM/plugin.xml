@@ -36,7 +36,7 @@
    </extension>
    
 <extension point="org.eclipse.ui.menus">
-    <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=gmlToolsStart">
+    <menuContribution locationURI="popup:org.eclipse.ui.popup.any?before=gmlToolsEnd">
       <command commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters" style="push">
          <visibleWhen checkEnabled="true"/>
       </command>
@@ -46,6 +46,10 @@
          <visibleWhen checkEnabled="true"/>
       </command>
     </menuContribution>
+    <menuContribution locationURI="toolbar:org.kalypso.gml.toolbar?before=gmlToolsEnd">
+      <command commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters" style="push">
+         <visibleWhen checkEnabled="true"/>
+      </command>
+    </menuContribution>
   </extension>   
-   
 </plugin>

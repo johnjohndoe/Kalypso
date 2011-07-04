@@ -46,6 +46,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -54,12 +57,10 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -82,27 +83,28 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author belger
  */
-public class CalcTuhhAction implements IActionDelegate
+public class CalcTuhhHandler extends AbstractHandler
 {
-  private IFeatureSelection m_selection;
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
   @Override
-  public void run( final IAction action )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final Feature[] features = FeatureSelectionHelper.getFeatures( m_selection );
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
+    final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
+
+    final IFeatureSelection featureSelection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
+    if( featureSelection == null )
+      throw new ExecutionException( "Selection must be a feature-selection" ); //$NON-NLS-1$
+
+    final Feature[] features = FeatureSelectionHelper.getFeatures( featureSelection );
 
     /* Save the workspace first: we assume that all features are from the same workspace */
-    final Shell activeShell = Display.getCurrent().getActiveShell();
 
     // FIXED: wait for all feature changes to be commited, else the gml workspace might still being changed.
     final ICoreRunnableWithProgress commandWaiter = new WaitForFeatureChanges();
     ProgressUtilities.busyCursorWhile( commandWaiter );
 
-    if( !saveFeatures( activeShell, features ).isOK() )
-      return;
+    if( !saveFeatures( shell, features, featureSelection ).isOK() )
+      return null;
 
     for( final Feature feature : features )
     {
@@ -119,7 +121,7 @@ public class CalcTuhhAction implements IActionDelegate
         continue;
       }
 
-      final Job calcJob = new Job( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.0", calculation.getName() ) ) //$NON-NLS-1$
+      final Job calcJob = new Job( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.0", calculation.getName() ) ) //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )
@@ -131,13 +133,16 @@ public class CalcTuhhAction implements IActionDelegate
 
             final ModelNature nature = (ModelNature) gmlFile.getProject().getNature( ModelNature.ID );
             if( nature == null )
-              return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.5" ) + ModelNature.ID ); //$NON-NLS-1$
+            {
+              final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.5" ) + ModelNature.ID; //$NON-NLS-1$
+              return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
+            }
 
             final Map<String, Object> properties = new HashMap<String, Object>();
             properties.put( "calc.xpath", calcxpath ); //$NON-NLS-1$
             properties.put( "result.path", resultPath ); //$NON-NLS-1$
 
-            return nature.launchAnt( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.8" ), "calc", properties, gmlFile.getParent(), monitor ); //$NON-NLS-1$ //$NON-NLS-2$
+            return nature.launchAnt( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.8" ), "calc", properties, gmlFile.getParent(), monitor ); //$NON-NLS-1$ //$NON-NLS-2$
           }
           catch( final OperationCanceledException e )
           {
@@ -157,19 +162,21 @@ public class CalcTuhhAction implements IActionDelegate
       // Setting a mutext does not help, because we already have a rule
       break;
     }
+
+    return null;
   }
 
   /**
    * Asks the user which corresponding workspaces should be saved.
    */
-  private IStatus saveFeatures( final Shell shell, final Feature[] features )
+  private IStatus saveFeatures( final Shell shell, final Feature[] features, final IFeatureSelection selection )
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
     final Set<CommandableWorkspace> objectsToSave = new HashSet<CommandableWorkspace>( features.length );
     for( final Feature feature : features )
     {
-      final CommandableWorkspace workspace = m_selection.getWorkspace( feature );
+      final CommandableWorkspace workspace = selection.getWorkspace( feature );
       final KeyInfo info = pool.getInfo( workspace );
       if( info.isDirty() )
         objectsToSave.add( workspace );
@@ -178,7 +185,7 @@ public class CalcTuhhAction implements IActionDelegate
     if( objectsToSave.size() == 0 )
       return Status.OK_STATUS;
 
-    final StringBuffer msg = new StringBuffer( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.10" ) ); //$NON-NLS-1$
+    final StringBuffer msg = new StringBuffer( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.10" ) ); //$NON-NLS-1$
     for( final CommandableWorkspace workspace : objectsToSave )
     {
       final KeyInfo info = pool.getInfo( workspace );
@@ -186,16 +193,16 @@ public class CalcTuhhAction implements IActionDelegate
       msg.append( "\n" ); //$NON-NLS-1$
     }
 
-    if( MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.12" ), msg.toString() ) ) //$NON-NLS-1$
+    if( MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.12" ), msg.toString() ) ) //$NON-NLS-1$
     {
-      final Job job = new Job( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.13" ) ) //$NON-NLS-1$
+      final Job job = new Job( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.13" ) ) //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
           final MultiStatus resultStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() ), 0, "", null ); //$NON-NLS-1$
 
-          monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.15" ), objectsToSave.size() ); //$NON-NLS-1$
+          monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.15" ), objectsToSave.size() ); //$NON-NLS-1$
 
           for( final CommandableWorkspace workspace : objectsToSave )
           {
@@ -231,18 +238,4 @@ public class CalcTuhhAction implements IActionDelegate
 
     return Status.CANCEL_STATUS;
   }
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  @Override
-  public void selectionChanged( final IAction action, final ISelection selection )
-  {
-    m_selection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
-
-    final boolean enable = m_selection != null && m_selection.size() == 1;
-    action.setEnabled( enable );
-  }
-
 }
