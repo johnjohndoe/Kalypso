@@ -120,15 +120,47 @@
        <command commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState" style="push"/>
     </menuContribution>
   </extension>
-  <extension
-        point="org.kalypso.ui.gmlExportWizards">
+  <extension point="org.kalypso.ui.exportWizards">
      <wizard
-           category="org.kalypso.model.wspm.tuhh.ui.category.exportGmlWizards"
+           category="exportWizards/profileExportWizards"
            class="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
            icon="icons/exportLocalAsWspm.gif"
            id="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
            name="KalypsoWSPM">
      </wizard>
   </extension>
-   
+  <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
+        <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport">
+           <enablement>
+           <!-- FIXME: instead: rootFeature is wspm model --> 
+           <!-- AND: we are in WSM light mode... -->
+              <and>
+                 <test
+                       property="org.kalypso.model.wspm.pdb.ui.localData.localProjectPresent">
+                 </test>
+                 <with variable="activePart">
+                    <instanceof value="org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart"/>
+                 </with>
+                 <with variable="selection">
+                    <iterate ifEmpty="false" operator="or">
+                       <test property="org.kalypso.gml.rootQName" value="{org.kalypso.model.wspmproj}WspmProject"/>
+                    </iterate>
+                 </with>
+                 <with variable="activeWorkbenchWindow.activePerspective">
+                    <equals value="WspmLightPerspective"/>
+                 </with>
+              </and>
+           </enablement>
+        </wizardEnablement>
+  </extension>
+  <extension
+        point="org.eclipse.core.expressions.propertyTesters">
+     <propertyTester
+           class="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataPropertyTest"
+           id="org.kalypso.model.wspm.pdb.ui.propertyTester"
+           namespace="org.kalypso.model.wspm.pdb.ui.localData"
+           properties="localProjectPresent"
+           type="java.lang.Object">
+     </propertyTester>
+  </extension>   
 </plugin>

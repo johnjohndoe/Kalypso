@@ -44,7 +44,6 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -167,7 +166,13 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
       final BigDecimal domainValue = (BigDecimal) record.getValue( m_domainComponent );
       final BigDecimal targetValue = (BigDecimal) record.getValue( m_valueComponent );
 
+      if( domainValue == null || targetValue == null )
+        continue;
+
       // convert to screen-point
+
+      // FIXME: this does not work correct
+
       final int x = xAxis.numericToScreen( domainValue );
       final int y = yAxis.numericToScreen( targetValue );
       final Point pos = new Point( x, y );
@@ -248,6 +253,10 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     for( final IRecord record : m_result )
     {
       final BigDecimal value = (BigDecimal) record.getValue( component );
+
+      if( value == null )
+        continue;
+
       max = max.max( value );
       min = min.min( value );
     }
@@ -305,6 +314,9 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
       final BigDecimal classValue = (BigDecimal) record.getValue( m_classComponent );
       final BigDecimal domainValue = (BigDecimal) record.getValue( m_domainComponent );
       final BigDecimal targetValue = (BigDecimal) record.getValue( m_valueComponent );
+
+      if( domainValue == null || targetValue == null )
+        continue;
 
       if( !ObjectUtils.equals( classValue, lastClass ) )
       {
@@ -429,24 +441,6 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   }
 
   /**
-   * @see org.kalypso.chart.framework.model.layer.IEditableChartLayer#setActivePoint(java.lang.Object)
-   */
-  public void setActivePoint( final Object data )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
-   */
-  @Override
-  protected ILegendEntry[] createLegendEntries( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
    */
   @Override
@@ -506,5 +500,4 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     // TODO Auto-generated method stub
 
   }
-
 }

@@ -76,7 +76,7 @@ import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
  */
 public class KMUpdateOperation implements ICoreRunnableWithProgress
 {
-  private final CompositeCommand m_commands = new CompositeCommand( "KM-Parameter erzeugen" );
+  private final CompositeCommand m_commands = new CompositeCommand( Messages.getString("KMUpdateOperation.0") ); //$NON-NLS-1$
 
   private final KMChannelElement[] m_channels;
 
@@ -196,7 +196,7 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     final IKMValue[] values = profileSet.getKMValues( lengthOfStrand, paramCount );
     final IStatusCollector paramLog = new StatusCollector( KMPlugin.getID() );
     final double qBordvoll = profileSet.getQBordvoll();
-    paramLog.add( IStatus.OK, "mittleres Q Bordvoll: %.3f", null, qBordvoll );
+    paramLog.add( IStatus.OK, Messages.getString("KMUpdateOperation.1"), null, qBordvoll ); //$NON-NLS-1$
 
     addCommand( new ChangeFeatureCommand( kmChannel, kmKMStartPT, kmStart.doubleValue() ) );
     addCommand( new ChangeFeatureCommand( kmChannel, kmKMEndPT, kmEnd.doubleValue() ) );

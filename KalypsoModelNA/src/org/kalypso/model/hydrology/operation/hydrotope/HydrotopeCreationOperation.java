@@ -222,14 +222,11 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       {
         if( count % 100 == 0 )
         {
-          final String msg = Messages.getString( String.format( "Processing geometry %d of %d geometries", count, intersectionList.size() ) ); //$NON-NLS-1$
+          final String msg = String.format( "Processing geometry %d of %d geometries", count, intersectionList.size() ); //$NON-NLS-1$
           progress.subTask( msg );
           // TODO: belongs to the end of this loop, but there are just too many else's
           // Better: put into sub-method and 'return' instead of 'continue'
           ProgressUtilities.worked( monitor, 100 );
-
-          // FIXME
-          System.out.println( msg );
         }
         count++;
 
@@ -351,7 +348,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             final Geometry g = JTSAdapter.export( f.getDefaultGeometryPropertyValue() );
             if( g == null )
             {
-              System.out.println( "Broken Feature:" + f + " MORE:" + f.getDefaultGeometryPropertyValue() );
+              System.out.println( "Broken Feature:" + f + " MORE:" + f.getDefaultGeometryPropertyValue() ); //$NON-NLS-1$ //$NON-NLS-2$
               m_outputList.remove( f );
               continue;
             }
@@ -373,8 +370,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
               union = geometryCollection.union();
               if( union.getNumGeometries() > 1 )
                 union = union.buffer( 0.0001 ); // fixes problem with precision
-              m_outputList.removeAll( featuresToMergeWith );
-              m_outputList.removeAll( featuresToMergeWith ); // fixes problem, what is going on here?
+              for( final Feature feature : featuresToMergeWith )
+              {
+                m_outputList.remove( feature );
+              }
             }
             catch( final Exception e )
             {
@@ -383,7 +382,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
               try
               {
                 union = geometryCollection.buffer( 0.0 );
-                m_outputList.removeAll( featuresToMergeWith );
+                for( final Feature feature : featuresToMergeWith )
+                {
+                  m_outputList.remove( feature );
+                }
               }
               catch( final Exception e2 )
               {
@@ -392,7 +394,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
                   union = geometry;
                   for( int i = 0; i < geometriesToMergeWith.size() - 1; i++ )
                     union = union.union( geometriesToMergeWith.get( i ) );
-                  m_outputList.removeAll( featuresToMergeWith );
+                  for( final Feature feature : featuresToMergeWith )
+                  {
+                    m_outputList.remove( feature );
+                  }
                 }
                 catch( final Exception e3 )
                 {
@@ -439,7 +444,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       }
       else
       {
-        throw new IllegalStateException( "cannot create hydrotope with multisurface" );
+        throw new IllegalStateException( "cannot create hydrotope with multisurface" ); //$NON-NLS-1$
       }
     }
     catch( final GM_Exception e )

@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  */
 public class BasicModelConverter extends AbstractLoggingOperation
 {
-  private static final Pattern PATTERN_LINK_MODEL_ZEITREIHEN = Pattern.compile( "project:/.model/(?i)Zeitreihen/" );
+  private static final Pattern PATTERN_LINK_MODEL_ZEITREIHEN = Pattern.compile( "project:/.model/(?i)Zeitreihen/" ); //$NON-NLS-1$
 
   private final File m_sourceDir;
 
@@ -170,7 +170,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     final String encoding = document.getInputEncoding();
     final String fileContents = FileUtils.readFileToString( observationConfFile, encoding );
 
-    final String newFileContents = PATTERN_LINK_MODEL_ZEITREIHEN.matcher( fileContents ).replaceAll( "project:/Zeitreihen/" );
+    final String newFileContents = PATTERN_LINK_MODEL_ZEITREIHEN.matcher( fileContents ).replaceAll( "project:/Zeitreihen/" ); //$NON-NLS-1$
 
     FileUtils.writeStringToFile( observationConfFile, newFileContents, encoding );
   }
@@ -198,7 +198,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
   private File findSourceTimeseriesDir( )
   {
     final File sourceModelDir = new File( m_sourceDir, ".model" ); //$NON-NLS-1$
-    final File sourceTimeseriesDir = new File( sourceModelDir, "Zeitreihen" );
+    final File sourceTimeseriesDir = new File( sourceModelDir, "Zeitreihen" ); //$NON-NLS-1$
     if( sourceTimeseriesDir.isDirectory() )
       return sourceTimeseriesDir;
 

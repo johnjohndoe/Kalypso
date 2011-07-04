@@ -126,9 +126,9 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
 
       final File propertiesFile = new File( tmpdir, "stats.txt" ); //$NON-NLS-1$
       final Properties properties = new Properties();
-      properties.put( "TOTAL_DIFFERENCE", String.format( Locale.ENGLISH, "%.8f", m_totalDifference ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      properties.put( "ANNUAL_COSTS", "n/a" ); //$NON-NLS-1$
-      properties.put( "VALUE_BENEFIT", "n/a" ); //$NON-NLS-1$
+      properties.put( IRiskZones.PROPERTY_TOTAL_DIFFERENCE, String.format( Locale.ENGLISH, IRiskZones.NUMBER_FORMAT, m_totalDifference ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      properties.put( IRiskZones.PROPERTY_ANNUAL_COSTS, IRiskZones.VALUE_NOT_AVAILABLE );
+      properties.put( IRiskZones.PROPERTY_VALUE_BENEFIT, IRiskZones.VALUE_NOT_AVAILABLE );
       final FileOutputStream propertiesStream = new FileOutputStream( propertiesFile );
       properties.store( propertiesStream, "Scenario statistics" );
       propertiesStream.flush();
@@ -153,7 +153,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
     {
       /* remove existing (invalid) coverages from the model */
       final ICoverageCollection outputCoverages = rasterModelOutput.getRiskZonesCoverage();
-      IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
+      final IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
       for( final ICoverage coverage : outputCoveragesList )
         CoverageManagementHelper.deleteGridFile( coverage );
 
@@ -162,8 +162,8 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
       final ICoverageCollection inputCoverages1 = rasterModelInput1.getRiskZonesCoverage();
       final ICoverageCollection inputCoverages2 = rasterModelInput2.getRiskZonesCoverage();
 
-      IFeatureBindingCollection<ICoverage> inputCoverages1List = inputCoverages1.getCoverages();
-      IFeatureBindingCollection<ICoverage> inputCoverages2List = inputCoverages2.getCoverages();
+      final IFeatureBindingCollection<ICoverage> inputCoverages1List = inputCoverages1.getCoverages();
+      final IFeatureBindingCollection<ICoverage> inputCoverages2List = inputCoverages2.getCoverages();
       if( inputCoverages1List.size() != inputCoverages2List.size() )
         return;
 

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModel1D2D
 Bundle-SymbolicName: org.kalypso.model1d2d;singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-Localization: plugin
 Require-Bundle: org.junit4;resolution:=optional,
  org.eclipse.ui.intro,
@@ -28,7 +28,7 @@ Require-Bundle: org.junit4;resolution:=optional,
  org.eclipse.jface.text,
  de.openali.odysseus.chart.ui,
  de.openali.odysseus.chart.ext.base,
- org.kalypso.service.wps;bundle-version="1.0.0"
+ org.kalypso.service.wps
 Bundle-ClassPath: .,
   lib/jmatio.jar
 Bundle-ActivationPolicy: lazy

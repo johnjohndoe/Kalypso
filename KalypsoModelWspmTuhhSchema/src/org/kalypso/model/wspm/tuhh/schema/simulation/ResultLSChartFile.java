@@ -49,6 +49,7 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chartconfig.x020.AlignmentType;
 import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.AxisType.Direction;
 import de.openali.odysseus.chartconfig.x020.ChartType;
@@ -123,6 +124,8 @@ public class ResultLSChartFile extends AbstractResultLSFile
     final ChartType chart = charts[0];
 
     final TitleType t1 = TitleType.Factory.newInstance();
+    t1.setHorizontalTextAnchor( AlignmentType.CENTER );
+    t1.setInsetBottom( 5 );
     t1.setStringValue( String.format( Messages.getString( "ResultLengthSection.2" ), m_chartTitle ) ); //$NON-NLS-1$
     chart.setTitleArray( new TitleType[] { t1 } ); //$NON-NLS-1$
 

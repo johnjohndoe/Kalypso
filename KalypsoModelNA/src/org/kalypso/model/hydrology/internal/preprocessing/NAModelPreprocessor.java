@@ -101,7 +101,7 @@ public class NAModelPreprocessor
     return m_idManager;
   }
 
-  public void process( final ISimulationMonitor monitor ) throws NAPreprocessorException
+  public void process( final ISimulationMonitor monitor ) throws NAPreprocessorException, SimulationException
   {
     try
     {
@@ -109,6 +109,9 @@ public class NAModelPreprocessor
     }
     catch( final NAPreprocessorException e )
     {
+      throw e;
+    }
+    catch( final SimulationException e ) {
       throw e;
     }
     catch( final Exception e )
@@ -179,13 +182,13 @@ public class NAModelPreprocessor
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Fehler beim Entzippen der Vorprozessierten ASCII Dateien", e );
+      throw new SimulationException( Messages.getString("NAModelPreprocessor.5"), e ); //$NON-NLS-1$
     }
   }
 
   public void processCallibrationFiles( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
   {
-    monitor.setMessage( "Wende Kalibrierungsfaktoren an..." );
+    monitor.setMessage( Messages.getString("NAModelPreprocessor.6") ); //$NON-NLS-1$
 
     final NAModellConverter naModellConverter = new NAModellConverter( m_idManager, m_simulationData, m_asciiDirs, m_logger );
 

@@ -47,7 +47,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -139,7 +138,8 @@ public class ConnectionContentControl extends Composite
     final Tree tree = toolkit.createTree( parent, SWT.FULL_SELECTION | SWT.MULTI );
     tree.setHeaderVisible( true );
     m_viewer = new TreeViewer( tree );
-    m_viewer.setAutoExpandLevel( 2 );
+    // m_viewer.setAutoExpandLevel( 2 );
+    m_viewer.setUseHashlookup( true );
 
     final ViewerColumn nameColumn = StatesViewer.createNameColumn( m_viewer, true );
     StatesViewer.createMeasurementDateColumn( m_viewer, true );
@@ -148,8 +148,7 @@ public class ConnectionContentControl extends Composite
 
     tree.addControlListener( new ColumnsResizeControlListener() );
 
-    setContentProvider( new ByWaterBodyContentProvider() );
-    m_viewer.setComparator( new PdbComparator() );
+    m_viewer.setContentProvider( new ByWaterBodyContentProvider() );
 
     return tree;
   }
@@ -171,11 +170,6 @@ public class ConnectionContentControl extends Composite
     m_manager.update( true );
   }
 
-  void setContentProvider( final ITreeContentProvider provider )
-  {
-    m_viewer.setContentProvider( provider );
-  }
-
   public void refresh( final String stateToSelect )
   {
     m_refreshJob.cancel();
@@ -188,6 +182,8 @@ public class ConnectionContentControl extends Composite
 
   private void resetInput( )
   {
+    // TODO:maybe we should keep input until new one is loaded?
+
     final Object oldInput = m_viewer.getInput();
     if( oldInput instanceof ConnectionInput )
       ((ConnectionInput) oldInput).dispose();

@@ -109,7 +109,7 @@ public class KMChannelElement
     final IStatus status = RunnableContextHelper.execute( context, true, false, operation );
     m_profileSet = operation.getProfileSet();
     if( !status.isOK() )
-      new StatusDialog( context.getShell(), status, "Read Profile Data" );
+      new StatusDialog( context.getShell(), status, Messages.getString("KMChannelElement.0") ); //$NON-NLS-1$
 
     updateProfileList();
   }
@@ -121,7 +121,7 @@ public class KMChannelElement
     if( StringUtils.isBlank( path ) )
     {
       m_profileSet = null;
-      final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), "File not set", null );
+      final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString("KMChannelElement.1") ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
@@ -134,7 +134,7 @@ public class KMChannelElement
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), "Failed to read profile data", e );
+      final IStatus status = new Status( IStatus.ERROR, KMPlugin.getID(), "Failed to read profile data", e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

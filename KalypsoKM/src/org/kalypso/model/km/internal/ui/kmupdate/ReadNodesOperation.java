@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.km.internal.KMPlugin;
+import org.kalypso.model.km.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
 
@@ -65,7 +66,7 @@ public class ReadNodesOperation implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      return new Status( IStatus.ERROR, KMPlugin.getID(), "Failed to determine WSPM results.", e );
+      return new Status( IStatus.ERROR, KMPlugin.getID(), Messages.getString("ReadNodesOperation_0"), e ); //$NON-NLS-1$
     }
   }
 

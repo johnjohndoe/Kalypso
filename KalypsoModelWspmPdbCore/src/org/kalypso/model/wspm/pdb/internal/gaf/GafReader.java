@@ -51,7 +51,8 @@ import java.math.BigDecimal;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.text.StrMatcher;
+import org.apache.commons.lang.text.StrTokenizer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
@@ -171,7 +172,15 @@ public class GafReader
 
   private GafPoint parseLine( final String line )
   {
-    final String[] tokens = StringUtils.split( line );
+    final StrTokenizer tokenizer = new StrTokenizer( line );
+    tokenizer.setDelimiterMatcher( StrMatcher.trimMatcher() );
+    tokenizer.setQuoteMatcher( StrMatcher.noneMatcher() );
+    tokenizer.setIgnoredMatcher( StrMatcher.noneMatcher() );
+    tokenizer.setTrimmerMatcher( StrMatcher.noneMatcher() );
+    tokenizer.setEmptyTokenAsNull( false );
+    tokenizer.setIgnoreEmptyTokens( false );
+    final String[] tokens = tokenizer.getTokenArray();
+
     if( tokens.length < 9 )
       throw new SkipLineException( IStatus.INFO, "Skipping line: too few tokens in line" );
 

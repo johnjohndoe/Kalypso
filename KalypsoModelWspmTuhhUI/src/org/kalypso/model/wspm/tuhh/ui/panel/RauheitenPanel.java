@@ -371,7 +371,7 @@ public class RauheitenPanel extends AbstractProfilView
       {
         final int i_left = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
         // instead of DB-right we always stop at the end of the profile
-        final int i_rechts = profil.getPoints().length - 1; 
+        final int i_rechts = profil.getPoints().length; 
         return new int[] { i_left, i_rechts };
       }
 

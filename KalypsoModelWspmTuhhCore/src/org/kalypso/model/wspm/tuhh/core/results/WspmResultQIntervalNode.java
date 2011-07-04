@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.results;
 
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * This result container represents a WSPM result.
@@ -84,7 +85,7 @@ public class WspmResultQIntervalNode extends AbstractWspmResultNode implements I
   @Override
   public String getLabel( )
   {
-    return "Ergebnis";
+    return Messages.getString("WspmResultQIntervalNode_0"); //$NON-NLS-1$
   }
 
   /**

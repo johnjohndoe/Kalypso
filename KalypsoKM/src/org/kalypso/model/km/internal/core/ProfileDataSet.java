@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.km.internal.KMPlugin;
+import org.kalypso.model.km.internal.i18n.Messages;
 
 /**
  * A set of {@link ProfileData}
@@ -186,7 +187,7 @@ public class ProfileDataSet
     final double qBordvoll = getQBordvoll();
     final int qBordvollIndex = findQBordvollIndex( qBordvoll );
     if( qBordvollIndex == -1 )
-      throw fail( "Mittleres Q-Bordvoll (%.3f) ausserhalb des berechneten Bereichs. WSPM Neubrechnnug notwendig.", qBordvoll );
+      throw fail( Messages.getString("ProfileDataSet_0"), qBordvoll ); //$NON-NLS-1$
 
     final int numberQ = getNumberQ();
     final int maxIndexQ = numberQ - 1;
@@ -196,10 +197,10 @@ public class ProfileDataSet
     final int[] qIndices = new int[paramCount];
 
     if( !buildMapping( qIndices, 0, middleParamIndex, 0, qBordvollIndex ) )
-      throw fail( "Nicht ausreichend Abflusswerte unterhalb von Q-Bordvoll (%.3f) vorhanden. Verringern Sie die Q-Schrittweite oder das minimale Q.", qBordvoll );
+      throw fail( Messages.getString("ProfileDataSet_1"), qBordvoll ); //$NON-NLS-1$
 
     if( !buildMapping( qIndices, middleParamIndex, paramCount, qBordvollIndex, numberQ ) )
-      throw fail( "Nicht ausreichend Abflusswerte oberhalb von Q-Bordvoll (%.3f) vorhanden. Verringern Sie die Q-Schrittweite oder vergößern Sie das maximale Q.", qBordvoll );
+      throw fail( Messages.getString("ProfileDataSet_2"), qBordvoll ); //$NON-NLS-1$
 
     qIndices[paramCount - 1] = maxIndexQ;
 

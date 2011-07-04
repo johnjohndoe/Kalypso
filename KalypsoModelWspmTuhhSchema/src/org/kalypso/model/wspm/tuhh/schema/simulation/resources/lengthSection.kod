@@ -439,7 +439,7 @@
             <Parameter name="inset_tick" value="2" />
             <Parameter name="inset_label" value="2" />
             <Parameter name="tick_length" value="5" />
-            <Parameter name="hide_cut" value="true" />
+            <Parameter name="hide_cut" value="false" />
             <Parameter name="gap" value="3" />
           </Parameters>
         </Provider>

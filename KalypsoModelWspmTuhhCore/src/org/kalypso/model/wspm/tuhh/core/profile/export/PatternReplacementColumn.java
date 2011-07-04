@@ -144,15 +144,15 @@ public class PatternReplacementColumn implements IProfileExportColumn
   protected String formatFormatString( final char formatType, final int width, final int precision )
   {
     if( width != NOT_SET && precision != NOT_SET )
-      return String.format( "%%%d.%d%s", width, precision, formatType );
+      return String.format( "%%%d.%d%s", width, precision, formatType ); //$NON-NLS-1$
 
     if( width != NOT_SET )
-      return String.format( "%%%d%s", width, formatType );
+      return String.format( "%%%d%s", width, formatType ); //$NON-NLS-1$
 
     if( precision != NOT_SET )
-      return String.format( "%%.%d%s", precision, formatType );
+      return String.format( "%%.%d%s", precision, formatType ); //$NON-NLS-1$
 
-    return String.format( "%%%s", formatType );
+    return String.format( "%%%s", formatType ); //$NON-NLS-1$
   }
 
   /**

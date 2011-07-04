@@ -178,18 +178,18 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     addPage( m_createPreferencePage );
 
     m_createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, Messages.getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getCatchmentTargetProperties() );
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getCatchmentTargetProperties() );
 
     addPage( m_createMappingCatchmentPage );
     m_createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, Messages.getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getChannelTargetProperties() );
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getChannelTargetProperties() );
     addPage( m_createMappingRiverPage );
 
     m_createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, Messages.getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getNodeTargetProperties() ); //$NON-NLS-1$
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getNodeTargetProperties() ); //$NON-NLS-1$
     addPage( m_createMappingNodePage );
     m_createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, Messages.getString( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
-    ImageProvider.IMAGE_KALYPSO_ICON_BIG, getHydrotopeTargetProperties() ); //$NON-NLS-1$
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getHydrotopeTargetProperties() ); //$NON-NLS-1$
     addPage( m_createMappingHydrotopPage );
   }
 
@@ -577,7 +577,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
       if( ftp instanceof IValuePropertyType )
       {
         final IValuePropertyType targetPT = (IValuePropertyType) ftp;
-        if( !targetPT.isVirtual() && !targetPT.isList() )
+        if( Feature.QN_NAME.equals( qName ) || (!targetPT.isVirtual() && !targetPT.isList()) )
           result.add( targetPT );
       }
     }

@@ -49,7 +49,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -126,19 +125,6 @@ public class NaModell extends Feature_Impl
     }
 
     return result.toArray( new KMChannel[result.size()] );
-  }
-
-  public StorageChannel[] getStorageChannels( )
-  {
-    final List<StorageChannel> result = new ArrayList<StorageChannel>();
-    final IFeatureBindingCollection<Channel> channels = getChannels();
-    for( final Channel channel : channels )
-    {
-      if( channel instanceof StorageChannel )
-        result.add( (StorageChannel) channel );
-    }
-
-    return result.toArray( new StorageChannel[result.size()] );
   }
 
   public synchronized IFeatureBindingCollection<Node> getNodes( )

@@ -41,17 +41,18 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -71,15 +72,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.kalypso.chart.ui.editor.commandhandler.ExportHandler;
-import org.kalypso.chart.ui.editor.commandhandler.MaximizeHandler;
-import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
-import org.kalypso.chart.ui.editor.mousehandler.DragPanHandler;
-import org.kalypso.chart.ui.editor.mousehandler.DragZoomInHandler;
-import org.kalypso.chart.ui.editor.mousehandler.DragZoomOutHandler;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.commons.eclipse.ui.EmbeddedSourceToolbarManager;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -87,7 +86,6 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
-import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.action.ProfilChartActionsEnum;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.IWspmOverlayConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider;
@@ -101,6 +99,7 @@ import org.kalypso.ogc.gml.mapmodel.KalypsoFeatureThemeHelper;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
@@ -135,6 +134,8 @@ public class CreateMainChannelComposite extends Composite
   Button m_buttonEditBank;
 
   private boolean m_bankEdit;
+
+  private EmbeddedSourceToolbarManager m_sourceManager;
 
   public boolean isBankEdit( )
   {
@@ -561,8 +562,8 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the first bank drawing */
     final Button drawFirstBankButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
     m_buttonList.add( drawFirstBankButton );
-    
-    GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
+
+    final GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
     layoutDataFirstButton.minimumWidth = 25;
     drawFirstBankButton.setVisible( true );
     drawFirstBankButton.setLayoutData( layoutDataFirstButton );
@@ -726,7 +727,7 @@ public class CreateMainChannelComposite extends Composite
     final GridData gridDataSpinner = new GridData();
     gridDataSpinner.horizontalAlignment = SWT.RIGHT;
     spinNumBankIntersections.setLayoutData( gridDataSpinner );
-    
+
     return bankSection;
   }
 
@@ -794,7 +795,7 @@ public class CreateMainChannelComposite extends Composite
     /* Button for the wspm-profile selection */
     final Button chooseProfilesButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
     m_buttonList.add( chooseProfilesButton );
-    GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
+    final GridData layoutDataFirstButton = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
     layoutDataFirstButton.minimumWidth = 25;
     chooseProfilesButton.setLayoutData( layoutDataFirstButton );
     chooseProfilesButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
@@ -897,26 +898,19 @@ public class CreateMainChannelComposite extends Composite
   }
 
   /**
-   * updates the data for a specific segments
-   */
-  // private void updateSegmentData( final boolean edit, final SegmentData segment )
-  // {
-  // m_data.updateSegment( edit, segment );
-  // }
-  /**
    * displays the selected cross sections -> data filling for the profil section
    */
   private void updateProfilSection( )
   {
+    if( m_sourceManager != null )
+      m_sourceManager.dispose();
+
     final Control client = m_profilSection.getClient();
     if( client != null && !client.isDisposed() )
       client.dispose();
 
     final Composite sectionClient = m_toolkit.createComposite( m_profilSection, SWT.NONE );
-    final GridLayout clientLayout = new GridLayout( 1, false );
-    clientLayout.marginHeight = 0;
-    clientLayout.marginWidth = 0;
-    sectionClient.setLayout( clientLayout );
+    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( sectionClient );
 
     m_profilSection.setClient( sectionClient );
     m_profilSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.39" ) ); //$NON-NLS-1$
@@ -927,7 +921,7 @@ public class CreateMainChannelComposite extends Composite
     final IProfil profil = m_data.getProfil();
     if( profil == null )
     {
-      final Label label = m_toolkit.createLabel( sectionClient, "", SWT.NONE ); //$NON-NLS-1$
+      final Label label = m_toolkit.createLabel( sectionClient, StringUtils.EMPTY, SWT.NONE );
       label.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.41" ) ); //$NON-NLS-1$
     }
     else
@@ -946,19 +940,20 @@ public class CreateMainChannelComposite extends Composite
       profilChartView.setProfil( profil, null );
       profilChartView.setLayerProvider( layerProvider );
 
-      final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
-      manager.createControl( sectionClient );
-
-      final Label label = m_toolkit.createLabel( sectionClient, "", SWT.BORDER | SWT.CENTER ); //$NON-NLS-1$
+      final String stationText = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.11", profil.getStation() ); //$NON-NLS-1$
+      final Label label = m_toolkit.createLabel( sectionClient, stationText, SWT.BORDER | SWT.CENTER );
       label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      label.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.11", profil.getStation() ) ); //$NON-NLS-1$
       label.setBackground( label.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
 
-      final Control profilControl = profilChartView.createControl( sectionClient );
+      final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT | SWT.SHADOW_OUT );
+      manager.createControl( sectionClient ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
+      final Control profilControl = profilChartView.createControl( sectionClient );
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-      final ILayerManager mngr = profilChartView.getChart().getChartModel().getLayerManager();
+      final IChartComposite chart = profilChartView.getChart();
+      final IChartModel chartModel = chart.getChartModel();
+      final ILayerManager mngr = chartModel.getLayerManager();
       final IChartLayer overlayLayer = mngr.findLayer( IWspmOverlayConstants.LAYER_OVERLAY );
 
       if( overlayLayer instanceof ProfilOverlayLayer )
@@ -972,46 +967,26 @@ public class CreateMainChannelComposite extends Composite
             layerData = currentSegment.getProfDownIntersProfile();
 
           ((ProfilOverlayLayer) overlayLayer).setProfile( layerData, m_data, m_widget );
-          // ((ProfilOverlayLayer) overlayLayer).lockLayer( false );
           m_widget.getPanel().repaintMap();
         }
       }
-      final int zOrder = mngr.getLayerPosition( overlayLayer );
-      final int last = mngr.getLayers().length - 1;
-      if( zOrder < last )
-        mngr.moveLayerToPosition( overlayLayer, last );
 
-      final IChartComposite chartComposite = profilChartView.getChartComposite();
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT, new DragZoomOutHandler( chartComposite ) ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN, new DragZoomInHandler( chartComposite ) ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN, new DragPanHandler( chartComposite ) ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EDIT, new DragEditHandler( chartComposite ) ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE, new MaximizeHandler() ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE, new ExportHandler() ) );
-      ChartUtilities.maximize( profilChartView.getChart().getChartModel() );
+      m_sourceManager = new EmbeddedSourceToolbarManager( PlatformUI.getWorkbench(), ChartSourceProvider.ACTIVE_CHART_NAME, chart );
+      final Map<String, Integer> commands = new LinkedHashMap<String, Integer>();
+      commands.put( "org.kalypso.chart.ui.commands.zoom_pan_maximize", CommandContributionItem.STYLE_RADIO );
+      commands.put( "org.kalypso.chart.ui.commands.pan", CommandContributionItem.STYLE_RADIO );
+      commands.put( "org.kalypso.chart.ui.commands.edit", CommandContributionItem.STYLE_RADIO );
+      commands.put( StringUtils.EMPTY, 0 );
+      commands.put( "org.kalypso.chart.ui.commands.maximize", CommandContributionItem.STYLE_PUSH );
+      commands.put( "org.kalypso.chart.ui.commands.ExportClipboardCommand", CommandContributionItem.STYLE_PUSH );
+      commands.put( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler", CommandContributionItem.STYLE_PUSH );
+      m_sourceManager.fillToolbar( manager, commands );
 
-      final IAction action = new Action( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.44" ), IAction.AS_PUSH_BUTTON ) //$NON-NLS-1$
-      {
-        /**
-         * @see org.eclipse.jface.action.Action#run()
-         */
-        @SuppressWarnings("synthetic-access")
-        @Override
-        public void run( )
-        {
-          // Execute code
-          m_data.switchProfile();
-          updateProfilSection();
-        }
-      };
-      action.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.14" ) ); //$NON-NLS-1$
-
-      final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
-      final ImageDescriptor changeImage = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.CHANGE );
-      action.setImageDescriptor( changeImage );
-      manager.add( action );
+      manager.add( new SwitchProfileAction( this ) );
 
       manager.update( true );
+
+      ChartUtilities.maximize( chartModel );
     }
 
     m_profilSection.setExpanded( profil != null );
@@ -1100,5 +1075,11 @@ public class CreateMainChannelComposite extends Composite
   public SegmentData getCurrentSegment( )
   {
     return m_data.getSelectedSegment();
+  }
+
+  void switchProfile( )
+  {
+    m_data.switchProfile();
+    updateProfilSection();
   }
 }

@@ -44,7 +44,11 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandlerFactory;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.gml.ZmlQQInlineTypeHandler;
+import org.kalypso.model.hydrology.gml.ZmlTAInlineTypeHandler;
+import org.kalypso.model.hydrology.gml.ZmlTNInlineTypeHandler;
+import org.kalypso.model.hydrology.gml.ZmlWQVInlineTypeHandler;
+import org.kalypso.model.hydrology.gml.ZmlWtKcLaiInlineTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 
 /**
@@ -55,11 +59,11 @@ public class TypeHandlerFactory implements ITypeHandlerFactory<IMarshallingTypeH
   @Override
   public void registerTypeHandlers( final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry ) throws TypeRegistryException
   {
-    final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", NaModelConstants.WVQ_AXES ); //$NON-NLS-1$
-    final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", NaModelConstants.TA_AXES ); //$NON-NLS-1$
-    final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", NaModelConstants.WTKCLAI_AXES ); //$NON-NLS-1$
-    final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", NaModelConstants.TN_AXES ); //$NON-NLS-1$
-    final ZmlInlineTypeHandler qqInline = new ZmlInlineTypeHandler( "ZmlInlineQQType", NaModelConstants.QQ_AXES ); //$NON-NLS-1$
+    final ZmlWQVInlineTypeHandler wvqInline = new ZmlWQVInlineTypeHandler();
+    final ZmlInlineTypeHandler taInline = new ZmlTAInlineTypeHandler();
+    final ZmlWtKcLaiInlineTypeHandler wtKcLaiInline = new ZmlWtKcLaiInlineTypeHandler();
+    final ZmlInlineTypeHandler tnInline = new ZmlTNInlineTypeHandler();
+    final ZmlInlineTypeHandler qqInline = new ZmlQQInlineTypeHandler();
 
     marshallingRegistry.registerTypeHandler( wvqInline );
     marshallingRegistry.registerTypeHandler( taInline );

@@ -184,7 +184,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
         }
         catch( final GmlSerializeException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.11"), e ); //$NON-NLS-1$
+          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.10" ), e ); //$NON-NLS-1$
         }
         return Status.OK_STATUS;
       }

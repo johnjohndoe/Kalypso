@@ -54,6 +54,7 @@ import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -68,7 +69,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
 
   public ProfileResultPattern( )
   {
-    super( "Result", "Result" ); //$NON-NLS-1$
+    super( "Result", Messages.getString("ProfileResultPattern_0") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -149,7 +150,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
 
   private IKeyValue<String, String> parseParams( final String param )
   {
-    final String[] params = param.split( "\\:", 2 );
+    final String[] params = param.split( "\\:", 2 ); //$NON-NLS-1$
     if( params.length != 2 )
       return null;
 
@@ -179,10 +180,10 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
 
   private String guessComponent( final String component )
   {
-    if( component.contains( ":" ) )
+    if( component.contains( ":" ) ) //$NON-NLS-1$
       return component;
 
-    if( component.startsWith( "#" ))
+    if( component.startsWith( "#" )) //$NON-NLS-1$
       return IWspmConstants.URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS + component;
 
     return IWspmConstants.LENGTH_SECTION_PROPERTY + component;

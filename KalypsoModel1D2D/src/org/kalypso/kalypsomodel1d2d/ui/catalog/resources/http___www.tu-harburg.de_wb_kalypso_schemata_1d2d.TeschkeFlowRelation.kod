@@ -7,7 +7,7 @@
 
 
 	<Chart id="runoffChart">
-		<Title>Abfluss</Title>
+		<Title horizontalTextAnchor="CENTER">Abfluss</Title>
 		<Description>Abflusswerte der Berechnung</Description>
 		<Layers>
 
