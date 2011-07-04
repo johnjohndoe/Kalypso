@@ -50,20 +50,21 @@
 						<AnchorPointY>0.0</AnchorPointY>
 					</AnchorPoint>
 					<Displacement>
-						<DisplacementX>0.0</DisplacementX>
-						<DisplacementY>0.0</DisplacementY>
+						<DisplacementX>10.0</DisplacementX>
+						<DisplacementY>10.0</DisplacementY>
 					</Displacement>
 					<Rotation>0.0</Rotation>
 				</PointPlacement>
 			</LabelPlacement>
 			<Halo>
+                <Radius>3</Radius>
 				<Fill>
-					<CssParameter name="fill-opacity">0.6</CssParameter>
-					<CssParameter name="fill">#ff0000</CssParameter>
+					<CssParameter name="fill-opacity">1.0</CssParameter>
+					<CssParameter name="fill">#ff3030</CssParameter>
 				</Fill>
 				<Stroke>
 					<CssParameter name="stroke">#000000</CssParameter>
-					<CssParameter name="stroke-width">1.0</CssParameter>
+					<CssParameter name="stroke-width">2.0</CssParameter>
 					<CssParameter name="stroke-linejoin">round</CssParameter>
 					<CssParameter name="stroke-opacity">1.0</CssParameter>
 					<CssParameter name="stroke-linecap">square</CssParameter>

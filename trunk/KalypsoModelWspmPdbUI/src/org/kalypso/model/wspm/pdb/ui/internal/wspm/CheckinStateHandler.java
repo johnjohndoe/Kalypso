@@ -49,6 +49,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.ui.internal.PdbUiUtils;
@@ -87,7 +88,9 @@ public class CheckinStateHandler extends AbstractHandler
       throw new ExecutionException( "Failed to access database", e );
     }
 
+    final String commandName = HandlerUtils.getCommandName( event );
     final CheckinStateWizard wizard = new CheckinStateWizard( data, connection );
+    wizard.setWindowTitle( commandName );
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     dialog.open();
 

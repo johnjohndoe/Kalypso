@@ -49,7 +49,7 @@ public final class ShapeImportDescriptiorHelper
   {
   }
 
-  public static final Double parseAsDouble( final Object value )
+  public static Double parseAsDouble( final Object value )
   {
     if( value instanceof Number )
       return ((Number) value).doubleValue();

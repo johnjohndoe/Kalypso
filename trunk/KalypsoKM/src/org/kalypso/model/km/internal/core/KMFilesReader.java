@@ -30,7 +30,7 @@ public class KMFilesReader implements IKMReader
 
   private final static Pattern PATTERN_TABLE = Pattern.compile( _S + _I + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + ".*?" ); //$NON-NLS-1$
 
-  private final static FileFilter KM_FILEFILTER = new SuffixFileFilter( ".km", IOCase.INSENSITIVE );
+  private final static FileFilter KM_FILEFILTER = new SuffixFileFilter( ".km", IOCase.INSENSITIVE ); //$NON-NLS-1$
 
   /**
    * The profile files.

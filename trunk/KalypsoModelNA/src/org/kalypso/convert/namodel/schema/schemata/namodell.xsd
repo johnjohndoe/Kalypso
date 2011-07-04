@@ -58,7 +58,7 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="generateResult" type="boolean"/>
+					<element name="generateResult" type="boolean" default="false" nillable="true"/>
 					<element name="downStreamChannelMember" type="na:ChannelLinkType" minOccurs="0"/>
 					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 					<!-- ZR berechnet, hier wird das Ergebnis gespeichert -->
@@ -214,7 +214,7 @@
           -->
 					<element name="Ort" type="gml:PolygonPropertyType"/>
 					<element name="entwaesserungsStrangMember" type="na:ChannelLinkType" minOccurs="0"/>
-					<element name="generateResult" type="boolean"/>
+					<element name="generateResult" type="boolean" default="false" nillable="true"/>
 					<!-- JH, Flaeche kann auch aus der Hydrotopdatei hierher übernommen werden (wird im Modell ohnehin aus Hydrotopdatei übernommen)-->
 					<element name="flaech" type="long"/>
 					<element name="faktn" default="1.0">
@@ -473,11 +473,17 @@
 					<element name="vmax" type="double"/>
 					<element name="vmin" type="double"/>
 					<element name="hvvsqd" type="zmlinline:ZmlInlineWVQType"/>
-					<element name="generateResult" type="boolean"/>
+					<element name="generateResult" type="boolean" default="false" nillable="true"/>
 					<element name="downStreamNodeMember_2nd" type="na:NodeLinkType" minOccurs="0"/>
 					<element name="downStreamNodeMember_3rd" type="na:NodeLinkType" minOccurs="0"/>
 					<element name="zmlLinkSeaEvaporation" type="obslink:TimeseriesLinkFeatureProperty" nillable="true"/>
-					<element name="faktorSeaEvaporation" type="double" default="1.0" nillable="true"/>
+					<element name="faktorSeaEvaporation" default="1.0" nillable="true">
+                        <simpleType>
+                            <restriction base="double" >
+                                <minExclusive value="0.0"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
 				</sequence>
 			</extension>
 		</complexContent>

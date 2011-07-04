@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -52,7 +53,7 @@ public class PointComponentPattern extends AbstractPatternInput<IProfilePatternD
 {
   public PointComponentPattern( )
   {
-    super( "Component", "Component" );
+    super( "Component", Messages.getString("PointComponentPattern_1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

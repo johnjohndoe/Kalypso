@@ -5,7 +5,7 @@
  xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
 	
 	<Chart id="profilChart">
-		<Title>King-Profil</Title>
+		<Title horizontalTextAnchor="CENTER">King-Profil</Title>
 		<Description>King-Profil</Description>
 		<Layers>
 			<Layer visible="true" id="kingLayer">
@@ -43,7 +43,7 @@
 			</Axis>
 			<Axis id="hoehe_Axis">
 				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Höhe [m]</Label>
+				<Label>Hï¿½he [m]</Label>
 				
 				<Direction>POSITIVE</Direction>
 				<Position>LEFT</Position>

@@ -30,6 +30,10 @@
 package org.kalypso.ui.rrm.internal.gml;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
@@ -45,6 +49,17 @@ import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.view.observationDialog.ClipboardExportAction;
+import org.kalypso.ogc.sensor.view.observationDialog.ClipboardImportAction;
+import org.kalypso.ogc.sensor.view.observationDialog.IObservationAction;
+import org.kalypso.ogc.sensor.view.observationDialog.RemoveObservationAction;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
@@ -63,10 +78,15 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     m_typeHandler = typeHandler;
   }
 
+  protected ZmlInlineTypeHandler getTypeHandler( )
+  {
+    return m_typeHandler;
+  }
+
   @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
-    return new ZmlInlineFeatureDialog( feature, ftp, m_typeHandler );
+    return new ZmlInlineFeatureDialog( feature, ftp, this );
   }
 
   @Override
@@ -103,7 +123,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   @Override
   public String getText( final Object o )
   {
-    return Messages.getString("org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler.1"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler.1" ); //$NON-NLS-1$
   }
 
   @Override
@@ -119,5 +139,62 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     // In future, this should be directly implemented at this point
     final IMarshallingTypeHandler marshallingHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( getTypeName() );
     return marshallingHandler.parseType( text );
+  }
+
+  public IObservationAction[] getObservationActions( )
+  {
+    final Collection<IObservationAction> actions = new ArrayList<IObservationAction>();
+
+    actions.add( getNewObservationAction() );
+    actions.add( new RemoveObservationAction() );
+    actions.add( new ClipboardImportAction( m_typeHandler ) );
+    actions.add( new ClipboardExportAction() );
+
+    return actions.toArray( new IObservationAction[actions.size()] );
+  }
+
+  protected IObservationAction getNewObservationAction( )
+  {
+    return new NewObservationAction( m_typeHandler );
+  }
+
+  /**
+   * Allow the type handler to check and possibly fix/convert the given observation.<br/>
+   * The default implementation copies the timeseries and implicitely makes sure that exactly the given axes are
+   * present. <br/>
+   * This also fixes the bug, that cancel did not work on the observation dialog.
+   */
+  public IObservation checkObservation( final IObservation o ) throws SensorException
+  {
+    if( o == null )
+      return null;
+
+    final ITupleModel model = o.getValues( null );
+
+    final IAxis[] newAxis = m_typeHandler.createAxes();
+
+    final CopyObservationVisitor visitor = new CopyObservationVisitor( newAxis );
+    final Map<String, String> nameMapping = createCheckObservationNameMapping();
+    visitor.setNameMapping( nameMapping );
+    model.accept( visitor );
+
+    /* copy the rest */
+    final String href = o.getHref();
+    final String name = o.getName();
+    final MetadataList metadata = (MetadataList) o.getMetadataList().clone();
+
+    final Object[][] values = visitor.getValues();
+    final SimpleTupleModel newModel = new SimpleTupleModel( newAxis, values );
+    return new SimpleObservation( href, name, metadata, newModel );
+  }
+
+  /**
+   * Additional name mapping that allows to read and check old time series.<br/>
+   * The mapping maps old axis-names to new ones.<br/>
+   * The default implementation returns the empty map.
+   */
+  protected Map<String, String> createCheckObservationNameMapping( )
+  {
+    return Collections.emptyMap();
   }
 }

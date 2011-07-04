@@ -83,7 +83,8 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
     try
     {
       simulation = new NAModelSimulation( m_simDirs, m_data, logger );
-      return simulation.runSimulation( monitor );
+      simulation.runSimulation( monitor );
+      return true;
     }
     catch( final SimulationException se )
     {

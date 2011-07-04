@@ -25,7 +25,6 @@
 				<ogc:PropertyName>name</ogc:PropertyName>
 			</Label>
 			<Font>
-				<CssParameter name="font-family" />
 				<CssParameter name="font-color">#000000</CssParameter>
 				<CssParameter name="font-size">12.0</CssParameter>
 				<CssParameter name="font-style">normal</CssParameter>
@@ -39,13 +38,14 @@
 				</LinePlacement>
 			</LabelPlacement>
 			<Halo>
+                <Radius>3</Radius>
 				<Fill>
 					<CssParameter name="fill-opacity">1.0</CssParameter>
 					<CssParameter name="fill">#23969c</CssParameter>
 				</Fill>
 				<Stroke>
 					<CssParameter name="stroke">#000000</CssParameter>
-					<CssParameter name="stroke-width">1.0</CssParameter>
+					<CssParameter name="stroke-width">2.0</CssParameter>
 					<CssParameter name="stroke-linejoin">round</CssParameter>
 					<CssParameter name="stroke-opacity">1.0</CssParameter>
 					<CssParameter name="stroke-linecap">square</CssParameter>

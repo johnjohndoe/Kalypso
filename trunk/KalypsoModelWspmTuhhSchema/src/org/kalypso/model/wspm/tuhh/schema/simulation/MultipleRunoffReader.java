@@ -100,7 +100,7 @@ public class MultipleRunoffReader
     m_kmDir = kmDir;
     m_log = log;
     m_calculation = calculation;
-    m_targetGmlFile = new File( outputDir, "qIntervallResults.gml" );
+    m_targetGmlFile = new File( outputDir, "qIntervallResults.gml" ); //$NON-NLS-1$
   }
 
   public void init( ) throws GMLSchemaException, MalformedURLException

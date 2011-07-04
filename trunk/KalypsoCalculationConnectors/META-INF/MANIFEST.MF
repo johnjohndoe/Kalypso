@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCalculationConnectors Plug-in
 Bundle-SymbolicName: org.kalypso.calculation.connectors;singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-Activator: org.kalypso.calculation.connector.PluginActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.NACalcJob,
  org.kalypso.model.wspm.core,
  org.kalypso.afgui,
- org.kalypso.ui
+ org.kalypso.ui,
+ org.kalypso.model.wspm.schema
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.calculation.connector,

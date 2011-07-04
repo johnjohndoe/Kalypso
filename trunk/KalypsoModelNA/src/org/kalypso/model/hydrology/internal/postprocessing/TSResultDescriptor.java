@@ -53,27 +53,27 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
  */
 public enum TSResultDescriptor
 {
-  qgs(".qgs", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_RUNOFF, 1.0d),
-  pre("j Niederschlag .pre", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RAINFALL, 1.0d),
-  tmp("j Temperatur .tmp", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_TEMPERATURE, 1.0d),
-  qif("n Interflow .qif", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d),
-  qgw("n Grundwasser .qgw", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d),
-  qgg("n Gesamtabfluss TG .qgg", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d),
-  gws("n Grundwasserstand .gws - Umrechnung von m auf cm", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_WATERLEVEL, 100.0d),
-  qbs("n Basisabfluss .qbs", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d),
-  qna("n Oberflaechenabfluss .qna", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d),
-  qvs("n Abfluss vers. Flaechen .qvs", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d),
-  sch("// n Schnee .sch [mm]", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_WATERLEVEL, 0.1d),
-  qt1("n Kluftgrundw1 .qt1", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d),
-  qtg("n Kluftgrundw .qtg", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d),
-  vet("n Evapotranspiration .vet [mm]", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_EVAPORATION, 0.1d),
+  qgs(".qgs", Node.FEATURE_NODE, ITimeseriesConstants.TYPE_RUNOFF, 1.0d), //$NON-NLS-1$
+  pre("j Niederschlag .pre", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RAINFALL, 1.0d), //$NON-NLS-1$
+  tmp("j Temperatur .tmp", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_TEMPERATURE, 1.0d), //$NON-NLS-1$
+  qif("n Interflow .qif", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d), //$NON-NLS-1$
+  qgw("n Grundwasser .qgw", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d), //$NON-NLS-1$
+  qgg("n Gesamtabfluss TG .qgg", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d), //$NON-NLS-1$
+  gws("n Grundwasserstand .gws - Umrechnung von m auf cm", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_WATERLEVEL, 100.0d), //$NON-NLS-1$
+  qbs("n Basisabfluss .qbs", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d), //$NON-NLS-1$
+  qna("n Oberflaechenabfluss .qna", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d), //$NON-NLS-1$
+  qvs("n Abfluss vers. Flaechen .qvs", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d), //$NON-NLS-1$
+  sch("// n Schnee .sch [mm]", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_WATERLEVEL, 0.1d), //$NON-NLS-1$
+  qt1("n Kluftgrundw1 .qt1", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d), //$NON-NLS-1$
+  qtg("n Kluftgrundw .qtg", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_RUNOFF, 1.0d), //$NON-NLS-1$
+  vet("n Evapotranspiration .vet [mm]", Catchment.FEATURE_CATCHMENT, ITimeseriesConstants.TYPE_EVAPORATION, 0.1d), //$NON-NLS-1$
 
   // Straenge
-  sph("n Wasserstand Speicher .sph [muNN]", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_NORMNULL, 1.0d),
-  sub("n Speicherueberlauf .sub [m³/s]", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_RUNOFF, 1.0d),
-  spi("n Speicherinhalt .spi [hm³] - Umrechnung auf m³", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_VOLUME, 1000000.0d);
+  sph("n Wasserstand Speicher .sph [muNN]", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_NORMNULL, 1.0d), //$NON-NLS-1$
+  sub("n Speicherueberlauf .sub [m³/s]", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_RUNOFF, 1.0d), //$NON-NLS-1$
+  spi("n Speicherinhalt .spi [hm³] - Umrechnung auf m³", StorageChannel.FEATURE_STORAGE_CHANNEL, ITimeseriesConstants.TYPE_VOLUME, 1000000.0d); //$NON-NLS-1$
 
-  public static final String SUFFIX_QGS = "qgs";
+  public static final String SUFFIX_QGS = "qgs"; //$NON-NLS-1$
 
   private final String m_description;
 

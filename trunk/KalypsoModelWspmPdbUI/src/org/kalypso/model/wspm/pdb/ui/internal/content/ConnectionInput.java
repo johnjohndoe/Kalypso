@@ -49,24 +49,26 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
 
 /**
  * @author Gernot Belger
  */
 public class ConnectionInput
 {
+  private final WaterBodyTreeNode m_rootNode;
+
   private final Session m_session;
 
   private final List<State> m_states;
-
-  private final List<WaterBody> m_waterBodies;
 
   public ConnectionInput( final Session session )
   {
     m_session = session;
 
     m_states = readState();
-    m_waterBodies = readWaterBody();
+    final List<WaterBody> waterBodies = readWaterBody();
+    m_rootNode = WaterBodyTreeNode.buildTree( waterBodies );
   }
 
   private List<State> readState( )
@@ -106,9 +108,9 @@ public class ConnectionInput
     return m_states.toArray( new State[m_states.size()] );
   }
 
-  public WaterBody[] getWaterBody( )
+  public WaterBodyTreeNode getRootNode( )
   {
-    return m_waterBodies.toArray( new WaterBody[m_waterBodies.size()] );
+    return m_rootNode;
   }
 
   public State getState( final String name )

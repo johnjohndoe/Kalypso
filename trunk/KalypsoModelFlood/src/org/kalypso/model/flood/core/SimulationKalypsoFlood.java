@@ -55,7 +55,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.BinaryGeoGridReader;
@@ -191,7 +190,6 @@ public class SimulationKalypsoFlood implements ISimulation
         throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.17" ), null ) ); //$NON-NLS-1$
 
       progress.setWorkRemaining( events.size() * 2 );
-      final Date lStart1 = new Date();
       for( final IRunoffEvent event : markedEvents )
       {
         progress.subTask( String.format( STR_EREIGNIS_xS, event.getName() ) );
@@ -202,7 +200,6 @@ public class SimulationKalypsoFlood implements ISimulation
 
         processEvent( model, eventFolder, event, progress.newChild( 1 ) );
       }
-      System.out.println( "Risk simulation: " + ((new Date()).getTime() - lStart1.getTime()) ); //$NON-NLS-1$
 
       return modelWorkspace;
     }
@@ -488,8 +485,9 @@ public class SimulationKalypsoFlood implements ISimulation
 
     // final IFolder eventFolder = eventsFolder.getFolder( event.getDataPath().toPortableString() );
 
-    for( final ICoverage terrainCoverage : terrainCoverages )
+    for( int i = 0; i < terrainCoverages.size(); i++ )
     {
+      final ICoverage terrainCoverage = terrainCoverages.get( i );
       progress.subTask( String.format( STR_EREIGNIS_xS_FLIESSTIEFENERMITTLUNG_xS, event.getName(), terrainCoverage.getName() ) );
 
       // final IGeoGrid terrainGrid = GeoGridUtilities.toGrid( terrainCoverage );
@@ -508,9 +506,7 @@ public class SimulationKalypsoFlood implements ISimulation
       // generate unique name for grid file
       final File resultsFolder = new File( eventFolder, "results" ); //$NON-NLS-1$
       resultsFolder.mkdir();
-      final String uniqueFileName = FileUtilities.createNewUniqueFileName( "grid", ".ascbin", resultsFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      final File outputCoverageFile = new File( resultsFolder, uniqueFileName );
+      final File outputCoverageFile = new File( resultsFolder, String.format( "HQ%d_%02d.bin", event.getReturnPeriod(), i ) ); //$NON-NLS-1$
 
       final String fileName = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + event.getDataPath() + "/results/" + outputCoverageFile.getName();//$NON-NLS-1$
 

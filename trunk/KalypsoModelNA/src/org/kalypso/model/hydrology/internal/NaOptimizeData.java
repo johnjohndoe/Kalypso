@@ -111,7 +111,7 @@ public class NaOptimizeData
     if( feature instanceof NAOptimize )
       return (NAOptimize) feature;
 
-    final String message = String.format( "Failed to get optimize feature from optimize-gml for node '%s'. Got '%s'", optimizeDom, feature );
+    final String message = String.format( "Failed to get optimize feature from optimize-gml for node '%s'. Got '%s'", optimizeDom, feature ); //$NON-NLS-1$
     throw new SimulationException( message );
   }
 

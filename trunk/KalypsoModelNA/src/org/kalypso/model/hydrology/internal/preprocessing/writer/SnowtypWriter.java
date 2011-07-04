@@ -66,7 +66,7 @@ public class SnowtypWriter extends AbstractCoreFileWriter
   protected void writeContent( final PrintWriter writer )
   {
     writer.append( Messages.getString( "org.kalypso.convert.namodel.manager.SchneeManager.0" ) ); //$NON-NLS-1$
-    writer.append( "/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
+    writer.append( "\n/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
     writer.append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<Snow> snowMembers = m_parameter.getSnow();

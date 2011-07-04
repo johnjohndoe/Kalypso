@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.ui; singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-Activator: org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
 Export-Package: org.kalypso.model.wspm.tuhh.ui,
  org.kalypso.model.wspm.tuhh.ui.actions,
@@ -23,12 +23,12 @@ Require-Bundle: org.kalypso.model.wspm.core,
  de.openali.odysseus.chart.ui,
  org.kalypso.simulation.core,
  de.openali.odysseus.chart.ext.base,
- org.kalypso.ModelSimulationBase;bundle-version="0.0.0",
- org.kalypso.afgui;bundle-version="0.0.0",
- org.kalypso.project.database.client;bundle-version="1.0.0",
- org.kalypso.gml.ui;bundle-version="2.2.0",
- org.kalypso.module;bundle-version="2.3.0",
- org.junit;resolution:=optional,
- org.kalypso.model.wspm.tuhh.schema;bundle-version="10.10.1"
+ org.kalypso.ModelSimulationBase,
+ org.kalypso.afgui,
+ org.kalypso.project.database.client,
+ org.kalypso.gml.ui,
+ org.kalypso.module,
+ org.kalypso.model.wspm.tuhh.schema,
+ org.junit;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

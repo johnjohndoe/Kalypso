@@ -69,7 +69,7 @@ public class BlockTimeSeriesTest extends TestCase
   private Block load( final String resource, final String key ) throws IOException
   {
     final TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
-    final BlockTimeSeries blockTimeseries = new BlockTimeSeries( ENACoreResultsFormat.FMT_2_2_AND_NEWER, timeZone );
+    final BlockTimeSeries blockTimeseries = new BlockTimeSeries( ENACoreResultsFormat.FMT_2_1_AND_OLDER, timeZone );
     final File tmpFile = File.createTempFile( "block", "txt" ); //$NON-NLS-1$ //$NON-NLS-2$
     tmpFile.deleteOnExit();
     final InputStream resourceAsStream = getClass().getResourceAsStream( resource );

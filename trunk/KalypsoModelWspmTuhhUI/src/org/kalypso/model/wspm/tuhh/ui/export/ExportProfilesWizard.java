@@ -127,9 +127,6 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
     return profiles.toArray( new IProfileFeature[] {} );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {

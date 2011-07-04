@@ -51,6 +51,7 @@ import org.eclipse.core.databinding.observable.set.SetChangeEvent;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -111,10 +112,13 @@ public class CheckinStateChooseElementsPage extends WizardPage
     treeViewer.setLabelProvider( new GMLLabelProvider() );
     final GMLContentProvider provider = new GMLContentProvider( false, false );
     /* Hide profiles */
-    provider.setShowChildreOverride( WspmWaterBody.QNAME_MEMBER_PROFILE, false );
-    provider.setShowChildreOverride( TuhhReachProfileSegment.QNAME_PROFILEREACHSEGMENT, false );
-    treeViewer.setContentProvider( provider );
+    provider.setShowChildrenOverride( WspmWaterBody.QNAME_MEMBER_PROFILE, false );
+    provider.setShowChildrenOverride( TuhhReachProfileSegment.QNAME_PROFILEREACHSEGMENT, false );
     provider.setRootPath( new GMLXPath( new GMLXPath( TuhhWspmProject.QNAME ), TuhhWspmProject.QNAME_MEMBER_WATER_BODY ) );
+    treeViewer.setContentProvider( provider );
+
+    final ViewerFilter pdbGmlFilter = new PdbWspmGmlFilter();
+    treeViewer.setFilters( new ViewerFilter[] { pdbGmlFilter } );
 
     treeViewer.setInput( m_data.getProject() );
 

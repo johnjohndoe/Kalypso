@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
+import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -68,8 +69,6 @@ public class Gaf2Db implements IPdbOperation
 {
   private final WaterBody m_waterBody;
 
-  private int m_profileCount = 0;
-
   private final State m_state;
 
   private final GafProfiles m_profiles;
@@ -79,6 +78,8 @@ public class Gaf2Db implements IPdbOperation
   private final String m_dbType;
 
   private final Coefficients m_coefficients;
+
+  private final PDBNameGenerator m_sectionNameGenerator = new PDBNameGenerator();
 
   public Gaf2Db( final String dbType, final WaterBody waterBody, final State state, final GafProfiles profiles, final Coefficients coefficients, final IProgressMonitor monitor )
   {
@@ -136,18 +137,19 @@ public class Gaf2Db implements IPdbOperation
 
     /* add parts */
     final GafPart[] parts = profile.getParts();
-    for( int i = 0; i < parts.length; i++ )
+    for( final GafPart gafPart : parts )
     {
-      final GafPart gafPart = parts[i];
-      final CrossSectionPart csPart = commitPart( session, dbType, crossSection, gafPart, i );
+      final PDBNameGenerator partNameGenerator = new PDBNameGenerator(); 
+      final CrossSectionPart csPart = commitPart( session, dbType, crossSection, gafPart, partNameGenerator );
       if( csPart == null )
         continue;
 
       final GafPoint[] points = gafPart.getPoints();
       for( int j = 0; j < points.length; j++ )
       {
+        final PDBNameGenerator pointNameGenerator = new PDBNameGenerator();
         final GafPoint gafPoint = points[j];
-        commitPoint( session, csPart, gafPoint, j );
+        commitPoint( session, csPart, gafPoint, j, pointNameGenerator );
       }
     }
   }
@@ -156,8 +158,10 @@ public class Gaf2Db implements IPdbOperation
   {
     final CrossSection crossSection = new CrossSection();
 
-    final String id = m_state.getName() + "_" + m_profileCount++;
-    crossSection.setName( id );
+    final String protoName = String.format( "%s", profile.getStation() );
+
+    final String name = m_sectionNameGenerator.createUniqueName( protoName );
+    crossSection.setName( name );
 
     crossSection.setState( m_state );
     crossSection.setWaterBody( m_waterBody );
@@ -180,14 +184,17 @@ public class Gaf2Db implements IPdbOperation
     return crossSection;
   }
 
-  private CrossSectionPart commitPart( final Session session, final String dbType, final CrossSection crossSection, final GafPart part, final int index ) throws Exception
+  private CrossSectionPart commitPart( final Session session, final String dbType, final CrossSection crossSection, final GafPart part, final PDBNameGenerator nameGenerator) throws Exception
   {
     final CrossSectionPart csPart = new CrossSectionPart();
 
-    final String name = crossSection.getName() + "_" + index;
+    final String partKind = part.getKind();
+
+    final String name = nameGenerator.createUniqueName( partKind );
+
     csPart.setName( name );
     csPart.setDescription( StringUtils.EMPTY );
-    csPart.setCategory( part.getKind() );
+    csPart.setCategory( partKind );
     final Geometry line = part.getLine( dbType );
     csPart.setLine( line );
 
@@ -199,7 +206,7 @@ public class Gaf2Db implements IPdbOperation
     return csPart;
   }
 
-  private void commitPoint( final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index ) throws Exception
+  private void commitPoint( final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index, final PDBNameGenerator nameGenerator ) throws Exception
   {
     final Point point = new Point();
 
@@ -211,8 +218,10 @@ public class Gaf2Db implements IPdbOperation
     final String readHyk = gafPoint.getHyk();
     final String realHyk = m_profiles.translateHyk( readHyk );
 
-    final String name = csPart.getName() + "_" + index;
+    /* Using pointID from gaf, but force it to be unique within each part */
+    final String name = nameGenerator.createUniqueName( gafPoint.getPointId() );
     point.setName( name );
+
     point.setDescription( StringUtils.EMPTY );
 
     point.setConsecutiveNum( index );
@@ -222,8 +231,6 @@ public class Gaf2Db implements IPdbOperation
     point.setCode( realCode );
 
     point.setLocation( gafPoint.getPoint() );
-
-    point.setName( gafPoint.getPointId() );
 
     final Roughness roughness = m_coefficients.getRoughnessOrUnknown( gafPoint.getRoughnessClass() );
     point.setRoughness( roughness );

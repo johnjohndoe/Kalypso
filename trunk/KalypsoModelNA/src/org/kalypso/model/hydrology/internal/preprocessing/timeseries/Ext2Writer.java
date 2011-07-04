@@ -70,7 +70,7 @@ public class Ext2Writer
       final Object value = values.get( i, valueAxis );
 
       final String formattedDate = m_dateFormat.format( date );
-      if( formattedDate.trim().endsWith( "11" ) )
+      if( formattedDate.trim().endsWith( "11" ) ) //$NON-NLS-1$
       {
         System.out.println();
       }

@@ -171,7 +171,7 @@ public class QRelationFileReader
     if( org.apache.commons.lang.StringUtils.isBlank( description ) )
       return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.19" ) + filename; //$NON-NLS-1$
 
-    return description + ", " + filename;
+    return description + ", " + filename; //$NON-NLS-1$
   }
 
   public void read( final File inputFile ) throws IOException
@@ -253,7 +253,7 @@ public class QRelationFileReader
     catch( final NumberFormatException nfe )
     {
       /* A good line but bad content. Give user a hint that something might be wrong. */
-      final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.21" );
+      final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.21" ); //$NON-NLS-1$
       m_log.log( false, msg, filename, lineNumber, tokens[i] ); //$NON-NLS-1$
     }
   }

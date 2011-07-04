@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.model.km.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultContentProvider;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
@@ -114,7 +115,7 @@ public class BrowseWspmDialog extends Dialog
   protected Control createDialogArea( Composite parent )
   {
     /* Set the title. */
-    getShell().setText( "WSPM Ergebnis auswählen" );
+    getShell().setText( Messages.getString("BrowseWspmDialog_0") ); //$NON-NLS-1$
 
     /* Create the main composite. */
     Composite main = (Composite) super.createDialogArea( parent );

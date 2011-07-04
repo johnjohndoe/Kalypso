@@ -119,8 +119,9 @@ public class GerWriter extends AbstractCoreFileWriter
       final TimeseriesLinkType link = ((StorageChannel) channel).getSeaEvaporationTimeseriesLink();
 
       // FIXME: this distinction is probably too soft; we want to always use HRB however, so meaybe not a problem
+// writer.println( link == null ? STORAGECHANNEL : STORAGECHANNEL_HRB );
 
-      writer.println( link == null ? STORAGECHANNEL : STORAGECHANNEL_HRB );
+      writer.println( STORAGECHANNEL_HRB );
     }
     else
       throw new UnsupportedOperationException( "can not write Feature to ascii" + channel.toString() ); //$NON-NLS-1$

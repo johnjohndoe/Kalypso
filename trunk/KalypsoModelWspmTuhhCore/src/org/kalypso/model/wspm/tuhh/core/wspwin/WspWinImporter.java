@@ -166,7 +166,8 @@ public class WspWinImporter
       if( modelDescription.length() != 0 )
         modelDescription.append( "\n\n" ); //$NON-NLS-1$
 
-      modelDescription.append( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.10", wspwinDirectory.getAbsolutePath(), DATE_FORMATTER.format( new Date( System.currentTimeMillis() ) ) ) ); //$NON-NLS-1$
+      final String description = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.10", wspwinDirectory.getAbsolutePath(), DATE_FORMATTER.format( new Date( System.currentTimeMillis() ) ) ); //$NON-NLS-1$
+      modelDescription.append( description );
 
       final String wspwinModelDescription = readProjectDescription( wspwinDirectory );
       if( wspwinModelDescription != null )
@@ -347,7 +348,7 @@ public class WspWinImporter
    */
   private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws IOException, ParseException
   {
-    final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.21", zustandBean.getFileName() );
+    final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.21", zustandBean.getFileName() ); //$NON-NLS-1$
     final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID );
 
     final String name = zustandBean.getName();

@@ -10,6 +10,7 @@ import ogc31.www.opengis.net.gml.FileType;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_FM_RM;
+import org.kalypso.calculation.connector.utils.Connectors;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -44,25 +45,24 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/modelSpecification.xml" );
+    return getClass().getResource( "resources/modelSpecification.xml" ); //$NON-NLS-1$
   }
 
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final URL fmModelURL = (URL) inputProvider.getInputForID( MODELSPEC_CONNECTOR_FM_RM.FM_Model.name() );
-    final URL rmModelURL = (URL) inputProvider.getInputForID( MODELSPEC_CONNECTOR_FM_RM.RM_Model.name() );
-    final String rmInputRasterFolderRelativePath = "raster/input/";
-    final File rmInputRasterFolder = new File( tmpdir, "rmInputRasterFolder" );
+    final GMLWorkspace fmModel = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_FM_RM.FM_Model.name() );
+    final GMLWorkspace rmModel = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_FM_RM.RM_Model.name() );
+
+    final String rmInputRasterFolderRelativePath = "raster/input/"; //$NON-NLS-1$
+    final File rmInputRasterFolder = new File( tmpdir, "rmInputRasterFolder" ); //$NON-NLS-1$
 
     try
     {
-      final GMLWorkspace fmModel = GmlSerializer.createGMLWorkspace( fmModelURL, null );
-      final GMLWorkspace rmModel = GmlSerializer.createGMLWorkspace( rmModelURL, null );
 
-      final File rmOutputFile = File.createTempFile( "outTempRM", ".gml", tmpdir );
+      final File rmOutputFile = File.createTempFile( "outTempRM", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$
       // folder absolute path on server FS
-      final String fmScenarioFolderAbsolutePath = new File( fmModelURL.getFile() ).getParent().concat( File.separator );
+      final String fmScenarioFolderAbsolutePath = new File( Connectors.getURL( inputProvider, MODELSPEC_CONNECTOR_FM_RM.FM_Model.name() ).getFile() ).getParent().concat( File.separator );
 
       final IFloodModel floodModel = (IFloodModel) fmModel.getRootFeature().getAdapter( IFloodModel.class );
       final IRasterDataModel riskRasterDataModel = (IRasterDataModel) rmModel.getRootFeature().getAdapter( IRasterDataModel.class );
@@ -76,7 +76,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
         annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" );
         annualCoverageCollection.setReturnPeriod( runoffEvent.getReturnPeriod() );
         final ICoverageCollection coverages = runoffEvent.getResultCoverages();
-        IFeatureBindingCollection<ICoverage> coveragesList = coverages.getCoverages();
+        final IFeatureBindingCollection<ICoverage> coveragesList = coverages.getCoverages();
         for( final ICoverage coverage : coveragesList )
         {
           if( fmScenarioFolderAbsolutePath != null && coverage instanceof RectifiedGridCoverage )
@@ -91,6 +91,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
               final File eventFile = new File( fmScenarioFolderAbsolutePath.concat( fileType.getFileName() ) );
               if( eventFile.exists() && eventFile.isFile() )
               {
+                // TODO local or server based calculation chain? server based -> move files to destination directory
                 FileUtils.copyFileToDirectory( eventFile, rmInputRasterFolder );
                 fileType.setFileName( rmInputRasterFolderRelativePath.concat( eventFile.getName() ) );
               }

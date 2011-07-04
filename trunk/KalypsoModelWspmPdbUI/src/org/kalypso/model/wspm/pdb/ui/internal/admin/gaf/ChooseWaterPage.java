@@ -111,7 +111,12 @@ public class ChooseWaterPage extends WizardPage
     GridLayoutFactory.swtDefaults().applyTo( panel );
 
     final DatabindingWizardPage binding = new DatabindingWizardPage( this, null );
-    createWaterBodyTable( binding, panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    final Control tableControl = createWaterBodyTable( binding, panel );
+    final GridData tableData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    tableData.heightHint = 250;
+    tableControl.setLayoutData( tableData );
+
     createSearchFields( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createActions( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 

@@ -66,7 +66,6 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -212,7 +211,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    return new DataRange<Number>( 0, 1 );
+    return  null;// new DataRange<Number>( 0, 1 );
   }
 
   /**
@@ -262,7 +261,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isPointPropertiesChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged() )
+    if( hint.isPointPropertiesChanged() || hint.isMarkerMoved()|| hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
       getEventHandler().fireLayerContentChanged( this );
   }
 
