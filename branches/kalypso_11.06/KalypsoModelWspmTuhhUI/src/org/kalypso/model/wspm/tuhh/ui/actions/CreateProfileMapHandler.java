@@ -43,60 +43,42 @@ package org.kalypso.model.wspm.tuhh.ui.actions;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.jface.action.IAction;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionDelegate;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureProperty;
 
 /**
  * @author Gernot Belger
  */
-public class CreateProfileMapAction extends ActionDelegate implements IObjectActionDelegate
+public class CreateProfileMapHandler extends AbstractHandler
 {
-  private IFeatureSelection m_selection;
-
-  /**
-   * @see org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
   @Override
-  public void selectionChanged( final IAction action, final ISelection selection )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    m_selection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
+    final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
+    if( !(selection instanceof IFeatureSelection) )
+      throw new ExecutionException( "selection must be feature selection" ); //$NON-NLS-1$
 
-    if( action != null )
-      action.setEnabled( m_selection != null );
-  }
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
 
-  /**
-   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IWorkbenchPart)
-   */
-  @Override
-  public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
-  {
-  }
+    final IFeatureSelection featureSelection = (IFeatureSelection) selection;
 
-  /**
-   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
-   */
-  @Override
-  public void runWithEvent( final IAction action, final Event event )
-  {
     /* retrieve selected profile-collections, abort if none */
     final Map<Feature, IRelationType> selectedProfiles = new HashMap<Feature, IRelationType>();
 
-    for( final Object selectedObject : m_selection.toList() )
+    for( final Object selectedObject : featureSelection.toList() )
     {
       if( selectedObject instanceof Feature )
       {
@@ -104,17 +86,23 @@ public class CreateProfileMapAction extends ActionDelegate implements IObjectAct
         final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( TuhhReach.QNAME_MEMBER_REACHSEGMENT );
         selectedProfiles.put( feature, rt );
       }
+      if( selectedObject instanceof IFeatureProperty )
+      {
+        final Feature feature = ((IFeatureProperty) selectedObject).getParentFeature();
+        final IRelationType rt = ((IFeatureProperty) selectedObject).getPropertyType();
+        selectedProfiles.put( feature, rt );
+      }
     }
-
-    final Shell shell = event.display.getActiveShell();
 
     if( selectedProfiles.size() == 0 )
     {
-      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CreateProfileMapAction.0"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CreateProfileMapAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
-      return;
+      MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CreateProfileMapHandler.0" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CreateProfileMapHandler.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return null;
     }
 
     final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
     org.kalypso.model.wspm.ui.action.CreateProfileMapAction.createAndOpenMap( activePart, selectedProfiles );
+
+    return null;
   }
 }
