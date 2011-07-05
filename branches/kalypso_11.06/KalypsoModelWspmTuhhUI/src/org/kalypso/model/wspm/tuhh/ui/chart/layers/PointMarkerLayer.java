@@ -104,7 +104,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
     final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) );
 
     final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
-    hoverFigure.setStyle( getLineStyle_hover() );
+    hoverFigure.setStyle( getLineStyleHover() );
     hoverFigure.setRectangle( new Rectangle( x - 5, m_offset, 10, getTargetAxis().getScreenHeight() ) );
 
     return new EditInfo( this, null, hoverFigure, dragStartData.getData(), getTooltipInfo( point ), dragStartData.getPosition() );
