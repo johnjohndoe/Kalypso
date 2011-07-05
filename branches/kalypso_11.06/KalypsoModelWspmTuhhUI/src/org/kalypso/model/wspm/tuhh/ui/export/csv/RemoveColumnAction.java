@@ -49,7 +49,6 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
- *
  */
 public class RemoveColumnAction extends Action
 {
@@ -62,7 +61,7 @@ public class RemoveColumnAction extends Action
     m_column = column;
     m_columnComposite = columnComposite;
 
-    setDescription( Messages.getString("RemoveColumnAction_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "RemoveColumnAction_0" ) ); //$NON-NLS-1$
 
     final ImageDescriptor image = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.REMOVE_CSV_EXPORT_COLUMN );
     setImageDescriptor( image );

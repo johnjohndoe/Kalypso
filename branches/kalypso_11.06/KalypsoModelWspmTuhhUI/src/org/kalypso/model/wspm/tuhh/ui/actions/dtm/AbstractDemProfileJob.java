@@ -80,7 +80,7 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("AbstractDemProfileJob_0") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "AbstractDemProfileJob_0" ) ); //$NON-NLS-1$
     }
   }
 

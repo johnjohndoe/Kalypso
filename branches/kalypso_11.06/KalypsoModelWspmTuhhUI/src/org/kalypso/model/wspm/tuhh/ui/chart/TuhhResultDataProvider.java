@@ -62,7 +62,9 @@ public final class TuhhResultDataProvider implements IWspLayerData
 
     final IWspmResultNode[] childNodes = node.getChildResults();
     for( final IWspmResultNode child : childNodes )
+    {
       initResults( child );
+    }
   }
 
   private void initActive( final IWspmResultNode resultNode )
@@ -72,7 +74,9 @@ public final class TuhhResultDataProvider implements IWspLayerData
     final IDialogSettings section = PluginUtilities.getSection( m_settings, settingsName );
     final boolean isActive = section.getBoolean( id );
     if( isActive )
+    {
       m_activeElements.add( new TuhhResultDataElement( resultNode ) );
+    }
   }
 
   @Override
@@ -89,9 +93,13 @@ public final class TuhhResultDataProvider implements IWspLayerData
     for( final Object element : elements )
     {
       if( element instanceof IWspmResultNode )
+      {
         m_activeElements.add( new TuhhResultDataElement( (IWspmResultNode) element ) );
+      }
       else if( element instanceof TuhhResultDataElement )
+      {
         m_activeElements.add( (TuhhResultDataElement) element );
+      }
     }
 
     if( m_settings == null )
@@ -101,7 +109,9 @@ public final class TuhhResultDataProvider implements IWspLayerData
     final String settingsBase = getSettingsName();
     final IDialogSettings section = m_settings.addNewSection( settingsBase );
     for( final TuhhResultDataElement resultNode : m_activeElements )
+    {
       section.put( resultNode.getId(), true );
+    }
   }
 
   /**

@@ -53,9 +53,9 @@ import org.kalypso.observation.result.IComponent;
  */
 public class RemovePropertyResolution extends AbstractProfilMarkerResolution
 {
-  private static final String STR_REMOVE_COMPONENT = Messages.getString("RemovePropertyResolution_0"); //$NON-NLS-1$
+  private static final String STR_REMOVE_COMPONENT = Messages.getString( "RemovePropertyResolution_0" ); //$NON-NLS-1$
 
-  private static final String STR_REMOVE_COMPONENT_DESCRIPTION = Messages.getString("RemovePropertyResolution_1"); //$NON-NLS-1$
+  private static final String STR_REMOVE_COMPONENT_DESCRIPTION = Messages.getString( "RemovePropertyResolution_1" ); //$NON-NLS-1$
 
   private int m_componentIndex;
 
@@ -78,7 +78,7 @@ public class RemovePropertyResolution extends AbstractProfilMarkerResolution
   {
     final IComponent component = profile.getResult().getComponent( m_componentIndex );
     final String componentLabel = ComponentUtilities.getComponentLabel( component );
-    final String opMsg = String.format( Messages.getString("RemovePropertyResolution_2"), componentLabel ); //$NON-NLS-1$
+    final String opMsg = String.format( Messages.getString( "RemovePropertyResolution_2" ), componentLabel ); //$NON-NLS-1$
 
     final ProfilOperation operation = new ProfilOperation( opMsg, profile, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyRemove( profile, component ) );

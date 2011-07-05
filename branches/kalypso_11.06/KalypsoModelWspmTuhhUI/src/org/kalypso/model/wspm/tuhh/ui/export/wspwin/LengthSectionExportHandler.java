@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -101,13 +100,13 @@ public class LengthSectionExportHandler extends AbstractHandler
       e.printStackTrace();
 
       final IStatus error = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( shell, Messages.getString("LengthSectionExportHandler_0"), Messages.getString("LengthSectionExportHandler_1"), error ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( shell, Messages.getString( "LengthSectionExportHandler_0" ), Messages.getString( "LengthSectionExportHandler_1" ), error ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return null;
   }
 
-  private final void doExport( final IObservation<TupleResult> obs ) throws FileNotFoundException, IOException
+  private void doExport( final IObservation<TupleResult> obs ) throws IOException
   {
     final File file = new File( System.getProperty( "java.io.tmpdir" ), "exportTmp.lng" );//$NON-NLS-1$ //$NON-NLS-2$
     file.deleteOnExit();
@@ -116,7 +115,7 @@ public class LengthSectionExportHandler extends AbstractHandler
     try
     {
       if( !lngExp.write( obs, writer ) )
-        throw new IOException( Messages.getString("LengthSectionExportHandler_2") ); //$NON-NLS-1$
+        throw new IOException( Messages.getString( "LengthSectionExportHandler_2" ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -127,7 +126,7 @@ public class LengthSectionExportHandler extends AbstractHandler
     Plotter.openPrf( file, doPrint );
   }
 
-  private final IObservation<TupleResult> getLSObservation( final IChartPart chartPart )
+  private IObservation<TupleResult> getLSObservation( final IChartPart chartPart )
   {
     final IChartModel chartModel = chartPart.getChartComposite().getChartModel();
     final ILayerManager layerManager = chartModel.getLayerManager();
@@ -147,6 +146,7 @@ public class LengthSectionExportHandler extends AbstractHandler
         }
       }
     }
+
     return null;
   }
 

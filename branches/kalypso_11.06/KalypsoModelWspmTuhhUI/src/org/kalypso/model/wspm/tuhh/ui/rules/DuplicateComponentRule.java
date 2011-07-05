@@ -78,7 +78,9 @@ public class DuplicateComponentRule extends AbstractValidatorRule
       final IComponent component = pointProperties[i];
       final String id = component.getId();
       if( existingComponents.contains( id ) )
+      {
         createDuplicateRule( profil, component, i, collector );
+      }
 
       existingComponents.add( id );
     }
@@ -88,7 +90,7 @@ public class DuplicateComponentRule extends AbstractValidatorRule
   {
     // TODO: we need a list of components that allow duplicates.
     final String componentLabel = ComponentUtilities.getComponentLabel( component );
-    final String msg = String.format( Messages.getString("DuplicateComponentRule_0"), componentLabel ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "DuplicateComponentRule_0" ), componentLabel ); //$NON-NLS-1$
 
     final IProfilMarkerResolution resolution = new RemovePropertyResolution( componentIndex );
     collector.createProfilMarker( IMarker.SEVERITY_ERROR, msg, profil, resolution );

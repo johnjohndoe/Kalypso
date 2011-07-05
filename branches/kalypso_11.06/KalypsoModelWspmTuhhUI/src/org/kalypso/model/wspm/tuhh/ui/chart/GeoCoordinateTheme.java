@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -62,7 +61,7 @@ public class GeoCoordinateTheme extends AbstractProfilTheme
 
   public GeoCoordinateTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( profil, IWspmTuhhConstants.LAYER_GEOKOORDINATEN, TITLE, chartLayers, cm );
+    super( profil, IWspmConstants.LAYER_GEOKOORDINATEN, TITLE, chartLayers, cm );
 
   }
 

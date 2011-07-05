@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -77,13 +78,13 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 
   private void createWasserspiegel2dStyle( )
   {
-    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_WASSERSPIEGEL2D + LINE, LineStyle.class ); //$NON-NLS-1$
+    final ILineStyle ls = getStyleFor( IWspmConstants.LAYER_WASSERSPIEGEL2D + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( new RGB( 153, 217, 234 ) );
   }
 
   private void createWasserspiegelStyle( )
   {
-    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_WASSERSPIEGEL + LINE, LineStyle.class ); //$NON-NLS-1$
+    final ILineStyle ls = getStyleFor( IWspmConstants.LAYER_WASSERSPIEGEL + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( new RGB( 153, 217, 234 ) );
   }
 
@@ -92,7 +93,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
 
     final ILineStyle lsT = getStyleFor( IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + LINE, LineStyle.class ); //$NON-NLS-1$
-    lsT.setColor( markerProvider.getColorFor(  IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    lsT.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     lsT.setWidth( 2 );
 
     final ILineStyle lsD = lsT.clone();
@@ -100,7 +101,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     addStyle( IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + LINE, lsD ); //$NON-NLS-1$
 
     final ILineStyle lsB = lsT.clone();
-    lsB.setColor( markerProvider.getColorFor(  IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
+    lsB.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
     addStyle( IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_BORDVOLL + LINE, lsB ); //$NON-NLS-1$
   }
 
@@ -109,14 +110,14 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
     final RGB col = markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
 
-    final ILineStyle ls = getStyleFor(  IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_WEHR + LINE, LineStyle.class ); //$NON-NLS-1$
+    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_DEVIDER + "_" + IWspmTuhhConstants.MARKER_TYP_WEHR + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( col );
     addStyle( IWspmTuhhConstants.LAYER_WEHR + "_" + IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + LINE, ls.clone() ); //$NON-NLS-1$
   }
 
   private void createCrossSectionStyles( )
   {
-    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.LAYER_GELAENDE + LINE, LineStyle.class ); //$NON-NLS-1$
+    final ILineStyle ls = getStyleFor( IWspmConstants.LAYER_GELAENDE + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( new RGB( 255, 150, 0 ) );
   }
 

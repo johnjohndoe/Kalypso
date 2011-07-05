@@ -140,7 +140,9 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
       final String structId = structID + countSuffix;
 
       if( writeBuilding( lowPoint, structId, name, profileObject ) )
+      {
         reallyExportedBuildings++;
+      }
     }
 
   }

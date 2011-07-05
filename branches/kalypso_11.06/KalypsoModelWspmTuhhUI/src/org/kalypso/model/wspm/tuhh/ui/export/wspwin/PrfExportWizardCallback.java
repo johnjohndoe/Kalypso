@@ -47,10 +47,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
@@ -94,7 +94,9 @@ public abstract class PrfExportWizardCallback implements IPrfExporterCallback
     String uniqueName = fileName;
 
     for( int i = 0; i < Integer.MAX_VALUE && m_filenames.contains( uniqueName ); i++ )
+    {
       uniqueName = fileName + i;
+    }
 
     m_filenames.add( uniqueName );
     return uniqueName;
@@ -123,12 +125,14 @@ public abstract class PrfExportWizardCallback implements IPrfExporterCallback
 
     for( final WspmResultLengthSection result : m_results )
     {
-      final Object waterlevel = result.getValue( bigStation, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL );
-      final Object discharge = result.getValue( bigStation, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_RUNOFF );
+      final Object waterlevel = result.getValue( bigStation, IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL );
+      final Object discharge = result.getValue( bigStation, IWspmConstants.LENGTH_SECTION_PROPERTY_RUNOFF );
       final String label = result.getLabel();
 
       if( waterlevel instanceof Number && discharge instanceof Number )
+      {
         waterlevels.add( new Waterlevel( ((Number) waterlevel).doubleValue(), ((Number) discharge).doubleValue(), label ) );
+      }
     }
 
     return waterlevels.toArray( new IWaterlevel[waterlevels.size()] );

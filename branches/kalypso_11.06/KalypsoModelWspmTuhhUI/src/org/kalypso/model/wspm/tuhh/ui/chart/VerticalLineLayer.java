@@ -65,7 +65,7 @@ public class VerticalLineLayer extends AbstractLineLayer
   /**
    * A list of values at the domain axis, where the vertical lines should be drawn.
    */
-  private BigDecimal[] m_points;
+  private final BigDecimal[] m_points;
 
   /**
    * The constructor.
@@ -73,7 +73,7 @@ public class VerticalLineLayer extends AbstractLineLayer
    * @param points
    *          A list of values at the domain axis, where the vertical lines should be drawn.
    */
-  public VerticalLineLayer( ILayerProvider provider, ILineStyle lineStyle, IPointStyle pointStyle, BigDecimal[] points )
+  public VerticalLineLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle, final BigDecimal[] points )
   {
     super( provider, lineStyle, pointStyle );
 
@@ -86,7 +86,7 @@ public class VerticalLineLayer extends AbstractLineLayer
    * @param points
    *          A list of values at the domain axis, where the vertical lines should be drawn.
    */
-  public VerticalLineLayer( ILayerProvider provider, IStyleSet styleSet, BigDecimal[] points )
+  public VerticalLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final BigDecimal[] points )
   {
     super( provider, styleSet );
 
@@ -97,19 +97,19 @@ public class VerticalLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
-    IAxis domainAxis = getDomainAxis();
-    IAxis targetAxis = getTargetAxis();
+    final IAxis domainAxis = getDomainAxis();
+    final IAxis targetAxis = getTargetAxis();
 
-    for( int i = 0; i < m_points.length; i++ )
+    for( final BigDecimal point : m_points )
     {
-      Integer x = domainAxis.numericToScreen( m_points[i].doubleValue() );
-      IDataRange<Number> numericRange = targetAxis.getNumericRange();
-      Integer yMin = targetAxis.numericToScreen( numericRange.getMin() );
-      Integer yMax = targetAxis.numericToScreen( numericRange.getMax() );
+      final Integer x = domainAxis.numericToScreen( point.doubleValue() );
+      final IDataRange<Number> numericRange = targetAxis.getNumericRange();
+      final Integer yMin = targetAxis.numericToScreen( numericRange.getMin() );
+      final Integer yMax = targetAxis.numericToScreen( numericRange.getMax() );
 
-      PolylineFigure polylineFigure = getPolylineFigure();
+      final PolylineFigure polylineFigure = getPolylineFigure();
       polylineFigure.setPoints( new Point[] { new Point( x, yMin ), new Point( x, yMax ) } );
       polylineFigure.paint( gc );
     }

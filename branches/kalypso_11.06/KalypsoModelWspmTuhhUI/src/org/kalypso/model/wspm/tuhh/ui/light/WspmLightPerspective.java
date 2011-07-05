@@ -59,7 +59,7 @@ public class WspmLightPerspective implements IPerspectiveFactory
 
   private static final String OUTLINE_FOLDER = "wspmLightOutlineFolder"; //$NON-NLS-1$
 
-  public static String ID = "WspmLightPerspective"; //$NON-NLS-1$
+  public static final String ID = "WspmLightPerspective"; //$NON-NLS-1$
 
   @Override
   public void createInitialLayout( final IPageLayout layout )

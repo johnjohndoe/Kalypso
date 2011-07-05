@@ -175,20 +175,24 @@ public class WeirPanel extends AbstractProfilView
     final IComponent objProp = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
     final String id = (String) building.getValue( objProp );
     if( id != null )
+    {
       m_wehrart.setSelection( new StructuredSelection( id ) );
+    }
     m_wehrStart.refresh();
     m_wehrEnd.refresh();
     updateDeviderGroup( profile );
     m_deviderGroup.getParent().layout( true, true );
   }
 
-  private final void updateDeviderGroup( final IProfil profile )
+  private void updateDeviderGroup( final IProfil profile )
   {
     final Control[] ctrls = m_deviderGroup.getChildren();
     for( final Control ctrl : ctrls )
     {
       if( !ctrl.isDisposed() )
+      {
         ctrl.dispose();
+      }
     }
     final IComponent cmpWehrTrenner = profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
     final IProfilPointMarker[] deviders = profile.getPointMarkerFor( cmpWehrTrenner );

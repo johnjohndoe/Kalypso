@@ -75,7 +75,9 @@ public class LngExportFileChooserPage extends ExportFileChooserPage
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
+    {
       m_doOpenPlotter = dialogSettings.getBoolean( SETTINGS_DO_OPEN_PLOTTER );
+    }
 
     createOptionsGroup( parent );
   }
@@ -85,11 +87,11 @@ public class LngExportFileChooserPage extends ExportFileChooserPage
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout() );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    group.setText( Messages.getString("LngExportFileChooserPage_0") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "LngExportFileChooserPage_0" ) ); //$NON-NLS-1$
 
     final Button openPlotterCheckbox = new Button( group, SWT.CHECK );
-    openPlotterCheckbox.setText( Messages.getString("LngExportFileChooserPage_1") ); //$NON-NLS-1$
-    openPlotterCheckbox.setToolTipText( Messages.getString("LngExportFileChooserPage_2") ); //$NON-NLS-1$
+    openPlotterCheckbox.setText( Messages.getString( "LngExportFileChooserPage_1" ) ); //$NON-NLS-1$
+    openPlotterCheckbox.setToolTipText( Messages.getString( "LngExportFileChooserPage_2" ) ); //$NON-NLS-1$
     openPlotterCheckbox.setSelection( m_doOpenPlotter );
     openPlotterCheckbox.addSelectionListener( new SelectionAdapter()
     {
@@ -111,12 +113,16 @@ public class LngExportFileChooserPage extends ExportFileChooserPage
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
+    {
       dialogSettings.put( SETTINGS_DO_OPEN_PLOTTER, selection );
+    }
 
     // Check if plotter has been configured and ask user to do so. We should
     // do something if that fails.
     if( m_doOpenPlotter )
+    {
       Plotter.checkPlotterExe( getShell() );
+    }
   }
 
   public boolean doOpenPlotter( )

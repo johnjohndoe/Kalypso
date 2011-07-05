@@ -136,8 +136,10 @@ public class CulvertPanel extends AbstractProfilView
         @Override
         public void focusGained( final FocusEvent e )
         {
-          if( (m_text != null) && !m_text.isDisposed() )
+          if( m_text != null && !m_text.isDisposed() )
+          {
             m_text.selectAll();
+          }
         }
 
         /**
@@ -179,7 +181,9 @@ public class CulvertPanel extends AbstractProfilView
       final Double val = Buildings.getDoubleValueFor( m_property.getId(), building );
       m_text.setText( String.format( "%.4f", val ) ); //$NON-NLS-1$
       if( m_text.isFocusControl() )
+      {
         m_text.selectAll();
+      }
     }
 
     public void dispose( )
@@ -204,13 +208,21 @@ public class CulvertPanel extends AbstractProfilView
           final String buildingId = building.getId();
 
           if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( buildingId ) )
+          {
             label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.1" ); //$NON-NLS-1$
+          }
           else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( buildingId ) )
+          {
             label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.2" ); //$NON-NLS-1$
+          }
           else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( buildingId ) )
+          {
             label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.3" ); //$NON-NLS-1$
+          }
           else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( buildingId ) )
+          {
             label = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.4" ); //$NON-NLS-1$
+          }
         }
       }
     }
@@ -271,7 +283,9 @@ public class CulvertPanel extends AbstractProfilView
     m_toolkit.adapt( m_cmb.getCombo() );
     final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
     if( building != null )
+    {
       m_cmb.setSelection( new StructuredSelection( m_culverts.get( building.getId() ) ) );
+    }
 
     final Label spacer = m_toolkit.createSeparator( m_propPanel, SWT.SEPARATOR | SWT.HORIZONTAL );
     spacer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
@@ -295,7 +309,9 @@ public class CulvertPanel extends AbstractProfilView
       return;
 
     for( final IComponent property : building.getObjectProperties() )
+    {
       m_lines.add( new PropertyLine( m_toolkit, m_propPanel, property ) );
+    }
 
     m_propPanel.layout();
   }
@@ -304,7 +320,9 @@ public class CulvertPanel extends AbstractProfilView
   {
 
     for( final PropertyLine line : m_lines )
+    {
       line.updateValue();
+    }
   }
 
   @Override
@@ -314,6 +332,7 @@ public class CulvertPanel extends AbstractProfilView
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )
+      {
         control.getDisplay().asyncExec( new Runnable()
         {
           @Override
@@ -322,6 +341,7 @@ public class CulvertPanel extends AbstractProfilView
             updateControls();
           }
         } );
+      }
     }
   }
 }

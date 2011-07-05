@@ -81,17 +81,19 @@ public class PlotterExportPage extends ExportPrfFileChooserPage
   {
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
+    {
       m_doPrint = dialogSettings.getBoolean( SETTINGS_DO_PRINT );
+    }
 
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout() );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    group.setText( Messages.getString("PlotterExportPage_0") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "PlotterExportPage_0" ) ); //$NON-NLS-1$
 
     final Button button = new Button( group, SWT.CHECK );
     button.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    button.setText( Messages.getString("PlotterExportPage_1") ); //$NON-NLS-1$
-    button.setToolTipText( Messages.getString("PlotterExportPage_2") ); //$NON-NLS-1$
+    button.setText( Messages.getString( "PlotterExportPage_1" ) ); //$NON-NLS-1$
+    button.setToolTipText( Messages.getString( "PlotterExportPage_2" ) ); //$NON-NLS-1$
     button.setSelection( m_doPrint );
     button.addSelectionListener( new SelectionAdapter()
     {

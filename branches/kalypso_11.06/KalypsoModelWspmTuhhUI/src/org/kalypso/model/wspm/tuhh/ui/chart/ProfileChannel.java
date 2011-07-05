@@ -131,6 +131,8 @@ public class ProfileChannel
   {
     final IRecord[] points = m_profile.getPoints();
     for( int i = m_startPoint; i < m_endPoint; i++ )
+    {
       points[i].setValue( roughnessIndex, value );
+    }
   }
 }

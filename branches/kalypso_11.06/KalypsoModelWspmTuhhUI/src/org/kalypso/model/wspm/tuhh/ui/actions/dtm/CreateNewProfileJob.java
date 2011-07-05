@@ -95,7 +95,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
   @Override
   public String getLabel( )
   {
-    return Messages.getString("CreateNewProfileJob.2"); //$NON-NLS-1$
+    return Messages.getString( "CreateNewProfileJob.2" ); //$NON-NLS-1$
   }
 
   /**

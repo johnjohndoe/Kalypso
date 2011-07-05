@@ -106,11 +106,11 @@ public class WProfImportWizard extends Wizard implements IWorkbenchWizard
     m_workspace = workspace;
     m_targetProject = targetProject;
 
-    m_wprofFilePage = new WProfImportFilePage( "wprofFilePage", Messages.getString("WProfImportWizard_0"), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_wprofFilePage.setDescription( Messages.getString("WProfImportWizard_1") ); //$NON-NLS-1$
+    m_wprofFilePage = new WProfImportFilePage( "wprofFilePage", Messages.getString( "WProfImportWizard_0" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_wprofFilePage.setDescription( Messages.getString( "WProfImportWizard_1" ) ); //$NON-NLS-1$
 
-    m_wprofMarkerPage = new WProfOptionsPage( "wprofMarkerPage", Messages.getString("WProfImportWizard_2"), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_wprofMarkerPage.setDescription( Messages.getString("WProfImportWizard_3") ); //$NON-NLS-1$
+    m_wprofMarkerPage = new WProfOptionsPage( "wprofMarkerPage", Messages.getString( "WProfImportWizard_2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_wprofMarkerPage.setDescription( Messages.getString( "WProfImportWizard_3" ) ); //$NON-NLS-1$
 
     final WProfProfileStrategyOptions profileStrategyOptions = m_wprofMarkerPage.getProfileStrategyOptions();
     profileStrategyOptions.addStrategy( new ProfileCreatorStrategy() );
@@ -148,7 +148,9 @@ public class WProfImportWizard extends Wizard implements IWorkbenchWizard
       final String markerID = mappingEntry.getKey();
       final int[] types = mappingEntry.getValue();
       for( final int type : types )
+      {
         handler.addMarkerMapping( markerID, type );
+      }
     }
 
     final Properties specification = m_wprofPropertyPage.getSpecification();
@@ -162,7 +164,7 @@ public class WProfImportWizard extends Wizard implements IWorkbenchWizard
 
     final IWizardContainer container = getContainer();
     final IStatus result = RunnableContextHelper.execute( container, true, true, op );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("WProfImportWizard_5"), result ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "WProfImportWizard_5" ), result ); //$NON-NLS-1$
 
     return !result.matches( IStatus.ERROR );
   }

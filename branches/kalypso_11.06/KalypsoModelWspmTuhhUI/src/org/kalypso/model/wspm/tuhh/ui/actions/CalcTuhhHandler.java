@@ -179,7 +179,9 @@ public class CalcTuhhHandler extends AbstractHandler
       final CommandableWorkspace workspace = selection.getWorkspace( feature );
       final KeyInfo info = pool.getInfo( workspace );
       if( info.isDirty() )
+      {
         objectsToSave.add( workspace );
+      }
     }
 
     if( objectsToSave.size() == 0 )

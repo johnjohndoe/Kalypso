@@ -72,7 +72,6 @@ public class DeviderTheme extends AbstractProfilTheme
     super( profil, IWspmTuhhConstants.LAYER_DEVIDER, TITLE, chartLayers, cm );
   }
 
- 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
    */
@@ -112,7 +111,9 @@ public class DeviderTheme extends AbstractProfilTheme
     int i = 0;
 
     for( final IComponent devider : deviders )
+    {
       deviderIds[i++] = devider.getId();
+    }
 
     final LegendEntry le = new LegendEntry( this, getTitle() )
     {

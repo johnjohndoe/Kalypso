@@ -61,7 +61,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.deegree.binding.gml.Definition;
 import org.kalypso.deegree.binding.gml.Dictionary;
 import org.kalypso.deegree.binding.swe.ItemDefinition;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.om.FeatureComponent;
 
@@ -85,7 +85,7 @@ public class ProfileExportComponentChooser
   public ProfileExportComponentChooser( final IDialogSettings settings )
   {
     m_settings = settings;
-    initComponents( IWspmTuhhConstants.URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS );
+    initComponents( IWspmConstants.URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS );
     initSelection();
   }
 
@@ -99,7 +99,9 @@ public class ProfileExportComponentChooser
     for( final IComponent component : m_components )
     {
       if( ArrayUtils.contains( ids, component.getId() ) )
+      {
         selectedComponent.add( component );
+      }
     }
 
     m_selectedColumns = selectedComponent.toArray( new IComponent[selectedComponent.size()] );
@@ -112,7 +114,9 @@ public class ProfileExportComponentChooser
     for( final Definition definition : allDefinitions )
     {
       if( definition instanceof ItemDefinition )
+      {
         m_components.add( new FeatureComponent( definition, urn ) );
+      }
     }
   }
 
@@ -155,10 +159,14 @@ public class ProfileExportComponentChooser
     m_selectedColumns = Arrays.castArray( checkedElements, new IComponent[checkedElements.length] );
     final String[] ids = new String[m_selectedColumns.length];
     for( int i = 0; i < ids.length; i++ )
+    {
       ids[i] = m_selectedColumns[i].getId();
+    }
 
     if( m_settings != null )
+    {
       m_settings.put( SETTINGS_COLUMNS, ids );
+    }
 
     fireCheckStateChanged( event );
   }
