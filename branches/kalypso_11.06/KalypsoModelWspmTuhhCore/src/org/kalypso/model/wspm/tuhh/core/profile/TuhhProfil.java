@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.commons.java.lang.Arrays;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
@@ -79,9 +81,9 @@ public class TuhhProfil extends AbstractProfil
   {
     // TODO: this restriction only exists for buildings! Other objects may occur several times...
     final IProfileObject[] objects = getProfileObjects( IProfileBuilding.class );
-    for( final IProfileObject o : objects )
+    for( final IProfileObject object : objects )
     {
-      removeProfileObject( o );
+      removeProfileObject( object );
     }
 
     return super.addProfileObjects( profileObjects );
@@ -123,8 +125,9 @@ public class TuhhProfil extends AbstractProfil
   public boolean removePoint( final IRecord point )
   {
     final IProfilPointMarker[] markers = getPointMarkerFor( point );
-    if( markers.length == 0 )
+    if( Arrays.isEmpty( markers ) )
       return super.removePoint( point );
+
     return false;
   }
 
@@ -176,22 +179,19 @@ public class TuhhProfil extends AbstractProfil
     final int index = indexOfProperty( component );
     if( index < 0 )
       return null;
+
     final Object value = record.getValue( index );
-
-    if( value == null )
+    if( Objects.isNull( value ) )
       return null;
 
-    final String id = component.getId();
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( id ) && "none".equals( value ) ) //$NON-NLS-1$
+    final String identifier = component.getId();
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( identifier ) && "none".equals( value ) ) //$NON-NLS-1$
       return null;
-
-    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( id ) && Boolean.FALSE.equals( value ) )
+    else if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( identifier ) && Boolean.FALSE.equals( value ) )
       return null;
-
-    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( id ) && Boolean.FALSE.equals( value ) )
+    else if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( identifier ) && Boolean.FALSE.equals( value ) )
       return null;
-
-    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( id ) && value instanceof Double && ((Double) value).isNaN() )
+    else if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( identifier ) && value instanceof Double && ((Double) value).isNaN() )
       return null;
 
     return new ProfilDevider( component, record );

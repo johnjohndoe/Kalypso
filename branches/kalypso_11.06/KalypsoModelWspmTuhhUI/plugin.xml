@@ -376,11 +376,11 @@
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">
      <provider
-           class="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider"
+           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.LengthSectionLayerProvider"
            id="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
      </provider>
      <provider
-           class="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider"
+           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.VerticalLineLayerProvider"
            id="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
      </provider>
   </extension>
