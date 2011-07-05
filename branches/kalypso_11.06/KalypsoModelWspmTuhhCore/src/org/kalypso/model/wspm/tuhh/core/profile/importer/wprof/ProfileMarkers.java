@@ -65,7 +65,9 @@ class ProfileMarkers
     final int pointAttribute = wprofPoint.getPunktattribut();
     final String[] markerIDs = m_punktattribute.getMarkerIDs( pointAttribute );
     for( final String markerID : markerIDs )
+    {
       addWProfPoint( markerID, wprofPoint );
+    }
   }
 
   private void addWProfPoint( final String markerID, final IWProfPoint wprofPoint )
@@ -82,6 +84,5 @@ class ProfileMarkers
 
     return new IWProfPoint[] {};
   }
-
 
 }

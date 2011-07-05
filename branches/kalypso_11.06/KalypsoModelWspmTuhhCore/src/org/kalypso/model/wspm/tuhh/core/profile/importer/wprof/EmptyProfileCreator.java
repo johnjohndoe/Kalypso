@@ -50,7 +50,7 @@ public class EmptyProfileCreator extends AbstractProfileCreator
 {
   public EmptyProfileCreator( final ProfileData data )
   {
-    super( Messages.getString("EmptyProfileCreator_0"), data ); //$NON-NLS-1$
+    super( Messages.getString( "EmptyProfileCreator_0" ), data ); //$NON-NLS-1$
   }
 
   /**

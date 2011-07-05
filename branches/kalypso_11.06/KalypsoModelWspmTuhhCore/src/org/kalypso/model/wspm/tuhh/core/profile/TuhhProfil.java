@@ -140,7 +140,9 @@ public class TuhhProfil extends AbstractProfil
     {
       final IProfilPointMarker marker = getMarker( component, record );
       if( marker != null )
+      {
         pointMarkers.add( marker );
+      }
     }
     return pointMarkers.toArray( new IProfilPointMarker[] {} );
   }
@@ -161,7 +163,9 @@ public class TuhhProfil extends AbstractProfil
     {
       final IProfilPointMarker marker = getMarker( markerColumn, record );
       if( marker != null )
+      {
         markers.add( marker );
+      }
     }
 
     return markers.toArray( new IProfilPointMarker[] {} );
@@ -187,7 +191,7 @@ public class TuhhProfil extends AbstractProfil
     if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( id ) && Boolean.FALSE.equals( value ) )
       return null;
 
-    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( id ) && (value instanceof Double) && ((Double) value).isNaN() )
+    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( id ) && value instanceof Double && ((Double) value).isNaN() )
       return null;
 
     return new ProfilDevider( component, record );

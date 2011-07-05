@@ -61,14 +61,16 @@ public final class ProfileExportUtils
   }
 
   /** Find the union of all components contained in the given profiles. */
-  public static final IComponent[] getComponents( final IProfileFeature[] profiles )
+  public static IComponent[] getComponents( final IProfileFeature[] profiles )
   {
     final Set<IComponent> profCompSet = new HashSet<IComponent>();
     for( final IProfileFeature profileFeature : profiles )
     {
       final IProfil profil = profileFeature.getProfil();
       for( final IComponent component : profil.getPointProperties() )
+      {
         profCompSet.add( component );
+      }
     }
     return profCompSet.toArray( new IComponent[] {} );
   }
@@ -81,7 +83,9 @@ public final class ProfileExportUtils
     {
       final IWspmResult result = column.getResult( profiles );
       if( result != null )
+      {
         results.put( result.getName(), result );
+      }
     }
 
     return results.values().toArray( new IWspmResult[results.size()] );

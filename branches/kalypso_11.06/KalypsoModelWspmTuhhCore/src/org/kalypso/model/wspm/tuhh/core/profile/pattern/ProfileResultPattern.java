@@ -69,7 +69,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
 
   public ProfileResultPattern( )
   {
-    super( "Result", Messages.getString("ProfileResultPattern_0") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "Result", Messages.getString( "ProfileResultPattern_0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -183,7 +183,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
     if( component.contains( ":" ) ) //$NON-NLS-1$
       return component;
 
-    if( component.startsWith( "#" )) //$NON-NLS-1$
+    if( component.startsWith( "#" ) ) //$NON-NLS-1$
       return IWspmConstants.URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS + component;
 
     return IWspmConstants.LENGTH_SECTION_PROPERTY + component;

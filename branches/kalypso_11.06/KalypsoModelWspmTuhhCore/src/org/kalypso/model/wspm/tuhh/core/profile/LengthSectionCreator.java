@@ -92,9 +92,11 @@ public class LengthSectionCreator
     final Double precision = lsResult.getComponent( 7 ).getPrecision();
 
     for( final IProfil profil : m_profiles )
+    {
       addProfile( profil, lsResult, precision );
+    }
 
-    return new Observation<TupleResult>( "LengthSectionResult", Messages.getString("LengthSectionCreator_0"), lsResult ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new Observation<TupleResult>( "LengthSectionResult", Messages.getString( "LengthSectionCreator_0" ), lsResult ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void addProfile( final IProfil profil, final TupleResult lsResult, final Double precision )
@@ -186,7 +188,9 @@ public class LengthSectionCreator
 
         /* Only consider points that are NOT same as height */
         if( Math.abs( value - doubleHeight ) > precision )
+        {
           maxValue = Math.max( maxValue, value );
+        }
       }
     }
 
@@ -214,7 +218,9 @@ public class LengthSectionCreator
 
         /* Only consider points that are NOT same as height */
         if( Math.abs( value - doubleHeight ) > precision )
+        {
           minValue = Math.min( minValue, value );
+        }
       }
     }
 
@@ -224,7 +230,7 @@ public class LengthSectionCreator
     return minValue;
   }
 
-  private final static BigDecimal valueToBigDecimal( final Object value )
+  private static BigDecimal valueToBigDecimal( final Object value )
   {
     if( value instanceof BigDecimal )
       return (BigDecimal) value;

@@ -69,7 +69,7 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
     m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
 
-    m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_COMMENT );
+    m_properties.add( IWspmConstants.POINT_PROPERTY_COMMENT );
 
     // Markers
     /**

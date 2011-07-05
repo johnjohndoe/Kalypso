@@ -90,7 +90,9 @@ public class WspmResultPolynomeCalculationNode extends AbstractWspmResultNode im
         for( final IFolder folder : folders )
         {
           if( !resultFolder.equals( folder ) )
+          {
             result.add( new WspmResultFolderNode( this, folder ) );
+          }
         }
       }
       catch( final CoreException e )
@@ -124,7 +126,7 @@ public class WspmResultPolynomeCalculationNode extends AbstractWspmResultNode im
   {
     final IWspmResultNode[] childResults = getChildResults();
     if( ArrayUtils.isEmpty( childResults ) )
-      return String.format( Messages.getString("WspmResultCalculationNode_0"), m_calculation.getName() ); //$NON-NLS-1$
+      return String.format( Messages.getString( "WspmResultCalculationNode_0" ), m_calculation.getName() ); //$NON-NLS-1$
 
     return m_calculation.getName();
   }

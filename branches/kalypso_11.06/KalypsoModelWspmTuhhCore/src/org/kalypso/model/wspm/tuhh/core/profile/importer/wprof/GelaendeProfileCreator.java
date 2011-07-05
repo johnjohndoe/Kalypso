@@ -81,14 +81,18 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
 
     final IWProfPoint[] soilPoints = getPoints( m_soilPointsID );
     for( final IWProfPoint point : soilPoints )
+    {
       profilePolygon.add( point );
+    }
 
     /* We also add points that have no object-type: theses are probably points from the prolongation tool */
     final IWProfPoint[] unknownPoints = getPoints( "" ); //$NON-NLS-1$
     if( unknownPoints != null )
     {
       for( final IWProfPoint point : unknownPoints )
+      {
         profilePolygon.add( point );
+      }
     }
 
     return profilePolygon.getPoints();
@@ -153,7 +157,9 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
       }
 
       if( comment != null && !comment.isEmpty() )
+      {
         point.setValue( commentIndex, comment );
+      }
     }
   }
 
@@ -256,7 +262,9 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
   {
     final IRecord[] result = new IRecord[points.length];
     for( int i = 0; i < result.length; i++ )
+    {
       result[i] = findPoint( profile, points[i] );
+    }
 
     return result;
   }

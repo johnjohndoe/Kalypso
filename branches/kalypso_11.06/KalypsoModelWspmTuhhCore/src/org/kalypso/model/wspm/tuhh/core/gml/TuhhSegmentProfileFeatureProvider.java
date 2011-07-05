@@ -77,7 +77,7 @@ public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvide
    * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getResult(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public Object getResult( Feature feature )
+  public Object getResult( final Feature feature )
   {
     if( feature == null )
       return null;

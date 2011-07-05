@@ -54,12 +54,12 @@ public class WspmResultQIntervalNode extends AbstractWspmResultNode implements I
   /**
    * The path of the q interval file.
    */
-  private IPath m_qIntervalPath;
+  private final IPath m_qIntervalPath;
 
   /**
    * The label.
    */
-  private String m_label;
+  private final String m_label;
 
   /**
    * The constructor.
@@ -71,7 +71,7 @@ public class WspmResultQIntervalNode extends AbstractWspmResultNode implements I
    * @param label
    *          The label.
    */
-  public WspmResultQIntervalNode( IWspmResultNode parentNode, IPath qIntervalPath, String label )
+  public WspmResultQIntervalNode( final IWspmResultNode parentNode, final IPath qIntervalPath, final String label )
   {
     super( parentNode );
 
@@ -85,7 +85,7 @@ public class WspmResultQIntervalNode extends AbstractWspmResultNode implements I
   @Override
   public String getLabel( )
   {
-    return Messages.getString("WspmResultQIntervalNode_0"); //$NON-NLS-1$
+    return Messages.getString( "WspmResultQIntervalNode_0" ); //$NON-NLS-1$
   }
 
   /**
@@ -121,7 +121,7 @@ public class WspmResultQIntervalNode extends AbstractWspmResultNode implements I
   @Override
   public TuhhCalculation getCalculation( )
   {
-    IWspmResultNode parent = getParent();
+    final IWspmResultNode parent = getParent();
     if( parent instanceof ITuhhCalculationNode )
       return ((ITuhhCalculationNode) parent).getCalculation();
 

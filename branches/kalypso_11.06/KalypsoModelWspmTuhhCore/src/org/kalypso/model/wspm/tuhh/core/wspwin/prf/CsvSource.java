@@ -66,7 +66,7 @@ public class CsvSource implements IProfilSource
 {
   private IProfilPointPropertyProvider m_provider = null;
 
-  private final HashMap<String, TupleResult> m_ProfilesTable = new HashMap<String, TupleResult>();
+  private final HashMap<String, TupleResult> m_profilesTable = new HashMap<String, TupleResult>();
 
   private String[] m_columns = null;
 
@@ -90,16 +90,18 @@ public class CsvSource implements IProfilSource
 
   private TupleResult getResult( final String id )
   {
-    if( m_ProfilesTable.containsKey( id ) )
-      return m_ProfilesTable.get( id );
+    if( m_profilesTable.containsKey( id ) )
+      return m_profilesTable.get( id );
     final TupleResult result = new TupleResult();
     for( final String column : m_columns )
     {
       final IComponent component = getComponent( column );
       if( component != null )
+      {
         result.addComponent( component );
+      }
     }
-    m_ProfilesTable.put( id, result );
+    m_profilesTable.put( id, result );
     return result;
   }
 
@@ -122,12 +124,18 @@ public class CsvSource implements IProfilSource
         {
           final int index = result.indexOfComponent( getComponent( m_columns[i] ) );
           if( index < 0 )
+          {
             continue;
+          }
           final Double dbl = NumberUtils.parseQuietDouble( values[i] );
           if( dbl.isNaN() )
+          {
             record.setValue( index, values[i] );
+          }
           else
+          {
             record.setValue( index, dbl );
+          }
         }
         result.add( record );
       }
@@ -145,13 +153,13 @@ public class CsvSource implements IProfilSource
     m_provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileTyp );
     extractDataBlocks( new CSVReader( reader, ';' ) );
     final ArrayList<IProfil> profiles = new ArrayList<IProfil>();
-    for( final String key : m_ProfilesTable.keySet() )
+    for( final String key : m_profilesTable.keySet() )
     {
       final IProfil profil = ProfilFactory.createProfil( profileTyp );
       if( profil == null )
-        throw new IOException( Messages.getString("CsvSource_0") ); //$NON-NLS-1$
+        throw new IOException( Messages.getString( "CsvSource_0" ) ); //$NON-NLS-1$
 
-      final TupleResult result = m_ProfilesTable.get( key );
+      final TupleResult result = m_profilesTable.get( key );
       profil.setStation( NumberUtils.parseQuietDouble( key ) );
       profil.setResult( result );
       profiles.add( profil );

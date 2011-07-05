@@ -50,7 +50,7 @@ import org.kalypso.commons.patternreplace.PatternInputReplacer;
 /**
  * @author Gernot Belger
  */
-public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfilePatternData>
+public final class ProfilePatternInputReplacer extends PatternInputReplacer<IProfilePatternData>
 {
   private static ProfilePatternInputReplacer INSTANCE = new ProfilePatternInputReplacer();
 
