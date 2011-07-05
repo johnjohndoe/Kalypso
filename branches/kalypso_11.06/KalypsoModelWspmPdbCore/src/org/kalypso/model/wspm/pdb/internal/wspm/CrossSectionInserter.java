@@ -56,8 +56,8 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -79,7 +79,7 @@ public class CrossSectionInserter
     m_project = project;
   }
 
-  public void insert( final CrossSection section ) throws GMLSchemaException, GM_Exception
+  public void insert( final CrossSection section ) throws Exception
   {
     final WspmWaterBody waterBody = insertWaterBody( section );
     final TuhhReach reach = insertReach( section, waterBody );
@@ -112,7 +112,7 @@ public class CrossSectionInserter
     reach.createProfileSegment( profile, profile.getStation() );
   }
 
-  private WspmWaterBody insertWaterBody( final CrossSection section ) throws GMLSchemaException, GM_Exception
+  private WspmWaterBody insertWaterBody( final CrossSection section ) throws Exception
   {
     final WaterBody waterBody = section.getWaterBody();
     final String gkn = waterBody.getName();
@@ -133,7 +133,10 @@ public class CrossSectionInserter
     newWspmWaterBody.setDirectionUpstreams( isDirectionUpstreams );
 
     final GM_Curve centerLine = (GM_Curve) JTSAdapter.wrapWithSrid( waterBody.getRiverlineAsLine() );
-    newWspmWaterBody.setCenterLine( centerLine );
+
+    final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final GM_Curve transformedCenterline = (GM_Curve) centerLine.transform( kalypsoSRS );
+    newWspmWaterBody.setCenterLine( transformedCenterline );
 
     return newWspmWaterBody;
   }
