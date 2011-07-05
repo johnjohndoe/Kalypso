@@ -4,20 +4,14 @@
     <Title />
     <Description />
     <Layers>
-      <Layer id="Boe_li" visible="false"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+      <Layer id="Boe_li" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
             <Parameter value="LengthSectionResult" name="observationId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
-              name="domainComponentId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li"
-              name="targetComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li" name="targetComponentId" />
           </Parameters>
         </Provider>
         <Title>Böschung (links)</Title>
@@ -41,20 +35,14 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer id="wsp" visible="true"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+      <Layer id="wsp" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
             <Parameter value="LengthSectionResult" name="observationId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
-              name="domainComponentId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"
-              name="targetComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" name="targetComponentId" />
           </Parameters>
         </Provider>
         <Title>Wasserspiegel</Title>
@@ -68,24 +56,18 @@
             <Width>2</Width>
             <LineColor>0000ff</LineColor>
           </LineStyle>
-           <PointStyle role="point" isVisible="false">
+          <PointStyle role="point" isVisible="false">
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer id="Boe_re" visible="false"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+      <Layer id="Boe_re" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
             <Parameter value="LengthSectionResult" name="observationId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
-              name="domainComponentId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re"
-              name="targetComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re" name="targetComponentId" />
           </Parameters>
         </Provider>
         <Title>Böschung (rechts)</Title>
@@ -109,20 +91,14 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer id="runoff" visible="true"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+      <Layer id="runoff" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
             <Parameter value="LengthSectionResult" name="observationId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
-              name="domainComponentId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff"
-              name="targetComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" name="targetComponentId" />
           </Parameters>
         </Provider>
         <Title>Abfluss</Title>
@@ -140,21 +116,15 @@
           </PointStyle>
         </Styles>
       </Layer>
-      
-      <Layer id="LengthSection_v_m" visible="true"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+
+      <Layer id="LengthSection_v_m" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
             <Parameter value="LengthSectionResult" name="observationId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
-              name="domainComponentId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m"
-              name="targetComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" name="targetComponentId" />
           </Parameters>
         </Provider>
         <Title>Fließgeschwindigkeit</Title>
@@ -172,21 +142,15 @@
           </PointStyle>
         </Styles>
       </Layer>
-      
-      <Layer id="h_BV" visible="false"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+
+      <Layer id="h_BV" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
             <Parameter value="LengthSectionResult" name="observationId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
-              name="domainComponentId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV"
-              name="targetComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV" name="targetComponentId" />
           </Parameters>
         </Provider>
         <Title>Bordvoll Höhe</Title>
@@ -210,20 +174,14 @@
           </PointStyle>
         </Styles>
       </Layer>
-      <Layer id="hen" visible="true"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+      <Layer id="hen" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
             <Parameter value="LengthSectionResult" name="observationId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
-              name="domainComponentId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_hen"
-              name="targetComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_hen" name="targetComponentId" />
           </Parameters>
         </Provider>
         <Title>Energielinie</Title>
@@ -237,23 +195,18 @@
             <Width>2</Width>
             <LineColor>207f33</LineColor>
           </LineStyle>
-                    <PointStyle role="point" isVisible="false">
+          <PointStyle role="point" isVisible="false">
           </PointStyle>
         </Styles>
       </Layer>
       <Layer id="Culvert" visible="false">
-        <Provider
-          epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
             <Parameter value="LengthSectionResult" name="observationId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
-              name="domainComponentId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_RohrDN"
-              name="targetComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_RohrDN" name="targetComponentId" />
           </Parameters>
         </Provider>
         <Description />
@@ -278,18 +231,13 @@
         </Styles>
       </Layer>
       <Layer id="Weir" visible="false">
-        <Provider
-          epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
             <Parameter value="LengthSectionResult" name="observationId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
-              name="domainComponentId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_WeirOK"
-              name="targetComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_WeirOK" name="targetComponentId" />
           </Parameters>
         </Provider>
         <Description />
@@ -315,18 +263,13 @@
         </Styles>
       </Layer>
       <Layer id="Bridge" visible="true">
-        <Provider
-          epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+        <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
             <Parameter value="LengthSectionResult" name="observationId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
-              name="domainComponentId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK"
-              name="targetComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK" name="targetComponentId" />
           </Parameters>
         </Provider>
         <Description />
@@ -351,20 +294,14 @@
 
         </Styles>
       </Layer>
-        <Layer id="soil" visible="true"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+      <Layer id="soil" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
             <Parameter value="LengthSectionResult" name="observationId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"
-              name="domainComponentId" />
-            <Parameter
-              value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround"
-              name="targetComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+            <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" name="targetComponentId" />
           </Parameters>
         </Provider>
         <Title>Sohlhöhe</Title>
@@ -393,48 +330,41 @@
     </Layers>
     <Mappers>
       <Axis id="NN_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Höhe [NN+m]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
-        <PreferredAdjustment before="5" range="90"
-          after="5" />
+        <PreferredAdjustment before="5" range="90" after="5" />
         <RendererRef ref="NumberAxisRenderer" />
       </Axis>
       <Axis id="M3S_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Abfluss [m³/s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
-        <PreferredAdjustment before="40" range="50" after="10"/>
+        <PreferredAdjustment before="40" range="50" after="10" />
         <RendererRef ref="NumberAxisRenderer" />
       </Axis>
       <Axis id="M1S_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Geschwindigkeit [m/s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
-        <PreferredAdjustment before="40" range="50" after="10"/>
+        <PreferredAdjustment before="40" range="50" after="10" />
         <RendererRef ref="NumberAxisRenderer" />
       </Axis>
       <Axis id="Station_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider
-          epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Station [km]</Label>
         <Direction>NEGATIVE</Direction>
         <Position>BOTTOM</Position>
-        <PreferredAdjustment before="1" range="98"
-          after="1" />
-                <RendererRef ref="NumberAxisRenderer" />
+        <PreferredAdjustment before="1" range="98" after="1" />
+        <RendererRef ref="NumberAxisRenderer" />
       </Axis>
     </Mappers>
     <Renderers>
       <AxisRenderer id="NumberAxisRenderer">
-        <Provider
-          epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="2" />
             <Parameter name="inset_label" value="2" />

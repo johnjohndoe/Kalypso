@@ -71,7 +71,7 @@ public class AbstractCoefficientInfo<T extends Coefficient>
   private T[] loadDefinition( final Session session, final String kind )
   {
     final Criteria criteria = session.createCriteria( m_type );
-    criteria.add( Restrictions.eq( "id.pointKind", kind ) );
+    criteria.add( Restrictions.eq( "id.pointKind", kind ) ); //$NON-NLS-1$
     @SuppressWarnings("unchecked")
     final List<T> list = criteria.list();
     return Arrays.toArray( list, m_type );
