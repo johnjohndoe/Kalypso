@@ -71,6 +71,21 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKrei
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
+import org.kalypso.model.wspm.tuhh.ui.chart.data.TuhhResultDataProvider;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.CulvertLayer;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.PointMarkerLayer;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.RiverChannelLayer;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.RoughnessLayer;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.SinuositaetLayer;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.StationPointLayer;
+import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingBridgeTheme;
+import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingTubesTheme;
+import org.kalypso.model.wspm.tuhh.ui.chart.themes.BuildingWeirTheme;
+import org.kalypso.model.wspm.tuhh.ui.chart.themes.DeviderTheme;
+import org.kalypso.model.wspm.tuhh.ui.chart.themes.GeoCoordinateTheme;
+import org.kalypso.model.wspm.tuhh.ui.chart.themes.RoughnessTheme;
+import org.kalypso.model.wspm.tuhh.ui.chart.themes.VegetationTheme;
+import org.kalypso.model.wspm.tuhh.ui.chart.utils.LayerStyleProviderTuhh;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -363,7 +378,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
 
     // TODO water level fixiation level
 
-    /** kalypso 2d layers */
+    /** 2d layers */
     final IProfilChartLayer[] twoDLayers = create2DWaterLevelLayers( profile );
     Collections.addAll( layersToAdd, twoDLayers );
 
