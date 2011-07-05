@@ -99,6 +99,7 @@ import org.kalypso.model.wspm.ui.view.chart.layer.CrossSectionTheme;
 import org.kalypso.model.wspm.ui.view.chart.layer.StationLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
+import org.kalypso.model.wspm.ui.view.chart.layer.wspfixation.WspFixationLayer;
 import org.kalypso.model.wspm.ui.view.table.GenericComponentUiHandlerProvider;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -376,6 +377,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     /** water level layer */
     layersToAdd.add( createWspLayer( profile, (IWspmResultNode) result ) );
 
+    /** water level fixation layer */
+    layersToAdd.add( createWspFixationLayer( profile, (IWspmResultNode) result ) );
+
     // TODO water level fixiation level
 
     /** 2d layers */
@@ -455,12 +459,20 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     return null;
   }
 
-  private IProfilChartLayer createWspLayer( final IProfil profil, final IWspmResultNode result )
+  private IProfilChartLayer createWspLayer( final IProfil profile, final IWspmResultNode result )
   {
     final CoordinateMapper cm = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
     final IWspLayerData wspLayerData = new TuhhResultDataProvider( result );
 
-    return new WspLayer( profil, IWspmConstants.LAYER_WASSERSPIEGEL, m_lsp, wspLayerData, false, cm );
+    return new WspLayer( profile, IWspmConstants.LAYER_WASSERSPIEGEL, m_lsp, wspLayerData, false, cm );
+  }
+
+  private IProfilChartLayer createWspFixationLayer( final IProfil profile, final IWspmResultNode result )
+  {
+    final CoordinateMapper cm = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
+    final IWspLayerData wspLayerData = new TuhhResultDataProvider( result );
+
+    return new WspFixationLayer( profile, IWspmConstants.LAYER_WASSERSPIEGEL_FIXIERUNG, m_lsp, wspLayerData, false, cm );
   }
 
   /**
