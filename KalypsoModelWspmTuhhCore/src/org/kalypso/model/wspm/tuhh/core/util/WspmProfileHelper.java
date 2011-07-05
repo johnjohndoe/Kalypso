@@ -109,7 +109,7 @@ public final class WspmProfileHelper
 
         lastIterationAdd = true;
       }
-      else if( h - sohlpunkt < fuziness && lastIterationAdd == true )
+      else if( h - sohlpunkt < fuziness && lastIterationAdd )
       {
         sohle.add( point );
       }
