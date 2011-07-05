@@ -139,7 +139,7 @@ public class Gaf2Db implements IPdbOperation
     final GafPart[] parts = profile.getParts();
     for( final GafPart gafPart : parts )
     {
-      final PDBNameGenerator partNameGenerator = new PDBNameGenerator(); 
+      final PDBNameGenerator partNameGenerator = new PDBNameGenerator();
       final CrossSectionPart csPart = commitPart( session, dbType, crossSection, gafPart, partNameGenerator );
       if( csPart == null )
         continue;
@@ -158,7 +158,7 @@ public class Gaf2Db implements IPdbOperation
   {
     final CrossSection crossSection = new CrossSection();
 
-    final String protoName = String.format( "%s", profile.getStation() );
+    final String protoName = String.format( "%s", profile.getStation() ); //$NON-NLS-1$
 
     final String name = m_sectionNameGenerator.createUniqueName( protoName );
     crossSection.setName( name );
@@ -184,7 +184,7 @@ public class Gaf2Db implements IPdbOperation
     return crossSection;
   }
 
-  private CrossSectionPart commitPart( final Session session, final String dbType, final CrossSection crossSection, final GafPart part, final PDBNameGenerator nameGenerator) throws Exception
+  private CrossSectionPart commitPart( final Session session, final String dbType, final CrossSection crossSection, final GafPart part, final PDBNameGenerator nameGenerator ) throws Exception
   {
     final CrossSectionPart csPart = new CrossSectionPart();
 

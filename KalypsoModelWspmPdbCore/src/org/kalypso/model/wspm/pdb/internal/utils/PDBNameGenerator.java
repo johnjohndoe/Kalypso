@@ -64,7 +64,7 @@ public class PDBNameGenerator
     /* Maxmimum of 99 section with the same station (else something is wrong) */
     for( int i = 0; i < 999; i++ )
     {
-      final String name = String.format( "%s_%d", protoName, i );
+      final String name = String.format( "%s_%d", protoName, i ); //$NON-NLS-1$
       if( !m_names.contains( name ) )
       {
         m_names.add( name );

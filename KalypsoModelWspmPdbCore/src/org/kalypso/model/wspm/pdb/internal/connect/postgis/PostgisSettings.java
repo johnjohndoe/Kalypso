@@ -236,7 +236,7 @@ public class PostgisSettings extends HibernateSettings
   @Override
   public String toString( )
   {
-    return String.format( "%s@%s:%s/%s", getUsername(), getHost(), getPort(), getDbName() );
+    return String.format( "%s@%s:%s/%s", getUsername(), getHost(), getPort(), getDbName() ); //$NON-NLS-1$
   }
 
   @Override

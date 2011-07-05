@@ -151,9 +151,9 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     // configuration.setProperty( "hibernate.hbm2dll.auto", "create" );
     // configuration.setProperty( "org.hibernate.tool.hbm2ddl", "debug" );
 
-    configuration.setProperty( Environment.POOL_SIZE, "1" );
-    configuration.setProperty( Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread" );
-    configuration.setProperty( Environment.CACHE_PROVIDER, "org.hibernate.cache.NoCacheProvider" );
+    configuration.setProperty( Environment.POOL_SIZE, "1" ); //$NON-NLS-1$
+    configuration.setProperty( Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread" ); //$NON-NLS-1$
+    configuration.setProperty( Environment.CACHE_PROVIDER, "org.hibernate.cache.NoCacheProvider" ); //$NON-NLS-1$
 
     // TODO: via tracing
     configuration.setProperty( Environment.SHOW_SQL, Boolean.FALSE.toString() );

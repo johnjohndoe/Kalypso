@@ -69,7 +69,7 @@ public class PostGisConnection extends HibernateConnection<PostgisSettings>
 
     configuration.setProperty( Environment.DRIVER, org.postgresql.Driver.class.getName() );
 
-    final String connectionUrl = String.format( "jdbc:postgresql://%s:%d/%s", settings.getHost(), settings.getPort(), settings.getDbName() );
+    final String connectionUrl = String.format( "jdbc:postgresql://%s:%d/%s", settings.getHost(), settings.getPort(), settings.getDbName() ); //$NON-NLS-1$
 
     configuration.setProperty( Environment.URL, connectionUrl );
     configuration.setProperty( Environment.USER, settings.getUsername() );

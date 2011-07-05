@@ -63,11 +63,11 @@ public class GafCodes
 
   public GafCodes( ) throws IOException
   {
-    final Properties properties = PropertiesUtilities.load( getClass().getResource( "kz.properties" ) );
+    final Properties properties = PropertiesUtilities.load( getClass().getResource( "kz.properties" ) ); //$NON-NLS-1$
     for( final String key : properties.stringPropertyNames() )
     {
       final String value = properties.getProperty( key );
-      final GafCode gafCode = new GafCode(key, value);
+      final GafCode gafCode = new GafCode( key, value );
 
       m_codes.put( gafCode.getCode(), gafCode );
       m_hykCodes.put( gafCode.getHyk(), gafCode );

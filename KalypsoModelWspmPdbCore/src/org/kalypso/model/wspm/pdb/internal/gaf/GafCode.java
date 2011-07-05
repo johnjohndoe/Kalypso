@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.gaf;
 
-
 /**
  * Represents the 'Kennziffer' (KZ) of a gaf file.
  * 
@@ -62,7 +61,7 @@ public class GafCode
   {
     m_key = key;
 
-    final String[] tokens = value.split( ";", 4 );
+    final String[] tokens = value.split( ";", 4 ); //$NON-NLS-1$
     m_dbCode = tokens[0];
     m_description = tokens[1];
     m_hyk = tokens[2];
