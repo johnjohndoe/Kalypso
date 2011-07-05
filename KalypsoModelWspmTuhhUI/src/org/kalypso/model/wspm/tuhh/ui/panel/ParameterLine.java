@@ -95,11 +95,17 @@ public class ParameterLine
     final BuildingWehr weir = WspmProfileHelper.getBuilding( m_profile, BuildingWehr.class );
     final Double coefficientValue;
     if( devider.getId().getId().equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
+    {
       coefficientValue = (Double) devider.getIntepretedValue();
+    }
     else
+    {
       coefficientValue = (Double) weir.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+    }
     if( coefficientValue != null )
+    {
       m_valueText.setText( String.format( "%.4f", coefficientValue ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
     final Display display = parent.getDisplay();
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
@@ -114,7 +120,9 @@ public class ParameterLine
       public void focusGained( final FocusEvent e )
       {
         if( m_valueText != null && !m_valueText.isDisposed() )
+        {
           m_valueText.selectAll();
+        }
       }
 
       @Override
@@ -142,15 +150,23 @@ public class ParameterLine
 
     /* Update text */
     if( valueToSet == null )
+    {
       m_valueText.setText( StringUtils.EMPTY );
+    }
     else
+    {
       m_valueText.setText( String.format( "%.4f", valueToSet ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.11" ), m_profile, true ); //$NON-NLS-1$
     if( m_devider.getId().getId().equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
+    {
       operation.addChange( new PointMarkerEdit( m_devider, valueToSet ) );
+    }
     else
+    {
       operation.addChange( new ProfileObjectEdit( weir, weir.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), valueToSet ) );
+    }
     new ProfilOperationJob( operation ).schedule();
   }
 }

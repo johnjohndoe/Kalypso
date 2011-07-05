@@ -54,6 +54,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -98,7 +99,7 @@ public class SobekExportTest extends Assert
     m_info.setFlowZone( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     m_info.setExportBridges( true );
     m_info.setTargetDir( m_targetDir );
-    m_info.setRoughnessID( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
+    m_info.setRoughnessID( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
     m_info.setRoughnessZoneTypes( m_info.getAllRoughnessZones() );
 
     final URL dataLocation = getClass().getResource( "resources/modell.gml.gz" ); //$NON-NLS-1$
@@ -117,7 +118,9 @@ public class SobekExportTest extends Assert
   public void tearDown( ) throws IOException
   {
     if( m_targetDir != null )
+    {
       FileUtils.deleteDirectory( m_targetDir );
+    }
   }
 
   private void testOperation( final ISobekProfileExportOperation exportOperation, final String filename ) throws IOException, CoreException

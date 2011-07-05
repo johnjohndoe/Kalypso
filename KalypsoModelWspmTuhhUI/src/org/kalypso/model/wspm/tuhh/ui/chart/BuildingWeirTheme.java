@@ -84,11 +84,13 @@ public class BuildingWeirTheme extends AbstractProfilTheme
   public BuildingWeirTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ICoordinateMapper cmDevider )
   {
     super( profil, IWspmTuhhConstants.LAYER_WEHR, TITLE, chartLayers, cm );
-    // spezialfall für PointMarker und LineLayer 
+    // spezialfall für PointMarker und LineLayer
     for( final IChartLayer layer : chartLayers )
     {
       if( layer instanceof PointMarkerLayer )
+      {
         layer.setCoordinateMapper( cmDevider );
+      }
     }
   }
 

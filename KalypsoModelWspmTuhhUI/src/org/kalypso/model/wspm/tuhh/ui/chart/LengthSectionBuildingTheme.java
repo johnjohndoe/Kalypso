@@ -126,7 +126,9 @@ public class LengthSectionBuildingTheme extends AbstractChartLayer implements IT
         if( info != null )
         {
           if( !tLayer.isActive() )
+          {
             tLayer.setActive( true );
+          }
           return info;
         }
       }

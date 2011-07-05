@@ -96,7 +96,7 @@ public class ExtendProfileJob extends AbstractDemProfileJob
 
   public ExtendProfileJob( final CreateProfileFromDEMWidget widget, final CommandableWorkspace commandableWorkspace, final IMapPanel mapPanel, final ICoverageCollection coverages, final FeatureList profileFeatures, final TuhhReach reach, final double simplifyDistance )
   {
-    super( Messages.getString("ExtendProfileJob_0"), widget, commandableWorkspace, mapPanel, reach, coverages, simplifyDistance ); //$NON-NLS-1$
+    super( Messages.getString( "ExtendProfileJob_0" ), widget, commandableWorkspace, mapPanel, reach, coverages, simplifyDistance ); //$NON-NLS-1$
 
     m_profileFeatures = profileFeatures;
 
@@ -118,10 +118,8 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     final Coordinate[] newPoints = richCoverages.extractPoints( curve );
     richCoverages.dispose();
     if( newPoints == null )
-    {
       // TODO: better message
       return Status.OK_STATUS;
-    }
 
     // add line into profile
     final IProfil profil = m_profile.getProfil();
@@ -151,7 +149,7 @@ public class ExtendProfileJob extends AbstractDemProfileJob
   @Override
   public String getLabel( )
   {
-    return Messages.getString("ExtendProfileJob_4"); //$NON-NLS-1$
+    return Messages.getString( "ExtendProfileJob_4" ); //$NON-NLS-1$
   }
 
   private GM_Point grabProfileEnd( final GM_Point pos )
@@ -225,13 +223,19 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     final GM_Point currentPos = MapUtilities.transform( mapPanel, currentPoint );
     final GM_Point grabPoint;
     if( pointCount == 0 )
+    {
       grabPoint = grabProfileEnd( currentPos );
+    }
     else
+    {
       grabPoint = m_startPoint;
+    }
 
     // paint grabbed point: the first one we got....
     if( grabPoint != null )
+    {
       m_grabPointPainter.paint( g, projection, grabPoint );
+    }
   }
 
   /**

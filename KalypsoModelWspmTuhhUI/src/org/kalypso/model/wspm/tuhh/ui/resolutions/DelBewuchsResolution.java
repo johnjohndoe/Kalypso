@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -61,13 +62,13 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
 
   public DelBewuchsResolution( )
   {
-    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution.0"), null, null ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution.0" ), null, null ); //$NON-NLS-1$
 
   }
 
   public DelBewuchsResolution( final int leftIndex, final int rightIndex )
   {
-    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution.1"), null, null ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution.1" ), null, null ); //$NON-NLS-1$
     m_leftIndex = leftIndex;
     m_rightIndex = rightIndex;
     m_initialized = true;
@@ -97,9 +98,9 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
 
     if( m_leftIndex >= m_rightIndex )
       return false;
-    final int iAX = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
-    final int iAY = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
-    final int iDP = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
+    final int iAX = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+    final int iAY = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+    final int iDP = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
     for( int i = m_leftIndex; i < m_rightIndex; i++ )
     {
       final IRecord point = profil.getPoint( i );
@@ -114,7 +115,7 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
    */
   @Override
-  public void setData( String parameterStream )
+  public void setData( final String parameterStream )
   {
     final String[] params = getParameter( parameterStream );
     try
@@ -123,7 +124,7 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
       m_rightIndex = new Integer( params[2] );
       m_initialized = m_leftIndex > Integer.MIN_VALUE && m_rightIndex < Integer.MAX_VALUE;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new IllegalArgumentException();
     }

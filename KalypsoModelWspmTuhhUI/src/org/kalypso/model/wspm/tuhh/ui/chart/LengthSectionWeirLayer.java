@@ -6,8 +6,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -52,8 +52,8 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
   {
     final TupleResult tr = m_data.getObservation().getResult();
     final IRecord rec = tr.get( index );
-    final int targetOKComponentIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WEIR_OK );
-    final int commentIndex = tr.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_TEXT );
+    final int targetOKComponentIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK );
+    final int commentIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT );
     final String targetOKComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetOKComponentIndex ) );
     final Double ok = ProfilUtil.getDoubleValueFor( targetOKComponentIndex, rec );
     if( commentIndex < 0 )
@@ -84,14 +84,14 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
     }
   }
 
-  private final Rectangle getScreenRect( final int i )
+  private Rectangle getScreenRect( final int i )
   {
     final TupleResult result = m_data.getObservation().getResult();
     final IRecord record = result.get( i );
-    final Double oK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, record );
-    final Double sT = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, record );
-    final Double uK = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_GROUND, record );
-    if( uK.isNaN() || oK.isNaN() || sT.isNaN()||getCoordinateMapper()==null )
+    final Double oK = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, record );
+    final Double sT = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, record );
+    final Double uK = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, record );
+    if( uK.isNaN() || oK.isNaN() || sT.isNaN() || getCoordinateMapper() == null )
       return null;
     final Point pOK = getCoordinateMapper().numericToScreen( sT, oK );
     final Point pUK = getCoordinateMapper().numericToScreen( sT, uK );

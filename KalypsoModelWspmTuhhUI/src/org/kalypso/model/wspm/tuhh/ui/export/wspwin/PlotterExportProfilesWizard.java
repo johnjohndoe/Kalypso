@@ -81,9 +81,9 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
 
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
     m_profileFileChooserPage = new PlotterExportPage( dirDelegate );
-    m_profileFileChooserPage.setTitle( Messages.getString("PlotterExportProfilesWizard_0") ); //$NON-NLS-1$
-    m_profileFileChooserPage.setDescription( Messages.getString("PlotterExportProfilesWizard_1") ); //$NON-NLS-1$
-    m_profileFileChooserPage.setFileGroupText( Messages.getString("PlotterExportProfilesWizard_2") ); //$NON-NLS-1$
+    m_profileFileChooserPage.setTitle( Messages.getString( "PlotterExportProfilesWizard_0" ) ); //$NON-NLS-1$
+    m_profileFileChooserPage.setDescription( Messages.getString( "PlotterExportProfilesWizard_1" ) ); //$NON-NLS-1$
+    m_profileFileChooserPage.setFileGroupText( Messages.getString( "PlotterExportProfilesWizard_2" ) ); //$NON-NLS-1$
     addPage( m_profileFileChooserPage );
 
     final IWspmResultNode results = WspmResultFactory.createResultNode( null, getProfileSelection().getContainer() );

@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.rules;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -86,9 +87,9 @@ public class TrennerRule extends AbstractValidatorRule
     if( !validateSize( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, collector, true ) )
       return;
 
-    final IProfilPointMarker db[] = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    final IProfilPointMarker tf[] = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final IProfilPointMarker bv[] = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    final IProfilPointMarker[] db = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilPointMarker[] tf = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] bv = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
 
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );
@@ -153,9 +154,9 @@ public class TrennerRule extends AbstractValidatorRule
 
   private void validatePosition( final IProfilPointMarker[] db, final IProfilPointMarker[] toValidate, final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( db == null || db.length != 2 )
+    if( Arrays.isEmpty( db ) || db.length != 2 )
       return;
-    if( toValidate == null || toValidate.length != 2 )
+    if( Arrays.isEmpty( toValidate ) || toValidate.length != 2 )
       return;
 
     final IRecord leftP = db[0].getPoint();

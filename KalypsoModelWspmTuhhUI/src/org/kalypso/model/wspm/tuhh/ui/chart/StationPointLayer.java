@@ -51,7 +51,7 @@ import org.kalypso.observation.result.IRecord;
 public class StationPointLayer extends PointsLineLayer
 {
 
-  public StationPointLayer( String id, IProfil profil, String targetRangeProperty, ILayerStyleProvider styleProvider )
+  public StationPointLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( id, profil, targetRangeProperty, styleProvider );
   }
@@ -60,7 +60,7 @@ public class StationPointLayer extends PointsLineLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTooltipInfo(org.kalypso.observation.result.IRecord)
    */
   @Override
-  public String getTooltipInfo( IRecord point )
+  public String getTooltipInfo( final IRecord point )
   {
     final String tp = super.getTooltipInfo( point );
     final String s = getProfil().getComment();

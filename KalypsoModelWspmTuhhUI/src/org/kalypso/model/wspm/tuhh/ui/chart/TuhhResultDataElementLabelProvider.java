@@ -72,7 +72,7 @@ public class TuhhResultDataElementLabelProvider extends LabelProvider
   {
     final IWspmResultNode node = TuhhResultDataElementContentProvider.asResultNode( element );
     if( node == null )
-      return Messages.getString("TuhhResultDataElementLabelProvider_0"); //$NON-NLS-1$
+      return Messages.getString( "TuhhResultDataElementLabelProvider_0" ); //$NON-NLS-1$
 
     return m_delegate.getText( node );
   }

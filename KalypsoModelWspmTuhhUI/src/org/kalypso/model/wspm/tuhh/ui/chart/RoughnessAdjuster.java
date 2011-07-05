@@ -140,11 +140,15 @@ public class RoughnessAdjuster
 
     final IComponent cmpKS = m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
     if( cmpKS != null )
+    {
       roughnessComponents.add( cmpKS );
+    }
 
     final IComponent cmpKST = m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
     if( cmpKST != null )
+    {
       roughnessComponents.add( cmpKST );
+    }
 
     return roughnessComponents.toArray( new IComponent[roughnessComponents.size()] );
   }

@@ -119,10 +119,10 @@ public class VegetationTheme extends AbstractProfilTheme
   {
     if( segmenthasVegetation( pp1 ) )
     {
-      final Double y1 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, pp1 );
-      final Double y2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, pp2 );
-      final Double x1 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, pp1 );
-      final Double x2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, pp2 );
+      final Double y1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, pp1 );
+      final Double y2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, pp2 );
+      final Double x1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, pp1 );
+      final Double x2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, pp2 );
 
       final Point p1 = new Point( getDomainAxis().numericToScreen( x1 ), getTargetAxis().numericToScreen( y1 ) - 3 );
       final Point p2 = new Point( getDomainAxis().numericToScreen( x2 ), getTargetAxis().numericToScreen( y2 ) - 3 );
@@ -152,9 +152,11 @@ public class VegetationTheme extends AbstractProfilTheme
     {
       final Rectangle hover = getHoverRectInternal( profilPoints[i], profilPoints[i + 1] );
       if( hover == null )
+      {
         continue;
+      }
       final int size = Math.min( hover.height / 2, Math.min( hover.width / 2, 10 ) );
-      if( (pos.x >= hover.x - size) && (pos.y >= hover.y - size) && (pos.x < hover.x + size) && (pos.y < hover.y + size) )
+      if( pos.x >= hover.x - size && pos.y >= hover.y - size && pos.x < hover.x + size && pos.y < hover.y + size )
         return new EditInfo( this, null, null, i, getTooltipInfo( profilPoints[i] ), pos );
     }
     return null;
@@ -175,9 +177,9 @@ public class VegetationTheme extends AbstractProfilTheme
   @Override
   public String getTooltipInfo( final IRecord point )
   {
-    final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
-    final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
-    final Double dp = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, point );
+    final Double ax = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point );
+    final Double ay = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point );
+    final Double dp = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point );
     return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", new Object[] { ax, ay, dp } ); //$NON-NLS-1$
   }
 
@@ -190,8 +192,8 @@ public class VegetationTheme extends AbstractProfilTheme
     final IProfil profil = getProfil();
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.1" ), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) );
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) ) );
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) ) );
     new ProfilOperationJob( operation ).schedule();
   }
 
@@ -226,7 +228,9 @@ public class VegetationTheme extends AbstractProfilTheme
 
       final Rectangle hover = getHoverRectInternal( profilPoints[i], profilPoints[i + 1] );
       if( hover == null )
+      {
         continue;
+      }
       drawIcon( gc, hover );
 
     }
@@ -248,14 +252,16 @@ public class VegetationTheme extends AbstractProfilTheme
       gc.drawOval( left + 2, top - size / 2, right - left - 4, bottom - clipping.y + 4 );
     }
     else
+    {
       gc.drawLine( clipping.x, clipping.y - 12, clipping.x, clipping.y );
+    }
   }
 
   final boolean segmenthasVegetation( final IRecord point )
   {
-    final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
-    final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
-    final Double dp = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, point );
+    final Double ax = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point );
+    final Double ay = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point );
+    final Double dp = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point );
     return !ax.isNaN() && !ay.isNaN() && !dp.isNaN() && ax * ay * dp != 0;
 
   }

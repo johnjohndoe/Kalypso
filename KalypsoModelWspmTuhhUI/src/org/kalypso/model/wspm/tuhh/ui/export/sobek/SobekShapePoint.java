@@ -90,7 +90,9 @@ public class SobekShapePoint
   public void close( ) throws IOException
   {
     if( m_shapeFile != null )
+    {
       m_shapeFile.close();
+    }
   }
 
   public void closeQuiet( )

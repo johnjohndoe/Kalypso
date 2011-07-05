@@ -57,7 +57,6 @@ import org.kalypso.observation.result.IComponent;
 
 /**
  * @author Gernot Belger
- *
  */
 public class RemoveRoughnessAction extends Action
 {
@@ -67,7 +66,7 @@ public class RemoveRoughnessAction extends Action
 
   public RemoveRoughnessAction( )
   {
-    setToolTipText( Messages.getString("RemoveRoughnessAction.0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "RemoveRoughnessAction.0" ) ); //$NON-NLS-1$
     final ImageDescriptor image = KalypsoModelWspmTuhhUIPlugin.getImageDescriptor( KalypsoModelWspmTuhhUIImages.ROUGHNESS_PANEL_REMOVE.getImagePath() );
     setImageDescriptor( image );
   }
@@ -91,8 +90,8 @@ public class RemoveRoughnessAction extends Action
 
     final Shell shell = event.display.getActiveShell();
     final String componentLabel = ComponentUtilities.getComponentLabel( m_component );
-    final String title = Messages.getString("RemoveRoughnessAction.1"); //$NON-NLS-1$
-    final String message = String.format( Messages.getString("RemoveRoughnessAction.2"), componentLabel ); //$NON-NLS-1$
+    final String title = Messages.getString( "RemoveRoughnessAction.1" ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "RemoveRoughnessAction.2" ), componentLabel ); //$NON-NLS-1$
     if( !MessageDialog.openConfirm( shell, title, message ) )
       return;
 

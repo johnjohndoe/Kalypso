@@ -64,12 +64,12 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
   /**
    * verschieben der Trennfläche auf den Profilpunkt IProfil.getPoints().get(index)
    * 
-   * @param deviderTyp,deviderIndex
-   *            devider=IProfil.getDevider(deviderTyp)[deviderIndex]
+   * @param deviderTyp
+   *          ,deviderIndex devider=IProfil.getDevider(deviderTyp)[deviderIndex]
    */
   public MoveDeviderResolution( final int deviderIndex, final String deviderTyp, final int pointIndex )
   {
-    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution.0"), null, null ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution.0" ), null, null ); //$NON-NLS-1$
     m_deviderIndex = deviderIndex;
     m_deviderTyp = deviderTyp;
     m_pointIndex = pointIndex;
@@ -78,7 +78,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
 
   public MoveDeviderResolution( )
   {
-    this(-1,"",-1); //$NON-NLS-1$
+    this( -1, "", -1 ); //$NON-NLS-1$
     m_initialized = false;
   }
 
@@ -119,7 +119,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
    */
   @Override
-  public void setData( String parameterStream )
+  public void setData( final String parameterStream )
   {
     final String[] params = getParameter( parameterStream );
     try
@@ -129,7 +129,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
       m_pointIndex = new Integer( params[3] );
       m_initialized = true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new IllegalArgumentException();
     }

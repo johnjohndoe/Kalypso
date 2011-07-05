@@ -68,7 +68,7 @@ public class BrueckeRule extends AbstractValidatorRule
     for( final IComponent property : building.getObjectProperties() )
     {
       final Object oValue = building.getValue( property );
-      if( oValue == null || (oValue instanceof Double && ((Double) oValue).isNaN()) )
+      if( oValue == null || oValue instanceof Double && ((Double) oValue).isNaN() )
       {
         pav.createMarker( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.0", property.getName() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );//$NON-NLS-1$
         return false;
@@ -162,9 +162,13 @@ public class BrueckeRule extends AbstractValidatorRule
       final double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pav.getPoints()[i] );
       final double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, pav.getPoints()[i] );
       if( !Double.isNaN( okB ) )
+      {
         minOK = Math.min( minOK, okB );
+      }
       if( !Double.isNaN( ukB ) )
+      {
         maxUK = Math.max( maxUK, ukB );
+      }
       // min Oberkante > max Unterkante
       if( maxUK > minOK )
       {

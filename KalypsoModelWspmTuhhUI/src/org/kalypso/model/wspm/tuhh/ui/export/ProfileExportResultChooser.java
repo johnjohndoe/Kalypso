@@ -112,12 +112,18 @@ public class ProfileExportResultChooser
         if( element instanceof IWspmResultNode )
         {
           if( event.getChecked() )
+          {
             addResultNode( (IWspmResultNode) element );
+          }
           else
+          {
             removeResultNode( (IWspmResultNode) element );
+          }
         }
         else
+        {
           treeViewer.setChecked( element, true );
+        }
 
         fireCheckStateChanged( event );
       }

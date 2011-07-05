@@ -73,7 +73,9 @@ public class TuhhResultDataElementContentProvider implements ITreeContentProvide
   {
     final TuhhResultDataElement[] wrappedElements = new TuhhResultDataElement[elements.length];
     for( int i = 0; i < wrappedElements.length; i++ )
+    {
       wrappedElements[i] = new TuhhResultDataElement( (IWspmResultNode) elements[i] );
+    }
 
     return wrappedElements;
   }

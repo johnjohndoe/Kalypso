@@ -92,7 +92,9 @@ public class WProfProfileStrategyOptions
     strategyViewer.setInput( m_strategies );
 
     if( m_strategies.size() > 0 )
+    {
       m_currentStrategy = m_strategies.get( 0 );
+    }
 
     final IDialogSettings dialogSettings = m_page.getWizard().getDialogSettings();
     if( dialogSettings != null )
@@ -112,7 +114,9 @@ public class WProfProfileStrategyOptions
     }
 
     if( m_currentStrategy != null )
+    {
       strategyViewer.setSelection( new StructuredSelection( m_currentStrategy ) );
+    }
 
     strategyViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {

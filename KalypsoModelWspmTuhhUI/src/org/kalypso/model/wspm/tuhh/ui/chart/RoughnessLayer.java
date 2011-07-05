@@ -111,7 +111,9 @@ public class RoughnessLayer extends AbstractProfilLayer
       final Double dY1 = (Double) profilPoints[i].getValue( index );
       final Double dX2 = (Double) profilPoints[i + 1].getValue( breite );
       if( dX1 == null || dX2 == null || dY1 == null )
+      {
         continue;
+      }
       final int x1 = dom.numericToScreen( dX1 );
       final int y1 = tar.numericToScreen( dY1 );
       final int x2 = dom.numericToScreen( dX2 );

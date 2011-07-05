@@ -171,12 +171,16 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
     {
       final boolean checked = m_viewer.getChecked( object );
       if( checked != check )
+      {
         toToggle.add( (IProfileFeature) object );
+      }
     }
 
     final IProfileFeature[] profilesToCheck = toToggle.toArray( new IProfileFeature[toToggle.size()] );
     if( profilesToCheck.length > 0 )
+    {
       handleCheckStateChanged( profilesToCheck, check );
+    }
   }
 
   /**
@@ -207,7 +211,9 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
 
       final WspmWaterBody waterBody = reach.getWaterBody();
       if( waterBody == null )
+      {
         m_viewer.setInput( new Object[] {} );
+      }
       else
       {
         final List< ? > profiles = (List< ? >) waterBody.getProperty( WspmWaterBody.QNAME_MEMBER_PROFILE );
@@ -245,7 +251,9 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
     {
       final TuhhReachProfileSegment segment = findSegment( segmentList, profileFeature );
       if( segment != null )
+      {
         segments.add( segment );
+      }
     }
 
     /* HACK: we use this time here to cleanup-broken reaches as well: remove everything than cannot be here */
@@ -258,12 +266,16 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
       /* This might happen, if the water body was duplicated */
       final IProfileFeature profileMember = segment.getProfileMember();
       if( profileMember == null )
+      {
         segments.add( segment );
+      }
       else
       {
         final WspmWaterBody water = profileMember.getWater();
         if( !segmentWater.equals( water ) )
+        {
           segments.add( segment );
+        }
       }
     }
 

@@ -57,7 +57,7 @@ public class RightForeland extends AbstractFlowZoneType
   @Override
   public String getLabel( )
   {
-    return Messages.getString("RightForeland_0"); //$NON-NLS-1$
+    return Messages.getString( "RightForeland_0" ); //$NON-NLS-1$
   }
 
   /**

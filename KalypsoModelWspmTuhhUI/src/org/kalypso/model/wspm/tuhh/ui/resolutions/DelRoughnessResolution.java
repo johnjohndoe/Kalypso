@@ -167,9 +167,13 @@ public class DelRoughnessResolution extends AbstractProfilMarkerResolution
 
       final IComponent comp = profil.hasPointProperty( m_roughness );
       if( comp != null )
+      {
         profil.removePointProperty( comp );
+      }
       else
+      {
         profil.addPointProperty( profil.getPointPropertyFor( m_roughness ), 0.0 );
+      }
       return true;
 
     }

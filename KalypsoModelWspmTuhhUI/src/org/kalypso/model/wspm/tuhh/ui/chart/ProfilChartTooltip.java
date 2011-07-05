@@ -85,7 +85,9 @@ public class ProfilChartTooltip
       else
       {
         if( key != null )
+        {
           formatter.format( "%s", key ); //$NON-NLS-1$
+        }
       }
     }
 
@@ -105,7 +107,9 @@ public class ProfilChartTooltip
     {
       final Object key = keyValue.getKey();
       if( key instanceof String )
+      {
         maxLength = Math.max( ((String) key).length(), maxLength );
+      }
     }
 
     return maxLength;

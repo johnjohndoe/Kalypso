@@ -72,7 +72,9 @@ public class WizardAddProfileFromDEM extends Wizard
     m_profile.setName( m_page.getProfileName() );
     final double profileStation = m_page.getProfileStation();
     if( !Double.isNaN( profileStation ) )
+    {
       m_profile.setStation( profileStation );
+    }
 
     return true;
   }

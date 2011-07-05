@@ -118,7 +118,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public final void executeDrop( final Point point, final EditInfo dragStartData )
   {
-    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) (dragStartData.getData()) : -1;
+    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) dragStartData.getData() : -1;
     if( pos == -1 )
       return;
 
@@ -140,7 +140,9 @@ public class PointMarkerLayer extends AbstractProfilLayer
       // BUGIFX: prohibit that a marker is moved on another marker of the same type, which
       // will incidentally remove it
       if( movesOnSameDeviderType( devider, targetDeviders ) )
+      {
         continue;
+      }
 
       if( devider.getId().getId().equals( getTargetComponent().getId() ) )
       {
@@ -159,13 +161,13 @@ public class PointMarkerLayer extends AbstractProfilLayer
     for( final IProfilPointMarker devider : deviders )
     {
       final IRecord point = devider.getPoint();
-      final Rectangle hoverRect = getHoverRect(point);
+      final Rectangle hoverRect = getHoverRect( point );
       if( hoverRect == null )
-        continue;
-      if( hoverRect.contains( pos ) )
       {
-        return new EditInfo( this, null, null,getProfil().indexOfPoint( point ), getTooltipInfo( point ), pos );
+        continue;
       }
+      if( hoverRect.contains( pos ) )
+        return new EditInfo( this, null, null, getProfil().indexOfPoint( point ), getTooltipInfo( point ), pos );
     }
     return null;
   }
@@ -198,7 +200,9 @@ public class PointMarkerLayer extends AbstractProfilLayer
       {
         final IComponent cmp = getTargetComponent();
         if( cmp != null )
+        {
           markerProvider.drawMarker( new String[] { cmp.getId() }, gc );
+        }
       }
     };
 
@@ -211,7 +215,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    return  null;// new DataRange<Number>( 0, 1 );
+    return null;// new DataRange<Number>( 0, 1 );
   }
 
   /**
@@ -261,8 +265,10 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isPointPropertiesChanged() || hint.isMarkerMoved()|| hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
+    if( hint.isPointPropertiesChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
+    {
       getEventHandler().fireLayerContentChanged( this );
+    }
   }
 
   /**

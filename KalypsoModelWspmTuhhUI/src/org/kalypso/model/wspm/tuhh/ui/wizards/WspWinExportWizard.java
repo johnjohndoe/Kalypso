@@ -80,9 +80,13 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
     final IDialogSettings pluginSettings = KalypsoModelWspmTuhhUIPlugin.getDefault().getDialogSettings();
     final IDialogSettings section = pluginSettings.getSection( "WspWinExportWizard" );//$NON-NLS-1$
     if( section != null )
+    {
       setDialogSettings( section );
+    }
     else
+    {
       setDialogSettings( pluginSettings.addNewSection( "WspWinExportWizard" ) );//$NON-NLS-1$
+    }
 
     setForcePreviousAndNextButtons( false );
   }
@@ -104,7 +108,7 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
     m_selection = currentSelection;
-    setWindowTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -129,11 +133,11 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
       @Override
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.1"), 100 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.1" ), 100 ); //$NON-NLS-1$
 
         try
         {
-          monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.2") ); //$NON-NLS-1$
+          monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.2" ) ); //$NON-NLS-1$
           final IStatus status = WspWinExporter.exportWspmProject( modelGml, wspwinDir, new SubProgressMonitor( monitor, 90 ) );
           if( !status.isOK() )
             throw new CoreException( status );
@@ -147,8 +151,10 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, operation );
     if( !status.isOK() )
+    {
       StatusUtilities.printStackTraces( status );
-    ErrorDialog.openError( shell, Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.3"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.4"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.3" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.4" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return status.isOK();
   }

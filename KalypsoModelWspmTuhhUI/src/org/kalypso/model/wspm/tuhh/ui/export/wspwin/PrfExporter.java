@@ -74,9 +74,9 @@ public class PrfExporter
   public IStatus export( final IProfileFeature[] profiles, final IProgressMonitor monitor )
   {
     final String id = PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() );
-    final MultiStatus resultStatus = new MultiStatus( id, 1, Messages.getString("PrfExporter_0"), null ); //$NON-NLS-1$
+    final MultiStatus resultStatus = new MultiStatus( id, 1, Messages.getString( "PrfExporter_0" ), null ); //$NON-NLS-1$
 
-    monitor.beginTask( Messages.getString("PrfExporter_1"), profiles.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "PrfExporter_1" ), profiles.length ); //$NON-NLS-1$
 
     for( final IProfileFeature feature : profiles )
     {
@@ -85,12 +85,12 @@ public class PrfExporter
       final double station = profil.getStation();
       final WspmWaterBody water = feature.getWater();
 
-      monitor.subTask( String.format( Messages.getString("PrfExporter_2"), profileName, station ) ); //$NON-NLS-1$
+      monitor.subTask( String.format( Messages.getString( "PrfExporter_2" ), profileName, station ) ); //$NON-NLS-1$
 
       final File file = m_callback.getExportFile( feature, profil );
       if( file.exists() )
       {
-        System.out.println( Messages.getString("PrfExporter_3") + file ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "PrfExporter_3" ) + file ); //$NON-NLS-1$
       }
 
       try
