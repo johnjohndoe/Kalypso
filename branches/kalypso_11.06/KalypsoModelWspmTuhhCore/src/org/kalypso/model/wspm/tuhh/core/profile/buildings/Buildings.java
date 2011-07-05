@@ -43,14 +43,16 @@ package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
 
 /**
  * @author Dirk Kuch
  */
-public final class BuildingUtil
+public final class Buildings
 {
-  private BuildingUtil( )
+  private Buildings( )
   {
   }
 
@@ -73,5 +75,29 @@ public final class BuildingUtil
       return Double.NaN;
     }
 
+  }
+
+  public static boolean isBridge( final IProfileObject building )
+  {
+    return building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE );
+  }
+
+  public static boolean isWeir( final IProfileObject building )
+  {
+    return building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_WEHR );
+  }
+
+  public static boolean isTube( final IProfileObject building )
+  {
+    if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_EI ) )
+      return true;
+    else if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_KREIS ) )
+      return true;
+    else if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) )
+      return true;
+    else if( building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) )
+      return true;
+
+    return false;
   }
 }

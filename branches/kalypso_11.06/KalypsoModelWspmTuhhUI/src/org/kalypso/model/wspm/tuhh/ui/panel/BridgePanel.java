@@ -60,7 +60,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -138,7 +138,7 @@ public class BridgePanel extends AbstractProfilView
             if( building == null )
               return;
 
-            final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
+            final Double val = Buildings.getDoubleValueFor( m_property.getId(), building );
             if( val == value )
               return;
 
@@ -160,7 +160,7 @@ public class BridgePanel extends AbstractProfilView
       if( building == null )
         return;
 
-      final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
+      final Double val = Buildings.getDoubleValueFor( m_property.getId(), building );
       final String textText = String.format( "%.3f", val ); //$NON-NLS-1$
       m_text.setText( textText );
       if( m_text.isFocusControl() )
