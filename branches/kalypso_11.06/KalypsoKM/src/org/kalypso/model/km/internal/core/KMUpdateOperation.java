@@ -69,6 +69,8 @@ import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
+import com.google.common.base.Objects;
+
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
 
 /**
@@ -76,7 +78,7 @@ import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovType;
  */
 public class KMUpdateOperation implements ICoreRunnableWithProgress
 {
-  private final CompositeCommand m_commands = new CompositeCommand( Messages.getString("KMUpdateOperation.0") ); //$NON-NLS-1$
+  private final CompositeCommand m_commands = new CompositeCommand( Messages.getString( "KMUpdateOperation.0" ) ); //$NON-NLS-1$
 
   private final KMChannelElement[] m_channels;
 
@@ -191,12 +193,15 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     final KMChannel kmChannel = element.getKMChannel();
     final IFeatureBindingCollection<KMParameter> kmParameter = kmChannel.getParameters();
 
-    final double lengthOfStrand = Math.abs( kmChannel.getKMStart().doubleValue() - kmChannel.getKMEnd().doubleValue() ) * 1000.0;
+    final double startKM = ((Number) Objects.firstNonNull( kmChannel.getKMStart(), kmStart )).doubleValue();
+    final double endKM = ((Number) Objects.firstNonNull( kmChannel.getKMEnd(), kmEnd )).doubleValue();
+
+    final double lengthOfStrand = Math.abs( startKM - endKM ) * 1000.0;
 
     final IKMValue[] values = profileSet.getKMValues( lengthOfStrand, paramCount );
     final IStatusCollector paramLog = new StatusCollector( KMPlugin.getID() );
     final double qBordvoll = profileSet.getQBordvoll();
-    paramLog.add( IStatus.OK, Messages.getString("KMUpdateOperation.1"), null, qBordvoll ); //$NON-NLS-1$
+    paramLog.add( IStatus.OK, Messages.getString( "KMUpdateOperation.1" ), null, qBordvoll ); //$NON-NLS-1$
 
     addCommand( new ChangeFeatureCommand( kmChannel, kmKMStartPT, kmStart.doubleValue() ) );
     addCommand( new ChangeFeatureCommand( kmChannel, kmKMEndPT, kmEnd.doubleValue() ) );
