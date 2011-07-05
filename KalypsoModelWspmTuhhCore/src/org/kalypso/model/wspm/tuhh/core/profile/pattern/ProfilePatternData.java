@@ -46,7 +46,6 @@ import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
- *
  */
 public class ProfilePatternData implements IProfilePatternData
 {

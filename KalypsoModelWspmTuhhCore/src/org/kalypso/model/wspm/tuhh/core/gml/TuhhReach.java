@@ -83,7 +83,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
 {
   public static final QName QNAME_MEMBER_WATER_BODY_LINK = new QName( NS_WSPM_TUHH, "waterBodyLinkMember" ); //$NON-NLS-1$
 
-  public final static QName QNAME_TUHH_REACH = new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ); //$NON-NLS-1$
+  public static final QName QNAME_TUHH_REACH = new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ); //$NON-NLS-1$
 
   public static final QName QNAME_MEMBER_MARKER = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "markerMember" ); //$NON-NLS-1$
 
@@ -131,7 +131,9 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
         final TuhhReachProfileSegment segment = (TuhhReachProfileSegment) segmentFeature;
         final IProfileFeature profileMember = segment.getProfileMember();
         if( profileMember != null )
+        {
           profilesegments.add( segment );
+        }
       }
     }
 
@@ -169,7 +171,9 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     {
       final IProfileFeature profileMember = segment.getProfileMember();
       if( profileMember == null )
+      {
         continue;
+      }
 
       final String crs = profileMember.getSrsName();
       final IProfil profil = profileMember.getProfil();
@@ -231,7 +235,9 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
         final TuhhReachProfileSegment segment = (TuhhReachProfileSegment) segmentFeature;
         final IProfileFeature profileMember = segment.getProfileMember();
         if( profileMember != null )
+        {
           profile.add( profileMember );
+        }
       }
     }
 
@@ -256,8 +262,10 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
         for( final TuhhCalculation tuhhCalculation : calculations )
         {
           final TuhhReach reach = tuhhCalculation.getReach();
-          if( this.equals( reach ) )
+          if( equals( reach ) )
+          {
             result.add( tuhhCalculation );
+          }
         }
       }
     }

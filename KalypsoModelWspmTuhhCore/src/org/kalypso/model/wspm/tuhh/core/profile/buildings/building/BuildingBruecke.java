@@ -53,13 +53,13 @@ import org.kalypso.observation.result.TupleResult;
 /**
  * @author kimwerner
  */
-final public class BuildingBruecke extends AbstractProfileObject implements IProfileBuilding
+public final class BuildingBruecke extends AbstractProfileObject implements IProfileBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_BRUECKE;
 
   public BuildingBruecke( final IProfil profil )
   {
-    this(profil, buildTupleResult() );
+    this( profil, buildTupleResult() );
   }
 
   private static IObservation<TupleResult> buildTupleResult( )
@@ -81,7 +81,7 @@ final public class BuildingBruecke extends AbstractProfileObject implements IPro
     return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
   }
 
-  public BuildingBruecke( final IProfil profil ,final IObservation<TupleResult> observation )
+  public BuildingBruecke( final IProfil profil, final IObservation<TupleResult> observation )
   {
     super( observation );
     addPointProperties( profil );
@@ -92,10 +92,14 @@ final public class BuildingBruecke extends AbstractProfileObject implements IPro
   {
     final IComponent uk = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
     if( !profil.hasPointProperty( uk ) )
+    {
       profil.addPointProperty( uk, null );
+    }
     final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
     if( !profil.hasPointProperty( ok ) )
+    {
       profil.addPointProperty( ok, null );
+    }
   }
 
   /**

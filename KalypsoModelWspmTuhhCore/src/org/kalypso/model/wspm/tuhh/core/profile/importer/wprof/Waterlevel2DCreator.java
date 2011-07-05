@@ -56,6 +56,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPhenomenonConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -109,11 +110,13 @@ public class Waterlevel2DCreator
       {
         final QName qName = pt.getQName();
         final String propertyName = qName.getLocalPart();
-        if( propertyName.startsWith( Messages.getString("Waterlevel2DCreator_0") ) ) //$NON-NLS-1$
+        if( propertyName.startsWith( Messages.getString( "Waterlevel2DCreator_0" ) ) ) //$NON-NLS-1$
         {
           final Object waterLevel = feature.getProperty( qName );
           if( waterLevel instanceof Number )
+          {
             addWaterLevel( propertyName, distance, (Number) waterLevel );
+          }
         }
       }
     }
@@ -129,7 +132,9 @@ public class Waterlevel2DCreator
   private SortedSet<Point2D> getWaterLevel( final String name )
   {
     if( !m_waterlevels.containsKey( name ) )
+    {
       m_waterlevels.put( name, new TreeSet<Point2D>( POINT2D_COMPARATOR ) );
+    }
 
     return m_waterlevels.get( name );
   }
@@ -161,17 +166,19 @@ public class Waterlevel2DCreator
       final BigDecimal waterlevel = getWaterlevel( width, polyLine );
 
       if( waterlevel != null && waterlevel.doubleValue() > WPROF_WATERLEVEL_MINIMAL_NODATA )
+      {
         point.setValue( waterlevelIndex, waterlevel );
+      }
     }
   }
 
   private IComponent createWaterlevelComponent( final String name )
   {
     final String id = "steiermark.waterlevel." + name; //$NON-NLS-1$
-    final String description = Messages.getString("Waterlevel2DCreator_1"); //$NON-NLS-1$
+    final String description = Messages.getString( "Waterlevel2DCreator_1" ); //$NON-NLS-1$
     final String unit = "m"; //$NON-NLS-1$
 
-    final IPhenomenon phenomenon = new DictionaryPhenomenon( IWspmConstants.PHENOMENON_WATERLEVEL_2D );
+    final IPhenomenon phenomenon = new DictionaryPhenomenon( IWspmPhenomenonConstants.PHENOMENON_WATERLEVEL_2D );
     final QName valueTypeName = new QName( NS.XSD_SCHEMA, "decimal" ); //$NON-NLS-1$
     final String frame = null;
     final Object defaultValue = null;

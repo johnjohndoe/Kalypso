@@ -101,14 +101,14 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
         }
 
         /* Collect all folders. */
-        CollectFolderVisitor dirVisitor = new CollectFolderVisitor( new IFolder[] { resultFolder.getFolder( ".svn" ) } ); //$NON-NLS-1$
+        final CollectFolderVisitor dirVisitor = new CollectFolderVisitor( new IFolder[] { resultFolder.getFolder( ".svn" ) } ); //$NON-NLS-1$
         resultFolder.accept( dirVisitor, IResource.DEPTH_ONE, false );
-        IFolder[] folders = dirVisitor.getFolders();
-        for( IFolder folder : folders )
+        final IFolder[] folders = dirVisitor.getFolders();
+        for( final IFolder folder : folders )
         {
           if( !resultFolder.equals( folder ) )
           {
-            WspmResultFolderNode folderNode = new WspmResultFolderNode( this, folder );
+            final WspmResultFolderNode folderNode = new WspmResultFolderNode( this, folder );
             result.add( folderNode );
           }
         }

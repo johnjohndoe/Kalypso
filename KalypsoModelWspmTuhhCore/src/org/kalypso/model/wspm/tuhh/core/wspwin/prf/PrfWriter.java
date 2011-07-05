@@ -144,7 +144,9 @@ public class PrfWriter implements IPrfConstants
     extractMetaData();
 
     if( m_profil.getPoints().length > 0 )
+    {
       extractDataBlocks();
+    }
 
     return m_dbWriter;
   }
@@ -155,7 +157,9 @@ public class PrfWriter implements IPrfConstants
     {
       // Skip station
       if( i == 9 )
+      {
         continue;
+      }
 
       final String[] line = getPrfMetadata( i );
       m_dbWriter.addKeyValue( i, line );
@@ -208,13 +212,21 @@ public class PrfWriter implements IPrfConstants
     writeWaterlevel();
 
     if( !ArrayUtils.isEmpty( m_profil.getProfileObjects( AbstractProfileObject.class ) ) )
+    {
       writeProfileObjects();
+    }
     if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) != null )
+    {
       writeHochRechts();
+    }
     if( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) != null )
+    {
       writeBewuchs();
+    }
     if( m_profil.getComment() != null )
+    {
       writeComment();
+    }
   }
 
   private void writeWaterlevel( )
@@ -223,13 +235,17 @@ public class PrfWriter implements IPrfConstants
     final ProfileWaterlevelWriter plotterExporter = new ProfileWaterlevelWriter( m_profil );
     final IDataBlock[] dbs1 = plotterExporter.createDataBlocks();
     for( final IDataBlock dataBlock : dbs1 )
+    {
       m_dbWriter.addDataBlock( dataBlock );
+    }
 
     /* Case 2: waterlevels obtained from results */
     final WaterlevelWriter waterlevelWriter = new WaterlevelWriter( m_profil, m_waterlevels );
     final IDataBlock[] dbs2 = waterlevelWriter.createDataBlocks();
     for( final IDataBlock dataBlock : dbs2 )
+    {
       m_dbWriter.addDataBlock( dataBlock );
+    }
   }
 
   private void writeComment( )
@@ -244,7 +260,9 @@ public class PrfWriter implements IPrfConstants
     try
     {
       for( String line = lineNumberReader.readLine(); line != null; line = lineNumberReader.readLine() )
+      {
         db.addLine( "CC " + line ); //$NON-NLS-1$
+      }
       if( db.getCoordCount() > 0 )
       {
         db.setThirdLine( "0  0  0  0  0  0  0  " + Integer.toString( db.getCoordCount() ) + " " + IWspWinConstants.SPEZIALPROFIL_COMMENT ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -265,7 +283,7 @@ public class PrfWriter implements IPrfConstants
     m_dbWriter.addDataBlock( db );
   }
 
-  private final boolean istDurchlass( final IProfileObject[] objects )
+  private boolean istDurchlass( final IProfileObject[] objects )
   {
     if( objects == null || objects.length < 1 )
       return false;
@@ -277,19 +295,19 @@ public class PrfWriter implements IPrfConstants
 
   }
 
-  private final IComponent[] getRoughness( )
+  private IComponent[] getRoughness( )
   {
     final IComponent comp = m_profil.hasPointProperty( m_defaultRoughnessType );
     if( comp != null )
       return new IComponent[] { comp };
-    final IComponent rks = m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
-    final IComponent rkst = m_profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
+    final IComponent rks = m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+    final IComponent rkst = m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
     if( rks == null && rkst == null )
       return new IComponent[] {};
     return new IComponent[] { rks, rkst };
   }
 
-  private final Double getRoughnessFromBuilding( )
+  private Double getRoughnessFromBuilding( )
   {
     final IProfileBuilding[] buildings = m_profil.getProfileObjects( IProfileBuilding.class );
     if( !istDurchlass( buildings ) )
@@ -304,30 +322,36 @@ public class PrfWriter implements IPrfConstants
     final IComponent[] cmpR = getRoughness();
     if( cmpR.length == 0 )
     {
-      final DataBlockHeader dbhr = createHeader( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ); //$NON-NLS-1$
+      final DataBlockHeader dbhr = createHeader( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ); //$NON-NLS-1$
       dbr = new CoordDataBlock( dbhr );
       writeCoords( null, dbr, buildingRoughness.isNaN() ? 0.0 : buildingRoughness );
       if( !buildingRoughness.isNaN() )
+      {
         dbr.getY()[0] = buildingRoughness;
+      }
       m_dbWriter.addDataBlock( dbr );
     }
     for( final IComponent c : cmpR )
     {
       if( c == null )
+      {
         continue;
+      }
       final DataBlockHeader dbhr = createHeader( c.getId() ); //$NON-NLS-1$
       dbr = new CoordDataBlock( dbhr );
       writeCoords( c, dbr, buildingRoughness.isNaN() ? 0.0 : buildingRoughness );
       if( !buildingRoughness.isNaN() )
+      {
         dbr.getY()[0] = buildingRoughness;
+      }
       m_dbWriter.addDataBlock( dbr );
     }
 
   }
 
-  private final DataBlockHeader createHeader( final String key )
+  private DataBlockHeader createHeader( final String key )
   {
-    if( IWspmTuhhConstants.POINT_PROPERTY_HOEHE.equals( key ) ) //$NON-NLS-1$
+    if( IWspmConstants.POINT_PROPERTY_HOEHE.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "GELAENDE-", "HOEHE" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( key ) ) //$NON-NLS-1$
@@ -342,16 +366,16 @@ public class PrfWriter implements IPrfConstants
     if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "TRENNLINIE", "WEHR" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST.equals( key ) ) //$NON-NLS-1$
+    if( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "RAUHEIT", "kst   m" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS.equals( key ) )
+    if( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS.equals( key ) )
       return new DataBlockHeader( "RAUHEIT", "k-s   m" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT.equals( key ) ) //$NON-NLS-1$
+    if( IWspmConstants.POINT_PROPERTY_RECHTSWERT.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "RECHTSWERT" ); //$NON-NLS-1$
 
-    if( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT.equals( key ) ) //$NON-NLS-1$
+    if( IWspmConstants.POINT_PROPERTY_HOCHWERT.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "HOCHWERT" ); //$NON-NLS-1$
 
     if( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE.equals( key ) ) //$NON-NLS-1$
@@ -360,19 +384,17 @@ public class PrfWriter implements IPrfConstants
     if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "OK-BRUECKE" ); //$NON-NLS-1$
 
-    if( IWspmConstants.POINT_PROPERTY_COMMENT.equals( key ) ) //$NON-NLS-1$
-    {
+    if( IWspmConstants.POINT_PROPERTY_COMMENT.equals( key ) )
       // REMARK: Important: Kommmentar MUST be written with lower case letters, else WspWin will not read it...
       return new DataBlockHeader( "Kommentar:" ); //$NON-NLS-1$
-    }
 
-    if( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.equals( key ) ) //$NON-NLS-1$
+    if( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "AX   m" ); //$NON-NLS-1$
 
-    if( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY.equals( key ) ) //$NON-NLS-1$
+    if( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "AY   m" ); //$NON-NLS-1$
 
-    if( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP.equals( key ) ) //$NON-NLS-1$
+    if( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "DP   m" ); //$NON-NLS-1$
 
     if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( key ) ) //$NON-NLS-1$
@@ -522,7 +544,9 @@ public class PrfWriter implements IPrfConstants
      * tuhh profile restriction - only one profile building allowed!
      */
     if( !buildings.isEmpty() )
+    {
       writeBuilding( buildings.get( 0 ) );
+    }
 
   }
 
@@ -565,7 +589,9 @@ public class PrfWriter implements IPrfConstants
         secLine.append( String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ) ); //$NON-NLS-1$
         final IProfilPointMarker[] deviders = m_profil.getPointMarkerFor( m_profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
         for( final IProfilPointMarker devider : deviders )
+        {
           secLine.append( String.format( Locale.US, " %12.4f", devider.getValue() ) ); //$NON-NLS-1$
+        }
         dbw.setSecondLine( secLine.toString() );
       }
       catch( final Exception e )
@@ -667,11 +693,11 @@ public class PrfWriter implements IPrfConstants
 
   private void writeBewuchs( )
   {
-    final DataBlockHeader dbhx = createHeader( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
+    final DataBlockHeader dbhx = createHeader( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
     final CoordDataBlock dbx = new CoordDataBlock( dbhx );
-    final DataBlockHeader dbhy = createHeader( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
+    final DataBlockHeader dbhy = createHeader( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
     final CoordDataBlock dby = new CoordDataBlock( dbhy );
-    final DataBlockHeader dbhp = createHeader( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
+    final DataBlockHeader dbhp = createHeader( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
     final CoordDataBlock dbp = new CoordDataBlock( dbhp );
     writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ), dbx, 0.0 );
     writeCoords( m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), dby, 0.0 );

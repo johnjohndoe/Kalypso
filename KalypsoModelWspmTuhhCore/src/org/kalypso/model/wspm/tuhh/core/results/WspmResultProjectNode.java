@@ -71,14 +71,18 @@ public class WspmResultProjectNode extends AbstractWspmResultNode
 
     final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
     for( final WspmWaterBody waterBody : waterBodies )
+    {
       results.add( new WspmResultWaterNode( this, waterBody ) );
+    }
 
     final TuhhCalculation[] calculations = m_project.getCalculations();
     for( final TuhhCalculation calculation : calculations )
     {
       final IWspmResultNode node = WspmResultFactory.createCalculationNode( this, calculation );
       if( node != null )
+      {
         results.add( node );
+      }
     }
 
     return results.toArray( new IWspmResultNode[results.size()] );
@@ -91,7 +95,7 @@ public class WspmResultProjectNode extends AbstractWspmResultNode
   public String getLabel( )
   {
 
-    String name = m_project.getName();
+    final String name = m_project.getName();
     if( name != null && name.length() > 0 )
       return name;
 

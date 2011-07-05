@@ -47,7 +47,7 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 /**
  * @author Gernot Belger
  */
-public class WProfContextPatternReplacer extends PatternInputReplacer<IWProfPoint>
+public final class WProfContextPatternReplacer extends PatternInputReplacer<IWProfPoint>
 {
   private static final WProfContextPatternReplacer INSTANCE = new WProfContextPatternReplacer();
 
@@ -59,12 +59,12 @@ public class WProfContextPatternReplacer extends PatternInputReplacer<IWProfPoin
   private WProfContextPatternReplacer( )
   {
     addReplacer( new AbstractPatternInput<IWProfPoint>( "River-ID", Messages.getString( "WProfContextPatternReplacer_1" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        {
+    {
       @Override
       public String getReplacement( final IWProfPoint point, final String param )
       {
         return point.getRiverId();
       }
-        } );
+    } );
   }
 }

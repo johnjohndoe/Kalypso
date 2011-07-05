@@ -48,8 +48,12 @@ import org.kalypso.observation.result.IComponent;
 /**
  * @author Dirk Kuch
  */
-public class BuildingUtil
+public final class BuildingUtil
 {
+  private BuildingUtil( )
+  {
+  }
+
   public static double getDoubleValueFor( final String componentID, final IProfileBuilding building )
   {
     final IComponent property = building.getObjectProperty( componentID );

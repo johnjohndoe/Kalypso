@@ -89,7 +89,9 @@ class ProfilePolygones extends HashMap<String, ProfilePolygon>
   {
     int numPoints = 0;
     for( final ProfilePolygon poly : values() )
+    {
       numPoints += poly.size();
+    }
 
     return numPoints;
   }

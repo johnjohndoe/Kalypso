@@ -58,7 +58,7 @@ public final class LengthSectionMapping
 {
   private static LengthSectionMapping INSTANCE;
 
-  public final static String blanc200 = StringUtils.repeat( " ", 200 ); //$NON-NLS-1$
+  public static final String BLANC200 = StringUtils.repeat( " ", 200 ); //$NON-NLS-1$
 
   private final Map<String, DataBlockDescription> m_propertyMap = new HashMap<String, DataBlockDescription>();
 
@@ -77,10 +77,12 @@ public final class LengthSectionMapping
     m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, DataBlockDescription.WASSERSPIEGEL );
   }
 
-  public synchronized static DataBlockHeader createHeader( final String id )
+  public static synchronized DataBlockHeader createHeader( final String id )
   {
     if( INSTANCE == null )
+    {
       INSTANCE = new LengthSectionMapping();
+    }
 
     return INSTANCE.createH( id );
   }

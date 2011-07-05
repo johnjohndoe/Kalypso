@@ -55,9 +55,9 @@ public final class BuildingTrapez extends AbstractProfileObject implements IProf
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_TRAPEZ;
 
-  public BuildingTrapez()
+  public BuildingTrapez( )
   {
-    this(buildObservation() );
+    this( buildObservation() );
   }
 
   private static IObservation<TupleResult> buildObservation( )
@@ -72,14 +72,14 @@ public final class BuildingTrapez extends AbstractProfileObject implements IProf
     result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
 
     final IComponent buildingComponent = getObjectComponent( ID );
-    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, buildingComponent==null?ID:buildingComponent.getName(), result ); //$NON-NLS-1$
+    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, buildingComponent == null ? ID : buildingComponent.getName(), result ); //$NON-NLS-1$
 
     return observation;
   }
 
-  public BuildingTrapez(final IObservation<TupleResult> observation )
+  public BuildingTrapez( final IObservation<TupleResult> observation )
   {
-    super(observation );
+    super( observation );
   }
 
   /**

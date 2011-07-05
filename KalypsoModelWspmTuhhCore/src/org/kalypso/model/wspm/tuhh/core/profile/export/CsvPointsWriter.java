@@ -87,7 +87,9 @@ public class CsvPointsWriter extends AbstractCsvWriter
       writer.append( cleanValue );
 
       if( i != columns.length - 1 )
+      {
         writer.append( '\t' );
+      }
     }
   }
 }

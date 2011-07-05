@@ -103,7 +103,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     if( propertyType == null )
     {
       final String property = m_specifiction.getProperty( propertySpecificationName );
-      final String msg = String.format( Messages.getString("BCEShapeWPRofContentProvider_0"), property ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "BCEShapeWPRofContentProvider_0" ), property ); //$NON-NLS-1$
       throw new IllegalArgumentException( msg );
     }
   }
@@ -183,7 +183,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public String getRiverName( )
   {
-    return "" + getProperty( "GEWAESSER_NAME", Object.class, Messages.getString("BCEShapeWPRofContentProvider_1") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return "" + getProperty( "GEWAESSER_NAME", Object.class, Messages.getString( "BCEShapeWPRofContentProvider_1" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   @Override
@@ -270,7 +270,9 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
       final URL[] pathes = new URL[photoNames.length];
       for( int i = 0; i < pathes.length; i++ )
+      {
         pathes[i] = new File( photoDir, photoNames[i] ).toURI().toURL();
+      }
 
       return pathes;
     }
@@ -345,7 +347,9 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
 
     final String pdfUrl = getPdfUrl();
     if( pdfUrl != null )
+    {
       builder.append( String.format( "%nPDF: %s ", pdfUrl ) ); //$NON-NLS-1$
+    }
 
     return builder.toString();
   }

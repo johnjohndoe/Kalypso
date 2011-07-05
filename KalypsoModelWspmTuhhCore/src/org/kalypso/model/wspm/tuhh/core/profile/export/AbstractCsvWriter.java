@@ -100,7 +100,7 @@ public abstract class AbstractCsvWriter
     }
   }
 
-  private final boolean write( final IProfileFeature[] profiles, final PrintWriter writer, final IProgressMonitor monitor ) throws CoreException
+  private boolean write( final IProfileFeature[] profiles, final PrintWriter writer, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( Messages.getString( "CsvSink_2" ), profiles.length ); //$NON-NLS-1$
 
@@ -119,14 +119,16 @@ public abstract class AbstractCsvWriter
     return true;
   }
 
-  private final void writeHeader( final PrintWriter writer )
+  private void writeHeader( final PrintWriter writer )
   {
     for( int i = 0; i < m_columns.length; i++ )
     {
       final IProfileExportColumn column = m_columns[i];
       writer.append( column.getHeader() );
       if( i != m_columns.length - 1 )
+      {
         writer.append( "\t" ); //$NON-NLS-1$
+      }
     }
 
     writer.println();

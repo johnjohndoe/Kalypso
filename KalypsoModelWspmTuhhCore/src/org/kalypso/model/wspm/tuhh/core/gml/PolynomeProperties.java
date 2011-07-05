@@ -62,9 +62,9 @@ public class PolynomeProperties extends AbstractFeatureBinder
 
   private static final QName QNAME_PROP_TRIPPLE_MODE = new QName( TuhhCalculation.NS_WSPM_TUHH, "trippleMode" ); //$NON-NLS-1$
 
-  public final static QName QNAME = new QName( TuhhCalculation.NS_WSPM_TUHH, "CalcPolynomes" ); //$NON-NLS-1$
+  public static final QName QNAME = new QName( TuhhCalculation.NS_WSPM_TUHH, "CalcPolynomes" ); //$NON-NLS-1$
 
-  private final static QName QNAME_PROP_DEEGREE = new QName( TuhhCalculation.NS_WSPM_TUHH, "degree" ); //$NON-NLS-1$
+  private static final QName QNAME_PROP_DEEGREE = new QName( TuhhCalculation.NS_WSPM_TUHH, "degree" ); //$NON-NLS-1$
 
   private static final QName QNAME_PROP_RUNOFF_SLOPE = new QName( TuhhCalculation.NS_WSPM_TUHH, "runoffSlope" ); //$NON-NLS-1$
 

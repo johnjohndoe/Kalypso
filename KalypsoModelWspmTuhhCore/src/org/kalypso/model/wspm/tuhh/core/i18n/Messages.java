@@ -47,7 +47,7 @@ import java.util.ResourceBundle;
 /**
  * @author kimwerner
  */
-public class Messages
+public final class Messages
 {
   private static final String BUNDLE_NAME = "org.kalypso.model.wspm.tuhh.core.i18n.messages"; //$NON-NLS-1$
 

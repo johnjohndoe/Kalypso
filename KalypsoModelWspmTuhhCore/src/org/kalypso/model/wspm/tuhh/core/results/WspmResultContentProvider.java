@@ -166,7 +166,9 @@ public class WspmResultContentProvider implements ITreeContentProvider
 
     final String[] properties = new String[items.length];
     for( int i = 0; i < properties.length; i++ )
+    {
       properties[i] = ((Property) items[i].getData( DATA_PROPERTY )).name();
+    }
 
     final ColumnViewer columnViewer = (ColumnViewer) viewer;
     columnViewer.setColumnProperties( properties );

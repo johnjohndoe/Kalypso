@@ -134,9 +134,13 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
     {
       final Feature calcFeature;
       if( o instanceof Feature )
+      {
         calcFeature = (Feature) o;
+      }
       else
+      {
         calcFeature = workspace.getFeature( (String) o );
+      }
 
       calcs.add( (TuhhCalculation) calcFeature );
     }

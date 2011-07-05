@@ -114,7 +114,9 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
     final IWProfPoint widthPoint = findBridgetWidth();
     if( widthPoint != null )
+    {
       setWidth( profile, bridge, widthPoint );
+    }
     setUWheight( profile, bridge, widthPoint );
 
     profile.addProfileObjects( new IProfileObject[] { bridge } );
@@ -190,13 +192,17 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     final List<IRecord> points = Arrays.asList( profile.getPoints() );
     final IRecord firstPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
     if( firstPoint != null )
+    {
       firstLast.add( firstPoint );
+    }
 
     Collections.reverse( points );
 
     final IRecord lastPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
     if( lastPoint != null )
+    {
       firstLast.add( lastPoint );
+    }
 
     return firstLast.toArray( new IRecord[firstLast.size()] );
   }
@@ -257,7 +263,9 @@ class BridgeProfileCreator extends GelaendeProfileCreator
       {
         final double dist = Math.abs( toSnap - height );
         if( dist > precision && dist < 0.05 )
+        {
           point.setValue( toSnapIndex, height );
+        }
         else if( dist >= 0.05 )
           return lastPoint;
       }
@@ -276,8 +284,10 @@ class BridgeProfileCreator extends GelaendeProfileCreator
       final Double higher = (Double) point.getValue( higherIndex );
       if( lower != null && higher != null )
       {
-        if( (higher - lower) < 0.05 )
+        if( higher - lower < 0.05 )
+        {
           point.setValue( lowerIndex, higher );
+        }
       }
     }
   }
@@ -286,9 +296,13 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   {
     final IWProfPoint[] ukPoints = getUkPoints();
     if( ukPoints.length < 2 )
+    {
       addDefaultProperty( profile, POINT_PROPERTY_UNTERKANTEBRUECKE, POINT_PROPERTY_HOEHE );
+    }
     else
+    {
       addBridgeProperty( profile, ukPoints, POINT_PROPERTY_UNTERKANTEBRUECKE );
+    }
   }
 
   protected IWProfPoint[] getUkPoints( )
@@ -347,7 +361,9 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     {
       final double value = point.getValue();
       if( !Double.isNaN( value ) )
+      {
         maxValue = Math.max( maxValue, value );
+      }
     }
 
     return maxValue;
@@ -355,13 +371,15 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
   private static final BigDecimal MIN_DISTTANCE = new BigDecimal( "0.0001" ); //$NON-NLS-1$
 
-  private static final double dMAX_BACKJUMP_DISTANCE = 0.30;
+  private static final double DMAX_BACKJUMP_DISTANCE = 0.30;
 
   private IWProfPoint[] swapBackJumps( final IWProfPoint[] bridgePoints )
   {
     final BridgePoint[] adjustedPoints = new BridgePoint[bridgePoints.length];
     for( int i = 0; i < adjustedPoints.length; i++ )
+    {
       adjustedPoints[i] = new BridgePoint( bridgePoints[i] );
+    }
 
     final boolean adjust = true;
     // TODO: optional?
@@ -383,20 +401,24 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
         final double backDistance = beforeDistance.subtract( hereDistance ).doubleValue();
         final double frontDistance = hereDistance.subtract( afterDistance ).doubleValue();
-        if( backDistance > 0 && backDistance < dMAX_BACKJUMP_DISTANCE )
+        if( backDistance > 0 && backDistance < DMAX_BACKJUMP_DISTANCE )
         {
           if( hereDistance.compareTo( beforeDistance ) <= 0 )
           {
             final BigDecimal newHere = beforeDistance.add( MIN_DISTTANCE );
             if( newHere.compareTo( afterDistance ) < 0 )
+            {
               here.setDistance( newHere );
+            }
           }
         }
-        else if( frontDistance > 0 && frontDistance < dMAX_BACKJUMP_DISTANCE )
+        else if( frontDistance > 0 && frontDistance < DMAX_BACKJUMP_DISTANCE )
         {
           final BigDecimal newHere = afterDistance.subtract( MIN_DISTTANCE );
           if( newHere.compareTo( beforeDistance ) > 0 )
+          {
             here.setDistance( newHere );
+          }
         }
       }
     }
@@ -408,9 +430,13 @@ class BridgeProfileCreator extends GelaendeProfileCreator
   {
     final IWProfPoint[] okPoints = getOkPoints();
     if( okPoints == null || okPoints.length < 2 )
+    {
       addDefaultProperty( profile, POINT_PROPERTY_OBERKANTEBRUECKE, POINT_PROPERTY_UNTERKANTEBRUECKE );
+    }
     else
+    {
       addBridgeProperty( profile, okPoints, POINT_PROPERTY_OBERKANTEBRUECKE );
+    }
   }
 
   protected IWProfPoint[] getOkPoints( )

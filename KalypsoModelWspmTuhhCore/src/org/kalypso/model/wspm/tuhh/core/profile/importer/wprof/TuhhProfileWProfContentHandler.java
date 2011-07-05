@@ -108,7 +108,9 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
 
     final IProfileSecondaryCreator[] secondaryCreators = strategy.createSecondaryCreators( data );
     for( final IProfileSecondaryCreator secondaryCreator : secondaryCreators )
+    {
       secondaryCreator.execute( m_project, data );
+    }
   }
 
   private void fireChangeEvents( )
@@ -156,7 +158,9 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
     final String pNam = wprofPoint.getPNam();
 
     if( !m_data.containsKey( pNam ) )
+    {
       m_data.put( pNam, new ProfileData( m_transformer, m_punktattribute, m_wprofPath ) );
+    }
 
     return m_data.get( pNam );
   }

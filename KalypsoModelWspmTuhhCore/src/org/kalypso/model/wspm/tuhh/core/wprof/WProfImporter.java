@@ -91,20 +91,20 @@ public class WProfImporter
 
   public void importW80Shape( final IProgressMonitor monitor ) throws GmlSerializeException, CoreException, MalformedURLException
   {
-    monitor.beginTask( String.format( Messages.getString("WProfImporter_0"), m_shapePath ), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( String.format( Messages.getString( "WProfImporter_0" ), m_shapePath ), 1000 ); //$NON-NLS-1$
 
     /* Load Shape */
     final File prjFile = new File( m_shapePath + ".prj" ); //$NON-NLS-1$
     final String shapeSrs = ShapeSerializer.loadCrs( prjFile.toURI().toURL(), m_shapeDefaultSrs );
 
-    monitor.subTask( Messages.getString("WProfImporter_1") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "WProfImporter_1" ) ); //$NON-NLS-1$
     final GMLWorkspace w80shapeWorkspace = ShapeSerializer.deserialize( m_shapePath, shapeSrs, m_shapeCharset, new SubProgressMonitor( monitor, 500 ) );
 
     final FeatureList w80features = (FeatureList) w80shapeWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    System.out.println( String.format( Messages.getString("WProfImporter_2"), w80features.size() ) ); //$NON-NLS-1$
+    System.out.println( String.format( Messages.getString( "WProfImporter_2" ), w80features.size() ) ); //$NON-NLS-1$
 
     /* Data */
-    monitor.subTask( Messages.getString("WProfImporter_3") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "WProfImporter_3" ) ); //$NON-NLS-1$
     importW80Data( w80features, new SubProgressMonitor( monitor, 500 ) );
   }
 
@@ -121,7 +121,9 @@ public class WProfImporter
       final IWProfPoint point = m_pointFactory.newPoint( feature );
 
       for( final IWProfContentHandler creator : m_handlers )
+      {
         creator.newPoint( point );
+      }
 
       ProgressUtilities.worked( monitor, 1 );
     }

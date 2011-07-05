@@ -89,11 +89,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author thuel2
  */
-public class WspWinExporter
+public final class WspWinExporter
 {
-  public WspWinExporter( )
+  private WspWinExporter( )
   {
-    // will not be instantiated
   }
 
   public static IStatus exportWspmProject( final Iterator<IResource> modelGml, final File wspwinDir, final SubProgressMonitor monitor )
@@ -152,8 +151,10 @@ public class WspWinExporter
           }
         }
         else
+        {
           // we don't process folders
           continue;
+        }
       }
       catch( final Throwable t )
       {
@@ -224,7 +225,7 @@ public class WspWinExporter
 
     if( values.isEmpty() )
     {
-      final String message = String.format( Messages.getString("WspWinExporter.3"), FeatureHelper.getAnnotationValue( runOffEvent, IAnnotation.ANNO_LABEL ) ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "WspWinExporter.3" ), FeatureHelper.getAnnotationValue( runOffEvent, IAnnotation.ANNO_LABEL ) ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message );
       throw new CoreException( status );
     }
@@ -313,10 +314,14 @@ public class WspWinExporter
       pw.format( "ART_RANDBEDINGUNG=%s%n", calculation.getStartKind().name() ); //$NON-NLS-1$
       final Double startWaterlevel = calculation.getStartWaterlevel();
       if( startWaterlevel != null )
+      {
         pw.format( Locale.US, "ANFANGSWASSERSPIEGEL=%s%n", startWaterlevel ); //$NON-NLS-1$
+      }
       final BigDecimal startSlope = calculation.getStartSlope();
       if( startSlope != null )
+      {
         pw.format( "GEFAELLE=%s%n", startSlope ); //$NON-NLS-1$
+      }
 
       pw.format( "%n" ); //$NON-NLS-1$
       pw.format( "# mögliche Werte%n" ); //$NON-NLS-1$
@@ -353,13 +358,19 @@ public class WspWinExporter
       pw.format( "%n" ); //$NON-NLS-1$
       final Double minQ = calculation.getMinQ();
       if( minQ != null )
+      {
         pw.format( Locale.US, "MIN_Q=%s%n", minQ ); //$NON-NLS-1$
+      }
       final Double maxQ = calculation.getMaxQ();
       if( maxQ != null )
+      {
         pw.format( Locale.US, "MAX_Q=%s%n", maxQ ); //$NON-NLS-1$
+      }
       final Double qstep = calculation.getQStep();
       if( qstep != null )
+      {
         pw.format( Locale.US, "DELTA_Q=%s%n", qstep ); //$NON-NLS-1$
+      }
 
       pw.format( "%n" ); //$NON-NLS-1$
       // Einheit des Durchflusses wird standardmäßig festgelegt
@@ -373,7 +384,9 @@ public class WspWinExporter
     finally
     {
       if( pw != null )
+      {
         pw.close();
+      }
     }
 
   }

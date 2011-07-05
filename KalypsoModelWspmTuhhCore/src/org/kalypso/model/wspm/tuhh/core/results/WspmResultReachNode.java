@@ -73,7 +73,9 @@ public class WspmResultReachNode extends AbstractWspmResultNode
     {
       final IWspmResultNode node = WspmResultFactory.createCalculationNode( this, calculation );
       if( node != null )
+      {
         results.add( node );
+      }
     }
 
     return results.toArray( new IWspmResultNode[results.size()] );
