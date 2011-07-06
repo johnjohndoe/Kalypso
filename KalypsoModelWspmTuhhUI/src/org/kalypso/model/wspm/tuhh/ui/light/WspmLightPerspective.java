@@ -128,17 +128,17 @@ public class WspmLightPerspective implements IPerspectiveFactory
     final IFolderLayout mainRightFolder = layout.createFolder( MAIN_RIGHT_FOLDER, IPageLayout.RIGHT, 0.7f, MAIN_FOLDER );
     mainRightFolder.addView( ViewContentOutline.ID );
 
-    layout.getViewLayout( ViewContentOutline.ID ).setCloseable( false );
-    // layout.getViewLayout( ViewContentOutline.ID ).setMoveable( false );
-
-    layout.getViewLayout( ProfilChartViewPart.ID ).setCloseable( false );
-    // layout.getViewLayout( ProfilChartViewPart.ID ).setMoveable( false );
-
     layout.getViewLayout( WspmGmvViewPart.ID ).setCloseable( false );
     layout.getViewLayout( WspmGmvViewPart.ID ).setMoveable( false );
 
     layout.getViewLayout( WspmMapViewPart.ID ).setCloseable( false );
     layout.getViewLayout( WspmMapViewPart.ID ).setMoveable( false );
+
+    layout.getViewLayout( ViewContentOutline.ID ).setCloseable( false );
+    // layout.getViewLayout( ViewContentOutline.ID ).setMoveable( false );
+
+    layout.getViewLayout( ProfilChartViewPart.ID ).setCloseable( false );
+    // layout.getViewLayout( ProfilChartViewPart.ID ).setMoveable( false );
 
     layout.getViewLayout( ProfilChartViewPart.ID ).setCloseable( false );
     // layout.getViewLayout( ProfilChartViewPart.ID ).setMoveable( false );
