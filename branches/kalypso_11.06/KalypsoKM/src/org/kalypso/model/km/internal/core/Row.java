@@ -6,7 +6,7 @@ package org.kalypso.model.km.internal.core;
 public class Row
 {
   /**
-   * The heigth of the waterlevel.
+   * The heigth of the water level.
    */
   private final double m_hNN;
 
@@ -64,7 +64,7 @@ public class Row
   public String toString( )
   {
     return "" + m_hNN + " " + m_q + " " + m_qf + " " + m_a + " " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    + m_af + " " + m_w + " " + m_wf + " " + m_i + " (" + getQfull() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        + m_af + " " + m_w + " " + m_wf + " " + m_i + " (" + getQfull() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
   }
 
   public double getHNN( )

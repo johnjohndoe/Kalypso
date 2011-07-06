@@ -8,7 +8,7 @@ import java.util.Set;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
@@ -33,7 +33,7 @@ public final class TuhhResultDataProvider implements IWspLayerData
   {
     m_results = results;
     m_settingId = settingId;
-    m_settings = PluginUtilities.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
+    m_settings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
 
     initResults( m_results );
   }
@@ -75,7 +75,7 @@ public final class TuhhResultDataProvider implements IWspLayerData
   {
     final String id = resultNode.getName();
     final String settingsName = getSettingsName();
-    final IDialogSettings section = PluginUtilities.getSection( m_settings, settingsName );
+    final IDialogSettings section = DialogSettingsUtils.getSection( m_settings, settingsName );
     final boolean isActive = section.getBoolean( id );
     if( isActive )
     {
