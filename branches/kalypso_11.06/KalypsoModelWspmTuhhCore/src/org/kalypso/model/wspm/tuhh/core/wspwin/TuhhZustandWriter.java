@@ -53,8 +53,8 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
+import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
@@ -82,7 +82,7 @@ public class TuhhZustandWriter
     m_segments = m_reach.getReachProfileSegments();
 
     final TuhhSegmentStationComparator stationComparator = new TuhhSegmentStationComparator( stationRange.getDirection() );
-    final FLIESSGESETZ fliessgesetz = calculation.getFliessgesetz();
+    final org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.FLIESSGESETZ fliessgesetz = calculation.getFliessgesetz();
     m_roughnessType = getRoughnessForFG( fliessgesetz );
 
     Arrays.sort( m_segments, stationComparator );
