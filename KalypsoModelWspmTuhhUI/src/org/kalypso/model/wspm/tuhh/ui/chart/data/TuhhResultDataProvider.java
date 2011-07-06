@@ -20,7 +20,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public final class TuhhResultDataProvider implements IWspLayerData
 {
-  private static final String SETTINGS_ACTIVE = "activeIds"; //$NON-NLS-1$ 
 
   private final IWspmResultNode m_results;
 
@@ -28,10 +27,14 @@ public final class TuhhResultDataProvider implements IWspLayerData
 
   private final IDialogSettings m_settings;
 
-  public TuhhResultDataProvider( final IWspmResultNode results )
+  private final String m_settingId;
+
+  public TuhhResultDataProvider( final IWspmResultNode results, final String settingId )
   {
     m_results = results;
+    m_settingId = settingId;
     m_settings = PluginUtilities.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
+
     initResults( m_results );
   }
 
@@ -63,6 +66,7 @@ public final class TuhhResultDataProvider implements IWspLayerData
     final IWspmResultNode[] childNodes = node.getChildResults();
     for( final IWspmResultNode child : childNodes )
     {
+
       initResults( child );
     }
   }
@@ -146,10 +150,10 @@ public final class TuhhResultDataProvider implements IWspLayerData
       {
         final URL context = workspace.getContext();
         if( context != null )
-          return SETTINGS_ACTIVE + context.toExternalForm();
+          return m_settingId + context.toExternalForm();
       }
     }
 
-    return SETTINGS_ACTIVE;
+    return m_settingId;
   }
 }
