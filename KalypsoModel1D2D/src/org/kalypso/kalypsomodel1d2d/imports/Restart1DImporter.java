@@ -51,6 +51,7 @@ import javax.vecmath.Vector2d;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -96,7 +97,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * Imports the results of a wspm waterlevel calculation as stationary result into the result database of 1d2d.
+ * Imports the results of a wspm water level calculation as stationary result into the result database of 1d2d.
  * <p>
  * This result can then be used to pseudo-restart a 1d-instationary calculation.
  * </p>
@@ -148,7 +149,7 @@ public class Restart1DImporter
       final IFile resultFile = stepFolder.getFile( "results.gml" ); //$NON-NLS-1$
       final File resultJavaFile = resultFile.getLocation().toFile();
       GmlSerializer.serializeWorkspace( resultJavaFile, resultWorkspace, "UTF-8" ); //$NON-NLS-1$
-      resultFile.refreshLocal( IFile.DEPTH_ONE, progress.newChild( 10 ) );
+      resultFile.refreshLocal( IResource.DEPTH_ONE, progress.newChild( 10 ) );
       ProgressUtilities.worked( progress, 0 );
 
       ProgressUtilities.worked( progress, 10 );
