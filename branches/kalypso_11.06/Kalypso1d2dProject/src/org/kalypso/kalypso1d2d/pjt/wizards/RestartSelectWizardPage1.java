@@ -62,8 +62,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
@@ -82,7 +82,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * @author Dejan Antanaskovic
- *
+ * 
  */
 public class RestartSelectWizardPage1 extends SelectResultWizardPage
 {
@@ -114,7 +114,7 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
     getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final Button importButton = new Button( panel, SWT.PUSH );
-    importButton.setText( Messages.getString("org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.0") ); //$NON-NLS-1$
+    importButton.setText( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.0" ) ); //$NON-NLS-1$
     importButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -156,9 +156,9 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
   {
     // Open Import Wizard
     final ImportWspmRestartWizard importWizard = new ImportWspmRestartWizard();
-    importWizard.setWindowTitle( Messages.getString("org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.1") ); //$NON-NLS-1$
+    importWizard.setWindowTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.1" ) ); //$NON-NLS-1$
 
-    PluginUtilities.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), Messages.getString("org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.2") ); //$NON-NLS-1$
+    DialogSettingsUtils.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.2" ) ); //$NON-NLS-1$
     importWizard.setDialogSettings( getDialogSettings() );
     importWizard.setNeedsProgressMonitor( true );
     final WizardDialog2 wizardDialog = new WizardDialog2( getContainer().getShell(), importWizard );
@@ -175,7 +175,7 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
       {
         try
         {
-          final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.3"), 100 ); //$NON-NLS-1$
+          final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.3" ), 100 ); //$NON-NLS-1$
 
           final IFile lengthSectionFile = importWizard.getLengthSection();
           final Restart1DImporter restart1DImporter = new Restart1DImporter( (IScenarioResultMeta) RestartSelectWizardPage1.this.getResultRoot(), scenarioFolder );
@@ -197,6 +197,6 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
     };
 
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, false, operation );
-    ErrorDialog.openError( getShell(), getTitle(), Messages.getString("org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.5"), result ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getTitle(), Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.5" ), result ); //$NON-NLS-1$
   }
 }
