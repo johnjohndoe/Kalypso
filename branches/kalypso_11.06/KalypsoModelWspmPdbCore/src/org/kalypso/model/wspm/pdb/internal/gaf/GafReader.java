@@ -48,66 +48,38 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrMatcher;
 import org.apache.commons.lang.text.StrTokenizer;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
-import org.kalypso.transformation.transformer.JTSTransformer;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 
 /**
  * @author Gernot Belger
  */
 public class GafReader
 {
-  public static class SkipLineException extends RuntimeException
-  {
-    private final int m_severity;
-
-    public SkipLineException( final int severity, final String message )
-    {
-      super( message );
-
-      m_severity = severity;
-    }
-
-    public int getSeverity( )
-    {
-      return m_severity;
-    }
-  }
+  private final Collection<GafLine> m_points = new ArrayList<GafLine>();
 
   private LineNumberReader m_reader;
-
-  private final GafProfiles m_gafProfiles;
-
-  private final GafLogger m_logger;
 
   private int m_goodLines;
 
   private int m_badLines;
 
-  private final JTSTransformer m_transformer;
-
-  private final GeometryFactory m_geometryFactory;
-
-  public GafReader( final GafLogger logger, final GafCodes gafCodes, final Coefficients coefficients, final JTSTransformer transformer, final GeometryFactory geometryFactory )
-  {
-    m_logger = logger;
-    m_transformer = transformer;
-    m_geometryFactory = geometryFactory;
-
-    m_gafProfiles = new GafProfiles( logger, gafCodes, coefficients, geometryFactory );
-  }
-
-  public GafProfiles read( final File gafFile, final IProgressMonitor monitor ) throws IOException
+  public IStatus read( final File gafFile, final IProgressMonitor monitor ) throws IOException
   {
     /* Reading gaf with progress stream to show nice progress for large files */
     final long contentLength = gafFile.length();
@@ -117,16 +89,23 @@ public class GafReader
     final InputStream fileStream = new BufferedInputStream( new FileInputStream( gafFile ) );
     final ProgressInputStream progresStream = new ProgressInputStream( fileStream, contentLength, monitor );
     m_reader = new LineNumberReader( new InputStreamReader( progresStream ) );
-    m_logger.setReader( m_reader );
 
     readLines();
 
-    m_logger.setReader( null );
+    final IStatusCollector logger = new StatusCollector(WspmPdbCorePlugin.PLUGIN_ID);
 
-    m_logger.log( IStatus.INFO, String.format( "%6d lines read", m_goodLines ), null, null );
-    m_logger.log( IStatus.INFO, String.format( "%6d lines skipped", m_badLines ), null, null );
+    logger.add( IStatus.INFO, String.format( "Reading file '%s'", gafFile.getAbsolutePath() ) );
+    if( m_goodLines > 0 )
+      logger.add( IStatus.OK, String.format( "%6d lines read", m_goodLines ) );
+    if( m_badLines > 0 )
+      logger.add( IStatus.INFO, String.format( "%6d lines skipped", m_badLines ) );
 
-    return m_gafProfiles;
+    return logger.asMultiStatus( "Successfully read GAF file" );
+  }
+
+  public GafLine[] getLines( )
+  {
+    return m_points.toArray( new GafLine[m_points.size()] );
   }
 
   public void close( ) throws IOException
@@ -150,27 +129,27 @@ public class GafReader
 
       readLine( line );
     }
-
-    m_gafProfiles.stop();
   }
 
   private void readLine( final String line )
   {
     try
     {
-      final GafPoint point = parseLine( line );
-      m_gafProfiles.addPoint( point );
+      final GafLine point = parseLine( line );
+      m_points.add( point );
+
       m_goodLines++;
     }
-    catch( final SkipLineException e )
+    catch( final CoreException e )
     {
-      m_logger.log( e, line );
+      final GafLine point = new GafLine( e.getStatus() );
+      m_points.add( point );
       m_badLines++;
       // TODO: stop parsing after 1000 errors
     }
   }
 
-  private GafPoint parseLine( final String line )
+  private GafLine parseLine( final String line ) throws CoreException
   {
     final StrTokenizer tokenizer = new StrTokenizer( line );
     tokenizer.setDelimiterMatcher( StrMatcher.trimMatcher() );
@@ -182,29 +161,34 @@ public class GafReader
     final String[] tokens = tokenizer.getTokenArray();
 
     if( tokens.length < 9 )
-      throw new SkipLineException( IStatus.INFO, "Skipping line: too few tokens in line" );
+      throw failLine( IStatus.INFO, "Skipping line: too few tokens in line" );
 
     final Object[] items = parseTokens( tokens );
     checkCommentLine( items );
 
     final BigDecimal station = asDecimal( items[0], "Station" );
-    final String pointId = tokens[1];
+    final String pointId = asString( tokens[1] );
     final BigDecimal width = asDecimal( items[2], "Width" );
     final BigDecimal height = asDecimal( items[3], "Height" );
-    final String code = tokens[4].toUpperCase();
-    final String roughnessClass = tokens[5];
-    final String vegetationClass = tokens[6];
+    final String code = asString( tokens[4] ).toUpperCase();
+    final String roughnessClass = asString( tokens[5] );
+    final String vegetationClass = asString( tokens[6] );
     final BigDecimal hw = asDecimal( items[7], "Hochwert" );
     final BigDecimal rw = asDecimal( items[8], "Rechtswert" );
-    final String hyk = tokens.length < 10 ? null : tokens[9].toUpperCase();
+    final String hyk = tokens.length < 10 ? StringUtils.EMPTY : asString( tokens[9] ).toUpperCase();
 
-    return new GafPoint( station, pointId, width, height, code, roughnessClass, vegetationClass, rw, hw, hyk, m_transformer, m_geometryFactory );
+    return new GafLine( station, pointId, width, height, code, roughnessClass, vegetationClass, rw, hw, hyk, Status.OK_STATUS );
+  }
+
+  private String asString( final String token )
+  {
+    return token.trim();
   }
 
   /**
    * Skip line, if all token are strings -> we assume it's a comment line
    */
-  private void checkCommentLine( final Object[] items )
+  private void checkCommentLine( final Object[] items ) throws CoreException
   {
     for( final Object item : items )
     {
@@ -212,7 +196,7 @@ public class GafReader
         return;
     }
 
-    throw new SkipLineException( IStatus.INFO, "Skipping line" );
+    throw failLine( IStatus.INFO, "Skipping line without numbers - comment line?" );
   }
 
   private Object[] parseTokens( final String[] tokens )
@@ -232,12 +216,19 @@ public class GafReader
     return ObjectUtils.toString( token );
   }
 
-  private BigDecimal asDecimal( final Object item, final String label )
+  private BigDecimal asDecimal( final Object item, final String label ) throws CoreException
   {
     if( item instanceof BigDecimal )
       return (BigDecimal) item;
 
     final String message = String.format( "Field '%s' is not a number", label );
-    throw new SkipLineException( IStatus.ERROR, message );
+    throw failLine( IStatus.ERROR, message );
+  }
+
+  private CoreException failLine( final int severity, final String message )
+  {
+    final String msg = String.format( "LINE %d: %s", m_reader.getLineNumber(), message );
+    final IStatus status = new Status( severity, WspmPdbCorePlugin.PLUGIN_ID, msg );
+    return new CoreException( status );
   }
 }

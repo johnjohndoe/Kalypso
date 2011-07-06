@@ -38,70 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.internal.gaf;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
+
+import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
+import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
+import org.kalypso.model.wspm.pdb.gaf.GafPointCheck;
 
 /**
- * Represents the 'Kennziffer' (KZ) of a gaf file.
- * 
  * @author Gernot Belger
  */
-public class GafCode
+public class RoughnessObservableValue extends TypedObservableValue<GafPointCheck, Roughness>
 {
-  private final String m_key;
+  private final String m_code;
 
-  private final String m_dbCode;
-
-  private final String m_description;
-
-  private final String m_hyk;
-
-  private final String m_kind;
-
-  public GafCode( final String key, final String value )
+  public RoughnessObservableValue( final GafPointCheck source, final String code )
   {
-    m_key = key;
-
-    final String[] tokens = value.split( ";", 4 ); //$NON-NLS-1$
-    m_dbCode = tokens[0];
-    m_description = tokens[1];
-    m_hyk = tokens[2];
-    m_kind = tokens[3];
+    super( source, Roughness.class );
+    m_code = code;
   }
 
-  public GafCode( final String key, final String dbCode, final String description, final String hyk, final String kind )
+  @Override
+  public void doSetValueTyped( final GafPointCheck source, final Roughness value )
   {
-    m_key = key;
-    m_dbCode = dbCode;
-    m_description = description;
-    m_hyk = hyk;
-    m_kind = kind;
+    source.setRoughnessMapping( m_code, value );
   }
 
-  public String getDbCode( )
+  @Override
+  public Roughness doGetValueTyped( final GafPointCheck source )
   {
-    return m_dbCode;
-  }
-
-  public String getDescription( )
-  {
-    return m_description;
-  }
-
-  public String getHyk( )
-  {
-    return m_hyk;
-  }
-
-  public String getCode( )
-  {
-    return m_key;
-  }
-
-  /**
-   * Classifies the point in different kinds of points; each kind representing one cross section part.
-   */
-  public String getKind( )
-  {
-    return m_kind;
+    return source.getRoughnessMapping( m_code );
   }
 }

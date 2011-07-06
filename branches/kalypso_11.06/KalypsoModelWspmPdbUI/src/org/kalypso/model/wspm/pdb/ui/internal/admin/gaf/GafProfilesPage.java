@@ -40,36 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.databinding.beans.PojoProperties;
-import org.eclipse.core.databinding.observable.list.WritableList;
-import org.eclipse.core.databinding.property.value.IValueProperty;
-import org.eclipse.jface.databinding.viewers.ViewerSupport;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
+import org.kalypso.core.status.StatusComposite;
+import org.kalypso.core.status.StatusCompositeValue;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
@@ -79,13 +75,11 @@ import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
  */
 public class GafProfilesPage extends WizardPage
 {
-  private final WritableList m_profiles = new WritableList( new ArrayList<GafProfile>(), GafProfile.class );
-
   private final ImportGafData m_data;
 
   private TableViewer m_profileViewer;
 
-  private Text m_logView;
+  private StatusComposite m_logView;
 
   protected GafProfilesPage( final String pageName, final ImportGafData data )
   {
@@ -94,7 +88,7 @@ public class GafProfilesPage extends WizardPage
     m_data = data;
 
     setTitle( "GAF Inhalt" );
-    setDescription( "The following cross section have been read from the gaf file." );
+    setDescription( "The following cross sections have been read from the gaf file." );
   }
 
   @Override
@@ -106,11 +100,19 @@ public class GafProfilesPage extends WizardPage
 
     createProfileTable( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createLogView( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    final DatabindingWizardPage binding = new DatabindingWizardPage( this, null );
+    final StatusCompositeValue target = new StatusCompositeValue( m_logView );
+    final IViewerObservableValue model = ViewersObservables.observeSinglePostSelection( m_profileViewer );
+    final DataBinder binder = new DataBinder( target, model );
+    binder.setModelToTargetConverter( new GafProfileToStatusConverter() );
+    binding.bindValue( binder );
   }
 
   private Control createProfileTable( final Composite parent )
   {
     m_profileViewer = new TableViewer( parent, SWT.BORDER | SWT.FULL_SELECTION );
+    m_profileViewer.setContentProvider( new ArrayContentProvider() );
 
     final Table table = m_profileViewer.getTable();
     table.setHeaderVisible( true );
@@ -120,55 +122,70 @@ public class GafProfilesPage extends WizardPage
     ColumnViewerUtil.createEmptyColumn( m_profileViewer ).setLabelProvider( new ColumnLabelProvider() );
 
     final TableViewerColumn stationColumn = new TableViewerColumn( m_profileViewer, SWT.NONE );
-    stationColumn.getColumn().setText( "Station" );
+    stationColumn.getColumn().setText( "Station [m]" );
     stationColumn.getColumn().setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( stationColumn.getColumn() );
 
+    stationColumn.setLabelProvider( new GafProfileStationLabelProvider() );
     stationColumn.getColumn().setAlignment( SWT.RIGHT );
 
     ColumnViewerSorter.registerSorter( stationColumn, new StationViewerSorter() );
 
-    final IValueProperty stationProperty = PojoProperties.value( GafProfile.class, "station" ); //$NON-NLS-1$
-    final IValueProperty nullProperty = PojoProperties.value( StringUtils.EMPTY );
-
-    final IValueProperty[] labelProperties = new IValueProperty[] { nullProperty, stationProperty };
-    ViewerSupport.bind( m_profileViewer, m_profiles, labelProperties );
+    m_profileViewer.addOpenListener( new IOpenListener()
+    {
+      @Override
+      public void open( final OpenEvent event )
+      {
+        handleShowProfileStatus( (IStructuredSelection) event.getSelection() );
+      }
+    } );
 
     return table;
   }
 
+  protected void handleShowProfileStatus( final IStructuredSelection selection )
+  {
+    final Object firstElement = selection.getFirstElement();
+    if( !(firstElement instanceof GafProfile) )
+      return;
+
+    final IStatus status = ((GafProfile) firstElement).getStatus();
+    final StatusDialog statusTableDialog = new StatusDialog( getShell(), status, "Details" );
+    statusTableDialog.open();
+  }
+
   private Control createLogView( final Composite parent )
   {
-    m_logView = new Text( parent, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
+    final Group panel = new Group( parent, SWT.NONE );
+    panel.setText( "Details" );
+    GridLayoutFactory.swtDefaults().applyTo( panel );
 
-    m_logView.setEditable( false );
+    m_logView = new StatusComposite( panel, StatusComposite.DETAILS | StatusComposite.HIDE_DETAILS_IF_DISABLED );
+    m_logView.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, true ) );
 
-    final Font textFont = JFaceResources.getFont( JFaceResources.TEXT_FONT );
-    m_logView.setFont( textFont );
-
-    return m_logView;
+    return panel;
   }
 
   public void updateControl( )
   {
-    try
-    {
-      m_profiles.clear();
-      final GafProfiles profiles = m_data.getProfiles();
-      if( profiles != null )
-        m_profiles.addAll( Arrays.asList( profiles.getProfiles() ) );
+    setErrorMessage( null );
+    setPageComplete( true );
 
-      final File logFile = m_data.getLogFile();
-      final String logContent = FileUtils.readFileToString( logFile, Charset.defaultCharset().name() );
-      m_logView.setText( logContent );
-    }
-    catch( final IOException e )
+    final GafProfiles profiles = m_data.getGafProfiles();
+
+    m_profileViewer.getControl().setEnabled( profiles != null );
+    m_logView.setStatus( null );
+
+    if( profiles == null )
     {
-      final StringWriter sw = new StringWriter();
-      final PrintWriter pw = new PrintWriter( sw );
-      e.printStackTrace( pw );
-      pw.close();
-      m_logView.setText( sw.toString() );
+      setErrorMessage( "Failed to read GAF file" );
+      setPageComplete( false );
+      m_profileViewer.setInput( null );
+    }
+    else
+    {
+      final GafProfile[] allProfiles = profiles.getProfiles();
+      m_profileViewer.setInput( allProfiles );
     }
   }
 }
