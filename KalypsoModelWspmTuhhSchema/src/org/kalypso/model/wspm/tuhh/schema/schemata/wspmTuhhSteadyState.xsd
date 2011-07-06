@@ -159,8 +159,8 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType"></element>
-					<element name="subReachDefinitionMember" type="tuhh:subReachDefinitionPropertyType"></element>
+					<element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType" />
+					<element name="subReachDefinitionMember" type="tuhh:subReachDefinitionPropertyType" />
 					<!-- TODO: not used at this moment -->
 					<!--
 						element ref="wspm:roughnessDefinitionCollectionMember"
@@ -170,11 +170,12 @@
 						element ref="wspm:vegetationDefinitionCollectionMember"
 						minOccurs="0"/
 					-->
-					<element name="waterlevelParameterMember" type="tuhh:WaterlevelParameterPropertyType"></element>
-					<element name="startConditionMember" type="tuhh:StartConditionPropertyType"></element>
+					<element name="waterlevelParameterMember" type="tuhh:WaterlevelParameterPropertyType" />
+					<element name="startConditionMember" type="tuhh:StartConditionPropertyType" />
 					<!-- TODO force it to be one of the water body's runOffEvents? -->
-					<element name="runOffEventMember" type="runoff:RunOffEventLinkPropertyType"></element>
-					<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType"></element>
+					<element name="runOffEventMember" type="runoff:RunOffEventLinkPropertyType" />
+					<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType" />
+                    <element name="waterLevelFixationMember" type="runoff:WaterlevelFixationLinkPropertyType" minOccurs="0" maxOccurs="1" />
 				</sequence>
 			</extension>
 		</complexContent>

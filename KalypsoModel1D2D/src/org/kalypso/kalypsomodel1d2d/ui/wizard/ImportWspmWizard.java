@@ -186,7 +186,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     /* Choose wspm-reach */
     m_wspmGmlPage.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.3" ) ); //$NON-NLS-1$
-    m_wspmGmlPage.setValidQNames( new QName[] { TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST } );
+    m_wspmGmlPage.setValidQNames( new QName[] { TuhhCalculation.QN_TUHH_CALC_REIB_CONST } );
     m_wspmGmlPage.setValidKind( true, false );
 
     /* Choose network collection */

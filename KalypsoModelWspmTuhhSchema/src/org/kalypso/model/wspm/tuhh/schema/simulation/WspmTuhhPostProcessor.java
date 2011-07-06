@@ -46,8 +46,8 @@ import java.net.URL;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
