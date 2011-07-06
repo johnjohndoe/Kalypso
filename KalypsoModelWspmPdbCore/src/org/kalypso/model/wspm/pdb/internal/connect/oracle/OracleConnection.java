@@ -69,7 +69,7 @@ public class OracleConnection extends HibernateConnection<OracleSettings>
 
     configuration.setProperty( Environment.DRIVER, oracle.jdbc.OracleDriver.class.getName() );
 
-    final String connectionUrl = String.format( "jdbc:oracle:thin:@%s:%d:%s", settings.getHost(), settings.getPort(), settings.getDbName() );
+    final String connectionUrl = String.format( "jdbc:oracle:thin:@%s:%d:%s", settings.getHost(), settings.getPort(), settings.getDbName() ); //$NON-NLS-1$
 
     configuration.setProperty( Environment.URL, connectionUrl );
     configuration.setProperty( Environment.USER, settings.getUsername() );

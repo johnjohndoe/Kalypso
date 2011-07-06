@@ -71,6 +71,7 @@ import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -128,11 +129,13 @@ public class RauheitenPanel extends AbstractProfilView
     final String[] components = provider.getPointProperties();
     for( final String componentID : components )
     {
-      if( componentID.startsWith( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
+      if( componentID.startsWith( IWspmConstants.POINT_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
       {
         final IComponent component = provider.getPointProperty( componentID );
         if( component != null )
+        {
           m_allKnownRoughnessTypes.add( component );
+        }
       }
     }
 
@@ -150,8 +153,10 @@ public class RauheitenPanel extends AbstractProfilView
     for( final IComponent component : components )
     {
       final String componentID = component.getId();
-      if( componentID.startsWith( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
+      if( componentID.startsWith( IWspmConstants.POINT_PROPERTY_RAUHEIT ) )
+      {
         m_availableRoughnessComponents.add( component );
+      }
     }
 
     m_currentRoughness = findCurrentRoughness();
@@ -208,9 +213,13 @@ public class RauheitenPanel extends AbstractProfilView
     } );
 
     if( m_currentRoughness == null )
+    {
       m_rauheitCombo.setSelection( StructuredSelection.EMPTY );
+    }
     else
+    {
       m_rauheitCombo.setSelection( new StructuredSelection( m_currentRoughness ) );
+    }
 
     m_rauheitCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -260,14 +269,20 @@ public class RauheitenPanel extends AbstractProfilView
       m_currentRoughness = selected;
     }
     else
+    {
       m_currentRoughness = null;
+    }
 
     /* Update settings */
     final IDialogSettings settings = getDialogSettings();
     if( m_currentRoughness == null )
+    {
       settings.put( SETTINGS_ROGUHNESS_COMPONENT, (String) null );
+    }
     else
+    {
       settings.put( SETTINGS_ROGUHNESS_COMPONENT, m_currentRoughness.getId() );
+    }
 
     final IComponent[] addableComponents = findAddableComponents();
     m_addAction.update( addableComponents );
@@ -300,7 +315,7 @@ public class RauheitenPanel extends AbstractProfilView
 
     final Text field = toolkit.createText( panel, StringUtils.EMPTY, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setToolTipText( Messages.getString("RauheitenPanel.0") ); //$NON-NLS-1$
+    field.setToolTipText( Messages.getString( "RauheitenPanel.0" ) ); //$NON-NLS-1$
 
     field.addModifyListener( doubleModifyListener );
 
@@ -355,24 +370,24 @@ public class RauheitenPanel extends AbstractProfilView
     {
       case left:
       {
-        final int i_left = 0; // instead of DB-left we always start at the beginning of the profile
-        final int i_rechts = profil.indexOfPoint( trennflaechen[0].getPoint() );
-        return new int[] { i_left, i_rechts };
+        final int left = 0; // instead of DB-left we always start at the beginning of the profile
+        final int right = profil.indexOfPoint( trennflaechen[0].getPoint() );
+        return new int[] { left, right };
       }
 
       case channel:
       {
-        final int i_left = profil.indexOfPoint( trennflaechen[0].getPoint() );
-        final int i_rechts = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
-        return new int[] { i_left, i_rechts };
+        final int left = profil.indexOfPoint( trennflaechen[0].getPoint() );
+        final int right = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
+        return new int[] { left, right };
       }
 
       case right:
       {
-        final int i_left = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
+        final int left = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
         // instead of DB-right we always stop at the end of the profile
-        final int i_rechts = profil.getPoints().length; 
-        return new int[] { i_left, i_rechts };
+        final int right = profil.getPoints().length;
+        return new int[] { left, right };
       }
 
       default:
@@ -395,7 +410,9 @@ public class RauheitenPanel extends AbstractProfilView
     for( final IRecord p : points )
     {
       if( !ObjectUtils.equals( p.getValue( index ), value ) )
+      {
         p.setValue( index, value );
+      }
     }
   }
 
@@ -427,7 +444,9 @@ public class RauheitenPanel extends AbstractProfilView
     {
       final Object currentValue = p.getValue( index );
       if( value == null )
+      {
         value = (Number) currentValue;
+      }
       else if( !value.equals( currentValue ) )
         return Double.NaN;
     }
@@ -445,9 +464,13 @@ public class RauheitenPanel extends AbstractProfilView
     m_rauheitCombo.getCombo().setEnabled( m_availableRoughnessComponents.size() > 0 );
 
     if( m_currentRoughness == null )
+    {
       m_rauheitCombo.setSelection( StructuredSelection.EMPTY, true );
+    }
     else
+    {
       m_rauheitCombo.setSelection( new StructuredSelection( m_currentRoughness ), true );
+    }
 
     final IComponent[] addableComponents = findAddableComponents();
     m_addAction.update( addableComponents );
@@ -473,17 +496,17 @@ public class RauheitenPanel extends AbstractProfilView
     if( value == null )
     {
       field.setText( StringUtils.EMPTY );
-      field.setMessage( Messages.getString("RauheitenPanel.1") ); //$NON-NLS-1$
+      field.setMessage( Messages.getString( "RauheitenPanel.1" ) ); //$NON-NLS-1$
     }
     else if( value.isNaN() )
     {
       field.setText( StringUtils.EMPTY );
-      field.setMessage( Messages.getString("RauheitenPanel.2") ); //$NON-NLS-1$
+      field.setMessage( Messages.getString( "RauheitenPanel.2" ) ); //$NON-NLS-1$
     }
     else if( value.isInfinite() )
     {
       field.setText( StringUtils.EMPTY );
-      field.setMessage( Messages.getString("RauheitenPanel.3") ); //$NON-NLS-1$
+      field.setMessage( Messages.getString( "RauheitenPanel.3" ) ); //$NON-NLS-1$
     }
     else
     {
@@ -493,7 +516,9 @@ public class RauheitenPanel extends AbstractProfilView
     }
 
     if( field.isFocusControl() )
+    {
       field.selectAll();
+    }
   }
 
   @Override
@@ -502,7 +527,7 @@ public class RauheitenPanel extends AbstractProfilView
     // TODO: protect against too many changes at once
     final Control control = getControl();
 
-    final Runnable operation= new Runnable()
+    final Runnable operation = new Runnable()
     {
       @Override
       public void run( )

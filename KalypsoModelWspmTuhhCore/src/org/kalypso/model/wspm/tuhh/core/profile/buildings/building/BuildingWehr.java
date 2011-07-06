@@ -87,11 +87,13 @@ public class BuildingWehr extends AbstractProfileObject implements IProfileBuild
 
   private void addPointProperties( final IProfil profil )
   {
-    //final IComponent hoehe = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    // final IComponent hoehe = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
 
     if( !profil.hasPointProperty( ok ) )
+    {
       profil.addPointProperty( ok, null );
+    }
   }
 
   /**

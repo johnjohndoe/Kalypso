@@ -90,11 +90,11 @@ public class ExportPrfFileChooserPage extends ExportFileChooserPage
     final Group group = new Group( parent, SWT.None );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     group.setLayout( new GridLayout( 3, false ) );
-    group.setText( Messages.getString("ExportPrfFileChooserPage_0") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "ExportPrfFileChooserPage_0" ) ); //$NON-NLS-1$
 
     final Label label = new Label( group, SWT.NONE );
     label.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
-    label.setText( Messages.getString("ExportPrfFileChooserPage_1") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "ExportPrfFileChooserPage_1" ) ); //$NON-NLS-1$
 
     final Text text = new Text( group, SWT.NONE );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -149,7 +149,7 @@ public class ExportPrfFileChooserPage extends ExportFileChooserPage
       return validate;
 
     if( StringUtils.isEmpty( m_filenamePattern ) )
-      return new MessageProvider( Messages.getString("ExportPrfFileChooserPage_2"), IMessageProvider.ERROR ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString( "ExportPrfFileChooserPage_2" ), IMessageProvider.ERROR ); //$NON-NLS-1$
 
     // check for invalid filename
 

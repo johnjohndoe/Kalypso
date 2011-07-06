@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -37,7 +37,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  */
 public class CreateProfileFromDEMWidget extends AbstractWidget
 {
-  private static final String STR_DEFAULT_TOOLTIP = Messages.getString("CreateProfileFromDEMWidget_0") + Messages.getString("CreateProfileFromDEMWidget_1") + Messages.getString("CreateProfileFromDEMWidget_2"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+  private static final String STR_DEFAULT_TOOLTIP = Messages.getString( "CreateProfileFromDEMWidget_0" ) + Messages.getString( "CreateProfileFromDEMWidget_1" ) + Messages.getString( "CreateProfileFromDEMWidget_2" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
   private static final String SETTINGS_MODE = "mode"; //$NON-NLS-1$
 
@@ -101,7 +101,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     final ICoverageCollection coverages = initCoverages( model );
     if( coverages == null )
     {
-      m_errorTooltip.setTooltip( Messages.getString("CreateProfileFromDEMWidget_5") ); //$NON-NLS-1$
+      m_errorTooltip.setTooltip( Messages.getString( "CreateProfileFromDEMWidget_5" ) ); //$NON-NLS-1$
       m_tooltip = m_errorTooltip;
       return;
     }
@@ -110,7 +110,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     m_strategy = initStrategy( model, coverages, mapPanel );
     if( m_strategy == null )
     {
-      m_errorTooltip.setTooltip( Messages.getString("CreateProfileFromDEMWidget_6") ); //$NON-NLS-1$
+      m_errorTooltip.setTooltip( Messages.getString( "CreateProfileFromDEMWidget_6" ) ); //$NON-NLS-1$
       m_tooltip = m_errorTooltip;
       return;
     }
@@ -171,10 +171,8 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     else if( foundThemes.length == 1 )
       return getCoverageTheme( (IKalypsoFeatureTheme) foundThemes[0] );
     else
-    {
       // TODO: let user choose what theme to use
       return getCoverageTheme( (IKalypsoFeatureTheme) foundThemes[0] );
-    }
   }
 
   private ICoverageCollection getCoverageTheme( final IKalypsoFeatureTheme coverageTheme )
@@ -195,9 +193,13 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
   public void doubleClickedLeft( final Point p )
   {
     if( m_strategy == null )
+    {
       activate( getCommandTarget(), getMapPanel() );
+    }
     else
+    {
       m_strategy.run();
+    }
   }
 
   /**
@@ -243,14 +245,18 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       return;
 
     if( m_strategy != null )
+    {
       m_strategy.paint( g, mapPanel, m_currentPoint );
+    }
 
     if( m_tooltip != null )
     {
       final Rectangle bounds = mapPanel.getScreenBounds();
 
       if( m_strategy != null )
+      {
         m_standardTooltip.setTooltip( STR_DEFAULT_TOOLTIP + m_strategy.getLabel() );
+      }
 
       m_tooltip.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
@@ -279,7 +285,9 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
         m_strategyExtendProfile = !m_strategyExtendProfile;
         final IDialogSettings settings = getSettings();
         if( settings != null )
+        {
           settings.put( SETTINGS_MODE, m_strategyExtendProfile );
+        }
         activate( getCommandTarget(), getMapPanel() );
         repaintMap();
         break;
@@ -297,7 +305,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
   private IDialogSettings getSettings( )
   {
-    return PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
+    return DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
   }
 
 }

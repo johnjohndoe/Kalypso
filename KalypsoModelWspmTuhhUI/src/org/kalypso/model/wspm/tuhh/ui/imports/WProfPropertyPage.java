@@ -83,8 +83,8 @@ public class WProfPropertyPage extends WizardPage
     m_defaultSpecification = defaultSpecification;
     m_specification = new Properties( defaultSpecification );
 
-    setTitle( Messages.getString("WProfPropertyPage_0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("WProfPropertyPage_1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "WProfPropertyPage_0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "WProfPropertyPage_1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -96,7 +96,7 @@ public class WProfPropertyPage extends WizardPage
     initSpecification();
 
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( Messages.getString("WProfPropertyPage_2") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "WProfPropertyPage_2" ) ); //$NON-NLS-1$
     group.setLayout( new FillLayout() );
 
     final ScrolledForm scrolledForm = new ScrolledForm( group, SWT.V_SCROLL );
@@ -109,19 +109,21 @@ public class WProfPropertyPage extends WizardPage
     /* Header */
     final Label keyLabel = new Label( body, SWT.NONE );
     keyLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    keyLabel.setText( Messages.getString("WProfPropertyPage_3") ); //$NON-NLS-1$
+    keyLabel.setText( Messages.getString( "WProfPropertyPage_3" ) ); //$NON-NLS-1$
 
     final Label defaultLabel = new Label( body, SWT.NONE );
     defaultLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    defaultLabel.setText( Messages.getString("WProfPropertyPage_4") ); //$NON-NLS-1$
+    defaultLabel.setText( Messages.getString( "WProfPropertyPage_4" ) ); //$NON-NLS-1$
 
     final Label valueLabel = new Label( body, SWT.NONE );
     valueLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    valueLabel.setText( Messages.getString("WProfPropertyPage_5") ); //$NON-NLS-1$
+    valueLabel.setText( Messages.getString( "WProfPropertyPage_5" ) ); //$NON-NLS-1$
 
     final Set<Object> keySet = m_defaultSpecification.keySet();
     for( final Object key : keySet )
+    {
       createRow( body, (String) key );
+    }
 
     createResetButton( body );
 
@@ -134,7 +136,7 @@ public class WProfPropertyPage extends WizardPage
   {
     /* Label filler = */new Label( parent, SWT.NONE );
     final Button button = new Button( parent, SWT.PUSH );
-    button.setText( Messages.getString("WProfPropertyPage_6") ); //$NON-NLS-1$
+    button.setText( Messages.getString( "WProfPropertyPage_6" ) ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -159,7 +161,9 @@ public class WProfPropertyPage extends WizardPage
     }
 
     for( final Text valueText : m_valueTexts )
+    {
       valueText.setText( "" ); //$NON-NLS-1$
+    }
   }
 
   private void createRow( final Composite parent, final String key )
@@ -177,7 +181,9 @@ public class WProfPropertyPage extends WizardPage
     final Text valueText = new Text( parent, SWT.LEFT | SWT.BORDER );
     valueText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     if( value instanceof String )
+    {
       valueText.setText( (String) value );
+    }
 
     valueText.addModifyListener( new ModifyListener()
     {
@@ -197,12 +203,18 @@ public class WProfPropertyPage extends WizardPage
     final String valueToSet = value.isEmpty() ? null : value;//$NON-NLS-1$
 
     if( valueToSet == null )
+    {
       m_specification.remove( key );
+    }
     else
+    {
       m_specification.setProperty( key, valueToSet );
+    }
     final IDialogSettings settings = getSettings();
     if( settings != null )
+    {
       settings.put( key, valueToSet );
+    }
   }
 
   private IDialogSettings getSettings( )
@@ -229,7 +241,9 @@ public class WProfPropertyPage extends WizardPage
     {
       final String value = settings.get( (String) key );
       if( value != null && !value.isEmpty() )
+      {
         m_specification.put( key, value.toUpperCase() );
+      }
     }
   }
 
@@ -242,7 +256,9 @@ public class WProfPropertyPage extends WizardPage
       final String key = (String) object;
       final String value = m_specification.getProperty( key );
       if( value != null && !value.isEmpty() )
+      {
         properties.setProperty( key, value );
+      }
     }
 
     return properties;

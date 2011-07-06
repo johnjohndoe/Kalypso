@@ -51,7 +51,7 @@ public class ProfileRiverNamePattern extends AbstractProfileStringPattern
 {
   public ProfileRiverNamePattern( )
   {
-    super( "River", Messages.getString("ProfileRiverNamePattern_0") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "River", Messages.getString( "ProfileRiverNamePattern_0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

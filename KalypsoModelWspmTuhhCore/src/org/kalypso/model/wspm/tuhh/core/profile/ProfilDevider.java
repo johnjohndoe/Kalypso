@@ -87,9 +87,13 @@ public class ProfilDevider extends PointMarker
         final Boolean flag = (Boolean) value;
 
         if( flag )
+        {
           setValue( "high" ); //$NON-NLS-1$
+        }
         else
+        {
           setValue( "low" ); //$NON-NLS-1$
+        }
 
         return;
       }

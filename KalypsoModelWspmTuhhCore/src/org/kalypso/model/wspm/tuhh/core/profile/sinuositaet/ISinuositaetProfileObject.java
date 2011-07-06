@@ -47,15 +47,15 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
  */
 public interface ISinuositaetProfileObject extends IProfileObject
 {
-  public static final String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUOSITAET"; //$NON-NLS-1$
+  String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUOSITAET"; //$NON-NLS-1$
 
-  public static final String PROPERTY_KENNUNG = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#KENNUNG"; //$NON-NLS-1$
+  String PROPERTY_KENNUNG = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#KENNUNG"; //$NON-NLS-1$
 
-  public static final String PROPERTY_SN = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#SN"; //$NON-NLS-1$
+  String PROPERTY_SN = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#SN"; //$NON-NLS-1$
 
-  public static final String PROPERTY_GERINNE_ART = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#GERINNE_ART"; //$NON-NLS-1$
+  String PROPERTY_GERINNE_ART = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#GERINNE_ART"; //$NON-NLS-1$
 
-  public static final String PROPERTY_LF = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#LF"; //$NON-NLS-1$
+  String PROPERTY_LF = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetComponents#LF"; //$NON-NLS-1$
 
   SINUOSITAET_KENNUNG getKennung( );
 

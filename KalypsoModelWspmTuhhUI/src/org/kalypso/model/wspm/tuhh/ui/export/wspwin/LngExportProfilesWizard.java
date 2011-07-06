@@ -98,7 +98,9 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
     exporter.export( profiles, file, monitor );
 
     if( m_profileFileChooserPage.doOpenPlotter() )
+    {
       openInPlotter( file );
+    }
   }
 
   private void openInPlotter( final File file ) throws CoreException
@@ -109,7 +111,7 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
     }
     catch( final IOException e )
     {
-      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("LngExportProfilesWizard_0"), e ); //$NON-NLS-1$
+      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "LngExportProfilesWizard_0" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

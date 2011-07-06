@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -60,7 +59,7 @@ public class ProfileAltitudeValidator
 
   private final double m_delta;
 
-  private final IComponent m_Breite;
+  private final IComponent m_breite;
 
   private final IValidatorMarkerCollector m_collector;
 
@@ -68,8 +67,8 @@ public class ProfileAltitudeValidator
 
   public ProfileAltitudeValidator( final IProfil profil, final IValidatorMarkerCollector collector )
   {
-    m_Breite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    m_delta = m_Breite == null ? 0.0001 : m_Breite.getPrecision();
+    m_breite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    m_delta = m_breite == null ? 0.0001 : m_breite.getPrecision();
     m_station = String.format( "km %.4f", profil.getStation() ); //$NON-NLS-1$
     m_profil = profil;
     m_collector = collector;
@@ -124,7 +123,7 @@ public class ProfileAltitudeValidator
   public final boolean compare( final Double d1, final Double d2, final int signum, final boolean orEqual )
   {
     final int sign = (int) (Math.abs( d1 - d2 ) < m_delta ? 0 : Math.signum( d1 - d2 ));
-    return orEqual ^ (sign == signum);
+    return orEqual ^ sign == signum;
   }
 
   /**
@@ -151,7 +150,7 @@ public class ProfileAltitudeValidator
       final Double h1 = ProfilUtil.getDoubleValueFor( componentID, point );
       if( !h1.isNaN() )
       {
-        final Double h2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, point );
+        final Double h2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
         if( !compare( h1, h2, check, orEqual ) )
           return lastPos;
         lastPos = i;

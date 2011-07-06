@@ -75,14 +75,18 @@ public class DurchlassRule extends AbstractValidatorRule
       final Object b = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
       final Object h = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
       if( b instanceof Double && h instanceof Double && (Double) h <= (Double) b )
+      {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.0" ), String.format( "km %.4f", profil.getStation() ), 0, null ); //$NON-NLS-1$ //$NON-NLS-2$
+      }
     }
     else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( building.getId() ) )
     {
       final Object b = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
       final Object h = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
       if( b instanceof Double && h instanceof Double && (Double) b <= (Double) h )
+      {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.2" ), String.format( "km %.4f", profil.getStation() ), 0, null ); //$NON-NLS-1$ //$NON-NLS-2$
+      }
 
     }
     final IComponent compKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );

@@ -52,12 +52,12 @@ public class WspmResultEclipseNode extends AbstractWspmResultNode
   /**
    * The eclipse project.
    */
-  private IProject m_eclipseProject;
+  private final IProject m_eclipseProject;
 
   /**
    * The wsmp project result node, which is associated with the eclipse project.
    */
-  private WspmResultProjectNode m_projectNode;
+  private final WspmResultProjectNode m_projectNode;
 
   /**
    * The constructor.
@@ -67,7 +67,7 @@ public class WspmResultEclipseNode extends AbstractWspmResultNode
    * @param projectNode
    *          The wsmp project result node, which is associated with the eclipse project.
    */
-  public WspmResultEclipseNode( IProject eclipseProject, WspmResultProjectNode projectNode )
+  public WspmResultEclipseNode( final IProject eclipseProject, final WspmResultProjectNode projectNode )
   {
     super( null );
 

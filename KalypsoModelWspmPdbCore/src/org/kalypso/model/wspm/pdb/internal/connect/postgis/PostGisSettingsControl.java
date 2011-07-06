@@ -79,18 +79,18 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
     GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( false ).applyTo( this );
 
     final StringBlankValidator hostValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
-    createPropertyControl( "Host", SWT.NONE, PostgisSettings.PROPERTY_HOST, hostValidator );
+    createPropertyControl( "Host", SWT.NONE, PostgisSettings.PROPERTY_HOST, hostValidator ); //$NON-NLS-1$
 
-    createPropertyControl( "Port", SWT.NONE, PostgisSettings.PROPERTY_PORT, new PortValidator( PostgisSettings.DEFAULT_PORT ) );
+    createPropertyControl( "Port", SWT.NONE, PostgisSettings.PROPERTY_PORT, new PortValidator( PostgisSettings.DEFAULT_PORT ) ); //$NON-NLS-1$
 
     final StringBlankValidator databaseValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
-    createPropertyControl( "Database", SWT.NONE, PostgisSettings.PROPERTY_DBNAME, databaseValidator );
+    createPropertyControl( "Database", SWT.NONE, PostgisSettings.PROPERTY_DBNAME, databaseValidator ); //$NON-NLS-1$
 
     final StringBlankValidator usernameValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
-    createPropertyControl( "Username", SWT.NONE, PostgisSettings.PROPERTY_USERNAME, usernameValidator );
+    createPropertyControl( "Username", SWT.NONE, PostgisSettings.PROPERTY_USERNAME, usernameValidator ); //$NON-NLS-1$
 
     final StringBlankValidator warningValidator = new StringBlankValidator( IStatus.WARNING, "Password field is empty" );
-    createPropertyControl( "Password", SWT.PASSWORD, PostgisSettings.PROPERTY_PASSWORD, warningValidator );
+    createPropertyControl( "Password", SWT.PASSWORD, PostgisSettings.PROPERTY_PASSWORD, warningValidator ); //$NON-NLS-1$
   }
 
   private void createPropertyControl( final String label, final int style, final String property, final IValidator... validators )

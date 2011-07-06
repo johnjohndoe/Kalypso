@@ -54,11 +54,11 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
 {
   private WspmResultLengthSection m_lengthSection;
 
-  private IFile m_file;
+  private final IFile m_file;
 
-  private String m_label;
+  private final String m_label;
 
-  public WspmResultContainer( ITuhhCalculationNode parent, IFile file, String label )
+  public WspmResultContainer( final ITuhhCalculationNode parent, final IFile file, final String label )
   {
     super( parent );
 
@@ -102,7 +102,7 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
     // Maybe we should check, if the file was modified since...
     if( m_lengthSection == null )
     {
-      TuhhCalculation calculation = getCalculation();
+      final TuhhCalculation calculation = getCalculation();
       if( calculation == null )
         return null;
 
@@ -127,7 +127,7 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   @Override
   public TuhhCalculation getCalculation( )
   {
-    IWspmResultNode parent = getParent();
+    final IWspmResultNode parent = getParent();
     if( parent instanceof ITuhhCalculationNode )
       return ((ITuhhCalculationNode) parent).getCalculation();
 

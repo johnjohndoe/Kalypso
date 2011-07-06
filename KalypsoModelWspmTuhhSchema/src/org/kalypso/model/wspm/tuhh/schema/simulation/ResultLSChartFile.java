@@ -43,16 +43,24 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chart.factory.layer.Layers;
+import de.openali.odysseus.chart.factory.provider.Providers;
 import de.openali.odysseus.chartconfig.x020.AlignmentType;
 import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.AxisType.Direction;
 import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.LayerType;
+import de.openali.odysseus.chartconfig.x020.ProviderType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
@@ -68,13 +76,16 @@ public class ResultLSChartFile extends AbstractResultLSFile
 
   private final String m_chartTitle;
 
-  public ResultLSChartFile( final File outDir, final String runoffName, final boolean isDirectionUpstreams, final String dataFilename, final String chartTitle )
+  private final Feature m_waterLevelFixation;
+
+  public ResultLSChartFile( final File outDir, final String runoffName, final boolean isDirectionUpstreams, final String dataFilename, final String chartTitle, final Feature waterLevelFixation )
   {
     super( outDir, runoffName );
 
     m_isDirectionUpstreams = isDirectionUpstreams;
     m_dataFilename = dataFilename;
     m_chartTitle = chartTitle;
+    m_waterLevelFixation = waterLevelFixation;
   }
 
   /**
@@ -129,10 +140,52 @@ public class ResultLSChartFile extends AbstractResultLSFile
     t1.setStringValue( String.format( Messages.getString( "ResultLengthSection.2" ), m_chartTitle ) ); //$NON-NLS-1$
     chart.setTitleArray( new TitleType[] { t1 } ); //$NON-NLS-1$
 
+    updateFixationLayer( chart );
+    updateAxes( chart );
+
+    ccl.getChartConfigurationDocument().save( outputFile );
+  }
+
+  private void updateFixationLayer( final ChartType chart )
+  {
+    final LayerType[] layers = findFixationLayers( chart );
+
+    for( final LayerType layer : layers )
+    {
+      if( Objects.isNull( m_waterLevelFixation ) )
+        Layers.remove( chart.getLayers(), layer );
+      else
+      {
+        final ProviderType provider = layer.getProvider();
+        Providers.updateParameter( provider, "observationId", m_waterLevelFixation.getId() );
+      }
+    }
+
+  }
+
+  private LayerType[] findFixationLayers( final ChartType chart )
+  {
+    final Set<LayerType> found = new LinkedHashSet<LayerType>();
+
+    final LayerType[] layers = chart.getLayers().getLayerArray();
+    for( final LayerType layer : layers )
+    {
+      if( "WspFixation".equals( layer.getId() ) ) //$NON-NLS-1$
+      {
+        found.add( layer );
+      }
+    }
+
+    return found.toArray( new LayerType[] {} );
+  }
+
+  private void updateAxes( final ChartType chart )
+  {
     final AxisType[] axes = chart.getMappers().getAxisArray();
     for( final AxisType axis : axes )
     {
-      if( axis.getLabel().equals( "Station_Axis" ) ) //$NON-NLS-1$
+
+      if( "Station_Axis".equals( axis.getId() ) )
       {
         if( m_isDirectionUpstreams )
           axis.setDirection( Direction.NEGATIVE );
@@ -140,8 +193,6 @@ public class ResultLSChartFile extends AbstractResultLSFile
           axis.setDirection( Direction.POSITIVE );
       }
     }
-
-    ccl.getChartConfigurationDocument().save( outputFile );
   }
 
 }

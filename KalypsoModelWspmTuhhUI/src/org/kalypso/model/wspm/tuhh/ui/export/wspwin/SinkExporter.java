@@ -79,7 +79,7 @@ public class SinkExporter
     }
     catch( final IOException e )
     {
-      final String message = String.format( Messages.getString("SinkExporter_0") ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "SinkExporter_0" ) ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }
@@ -106,7 +106,7 @@ public class SinkExporter
 
   private void writeProfiles( final IProfileFeature[] profileFeatures, final OutputStream os, final IProgressMonitor monitor ) throws IOException, CoreException
   {
-    monitor.beginTask( Messages.getString("SinkExporter_1"), profileFeatures.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "SinkExporter_1" ), profileFeatures.length ); //$NON-NLS-1$
 
     final IProfil[] profiles = new IProfil[profileFeatures.length];
     for( int i = 0; i < profiles.length; i++ )

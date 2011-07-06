@@ -85,28 +85,34 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
     final int step = m_orientationLeft ? -1 : 1;
 
     final IRecord point = profil.getPoint( m_pointIndex );
-    Double AX_P = (Double) point.getValue( iAX );
-    Double AY_P = (Double) point.getValue( iAY );
-    Double DP_P = (Double) point.getValue( iDP );
+    Double pAx = (Double) point.getValue( iAX );
+    Double pAy = (Double) point.getValue( iAY );
+    Double pDp = (Double) point.getValue( iDP );
 
     for( int i = m_pointIndex + step; i > -1 && i < profil.getPoints().length; i = i + step )
     {
 
-      final IRecord p = profil.getPoint( i );
-      final Double AX = (Double) p.getValue( iAX );
-      final Double AY = (Double) p.getValue( iAY );
-      final Double DP = (Double) p.getValue( iDP );
-      if( AX_P == 0.0 & AX != 0.0 )
-        AX_P = AX;
-      if( AY_P == 0.0 & AY != 0.0 )
-        AY_P = AY;
-      if( DP_P == 0.0 & DP != 0.0 )
-        DP_P = DP;
-      if( AX_P * AY_P * DP_P != 0.0 )
+      final IRecord record = profil.getPoint( i );
+      final Double dAx = (Double) record.getValue( iAX );
+      final Double dAy = (Double) record.getValue( iAY );
+      final Double dDp = (Double) record.getValue( iDP );
+      if( pAx == 0.0 & dAx != 0.0 )
       {
-        point.setValue( iAX, AX_P );
-        point.setValue( iAY, AY_P );
-        point.setValue( iDP, DP_P );
+        pAx = dAx;
+      }
+      if( pAy == 0.0 & dAy != 0.0 )
+      {
+        pAy = dAy;
+      }
+      if( pDp == 0.0 & dDp != 0.0 )
+      {
+        pDp = dDp;
+      }
+      if( pAx * pAy * pDp != 0.0 )
+      {
+        point.setValue( iAX, pAx );
+        point.setValue( iAY, pAy );
+        point.setValue( iDP, pDp );
         profil.setActivePoint( point );
         break;
       }

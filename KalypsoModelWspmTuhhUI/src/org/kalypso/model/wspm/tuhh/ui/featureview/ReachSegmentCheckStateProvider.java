@@ -61,31 +61,31 @@ public class ReachSegmentCheckStateProvider implements ICheckStateProvider
   public ReachSegmentCheckStateProvider( final TuhhReach reach )
   {
     Assert.isNotNull( reach );
-    
+
     m_reach = reach;
     // TODO: we probably also need to listen to model events in order to clear the hash
     m_profileHash.clear();
-    
+
     /* Performance: Hash the profile for quicker access later */
-      final TuhhReachProfileSegment[] reachProfileSegments = m_reach.getReachProfileSegments();
-      for( TuhhReachProfileSegment tuhhReachProfileSegment : reachProfileSegments )
-      {
-        IProfileFeature profileMember = tuhhReachProfileSegment.getProfileMember();
-        m_profileHash.add( profileMember );
-      }
+    final TuhhReachProfileSegment[] reachProfileSegments = m_reach.getReachProfileSegments();
+    for( final TuhhReachProfileSegment tuhhReachProfileSegment : reachProfileSegments )
+    {
+      final IProfileFeature profileMember = tuhhReachProfileSegment.getProfileMember();
+      m_profileHash.add( profileMember );
+    }
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
    */
   @Override
-  public boolean isChecked( Object element )
+  public boolean isChecked( final Object element )
   {
     final IProfileFeature profile = (IProfileFeature) element;
     return reachContainsProfile( profile );
   }
 
-  private boolean reachContainsProfile( IProfileFeature profile )
+  private boolean reachContainsProfile( final IProfileFeature profile )
   {
     return m_profileHash.contains( profile );
   }
@@ -94,7 +94,7 @@ public class ReachSegmentCheckStateProvider implements ICheckStateProvider
    * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
    */
   @Override
-  public boolean isGrayed( Object element )
+  public boolean isGrayed( final Object element )
   {
     // TODO: maybe if profile with same station was already checked?
     return false;

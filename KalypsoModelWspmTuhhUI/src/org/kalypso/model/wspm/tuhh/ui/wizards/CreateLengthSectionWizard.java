@@ -120,13 +120,15 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
     addPage( m_profileChooserPage );
   }
 
-  private final IProfil[] extractProfiles( final Object[] profilFeatures )
+  private IProfil[] extractProfiles( final Object[] profilFeatures )
   {
     final SortedMap<Double, IProfil> profiles = new TreeMap<Double, IProfil>();
     for( final Object objProfileFeature : profilFeatures )
     {
       if( !(objProfileFeature instanceof IProfileFeature) )
+      {
         continue;
+      }
       final IProfileFeature profileFeature = (IProfileFeature) objProfileFeature;
 
       final IProfil profil = profileFeature.getProfil();
@@ -153,7 +155,7 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
     }
     catch( final Throwable t )
     {
-      final String message = String.format( Messages.getString("CreateLengthSectionWizard.0"), t.getLocalizedMessage() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "CreateLengthSectionWizard.0" ), t.getLocalizedMessage() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message, t );
       KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( status );
       new StatusDialog( getShell(), status, getWindowTitle() ).open();
@@ -164,12 +166,16 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
   private void doExport( final Object[] profilFeatures, final URL context, final IFolder parentFolder ) throws CoreException, GMLSchemaException, IOException, GmlSerializeException, PartInitException
   {
     if( !parentFolder.exists() )
+    {
       parentFolder.create( false, true, new NullProgressMonitor() );
+    }
 
     final String fName = String.format( "station(%.4f)%d", ((IProfileFeature) profilFeatures[0]).getStation(), profilFeatures.length ); //$NON-NLS-1$
     final IFolder targetFolder = parentFolder.getFolder( fName );
     if( !targetFolder.exists() )
+    {
       targetFolder.create( false, true, new NullProgressMonitor() );
+    }
 
     final IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) ); //$NON-NLS-1$
     final File targetJavaFile = targetFile.getLocation().toFile();

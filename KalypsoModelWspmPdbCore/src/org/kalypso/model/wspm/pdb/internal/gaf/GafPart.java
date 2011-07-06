@@ -111,7 +111,7 @@ public class GafPart
    */
   private Geometry createEmptyGeometry( final String dbType )
   {
-    if( dbType.contains( "Oracle" ) )
+    if( dbType.contains( "Oracle" ) ) //$NON-NLS-1$
       return null;
 
     // return m_geometryFactory.createGeometryCollection( null );

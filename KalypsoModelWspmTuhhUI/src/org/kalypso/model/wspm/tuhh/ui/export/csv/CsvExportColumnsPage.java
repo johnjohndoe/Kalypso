@@ -74,8 +74,8 @@ public class CsvExportColumnsPage extends WizardPage
 {
   enum OUTPUT_TYPE
   {
-    point(Messages.getString("CsvExportColumnsPage_0")), //$NON-NLS-1$
-    profiles(Messages.getString("CsvExportColumnsPage_1")); //$NON-NLS-1$
+    point(Messages.getString( "CsvExportColumnsPage_0" )), //$NON-NLS-1$
+    profiles(Messages.getString( "CsvExportColumnsPage_1" )); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -110,8 +110,8 @@ public class CsvExportColumnsPage extends WizardPage
   {
     super( "csvColumns" ); //$NON-NLS-1$
 
-    setTitle( Messages.getString("CsvExportColumnsPage_2") ); //$NON-NLS-1$
-    setDescription( Messages.getString("CsvExportColumnsPage_3") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "CsvExportColumnsPage_2" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "CsvExportColumnsPage_3" ) ); //$NON-NLS-1$
 
     final PatternReplacementColumn[] defaultColumns = createDefaultColumns();
     m_columnsComposite = new ExportColumnsComposite( defaultColumns, profileSelection );
@@ -136,8 +136,8 @@ public class CsvExportColumnsPage extends WizardPage
   private PatternReplacementColumn[] createDefaultColumns( )
   {
     final Collection<PatternReplacementColumn> columns = new ArrayList<PatternReplacementColumn>();
-    columns.add( new PatternReplacementColumn( Messages.getString("CsvExportColumnsPage_5"), "<Station>" ) );  //$NON-NLS-1$//$NON-NLS-2$
-    columns.add( new PatternReplacementColumn( Messages.getString("CsvExportColumnsPage_6"), "<Name>" ) );  //$NON-NLS-1$//$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( Messages.getString( "CsvExportColumnsPage_5" ), "<Station>" ) ); //$NON-NLS-1$//$NON-NLS-2$
+    columns.add( new PatternReplacementColumn( Messages.getString( "CsvExportColumnsPage_6" ), "<Name>" ) ); //$NON-NLS-1$//$NON-NLS-2$
     return columns.toArray( new PatternReplacementColumn[columns.size()] );
   }
 
@@ -172,10 +172,14 @@ public class CsvExportColumnsPage extends WizardPage
 
       final String typeName = dialogSettings.get( SETTINGS_TYPE );
       if( typeName != null )
+      {
         m_type = OUTPUT_TYPE.valueOf( typeName );
+      }
 
       if( m_typeCombo != null )
+      {
         m_typeCombo.setSelection( new StructuredSelection( m_type ) );
+      }
 
       m_columnsComposite.applyDialogSettings( dialogSettings );
 
@@ -197,7 +201,7 @@ public class CsvExportColumnsPage extends WizardPage
   private Control createTypeControl( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( Messages.getString("CsvExportColumnsPage_7") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "CsvExportColumnsPage_7" ) ); //$NON-NLS-1$
 
     group.setLayout( new GridLayout() );
 

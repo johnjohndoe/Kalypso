@@ -90,9 +90,13 @@ public class WehrRule extends AbstractValidatorRule
     final int index3 = profil.indexOfPoint( deviders[0].getPoint() );
     final int index4 = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
     if( index1 < index3 )
+    {
       collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.1" ), String.format( "km %.4f", profil.getStation() ), index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
     if( index2 > index4 )
+    {
       collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.3" ), String.format( "km %.4f", profil.getStation() ), index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
   }
 
   private void validateBewuchs( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
@@ -133,21 +137,25 @@ public class WehrRule extends AbstractValidatorRule
     if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( building.getValue( cmp ) ) )
       return;
     if( deviders != null )
+    {
       for( final IProfilPointMarker devider : deviders )
       {
         final Object objValue = devider.getValue();
-        if( (objValue == null) || !(objValue instanceof Double) || (((Double) objValue).isNaN()) || ((Double) objValue == 0.0) )
+        if( objValue == null || !(objValue instanceof Double) || ((Double) objValue).isNaN() || (Double) objValue == 0.0 )
         {
           collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.7" ), String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( devider.getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
           break;
         }
       }
+    }
 
     for( final IComponent property : building.getObjectProperties() )
     {
       final Object prop = building.getValue( property );
       if( !(prop instanceof Double) )
+      {
         continue;
+      }
 
       if( ((Double) prop).isNaN() || (Double) prop == 0.0 )
       {
@@ -177,7 +185,9 @@ public class WehrRule extends AbstractValidatorRule
       final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
       final Double wk = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_TYP_WEHR, point );
       if( !h.isNaN() && !wk.isNaN() && wk < h )
+      {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.12" ), String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
+      }
     }
   }
 

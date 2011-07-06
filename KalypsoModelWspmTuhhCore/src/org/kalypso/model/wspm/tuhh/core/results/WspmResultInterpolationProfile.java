@@ -79,7 +79,7 @@ public class WspmResultInterpolationProfile
 
     final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile.getProfil(), nextProfile.getProfil(), onlyRiverChannel );
     final IProfil newProfile = interpolation.interpolate( m_interpolatedStation, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    final String name = String.format( Messages.getString("WspmResultInterpolationProfile_0"), m_previousStation, m_nextStation ); //$NON-NLS-1$
+    final String name = String.format( Messages.getString( "WspmResultInterpolationProfile_0" ), m_previousStation, m_nextStation ); //$NON-NLS-1$
     newProfile.setName( name );
 
     final IProfileFeature profileFeature = createProfileFeature();

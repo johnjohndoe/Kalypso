@@ -252,15 +252,21 @@ public class SobekExportInfo
 
     final String idPattern = m_settings.get( SETTINGS_ID_PATTERN );
     if( idPattern != null )
+    {
       m_idPattern = idPattern;
+    }
 
     final String namePattern = m_settings.get( SETTINGS_NAME_PATTERN );
     if( namePattern != null )
+    {
       m_namePattern = namePattern;
+    }
 
     final String idSuffix = m_settings.get( SETTINGS_BUILDINGS_SUFFIX );
     if( idSuffix != null )
+    {
       m_idSuffix = idSuffix;
+    }
 
     /* Invert flag for better default behavior (we want true, but default emtpy settings is false) */
     m_exportBuildings = !m_settings.getBoolean( SETTINGS_EXPORT_BUILDINGS );
@@ -282,7 +288,9 @@ public class SobekExportInfo
 
     final String savedRoughness = m_settings.get( SETTING_ROUGHNESS );
     if( !StringUtils.isBlank( savedRoughness ) )
+    {
       m_roughnessId = savedRoughness;
+    }
 
     final String[] savedZones = m_settings.getArray( SETTING_ROUGHNESS_ZONES );
     if( savedZones != null )
@@ -292,7 +300,9 @@ public class SobekExportInfo
       {
         final IFlowZoneType zone = findZone( className );
         if( zone != null )
+        {
           zoneTypes.add( zone );
+        }
       }
       m_roughnessZoneTypes = zoneTypes.toArray( new IFlowZoneType[zoneTypes.size()] );
     }
@@ -322,7 +332,9 @@ public class SobekExportInfo
 
     final String[] zoneNames = new String[m_roughnessZoneTypes.length];
     for( int i = 0; i < zoneNames.length; i++ )
+    {
       zoneNames[i] = m_roughnessZoneTypes[i].getClass().getName();
+    }
     m_settings.put( SETTING_ROUGHNESS_ZONES, zoneNames );
   }
 
@@ -339,7 +351,7 @@ public class SobekExportInfo
       return new MessageProvider( Messages.getString( "SobekProfileExportFileChooserPage_10" ), IMessageProvider.WARNING ); //$NON-NLS-1$
 
     if( StringUtils.isBlank( m_namePattern ) )
-      return new MessageProvider( Messages.getString("SobekExportInfo.0"), IMessageProvider.WARNING ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString( "SobekExportInfo.0" ), IMessageProvider.WARNING ); //$NON-NLS-1$
 
     if( StringUtils.isBlank( m_idSuffix ) )
       return new MessageProvider( Messages.getString( "SobekProfileExportFileChooserPage.5" ), IMessageProvider.WARNING ); //$NON-NLS-1$
@@ -386,7 +398,9 @@ public class SobekExportInfo
   private void updateMessage( )
   {
     if( m_page != null )
+    {
       m_page.updateMessage();
+    }
   }
 
   public void setTargetDir( final File targetDir )

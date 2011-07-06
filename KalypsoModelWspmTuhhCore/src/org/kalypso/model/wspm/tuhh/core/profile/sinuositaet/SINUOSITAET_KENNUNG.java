@@ -47,10 +47,10 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
  */
 public enum SINUOSITAET_KENNUNG
 {
-  eKeineBeruecksichtigung(1, Messages.getString("SINUOSITAET_KENNUNG_0")), //$NON-NLS-1$
-  eNurCmFaktor(2, Messages.getString("SINUOSITAET_KENNUNG_1")), //$NON-NLS-1$
-  eNurFliesswegVerlaengerung(3, Messages.getString("SINUOSITAET_KENNUNG_2")), //$NON-NLS-1$
-  eBeides(4, Messages.getString("SINUOSITAET_KENNUNG_3")); //$NON-NLS-1$
+  eKeineBeruecksichtigung(1, Messages.getString( "SINUOSITAET_KENNUNG_0" )), //$NON-NLS-1$
+  eNurCmFaktor(2, Messages.getString( "SINUOSITAET_KENNUNG_1" )), //$NON-NLS-1$
+  eNurFliesswegVerlaengerung(3, Messages.getString( "SINUOSITAET_KENNUNG_2" )), //$NON-NLS-1$
+  eBeides(4, Messages.getString( "SINUOSITAET_KENNUNG_3" )); //$NON-NLS-1$
 
   private final int m_value;
 
@@ -76,7 +76,7 @@ public enum SINUOSITAET_KENNUNG
     return m_value;
   }
 
-  public final static SINUOSITAET_KENNUNG fromInteger( final int i )
+  public static final SINUOSITAET_KENNUNG fromInteger( final int i )
   {
     for( final SINUOSITAET_KENNUNG sk : values() )
     {

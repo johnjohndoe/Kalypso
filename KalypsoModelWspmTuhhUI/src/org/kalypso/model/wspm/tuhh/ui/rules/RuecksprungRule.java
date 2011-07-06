@@ -77,11 +77,17 @@ public class RuecksprungRule extends AbstractValidatorRule
       final Double y1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i - 1] );
       final Double y2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
       if( x1.isNaN() || x2.isNaN() || y1.isNaN() || y2.isNaN() )
+      {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule.0", cB.getName() ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE ); //$NON-NLS-1$ //$NON-NLS-2$
-      else if(  x1 - x2  > deltaX )
+      }
+      else if( x1 - x2 > deltaX )
+      {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule.2", x2 ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE ); //$NON-NLS-1$ //$NON-NLS-2$
+      }
       else if( Math.abs( x2 - x1 ) < deltaX && Math.abs( y2 - y1 ) > deltaY )
+      {
         collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule.4", x2 ), String.format( "km %.4f", profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE ); //$NON-NLS-1$ //$NON-NLS-2$
+      }
     }
   }
 }

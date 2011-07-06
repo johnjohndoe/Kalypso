@@ -60,7 +60,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -121,8 +121,10 @@ public class BridgePanel extends AbstractProfilView
         @Override
         public void focusGained( final FocusEvent e )
         {
-          if( (m_text != null) && !m_text.isDisposed() )
+          if( m_text != null && !m_text.isDisposed() )
+          {
             m_text.selectAll();
+          }
         }
 
         /**
@@ -138,7 +140,7 @@ public class BridgePanel extends AbstractProfilView
             if( building == null )
               return;
 
-            final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
+            final Double val = Buildings.getDoubleValueFor( m_property.getId(), building );
             if( val == value )
               return;
 
@@ -160,11 +162,13 @@ public class BridgePanel extends AbstractProfilView
       if( building == null )
         return;
 
-      final Double val = BuildingUtil.getDoubleValueFor( m_property.getId(), building );
+      final Double val = Buildings.getDoubleValueFor( m_property.getId(), building );
       final String textText = String.format( "%.3f", val ); //$NON-NLS-1$
       m_text.setText( textText );
       if( m_text.isFocusControl() )
+      {
         m_text.selectAll();
+      }
     }
 
     public void dispose( )
@@ -193,7 +197,9 @@ public class BridgePanel extends AbstractProfilView
   protected void createPropertyPanel( )
   {
     for( final PropertyLine line : m_lines )
+    {
       line.dispose();
+    }
 
     m_lines = new ArrayList<PropertyLine>( 8 );
 
@@ -202,7 +208,9 @@ public class BridgePanel extends AbstractProfilView
       return;
 
     for( final IComponent property : building.getObjectProperties() )
+    {
       m_lines.add( new PropertyLine( m_toolkit, m_propPanel, property ) );
+    }
 
     m_propPanel.layout();
   }
@@ -215,7 +223,9 @@ public class BridgePanel extends AbstractProfilView
       return;
 
     for( final PropertyLine line : m_lines )
+    {
       line.updateValue();
+    }
   }
 
   @Override
@@ -225,6 +235,7 @@ public class BridgePanel extends AbstractProfilView
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )
+      {
         control.getDisplay().asyncExec( new Runnable()
         {
           @Override
@@ -234,6 +245,7 @@ public class BridgePanel extends AbstractProfilView
             updateControls();
           }
         } );
+      }
     }
   }
 }

@@ -47,8 +47,8 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
  */
 public enum SINUOSITAET_GERINNE_ART
 {
-  eKompakt(1, Messages.getString("SINUOSITAET_GERINNE_ART_0")), //$NON-NLS-1$
-  eGegliedert(2, Messages.getString("SINUOSITAET_GERINNE_ART_1")); //$NON-NLS-1$
+  eKompakt(1, Messages.getString( "SINUOSITAET_GERINNE_ART_0" )), //$NON-NLS-1$
+  eGegliedert(2, Messages.getString( "SINUOSITAET_GERINNE_ART_1" )); //$NON-NLS-1$
 
   /**
    * @see java.lang.Enum#toString()
@@ -60,9 +60,10 @@ public enum SINUOSITAET_GERINNE_ART
   }
 
   private final int m_value;
+
   private final String m_label;
 
-  SINUOSITAET_GERINNE_ART( final int value, String label )
+  SINUOSITAET_GERINNE_ART( final int value, final String label )
   {
     m_value = value;
     m_label = label;
@@ -72,8 +73,8 @@ public enum SINUOSITAET_GERINNE_ART
   {
     return m_value;
   }
- 
-  public final static SINUOSITAET_GERINNE_ART fromInteger( final int i )
+
+  public static final SINUOSITAET_GERINNE_ART fromInteger( final int i )
   {
     for( final SINUOSITAET_GERINNE_ART sg : values() )
     {

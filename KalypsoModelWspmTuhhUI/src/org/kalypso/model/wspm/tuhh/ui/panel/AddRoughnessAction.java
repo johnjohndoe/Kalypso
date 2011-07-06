@@ -59,7 +59,7 @@ public class AddRoughnessAction extends Action
   public AddRoughnessAction( final RauheitenPanel panel )
   {
     m_panel = panel;
-    setToolTipText( Messages.getString("AddRoughnessAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "AddRoughnessAction_0" ) ); //$NON-NLS-1$
     final ImageDescriptor image = KalypsoModelWspmTuhhUIPlugin.getImageDescriptor( KalypsoModelWspmTuhhUIImages.ROUGHNESS_PANEL_ADD.getImagePath() );
     setImageDescriptor( image );
   }
@@ -68,11 +68,15 @@ public class AddRoughnessAction extends Action
   {
     final IMenuCreator oldCreator = getMenuCreator();
     if( oldCreator != null )
+    {
       oldCreator.dispose();
+    }
 
     final DropDownMenuCreator menuCreator = new DropDownMenuCreator();
     for( final IComponent component : addableComponents )
+    {
       menuCreator.addAction( new AddPropertyAction( m_panel, component ) );
+    }
 
     setMenuCreator( menuCreator );
 

@@ -53,14 +53,17 @@ public class PrfSink implements IProfilSink
 {
   // depends on Tuhh 1D calculation, ks or kst
   private final String m_defaultRoughnessType;
-  public PrfSink()
+
+  public PrfSink( )
   {
     m_defaultRoughnessType = ""; //$NON-NLS-1$
   }
-  public PrfSink(final String defaultRoughnessType )
+
+  public PrfSink( final String defaultRoughnessType )
   {
     m_defaultRoughnessType = defaultRoughnessType;
   }
+
   /**
    * FIXME: do not use IProfile[] profile, but only ever the first gets written....
    * 
@@ -75,7 +78,7 @@ public class PrfSink implements IProfilSink
 
     final IProfil profil = profiles[0];
 
-    final PrfWriter prfWriter = new PrfWriter( profil, new IWaterlevel[0],m_defaultRoughnessType );
+    final PrfWriter prfWriter = new PrfWriter( profil, new IWaterlevel[0], m_defaultRoughnessType );
     prfWriter.write( writer );
 
     return true;

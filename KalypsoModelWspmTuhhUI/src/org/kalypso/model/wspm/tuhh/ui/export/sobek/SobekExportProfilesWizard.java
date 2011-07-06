@@ -93,7 +93,7 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
     final ISobekProfileExportOperation[] operations = m_profileFileChooserPage.getOperations( profiles );
     final Collection<IStatus> problems = new ArrayList<IStatus>( operations.length );
 
-    monitor.beginTask( Messages.getString("SobekExportProfilesWizard_0"), operations.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "SobekExportProfilesWizard_0" ), operations.length ); //$NON-NLS-1$
 
     for( final ISobekProfileExportOperation operation : operations )
     {
@@ -101,13 +101,15 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
 
       final IStatus execute = operation.execute( new SubProgressMonitor( monitor, 1 ) );
       if( !execute.isOK() )
+      {
         problems.add( execute );
+      }
     }
 
     final IStatus[] problemChildren = problems.toArray( new IStatus[problems.size()] );
     if( problemChildren.length > 0 )
     {
-      final String message = Messages.getString("SobekExportProfilesWizard_1"); //$NON-NLS-1$
+      final String message = Messages.getString( "SobekExportProfilesWizard_1" ); //$NON-NLS-1$
       final IStatus status = new MultiStatus( KalypsoModelWspmTuhhUIPlugin.getID(), 0, problemChildren, message, null );
       throw new CoreException( status );
     }

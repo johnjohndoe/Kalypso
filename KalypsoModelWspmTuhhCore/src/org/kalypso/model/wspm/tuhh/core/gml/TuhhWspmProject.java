@@ -116,12 +116,12 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
 
   public TuhhCalculation createCalculation( ) throws GMLSchemaException
   {
-    return (TuhhCalculation) FeatureHelper.addFeature( this, QNAME_PROP_CALC_MEMBER, TuhhCalculation.QNAME_TUHH_CALC, -1 );
+    return (TuhhCalculation) FeatureHelper.addFeature( this, QNAME_PROP_CALC_MEMBER, TuhhCalculation.QN_TUHH_CALC, -1 );
   }
 
   public TuhhCalculation createReibConstCalculation( ) throws GMLSchemaException
   {
-    return (TuhhCalculation) FeatureHelper.addFeature( this, QNAME_PROP_CALC_MEMBER, TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST, -1 );
+    return (TuhhCalculation) FeatureHelper.addFeature( this, QNAME_PROP_CALC_MEMBER, TuhhCalculation.QN_TUHH_CALC_REIB_CONST, -1 );
   }
 
   public TuhhCalculation[] getCalculations( )
@@ -134,9 +134,13 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
     {
       final Feature calcFeature;
       if( o instanceof Feature )
+      {
         calcFeature = (Feature) o;
+      }
       else
+      {
         calcFeature = workspace.getFeature( (String) o );
+      }
 
       calcs.add( (TuhhCalculation) calcFeature );
     }

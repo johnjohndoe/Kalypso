@@ -59,7 +59,7 @@ public class ChooseResultsWizard extends Wizard
 
   public ChooseResultsWizard( final ProfileSelection profileSelection )
   {
-    setWindowTitle( Messages.getString("ChooseResultsWizard_0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ChooseResultsWizard_0" ) ); //$NON-NLS-1$
     setHelpAvailable( false );
     setNeedsProgressMonitor( false );
     setForcePreviousAndNextButtons( false );

@@ -82,7 +82,7 @@ public class WaterlevelWriter
   private IDataBlock createDataBlock( final IWaterlevel waterlevel )
   {
     final String calcName = waterlevel.getLabel();
-    final String riverName = Messages.getString("WaterlevelWriter_0"); //$NON-NLS-1$
+    final String riverName = Messages.getString( "WaterlevelWriter_0" ); //$NON-NLS-1$
     final double discharge = waterlevel.getDischarge();
     // TODO: enforce 3 significant digits
 // final BigDecimal bigDischarge = new BigDecimal( discharge, new MathContext( 3 ) );
@@ -102,6 +102,8 @@ public class WaterlevelWriter
   {
     final Double[] intersections = WspmProfileHelper.calculateWspIntersections( m_profil, waterlevel );
     for( final Double intersection : intersections )
+    {
       creator.add( intersection, waterlevel );
+    }
   }
 }

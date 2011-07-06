@@ -50,7 +50,6 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
- *
  */
 public class InterpolationStationData extends AbstractModelObject
 {
@@ -138,6 +137,7 @@ public class InterpolationStationData extends AbstractModelObject
 
     return m_nextProfile.getBigStation().toString();
   }
+
   public BigDecimal getNewStation( )
   {
     return m_station;

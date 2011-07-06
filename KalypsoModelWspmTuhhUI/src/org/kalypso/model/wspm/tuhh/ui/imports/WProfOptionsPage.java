@@ -90,12 +90,12 @@ public class WProfOptionsPage extends WizardPage
 
     final Group markerGroup = new Group( panel, SWT.NONE );
     markerGroup.setLayout( new FillLayout() );
-    markerGroup.setText( Messages.getString("WProfOptionsPage_0") ); //$NON-NLS-1$
+    markerGroup.setText( Messages.getString( "WProfOptionsPage_0" ) ); //$NON-NLS-1$
     m_markerOptions.createControl( markerGroup );
 
     final Group creatorGroup = new Group( panel, SWT.NONE );
     creatorGroup.setLayout( new FillLayout() );
-    creatorGroup.setText( Messages.getString("WProfOptionsPage_1") ); //$NON-NLS-1$
+    creatorGroup.setText( Messages.getString( "WProfOptionsPage_1" ) ); //$NON-NLS-1$
     m_profileCreatorOptions.createControl( creatorGroup );
 
     setControl( panel );
@@ -105,8 +105,12 @@ public class WProfOptionsPage extends WizardPage
   {
     final IMessageProvider markerMessage = m_markerOptions.validate();
     if( markerMessage != null )
+    {
       setMessage( markerMessage.getMessage(), markerMessage.getMessageType() );
+    }
     else
+    {
       setMessage( null, IMessageProvider.NONE );
+    }
   }
 }

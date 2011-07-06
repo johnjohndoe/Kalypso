@@ -103,8 +103,8 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateContentProvider;
 import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateLabelProvider;
@@ -574,7 +574,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     for( final IKalypsoStyle style : styles )
     {
-      if( (style instanceof IKalypsoUserStyle) && ((IKalypsoUserStyle) style).getName().equals( name ) )
+      if( style instanceof IKalypsoUserStyle && ((IKalypsoUserStyle) style).getName().equals( name ) )
         return (IKalypsoUserStyle) style;
     }
 
@@ -991,7 +991,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     /* Show dialog to user and import tins afterwards */
     final ImportTinOperation operation = new ImportTinOperation( m_dataProvider, runoffEvent.getTins(), getMapPanel() );
     final GmlSourceChooserWizard wizard = new GmlSourceChooserWizard( provider, operation );
-    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), getClass().getName() );
+    final IDialogSettings dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), getClass().getName() );
     wizard.setDialogSettings( dialogSettings );
     wizard.setWindowTitle( windowTitle );
 

@@ -57,8 +57,8 @@ public class AddColumnAction extends Action
   {
     m_columnsComposite = columnsComposite;
 
-    setText( Messages.getString("AddColumnAction_0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("AddColumnAction_1") ); //$NON-NLS-1$
+    setText( Messages.getString( "AddColumnAction_0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "AddColumnAction_1" ) ); //$NON-NLS-1$
 
     final ImageDescriptor image = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.ADD_CSV_EXPORT_COLUMN );
     setImageDescriptor( image );

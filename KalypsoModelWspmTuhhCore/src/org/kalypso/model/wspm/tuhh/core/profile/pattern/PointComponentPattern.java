@@ -53,7 +53,7 @@ public class PointComponentPattern extends AbstractPatternInput<IProfilePatternD
 {
   public PointComponentPattern( )
   {
-    super( "Component", Messages.getString("PointComponentPattern_1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "Component", Messages.getString( "PointComponentPattern_1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
