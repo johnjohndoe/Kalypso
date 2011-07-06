@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.gaf;
 
+import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,5 +92,13 @@ public class AbstractCoefficientInfo<T extends Coefficient>
   public T getCoefficient( final String name )
   {
     return m_definitions.get( name );
+  }
+
+  @SuppressWarnings("unchecked")
+  public T[] getAllCoefficients( )
+  {
+    final Collection<T> values = m_definitions.values();
+
+    return values.toArray( (T[]) Array.newInstance( m_type, values.size() ) );
   }
 }

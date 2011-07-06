@@ -74,6 +74,8 @@ public class ImportGafWizard extends Wizard
 
   private final GafProfilesPage m_gafProfilesPage;
 
+  private final GafOptionsPage m_optionsPage;
+
   public ImportGafWizard( final State[] existingState, final ImportGafData data )
   {
     m_data = data;
@@ -84,11 +86,15 @@ public class ImportGafWizard extends Wizard
     m_data.init( settings );
 
     addPage( new ImportGafPage( "gaf", m_data ) ); //$NON-NLS-1$
+
+    m_optionsPage = new GafOptionsPage( "options", m_data ); //$NON-NLS-1$
+    addPage( m_optionsPage );
+
     m_gafProfilesPage = new GafProfilesPage( "profiles", m_data ); //$NON-NLS-1$
     addPage( m_gafProfilesPage );
-    // TODO: some options for gaf import: need to refaktor how parts are built
-    // addPage( new GafOptionsPage( "options", m_data ) ); //$NON-NLS-1$
+
     addPage( new ChooseWaterPage( "waterBody", m_data ) ); //$NON-NLS-1$
+
     addPage( new EditStatePage( "state", m_data.getState(), existingState, Mode.NEW ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
@@ -123,7 +129,7 @@ public class ImportGafWizard extends Wizard
   {
     final ImportGafOperation operation = new ImportGafOperation( m_data );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    new StatusDialog2( getShell(), result, getWindowTitle() );
+    new StatusDialog2( getShell(), result, getWindowTitle() ).open();
 
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
@@ -134,17 +140,19 @@ public class ImportGafWizard extends Wizard
 
   protected void handlePageChanged( final Object selectedPage )
   {
-    if( selectedPage == m_gafProfilesPage )
+    if( selectedPage == m_optionsPage )
     {
-      /* Prepare for exception */
-      m_data.setProfiles( null );
-
       final ReadGafOperation operation = new ReadGafOperation( m_data );
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
       if( !status.isOK() )
-        new StatusDialog2( getShell(), status, getWindowTitle() );
-      else
-        m_data.setProfiles( operation.getProfiles() );
+        new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+
+      m_optionsPage.updateControl();
+    }
+
+    if( selectedPage == m_gafProfilesPage )
+    {
+      m_data.createProfiles();
 
       m_gafProfilesPage.updateControl();
     }

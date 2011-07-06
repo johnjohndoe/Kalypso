@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
@@ -77,17 +78,14 @@ public class Gaf2Db implements IPdbOperation
 
   private final String m_dbType;
 
-  private final Coefficients m_coefficients;
-
   private final PDBNameGenerator m_sectionNameGenerator = new PDBNameGenerator();
 
-  public Gaf2Db( final String dbType, final WaterBody waterBody, final State state, final GafProfiles profiles, final Coefficients coefficients, final IProgressMonitor monitor )
+  public Gaf2Db( final String dbType, final WaterBody waterBody, final State state, final GafProfiles profiles, final IProgressMonitor monitor )
   {
     m_dbType = dbType;
     m_waterBody = waterBody;
     m_state = state;
     m_profiles = profiles;
-    m_coefficients = coefficients;
     m_monitor = monitor;
   }
 
@@ -212,11 +210,8 @@ public class Gaf2Db implements IPdbOperation
 
     point.setCrossSectionPart( csPart );
 
-    final String readCode = gafPoint.getCode();
-    final String realCode = m_profiles.translateCode( readCode );
-
-    final String readHyk = gafPoint.getHyk();
-    final String realHyk = m_profiles.translateHyk( readHyk );
+    final GafCode code = gafPoint.getCode();
+    final GafCode hyk = gafPoint.getHyk();
 
     /* Using pointID from gaf, but force it to be unique within each part */
     final String name = nameGenerator.createUniqueName( gafPoint.getPointId() );
@@ -227,17 +222,17 @@ public class Gaf2Db implements IPdbOperation
     point.setConsecutiveNum( index );
     point.setHeight( gafPoint.getHeight() );
     point.setWidth( gafPoint.getWidth() );
-    point.setHyk( realHyk );
-    point.setCode( realCode );
+    point.setHyk( hyk.getHyk() );
+    point.setCode( code.getCode() );
 
     point.setLocation( gafPoint.getPoint() );
 
-    final Roughness roughness = m_coefficients.getRoughnessOrUnknown( gafPoint.getRoughnessClass() );
+    final Roughness roughness = gafPoint.getRoughnessClass();
     point.setRoughness( roughness );
     point.setRoughnessKstValue( roughness.getKstValue() );
     point.setRoughnessKValue( roughness.getKValue() );
 
-    final Vegetation vegetation = m_coefficients.getVegetationOrUnknown( gafPoint.getVegetationClass() );
+    final Vegetation vegetation = gafPoint.getVegetationClass();
     point.setVegetation( vegetation );
     point.setVegetationAx( vegetation.getAx() );
     point.setVegetationAy( vegetation.getAy() );

@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
@@ -94,12 +95,12 @@ public class ImportGafAction extends Action
 
       final Wizard importWizard = new ImportGafWizard( states, data );
       importWizard.setWindowTitle( "Import GAF file" );
-      final WizardDialog dialog = new WizardDialog( shell, importWizard );
+      final WizardDialog dialog = new WizardDialog2( shell, importWizard );
       final int result = dialog.open();
       if( result == Window.OK )
         m_updateable.update();
     }
-    catch( final PdbConnectException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Error during GAF Import", e );

@@ -41,9 +41,11 @@
 package org.kalypso.model.wspm.pdb.gaf;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
@@ -54,10 +56,14 @@ import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafLine;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.opengis.referencing.FactoryException;
+
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Gernot Belger
@@ -83,11 +89,19 @@ public class ImportGafData extends AbstractModelObject
 
   private final IPdbConnection m_connection;
 
-  private GafProfiles m_profiles;
-
   private Coefficients m_coefficients;
 
   private PdbInfo m_info;
+
+  private GeometryFactory m_geometryFactory;
+
+  private GafLine[] m_lines;
+
+  private GafProfiles m_gafProfiles;
+
+  private IStatus m_readGafStatus;
+
+  private GafPointCheck m_pointChecker;
 
   public ImportGafData( final IPdbConnection connection )
   {
@@ -125,7 +139,7 @@ public class ImportGafData extends AbstractModelObject
     settings.put( PROPERTY_GAF_FILE, gafPath );
   }
 
-  public void initFromDb( ) throws PdbConnectException
+  public void initFromDb( ) throws PdbConnectException, IOException
   {
     Session session = null;
     try
@@ -141,6 +155,10 @@ public class ImportGafData extends AbstractModelObject
     {
       PdbUtils.closeSessionQuietly( session );
     }
+
+    final GafCodes gafCodes = new GafCodes();
+    final Coefficients coefficients = getCoefficients();
+    m_pointChecker = new GafPointCheck( gafCodes, coefficients );
   }
 
   public String getSrs( )
@@ -153,6 +171,9 @@ public class ImportGafData extends AbstractModelObject
     final String oldValue = m_srs;
 
     m_srs = srs;
+
+    final int targetSRID = m_info.getSRID();
+    m_geometryFactory = new GeometryFactory( new PrecisionModel(), targetSRID );
 
     firePropertyChange( PROPERTY_SRS, oldValue, m_srs );
   }
@@ -200,28 +221,9 @@ public class ImportGafData extends AbstractModelObject
     return m_state;
   }
 
-  public File getLogFile( )
-  {
-    final File gafFile = getGafFile();
-    if( gafFile == null )
-      return null;
-
-    return new File( gafFile.getAbsolutePath() + ".log" );
-  }
-
   public IPdbConnection getConnection( )
   {
     return m_connection;
-  }
-
-  public void setProfiles( final GafProfiles profiles )
-  {
-    m_profiles = profiles;
-  }
-
-  public GafProfiles getProfiles( )
-  {
-    return m_profiles;
   }
 
   public Coefficients getCoefficients( )
@@ -229,9 +231,69 @@ public class ImportGafData extends AbstractModelObject
     return m_coefficients;
   }
 
-  public JTSTransformer getTransformer( ) throws FactoryException
+  public JTSTransformer getTransformer( )
   {
-    final int sourceSRID = JTSAdapter.toSrid( m_srs );
-    return new JTSTransformer( sourceSRID, m_info.getSRID() );
+    try
+    {
+      final int sourceSRID = JTSAdapter.toSrid( m_srs );
+      return new JTSTransformer( sourceSRID, m_info.getSRID() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public void createProfiles( )
+  {
+    if( m_lines == null )
+    {
+      m_gafProfiles = null;
+      return;
+    }
+
+    m_gafProfiles = new GafProfiles( m_pointChecker, m_geometryFactory, getTransformer() );
+    m_gafProfiles.addLines( m_lines );
+  }
+
+  public GeometryFactory getGeometryFactory( )
+  {
+    return m_geometryFactory;
+  }
+
+  public void setLines( final GafLine[] lines )
+  {
+    m_lines = lines;
+    if( m_lines == null )
+      return;
+
+    m_pointChecker.cleanup();
+
+    for( final GafLine line : lines )
+    {
+      if( line.getStatus().isOK() )
+        m_pointChecker.check( line );
+    }
+  }
+
+  public GafPointCheck getPointChecker( )
+  {
+    return m_pointChecker;
+  }
+
+  public void setReadGafStatus( final IStatus readGafStatus )
+  {
+    m_readGafStatus = readGafStatus;
+  }
+
+  public IStatus getReadGafStatus( )
+  {
+    return m_readGafStatus;
+  }
+
+  public GafProfiles getGafProfiles( )
+  {
+    return m_gafProfiles;
   }
 }

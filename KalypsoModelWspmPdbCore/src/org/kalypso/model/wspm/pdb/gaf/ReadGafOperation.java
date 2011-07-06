@@ -49,15 +49,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafLogger;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafLine;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafReader;
-import org.kalypso.transformation.transformer.JTSTransformer;
-import org.opengis.referencing.FactoryException;
-
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * First stage of gaf reading: open log file, then delegate to next level.
@@ -68,8 +61,6 @@ public class ReadGafOperation implements ICoreRunnableWithProgress
 {
   private final ImportGafData m_data;
 
-  private GafProfiles m_profiles;
-
   public ReadGafOperation( final ImportGafData data )
   {
     m_data = data;
@@ -78,57 +69,28 @@ public class ReadGafOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    // Handle log first and separately in order to separate reading errors from log problems
-    GafLogger logger = null;
-
-    try
-    {
-      logger = new GafLogger( m_data.getLogFile() );
-
-      final File gafFile = m_data.getGafFile();
-
-      m_profiles = readGaf( gafFile, logger, monitor );
-
-      return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "Successfully read GAF file" );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Error while writing log file", e );
-    }
-    finally
-    {
-      if( logger != null )
-        logger.close();
-    }
-  }
-
-  private GafProfiles readGaf( final File gafFile, final GafLogger logger, final IProgressMonitor monitor ) throws CoreException
-  {
     GafReader gafReader = null;
     try
     {
-      final JTSTransformer transformer = m_data.getTransformer();
-      final GeometryFactory geometryFactory = new GeometryFactory( new PrecisionModel(), transformer.getTargetSRID() );
-      final GafCodes gafCodes = new GafCodes();
-      final Coefficients coefficients = m_data.getCoefficients();
+      /* Prepare for exception */
+      m_data.setLines( null );
 
-      gafReader = new GafReader( logger, gafCodes, coefficients, transformer, geometryFactory );
-      final GafProfiles profiles = gafReader.read( gafFile, monitor );
+      final File gafFile = m_data.getGafFile();
+
+      gafReader = new GafReader();
+      final IStatus status = gafReader.read( gafFile, monitor );
       gafReader.close();
-      return profiles;
+
+      final GafLine[] gafLines = gafReader.getLines();
+
+      m_data.setReadGafStatus( status );
+      m_data.setLines( gafLines );
+
+      return Status.OK_STATUS;
     }
     catch( final IOException e )
     {
       final String message = "Error while reading file";
-      logger.log( IStatus.ERROR, message, null, e );
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
-      throw new CoreException( status );
-    }
-    catch( final FactoryException e )
-    {
-      final String message = "Failed to initialize coordinate transformer";
-      logger.log( IStatus.ERROR, message, null, e );
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }
@@ -137,10 +99,5 @@ public class ReadGafOperation implements ICoreRunnableWithProgress
       if( gafReader != null )
         gafReader.closeQuietly();
     }
-  }
-
-  public GafProfiles getProfiles( )
-  {
-    return m_profiles;
   }
 }
