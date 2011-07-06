@@ -84,6 +84,7 @@ public class TuhhResultDataElement implements IWspLayerDataElement
     return m_resultNode.getLabel();
   }
 
+  @Override
   public String getId( )
   {
     if( m_resultNode == null )
