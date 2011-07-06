@@ -46,7 +46,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.BuildingUtil;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -57,7 +57,6 @@ import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
- *
  */
 class AddWeirDeviderAction extends Action
 {
@@ -65,7 +64,7 @@ class AddWeirDeviderAction extends Action
 
   private final IProfil m_profile;
 
-  public AddWeirDeviderAction(final IProfil profile, final IProfilPointMarker devider, final boolean canAdd  )
+  public AddWeirDeviderAction( final IProfil profile, final IProfilPointMarker devider, final boolean canAdd )
   {
     m_profile = profile;
     m_devider = devider;
@@ -74,7 +73,6 @@ class AddWeirDeviderAction extends Action
     setImageDescriptor( KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD );
     setEnabled( canAdd && devider != null );
   }
-
 
   /**
    * @see org.eclipse.jface.action.Action#run()
@@ -96,7 +94,7 @@ class AddWeirDeviderAction extends Action
       if( building == null )
         return;
 
-      final Object dblVal = (objVal instanceof Double) ? objVal : BuildingUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, building );
+      final Object dblVal = objVal instanceof Double ? objVal : Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, building );
       operation.addChange( new PointMarkerEdit( trenner, dblVal ) );
       operation.addChange( new ActiveObjectEdit( m_profile, point, null ) );
       new ProfilOperationJob( operation ).schedule();

@@ -209,9 +209,11 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     final int numPoints = profilePolygones.getNumPoints();
     final String[] objTypes = profilePolygones.getAllIDs();
     final String objTypesString = Arrays.toString( objTypes, ", " ); //$NON-NLS-1$
-    final String profileComment = comment + Messages.getString("AbstractProfileCreator_0") + objTypesString + Messages.getString("AbstractProfileCreator_1") + numPoints; //$NON-NLS-1$ //$NON-NLS-2$
+    final String profileComment = comment + Messages.getString( "AbstractProfileCreator_0" ) + objTypesString + Messages.getString( "AbstractProfileCreator_1" ) + numPoints; //$NON-NLS-1$ //$NON-NLS-2$
     if( m_createProfileComment )
+    {
       profile.setComment( profileComment );
+    }
 
     // FIXME:
     profile.setStation( station == null ? -999.999 : station.doubleValue() );

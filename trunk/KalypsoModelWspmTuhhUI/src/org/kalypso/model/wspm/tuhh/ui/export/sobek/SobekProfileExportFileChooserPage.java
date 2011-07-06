@@ -76,7 +76,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
 {
-  private static final String STR_SUFFIX_TOOLTIP = Messages.getString("SobekProfileExportFileChooserPage.1"); //$NON-NLS-1$
+  private static final String STR_SUFFIX_TOOLTIP = Messages.getString( "SobekProfileExportFileChooserPage.1" ); //$NON-NLS-1$
 
   private static final String STR_ZONE_LABEL = Messages.getString( "SobekProfileFileChooser_0" ); //$NON-NLS-1$
 
@@ -88,8 +88,8 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   {
     super( "sobekProfileExportFileChooserPage" ); //$NON-NLS-1$
 
-    setTitle( Messages.getString("SobekProfileExportFileChooserPage_5") ); //$NON-NLS-1$
-    setDescription( Messages.getString("SobekProfileExportFileChooserPage_6") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "SobekProfileExportFileChooserPage_5" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "SobekProfileExportFileChooserPage_6" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -99,7 +99,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   public void createControl( final Composite parent )
   {
     m_info = new SobekExportInfo( this, getDialogSettings() );
-    m_info.readSettings(  );
+    m_info.readSettings();
 
     final Composite comp = new Composite( parent, SWT.NONE );
     comp.setLayout( new GridLayout() );
@@ -189,7 +189,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
     final FileChooserGroup dirChooser = m_info.getDirChooser();
     dirChooser.setDialogSettings( getDialogSettings() );
 
-    dirChooser.setLabel( Messages.getString("SobekProfileExportFileChooserPage.2") ); //$NON-NLS-1$
+    dirChooser.setLabel( Messages.getString( "SobekProfileExportFileChooserPage.2" ) ); //$NON-NLS-1$
 
     dirChooser.createControlsInGrid( idPanel );
   }
@@ -197,8 +197,8 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   private void createNamePatternControl( final Composite parent )
   {
     final Label patternLabel = new Label( parent, SWT.NONE );
-    patternLabel.setText( Messages.getString("SobekProfileExportFileChooserPage.6") ); //$NON-NLS-1$
-    patternLabel.setToolTipText( Messages.getString("SobekProfileExportFileChooserPage.7") ); //$NON-NLS-1$
+    patternLabel.setText( Messages.getString( "SobekProfileExportFileChooserPage.6" ) ); //$NON-NLS-1$
+    patternLabel.setToolTipText( Messages.getString( "SobekProfileExportFileChooserPage.7" ) ); //$NON-NLS-1$
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -220,7 +220,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   {
     final Label patternLabel = new Label( parent, SWT.NONE );
     patternLabel.setText( Messages.getString( "SobekProfileExportFileChooserPage_9" ) ); //$NON-NLS-1$
-    patternLabel.setToolTipText( Messages.getString("SobekProfileExportFileChooserPage.3") ); //$NON-NLS-1$
+    patternLabel.setToolTipText( Messages.getString( "SobekProfileExportFileChooserPage.3" ) ); //$NON-NLS-1$
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -241,7 +241,7 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   private void createBuildingSuffixControl( final Composite parent )
   {
     final Label suffixLabel = new Label( parent, SWT.NONE );
-    suffixLabel.setText( Messages.getString("SobekProfileExportFileChooserPage.4") ); //$NON-NLS-1$
+    suffixLabel.setText( Messages.getString( "SobekProfileExportFileChooserPage.4" ) ); //$NON-NLS-1$
     suffixLabel.setToolTipText( STR_SUFFIX_TOOLTIP );
 
     final Text suffixText = new Text( parent, SWT.SINGLE | SWT.BORDER );
@@ -287,7 +287,6 @@ public class SobekProfileExportFileChooserPage extends ValidatingWizardPage
   public ISobekProfileExportOperation[] getOperations( final IProfileFeature[] profiles )
   {
     m_info.setProfiles( profiles );
-
 
     final Collection<ISobekProfileExportOperation> ops = new ArrayList<ISobekProfileExportOperation>();
 

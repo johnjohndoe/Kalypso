@@ -190,7 +190,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
     {
       params[i] = st.nextToken();
     }
-    if( !(params[0].equals( getClass().getName() )) )
+    if( !params[0].equals( getClass().getName() ) )
       throw new IllegalArgumentException();
 
     return params;

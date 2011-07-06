@@ -55,7 +55,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -165,13 +164,13 @@ public class ResultLengthSection
     Arrays.sort( reachProfileSegments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
     /* Breaklines */
-    final BreakLinesWriter breakLines = new BreakLinesWriter( reachProfileSegments, result, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, Double.valueOf( m_epsThinning ) );
+    final BreakLinesWriter breakLines = new BreakLinesWriter( reachProfileSegments, result, IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, Double.valueOf( m_epsThinning ) );
 
     final String dataFilename = m_gmlFilePattern.replaceAll( PATTERN_RUNOFF, runoffName );
 
     /* Create result file handlers */
     addResultFile( new ResultLSGmlFile( m_dataDir, dataFilename, lengthSectionWorkspace ) );
-    addResultFile( new ResultLSChartFile( m_outDir, runoffName, isDirectionUpstreams, dataFilename, title ) );
+    addResultFile( new ResultLSChartFile( m_outDir, runoffName, isDirectionUpstreams, dataFilename, title, m_calculation.getLinkedWaterLevelFixation() ) );
     addResultFile( new ResultLSTableFile( m_outDir, runoffName, dataFilename ) );
     addResultFile( new ResultLSBreaklinesFile( m_dataDir, runoffName, breakLines ) );
     addResultFile( new ResultLSTinFile( m_dataDir, runoffName, breakLines ) );

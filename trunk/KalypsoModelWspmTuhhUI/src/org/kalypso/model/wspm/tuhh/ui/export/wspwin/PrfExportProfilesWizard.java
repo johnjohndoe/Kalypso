@@ -79,9 +79,9 @@ public class PrfExportProfilesWizard extends ExportProfilesWizard
 
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
     m_profileFileChooserPage = new ExportPrfFileChooserPage( dirDelegate );
-    m_profileFileChooserPage.setTitle( Messages.getString("PrfExportProfilesWizard_0") ); //$NON-NLS-1$
-    m_profileFileChooserPage.setDescription( Messages.getString("PrfExportProfilesWizard_1") ); //$NON-NLS-1$
-    m_profileFileChooserPage.setFileGroupText( Messages.getString("PrfExportProfilesWizard_2") ); //$NON-NLS-1$
+    m_profileFileChooserPage.setTitle( Messages.getString( "PrfExportProfilesWizard_0" ) ); //$NON-NLS-1$
+    m_profileFileChooserPage.setDescription( Messages.getString( "PrfExportProfilesWizard_1" ) ); //$NON-NLS-1$
+    m_profileFileChooserPage.setFileGroupText( Messages.getString( "PrfExportProfilesWizard_2" ) ); //$NON-NLS-1$
     addPage( m_profileFileChooserPage );
 
     final IWspmResultNode results = WspmResultFactory.createResultNode( null, getProfileSelection().getContainer() );

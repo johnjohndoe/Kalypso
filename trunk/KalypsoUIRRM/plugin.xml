@@ -83,21 +83,6 @@
 
 	<extension point="org.eclipse.ui.menus">
    		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-			<command commandId="org.kalypso.ui.map.outline.command.RRMImportLanduse" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected"/>
-				</visibleWhen>
-			</command>
-			<command commandId="org.kalypso.ui.map.outline.command.RRMImportPedology" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.kalypso.ui.rrm.definition.onePedologyThemeSelected"/>
-				</visibleWhen>
-			</command>
-			<command commandId="org.kalypso.ui.map.outline.command.RRMImportGeology" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.kalypso.ui.rrm.definition.oneGeologyThemeSelected"/>
-				</visibleWhen>
-			</command>
 			<command commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" style="push">
 				<visibleWhen checkEnabled="false">
 					<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>

@@ -128,7 +128,6 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
 
     final String srs = profileFeature.getSrsName();
 
-
     final GM_Point lowPoint = WspmGeometryUtilities.createLocation( profil, minPoint, srs );
     m_shapePoint.addEntry( lowPoint, id, name );
   }

@@ -73,9 +73,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.swt.widgets.DisposeButtonImageListener;
@@ -253,7 +255,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_MOVE_UP ) )
     {
       final Button moveUpBtn = new Button( btnComposite, SWT.PUSH );
-      moveUpBtn.setImage( KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_up.gif" ).createImage() );//$NON-NLS-1$
+      moveUpBtn.setImage( AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_up.gif" ).createImage() );//$NON-NLS-1$
       DisposeButtonImageListener.hookToButton( moveUpBtn );
       moveUpBtn.addSelectionListener( new SelectionAdapter()
       {
@@ -271,7 +273,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) )
     {
       final Button moveDownBtn = new Button( btnComposite, SWT.PUSH );
-      moveDownBtn.setImage( KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_down.gif" ).createImage() );//$NON-NLS-1$
+      moveDownBtn.setImage( AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_down.gif" ).createImage() );//$NON-NLS-1$
       DisposeButtonImageListener.hookToButton( moveDownBtn );
       moveDownBtn.addSelectionListener( new SelectionAdapter()
       {
@@ -288,7 +290,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_SHOW_AND_MAXIMIZE ) )
     {
       m_btnMaximizeCalcUnit = new Button( btnComposite, SWT.PUSH );
-      m_btnMaximizeCalcUnit.setImage( KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/17_show_calculationunit.gif" ).createImage() );//$NON-NLS-1$
+      m_btnMaximizeCalcUnit.setImage( AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/17_show_calculationunit.gif" ).createImage() );//$NON-NLS-1$
       DisposeButtonImageListener.hookToButton( m_btnMaximizeCalcUnit );
       m_btnMaximizeCalcUnit.addSelectionListener( new SelectionAdapter()
       {
@@ -306,7 +308,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_REMOVE ) )
     {
       m_btnDeleteCalcUnit = new Button( btnComposite, SWT.PUSH );
-      m_btnDeleteCalcUnit.setImage( KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/19_cut_calculationunit.gif" ).createImage() );//$NON-NLS-1$
+      m_btnDeleteCalcUnit.setImage( AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/19_cut_calculationunit.gif" ).createImage() );//$NON-NLS-1$
       DisposeButtonImageListener.hookToButton( m_btnDeleteCalcUnit );
       m_btnDeleteCalcUnit.addSelectionListener( new SelectionAdapter()
       {
@@ -334,7 +336,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_ADD ) )
     {
       m_btnCreateCalcUnit = new Button( btnComposite, SWT.PUSH );
-      m_btnCreateCalcUnit.setImage( KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).createImage() );//$NON-NLS-1$
+      m_btnCreateCalcUnit.setImage( AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).createImage() );//$NON-NLS-1$
       DisposeButtonImageListener.hookToButton( m_btnCreateCalcUnit );
       m_btnCreateCalcUnit.addSelectionListener( new SelectionAdapter()
       {
@@ -359,7 +361,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_EDIT ) )
     {
       m_btnEditCalcUnit = new Button( btnComposite, SWT.PUSH );
-      m_btnEditCalcUnit.setImage( KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/20_edit_calculationunit.gif" ).createImage() );//$NON-NLS-1$
+      m_btnEditCalcUnit.setImage( AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/20_edit_calculationunit.gif" ).createImage() );//$NON-NLS-1$
       DisposeButtonImageListener.hookToButton( m_btnEditCalcUnit );
       final CalculationUnitDataModel dataModel = m_dataModel;
       m_btnEditCalcUnit.addSelectionListener( new SelectionAdapter()
@@ -374,7 +376,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
           final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
           final CalculationUnitPropertyWizard calculationSubWizard = new CalculationUnitPropertyWizard( dataModel );
-          calculationSubWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationSubWizard" ) ); //$NON-NLS-1$
+          calculationSubWizard.setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationSubWizard" ) ); //$NON-NLS-1$
           final WizardDialog2 wizardDialog = new WizardDialog2( shell, calculationSubWizard );
           wizardDialog.setRememberSize( true );
           wizardDialog.open();
@@ -387,7 +389,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_CLICK_TO_CALCULATE ) )
     {
       m_btnRunCalculation = new Button( btnComposite, SWT.PUSH );
-      m_btnRunCalculation.setImage( KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/startCalculation.gif" ).createImage() );//$NON-NLS-1$
+      m_btnRunCalculation.setImage( AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/startCalculation.gif" ).createImage() );//$NON-NLS-1$
       DisposeButtonImageListener.hookToButton( m_btnRunCalculation );
       m_btnRunCalculation.addSelectionListener( new SelectionAdapter()
       {

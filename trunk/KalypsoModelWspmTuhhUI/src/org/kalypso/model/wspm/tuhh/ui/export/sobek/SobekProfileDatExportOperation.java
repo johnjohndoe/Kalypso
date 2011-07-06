@@ -105,10 +105,8 @@ public class SobekProfileDatExportOperation extends AbstractSobekFileExportOpera
     final IProfil profil = profileFeature.getProfil();
     final IRecord[] points = profil.getPoints();
     if( points.length < 2 )
-    {
       // TODO: log?
       return null;
-    }
 
     final SobekExportInfo info = getInfo();
     final String flowZone = info.getFlowZone();

@@ -81,12 +81,12 @@ public class WProfMarkerOptions
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout( 2, false ) );
     final Label label = new Label( panel, SWT.NONE );
-    label.setText( Messages.getString("WProfMarkerOptions_0") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "WProfMarkerOptions_0" ) ); //$NON-NLS-1$
     label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
-    createMarkerRow( panel, Messages.getString("WProfMarkerOptions_1"), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, false ); //$NON-NLS-1$
-    createMarkerRow( panel, Messages.getString("WProfMarkerOptions_2"), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, true ); //$NON-NLS-1$
-    createMarkerRow( panel, Messages.getString("WProfMarkerOptions_3"), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, true ); //$NON-NLS-1$
+    createMarkerRow( panel, Messages.getString( "WProfMarkerOptions_1" ), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, false ); //$NON-NLS-1$
+    createMarkerRow( panel, Messages.getString( "WProfMarkerOptions_2" ), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, true ); //$NON-NLS-1$
+    createMarkerRow( panel, Messages.getString( "WProfMarkerOptions_3" ), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, true ); //$NON-NLS-1$
 
     return panel;
   }
@@ -150,12 +150,14 @@ public class WProfMarkerOptions
       /* Set dialog settings, if parsing was successful */
       final IDialogSettings dialogSettings = m_page.getWizard().getDialogSettings();
       if( dialogSettings != null )
+      {
         dialogSettings.put( markerType, currentText );
+      }
 
       if( values.length == 0 )
       {
         if( !isOptional )
-          return new MessageProvider( String.format( Messages.getString("WProfMarkerOptions_4"), label ), IMessageProvider.ERROR ); //$NON-NLS-1$
+          return new MessageProvider( String.format( Messages.getString( "WProfMarkerOptions_4" ), label ), IMessageProvider.ERROR ); //$NON-NLS-1$
 
         return null;
       }
@@ -165,7 +167,7 @@ public class WProfMarkerOptions
     }
     catch( final NumberFormatException e )
     {
-      return new MessageProvider( String.format( Messages.getString("WProfMarkerOptions_5"), currentText, e.getLocalizedMessage() ), IMessageProvider.ERROR ); //$NON-NLS-1$
+      return new MessageProvider( String.format( Messages.getString( "WProfMarkerOptions_5" ), currentText, e.getLocalizedMessage() ), IMessageProvider.ERROR ); //$NON-NLS-1$
     }
   }
 
@@ -178,12 +180,16 @@ public class WProfMarkerOptions
       final int splitLenght = split.length;
       split = (String[]) ArrayUtils.removeElement( split, "" ); //$NON-NLS-1$
       if( splitLenght == split.length )
+      {
         break;
+      }
     }
 
     final int[] ids = new int[split.length];
     for( int i = 0; i < ids.length; i++ )
+    {
       ids[i] = Integer.parseInt( split[i].trim() );
+    }
 
     return ids;
   }

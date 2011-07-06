@@ -99,11 +99,13 @@ public class WspmResultFolderNode extends AbstractWspmResultNode implements ITuh
       }
 
       /* Collect all results with q interval results. */
-      FileFilterVisitor qIntervalVisitor = new FileFilterVisitor( new WildcardFileFilter( "qIntervallResults*.gml" ) ); //$NON-NLS-1$
+      final FileFilterVisitor qIntervalVisitor = new FileFilterVisitor( new WildcardFileFilter( "qIntervallResults*.gml" ) ); //$NON-NLS-1$
       m_folder.accept( qIntervalVisitor );
-      IFile[] qIntervalVisitorFiles = qIntervalVisitor.getFiles();
-      for( IFile qIntervalFile : qIntervalVisitorFiles )
+      final IFile[] qIntervalVisitorFiles = qIntervalVisitor.getFiles();
+      for( final IFile qIntervalFile : qIntervalVisitorFiles )
+      {
         result.add( new WspmResultQIntervalNode( this, qIntervalFile.getFullPath(), qIntervalFile.getName() ) );
+      }
     }
     catch( final CoreException e )
     {

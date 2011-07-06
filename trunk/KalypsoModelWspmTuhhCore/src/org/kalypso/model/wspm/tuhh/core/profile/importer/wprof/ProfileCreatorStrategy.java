@@ -58,7 +58,7 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
   @Override
   public String toString( )
   {
-    return Messages.getString("ProfileCreatorStrategy_0"); //$NON-NLS-1$
+    return Messages.getString( "ProfileCreatorStrategy_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -68,7 +68,7 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
 
     final IWProfPoint anyPoint = polygones.getAnyPoint();
     final WProfProfileType profileType = anyPoint.getProfileType();
-    final String profileLabel = profileType == null ? Messages.getString("ProfileCreatorStrategy_1") : profileType.getLabel(); //$NON-NLS-1$
+    final String profileLabel = profileType == null ? Messages.getString( "ProfileCreatorStrategy_1" ) : profileType.getLabel(); //$NON-NLS-1$
 
     final String[] allIDs = polygones.getAllIDs();
     for( final String id : allIDs )
@@ -76,13 +76,13 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
       if( id.startsWith( "K" ) ) //$NON-NLS-1$
       {
         if( polygones.hasPoints( "V01" ) ) //$NON-NLS-1$
-          return new KreisProfileCreator( profileLabel + Messages.getString("ProfileCreatorStrategy_2"), data, "V01", "V03", "V99" );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+          return new KreisProfileCreator( profileLabel + Messages.getString( "ProfileCreatorStrategy_2" ), data, "V01", "V03", "V99" ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
         if( polygones.hasPoints( "D01" ) ) //$NON-NLS-1$
-          return new KreisProfileCreator( profileLabel + Messages.getString("ProfileCreatorStrategy_3"), data, "D01", "D03", "V99" );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+          return new KreisProfileCreator( profileLabel + Messages.getString( "ProfileCreatorStrategy_3" ), data, "D01", "D03", "V99" ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
         if( polygones.hasPoints( "D91" ) ) //$NON-NLS-1$
-          return new KreisProfileCreator( profileLabel + Messages.getString("ProfileCreatorStrategy_4"), data, "D91", "D93", "V99" );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+          return new KreisProfileCreator( profileLabel + Messages.getString( "ProfileCreatorStrategy_4" ), data, "D91", "D93", "V99" ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       }
     }
 
@@ -90,16 +90,16 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
       return new BridgeProfileCreator( data, "V01", "V02", "V03", "V99", profileLabel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     if( polygones.hasPoints( "D01", "D02", "D03" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      return new BridgeProfileCreator( data, "D01", "D02", "D03", "V99", profileLabel + Messages.getString("ProfileCreatorStrategy_5") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      return new BridgeProfileCreator( data, "D01", "D02", "D03", "V99", profileLabel + Messages.getString( "ProfileCreatorStrategy_5" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     if( polygones.hasPoints( "D01", "D02", "D05" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      return new BridgeProfileCreator( data, "D01", "D02", "D05", "V99", profileLabel + Messages.getString("ProfileCreatorStrategy_6") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      return new BridgeProfileCreator( data, "D01", "D02", "D05", "V99", profileLabel + Messages.getString( "ProfileCreatorStrategy_6" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     if( polygones.hasPoints( "D91", "D92", "D93" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      return new BridgeProfileCreator( data, "D91", "D92", "D93", "V99", profileLabel + Messages.getString("ProfileCreatorStrategy_7") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      return new BridgeProfileCreator( data, "D91", "D92", "D93", "V99", profileLabel + Messages.getString( "ProfileCreatorStrategy_7" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     if( polygones.hasPoints( "D91", "D92", "D95" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      return new BridgeProfileCreator( data, "D91", "D92", "D95", "V99", profileLabel + Messages.getString("ProfileCreatorStrategy_8") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      return new BridgeProfileCreator( data, "D91", "D92", "D95", "V99", profileLabel + Messages.getString( "ProfileCreatorStrategy_8" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     /* Wehre */
 
@@ -114,7 +114,7 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
 
     // dieser Fall ist von den Attributen her gar kein Wehr...
     if( polygones.hasPoints( "V01", "V03" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-      return new WeirProfileCreator( profileLabel, data, "V01", "V03" );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+      return new WeirProfileCreator( profileLabel, data, "V01", "V03" ); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
     if( polygones.hasPoints( "21", "2314" ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return new WeirProfileCreator( profileLabel, data, "21", "2314" ); //$NON-NLS-1$//$NON-NLS-2$
@@ -125,14 +125,14 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
     // Im Zweifelsfall auch noch mal alles nur als Gelände versuchen
 
     if( polygones.hasPoints( "D01" ) ) //$NON-NLS-1$
-      return new GelaendeProfileCreator( profileLabel + Messages.getString("ProfileCreatorStrategy_12"), data, "D01" );  //$NON-NLS-1$//$NON-NLS-2$
+      return new GelaendeProfileCreator( profileLabel + Messages.getString( "ProfileCreatorStrategy_12" ), data, "D01" ); //$NON-NLS-1$//$NON-NLS-2$
 
     if( polygones.hasPoints( "D91" ) ) //$NON-NLS-1$
-      return new GelaendeProfileCreator( profileLabel + Messages.getString("ProfileCreatorStrategy_13"), data, "D91" );  //$NON-NLS-1$//$NON-NLS-2$
+      return new GelaendeProfileCreator( profileLabel + Messages.getString( "ProfileCreatorStrategy_13" ), data, "D91" ); //$NON-NLS-1$//$NON-NLS-2$
 
     // Rarer Fall, nur V01er (z.B. mit V08)
     if( polygones.hasPoints( "V01" ) ) //$NON-NLS-1$
-      return new GelaendeProfileCreator( profileLabel + " (V01)", data, "V01" );  //$NON-NLS-1$//$NON-NLS-2$
+      return new GelaendeProfileCreator( profileLabel + " (V01)", data, "V01" ); //$NON-NLS-1$//$NON-NLS-2$
 
     if( polygones.hasPoints( "2314" ) ) //$NON-NLS-1$
       return new GelaendeProfileCreator( profileLabel, data, "2314" ); //$NON-NLS-1$

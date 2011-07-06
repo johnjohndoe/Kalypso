@@ -82,9 +82,9 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
  */
 public class ExportConfigurationComposite
 {
-  private static final String _STR_COMBO_DEFAULT_ENTRY = Messages.getString("ExportConfigurationComposite_0"); //$NON-NLS-1$
+  private static final String STR_COMBO_DEFAULT_ENTRY = Messages.getString( "ExportConfigurationComposite_0" ); //$NON-NLS-1$
 
-  private static final Object _STR_COMBO_EMPTY_ENTRY = Messages.getString("ExportConfigurationComposite_1"); //$NON-NLS-1$
+  private static final Object STR_COMBO_EMPTY_ENTRY = Messages.getString( "ExportConfigurationComposite_1" ); //$NON-NLS-1$
 
   private static final String SETTINGS_LABEL = "label"; //$NON-NLS-1$
 
@@ -133,12 +133,12 @@ public class ExportConfigurationComposite
   {
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( 3, false ) );
-    group.setText( Messages.getString("ExportConfigurationComposite_3") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "ExportConfigurationComposite_3" ) ); //$NON-NLS-1$
 
     final Text saveConfigNameField = new Text( group, SWT.SINGLE | SWT.BORDER );
     m_saveConfigNameField = saveConfigNameField;
     saveConfigNameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    saveConfigNameField.setMessage( Messages.getString("ExportConfigurationComposite_4") ); //$NON-NLS-1$
+    saveConfigNameField.setMessage( Messages.getString( "ExportConfigurationComposite_4" ) ); //$NON-NLS-1$
     saveConfigNameField.addModifyListener( new ModifyListener()
     {
       @Override
@@ -168,7 +168,7 @@ public class ExportConfigurationComposite
     updateControl();
 
     final ImageDescriptor removeImage = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.REMOVE_CSV_CONFIGURATION );
-    final Action removeConfigAction = new Action( Messages.getString("ExportConfigurationComposite_5"), removeImage ) //$NON-NLS-1$
+    final Action removeConfigAction = new Action( Messages.getString( "ExportConfigurationComposite_5" ), removeImage ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#run()
@@ -179,7 +179,9 @@ public class ExportConfigurationComposite
         final IStructuredSelection selection = (IStructuredSelection) savedConfigsCombo.getSelection();
         final Object firstElement = selection.getFirstElement();
         if( firstElement instanceof IDialogSettings )
+        {
           removeConfiguration( getText(), (IDialogSettings) firstElement );
+        }
       }
     };
     ActionHyperlink.createHyperlink( null, group, SWT.PUSH, removeConfigAction );
@@ -201,12 +203,16 @@ public class ExportConfigurationComposite
 
           final String label = settings.get( SETTINGS_LABEL );
           if( label != null )
+          {
             saveConfigNameField.setText( label );
+          }
 
           applySettings( settings );
         }
         else
+        {
           removeConfigAction.setEnabled( false );
+        }
       }
     } );
 
@@ -228,7 +234,7 @@ public class ExportConfigurationComposite
     final Shell shell = m_csvExportColumnsPage.getShell();
 
     final String configLabel = configuration.get( SETTINGS_LABEL );
-    final String message = String.format( Messages.getString("ExportConfigurationComposite_6"), configLabel ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "ExportConfigurationComposite_6" ), configLabel ); //$NON-NLS-1$
     if( !MessageDialog.openConfirm( shell, title, message ) )
       return;
 
@@ -245,11 +251,11 @@ public class ExportConfigurationComposite
   private Object[] getInput( )
   {
     if( m_configurations.size() == 0 )
-      return new Object[] { _STR_COMBO_EMPTY_ENTRY };
+      return new Object[] { STR_COMBO_EMPTY_ENTRY };
 
     final IDialogSettings[] configurations = m_configurations.values().toArray( new IDialogSettings[m_configurations.size()] );
     final Object[] input = new Object[m_configurations.size() + 1];
-    input[0] = _STR_COMBO_DEFAULT_ENTRY;
+    input[0] = STR_COMBO_DEFAULT_ENTRY;
     System.arraycopy( configurations, 0, input, 1, configurations.length );
     return input;
   }

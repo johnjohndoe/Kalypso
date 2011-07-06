@@ -75,7 +75,9 @@ public abstract class AbstractSobekStructExportOperation extends AbstractSobekFi
       final String structId = id + countSuffix;
 
       if( writeBuilding( structId, profil, profileName, profileObject ) )
+      {
         reallyExportedBuildings++;
+      }
     }
   }
 

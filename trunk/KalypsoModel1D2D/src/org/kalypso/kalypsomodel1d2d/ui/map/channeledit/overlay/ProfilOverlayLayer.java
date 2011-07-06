@@ -104,8 +104,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
     getLineStyle().setColor( rgb );
     getPointStyle().setInlineColor( COLOR_BLANK );
     getPointStyle().getStroke().setColor( COLOR_LINE );
-    getLineStyle_hover().setColor( COLOR_LINE );
-    getLineStyle_hover().setAlpha( getLineStyle_hover().getAlpha() * 4 );
+    getLineStyleHover().setColor( COLOR_LINE );
+    getLineStyleHover().setAlpha( getLineStyleHover().getAlpha() * 4 );
 
   }
 
@@ -134,10 +134,10 @@ public class ProfilOverlayLayer extends PointsLineLayer
      * set LineStyles
      */
     final PolylineFigure snapped = new PolylineFigure();
-    final ILineStyle ls = getLineStyle_active();
+    final ILineStyle ls = getLineStyleActive();
     snapped.setStyle( ls );
     final PolylineFigure lineFigure_move = new PolylineFigure();
-    lineFigure_move.setStyle( getLineStyle_hover() );
+    lineFigure_move.setStyle( getLineStyleHover() );
 
     /**
      * snap Point

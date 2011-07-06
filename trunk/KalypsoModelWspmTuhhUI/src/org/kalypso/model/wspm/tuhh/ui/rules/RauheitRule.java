@@ -65,7 +65,7 @@ public class RauheitRule extends AbstractValidatorRule
   @Override
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( profil == null || istDurchlass( profil.getProfileObjects( IProfileBuilding.class ) ) )
+    if( profil == null || isDurchlass( profil.getProfileObjects( IProfileBuilding.class ) ) )
       return;
 
     final String stationId = String.format( "km %.4f", profil.getStation() );//$NON-NLS-1$
@@ -113,12 +113,13 @@ public class RauheitRule extends AbstractValidatorRule
     }
   }
 
-  private final boolean istDurchlass( final IProfileObject[] objects )
+  private boolean isDurchlass( final IProfileObject[] objects )
   {
     if( objects == null || objects.length < 1 || objects[0] == null )
       return false;
 
     final String building = objects[0].getId();
-    return (building.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ));
+    return building.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS )
+        || building.equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ );
   }
 }

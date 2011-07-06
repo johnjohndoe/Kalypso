@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
 /**
  * @author Gernot Belger
- *
  */
 public interface IValueWithFormat<T>
 {

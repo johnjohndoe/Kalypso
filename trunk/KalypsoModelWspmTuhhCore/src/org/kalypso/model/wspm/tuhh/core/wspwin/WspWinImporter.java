@@ -78,8 +78,8 @@ import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.START_KONDITION_KIND;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.START_KONDITION_KIND;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -107,7 +107,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author thuel2
  */
-public class WspWinImporter
+public final class WspWinImporter
 {
   public static final String FILE_PROBEZ = "probez.txt"; //$NON-NLS-1$
 
@@ -115,7 +115,6 @@ public class WspWinImporter
 
   private WspWinImporter( )
   {
-    // will not be instantiated
   }
 
   /**
@@ -164,7 +163,9 @@ public class WspWinImporter
       final String oldProjectDescription = wspmProject.getDescription();
       final StringBuffer modelDescription = new StringBuffer( oldProjectDescription == null ? "" : oldProjectDescription ); //$NON-NLS-1$
       if( modelDescription.length() != 0 )
+      {
         modelDescription.append( "\n\n" ); //$NON-NLS-1$
+      }
 
       final String description = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.10", wspwinDirectory.getAbsolutePath(), DATE_FORMATTER.format( new Date( System.currentTimeMillis() ) ) ); //$NON-NLS-1$
       modelDescription.append( description );
@@ -484,7 +485,9 @@ public class WspWinImporter
     try
     {
       if( !isNotTuhhProject )
+      {
         importCalculations( tuhhProject, zustandBean, log, reach, profDir, baseName, readRunOffEvents );
+      }
     }
     catch( final Exception e )
     {
@@ -550,9 +553,13 @@ public class WspWinImporter
 
         final TuhhCalculation.WSP_ITERATION_TYPE iterationType;
         if( contentBean.isSimpleBerechnungWSPInt() )
+        {
           iterationType = TuhhCalculation.WSP_ITERATION_TYPE.SIMPLE;
+        }
         else
+        {
           iterationType = TuhhCalculation.WSP_ITERATION_TYPE.EXACT;
+        }
 
         final TuhhCalculation.VERZOEGERUNSVERLUST_TYPE verzType;
         switch( contentBean.getVerzoegerungsVerlust() )
@@ -571,9 +578,13 @@ public class WspWinImporter
 
         final TuhhCalculation.REIBUNGSVERLUST_TYPE reibType;
         if( contentBean.isReibungsverlustNachTrapezformel() )
+        {
           reibType = TuhhCalculation.REIBUNGSVERLUST_TYPE.TRAPEZ_FORMULA;
+        }
         else
+        {
           reibType = TuhhCalculation.REIBUNGSVERLUST_TYPE.GEOMETRIC_FORMULA;
+        }
 
         final boolean useExtremeRougness = false; // as WSPWIN did not know this option, set to false
 

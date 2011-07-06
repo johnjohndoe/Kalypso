@@ -81,8 +81,8 @@ public class SimplifyProfilePage extends WizardPage
   {
     super( pageName );
 
-    setTitle( Messages.getString("SimplifyProfilePage_2") ); //$NON-NLS-1$
-    setDescription( Messages.getString("SimplifyProfilePage_3") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "SimplifyProfilePage_2" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "SimplifyProfilePage_3" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -106,8 +106,8 @@ public class SimplifyProfilePage extends WizardPage
   {
     final Button checkbox = new Button( parent, SWT.CHECK );
     checkbox.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false, 2, 1 ) );
-    checkbox.setText( Messages.getString("SimplifyProfilePage_4") ); //$NON-NLS-1$
-    checkbox.setToolTipText( Messages.getString("SimplifyProfilePage_5") ); //$NON-NLS-1$
+    checkbox.setText( Messages.getString( "SimplifyProfilePage_4" ) ); //$NON-NLS-1$
+    checkbox.setToolTipText( Messages.getString( "SimplifyProfilePage_5" ) ); //$NON-NLS-1$
     checkbox.setSelection( m_isKeepBuildingPoints );
 
     checkbox.addSelectionListener( new SelectionAdapter()
@@ -136,7 +136,7 @@ public class SimplifyProfilePage extends WizardPage
   {
     final Label label = new Label( group, SWT.NONE );
     label.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    label.setText( Messages.getString("SimplifyProfilePage_6") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "SimplifyProfilePage_6" ) ); //$NON-NLS-1$
 
     final Spinner spinner = new Spinner( group, SWT.BORDER | SWT.TRAIL );
     final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -182,7 +182,9 @@ public class SimplifyProfilePage extends WizardPage
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
+    {
       dialogSettings.put( SETTINGS_KEEP_BUILDING_PONITS, keepBuildingPoints );
+    }
   }
 
   protected void handleDistanceChanged( final double distance )
@@ -191,7 +193,9 @@ public class SimplifyProfilePage extends WizardPage
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
+    {
       dialogSettings.put( SETTINGS_DISTANCE, distance );
+    }
   }
 
   public double getDistance( )

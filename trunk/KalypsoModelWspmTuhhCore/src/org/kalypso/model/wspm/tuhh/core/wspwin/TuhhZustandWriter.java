@@ -49,12 +49,12 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
@@ -82,7 +82,7 @@ public class TuhhZustandWriter
     m_segments = m_reach.getReachProfileSegments();
 
     final TuhhSegmentStationComparator stationComparator = new TuhhSegmentStationComparator( stationRange.getDirection() );
-    final FLIESSGESETZ fliessgesetz = calculation.getFliessgesetz();
+    final org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.FLIESSGESETZ fliessgesetz = calculation.getFliessgesetz();
     m_roughnessType = getRoughnessForFG( fliessgesetz );
 
     Arrays.sort( m_segments, stationComparator );
@@ -100,7 +100,9 @@ public class TuhhZustandWriter
 
       int fileCount = 0;
       for( final TuhhReachProfileSegment segment : m_segments )
+      {
         writeProfile( zustWriter, segment, profDir, fileCount++ );
+      }
 
       if( fileCount == 0 )
       {
@@ -152,14 +154,14 @@ public class TuhhZustandWriter
     prfWriter.close();
   }
 
-  private final static String getRoughnessForFG( final FLIESSGESETZ fg )
+  private static String getRoughnessForFG( final FLIESSGESETZ fg )
   {
     if( FLIESSGESETZ.DARCY_WEISBACH_MIT_FORMEINFLUSS.equals( fg ) )
-      return (IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS);
+      return IWspmConstants.POINT_PROPERTY_RAUHEIT_KS;
     else if( FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS.equals( fg ) )
-      return (IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS);
+      return IWspmConstants.POINT_PROPERTY_RAUHEIT_KS;
     else if( FLIESSGESETZ.MANNING_STRICKLER.equals( fg ) )
-      return (IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST);
+      return IWspmConstants.POINT_PROPERTY_RAUHEIT_KST;
     else
       return ""; //$NON-NLS-1$
   }

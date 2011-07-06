@@ -74,7 +74,7 @@ public final class PlotterExportWizardCallback extends PrfExportWizardCallback
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("PlotterExportWizardCallback_0"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "PlotterExportWizardCallback_0" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

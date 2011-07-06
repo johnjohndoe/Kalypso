@@ -85,7 +85,6 @@ final class SimplifyProfileManipulator implements IProfileManipulator
     return buildingPoints.toArray( new IRecord[buildingPoints.size()] );
   }
 
-
   private IRecord[] getBuildingPoints( final IProfil profile, final String buildingComponent )
   {
     if( m_keepBuildingPoints )
@@ -110,7 +109,9 @@ final class SimplifyProfileManipulator implements IProfileManipulator
     {
       final Object value = point.getValue( componentIndex );
       if( value instanceof Number )
+      {
         allPoints.add( point );
+      }
     }
 
     return allPoints.toArray( new IRecord[allPoints.size()] );

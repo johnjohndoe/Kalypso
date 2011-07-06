@@ -139,10 +139,14 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
 
       final Formatter formatter = getFormatter();
       if( profileObject instanceof BuildingBruecke )
+      {
         writeBridge( formatter, buildingId, profileName, points, profil );
-      // TODO: support other building types (tube, ...)
+        // TODO: support other building types (tube, ...)
+      }
       else
+      {
         reallyExportedBuildings--;
+      }
     }
   }
 

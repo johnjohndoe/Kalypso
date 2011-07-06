@@ -131,13 +131,21 @@ public class WspmResultLengthSectionColumn implements Formattable
   public void formatTo( final Formatter formatter, final int flags, final int width, final int precision )
   {
     if( m_observationName.length() < width )
+    {
       formatter.format( m_observationName );
+    }
     else
+    {
       formatter.format( m_observationName.substring( 0, width ) );
+    }
 
     if( m_componentLabel.length() < precision )
+    {
       formatter.format( m_componentLabel );
+    }
     else
+    {
       formatter.format( m_componentLabel.substring( 0, precision ) );
+    }
   }
 }

@@ -5,7 +5,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.grid.RichCoverageCollection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -56,7 +56,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
     ProfileUiUtils.addDefaultMarkers( profile, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
 
     final WizardAddProfileFromDEM wizard = new WizardAddProfileFromDEM( profile );
-    wizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() ) );
+    wizard.setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() ) );
     final WizardDialog2 dialog = new WizardDialog2( PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard );
     dialog.setRememberSize( true );
     if( dialog.open() != Window.OK )
@@ -95,7 +95,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
   @Override
   public String getLabel( )
   {
-    return Messages.getString("CreateNewProfileJob.2"); //$NON-NLS-1$
+    return Messages.getString( "CreateNewProfileJob.2" ); //$NON-NLS-1$
   }
 
   /**

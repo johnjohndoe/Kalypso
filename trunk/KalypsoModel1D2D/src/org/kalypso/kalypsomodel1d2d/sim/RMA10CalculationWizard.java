@@ -45,6 +45,7 @@ import java.io.File;
 import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -60,7 +61,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Button;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
@@ -120,7 +121,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     setForcePreviousAndNextButtons( true );
 
     setWindowTitle( STRING_DLG_TITLE_RMA10S );
-    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "rma10simulation" ) ); //$NON-NLS-1$
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "rma10simulation" ) ); //$NON-NLS-1$
   }
 
   protected void handlePageChanged( final PageChangedEvent event )
@@ -385,7 +386,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
       final File simDir = m_unitFolder.getLocation().toFile();
       final File loggerFile = new File( simDir, SIMULATION_LOG_GML );
       GmlSerializer.serializeWorkspace( loggerFile, workspace, "UTF-8" ); //$NON-NLS-1$
-      m_unitFolder.refreshLocal( IFolder.DEPTH_ONE, new NullProgressMonitor() );
+      m_unitFolder.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
     }
     catch( final Throwable e )
     {

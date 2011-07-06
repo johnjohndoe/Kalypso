@@ -90,17 +90,17 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   private final IStructuredSelection m_selection;
 
   // widgets
-  ResourceTreeAndListGroup resourceGroup;
+  protected ResourceTreeAndListGroup m_resourceGroup;
 
-  private Combo destinationNameField;
+  private Combo m_destinationNameField;
 
-  private Button destinationBrowseButton;
+  private Button m_destinationBrowseButton;
 
-  protected Button overwriteExistingFilesCheckbox;
+  protected Button m_overwriteExistingFilesCheckbox;
 
-  protected Button selectAllButton;
+  protected Button m_selectAllButton;
 
-  protected Button deselectAllButton;
+  protected Button m_deselectAllButton;
 
   // messages and labels
   private static final String SELECT_ALL_TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.0" ); //$NON-NLS-1$
@@ -118,9 +118,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   private static final String OVERWRITE_EXISTING_CHECK_LABEL = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.6" ); //$NON-NLS-1$
 
   // dialog store id constants
-  private final static String STORE_DESTINATION_NAMES_ID = "WspWinExportPage.STORE_DESTINATION_NAMES_ID";//$NON-NLS-1$
+  private static final String STORE_DESTINATION_NAMES_ID = "WspWinExportPage.STORE_DESTINATION_NAMES_ID";//$NON-NLS-1$
 
-  private final static String STORE_OVERWRITE_EXISTING_RESOURCES_ID = "WspWinExportPage.STORE_OVERWRITE_EXISTING_RESOURCES_ID";//$NON-NLS-1$
+  private static final String STORE_OVERWRITE_EXISTING_RESOURCES_ID = "WspWinExportPage.STORE_OVERWRITE_EXISTING_RESOURCES_ID";//$NON-NLS-1$
 
   /**
    * Creates an instance of this class
@@ -166,8 +166,10 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   {
     final Widget source = event.widget;
 
-    if( source == destinationBrowseButton )
+    if( source == m_destinationBrowseButton )
+    {
       handleDestinationBrowseButtonPressed();
+    }
 
     updatePageCompletion();
   }
@@ -178,8 +180,8 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   protected void handleDestinationBrowseButtonPressed( )
   {
 
-    final String currentSource = this.destinationNameField.getText();
-    final DirectoryDialog dialog = new DirectoryDialog( destinationNameField.getShell(), SWT.SAVE );
+    final String currentSource = m_destinationNameField.getText();
+    final DirectoryDialog dialog = new DirectoryDialog( m_destinationNameField.getShell(), SWT.SAVE );
     dialog.setText( SELECT_DESTINATION_TITLE );
     dialog.setMessage( SELECT_DESTINATION_MESSAGE );
     dialog.setFilterPath( getDestinationDirectoryName( currentSource ) );
@@ -188,12 +190,12 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     if( selectedDirectory != null )
     {
       // Just quit if the directory is not valid
-      if( (getDestinationDirectory( selectedDirectory ) == null) || selectedDirectory.equals( currentSource ) )
+      if( getDestinationDirectory( selectedDirectory ) == null || selectedDirectory.equals( currentSource ) )
         return;
       // If it is valid then proceed to populate
       setErrorMessage( null );
       setDestinationName( selectedDirectory );
-      resourceGroup.setFocus();
+      m_resourceGroup.setFocus();
     }
   }
 
@@ -224,7 +226,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     restoreResourceSpecificationWidgetValues(); // ie.- local
     restoreWidgetValues();
     if( m_selection != null )
+    {
       setupBasedOnInitialSelections();
+    }
 
     updateWidgetEnablements();
     setPageComplete( determinePageCompletion() );
@@ -253,33 +257,33 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     buttonComposite.setLayout( layout );
     buttonComposite.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL ) );
 
-    selectAllButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL_TITLE, false );
+    m_selectAllButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL_TITLE, false );
 
     SelectionListener listener = new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        resourceGroup.setAllSelections( true );
+        m_resourceGroup.setAllSelections( true );
       }
     };
-    selectAllButton.addSelectionListener( listener );
-    selectAllButton.setFont( font );
-    setButtonLayoutData( selectAllButton );
+    m_selectAllButton.addSelectionListener( listener );
+    m_selectAllButton.setFont( font );
+    setButtonLayoutData( m_selectAllButton );
 
-    deselectAllButton = createButton( buttonComposite, IDialogConstants.DESELECT_ALL_ID, DESELECT_ALL_TITLE, false );
+    m_deselectAllButton = createButton( buttonComposite, IDialogConstants.DESELECT_ALL_ID, DESELECT_ALL_TITLE, false );
 
     listener = new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        resourceGroup.setAllSelections( false );
+        m_resourceGroup.setAllSelections( false );
       }
     };
-    deselectAllButton.addSelectionListener( listener );
-    deselectAllButton.setFont( font );
-    setButtonLayoutData( deselectAllButton );
+    m_deselectAllButton.addSelectionListener( listener );
+    m_deselectAllButton.setFont( font );
+    setButtonLayoutData( m_deselectAllButton );
 
   }
 
@@ -288,8 +292,8 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    */
   protected void enableButtonGroup( final boolean enable )
   {
-    selectAllButton.setEnabled( enable );
-    deselectAllButton.setEnabled( enable );
+    m_selectAllButton.setEnabled( enable );
+    m_deselectAllButton.setEnabled( enable );
   }
 
   /**
@@ -314,20 +318,20 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     destinationLabel.setFont( font );
 
     // destination name entry field
-    destinationNameField = new Combo( destinationSelectionGroup, SWT.SINGLE | SWT.BORDER );
-    destinationNameField.addListener( SWT.Modify, this );
-    destinationNameField.addListener( SWT.Selection, this );
+    m_destinationNameField = new Combo( destinationSelectionGroup, SWT.SINGLE | SWT.BORDER );
+    m_destinationNameField.addListener( SWT.Modify, this );
+    m_destinationNameField.addListener( SWT.Selection, this );
     final GridData data = new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL );
     data.widthHint = SIZING_TEXT_FIELD_WIDTH;
-    destinationNameField.setLayoutData( data );
-    destinationNameField.setFont( font );
+    m_destinationNameField.setLayoutData( data );
+    m_destinationNameField.setFont( font );
 
     // destination browse button
-    destinationBrowseButton = new Button( destinationSelectionGroup, SWT.PUSH );
-    destinationBrowseButton.setText( DESTINATION_BROWSE );
-    destinationBrowseButton.addListener( SWT.Selection, this );
-    destinationBrowseButton.setFont( font );
-    setButtonLayoutData( destinationBrowseButton );
+    m_destinationBrowseButton = new Button( destinationSelectionGroup, SWT.PUSH );
+    m_destinationBrowseButton.setText( DESTINATION_BROWSE );
+    m_destinationBrowseButton.addListener( SWT.Selection, this );
+    m_destinationBrowseButton.setFont( font );
+    setButtonLayoutData( m_destinationBrowseButton );
 
     new Label( parent, SWT.NONE ); // vertical spacer
 
@@ -349,10 +353,12 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     for( final IProject project : projects )
     {
       if( project.isOpen() )
+      {
         input.add( project );
+      }
     }
 
-    this.resourceGroup = new ResourceTreeAndListGroup( parent, input, getResourceProvider( IResource.FOLDER | IResource.PROJECT ), WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider(), getResourceProvider( IResource.FILE ), WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider(), SWT.NONE, DialogUtil.inRegularFontMode( parent ) );
+    m_resourceGroup = new ResourceTreeAndListGroup( parent, input, getResourceProvider( IResource.FOLDER | IResource.PROJECT ), WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider(), getResourceProvider( IResource.FILE ), WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider(), SWT.NONE, DialogUtil.inRegularFontMode( parent ) );
 
   }
 
@@ -378,12 +384,12 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   protected void createOverwriteExisting( final Group optionsGroup, final Font font )
   {
     // overwrite... checkbox
-    overwriteExistingFilesCheckbox = new Button( optionsGroup, SWT.CHECK | SWT.LEFT );
-    overwriteExistingFilesCheckbox.setText( OVERWRITE_EXISTING_CHECK_LABEL );
-    overwriteExistingFilesCheckbox.setFont( font );
+    m_overwriteExistingFilesCheckbox = new Button( optionsGroup, SWT.CHECK | SWT.LEFT );
+    m_overwriteExistingFilesCheckbox.setText( OVERWRITE_EXISTING_CHECK_LABEL );
+    m_overwriteExistingFilesCheckbox.setFont( font );
 
     // TODO: not yet implemented: disable
-    overwriteExistingFilesCheckbox.setEnabled( false );
+    m_overwriteExistingFilesCheckbox.setEnabled( false );
 
   }
 
@@ -457,13 +463,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
         {
           // input element case
           if( o instanceof ArrayList )
-          {
             return ((ArrayList< ? >) o).toArray();
-          }
           else
-          {
             return new Object[0];
-          }
         }
       }
     };
@@ -480,7 +482,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     final Iterator<IResource> resourcesToExportIterator = getSelectedResourcesIterator();
     final List<IResource> resourcesToExport = new ArrayList<IResource>();
     while( resourcesToExportIterator.hasNext() )
+    {
       resourcesToExport.add( resourcesToExportIterator.next() );
+    }
     return resourcesToExport;
   }
 
@@ -494,7 +498,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   @SuppressWarnings("unchecked")
   protected Iterator<IResource> getSelectedResourcesIterator( )
   {
-    return this.resourceGroup.getAllCheckedListItems().iterator();
+    return m_resourceGroup.getAllCheckedListItems().iterator();
   }
 
   /**
@@ -505,7 +509,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    */
   protected List< ? > getWhiteCheckedResources( )
   {
-    return this.resourceGroup.getAllWhiteCheckedItems();
+    return m_resourceGroup.getAllWhiteCheckedItems();
   }
 
   //
@@ -573,13 +577,15 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
       // update source names history
       String[] destinationNames = settings.getArray( STORE_DESTINATION_NAMES_ID );
       if( destinationNames == null )
+      {
         destinationNames = new String[0];
+      }
 
       destinationNames = addToHistory( destinationNames, getDestinationDirectoryName() );
       settings.put( STORE_DESTINATION_NAMES_ID, destinationNames );
 
       // radio buttons and checkboxes
-      settings.put( STORE_OVERWRITE_EXISTING_RESOURCES_ID, overwriteExistingFilesCheckbox.getSelection() );
+      settings.put( STORE_OVERWRITE_EXISTING_RESOURCES_ID, m_overwriteExistingFilesCheckbox.getSelection() );
     }
 
   }
@@ -600,10 +606,12 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
       // set filenames history
       for( final String destinationName : destinationNames )
-        destinationNameField.add( destinationName );
+      {
+        m_destinationNameField.add( destinationName );
+      }
 
       // radio buttons and checkboxes
-      overwriteExistingFilesCheckbox.setSelection( settings.getBoolean( STORE_OVERWRITE_EXISTING_RESOURCES_ID ) );
+      m_overwriteExistingFilesCheckbox.setSelection( settings.getBoolean( STORE_OVERWRITE_EXISTING_RESOURCES_ID ) );
     }
   }
 
@@ -620,12 +628,18 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
       {
         final IResource currentResource = (IResource) res;
         if( currentResource.getType() == IResource.FILE )
-          this.resourceGroup.initialCheckListItem( currentResource );
+        {
+          m_resourceGroup.initialCheckListItem( currentResource );
+        }
         else
-          this.resourceGroup.initialCheckTreeItem( res );
+        {
+          m_resourceGroup.initialCheckTreeItem( res );
+        }
       }
       else
-        this.resourceGroup.initialCheckTreeItem( res );
+      {
+        m_resourceGroup.initialCheckTreeItem( res );
+      }
     }
   }
 
@@ -635,7 +649,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    */
   public File getDestinationDirectory( )
   {
-    return getDestinationDirectory( this.destinationNameField.getText() );
+    return getDestinationDirectory( m_destinationNameField.getText() );
   }
 
   /**
@@ -649,9 +663,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   {
     final File destinationDirectory = new File( getDestinationDirectoryName( path ) );
     if( !destinationDirectory.exists() || !destinationDirectory.isDirectory() )
-    {
       return null;
-    }
 
     return destinationDirectory;
   }
@@ -662,7 +674,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    */
   private String getDestinationDirectoryName( )
   {
-    return getDestinationDirectoryName( this.destinationNameField.getText() );
+    return getDestinationDirectoryName( m_destinationNameField.getText() );
   }
 
   /**
@@ -673,10 +685,14 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   {
     IPath result = new Path( destinationName.trim() );
 
-    if( result.getDevice() != null && result.segmentCount() == 0 ) // something like "c:"
+    if( result.getDevice() != null && result.segmentCount() == 0 )
+    {
       result = result.addTrailingSeparator();
+    }
     else
+    {
       result = result.removeTrailingSeparator();
+    }
 
     return result.toOSString();
   }
@@ -693,12 +709,14 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     if( path.length() > 0 )
     {
 
-      final String[] currentItems = this.destinationNameField.getItems();
+      final String[] currentItems = m_destinationNameField.getItems();
       int selectionIndex = -1;
       for( int i = 0; i < currentItems.length; i++ )
       {
         if( currentItems[i].equals( path ) )
+        {
           selectionIndex = i;
+        }
       }
       if( selectionIndex < 0 )
       {
@@ -706,10 +724,10 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
         final String[] newItems = new String[oldLength + 1];
         System.arraycopy( currentItems, 0, newItems, 0, oldLength );
         newItems[oldLength] = path;
-        this.destinationNameField.setItems( newItems );
+        m_destinationNameField.setItems( newItems );
         selectionIndex = oldLength;
       }
-      this.destinationNameField.select( selectionIndex );
+      m_destinationNameField.select( selectionIndex );
 
       // resetSelection();
     }

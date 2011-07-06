@@ -54,13 +54,13 @@ import org.kalypso.observation.result.TupleResult;
 public class TUHHInterpolationHandler implements IInterpolationHandler
 {
   /* Get interpolated value during interpolation */
-  private final static String[] m_interpolIDs = new String[] { IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOCHWERT,
-    IWspmConstants.POINT_PROPERTY_RECHTSWERT, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE,
-    IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR };
+  private static final String[] INTERPOLATION_IDS = new String[] { IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOCHWERT,
+      IWspmConstants.POINT_PROPERTY_RECHTSWERT, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE,
+      IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR };
 
   /* Gets value of first point during interpolation */
-  private final static String[] m_constantIDs = new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP,
-    IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS };
+  private static final String[] CONSTANT_IDS = new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP,
+      IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS };
 
   /**
    * @see org.kalypso.observation.result.IInterpolationHandler#getInterpolationCoponent()
@@ -84,22 +84,26 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
     {
       final IRecord previous = result.get( index );
       final IRecord next = result.get( index + 1 );
-      for( final String id : m_interpolIDs )
+      for( final String id : INTERPOLATION_IDS )
       {
         final int i = result.indexOfComponent( id );
         if( i < 0 )
+        {
           continue;
+        }
         final Object v1 = previous.getValue( i );
         final Object v2 = next.getValue( i );
         final Object interp = interpolateValues( v1, v2, distance );
         record.setValue( i, interp );
       }
 
-      for( final String id : m_constantIDs )
+      for( final String id : CONSTANT_IDS )
       {
         final int i = result.indexOfComponent( id );
         if( i < 0 )
+        {
           continue;
+        }
         record.setValue( i, previous.getValue( i ) );
       }
       return true;

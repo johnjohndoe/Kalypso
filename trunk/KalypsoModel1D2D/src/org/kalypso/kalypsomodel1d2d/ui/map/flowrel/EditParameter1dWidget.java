@@ -62,7 +62,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -88,10 +88,10 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
 
   public EditParameter1dWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.1"), new SelectFeatureWidget( "", "", new QName[] { ITeschkeFlowRelation.QNAME, IFlowRelation1D.QNAME, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-         }, IFlowRelationship.QNAME_PROP_POSITION ) );
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { ITeschkeFlowRelation.QNAME, IFlowRelation1D.QNAME, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    }, IFlowRelationship.QNAME_PROP_POSITION ) );
 
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.4") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.4" ) ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
@@ -109,7 +109,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.5") + delegateTooltip ); //$NON-NLS-1$
+      m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.5" ) + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
@@ -120,7 +120,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( ICommandTarget commandPoster, IMapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -190,7 +190,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
       final IFlowRelationshipModel flowModel = dataProvider.getModel( IFlowRelationshipModel.class );
 
       final FlowRelCalcWizard wizard = new FlowRelCalcWizard( flowRels, flowModel, discModel );
-      wizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "flowRelCalcWizard" ) ); //$NON-NLS-1$
+      wizard.setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "flowRelCalcWizard" ) ); //$NON-NLS-1$
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, wizard );
       wizardDialog2.setRememberSize( true );
       if( wizardDialog2.open() == Window.OK )
@@ -201,7 +201,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
     catch( final CoreException e )
     {
       KalypsoModel1D2DPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.8"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.9"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.8" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.9" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 

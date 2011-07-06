@@ -1,41 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="false"
-            id="org.kalypso.model.wspm.objectContribution.calcTuhh"
-            objectClass="org.kalypsodeegree.model.feature.Feature">
-         <filter
-               name="featureType"
-               value="org.kalypso.model.wspm.tuhh#CalculationWspmTuhhSteadyState;org.kalypso.model.wspm.tuhh#CalculationReibConstWspmTuhhSteadyState"/>
-         <action
-               class="org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction"
-               icon="icons/obj16/startCalulation.gif"
-               id="org.kalypso.model.wspm.calcTuhhAction"
-               label="%org.kalypso.model.wspm.calcTuhhAction"
-               style="push"
-               tooltip="%org.kalypso.model.wspm.calcTuhhAction.tooltip"/>
-      </objectContribution>
-            <objectContribution
-            adaptable="false"
-            id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.feature.tuhhreach"
-            objectClass="org.kalypsodeegree.model.feature.Feature">
-         <filter
-               name="featureType"
-               value="org.kalypso.model.wspm.tuhh#ReachWspmTuhhSteadyState"/>
-         <action
-               class="org.kalypso.model.wspm.tuhh.ui.actions.CreateProfileMapAction"
-               icon="icons/elcl16/createProfileMap.gif"
-               id="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
-               label="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
-               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
-               style="push"
-               tooltip="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction.description"/>
-      </objectContribution>
-   </extension>
-
 	<extension point="org.eclipse.ui.handlers">
           <handler
                 class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportHandler"
@@ -323,8 +288,7 @@
   </extension>
 
   <extension point="org.eclipse.ui.handlers">
-    <handler
-          commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM">
+    <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM">
           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
         	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.model.wspm.tuhh.ui.actions.dtm.CreateProfileFromDEMWidget" />
       	  </class>
@@ -351,6 +315,44 @@
          </and>
       </enabledWhen>
    </handler>
+   <handler class="org.kalypso.model.wspm.tuhh.ui.actions.CreateProfileMapHandler" commandId="org.kalypso.model.wspm.ui.commands.CreateMapFromProfiles">
+      <enabledWhen>
+         <and>
+             <with variable="activeWorkbenchWindow">
+                <test property="org.kalypso.ui.window.isEditorAreaVisible"/>
+             </with>
+             <with variable="selection">
+                <and>
+                    <count value="1"/>
+                    <iterate ifEmpty="false" operator="and">
+                       <or>
+                         <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspmprofile}Profile"/>
+                         <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
+                         <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState"/>
+                       </or>
+                    </iterate>
+                </and>
+             </with>
+         </and>
+      </enabledWhen>
+   </handler>
+   <handler commandId="org.kalypso.model.wspm.command.calcTuhh" class="org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler">
+      <enabledWhen>
+         <with variable="selection">
+            <and>
+                <!--
+                <count value="1"/>
+                -->
+                <iterate ifEmpty="false" operator="and">
+                   <or>
+                     <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}CalculationWspmTuhhSteadyState"/>
+                     <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}CalculationReibConstWspmTuhhSteadyState"/>
+                   </or>
+                </iterate>
+            </and>
+         </with>
+      </enabledWhen>
+   </handler>
   </extension>
 
   <extension point="org.eclipse.ui.commands">
@@ -365,21 +367,27 @@
 	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
 	       name="%command.name.7">
 	</command>
+    <command
+          description="%org.kalypso.model.wspm.calcTuhhAction.description"
+          id="org.kalypso.model.wspm.command.calcTuhh"
+          name="%org.kalypso.model.wspm.calcTuhhAction.name">
+    </command>
   </extension>
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">
      <provider
-           class="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider"
+           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.LengthSectionLayerProvider"
            id="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
      </provider>
      <provider
-           class="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider"
+           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.VerticalLineLayerProvider"
            id="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
      </provider>
   </extension>
   <extension
         point="org.eclipse.ui.commandImages">
      <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
+     <image commandId="org.kalypso.model.wspm.command.calcTuhh" icon="icons/obj16/startCalulation.gif"/>
   </extension>
   <extension
         point="org.eclipse.core.runtime.preferences">
@@ -694,5 +702,32 @@
                  </reference>
            </enablement>
         </wizardEnablement>
+     </extension>
+     <extension point="org.eclipse.ui.menus">
+         <menuContribution allPopups="false" locationURI="popup:org.eclipse.ui.popup.any?before=gmlToolsEnd">
+            <command commandId="org.kalypso.model.wspm.command.calcTuhh" style="push">
+                  <visibleWhen checkEnabled="true"/>
+            </command>
+            <command commandId="org.kalypso.model.wspm.ui.commands.CreateMapFromProfiles" style="push">
+               <visibleWhen checkEnabled="true"/>
+            </command>
+         </menuContribution>
+         <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.featureview.views.FeatureView">
+            <command commandId="org.kalypso.model.wspm.command.calcTuhh" style="push">
+                  <visibleWhen checkEnabled="true"/>
+            </command>
+            <command commandId="org.kalypso.model.wspm.ui.commands.CreateMapFromProfiles" style="push">
+               <visibleWhen checkEnabled="true"/>
+            </command>
+         </menuContribution>
+         
+        <menuContribution locationURI="toolbar:org.kalypso.gml.toolbar?before=gmlToolsEnd">
+            <command commandId="org.kalypso.model.wspm.command.calcTuhh" style="push">
+                  <visibleWhen checkEnabled="true"/>
+            </command>
+            <command commandId="org.kalypso.model.wspm.ui.commands.CreateMapFromProfiles" style="push">
+               <visibleWhen checkEnabled="true"/>
+            </command>
+        </menuContribution>
      </extension>
 </plugin>

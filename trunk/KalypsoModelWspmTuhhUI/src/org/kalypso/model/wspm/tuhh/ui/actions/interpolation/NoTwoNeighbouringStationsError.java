@@ -108,7 +108,7 @@ public class NoTwoNeighbouringStationsError implements IValidator
   {
     final BigDecimal station = (BigDecimal) value;
     if( station == null )
-      return ValidationStatus.error( Messages.getString("NoTwoNeighbouringStationsError.0") ); //$NON-NLS-1$
+      return ValidationStatus.error( Messages.getString( "NoTwoNeighbouringStationsError.0" ) ); //$NON-NLS-1$
 
     final IProfileFeature prevProfile = getPreviousProfile( station );
 

@@ -72,7 +72,7 @@ public final class WspmResultFactory
     throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
-  public static final IWspmResultNode createResultNode( final IWspmResultNode parent, final Feature feature )
+  public static IWspmResultNode createResultNode( final IWspmResultNode parent, final Feature feature )
   {
     if( feature instanceof TuhhReach )
       return new WspmResultReachNode( parent, (TuhhReach) feature );
@@ -89,7 +89,7 @@ public final class WspmResultFactory
     return null;
   }
 
-  public static final IWspmResultNode createCalculationNode( final IWspmResultNode parent, final TuhhCalculation calculation )
+  public static IWspmResultNode createCalculationNode( final IWspmResultNode parent, final TuhhCalculation calculation )
   {
     if( calculation instanceof CalculationWspmTuhhSteadyState )
       return new WspmResultCalculationNode( parent, (CalculationWspmTuhhSteadyState) calculation );
@@ -104,7 +104,7 @@ public final class WspmResultFactory
    * 
    * @return The root nodes.
    */
-  public static final IWspmResultNode[] createRootNodes( final IProgressMonitor monitor ) throws Exception
+  public static IWspmResultNode[] createRootNodes( final IProgressMonitor monitor ) throws Exception
   {
     final List<IWspmResultNode> rootNodes = new ArrayList<IWspmResultNode>();
 
@@ -112,20 +112,26 @@ public final class WspmResultFactory
     final IWorkspaceRoot root = workspace.getRoot();
     final IProject[] projects = root.getProjects();
 
-    monitor.beginTask( Messages.getString("WspmResultFactory_0"), projects.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "WspmResultFactory_0" ), projects.length ); //$NON-NLS-1$
 
     for( final IProject project : projects )
     {
       if( !project.isOpen() )
+      {
         continue;
+      }
 
       final IFile wspmFile = project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
       if( !wspmFile.exists() )
+      {
         continue;
+      }
 
       final IFile modelFile = project.getFile( "modell.gml" ); //$NON-NLS-1$
       if( !modelFile.exists() )
+      {
         continue;
+      }
 
       final URL modelURL = ResourceUtilities.createURL( modelFile );
       final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );

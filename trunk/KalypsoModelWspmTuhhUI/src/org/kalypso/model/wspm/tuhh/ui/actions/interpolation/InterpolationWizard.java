@@ -83,7 +83,7 @@ public class InterpolationWizard extends Wizard implements IWorkbenchWizard
   {
     setNeedsProgressMonitor( false );
     setHelpAvailable( false );
-    setWindowTitle( Messages.getString("InterpolationWizard_0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "InterpolationWizard_0" ) ); //$NON-NLS-1$
   }
 
   @Override

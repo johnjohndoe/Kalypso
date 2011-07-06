@@ -54,8 +54,12 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 /**
  * @author Dirk Kuch
  */
-public class WspmProfileHelper
+public final class WspmProfileHelper
 {
+  private WspmProfileHelper( )
+  {
+  }
+
   /**
    * @return breite of sohlpunkt
    */
@@ -96,7 +100,7 @@ public class WspmProfileHelper
     {
       final Double h = point.getHoehe();
 
-      if( h < (sohlpunkt - fuziness) )
+      if( h < sohlpunkt - fuziness )
       {
         sohle.clear();
 
@@ -105,7 +109,7 @@ public class WspmProfileHelper
 
         lastIterationAdd = true;
       }
-      else if( (h - sohlpunkt) < fuziness && lastIterationAdd == true )
+      else if( h - sohlpunkt < fuziness && lastIterationAdd )
       {
         sohle.add( point );
       }

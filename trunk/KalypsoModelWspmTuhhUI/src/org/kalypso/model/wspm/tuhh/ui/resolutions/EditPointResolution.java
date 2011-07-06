@@ -51,43 +51,46 @@ import org.kalypso.observation.result.IRecord;
 
 public class EditPointResolution extends AbstractProfilMarkerResolution
 {
-   private int m_index;
+  private int m_index;
 
-   private String m_propertyId;
+  private String m_propertyId;
 
-   private double m_value;
-   
+  private double m_value;
+
   /**
-   * @param deviderTyp,deviderIndex
-   *            devider=IProfil.getDevider(deviderTyp)[deviderIndex]
+   * @param deviderTyp
+   *          ,deviderIndex devider=IProfil.getDevider(deviderTyp)[deviderIndex]
    */
   public EditPointResolution( final int index, final IComponent property, final double value )
   {
-    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.0" ,property.getName() ), null, null ); //$NON-NLS-1$ 
+    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.0", property.getName() ), null, null ); //$NON-NLS-1$ 
     m_index = index;
     m_propertyId = property.getId();
     m_value = value;
   }
+
   public EditPointResolution( final int index, final String propertyID, final double value )
   {
-    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.0" ,propertyID ), null, null ); //$NON-NLS-1$ 
+    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.0", propertyID ), null, null ); //$NON-NLS-1$ 
     m_index = index;
     m_propertyId = propertyID;
     m_value = value;
   }
-  public EditPointResolution()
+
+  public EditPointResolution( )
   {
-    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.2"), null, null ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.2" ), null, null ); //$NON-NLS-1$
     m_index = -1;
     m_propertyId = ""; //$NON-NLS-1$
     m_value = Double.NaN;
   }
+
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.eclipse.core.resources.IMarker)
    */
- @Override
-public boolean resolve( final IProfil profil )
+  @Override
+  public boolean resolve( final IProfil profil )
   {
     final IRecord[] points = profil.getPoints();
     if( points.length == 0 )
@@ -103,14 +106,16 @@ public boolean resolve( final IProfil profil )
     }
     return false;
   }
+
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#getSerializedParameter()
    */
   @Override
   public String getSerializedParameter( )
   {
-     return super.getSerializedParameter()+";"+m_index+";"+m_propertyId+";"+m_value; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return super.getSerializedParameter() + ";" + m_index + ";" + m_propertyId + ";" + m_value; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
+
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
    */
@@ -122,7 +127,7 @@ public boolean resolve( final IProfil profil )
     {
       m_index = new Integer( params[1] );
       m_propertyId = params[2];
-      m_value= new Double( params[3] );
+      m_value = new Double( params[3] );
     }
     catch( final Exception e )
     {

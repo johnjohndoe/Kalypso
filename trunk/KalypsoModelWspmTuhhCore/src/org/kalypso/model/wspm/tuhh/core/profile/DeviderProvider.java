@@ -57,14 +57,14 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public class DeviderProvider implements IProfilPointMarkerProvider
 {
-  private static final HashMap<String, RGB> m_markerTypes = new HashMap<String, RGB>();
+  private static final HashMap<String, RGB> MARKER_TYPES = new HashMap<String, RGB>();
 
   public DeviderProvider( )
   {
-    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, new RGB( 200, 50, 0 ) );
-    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, new RGB( 0, 0, 255 ) );
-    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, new RGB( 0, 180, 0 ) );
-    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_WEHR, new RGB( 0, 128, 0 ) );
+    MARKER_TYPES.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, new RGB( 200, 50, 0 ) );
+    MARKER_TYPES.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, new RGB( 0, 0, 255 ) );
+    MARKER_TYPES.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, new RGB( 0, 180, 0 ) );
+    MARKER_TYPES.put( IWspmTuhhConstants.MARKER_TYP_WEHR, new RGB( 0, 128, 0 ) );
   }
 
   /**
@@ -74,7 +74,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   public void drawMarker( final String[] markers, final GC gc )
   {
     final int cnt = markers.length;
-    final int offset = ((gc.getClipping().width - (3 * cnt)) / 2)+1;
+    final int offset = (gc.getClipping().width - 3 * cnt) / 2 + 1;
     int i = 0;
     final PolylineFigure rf = new PolylineFigure();
 
@@ -82,13 +82,13 @@ public class DeviderProvider implements IProfilPointMarkerProvider
     rf.getStyle().setWidth( 3 );
     for( final String marker : markers )
     {
-      final RGB rgb = m_markerTypes.get( marker );
+      final RGB rgb = MARKER_TYPES.get( marker );
       if( rgb != null )
       {
 
         rf.getStyle().setColor( rgb );
 
-        rf.setPoints( new Point[]{ new Point( offset + 4 * i, gc.getClipping().y),new Point(offset + 4 * i++, gc.getClipping().height )} );
+        rf.setPoints( new Point[] { new Point( offset + 4 * i, gc.getClipping().y ), new Point( offset + 4 * i++, gc.getClipping().height ) } );
         rf.paint( gc );
       }
     }
@@ -100,6 +100,6 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   @Override
   public RGB getColorFor( final String marker )
   {
-    return m_markerTypes.get( marker );
+    return MARKER_TYPES.get( marker );
   }
 }

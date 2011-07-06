@@ -84,8 +84,8 @@ public class InterpolationStationPage extends WizardPage
 
     m_interpolationData = interpolationData;
 
-    setTitle( Messages.getString("InterpolationStationPage_1") ); //$NON-NLS-1$
-    setDescription( Messages.getString("InterpolationStationPage_2") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "InterpolationStationPage_1" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "InterpolationStationPage_2" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -95,7 +95,9 @@ public class InterpolationStationPage extends WizardPage
   public void dispose( )
   {
     if( m_pageSupport != null )
+    {
       m_pageSupport.dispose();
+    }
 
     super.dispose();
   }
@@ -118,19 +120,19 @@ public class InterpolationStationPage extends WizardPage
     final GridLayout groupLayout = new GridLayout( 3, true );
     groupLayout.horizontalSpacing = 10;
     group.setLayout( groupLayout );
-    group.setText( Messages.getString("InterpolationStationPage_3") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "InterpolationStationPage_3" ) ); //$NON-NLS-1$
 
     // 1st line
     final Label prevLabel = new Label( group, SWT.NONE );
-    prevLabel.setText( Messages.getString("InterpolationStationPage_4") ); //$NON-NLS-1$
+    prevLabel.setText( Messages.getString( "InterpolationStationPage_4" ) ); //$NON-NLS-1$
     prevLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
 
     final Label kmLabel = new Label( group, SWT.NONE );
-    kmLabel.setText( Messages.getString("InterpolationStationPage_5") ); //$NON-NLS-1$
+    kmLabel.setText( Messages.getString( "InterpolationStationPage_5" ) ); //$NON-NLS-1$
     kmLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
 
     final Label nextLabel = new Label( group, SWT.NONE );
-    nextLabel.setText( Messages.getString("InterpolationStationPage_6") ); //$NON-NLS-1$
+    nextLabel.setText( Messages.getString( "InterpolationStationPage_6" ) ); //$NON-NLS-1$
     nextLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
 
     // // 2nd line
@@ -146,7 +148,7 @@ public class InterpolationStationPage extends WizardPage
     // / 3rd line
     final Button onlyChannelCheck = new Button( group, SWT.CHECK );
     onlyChannelCheck.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
-    onlyChannelCheck.setText( Messages.getString("InterpolationStationPage_7") ); //$NON-NLS-1$
+    onlyChannelCheck.setText( Messages.getString( "InterpolationStationPage_7" ) ); //$NON-NLS-1$
 
     createBinding( stationEditor, onlyChannelCheck );
   }

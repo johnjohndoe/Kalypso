@@ -57,7 +57,7 @@ public class LeftBank extends AbstractFlowZoneType
   @Override
   public String getLabel( )
   {
-    return Messages.getString("LeftBank_0"); //$NON-NLS-1$
+    return Messages.getString( "LeftBank_0" ); //$NON-NLS-1$
   }
 
   /**

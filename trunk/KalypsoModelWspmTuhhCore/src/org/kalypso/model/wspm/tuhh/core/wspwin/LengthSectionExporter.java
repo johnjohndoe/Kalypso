@@ -76,18 +76,26 @@ public class LengthSectionExporter
     for( int i = 0; i < result.getComponents().length; i++ )
     {
       if( i == stationIndex )
+      {
         continue;
+      }
 
       final DataBlockHeader dbh = LengthSectionMapping.createHeader( result.getComponent( i ).getId() );
       if( dbh == null )
+      {
         continue;
+      }
 
       final IDataBlock block = createDataBLock( dbh, result, stationIndex, i );
 
       if( i == posGround )
+      {
         prfwriter.addDataBlock( 0, block );// due restrictions of wspwin-plotter
+      }
       else if( block.getCoordCount() > 0 )
+      {
         prfwriter.addDataBlock( block );
+      }
     }
     return prfwriter;
   }

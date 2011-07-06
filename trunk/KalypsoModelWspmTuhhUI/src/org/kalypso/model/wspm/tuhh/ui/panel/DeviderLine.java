@@ -108,7 +108,9 @@ class DeviderLine
       public void focusGained( final FocusEvent e )
       {
         if( m_position != null && !m_position.isDisposed() )
+        {
           m_position.selectAll();
+        }
       }
 
       /**
@@ -148,7 +150,9 @@ class DeviderLine
   public void refresh( )
   {
     if( m_devider == null )
+    {
       m_position.setText( StringUtils.EMPTY );
+    }
     else
     {
       final IRecord point = m_devider.getPoint();

@@ -153,7 +153,9 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
     final Collection<IProfileExportColumn> columns = new ArrayList<IProfileExportColumn>();
 
     for( final IProfileExportColumn column : userDefinedColumns )
+    {
       columns.add( column );
+    }
 
     if( type == OUTPUT_TYPE.point )
     {
