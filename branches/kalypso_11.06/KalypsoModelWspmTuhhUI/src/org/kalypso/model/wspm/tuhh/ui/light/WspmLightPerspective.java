@@ -61,9 +61,9 @@ public class WspmLightPerspective implements IPerspectiveFactory
 
   private static final String TOP_LEFT = "wspmLightTopLeftFolder"; //$NON-NLS-1$
 
-  private static final String BOTTOM_LEFT = "wspmLightBottomLeftFolder"; //$NON-NLS-1$
+  private static final String BOTTOM_RIGHT = "wspmLightBottomRightFolder"; //$NON-NLS-1$
 
-  private static final String SCND_BOTTOM_LEFT = "wspmLightScndBottomLeftFolder"; //$NON-NLS-1$
+  private static final String SCND_BOTTOM_RIGHT = "wspmLightScndBottomRightFolder"; //$NON-NLS-1$
 
   private static final String BOTTOM_MAIN_FOLDER = "wspmLightBottomMainFolder"; //$NON-NLS-1$
 
@@ -118,11 +118,11 @@ public class WspmLightPerspective implements IPerspectiveFactory
     bottomMainFolder.addView( ProfilChartViewPart.ID );
 
     /** bottom right main folders */
-    final IFolderLayout bottomLeft = layout.createFolder( BOTTOM_LEFT, IPageLayout.RIGHT, 0.7f, BOTTOM_MAIN_FOLDER );
-    bottomLeft.addView( LegendViewPart.class.getName() );
+    final IFolderLayout bottomRight = layout.createFolder( BOTTOM_RIGHT, IPageLayout.RIGHT, 0.7f, BOTTOM_MAIN_FOLDER );
+    bottomRight.addView( LegendViewPart.class.getName() );
 
-    final IFolderLayout scndBottomLeft = layout.createFolder( SCND_BOTTOM_LEFT, IPageLayout.RIGHT, 0.5f, BOTTOM_LEFT );
-    scndBottomLeft.addView( LayerViewPart.class.getName() );
+    final IFolderLayout scndBottomRight = layout.createFolder( SCND_BOTTOM_RIGHT, IPageLayout.RIGHT, 0.5f, BOTTOM_RIGHT );
+    scndBottomRight.addView( LayerViewPart.class.getName() );
 
     /** main right */
     final IFolderLayout mainRightFolder = layout.createFolder( MAIN_RIGHT_FOLDER, IPageLayout.RIGHT, 0.7f, MAIN_FOLDER );
