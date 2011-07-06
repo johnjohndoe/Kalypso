@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -78,6 +79,8 @@ public class ImportGafData extends AbstractModelObject
 
   public static final String PROPERTY_WATER_BODY = "waterBody"; //$NON-NLS-1$
 
+  public static final String PROPERTY_LOG_FILE = "logFile"; //$NON-NLS-1$
+
   private String m_srs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   private File m_gafFile = null;
@@ -102,6 +105,8 @@ public class ImportGafData extends AbstractModelObject
   private IStatus m_readGafStatus;
 
   private GafPointCheck m_pointChecker;
+
+  private File m_logFile;
 
   public ImportGafData( final IPdbConnection connection )
   {
@@ -205,7 +210,10 @@ public class ImportGafData extends AbstractModelObject
 
     firePropertyChange( PROPERTY_GAF_FILE, oldValue, m_gafFile );
 
-    if( m_gafFile != null )
+    File logFile;
+    if( m_gafFile == null )
+      logFile = null;
+    else
     {
       final String filename = m_gafFile.getName();
 
@@ -213,7 +221,12 @@ public class ImportGafData extends AbstractModelObject
       m_state.setSource( stateSource );
 
       m_state.setName( filename );
+
+      final String logFilename = FilenameUtils.removeExtension( filename ) + ".log";//$NON-NLS-1$
+      logFile = new File( m_gafFile.getParent(), logFilename );
     }
+
+    setLogFile( logFile );
   }
 
   public State getState( )
@@ -295,5 +308,15 @@ public class ImportGafData extends AbstractModelObject
   public GafProfiles getGafProfiles( )
   {
     return m_gafProfiles;
+  }
+
+  public File getLogFile( )
+  {
+    return m_logFile;
+  }
+
+  public void setLogFile( final File logFile )
+  {
+    m_logFile = logFile;
   }
 }
