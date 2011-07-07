@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.gaf;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.io.FilenameUtils;
@@ -50,10 +51,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
@@ -82,6 +85,10 @@ public class ImportGafData extends AbstractModelObject
 
   public static final String PROPERTY_LOG_FILE = "logFile"; //$NON-NLS-1$
 
+  public static final String PROPERTY_HAS_WATERLEVELS = "hasWaterlevels"; //$NON-NLS-1$
+
+  public static final String PROPERTY_IMPORT_WATERLEVELS = "importWaterlevels"; //$NON-NLS-1$
+
   private String m_srs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   private File m_gafFile = null;
@@ -108,6 +115,12 @@ public class ImportGafData extends AbstractModelObject
   private GafPointCheck m_pointChecker;
 
   private File m_logFile;
+
+  private boolean m_hasWaterlevels;
+
+  private boolean m_importWaterlevels = true;
+
+  private final Event m_waterlevelEvent = new Event();
 
   public ImportGafData( final IPdbConnection connection )
   {
@@ -218,10 +231,14 @@ public class ImportGafData extends AbstractModelObject
     {
       final String filename = m_gafFile.getName();
 
-      final String stateSource = String.format( "Importiert aus: %s", filename );
-      m_state.setSource( stateSource );
+      m_state.setSource( filename );
 
-      m_state.setName( filename );
+      final Calendar now = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+      final Object thisYear = now.get( Calendar.YEAR );
+      m_state.setName( String.format( "Measurement %s %d", FilenameUtils.removeExtension( filename ), thisYear ) );
+
+      m_waterlevelEvent.setSource( m_state.getSource() );
+      m_waterlevelEvent.setName( m_state.getName() );
 
       final String logFilename = FilenameUtils.removeExtension( filename ) + ".log";//$NON-NLS-1$
       logFile = new File( m_gafFile.getParent(), logFilename );
@@ -273,6 +290,8 @@ public class ImportGafData extends AbstractModelObject
 
     m_gafProfiles = new GafProfiles( m_pointChecker, getTransformer(), riverline, readGafStatus );
     m_gafProfiles.addLines( m_lines );
+
+    setHasWaterlevels( updateWaterlevels() );
   }
 
   public GeometryFactory getGeometryFactory( )
@@ -323,5 +342,53 @@ public class ImportGafData extends AbstractModelObject
   public void setLogFile( final File logFile )
   {
     m_logFile = logFile;
+  }
+
+  public boolean getHasWaterlevels( )
+  {
+    return m_hasWaterlevels;
+  }
+
+  private void setHasWaterlevels( final boolean hasWaterlevels )
+  {
+    final Object oldValue = m_hasWaterlevels;
+
+    m_hasWaterlevels = hasWaterlevels;
+
+    firePropertyChange( PROPERTY_HAS_WATERLEVELS, oldValue, m_hasWaterlevels );
+  }
+
+  public boolean getImportWaterlevels( )
+  {
+    return m_importWaterlevels;
+  }
+
+  public void setImportWaterlevels( final boolean importWaterlevels )
+  {
+    final Object oldValue = m_importWaterlevels;
+
+    m_importWaterlevels = importWaterlevels;
+
+    firePropertyChange( PROPERTY_IMPORT_WATERLEVELS, oldValue, m_importWaterlevels );
+  }
+
+  private boolean updateWaterlevels( )
+  {
+    if( m_gafProfiles == null )
+      return false;
+
+    final GafProfile[] profiles = m_gafProfiles.getProfiles();
+    for( final GafProfile profile : profiles )
+    {
+      if( profile.hasWaterlevel() )
+        return true;
+    }
+
+    return false;
+  }
+
+  public Event getWaterlevelEvent( )
+  {
+    return m_waterlevelEvent;
   }
 }

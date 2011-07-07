@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
@@ -109,7 +110,10 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
 
       final GafProfiles profiles = m_data.getGafProfiles();
 
-      final Gaf2Db gaf2db = new Gaf2Db( dbType, waterBody, state, profiles, monitor );
+      final boolean hasWaterlevels = m_data.getHasWaterlevels();
+      final Event waterlevelEvent = hasWaterlevels ? m_data.getWaterlevelEvent() : null;
+
+      final Gaf2Db gaf2db = new Gaf2Db( dbType, waterBody, state, profiles, waterlevelEvent, monitor );
       new Executor( session, gaf2db ).execute();
 
       session.close();

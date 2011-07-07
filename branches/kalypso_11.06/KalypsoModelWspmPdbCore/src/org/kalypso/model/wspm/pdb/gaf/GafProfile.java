@@ -214,4 +214,10 @@ public class GafProfile implements IGafConstants
 
     // TODO More checks?
   }
+
+  public boolean hasWaterlevel( )
+  {
+    final GafPart gafPart = m_parts.get( IGafConstants.KZ_CATEGORY_WATERLEVEL );
+    return gafPart != null && gafPart.getPoints().length > 0;
+  }
 }
