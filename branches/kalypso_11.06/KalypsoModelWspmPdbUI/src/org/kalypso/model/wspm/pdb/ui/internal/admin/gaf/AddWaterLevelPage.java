@@ -65,6 +65,8 @@ public class AddWaterLevelPage extends WizardPage
 
   private DatabindingWizardPage m_binding;
 
+  private WaterlevelComposite m_waterlevelComposite;
+
   protected AddWaterLevelPage( final String pageName, final ImportGafData data )
   {
     super( pageName );
@@ -110,13 +112,14 @@ public class AddWaterLevelPage extends WizardPage
     group.setLayout( new FillLayout() );
 
     final Event event = m_data.getWaterlevelEvent();
-    final WaterlevelComposite waterlevelComposite = new WaterlevelComposite( group, SWT.NONE, event, m_binding );
+
+    m_waterlevelComposite = new WaterlevelComposite( group, SWT.NONE, event, m_binding );
 
     final ISWTObservableValue targetVisible = SWTObservables.observeVisible( group );
     final IObservableValue modelVisible = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_HAS_WATERLEVELS );
     m_binding.bindValue( targetVisible, modelVisible );
 
-    final ISWTObservableValue targetEnablement = SWTObservables.observeEnabled( waterlevelComposite );
+    final ISWTObservableValue targetEnablement = SWTObservables.observeEnabled( m_waterlevelComposite );
     final IObservableValue modelEnablement = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_IMPORT_WATERLEVELS );
     m_binding.bindValue( targetEnablement, modelEnablement );
   }
@@ -127,5 +130,8 @@ public class AddWaterLevelPage extends WizardPage
       setMessage( null );
     else
       setMessage( "GAF file does not contain any water levels", INFORMATION );
+
+    final Event[] existingEvents = m_data.getExistingEvents();
+    m_waterlevelComposite.setExistingEvents( existingEvents );
   }
 }

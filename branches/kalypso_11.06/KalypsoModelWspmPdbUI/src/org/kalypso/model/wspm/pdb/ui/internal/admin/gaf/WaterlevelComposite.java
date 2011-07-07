@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
@@ -75,6 +76,10 @@ public class WaterlevelComposite extends Composite
 
   private Text m_nameField;
 
+  private UniqueEventNameValidator m_uniqueEventNameValidator;
+
+  private Binding m_nameBinding;
+
   public WaterlevelComposite( final Composite parent, final int style, final Event event, final IDataBinding binding )
   {
     super( parent, style );
@@ -102,10 +107,10 @@ public class WaterlevelComposite extends Composite
 
     final DataBinder binder = new DataBinder( target, model );
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Name' must not be empty" ) );
+    m_uniqueEventNameValidator = new UniqueEventNameValidator( null );
+    binder.addTargetAfterGetValidator( m_uniqueEventNameValidator );
 
-    // TODO: check for uniqueness
-
-    m_binding.bindValue( binder );
+    m_nameBinding = m_binding.bindValue( binder );
   }
 
   private void createSourceControls( final Composite parent )
@@ -151,5 +156,12 @@ public class WaterlevelComposite extends Composite
     m_nameField.setEnabled( enabled );
     m_sourceField.setEnabled( enabled );
     m_typeField.getControl().setEnabled( enabled );
+  }
+
+  public void setExistingEvents( final Event[] existingEvents )
+  {
+    m_uniqueEventNameValidator.setExistingEvents( existingEvents );
+
+    m_nameBinding.validateTargetToModel();
   }
 }
