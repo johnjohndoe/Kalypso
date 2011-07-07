@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -238,7 +239,8 @@ public class ImportGafData extends AbstractModelObject
       m_state.setName( String.format( "Measurement %s %d", FilenameUtils.removeExtension( filename ), thisYear ) );
 
       m_waterlevelEvent.setSource( m_state.getSource() );
-      m_waterlevelEvent.setName( m_state.getName() );
+      /* No need for filename/river-name here, as name is unique within water body */
+      m_waterlevelEvent.setName( String.format( "Measurement %d", thisYear ) );
 
       final String logFilename = FilenameUtils.removeExtension( filename ) + ".log";//$NON-NLS-1$
       logFile = new File( m_gafFile.getParent(), logFilename );
@@ -390,5 +392,14 @@ public class ImportGafData extends AbstractModelObject
   public Event getWaterlevelEvent( )
   {
     return m_waterlevelEvent;
+  }
+
+  public Event[] getExistingEvents( )
+  {
+    if( m_waterBody == null )
+      return new Event[0];
+
+    final Set<Event> events = m_waterBody.getEvents();
+    return events.toArray( new Event[events.size()] );
   }
 }
