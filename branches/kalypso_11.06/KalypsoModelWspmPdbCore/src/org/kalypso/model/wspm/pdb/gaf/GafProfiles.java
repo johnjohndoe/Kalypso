@@ -47,6 +47,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafLine;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafPoint;
 import org.kalypso.transformation.transformer.JTSTransformer;
@@ -75,8 +78,13 @@ public class GafProfiles
 
   private final LineString m_riverline;
 
-  public GafProfiles( final GafPointCheck checker, final JTSTransformer jtsTransformer, final LineString riverline )
+  private final IStatus m_readGafStatus;
+
+  private IStatus m_status;
+
+  public GafProfiles( final GafPointCheck checker, final JTSTransformer jtsTransformer, final LineString riverline, final IStatus readGafStatus )
   {
+    m_readGafStatus = readGafStatus;
     m_geometryFactory = riverline.getFactory();
     m_transformer = jtsTransformer;
     m_pointChecker = checker;
@@ -145,5 +153,22 @@ public class GafProfiles
       }
     }
     stop();
+  }
+
+  public IStatus getStatus( )
+  {
+    if( m_status == null )
+    {
+      final IStatusCollector stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
+
+      stati.add( m_readGafStatus );
+
+      for( final GafProfile profile : m_profiles )
+        stati.add( profile.getStatus() );
+
+      m_status = stati.asMultiStatusOrOK( "Problems occured while reading GAF file" );
+    }
+
+    return m_status;
   }
 }
