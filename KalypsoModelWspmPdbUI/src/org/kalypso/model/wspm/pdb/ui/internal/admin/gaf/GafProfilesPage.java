@@ -160,6 +160,8 @@ public class GafProfilesPage extends WizardPage
     panel.setText( "Details" );
     GridLayoutFactory.swtDefaults().applyTo( panel );
 
+    // TODO: instead directly insert status table -> see StatusDialog
+
     m_logView = new StatusComposite( panel, StatusComposite.DETAILS | StatusComposite.HIDE_DETAILS_IF_DISABLED );
     m_logView.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, true ) );
 

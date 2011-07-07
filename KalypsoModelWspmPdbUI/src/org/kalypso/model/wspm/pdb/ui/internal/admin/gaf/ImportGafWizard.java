@@ -86,14 +86,13 @@ public class ImportGafWizard extends Wizard
     m_data.init( settings );
 
     addPage( new ImportGafPage( "gaf", m_data ) ); //$NON-NLS-1$
+    addPage( new ChooseWaterPage( "waterBody", m_data ) ); //$NON-NLS-1$
 
     m_optionsPage = new GafOptionsPage( "options", m_data ); //$NON-NLS-1$
     addPage( m_optionsPage );
 
     m_gafProfilesPage = new GafProfilesPage( "profiles", m_data ); //$NON-NLS-1$
     addPage( m_gafProfilesPage );
-
-    addPage( new ChooseWaterPage( "waterBody", m_data ) ); //$NON-NLS-1$
 
     addPage( new EditStatePage( "state", m_data.getState(), existingState, Mode.NEW ) ); //$NON-NLS-1$
 

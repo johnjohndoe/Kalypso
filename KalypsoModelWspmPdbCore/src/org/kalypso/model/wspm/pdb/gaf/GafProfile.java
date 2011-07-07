@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.pdb.internal.gaf.GafPoint;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Represent point of a gaf file with the same station.
@@ -169,5 +170,48 @@ public class GafProfile implements IGafConstants
     }
 
     return m_status;
+  }
+
+  /**
+   * Check the profile if everything is legal. Check, if the profile intersects with the riverline
+   */
+  public void check( final LineString riverline )
+  {
+    /* Find PP part */
+    if( m_parts.size() == 0 )
+    {
+      m_stati.add( IStatus.ERROR, "Cross sections does not contain any parts" );
+      return;
+    }
+
+    /* Check if PP part intersects with riverline */
+    final GafPart ppPart = m_parts.get( IGafConstants.KZ_CATEGORY_PROFILE );
+    if( ppPart == null )
+    {
+      m_stati.add( IStatus.ERROR, "No profile points (PP) in this cross section." );
+      return;
+    }
+
+    try
+    {
+      final Geometry line = ppPart.getLine( null );
+      if( line == null )
+      {
+        m_stati.add( IStatus.WARNING, "Cross section has no line geometry" );
+      }
+      else if( riverline != null && !line.intersects( riverline ) )
+      {
+        final double distance = line.distance( riverline );
+        final String msg = String.format( "Cross section does not intersect with riverline. Distance is %.1f [km]", distance / 1000.0 );
+        m_stati.add( IStatus.WARNING, msg );
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      m_stati.add( IStatus.ERROR, "Inalid geometry for part 'PP'" );
+    }
+
+    // TODO More checks?
   }
 }
