@@ -60,6 +60,7 @@
             </Stroke>
         </LineSymbolizer>
     </Rule>
+    <!-- 
     <Rule>
 		<Name>Durchfluss Bereiche</Name>
 		<Title>Durchfluss Bereiche</Title>
@@ -80,4 +81,5 @@
 			</Stroke>
 		</LineSymbolizer>
 	</Rule>
+     -->
 </FeatureTypeStyle>

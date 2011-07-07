@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartViewPart;
 import org.kalypso.model.wspm.ui.view.legend.LegendViewPart;
 import org.kalypso.model.wspm.ui.view.table.TableView;
 import org.kalypso.ogc.gml.outline.ViewContentOutline;
+import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
 /**
@@ -107,6 +108,7 @@ public class WspmLightPerspective implements IPerspectiveFactory
     /** top left folder */
     final IFolderLayout leftFolder = layout.createFolder( TOP_LEFT, IPageLayout.LEFT, 0.15f, editorArea );
     leftFolder.addView( WspmGmvViewPart.ID );
+    leftFolder.addPlaceholder( StyleEditorViewPart.ID );
 
     /** main view */
     final IFolderLayout mainFolder = layout.createFolder( MAIN_FOLDER, IPageLayout.RIGHT, 1.0f, editorArea );
