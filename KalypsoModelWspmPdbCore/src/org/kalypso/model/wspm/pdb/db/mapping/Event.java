@@ -1,5 +1,6 @@
 package org.kalypso.model.wspm.pdb.db.mapping;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -10,15 +11,19 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.db.constants.EventConstants;
 
 /**
@@ -26,9 +31,8 @@ import org.kalypso.model.wspm.pdb.db.constants.EventConstants;
  */
 @Entity
 @Table(name = "event", schema = "pdb_admin", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-public class Event implements java.io.Serializable, EventConstants
+public class Event extends AbstractModelObject implements Serializable, EventConstants
 {
-
   private BigDecimal id;
 
   private WaterBody waterBody;
@@ -82,6 +86,8 @@ public class Event implements java.io.Serializable, EventConstants
 
   @Id
   @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_id_seq")
+  @SequenceGenerator(name = "event_id_seq", sequenceName = "seq_pdb")
   public BigDecimal getId( )
   {
     return this.id;
@@ -112,7 +118,11 @@ public class Event implements java.io.Serializable, EventConstants
 
   public void setName( final String name )
   {
+    final Object oldValue = this.name;
+
     this.name = name;
+
+    firePropertyChange( PROPERTY_NAME, oldValue, name );
   }
 
   @Temporal(TemporalType.TIMESTAMP)
@@ -170,7 +180,11 @@ public class Event implements java.io.Serializable, EventConstants
 
   public void setSource( final String source )
   {
+    final Object oldValue = this.source;
+
     this.source = source;
+
+    firePropertyChange( PROPERTY_SOURCE, oldValue, source );
   }
 
   @Column(name = "type", length = 50)
@@ -182,7 +196,11 @@ public class Event implements java.io.Serializable, EventConstants
 
   public void setType( final TYPE type )
   {
+    final Object oldValue = this.type;
+
     this.type = type;
+
+    firePropertyChange( PROPERTY_TYPE, oldValue, type );
   }
 
   @Column(name = "description")

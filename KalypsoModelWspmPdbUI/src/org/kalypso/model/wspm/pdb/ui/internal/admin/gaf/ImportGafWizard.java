@@ -76,6 +76,8 @@ public class ImportGafWizard extends Wizard
 
   private final GafOptionsPage m_optionsPage;
 
+  private final AddWaterLevelPage m_waterLevelPage;
+
   public ImportGafWizard( final State[] existingState, final ImportGafData data )
   {
     m_data = data;
@@ -95,6 +97,9 @@ public class ImportGafWizard extends Wizard
     addPage( m_gafProfilesPage );
 
     addPage( new EditStatePage( "state", m_data.getState(), existingState, Mode.NEW ) ); //$NON-NLS-1$
+
+    m_waterLevelPage = new AddWaterLevelPage( "addWaterlevel", m_data ); //$NON-NLS-1$
+    addPage( m_waterLevelPage );
 
     setNeedsProgressMonitor( true );
   }
@@ -154,6 +159,7 @@ public class ImportGafWizard extends Wizard
       m_data.createProfiles();
 
       m_gafProfilesPage.updateControl();
+      m_waterLevelPage.updateControl();
     }
   }
 }

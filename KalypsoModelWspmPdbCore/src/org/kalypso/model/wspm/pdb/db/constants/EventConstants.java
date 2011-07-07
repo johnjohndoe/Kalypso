@@ -45,12 +45,31 @@ package org.kalypso.model.wspm.pdb.db.constants;
  */
 public interface EventConstants
 {
-  public enum TYPE
+  enum TYPE
   {
     /**
      * Default
      */
-    Measurement,
-    Simulation
+    Measurement("Measurement"),
+    Simulation("Simulation");
+
+    private final String m_label;
+
+    TYPE( final String label )
+    {
+      m_label = label;
+    }
+
+    @Override
+    public String toString( )
+    {
+      return m_label;
+    }
   }
+
+  String PROPERTY_NAME = "name"; //$NON-NLS-1$
+
+  String PROPERTY_SOURCE = "source"; //$NON-NLS-1$
+
+  String PROPERTY_TYPE = "type"; //$NON-NLS-1$
 }
