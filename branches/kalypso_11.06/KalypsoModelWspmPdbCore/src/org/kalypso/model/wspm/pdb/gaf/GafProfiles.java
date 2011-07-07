@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.pdb.internal.gaf.GafPoint;
 import org.kalypso.transformation.transformer.JTSTransformer;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Assembles all read points into different profiles.
@@ -72,11 +73,14 @@ public class GafProfiles
 
   private final JTSTransformer m_transformer;
 
-  public GafProfiles( final GafPointCheck checker, final GeometryFactory geometryFactory, final JTSTransformer transformer )
+  private final LineString m_riverline;
+
+  public GafProfiles( final GafPointCheck checker, final JTSTransformer jtsTransformer, final LineString riverline )
   {
-    m_geometryFactory = geometryFactory;
-    m_transformer = transformer;
+    m_geometryFactory = riverline.getFactory();
+    m_transformer = jtsTransformer;
     m_pointChecker = checker;
+    m_riverline = riverline;
   }
 
   public void addPoint( final GafPoint point )
@@ -119,6 +123,7 @@ public class GafProfiles
 
     m_committedStations.add( station );
 
+    m_currentProfile.check( m_riverline );
     m_profiles.add( m_currentProfile );
 
     m_currentProfile = null;

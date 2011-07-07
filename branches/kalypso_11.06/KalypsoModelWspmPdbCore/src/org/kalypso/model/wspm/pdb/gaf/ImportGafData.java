@@ -64,6 +64,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
@@ -266,7 +267,9 @@ public class ImportGafData extends AbstractModelObject
       return;
     }
 
-    m_gafProfiles = new GafProfiles( m_pointChecker, m_geometryFactory, getTransformer() );
+    final LineString riverline = m_waterBody.getRiverlineAsLine();
+
+    m_gafProfiles = new GafProfiles( m_pointChecker, getTransformer(), riverline );
     m_gafProfiles.addLines( m_lines );
   }
 
