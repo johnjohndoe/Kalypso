@@ -49,6 +49,8 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.net.UrlUtilities;
+import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -76,16 +78,16 @@ public class ResultLSChartFile extends AbstractResultLSFile
 
   private final String m_chartTitle;
 
-  private final Feature m_waterLevelFixation;
+  private final TuhhCalculation m_calculation;
 
-  public ResultLSChartFile( final File outDir, final String runoffName, final boolean isDirectionUpstreams, final String dataFilename, final String chartTitle, final Feature waterLevelFixation )
+  public ResultLSChartFile( final File outDir, final String runoffName, final boolean isDirectionUpstreams, final String dataFilename, final String chartTitle, final TuhhCalculation calculation )
   {
     super( outDir, runoffName );
 
     m_isDirectionUpstreams = isDirectionUpstreams;
     m_dataFilename = dataFilename;
     m_chartTitle = chartTitle;
-    m_waterLevelFixation = waterLevelFixation;
+    m_calculation = calculation;
   }
 
   /**
@@ -150,17 +152,27 @@ public class ResultLSChartFile extends AbstractResultLSFile
   {
     final LayerType[] layers = findFixationLayers( chart );
 
+    final Feature fixation = getWaterLevelFixationMember();
+
     for( final LayerType layer : layers )
     {
-      if( Objects.isNull( m_waterLevelFixation ) )
+      if( Objects.isNull( fixation ) )
         Layers.remove( chart.getLayers(), layer );
       else
       {
         final ProviderType provider = layer.getProvider();
-        Providers.updateParameter( provider, "observationId", m_waterLevelFixation.getId() );
+        Providers.updateParameter( provider, "observationId", fixation.getId() ); //$NON-NLS-1$
       }
     }
+  }
 
+  private Feature getWaterLevelFixationMember( )
+  {
+    if( !(m_calculation instanceof CalculationWspmTuhhSteadyState) )
+      return null;
+
+    final CalculationWspmTuhhSteadyState calc = (CalculationWspmTuhhSteadyState) m_calculation;
+    return calc.getLinkedWaterLevelFixation();
   }
 
   private LayerType[] findFixationLayers( final ChartType chart )

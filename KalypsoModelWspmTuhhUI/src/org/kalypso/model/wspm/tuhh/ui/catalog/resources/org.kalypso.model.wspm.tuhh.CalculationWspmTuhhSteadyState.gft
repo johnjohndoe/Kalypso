@@ -148,13 +148,13 @@
     </gft:subcomposite>
   </gft:group>
 
-  <gft:label property="wspm:waterLevelFixationMember" style="SWT.NONE">
+  <gft:label property="tuhh:waterLevelFixationMember" style="SWT.NONE">
     <gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </gft:label>
-  <gft:combo property="wspm:waterLevelFixationMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+  <gft:combo property="tuhh:waterLevelFixationMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
     <gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
   </gft:combo>
-  <gft:validatorlabel property="wspm:waterLevelFixationMember" visible="true" style="SWT.NONE">
+  <gft:validatorlabel property="tuhh:waterLevelFixationMember" visible="true" style="SWT.NONE">
     <gft:gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </gft:validatorlabel>
 

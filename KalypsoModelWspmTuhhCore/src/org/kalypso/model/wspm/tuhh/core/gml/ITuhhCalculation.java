@@ -54,7 +54,7 @@ public interface ITuhhCalculation extends IWspmConstants, IWspmTuhhConstants
 
   QName QN_PROPERTY_RUN_OFF_EVENT_MEMBER = new QName( NS_WSPM_TUHH, "runOffEventMember" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_WATER_LEVEL_FIXATION_MEMBER = new QName( NS_WSPM, "waterLevelFixationMember" ); //$NON-NLS-1$
+  QName QN_PROPERTY_WATER_LEVEL_FIXATION_MEMBER = new QName( NS_WSPM_TUHH, "waterLevelFixationMember" ); //$NON-NLS-1$
 
   QName QN_TUHH_CALC = new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" ); //$NON-NLS-1$
 

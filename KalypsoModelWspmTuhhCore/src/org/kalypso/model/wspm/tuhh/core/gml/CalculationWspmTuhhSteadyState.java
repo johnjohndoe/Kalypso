@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.tuhh.core.gml;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -51,5 +53,10 @@ public class CalculationWspmTuhhSteadyState extends TuhhCalculation
   public CalculationWspmTuhhSteadyState( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public Feature getLinkedWaterLevelFixation( )
+  {
+    return FeatureHelper.resolveLinkedFeature( getWorkspace(), getProperty( QN_PROPERTY_WATER_LEVEL_FIXATION_MEMBER ) );
   }
 }

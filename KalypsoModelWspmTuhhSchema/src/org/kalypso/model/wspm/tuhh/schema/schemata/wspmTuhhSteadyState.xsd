@@ -175,6 +175,7 @@
 					<!-- TODO force it to be one of the water body's runOffEvents? -->
 					<element name="runOffEventMember" type="runoff:RunOffEventLinkPropertyType" />
 					<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType" />
+                    <element name="waterLevelFixationMember" type="runoff:WaterlevelFixationLinkPropertyType" minOccurs="0" maxOccurs="1" />
 				</sequence>
 			</extension>
 		</complexContent>
