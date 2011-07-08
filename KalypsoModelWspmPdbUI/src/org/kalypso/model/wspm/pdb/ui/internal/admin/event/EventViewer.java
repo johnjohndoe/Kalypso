@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
 
 import java.util.List;
 
@@ -58,20 +58,21 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.PdbNameComparator;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbLabelProvider;
 
 /**
  * @author Gernot Belger
  */
-public class WaterBodyViewer
+public class EventViewer
 {
   private TableViewer m_viewer;
 
   private final Session m_session;
 
-  public WaterBodyViewer( final Session session )
+  public EventViewer( final Session session )
   {
     m_session = session;
   }
@@ -83,7 +84,7 @@ public class WaterBodyViewer
 
     configureViewer( m_viewer );
 
-    refreshWaterBody( null );
+    refreshEvents( null );
 
     return m_viewer;
   }
@@ -97,43 +98,34 @@ public class WaterBodyViewer
 
     table.addControlListener( new ColumnsResizeControlListener() );
 
-    createLabelColumn( viewer );
     createNameColumn( viewer );
-  }
-
-  public static ViewerColumn createLabelColumn( final ColumnViewer viewer )
-  {
-    final ViewerColumn labelColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
-    final ViewerColumnItem column = new ViewerColumnItem( labelColumn );
-
-    column.setText( WaterBodyStrings.STR_NAME );
-    column.setResizable( false );
-    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
-    labelColumn.setLabelProvider( new PdbLabelProvider() );
-    ColumnViewerSorter.registerSorter( labelColumn, new PdbNameComparator() );
-    return labelColumn;
+    createMeasurementDateColumn( viewer );
   }
 
   public static ViewerColumn createNameColumn( final ColumnViewer viewer )
   {
-    final ViewerColumn gknColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
-    final ViewerColumnItem column = new ViewerColumnItem( gknColumn );
+    final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    final ViewerColumnItem column = new ViewerColumnItem( nameColumn );
 
-    column.setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
+    column.setText( "Name" );
     column.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
-    gknColumn.setLabelProvider( new WaterBodyCodeLabelProvider() );
-    ColumnViewerSorter.registerSorter( gknColumn, new PdbGknComparator() );
-    return gknColumn;
+    nameColumn.setLabelProvider( new PdbLabelProvider() );
+    ColumnViewerSorter.registerSorter( nameColumn, new PdbNameComparator() );
+    return nameColumn;
   }
 
-  public void refreshWaterBody( final String name )
+  public static ViewerColumn createMeasurementDateColumn( final ColumnViewer viewer )
   {
+    return StatesViewer.createMeasurementDateColumn( viewer );
+  }
 
-    final WaterBody[] waterBodies = loadWaterbodies( m_session );
-    m_viewer.setInput( waterBodies );
+  public void refreshEvents( final String name )
+  {
+    final Event[] events = loadEvents();
+    m_viewer.setInput( events );
 
-    final WaterBody toSelect = findWaterBody( waterBodies, name );
+    final Event toSelect = findEvent( events, name );
 
     if( toSelect == null )
       m_viewer.setSelection( StructuredSelection.EMPTY );
@@ -141,15 +133,15 @@ public class WaterBodyViewer
       m_viewer.setSelection( new StructuredSelection( toSelect ) );
   }
 
-  private static WaterBody findWaterBody( final WaterBody[] waterBodies, final String name )
+  private static Event findEvent( final Event[] events, final String name )
   {
     if( name == null )
       return null;
 
-    for( final WaterBody waterBody : waterBodies )
+    for( final Event event : events )
     {
-      if( waterBody.getName().equals( name ) )
-        return waterBody;
+      if( event.getName().equals( name ) )
+        return event;
     }
 
     return null;
@@ -160,17 +152,17 @@ public class WaterBodyViewer
     return m_viewer.getControl();
   }
 
-  public static WaterBody[] loadWaterbodies( final Session session )
+  protected Event[] loadEvents( )
   {
     try
     {
-      final List<WaterBody> waterBodies = GetPdbList.getList( session, WaterBody.class );
-      return waterBodies.toArray( new WaterBody[waterBodies.size()] );
+      final List<Event> events = GetPdbList.getList( m_session, Event.class );
+      return events.toArray( new Event[events.size()] );
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new WaterBody[] {};
+      return new Event[] {};
     }
   }
 
@@ -179,8 +171,8 @@ public class WaterBodyViewer
     return m_viewer;
   }
 
-  public WaterBody[] getExistingWaterbodies( )
+  public Event[] getExistingEvents( )
   {
-    return (WaterBody[]) m_viewer.getInput();
+    return (Event[]) m_viewer.getInput();
   }
 }

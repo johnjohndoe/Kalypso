@@ -66,7 +66,6 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
@@ -182,13 +181,13 @@ public class ConnectionContentControl extends Composite
     m_manager.update( true );
   }
 
-  public void refresh( final String stateToSelect )
+  public void refresh( final ElementSelector elementToSelect )
   {
     m_refreshJob.cancel();
 
     resetInput();
 
-    m_refreshJob.setStateToSelect( stateToSelect );
+    m_refreshJob.setElementToSelect( elementToSelect );
     m_refreshJob.schedule( 100 );
   }
 
@@ -213,10 +212,10 @@ public class ConnectionContentControl extends Composite
       final ConnectionInput input = m_refreshJob.getInput();
       ViewerUtilities.setInput( m_viewer, input, true );
 
-      final String stateToSelect = m_refreshJob.getStateToSelect();
-      final State state = input.getState( stateToSelect );
-      if( state != null )
-        ViewerUtilities.setSelection( m_viewer, new StructuredSelection( state ), true, true );
+      final ElementSelector selector = m_refreshJob.getElementToSelect();
+      final Object element = selector == null ? null : selector.findElement( input );
+      if( element != null )
+        ViewerUtilities.setSelection( m_viewer, new StructuredSelection( element ), true, true );
 
       refreshColumnSizes();
     }

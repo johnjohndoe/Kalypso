@@ -126,4 +126,12 @@ public class ConnectionInput
 
     return null;
   }
+
+  public WaterBody getWaterBody( final String waterBodyName )
+  {
+    if( waterBodyName == null )
+      return null;
+
+    return m_rootNode.findWaterBodyByName( waterBodyName );
+  }
 }

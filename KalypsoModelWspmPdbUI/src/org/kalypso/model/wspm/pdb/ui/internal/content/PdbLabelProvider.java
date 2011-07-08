@@ -66,16 +66,10 @@ public class PdbLabelProvider extends ColumnLabelProvider
   public String getText( final Object element )
   {
     if( element instanceof WaterBodyTreeNode )
-    {
-      final WaterBodyTreeNode node = (WaterBodyTreeNode) element;
-      return node.getLabel();
-    }
+      return ((WaterBodyTreeNode) element).getLabel();
 
     if( element instanceof WaterBody )
-    {
-      final WaterBody waterBody = (WaterBody) element;
-      return String.format( "%s", waterBody.getName() );
-    }
+      return ((WaterBody) element).getLabel();
 
     if( element instanceof State )
       return ((State) element).getName();

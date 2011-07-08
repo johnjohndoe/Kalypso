@@ -92,6 +92,9 @@ public class PdbNameComparator extends ViewerComparator
     if( element instanceof State )
       return ((State) element).getName();
 
+    if( element instanceof Event )
+      return ((Event) element).getName();
+
     return element.toString();
   }
 }
