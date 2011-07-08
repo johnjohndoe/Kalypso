@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<WspmProject xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns="org.kalypso.model.wspmproj" xmlns:swe="http://www.opengis.net/swe" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:commonShp="org.kalypso.gml.common" xmlns:wspmproj="org.kalypso.model.wspmproj" gml:id="root">
+<WspmProject xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns="org.kalypso.model.wspmproj" xmlns:swe="http://www.opengis.net/swe" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:commonShp="org.kalypso.gml.common" gml:id="root">
  <wspm:waterBodyMember xmlns:wspm="org.kalypso.model.wspm">
   <wspm:WaterBody gml:id="WaterBody12119937672611">
    <gml:description>Ein Demo-Gewässer</gml:description>
    <gml:name>Demo</gml:name>
    <wspm:refNr/>
+   <wspm:centerLine/>
    <wspm:isDirectionUpstream>true</wspm:isDirectionUpstream>
    <wspm:profileMember>
     <prof:Profile gml:id="Profile12119938274871">
@@ -13333,6 +13334,44 @@ an, um ein externes Bild zu referenzieren.</gml:description>
 ]]></om:result>
     </runoff:RunOffEvent>
    </wspm:runOffEventMember>
+   <wspm:waterlevelFixationMember>
+    <runoff:WaterlevelFixation gml:id="WaterlevelFixation1310124696268658">
+     <gml:name>Demo Water Level Fixation</gml:name>
+     <om:time xmlns:om="http://www.opengis.net/om"/>
+     <om:procedure xmlns:om="http://www.opengis.net/om"/>
+     <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
+     <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
+     <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+      <swe:RecordDefinition gml:id="WaterlevelFixation1310124696268658_fixedResultDefinitionId">
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"/>
+      </swe:RecordDefinition>
+     </om:resultDefinition>
+     <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[46 363.8
+44 363.6
+43 363.7
+]]></om:result>
+    </runoff:WaterlevelFixation>
+   </wspm:waterlevelFixationMember>
+   <wspm:waterlevelFixationMember>
+    <runoff:WaterlevelFixation gml:id="WaterlevelFixation1310125232948190">
+     <gml:name>Demo Water Level Fixation Weir</gml:name>
+     <om:time xmlns:om="http://www.opengis.net/om"/>
+     <om:procedure xmlns:om="http://www.opengis.net/om"/>
+     <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
+     <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
+     <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+      <swe:RecordDefinition gml:id="WaterlevelFixation1310125232948190_fixedResultDefinitionId">
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"/>
+      </swe:RecordDefinition>
+     </om:resultDefinition>
+     <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[46 365.2
+44 363.60
+43 363.70
+]]></om:result>
+    </runoff:WaterlevelFixation>
+   </wspm:waterlevelFixationMember>
   </wspm:WaterBody>
  </wspm:waterBodyMember>
  <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
@@ -13384,6 +13423,7 @@ an, um ein externes Bild zu referenzieren.</gml:description>
      <tuhh:maximalRunOff/>
     </tuhh:RunOffInterval>
    </tuhh:runOffIntervalMember>
+   <tuhh:waterLevelFixationMember xlink:href="#WaterlevelFixation1310124696268658"/>
   </tuhh:CalculationWspmTuhhSteadyState>
  </wspm:calculationMember>
  <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
@@ -13435,57 +13475,7 @@ an, um ein externes Bild zu referenzieren.</gml:description>
      <tuhh:maximalRunOff/>
     </tuhh:RunOffInterval>
    </tuhh:runOffIntervalMember>
-  </tuhh:CalculationWspmTuhhSteadyState>
- </wspm:calculationMember>
- <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
-  <tuhh:CalculationWspmTuhhSteadyState gml:id="CalculationWspmTuhhSteadyState1211996775952122">
-   <gml:description>Wasserspiegellagenberechnung mit Randbedinungen: Abfluss 2 und Grenztiefe</gml:description>
-   <gml:name>Rechnung 2</gml:name>
-   <wspm:calcCreationMember>
-    <wspm:CalcCreation gml:id="CalcCreation1211996775952286">
-     <wspm:user>BCE</wspm:user>
-     <wspm:date>2008-05-28T19:46:39.717+02:00</wspm:date>
-    </wspm:CalcCreation>
-   </wspm:calcCreationMember>
-   <tuhh:fliessgesetz>DARCY_WEISBACH_MIT_FORMEINFLUSS</tuhh:fliessgesetz>
-   <tuhh:mode>WATERLEVEL</tuhh:mode>
-   <tuhh:reachWspmTuhhSteadyStateMember xlink:href="#ReachWspmTuhhSteadyState1211993884481105"/>
-   <tuhh:subReachDefinitionMember>
-    <tuhh:SubReachDefinition gml:id="SubReachDefinition1211996775952196">
-     <tuhh:startStation>0</tuhh:startStation>
-     <tuhh:endStation>50</tuhh:endStation>
-    </tuhh:SubReachDefinition>
-   </tuhh:subReachDefinitionMember>
-   <tuhh:waterlevelParameterMember>
-    <tuhh:WaterlevelParameter gml:id="WaterlevelParameter1211996775952770">
-     <tuhh:exeVersion>_2_2_1_0</tuhh:exeVersion>
-     <tuhh:wspIteration>SIMPLE</tuhh:wspIteration>
-     <tuhh:verzoegerungsverlust>BJOERNSEN</tuhh:verzoegerungsverlust>
-     <tuhh:reibungsverlust>TRAPEZ_FORMULA</tuhh:reibungsverlust>
-     <tuhh:specialOptionsMember>
-      <tuhh:SpecialOptions gml:id="SpecialOptions1211996775952109">
-       <tuhh:doCalcBridges>true</tuhh:doCalcBridges>
-       <tuhh:doCalcBarrages>true</tuhh:doCalcBarrages>
-       <tuhh:useExtremeRoughness>false</tuhh:useExtremeRoughness>
-      </tuhh:SpecialOptions>
-     </tuhh:specialOptionsMember>
-    </tuhh:WaterlevelParameter>
-   </tuhh:waterlevelParameterMember>
-   <tuhh:startConditionMember>
-    <tuhh:StartCondition gml:id="StartCondition1211996775952368">
-     <tuhh:kind>WATERLEVEL</tuhh:kind>
-     <tuhh:waterlevel>367.2</tuhh:waterlevel>
-     <tuhh:bottomSlope/>
-    </tuhh:StartCondition>
-   </tuhh:startConditionMember>
-   <tuhh:runOffEventMember xlink:href="#RunOffEvent1211995667675772"/>
-   <tuhh:runOffIntervalMember>
-    <tuhh:RunOffInterval gml:id="RunOffInterval1211996775952716">
-     <tuhh:minimalRunOff/>
-     <tuhh:runOffStep/>
-     <tuhh:maximalRunOff/>
-    </tuhh:RunOffInterval>
-   </tuhh:runOffIntervalMember>
+   <tuhh:waterLevelFixationMember xlink:href="#WaterlevelFixation1310124696268658"/>
   </tuhh:CalculationWspmTuhhSteadyState>
  </wspm:calculationMember>
  <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
@@ -13532,6 +13522,58 @@ an, um ein externes Bild zu referenzieren.</gml:description>
    <tuhh:runOffEventMember xlink:href="#RunOffEvent1283765702791436"/>
    <tuhh:runOffIntervalMember>
     <tuhh:RunOffInterval gml:id="RunOffInterval12837658806771004">
+     <tuhh:minimalRunOff/>
+     <tuhh:runOffStep/>
+     <tuhh:maximalRunOff/>
+    </tuhh:RunOffInterval>
+   </tuhh:runOffIntervalMember>
+   <tuhh:waterLevelFixationMember xlink:href="#WaterlevelFixation1310125232948190"/>
+  </tuhh:CalculationWspmTuhhSteadyState>
+ </wspm:calculationMember>
+ <wspm:calculationMember xmlns:wspm="org.kalypso.model.wspm">
+  <tuhh:CalculationWspmTuhhSteadyState gml:id="CalculationWspmTuhhSteadyState1211996775952122">
+   <gml:description>Wasserspiegellagenberechnung mit Randbedinungen: Abfluss 2 und Grenztiefe</gml:description>
+   <gml:name>Rechnung 2</gml:name>
+   <wspm:calcCreationMember>
+    <wspm:CalcCreation gml:id="CalcCreation1211996775952286">
+     <wspm:user>BCE</wspm:user>
+     <wspm:date>2008-05-28T19:46:39.717+02:00</wspm:date>
+    </wspm:CalcCreation>
+   </wspm:calcCreationMember>
+   <tuhh:fliessgesetz>DARCY_WEISBACH_MIT_FORMEINFLUSS</tuhh:fliessgesetz>
+   <tuhh:mode>WATERLEVEL</tuhh:mode>
+   <tuhh:reachWspmTuhhSteadyStateMember xlink:href="#ReachWspmTuhhSteadyState1211993884481105"/>
+   <tuhh:subReachDefinitionMember>
+    <tuhh:SubReachDefinition gml:id="SubReachDefinition1211996775952196">
+     <tuhh:startStation>0</tuhh:startStation>
+     <tuhh:endStation>50</tuhh:endStation>
+    </tuhh:SubReachDefinition>
+   </tuhh:subReachDefinitionMember>
+   <tuhh:waterlevelParameterMember>
+    <tuhh:WaterlevelParameter gml:id="WaterlevelParameter1211996775952770">
+     <tuhh:exeVersion>_2_2_1_0</tuhh:exeVersion>
+     <tuhh:wspIteration>SIMPLE</tuhh:wspIteration>
+     <tuhh:verzoegerungsverlust>BJOERNSEN</tuhh:verzoegerungsverlust>
+     <tuhh:reibungsverlust>TRAPEZ_FORMULA</tuhh:reibungsverlust>
+     <tuhh:specialOptionsMember>
+      <tuhh:SpecialOptions gml:id="SpecialOptions1211996775952109">
+       <tuhh:doCalcBridges>true</tuhh:doCalcBridges>
+       <tuhh:doCalcBarrages>true</tuhh:doCalcBarrages>
+       <tuhh:useExtremeRoughness>false</tuhh:useExtremeRoughness>
+      </tuhh:SpecialOptions>
+     </tuhh:specialOptionsMember>
+    </tuhh:WaterlevelParameter>
+   </tuhh:waterlevelParameterMember>
+   <tuhh:startConditionMember>
+    <tuhh:StartCondition gml:id="StartCondition1211996775952368">
+     <tuhh:kind>WATERLEVEL</tuhh:kind>
+     <tuhh:waterlevel>367.2</tuhh:waterlevel>
+     <tuhh:bottomSlope/>
+    </tuhh:StartCondition>
+   </tuhh:startConditionMember>
+   <tuhh:runOffEventMember xlink:href="#RunOffEvent1211995667675772"/>
+   <tuhh:runOffIntervalMember>
+    <tuhh:RunOffInterval gml:id="RunOffInterval1211996775952716">
      <tuhh:minimalRunOff/>
      <tuhh:runOffStep/>
      <tuhh:maximalRunOff/>

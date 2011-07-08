@@ -13,6 +13,7 @@
 	</buildSpec>
 	<natures>
 		<nature>org.kalypso.simulation.ui.ModelNature</nature>
-	    <nature>org.eclipse.pde.PluginNature</nature>
+		<nature>org.eclipse.pde.PluginNature</nature>
+		<nature>org.kalypso.module.ModuleNature</nature>
 	</natures>
 </projectDescription>
