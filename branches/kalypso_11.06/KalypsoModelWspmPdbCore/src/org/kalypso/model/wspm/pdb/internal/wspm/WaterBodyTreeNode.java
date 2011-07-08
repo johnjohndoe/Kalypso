@@ -189,4 +189,20 @@ public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
 
     return false;
   }
+
+  public WaterBody findWaterBodyByName( final String waterBodyName )
+  {
+    final String name = m_water == null ? null : m_water.getName();
+    if( waterBodyName.equals( name ) )
+      return m_water;
+
+    for( final WaterBodyTreeNode node : m_waterChildren )
+    {
+      final WaterBody foundWater = node.findWaterBodyByName( waterBodyName );
+      if( foundWater != null )
+        return foundWater;
+    }
+
+    return null;
+  }
 }

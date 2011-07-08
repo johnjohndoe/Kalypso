@@ -40,67 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshContentJob extends Job
+public interface IConnectionViewer
 {
-  private final IPdbConnection m_connection;
+  IPdbConnection getConnection( );
 
-  private ConnectionInput m_input;
-
-  private ElementSelector m_elementToSelect;
-
-  public RefreshContentJob( final IPdbConnection connection )
-  {
-    super( "Refresh..." );
-
-    m_connection = connection;
-  }
-
-  @Override
-  protected IStatus run( final IProgressMonitor monitor )
-  {
-    monitor.beginTask( "Refresh...", IProgressMonitor.UNKNOWN );
-
-    try
-    {
-      final Session session = m_connection.openSession();
-      m_input = new ConnectionInput( session );
-      return Status.OK_STATUS;
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to connect to database", e );
-    }
-    finally
-    {
-      monitor.done();
-    }
-  }
-
-  public ConnectionInput getInput( )
-  {
-    return m_input;
-  }
-
-  public void setElementToSelect( final ElementSelector elementToSelect )
-  {
-    m_elementToSelect = elementToSelect;
-  }
-
-  public ElementSelector getElementToSelect( )
-  {
-    return m_elementToSelect;
-  }
+  void reload( ElementSelector elementToSelect );
 }

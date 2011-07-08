@@ -40,67 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshContentJob extends Job
+public class ElementSelector
 {
-  private final IPdbConnection m_connection;
+  private String m_waterBodyName;
 
-  private ConnectionInput m_input;
+  private String m_stateName;
 
-  private ElementSelector m_elementToSelect;
-
-  public RefreshContentJob( final IPdbConnection connection )
+  public void setWaterBodyNameForSelection( final String waterBodyName )
   {
-    super( "Refresh..." );
-
-    m_connection = connection;
+    m_waterBodyName = waterBodyName;
   }
 
-  @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  public void setStateNameForSelection( final String stateName )
   {
-    monitor.beginTask( "Refresh...", IProgressMonitor.UNKNOWN );
-
-    try
-    {
-      final Session session = m_connection.openSession();
-      m_input = new ConnectionInput( session );
-      return Status.OK_STATUS;
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to connect to database", e );
-    }
-    finally
-    {
-      monitor.done();
-    }
+    m_stateName = stateName;
   }
 
-  public ConnectionInput getInput( )
+  public Object findElement( final ConnectionInput input )
   {
-    return m_input;
-  }
+    if( m_waterBodyName != null )
+      return input.getWaterBody( m_waterBodyName );
 
-  public void setElementToSelect( final ElementSelector elementToSelect )
-  {
-    m_elementToSelect = elementToSelect;
-  }
+    if( m_stateName != null )
+      return input.getState( m_stateName );
 
-  public ElementSelector getElementToSelect( )
-  {
-    return m_elementToSelect;
+    return null;
   }
 }

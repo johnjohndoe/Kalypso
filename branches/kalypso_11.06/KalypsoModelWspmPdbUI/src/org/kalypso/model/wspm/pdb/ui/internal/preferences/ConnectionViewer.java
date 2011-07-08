@@ -40,14 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -55,6 +63,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.ConnectionAdminControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ConnectionContentControl;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.filter.StateFilterControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
@@ -157,9 +166,37 @@ public class ConnectionViewer extends Composite
     return section;
   }
 
-  public void reload( final String stateToSelect )
+  public void reload( final ElementSelector elementToSelect )
   {
     if( m_contentViewer != null )
-      m_contentViewer.refresh( stateToSelect );
+      m_contentViewer.refresh( elementToSelect );
+  }
+
+  public void createContextMenu( final IWorkbenchPartSite site )
+  {
+    final TreeViewer viewer = m_contentViewer.getTreeViewer();
+    site.setSelectionProvider( viewer );
+
+    // create context menu for editor
+    final MenuManager menuManager = new MenuManager();
+    // add additions separator: if not, eclipse whines
+    menuManager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+
+    final Menu menu = menuManager.createContextMenu( viewer.getControl() );
+
+    site.registerContextMenu( menuManager, viewer ); //$NON-NLS-N$
+//    site.registerContextMenu( "pdbContentTreePopupMenu", menuManager, viewer ); //$NON-NLS-N$
+
+    viewer.getControl().setMenu( menu );
+
+    viewer.getControl().addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        menuManager.dispose();
+        site.setSelectionProvider( null );
+      }
+    } );
   }
 }

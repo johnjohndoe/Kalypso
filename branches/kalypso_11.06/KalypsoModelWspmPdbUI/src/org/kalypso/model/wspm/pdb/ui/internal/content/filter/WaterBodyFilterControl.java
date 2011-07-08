@@ -107,8 +107,8 @@ public class WaterBodyFilterControl extends Composite
 
   private void createContents( final FormToolkit toolkit, final Composite parent )
   {
-    createGknField( toolkit, parent );
     createNameField( toolkit, parent );
+    createGknField( toolkit, parent );
   }
 
   private void createGknField( final FormToolkit toolkit, final Composite parent )
