@@ -31,7 +31,7 @@ import org.kalypso.model.wspm.pdb.db.constants.EventConstants;
  */
 @Entity
 @Table(name = "event", schema = "pdb_admin", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-public class Event extends AbstractModelObject implements Serializable, EventConstants
+public class Event extends AbstractModelObject implements Serializable, EventConstants, IElementWithDates
 {
   private BigDecimal id;
 
@@ -125,6 +125,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     firePropertyChange( PROPERTY_NAME, oldValue, name );
   }
 
+  @Override
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "creation_date", nullable = false, length = 22)
   public Date getCreationDate( )
@@ -137,6 +138,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     this.creationDate = creationDate;
   }
 
+  @Override
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "editing_date", nullable = false, length = 22)
   public Date getEditingDate( )
@@ -149,6 +151,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     this.editingDate = editingDate;
   }
 
+  @Override
   @Column(name = "editing_user", nullable = false, length = 50)
   public String getEditingUser( )
   {
@@ -160,6 +163,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
     this.editingUser = editingUser;
   }
 
+  @Override
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "measurement_date", length = 22)
   public Date getMeasurementDate( )

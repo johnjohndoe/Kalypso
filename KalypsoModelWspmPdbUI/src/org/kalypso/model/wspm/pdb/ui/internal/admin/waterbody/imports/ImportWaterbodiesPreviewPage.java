@@ -119,7 +119,7 @@ public class ImportWaterbodiesPreviewPage extends WizardPage implements IUpdatea
     m_viewer = CheckboxTableViewer.newCheckList( panel, SWT.BORDER | SWT.FULL_SELECTION );
     m_viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    WaterBodyViewer.configureViewer( m_viewer, true );
+    WaterBodyViewer.configureViewer( m_viewer );
     m_viewer.setContentProvider( new ArrayContentProvider() );
 
     final TableViewerColumn validColumn = new TableViewerColumn( m_viewer, SWT.LEFT );

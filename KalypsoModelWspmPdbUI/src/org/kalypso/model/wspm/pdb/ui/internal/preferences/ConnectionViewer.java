@@ -91,7 +91,7 @@ public class ConnectionViewer extends Composite
 
     createAdminGroup( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     createPdbView( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    final StructuredViewer contentViewer = m_contentViewer.getViewer();
+    final StructuredViewer contentViewer = m_contentViewer.getTreeViewer();
     createSearchControls( toolkit, this, contentViewer ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
   }
 

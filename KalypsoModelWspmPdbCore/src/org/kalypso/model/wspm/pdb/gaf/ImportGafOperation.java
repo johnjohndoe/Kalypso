@@ -110,8 +110,7 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
 
       final GafProfiles profiles = m_data.getGafProfiles();
 
-      final boolean hasWaterlevels = m_data.getHasWaterlevels();
-      final Event waterlevelEvent = hasWaterlevels ? m_data.getWaterlevelEvent() : null;
+      final Event waterlevelEvent = getWaterlevelEvent();
 
       final Gaf2Db gaf2db = new Gaf2Db( dbType, waterBody, state, profiles, waterlevelEvent, monitor );
       new Executor( session, gaf2db ).execute();
@@ -131,6 +130,18 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
       ProgressUtilities.done( monitor );
       PdbUtils.closeSessionQuietly( session );
     }
+  }
+
+  protected Event getWaterlevelEvent( )
+  {
+    if( !m_data.getHasWaterlevels() )
+      return null;
+
+    final boolean importWaterlevels = m_data.getImportWaterlevels();
+    if( !importWaterlevels )
+      return null;
+
+    return m_data.getWaterlevelEvent();
   }
 
   private IStatus doWriteLog( final IProgressMonitor monitor )

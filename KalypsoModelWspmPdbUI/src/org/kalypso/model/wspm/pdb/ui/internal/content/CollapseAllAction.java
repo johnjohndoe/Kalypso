@@ -44,7 +44,6 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandImageService;
@@ -56,11 +55,11 @@ import org.eclipse.ui.services.IServiceLocator;
  */
 public class CollapseAllAction extends Action
 {
-  private final TreeViewer m_viewer;
+  private final ConnectionContentControl m_control;
 
-  public CollapseAllAction( final TreeViewer viewer )
+  public CollapseAllAction( final ConnectionContentControl control )
   {
-    m_viewer = viewer;
+    m_control = control;
 
     try
     {
@@ -83,6 +82,7 @@ public class CollapseAllAction extends Action
   @Override
   public void run( )
   {
-    m_viewer.collapseAll();
+    m_control.getTreeViewer().collapseAll();
+    m_control.refreshColumnSizes();
   }
 }

@@ -44,6 +44,7 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
@@ -73,11 +74,14 @@ public class PdbLabelProvider extends ColumnLabelProvider
     if( element instanceof WaterBody )
     {
       final WaterBody waterBody = (WaterBody) element;
-      return String.format( "%s (%s)", waterBody.getLabel(), waterBody.getName() );
+      return String.format( "%s", waterBody.getName() );
     }
 
     if( element instanceof State )
       return ((State) element).getName();
+
+    if( element instanceof Event )
+      return ((Event) element).getName();
 
     if( element instanceof CrossSection )
       return ObjectUtils.toString( ((CrossSection) element).getStation() );
@@ -93,6 +97,9 @@ public class PdbLabelProvider extends ColumnLabelProvider
 
     if( element instanceof State )
       return WspmPdbUiImages.getImage( IMAGE.STATE );
+
+    if( element instanceof Event )
+      return WspmPdbUiImages.getImage( IMAGE.EVENT );
 
     if( element instanceof CrossSection )
       return WspmPdbUiImages.getImage( IMAGE.CROSS_SECTION );

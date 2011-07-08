@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -67,6 +68,6 @@ public class PdbGknComparator extends ViewerComparator
     if( element instanceof WaterBody )
       return ((WaterBody) element).getName();
 
-    return element.toString();
+     return element.toString();
   }
 }

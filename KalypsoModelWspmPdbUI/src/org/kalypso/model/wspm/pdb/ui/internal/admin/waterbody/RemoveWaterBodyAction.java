@@ -122,6 +122,9 @@ public class RemoveWaterBodyAction extends UpdateableAction
 
   private boolean hasData( final WaterBody waterBody )
   {
-    return !waterBody.getCrossSections().isEmpty();
+    final boolean hasCrossSections = !waterBody.getCrossSections().isEmpty();
+    final boolean hasWaterlevels = !waterBody.getEvents().isEmpty();
+
+    return hasCrossSections || hasWaterlevels;
   }
 }
