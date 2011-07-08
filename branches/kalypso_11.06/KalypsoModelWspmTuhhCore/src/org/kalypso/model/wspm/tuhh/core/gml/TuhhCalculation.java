@@ -377,9 +377,4 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
     final String calcCaseName = getName();
     return new Path( IWspmTuhhConstants.FOLDER_RESULTS ).append( calcCaseName );
   }
-
-  public Feature getLinkedWaterLevelFixation( )
-  {
-    return FeatureHelper.resolveLinkedFeature( getWorkspace(), getProperty( QN_PROPERTY_WATER_LEVEL_FIXATION_MEMBER ) );
-  }
 }

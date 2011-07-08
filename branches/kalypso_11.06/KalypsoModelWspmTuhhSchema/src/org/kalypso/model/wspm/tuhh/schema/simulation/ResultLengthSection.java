@@ -170,7 +170,7 @@ public class ResultLengthSection
 
     /* Create result file handlers */
     addResultFile( new ResultLSGmlFile( m_dataDir, dataFilename, lengthSectionWorkspace ) );
-    addResultFile( new ResultLSChartFile( m_outDir, runoffName, isDirectionUpstreams, dataFilename, title, m_calculation.getLinkedWaterLevelFixation() ) );
+    addResultFile( new ResultLSChartFile( m_outDir, runoffName, isDirectionUpstreams, dataFilename, title, m_calculation ) );
     addResultFile( new ResultLSTableFile( m_outDir, runoffName, dataFilename ) );
     addResultFile( new ResultLSBreaklinesFile( m_dataDir, runoffName, breakLines ) );
     addResultFile( new ResultLSTinFile( m_dataDir, runoffName, breakLines ) );
