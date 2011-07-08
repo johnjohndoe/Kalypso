@@ -53,15 +53,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.wspwin.LengthSectionExporter;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.wspwin.core.Plotter;
 
@@ -130,24 +127,10 @@ public class LengthSectionExportHandler extends AbstractHandler
   {
     final IChartModel chartModel = chartPart.getChartComposite().getChartModel();
     final ILayerManager layerManager = chartModel.getLayerManager();
-    final IChartLayer[] layers = layerManager.getLayers();
-    for( final IChartLayer iChartLayer : layers )
-    {
-      if( iChartLayer instanceof TupleResultLineLayer )
-      {
-        final IObservation<TupleResult> obs = ((TupleResultLineLayer) iChartLayer).getObservation();
-        if( obs != null )
-        {
-          for( final IComponent comp : obs.getResult().getComponents() )
-          {
-            if( comp.getId().equals( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) )
-              return obs;
-          }
-        }
-      }
-    }
+    final LengthSectionExportVisitor visitor = new LengthSectionExportVisitor();
+    layerManager.accept( visitor );
 
-    return null;
+    return visitor.getObservation();
   }
 
 }
