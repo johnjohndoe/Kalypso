@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
@@ -54,10 +55,30 @@ public class PdbNameComparator extends ViewerComparator
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
+    /* First, sort by type, with a predefined order */
+    final int order1 = getOrder( e1 );
+    final int order2 = getOrder( e2 );
+    if( order1 != order2 )
+      return order1 - order2;
+
+    /* Else sort by name */
     final String n1 = getName( e1 );
     final String n2 = getName( e2 );
-
     return n1.compareTo( n2 );
+  }
+
+  private int getOrder( final Object element )
+  {
+    if( element instanceof WaterBodyTreeNode )
+      return 0;
+
+    if( element instanceof State )
+      return 1;
+
+    if( element instanceof Event )
+      return 2;
+
+    return 1000;
   }
 
   private String getName( final Object element )

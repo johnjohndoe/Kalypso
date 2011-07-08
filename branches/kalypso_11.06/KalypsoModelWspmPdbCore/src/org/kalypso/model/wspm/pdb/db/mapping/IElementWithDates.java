@@ -38,27 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.db.mapping;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
+import java.util.Date;
 
 /**
+ * Common interface for all elements that have creation, measurement, editing dates and also the editing user.
+ * 
  * @author Gernot Belger
  */
-public class WaterBodyCodeLabelProvider extends ColumnLabelProvider
+public interface IElementWithDates
 {
-  @Override
-  public String getText( final Object element )
-  {
-    if( element instanceof WaterBody )
-      return ((WaterBody) element).getName();
+  Date getCreationDate( );
 
-    if( element instanceof WaterBodyTreeNode )
-      return ((WaterBodyTreeNode) element).getWaterBody().getName();
+  Date getEditingDate( );
 
-    return StringUtils.EMPTY;
-  }
+  String getEditingUser( );
+
+  Date getMeasurementDate( );
 }

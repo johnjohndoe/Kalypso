@@ -44,7 +44,6 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandImageService;
@@ -56,12 +55,11 @@ import org.eclipse.ui.services.IServiceLocator;
  */
 public class ExpandAllAction extends Action
 {
-  private final TreeViewer m_viewer;
+  private final ConnectionContentControl m_control;
 
-  public ExpandAllAction( final TreeViewer viewer )
+  public ExpandAllAction( final ConnectionContentControl control )
   {
-    m_viewer = viewer;
-
+    m_control = control;
     try
     {
       final IServiceLocator locator = PlatformUI.getWorkbench();
@@ -83,6 +81,7 @@ public class ExpandAllAction extends Action
   @Override
   public void run( )
   {
-    m_viewer.expandAll();
+    m_control.getTreeViewer().expandAll();
+    m_control.refreshColumnSizes();
   }
 }

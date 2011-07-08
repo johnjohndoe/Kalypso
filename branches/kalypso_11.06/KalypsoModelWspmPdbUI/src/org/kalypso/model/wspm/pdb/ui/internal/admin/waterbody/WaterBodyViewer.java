@@ -40,22 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.databinding.beans.BeanProperties;
-import org.eclipse.core.databinding.observable.list.WritableList;
-import org.eclipse.core.databinding.property.value.IValueProperty;
-import org.eclipse.jface.databinding.viewers.ViewerSupport;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.hibernate.Session;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -70,8 +68,6 @@ public class WaterBodyViewer
 {
   private TableViewer m_viewer;
 
-  private WritableList m_tableInput;
-
   private final Session m_session;
 
   public WaterBodyViewer( final Session session )
@@ -82,23 +78,16 @@ public class WaterBodyViewer
   public TableViewer createTableViewer( final Composite parent )
   {
     m_viewer = new TableViewer( parent, SWT.BORDER | SWT.FULL_SELECTION );
+    m_viewer.setContentProvider( new ArrayContentProvider() );
 
-    configureViewer( m_viewer, false );
-
-    m_tableInput = new WritableList( new ArrayList<WaterBody>(), WaterBody.class );
+    configureViewer( m_viewer );
 
     refreshWaterBody( null );
-
-    final IValueProperty labelProperty = BeanProperties.value( WaterBody.class, WaterBody.PROPERTY_LABEL );
-    final IValueProperty gknProperty = BeanProperties.value( WaterBody.class, WaterBody.PROPERTY_NAME );
-
-    final IValueProperty[] labelProperties = new IValueProperty[] { gknProperty, labelProperty };
-    ViewerSupport.bind( m_viewer, m_tableInput, labelProperties );
 
     return m_viewer;
   }
 
-  public static void configureViewer( final TableViewer viewer, final boolean setLabelProvider )
+  public static void configureViewer( final TableViewer viewer )
   {
     viewer.setUseHashlookup( true );
 
@@ -107,28 +96,41 @@ public class WaterBodyViewer
 
     table.addControlListener( new ColumnsResizeControlListener() );
 
-    final TableViewerColumn gknColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    gknColumn.getColumn().setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
-    gknColumn.getColumn().setResizable( false );
-    ColumnsResizeControlListener.setMinimumPackWidth( gknColumn.getColumn() );
-    if( setLabelProvider )
-      gknColumn.setLabelProvider( new WaterBodyCodeLabelProvider() );
-    ColumnViewerSorter.registerSorter( gknColumn, new PdbGknComparator() );
+    createNameColumn( viewer );
+    createLabelColumn( viewer );
+  }
 
-    final TableViewerColumn labelColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    labelColumn.getColumn().setText( WaterBodyStrings.STR_NAME );
-    labelColumn.getColumn().setResizable( false );
-    ColumnsResizeControlListener.setMinimumPackWidth( labelColumn.getColumn() );
-    if( setLabelProvider )
-      labelColumn.setLabelProvider( new WaterBodyLabelLabelProvider() );
+  public static ViewerColumn createLabelColumn( final ColumnViewer viewer )
+  {
+    final ViewerColumn labelColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    final ViewerColumnItem column = new ViewerColumnItem( labelColumn );
+
+    column.setText( WaterBodyStrings.STR_NAME );
+    column.setResizable( false );
+    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
+    labelColumn.setLabelProvider( new WaterBodyLabelLabelProvider() );
     ColumnViewerSorter.registerSorter( labelColumn, new PdbNameComparator() );
+    return labelColumn;
+  }
+
+  public static ViewerColumn createNameColumn( final ColumnViewer viewer )
+  {
+    final ViewerColumn gknColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    final ViewerColumnItem column = new ViewerColumnItem( gknColumn );
+
+    column.setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
+    column.setResizable( false );
+    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
+    gknColumn.setLabelProvider( new WaterBodyCodeLabelProvider() );
+    ColumnViewerSorter.registerSorter( gknColumn, new PdbGknComparator() );
+    return gknColumn;
   }
 
   public void refreshWaterBody( final String name )
   {
-    m_tableInput.clear();
-    final List<WaterBody> waterBodies = Arrays.asList( loadWaterbodies() );
-    m_tableInput.addAll( waterBodies );
+
+    final WaterBody[] waterBodies = loadWaterbodies();
+    m_viewer.setInput( waterBodies );
 
     final WaterBody toSelect = findWaterBody( waterBodies, name );
 
@@ -138,7 +140,7 @@ public class WaterBodyViewer
       m_viewer.setSelection( new StructuredSelection( toSelect ) );
   }
 
-  private static WaterBody findWaterBody( final List<WaterBody> waterBodies, final String name )
+  private static WaterBody findWaterBody( final WaterBody[] waterBodies, final String name )
   {
     if( name == null )
       return null;
@@ -178,6 +180,6 @@ public class WaterBodyViewer
 
   public WaterBody[] getExistingWaterbodies( )
   {
-    return (WaterBody[]) m_tableInput.toArray( new WaterBody[m_tableInput.size()] );
+    return (WaterBody[]) m_viewer.getInput();
   }
 }

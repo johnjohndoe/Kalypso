@@ -52,7 +52,6 @@ import java.util.TreeSet;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
@@ -60,7 +59,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
  */
 public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
 {
-  private final SortedSet<WaterBodyTreeNode> m_children = new TreeSet<WaterBodyTreeNode>();
+  private final SortedSet<WaterBodyTreeNode> m_waterChildren = new TreeSet<WaterBodyTreeNode>();
 
   private Object[] m_allChildren = null;
 
@@ -103,7 +102,7 @@ public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
 
   public String getLabel( )
   {
-    return String.format( "%s (%s)", m_water.getLabel(), m_water.getName() );
+    return m_water.getLabel();
   }
 
   public WaterBody getWaterBody( )
@@ -115,10 +114,10 @@ public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
   {
     if( m_allChildren == null )
     {
-      final Object[] states = getStates();
-      final Collection<Object> all = new ArrayList<Object>( m_children.size() + states.length );
-      all.addAll( m_children );
-      all.addAll( Arrays.asList( states ) );
+      final Object[] realChildren = getRealChildren();
+      final Collection<Object> all = new ArrayList<Object>( m_waterChildren.size() + realChildren.length );
+      all.addAll( m_waterChildren );
+      all.addAll( Arrays.asList( realChildren ) );
       m_allChildren = all.toArray( new Object[all.size()] );
       return m_allChildren;
     }
@@ -126,17 +125,19 @@ public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
     return m_allChildren;
   }
 
-  private Object[] getStates( )
+  private Object[] getRealChildren( )
   {
     if( m_water == null )
       return ArrayUtils.EMPTY_OBJECT_ARRAY;
 
     final Set<CrossSection> crossSections = m_water.getCrossSections();
-    final Set<State> states = new HashSet<State>();
+    final Set<Object> children = new HashSet<Object>();
     for( final CrossSection crossSection : crossSections )
-      states.add( crossSection.getState() );
+      children.add( crossSection.getState() );
 
-    return states.toArray( new State[states.size()] );
+    children.addAll( m_water.getEvents() );
+
+    return children.toArray( new Object[children.size()] );
   }
 
   private void addChild( final WaterBodyTreeNode childNode )
@@ -144,7 +145,7 @@ public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
     /* find parent */
     final WaterBodyTreeNode parent = findParent( childNode );
     if( parent == null )
-      m_children.add( childNode );
+      m_waterChildren.add( childNode );
     else
       parent.addChild( childNode );
   }
@@ -152,7 +153,7 @@ public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
   private WaterBodyTreeNode findParent( final WaterBodyTreeNode childNode )
   {
     final String code = childNode.getCode();
-    for( final WaterBodyTreeNode node : m_children )
+    for( final WaterBodyTreeNode node : m_waterChildren )
     {
       if( code.startsWith( node.getCode() ) )
         return node;
@@ -180,7 +181,7 @@ public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
     if( myName.contains( name ) )
       return true;
 
-    for( final WaterBodyTreeNode childNode : m_children )
+    for( final WaterBodyTreeNode childNode : m_waterChildren )
     {
       if( childNode.containsChildWithName( name ) )
         return true;
