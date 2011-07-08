@@ -266,7 +266,7 @@ public class LzsimWriter
       }
       writer.close();
     }
-    catch( final IOException e )
+    catch( final Throwable e )
     {
       final String msg = String.format( Messages.getString("LzsimWriter.7"), iniCatchment.getNaCatchmentID() ); //$NON-NLS-1$
       throw new SimulationException( msg, e );
