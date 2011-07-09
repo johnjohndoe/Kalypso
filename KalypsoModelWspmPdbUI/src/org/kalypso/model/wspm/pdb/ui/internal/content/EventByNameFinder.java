@@ -40,68 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
+ *
  */
-public class ElementSelector
+class EventByNameFinder implements IWaterBodyTreeVisitor
 {
-  private final Collection<String> m_waterBodyNames = new ArrayList<String>();
+  private final String m_searchName;
 
-  private final Collection<String> m_stateNames = new ArrayList<String>();
+  private Event m_result;
 
-  private final Collection<String> m_eventNames = new ArrayList<String>();
-
-  public void addWaterBodyName( final String waterBodyName )
+  public EventByNameFinder( final String searchName )
   {
-    m_waterBodyNames.add( waterBodyName );
+    m_searchName = searchName;
   }
 
-  public void addStateName( final String stateName )
+  @Override
+  public void visit( final WaterBodyTreeNode node ) throws CancelException
   {
-    m_stateNames.add( stateName );
-  }
+    final Set<Event> events = getEvents( node );
 
-  public void addEventName( final String eventName )
-  {
-    m_eventNames.add( eventName );
-  }
-
-  public Object[] getElements( final ConnectionInput input )
-  {
-    final Collection<Object> elements = new ArrayList<Object>();
-
-    for( final String waterBodyName : m_waterBodyNames )
-      elements.add( input.getWaterBody( waterBodyName ) );
-
-    for( final String stateName : m_stateNames )
-      elements.add( input.getState( stateName ) );
-
-    for( final String eventName : m_eventNames )
-      elements.add( input.getEvent( eventName ) );
-
-    /* null might have been added, remove it now */
-    elements.remove( null );
-
-    return elements.toArray( new Object[elements.size()] );
-  }
-
-  public void setElemensToSelect( final Object[] elements )
-  {
-    for( final Object element : elements )
+    for( final Event event : events )
     {
-      if( element instanceof WaterBody )
-        addWaterBodyName( ((WaterBody) element).getName() );
-      else if( element instanceof State )
-        addStateName( ((State) element).getName() );
-      else if( element instanceof Event )
-        addEventName( ((Event) element).getName() );
+      if( m_searchName.equals( event.getName() ) )
+      {
+        m_result = event;
+        throw new CancelException();
+      }
     }
+  }
+
+  private Set<Event> getEvents( final WaterBodyTreeNode node )
+  {
+    final WaterBody water = node.getWaterBody();
+    if( water == null )
+      return Collections.emptySet();
+
+    return water.getEvents();
+  }
+
+  public Event getResult( )
+  {
+    return m_result;
   }
 }

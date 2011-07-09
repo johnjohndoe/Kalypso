@@ -62,11 +62,10 @@ public class RefreshAction extends Action
   @Override
   public void run( )
   {
-    // TODO: get selected element
     final ElementSelector selector = new ElementSelector();
     final IStructuredSelection selection = (IStructuredSelection) m_control.getTreeViewer().getSelection();
     selector.setElemensToSelect( selection.toArray() );
 
-    m_control.refresh( null );
+    m_control.refresh( selector );
   }
 }

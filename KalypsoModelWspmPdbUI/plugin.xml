@@ -185,7 +185,7 @@
                  <and> 
                     <count value="1"/>
                     <iterate ifEmpty="false" operator="and">
-                       <instanceof value="org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode"/>
+                       <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.WaterBody"/>
                     </iterate>
                  </and>
               </with>

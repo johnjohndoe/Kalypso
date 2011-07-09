@@ -142,7 +142,8 @@ public class ConnectionContentControl extends Composite
     final Tree tree = toolkit.createTree( parent, SWT.FULL_SELECTION | SWT.MULTI );
     tree.setHeaderVisible( true );
     m_viewer = new TreeViewer( tree );
-    // m_viewer.setUseHashlookup( true );
+    m_viewer.setUseHashlookup( true );
+    m_viewer.setContentProvider( new ByWaterBodyContentProvider() );
 
     final ViewerColumn nameColumn = StatesViewer.createNameColumn( m_viewer );
     WaterBodyViewer.createNameColumn( m_viewer );
@@ -153,7 +154,6 @@ public class ConnectionContentControl extends Composite
     m_treeListener = new ColumnsResizeControlListener();
     tree.addControlListener( m_treeListener );
 
-    m_viewer.setContentProvider( new ByWaterBodyContentProvider() );
     tree.addTreeListener( new TreeListener()
     {
       @Override
