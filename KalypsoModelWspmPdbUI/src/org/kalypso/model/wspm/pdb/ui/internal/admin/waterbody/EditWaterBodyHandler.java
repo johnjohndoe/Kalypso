@@ -78,6 +78,7 @@ public class EditWaterBodyHandler extends AbstractHandler
 
     final String windowTitle = "Edit Water Body";
 
+    String nameToSelect = selectedItem.getName();
     Session session = null;
     try
     {
@@ -95,6 +96,7 @@ public class EditWaterBodyHandler extends AbstractHandler
       final WizardDialog dialog = new WizardDialog( shell, wizard );
       if( dialog.open() == Window.OK )
       {
+        nameToSelect = clone.getName();
         uncloneData( waterBodyToEdit, clone );
 
         final FlushOperation operation = new FlushOperation();
@@ -115,7 +117,7 @@ public class EditWaterBodyHandler extends AbstractHandler
     }
 
     final ElementSelector selector = new ElementSelector();
-    selector.addWaterBodyName( selectedItem.getName() );
+    selector.addWaterBodyName( nameToSelect );
     viewer.reload( selector );
     return null;
   }
