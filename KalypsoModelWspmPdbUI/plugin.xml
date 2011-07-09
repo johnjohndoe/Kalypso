@@ -165,11 +165,14 @@
   </extension>
   
   <extension point="org.eclipse.core.expressions.definitions">
+     <definition id="isPdbViewVisible">
+              <with variable="activeWorkbenchWindow">
+                 <test property="org.kalypso.ui.window.isViewVisible" value="PdbView"/>
+              </with>
+     </definition>
      <definition id="onePdbElementSelected">
            <and>
-              <with variable="activePart">
-                 <instanceof value="org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer"/>
-              </with>
+              <reference definitionId="isPdbViewVisible"/>
               <with variable="selection">
                  <and> 
                     <count value="1"/>
@@ -194,9 +197,7 @@
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard">
        <enablement>
-              <with variable="activePart">
-                 <instanceof value="org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer"/>
-              </with>
+              <reference definitionId="isPdbViewVisible"/>
        </enablement>
     </wizardEnablement>
   </extension>
