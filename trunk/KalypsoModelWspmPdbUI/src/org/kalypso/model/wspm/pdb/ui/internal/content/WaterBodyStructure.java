@@ -46,11 +46,12 @@ import java.util.Map;
 
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.ui.content.IWaterBodyStructure;
 
 /**
  * @author Gernot Belger
  */
-public class WaterBodyStructure implements IWaterBodyTreeVisitor
+public class WaterBodyStructure implements IWaterBodyTreeVisitor, IWaterBodyStructure
 {
   private final Map<WaterBody, WaterBodyTreeNode> m_waterToNodes = new IdentityHashMap<WaterBody, WaterBodyTreeNode>();
 

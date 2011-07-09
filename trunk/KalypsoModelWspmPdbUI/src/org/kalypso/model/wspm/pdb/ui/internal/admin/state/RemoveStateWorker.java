@@ -44,7 +44,10 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.ui.content.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
+import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IRemoveWorker;
 
 /**
@@ -79,8 +82,11 @@ public class RemoveStateWorker implements IRemoveWorker
   }
 
   @Override
-  public void addElementsToSelect( final ElementSelector selector )
+  public void addElementsToSelect( final IConnectionViewer viewer, final ElementSelector selector )
   {
-    selector.addStateName( m_selectedItem.getName() );
+    final IWaterBodyStructure structure = viewer.getStructure();
+    final Object parent = structure.getParent( m_selectedItem );
+    if( parent instanceof WaterBody )
+      selector.addWaterBodyName( ((WaterBody) parent).getName() );
   }
 }

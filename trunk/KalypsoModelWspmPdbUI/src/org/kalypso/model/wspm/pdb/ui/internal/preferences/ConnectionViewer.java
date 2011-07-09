@@ -66,6 +66,7 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.content.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.ConnectionAdminControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ConnectionContentControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
@@ -218,5 +219,13 @@ public class ConnectionViewer extends Composite
         site.setSelectionProvider( null );
       }
     } );
+  }
+
+  IWaterBodyStructure getStructure( )
+  {
+    if( m_contentViewer == null )
+      return null;
+
+    return m_contentViewer.getStructure();
   }
 }

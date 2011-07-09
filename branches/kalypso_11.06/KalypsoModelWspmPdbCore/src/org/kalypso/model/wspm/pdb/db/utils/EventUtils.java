@@ -38,45 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin;
+package org.kalypso.model.wspm.pdb.db.utils;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ManageWaterBodyAction;
+import org.apache.commons.lang.ObjectUtils;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 
 /**
  * @author Gernot Belger
  */
-public class ConnectionAdminControl extends Composite
+public final class EventUtils
 {
-  private final IPdbConnection m_connection;
-
-  private final IUpdateable m_updateable;
-
-  public ConnectionAdminControl( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection, final IUpdateable updateable )
+  private EventUtils( )
   {
-    super( parent, SWT.NONE );
-
-    m_connection = connection;
-    m_updateable = updateable;
-
-    GridLayoutFactory.swtDefaults().applyTo( this );
-    toolkit.adapt( this );
-
-    createWaterBodyControl( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    throw new UnsupportedOperationException();
   }
 
-  private Control createWaterBodyControl( final FormToolkit toolkit, final Composite parent )
+  public static Event findEventByName( final Event[] events, final String name )
   {
-    final Action waterbodyAction = new ManageWaterBodyAction( m_connection, m_updateable );
-    return ActionHyperlink.createHyperlink( toolkit, parent, SWT.NONE, waterbodyAction );
+    for( final Event event : events )
+    {
+      if( ObjectUtils.equals( event.getName(), name ) )
+        return event;
+    }
+    return null;
   }
+
+// public static State[] getStates( final IPdbConnection connection ) throws PdbConnectException
+// {
+// Session session = null;
+// try
+// {
+// session = connection.openSession();
+// final List<State> list = GetPdbList.getList( session, State.class );
+// final State[] states = list.toArray( new State[list.size()] );
+// session.close();
+// return states;
+// }
+// finally
+// {
+// PdbUtils.closeSessionQuietly( session );
+// }
+// }
 }
