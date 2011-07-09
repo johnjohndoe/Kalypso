@@ -49,9 +49,15 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.databinding.observable.set.WritableSet;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
@@ -97,14 +103,39 @@ public class ImportWaterBodiesData extends AbstractModelObject
 
   private final WritableSet m_selectedWaterBodies = new WritableSet( new HashSet<WaterBody>(), WaterBody.class );
 
-  private final WaterBody[] m_existingWaterbodies;
+  private WaterBody[] m_existingWaterbodies;
 
   private final IPdbConnection m_connection;
 
-  public ImportWaterBodiesData( final IPdbConnection connection, final WaterBody[] existingWaterbodies )
+  private boolean m_isInitialized = false;
+
+  public ImportWaterBodiesData( final IPdbConnection connection )
   {
     m_connection = connection;
-    m_existingWaterbodies = existingWaterbodies;
+  }
+
+  public void init( final IDialogSettings dialogSettings ) throws PdbConnectException
+  {
+    Assert.isTrue( !m_isInitialized );
+
+    m_isInitialized = true;
+
+    Session session = null;
+    try
+    {
+      session = m_connection.openSession();
+
+      m_existingWaterbodies = GetPdbList.getArray( session, WaterBody.class );
+
+      session.close();
+    }
+    finally
+    {
+      PdbUtils.closeSessionQuietly( session );
+    }
+
+    if( dialogSettings == null )
+      return;
 
     // TODO: init from dialog settings
 
@@ -196,5 +227,10 @@ public class ImportWaterBodiesData extends AbstractModelObject
   public WaterBody[] getExistingWaterBodies( )
   {
     return m_existingWaterbodies;
+  }
+
+  public boolean isInit( )
+  {
+    return m_isInitialized;
   }
 }

@@ -319,6 +319,9 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
   @Override
   public boolean isPageComplete( )
   {
+    if( m_geometryStatusComposite == null )
+      return false;
+
     final IStatus geometryStatus = m_geometryStatusComposite.getStatus();
     final boolean isGeometryOk = geometryStatus != null && geometryStatus.isOK();
 

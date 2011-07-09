@@ -38,47 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard;
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * @author Gernot Belger
  */
-public class ImportWaterBodiesAction extends UpdateableAction
+public class InitImportWaterBodiesDataOperation implements ICoreRunnableWithProgress
 {
-  private final ManageWaterBodiesPage m_page;
+  private final ImportWaterBodiesData m_data;
 
-  private final WaterBodyViewer m_viewer;
+  private final IDialogSettings m_dialogSettings;
 
-  public ImportWaterBodiesAction( final ManageWaterBodiesPage page, final WaterBodyViewer viewer )
+  public InitImportWaterBodiesDataOperation( final ImportWaterBodiesData data, final IDialogSettings dialogSettings )
   {
-    m_page = page;
-    m_viewer = viewer;
-
-    setText( "&Import..." );
+    m_data = data;
+    m_dialogSettings = dialogSettings;
   }
 
   @Override
-  protected boolean checkEnabled( )
+  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    return true;
-  }
-
-  @Override
-  public void runWithEvent( final Event event )
-  {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    final Wizard wizard = new ImportWaterBodiesWizard();
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    if( dialog.open() != Window.CANCEL )
-      m_viewer.refreshWaterBody( null );
+    try
+    {
+      m_data.init( m_dialogSettings );
+      return Status.OK_STATUS;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new InvocationTargetException( e );
+    }
   }
 }

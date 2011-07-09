@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
@@ -53,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
@@ -144,10 +147,23 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
     if( m_data.isInit() )
       return;
 
-    final InitImportGafDataOperation operation = new InitImportGafDataOperation( m_data, getDialogSettings() );
-    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    if( !result.isOK() )
-      new StatusDialog2( getShell(), result, getWindowTitle() );
+    final ImportGafData data = m_data;
+    // REMARK: postpone initializing data, else we might have a clash with creation of the page
+    // Is there a better tmie to init?
+    final UIJob job = new UIJob( "Start init data" ) //$NON-NLS-1$
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        final InitImportGafDataOperation operation = new InitImportGafDataOperation( data, getDialogSettings() );
+        final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
+        if( !result.isOK() )
+          new StatusDialog2( getShell(), result, getWindowTitle() );
+        return Status.OK_STATUS;
+      }
+    };
+    job.setSystem( true );
+    job.schedule( 100 );
   }
 
   @Override

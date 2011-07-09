@@ -41,27 +41,38 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 import org.eclipse.core.databinding.observable.set.WritableSet;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
+import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
 
 /**
  * @author Gernot Belger
  */
-public class ImportWaterBodiesWizard extends Wizard
+public class ImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard
 {
   private final IPageChangedListener m_pageListener = new IPageChangedListener()
   {
@@ -72,24 +83,47 @@ public class ImportWaterBodiesWizard extends Wizard
     }
   };
 
-  private final SelectShapeFilePage m_shapeFilePage;
+  private SelectShapeFilePage m_shapeFilePage;
 
-  private final ImportWaterBodiesData m_data;
+  private ImportWaterBodiesData m_data;
 
-  public ImportWaterBodiesWizard( final ImportWaterBodiesData data )
+  private IConnectionViewer m_viewer;
+
+  public ImportWaterBodiesWizard( )
   {
-    m_data = data;
-
     setWindowTitle( "Import Water Bodies" );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
     setNeedsProgressMonitor( true );
+  }
+
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    final IWorkbenchPart activePart = workbench.getActiveWorkbenchWindow().getActivePage().getActivePart();
+    m_viewer = (IConnectionViewer) activePart;
+
+    final IPdbConnection connection = m_viewer.getConnection();
+
+    m_data = new ImportWaterBodiesData( connection );
 
     m_shapeFilePage = new SelectShapeFilePage( "selectPage", "Select Shape File", WspmPdbUiImages.IMG_WIZBAN_IMPORT_WIZ ); //$NON-NLS-1$
     m_shapeFilePage.setDescription( "Select the shape file of river lines on this page." );
     addPage( m_shapeFilePage );
 
-    addPage( new ImportWaterbodiesSelectAttributesPage( "selectAttributes", data ) ); //$NON-NLS-1$
-    addPage( new ImportWaterbodiesPreviewPage( "previewPage", data ) ); //$NON-NLS-1$
+    addPage( new ImportWaterbodiesSelectAttributesPage( "selectAttributes", m_data ) ); //$NON-NLS-1$
+    addPage( new ImportWaterbodiesPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
+  }
+
+  /**
+   * Overridden, in order NOT to pre-create the pages. We else get problems later, because the data might not yet have
+   * been initialized.
+   * 
+   * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  public void createPageControls( final Composite pageContainer )
+  {
+    // do nothing
   }
 
   @Override
@@ -105,6 +139,7 @@ public class ImportWaterBodiesWizard extends Wizard
   public void setContainer( final IWizardContainer wizardContainer )
   {
     final IWizardContainer oldContainer = getContainer();
+
     if( oldContainer instanceof IPageChangeProvider )
       ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageListener );
 
@@ -116,12 +151,38 @@ public class ImportWaterBodiesWizard extends Wizard
 
   protected void handlePageChange( final IWizardPage page )
   {
+    createData();
+
     final String shapeFile = m_shapeFilePage.getShapeFile();
     final String srs = m_shapeFilePage.getSoureCRS();
     m_data.setShapeInput( shapeFile, srs );
 
     if( page instanceof IUpdateable )
       ((IUpdateable) page).update();
+  }
+
+  private void createData( )
+  {
+    if( m_data.isInit() )
+      return;
+
+    final ImportWaterBodiesData data = m_data;
+    // REMARK: postpone initializing data, else we might have a clash with creation of the page
+    // Is there a better tmie to init?
+    final UIJob job = new UIJob( "Start init data" ) //$NON-NLS-1$
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        final InitImportWaterBodiesDataOperation operation = new InitImportWaterBodiesDataOperation( data, getDialogSettings() );
+        final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
+        if( !result.isOK() )
+          new StatusDialog2( getShell(), result, getWindowTitle() );
+        return Status.OK_STATUS;
+      }
+    };
+    job.setSystem( true );
+    job.schedule( 100 );
   }
 
   @Override
@@ -133,11 +194,14 @@ public class ImportWaterBodiesWizard extends Wizard
     final ICoreRunnableWithProgress operation = new ImportWaterBodiesOperation( waterBodies, m_data );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
-    {
       new StatusDialog2( getShell(), status, getWindowTitle() );
-      return false;
-    }
 
-    return true;
+    /* Select new element in tree */
+    final ElementSelector selector = new ElementSelector();
+    if( waterBodies.length > 0 )
+      selector.addWaterBodyName( waterBodies[0].getName() );
+    m_viewer.reload( selector );
+
+    return !status.matches( IStatus.ERROR );
   }
 }
