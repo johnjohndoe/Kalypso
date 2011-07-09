@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants.STATIONING_DIRECTION;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.shape.ShapeFile;
@@ -172,7 +173,12 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
       return info.getDefaultValue();
 
     final int fieldIndex = findFieldIndex( field.getName(), fields );
-    return data[fieldIndex];
+    final Object value = data[fieldIndex];
+
+    if( WaterBody.PROPERTY_DIRECTION_OF_STATIONING.equals( info.getProperty() ) )
+      return STATIONING_DIRECTION.valueOf( (String) value );
+
+    return value;
   }
 
   private int findFieldIndex( final String name, final IDBFField[] fields )

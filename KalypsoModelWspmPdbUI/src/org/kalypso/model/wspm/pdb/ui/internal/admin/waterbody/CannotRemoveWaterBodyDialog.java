@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ByStateContentProvider;
@@ -63,7 +64,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.PdbLabelProvider;
  */
 public class CannotRemoveWaterBodyDialog extends MessageDialog
 {
-  private static String DIALOG_MESSAGE = "Cannot remove water body.\nThere are cross sections referencing this water body:";
+  private static String DIALOG_MESSAGE = "Cannot remove water body.\nThere are cross sections or water levels referencing this water body:";
 
   private final WaterBody m_waterBody;
 
@@ -93,24 +94,28 @@ public class CannotRemoveWaterBodyDialog extends MessageDialog
     viewer.setContentProvider( new ByStateContentProvider( true ) );
     viewer.setComparator( new PdbComparator() );
 
-    final State[] allState = findAllState( m_waterBody );
-    viewer.setInput( allState );
-
+    final Object[] referencingData = findAllData( m_waterBody );
+    viewer.setInput( referencingData );
 
     return viewer.getControl();
   }
 
-  private State[] findAllState( final WaterBody waterBody )
+  private Object[] findAllData( final WaterBody waterBody )
   {
-    final Set<State> allState = new HashSet<State>();
+    final Set<Object> allData = new HashSet<Object>();
 
+    /* States via cross sections */
     final Set<CrossSection> crossSections = waterBody.getCrossSections();
     for( final CrossSection crossSection : crossSections )
     {
       final State states = crossSection.getState();
-      allState.add( states );
+      allData.add( states );
     }
 
-    return allState.toArray( new State[allState.size()] );
+    /* waterlevel events */
+    final Set<Event> events = waterBody.getEvents();
+    allData.addAll( events );
+
+    return allData.toArray( new Object[allData.size()] );
   }
 }

@@ -38,27 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
+import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
+import org.kalypso.model.wspm.pdb.gaf.GafCode;
+import org.kalypso.model.wspm.pdb.gaf.GafPointCheck;
 
 /**
  * @author Gernot Belger
  */
-public class WaterBodyCodeLabelProvider extends ColumnLabelProvider
+public class HykObservableValue extends TypedObservableValue<GafPointCheck, GafCode>
 {
-  @Override
-  public String getText( final Object element )
+  private final String m_code;
+
+  public HykObservableValue( final GafPointCheck source, final String code )
   {
-    if( element instanceof WaterBody )
-      return ((WaterBody) element).getName();
+    super( source, GafCode.class );
 
-    if( element instanceof WaterBodyTreeNode )
-      return ((WaterBodyTreeNode) element).getWaterBody().getName();
+    m_code = code;
+  }
 
-    return StringUtils.EMPTY;
+  @Override
+  public void doSetValueTyped( final GafPointCheck source, final GafCode value )
+  {
+    source.setHykMapping( m_code, value );
+  }
+
+  @Override
+  public GafCode doGetValueTyped( final GafPointCheck source )
+  {
+    return source.getHykMapping( m_code );
   }
 }

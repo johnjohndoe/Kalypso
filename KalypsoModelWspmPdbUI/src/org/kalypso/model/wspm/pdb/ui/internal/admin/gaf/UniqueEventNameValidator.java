@@ -38,69 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshContentJob extends Job
+public class UniqueEventNameValidator extends TypedValidator<String>
 {
-  private final IPdbConnection m_connection;
+  private final Set<String> m_names = new HashSet<String>();
 
-  private ConnectionInput m_input;
+  private final String m_ignoreName;
 
-  private ElementSelector m_elementToSelect;
-
-  public RefreshContentJob( final IPdbConnection connection )
+  public UniqueEventNameValidator( final String ignoreName )
   {
-    super( "Refresh..." );
+    super( String.class, IStatus.ERROR, "A waterlevel event with that name already exists" );
 
-    m_connection = connection;
+    m_ignoreName = ignoreName;
   }
 
   @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  protected IStatus doValidate( final String value ) throws CoreException
   {
-    monitor.beginTask( "Refresh...", IProgressMonitor.UNKNOWN );
+    if( value.equals( m_ignoreName ) )
+      return ValidationStatus.ok();
 
-    try
-    {
-      final Session session = m_connection.openSession();
-      m_input = new ConnectionInput( session );
-      return Status.OK_STATUS;
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to connect to database", e );
-    }
-    finally
-    {
-      monitor.done();
-    }
+    if( m_names.contains( value ) )
+      fail();
+
+    return ValidationStatus.ok();
   }
 
-  public ConnectionInput getInput( )
+  public void setExistingEvents( final Event[] existingEvents )
   {
-    return m_input;
-  }
-
-  public void setElementToSelect( final ElementSelector elementToSelect )
-  {
-    m_elementToSelect = elementToSelect;
-  }
-
-  public ElementSelector getElementToSelect( )
-  {
-    return m_elementToSelect;
+    m_names.clear();
+    for( final Event event : existingEvents )
+      m_names.add( event.getName() );
   }
 }

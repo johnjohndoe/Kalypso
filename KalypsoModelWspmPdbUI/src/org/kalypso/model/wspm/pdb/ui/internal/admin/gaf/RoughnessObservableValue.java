@@ -38,27 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
+import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
+import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
+import org.kalypso.model.wspm.pdb.gaf.GafPointCheck;
 
 /**
  * @author Gernot Belger
  */
-public class WaterBodyCodeLabelProvider extends ColumnLabelProvider
+public class RoughnessObservableValue extends TypedObservableValue<GafPointCheck, Roughness>
 {
-  @Override
-  public String getText( final Object element )
+  private final String m_code;
+
+  public RoughnessObservableValue( final GafPointCheck source, final String code )
   {
-    if( element instanceof WaterBody )
-      return ((WaterBody) element).getName();
+    super( source, Roughness.class );
+    m_code = code;
+  }
 
-    if( element instanceof WaterBodyTreeNode )
-      return ((WaterBodyTreeNode) element).getWaterBody().getName();
+  @Override
+  public void doSetValueTyped( final GafPointCheck source, final Roughness value )
+  {
+    source.setRoughnessMapping( m_code, value );
+  }
 
-    return StringUtils.EMPTY;
+  @Override
+  public Roughness doGetValueTyped( final GafPointCheck source )
+  {
+    return source.getRoughnessMapping( m_code );
   }
 }

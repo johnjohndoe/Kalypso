@@ -47,6 +47,7 @@ import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
@@ -125,5 +126,21 @@ public class ConnectionInput
     }
 
     return null;
+  }
+
+  public WaterBodyTreeNode getWaterBody( final String waterBodyName )
+  {
+    if( waterBodyName == null )
+      return null;
+
+    return m_rootNode.findWaterBodyByName( waterBodyName );
+  }
+
+  public Event getEvent( final String eventName )
+  {
+    if( eventName == null )
+      return null;
+
+    return m_rootNode.findEventName( eventName );
   }
 }

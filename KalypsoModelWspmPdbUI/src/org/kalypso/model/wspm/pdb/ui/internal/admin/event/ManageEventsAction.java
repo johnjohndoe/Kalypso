@@ -38,69 +38,60 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.hibernate.Session;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshContentJob extends Job
+public class ManageEventsAction extends Action
 {
   private final IPdbConnection m_connection;
 
-  private ConnectionInput m_input;
+  private final IUpdateable m_updateable;
 
-  private ElementSelector m_elementToSelect;
-
-  public RefreshContentJob( final IPdbConnection connection )
+  public ManageEventsAction( final IPdbConnection connection, final IUpdateable updateable )
   {
-    super( "Refresh..." );
-
     m_connection = connection;
+    m_updateable = updateable;
+
+    setText( "Manage water levels..." );
+    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.EVENT ) );
   }
 
   @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  public void runWithEvent( final Event event )
   {
-    monitor.beginTask( "Refresh...", IProgressMonitor.UNKNOWN );
+    final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    try
+    final Wizard wizard = new ManageEventsWizard( m_connection );
+    wizard.setWindowTitle( "Manage Water Levels" );
+    final WizardDialog dialog = new WizardDialog( shell, wizard )
     {
-      final Session session = m_connection.openSession();
-      m_input = new ConnectionInput( session );
-      return Status.OK_STATUS;
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to connect to database", e );
-    }
-    finally
-    {
-      monitor.done();
-    }
-  }
+      @Override
+      protected void createButtonsForButtonBar( final Composite parent )
+      {
+        super.createButtonsForButtonBar( parent );
 
-  public ConnectionInput getInput( )
-  {
-    return m_input;
-  }
+        final Button cancelButton = getButton( IDialogConstants.CANCEL_ID );
+        cancelButton.setVisible( false );
+        ((GridData) cancelButton.getLayoutData()).exclude = true;
+      }
+    };
+    dialog.open();
 
-  public void setElementToSelect( final ElementSelector elementToSelect )
-  {
-    m_elementToSelect = elementToSelect;
-  }
-
-  public ElementSelector getElementToSelect( )
-  {
-    return m_elementToSelect;
+    m_updateable.update();
   }
 }

@@ -38,69 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.kalypso.core.status.StatusComposite;
+import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshContentJob extends Job
+public class GafProfileStationLabelProvider extends ColumnLabelProvider
 {
-  private final IPdbConnection m_connection;
-
-  private ConnectionInput m_input;
-
-  private ElementSelector m_elementToSelect;
-
-  public RefreshContentJob( final IPdbConnection connection )
+  @Override
+  public String getText( final Object element )
   {
-    super( "Refresh..." );
+    if( element instanceof GafProfile )
+      return ((GafProfile) element).getStation().toString();
 
-    m_connection = connection;
+    return super.getText( element );
   }
 
   @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  public Image getImage( final Object element )
   {
-    monitor.beginTask( "Refresh...", IProgressMonitor.UNKNOWN );
-
-    try
+    if( element instanceof GafProfile )
     {
-      final Session session = m_connection.openSession();
-      m_input = new ConnectionInput( session );
-      return Status.OK_STATUS;
+      final IStatus status = ((GafProfile) element).getStatus();
+      return StatusComposite.getStatusImage( status );
     }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to connect to database", e );
-    }
-    finally
-    {
-      monitor.done();
-    }
-  }
 
-  public ConnectionInput getInput( )
-  {
-    return m_input;
-  }
-
-  public void setElementToSelect( final ElementSelector elementToSelect )
-  {
-    m_elementToSelect = elementToSelect;
-  }
-
-  public ElementSelector getElementToSelect( )
-  {
-    return m_elementToSelect;
+    return super.getImage( element );
   }
 }
