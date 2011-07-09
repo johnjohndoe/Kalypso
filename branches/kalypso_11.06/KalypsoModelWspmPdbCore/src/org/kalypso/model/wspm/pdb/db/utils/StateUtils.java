@@ -38,23 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.db.utils;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.apache.commons.lang.ObjectUtils;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
  * @author Gernot Belger
- *
  */
-public interface IEditWorker
+public final class StateUtils
 {
-  String getWindowTitle( );
+  private StateUtils( )
+  {
+    throw new UnsupportedOperationException();
+  }
 
-  Wizard createWizard( Session session ) throws PdbConnectException;
-
-  void afterWizardOK( );
-
-  void addElementsToSelect( ElementSelector selector );
+  public static State findStateByName( final State[] states, final String name )
+  {
+    for( final State state : states )
+    {
+      if( ObjectUtils.equals( state.getName(), name ) )
+        return state;
+    }
+    return null;
+  }
 }

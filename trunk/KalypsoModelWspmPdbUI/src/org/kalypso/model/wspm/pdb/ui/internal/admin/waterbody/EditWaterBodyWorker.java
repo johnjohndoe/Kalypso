@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.wizard.Wizard;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IEditWorker;
@@ -81,7 +81,7 @@ public class EditWaterBodyWorker implements IEditWorker
   public Wizard createWizard( final Session session ) throws PdbConnectException
   {
     final WaterBody[] existingWaterbodies = GetPdbList.getArray( session, WaterBody.class );
-    m_waterBodyToEdit = findWaterBody( existingWaterbodies );
+    m_waterBodyToEdit = WaterBodyUtils.findWaterBodyByName( existingWaterbodies, m_selectedItem.getName() );
     m_clone = cloneForEdit( m_waterBodyToEdit );
     return new EditWaterBodyWizard( existingWaterbodies, m_clone, Mode.EDIT );
   }
@@ -97,17 +97,6 @@ public class EditWaterBodyWorker implements IEditWorker
   public void addElementsToSelect( final ElementSelector selector )
   {
     selector.addWaterBodyName( m_nameToSelect );
-  }
-
-  private WaterBody findWaterBody( final WaterBody[] waterbodies )
-  {
-    final String name = m_selectedItem.getName();
-    for( final WaterBody waterBody : waterbodies )
-    {
-      if( ObjectUtils.equals( waterBody.getName(), name ) )
-        return waterBody;
-    }
-    return null;
   }
 
   private WaterBody cloneForEdit( final WaterBody other )

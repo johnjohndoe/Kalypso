@@ -38,23 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.db.utils;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.apache.commons.lang.ObjectUtils;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
- *
  */
-public interface IEditWorker
+public final class WaterBodyUtils
 {
-  String getWindowTitle( );
+  private WaterBodyUtils( )
+  {
+    throw new UnsupportedOperationException();
+  }
 
-  Wizard createWizard( Session session ) throws PdbConnectException;
-
-  void afterWizardOK( );
-
-  void addElementsToSelect( ElementSelector selector );
+  public static WaterBody findWaterBodyByName( final WaterBody[] waterbodies, final String name )
+  {
+    for( final WaterBody waterBody : waterbodies )
+    {
+      if( ObjectUtils.equals( waterBody.getName(), name ) )
+        return waterBody;
+    }
+    return null;
+  }
 }

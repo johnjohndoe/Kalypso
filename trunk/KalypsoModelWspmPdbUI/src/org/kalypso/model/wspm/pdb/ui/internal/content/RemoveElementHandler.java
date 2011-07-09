@@ -40,38 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.hibernate.Session;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.PdbUtils;
-import org.kalypso.model.wspm.pdb.connect.Executor;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.FlushOperation;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.ui.internal.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStateWorker;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyWorker;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.RemoveStateWorker;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.RemoveWaterBodyWorker;
 
 /**
  * @author Gernot Belger
  */
-public class EditElementHandler extends AbstractHandler
+public class RemoveElementHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
@@ -81,36 +73,23 @@ public class EditElementHandler extends AbstractHandler
 
     final IConnectionViewer viewer = PdbHandlerUtils.getConnectionViewerChecked( event );
 
-    final String username = viewer.getUsername();
-    final IEditWorker worker = findWorker( selectedItem, username );
+    final IRemoveWorker worker = findWorker( selectedItem );
+
+    if( !worker.checkPrerequisites( shell ) )
+      return null;
 
     Session session = null;
     try
     {
       session = PdbHandlerUtils.aquireSession( viewer );
 
-      final Wizard wizard = createWizard( worker, session, shell );
-      if( wizard == null )
-        return null;
-      wizard.setWindowTitle( worker.getWindowTitle() );
+      final IPdbOperation operation = worker.createOperation();
 
-      final WizardDialog dialog = new WizardDialog( shell, wizard );
-      if( dialog.open() == Window.OK )
-      {
-        worker.afterWizardOK();
-
-        final FlushOperation operation = new FlushOperation();
-        new Executor( session, operation ).execute();
-      }
-
+      final ExecutorRunnable runnable = new ExecutorRunnable( session, operation );
+      runnable.setOKStatus( new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "Element has been successfully removed" ) );
+      final IStatus result = ProgressUtilities.busyCursorWhile( runnable );
+      new StatusDialog2( shell, result, worker.getWindowTitle() ).open();
       session.close();
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
-      final String windowTitle = worker.getWindowTitle();
-      new StatusDialog2( shell, status, windowTitle ).open();
     }
     finally
     {
@@ -123,40 +102,13 @@ public class EditElementHandler extends AbstractHandler
     return null;
   }
 
-  private Wizard createWizard( final IEditWorker worker, final Session session, final Shell shell )
-  {
-    final Wizard[] wizards = new Wizard[1];
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-    {
-      @Override
-      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
-      {
-        try
-        {
-          wizards[0] = worker.createWizard( session );
-          return Status.OK_STATUS;
-        }
-        catch( final PdbConnectException e )
-        {
-          throw new InvocationTargetException( e );
-        }
-      }
-    };
-
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    if( !status.isOK() )
-      new StatusDialog2( shell, status, worker.getWindowTitle() ).open();
-
-    return wizards[0];
-  }
-
-  private IEditWorker findWorker( final Object selectedItem, final String username )
+  private IRemoveWorker findWorker( final Object selectedItem )
   {
     if( selectedItem instanceof WaterBody )
-      return new EditWaterBodyWorker( (WaterBody) selectedItem );
+      return new RemoveWaterBodyWorker( (WaterBody) selectedItem );
 
     if( selectedItem instanceof State )
-      return new EditStateWorker( (State) selectedItem, username );
+      return new RemoveStateWorker( (State) selectedItem );
 
     throw new IllegalArgumentException();
   }

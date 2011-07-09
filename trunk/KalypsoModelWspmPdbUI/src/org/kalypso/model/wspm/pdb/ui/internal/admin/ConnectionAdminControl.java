@@ -52,7 +52,6 @@ import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.event.ManageEventsAction;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafAction;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.state.ManageStateAction;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ManageWaterBodyAction;
 
 /**
@@ -76,7 +75,6 @@ public class ConnectionAdminControl extends Composite
 
     createImportControl( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createWaterBodyControl( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    createStateControl( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createEventControl( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
   }
 
@@ -90,12 +88,6 @@ public class ConnectionAdminControl extends Composite
   {
     final Action waterbodyAction = new ManageWaterBodyAction( m_connection, m_updateable );
     return ActionHyperlink.createHyperlink( toolkit, parent, SWT.NONE, waterbodyAction );
-  }
-
-  private Control createStateControl( final FormToolkit toolkit, final Composite parent )
-  {
-    final Action stateAction = new ManageStateAction( m_connection, m_updateable );
-    return ActionHyperlink.createHyperlink( toolkit, parent, SWT.NONE, stateAction );
   }
 
   private Control createEventControl( final FormToolkit toolkit, final Composite parent )

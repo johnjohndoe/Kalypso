@@ -40,21 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 
 /**
  * @author Gernot Belger
- *
  */
-public interface IEditWorker
+public interface IRemoveWorker
 {
   String getWindowTitle( );
 
-  Wizard createWizard( Session session ) throws PdbConnectException;
-
-  void afterWizardOK( );
+  boolean checkPrerequisites( Shell shell );
 
   void addElementsToSelect( ElementSelector selector );
+
+  IPdbOperation createOperation( );
 }

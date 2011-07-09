@@ -38,23 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
+import org.kalypso.model.wspm.pdb.ui.internal.content.IRemoveWorker;
 
 /**
  * @author Gernot Belger
- *
  */
-public interface IEditWorker
+public class RemoveStateWorker implements IRemoveWorker
 {
-  String getWindowTitle( );
+  private final State m_selectedItem;
 
-  Wizard createWizard( Session session ) throws PdbConnectException;
+  public RemoveStateWorker( final State selectedItem )
+  {
+    m_selectedItem = selectedItem;
+  }
 
-  void afterWizardOK( );
+  @Override
+  public String getWindowTitle( )
+  {
+    return "Remove State";
+  }
 
-  void addElementsToSelect( ElementSelector selector );
+  @Override
+  public boolean checkPrerequisites( final Shell shell )
+  {
+    final RemoveStateDialog dialog = new RemoveStateDialog( shell, getWindowTitle(), m_selectedItem );
+    return dialog.open() == Window.OK;
+  }
+
+  @Override
+  public IPdbOperation createOperation( )
+  {
+    return new DeleteStateOperation( m_selectedItem.getName() );
+  }
+
+  @Override
+  public void addElementsToSelect( final ElementSelector selector )
+  {
+    selector.addStateName( m_selectedItem.getName() );
+  }
 }
