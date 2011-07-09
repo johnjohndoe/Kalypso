@@ -51,7 +51,6 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.event.ManageEventsAction;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafAction;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ManageWaterBodyAction;
 
 /**
@@ -73,15 +72,8 @@ public class ConnectionAdminControl extends Composite
     GridLayoutFactory.swtDefaults().applyTo( this );
     toolkit.adapt( this );
 
-    createImportControl( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createWaterBodyControl( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createEventControl( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-  }
-
-  private Control createImportControl( final FormToolkit toolkit, final Composite parent )
-  {
-    final Action importAction = new ImportGafAction( m_connection, m_updateable );
-    return ActionHyperlink.createHyperlink( toolkit, parent, SWT.NONE, importAction );
   }
 
   private Control createWaterBodyControl( final FormToolkit toolkit, final Composite parent )

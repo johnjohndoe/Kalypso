@@ -38,40 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 
 /**
  * @author Gernot Belger
  */
-public class EditStateWizard extends Wizard implements IStatesProvider
+public class InitImportGafDataOperation implements ICoreRunnableWithProgress
 {
-  private final State m_state;
+  private final ImportGafData m_data;
 
-  private final State[] m_existingState;
+  private final IDialogSettings m_dialogSettings;
 
-  public EditStateWizard( final State[] existingState, final State state )
+  public InitImportGafDataOperation( final ImportGafData data, final IDialogSettings dialogSettings )
   {
-    m_existingState = existingState;
-    m_state = state;
-
-    setWindowTitle( "Edit State" );
-
-    addPage( new EditStatePage( "editState", m_state, this, Mode.EDIT ) ); //$NON-NLS-1$
+    m_data = data;
+    m_dialogSettings = dialogSettings;
   }
 
   @Override
-  public boolean performFinish( )
+  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    return true;
-  }
-
-  @Override
-  public State[] getStates( )
-  {
-    return m_existingState;
+    try
+    {
+      m_data.initFromDb();
+      m_data.init( m_dialogSettings );
+      return Status.OK_STATUS;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new InvocationTargetException( e );
+    }
   }
 }

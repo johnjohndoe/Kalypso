@@ -94,7 +94,6 @@ public class ChooseWaterPage extends WizardPage
   public void dispose( )
   {
     PdbUtils.closeSessionQuietly( m_session );
-    m_session.close();
 
     super.dispose();
   }

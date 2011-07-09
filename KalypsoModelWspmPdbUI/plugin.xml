@@ -185,6 +185,22 @@
      </definition>
   </extension>
   
+  <extension point="org.kalypso.ui.importWizards">
+      <category id="pdbWizardsCategory" name="Cross Section Database"/>
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard" name="Import GAF">
+        <description>Imports a new state from a GAF file</description>
+      </wizard>
+  </extension>
+  <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard">
+       <enablement>
+              <with variable="activePart">
+                 <instanceof value="org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer"/>
+              </with>
+       </enablement>
+    </wizardEnablement>
+  </extension>
+  
   <!-- Commands on PDB elements -->
   <extension point="org.eclipse.ui.commands">
      <category id="pdbCommands" name="PDB Commands"/>
@@ -209,9 +225,6 @@
   </extension>
   <extension point="org.eclipse.ui.menus">
      <menuContribution allPopups="false" locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-        <command commandId="org.kalypso.ui.command.import" style="push">
-           <visibleWhen checkEnabled="true"/>
-        </command>
         <command commandId="org.kalypso.model.wspm.pdb.ui.command.editElement" style="push">
            <visibleWhen checkEnabled="true"/>
         </command>
