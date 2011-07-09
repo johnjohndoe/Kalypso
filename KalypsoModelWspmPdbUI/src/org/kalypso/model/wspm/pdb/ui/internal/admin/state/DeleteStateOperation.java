@@ -40,52 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
-import org.eclipse.jface.wizard.Wizard;
 import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.PdbUtils;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.utils.StateUtils;
 
 /**
  * @author Gernot Belger
  */
-public class ManageStatesWizard extends Wizard
+public class DeleteStateOperation implements IPdbOperation
 {
-  private final Session m_session;
+  private final String m_name;
 
-  public ManageStatesWizard( final IPdbConnection connection )
+  public DeleteStateOperation( final String name )
   {
-    m_session = openSession( connection );
-
-    final String username = connection.getSettings().getUsername();
-
-    addPage( new ManageStatesPage( "states", m_session, username ) ); //$NON-NLS-1$
-  }
-
-  private Session openSession( final IPdbConnection connection )
-  {
-    try
-    {
-      return connection.openSession();
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    m_name = name;
   }
 
   @Override
-  public void dispose( )
+  public String getLabel( )
   {
-    PdbUtils.closeSessionQuietly( m_session );
-
-    super.dispose();
+    return String.format( "Delete State '%s'", m_name );
   }
 
   @Override
-  public boolean performFinish( )
+  public void execute( final Session session ) throws PdbConnectException
   {
-    return true;
+    final State[] existingStates = GetPdbList.getArray( session, State.class );
+    final State elementToDelete = StateUtils.findStateByName( existingStates, m_name );
+    session.delete( elementToDelete );
   }
 }

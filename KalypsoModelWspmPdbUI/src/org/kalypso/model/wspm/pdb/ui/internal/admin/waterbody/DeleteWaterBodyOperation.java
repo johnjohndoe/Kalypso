@@ -38,23 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
-import org.eclipse.jface.wizard.Wizard;
 import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
 
 /**
  * @author Gernot Belger
- *
  */
-public interface IEditWorker
+public class DeleteWaterBodyOperation implements IPdbOperation
 {
-  String getWindowTitle( );
+  private final String m_name;
 
-  Wizard createWizard( Session session ) throws PdbConnectException;
+  public DeleteWaterBodyOperation( final String name )
+  {
+    m_name = name;
+  }
 
-  void afterWizardOK( );
+  @Override
+  public String getLabel( )
+  {
+    return String.format( "Delete Water Body '%s'", m_name );
+  }
 
-  void addElementsToSelect( ElementSelector selector );
+  @Override
+  public void execute( final Session session ) throws PdbConnectException
+  {
+    final WaterBody[] existingWaterbodies = GetPdbList.getArray( session, WaterBody.class );
+    final Object elementToDelete = WaterBodyUtils.findWaterBodyByName( existingWaterbodies, m_name );
+    session.delete( elementToDelete );
+  }
 }

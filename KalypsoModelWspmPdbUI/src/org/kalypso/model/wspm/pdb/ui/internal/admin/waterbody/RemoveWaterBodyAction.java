@@ -56,7 +56,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
- *
  */
 public class RemoveWaterBodyAction extends UpdateableAction
 {
