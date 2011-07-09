@@ -40,67 +40,71 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 
 /**
  * @author Gernot Belger
  */
-public class PdbLabelProvider extends ColumnLabelProvider
+public class ElementSelector
 {
-  public static final String PENDING = "Pending...";
+  private final Collection<String> m_waterBodyNames = new ArrayList<String>();
 
-  public static final String EMPTY_STATES = "<Database contains no state>";
+  private final Collection<String> m_stateNames = new ArrayList<String>();
 
-  public static final Object EMPTY_WATER_BODY = "<Database contains no waterbody>";
+  private final Collection<String> m_eventNames = new ArrayList<String>();
 
-  @Override
-  public String getText( final Object element )
+  public void addWaterBodyName( final String waterBodyName )
   {
-    if( element instanceof WaterBodyTreeNode )
-      return ((WaterBodyTreeNode) element).getLabel();
-
-    if( element instanceof WaterBody )
-      return ((WaterBody) element).getLabel();
-
-    if( element instanceof State )
-      return ((State) element).getName();
-
-    if( element instanceof Event )
-      return ((Event) element).getName();
-
-    if( element instanceof CrossSection )
-      return ObjectUtils.toString( ((CrossSection) element).getStation() );
-
-    return super.getText( element );
+    m_waterBodyNames.add( waterBodyName );
   }
 
-  @Override
-  public Image getImage( final Object element )
+  public void addStateName( final String stateName )
   {
-    if( element instanceof WaterBody || element instanceof WaterBodyTreeNode )
-      return WspmPdbUiImages.getImage( IMAGE.WATER_BODY );
+    m_stateNames.add( stateName );
+  }
 
-    if( element instanceof State )
-      return WspmPdbUiImages.getImage( IMAGE.STATE );
+  public void addEventName( final String eventName )
+  {
+    m_eventNames.add( eventName );
+  }
 
-    if( element instanceof Event )
-      return WspmPdbUiImages.getImage( IMAGE.EVENT );
+  public Object[] getElements( final ConnectionInput input )
+  {
+    final Collection<Object> elements = new ArrayList<Object>();
 
-    if( element instanceof CrossSection )
-      return WspmPdbUiImages.getImage( IMAGE.CROSS_SECTION );
+    for( final String waterBodyName : m_waterBodyNames )
+      elements.add( input.getWaterBody( waterBodyName ) );
 
-    if( element == PENDING )
-      return WspmPdbUiImages.getImage( IMAGE.PENDING );
+    for( final String stateName : m_stateNames )
+      elements.add( input.getState( stateName ) );
 
-    return super.getImage( element );
+    for( final String eventName : m_eventNames )
+      elements.add( input.getEvent( eventName ) );
+
+    /* null might have been added, remove it now */
+    elements.remove( null );
+
+    return elements.toArray( new Object[elements.size()] );
+  }
+
+  public void setElemensToSelect( final Object[] elements )
+  {
+    for( final Object element : elements )
+    {
+      if( element instanceof WaterBodyTreeNode )
+        addWaterBodyName( ((WaterBodyTreeNode) element).getWaterBody().getName() );
+      else if( element instanceof WaterBody )
+        addWaterBodyName( ((WaterBody) element).getName() );
+      else if( element instanceof State )
+        addStateName( ((State) element).getName() );
+      else if( element instanceof Event )
+        addEventName( ((Event) element).getName() );
+    }
   }
 }

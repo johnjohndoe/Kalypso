@@ -38,27 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 
 /**
  * @author Gernot Belger
  */
-public class WaterBodyCodeLabelProvider extends ColumnLabelProvider
+public class ViewerComparableComparator extends ViewerComparator
 {
   @Override
-  public String getText( final Object element )
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    if( element instanceof WaterBody )
-      return ((WaterBody) element).getName();
+    if( e1 instanceof Comparable )
+    {
+      @SuppressWarnings("unchecked")
+      final Comparable<Object> c1 = (Comparable<Object>) e1;
+      return c1.compareTo( e2 );
+    }
 
-    if( element instanceof WaterBodyTreeNode )
-      return ((WaterBodyTreeNode) element).getWaterBody().getName();
-
-    return StringUtils.EMPTY;
+    return super.compare( viewer, e1, e2 );
   }
 }

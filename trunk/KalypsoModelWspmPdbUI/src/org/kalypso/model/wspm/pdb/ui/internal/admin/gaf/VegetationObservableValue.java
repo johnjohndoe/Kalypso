@@ -38,27 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
+import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
+import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
+import org.kalypso.model.wspm.pdb.gaf.GafPointCheck;
 
 /**
  * @author Gernot Belger
  */
-public class WaterBodyCodeLabelProvider extends ColumnLabelProvider
+public class VegetationObservableValue extends TypedObservableValue<GafPointCheck, Vegetation>
 {
-  @Override
-  public String getText( final Object element )
+  private final String m_code;
+
+  public VegetationObservableValue( final GafPointCheck source, final String code )
   {
-    if( element instanceof WaterBody )
-      return ((WaterBody) element).getName();
+    super( source, Vegetation.class );
 
-    if( element instanceof WaterBodyTreeNode )
-      return ((WaterBodyTreeNode) element).getWaterBody().getName();
+    m_code = code;
+  }
 
-    return StringUtils.EMPTY;
+  @Override
+  public void doSetValueTyped( final GafPointCheck source, final Vegetation value )
+  {
+    source.setVegetationMapping( m_code, value );
+  }
+
+  @Override
+  public Vegetation doGetValueTyped( final GafPointCheck source )
+  {
+    return source.getVegetationMapping( m_code );
   }
 }

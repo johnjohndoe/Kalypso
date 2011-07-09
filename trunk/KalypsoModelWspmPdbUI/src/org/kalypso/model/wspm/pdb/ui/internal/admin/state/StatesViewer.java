@@ -40,14 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.databinding.beans.BeanProperties;
-import org.eclipse.core.databinding.observable.list.WritableList;
-import org.eclipse.core.databinding.property.value.IValueProperty;
-import org.eclipse.jface.databinding.viewers.ViewerSupport;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -75,8 +70,6 @@ public class StatesViewer
 {
   private TableViewer m_viewer;
 
-  private WritableList m_tableInput;
-
   // FIXME: we should not leave the session all the time open... better to have the connection and reopen session
   private final Session m_session;
 
@@ -90,32 +83,24 @@ public class StatesViewer
     m_viewer = new TableViewer( parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.H_SCROLL );
     final Table table = m_viewer.getTable();
     table.setHeaderVisible( true );
-
     table.addControlListener( new ColumnsResizeControlListener() );
 
-    final ViewerColumn nameColumn = createNameColumn( m_viewer, false );
-    createMeasurementDateColumn( m_viewer, false );
+    m_viewer.setContentProvider( new ArrayContentProvider() );
+
+    final ViewerColumn nameColumn = createNameColumn( m_viewer );
+    createMeasurementDateColumn( m_viewer );
 
     ColumnViewerSorter.setSortState( nameColumn, Boolean.FALSE );
 
-    m_tableInput = new WritableList( new ArrayList<State>(), State.class );
-
     refreshState( null );
-
-    final IValueProperty nameProperty = BeanProperties.value( State.class, State.PROPERTY_NAME );
-    final IValueProperty measurementProperty = BeanProperties.value( State.class, State.PROPERTY_MEASUREMENTDATE_FORMATTED );
-
-    final IValueProperty[] labelProperties = new IValueProperty[] { nameProperty, measurementProperty };
-    ViewerSupport.bind( m_viewer, m_tableInput, labelProperties );
 
     return m_viewer;
   }
 
   public void refreshState( final String id )
   {
-    m_tableInput.clear();
-    final List<State> states = Arrays.asList( loadState() );
-    m_tableInput.addAll( states );
+    final State[] states = loadState();
+    m_viewer.setInput( states );
 
     final State toSelect = findState( states, id );
 
@@ -125,7 +110,7 @@ public class StatesViewer
       m_viewer.setSelection( new StructuredSelection( toSelect ) );
   }
 
-  private static State findState( final List<State> states, final String name )
+  private static State findState( final State[] states, final String name )
   {
     if( name == null )
       return null;
@@ -165,10 +150,10 @@ public class StatesViewer
 
   public State[] getExistingState( )
   {
-    return (State[]) m_tableInput.toArray( new State[m_tableInput.size()] );
+    return (State[]) m_viewer.getInput();
   }
 
-  public static ViewerColumn createNameColumn( final ColumnViewer viewer, final boolean setLabelProvider )
+  public static ViewerColumn createNameColumn( final ColumnViewer viewer )
   {
     final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem column = new ViewerColumnItem( nameColumn );
@@ -177,14 +162,13 @@ public class StatesViewer
     column.setMoveable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
 
-    if( setLabelProvider )
-      nameColumn.setLabelProvider( new PdbLabelProvider() );
+    nameColumn.setLabelProvider( new PdbLabelProvider() );
 
     ColumnViewerSorter.registerSorter( nameColumn, new PdbNameComparator() );
     return nameColumn;
   }
 
-  public static ViewerColumn createMeasurementDateColumn( final ColumnViewer viewer, final boolean setLabelProvider )
+  public static ViewerColumn createMeasurementDateColumn( final ColumnViewer viewer )
   {
     final ViewerColumn measurementDateColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem column = new ViewerColumnItem( measurementDateColumn );
@@ -193,8 +177,7 @@ public class StatesViewer
     column.setMoveable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
 
-    if( setLabelProvider )
-      measurementDateColumn.setLabelProvider( new PdbMeasurementLabelProvider() );
+    measurementDateColumn.setLabelProvider( new PdbMeasurementLabelProvider() );
 
     ColumnViewerSorter.registerSorter( measurementDateColumn, new PdbMeasurementDateComparator() );
 

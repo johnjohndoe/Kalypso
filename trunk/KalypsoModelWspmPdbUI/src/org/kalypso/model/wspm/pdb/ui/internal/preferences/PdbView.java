@@ -72,13 +72,15 @@ import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
+import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.FindViewRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
  * @author Gernot Belger
  */
-public class PdbView extends ViewPart
+public class PdbView extends ViewPart implements IConnectionViewer
 {
   public static final String ID = "PdbView"; //$NON-NLS-1$
 
@@ -283,6 +285,9 @@ public class PdbView extends ViewPart
     else
       new NonConnectedControl( m_toolkit, body, m_autoConnectData, this );
 
+    if( m_connectionViewer != null )
+      m_connectionViewer.createContextMenu( getSite() );
+
     if( m_wspmProject != null && !isConnected )
       startAutoConnect();
 
@@ -294,6 +299,7 @@ public class PdbView extends ViewPart
     toolkit.createComposite( parent );
   }
 
+  @Override
   public IPdbConnection getConnection( )
   {
     return m_pdbConnection;
@@ -321,12 +327,15 @@ public class PdbView extends ViewPart
     final IWorkbenchPage page = window.getActivePage();
     page.activate( view );
 
-    view.reload( stateToSelect );
+    final ElementSelector elementSelector = new ElementSelector();
+    elementSelector.addStateName( stateToSelect );
+    view.reload( elementSelector );
   }
 
-  private void reload( final String stateToSelect )
+  @Override
+  public void reload( final ElementSelector elementToSelect )
   {
     if( m_connectionViewer != null )
-      m_connectionViewer.reload( stateToSelect );
+      m_connectionViewer.reload( elementToSelect );
   }
 }

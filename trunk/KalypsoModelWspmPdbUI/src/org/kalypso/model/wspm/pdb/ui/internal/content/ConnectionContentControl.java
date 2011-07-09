@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -48,10 +49,11 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.TreeEvent;
+import org.eclipse.swt.events.TreeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -65,8 +67,8 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
@@ -90,6 +92,8 @@ public class ConnectionContentControl extends Composite
   private final ToolBarManager m_manager;
 
   private final PdbWspmProject m_project;
+
+  private ColumnsResizeControlListener m_treeListener;
 
   public ConnectionContentControl( final FormToolkit toolkit, final Section parent, final IPdbConnection connection, final PdbWspmProject project )
   {
@@ -138,17 +142,32 @@ public class ConnectionContentControl extends Composite
     final Tree tree = toolkit.createTree( parent, SWT.FULL_SELECTION | SWT.MULTI );
     tree.setHeaderVisible( true );
     m_viewer = new TreeViewer( tree );
-    // m_viewer.setAutoExpandLevel( 2 );
-    m_viewer.setUseHashlookup( true );
+    // m_viewer.setUseHashlookup( true );
 
-    final ViewerColumn nameColumn = StatesViewer.createNameColumn( m_viewer, true );
-    StatesViewer.createMeasurementDateColumn( m_viewer, true );
+    final ViewerColumn nameColumn = StatesViewer.createNameColumn( m_viewer );
+    WaterBodyViewer.createNameColumn( m_viewer );
+    StatesViewer.createMeasurementDateColumn( m_viewer );
 
     ColumnViewerSorter.setSortState( nameColumn, false );
 
-    tree.addControlListener( new ColumnsResizeControlListener() );
+    m_treeListener = new ColumnsResizeControlListener();
+    tree.addControlListener( m_treeListener );
 
     m_viewer.setContentProvider( new ByWaterBodyContentProvider() );
+    tree.addTreeListener( new TreeListener()
+    {
+      @Override
+      public void treeExpanded( final TreeEvent e )
+      {
+        refreshColumnSizes();
+      }
+
+      @Override
+      public void treeCollapsed( final TreeEvent e )
+      {
+        refreshColumnSizes();
+      }
+    } );
 
     return tree;
   }
@@ -156,27 +175,20 @@ public class ConnectionContentControl extends Composite
   private void createActions( )
   {
     m_manager.add( new RefreshAction( this ) );
-    m_manager.add( new ExpandAllAction( m_viewer ) );
-    m_manager.add( new CollapseAllAction( m_viewer ) );
+    m_manager.add( new ExpandAllAction( this ) );
+    m_manager.add( new CollapseAllAction( this ) );
     m_manager.add( new Separator() );
-    // final ByStateAction byStateAction = new ByStateAction( this );
-    // byStateAction.setChecked( true );
-    // m_manager.add( byStateAction );
-    // m_manager.add( new ByWaterBodyAction( this ) );
-    // m_manager.add( new Separator() );
-    // m_manager.add( new ExportAction( this ) );
-    // m_manager.add( new CheckoutAction( this ) );
 
     m_manager.update( true );
   }
 
-  public void refresh( final String stateToSelect )
+  public void refresh( final ElementSelector elementToSelect )
   {
     m_refreshJob.cancel();
 
     resetInput();
 
-    m_refreshJob.setStateToSelect( stateToSelect );
+    m_refreshJob.setElementToSelect( elementToSelect );
     m_refreshJob.schedule( 100 );
   }
 
@@ -189,6 +201,7 @@ public class ConnectionContentControl extends Composite
       ((ConnectionInput) oldInput).dispose();
 
     m_viewer.setInput( PdbLabelProvider.PENDING );
+    refreshColumnSizes();
   }
 
   protected void handleRefreshDone( )
@@ -200,10 +213,12 @@ public class ConnectionContentControl extends Composite
       final ConnectionInput input = m_refreshJob.getInput();
       ViewerUtilities.setInput( m_viewer, input, true );
 
-      final String stateToSelect = m_refreshJob.getStateToSelect();
-      final State state = input.getState( stateToSelect );
-      if( state != null )
-        ViewerUtilities.setSelection( m_viewer, new StructuredSelection( state ), true, true );
+      final ElementSelector selector = m_refreshJob.getElementToSelect();
+      final Object[] element = selector == null ? ArrayUtils.EMPTY_OBJECT_ARRAY : selector.getElements( input );
+      if( element != null )
+        ViewerUtilities.setSelection( m_viewer, new StructuredSelection( element ), true, true );
+
+      refreshColumnSizes();
     }
     finally
     {
@@ -222,7 +237,12 @@ public class ConnectionContentControl extends Composite
     return m_project;
   }
 
-  public StructuredViewer getViewer( )
+  protected void refreshColumnSizes( )
+  {
+    m_treeListener.updateColumnSizes();
+  }
+
+  public TreeViewer getTreeViewer( )
   {
     return m_viewer;
   }

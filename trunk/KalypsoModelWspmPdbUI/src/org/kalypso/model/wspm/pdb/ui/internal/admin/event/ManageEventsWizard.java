@@ -38,69 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.wizard.Wizard;
 import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
  */
-public class RefreshContentJob extends Job
+public class ManageEventsWizard extends Wizard
 {
-  private final IPdbConnection m_connection;
+  private final Session m_session;
 
-  private ConnectionInput m_input;
-
-  private ElementSelector m_elementToSelect;
-
-  public RefreshContentJob( final IPdbConnection connection )
+  public ManageEventsWizard( final IPdbConnection connection )
   {
-    super( "Refresh..." );
+    m_session = openSession( connection );
 
-    m_connection = connection;
+    addPage( new ManageEventsPage( "events", connection, m_session ) ); //$NON-NLS-1$
   }
 
-  @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  private Session openSession( final IPdbConnection connection )
   {
-    monitor.beginTask( "Refresh...", IProgressMonitor.UNKNOWN );
-
     try
     {
-      final Session session = m_connection.openSession();
-      m_input = new ConnectionInput( session );
-      return Status.OK_STATUS;
+      return connection.openSession();
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to connect to database", e );
-    }
-    finally
-    {
-      monitor.done();
+      return null;
     }
   }
 
-  public ConnectionInput getInput( )
+  @Override
+  public void dispose( )
   {
-    return m_input;
+    PdbUtils.closeSessionQuietly( m_session );
+
+    super.dispose();
   }
 
-  public void setElementToSelect( final ElementSelector elementToSelect )
+  @Override
+  public boolean performFinish( )
   {
-    m_elementToSelect = elementToSelect;
-  }
-
-  public ElementSelector getElementToSelect( )
-  {
-    return m_elementToSelect;
+    return true;
   }
 }

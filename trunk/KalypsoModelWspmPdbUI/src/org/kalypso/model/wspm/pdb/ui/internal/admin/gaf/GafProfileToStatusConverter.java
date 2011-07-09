@@ -38,69 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.commons.databinding.conversion.TypedConverter;
+import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 
 /**
  * @author Gernot Belger
+ *
  */
-public class RefreshContentJob extends Job
+public class GafProfileToStatusConverter extends TypedConverter<GafProfile, IStatus>
 {
-  private final IPdbConnection m_connection;
-
-  private ConnectionInput m_input;
-
-  private ElementSelector m_elementToSelect;
-
-  public RefreshContentJob( final IPdbConnection connection )
+  public GafProfileToStatusConverter( )
   {
-    super( "Refresh..." );
-
-    m_connection = connection;
+    super( GafProfile.class, IStatus.class );
   }
 
   @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  public IStatus convertTyped( final GafProfile fromObject )
   {
-    monitor.beginTask( "Refresh...", IProgressMonitor.UNKNOWN );
+    if( fromObject == null )
+      return null;
 
-    try
-    {
-      final Session session = m_connection.openSession();
-      m_input = new ConnectionInput( session );
-      return Status.OK_STATUS;
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to connect to database", e );
-    }
-    finally
-    {
-      monitor.done();
-    }
-  }
-
-  public ConnectionInput getInput( )
-  {
-    return m_input;
-  }
-
-  public void setElementToSelect( final ElementSelector elementToSelect )
-  {
-    m_elementToSelect = elementToSelect;
-  }
-
-  public ElementSelector getElementToSelect( )
-  {
-    return m_elementToSelect;
+    return fromObject.getStatus();
   }
 }
