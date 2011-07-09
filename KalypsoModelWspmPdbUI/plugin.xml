@@ -191,12 +191,25 @@
   
   <extension point="org.kalypso.ui.importWizards">
       <category id="pdbWizardsCategory" name="Cross Section Database"/>
-      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard" name="Import GAF">
+      <wizard
+            category="pdbWizardsCategory"
+            class="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard"
+            icon="icons/state.gif"
+            id="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard"
+            name="Import GAF">
         <description>Imports a new state from a GAF file</description>
+      </wizard>
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="Import Water Bodies" icon="icons/waterBody.gif">
+        <description>Imports or updates water bodies from a shape file</description>
       </wizard>
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard">
+       <enablement>
+              <reference definitionId="isPdbViewVisible"/>
+       </enablement>
+    </wizardEnablement>
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard">
        <enablement>
               <reference definitionId="isPdbViewVisible"/>
        </enablement>
