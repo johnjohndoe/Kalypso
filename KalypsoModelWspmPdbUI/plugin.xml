@@ -199,5 +199,10 @@
            <visibleWhen checkEnabled="true"/>
         </command>
      </menuContribution>
+     <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.pdb.ui.content">
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.editWaterBody" style="push">
+           <visibleWhen checkEnabled="true"/>
+        </command>
+     </menuContribution>
   </extension>   
 </plugin>
