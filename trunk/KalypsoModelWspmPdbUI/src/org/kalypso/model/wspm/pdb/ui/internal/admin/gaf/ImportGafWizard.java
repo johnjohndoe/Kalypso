@@ -45,9 +45,14 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
@@ -58,8 +63,11 @@ import org.kalypso.model.wspm.pdb.gaf.ReadGafOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.IStatesProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
+import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 
-public class ImportGafWizard extends Wizard
+public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStatesProvider
 {
   private final IPageChangedListener m_pageListener = new IPageChangedListener()
   {
@@ -70,22 +78,51 @@ public class ImportGafWizard extends Wizard
     }
   };
 
-  private final ImportGafData m_data;
+  private ImportGafData m_data;
 
-  private final GafProfilesPage m_gafProfilesPage;
+  private GafProfilesPage m_gafProfilesPage;
 
-  private final GafOptionsPage m_optionsPage;
+  private GafOptionsPage m_optionsPage;
 
-  private final AddWaterLevelPage m_waterLevelPage;
+  private AddWaterLevelPage m_waterLevelPage;
 
-  public ImportGafWizard( final State[] existingState, final ImportGafData data )
+  private IWorkbench m_workbench;
+
+  private IConnectionViewer m_viewer;
+
+  public ImportGafWizard( )
   {
-    m_data = data;
-
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() );
     setDialogSettings( settings );
+    setNeedsProgressMonitor( true );
+    setWindowTitle( "Import GAF" );
+  }
 
-    m_data.init( settings );
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    m_workbench = workbench;
+  }
+
+  /**
+   * Overridden, in order NOT to pre-create the pages. We else get problems later, because the data might not yet have
+   * been initialized.
+   * 
+   * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  public void createPageControls( final Composite pageContainer )
+  {
+    // do nothing
+  }
+
+  @Override
+  public void addPages( )
+  {
+    final IWorkbenchPart activePart = m_workbench.getActiveWorkbenchWindow().getActivePage().getActivePart();
+    m_viewer = (IConnectionViewer) activePart;
+
+    m_data = new ImportGafData( m_viewer.getConnection() );
 
     addPage( new ImportGafPage( "gaf", m_data ) ); //$NON-NLS-1$
     addPage( new ChooseWaterPage( "waterBody", m_data ) ); //$NON-NLS-1$
@@ -96,12 +133,21 @@ public class ImportGafWizard extends Wizard
     m_gafProfilesPage = new GafProfilesPage( "profiles", m_data ); //$NON-NLS-1$
     addPage( m_gafProfilesPage );
 
-    addPage( new EditStatePage( "state", m_data.getState(), existingState, Mode.NEW ) ); //$NON-NLS-1$
+    addPage( new EditStatePage( "state", m_data.getState(), this, Mode.NEW ) ); //$NON-NLS-1$
 
     m_waterLevelPage = new AddWaterLevelPage( "addWaterlevel", m_data ); //$NON-NLS-1$
     addPage( m_waterLevelPage );
+  }
 
-    setNeedsProgressMonitor( true );
+  private void createData( )
+  {
+    if( m_data.isInit() )
+      return;
+
+    final InitImportGafDataOperation operation = new InitImportGafDataOperation( m_data, getDialogSettings() );
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    if( !result.isOK() )
+      new StatusDialog2( getShell(), result, getWindowTitle() );
   }
 
   @Override
@@ -139,11 +185,18 @@ public class ImportGafWizard extends Wizard
     if( settings != null )
       m_data.store( settings );
 
+    /* Select new element in tree */
+    final ElementSelector selector = new ElementSelector();
+    selector.addStateName( m_data.getState().getName() );
+    m_viewer.reload( selector );
+
     return true;
   }
 
   protected void handlePageChanged( final Object selectedPage )
   {
+    createData();
+
     if( selectedPage == m_optionsPage )
     {
       final ReadGafOperation operation = new ReadGafOperation( m_data );
@@ -161,5 +214,11 @@ public class ImportGafWizard extends Wizard
       m_gafProfilesPage.updateControl();
       m_waterLevelPage.updateControl();
     }
+  }
+
+  @Override
+  public State[] getStates( )
+  {
+    return m_data.getExistingStates();
   }
 }

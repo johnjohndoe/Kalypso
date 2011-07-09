@@ -40,7 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db.utils;
 
+import java.util.List;
+
 import org.apache.commons.lang.ObjectUtils;
+import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.PdbUtils;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
@@ -61,5 +68,22 @@ public final class StateUtils
         return state;
     }
     return null;
+  }
+
+  public static State[] getStates( final IPdbConnection connection ) throws PdbConnectException
+  {
+    Session session = null;
+    try
+    {
+      session = connection.openSession();
+      final List<State> list = GetPdbList.getList( session, State.class );
+      final State[] states = list.toArray( new State[list.size()] );
+      session.close();
+      return states;
+    }
+    finally
+    {
+      PdbUtils.closeSessionQuietly( session );
+    }
   }
 }

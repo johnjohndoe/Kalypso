@@ -97,8 +97,6 @@ public class ImportGafPage extends WizardPage
     createGafPathControl( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createSrsControl( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    // TODO: spiegeln bzw. sortieren zulassen
-
     // dokumente (images/dxf)
   }
 

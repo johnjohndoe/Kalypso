@@ -87,6 +87,8 @@ public class AddWaterLevelPage extends WizardPage
 
     createDoImportCheck( panel );
     createEventControls( panel );
+
+    updateControl();
   }
 
   private void createDoImportCheck( final Composite parent )
@@ -132,6 +134,7 @@ public class AddWaterLevelPage extends WizardPage
       setMessage( "GAF file does not contain any water levels", INFORMATION );
 
     final Event[] existingEvents = m_data.getExistingEvents();
-    m_waterlevelComposite.setExistingEvents( existingEvents );
+    if( m_waterlevelComposite != null )
+      m_waterlevelComposite.setExistingEvents( existingEvents );
   }
 }

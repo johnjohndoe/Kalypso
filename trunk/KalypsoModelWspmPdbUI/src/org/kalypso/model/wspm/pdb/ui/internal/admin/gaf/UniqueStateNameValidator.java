@@ -58,18 +58,18 @@ public class UniqueStateNameValidator extends TypedValidator<String>
 
   private final String m_ignoreName;
 
-  public UniqueStateNameValidator( final State[] existingState, final String ignoreName )
+  public UniqueStateNameValidator( final State[] existingStates, final String ignoreName )
   {
-    this( existingState, IStatus.ERROR, ignoreName );
+    this( existingStates, IStatus.ERROR, ignoreName );
   }
 
-  public UniqueStateNameValidator( final State[] existingState, final int severity, final String ignoreName )
+  public UniqueStateNameValidator( final State[] existingStates, final int severity, final String ignoreName )
   {
     super( String.class, severity, "A state with the same name already exists" );
 
     m_ignoreName = ignoreName;
 
-    for( final State states : existingState )
+    for( final State states : existingStates )
       m_names.add( states.getName() );
   }
 

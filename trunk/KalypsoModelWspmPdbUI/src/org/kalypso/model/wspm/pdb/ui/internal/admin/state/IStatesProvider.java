@@ -40,38 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
-import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
 
 /**
  * @author Gernot Belger
  */
-public class EditStateWizard extends Wizard implements IStatesProvider
+public interface IStatesProvider
 {
-  private final State m_state;
-
-  private final State[] m_existingState;
-
-  public EditStateWizard( final State[] existingState, final State state )
-  {
-    m_existingState = existingState;
-    m_state = state;
-
-    setWindowTitle( "Edit State" );
-
-    addPage( new EditStatePage( "editState", m_state, this, Mode.EDIT ) ); //$NON-NLS-1$
-  }
-
-  @Override
-  public boolean performFinish( )
-  {
-    return true;
-  }
-
-  @Override
-  public State[] getStates( )
-  {
-    return m_existingState;
-  }
+  State[] getStates( );
 }

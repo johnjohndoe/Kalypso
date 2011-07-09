@@ -56,6 +56,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
@@ -92,7 +93,7 @@ public class ImportGafData extends AbstractModelObject
 
   private String m_srs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-  private File m_gafFile = null;
+  private File m_gafFile;
 
   /** We always create a new state when importing a gaf file */
   private final State m_state = new State();
@@ -123,6 +124,10 @@ public class ImportGafData extends AbstractModelObject
 
   private final Event m_waterlevelEvent = new Event();
 
+  private State[] m_existingStates;
+
+  private boolean m_isInitalized = false;
+
   public ImportGafData( final IPdbConnection connection )
   {
     m_connection = connection;
@@ -132,6 +137,32 @@ public class ImportGafData extends AbstractModelObject
     m_state.setIsstatezero( State.ZERO_STATE_ON );
     m_state.setDescription( StringUtils.EMPTY );
     m_state.setEditingUser( connection.getSettings().getUsername() );
+  }
+
+  public void initFromDb( ) throws PdbConnectException, IOException
+  {
+    m_isInitalized = true;
+
+    Session session = null;
+    try
+    {
+      session = m_connection.openSession();
+
+      m_coefficients = new Coefficients( session, IGafConstants.POINT_KIND_GAF );
+      m_info = new PdbInfo( session );
+      m_existingStates = GetPdbList.getArray( session, State.class );
+
+      session.close();
+    }
+    finally
+    {
+      PdbUtils.closeSessionQuietly( session );
+    }
+
+    final GafCodes gafCodes = new GafCodes();
+    final Coefficients coefficients = getCoefficients();
+    m_pointChecker = new GafPointCheck( gafCodes, coefficients );
+
   }
 
   public void init( final IDialogSettings settings )
@@ -157,28 +188,6 @@ public class ImportGafData extends AbstractModelObject
 
     settings.put( PROPERTY_SRS, m_srs );
     settings.put( PROPERTY_GAF_FILE, gafPath );
-  }
-
-  public void initFromDb( ) throws PdbConnectException, IOException
-  {
-    Session session = null;
-    try
-    {
-      session = m_connection.openSession();
-
-      m_coefficients = new Coefficients( session, IGafConstants.POINT_KIND_GAF );
-      m_info = new PdbInfo( session );
-
-      session.close();
-    }
-    finally
-    {
-      PdbUtils.closeSessionQuietly( session );
-    }
-
-    final GafCodes gafCodes = new GafCodes();
-    final Coefficients coefficients = getCoefficients();
-    m_pointChecker = new GafPointCheck( gafCodes, coefficients );
   }
 
   public String getSrs( )
@@ -401,5 +410,15 @@ public class ImportGafData extends AbstractModelObject
 
     final Set<Event> events = m_waterBody.getEvents();
     return events.toArray( new Event[events.size()] );
+  }
+
+  public State[] getExistingStates( )
+  {
+    return m_existingStates;
+  }
+
+  public boolean isInit( )
+  {
+    return m_isInitalized;
   }
 }
