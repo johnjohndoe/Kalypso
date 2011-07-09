@@ -82,10 +82,11 @@ public class GafProfiles
 
   private IStatus m_status;
 
-  public GafProfiles( final GafPointCheck checker, final JTSTransformer jtsTransformer, final LineString riverline, final IStatus readGafStatus )
+  public GafProfiles( final GafPointCheck checker, final JTSTransformer jtsTransformer, final GeometryFactory geometryFactory, final LineString riverline, final IStatus readGafStatus )
   {
     m_readGafStatus = readGafStatus;
-    m_geometryFactory = riverline.getFactory();
+    // REMARK: cannot rely on the factory of riverline, as that may be null
+    m_geometryFactory = geometryFactory;
     m_transformer = jtsTransformer;
     m_pointChecker = checker;
     m_riverline = riverline;

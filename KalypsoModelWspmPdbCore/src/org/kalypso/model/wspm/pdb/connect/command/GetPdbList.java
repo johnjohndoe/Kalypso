@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect.command;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -67,5 +68,12 @@ public final class GetPdbList
       final String message = String.format( "Failed to retreive: %s", type.getName() );
       throw new PdbConnectException( message, e );
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> T[] getArray( final Session session, final Class<T> type ) throws PdbConnectException
+  {
+    final List<T> list = getList( session, type );
+    return list.toArray( (T[]) Array.newInstance( type, list.size() ) );
   }
 }
