@@ -63,6 +63,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.services.IEvaluationService;
+import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.ConnectionAdminControl;
@@ -92,7 +93,7 @@ public class ConnectionViewer extends Composite
 
   private final PdbWspmProject m_project;
 
-  public ConnectionViewer( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection, final PdbWspmProject project )
+  public ConnectionViewer( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Composite parent, final IPdbConnection connection, final PdbWspmProject project )
   {
     super( parent, SWT.NONE );
 
@@ -103,7 +104,7 @@ public class ConnectionViewer extends Composite
     GridLayoutFactory.fillDefaults().applyTo( this );
 
     createAdminGroup( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    createPdbView( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    createPdbView( serviceLocator, toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final StructuredViewer contentViewer = m_contentViewer.getTreeViewer();
     createSearchControls( toolkit, this, contentViewer ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
   }
@@ -123,14 +124,14 @@ public class ConnectionViewer extends Composite
     return section;
   }
 
-  private Control createPdbView( final FormToolkit toolkit, final Composite parent )
+  private Control createPdbView( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Composite parent )
   {
     final Section section = toolkit.createSection( parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR );
     section.setText( "Contents" );
     section.setDescription( "Contents of the cross section database." );
     section.setLayout( new FillLayout() );
 
-    m_contentViewer = new ConnectionContentControl( toolkit, section, m_connection, m_project );
+    m_contentViewer = new ConnectionContentControl( serviceLocator, toolkit, section, m_connection, m_project );
 
     section.setClient( m_contentViewer );
 

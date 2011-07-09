@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
@@ -265,6 +266,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
   protected void updateControl( )
   {
     m_connectionViewer = null;
+
     final Composite body = m_form.getBody();
     ControlUtils.disposeChildren( body );
 
@@ -278,15 +280,17 @@ public class PdbView extends ViewPart implements IConnectionViewer
 
     m_disconnectAction.setEnabled( isConnected );
 
+    final IWorkbenchPartSite site = getSite();
+
     if( m_wspmProject == null )
       createNoWspmProjectControl( m_toolkit, body );
     else if( isConnected )
-      m_connectionViewer = new ConnectionViewer( m_toolkit, body, m_pdbConnection, m_wspmProject );
+      m_connectionViewer = new ConnectionViewer( site, m_toolkit, body, m_pdbConnection, m_wspmProject );
     else
       new NonConnectedControl( m_toolkit, body, m_autoConnectData, this );
 
     if( m_connectionViewer != null )
-      m_connectionViewer.createContextMenu( getSite() );
+      m_connectionViewer.createContextMenu( site );
 
     if( m_wspmProject != null && !isConnected )
       startAutoConnect();

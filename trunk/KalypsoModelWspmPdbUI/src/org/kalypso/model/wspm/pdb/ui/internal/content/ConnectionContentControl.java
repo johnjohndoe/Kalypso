@@ -61,6 +61,8 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.menus.IMenuService;
+import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
@@ -76,6 +78,8 @@ import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
  */
 public class ConnectionContentControl extends Composite
 {
+  private static final String TOOLBAR_URI = "toolbar:org.kalypso.model.wspm.pdb.ui.content"; //$NON-NLS-1$
+
   private final IJobChangeListener m_refreshJobListener = new JobChangeAdapter()
   {
     @Override
@@ -95,9 +99,13 @@ public class ConnectionContentControl extends Composite
 
   private ColumnsResizeControlListener m_treeListener;
 
-  public ConnectionContentControl( final FormToolkit toolkit, final Section parent, final IPdbConnection connection, final PdbWspmProject project )
+  private final IServiceLocator m_serviceLocator;
+
+  public ConnectionContentControl( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Section parent, final IPdbConnection connection, final PdbWspmProject project )
   {
     super( parent, SWT.NONE );
+
+    m_serviceLocator = serviceLocator;
 
     m_project = project;
 
@@ -126,6 +134,9 @@ public class ConnectionContentControl extends Composite
   public void dispose( )
   {
     resetInput();
+
+    final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
+    service.releaseContributions( m_manager );
 
     super.dispose();
   }
@@ -178,6 +189,9 @@ public class ConnectionContentControl extends Composite
     m_manager.add( new ExpandAllAction( this ) );
     m_manager.add( new CollapseAllAction( this ) );
     m_manager.add( new Separator() );
+
+    final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
+    service.populateContributionManager( m_manager, TOOLBAR_URI );
 
     m_manager.update( true );
   }
