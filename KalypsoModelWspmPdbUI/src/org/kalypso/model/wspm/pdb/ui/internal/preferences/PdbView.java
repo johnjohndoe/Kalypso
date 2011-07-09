@@ -342,4 +342,10 @@ public class PdbView extends ViewPart implements IConnectionViewer
     if( m_connectionViewer != null )
       m_connectionViewer.reload( elementToSelect );
   }
+
+  @Override
+  public String getUsername( )
+  {
+    return m_pdbConnection.getSettings().getUsername();
+  }
 }

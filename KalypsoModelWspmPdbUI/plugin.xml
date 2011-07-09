@@ -167,15 +167,13 @@
   <!-- Commands on PDB elements -->
   <extension point="org.eclipse.ui.commands">
      <category id="pdbCommands" name="PDB Commands"/>
-     <command categoryId="pdbCommands" description="Edit the properties of a water body" id="org.kalypso.model.wspm.pdb.ui.command.editWaterBody" name="Edit..."/>
+     <command categoryId="pdbCommands" description="Edit the properties of a water body" id="org.kalypso.model.wspm.pdb.ui.command.editElement" name="Edit..."/>
   </extension>
   <extension point="org.eclipse.ui.commandImages">
-     <image commandId="org.kalypso.model.wspm.pdb.ui.command.editWaterBody" icon="icons/editCommand.gif"/>
+     <image commandId="org.kalypso.model.wspm.pdb.ui.command.editElement" icon="icons/editCommand.gif"/>
   </extension>
   <extension point="org.eclipse.ui.handlers">
-     <handler
-           class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyHandler"
-           commandId="org.kalypso.model.wspm.pdb.ui.command.editWaterBody">
+     <handler class="org.kalypso.model.wspm.pdb.ui.internal.content.EditElementHandler" commandId="org.kalypso.model.wspm.pdb.ui.command.editElement">
         <enabledWhen>
            <and>
               <with variable="activePart">
@@ -185,7 +183,10 @@
                  <and> 
                     <count value="1"/>
                     <iterate ifEmpty="false" operator="and">
-                       <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.WaterBody"/>
+                        <or>
+                           <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.WaterBody"/>
+                           <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.State"/>
+                       </or>
                     </iterate>
                  </and>
               </with>
@@ -195,12 +196,12 @@
   </extension>
   <extension point="org.eclipse.ui.menus">
      <menuContribution allPopups="false" locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-        <command commandId="org.kalypso.model.wspm.pdb.ui.command.editWaterBody" style="push">
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.editElement" style="push">
            <visibleWhen checkEnabled="true"/>
         </command>
      </menuContribution>
      <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.pdb.ui.content">
-        <command commandId="org.kalypso.model.wspm.pdb.ui.command.editWaterBody" style="push">
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.editElement" style="push">
            <visibleWhen checkEnabled="true"/>
         </command>
      </menuContribution>

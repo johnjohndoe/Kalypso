@@ -40,16 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.eclipse.jface.wizard.Wizard;
+import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
+ *
  */
-public interface IConnectionViewer
+public interface IEditWorker
 {
-  IPdbConnection getConnection( );
+  Wizard createWizard( Session session ) throws PdbConnectException;
 
-  void reload( ElementSelector elementToSelect );
+  String getWindowTitle( );
 
-  String getUsername( );
+  void afterWizardOK( );
+
+  void addElementsToSelect( ElementSelector selector );
 }

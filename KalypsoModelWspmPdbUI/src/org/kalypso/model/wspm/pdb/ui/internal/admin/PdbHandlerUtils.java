@@ -49,7 +49,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 
 /**
@@ -88,24 +87,21 @@ public class PdbHandlerUtils
     }
   }
 
-  public static WaterBody getSelectedWaterBodyChecked( final ExecutionEvent event ) throws ExecutionException
+  public static Object getSelectedElementChecked( final ExecutionEvent event ) throws ExecutionException
   {
-    final WaterBody waterBody = getSelectedWaterBody( event );
-    if( waterBody == null )
-      throw new ExecutionException( "Failed to find selected water body" ); //$NON-NLS-1$
-    return waterBody;
+    final Object element = getSelectedElement( event );
+    if( element == null )
+      throw new ExecutionException( "Failed to find a selected element" ); //$NON-NLS-1$
+
+    return element;
   }
 
-  private static WaterBody getSelectedWaterBody( final ExecutionEvent event )
+  private static Object getSelectedElement( final ExecutionEvent event )
   {
     final ISelection selection = HandlerUtil.getCurrentSelection( event );
     if( !(selection instanceof IStructuredSelection) )
       return null;
 
-    final Object element = ((IStructuredSelection) selection).getFirstElement();
-    if( element instanceof WaterBody )
-      return (WaterBody) element;
-
-    return null;
+    return ((IStructuredSelection) selection).getFirstElement();
   }
 }
