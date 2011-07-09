@@ -44,12 +44,14 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbView;
 
 /**
  * @author Gernot Belger
@@ -66,11 +68,15 @@ public class PdbHandlerUtils
 
   private static IConnectionViewer getConnectionViewer( final ExecutionEvent event )
   {
-    final IWorkbenchPart part = HandlerUtil.getActivePart( event );
-    if( part instanceof IConnectionViewer )
-      return (IConnectionViewer) part;
+    final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
+    if( window == null )
+      return null;
 
-    return null;
+    final IWorkbenchPage page = window.getActivePage();
+    if( page == null )
+      return null;
+
+    return (PdbView) page.findView( PdbView.ID );
   }
 
   public static Session aquireSession( final IConnectionViewer viewer ) throws ExecutionException
