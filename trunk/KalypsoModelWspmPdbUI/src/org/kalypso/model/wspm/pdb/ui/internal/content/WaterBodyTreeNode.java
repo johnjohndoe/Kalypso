@@ -38,12 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.internal.wspm;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,13 +52,12 @@ import java.util.TreeSet;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
-import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
  */
-public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
+class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
 {
   private final SortedSet<WaterBodyTreeNode> m_waterChildren = new TreeSet<WaterBodyTreeNode>();
 
@@ -118,7 +116,10 @@ public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
     {
       final Object[] realChildren = getRealChildren();
       final Collection<Object> all = new ArrayList<Object>( m_waterChildren.size() + realChildren.length );
-      all.addAll( m_waterChildren );
+
+      for( final WaterBodyTreeNode childNode : m_waterChildren )
+        all.add( childNode.getWaterBody() );
+
       all.addAll( Arrays.asList( realChildren ) );
       m_allChildren = all.toArray( new Object[all.size()] );
       return m_allChildren;
@@ -192,43 +193,18 @@ public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
     return false;
   }
 
-  public WaterBodyTreeNode findWaterBodyByName( final String waterBodyName )
+  public void accept( final IWaterBodyTreeVisitor visitor )
   {
-    final String name = m_water == null ? null : m_water.getName();
-    if( waterBodyName.equals( name ) )
-      return this;
-
-    for( final WaterBodyTreeNode node : m_waterChildren )
+    try
     {
-      final WaterBodyTreeNode foundWater = node.findWaterBodyByName( waterBodyName );
-      if( foundWater != null )
-        return foundWater;
+      visitor.visit( this );
     }
-
-    return null;
-  }
-
-  public Event findEventName( final String eventName )
-  {
-    final Set<Event> events;
-    if( m_water == null )
-      events = Collections.emptySet();
-    else
-      events = m_water.getEvents();
-
-    for( final Event event : events )
+    catch( final IWaterBodyTreeVisitor.CancelException e )
     {
-      if( eventName.equals( event.getName() ) )
-        return event;
+      return;
     }
 
     for( final WaterBodyTreeNode node : m_waterChildren )
-    {
-      final Event foundEvent = node.findEventName( eventName );
-      if( foundEvent != null )
-        return foundEvent;
-    }
-
-    return null;
+      node.accept( visitor );
   }
 }

@@ -50,7 +50,6 @@ import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 
 /**
@@ -106,8 +105,6 @@ public class PdbHandlerUtils
     final Object element = ((IStructuredSelection) selection).getFirstElement();
     if( element instanceof WaterBody )
       return (WaterBody) element;
-    if( element instanceof WaterBodyTreeNode )
-      return ((WaterBodyTreeNode) element).getWaterBody();
 
     return null;
   }

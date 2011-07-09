@@ -136,8 +136,6 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
       final WaterBody waterBody = (WaterBody) element;
       addElementsAsCrossSection( waterBody.getCrossSections() );
     }
-    else if( element instanceof WaterBodyTreeNode )
-      addElementAsCrossSection( ((WaterBodyTreeNode) element).getWaterBody() );
   }
 
   private void checkoutCrossSections( final IProgressMonitor monitor ) throws CoreException

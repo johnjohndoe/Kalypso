@@ -38,23 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
-
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 /**
  * @author Gernot Belger
  */
-public class WaterBodyCodeLabelProvider extends ColumnLabelProvider
+interface IWaterBodyTreeVisitor
 {
-  @Override
-  public String getText( final Object element )
+  class CancelException extends Exception
   {
-    if( element instanceof WaterBody )
-      return ((WaterBody) element).getName();
-
-    return StringUtils.EMPTY;
   }
+
+  void visit( WaterBodyTreeNode node ) throws CancelException;
 }
