@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.internal.wspm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,6 +53,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
@@ -190,17 +192,41 @@ public class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
     return false;
   }
 
-  public WaterBody findWaterBodyByName( final String waterBodyName )
+  public WaterBodyTreeNode findWaterBodyByName( final String waterBodyName )
   {
     final String name = m_water == null ? null : m_water.getName();
     if( waterBodyName.equals( name ) )
-      return m_water;
+      return this;
 
     for( final WaterBodyTreeNode node : m_waterChildren )
     {
-      final WaterBody foundWater = node.findWaterBodyByName( waterBodyName );
+      final WaterBodyTreeNode foundWater = node.findWaterBodyByName( waterBodyName );
       if( foundWater != null )
         return foundWater;
+    }
+
+    return null;
+  }
+
+  public Event findEventName( final String eventName )
+  {
+    final Set<Event> events;
+    if( m_water == null )
+      events = Collections.emptySet();
+    else
+      events = m_water.getEvents();
+
+    for( final Event event : events )
+    {
+      if( eventName.equals( event.getName() ) )
+        return event;
+    }
+
+    for( final WaterBodyTreeNode node : m_waterChildren )
+    {
+      final Event foundEvent = node.findEventName( eventName );
+      if( foundEvent != null )
+        return foundEvent;
     }
 
     return null;
