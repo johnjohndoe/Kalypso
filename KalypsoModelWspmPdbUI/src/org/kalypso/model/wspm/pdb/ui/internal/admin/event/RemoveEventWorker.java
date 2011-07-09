@@ -38,11 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.content.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
@@ -52,11 +53,11 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.IRemoveWorker;
 /**
  * @author Gernot Belger
  */
-public class RemoveWaterBodyWorker implements IRemoveWorker
+public class RemoveEventWorker implements IRemoveWorker
 {
-  private final WaterBody m_selectedItem;
+  private final Event m_selectedItem;
 
-  public RemoveWaterBodyWorker( final WaterBody selectedItem )
+  public RemoveEventWorker( final Event selectedItem )
   {
     m_selectedItem = selectedItem;
   }
@@ -64,39 +65,21 @@ public class RemoveWaterBodyWorker implements IRemoveWorker
   @Override
   public String getWindowTitle( )
   {
-    return "Remove Water Body";
+    return "Remove Event";
   }
 
   @Override
   public boolean checkPrerequisites( final Shell shell )
   {
     final String name = m_selectedItem.getName();
-
-    final boolean hasData = hasData(  );
-    if( hasData )
-    {
-      /* show dialog with states/cross-sections -> water cannot be removed */
-      final CannotRemoveWaterBodyDialog dialog = new CannotRemoveWaterBodyDialog( shell, getWindowTitle(), m_selectedItem );
-      dialog.open();
-      return false;
-    }
-
-    final String message = String.format( "Remove waterbody: %s (%s)? This operation cannot be undone.", m_selectedItem.getLabel(), name );
+    final String message = String.format( "Remove event '%s' ? This operation cannot be undone.", name );
     return MessageDialog.openConfirm( shell, getWindowTitle(), message );
-  }
-
-  private boolean hasData( )
-  {
-    final boolean hasCrossSections = !m_selectedItem.getCrossSections().isEmpty();
-    final boolean hasWaterlevels = !m_selectedItem.getEvents().isEmpty();
-
-    return hasCrossSections || hasWaterlevels;
   }
 
   @Override
   public IPdbOperation createOperation( )
   {
-    return new DeleteWaterBodyOperation( m_selectedItem.getName() );
+    return new DeleteEventOperation( m_selectedItem.getName() );
   }
 
   @Override

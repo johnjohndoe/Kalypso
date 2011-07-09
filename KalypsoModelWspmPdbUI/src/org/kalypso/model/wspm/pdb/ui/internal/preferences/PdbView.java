@@ -56,6 +56,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
@@ -70,6 +71,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.pdb.ui.content.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -285,7 +287,8 @@ public class PdbView extends ViewPart implements IConnectionViewer
     if( m_wspmProject == null )
       createNoWspmProjectControl( m_toolkit, body );
     else if( isConnected )
-      m_connectionViewer = new ConnectionViewer( site, m_toolkit, body, m_pdbConnection, m_wspmProject );
+      // FIXME
+      m_connectionViewer = new ConnectionViewer( PlatformUI.getWorkbench(), m_toolkit, body, m_pdbConnection, m_wspmProject );
     else
       new NonConnectedControl( m_toolkit, body, m_autoConnectData, this );
 
@@ -347,5 +350,14 @@ public class PdbView extends ViewPart implements IConnectionViewer
   public String getUsername( )
   {
     return m_pdbConnection.getSettings().getUsername();
+  }
+
+  @Override
+  public IWaterBodyStructure getStructure( )
+  {
+    if( m_connectionViewer == null )
+      return null;
+
+    return m_connectionViewer.getStructure();
   }
 }

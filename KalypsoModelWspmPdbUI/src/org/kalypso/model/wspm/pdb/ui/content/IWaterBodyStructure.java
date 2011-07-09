@@ -38,21 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
-
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+package org.kalypso.model.wspm.pdb.ui.content;
 
 /**
  * @author Gernot Belger
  */
-public interface IRemoveWorker
+public interface IWaterBodyStructure
 {
-  String getWindowTitle( );
-
-  boolean checkPrerequisites( Shell shell );
-
-  void addElementsToSelect( IConnectionViewer viewer, ElementSelector selector );
-
-  IPdbOperation createOperation( );
+  Object getParent( Object child );
 }

@@ -40,50 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
 
-import org.eclipse.jface.wizard.Wizard;
 import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.PdbUtils;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.utils.EventUtils;
 
 /**
  * @author Gernot Belger
  */
-public class ManageEventsWizard extends Wizard
+public class DeleteEventOperation implements IPdbOperation
 {
-  private final Session m_session;
+  private final String m_name;
 
-  public ManageEventsWizard( final IPdbConnection connection )
+  public DeleteEventOperation( final String name )
   {
-    m_session = openSession( connection );
-
-    addPage( new ManageEventsPage( "events", connection, m_session ) ); //$NON-NLS-1$
-  }
-
-  private Session openSession( final IPdbConnection connection )
-  {
-    try
-    {
-      return connection.openSession();
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    m_name = name;
   }
 
   @Override
-  public void dispose( )
+  public String getLabel( )
   {
-    PdbUtils.closeSessionQuietly( m_session );
-
-    super.dispose();
+    return String.format( "Delete Event '%s'", m_name );
   }
 
   @Override
-  public boolean performFinish( )
+  public void execute( final Session session ) throws PdbConnectException
   {
-    return true;
+    final Event[] existingEvents = GetPdbList.getArray( session, Event.class );
+    final Object elementToDelete = EventUtils.findEventByName( existingEvents, m_name );
+    session.delete( elementToDelete );
   }
 }

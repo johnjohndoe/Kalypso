@@ -69,6 +69,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.content.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
@@ -137,6 +138,7 @@ public class ConnectionContentControl extends Composite
 
     final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
     service.releaseContributions( m_manager );
+    m_manager.dispose();
 
     super.dispose();
   }
@@ -259,5 +261,17 @@ public class ConnectionContentControl extends Composite
   public TreeViewer getTreeViewer( )
   {
     return m_viewer;
+  }
+
+  public IWaterBodyStructure getStructure( )
+  {
+    if( m_viewer == null )
+      return null;
+
+    final ConnectionInput input = (ConnectionInput) m_viewer.getInput();
+    if( input == null )
+      return null;
+
+    return input.getStructure();
   }
 }

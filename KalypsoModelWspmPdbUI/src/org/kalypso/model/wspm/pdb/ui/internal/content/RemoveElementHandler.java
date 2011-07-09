@@ -52,11 +52,13 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.event.RemoveEventWorker;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.RemoveStateWorker;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.RemoveWaterBodyWorker;
 
@@ -97,7 +99,7 @@ public class RemoveElementHandler extends AbstractHandler
     }
 
     final ElementSelector selector = new ElementSelector();
-    worker.addElementsToSelect( selector );
+    worker.addElementsToSelect( viewer, selector );
     viewer.reload( selector );
     return null;
   }
@@ -109,6 +111,9 @@ public class RemoveElementHandler extends AbstractHandler
 
     if( selectedItem instanceof State )
       return new RemoveStateWorker( (State) selectedItem );
+
+    if( selectedItem instanceof Event )
+      return new RemoveEventWorker( (Event) selectedItem );
 
     throw new IllegalArgumentException();
   }

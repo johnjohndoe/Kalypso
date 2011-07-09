@@ -166,10 +166,10 @@
   
   <extension point="org.eclipse.core.expressions.definitions">
      <definition id="isPdbViewVisible">
-              <with variable="activeWorkbenchWindow">
-                 <test property="org.kalypso.ui.window.isViewVisible" value="PdbView"/>
-              </with>
-     </definition>
+          <with variable="activeWorkbenchWindow">
+             <test property="org.kalypso.ui.window.isViewVisible" value="PdbView"/>
+          </with>
+ </definition>
      <definition id="onePdbElementSelected">
            <and>
               <reference definitionId="isPdbViewVisible"/>
@@ -180,6 +180,7 @@
                         <or>
                            <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.WaterBody"/>
                            <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.State"/>
+                           <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.Event"/>
                        </or>
                     </iterate>
                  </and>
