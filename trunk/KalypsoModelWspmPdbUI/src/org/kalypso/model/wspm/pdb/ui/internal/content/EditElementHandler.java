@@ -38,15 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -56,48 +56,42 @@ import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.FlushOperation;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
-import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
-import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStateWorker;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyWorker;
 
 /**
  * @author Gernot Belger
  */
-public class EditWaterBodyHandler extends AbstractHandler
+public class EditElementHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
-    final WaterBody selectedItem = PdbHandlerUtils.getSelectedWaterBodyChecked( event );
+    final Object selectedItem = PdbHandlerUtils.getSelectedElementChecked( event );
 
     final IConnectionViewer viewer = PdbHandlerUtils.getConnectionViewerChecked( event );
 
-    final String windowTitle = "Edit Water Body";
+    final String username = viewer.getUsername();
+    final IEditWorker worker = findWorker( selectedItem, username );
 
-    String nameToSelect = selectedItem.getName();
     Session session = null;
     try
     {
       session = PdbHandlerUtils.aquireSession( viewer );
 
       // TODO Show busy cursor...
-      final WaterBody[] existingWaterbodies = WaterBodyViewer.loadWaterbodies( session );
-      final WaterBody waterBodyToEdit = findWaterBody( existingWaterbodies, selectedItem );
-
-      final WaterBody clone = cloneForEdit( waterBodyToEdit );
-
-      final EditWaterBodyWizard wizard = new EditWaterBodyWizard( existingWaterbodies, clone, Mode.EDIT );
-      wizard.setWindowTitle( windowTitle );
+      final Wizard wizard = worker.createWizard( session );
+      wizard.setWindowTitle( worker.getWindowTitle() );
 
       final WizardDialog dialog = new WizardDialog( shell, wizard );
       if( dialog.open() == Window.OK )
       {
-        nameToSelect = clone.getName();
-        uncloneData( waterBodyToEdit, clone );
+        worker.afterWizardOK();
 
         final FlushOperation operation = new FlushOperation();
         new Executor( session, operation ).execute();
@@ -109,6 +103,7 @@ public class EditWaterBodyHandler extends AbstractHandler
     {
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
+      final String windowTitle = worker.getWindowTitle();
       new StatusDialog2( shell, status, windowTitle ).open();
     }
     finally
@@ -117,40 +112,19 @@ public class EditWaterBodyHandler extends AbstractHandler
     }
 
     final ElementSelector selector = new ElementSelector();
-    selector.addWaterBodyName( nameToSelect );
+    worker.addElementsToSelect( selector );
     viewer.reload( selector );
     return null;
   }
 
-  private WaterBody findWaterBody( final WaterBody[] waterbodies, final WaterBody element )
+  private IEditWorker findWorker( final Object selectedItem, final String username )
   {
-    final String name = element.getName();
-    for( final WaterBody waterBody : waterbodies )
-    {
-      if( ObjectUtils.equals( waterBody.getName(), name ) )
-        return waterBody;
+    if( selectedItem instanceof WaterBody )
+      return new EditWaterBodyWorker( (WaterBody) selectedItem );
 
-    }
-    return null;
-  }
+    if( selectedItem instanceof State )
+      return new EditStateWorker( (State) selectedItem, username );
 
-  private WaterBody cloneForEdit( final WaterBody other )
-  {
-    final WaterBody clone = new WaterBody( other.getId(), other.getName(), other.getLabel(), other.getDirectionOfStationing() );
-    clone.setDescription( other.getDescription() );
-    clone.setRiverline( other.getRiverline() );
-    return clone;
-  }
-
-  /**
-   * Copy the edited data back into the persistent object.
-   */
-  private void uncloneData( final WaterBody original, final WaterBody clone )
-  {
-    original.setName( clone.getName() );
-    original.setLabel( clone.getLabel() );
-    original.setDescription( clone.getDescription() );
-    original.setDirectionOfStationing( clone.getDirectionOfStationing() );
-    original.setRiverline( clone.getRiverline() );
+    throw new IllegalArgumentException();
   }
 }
