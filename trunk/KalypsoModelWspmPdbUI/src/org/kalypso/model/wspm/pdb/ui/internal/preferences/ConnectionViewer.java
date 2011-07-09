@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -54,11 +56,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.ConnectionAdminControl;
@@ -175,6 +179,7 @@ public class ConnectionViewer extends Composite
   public void createContextMenu( final IWorkbenchPartSite site )
   {
     final TreeViewer viewer = m_contentViewer.getTreeViewer();
+
     site.setSelectionProvider( viewer );
 
     // create context menu for editor
@@ -182,12 +187,26 @@ public class ConnectionViewer extends Composite
     // add additions separator: if not, eclipse whines
     menuManager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
 
+    menuManager.addMenuListener( new IMenuListener()
+    {
+      @Override
+      public void menuAboutToShow( final IMenuManager manager )
+      {
+        // Strange, without this listener, the menu does not show up the first time
+      }
+    } );
+
     final Menu menu = menuManager.createContextMenu( viewer.getControl() );
 
-    site.registerContextMenu( menuManager, viewer ); //$NON-NLS-N$
-//    site.registerContextMenu( "pdbContentTreePopupMenu", menuManager, viewer ); //$NON-NLS-N$
+    site.registerContextMenu( "pdbContentTreePopupMenu", menuManager, viewer ); //$NON-NLS-N$
 
     viewer.getControl().setMenu( menu );
+
+    // final ISelection selection = viewer.getSelection();
+    final IEvaluationService service = (IEvaluationService) site.getService( IEvaluationService.class );
+    // final IHandlerService service = (IHandlerService) site.getService( IHandlerService.class );
+    // service.getCurrentState().addVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME, selection );
+    service.requestEvaluation( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
     viewer.getControl().addDisposeListener( new DisposeListener()
     {
