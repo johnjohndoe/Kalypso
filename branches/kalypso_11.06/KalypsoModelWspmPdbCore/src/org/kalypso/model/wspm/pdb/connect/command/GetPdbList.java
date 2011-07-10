@@ -46,28 +46,57 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
  */
-public final class GetPdbList
+public final class GetPdbList<T> implements IPdbOperation
 {
+  private List<T> m_result;
+
+  private final Class<T> m_type;
+
+  public GetPdbList( final Class<T> type )
+  {
+    m_type = type;
+  }
+
+  @Override
+  public String getLabel( )
+  {
+    return "Get elements";
+  }
+
   @SuppressWarnings("unchecked")
-  public static <T> List<T> getList( final Session session, final Class<T> type ) throws PdbConnectException
+  @Override
+  public void execute( final Session session ) throws PdbConnectException
   {
     try
     {
-      final Criteria criteria = session.createCriteria( type );
-      return criteria.list();
+      final Criteria criteria = session.createCriteria( m_type );
+      m_result = criteria.list();
     }
     catch( final HibernateException e )
     {
       e.printStackTrace();
 
-      final String message = String.format( "Failed to retreive: %s", type.getName() );
+      final String message = String.format( "Failed to retreive: %s", m_type.getName() );
       throw new PdbConnectException( message, e );
     }
+  }
+
+  public List<T> getResult( )
+  {
+    return m_result;
+  }
+
+  public static <T> List<T> getList( final Session session, final Class<T> type ) throws PdbConnectException
+  {
+    final GetPdbList<T> operation = new GetPdbList<T>( type );
+    operation.execute( session );
+    return operation.getResult();
   }
 
   @SuppressWarnings("unchecked")
@@ -75,5 +104,11 @@ public final class GetPdbList
   {
     final List<T> list = getList( session, type );
     return list.toArray( (T[]) Array.newInstance( type, list.size() ) );
+  }
+
+  @SuppressWarnings("unchecked")
+  public T[] getResultAsArray( )
+  {
+    return m_result.toArray( (T[]) Array.newInstance( m_type, m_result.size() ) );
   }
 }

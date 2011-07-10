@@ -40,37 +40,58 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.command.SaveObjectOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.ui.internal.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
+import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 
 /**
  * @author Gernot Belger
  */
-public class EditWaterBodyWizard extends Wizard
+public class AddWaterBodyWizard extends Wizard
 {
-  private final WaterBody m_waterBody;
+  private final WaterBody m_waterBody = new WaterBody();
 
   private final WaterBody[] m_existingWaterbodies;
 
-  private final Mode m_mode;
+  private final IConnectionViewer m_viewer;
 
-  public EditWaterBodyWizard( final WaterBody[] existingWaterbodies, final WaterBody waterBody, final Mode mode )
+  public AddWaterBodyWizard( final WaterBody[] existingWaterBodies, final IConnectionViewer viewer )
   {
-    m_existingWaterbodies = existingWaterbodies;
-    m_waterBody = waterBody;
-    m_mode = mode;
+    m_existingWaterbodies = existingWaterBodies;
+    m_viewer = viewer;
+
+    setWindowTitle( "Create New Water Body" );
+    setNeedsProgressMonitor( true );
   }
 
   @Override
   public void addPages( )
   {
-    addPage( new EditWaterBodyPage( "editWaterBody", m_waterBody, m_existingWaterbodies, m_mode ) ); //$NON-NLS-1$
+    addPage( new EditWaterBodyPage( "editWaterBody", m_waterBody, m_existingWaterbodies, Mode.NEW ) ); //$NON-NLS-1$
   }
 
   @Override
   public boolean performFinish( )
   {
+    final SaveObjectOperation operation = new SaveObjectOperation( m_waterBody );
+
+    final IPdbConnection connection = m_viewer.getConnection();
+    final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, runnable );
+    if( !result.isOK() )
+      new StatusDialog2( getShell(), result, getWindowTitle() ).open();
+
+    final ElementSelector selector = new ElementSelector();
+    selector.addWaterBodyName( m_waterBody.getName() );
+    m_viewer.reload( selector );
     return true;
   }
 }

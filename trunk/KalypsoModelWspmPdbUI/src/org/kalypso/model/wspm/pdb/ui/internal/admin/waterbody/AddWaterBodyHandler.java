@@ -38,73 +38,55 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
-import org.kalypso.model.wspm.pdb.db.mapping.Event;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.ExecutorRunnable;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.event.RemoveEventWorker;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.state.RemoveStateWorker;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.RemoveWaterBodyWorker;
+import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 
 /**
  * @author Gernot Belger
  */
-public class RemoveElementHandler extends AbstractHandler
+public class AddWaterBodyHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final Shell shell = HandlerUtil.getActiveShellChecked( event );
-    final Object selectedItem = PdbHandlerUtils.getSelectedElementChecked( event );
-
     final IConnectionViewer viewer = PdbHandlerUtils.getConnectionViewerChecked( event );
 
-    final IRemoveWorker worker = findWorker( selectedItem );
-
-    if( !worker.checkPrerequisites( shell ) )
-      return null;
+    final Shell shell = HandlerUtil.getActiveShell( event );
+    final String commandName = HandlerUtils.getCommandName( event );
 
     final IPdbConnection connection = viewer.getConnection();
 
-    final IPdbOperation operation = worker.createOperation();
+    final GetPdbList<WaterBody> operation = new GetPdbList<WaterBody>( WaterBody.class );
     final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
-    runnable.setOKStatus( new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "Element has been successfully removed" ) );
-
     final IStatus result = ProgressUtilities.busyCursorWhile( runnable );
-    new StatusDialog2( shell, result, worker.getWindowTitle() ).open();
+    if( !result.isOK() )
+    {
+      new StatusDialog2( shell, result, commandName );
+      return null;
+    }
 
-    final ElementSelector selector = new ElementSelector();
-    worker.addElementsToSelect( viewer, selector );
-    viewer.reload( selector );
+    final WaterBody[] waterBodies = operation.getResultAsArray();
+
+    final AddWaterBodyWizard wizard = new AddWaterBodyWizard( waterBodies, viewer );
+
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    dialog.open();
     return null;
-  }
-
-  private IRemoveWorker findWorker( final Object selectedItem )
-  {
-    if( selectedItem instanceof WaterBody )
-      return new RemoveWaterBodyWorker( (WaterBody) selectedItem );
-
-    if( selectedItem instanceof State )
-      return new RemoveStateWorker( (State) selectedItem );
-
-    if( selectedItem instanceof Event )
-      return new RemoveEventWorker( (Event) selectedItem );
-
-    throw new IllegalArgumentException();
   }
 }
