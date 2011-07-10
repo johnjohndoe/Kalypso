@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.SelectAllFocusListener;
+import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 
 /**
  * Helper that allow to search for specific water bodies.
@@ -72,7 +73,7 @@ public class WaterBodyFilterControl extends Composite
 
   private final Color m_yellow;
 
-  public WaterBodyFilterControl( final FormToolkit toolkit, final Composite parent )
+  public WaterBodyFilterControl( final FormToolkit toolkit, final Composite parent, final IConnectionViewer viewer )
   {
     super( parent, SWT.NONE );
 
@@ -83,7 +84,7 @@ public class WaterBodyFilterControl extends Composite
 
     ControlUtils.addDisposeListener( this );
 
-    m_filter = new WaterBodiesFilter( StringUtils.EMPTY, StringUtils.EMPTY );
+    m_filter = new WaterBodiesFilter( StringUtils.EMPTY, StringUtils.EMPTY, viewer );
 
     GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( true ).applyTo( this );
     m_binding = new DataBindingContext();

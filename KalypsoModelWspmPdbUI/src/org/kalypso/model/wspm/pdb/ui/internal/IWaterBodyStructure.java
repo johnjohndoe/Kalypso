@@ -38,44 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+package org.kalypso.model.wspm.pdb.ui.internal;
 
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard;
 
 /**
  * @author Gernot Belger
  */
-public class ImportWaterBodiesAction extends UpdateableAction
+public interface IWaterBodyStructure
 {
-  private final WaterBodyViewer m_viewer;
+  Object getParent( Object child );
 
-  public ImportWaterBodiesAction( final ManageWaterBodiesPage page, final WaterBodyViewer viewer )
-  {
-    m_viewer = viewer;
-
-    setText( "&Import..." );
-  }
-
-  @Override
-  protected boolean checkEnabled( )
-  {
-    return true;
-  }
-
-  @Override
-  public void runWithEvent( final Event event )
-  {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    final Wizard wizard = new ImportWaterBodiesWizard();
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    if( dialog.open() != Window.CANCEL )
-      m_viewer.refreshWaterBody( null );
-  }
+  Object[] getChildren( Object element );
 }

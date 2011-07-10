@@ -178,21 +178,6 @@ class WaterBodyTreeNode implements Comparable<WaterBodyTreeNode>
     return rootNode;
   }
 
-  public boolean containsChildWithName( final String name )
-  {
-    final String myName = getWaterBody().getLabel().toLowerCase();
-    if( myName.contains( name ) )
-      return true;
-
-    for( final WaterBodyTreeNode childNode : m_waterChildren )
-    {
-      if( childNode.containsChildWithName( name ) )
-        return true;
-    }
-
-    return false;
-  }
-
   public void accept( final IWaterBodyTreeVisitor visitor )
   {
     try

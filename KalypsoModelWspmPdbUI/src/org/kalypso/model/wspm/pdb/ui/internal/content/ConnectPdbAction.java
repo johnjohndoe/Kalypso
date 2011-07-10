@@ -38,45 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ManageWaterBodyAction;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
 
 /**
  * @author Gernot Belger
  */
-public class ConnectionAdminControl extends Composite
+public class ConnectPdbAction extends Action
 {
-  private final IPdbConnection m_connection;
+  private final PdbView m_view;
 
-  private final IUpdateable m_updateable;
+  private final IPdbSettings m_settings;
 
-  public ConnectionAdminControl( final FormToolkit toolkit, final Composite parent, final IPdbConnection connection, final IUpdateable updateable )
+  public ConnectPdbAction( final PdbView view, final IPdbSettings settings )
   {
-    super( parent, SWT.NONE );
+    super( String.format( "%s - %s", settings.getName(), settings.toString() ) );
 
-    m_connection = connection;
-    m_updateable = updateable;
+    setImageDescriptor( settings.getImage() );
+    setToolTipText( "Connect to Database" );
 
-    GridLayoutFactory.swtDefaults().applyTo( this );
-    toolkit.adapt( this );
-
-    createWaterBodyControl( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_view = view;
+    m_settings = settings;
   }
 
-  private Control createWaterBodyControl( final FormToolkit toolkit, final Composite parent )
+  @Override
+  public void runWithEvent( final Event event )
   {
-    final Action waterbodyAction = new ManageWaterBodyAction( m_connection, m_updateable );
-    return ActionHyperlink.createHyperlink( toolkit, parent, SWT.NONE, waterbodyAction );
+    final Shell shell = m_view.getSite().getShell();
+
+    final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( m_settings, false );
+
+    final IStatus result = ProgressUtilities.busyCursorWhile( operation );
+    if( !result.isOK() )
+      new StatusDialog2( shell, result, "Open Connection" ).open();
+
+    final IPdbConnection connection = operation.getConnection();
+    m_view.setConnection( connection, result );
   }
 }

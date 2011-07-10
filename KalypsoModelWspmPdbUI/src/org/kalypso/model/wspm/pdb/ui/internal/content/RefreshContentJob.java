@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -72,10 +73,12 @@ public class RefreshContentJob extends Job
   {
     monitor.beginTask( "Refresh...", IProgressMonitor.UNKNOWN );
 
+    Session session = null;
     try
     {
-      final Session session = m_connection.openSession();
+      session = m_connection.openSession();
       m_input = new ConnectionInput( session );
+      session.close();
       return Status.OK_STATUS;
     }
     catch( final PdbConnectException e )
@@ -85,6 +88,7 @@ public class RefreshContentJob extends Job
     }
     finally
     {
+      PdbUtils.closeSessionQuietly( session );
       monitor.done();
     }
   }

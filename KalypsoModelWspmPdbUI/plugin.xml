@@ -20,7 +20,7 @@
       <view
             allowMultiple="false"
             category="org.kalypso.model.wspm.pdb.ui.viewCategory"
-            class="org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbView"
+            class="org.kalypso.model.wspm.pdb.ui.internal.content.PdbView"
             icon="icons/pdb.gif"
             id="PdbView"
             name="Profildatenbank"
