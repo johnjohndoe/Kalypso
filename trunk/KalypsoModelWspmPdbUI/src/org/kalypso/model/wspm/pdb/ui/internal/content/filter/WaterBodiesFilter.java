@@ -129,6 +129,9 @@ public class WaterBodiesFilter extends ViewerFilter
     if( myName.contains( m_name ) )
       return true;
 
+    if( m_connectionViewer == null )
+      return false;
+
     final IWaterBodyStructure structure = m_connectionViewer.getStructure();
     if( structure == null )
       return false;
