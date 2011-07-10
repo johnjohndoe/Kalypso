@@ -47,7 +47,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.Executor;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
@@ -56,13 +58,16 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
  */
 public class ExecutorRunnable implements ICoreRunnableWithProgress
 {
-  private final Executor m_executor;
-
   private IStatus m_okStatus = Status.OK_STATUS;
 
-  public ExecutorRunnable( final Session session, final IPdbOperation operation )
+  private final IPdbConnection m_connection;
+
+  private final IPdbOperation m_operation;
+
+  public ExecutorRunnable( final IPdbConnection connection, final IPdbOperation operation )
   {
-    m_executor = new Executor( session, operation );
+    m_connection = connection;
+    m_operation = operation;
   }
 
   /**
@@ -76,16 +81,28 @@ public class ExecutorRunnable implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
   {
+    Session session = null;
+
     try
     {
-      monitor.beginTask( m_executor.getLabel(), IProgressMonitor.UNKNOWN );
+      monitor.beginTask( m_operation.getLabel(), IProgressMonitor.UNKNOWN );
 
+      session = m_connection.openSession();
+
+      final Executor m_executor = new Executor( session, m_operation );
       m_executor.execute();
+
+      session.close();
+
       return m_okStatus;
     }
     catch( final PdbConnectException e )
     {
       throw new InvocationTargetException( e );
+    }
+    finally
+    {
+      PdbUtils.closeSessionQuietly( session );
     }
   }
 }

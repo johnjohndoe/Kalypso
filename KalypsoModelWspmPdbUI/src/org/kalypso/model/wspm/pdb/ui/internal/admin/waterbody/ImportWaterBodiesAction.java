@@ -53,13 +53,10 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWate
  */
 public class ImportWaterBodiesAction extends UpdateableAction
 {
-  private final ManageWaterBodiesPage m_page;
-
   private final WaterBodyViewer m_viewer;
 
   public ImportWaterBodiesAction( final ManageWaterBodiesPage page, final WaterBodyViewer viewer )
   {
-    m_page = page;
     m_viewer = viewer;
 
     setText( "&Import..." );
