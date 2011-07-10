@@ -69,7 +69,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.content.IWaterBodyStructure;
+import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;

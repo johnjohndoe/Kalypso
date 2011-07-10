@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.preferences;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
@@ -64,6 +64,8 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
+import org.kalypso.model.wspm.pdb.ui.internal.preferences.OpenConnectionData;
+import org.kalypso.model.wspm.pdb.ui.internal.preferences.WspmPdbPreferencePage;
 
 /**
  * @author Gernot Belger

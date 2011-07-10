@@ -51,7 +51,7 @@ import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbView;
+import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
 
 /**
  * @author Gernot Belger

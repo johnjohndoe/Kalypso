@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.preferences;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;

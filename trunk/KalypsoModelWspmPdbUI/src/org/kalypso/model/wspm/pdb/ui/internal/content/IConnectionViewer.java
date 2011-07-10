@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.content.IWaterBodyStructure;
+import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 
 /**
  * @author Gernot Belger

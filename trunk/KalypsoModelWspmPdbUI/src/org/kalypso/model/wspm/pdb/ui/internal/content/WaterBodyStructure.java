@@ -44,9 +44,10 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.ui.content.IWaterBodyStructure;
+import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 
 /**
  * @author Gernot Belger
@@ -85,12 +86,19 @@ public class WaterBodyStructure implements IWaterBodyTreeVisitor, IWaterBodyStru
     return visitor.getResult();
   }
 
-  public Object[] getChildren( final WaterBody waterBody )
+  @Override
+  public Object[] getChildren( final Object waterBody )
   {
-    final WaterBodyTreeNode node = findNode( waterBody );
-    return node.getAllChildren();
+    if( waterBody == null || waterBody instanceof WaterBody )
+    {
+      final WaterBodyTreeNode node = findNode( (WaterBody) waterBody );
+      return node.getAllChildren();
+    }
+
+    return ArrayUtils.EMPTY_OBJECT_ARRAY;
   }
 
+  @Override
   public Object getParent( final Object element )
   {
     return m_parents.get( element );

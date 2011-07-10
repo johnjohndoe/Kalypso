@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.preferences;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -56,20 +56,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
-import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.content.IWaterBodyStructure;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.ConnectionAdminControl;
-import org.kalypso.model.wspm.pdb.ui.internal.content.ConnectionContentControl;
-import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
+import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.content.filter.StateFilterControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
@@ -77,17 +71,8 @@ import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 /**
  * @author Gernot Belger
  */
-public class ConnectionViewer extends Composite
+public class ConnectionViewer extends Composite implements IConnectionViewer
 {
-  private final IUpdateable m_updateable = new IUpdateable()
-  {
-    @Override
-    public void update( )
-    {
-      reload( null );
-    }
-  };
-
   private final IPdbConnection m_connection;
 
   private ConnectionContentControl m_contentViewer;
@@ -104,25 +89,9 @@ public class ConnectionViewer extends Composite
     toolkit.adapt( this );
     GridLayoutFactory.fillDefaults().applyTo( this );
 
-    createAdminGroup( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     createPdbView( serviceLocator, toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final StructuredViewer contentViewer = m_contentViewer.getTreeViewer();
     createSearchControls( toolkit, this, contentViewer ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-  }
-
-  private Control createAdminGroup( final FormToolkit toolkit, final Composite parent )
-  {
-    final Section section = toolkit.createSection( parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
-    // TODO: nur zeigen, wenn der user admin rechte hat
-    section.setText( "Administration" );
-    section.setDescription( "This section allows to administrate the cross section database." );
-    section.setLayout( new FillLayout() );
-
-    final ConnectionAdminControl adminControl = new ConnectionAdminControl( toolkit, section, m_connection, m_updateable );
-
-    section.setClient( adminControl );
-
-    return section;
   }
 
   private Control createPdbView( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Composite parent )
@@ -157,7 +126,7 @@ public class ConnectionViewer extends Composite
     waterGroup.setText( "Water Bodies" );
     waterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    final WaterBodyFilterControl waterFilterControl = new WaterBodyFilterControl( toolkit, waterGroup );
+    final WaterBodyFilterControl waterFilterControl = new WaterBodyFilterControl( toolkit, waterGroup, this );
     waterFilterControl.setViewer( viewer );
 
     final Group stateGroup = new Group( panel, SWT.NONE );
@@ -172,6 +141,7 @@ public class ConnectionViewer extends Composite
     return section;
   }
 
+  @Override
   public void reload( final ElementSelector elementToSelect )
   {
     if( m_contentViewer != null )
@@ -204,11 +174,8 @@ public class ConnectionViewer extends Composite
 
     viewer.getControl().setMenu( menu );
 
-    // final ISelection selection = viewer.getSelection();
-    final IEvaluationService service = (IEvaluationService) site.getService( IEvaluationService.class );
-    // final IHandlerService service = (IHandlerService) site.getService( IHandlerService.class );
-    // service.getCurrentState().addVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME, selection );
-    service.requestEvaluation( ISources.ACTIVE_CURRENT_SELECTION_NAME );
+// final IEvaluationService service = (IEvaluationService) site.getService( IEvaluationService.class );
+// service.requestEvaluation( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
     viewer.getControl().addDisposeListener( new DisposeListener()
     {
@@ -221,11 +188,24 @@ public class ConnectionViewer extends Composite
     } );
   }
 
-  IWaterBodyStructure getStructure( )
+  @Override
+  public IWaterBodyStructure getStructure( )
   {
     if( m_contentViewer == null )
       return null;
 
     return m_contentViewer.getStructure();
+  }
+
+  @Override
+  public IPdbConnection getConnection( )
+  {
+    return m_connection;
+  }
+
+  @Override
+  public String getUsername( )
+  {
+    return m_connection.getSettings().getUsername();
   }
 }

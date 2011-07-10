@@ -45,6 +45,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
+import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 
 /**
  * @author Gernot Belger
@@ -61,8 +63,11 @@ public class WaterBodiesFilter extends ViewerFilter
 
   private StructuredViewer m_viewer = null;
 
-  public WaterBodiesFilter( final String gkn, final String name )
+  private final IConnectionViewer m_connectionViewer;
+
+  public WaterBodiesFilter( final String gkn, final String name, final IConnectionViewer viewer )
   {
+    m_connectionViewer = viewer;
     setGkn( gkn );
     setName( name );
   }
@@ -78,14 +83,15 @@ public class WaterBodiesFilter extends ViewerFilter
     if( element instanceof WaterBody )
     {
       final WaterBody waterBody = (WaterBody) element;
-      final String name = waterBody.getLabel().toLowerCase();
       final String gkn = waterBody.getName().toLowerCase();
 
       if( !StringUtils.isBlank( m_gkn ) && !gkn.contains( m_gkn ) )
         return false;
 
-      if( !StringUtils.isBlank( m_name ) && !name.contains( m_name ) )
-        return false;
+      if( StringUtils.isBlank( m_name ) )
+        return true;
+
+      return containsChildWithName( (WaterBody) element );
     }
 
     return true;
@@ -115,5 +121,25 @@ public class WaterBodiesFilter extends ViewerFilter
 
     if( m_viewer != null )
       m_viewer.refresh();
+  }
+
+  public boolean containsChildWithName( final WaterBody element )
+  {
+    final String myName = element.getLabel().toLowerCase();
+    if( myName.contains( m_name ) )
+      return true;
+
+    final IWaterBodyStructure structure = m_connectionViewer.getStructure();
+    if( structure == null )
+      return false;
+
+    final Object[] children = structure.getChildren( element );
+    for( final Object child : children )
+    {
+      if( child instanceof WaterBody && containsChildWithName( (WaterBody) child ) )
+        return true;
+    }
+
+    return false;
   }
 }

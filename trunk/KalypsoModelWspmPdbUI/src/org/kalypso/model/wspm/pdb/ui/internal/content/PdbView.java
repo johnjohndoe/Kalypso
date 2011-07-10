@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.preferences;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
@@ -71,12 +71,11 @@ import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
-import org.kalypso.model.wspm.pdb.ui.content.IWaterBodyStructure;
+import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
-import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.preferences.OpenConnectionData;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.FindViewRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
