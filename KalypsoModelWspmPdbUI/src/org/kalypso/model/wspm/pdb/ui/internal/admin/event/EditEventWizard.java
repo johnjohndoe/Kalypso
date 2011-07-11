@@ -38,43 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 
 /**
  * @author Gernot Belger
  */
-public class EditStateWizard extends Wizard implements IStatesProvider
+public class EditEventWizard extends Wizard
 {
-  private final State m_state;
+  private final Event m_event;
 
-  private final State[] m_existingState;
-
-  public EditStateWizard( final State[] existingState, final State state )
+  public EditEventWizard( final Event[] existingEvents, final Event event )
   {
-    m_existingState = existingState;
-    m_state = state;
+    m_event = event;
 
     setWindowTitle( "Edit State" );
 
-    final EditStatePage editStatePage = new EditStatePage( "editState", m_state, this, Mode.EDIT ); //$NON-NLS-1$
-    editStatePage.setTitle( "Edit State Properties" );
-    editStatePage.setDescription( "Change the properties of the edited state." );
-    addPage( editStatePage );
+    addPage( new EditEventPage( "editEvent", m_event, existingEvents ) ); //$NON-NLS-1$
   }
 
   @Override
   public boolean performFinish( )
   {
     return true;
-  }
-
-  @Override
-  public State[] getStates( )
-  {
-    return m_existingState;
   }
 }

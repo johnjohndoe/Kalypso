@@ -136,7 +136,10 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
     m_gafProfilesPage = new GafProfilesPage( "profiles", m_data ); //$NON-NLS-1$
     addPage( m_gafProfilesPage );
 
-    addPage( new EditStatePage( "state", m_data.getState(), this, Mode.NEW ) ); //$NON-NLS-1$
+    final EditStatePage editStatePage = new EditStatePage( "state", m_data.getState(), this, Mode.NEW ); //$NON-NLS-1$
+    editStatePage.setTitle( EditStatePage.STR_ENTER_STATE_PROPERTIES );
+    editStatePage.setDescription( EditStatePage.STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE );
+    addPage( editStatePage );
 
     m_waterLevelPage = new AddWaterLevelPage( "addWaterlevel", m_data ); //$NON-NLS-1$
     addPage( m_waterLevelPage );

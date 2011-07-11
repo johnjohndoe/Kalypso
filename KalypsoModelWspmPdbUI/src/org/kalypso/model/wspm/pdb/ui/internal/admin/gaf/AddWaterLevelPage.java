@@ -115,7 +115,7 @@ public class AddWaterLevelPage extends WizardPage
 
     final Event event = m_data.getWaterlevelEvent();
 
-    m_waterlevelComposite = new WaterlevelComposite( group, SWT.NONE, event, m_binding );
+    m_waterlevelComposite = new WaterlevelComposite( group, SWT.NONE, event, m_binding, null );
 
     final ISWTObservableValue targetVisible = SWTObservables.observeVisible( group );
     final IObservableValue modelVisible = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_HAS_WATERLEVELS );

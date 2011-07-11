@@ -38,43 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.WaterlevelComposite;
 
 /**
  * @author Gernot Belger
  */
-public class EditStateWizard extends Wizard implements IStatesProvider
+public class EditEventPage extends WizardPage
 {
-  private final State m_state;
+  private final Event m_event;
 
-  private final State[] m_existingState;
+  private final Event[] m_existingEvents;
 
-  public EditStateWizard( final State[] existingState, final State state )
+  private DatabindingWizardPage m_binding;
+
+  private final String m_ignoreName;
+
+  public EditEventPage( final String pageName, final Event event, final Event[] existingEvents )
   {
-    m_existingState = existingState;
-    m_state = state;
+    super( pageName );
 
-    setWindowTitle( "Edit State" );
+    m_event = event;
+    m_existingEvents = existingEvents;
+    m_ignoreName = m_event.getName();
 
-    final EditStatePage editStatePage = new EditStatePage( "editState", m_state, this, Mode.EDIT ); //$NON-NLS-1$
-    editStatePage.setTitle( "Edit State Properties" );
-    editStatePage.setDescription( "Change the properties of the edited state." );
-    addPage( editStatePage );
+    setTitle( "Edit Event Properties" );
+    setDescription( "Change the properties of the edited event." );
   }
 
   @Override
-  public boolean performFinish( )
+  public void createControl( final Composite parent )
   {
-    return true;
-  }
+    final Composite panel = new Composite( parent, SWT.NONE );
+    setControl( panel );
+    panel.setLayout( new FillLayout() );
 
-  @Override
-  public State[] getStates( )
-  {
-    return m_existingState;
+    m_binding = new DatabindingWizardPage( this, null );
+
+    final int style = WaterlevelComposite.SHOW_MEASUREMENT_DATE;
+    final WaterlevelComposite eventEditor = new WaterlevelComposite( panel, style, m_event, m_binding, m_ignoreName );
+    eventEditor.setExistingEvents( m_existingEvents );
   }
 }

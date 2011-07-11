@@ -68,6 +68,10 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.UniqueStateNameValidator
  */
 public class EditStatePage extends WizardPage
 {
+  public static final String STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE = "Enter the properties of the freshly created state";
+
+  public static final String STR_ENTER_STATE_PROPERTIES = "Enter State Properties";
+
   public enum Mode
   {
     NEW,
@@ -89,9 +93,6 @@ public class EditStatePage extends WizardPage
     m_state = state;
     m_statesProvider = statesProvider;
     m_mode = mode;
-
-    setTitle( "Enter State Properties" );
-    setDescription( "Enter the properties of the freshly created state" );
   }
 
   @Override
