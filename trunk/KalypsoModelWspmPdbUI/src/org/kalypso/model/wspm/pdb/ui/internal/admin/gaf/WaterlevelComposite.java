@@ -65,6 +65,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
 
 /**
  * @author Gernot Belger
@@ -93,6 +94,8 @@ public class WaterlevelComposite extends Composite
 
   private DateTime m_measurementField;
 
+  private Text m_descriptionField;
+
   public WaterlevelComposite( final Composite parent, final int style, final Event event, final IDataBinding binding, final String ignoreName )
   {
     super( parent, SWT.NONE );
@@ -106,6 +109,7 @@ public class WaterlevelComposite extends Composite
 
     createNameControls( this );
     createSourceControls( this );
+    createDescriptionControls( this );
     createTypeControls( this );
 
     if( (m_style & SHOW_MEASUREMENT_DATE) != 0 )
@@ -146,6 +150,23 @@ public class WaterlevelComposite extends Composite
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.WARNING, "'Source' should not be empty" ) );
 
     m_binding.bindValue( binder );
+  }
+
+  private void createDescriptionControls( final Composite parent )
+  {
+    final Label label = new Label( parent, SWT.NONE );
+    label.setText( "Description" );
+    label.setLayoutData( new GridData( SWT.LEFT, SWT.TOP, false, false ) );
+
+    m_descriptionField = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
+    m_descriptionField.setTextLimit( Event.DESCRIPTION_LIMIT );
+    m_descriptionField.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_descriptionField.setMessage( "<Beschreibung des Ereignisses>" );
+
+    final IObservableValue target = SWTObservables.observeText( m_descriptionField, SWT.Modify );
+    final IObservableValue model = BeansObservables.observeValue( m_event, State.PROPERTY_DESCRIPTION );
+
+    m_binding.bindValue( target, model );
   }
 
   private void createTypeControls( final Composite parent )
@@ -192,6 +213,7 @@ public class WaterlevelComposite extends Composite
 
     m_nameField.setEnabled( enabled );
     m_sourceField.setEnabled( enabled );
+    m_descriptionField.setEnabled( enabled );
     m_typeField.getControl().setEnabled( enabled );
     if( m_measurementField != null )
       m_measurementField.setEnabled( enabled );
