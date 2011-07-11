@@ -49,6 +49,8 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
+import com.vividsolutions.jts.geom.TopologyException;
+
 /**
  * @author Dejan Antanaskovic
  */
@@ -91,7 +93,16 @@ public final class PolygonIntersectionHelper
    */
   public static GM_MultiSurface createIntersection( final GM_MultiSurface geometry, final GM_MultiSurface existingGeometry )
   {
-    final GM_Object intersection = existingGeometry.intersection( geometry );
+
+    GM_Object intersection;
+    try
+    {
+      intersection = existingGeometry.intersection( geometry );
+    }
+    catch( final TopologyException e )
+    {
+      intersection = geometry.getBuffer( 0.001 ).intersection( existingGeometry.getBuffer( 0.001 ) );
+    }
     return toMultiSurfaceOrNull( intersection );
   }
 
