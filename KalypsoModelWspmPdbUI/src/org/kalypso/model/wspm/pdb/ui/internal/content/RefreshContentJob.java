@@ -45,7 +45,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -78,7 +77,9 @@ public class RefreshContentJob extends Job
     {
       session = m_connection.openSession();
       m_input = new ConnectionInput( session );
-      session.close();
+      // REMARK: we need to leave the session open here, else lazy initialization of elements
+      // will not work. The session is closed when the input is disposed.
+      // session.close();
       return Status.OK_STATUS;
     }
     catch( final PdbConnectException e )
@@ -88,7 +89,8 @@ public class RefreshContentJob extends Job
     }
     finally
     {
-      PdbUtils.closeSessionQuietly( session );
+      // REMARK: se above
+      // PdbUtils.closeSessionQuietly( session );
       monitor.done();
     }
   }
