@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
 
 import java.util.Date;
 
@@ -46,27 +46,27 @@ import org.eclipse.jface.wizard.Wizard;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.db.utils.StateUtils;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.utils.EventUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IEditWorker;
 
 /**
  * @author Gernot Belger
  */
-public class EditStateWorker implements IEditWorker
+public class EditEventWorker implements IEditWorker
 {
-  private final State m_selectedItem;
+  private final Event m_selectedItem;
 
   private String m_nameToSelect;
 
-  private State m_clone;
+  private Event m_clone;
 
-  private State m_stateToEdit;
+  private Event m_eventToEdit;
 
   private final String m_username;
 
-  public EditStateWorker( final State selectedItem, final String username )
+  public EditEventWorker( final Event selectedItem, final String username )
   {
     m_selectedItem = selectedItem;
     m_username = username;
@@ -76,16 +76,16 @@ public class EditStateWorker implements IEditWorker
   @Override
   public String getWindowTitle( )
   {
-    return "Edit State Properties";
+    return "Edit Event Properties";
   }
 
   @Override
   public Wizard createWizard( final Session session ) throws PdbConnectException
   {
-    final State[] existingStates = GetPdbList.getArray( session, State.class );
-    m_stateToEdit = StateUtils.findStateByName( existingStates, m_selectedItem.getName() );
+    final Event[] existingEvents = GetPdbList.getArray( session, Event.class );
+    m_eventToEdit = EventUtils.findEventByName( existingEvents, m_selectedItem.getName() );
     m_clone = cloneForEdit( m_selectedItem );
-    return new EditStateWizard( existingStates, m_clone );
+    return new EditEventWizard( existingEvents, m_clone );
   }
 
   @Override
@@ -98,12 +98,12 @@ public class EditStateWorker implements IEditWorker
   @Override
   public void addElementsToSelect( final ElementSelector selector )
   {
-    selector.addStateName( m_nameToSelect );
+    selector.addEventName( m_nameToSelect );
   }
 
-  private State cloneForEdit( final State other )
+  private Event cloneForEdit( final Event other )
   {
-    return new State( other.getId(), other.getName(), other.getIsstatezero(), other.getCreationDate(), other.getEditingDate(), other.getEditingUser(), other.getMeasurementDate(), other.getSource(), other.getDescription(), null );
+    return new Event( other.getId(), other.getWaterBody(), other.getName(), other.getCreationDate(), other.getEditingDate(), other.getEditingUser(), other.getMeasurementDate(), other.getSource(), other.getType(), other.getDescription(), other.getWaterlevelFixations() );
   }
 
   /**
@@ -111,15 +111,16 @@ public class EditStateWorker implements IEditWorker
    */
   private void uncloneData( )
   {
-    m_stateToEdit.setName( m_clone.getName() );
-    m_stateToEdit.setIsstatezero( m_clone.getIsstatezero() );
-    m_stateToEdit.setCreationDate( m_clone.getCreationDate() );
-    m_stateToEdit.setMeasurementDate( m_clone.getMeasurementDate() );
-    m_stateToEdit.setSource( m_clone.getSource() );
-    m_stateToEdit.setDescription( m_clone.getDescription() );
+    m_eventToEdit.setCreationDate( m_clone.getCreationDate() );
+    m_eventToEdit.setDescription( m_clone.getDescription() );
+    m_eventToEdit.setMeasurementDate( m_clone.getMeasurementDate() );
+    m_eventToEdit.setName( m_clone.getName() );
+    m_eventToEdit.setSource( m_clone.getSource() );
+    m_eventToEdit.setType( m_clone.getType() );
+    m_eventToEdit.setWaterBody( m_clone.getWaterBody() );
 
     // Automatically change editing data and user
-    m_stateToEdit.setEditingDate( new Date() );
-    m_stateToEdit.setEditingUser( m_username );
+    m_eventToEdit.setEditingDate( new Date() );
+    m_eventToEdit.setEditingUser( m_username );
   }
 }

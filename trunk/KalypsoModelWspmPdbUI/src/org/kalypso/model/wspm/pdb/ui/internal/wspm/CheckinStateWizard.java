@@ -73,7 +73,11 @@ public class CheckinStateWizard extends Wizard implements IStatesProvider
     setNeedsProgressMonitor( true );
 
     addPage( new CheckinStateChooseElementsPage( "chooseElements", m_data ) ); //$NON-NLS-1$
-    addPage( new EditStatePage( "editState", m_data.getState(), this, Mode.NEW ) ); //$NON-NLS-1$
+
+    final EditStatePage editStatePage = new EditStatePage( "editState", m_data.getState(), this, Mode.NEW );
+    editStatePage.setTitle( EditStatePage.STR_ENTER_STATE_PROPERTIES );
+    editStatePage.setDescription( EditStatePage.STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE );
+    addPage( editStatePage );
   }
 
   @Override

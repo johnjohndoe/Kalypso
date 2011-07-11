@@ -61,10 +61,12 @@ import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.FlushOperation;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.event.EditEventWorker;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStateWorker;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyWorker;
 
@@ -157,6 +159,9 @@ public class EditElementHandler extends AbstractHandler
 
     if( selectedItem instanceof State )
       return new EditStateWorker( (State) selectedItem, username );
+
+    if( selectedItem instanceof Event )
+      return new EditEventWorker( (Event) selectedItem, username );
 
     throw new IllegalArgumentException();
   }

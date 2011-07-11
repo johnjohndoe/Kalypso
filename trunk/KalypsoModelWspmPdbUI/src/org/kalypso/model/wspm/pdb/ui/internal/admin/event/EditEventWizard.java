@@ -38,42 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.db.constants;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
+
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 
 /**
  * @author Gernot Belger
  */
-public interface EventConstants
+public class EditEventWizard extends Wizard
 {
-  enum TYPE
+  private final Event m_event;
+
+  public EditEventWizard( final Event[] existingEvents, final Event event )
   {
-    /**
-     * Default
-     */
-    Measurement("Measurement"),
-    Simulation("Simulation");
+    m_event = event;
 
-    private final String m_label;
+    setWindowTitle( "Edit State" );
 
-    TYPE( final String label )
-    {
-      m_label = label;
-    }
-
-    @Override
-    public String toString( )
-    {
-      return m_label;
-    }
+    addPage( new EditEventPage( "editEvent", m_event, existingEvents ) ); //$NON-NLS-1$
   }
 
-  String PROPERTY_NAME = "name"; //$NON-NLS-1$
-
-  String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
-
-  String PROPERTY_SOURCE = "source"; //$NON-NLS-1$
-
-  String PROPERTY_TYPE = "type"; //$NON-NLS-1$
-
-  String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
+  @Override
+  public boolean performFinish( )
+  {
+    return true;
+  }
 }

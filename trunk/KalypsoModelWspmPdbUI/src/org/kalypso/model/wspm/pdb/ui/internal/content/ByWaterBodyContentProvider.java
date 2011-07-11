@@ -85,7 +85,7 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
   {
     if( element instanceof WaterBody )
     {
-      final Object[] allChildren = m_input.getChildren( (WaterBody) element );
+      final Object[] allChildren = m_input.getChildren( element );
       return !Arrays.isEmpty( allChildren );
     }
 
