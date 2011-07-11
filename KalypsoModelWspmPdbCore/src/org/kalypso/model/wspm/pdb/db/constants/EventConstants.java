@@ -69,7 +69,11 @@ public interface EventConstants
 
   String PROPERTY_NAME = "name"; //$NON-NLS-1$
 
+  String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
+
   String PROPERTY_SOURCE = "source"; //$NON-NLS-1$
 
   String PROPERTY_TYPE = "type"; //$NON-NLS-1$
+
+  String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
 }
