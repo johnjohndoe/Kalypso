@@ -78,15 +78,19 @@ public class FindReachThemesVisitor implements IKalypsoThemeVisitor
     return values.toArray( new IKalypsoFeatureTheme[values.size()] );
   }
 
-  public IKalypsoFeatureTheme[] getThemes( final TuhhReach[] reaches )
+  public IKalypsoFeatureTheme[] getThemes( final Object[] elements )
   {
-    final Collection<IKalypsoFeatureTheme> themes = new ArrayList<IKalypsoFeatureTheme>( reaches.length );
+    final Collection<IKalypsoFeatureTheme> themes = new ArrayList<IKalypsoFeatureTheme>( elements.length );
 
-    for( final TuhhReach reach : reaches )
+    for( final Object element : elements )
     {
-      final String id = reach.getId();
-      if( m_reaches.containsKey( id ) )
-        themes.add( m_reaches.get( id ) );
+      if( element instanceof TuhhReach )
+      {
+        final TuhhReach reach = (TuhhReach) element;
+        final String id = reach.getId();
+        if( m_reaches.containsKey( id ) )
+          themes.add( m_reaches.get( id ) );
+      }
     }
 
     return themes.toArray( new IKalypsoFeatureTheme[themes.size()] );

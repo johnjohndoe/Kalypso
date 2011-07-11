@@ -81,7 +81,7 @@ public class CrossSectionInserter
 
   public void insert( final CrossSection section ) throws Exception
   {
-    final WspmWaterBody waterBody = insertWaterBody( section );
+    final WspmWaterBody waterBody = insertWaterBody( m_project, section.getWaterBody() );
     final TuhhReach reach = insertReach( section, waterBody );
 
     final IProfileFeature profile = insertProfile( section, waterBody );
@@ -112,19 +112,20 @@ public class CrossSectionInserter
     reach.createProfileSegment( profile, profile.getStation() );
   }
 
-  private WspmWaterBody insertWaterBody( final CrossSection section ) throws Exception
+  static WspmWaterBody insertWaterBody( final TuhhWspmProject project, final WaterBody waterBody ) throws Exception
   {
-    final WaterBody waterBody = section.getWaterBody();
+    // FIXME: always update local wb with properties from database
+
     final String gkn = waterBody.getName();
 
     /* If water body with same code exists, we will use it */
-    final WspmWaterBody wspmWaterBody = m_project.findWaterByRefNr( gkn );
+    final WspmWaterBody wspmWaterBody = project.findWaterByRefNr( gkn );
     if( wspmWaterBody != null )
       return wspmWaterBody;
 
     final String name = waterBody.getLabel();
 
-    final WspmWaterBody newWspmWaterBody = m_project.createWaterBody( name, true );
+    final WspmWaterBody newWspmWaterBody = project.createWaterBody( name, true );
     newWspmWaterBody.setRefNr( gkn );
     newWspmWaterBody.setDescription( waterBody.getDescription() );
 
@@ -161,7 +162,7 @@ public class CrossSectionInserter
     return newReach;
   }
 
-  public TuhhReach[] getInsertedReches( )
+  public TuhhReach[] getInsertedReaches( )
   {
     final Collection<TuhhReach> values = m_reaches.values();
     return values.toArray( new TuhhReach[values.size()] );

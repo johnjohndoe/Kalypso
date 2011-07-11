@@ -41,12 +41,10 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -56,31 +54,28 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * @author Gernot Belger
  */
 public class CheckoutOperation implements ICoreRunnableWithProgress
 {
+  private final List<Feature> m_changedFeatures = new ArrayList<Feature>();
+
+  private final List<Feature> m_changedParents = new ArrayList<Feature>();
+
+  private final CheckoutDataSearcher m_searcher = new CheckoutDataSearcher();
+
   private final IStructuredSelection m_selection;
 
-  private final Set<CrossSection> m_crossSections = new HashSet<CrossSection>();
-
   private final IPdbWspmProject m_project;
-
-  private TuhhReach[] m_changedReaches;
 
   public CheckoutOperation( final IPdbWspmProject project, final IStructuredSelection selection )
   {
@@ -95,85 +90,49 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
 
     // TODO: save dirty project data; ask user to do so..
 
-    monitor.subTask( "Searching for cross sections to checkout..." );
-    findCrossSections();
+    monitor.subTask( "Searching for data to checkout..." );
+    m_searcher.search( m_selection );
     ProgressUtilities.worked( monitor, 5 );
-    if( m_crossSections.isEmpty() )
-      return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "No cross sections found in selection." );
+
+    final CrossSection[] crossSections = m_searcher.getCrossSections();
+    final Event[] events = m_searcher.getEvents();
+
+    final boolean hasCrossSection = !ArrayUtils.isEmpty( crossSections );
+    final boolean hasWaterlevels = !ArrayUtils.isEmpty( events );
+    if( !hasCrossSection && !hasWaterlevels )
+      return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "No downloadable data found in selection." );
 
     // TODO Preview?
 
-    checkoutCrossSections( new SubProgressMonitor( monitor, 95 ) );
+    final TuhhWspmProject project = m_project.getWspmProject();
+    final CheckoutCrossSectionsWorker crossSectionsWorker = new CheckoutCrossSectionsWorker( this, project, crossSections );
+    crossSectionsWorker.execute( new SubProgressMonitor( monitor, 45 ) );
+
+    final CheckoutWaterlevelWorker waterlevelWorker = new CheckoutWaterlevelWorker( this, project, events );
+    waterlevelWorker.execute( new SubProgressMonitor( monitor, 45 ) );
+
+    fireEventsAndSaveData( new SubProgressMonitor( monitor, 5 ) );
 
     ProgressUtilities.done( monitor );
 
     return Status.OK_STATUS;
   }
 
-  private void findCrossSections( )
+  private void fireEventsAndSaveData( final IProgressMonitor monitor ) throws CoreException
   {
-    final List< ? > list = m_selection.toList();
-    addElementsAsCrossSection( list );
-  }
-
-  private void addElementsAsCrossSection( final Collection< ? > elements )
-  {
-    for( final Object element : elements )
-      addElementAsCrossSection( element );
-  }
-
-  private void addElementAsCrossSection( final Object element )
-  {
-    if( element instanceof CrossSection )
-      m_crossSections.add( (CrossSection) element );
-    else if( element instanceof State )
-    {
-      final State state = (State) element;
-      addElementsAsCrossSection( state.getCrossSections() );
-    }
-    else if( element instanceof WaterBody )
-    {
-      final WaterBody waterBody = (WaterBody) element;
-      addElementsAsCrossSection( waterBody.getCrossSections() );
-    }
-  }
-
-  private void checkoutCrossSections( final IProgressMonitor monitor ) throws CoreException
-  {
-    final List<CrossSection> sortedSections = getSortedSections();
-    monitor.beginTask( "Reading cross sections from database", sortedSections.size() + 10 );
-
     try
     {
-      /* Convert the cross sections */
-      final TuhhWspmProject project = m_project.getWspmProject();
-      final CrossSectionInserter inserter = new CrossSectionInserter( project );
-      for( final CrossSection crossSection : sortedSections )
-      {
-        monitor.subTask( String.format( "Converting %s", crossSection.getStation() ) );
-        inserter.insert( crossSection );
-        ProgressUtilities.worked( monitor, 1 );
-      }
-
-      m_changedReaches = inserter.getInsertedReches();
-      final WspmWaterBody[] changedWaterBodies = getChangedParents( m_changedReaches );
+      final Feature[] changedFeatures = getNewElements();
+      final Feature[] changedParents = m_changedParents.toArray( new Feature[m_changedParents.size()] );
 
       final CommandableWorkspace workspace = m_project.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, changedWaterBodies, m_changedReaches, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, changedParents, changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       workspace.postCommand( new EmptyCommand( null, false ) );
-      m_project.doSave( new SubProgressMonitor( monitor, 10 ) );
+      m_project.doSave( monitor );
     }
-    catch( final GMLSchemaException e )
+    catch( final CoreException e )
     {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
-      throw new CoreException( status );
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
-      throw new CoreException( status );
+      throw e;
     }
     catch( final Exception e )
     {
@@ -187,25 +146,20 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private WspmWaterBody[] getChangedParents( final TuhhReach[] changedReaches )
+  public Feature[] getNewElements( )
   {
-    final Set<WspmWaterBody> result = new HashSet<WspmWaterBody>();
-
-    for( final TuhhReach reach : changedReaches )
-      result.add( reach.getWaterBody() );
-
-    return result.toArray( new WspmWaterBody[result.size()] );
+    return m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
   }
 
-  private List<CrossSection> getSortedSections( )
+  public void addChangedFeatures( final Feature[] changedFeatures )
   {
-    final ArrayList<CrossSection> list = new ArrayList<CrossSection>( m_crossSections );
-    Collections.sort( list, new ByStationComparator() );
-    return list;
-  }
+    m_changedFeatures.addAll( Arrays.asList( changedFeatures ) );
 
-  public TuhhReach[] getNewReaches( )
-  {
-    return m_changedReaches;
+    for( final Feature feature : changedFeatures )
+    {
+      final Feature parent = feature.getParent();
+      if( parent != null )
+        m_changedParents.add( parent );
+    }
   }
 }
