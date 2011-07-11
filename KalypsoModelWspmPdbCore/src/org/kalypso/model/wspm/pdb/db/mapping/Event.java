@@ -228,5 +228,4 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   {
     this.waterlevelFixations = waterlevelFixations;
   }
-
 }
