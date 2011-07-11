@@ -41,17 +41,17 @@
 package org.kalypso.model.wspm.tuhh.core.results;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
 public class WspmResultFixationNode extends AbstractWspmResultNode implements IWspmResult
 {
-  private final Feature m_fixation;
+  private final WspmFixation m_fixation;
 
-  public WspmResultFixationNode( final IWspmResultNode parent, final Feature fixation )
+  public WspmResultFixationNode( final IWspmResultNode parent, final WspmFixation fixation )
   {
     super( parent );
 

@@ -66,5 +66,4 @@ public class TuhhSegmentStationComparator implements Comparator<TuhhReachProfile
 
     return m_stationComparator.compare( s1, s2 );
   }
-
 }

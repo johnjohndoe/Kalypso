@@ -69,9 +69,12 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.gml.IObservationFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.core.gml.WspmProject;
+import org.kalypso.model.wspm.core.gml.WspmRunoffEvent;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
@@ -87,7 +90,6 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.CalculationBean;
 import org.kalypso.wspwin.core.CalculationContentBean;
@@ -103,6 +105,7 @@ import org.kalypso.wspwin.core.ZustandContentBean;
 import org.kalypso.wspwin.core.ZustandSegmentBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author thuel2
@@ -422,11 +425,12 @@ public final class WspWinImporter
       int count = 0;
       for( final RunOffEventBean bean : runOffEventBeans )
       {
-        final Feature runOffFeature = waterBody.createRunOffEvent();
-        writeRunOffBeanIntoFeature( bean, baseName + bean.getName(), runOffFeature );
+        final IFeatureBindingCollection<WspmRunoffEvent> runoffEvents = waterBody.getRunoffEvents();
+        final WspmRunoffEvent newEvent = runoffEvents.addNew( WspmRunoffEvent.QNAME_FEATURE_RUNOFF_EVENT );
+        writeRunOffBeanIntoFeature( bean, baseName + bean.getName(), newEvent );
 
         // remember for reference from calculation
-        readRunOffEvents.put( count++, runOffFeature.getId() );
+        readRunOffEvents.put( count++, newEvent.getId() );
       }
     }
     catch( final Exception e )
@@ -441,8 +445,9 @@ public final class WspWinImporter
       {
         if( !bean.getEntries().isEmpty() )
         {
-          final Feature wspFixFeature = waterBody.createWspFix();
-          writeWspFixBeanIntoFeature( bean, baseName + bean.getName(), wspFixFeature );
+          final IFeatureBindingCollection<WspmFixation> fixations = waterBody.getWspFixations();
+          final WspmFixation wspFixation = fixations.addNew( WspmFixation.QNAME_FEATURE_WSPM_FIXATION );
+          writeRunOffBeanIntoFeature( bean, baseName + bean.getName(), wspFixation );
         }
       }
     }
@@ -618,9 +623,10 @@ public final class WspWinImporter
     }
   }
 
-  private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
+  // FIXME: change to common interface of runoff and fixation
+  private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final IObservationFeature observationFeature )
   {
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( runOffFeature );
+    final IObservation<TupleResult> obs = observationFeature.toObservation();
     obs.setName( name );
     obs.setDescription( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.28" ) ); //$NON-NLS-1$
 
@@ -629,8 +635,6 @@ public final class WspWinImporter
 
     final IComponent stationComp;
     final IComponent valueComp;
-// if( components.length < 1 )
-// return;
     if( components[0].getName().startsWith( "Station" ) ) //$NON-NLS-1$
     {
       stationComp = components[0];
@@ -652,12 +656,7 @@ public final class WspWinImporter
     }
 
     // TODO: WSP Fixierung nur schreiben, wenn Anzahl größer 0
-    ObservationFeatureFactory.toFeature( obs, runOffFeature );
-  }
-
-  private static void writeWspFixBeanIntoFeature( final RunOffEventBean bean, final String name, final Feature runOffFeature )
-  {
-    writeRunOffBeanIntoFeature( bean, name, runOffFeature );
+    observationFeature.saveObservation( obs );
   }
 
   /** Returns the content of the prof/probez.txt file */

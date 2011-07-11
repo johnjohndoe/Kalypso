@@ -47,15 +47,14 @@ import java.util.Collection;
 import org.eclipse.core.resources.IFile;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.observation.util.TupleResultIndex;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -69,24 +68,34 @@ public class WspmResultLengthSection
 
   public static WspmResultLengthSection create( final IFile observationFile, final GMLXPath gmlxPath )
   {
+    GMLWorkspace workspace = null;
     try
     {
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( observationFile );
-      final Feature obsFeature = (Feature) GMLXPathUtilities.query( gmlxPath, workspace );
-      final WspmResultLengthSection obs = create( obsFeature );
-      workspace.dispose();
-      return obs;
+      workspace = GmlSerializer.createGMLWorkspace( observationFile );
+      final Object object = GMLXPathUtilities.query( gmlxPath, workspace );
+      if( object instanceof WspmFixation )
+      {
+        final WspmResultLengthSection obs = create( (WspmFixation) object );
+        return obs;
+      }
+
+      return null;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       return null;
     }
+    finally
+    {
+      if( workspace != null )
+        workspace.dispose();
+    }
   }
 
-  public static WspmResultLengthSection create( final Feature fixation )
+  public static WspmResultLengthSection create( final WspmFixation fixation )
   {
-    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( fixation );
+    final IObservation<TupleResult> observation = fixation.toObservation();
     return new WspmResultLengthSection( observation );
   }
 
