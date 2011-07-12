@@ -119,11 +119,11 @@ public final class PolygonIntersectionHelper
     {
       final GM_Object[] all = ((GM_MultiPrimitive) geometry).getAll();
       final List<GM_Surface< ? >> outputList = new ArrayList<GM_Surface< ? >>( all.length );
-      for( final GM_Object gm_Object : all )
+      for( final GM_Object geom : all )
       {
-        if( gm_Object instanceof GM_Surface )
+        if( geom instanceof GM_Surface )
         {
-          outputList.add( (GM_Surface< ? >) gm_Object );
+          outputList.add( (GM_Surface< ? >) geom );
         }
       }
       return GeometryFactory.createGM_MultiSurface( outputList.toArray( new GM_Surface< ? >[outputList.size()] ), geometry.getCoordinateSystem() );
