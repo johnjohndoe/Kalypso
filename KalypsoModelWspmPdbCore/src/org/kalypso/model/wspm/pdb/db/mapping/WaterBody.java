@@ -235,6 +235,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     setDirectionOfStationing( waterBody.getDirectionOfStationing() );
     setLabel( waterBody.getLabel() );
     setName( waterBody.getName() );
+    setRank( waterBody.getRank() );
     setRiverline( waterBody.getRiverline() );
   }
 }
