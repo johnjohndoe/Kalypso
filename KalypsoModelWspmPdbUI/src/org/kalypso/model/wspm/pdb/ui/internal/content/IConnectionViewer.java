@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
  * @author Gernot Belger
@@ -55,4 +56,6 @@ public interface IConnectionViewer
   String getUsername( );
 
   IWaterBodyStructure getStructure( );
+
+  PdbWspmProject getProject( );
 }

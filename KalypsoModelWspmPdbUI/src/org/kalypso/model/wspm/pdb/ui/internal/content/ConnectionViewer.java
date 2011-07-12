@@ -56,11 +56,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
@@ -174,8 +176,8 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
 
     viewer.getControl().setMenu( menu );
 
-// final IEvaluationService service = (IEvaluationService) site.getService( IEvaluationService.class );
-// service.requestEvaluation( ISources.ACTIVE_CURRENT_SELECTION_NAME );
+    final IEvaluationService service = (IEvaluationService) site.getService( IEvaluationService.class );
+    service.requestEvaluation( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
     viewer.getControl().addDisposeListener( new DisposeListener()
     {
@@ -207,5 +209,11 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
   public String getUsername( )
   {
     return m_connection.getSettings().getUsername();
+  }
+
+  @Override
+  public PdbWspmProject getProject( )
+  {
+    return m_project;
   }
 }

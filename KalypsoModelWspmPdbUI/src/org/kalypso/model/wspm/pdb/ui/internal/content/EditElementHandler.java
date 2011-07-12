@@ -135,7 +135,8 @@ public class EditElementHandler extends AbstractHandler
       {
         try
         {
-          wizards[0] = worker.createWizard( session );
+          monitor.beginTask( "Initializing Dialog", IProgressMonitor.UNKNOWN );
+          wizards[0] = worker.createWizard( monitor, session );
           return Status.OK_STATUS;
         }
         catch( final PdbConnectException e )

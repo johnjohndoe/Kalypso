@@ -55,7 +55,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
  */
 public class PdbLabelProvider extends ColumnLabelProvider
 {
-  public static final String PENDING = "Pending...";
+  public static final String PENDING = "Loading Data...";
 
   public static final String EMPTY_STATES = "<Database contains no state>";
 
