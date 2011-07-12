@@ -40,60 +40,65 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutOperation;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutAction extends Action
+public class CheckoutPdbHandler extends AbstractHandler
 {
-  private final ConnectionContentControl m_control;
+// public CheckoutPdbHandler( final ConnectionContentControl control )
+// {
+// m_control = control;
 
-  public CheckoutAction( final ConnectionContentControl control )
-  {
-    m_control = control;
-
-    setText( "Download selected items" );
-    setToolTipText( "Download the selected items into the local workspace." );
-    setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.IMPORT ) );
-  }
+// setText( "Download selected items" );
+// setToolTipText( "Download the selected items into the local workspace." );
+// setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.IMPORT ) );
+// }
 
   @Override
-  public void runWithEvent( final Event event )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
+    final IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked( event );
+    final IConnectionViewer viewer = PdbHandlerUtils.getConnectionViewerChecked( event );
+    final String commandName = HandlerUtils.getCommandName( event );
 
-    final IStructuredSelection selection = m_control.getSelection();
     if( selection.isEmpty() )
     {
       final String message = "Please select at least one item in the tree.";
-      MessageDialog.openInformation( shell, getText(), message );
-      return;
+      MessageDialog.openInformation( shell, commandName, message );
+      return null;
     }
 
     // TODO: ask, if all local data should be replaced (or at least an existing copy of the reach should be replaced)
 
-    final PdbWspmProject project = m_control.getProject();
+    final PdbWspmProject project = viewer.getProject();
+
     /* Ask user to save project and do nothing on cancel */
     if( !project.saveProject( true ) )
-      return;
+      return null;
 
     final CheckoutOperation operation = new CheckoutOperation( project, selection );
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     if( !status.isOK() )
-      new StatusDialog2( shell, status, getText() ).open();
+      new StatusDialog2( shell, status, commandName ).open();
 
     final Object[] toSelect = operation.getNewElements();
     project.updateViews( toSelect );
+    return null;
   }
 }

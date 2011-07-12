@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -80,8 +81,10 @@ public class EditStateWorker implements IEditWorker
   }
 
   @Override
-  public Wizard createWizard( final Session session ) throws PdbConnectException
+  public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws PdbConnectException
   {
+    monitor.subTask( "Fetching existing states from database..." );
+
     final State[] existingStates = GetPdbList.getArray( session, State.class );
     m_stateToEdit = StateUtils.findStateByName( existingStates, m_selectedItem.getName() );
     m_clone = cloneForEdit( m_selectedItem );

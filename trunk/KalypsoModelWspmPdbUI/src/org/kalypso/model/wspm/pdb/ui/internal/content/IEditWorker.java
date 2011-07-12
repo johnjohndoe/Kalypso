@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -52,7 +53,7 @@ public interface IEditWorker
 {
   String getWindowTitle( );
 
-  Wizard createWizard( Session session ) throws PdbConnectException;
+  Wizard createWizard( IProgressMonitor monitor, Session session ) throws PdbConnectException;
 
   void afterWizardOK( );
 

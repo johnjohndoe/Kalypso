@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -78,8 +79,10 @@ public class EditWaterBodyWorker implements IEditWorker
   }
 
   @Override
-  public Wizard createWizard( final Session session ) throws PdbConnectException
+  public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws PdbConnectException
   {
+    monitor.subTask( "Fetching existing water bodies from database..." );
+
     final WaterBody[] existingWaterbodies = GetPdbList.getArray( session, WaterBody.class );
     m_waterBodyToEdit = WaterBodyUtils.findWaterBodyByName( existingWaterbodies, m_selectedItem.getName() );
     m_clone = cloneForEdit( m_waterBodyToEdit );

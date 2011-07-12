@@ -359,4 +359,13 @@ public class PdbView extends ViewPart implements IConnectionViewer
 
     return m_connectionViewer.getStructure();
   }
+
+  @Override
+  public PdbWspmProject getProject( )
+  {
+    if( m_connectionViewer == null )
+      return null;
+
+    return m_connectionViewer.getProject();
+  }
 }

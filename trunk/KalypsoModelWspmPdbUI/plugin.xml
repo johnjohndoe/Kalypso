@@ -227,6 +227,12 @@
            id="org.kalypso.model.wspm.pdb.ui.command.addWaterBody"
            name="Create Water Bdoy">
      </command>
+     <command
+           categoryId="pdbCommands"
+           description="Download the selected items into the local workspace."
+           id="org.kalypso.model.wspm.pdb.ui.command.download"
+           name="Download">
+     </command>
   </extension>
   <extension point="org.eclipse.ui.commandImages">
      <image commandId="org.kalypso.model.wspm.pdb.ui.command.editElement" icon="icons/editElement.gif"/>
@@ -234,6 +240,10 @@
      <image
            commandId="org.kalypso.model.wspm.pdb.ui.command.addWaterBody"
            icon="icons/createWaterBody.gif">
+     </image>
+     <image
+           commandId="org.kalypso.model.wspm.pdb.ui.command.download"
+           icon="icons/download.gif">
      </image>
   </extension>
   <extension point="org.eclipse.ui.handlers">
@@ -256,6 +266,12 @@
            </reference>
         </enabledWhen>
      </handler>
+     <handler class="org.kalypso.model.wspm.pdb.ui.internal.content.CheckoutPdbHandler"
+           commandId="org.kalypso.model.wspm.pdb.ui.command.download">
+        <enabledWhen>
+           <reference definitionId="isPdbViewVisible"/>
+        </enabledWhen>
+     </handler>
   </extension>
   <extension point="org.eclipse.ui.menus">
      <menuContribution allPopups="false" locationURI="popup:org.eclipse.ui.popup.any?after=additions">
@@ -266,6 +282,10 @@
            <visibleWhen checkEnabled="true"/>
         </command>
         <command commandId="org.kalypso.model.wspm.pdb.ui.command.removeElement" style="push">
+           <visibleWhen checkEnabled="true"/>
+        </command>
+        <separator name="pdbElementsEnd" visible="true"/>
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.download" style="push">
            <visibleWhen checkEnabled="true"/>
         </command>
      </menuContribution>
@@ -281,6 +301,10 @@
            <visibleWhen checkEnabled="true"/>
         </command>
         <command commandId="org.kalypso.model.wspm.pdb.ui.command.removeElement" style="push">
+           <visibleWhen checkEnabled="true"/>
+        </command>
+        <separator name="pdbElementsEnd" visible="true"/>
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.download" style="push">
            <visibleWhen checkEnabled="true"/>
         </command>
      </menuContribution>
