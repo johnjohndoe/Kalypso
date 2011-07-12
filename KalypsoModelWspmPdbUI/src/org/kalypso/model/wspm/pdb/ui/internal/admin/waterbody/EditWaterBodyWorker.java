@@ -103,6 +103,7 @@ public class EditWaterBodyWorker implements IEditWorker
   {
     final WaterBody clone = new WaterBody( other.getId(), other.getName(), other.getLabel(), other.getDirectionOfStationing() );
     clone.setDescription( other.getDescription() );
+    clone.setRank( other.getRank() );
     clone.setRiverline( other.getRiverline() );
     return clone;
   }
@@ -116,6 +117,7 @@ public class EditWaterBodyWorker implements IEditWorker
     m_waterBodyToEdit.setLabel( m_clone.getLabel() );
     m_waterBodyToEdit.setDescription( m_clone.getDescription() );
     m_waterBodyToEdit.setDirectionOfStationing( m_clone.getDirectionOfStationing() );
+    m_waterBodyToEdit.setRank( m_clone.getRank() );
     m_waterBodyToEdit.setRiverline( m_clone.getRiverline() );
   }
 }

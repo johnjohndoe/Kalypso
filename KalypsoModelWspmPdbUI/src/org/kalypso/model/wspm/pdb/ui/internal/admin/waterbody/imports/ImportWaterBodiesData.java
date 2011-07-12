@@ -91,7 +91,7 @@ public class ImportWaterBodiesData extends AbstractModelObject
 
   public static final String PROPERTY_INSERTION_MODE = "insertionMode"; //$NON-NLS-1$
 
-  private final Map<String, ImportAttributeInfo> m_infos = new HashMap<String, ImportAttributeInfo>();
+  private final Map<String, ImportAttributeInfo< ? >> m_infos = new HashMap<String, ImportAttributeInfo< ? >>();
 
   private String m_srs;
 
@@ -162,9 +162,9 @@ public class ImportWaterBodiesData extends AbstractModelObject
     m_srs = srs;
   }
 
-  public ImportAttributeInfo addAttributeInfo( final String property, final ComboViewer viewer, final boolean optional )
+  public <T> ImportAttributeInfo<T> addAttributeInfo( final String property, final ComboViewer viewer, final boolean optional )
   {
-    final ImportAttributeInfo info = new ImportAttributeInfo( property, viewer, optional );
+    final ImportAttributeInfo<T> info = new ImportAttributeInfo<T>( property, viewer, optional );
     m_infos.put( property, info );
     return info;
   }
@@ -174,9 +174,9 @@ public class ImportWaterBodiesData extends AbstractModelObject
     return m_shapeFile;
   }
 
-  public ImportAttributeInfo[] getAttributeInfos( )
+  public ImportAttributeInfo< ? >[] getAttributeInfos( )
   {
-    final Collection<ImportAttributeInfo> values = m_infos.values();
+    final Collection<ImportAttributeInfo< ? >> values = m_infos.values();
     return values.toArray( new ImportAttributeInfo[values.size()] );
   }
 
