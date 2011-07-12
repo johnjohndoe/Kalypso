@@ -252,8 +252,7 @@
             name="%org.kalypso.ui.rrm.logviewer.LogViewer.name"/>
    </extension>
    
-  <extension
-       point="org.kalypso.module.conversion">
+  <extension point="org.kalypso.module.conversion">
     <projectconversion module="KalypsRrmModel" class="org.kalypso.ui.rrm.wizards.conversion.RrmProjectConverterFactory"/>
    </extension> 
 
