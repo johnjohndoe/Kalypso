@@ -100,12 +100,12 @@ public class RefreshContentJob extends Job
     return m_input;
   }
 
-  public void setElementToSelect( final ElementSelector elementToSelect )
+  public synchronized void setElementToSelect( final ElementSelector elementToSelect )
   {
     m_elementToSelect = elementToSelect;
   }
 
-  public ElementSelector getElementToSelect( )
+  public synchronized ElementSelector getElementToSelect( )
   {
     return m_elementToSelect;
   }
