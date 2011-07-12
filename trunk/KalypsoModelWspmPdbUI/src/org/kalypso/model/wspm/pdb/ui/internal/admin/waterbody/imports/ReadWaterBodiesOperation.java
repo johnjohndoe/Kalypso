@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -105,6 +106,10 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
         wbs.add( wb );
       }
     }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
     catch( final Exception e )
     {
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to read water bodies from shape", e );
@@ -130,7 +135,7 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     return m_waterBodies;
   }
 
-  private WaterBody toWaterBody( final ISHPGeometry shape, final Object[] data, final IDBFField[] fields ) throws GM_Exception
+  private WaterBody toWaterBody( final ISHPGeometry shape, final Object[] data, final IDBFField[] fields ) throws GM_Exception, CoreException
   {
     final WaterBody waterBody = new WaterBody();
 
@@ -138,8 +143,8 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     final GM_Curve riverline = toCurve( waterBody, riverlineObject );
     waterBody.setRiverline( JTSAdapter.export( riverline ) );
 
-    final ImportAttributeInfo[] attributeInfos = m_data.getAttributeInfos();
-    for( final ImportAttributeInfo info : attributeInfos )
+    final ImportAttributeInfo< ? >[] attributeInfos = m_data.getAttributeInfos();
+    for( final ImportAttributeInfo< ? > info : attributeInfos )
     {
       final String property = info.getProperty();
       final Object value = findValue( info, fields, data );
@@ -166,7 +171,7 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     return allCurves[0];
   }
 
-  private Object findValue( final ImportAttributeInfo info, final IDBFField[] fields, final Object[] data )
+  private Object findValue( final ImportAttributeInfo< ? > info, final IDBFField[] fields, final Object[] data ) throws CoreException
   {
     final IDBFField field = info.getField();
     if( field == ImportAttributeInfo.FIELD_USE_DEFAULT )
@@ -176,9 +181,50 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     final Object value = data[fieldIndex];
 
     if( WaterBody.PROPERTY_DIRECTION_OF_STATIONING.equals( info.getProperty() ) )
-      return STATIONING_DIRECTION.valueOf( (String) value );
+      return parseDirection(value);
+    if( WaterBody.PROPERTY_RANK.equals( info.getProperty() ) )
+      return parseRank( value );
 
     return value;
+  }
+
+  private Integer parseRank( final Object value ) throws CoreException
+  {
+    if( value == null )
+      return null;
+
+    if( value instanceof Number )
+      return ((Number) value).intValue();
+
+    final String text = value.toString();
+    try
+    {
+      return Integer.parseInt( text );
+    }
+    catch( final NumberFormatException e )
+    {
+      final String msg = String.format( "Failed to parse rank from value '%s'. Value should be a number.", text );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
+      throw new CoreException( status );
+    }
+  }
+
+  private STATIONING_DIRECTION parseDirection( final Object value ) throws CoreException
+  {
+    if( value == null )
+      return STATIONING_DIRECTION.upstream;
+
+    try
+    {
+      return STATIONING_DIRECTION.valueOf( value.toString() );
+    }
+    catch( final IllegalArgumentException e )
+    {
+      final String possibleValues = StringUtils.join( STATIONING_DIRECTION.values() );
+      final String msg = String.format( "Failed to parse stationing direction from value '%s'. Possible values are: %s", value, possibleValues );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
+      throw new CoreException( status );
+    }
   }
 
   private int findFieldIndex( final String name, final IDBFField[] fields )
@@ -191,5 +237,4 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
 
     throw new IllegalArgumentException();
   }
-
 }

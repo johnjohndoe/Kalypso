@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -117,12 +118,26 @@ public class WaterBodyViewer
     final ViewerColumn gknColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem column = new ViewerColumnItem( gknColumn );
 
-    column.setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
+    column.setText( "GKN" );
+    column.setToolTipText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
     column.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
     gknColumn.setLabelProvider( new WaterBodyCodeLabelProvider() );
     ColumnViewerSorter.registerSorter( gknColumn, new PdbGknComparator() );
     return gknColumn;
+  }
+
+  public static ViewerColumn createRankColumn( final CheckboxTableViewer viewer )
+  {
+    final ViewerColumn rankColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.CENTER );
+    final ViewerColumnItem column = new ViewerColumnItem( rankColumn );
+
+    column.setText( "Rank" );
+    column.setResizable( false );
+    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
+    rankColumn.setLabelProvider( new WaterBodyRankLabelProvider() );
+    ColumnViewerSorter.registerSorter( rankColumn, new PdbGknComparator() );
+    return rankColumn;
   }
 
   public void refreshWaterBody( final String name )

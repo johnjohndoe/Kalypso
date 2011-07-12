@@ -38,51 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.db.constants;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+
+import org.kalypso.commons.databinding.conversion.TypedConverter;
 
 /**
  * @author Gernot Belger
  */
-public interface WaterBodyConstants
+public class RankToStringConverter extends TypedConverter<Integer, String>
 {
-  Integer DEFAULT_RANK = -1;
+  private final String[] m_ranks;
 
-  String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
-
-  String PROPERTY_ID = "id"; //$NON-NLS-1$
-
-  String PROPERTY_NAME = "name"; //$NON-NLS-1$
-
-  String PROPERTY_LABEL = "label"; //$NON-NLS-1$
-
-  String PROPERTY_RIVERLINE = "riverline"; //$NON-NLS-1$
-
-  String PROPERTY_DIRECTION_OF_STATIONING = "directionOfStationing"; //$NON-NLS-1$
-
-  String PROPERTY_RANK = "rank"; //$NON-NLS-1$
-
-  // FIXME: fetch from annotation
-  int NAME_LIMIT = 100;
-
-  int DESCRIPTION_LIMIT = 255;
-
-  public enum STATIONING_DIRECTION
+  public RankToStringConverter( final String[] ranks )
   {
-    /** Default */
-    upstream("upstreams"),
-    downstream("downstreams");
+    super( Integer.class, String.class );
 
-    private final String m_label;
+    m_ranks = ranks;
+  }
 
-    private STATIONING_DIRECTION( final String label )
-    {
-      m_label = label;
-    }
+  @Override
+  public String convertTyped( final Integer rank )
+  {
+    if( rank == null || rank < 0 || rank >= m_ranks.length )
+      return m_ranks[0];
 
-    @Override
-    public String toString( )
-    {
-      return m_label;
-    }
+    return m_ranks[rank];
   }
 }

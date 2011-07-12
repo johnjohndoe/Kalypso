@@ -38,51 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.db.constants;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
+
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
  */
-public interface WaterBodyConstants
+public class WaterBodyRankLabelProvider extends ColumnLabelProvider
 {
-  Integer DEFAULT_RANK = -1;
-
-  String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
-
-  String PROPERTY_ID = "id"; //$NON-NLS-1$
-
-  String PROPERTY_NAME = "name"; //$NON-NLS-1$
-
-  String PROPERTY_LABEL = "label"; //$NON-NLS-1$
-
-  String PROPERTY_RIVERLINE = "riverline"; //$NON-NLS-1$
-
-  String PROPERTY_DIRECTION_OF_STATIONING = "directionOfStationing"; //$NON-NLS-1$
-
-  String PROPERTY_RANK = "rank"; //$NON-NLS-1$
-
-  // FIXME: fetch from annotation
-  int NAME_LIMIT = 100;
-
-  int DESCRIPTION_LIMIT = 255;
-
-  public enum STATIONING_DIRECTION
+  @Override
+  public String getText( final Object element )
   {
-    /** Default */
-    upstream("upstreams"),
-    downstream("downstreams");
-
-    private final String m_label;
-
-    private STATIONING_DIRECTION( final String label )
+    if( element instanceof WaterBody )
     {
-      m_label = label;
+      final Integer rank = ((WaterBody) element).getRank();
+      if( rank < 0 || rank >= EditWaterBodyPage.RANK_INPUT.length )
+        return EditWaterBodyPage.RANK_INPUT[0];
+
+      return EditWaterBodyPage.RANK_INPUT[rank];
     }
 
-    @Override
-    public String toString( )
-    {
-      return m_label;
-    }
+    return EditWaterBodyPage.RANK_INPUT[0];
   }
 }

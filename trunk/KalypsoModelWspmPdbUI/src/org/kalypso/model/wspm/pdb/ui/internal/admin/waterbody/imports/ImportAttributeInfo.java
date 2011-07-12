@@ -50,7 +50,7 @@ import org.kalypso.shape.dbf.IDBFField;
 /**
  * @author Gernot Belger
  */
-public class ImportAttributeInfo extends AbstractModelObject
+public class ImportAttributeInfo<T> extends AbstractModelObject
 {
   public static final String PROPERTY_ENABLEMENT = "enablement"; //$NON-NLS-1$
 
@@ -79,7 +79,7 @@ public class ImportAttributeInfo extends AbstractModelObject
 
   private IDBFField m_field = FIELD_USE_DEFAULT;
 
-  private Object m_defaultValue;
+  private T m_defaultValue;
 
   public ImportAttributeInfo( final String property, final ComboViewer viewer, final boolean optional )
   {
@@ -98,12 +98,12 @@ public class ImportAttributeInfo extends AbstractModelObject
     return m_field == FIELD_USE_DEFAULT;
   }
 
-  public Object getDefaultValue( )
+  public T getDefaultValue( )
   {
     return m_defaultValue;
   }
 
-  public void setDefaultValue( final Object defaultValue )
+  public void setDefaultValue( final T defaultValue )
   {
     final Object oldValue = m_defaultValue;
 

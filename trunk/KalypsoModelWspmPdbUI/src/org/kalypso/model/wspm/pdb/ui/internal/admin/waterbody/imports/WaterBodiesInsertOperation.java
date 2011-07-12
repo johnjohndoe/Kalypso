@@ -89,17 +89,17 @@ public class WaterBodiesInsertOperation implements IPdbOperation
       m_existingWaterBodies.put( waterBody.getName(), waterBody );
     m_monitor.worked( 20 );
 
-      for( final WaterBody waterBody : m_waterBodies )
-      {
-        m_monitor.subTask( waterBody.getName() );
-        insertWaterBody( session, waterBody );
-        m_monitor.worked( 1 );
-      }
+    for( final WaterBody waterBody : m_waterBodies )
+    {
+      m_monitor.subTask( waterBody.getName() );
+      insertWaterBody( session, waterBody );
+      m_monitor.worked( 1 );
+    }
 
-      m_monitor.subTask( "writing data into database..." );
-      session.flush();
+    m_monitor.subTask( "writing data into database..." );
+    session.flush();
 
-      m_monitor.done();
+    m_monitor.done();
   }
 
   private void insertWaterBody( final Session session, final WaterBody waterBody )
