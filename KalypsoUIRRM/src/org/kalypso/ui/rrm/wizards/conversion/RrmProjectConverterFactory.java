@@ -56,5 +56,4 @@ public class RrmProjectConverterFactory implements IProject2ProjectConverterFact
   {
     return new RrmProjectConverter( sourceVersion, sourceDir, targetDir );
   }
-
 }
