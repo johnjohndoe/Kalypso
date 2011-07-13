@@ -100,6 +100,10 @@ public class PrfExporter
 
         configurePrfWriterWithMetadata( water, profil, prfWriter );
 
+        // WspWin needs the profile number for import. We are using the station in [m] to ao avoid conflicts
+        final int profileNumber = (int) (station * 1000.0);
+        prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_8_BLATTBEZEICHNUNG_2, Integer.toString( profileNumber ) );
+
         prfWriter.write( file );
 
         m_callback.profileWritten( file );
@@ -126,10 +130,12 @@ public class PrfExporter
   public static void configurePrfWriterWithMetadata( final WspmWaterBody water, final IProfil profil, final PrfWriter prfWriter )
   {
     final String profileName = profil.getName();
+    final String profileDescription = profil.getDescription();
     final String riverId = water.getRefNr();
     final String riverDescription = water.getDescription();
     final String riverDescriptionCleaned = riverDescription.replace( '\n', '-' ).replace( '\r', '-' );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_4_PROJEKTBEZEICHNUNG_1, riverId );
+    prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_5_PROJEKTBEZEICHNUNG_2, profileDescription );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_6_PROJEKTBEZEICHNUNG_3, riverDescriptionCleaned );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT, profileName );
   }

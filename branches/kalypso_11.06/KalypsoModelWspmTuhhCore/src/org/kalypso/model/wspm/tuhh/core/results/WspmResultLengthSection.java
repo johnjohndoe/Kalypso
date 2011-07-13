@@ -47,14 +47,15 @@ import java.util.Collection;
 import org.eclipse.core.resources.IFile;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.observation.util.TupleResultIndex;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -73,11 +74,8 @@ public class WspmResultLengthSection
     {
       workspace = GmlSerializer.createGMLWorkspace( observationFile );
       final Object object = GMLXPathUtilities.query( gmlxPath, workspace );
-      if( object instanceof WspmFixation )
-      {
-        final WspmResultLengthSection obs = create( (WspmFixation) object );
-        return obs;
-      }
+      if( object instanceof Feature )
+        return create( (Feature) object );
 
       return null;
     }
@@ -93,9 +91,9 @@ public class WspmResultLengthSection
     }
   }
 
-  public static WspmResultLengthSection create( final WspmFixation fixation )
+  public static WspmResultLengthSection create( final Feature object )
   {
-    final IObservation<TupleResult> observation = fixation.toObservation();
+    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( object );
     return new WspmResultLengthSection( observation );
   }
 

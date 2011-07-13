@@ -180,6 +180,8 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     final WspmResultLengthSection[] sections = new WspmResultLengthSection[results.length];
     for( int i = 0; i < results.length; i++ )
     {
+      // FIXME: getLengthSection might return null here, wahy?
+      // TODO: waterlevels without ls should not be selectable in the page
       sections[i] = results[i].getLengthSection();
     }
 
