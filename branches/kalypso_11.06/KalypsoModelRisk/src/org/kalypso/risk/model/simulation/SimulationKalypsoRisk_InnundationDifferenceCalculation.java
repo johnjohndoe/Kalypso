@@ -148,16 +148,25 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
       if( inputCoverageCollection1.size() != inputCoverageCollection2.size() )
         return;
 
-      // select representative HQ collection (HQ100)
+      int highestReturnPeriod = 1;
+      for( int i = 0; i < inputCoverageCollection1.size(); i++ )
+      {
+        final IAnnualCoverageCollection collection = inputCoverageCollection1.get( i );
+        final int returnPeriod = collection.getReturnPeriod();
+        if( highestReturnPeriod < returnPeriod )
+          highestReturnPeriod = returnPeriod;
+      }
+      
+      // select representative HQ collection (highest HQ)
       IAnnualCoverageCollection collection1_HQ100 = null;
       IAnnualCoverageCollection collection2_HQ100 = null;
       for( int i = 0; i < inputCoverageCollection1.size(); i++ )
       {
         final IAnnualCoverageCollection collection1 = inputCoverageCollection1.get( i );
         final IAnnualCoverageCollection collection2 = inputCoverageCollection2.get( i );
-        if( collection1.getReturnPeriod() == 100 )
+        if( collection1.getReturnPeriod() == highestReturnPeriod )
           collection1_HQ100 = collection1;
-        if( collection2.getReturnPeriod() == 100 )
+        if( collection2.getReturnPeriod() == highestReturnPeriod )
           collection2_HQ100 = collection2;
       }
 
