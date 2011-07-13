@@ -55,6 +55,9 @@ public interface IPrfConstants
 
   Integer PRF_LINE_6_PROJEKTBEZEICHNUNG_3 = 6;
 
+  /* Reserved for profile number */
+  Integer PRF_LINE_8_BLATTBEZEICHNUNG_2 = 8;
+
   Integer PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT = 13;
 
   String HEADER_SINUOSITAET = "SINOUSITAET"; //$NON-NLS-1$
