@@ -88,7 +88,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       final IRasterDataModel riskCalculatedRasterDataModel = (IRasterDataModel) riskCalculatedRasterDataModelWS.getRootFeature().getAdapter( IRasterDataModel.class );
       final IRasterDataModel riskDifferenceRasterDataModel = (IRasterDataModel) riskDifferenceRasterDataModelWS.getRootFeature().getAdapter( IRasterDataModel.class );
 
-      // adding representative (HQ100) inundation coverages to the model
+      // adding representative (highest HQ) inundation coverages to the model
       int highestReturnPeriod = 1;
       for( final IAnnualCoverageCollection coverageCollection : riskStatusQuoRasterDataModel.getWaterlevelCoverageCollection() )
       {
