@@ -346,7 +346,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         dataList.add( izMax.getDateMaximumFormatted() );
         dataList.add( calcMax.getValueMaximum() );
         dataList.add( calcMax.getDateMaximumFormatted() );
-        dataList.add( (int) Math.abs( izMax.getValueMaximum() - calcMax.getValueMaximum() ) );
+        dataList.add( Double.compare( izMax.getValueMaximum(), calcMax.getValueMaximum() ) );
         dataList.add( calcMax.getDateMaximum().compareTo( izMax.getDateMaximum() ) );
         dataList.add( izMax.getVolume() );
         dataList.add( calcMax.getVolume() );
@@ -362,7 +362,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
     catch( final Exception e )
     {
       setStatus( STATUS.ERROR, e.getLocalizedMessage() );
-      throw new SimulationException( Messages.getString("NA_PostprocessingJob_0"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "NA_PostprocessingJob_0" ), e ); //$NON-NLS-1$
     }
     resultEater.addResult( "OutputFolder", tmpdir ); //$NON-NLS-1$
     setStatus( STATUS.OK, "Success" ); //$NON-NLS-1$
