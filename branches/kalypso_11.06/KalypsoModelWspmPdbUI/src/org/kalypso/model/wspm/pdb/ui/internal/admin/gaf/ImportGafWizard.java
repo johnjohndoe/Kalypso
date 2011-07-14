@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -60,6 +61,7 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafOperation;
@@ -89,7 +91,6 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   private GafOptionsPage m_optionsPage;
 
   private AddWaterLevelPage m_waterLevelPage;
-
 
   private IConnectionViewer m_viewer;
 
@@ -211,6 +212,14 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
       m_data.createProfiles();
 
       m_gafProfilesPage.updateControl();
+    }
+
+    if( selectedPage == m_waterLevelPage )
+    {
+      final Event event = m_data.getWaterlevelEvent();
+      if( StringUtils.isBlank( event.getName() ) )
+        event.setName( m_data.getState().getName() );
+
       m_waterLevelPage.updateControl();
     }
   }
