@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
@@ -182,6 +183,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     configuration.addAnnotatedClass( Vegetation.class );
     configuration.addAnnotatedClass( VegetationId.class );
     configuration.addAnnotatedClass( WaterlevelFixation.class );
+    configuration.addAnnotatedClass( Document.class );
   }
 
   @Override

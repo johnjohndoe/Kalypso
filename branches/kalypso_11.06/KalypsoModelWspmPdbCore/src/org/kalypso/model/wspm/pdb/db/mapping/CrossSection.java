@@ -53,6 +53,8 @@ public class CrossSection implements java.io.Serializable
 
   private String description;
 
+  private Set<Document> documents = new HashSet<Document>( 0 );
+
   private Set<CrossSectionPart> crossSectionParts = new HashSet<CrossSectionPart>( 0 );
 
   public CrossSection( )
@@ -71,7 +73,7 @@ public class CrossSection implements java.io.Serializable
     this.editingUser = editingUser;
   }
 
-  public CrossSection( final BigDecimal id, final WaterBody waterBody, final State state, final String name, final LineString line, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String description, final Set<CrossSectionPart> crossSectionParts )
+  public CrossSection( final BigDecimal id, final WaterBody waterBody, final State state, final String name, final LineString line, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String description, final Set<Document> documents, final Set<CrossSectionPart> crossSectionParts )
   {
     this.id = id;
     this.waterBody = waterBody;
@@ -84,6 +86,7 @@ public class CrossSection implements java.io.Serializable
     this.editingUser = editingUser;
     this.measurementDate = measurementDate;
     this.description = description;
+    this.documents = documents;
     this.crossSectionParts = crossSectionParts;
   }
 
@@ -214,6 +217,17 @@ public class CrossSection implements java.io.Serializable
   public void setDescription( final String description )
   {
     this.description = description;
+  }
+  
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSection")
+  public Set<Document> getDocuments( )
+  {
+    return this.documents;
+  }
+
+  public void setDocuments( Set<Document> documents )
+  {
+    this.documents = documents;
   }
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSection")

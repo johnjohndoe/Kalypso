@@ -49,6 +49,8 @@ public class State extends AbstractModelObject implements Serializable, StateCon
 
   private Set<CrossSection> crossSections = new HashSet<CrossSection>( 0 );
 
+  private Set<Document> documents = new HashSet<Document>( 0 );
+
   public State( )
   {
   }
@@ -63,7 +65,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
     this.editingUser = editingUser;
   }
 
-  public State( final BigDecimal id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String description, final Set<CrossSection> crossSections )
+  public State( final BigDecimal id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String description, final Set<CrossSection> crossSections, final Set<Document> documents  )
   {
     this.id = id;
     this.name = name;
@@ -75,6 +77,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
     this.source = source;
     this.description = description;
     this.crossSections = crossSections;
+    this.documents = documents;
   }
 
   @Id
@@ -232,4 +235,16 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   {
     this.crossSections = crossSections;
   }
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "state")
+  public Set<Document> getDocuments( )
+  {
+    return this.documents;
+  }
+
+  public void setDocuments( final Set<Document> documents )
+  {
+    this.documents = documents;
+  }
+
 }
