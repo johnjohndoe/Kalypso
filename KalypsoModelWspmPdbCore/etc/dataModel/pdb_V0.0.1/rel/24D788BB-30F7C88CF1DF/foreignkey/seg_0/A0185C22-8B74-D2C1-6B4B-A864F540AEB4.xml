@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" id="A0185C22-8B74-D2C1-6B4B-A864F540AEB4" directorySegmentName="seg_0" name="CS_Part__Point">
+   <createdBy>thuel</createdBy>
+   <createdTime>2011-06-07 11:15:44 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-06-07 11:15:44 UTC</changedTime>
+   <generatorID>DFF91E42-28EC-B18B-A087-E3E472B1E533</generatorID>
+   <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+   <containerWithKeyObject>3DA05EF6-8262-F352-C262-8AA4295E5B39</containerWithKeyObject>
+   <deleteRule>CASCADE</deleteRule>
+   <localFKIndex>40F68F6F-DFCC-E3C6-30D9-A005B6A5BCFD</localFKIndex>
+   <keyObject>B6173236-4105-31D0-0ABE-DF62B4DEBA4C</keyObject>
+   <mandatory>true</mandatory>
+   <transferable>true</transferable>
+</FKIndexAssociation>

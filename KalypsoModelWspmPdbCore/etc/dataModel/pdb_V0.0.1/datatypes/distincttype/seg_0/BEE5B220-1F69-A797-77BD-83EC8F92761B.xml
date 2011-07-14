@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<DistinctType class="oracle.dbtools.crest.model.design.datatypes.DistinctType" name="Name_Short" id="BEE5B220-1F69-A797-77BD-83EC8F92761B" directorySegmentName="seg_0">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-26 09:08:43 UTC</createdTime>
+   <changedBy>thuel2</changedBy>
+   <changedTime>2011-05-26 09:09:11 UTC</changedTime>
+   <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+   <predefined>false</predefined>
+   <logicalDataType>LOGDT024</logicalDataType>
+   <precision>0</precision>
+   <scale>0</scale>
+   <size>50</size>
+</DistinctType>

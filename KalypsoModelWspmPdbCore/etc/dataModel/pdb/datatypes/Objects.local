@@ -2,6 +2,7 @@
 <oracle.dbtools.crest.model.design.datatypes.DataTypesDesign>
    <object objectType="DistinctType" objectID="B3BBFFC0-261E-2785-8C3A-A260662720FD" name="Description" seqName="seg_0"/>
    <object objectType="DistinctType" objectID="06BBC0AF-44E8-E1D3-844F-E68A8A8BE333" name="Discharge" seqName="seg_0"/>
+   <object objectType="DistinctType" objectID="5C17ED4F-09D6-10E4-79AC-987B6168561A" name="FileName" seqName="seg_0"/>
    <object objectType="DistinctType" objectID="42097DC7-758D-D280-EB37-5F6D23BE7A65" name="Height" seqName="seg_0"/>
    <object objectType="DistinctType" objectID="48C0BA71-78E5-7A37-66AA-13F3758A0222" name="HyK" seqName="seg_0"/>
    <object objectType="DistinctType" objectID="7565B3CB-D8D2-FFBA-EB71-D7A4D4490C87" name="KZ" seqName="seg_0"/>
