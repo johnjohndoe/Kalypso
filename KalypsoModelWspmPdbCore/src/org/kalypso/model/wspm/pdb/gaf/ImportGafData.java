@@ -126,8 +126,6 @@ public class ImportGafData extends AbstractModelObject
 
   private State[] m_existingStates;
 
-  private boolean m_isInitalized = false;
-
   public ImportGafData( final IPdbConnection connection )
   {
     m_connection = connection;
@@ -141,8 +139,6 @@ public class ImportGafData extends AbstractModelObject
 
   public void initFromDb( ) throws PdbConnectException, IOException
   {
-    m_isInitalized = true;
-
     Session session = null;
     try
     {
@@ -162,7 +158,6 @@ public class ImportGafData extends AbstractModelObject
     final GafCodes gafCodes = new GafCodes();
     final Coefficients coefficients = getCoefficients();
     m_pointChecker = new GafPointCheck( gafCodes, coefficients );
-
   }
 
   public void init( final IDialogSettings settings )
@@ -415,10 +410,5 @@ public class ImportGafData extends AbstractModelObject
   public State[] getExistingStates( )
   {
     return m_existingStates;
-  }
-
-  public boolean isInit( )
-  {
-    return m_isInitalized;
   }
 }
