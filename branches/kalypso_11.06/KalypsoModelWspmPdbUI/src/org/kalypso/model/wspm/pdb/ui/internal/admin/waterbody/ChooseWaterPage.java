@@ -38,9 +38,8 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
-import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
@@ -61,10 +60,8 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.wspm.pdb.PdbUtils;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.AddWaterBodyAction;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
 
 /**
@@ -72,22 +69,24 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterCont
  */
 public class ChooseWaterPage extends WizardPage
 {
-  private final ImportGafData m_data;
-
   private WaterBodyViewer m_waterBodyViewer;
 
   private Session m_session;
 
   private WaterBodyFilterControl m_waterBodyFilterControl;
 
-  ChooseWaterPage( final String pageName, final ImportGafData data )
+  private final IPdbConnection m_connection;
+
+  private final IObservableValue m_waterValue;
+
+  public ChooseWaterPage( final String pageName, final IPdbConnection connection, final IObservableValue waterValue )
   {
     super( pageName );
 
-    m_data = data;
+    m_connection = connection;
+    m_waterValue = waterValue;
 
     setTitle( "Choose Water Body" );
-    setDescription( "Choose the water body into which the profiles will be imported" );
   }
 
   @Override
@@ -128,7 +127,7 @@ public class ChooseWaterPage extends WizardPage
   {
     try
     {
-      m_session = m_data.getConnection().openSession();
+      m_session = m_connection.openSession();
     }
     catch( final Exception e )
     {
@@ -142,9 +141,8 @@ public class ChooseWaterPage extends WizardPage
 
     /* selection -> data */
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( waterBodiesViewer );
-    final IObservableValue model = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_WATER_BODY );
 
-    final DataBinder dataBinder = new DataBinder( target, model );
+    final DataBinder dataBinder = new DataBinder( target, m_waterValue );
 
     dataBinder.addTargetAfterGetValidator( new NotNullValidator<WaterBody>( WaterBody.class, IStatus.ERROR, "no water body is selected" ) );
     binding.bindValue( dataBinder );

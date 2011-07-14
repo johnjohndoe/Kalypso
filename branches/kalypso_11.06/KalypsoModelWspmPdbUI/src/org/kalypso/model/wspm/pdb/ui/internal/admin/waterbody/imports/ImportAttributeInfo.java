@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
-import org.eclipse.jface.viewers.ComboViewer;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
@@ -73,24 +72,16 @@ public class ImportAttributeInfo<T> extends AbstractModelObject
 
   private final String m_property;
 
-  private final ComboViewer m_viewer;
-
   private final boolean m_optional;
 
   private IDBFField m_field = FIELD_USE_DEFAULT;
 
   private T m_defaultValue;
 
-  public ImportAttributeInfo( final String property, final ComboViewer viewer, final boolean optional )
+  public ImportAttributeInfo( final String property, final boolean optional )
   {
     m_property = property;
-    m_viewer = viewer;
     m_optional = optional;
-  }
-
-  public ComboViewer getViewer( )
-  {
-    return m_viewer;
   }
 
   public boolean getEnablement( )

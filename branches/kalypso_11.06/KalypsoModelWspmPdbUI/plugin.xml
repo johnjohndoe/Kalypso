@@ -202,6 +202,9 @@
       <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="Import Water Bodies" icon="icons/waterBody.gif">
         <description>Imports or updates water bodies from a shape file</description>
       </wizard>
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" name="Import Water Levels" icon="icons/event.gif">
+        <description>Imports or updates water bodies from a shape file</description>
+      </wizard>
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard">
@@ -210,6 +213,11 @@
        </enablement>
     </wizardEnablement>
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard">
+       <enablement>
+              <reference definitionId="isPdbViewVisible"/>
+       </enablement>
+    </wizardEnablement>
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard">
        <enablement>
               <reference definitionId="isPdbViewVisible"/>
        </enablement>

@@ -107,7 +107,11 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
 
   public void setWaterBody( final WaterBody waterBody )
   {
+    final Object oldValue = this.waterBody;
+
     this.waterBody = waterBody;
+
+    firePropertyChange( PROPERTY_WATER_BODY, oldValue, waterBody );
   }
 
   @Column(name = "name", nullable = false, length = 100)
