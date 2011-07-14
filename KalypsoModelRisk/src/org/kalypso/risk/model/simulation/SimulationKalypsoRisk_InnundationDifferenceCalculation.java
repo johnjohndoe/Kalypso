@@ -174,9 +174,9 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
         return;
 
       final IAnnualCoverageCollection resultCoverageCollection = resultCollection.addNew( IAnnualCoverageCollection.QNAME );
-      resultCoverageCollection.setReturnPeriod( 100 );
+      resultCoverageCollection.setReturnPeriod( highestReturnPeriod );
       resultCoverageCollection.setName( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.1" ) ); //$NON-NLS-1$
-      resultCoverageCollection.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.2" ), 100 ) ); //$NON-NLS-1$
+      resultCoverageCollection.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.2" ), highestReturnPeriod ) ); //$NON-NLS-1$
 
       // calculate actual difference
       final IFeatureBindingCollection<ICoverage> coverages1_HG100 = collection1_HQ100.getCoverages();
