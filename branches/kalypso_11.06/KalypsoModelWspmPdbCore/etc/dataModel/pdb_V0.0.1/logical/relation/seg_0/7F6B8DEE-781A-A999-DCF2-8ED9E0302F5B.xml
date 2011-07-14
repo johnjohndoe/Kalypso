@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Event__Waterlevel_Fixation" id="7F6B8DEE-781A-A999-DCF2-8ED9E0302F5B" directorySegmentName="seg_0">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-18 12:08:53 UTC</createdTime>
+   <changedBy>thuel2</changedBy>
+   <changedTime>2011-05-26 09:10:18 UTC</changedTime>
+   <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+   <identifying>false</identifying>
+   <optionalSource>false</optionalSource>
+   <optionalTarget>false</optionalTarget>
+   <sourceCardinality>1</sourceCardinality>
+   <sourceEntity>90F0EE48-08A3-D666-C1C5-A0D069D98D8E</sourceEntity>
+   <targetCardinalityString>*</targetCardinalityString>
+   <targetEntity>B4965682-C105-A211-FEFA-970E12F1D1C8</targetEntity>
+   <transferable>true</transferable>
+</Relation>

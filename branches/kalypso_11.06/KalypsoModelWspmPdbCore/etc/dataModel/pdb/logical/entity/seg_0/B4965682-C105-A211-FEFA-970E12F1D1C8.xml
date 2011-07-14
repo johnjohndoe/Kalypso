@@ -2,8 +2,8 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="B4965682-C105-A211-FEFA-970E12F1D1C8" directorySegmentName="seg_0" name="Waterlevel_Fixation">
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-17 15:51:34 UTC</createdTime>
-   <changedBy>thuel2</changedBy>
-   <changedTime>2011-05-27 08:27:08 UTC</changedTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-07-13 13:38:05 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Waterlevel_Fixations PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -67,6 +67,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:52:41 UTC</changedTime>
          <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <use>2</use>
          <distinctType>72F78EA1-BFF2-06C3-B23C-A9FCA41237A5</distinctType>
@@ -129,9 +130,11 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:53:05 UTC</changedTime>
          <comment>[m NN]</comment>
+         <commentInRDBMS>[m NN]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
-         <use>1</use>
+         <use>2</use>
+         <distinctType>AEFEDAF5-E7EA-7380-BB59-646A04A3C033</distinctType>
          <logicalDatatype>LOGDT019</logicalDatatype>
          <dataTypePrecision>8</dataTypePrecision>
          <dataTypeScale>3</dataTypeScale>
@@ -142,9 +145,11 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:52:58 UTC</changedTime>
          <comment>[m³/s]</comment>
+         <commentInRDBMS>[m³/s]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
-         <use>1</use>
+         <use>2</use>
+         <distinctType>06BBC0AF-44E8-E1D3-844F-E68A8A8BE333</distinctType>
          <logicalDatatype>LOGDT019</logicalDatatype>
          <dataTypePrecision>8</dataTypePrecision>
          <dataTypeScale>3</dataTypeScale>

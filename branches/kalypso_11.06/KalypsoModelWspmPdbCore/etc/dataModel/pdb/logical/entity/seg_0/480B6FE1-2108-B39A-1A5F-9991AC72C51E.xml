@@ -3,7 +3,7 @@
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-17 15:19:37 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2011-06-07 09:31:54 UTC</changedTime>
+   <changedTime>2011-07-13 13:37:40 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Points PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -66,7 +66,6 @@
          <createdTime>2011-05-17 15:33:21 UTC</createdTime>
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-23 13:06:25 UTC</changedTime>
-         <comment>Point ID</comment>
          <ownerDesignName>pdb</ownerDesignName>
          <use>2</use>
          <distinctType>BEE5B220-1F69-A797-77BD-83EC8F92761B</distinctType>
@@ -77,8 +76,8 @@
       <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Location" id="D077D66B-FFA9-4BDE-8A6B-71F35FB08569">
          <createdBy>thuel2</createdBy>
          <createdTime>2011-05-17 16:15:52 UTC</createdTime>
-         <changedBy>thuel2</changedBy>
-         <changedTime>2011-05-23 07:57:55 UTC</changedTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-07-13 13:36:43 UTC</changedTime>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <structuredType>47E390DE-0671-C4B1-8428-0F45CBEE18F8</structuredType>
@@ -101,6 +100,7 @@
          <changedBy>thuel</changedBy>
          <changedTime>2011-05-31 08:00:05 UTC</changedTime>
          <comment>(GAF-) Kennzeichnung</comment>
+         <commentInRDBMS>(GAF-) Kennzeichnung</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <use>2</use>
@@ -126,6 +126,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:58:17 UTC</changedTime>
          <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <use>2</use>
@@ -140,6 +141,7 @@
          <changedBy>thuel</changedBy>
          <changedTime>2011-05-31 07:59:41 UTC</changedTime>
          <comment>[m NN]</comment>
+         <commentInRDBMS>[m NN]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <use>2</use>
@@ -167,6 +169,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:57:13 UTC</changedTime>
          <comment>[mm]</comment>
+         <commentInRDBMS>[mm]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <use>2</use>
@@ -181,6 +184,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:57:21 UTC</changedTime>
          <comment>[m^.33/s]</comment>
+         <commentInRDBMS>[m^.33/s]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <use>2</use>
@@ -195,6 +199,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:57:31 UTC</changedTime>
          <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <use>2</use>
@@ -209,6 +214,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:57:40 UTC</changedTime>
          <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <use>2</use>
@@ -223,6 +229,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:57:52 UTC</changedTime>
          <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <use>2</use>
