@@ -73,6 +73,9 @@ public class EditWaterBodyPage extends WizardPage
     EDIT;
   }
 
+  // FIXME: should come from elsewhere
+  public static final String[] RANK_INPUT = new String[] { "<Not Set>", "I", "II", "III", "IV" };
+
   private final WaterBody m_waterBody;
 
   private DatabindingWizardPage m_binding;
@@ -106,8 +109,8 @@ public class EditWaterBodyPage extends WizardPage
     createNameControls( composite );
     createLabelControls( composite );
     createDirectionControls( composite );
+    createOrderControls( composite );
     createDescriptionControls( composite );
-    // private Geometry riverline;
   }
 
   private void createNameControls( final Composite parent )
@@ -166,6 +169,26 @@ public class EditWaterBodyPage extends WizardPage
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( comboViewer );
     final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBody.PROPERTY_DIRECTION_OF_STATIONING );
     m_binding.bindValue( target, model );
+  }
+
+  private void createOrderControls( final Composite parent )
+  {
+    new Label( parent, SWT.NONE ).setText( "Rank" );
+
+    final ComboViewer comboViewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
+    comboViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    comboViewer.setContentProvider( new ArrayContentProvider() );
+    comboViewer.setLabelProvider( new LabelProvider() );
+
+    comboViewer.setInput( RANK_INPUT );
+
+    final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( comboViewer );
+    final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBody.PROPERTY_RANK );
+
+    final DataBinder binder = new DataBinder( target, model );
+    binder.setTargetToModelConverter( new StringToRankConverter( RANK_INPUT ) );
+    binder.setModelToTargetConverter( new RankToStringConverter( RANK_INPUT ) );
+    m_binding.bindValue( binder );
   }
 
   private void createDescriptionControls( final Composite parent )

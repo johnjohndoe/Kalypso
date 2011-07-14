@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 import java.io.IOException;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
@@ -52,7 +52,6 @@ import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
-import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -68,12 +67,16 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.validation.ObjectNotSameValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants.STATIONING_DIRECTION;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.RankToStringConverter;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.StringToRankConverter;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBFFieldLabelProvider;
@@ -89,7 +92,7 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
 
   private StatusComposite m_geometryStatusComposite;
 
-  private DataBindingContext m_binding;
+  private DatabindingWizardPage m_binding;
 
   protected ImportWaterbodiesSelectAttributesPage( final String pageName, final ImportWaterBodiesData data )
   {
@@ -104,7 +107,7 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
   @Override
   public void createControl( final Composite parent )
   {
-    m_binding = new DataBindingContext();
+    m_binding = new DatabindingWizardPage( this, null );
 
     final Composite panel = new Composite( parent, SWT.NONE );
     setControl( panel );
@@ -121,8 +124,7 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
     createNameControl( attributeGroup );
     createDescriptionControl( attributeGroup );
     createDirectionControl( attributeGroup );
-
-    WizardPageSupport.create( this, m_binding );
+    createRankControl( attributeGroup );
 
     setErrorMessage( null );
   }
@@ -145,7 +147,7 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
 
   private void createDescriptionControl( final Composite parent )
   {
-    final ImportAttributeInfo info = createAttributeControl( "Description", WaterBody.PROPERTY_DESCRIPTION, parent, true );
+    final ImportAttributeInfo<String> info = createAttributeControl( "Description", WaterBody.PROPERTY_DESCRIPTION, parent, true );
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -163,7 +165,7 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
 
   private void createDirectionControl( final Composite parent )
   {
-    final ImportAttributeInfo info = createAttributeControl( "Directection of Stationing", WaterBody.PROPERTY_DIRECTION_OF_STATIONING, parent, true );
+    final ImportAttributeInfo<STATIONING_DIRECTION> info = createAttributeControl( "Directection of Stationing", WaterBody.PROPERTY_DIRECTION_OF_STATIONING, parent, true );
 
     info.setDefaultValue( STATIONING_DIRECTION.upstream );
 
@@ -184,6 +186,36 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
     m_binding.bindValue( targetEnablement, modelEnablement );
   }
 
+  private void createRankControl( final Composite parent )
+  {
+    final ImportAttributeInfo<Integer> info = createAttributeControl( "Rank", WaterBody.PROPERTY_RANK, parent, true );
+
+    info.setDefaultValue( WaterBody.DEFAULT_RANK );
+
+    final ComboViewer rankViewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
+    rankViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    rankViewer.setLabelProvider( new LabelProvider() );
+    rankViewer.setContentProvider( new ArrayContentProvider() );
+    rankViewer.setInput( EditWaterBodyPage.RANK_INPUT );
+
+    final IObservableValue targetValue = ViewersObservables.observeSinglePostSelection( rankViewer );
+    final IObservableValue targetEnablement = SWTObservables.observeEnabled( rankViewer.getControl() );
+
+    // REMARK: we explicitly need to declare the valueType here, else we get a BindingException, becsue the erased
+    // property type is Object.
+    final IObservableValue modelValue = BeanProperties.value( info.getClass(), ImportAttributeInfo.PROPERTY_DEFAULT_VALUE, Integer.class ).observe( info );
+
+    final IObservableValue modelEnablement = BeansObservables.observeValue( info, ImportAttributeInfo.PROPERTY_ENABLEMENT );
+
+    final DataBinder valueBinder = new DataBinder( targetValue, modelValue );
+    valueBinder.setTargetToModelConverter( new StringToRankConverter( EditWaterBodyPage.RANK_INPUT ) );
+    valueBinder.setModelToTargetConverter( new RankToStringConverter( EditWaterBodyPage.RANK_INPUT ) );
+    m_binding.bindValue( valueBinder );
+
+    m_binding.bindValue( targetEnablement, modelEnablement );
+  }
+
   private void createGeometryCheckControl( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
@@ -196,7 +228,7 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
     m_geometryStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
   }
 
-  private ImportAttributeInfo createAttributeControl( final String label, final String property, final Composite parent, final boolean optional )
+  private <T> ImportAttributeInfo<T> createAttributeControl( final String label, final String property, final Composite parent, final boolean optional )
   {
     new Label( parent, SWT.NONE ).setText( label );
 
@@ -208,7 +240,7 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setComparator( new ViewerComparator() );
 
-    final ImportAttributeInfo info = m_data.addAttributeInfo( property, viewer, optional );
+    final ImportAttributeInfo<T> info = m_data.addAttributeInfo( property, viewer, optional );
 
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
     final IObservableValue model = BeansObservables.observeValue( info, ImportAttributeInfo.PROPERTY_FIELD );
@@ -221,7 +253,7 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
       binder.addTargetAfterGetValidator( validator );
       binder.addModelBeforeSetValidator( validator );
     }
-    binder.apply( m_binding );
+    m_binding.bindValue( binder );
 
     return info;
   }
@@ -242,8 +274,8 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
       /* Refresh combos */
       final IDBFField[] fields = shapeFile.getFields();
       final IDBFField[] fieldsWithNoData = (IDBFField[]) ArrayUtils.add( fields, ImportAttributeInfo.FIELD_USE_DEFAULT );
-      final ImportAttributeInfo[] attributeInfos = m_data.getAttributeInfos();
-      for( final ImportAttributeInfo info : attributeInfos )
+      final ImportAttributeInfo< ? >[] attributeInfos = m_data.getAttributeInfos();
+      for( final ImportAttributeInfo< ? > info : attributeInfos )
       {
         final IDBFField oldField = info.getField();
         final ComboViewer viewer = info.getViewer();
@@ -260,7 +292,7 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
         }
       }
 
-      m_binding.updateTargets();
+      m_binding.getBindingContext().updateTargets();
     }
     catch( final IOException e )
     {
@@ -319,6 +351,9 @@ public class ImportWaterbodiesSelectAttributesPage extends WizardPage implements
   @Override
   public boolean isPageComplete( )
   {
+    if( m_geometryStatusComposite == null )
+      return false;
+
     final IStatus geometryStatus = m_geometryStatusComposite.getStatus();
     final boolean isGeometryOk = geometryStatus != null && geometryStatus.isOK();
 

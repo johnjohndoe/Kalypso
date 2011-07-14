@@ -53,7 +53,7 @@ import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.ui.internal.PdbUiUtils;
-import org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbView;
+import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateData;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.GmltreeHandlerUtils;

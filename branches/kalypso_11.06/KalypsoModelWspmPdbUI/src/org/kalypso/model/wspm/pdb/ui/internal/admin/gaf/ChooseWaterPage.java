@@ -94,7 +94,6 @@ public class ChooseWaterPage extends WizardPage
   public void dispose( )
   {
     PdbUtils.closeSessionQuietly( m_session );
-    m_session.close();
 
     super.dispose();
   }
@@ -159,7 +158,7 @@ public class ChooseWaterPage extends WizardPage
     panel.setLayout( new FillLayout() );
     panel.setText( "Search" );
 
-    m_waterBodyFilterControl = new WaterBodyFilterControl( null, panel );
+    m_waterBodyFilterControl = new WaterBodyFilterControl( null, panel, null );
 
     return panel;
   }

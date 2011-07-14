@@ -46,22 +46,22 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.commons.java.lang.Arrays;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
  */
 public class ByWaterBodyContentProvider implements ITreeContentProvider
 {
+  private WaterBodyStructure m_input;
+
   @Override
   public Object[] getElements( final Object inputElement )
   {
     if( inputElement instanceof ConnectionInput )
     {
-      final WaterBodyTreeNode rootNode = ((ConnectionInput) inputElement).getRootNode();
-      final Object[] allChildren = rootNode.getAllChildren();
+      final WaterBody rootNode = m_input.getRoot();
+      final Object[] allChildren = m_input.getChildren( rootNode );
       if( ArrayUtils.isEmpty( allChildren ) )
         return new Object[] { PdbLabelProvider.EMPTY_WATER_BODY };
 
@@ -83,15 +83,11 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
   @Override
   public boolean hasChildren( final Object element )
   {
-    if( element instanceof WaterBodyTreeNode )
+    if( element instanceof WaterBody )
     {
-      final WaterBodyTreeNode node = (WaterBodyTreeNode) element;
-      final Object[] allChildren = node.getAllChildren();
+      final Object[] allChildren = m_input.getChildren( element );
       return !Arrays.isEmpty( allChildren );
     }
-
-    if( element instanceof State )
-      return false;
 
     return false;
   }
@@ -99,11 +95,10 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
   @Override
   public Object[] getChildren( final Object parentElement )
   {
-    if( parentElement instanceof WaterBodyTreeNode )
+    if( parentElement instanceof WaterBody )
     {
-      final WaterBodyTreeNode node = (WaterBodyTreeNode) parentElement;
-      final Object[] allChildren = node.getAllChildren();
-      return allChildren;
+      final WaterBody waterBody = (WaterBody) parentElement;
+      return m_input.getChildren( waterBody );
     }
 
     return ArrayUtils.EMPTY_OBJECT_ARRAY;
@@ -112,10 +107,10 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
   @Override
   public Object getParent( final Object element )
   {
-    if( element instanceof CrossSection )
-      return ((CrossSection) element).getWaterBody();
+    if( m_input == null )
+      return null;
 
-    return null;
+    return m_input.getParent( element );
   }
 
   @Override
@@ -126,5 +121,9 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
+    if( newInput instanceof ConnectionInput )
+      m_input = ((ConnectionInput) newInput).getStructure();
+    else
+      m_input = null;
   }
 }

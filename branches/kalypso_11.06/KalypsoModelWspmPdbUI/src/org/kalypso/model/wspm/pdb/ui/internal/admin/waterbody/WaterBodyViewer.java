@@ -40,9 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
-import java.util.List;
-
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -119,7 +118,8 @@ public class WaterBodyViewer
     final ViewerColumn gknColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem column = new ViewerColumnItem( gknColumn );
 
-    column.setText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
+    column.setText( "GKN" );
+    column.setToolTipText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
     column.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
     gknColumn.setLabelProvider( new WaterBodyCodeLabelProvider() );
@@ -127,10 +127,22 @@ public class WaterBodyViewer
     return gknColumn;
   }
 
+  public static ViewerColumn createRankColumn( final CheckboxTableViewer viewer )
+  {
+    final ViewerColumn rankColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.CENTER );
+    final ViewerColumnItem column = new ViewerColumnItem( rankColumn );
+
+    column.setText( "Rank" );
+    column.setResizable( false );
+    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
+    rankColumn.setLabelProvider( new WaterBodyRankLabelProvider() );
+    ColumnViewerSorter.registerSorter( rankColumn, new PdbGknComparator() );
+    return rankColumn;
+  }
+
   public void refreshWaterBody( final String name )
   {
-
-    final WaterBody[] waterBodies = loadWaterbodies( m_session );
+    final WaterBody[] waterBodies = loadWaterbodies();
     m_viewer.setInput( waterBodies );
 
     final WaterBody toSelect = findWaterBody( waterBodies, name );
@@ -139,6 +151,19 @@ public class WaterBodyViewer
       m_viewer.setSelection( StructuredSelection.EMPTY );
     else
       m_viewer.setSelection( new StructuredSelection( toSelect ) );
+  }
+
+  private WaterBody[] loadWaterbodies( )
+  {
+    try
+    {
+      return GetPdbList.getArray( m_session, WaterBody.class );
+    }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+      return new WaterBody[0];
+    }
   }
 
   private static WaterBody findWaterBody( final WaterBody[] waterBodies, final String name )
@@ -158,20 +183,6 @@ public class WaterBodyViewer
   public Control getControl( )
   {
     return m_viewer.getControl();
-  }
-
-  public static WaterBody[] loadWaterbodies( final Session session )
-  {
-    try
-    {
-      final List<WaterBody> waterBodies = GetPdbList.getList( session, WaterBody.class );
-      return waterBodies.toArray( new WaterBody[waterBodies.size()] );
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      return new WaterBody[] {};
-    }
   }
 
   public TableViewer getViewer( )

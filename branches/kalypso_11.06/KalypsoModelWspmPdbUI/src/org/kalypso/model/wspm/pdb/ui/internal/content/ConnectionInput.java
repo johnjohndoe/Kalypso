@@ -47,16 +47,16 @@ import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
 
 /**
  * @author Gernot Belger
  */
 public class ConnectionInput
 {
-  private final WaterBodyTreeNode m_rootNode;
+  private final WaterBodyStructure m_waters;
 
   private final Session m_session;
 
@@ -68,7 +68,8 @@ public class ConnectionInput
 
     m_states = readState();
     final List<WaterBody> waterBodies = readWaterBody();
-    m_rootNode = WaterBodyTreeNode.buildTree( waterBodies );
+
+    m_waters = new WaterBodyStructure( waterBodies );
   }
 
   private List<State> readState( )
@@ -108,11 +109,6 @@ public class ConnectionInput
     return m_states.toArray( new State[m_states.size()] );
   }
 
-  public WaterBodyTreeNode getRootNode( )
-  {
-    return m_rootNode;
-  }
-
   public State getState( final String name )
   {
     if( name == null )
@@ -132,6 +128,19 @@ public class ConnectionInput
     if( waterBodyName == null )
       return null;
 
-    return m_rootNode.findWaterBodyByName( waterBodyName );
+    return m_waters.findWaterBodyByName( waterBodyName );
+  }
+
+  public Event getEvent( final String eventName )
+  {
+    if( eventName == null )
+      return null;
+
+    return m_waters.findEventName( eventName );
+  }
+
+  public WaterBodyStructure getStructure( )
+  {
+    return m_waters;
   }
 }

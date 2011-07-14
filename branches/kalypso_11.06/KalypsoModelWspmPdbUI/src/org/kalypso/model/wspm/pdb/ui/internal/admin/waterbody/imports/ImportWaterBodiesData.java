@@ -49,9 +49,15 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.databinding.observable.set.WritableSet;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
@@ -85,7 +91,7 @@ public class ImportWaterBodiesData extends AbstractModelObject
 
   public static final String PROPERTY_INSERTION_MODE = "insertionMode"; //$NON-NLS-1$
 
-  private final Map<String, ImportAttributeInfo> m_infos = new HashMap<String, ImportAttributeInfo>();
+  private final Map<String, ImportAttributeInfo< ? >> m_infos = new HashMap<String, ImportAttributeInfo< ? >>();
 
   private String m_srs;
 
@@ -97,14 +103,39 @@ public class ImportWaterBodiesData extends AbstractModelObject
 
   private final WritableSet m_selectedWaterBodies = new WritableSet( new HashSet<WaterBody>(), WaterBody.class );
 
-  private final WaterBody[] m_existingWaterbodies;
+  private WaterBody[] m_existingWaterbodies;
 
   private final IPdbConnection m_connection;
 
-  public ImportWaterBodiesData( final IPdbConnection connection, final WaterBody[] existingWaterbodies )
+  private boolean m_isInitialized = false;
+
+  public ImportWaterBodiesData( final IPdbConnection connection )
   {
     m_connection = connection;
-    m_existingWaterbodies = existingWaterbodies;
+  }
+
+  public void init( final IDialogSettings dialogSettings ) throws PdbConnectException
+  {
+    Assert.isTrue( !m_isInitialized );
+
+    m_isInitialized = true;
+
+    Session session = null;
+    try
+    {
+      session = m_connection.openSession();
+
+      m_existingWaterbodies = GetPdbList.getArray( session, WaterBody.class );
+
+      session.close();
+    }
+    finally
+    {
+      PdbUtils.closeSessionQuietly( session );
+    }
+
+    if( dialogSettings == null )
+      return;
 
     // TODO: init from dialog settings
 
@@ -131,9 +162,9 @@ public class ImportWaterBodiesData extends AbstractModelObject
     m_srs = srs;
   }
 
-  public ImportAttributeInfo addAttributeInfo( final String property, final ComboViewer viewer, final boolean optional )
+  public <T> ImportAttributeInfo<T> addAttributeInfo( final String property, final ComboViewer viewer, final boolean optional )
   {
-    final ImportAttributeInfo info = new ImportAttributeInfo( property, viewer, optional );
+    final ImportAttributeInfo<T> info = new ImportAttributeInfo<T>( property, viewer, optional );
     m_infos.put( property, info );
     return info;
   }
@@ -143,9 +174,9 @@ public class ImportWaterBodiesData extends AbstractModelObject
     return m_shapeFile;
   }
 
-  public ImportAttributeInfo[] getAttributeInfos( )
+  public ImportAttributeInfo< ? >[] getAttributeInfos( )
   {
-    final Collection<ImportAttributeInfo> values = m_infos.values();
+    final Collection<ImportAttributeInfo< ? >> values = m_infos.values();
     return values.toArray( new ImportAttributeInfo[values.size()] );
   }
 
@@ -196,5 +227,10 @@ public class ImportWaterBodiesData extends AbstractModelObject
   public WaterBody[] getExistingWaterBodies( )
   {
     return m_existingWaterbodies;
+  }
+
+  public boolean isInit( )
+  {
+    return m_isInitialized;
   }
 }

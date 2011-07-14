@@ -169,7 +169,7 @@ public class PdbWspmProject implements IPdbWspmProject
     m_provider.save( monitor );
   }
 
-  public void updateViews( final TuhhReach[] toSelect )
+  public void updateViews( final Object[] toSelect )
   {
     /* Bring gmv view to top and select changed features */
     final WspmGmvViewPart gmvView = findView( WspmGmvViewPart.ID );

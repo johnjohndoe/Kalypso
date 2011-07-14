@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 
@@ -56,7 +55,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
  */
 public class PdbLabelProvider extends ColumnLabelProvider
 {
-  public static final String PENDING = "Pending...";
+  public static final String PENDING = "Loading Data...";
 
   public static final String EMPTY_STATES = "<Database contains no state>";
 
@@ -65,9 +64,6 @@ public class PdbLabelProvider extends ColumnLabelProvider
   @Override
   public String getText( final Object element )
   {
-    if( element instanceof WaterBodyTreeNode )
-      return ((WaterBodyTreeNode) element).getLabel();
-
     if( element instanceof WaterBody )
       return ((WaterBody) element).getLabel();
 
@@ -86,7 +82,7 @@ public class PdbLabelProvider extends ColumnLabelProvider
   @Override
   public Image getImage( final Object element )
   {
-    if( element instanceof WaterBody || element instanceof WaterBodyTreeNode )
+    if( element instanceof WaterBody )
       return WspmPdbUiImages.getImage( IMAGE.WATER_BODY );
 
     if( element instanceof State )
