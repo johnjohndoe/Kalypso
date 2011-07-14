@@ -53,7 +53,6 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
@@ -357,7 +356,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
       // FIXME: check if this workspace is empty and give a better error message
       final File shapeFile = new File( tmpdir, "difference" ); //$NON-NLS-1$
-      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
+      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), (String) null );
     }
     catch( final Exception e )
     {
