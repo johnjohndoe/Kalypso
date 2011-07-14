@@ -1,42 +1,48 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 07.06.2011 13:51:03 by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 14.07.2011 11:52:27 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="Roughness" table="roughness">
+    <class name="Roughness" table="ROUGHNESS">
         <composite-id name="id" class="RoughnessId">
             <key-property name="pointKind" type="string">
-                <column name="point_kind" length="50" />
+                <column name="POINT_KIND" length="50" />
             </key-property>
             <key-property name="name" type="string">
-                <column name="name" length="50" />
+                <column name="NAME" length="50" />
             </key-property>
         </composite-id>
         <many-to-one name="pointKind" class="PointKind" update="false" insert="false" fetch="select">
-            <column name="point_kind" length="50" not-null="true" />
+            <column name="POINT_KIND" length="50" not-null="true" />
         </many-to-one>
         <property name="KValue" type="big_decimal">
-            <column name="k_value" precision="8" scale="1" />
+            <column name="K_VALUE" precision="8" scale="1">
+                <comment>[mm]</comment>
+            </column>
         </property>
         <property name="kstValue" type="big_decimal">
-            <column name="kst_value" precision="8" scale="1" />
+            <column name="KST_VALUE" precision="8" scale="1">
+                <comment>[m^.33/s]</comment>
+            </column>
         </property>
         <property name="label" type="string">
-            <column name="label" length="100" />
+            <column name="LABEL" length="100" />
         </property>
         <property name="source" type="string">
-            <column name="source" />
+            <column name="SOURCE">
+                <comment>Angabe einer Literaturstelle</comment>
+            </column>
         </property>
         <property name="validity" type="string">
-            <column name="validity" />
+            <column name="VALIDITY" />
         </property>
         <property name="description" type="string">
-            <column name="description" />
+            <column name="DESCRIPTION" />
         </property>
-        <set name="points" table="point" inverse="true" lazy="true" fetch="select">
+        <set name="points" table="POINT" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="roughness_point_kind" length="50" />
-                <column name="roughness" length="50" />
+                <column name="ROUGHNESS_POINT_KIND" length="50" />
+                <column name="ROUGHNESS" length="50" />
             </key>
             <one-to-many class="Point" />
         </set>

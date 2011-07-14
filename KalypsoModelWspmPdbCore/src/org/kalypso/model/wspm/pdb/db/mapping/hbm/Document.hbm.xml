@@ -3,16 +3,31 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 14.07.2011 11:52:27 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="Event" table="EVENT">
+    <class name="Document" table="DOCUMENT">
         <id name="id" type="big_decimal">
             <column name="ID" precision="20" scale="0" />
             <generator class="assigned" />
         </id>
         <many-to-one name="waterBody" class="WaterBody" fetch="select">
-            <column name="WATER_BODY" precision="20" scale="0" not-null="true" />
+            <column name="WATER_BODY_ID" precision="20" scale="0" />
+        </many-to-one>
+        <many-to-one name="crossSection" class="CrossSection" fetch="select">
+            <column name="CROSS_SECTION_ID" precision="20" scale="0" />
+        </many-to-one>
+        <many-to-one name="state" class="State" fetch="select">
+            <column name="STATE_ID" precision="20" scale="0" />
         </many-to-one>
         <property name="name" type="string">
-            <column name="NAME" length="100" not-null="true" unique="true" />
+            <column name="NAME" length="100" not-null="true" />
+        </property>
+        <property name="location" type="serializable">
+            <column name="LOCATION" />
+        </property>
+        <property name="filename" type="string">
+            <column name="FILENAME" length="2048" not-null="true" unique="true" />
+        </property>
+        <property name="mimetype" type="string">
+            <column name="MIMETYPE" length="50" />
         </property>
         <property name="creationDate" type="serializable">
             <column name="CREATION_DATE" not-null="true" />
@@ -26,22 +41,18 @@
         <property name="measurementDate" type="serializable">
             <column name="MEASUREMENT_DATE" />
         </property>
-        <property name="source" type="string">
-            <column name="SOURCE" />
+        <property name="shotdirection" type="big_decimal">
+            <column name="SHOTDIRECTION" precision="8" scale="3">
+                <comment>[&#176;] - Aufnahmerichtung (0-360)</comment>
+            </column>
         </property>
-        <property name="type" type="string">
-            <column name="TYPE" length="50">
-                <comment>Art des Ereignisses: Messung, Simulation</comment>
+        <property name="viewangle" type="big_decimal">
+            <column name="VIEWANGLE" precision="8" scale="3">
+                <comment>[&#176;] - &#214;ffnungswinkel (0-360)</comment>
             </column>
         </property>
         <property name="description" type="string">
             <column name="DESCRIPTION" />
         </property>
-        <set name="waterlevelFixations" table="WATERLEVEL_FIXATION" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="EVENT" precision="20" scale="0" not-null="true" />
-            </key>
-            <one-to-many class="WaterlevelFixation" />
-        </set>
     </class>
 </hibernate-mapping>

@@ -51,7 +51,9 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   private Set<Event> events = new HashSet<Event>( 0 );
 
   private Set<CrossSection> crossSections = new HashSet<CrossSection>( 0 );
-
+  
+  private Set<Document> documents = new HashSet<Document>( 0 );
+  
   public WaterBody( )
   {
   }
@@ -64,7 +66,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     this.directionOfStationing = directionOfStationing;
   }
 
-  public WaterBody( final BigDecimal id, final String name, final Geometry riverline, final String label, final STATIONING_DIRECTION directionOfStationing, final Integer rank, final String description, final Set<Event> events, final Set<CrossSection> crossSections )
+  public WaterBody( final BigDecimal id, final String name, final Geometry riverline, final String label, final STATIONING_DIRECTION directionOfStationing, final Integer rank, final String description, final Set<Event> events, final Set<CrossSection> crossSections, final Set<Document> documents )
   {
     this.id = id;
     this.name = name;
@@ -75,6 +77,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
     this.description = description;
     this.events = events;
     this.crossSections = crossSections;
+    this.documents = documents;
   }
 
   @Id
@@ -207,6 +210,18 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   {
     this.crossSections = crossSections;
   }
+  
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "waterBody")
+  public Set<Document> getDocuments( )
+  {
+    return this.documents;
+  }
+
+  public void setDocuments( final Set<Document> documents )
+  {
+    this.documents = documents;
+  }
+
 
   @Transient
   public LineString getRiverlineAsLine( )

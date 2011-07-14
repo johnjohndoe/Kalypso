@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.db;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -56,11 +57,13 @@ public class PdbInfo
 {
   public static final int UNKNOWN_SRID = -1;
 
-  private static final Object CURRENT_VERSION = "0.0.1"; //$NON-NLS-1$
+  private static final Object CURRENT_VERSION = "0.0.2"; //$NON-NLS-1$
 
   private final String PROPERTY_VERSION = "Version"; //$NON-NLS-1$
 
   private final String PROPERTY_SRID = "SRID"; //$NON-NLS-1$
+
+  private final String PROPERTY_DOCUMENT_SERVER = "DocumentServer"; //$NON-NLS-1$
 
   private final Properties m_properties = new Properties();
 
@@ -68,7 +71,10 @@ public class PdbInfo
   {
     final List<Info> list = GetPdbList.getList( session, Info.class );
     for( final Info property : list )
-      m_properties.put( property.getKey(), property.getValue() );
+    {
+      final String value = property.getValue();
+      m_properties.put( property.getKey(), StringUtils.defaultString( value ) );
+    }
   }
 
   public String getVersion( )
@@ -82,6 +88,14 @@ public class PdbInfo
     return NumberUtils.parseQuietInt( property, UNKNOWN_SRID );
   }
 
+  /**
+   * @return base part of document server's URL; Will be used to resolve document URLs.
+   */
+  public String getDocumentServer( )
+  {
+    return m_properties.getProperty( PROPERTY_DOCUMENT_SERVER );
+  }
+
   public void validate( ) throws PdbConnectException
   {
     final String version = getVersion();
@@ -90,7 +104,6 @@ public class PdbInfo
       final String message = String.format( "Unknown Version of PDB: %s (should be %s)", version, CURRENT_VERSION );
       throw new PdbConnectException( message );
     }
-
 
     final int srid = getSRID();
     if( UNKNOWN_SRID == srid )
