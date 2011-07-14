@@ -79,4 +79,6 @@ public interface EventConstants
   String PROPERTY_TYPE = "type"; //$NON-NLS-1$
 
   String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
+
+  String PROPERTY_WATER_BODY = "waterBody"; //$NON-NLS-1$
 }

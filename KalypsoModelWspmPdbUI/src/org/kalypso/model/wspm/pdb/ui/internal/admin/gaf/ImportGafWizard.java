@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -62,6 +64,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafOperation;
@@ -70,6 +73,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.IStatesProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ChooseWaterPage;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 
@@ -91,6 +95,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   private GafOptionsPage m_optionsPage;
 
   private AddWaterLevelPage m_waterLevelPage;
+
 
   private IConnectionViewer m_viewer;
 
@@ -135,7 +140,13 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   public void addPages( )
   {
     addPage( new ImportGafPage( "gaf", m_data ) ); //$NON-NLS-1$
-    addPage( new ChooseWaterPage( "waterBody", m_data ) ); //$NON-NLS-1$
+
+    final IPdbConnection connection = m_data.getConnection();
+    final IObservableValue waterValue = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_WATER_BODY );
+
+    final ChooseWaterPage waterPage = new ChooseWaterPage( "waterBody", connection, waterValue ); //$NON-NLS-1$
+    waterPage.setDescription( "Choose the water body into which the profiles will be imported" );
+    addPage( waterPage );
 
     m_optionsPage = new GafOptionsPage( "options", m_data ); //$NON-NLS-1$
     addPage( m_optionsPage );

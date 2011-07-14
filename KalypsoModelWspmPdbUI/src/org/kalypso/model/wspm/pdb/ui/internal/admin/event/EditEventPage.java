@@ -55,7 +55,7 @@ public class EditEventPage extends WizardPage
 {
   private final Event m_event;
 
-  private final Event[] m_existingEvents;
+  private Event[] m_existingEvents;
 
   private DatabindingWizardPage m_binding;
 
@@ -71,6 +71,11 @@ public class EditEventPage extends WizardPage
 
     setTitle( "Edit Event Properties" );
     setDescription( "Change the properties of the edited event." );
+  }
+
+  public void setExistingEvents( final Event[] existingEvents )
+  {
+    m_existingEvents = existingEvents;
   }
 
   @Override

@@ -25,6 +25,14 @@ import org.apache.commons.lang.StringUtils;
 @Table(name = "waterlevel_fixation", schema = "pdb_admin")
 public class WaterlevelFixation implements java.io.Serializable
 {
+  public static final String PROPERTY_STATION = "station"; //$NON-NLS-1$
+
+  public static final String PROPERTY_WATERLEVEL = "waterlevel"; //$NON-NLS-1$
+
+  public static final String PROPERTY_DISCHARGE = "discharge"; //$NON-NLS-1$
+
+  public static final String PROPERTY_MEASURMENT_DATE = "measurementDate"; //$NON-NLS-1$
+
   private BigDecimal id;
 
   private Event event;
