@@ -152,4 +152,9 @@ public class ImportWaterLevelsData extends AbstractModelObject
   {
     m_infos = infos;
   }
+
+  public String getSrs( )
+  {
+    return m_srs;
+  }
 }

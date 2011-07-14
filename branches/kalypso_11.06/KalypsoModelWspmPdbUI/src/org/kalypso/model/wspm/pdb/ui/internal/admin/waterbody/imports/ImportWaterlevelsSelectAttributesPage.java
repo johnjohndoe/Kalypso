@@ -61,7 +61,6 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.DateTimeSelectionProperty;
@@ -117,7 +116,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
   private void createWaterlevelControl( final Composite parent )
   {
-    createAttributeControl( "Name", WaterlevelFixation.PROPERTY_WATERLEVEL, parent, false );
+    createAttributeControl( "Water Level", WaterlevelFixation.PROPERTY_WATERLEVEL, parent, false );
 
     /* No default control: code must be taken from shape */
     new Label( parent, SWT.NONE );
@@ -143,7 +142,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
   private void createMeasurementControl( final Composite parent, final IDataBinding binding )
   {
-    final ImportAttributeInfo<Date> info = createAttributeControl( "Measurment", WaterlevelFixation.PROPERTY_MEASURMENT_DATE, parent, true );
+    final ImportAttributeInfo<Date> info = createAttributeControl( "Measurement", WaterlevelFixation.PROPERTY_MEASURMENT_DATE, parent, true );
 
     final DateTime measurementField = new DateTime( parent, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN );
     measurementField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -171,7 +170,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
   private void createDescriptionControl( final Composite parent, final IDataBinding binding )
   {
-    final ImportAttributeInfo<String> info = createAttributeControl( "Description", WaterBody.PROPERTY_DESCRIPTION, parent, true );
+    final ImportAttributeInfo<String> info = createAttributeControl( "Description", WaterlevelFixation.PROPERTY_DESCRIPTION, parent, true );
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

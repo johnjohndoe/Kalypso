@@ -123,8 +123,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     final IObservableValue waterValue = BeansObservables.observeValue( event, Event.PROPERTY_WATER_BODY );
 
     addPage( new ImportWaterlevelsSelectAttributesPage( "selectAttributes", m_data ) ); //$NON-NLS-1$
-    // FIXME
-    //addPage( new ImportWaterbodiesPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
+    addPage( new ImportWaterlevelsPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
 
     /* Choose water body */
     final IPdbConnection connection = m_data.getConnection();
