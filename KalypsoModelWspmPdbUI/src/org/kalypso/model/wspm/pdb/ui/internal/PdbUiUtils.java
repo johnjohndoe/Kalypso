@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbView;
+import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.FindViewRunnable;
 
 

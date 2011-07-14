@@ -68,6 +68,10 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.UniqueStateNameValidator
  */
 public class EditStatePage extends WizardPage
 {
+  public static final String STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE = "Enter the properties of the freshly created state";
+
+  public static final String STR_ENTER_STATE_PROPERTIES = "Enter State Properties";
+
   public enum Mode
   {
     NEW,
@@ -78,20 +82,17 @@ public class EditStatePage extends WizardPage
 
   private DatabindingWizardPage m_binding;
 
-  private final State[] m_existingState;
-
   private final Mode m_mode;
 
-  public EditStatePage( final String pageName, final State state, final State[] existingState, final Mode mode )
+  private final IStatesProvider m_statesProvider;
+
+  public EditStatePage( final String pageName, final State state, final IStatesProvider statesProvider, final Mode mode )
   {
     super( pageName );
 
     m_state = state;
-    m_existingState = existingState;
+    m_statesProvider = statesProvider;
     m_mode = mode;
-
-    setTitle( "Enter State Properties" );
-    setDescription( "Enter the properties of the freshly created state" );
   }
 
   @Override
@@ -128,12 +129,14 @@ public class EditStatePage extends WizardPage
     /* Ignore own name in edit mode */
     final String ignoreName = m_mode == Mode.EDIT ? m_state.getName() : null;
 
-    final UniqueStateNameValidator uniqueStateNameValidator = new UniqueStateNameValidator( m_existingState, ignoreName );
+    final State[] existingStates = m_statesProvider.getStates();
+
+    final UniqueStateNameValidator uniqueStateNameValidator = new UniqueStateNameValidator( existingStates, ignoreName );
     binder.addTargetAfterGetValidator( uniqueStateNameValidator );
     binder.addTargetBeforeSetValidator( uniqueStateNameValidator );
     // FIXME: does not work correctly: if file is changed on file page, we will not get a correct validation here
     // using a warning here at least shows the correct
-    binder.addModelAfterGetValidator( new UniqueStateNameValidator( m_existingState, IStatus.WARNING, ignoreName ) );
+    binder.addModelAfterGetValidator( new UniqueStateNameValidator( existingStates, IStatus.WARNING, ignoreName ) );
 
     m_binding.bindValue( binder );
   }

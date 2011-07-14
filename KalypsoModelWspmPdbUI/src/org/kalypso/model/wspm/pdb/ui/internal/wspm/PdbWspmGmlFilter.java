@@ -119,7 +119,7 @@ public class PdbWspmGmlFilter extends ViewerFilter
     if( element instanceof LinkedFeatureElement )
     {
       final LinkedFeatureElement linkedElement =  (LinkedFeatureElement) element;
-      return linkedElement.getParentElement().getAssociationTypeProperty().getQName();
+      return linkedElement.getParentElement().getPropertyType().getQName();
     }
 
     return null;

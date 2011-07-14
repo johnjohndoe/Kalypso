@@ -87,6 +87,8 @@ public class AddWaterLevelPage extends WizardPage
 
     createDoImportCheck( panel );
     createEventControls( panel );
+
+    updateControl();
   }
 
   private void createDoImportCheck( final Composite parent )
@@ -113,7 +115,7 @@ public class AddWaterLevelPage extends WizardPage
 
     final Event event = m_data.getWaterlevelEvent();
 
-    m_waterlevelComposite = new WaterlevelComposite( group, SWT.NONE, event, m_binding );
+    m_waterlevelComposite = new WaterlevelComposite( group, SWT.NONE, event, m_binding, null );
 
     final ISWTObservableValue targetVisible = SWTObservables.observeVisible( group );
     final IObservableValue modelVisible = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_HAS_WATERLEVELS );
@@ -132,6 +134,7 @@ public class AddWaterLevelPage extends WizardPage
       setMessage( "GAF file does not contain any water levels", INFORMATION );
 
     final Event[] existingEvents = m_data.getExistingEvents();
-    m_waterlevelComposite.setExistingEvents( existingEvents );
+    if( m_waterlevelComposite != null )
+      m_waterlevelComposite.setExistingEvents( existingEvents );
   }
 }

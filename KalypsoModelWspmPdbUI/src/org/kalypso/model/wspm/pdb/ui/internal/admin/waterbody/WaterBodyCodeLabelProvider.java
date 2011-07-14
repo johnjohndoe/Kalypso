@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
 
 /**
  * @author Gernot Belger
@@ -55,9 +54,6 @@ public class WaterBodyCodeLabelProvider extends ColumnLabelProvider
   {
     if( element instanceof WaterBody )
       return ((WaterBody) element).getName();
-
-    if( element instanceof WaterBodyTreeNode )
-      return ((WaterBodyTreeNode) element).getWaterBody().getName();
 
     return StringUtils.EMPTY;
   }

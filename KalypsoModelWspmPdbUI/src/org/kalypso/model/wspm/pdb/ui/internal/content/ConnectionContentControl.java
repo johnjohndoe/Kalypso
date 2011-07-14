@@ -40,19 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.events.TreeListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -60,12 +65,14 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.eclipse.ui.menus.IMenuService;
+import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
@@ -75,6 +82,8 @@ import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
  */
 public class ConnectionContentControl extends Composite
 {
+  private static final String TOOLBAR_URI = "toolbar:org.kalypso.model.wspm.pdb.ui.content"; //$NON-NLS-1$
+
   private final IJobChangeListener m_refreshJobListener = new JobChangeAdapter()
   {
     @Override
@@ -94,14 +103,18 @@ public class ConnectionContentControl extends Composite
 
   private ColumnsResizeControlListener m_treeListener;
 
-  public ConnectionContentControl( final FormToolkit toolkit, final Section parent, final IPdbConnection connection, final PdbWspmProject project )
+  private final IServiceLocator m_serviceLocator;
+
+  public ConnectionContentControl( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Section parent, final IPdbConnection connection, final PdbWspmProject project )
   {
     super( parent, SWT.NONE );
+
+    m_serviceLocator = serviceLocator;
 
     m_project = project;
 
     m_refreshJob = new RefreshContentJob( connection );
-    m_refreshJob.setUser( true );
+    m_refreshJob.setSystem( true );
     m_refreshJob.addJobChangeListener( m_refreshJobListener );
 
     GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( this );
@@ -115,16 +128,17 @@ public class ConnectionContentControl extends Composite
     createTree( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createActions();
 
-    final CheckoutAction checkoutAction = new CheckoutAction( this );
-    ActionHyperlink.createHyperlink( toolkit, this, SWT.PUSH, checkoutAction ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
     refresh( null );
   }
 
   @Override
   public void dispose( )
   {
-    resetInput();
+    setInput( null );
+
+    final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
+    service.releaseContributions( m_manager );
+    m_manager.dispose();
 
     super.dispose();
   }
@@ -142,6 +156,8 @@ public class ConnectionContentControl extends Composite
     tree.setHeaderVisible( true );
     m_viewer = new TreeViewer( tree );
     m_viewer.setUseHashlookup( true );
+    m_viewer.setContentProvider( new ByWaterBodyContentProvider() );
+    m_viewer.setInput( PdbLabelProvider.PENDING );
 
     final ViewerColumn nameColumn = StatesViewer.createNameColumn( m_viewer );
     WaterBodyViewer.createNameColumn( m_viewer );
@@ -152,7 +168,15 @@ public class ConnectionContentControl extends Composite
     m_treeListener = new ColumnsResizeControlListener();
     tree.addControlListener( m_treeListener );
 
-    m_viewer.setContentProvider( new ByWaterBodyContentProvider() );
+    m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        handleSelectionChanged( (IStructuredSelection) event.getSelection() );
+      }
+    } );
+
     tree.addTreeListener( new TreeListener()
     {
       @Override
@@ -171,6 +195,14 @@ public class ConnectionContentControl extends Composite
     return tree;
   }
 
+  protected void handleSelectionChanged( final IStructuredSelection selection )
+  {
+    /* Preserve selection from user, i.e. if the selection is changed during refresh, use that new selection */
+    final ElementSelector selector = new ElementSelector();
+    selector.setElemensToSelect( selection.toArray() );
+    m_refreshJob.setElementToSelect( selector );
+  }
+
   private void createActions( )
   {
     m_manager.add( new RefreshAction( this ) );
@@ -178,52 +210,71 @@ public class ConnectionContentControl extends Composite
     m_manager.add( new CollapseAllAction( this ) );
     m_manager.add( new Separator() );
 
+    final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
+    service.populateContributionManager( m_manager, TOOLBAR_URI );
+
     m_manager.update( true );
   }
 
   public void refresh( final ElementSelector elementToSelect )
   {
+    // TODO: it would also be nice to directly update any changed elements
+    // Hm, maybe we should directly always work on the current state?
+
+    applySelection( elementToSelect );
+
     m_refreshJob.cancel();
 
-    resetInput();
+    final Font italicFont = JFaceResources.getFontRegistry().getItalic( JFaceResources.DIALOG_FONT );
+    m_viewer.getControl().setFont( italicFont );
 
-    m_refreshJob.setElementToSelect( elementToSelect );
-    m_refreshJob.schedule( 100 );
+    // m_refreshJob.setElementToSelect( elementToSelect );
+    m_refreshJob.schedule( 500 );
   }
 
-  private void resetInput( )
+  protected synchronized void setInput( final Object input )
   {
-    // TODO:maybe we should keep input until new one is loaded?
-
     final Object oldInput = m_viewer.getInput();
     if( oldInput instanceof ConnectionInput )
       ((ConnectionInput) oldInput).dispose();
 
-    m_viewer.setInput( PdbLabelProvider.PENDING );
+    m_viewer.setInput( input );
     refreshColumnSizes();
   }
 
   protected void handleRefreshDone( )
   {
-    final Object oldInput = m_viewer.getInput();
+    final ConnectionInput input = m_refreshJob.getInput();
+    final ElementSelector selector = m_refreshJob.getElementToSelect();
 
-    try
+    final TreeViewer viewer = m_viewer;
+    final Runnable operation = new Runnable()
     {
-      final ConnectionInput input = m_refreshJob.getInput();
-      ViewerUtilities.setInput( m_viewer, input, true );
+      @Override
+      public void run( )
+      {
+        setInput( input );
 
-      final ElementSelector selector = m_refreshJob.getElementToSelect();
-      final Object element = selector == null ? null : selector.findElement( input );
-      if( element != null )
-        ViewerUtilities.setSelection( m_viewer, new StructuredSelection( element ), true, true );
+        final Font normalFont = JFaceResources.getFontRegistry().get( JFaceResources.DIALOG_FONT );
+        viewer.getControl().setFont( normalFont );
 
-      refreshColumnSizes();
-    }
-    finally
-    {
-      if( oldInput instanceof ConnectionInput )
-        ((ConnectionInput) oldInput).dispose();
-    }
+        applySelection( selector );
+      }
+    };
+    ViewerUtilities.execute( m_viewer, operation, true );
+  }
+
+  protected void applySelection( final ElementSelector selector )
+  {
+    final Object input = m_viewer.getInput();
+    if( !(input instanceof ConnectionInput) )
+      return;
+
+    final Object[] element = selector == null ? ArrayUtils.EMPTY_OBJECT_ARRAY : selector.getElements( (ConnectionInput) input );
+    if( element != null )
+      ViewerUtilities.setSelection( m_viewer, new StructuredSelection( element ), true, true );
+
+    refreshColumnSizes();
   }
 
   public IStructuredSelection getSelection( )
@@ -244,5 +295,17 @@ public class ConnectionContentControl extends Composite
   public TreeViewer getTreeViewer( )
   {
     return m_viewer;
+  }
+
+  public IWaterBodyStructure getStructure( )
+  {
+    if( m_viewer == null )
+      return null;
+
+    final ConnectionInput input = (ConnectionInput) m_viewer.getInput();
+    if( input == null )
+      return null;
+
+    return input.getStructure();
   }
 }

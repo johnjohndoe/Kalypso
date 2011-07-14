@@ -52,15 +52,9 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.SaveObjectOperation;
-import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * @author Gernot Belger
@@ -85,7 +79,6 @@ public class AddWaterBodyAction extends UpdateableAction
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
     final WaterBody newWaterBody = new WaterBody();
-    // newWaterBody.setRiverline( createLine() );
 
     final EditWaterBodyWizard wizard = new EditWaterBodyWizard( m_viewer.getExistingWaterbodies(), newWaterBody, Mode.NEW );
     wizard.setWindowTitle( "Create New Water Body" );
@@ -105,22 +98,6 @@ public class AddWaterBodyAction extends UpdateableAction
         final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
         new StatusDialog2( shell, status, wizard.getWindowTitle() ).open();
       }
-    }
-  }
-
-  private LineString createLine( )
-  {
-    try
-    {
-      final PdbInfo info = new PdbInfo( m_session );
-      final int srid = info.getSRID();
-      final GeometryFactory factory = new GeometryFactory( new PrecisionModel(), srid );
-      return factory.createLineString( (Coordinate[]) null );
-    }
-    catch( final PdbConnectException e )
-    {
-      e.printStackTrace();
-      return null;
     }
   }
 

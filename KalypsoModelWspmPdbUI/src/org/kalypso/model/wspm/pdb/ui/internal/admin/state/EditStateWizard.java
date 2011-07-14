@@ -47,22 +47,34 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
 /**
  * @author Gernot Belger
  */
-public class EditStateWizard extends Wizard
+public class EditStateWizard extends Wizard implements IStatesProvider
 {
   private final State m_state;
 
+  private final State[] m_existingState;
+
   public EditStateWizard( final State[] existingState, final State state )
   {
+    m_existingState = existingState;
     m_state = state;
 
     setWindowTitle( "Edit State" );
 
-    addPage( new EditStatePage( "editState", m_state, existingState, Mode.EDIT ) ); //$NON-NLS-1$
+    final EditStatePage editStatePage = new EditStatePage( "editState", m_state, this, Mode.EDIT ); //$NON-NLS-1$
+    editStatePage.setTitle( "Edit State Properties" );
+    editStatePage.setDescription( "Change the properties of the edited state." );
+    addPage( editStatePage );
   }
 
   @Override
   public boolean performFinish( )
   {
     return true;
+  }
+
+  @Override
+  public State[] getStates( )
+  {
+    return m_existingState;
   }
 }

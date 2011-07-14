@@ -40,34 +40,68 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
  */
 public class ElementSelector
 {
-  private String m_waterBodyName;
+  private final Collection<String> m_waterBodyNames = new ArrayList<String>();
 
-  private String m_stateName;
+  private final Collection<String> m_stateNames = new ArrayList<String>();
 
-  public void setWaterBodyNameForSelection( final String waterBodyName )
+  private final Collection<String> m_eventNames = new ArrayList<String>();
+
+  public void addWaterBodyName( final String waterBodyName )
   {
-    m_waterBodyName = waterBodyName;
+    m_waterBodyNames.add( waterBodyName );
   }
 
-  public void setStateNameForSelection( final String stateName )
+  public void addStateName( final String stateName )
   {
-    m_stateName = stateName;
+    m_stateNames.add( stateName );
   }
 
-  public Object findElement( final ConnectionInput input )
+  public void addEventName( final String eventName )
   {
-    if( m_waterBodyName != null )
-      return input.getWaterBody( m_waterBodyName );
+    m_eventNames.add( eventName );
+  }
 
-    if( m_stateName != null )
-      return input.getState( m_stateName );
+  public Object[] getElements( final ConnectionInput input )
+  {
+    final Collection<Object> elements = new ArrayList<Object>();
 
-    return null;
+    for( final String waterBodyName : m_waterBodyNames )
+      elements.add( input.getWaterBody( waterBodyName ) );
+
+    for( final String stateName : m_stateNames )
+      elements.add( input.getState( stateName ) );
+
+    for( final String eventName : m_eventNames )
+      elements.add( input.getEvent( eventName ) );
+
+    /* null might have been added, remove it now */
+    elements.remove( null );
+
+    return elements.toArray( new Object[elements.size()] );
+  }
+
+  public void setElemensToSelect( final Object[] elements )
+  {
+    for( final Object element : elements )
+    {
+      if( element instanceof WaterBody )
+        addWaterBodyName( ((WaterBody) element).getName() );
+      else if( element instanceof State )
+        addStateName( ((State) element).getName() );
+      else if( element instanceof Event )
+        addEventName( ((Event) element).getName() );
+    }
   }
 }

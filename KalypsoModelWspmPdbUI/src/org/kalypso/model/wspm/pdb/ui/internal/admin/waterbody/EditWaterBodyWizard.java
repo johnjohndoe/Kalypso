@@ -51,11 +51,21 @@ public class EditWaterBodyWizard extends Wizard
 {
   private final WaterBody m_waterBody;
 
+  private final WaterBody[] m_existingWaterbodies;
+
+  private final Mode m_mode;
+
   public EditWaterBodyWizard( final WaterBody[] existingWaterbodies, final WaterBody waterBody, final Mode mode )
   {
+    m_existingWaterbodies = existingWaterbodies;
     m_waterBody = waterBody;
+    m_mode = mode;
+  }
 
-    addPage( new EditWaterBodyPage( "editWaterBody", m_waterBody, existingWaterbodies, mode ) ); //$NON-NLS-1$
+  @Override
+  public void addPages( )
+  {
+    addPage( new EditWaterBodyPage( "editWaterBody", m_waterBody, m_existingWaterbodies, m_mode ) ); //$NON-NLS-1$
   }
 
   @Override

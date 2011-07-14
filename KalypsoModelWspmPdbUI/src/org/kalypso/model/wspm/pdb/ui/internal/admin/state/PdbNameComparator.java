@@ -45,7 +45,6 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode;
 
 /**
  * @author Gernot Belger
@@ -69,7 +68,7 @@ public class PdbNameComparator extends ViewerComparator
 
   private int getOrder( final Object element )
   {
-    if( element instanceof WaterBodyTreeNode )
+    if( element instanceof WaterBody )
       return 0;
 
     if( element instanceof State )
@@ -83,9 +82,6 @@ public class PdbNameComparator extends ViewerComparator
 
   private String getName( final Object element )
   {
-    if( element instanceof WaterBodyTreeNode )
-      return getName( ((WaterBodyTreeNode) element).getWaterBody() );
-
     if( element instanceof WaterBody )
       return ((WaterBody) element).getLabel();
 

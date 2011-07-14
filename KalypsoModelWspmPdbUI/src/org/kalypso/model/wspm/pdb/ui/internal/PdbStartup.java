@@ -53,7 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbView;
+import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.InitPdbDataOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.light.WspmLightPerspective;

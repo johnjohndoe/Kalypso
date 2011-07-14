@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 
 /**
@@ -61,6 +62,10 @@ public class RefreshAction extends Action
   @Override
   public void run( )
   {
-    m_control.refresh( null );
+    final ElementSelector selector = new ElementSelector();
+    final IStructuredSelection selection = (IStructuredSelection) m_control.getTreeViewer().getSelection();
+    selector.setElemensToSelect( selection.toArray() );
+
+    m_control.refresh( selector );
   }
 }

@@ -20,7 +20,7 @@
       <view
             allowMultiple="false"
             category="org.kalypso.model.wspm.pdb.ui.viewCategory"
-            class="org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbView"
+            class="org.kalypso.model.wspm.pdb.ui.internal.content.PdbView"
             icon="icons/pdb.gif"
             id="PdbView"
             name="Profildatenbank"
@@ -164,38 +164,147 @@
      </propertyTester>
   </extension>
   
-  <!-- Commands on PDB elements -->
-  <extension point="org.eclipse.ui.commands">
-     <category id="pdbCommands" name="PDB Commands"/>
-     <command categoryId="pdbCommands" description="Edit the properties of a water body" id="org.kalypso.model.wspm.pdb.ui.command.editWaterBody" name="Edit..."/>
-  </extension>
-  <extension point="org.eclipse.ui.commandImages">
-     <image commandId="org.kalypso.model.wspm.pdb.ui.command.editWaterBody" icon="icons/editCommand.gif"/>
-  </extension>
-  <extension point="org.eclipse.ui.handlers">
-     <handler
-           class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyHandler"
-           commandId="org.kalypso.model.wspm.pdb.ui.command.editWaterBody">
-        <enabledWhen>
+  <extension point="org.eclipse.core.expressions.definitions">
+     <definition id="isPdbViewVisible">
+          <with variable="activeWorkbenchWindow">
+             <test property="org.kalypso.ui.window.isViewVisible" value="PdbView"/>
+          </with>
+ </definition>
+     <definition id="onePdbElementSelected">
            <and>
-              <with variable="activePart">
-                 <instanceof value="org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer"/>
-              </with>
+              <reference definitionId="isPdbViewVisible"/>
               <with variable="selection">
                  <and> 
                     <count value="1"/>
                     <iterate ifEmpty="false" operator="and">
-                       <instanceof value="org.kalypso.model.wspm.pdb.internal.wspm.WaterBodyTreeNode"/>
+                        <or>
+                           <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.WaterBody"/>
+                           <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.State"/>
+                           <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.Event"/>
+                       </or>
                     </iterate>
                  </and>
               </with>
            </and>
+     </definition>
+  </extension>
+  
+  <extension point="org.kalypso.ui.importWizards">
+      <category id="pdbWizardsCategory" name="Cross Section Database"/>
+      <wizard
+            category="pdbWizardsCategory"
+            class="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard"
+            icon="icons/state.gif"
+            id="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard"
+            name="Import GAF">
+        <description>Imports a new state from a GAF file</description>
+      </wizard>
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="Import Water Bodies" icon="icons/waterBody.gif">
+        <description>Imports or updates water bodies from a shape file</description>
+      </wizard>
+  </extension>
+  <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard">
+       <enablement>
+              <reference definitionId="isPdbViewVisible"/>
+       </enablement>
+    </wizardEnablement>
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard">
+       <enablement>
+              <reference definitionId="isPdbViewVisible"/>
+       </enablement>
+    </wizardEnablement>
+  </extension>
+  
+  <!-- Commands on PDB elements -->
+  <extension point="org.eclipse.ui.commands">
+     <category id="pdbCommands" name="PDB Commands"/>
+     <command categoryId="pdbCommands" description="Edit the properties of the selected element" id="org.kalypso.model.wspm.pdb.ui.command.editElement" name="Edit..."/>
+     <command categoryId="pdbCommands" description="Remove the selected element" id="org.kalypso.model.wspm.pdb.ui.command.removeElement" name="Remove..."/>
+     <command
+           categoryId="pdbCommands"
+           description="Creates a new water body and adds it to the database"
+           id="org.kalypso.model.wspm.pdb.ui.command.addWaterBody"
+           name="Create Water Bdoy">
+     </command>
+     <command
+           categoryId="pdbCommands"
+           description="Download the selected items into the local workspace."
+           id="org.kalypso.model.wspm.pdb.ui.command.download"
+           name="Download">
+     </command>
+  </extension>
+  <extension point="org.eclipse.ui.commandImages">
+     <image commandId="org.kalypso.model.wspm.pdb.ui.command.editElement" icon="icons/editElement.gif"/>
+     <image commandId="org.kalypso.model.wspm.pdb.ui.command.removeElement" icon="icons/removeElement.png"/>
+     <image
+           commandId="org.kalypso.model.wspm.pdb.ui.command.addWaterBody"
+           icon="icons/createWaterBody.gif">
+     </image>
+     <image
+           commandId="org.kalypso.model.wspm.pdb.ui.command.download"
+           icon="icons/download.gif">
+     </image>
+  </extension>
+  <extension point="org.eclipse.ui.handlers">
+     <handler class="org.kalypso.model.wspm.pdb.ui.internal.content.EditElementHandler" commandId="org.kalypso.model.wspm.pdb.ui.command.editElement">
+        <enabledWhen>
+           <reference definitionId="onePdbElementSelected"/>
+        </enabledWhen>
+     </handler>
+     <handler class="org.kalypso.model.wspm.pdb.ui.internal.content.RemoveElementHandler" commandId="org.kalypso.model.wspm.pdb.ui.command.removeElement">
+        <enabledWhen>
+           <reference definitionId="onePdbElementSelected"/>
+        </enabledWhen>
+     </handler>
+     <handler
+           class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.AddWaterBodyHandler"
+           commandId="org.kalypso.model.wspm.pdb.ui.command.addWaterBody">
+        <enabledWhen>
+           <reference
+                 definitionId="isPdbViewVisible">
+           </reference>
+        </enabledWhen>
+     </handler>
+     <handler class="org.kalypso.model.wspm.pdb.ui.internal.content.CheckoutPdbHandler"
+           commandId="org.kalypso.model.wspm.pdb.ui.command.download">
+        <enabledWhen>
+           <reference definitionId="isPdbViewVisible"/>
         </enabledWhen>
      </handler>
   </extension>
   <extension point="org.eclipse.ui.menus">
      <menuContribution allPopups="false" locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-        <command commandId="org.kalypso.model.wspm.pdb.ui.command.editWaterBody" style="push">
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.addWaterBody" style="push">
+           <visibleWhen checkEnabled="true"/>
+        </command>
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.editElement" style="push">
+           <visibleWhen checkEnabled="true"/>
+        </command>
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.removeElement" style="push">
+           <visibleWhen checkEnabled="true"/>
+        </command>
+        <separator name="pdbElementsEnd" visible="true"/>
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.download" style="push">
+           <visibleWhen checkEnabled="true"/>
+        </command>
+     </menuContribution>
+     <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.pdb.ui.content">
+        <command commandId="org.kalypso.ui.command.import" style="push">
+           <visibleWhen checkEnabled="true"/>
+        </command>
+        <separator name="pdbElements" visible="true"/>
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.addWaterBody" style="push">
+           <visibleWhen checkEnabled="true"/>
+        </command>
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.editElement" style="push">
+           <visibleWhen checkEnabled="true"/>
+        </command>
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.removeElement" style="push">
+           <visibleWhen checkEnabled="true"/>
+        </command>
+        <separator name="pdbElementsEnd" visible="true"/>
+        <command commandId="org.kalypso.model.wspm.pdb.ui.command.download" style="push">
            <visibleWhen checkEnabled="true"/>
         </command>
      </menuContribution>

@@ -72,10 +72,14 @@ public class RefreshContentJob extends Job
   {
     monitor.beginTask( "Refresh...", IProgressMonitor.UNKNOWN );
 
+    Session session = null;
     try
     {
-      final Session session = m_connection.openSession();
+      session = m_connection.openSession();
       m_input = new ConnectionInput( session );
+      // REMARK: we need to leave the session open here, else lazy initialization of elements
+      // will not work. The session is closed when the input is disposed.
+      // session.close();
       return Status.OK_STATUS;
     }
     catch( final PdbConnectException e )
@@ -85,6 +89,8 @@ public class RefreshContentJob extends Job
     }
     finally
     {
+      // REMARK: se above
+      // PdbUtils.closeSessionQuietly( session );
       monitor.done();
     }
   }
@@ -94,12 +100,12 @@ public class RefreshContentJob extends Job
     return m_input;
   }
 
-  public void setElementToSelect( final ElementSelector elementToSelect )
+  public synchronized void setElementToSelect( final ElementSelector elementToSelect )
   {
     m_elementToSelect = elementToSelect;
   }
 
-  public ElementSelector getElementToSelect( )
+  public synchronized ElementSelector getElementToSelect( )
   {
     return m_elementToSelect;
   }
