@@ -49,7 +49,6 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.databinding.observable.set.WritableSet;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.hibernate.Session;
@@ -107,8 +106,6 @@ public class ImportWaterBodiesData extends AbstractModelObject
 
   private final IPdbConnection m_connection;
 
-  private boolean m_isInitialized = false;
-
   public ImportWaterBodiesData( final IPdbConnection connection )
   {
     m_connection = connection;
@@ -116,10 +113,6 @@ public class ImportWaterBodiesData extends AbstractModelObject
 
   public void init( final IDialogSettings dialogSettings ) throws PdbConnectException
   {
-    Assert.isTrue( !m_isInitialized );
-
-    m_isInitialized = true;
-
     Session session = null;
     try
     {
@@ -227,10 +220,5 @@ public class ImportWaterBodiesData extends AbstractModelObject
   public WaterBody[] getExistingWaterBodies( )
   {
     return m_existingWaterbodies;
-  }
-
-  public boolean isInit( )
-  {
-    return m_isInitialized;
   }
 }
