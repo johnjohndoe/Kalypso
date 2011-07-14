@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
+import org.kalypso.model.wspm.pdb.db.constants.StateConstants;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -132,7 +133,7 @@ public class ImportGafData extends AbstractModelObject
 
     /* Pre init measurement date to now */
     m_state.setMeasurementDate( new Date() );
-    m_state.setIsstatezero( State.ZERO_STATE_ON );
+    m_state.setIsstatezero( StateConstants.ZERO_STATE_ON );
     m_state.setDescription( StringUtils.EMPTY );
     m_state.setEditingUser( connection.getSettings().getUsername() );
   }
@@ -243,8 +244,7 @@ public class ImportGafData extends AbstractModelObject
       m_state.setName( String.format( "Measurement %s %d", FilenameUtils.removeExtension( filename ), thisYear ) );
 
       m_waterlevelEvent.setSource( m_state.getSource() );
-      /* No need for filename/river-name here, as name is unique within water body */
-      m_waterlevelEvent.setName( String.format( "Measurement %d", thisYear ) );
+      /* No need to set evetn name hee, it will be updated before event-page is displayed */
 
       final String logFilename = FilenameUtils.removeExtension( filename ) + ".log";//$NON-NLS-1$
       logFile = new File( m_gafFile.getParent(), logFilename );
