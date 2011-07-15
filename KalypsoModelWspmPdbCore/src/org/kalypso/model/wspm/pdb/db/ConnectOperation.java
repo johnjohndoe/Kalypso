@@ -61,6 +61,8 @@ public class ConnectOperation implements ICoreRunnableWithProgress
 
   private IPdbConnection m_connection;
 
+  private PdbInfo m_info;
+
   public ConnectOperation( final IPdbSettings settings )
   {
     m_settings = settings;
@@ -80,13 +82,15 @@ public class ConnectOperation implements ICoreRunnableWithProgress
       m_connection = m_settings.createConnection();
       m_connection.connect();
 
-      monitor.subTask( "checking database version..." );
+      // monitor.subTask( "checking database version..." );
 
       session = m_connection.openSession();
 
-      // TODO: allow to recover if validation fails: create or update database
-      final PdbInfo info = new PdbInfo( session );
-      info.validate();
+      // TODO: remember info, for later validation by test-button -> maybe present second button: 'create/update db'
+
+      // FIXME: if info table is missing, we got lost here....
+      m_info = new PdbInfo( session );
+
       session.close();
 
       return Status.OK_STATUS;
@@ -108,5 +112,10 @@ public class ConnectOperation implements ICoreRunnableWithProgress
   public IPdbConnection getConnection( )
   {
     return m_connection;
+  }
+
+  public PdbInfo getInfo( )
+  {
+    return m_info;
   }
 }

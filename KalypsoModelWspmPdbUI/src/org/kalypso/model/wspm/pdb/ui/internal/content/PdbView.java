@@ -57,6 +57,9 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
@@ -66,11 +69,13 @@ import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
@@ -100,6 +105,15 @@ public class PdbView extends ViewPart implements IConnectionViewer
     }
   };
 
+  private final IHyperlinkListener m_statusListener = new HyperlinkAdapter()
+  {
+    @Override
+    public void linkActivated( final HyperlinkEvent e )
+    {
+      openConnectionStatus();
+    }
+  };
+
   private Form m_form;
 
   private FormToolkit m_toolkit;
@@ -113,6 +127,9 @@ public class PdbView extends ViewPart implements IConnectionViewer
   private boolean m_autoConnectWasDone = false;
 
   private ConnectionViewer m_connectionViewer;
+
+  private IStatus m_connectionStatus;
+
 
   public PdbView( )
   {
@@ -155,6 +172,8 @@ public class PdbView extends ViewPart implements IConnectionViewer
 
     m_form.setImage( getFormImage() );
     m_form.setText( getFormTitel() );
+
+    m_form.addMessageHyperlinkListener( m_statusListener );
 
     final IToolBarManager formToolbar = m_form.getToolBarManager();
     formToolbar.add( m_disconnectAction );
@@ -212,7 +231,8 @@ public class PdbView extends ViewPart implements IConnectionViewer
       final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
       final IStatus result = ProgressUtilities.busyCursorWhile( operation );
       final IPdbConnection connection = operation.getConnection();
-      setConnection( connection, result );
+      final PdbInfo info = operation.getInfo();
+      setConnection( connection, result, info );
 
       return result;
     }
@@ -230,7 +250,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
       m_form.setFocus();
   }
 
-  synchronized void setConnection( final IPdbConnection connection, final IStatus status )
+  synchronized void setConnection( final IPdbConnection connection, final IStatus status, final PdbInfo info )
   {
     Assert.isTrue( connection == null || connection.isConnected() );
 
@@ -252,15 +272,33 @@ public class PdbView extends ViewPart implements IConnectionViewer
       e.printStackTrace();
     }
 
-    m_pdbConnection = connection;
+    m_pdbConnection = validateConnection( connection, status, info );
     final String settingsName = m_pdbConnection == null ? null : m_pdbConnection.getSettings().getName();
     m_autoConnectData.setAutoConnectName( settingsName );
 
     m_updateControlJob.schedule();
   }
 
+  private IPdbConnection validateConnection( final IPdbConnection connection, final IStatus status, final PdbInfo info )
+  {
+    if( connection == null )
+      return null;
+
+    // TODO: use info to show some information to the user
+    final PdbUpdater checker = new PdbUpdater( connection, info, getSite().getShell() );
+    final IStatus checkResult = checker.execute();
+    if( checkResult.isOK() )
+      return connection;
+    else
+    {
+      PdbUtils.closeQuietly( connection );
+      return null;
+    }
+  }
+
   private void setStatus( final IStatus status )
   {
+    m_connectionStatus = status;
     MessageUtilitites.setMessage( m_form, status );
   }
 
@@ -367,5 +405,13 @@ public class PdbView extends ViewPart implements IConnectionViewer
       return null;
 
     return m_connectionViewer.getProject();
+  }
+
+  protected void openConnectionStatus( )
+  {
+    if( m_connectionStatus == null )
+      return;
+
+    new StatusDialog2( getSite().getShell(), m_connectionStatus, "Connection Status" ).open();
   }
 }

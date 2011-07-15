@@ -49,6 +49,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
+import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
@@ -57,7 +58,7 @@ public class PdbInfo
 {
   public static final int UNKNOWN_SRID = -1;
 
-  private static final Object CURRENT_VERSION = "0.0.2"; //$NON-NLS-1$
+  public static final Version CURRENT_VERSION = new Version( "0.0.2" ); //$NON-NLS-1$
 
   private final String PROPERTY_VERSION = "Version"; //$NON-NLS-1$
 
@@ -77,9 +78,13 @@ public class PdbInfo
     }
   }
 
-  public String getVersion( )
+  public Version getVersion( )
   {
-    return m_properties.getProperty( PROPERTY_VERSION );
+    final String version = m_properties.getProperty( PROPERTY_VERSION );
+    if( StringUtils.isBlank( version ) )
+      return null;
+
+    return new Version( version );
   }
 
   public int getSRID( )
@@ -96,20 +101,20 @@ public class PdbInfo
     return m_properties.getProperty( PROPERTY_DOCUMENT_SERVER );
   }
 
-  public void validate( ) throws PdbConnectException
-  {
-    final String version = getVersion();
-    if( !CURRENT_VERSION.equals( version ) )
-    {
-      final String message = String.format( "Unknown Version of PDB: %s (should be %s)", version, CURRENT_VERSION );
-      throw new PdbConnectException( message );
-    }
-
-    final int srid = getSRID();
-    if( UNKNOWN_SRID == srid )
-    {
-      final String message = String.format( "Failed to determine SRID: %s", m_properties.get( PROPERTY_SRID ) );
-      throw new PdbConnectException( message );
-    }
-  }
+// public void validate( ) throws PdbConnectException
+// {
+// final String version = getVersion();
+// if( !CURRENT_VERSION.equals( version ) )
+// {
+// final String message = String.format( "Unknown Version of PDB: %s (should be %s)", version, CURRENT_VERSION );
+// throw new PdbConnectException( message );
+// }
+//
+// final int srid = getSRID();
+// if( UNKNOWN_SRID == srid )
+// {
+// final String message = String.format( "Failed to determine SRID: %s", m_properties.get( PROPERTY_SRID ) );
+// throw new PdbConnectException( message );
+// }
+// }
 }
