@@ -49,6 +49,7 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 
 /**
  * @author Gernot Belger
@@ -82,6 +83,7 @@ public class ConnectPdbAction extends Action
       new StatusDialog2( shell, result, "Open Connection" ).open();
 
     final IPdbConnection connection = operation.getConnection();
-    m_view.setConnection( connection, result );
+    final PdbInfo info = operation.getInfo();
+    m_view.setConnection( connection, result, info );
   }
 }

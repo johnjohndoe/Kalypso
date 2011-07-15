@@ -4,8 +4,6 @@
 --   type:      Oracle Database 10g
 
 
-
-
 CREATE TABLE Document
     (
      ID numeric (20)  NOT NULL ,
