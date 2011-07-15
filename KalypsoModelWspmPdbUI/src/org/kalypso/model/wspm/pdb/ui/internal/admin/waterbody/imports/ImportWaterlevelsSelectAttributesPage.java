@@ -108,7 +108,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
   private void createStationControl( final Composite parent )
   {
-    createAttributeControl( "Station", WaterlevelFixation.PROPERTY_STATION, parent, false );
+    createAttributeControl( WaterlevelFixationStrings.STATION, WaterlevelFixation.PROPERTY_STATION, parent, false );
 
     /* No default control: code must be taken from shape */
     new Label( parent, SWT.NONE );
@@ -116,7 +116,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
   private void createWaterlevelControl( final Composite parent )
   {
-    createAttributeControl( "Water Level", WaterlevelFixation.PROPERTY_WATERLEVEL, parent, false );
+    createAttributeControl( WaterlevelFixationStrings.WATERLEVEL, WaterlevelFixation.PROPERTY_WATERLEVEL, parent, false );
 
     /* No default control: code must be taken from shape */
     new Label( parent, SWT.NONE );
@@ -124,7 +124,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
   private void createDischargeControl( final Composite parent, final IDataBinding binding )
   {
-    final ImportAttributeInfo<BigDecimal> info = createAttributeControl( "Discharge", WaterlevelFixation.PROPERTY_DISCHARGE, parent, true );
+    final ImportAttributeInfo<BigDecimal> info = createAttributeControl( WaterlevelFixationStrings.DISCHARGE, WaterlevelFixation.PROPERTY_DISCHARGE, parent, true );
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -142,7 +142,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
   private void createMeasurementControl( final Composite parent, final IDataBinding binding )
   {
-    final ImportAttributeInfo<Date> info = createAttributeControl( "Measurement", WaterlevelFixation.PROPERTY_MEASURMENT_DATE, parent, true );
+    final ImportAttributeInfo<Date> info = createAttributeControl( WaterlevelFixationStrings.MEASUREMENT, WaterlevelFixation.PROPERTY_MEASURMENT_DATE, parent, true );
 
     final DateTime measurementField = new DateTime( parent, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN );
     measurementField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -170,7 +170,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
   private void createDescriptionControl( final Composite parent, final IDataBinding binding )
   {
-    final ImportAttributeInfo<String> info = createAttributeControl( "Description", WaterlevelFixation.PROPERTY_DESCRIPTION, parent, true );
+    final ImportAttributeInfo<String> info = createAttributeControl( WaterlevelFixationStrings.DESCRIPTION, WaterlevelFixation.PROPERTY_DESCRIPTION, parent, true );
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

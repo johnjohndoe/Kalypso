@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -79,8 +79,6 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
 
   private final ImportWaterLevelsData m_data;
 
-  private DataBindingContext m_binding;
-
   private CheckboxTableViewer m_viewer;
 
   protected ImportWaterlevelsPreviewPage( final String pageName, final ImportWaterLevelsData data )
@@ -99,8 +97,6 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
     final Composite panel = new Composite( parent, SWT.NONE );
     setControl( panel );
     GridLayoutFactory.swtDefaults().applyTo( panel );
-
-    m_binding = new DataBindingContext();
 
     createWaterTable( panel );
     createSelectButtons( panel );
@@ -121,18 +117,18 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setCheckStateProvider( new EventFixationsCheckstateProvider( waterlevelEvent ) );
 
-    createWaterlevelColumn( m_viewer, "Station", WaterlevelFixation.PROPERTY_STATION, "%s" );
-    createWaterlevelColumn( m_viewer, "Water Level", WaterlevelFixation.PROPERTY_WATERLEVEL, "%s" );
-    createWaterlevelColumn( m_viewer, "Discharge", WaterlevelFixation.PROPERTY_DISCHARGE, "%s" );
-    createWaterlevelColumn( m_viewer, "Measurement", WaterlevelFixation.PROPERTY_MEASURMENT_DATE, "%s" );
-    createWaterlevelColumn( m_viewer, "Description", WaterlevelFixation.PROPERTY_DESCRIPTION, "%s" );
-
     final TableViewerColumn validColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     validColumn.getColumn().setText( "Status" );
     validColumn.getColumn().setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( validColumn.getColumn() );
     ColumnViewerSorter.registerSorter( validColumn, new ViewerComparator() );
     validColumn.setLabelProvider( new WaterLevelImportStatusLabelProvider( m_waterlevelStatus ) );
+
+    createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.STATION, WaterlevelFixation.PROPERTY_STATION, "%s" );
+    createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.WATERLEVEL, WaterlevelFixation.PROPERTY_WATERLEVEL, "%s" );
+    createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.DISCHARGE, WaterlevelFixation.PROPERTY_DISCHARGE, "%s" );
+    createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.MEASUREMENT, WaterlevelFixation.PROPERTY_MEASURMENT_DATE, "%s" );
+    createWaterlevelColumn( m_viewer, WaterlevelFixationStrings.DESCRIPTION, WaterlevelFixation.PROPERTY_DESCRIPTION, "%s" );
 
     m_viewer.addCheckStateListener( new ICheckStateListener()
     {
@@ -205,10 +201,23 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
   @Override
   public void update( )
   {
-    m_data.getEvent().getWaterlevelFixations().clear();
+    final Set<WaterlevelFixation> checkedWaterlevels = m_data.getEvent().getWaterlevelFixations();
+    checkedWaterlevels.clear();
 
     final WaterlevelFixation[] waterLevels = readWaterLevels();
+    if( waterLevels != null )
+    {
+      for( final WaterlevelFixation waterlevel : waterLevels )
+      {
+        final IStatus status = m_waterlevelStatus.get( waterlevel );
+        if( status == null || !status.matches( IStatus.ERROR ) )
+          checkedWaterlevels.add( waterlevel );
+      }
+    }
+
     m_viewer.setInput( waterLevels );
+
+    ColumnsResizeControlListener.refreshColumnsWidth( m_viewer.getTable() );
   }
 
   private WaterlevelFixation[] readWaterLevels( )

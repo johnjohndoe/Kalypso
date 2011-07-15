@@ -58,14 +58,19 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.ui.internal.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.event.EditEventPage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ChooseWaterPage;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
 
@@ -195,23 +200,23 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   @Override
   public boolean performFinish( )
   {
-    // FIXME
-// final WritableSet selectedWaterBodies = m_data.getSelectedWaterBodies();
-// final WaterBody[] waterBodies = (WaterBody[]) selectedWaterBodies.toArray( new WaterBody[selectedWaterBodies.size()]
-// );
-//
-// final ICoreRunnableWithProgress operation = new ImportWaterBodiesOperation( waterBodies, m_data );
-// final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
-// if( !status.isOK() )
-// new StatusDialog2( getShell(), status, getWindowTitle() );
-//
-// /* Select new element in tree */
-// final ElementSelector selector = new ElementSelector();
-// if( waterBodies.length > 0 )
-// selector.addWaterBodyName( waterBodies[0].getName() );
-// m_viewer.reload( selector );
-//
-// return !status.matches( IStatus.ERROR );
-    return true;
+    final Event event = m_data.getEvent();
+
+    final IPdbConnection connection = m_data.getConnection();
+    final String username = connection.getSettings().getUsername();
+    final IPdbOperation operation = new SaveEventOperation( event, username );
+
+    final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
+
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
+    if( !status.isOK() )
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+
+    /* Select new element in tree */
+    final ElementSelector selector = new ElementSelector();
+    selector.addEventName( event.getName() );
+    m_viewer.reload( selector );
+
+    return !status.matches( IStatus.ERROR );
   }
 }

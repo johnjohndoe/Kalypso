@@ -38,39 +38,60 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
-import java.text.DateFormat;
 import java.util.Date;
+import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.model.wspm.pdb.db.mapping.IElementWithDates;
+import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 
 /**
  * @author Gernot Belger
  */
-public class PdbMeasurementLabelProvider extends ColumnLabelProvider
+public class SaveEventOperation implements IPdbOperation
 {
-  private final DateFormat m_dateFormat = DateFormat.getDateInstance( DateFormat.MEDIUM );
+  private final Event m_event;
 
-  public PdbMeasurementLabelProvider( )
+  private final String m_username;
+
+  public SaveEventOperation( final Event event, final String username )
   {
-    m_dateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    m_event = event;
+    m_username = username;
   }
 
   @Override
-  public String getText( final Object element )
+  public String getLabel( )
   {
-    if( element instanceof IElementWithDates )
-    {
-      final IElementWithDates state = (IElementWithDates) element;
-      final Date measurementDate = state.getMeasurementDate();
-      if( measurementDate != null )
-        return m_dateFormat.format( measurementDate );
-    }
+    return "Saveevent";
+  }
 
-    return StringUtils.EMPTY;
+  @Override
+  public void execute( final Session session )
+  {
+    /* Prepare event for save */
+    final Date now = new Date();
+    m_event.setCreationDate( now );
+    m_event.setEditingDate( now );
+    m_event.setEditingUser( m_username );
+
+    session.save( m_event );
+
+    final Set<WaterlevelFixation> waterlevels = m_event.getWaterlevelFixations();
+    for( final WaterlevelFixation waterlevel : waterlevels )
+    {
+      waterlevel.setCreationDate( now );
+      waterlevel.setEditingDate( now );
+      waterlevel.setEditingUser( m_username );
+      waterlevel.setEvent( m_event );
+
+      if( waterlevel.getMeasurementDate() == null )
+        waterlevel.setMeasurementDate( m_event.getMeasurementDate() );
+
+      session.save( waterlevel );
+    }
   }
 }
