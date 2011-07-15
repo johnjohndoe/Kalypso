@@ -38,39 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
-
-import java.text.DateFormat;
-import java.util.Date;
-
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.model.wspm.pdb.db.mapping.IElementWithDates;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 /**
  * @author Gernot Belger
  */
-public class PdbMeasurementLabelProvider extends ColumnLabelProvider
+public interface WaterlevelFixationStrings
 {
-  private final DateFormat m_dateFormat = DateFormat.getDateInstance( DateFormat.MEDIUM );
+  String STATION = "Station [m]";
 
-  public PdbMeasurementLabelProvider( )
-  {
-    m_dateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-  }
+  String WATERLEVEL = "Water Level [mNN]";
 
-  @Override
-  public String getText( final Object element )
-  {
-    if( element instanceof IElementWithDates )
-    {
-      final IElementWithDates state = (IElementWithDates) element;
-      final Date measurementDate = state.getMeasurementDate();
-      if( measurementDate != null )
-        return m_dateFormat.format( measurementDate );
-    }
+  String DISCHARGE = "Discharge [m³/s]";
 
-    return StringUtils.EMPTY;
-  }
+  String MEASUREMENT = "Measurement";
+
+  String DESCRIPTION = "Description";
 }

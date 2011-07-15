@@ -177,7 +177,7 @@ public class ImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard,
     final ICoreRunnableWithProgress operation = new ImportWaterBodiesOperation( waterBodies, m_data );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
-      new StatusDialog2( getShell(), status, getWindowTitle() );
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
     /* Select new element in tree */
     final ElementSelector selector = new ElementSelector();

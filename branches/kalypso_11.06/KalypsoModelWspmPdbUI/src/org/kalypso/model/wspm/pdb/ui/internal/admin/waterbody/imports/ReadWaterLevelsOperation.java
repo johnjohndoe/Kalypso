@@ -52,6 +52,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -103,7 +105,10 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
         final Object[] data = shapeFile.getRow( row );
         final ISHPGeometry shape = shapeFile.getShape( row );
         final WaterlevelFixation wb = toWaterlevelFixation( shape, data, fields );
+
+        final IStatus valid = checkWaterlevel(wb);
         wbs.add( wb );
+        m_waterLevelStatus.put( wb, valid );
       }
     }
     catch( final CoreException e )
@@ -128,6 +133,24 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
     m_waterLevels = wbs.toArray( new WaterlevelFixation[wbs.size()] );
     return Status.OK_STATUS;
+  }
+
+  private IStatus checkWaterlevel( final WaterlevelFixation wb )
+  {
+    final IStatusCollector stati = new StatusCollector( WspmPdbUiPlugin.PLUGIN_ID );
+
+    final BigDecimal station = wb.getStation();
+    if( station == null )
+      stati.add( IStatus.ERROR, "Missing station value" );
+
+    final Point location = wb.getLocation();
+    if( location == null )
+      stati.add( IStatus.WARNING, "Missing geometry value" );
+
+    if( stati.size() == 1 )
+      return stati.getAllStati()[0];
+
+    return stati.asMultiStatusOrOK( "Mehrere Warnungen" );
   }
 
   public WaterlevelFixation[] getWaterBodies( )
@@ -164,11 +187,11 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     final Object value = data[fieldIndex];
 
     if( WaterlevelFixation.PROPERTY_STATION.equals( info.getProperty() ) )
-      return parseDecimal( value, field.getName() );
+      return parseDecimal( value, field.getName(), 4 );
     if( WaterlevelFixation.PROPERTY_WATERLEVEL.equals( info.getProperty() ) )
-      return parseDecimal( value, field.getName() );
+      return parseDecimal( value, field.getName(), 2 );
     if( WaterlevelFixation.PROPERTY_DISCHARGE.equals( info.getProperty() ) )
-      return parseDecimal( value, field.getName() );
+      return parseDecimal( value, field.getName(), 3 );
 
     if( WaterlevelFixation.PROPERTY_MEASURMENT_DATE.equals( info.getProperty() ) )
       return parseDate( value, field.getName() );
@@ -192,18 +215,18 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     throw new CoreException( status );
   }
 
-  private BigDecimal parseDecimal( final Object value, final String label ) throws CoreException
+  private BigDecimal parseDecimal( final Object value, final String label, final int scale ) throws CoreException
   {
     if( value == null )
       return null;
 
     if( value instanceof Number )
-      return new BigDecimal( ((Number) value).doubleValue() );
+      return new BigDecimal( ((Number) value).doubleValue() ).setScale( scale, BigDecimal.ROUND_HALF_UP );
 
     final String text = value.toString();
     try
     {
-      return new BigDecimal( text );
+      return new BigDecimal( text ).setScale( scale, BigDecimal.ROUND_HALF_UP );
     }
     catch( final NumberFormatException e )
     {

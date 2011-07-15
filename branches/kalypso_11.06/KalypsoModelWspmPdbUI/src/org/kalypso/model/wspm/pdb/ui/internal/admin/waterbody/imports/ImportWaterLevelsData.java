@@ -42,9 +42,11 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
@@ -77,6 +79,8 @@ public class ImportWaterLevelsData extends AbstractModelObject
   public ImportWaterLevelsData( final IPdbConnection connection )
   {
     m_connection = connection;
+
+    m_event.setMeasurementDate( new Date() );
   }
 
   public void init( final IDialogSettings dialogSettings ) throws PdbConnectException
@@ -116,10 +120,12 @@ public class ImportWaterLevelsData extends AbstractModelObject
     /* Update name and source of event */
     if( m_shapeFile != null )
     {
+      final String baseName = FilenameUtils.getBaseName( m_shapeFile );
       if( StringUtils.isBlank( m_event.getName() ) )
-        m_event.setName( FilenameUtils.getBaseName( m_shapeFile ) );
+        m_event.setName( WordUtils.capitalizeFully( baseName.replace( '_', ' ' ) ) );
+
       if( StringUtils.isBlank( m_event.getSource() ) )
-        m_event.setSource( FilenameUtils.getBaseName( m_shapeFile ) + ShapeFile.EXTENSION_SHP );
+        m_event.setSource( baseName + ShapeFile.EXTENSION_SHP );
     }
   }
 
