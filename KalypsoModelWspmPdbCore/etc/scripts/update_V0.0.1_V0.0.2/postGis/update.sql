@@ -225,7 +225,7 @@ VALUES ( '', 'pdb_admin', 'document', 'location', 3, 31468, 'POINT' );
 
 -- 06_prefill_table_info
 UPDATE INFO set value='0.0.2'  where key ='Version';
-INSERT INTO INFO("KEY", "VALUE") VALUES ('DocumentServer', '');
+INSERT INTO INFO("key", "value") VALUES ('DocumentServer', '');
 
 -- 99_create_spatial_indexes
 CREATE INDEX IX_DOCUMENT__LOCATION ON DOCUMENT USING GIST ( LOCATION );
