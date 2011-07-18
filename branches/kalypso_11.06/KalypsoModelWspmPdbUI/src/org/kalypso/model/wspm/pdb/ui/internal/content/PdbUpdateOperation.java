@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import java.io.IOException;
 
+import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -99,12 +100,27 @@ public class PdbUpdateOperation implements IPdbOperation
 
   private void executeUpdateScripts( final Session session ) throws IOException
   {
-    final UpdateScript[] scripts = UpdateScriptExtenions.getUpdateScripts( m_sourceVersion, m_dbType );
-    for( final UpdateScript script : scripts )
+    final FlushMode oldMode = session.getFlushMode();
+    try
     {
-      final String sql = script.loadSQL();
-      final SQLQuery sqlQuery = session.createSQLQuery( sql );
-      sqlQuery.executeUpdate();
+      session.setFlushMode( FlushMode.COMMIT );
+
+      final UpdateScript[] scripts = UpdateScriptExtenions.getUpdateScripts( m_sourceVersion, m_dbType );
+      for( final UpdateScript script : scripts )
+      {
+        final String[] sqls = script.loadSQL();
+        for( final String sql : sqls )
+        {
+          System.out.println( sql );
+
+          final SQLQuery sqlQuery = session.createSQLQuery( sql );
+          sqlQuery.executeUpdate();
+        }
+      }
+    }
+    finally
+    {
+      session.setFlushMode( oldMode );
     }
   }
 }

@@ -114,13 +114,13 @@ public class PdbView extends ViewPart implements IConnectionViewer
     }
   };
 
+  private final OpenConnectionData m_autoConnectData = new OpenConnectionData();
+
   private Form m_form;
 
   private FormToolkit m_toolkit;
 
   private IPdbConnection m_pdbConnection;
-
-  private final OpenConnectionData m_autoConnectData = new OpenConnectionData();
 
   private PdbWspmProject m_wspmProject;
 
@@ -129,7 +129,6 @@ public class PdbView extends ViewPart implements IConnectionViewer
   private ConnectionViewer m_connectionViewer;
 
   private IStatus m_connectionStatus;
-
 
   public PdbView( )
   {
