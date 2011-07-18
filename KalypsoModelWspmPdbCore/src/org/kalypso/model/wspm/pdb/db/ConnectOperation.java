@@ -82,15 +82,10 @@ public class ConnectOperation implements ICoreRunnableWithProgress
       m_connection = m_settings.createConnection();
       m_connection.connect();
 
-      // monitor.subTask( "checking database version..." );
-
       session = m_connection.openSession();
 
-      // TODO: remember info, for later validation by test-button -> maybe present second button: 'create/update db'
-
-      // FIXME: if info table is missing, we got lost here....
+      monitor.subTask( "loading info table..." );
       m_info = new PdbInfo( session );
-
       session.close();
 
       return Status.OK_STATUS;

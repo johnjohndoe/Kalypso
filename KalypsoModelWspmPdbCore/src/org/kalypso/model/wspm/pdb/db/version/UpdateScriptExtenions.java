@@ -98,7 +98,7 @@ public class UpdateScriptExtenions
         final UpdateScript updateScript = new UpdateScript( element );
         final Version scriptVersion = updateScript.getTargetVersion();
         final String scriptType = updateScript.getType();
-        if( type.equals( scriptType ) && version.compareTo( scriptVersion ) < 0 )
+        if( type.equals( scriptType ) && version.compareTo( scriptVersion ) == 0 )
           return updateScript;
       }
       catch( final Throwable e )

@@ -44,11 +44,15 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.osgi.framework.Version;
 
 /**
@@ -68,14 +72,41 @@ public class PdbInfo
 
   private final Properties m_properties = new Properties();
 
-  public PdbInfo( final Session session ) throws PdbConnectException
+  private IStatus m_status;
+
+  public PdbInfo( final Session session )
   {
-    final List<Info> list = GetPdbList.getList( session, Info.class );
-    for( final Info property : list )
+    // REAMRK: need to put this into a transaction, else, if an error occurs
+    // later changes on the db do not work any more
+    Transaction transaction = null;
+
+    try
     {
-      final String value = property.getValue();
-      m_properties.put( property.getKey(), StringUtils.defaultString( value ) );
+      transaction = session.beginTransaction();
+
+      final List<Info> list = GetPdbList.getList( session, Info.class );
+      for( final Info property : list )
+      {
+        final String value = property.getValue();
+        m_properties.put( property.getKey(), StringUtils.defaultString( value ) );
+        m_status = Status.OK_STATUS;
+      }
     }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+      m_status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "Failed to load 'Info' table from database. Database might not exist yet.", e );
+    }
+    finally
+    {
+      if( transaction != null )
+        transaction.commit();
+    }
+  }
+
+  public IStatus getStatus( )
+  {
+    return m_status;
   }
 
   public Version getVersion( )
