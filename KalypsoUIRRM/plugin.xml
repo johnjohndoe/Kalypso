@@ -105,7 +105,9 @@
 				<and>
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
-						<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse"/>
+					    <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+						  <test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse"/>
+					    </adapt>
 					</iterate>
 				</and>
 			</with>
@@ -115,7 +117,9 @@
 				<and>
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
-						<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype"/>
+                        <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+						      <test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype"/>
+                        </adapt>
 					</iterate>
 				</and>
 			</with>
@@ -125,7 +129,9 @@
 				<and>
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
-						<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie"/>
+                        <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+						  <test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie"/>
+                        </adapt>
 					</iterate>
 				</and>
 			</with>
@@ -135,7 +141,9 @@
 				<and>
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
-						<test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/hydrotop}Hydrotop"/>
+                        <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+						  <test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/hydrotop}Hydrotop"/>
+                        </adapt>
 					</iterate>
 				</and>
 			</with>
@@ -146,19 +154,29 @@
 					<count value="+"/>
 					<or>
 						<iterate ifEmpty="false" operator="or">
-							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie"/>
+                            <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+    							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie"/>
+                            </adapt>
 						</iterate>
 						<iterate ifEmpty="false" operator="or">
-							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype"/>
+                            <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+    							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype"/>
+                            </adapt>
 						</iterate>
 						<iterate ifEmpty="false" operator="or">
-							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse"/>					
+                            <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+    							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse"/>					
+                            </adapt>
 						</iterate>
 						<iterate ifEmpty="false" operator="or">
-							<test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/hydrotop}Hydrotop"/>					
+                            <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+    							<test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/hydrotop}Hydrotop"/>					
+                            </adapt>
 						</iterate>
 						<iterate ifEmpty="false" operator="or">
-							<test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/kalypsoNA}Catchment"/>					
+                            <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+    							<test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/kalypsoNA}Catchment"/>					
+                            </adapt>
 						</iterate>
 					</or>
 				</and>

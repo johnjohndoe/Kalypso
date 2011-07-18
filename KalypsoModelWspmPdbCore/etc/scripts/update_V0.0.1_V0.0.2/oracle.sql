@@ -5,7 +5,6 @@
 --   site:      Oracle Database 10g
 --   type:      Oracle Database 10g
 
-
 CREATE TABLE Document
     (
      ID NUMBER (20)  NOT NULL ,
@@ -18,10 +17,10 @@ CREATE TABLE Document
      Editing_User VARCHAR2 (50)  NOT NULL , 
      Measurement_Date TIMESTAMP (0) , 
 
---  [°] - Aufnahmerichtung (0-360)
+--  [Â°] - Aufnahmerichtung (0-360)
  ShotDirection NUMBER (8,3) CHECK ( ShotDirection BETWEEN 0 AND 360) ,
 
---  [°] - Öffnungswinkel (0-360)
+--  [Â°] - Ã–ffnungswinkel (0-360)
  ViewAngle NUMBER (8,3) CHECK ( ViewAngle BETWEEN 0 AND 360) ,
      Description VARCHAR2 (255) , 
      Cross_Section_ID NUMBER (20) ,
@@ -31,11 +30,10 @@ CREATE TABLE Document
 ;
 
 
-
-COMMENT ON COLUMN Document.ShotDirection IS '[°] - Aufnahmerichtung (0-360)'
+COMMENT ON COLUMN Document.ShotDirection IS '[Â°] - Aufnahmerichtung (0-360)'
 ;
 
-COMMENT ON COLUMN Document.ViewAngle IS '[°] - Öffnungswinkel (0-360)'
+COMMENT ON COLUMN Document.ViewAngle IS '[Â°] - Ã–ffnungswinkel (0-360)'
 ;
 
 ALTER TABLE Document
@@ -85,7 +83,7 @@ COMMENT ON COLUMN Point.Vegetation_Ay IS '[m]'
 ;
 
 
-COMMENT ON COLUMN Point_Kind.Name IS 'Quelle für Import: GAF, WPROF, ...'
+COMMENT ON COLUMN Point_Kind.Name IS 'Quelle fÃ¼r Import: GAF, WPROF, ...'
 ;
 
 
@@ -125,7 +123,7 @@ COMMENT ON COLUMN Vegetation.Source IS 'Angabe einer Literaturstelle'
 ;
 
 
-COMMENT ON COLUMN Water_Body.Rank IS 'Gewässerordnung (ggf. zur Darstellung)'
+COMMENT ON COLUMN Water_Body.Rank IS 'GewÃ¤sserordnung (ggf. zur Darstellung)'
 ;
 
 
@@ -137,12 +135,16 @@ COMMENT ON COLUMN Waterlevel_Fixation.Waterlevel IS '[m NN]'
 ;
 
 
-COMMENT ON COLUMN Waterlevel_Fixation.Discharge IS '[m³/s]'
+COMMENT ON COLUMN Waterlevel_Fixation.Discharge IS '[mÂ³/s]'
 ;
 
+
+ALTER TABLE Event DROP CONSTRAINT "Event Name UK" CASCADE
+;
 
 DROP INDEX "Event Name UKX"
 ;
+
 CREATE UNIQUE INDEX "Event Name UKX" ON Event
     (
      Name,
@@ -150,8 +152,6 @@ CREATE UNIQUE INDEX "Event Name UKX" ON Event
     )
 ;
 
-ALTER TABLE Event DROP CONSTRAINT "Event Name UK" CASCADE
-;
 ALTER TABLE Event ADD
     CONSTRAINT "Event Name UK" UNIQUE (
     Name ,
@@ -235,4 +235,4 @@ UPDATE INFO set value='0.0.2'  where key ='Version';
 INSERT INTO INFO("KEY", "VALUE") VALUES ('DocumentServer', '');
 
 -- 99_create_spatial_indexes
-CREATE INDEX IX_DOCUMENT__LOCATION ON "DOCUMENT"("LOCATION") INDEXTYPE IS MDSYS.SPATIAL_INDEX ;
+CREATE INDEX IX_DOCUMENT__LOCATION ON "DOCUMENT"("LOCATION") INDEXTYPE IS MDSYS.SPATIAL_INDEX 

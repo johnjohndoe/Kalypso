@@ -87,12 +87,12 @@ public class UpdateScript
     return m_targetVersion;
   }
 
-  public String loadSQL( ) throws IOException
+  public String[] loadSQL( ) throws IOException
   {
     final Bundle bundle = Platform.getBundle( m_bundleID );
     final URL entry = bundle.getEntry( m_location );
     // FIXME: encoding!
-    final String rawSQL = UrlUtilities.toString( entry, "CP1252" );
+    final String rawSQL = UrlUtilities.toString( entry, "UTF-8" );
 
     final Collection<String> noComments = new ArrayList<String>();
 
@@ -101,9 +101,14 @@ public class UpdateScript
     {
       final String trim = StringUtils.trimToEmpty( line );
       if( !trim.isEmpty() && !trim.startsWith( "--" ) )
-        noComments.add( line );
+      {
+        noComments.add( trim );
+      }
     }
-    return StringUtils.join( noComments, "\n" );
+
+    final String result = StringUtils.join( noComments, "\n" );
+
+    return StringUtils.split( result, ';' );
   }
 
   public String getType( )

@@ -838,6 +838,7 @@ ALTER TABLE Event DROP CONSTRAINT "Event Name UK" CASCADE
 
 DROP INDEX "Event Name UKX"
 ;
+
 CREATE UNIQUE INDEX "Event Name UKX" ON Event
     (
      Name,
