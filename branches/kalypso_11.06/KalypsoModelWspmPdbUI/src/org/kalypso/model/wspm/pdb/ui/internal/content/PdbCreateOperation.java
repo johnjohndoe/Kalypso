@@ -53,7 +53,6 @@ import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
- *
  */
 public class PdbCreateOperation implements IPdbOperation
 {

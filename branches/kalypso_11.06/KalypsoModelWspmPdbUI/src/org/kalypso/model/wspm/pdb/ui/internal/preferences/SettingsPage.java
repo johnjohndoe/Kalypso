@@ -68,6 +68,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.connect.SettingsNameValue;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 
 /**
  * A {@link org.eclipse.jface.dialogs.IDialogPage} that edits the parameters of one {@link IPdbSettings}.
@@ -211,6 +212,11 @@ class SettingsPage extends WizardPage
   {
     final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( m_settings, true );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    m_validationComposite.setStatus( result );
+    final PdbInfo info = operation.getInfo();
+
+    if( result.isOK() )
+      m_validationComposite.setStatus( info.getStatus() );
+    else
+      m_validationComposite.setStatus( result );
   }
 }

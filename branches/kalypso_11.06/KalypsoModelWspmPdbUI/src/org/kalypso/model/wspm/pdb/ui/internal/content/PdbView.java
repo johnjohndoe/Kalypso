@@ -289,11 +289,9 @@ public class PdbView extends ViewPart implements IConnectionViewer
     final IStatus checkResult = checker.execute();
     if( checkResult.isOK() )
       return connection;
-    else
-    {
-      PdbUtils.closeQuietly( connection );
-      return null;
-    }
+
+    PdbUtils.closeQuietly( connection );
+    return null;
   }
 
   private void setStatus( final IStatus status )
