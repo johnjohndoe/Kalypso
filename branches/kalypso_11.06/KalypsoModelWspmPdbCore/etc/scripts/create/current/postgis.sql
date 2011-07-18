@@ -6,7 +6,8 @@
 --   site:      Oracle Database 10g
 --   type:      Oracle Database 10g
 
-
+CREATE SCHEMA pdb_admin
+  AUTHORIZATION pdb_admin;
 
 CREATE TABLE Cross_Section
     (
