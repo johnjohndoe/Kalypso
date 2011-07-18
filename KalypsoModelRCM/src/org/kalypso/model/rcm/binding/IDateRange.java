@@ -51,5 +51,9 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IDateRange extends Feature
 {
+  String getFrom( );
+
+  String getTo( );
+
   DateRange asDateRange( IStringResolver variableResolver );
 }

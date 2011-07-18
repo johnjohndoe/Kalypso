@@ -14,5 +14,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.rcm,
  org.kalypso.model.rcm.binding,
+ org.kalypso.model.rcm.internal.binding,
  org.kalypso.model.rcm.util
 Bundle-ClassPath: .
