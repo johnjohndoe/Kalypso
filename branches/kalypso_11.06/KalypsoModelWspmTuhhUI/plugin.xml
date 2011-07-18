@@ -233,7 +233,9 @@
 				<and>
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
-						<test property="org.kalypso.ui.test.theme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
+					    <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+						  <test property="org.kalypso.ui.test.theme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
+					    </adapt>
 					</iterate>
 				</and>
 			</with>

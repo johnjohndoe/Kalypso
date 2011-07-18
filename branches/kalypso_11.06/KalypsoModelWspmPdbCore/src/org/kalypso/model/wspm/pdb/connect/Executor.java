@@ -82,9 +82,9 @@ public class Executor
     }
     catch( final Throwable e )
     {
-      final PdbConnectException pce = logError( e );
-
       doRollback( transaction );
+
+      final PdbConnectException pce = logError( e );
 
       throw pce;
     }
