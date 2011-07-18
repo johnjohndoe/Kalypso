@@ -79,10 +79,7 @@ public class PdbUpdater
     /* Check version */
     final Version version = m_info.getVersion();
     if( version == null )
-    {
-      // TODO: create db -> execute script with version 0.0.0
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Info table is missing" );
-    }
+      return handleCreate();
 
     if( PdbInfo.CURRENT_VERSION.equals( version ) )
       return Status.OK_STATUS;
@@ -99,13 +96,37 @@ public class PdbUpdater
     throw new IllegalStateException();
   }
 
+  private IStatus handleCreate( )
+  {
+    // TODO: check, if database is empty
+    // TODO: check, if it is a spatial database
+
+    /* ask user what to do */
+    final String msg = String.format( "You are connection with an empty database.\nDo you wish to create the database with the current user as owner?\n" );
+    final MessageDialog dialog = new MessageDialog( m_shell, "Create Database", null, msg, MessageDialog.CONFIRM, new String[] { "Create Now!", IDialogConstants.CANCEL_LABEL }, 1 );
+    if( dialog.open() != Window.OK )
+      return Status.CANCEL_STATUS;
+
+
+    /* Do update */
+    final String dbType = m_connection.getSettings().getType();
+    final IPdbOperation operation = new PdbCreateOperation( dbType );
+    final ExecutorRunnable runnable = new ExecutorRunnable( m_connection, operation );
+
+    final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
+    if( !status.isOK() )
+      new StatusDialog2( m_shell, status, "Update Failed" ).open();
+
+    return status;
+  }
+
   private IStatus handleUpdate( final Version version )
   {
     // 0) ggf. check preconditions
 
     /* ask user what to do */
-    final String msg = String.format( "The Version of the cross section database (%s) is older than the current version (%s).\nPlease backup the database before updating.\nUpdate database now (can take dozens of minutes)?", version, PdbInfo.CURRENT_VERSION );
-    final MessageDialog dialog = new MessageDialog( m_shell, "Update Database", null, msg, MessageDialog.CONFIRM, new String[] { "Update!", IDialogConstants.CANCEL_LABEL }, 1 );
+    final String msg = String.format( "The Version of the cross section database (%s) is older than the current version (%s).\nPlease backup the database before updating.\nUpdate database now?", version, PdbInfo.CURRENT_VERSION );
+    final MessageDialog dialog = new MessageDialog( m_shell, "Update Database", null, msg, MessageDialog.CONFIRM, new String[] { "Update Now!", IDialogConstants.CANCEL_LABEL }, 1 );
     if( dialog.open() != Window.OK )
       return Status.CANCEL_STATUS;
 
@@ -114,7 +135,7 @@ public class PdbUpdater
     final IPdbOperation operation = new PdbUpdateOperation( version, dbType );
     final ExecutorRunnable runnable = new ExecutorRunnable( m_connection, operation );
 
-    // FIXE: we need to update the info now
+    // FIXME: we need to update the info now
 
     final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
     if( !status.isOK() )

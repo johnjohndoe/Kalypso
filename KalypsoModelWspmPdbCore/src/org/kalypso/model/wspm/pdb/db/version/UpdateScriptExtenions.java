@@ -52,19 +52,18 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.osgi.framework.Version;
 
-
 /**
  * @author Gernot Belger
  */
 public class UpdateScriptExtenions
 {
+  private static final String STR_FAILED_TO_ACCESS_EXTENSION = "Failed to access extension"; //$NON-NLS-1$
+
   private final static String UPDATE_EXTENSION_POINT = "org.kalypso.model.wspm.pdb.core.updateScript"; //$NON-NLS-1$
 
   public static UpdateScript[] getUpdateScripts( final Version sourceVersion, final String type )
   {
-    final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IExtensionPoint extensionPoint = registry.getExtensionPoint( UPDATE_EXTENSION_POINT );
-    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    final IConfigurationElement[] configurationElements = getElements();
 
     final Collection<UpdateScript> scripts = new ArrayList<UpdateScript>();
 
@@ -80,11 +79,44 @@ public class UpdateScriptExtenions
       }
       catch( final Throwable e )
       {
-        final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Failed to access extension", e ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, STR_FAILED_TO_ACCESS_EXTENSION, e ); //$NON-NLS-1$
         WspmPdbCorePlugin.getDefault().getLog().log( status );
       }
     }
 
     return scripts.toArray( new UpdateScript[scripts.size()] );
   }
+
+  public static UpdateScript getScript( final Version version, final String type )
+  {
+    final IConfigurationElement[] configurationElements = getElements();
+
+    for( final IConfigurationElement element : configurationElements )
+    {
+      try
+      {
+        final UpdateScript updateScript = new UpdateScript( element );
+        final Version scriptVersion = updateScript.getTargetVersion();
+        final String scriptType = updateScript.getType();
+        if( type.equals( scriptType ) && version.compareTo( scriptVersion ) < 0 )
+          return updateScript;
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, STR_FAILED_TO_ACCESS_EXTENSION, e ); //$NON-NLS-1$
+        WspmPdbCorePlugin.getDefault().getLog().log( status );
+      }
+    }
+
+    return null;
+  }
+
+  private static IConfigurationElement[] getElements( )
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( UPDATE_EXTENSION_POINT );
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    return configurationElements;
+  }
+
 }
