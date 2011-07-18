@@ -5,16 +5,28 @@
    <extension
          point="org.kalypso.model.wspm.pdb.core.updateScript">
       <script
-            comment="Postgis 0.0.1 -&gt; 0.0.20.2"
-            location="etc/scripts/update_V0.0.1_V0.0.2/postGis/update.sql"
+            comment="Postgis 0.0.1 -&gt; 0.0.2"
+            location="etc/scripts/update_V0.0.1_V0.0.2/postgis.sql"
             targetVersion="0.0.2"
             type="postgis">
       </script>
       <script
             comment="Oracle 0.0.1 -&gt; 0.0.2"
-            location="etc/scripts/update_V0.0.1_V0.0.2/oracle/update.sql"
+            location="etc/scripts/update_V0.0.1_V0.0.2/oracle.sql"
             targetVersion="0.0.2"
             type="oracle">
+      </script>
+      <script
+            comment="Oracle - Create DB"
+            location="etc/scripts/create/current/oracle.sql"
+            targetVersion="0.0.0"
+            type="oracle">
+      </script>
+      <script
+            comment="Postgis - Create DB"
+            location="etc/scripts/create/current/postgis.sql"
+            targetVersion="0.0.0"
+            type="postgis">
       </script>
    </extension>
 

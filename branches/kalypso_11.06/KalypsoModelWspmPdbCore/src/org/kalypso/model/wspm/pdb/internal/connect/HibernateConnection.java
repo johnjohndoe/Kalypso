@@ -150,6 +150,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
 
     // FIXME: why does this not work???
     // configuration.setProperty( "hibernate.hbm2dll.auto", "create" );
+    // cfg.setProperty( org.hibernate.cfg.Environment.HBM2DDL_AUTO, "create" );
     // configuration.setProperty( "org.hibernate.tool.hbm2ddl", "debug" );
 
     configuration.setProperty( Environment.POOL_SIZE, "1" ); //$NON-NLS-1$
