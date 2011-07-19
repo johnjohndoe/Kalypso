@@ -77,6 +77,8 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
 
   private final IPdbWspmProject m_project;
 
+  private boolean m_shouldShowWspmData = true;
+
   public CheckoutOperation( final IPdbWspmProject project, final IStructuredSelection selection )
   {
     m_project = project;
@@ -100,9 +102,12 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     final boolean hasCrossSection = !ArrayUtils.isEmpty( crossSections );
     final boolean hasWaterlevels = !ArrayUtils.isEmpty( events );
     if( !hasCrossSection && !hasWaterlevels )
+    {
+      m_shouldShowWspmData = false;
       return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "No downloadable data found in selection." );
+    }
 
-    // TODO Preview?
+    // TODO Preview
 
     final TuhhWspmProject project = m_project.getWspmProject();
     final CheckoutCrossSectionsWorker crossSectionsWorker = new CheckoutCrossSectionsWorker( this, project, crossSections );
@@ -161,5 +166,10 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
       if( parent != null )
         m_changedParents.add( parent );
     }
+  }
+
+  public boolean shouldShowWspmData( )
+  {
+    return m_shouldShowWspmData;
   }
 }
