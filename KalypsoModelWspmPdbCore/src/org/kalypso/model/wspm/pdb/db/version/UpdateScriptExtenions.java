@@ -41,7 +41,8 @@
 package org.kalypso.model.wspm.pdb.db.version;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -65,7 +66,7 @@ public class UpdateScriptExtenions
   {
     final IConfigurationElement[] configurationElements = getElements();
 
-    final Collection<UpdateScript> scripts = new ArrayList<UpdateScript>();
+    final List<UpdateScript> scripts = new ArrayList<UpdateScript>();
 
     for( final IConfigurationElement element : configurationElements )
     {
@@ -83,6 +84,9 @@ public class UpdateScriptExtenions
         WspmPdbCorePlugin.getDefault().getLog().log( status );
       }
     }
+
+    /* Sort by version, the scripts get applied in that order */
+    Collections.sort( scripts );
 
     return scripts.toArray( new UpdateScript[scripts.size()] );
   }
