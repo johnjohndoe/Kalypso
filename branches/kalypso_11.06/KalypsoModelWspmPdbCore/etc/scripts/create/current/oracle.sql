@@ -66,7 +66,6 @@ CREATE TABLE Cross_Section_Part
     )
 ;
 
-
 CREATE UNIQUE INDEX "Cross_Section_Part PKX" ON Cross_Section_Part
     (
      ID ASC
@@ -566,7 +565,7 @@ increment by 1
 nocache
 nocycle
 noorder
-/
+;
 
 -- 05_register_geometries
 
@@ -663,7 +662,6 @@ INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value)
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('57', 'unregelmäßiges Vorland', 'unregelmäßiges Vorland', 'GAF',0.8, 15);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('58', 'sehr unregelmäßiges Vorland mit Verbauungen', 'sehr unregelmäßiges Vorland mit Verbauungen', 'GAF',1, 12);
 
-
 -- 09_prefill_table__vegetation
 INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('-1', 'unknown', 'unknown','GAF',0,0,0);
 INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('1', 'Röhricht, licht', 'Röhricht, licht', 'GAF',0.003, 0.03, 0.03);
@@ -686,8 +684,8 @@ CREATE INDEX IX_CROSS_SECTION_PART__LINE ON CROSS_SECTION_PART(LINE) INDEXTYPE I
 CREATE INDEX IX_CROSS_SECTION__LINE ON CROSS_SECTION(LINE) INDEXTYPE IS MDSYS.SPATIAL_INDEX ;
 CREATE INDEX IX_WATER_BODY__RIVERLINE ON WATER_BODY(RIVERLINE) INDEXTYPE IS MDSYS.SPATIAL_INDEX ;
 CREATE INDEX IX_WL_FIX__LOCATION ON WATERLEVEL_FIXATION(LOCATION) INDEXTYPE IS MDSYS.SPATIAL_INDEX ;
-commit;
 
+commit;
 
 -- update to V0.0.2
 -- 03_create_tables

@@ -55,7 +55,7 @@ import org.osgi.framework.Version;
 /**
  * @author Gernot Belger
  */
-public class UpdateScript
+public class UpdateScript implements Comparable<UpdateScript>
 {
   private static final String PROPERTY_TARGET_VERSION = "targetVersion"; //$NON-NLS-1$
 
@@ -114,5 +114,11 @@ public class UpdateScript
   public String getType( )
   {
     return m_type;
+  }
+
+  @Override
+  public int compareTo( final UpdateScript o )
+  {
+    return m_targetVersion.compareTo( o.getTargetVersion() );
   }
 }

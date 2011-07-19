@@ -40,24 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.hibernate.jdbc.Work;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
-import org.kalypso.model.wspm.pdb.ui.internal.ExecutorRunnable;
+import org.kalypso.model.wspm.pdb.db.version.UpdateScript;
+import org.kalypso.model.wspm.pdb.db.version.UpdateScriptExtenions;
+import org.kalypso.model.wspm.pdb.ui.internal.WorkRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
- *
  */
 public class PdbUpdater
 {
@@ -107,17 +113,13 @@ public class PdbUpdater
     if( dialog.open() != Window.OK )
       return Status.CANCEL_STATUS;
 
-
     /* Do update */
     final String dbType = m_connection.getSettings().getType();
-    final IPdbOperation operation = new PdbCreateOperation( dbType );
-    final ExecutorRunnable runnable = new ExecutorRunnable( m_connection, operation );
-
-    final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
-    if( !status.isOK() )
-      new StatusDialog2( m_shell, status, "Update Failed" ).open();
-
-    return status;
+    final UpdateScript createScript = UpdateScriptExtenions.getScript( new Version( 0, 0, 0 ), dbType );
+    if( createScript == null )
+      throw new IllegalStateException( "Missing create script" ); //$NON-NLS-1$
+    final UpdateScript[] scripts = new UpdateScript[] { createScript };
+    return executeScripts( scripts, "Create Database" );
   }
 
   private IStatus handleUpdate( final Version version )
@@ -132,15 +134,44 @@ public class PdbUpdater
 
     /* Do update */
     final String dbType = m_connection.getSettings().getType();
-    final IPdbOperation operation = new PdbUpdateOperation( version, dbType );
-    final ExecutorRunnable runnable = new ExecutorRunnable( m_connection, operation );
+    final UpdateScript[] scripts = UpdateScriptExtenions.getUpdateScripts( version, dbType );
+    if( scripts == null )
+      throw new IllegalStateException( "Missing create script" ); //$NON-NLS-1$
+    return executeScripts( scripts, "Update Database" );
+  }
 
-    // FIXME: we need to update the info now
+  private IStatus executeScripts( final UpdateScript[] scripts, final String windowTitle )
+  {
+    final String[] sqls = loadSql( scripts );
+    if( sqls == null )
+      return Status.OK_STATUS;
+
+    final Work operation = new SqlWork( sqls );
+    final WorkRunnable runnable = new WorkRunnable( m_connection, operation );
 
     final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
     if( !status.isOK() )
-      new StatusDialog2( m_shell, status, "Update Failed" ).open();
+      new StatusDialog2( m_shell, status, windowTitle ).open();
 
     return status;
+  }
+
+  private String[] loadSql( final UpdateScript[] scripts )
+  {
+    try
+    {
+      final Collection<String> sql = new ArrayList<String>();
+      for( final UpdateScript script : scripts )
+      {
+        final String[] sqlStatements = script.loadSQL();
+        sql.addAll( Arrays.asList( sqlStatements ) );
+      }
+      return sql.toArray( new String[sql.size()] );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      throw new IllegalStateException( "Failed to load update scripts", e );
+    }
   }
 }
