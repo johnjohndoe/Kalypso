@@ -52,6 +52,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.CalculationReibConstWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -121,13 +122,13 @@ public final class WspmResultFactory
         continue;
       }
 
-      final IFile wspmFile = project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
+      final IFile wspmFile = project.getFile( IWspmTuhhConstants.FILE_WSPM_GMV );
       if( !wspmFile.exists() )
       {
         continue;
       }
 
-      final IFile modelFile = project.getFile( "modell.gml" ); //$NON-NLS-1$
+      final IFile modelFile = project.getFile( IWspmTuhhConstants.FILE_MODELL_GML );
       if( !modelFile.exists() )
       {
         continue;

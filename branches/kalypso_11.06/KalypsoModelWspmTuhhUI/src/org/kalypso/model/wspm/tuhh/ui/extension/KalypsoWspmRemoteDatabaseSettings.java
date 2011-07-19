@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.extension;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.kalypso.model.wspm.tuhh.core.util.WspmTuhhUtils;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
@@ -75,9 +75,7 @@ public class KalypsoWspmRemoteDatabaseSettings implements IKalypsoModuleDatabase
         {
           final ILocalProject local = (ILocalProject) handler;
           final IProject project = local.getProject();
-          final IFile file = project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
-
-          return file.exists();
+          return WspmTuhhUtils.isWspmTuhhProject( project );
         }
         else if( handler instanceof IRemoteProject )
         {

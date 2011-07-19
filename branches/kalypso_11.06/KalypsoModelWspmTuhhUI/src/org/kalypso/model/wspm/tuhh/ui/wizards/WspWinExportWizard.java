@@ -40,10 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
-import java.io.File;
-import java.util.Iterator;
-
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -57,7 +53,9 @@ import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportData;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -65,51 +63,52 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 /**
  * @author thuel2
  */
-
 public class WspWinExportWizard extends Wizard implements IExportWizard
 {
-  private IStructuredSelection m_selection;
+  private final WspWinExportData m_data = new WspWinExportData();
 
-  private WspWinExportPage m_wspWinExportPage;
+  private WspWinExportProjectSelectionPage m_projectselectionPage;
+
+  private WspWinExportDestinationPage m_destinationPage;
+
 
   /**
    * Creates a wizard for exporting workspace resources into a wspwin project.
    */
   public WspWinExportWizard( )
   {
-    final IDialogSettings pluginSettings = KalypsoModelWspmTuhhUIPlugin.getDefault().getDialogSettings();
-    final IDialogSettings section = pluginSettings.getSection( "WspWinExportWizard" );//$NON-NLS-1$
-    if( section != null )
-    {
-      setDialogSettings( section );
-    }
-    else
-    {
-      setDialogSettings( pluginSettings.addNewSection( "WspWinExportWizard" ) );//$NON-NLS-1$
-    }
+    final IDialogSettings section = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), "WspWinExportWizard" );//$NON-NLS-1$
+    setDialogSettings( section );
+
+    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.0" ) ); //$NON-NLS-1$
 
     setForcePreviousAndNextButtons( false );
+    setNeedsProgressMonitor( true );
   }
 
-  /*
-   * (non-Javadoc) Method declared on IWizard.
-   */
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    m_data.setSelection( selection );
+
+    m_data.loadSettings( getDialogSettings() );
+  }
+
   @Override
   public void addPages( )
   {
-    m_wspWinExportPage = new WspWinExportPage( m_selection );
-    addPage( m_wspWinExportPage );
+    m_projectselectionPage = new WspWinExportProjectSelectionPage( "projectSelection", m_data ); //$NON-NLS-1$
+    addPage( m_projectselectionPage );
+
+    m_destinationPage = new WspWinExportDestinationPage( "destinationSelection", m_data ); //$NON-NLS-1$
+    addPage( m_destinationPage );
   }
 
-  /*
-   * (non-Javadoc) Method declared on IWorkbenchWizard.
-   */
   @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
+  public boolean performCancel( )
   {
-    m_selection = currentSelection;
-    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.0" ) ); //$NON-NLS-1$
-    setNeedsProgressMonitor( true );
+    m_data.storeSettings( getDialogSettings() );
+    return super.performCancel();
   }
 
   /*
@@ -118,14 +117,10 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
   @Override
   public boolean performFinish( )
   {
-    m_wspWinExportPage.saveWidgetValues();
+    m_data.storeSettings( getDialogSettings() );
+    final WspWinExportData data = m_data;
+
     final Shell shell = getContainer().getShell();
-
-    // get model.gml (wspmTuhhModel.gml)
-    final Iterator<IResource> modelGml = m_wspWinExportPage.getSelectedResourcesIterator();
-
-    // get destination path (wspwin path, not wspwin project path)
-    final File wspwinDir = m_wspWinExportPage.getDestinationDirectory();
 
     // set visitor loose
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
@@ -138,7 +133,7 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
         try
         {
           monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.2" ) ); //$NON-NLS-1$
-          final IStatus status = WspWinExporter.exportWspmProject( modelGml, wspwinDir, new SubProgressMonitor( monitor, 90 ) );
+          final IStatus status = WspWinExporter.exportWspmProject( data, new SubProgressMonitor( monitor, 90 ) );
           if( !status.isOK() )
             throw new CoreException( status );
         }
