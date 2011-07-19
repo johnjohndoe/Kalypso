@@ -48,7 +48,6 @@ import org.hibernate.cfg.Environment;
 import org.hibernatespatial.GeometryUserType2;
 import org.hibernatespatial.HBSpatialExtension;
 import org.hibernatespatial.SpatialDialect;
-import org.hibernatespatial.postgis.PostgisDialect;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -201,10 +200,10 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
       {
         final Configuration configuration = getConfiguration();
 
-        final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
-        final String[] creationScript = configuration.generateSchemaCreationScript( dialect );
-        for( final String sql : creationScript )
-          System.out.println( sql );
+        // final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
+        // final String[] creationScript = configuration.generateSchemaCreationScript( dialect );
+        // for( final String sql : creationScript )
+        // System.out.println( sql );
 
         final SessionFactory sessionFactory = configuration.buildSessionFactory();
         setSessionFactory( sessionFactory );
