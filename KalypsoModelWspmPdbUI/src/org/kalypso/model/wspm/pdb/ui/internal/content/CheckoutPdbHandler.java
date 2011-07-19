@@ -60,15 +60,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
  */
 public class CheckoutPdbHandler extends AbstractHandler
 {
-// public CheckoutPdbHandler( final ConnectionContentControl control )
-// {
-// m_control = control;
-
-// setText( "Download selected items" );
-// setToolTipText( "Download the selected items into the local workspace." );
-// setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.IMPORT ) );
-// }
-
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -98,7 +89,8 @@ public class CheckoutPdbHandler extends AbstractHandler
       new StatusDialog2( shell, status, commandName ).open();
 
     final Object[] toSelect = operation.getNewElements();
-    project.updateViews( toSelect );
+    if( operation.shouldShowWspmData() )
+      project.updateViews( toSelect );
     return null;
   }
 }
