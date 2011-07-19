@@ -46,11 +46,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Formatter;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
@@ -59,12 +57,11 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -72,6 +69,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -95,59 +93,57 @@ public final class WspWinExporter
   {
   }
 
-  public static IStatus exportWspmProject( final Iterator<IResource> modelGml, final File wspwinDir, final SubProgressMonitor monitor )
+  public static IStatus exportWspmProject( final WspWinExportData data, final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.0" ), 1000 ); //$NON-NLS-1$
 
     monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.1" ) ); //$NON-NLS-1$
 
-    // modelGml holds all selected resources (very general)
-    while( modelGml.hasNext() )
-    {
+    final File wspwinDir = data.getOutputDir();
 
+    final IProject[] projects = data.getSelectedProjects();
+    for( final IProject project : projects )
+    {
       try
       {
-        final IResource resource = modelGml.next();
-        if( resource instanceof IFile )
+
+        final IFile modelGmlFile = project.getFile( IWspmTuhhConstants.FILE_MODELL_GML );
+
+        // read gml workspace
+        final GMLWorkspace gmlWrkSpce = GmlSerializer.createGMLWorkspace( modelGmlFile );
+        final Feature rootFeat = gmlWrkSpce.getRootFeature();
+
+        // featType holen
+        final IFeatureType featureType = rootFeat.getFeatureType();
+        final QName featureName = featureType.getQName();
+
+        // process only WspmProject features
+        if( QNameUtilities.equals( featureName, IWspmConstants.NS_WSPMPROJ, "WspmProject" ) ) //$NON-NLS-1$
         {
-          // read gml workspace
-          final URL modelGmlUrl = ResourceUtilities.createURL( resource );
+          // load (initialize) WspmProject
+          monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.3", project.getName() ) ); //$NON-NLS-1$
+          final TuhhWspmProject wspmProject = (TuhhWspmProject) gmlWrkSpce.getRootFeature();
 
-          final GMLWorkspace gmlWrkSpce = GmlSerializer.createGMLWorkspace( modelGmlUrl, null );
-          final Feature rootFeat = gmlWrkSpce.getRootFeature();
+          // create unique wspwinProjectDir
+          File wspwinProjDir = new File( wspwinDir, wspmProject.getName() );
+          int ii = 0;
 
-          // featType holen
-          final IFeatureType featureType = rootFeat.getFeatureType();
-          final QName featureName = featureType.getQName();
-
-          // process only WspmProject features
-          if( QNameUtilities.equals( featureName, IWspmConstants.NS_WSPMPROJ, "WspmProject" ) ) //$NON-NLS-1$
+          while( wspwinProjDir.exists() )
           {
-            // load (initialize) WspmProject
-            monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.3" ) + resource.getName() + Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-            final TuhhWspmProject wspmProject = (TuhhWspmProject) gmlWrkSpce.getRootFeature();
+            ii++;
+            wspwinProjDir = new File( wspwinDir, wspmProject.getName() + "_" + ii ); //$NON-NLS-1$
+          }
+          wspwinProjDir.mkdirs();
 
-            // create unique wspwinProjectDir
-            File wspwinProjDir = new File( wspwinDir, wspmProject.getName() );
-            int ii = 0;
+          // write data into wspwinDir projectDir
+          monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.6" ) ); //$NON-NLS-1$
 
-            while( wspwinProjDir.exists() )
-            {
-              ii++;
-              wspwinProjDir = new File( wspwinDir, wspmProject.getName() + "_" + ii ); //$NON-NLS-1$
-            }
-            wspwinProjDir.mkdirs();
-
-            // write data into wspwinDir projectDir
-            monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.6" ) ); //$NON-NLS-1$
-
-            // CalculationTuhh
-            final TuhhCalculation[] tuhhCalcs = wspmProject.getCalculations();
-            for( final TuhhCalculation calculation : tuhhCalcs )
-            {
-              final File dir = new File( wspwinProjDir, calculation.getId() );
-              writeForTuhhKernel( calculation, dir );
-            }
+          // CalculationTuhh
+          final TuhhCalculation[] tuhhCalcs = wspmProject.getCalculations();
+          for( final TuhhCalculation calculation : tuhhCalcs )
+          {
+            final File dir = new File( wspwinProjDir, calculation.getId() );
+            writeForTuhhKernel( calculation, dir );
           }
         }
         else

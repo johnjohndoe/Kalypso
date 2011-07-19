@@ -71,7 +71,7 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.FileValueSelectionListener;
 import org.kalypso.commons.databinding.validation.FileAlreadyExistsValidator;
 import org.kalypso.commons.databinding.validation.FileCannotWriteValidator;
-import org.kalypso.commons.databinding.validation.FileIsDirectoryValidator;
+import org.kalypso.commons.databinding.validation.FileShouldNotBeDirectoryValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
@@ -210,7 +210,7 @@ public class GafProfilesPage extends WizardPage
     binder.setModelToTargetConverter( new FileToStringConverter() );
 
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.INFO, "Will not save log file" ) );
-    binder.addTargetAfterConvertValidator( new FileIsDirectoryValidator() );
+    binder.addTargetAfterConvertValidator( new FileShouldNotBeDirectoryValidator() );
     binder.addTargetAfterConvertValidator( new FileCannotWriteValidator() );
     binder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator() );
 
