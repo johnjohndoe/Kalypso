@@ -47,6 +47,8 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.core.databinding.observable.set.ISetChangeListener;
+import org.eclipse.core.databinding.observable.set.SetChangeEvent;
 import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -68,7 +70,9 @@ public class WspWinExportData extends AbstractModelObject
 
   public static final String PROPERTY_OVERWRITE_EXISTING = "overwriteExisting"; //$NON-NLS-1$
 
-  private final WritableSet m_selectedProjects = new WritableSet();
+  private final WritableSet m_selectedProjectsSet = new WritableSet();
+
+  private IProject[] m_selectedProjects = new IProject[0];
 
   private File m_outputDir;
 
@@ -76,23 +80,40 @@ public class WspWinExportData extends AbstractModelObject
 
   private boolean m_overwriteExisting = false;
 
+  public WspWinExportData( )
+  {
+    m_selectedProjectsSet.addSetChangeListener( new ISetChangeListener()
+    {
+      @Override
+      public void handleSetChange( final SetChangeEvent event )
+      {
+        projectsChanged();
+      }
+    } );
+  }
+
+  protected void projectsChanged( )
+  {
+    m_selectedProjects = (IProject[]) m_selectedProjectsSet.toArray( new IProject[m_selectedProjectsSet.size()] );
+  }
+
   public void setSelection( final IStructuredSelection selection )
   {
     for( final Object element : selection.toArray() )
     {
       if( element instanceof IResource )
-        m_selectedProjects.add( ((IResource) element).getProject() );
+        m_selectedProjectsSet.add( ((IResource) element).getProject() );
     }
   }
 
   public WritableSet getSelectedProjectList( )
   {
-    return m_selectedProjects;
+    return m_selectedProjectsSet;
   }
 
   public IProject[] getSelectedProjects( )
   {
-    return (IProject[]) m_selectedProjects.toArray( new IProject[m_selectedProjects.size()] );
+    return m_selectedProjects;
   }
 
   public File getOutputDir( )
@@ -156,7 +177,12 @@ public class WspWinExportData extends AbstractModelObject
   {
     final String[] destinationNames = settings.getArray( PROPERTY_OUTPUT_DIR_HISTORY );
     if( destinationNames != null )
+    {
       setOutputDirHistory( destinationNames );
+
+      if( destinationNames.length > 0 )
+        setOutputDir( new File( destinationNames[0] ) );
+    }
   }
 
   public void storeSettings( final IDialogSettings settings )

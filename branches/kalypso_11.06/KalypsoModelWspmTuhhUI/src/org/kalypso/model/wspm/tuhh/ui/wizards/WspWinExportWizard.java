@@ -113,17 +113,14 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
   public boolean performFinish( )
   {
     m_data.storeSettings( getDialogSettings() );
-    final WspWinExportData data = m_data;
 
     final Shell shell = getContainer().getShell();
 
     final WspWinExportOperation operation = new WspWinExportOperation( m_data );
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, operation );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
-    {
       StatusUtilities.printStackTraces( status );
-    }
     ErrorDialog.openError( shell, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.3" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.4" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return status.isOK();
