@@ -46,7 +46,6 @@ import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -66,15 +65,14 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IObservationFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.IRunOffEvent;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.core.gml.WspmProject;
-import org.kalypso.model.wspm.core.gml.WspmRunoffEvent;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
@@ -87,7 +85,6 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -204,7 +201,7 @@ public final class WspWinImporter
       // /////////////// //
       final Map<String, IProfileFeature> importedProfiles = new HashMap<String, IProfileFeature>();
       final ProfileBean[] commonProfiles = wspCfgBean.getProfiles();
-      logStatus.add( importProfiles( WspWinHelper.getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams, isNotTuhhProject ) );
+      logStatus.add( importProfiles( WspWinHelper.getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams ) );
 
       // ////////////// //
       // import reaches //
@@ -262,7 +259,7 @@ public final class WspWinImporter
    * Adds the profile beans as profiles to the tuhh-project. For each profile bean, a new profile file is generated and
    * the profile is added as reference to it.
    */
-  private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, IProfileFeature> addedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject )
+  private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, IProfileFeature> addedProfiles, final boolean isDirectionUpstreams )
   {
     final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID );
     final String problemMessgage = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.18" ); //$NON-NLS-1$
@@ -271,7 +268,7 @@ public final class WspWinImporter
     {
       try
       {
-        final IProfileFeature profile = importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams, isNotTuhhProject );
+        final IProfileFeature profile = importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams );
 
         final BigDecimal profStation = profile.getBigStation();
         final BigDecimal beanStation = new BigDecimal( bean.getStation() );
@@ -306,7 +303,7 @@ public final class WspWinImporter
    * Imports a single profile according to the given ProfileBean. If the map already contains a profile with the same id
    * (usually the filename), we return this instead.
    */
-  private static IProfileFeature importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, IProfileFeature> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws GMLSchemaException, IOException, CoreException
+  private static IProfileFeature importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, IProfileFeature> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams ) throws GMLSchemaException, IOException, CoreException
   {
     final String fileName = bean.getFileName();
 
@@ -339,7 +336,7 @@ public final class WspWinImporter
    * importedPRofilesMap.
    * </p>
    */
-  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfg wspCfg, final WspWinZustand zustand, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws IOException, ParseException
+  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfg wspCfg, final WspWinZustand zustand, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws GMLSchemaException
   {
     final ZustandBean zustandBean = zustand.getBean();
 
@@ -349,15 +346,7 @@ public final class WspWinImporter
     final String name = zustandBean.getName();
     final String waterName = zustandBean.getWaterName();
 
-    final TuhhReach reach;
-    try
-    {
-      reach = tuhhProject.createNewReach( waterName, isDirectionUpstreams );
-    }
-    catch( final GMLSchemaException e )
-    {
-      return StatusUtilities.statusFromThrowable( e );
-    }
+    final TuhhReach reach = tuhhProject.createNewReach( waterName, isDirectionUpstreams );
 
     reach.setName( name );
 
@@ -378,7 +367,7 @@ public final class WspWinImporter
       try
       {
         final ProfileBean fromBean = new ProfileBean( waterName, name, bean.getStationFrom(), bean.getFileNameFrom() );
-        final IProfileFeature fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams, isNotTuhhProject );
+        final IProfileFeature fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams );
 
         reach.createProfileSegment( fromProf, bean.getStationFrom() );
 
@@ -386,7 +375,7 @@ public final class WspWinImporter
         {
           // also add last profile
           final ProfileBean toBean = new ProfileBean( waterName, name, bean.getStationTo(), bean.getFileNameTo() );
-          final IProfileFeature toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams, isNotTuhhProject );
+          final IProfileFeature toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams );
 
           reach.createProfileSegment( toProf, bean.getStationTo() );
         }
@@ -411,12 +400,12 @@ public final class WspWinImporter
     final Map<Integer, String> readRunOffEvents = new HashMap<Integer, String>();
     try
     {
-      final RunOffEventBean[] runOffEventBeans = zustandBean.readRunOffs( profDir );
+      final RunOffEventBean[] runOffEventBeans = zustand.getRunOffEvents();
       int count = 0;
       for( final RunOffEventBean bean : runOffEventBeans )
       {
-        final IFeatureBindingCollection<WspmRunoffEvent> runoffEvents = waterBody.getRunoffEvents();
-        final WspmRunoffEvent newEvent = runoffEvents.addNew( WspmRunoffEvent.QNAME_FEATURE_RUNOFF_EVENT );
+        final IFeatureBindingCollection<IRunOffEvent> runoffEvents = waterBody.getRunoffEvents();
+        final IRunOffEvent newEvent = runoffEvents.addNew( IRunOffEvent.FEATURE_RUNOFF_EVENT );
         writeRunOffBeanIntoFeature( bean, baseName + bean.getName(), newEvent );
 
         // remember for reference from calculation
@@ -430,7 +419,7 @@ public final class WspWinImporter
 
     try
     {
-      final RunOffEventBean[] wspFixesBeans = zustandBean.readWspFixes( profDir );
+      final RunOffEventBean[] wspFixesBeans = zustand.getWspFixations();
       for( final RunOffEventBean bean : wspFixesBeans )
       {
         if( !bean.getEntries().isEmpty() )
@@ -455,7 +444,7 @@ public final class WspWinImporter
     LocalEnergyLossBean[] locEnergyLossBeans = null;
     try
     {
-      locEnergyLossBeans = zustandBean.readLocalEnergyLosses( profDir );
+      locEnergyLossBeans = zustand.getLosses();
 
       int count = 0;
       for( final LocalEnergyLossBean bean : locEnergyLossBeans )
@@ -481,7 +470,7 @@ public final class WspWinImporter
     {
       if( !isNotTuhhProject )
       {
-        importCalculations( tuhhProject, zustandBean, log, reach, profDir, baseName, readRunOffEvents );
+        importCalculations( tuhhProject, zustand, log, reach, profDir, baseName, readRunOffEvents );
       }
     }
     catch( final Exception e )
@@ -492,9 +481,9 @@ public final class WspWinImporter
     return log.asMultiStatus( message );
   }
 
-  private static void importCalculations( final TuhhWspmProject tuhhProject, final ZustandBean zustandBean, final IStatusCollector log, final TuhhReach reach, final File profDir, final String baseName, final Map<Integer, String> readRunOffEvents ) throws ParseException, IOException
+  private static void importCalculations( final TuhhWspmProject tuhhProject, final WspWinZustand zustand, final IStatusCollector log, final TuhhReach reach, final File profDir, final String baseName, final Map<Integer, String> readRunOffEvents )
   {
-    final CalculationBean[] calcBeans = zustandBean.readCalculations( profDir );
+    final CalculationBean[] calcBeans = zustand.getCalculations();
     for( final CalculationBean bean : calcBeans )
     {
       try
@@ -533,13 +522,13 @@ public final class WspWinImporter
             type = TuhhCalculation.START_KONDITION_KIND.WATERLEVEL;
             break;
 
-          default:
-          case GRENZTIEFE:
-            type = TuhhCalculation.START_KONDITION_KIND.CRITICAL_WATER_DEPTH;
-            break;
-
           case STATIONAER_GLEICHFOERMIGES_GEFAELLE:
             type = TuhhCalculation.START_KONDITION_KIND.UNIFORM_BOTTOM_SLOPE;
+            break;
+
+          case GRENZTIEFE:
+          default:
+            type = TuhhCalculation.START_KONDITION_KIND.CRITICAL_WATER_DEPTH;
             break;
         }
         final double startSlope = contentBean.getGefaelle();
@@ -613,7 +602,6 @@ public final class WspWinImporter
     }
   }
 
-  // FIXME: change to common interface of runoff and fixation
   private static void writeRunOffBeanIntoFeature( final RunOffEventBean bean, final String name, final IObservationFeature observationFeature )
   {
     final IObservation<TupleResult> obs = observationFeature.toObservation();
@@ -621,28 +609,19 @@ public final class WspWinImporter
     obs.setDescription( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.28" ) ); //$NON-NLS-1$
 
     final TupleResult result = obs.getResult();
-    final IComponent[] components = result.getComponents();
 
-    final IComponent stationComp;
-    final IComponent valueComp;
-    if( components[0].getName().startsWith( "Station" ) ) //$NON-NLS-1$
-    {
-      stationComp = components[0];
-      valueComp = components[1];
-    }
-    else
-    {
-      valueComp = components[0];
-      stationComp = components[1];
-    }
+    final int stationIndex = result.indexOfComponent( IRunOffEvent.COMPONENT_STATION );
+    final int runoffIndex = result.indexOfComponent( IRunOffEvent.COMPONENT_RUNOFF );
+    final int wspIndex = result.indexOfComponent( WspmFixation.COMPONENT_WSP );
+    final int valueIndex = runoffIndex == -1 ? wspIndex : runoffIndex;
 
     final Map<BigDecimal, BigDecimal> values = bean.getEntries();
     for( final Map.Entry<BigDecimal, BigDecimal> entry : values.entrySet() )
     {
       final IRecord record = result.createRecord();
       result.add( record );
-      record.setValue( result.indexOfComponent( stationComp ), entry.getKey() );
-      record.setValue( result.indexOfComponent( valueComp ), entry.getValue() );
+      record.setValue( stationIndex, entry.getKey() );
+      record.setValue( valueIndex, entry.getValue() );
     }
 
     // TODO: WSP Fixierung nur schreiben, wenn Anzahl größer 0

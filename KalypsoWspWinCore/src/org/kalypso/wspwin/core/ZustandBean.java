@@ -41,6 +41,7 @@
 package org.kalypso.wspwin.core;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -111,7 +112,61 @@ public class ZustandBean
   {
     final WspWinZustand zustand = new WspWinZustand( this, profProj );
     zustand.read( new File( profDir, getFileName() ) );
+
+    final RunOffEventBean[] runOffs = readRunOffs( profDir );
+    for( final RunOffEventBean runOff : runOffs )
+      zustand.addRunoff( runOff );
+
+    final RunOffEventBean[] wspFixes = readWspFixes( profDir );
+    for( final RunOffEventBean wspFix : wspFixes )
+      zustand.addWspFix( wspFix );
+
+    final LocalEnergyLossBean[] localEnergyLosses = readLocalEnergyLosses( profDir );
+    for( final LocalEnergyLossBean loss : localEnergyLosses )
+      zustand.addLoss( loss );
+
+    final CalculationBean[] calculations = readCalculations( profDir );
+    for( final CalculationBean calculation : calculations )
+      zustand.addCalculation( calculation );
+
     return zustand;
+  }
+
+
+  private RunOffEventBean[] readRunOffs( final File profDir ) throws ParseException, IOException
+  {
+    final File qwtFile = getZustandFile( profDir, "qwt" ); //$NON-NLS-1$
+    return RunOffEventBean.read( qwtFile );
+  }
+
+  private void writeRunOffs( final File profDir, final RunOffEventBean[] runoff ) throws IOException
+  {
+    final File qwtFile = getZustandFile( profDir, "qwt" ); //$NON-NLS-1$
+    RunOffEventBean.write( qwtFile, runoff );
+  }
+
+  private RunOffEventBean[] readWspFixes( final File profDir ) throws ParseException, IOException
+  {
+    final File wsfFile = getZustandFile( profDir, "wsf" ); //$NON-NLS-1$
+    return RunOffEventBean.read( wsfFile );
+  }
+
+  private void writeWspFixes( final File profDir, final RunOffEventBean[] fixation ) throws FileNotFoundException
+  {
+    final File wsfFile = getZustandFile( profDir, "wsf" ); //$NON-NLS-1$
+    RunOffEventBean.write( wsfFile, fixation );
+  }
+
+  private LocalEnergyLossBean[] readLocalEnergyLosses( final File profDir ) throws ParseException, IOException
+  {
+    final File lelFile = getZustandFile( profDir, "psi" ); //$NON-NLS-1$
+    return LocalEnergyLossBean.read( lelFile );
+  }
+
+  private CalculationBean[] readCalculations( final File profDir ) throws ParseException, IOException
+  {
+    final File berFile = getZustandFile( profDir, "ber" ); //$NON-NLS-1$
+    return CalculationBean.readBerFile( berFile );
   }
 
   private File getZustandFile( final File profDir, final String suffix )
@@ -119,30 +174,6 @@ public class ZustandBean
     final String strFileName = getFileName();
     final String strBaseName = FileUtilities.nameWithoutExtension( strFileName );
     return new File( profDir, strBaseName + "." + suffix );
-  }
-
-  public RunOffEventBean[] readRunOffs( final File profDir ) throws ParseException, IOException
-  {
-    final File qwtFile = getZustandFile( profDir, "qwt" ); //$NON-NLS-1$
-    return RunOffEventBean.read( qwtFile );
-  }
-
-  public RunOffEventBean[] readWspFixes( final File profDir ) throws ParseException, IOException
-  {
-    final File wsfFile = getZustandFile( profDir, "wsf" ); //$NON-NLS-1$
-    return RunOffEventBean.read( wsfFile );
-  }
-
-  public LocalEnergyLossBean[] readLocalEnergyLosses( final File profDir ) throws ParseException, IOException
-  {
-    final File lelFile = getZustandFile( profDir, "psi" ); //$NON-NLS-1$
-    return LocalEnergyLossBean.read( lelFile );
-  }
-
-  public CalculationBean[] readCalculations( final File profDir ) throws ParseException, IOException
-  {
-    final File berFile = getZustandFile( profDir, "ber" ); //$NON-NLS-1$
-    return CalculationBean.readBerFile( berFile );
   }
 
   public String formatLine( )
@@ -161,5 +192,17 @@ public class ZustandBean
   public void setEndStation( final double endStation )
   {
     m_endStation = endStation;
+  }
+
+  public void writeZustand( final File wspwinDir, final WspWinZustand zustand ) throws IOException
+  {
+    zustand.write( wspwinDir );
+
+    final File profDir = WspWinHelper.getProfDir( wspwinDir );
+
+    writeRunOffs( profDir, zustand.getRunOffEvents() );
+    writeWspFixes( profDir, zustand.getWspFixations() );
+
+    // TODO: write calculations and losses
   }
 }

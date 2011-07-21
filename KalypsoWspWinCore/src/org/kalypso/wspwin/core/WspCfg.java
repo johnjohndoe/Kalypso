@@ -146,7 +146,8 @@ public class WspCfg
       }
     }
 
-    throw new IllegalArgumentException();
+    // default to pasche
+    setType( TYPE.PASCHE );
   }
 
   private void setType( final TYPE type )
@@ -179,10 +180,7 @@ public class WspCfg
       // ignore the values, we read the count from the linecount
       // just parse the type
       final char type = firstLine.charAt( firstLine.length() - 1 );
-      if( type != 'b' && type != 'l' )
-        bean.setType( 'b' ); // default to pasche
-      else
-        bean.setType( type );
+      bean.setType( type );
 
       final Collection<ZustandBean> zustandBeans = new ArrayList<ZustandBean>();
       while( reader.ready() )
@@ -266,7 +264,10 @@ public class WspCfg
 
     /* Zustaende */
     for( final WspWinZustand zustand : zustaende )
-      zustand.write( wspwinDir );
+    {
+      final ZustandBean bean = zustand.getBean();
+      bean.writeZustand( wspwinDir, zustand );
+    }
   }
 
   private void writeContent( final File wspwinDir ) throws IOException
