@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -95,42 +96,11 @@ public class WspWinExportOperation implements ICoreRunnableWithProgress
 
     monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.1" ) ); //$NON-NLS-1$
 
-    final File wspwinDir = m_data.getOutputDir();
-
     for( final IProject project : projects )
     {
       try
       {
-        final IFile modelGmlFile = project.getFile( IWspmTuhhConstants.FILE_MODELL_GML );
-
-        // read gml workspace
-        monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.3", project.getName() ) ); //$NON-NLS-1$
-        final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelGmlFile );
-        final TuhhWspmProject wspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
-
-        // create unique wspwinProjectDir
-
-        final File wspwinProjDir = new File( wspwinDir, project.getName() );
-
-        // write data into wspwinDir projectDir
-        monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.6" ) ); //$NON-NLS-1$
-
-        // CalculationTuhh
-        final TuhhCalculation[] tuhhCalcs = wspmProject.getCalculations();
-        for( final TuhhCalculation calculation : tuhhCalcs )
-        {
-          final String calcName = calculation.getName();
-          /* Fall back to id if name is blank */
-          final String calcDirName = StringUtils.isBlank( calcName ) ? calculation.getId() : calcName;
-          final String dirName = FileUtilities.validateName( calcDirName, "_" ); //$NON-NLS-1$
-          final File dir = new File( wspwinProjDir, dirName );
-          final File calcOutputDir = checkExistance( dir );
-          if( calcOutputDir != null )
-          {
-            FileUtils.deleteDirectory( calcOutputDir );
-            WspWinExporter.writeForTuhhKernel( calculation, calcOutputDir );
-          }
-        }
+        exportProject( project, new SubProgressMonitor( monitor, 1 ) );
       }
       catch( final CoreException e )
       {
@@ -148,6 +118,45 @@ public class WspWinExportOperation implements ICoreRunnableWithProgress
       }
     }
     return Status.OK_STATUS;
+  }
+
+  private void exportProject( final IProject project, final IProgressMonitor monitor ) throws Exception
+  {
+    monitor.beginTask( StringUtils.EMPTY, 100 );
+
+    final IFile modelGmlFile = project.getFile( IWspmTuhhConstants.FILE_MODELL_GML );
+
+    // read gml workspace
+    monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.3", project.getName() ) ); //$NON-NLS-1$
+    final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelGmlFile, new SubProgressMonitor( monitor, 50 ) );
+    final TuhhWspmProject wspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
+
+    // create unique wspwinProjectDir
+    final File wspwinDir = m_data.getOutputDir();
+    final File wspwinProjDir = new File( wspwinDir, project.getName() );
+
+    // write data into wspwinDir projectDir
+    monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.6" ) ); //$NON-NLS-1$
+
+    // CalculationTuhh
+    final TuhhCalculation[] tuhhCalcs = wspmProject.getCalculations();
+    for( final TuhhCalculation calculation : tuhhCalcs )
+    {
+      final String calcName = calculation.getName();
+      /* Fall back to id if name is blank */
+      final String calcDirName = StringUtils.isBlank( calcName ) ? calculation.getId() : calcName;
+      final String dirName = FileUtilities.validateName( calcDirName, "_" ); //$NON-NLS-1$
+      final File dir = new File( wspwinProjDir, dirName );
+      final File calcOutputDir = checkExistance( dir );
+      if( calcOutputDir != null )
+      {
+        FileUtils.deleteDirectory( calcOutputDir );
+        WspWinExporter.writeForTuhhKernel( calculation, calcOutputDir );
+      }
+    }
+    monitor.worked( 50 );
+
+    monitor.done();
   }
 
   private File checkExistance( final File dir ) throws CoreException
