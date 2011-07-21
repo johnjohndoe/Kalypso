@@ -41,34 +41,37 @@
 package org.kalypso.wspwin.core;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
  */
 public class RunOffEventBean
 {
   private final String m_name;
 
-  private final Map<BigDecimal, BigDecimal> m_entries;
+  private final Map<BigDecimal, BigDecimal> m_entries = new TreeMap<BigDecimal, BigDecimal>();
 
-  public RunOffEventBean( final String name, final Map<BigDecimal, BigDecimal> entries )
+  public RunOffEventBean( final String name )
   {
     m_name = name;
-    m_entries = new TreeMap<BigDecimal, BigDecimal>( entries );
   }
 
   public String getName( )
@@ -79,6 +82,11 @@ public class RunOffEventBean
   public Map<BigDecimal, BigDecimal> getEntries( )
   {
     return Collections.unmodifiableMap( m_entries );
+  }
+
+  public void addEntry( final BigDecimal station, final BigDecimal value )
+  {
+    m_entries.put( station, value );
   }
 
   /** Reads a qwt or wsf file */
@@ -103,10 +111,12 @@ public class RunOffEventBean
           throw new ParseException( Messages.getString("org.kalypso.wspwin.core.RunOffEventBean.0") + nextLine, count ); //$NON-NLS-1$
 
         final String eventName = tokenizer.nextToken();
+
+        final RunOffEventBean bean = new RunOffEventBean( eventName );
+
         final int eventLength = Integer.parseInt( tokenizer.nextToken() );
 
         // read block: station -> value
-        final Map<BigDecimal, BigDecimal> entries = new HashMap<BigDecimal, BigDecimal>( eventLength );
         for( int i = 0; i < eventLength; i++ )
         {
           if( !lineIt.hasNext() )
@@ -120,10 +130,10 @@ public class RunOffEventBean
 
           final double station = Double.parseDouble( tz.nextToken() );
           final double value = Double.parseDouble( tz.nextToken() );
-          entries.put( BigDecimal.valueOf( station ), BigDecimal.valueOf( value ) );
+          bean.addEntry( BigDecimal.valueOf( station ), BigDecimal.valueOf( value ) );
         }
 
-        beans.add( new RunOffEventBean( eventName, entries ) );
+        beans.add( bean );
       }
 
       return beans.toArray( new RunOffEventBean[beans.size()] );
@@ -132,5 +142,32 @@ public class RunOffEventBean
     {
       LineIterator.closeQuietly( lineIt );
     }
+  }
+
+  public static void write( final File outputFile, final RunOffEventBean[] fixation ) throws FileNotFoundException
+  {
+    final PrintWriter pw = new PrintWriter( outputFile );
+
+    for( final RunOffEventBean runOff : fixation )
+    {
+      // FIXME: shorten name
+      final String name = runOff.getName();
+      final String cleanName = StringUtils.remove( name, ' ' );
+
+      final Map<BigDecimal, BigDecimal> entries = runOff.getEntries();
+
+      pw.format( "%s %d%n", cleanName, entries.size() );
+      for( final Entry<BigDecimal, BigDecimal> entry : entries.entrySet() )
+      {
+        final BigDecimal station = entry.getKey();
+        final BigDecimal value = entry.getValue();
+        pw.format( Locale.US, "%10.4f %10.3f%n", station, value );
+      }
+    }
+
+    pw.checkError();
+
+    pw.flush();
+    pw.close();
   }
 }

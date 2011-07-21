@@ -56,16 +56,24 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.model.wspm.core.gml.IObservationFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.IRunOffEvent;
+import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.wspwin.core.RunOffEventBean;
 import org.kalypso.wspwin.core.WspCfg;
 import org.kalypso.wspwin.core.WspCfg.TYPE;
 import org.kalypso.wspwin.core.WspWinFiles;
 import org.kalypso.wspwin.core.WspWinZustand;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * Writes the state for calculation with kalypso-1d.exe (which is different from wspwin format!).
@@ -112,6 +120,48 @@ public class WspWinProjectWriter
 
     for( final TuhhReachProfileSegment segment : segments )
       addProfile( segment, zustand );
+
+    final IFeatureBindingCollection<IRunOffEvent> runoffEvents = waterBody.getRunoffEvents();
+    for( final IRunOffEvent runoffEvent : runoffEvents )
+      addRunoffEvent( runoffEvent, zustand );
+
+    final IFeatureBindingCollection<WspmFixation> fixations = waterBody.getWspFixations();
+    for( final WspmFixation fixation : fixations )
+      addFixation( fixation, zustand );
+
+    // TODO: losses + calculations
+  }
+
+  private void addRunoffEvent( final IRunOffEvent runoffEvent, final WspWinZustand zustand )
+  {
+    final RunOffEventBean bean = convertToRunoffBean( runoffEvent, IRunOffEvent.COMPONENT_RUNOFF );
+    zustand.addRunoff( bean );
+  }
+
+  private void addFixation( final WspmFixation runoffEvent, final WspWinZustand zustand )
+  {
+    final RunOffEventBean bean = convertToRunoffBean( runoffEvent, WspmFixation.COMPONENT_WSP );
+    zustand.addWspFix( bean );
+  }
+
+  private RunOffEventBean convertToRunoffBean( final IObservationFeature feature, final String valueComponent )
+  {
+    final RunOffEventBean bean = new RunOffEventBean( feature.getName() );
+
+    final IObservation<TupleResult> obs = feature.toObservation();
+    final TupleResult result = obs.getResult();
+
+    final int stationIndex = result.indexOfComponent( IRunOffEvent.COMPONENT_STATION );
+    final int runoffIndex = result.indexOfComponent( valueComponent );
+
+    for( final IRecord record : result )
+    {
+      final BigDecimal station = (BigDecimal) record.getValue( stationIndex );
+      final BigDecimal value = (BigDecimal) record.getValue( runoffIndex );
+      bean.addEntry( station, value );
+    }
+
+    return bean;
   }
 
   private String findZustandFilename( final String waterName )

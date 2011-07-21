@@ -68,6 +68,14 @@ public class WspWinZustand
 
   private final Collection<ZustandSegmentBean> m_segmentBeans = new ArrayList<ZustandSegmentBean>();
 
+  private final Collection<RunOffEventBean> m_runoffs = new ArrayList<RunOffEventBean>();
+
+  private final Collection<RunOffEventBean> m_wspFixes = new ArrayList<RunOffEventBean>();
+
+  private final Collection<LocalEnergyLossBean> m_losses = new ArrayList<LocalEnergyLossBean>();
+
+  private final Collection<CalculationBean> m_calculations = new ArrayList<CalculationBean>();
+
   private final ZustandBean m_bean;
 
   private final WspWinProfProj m_profProj;
@@ -234,5 +242,45 @@ public class WspWinZustand
       pw.append( segment.formatLine() ).append( SystemUtils.LINE_SEPARATOR );
 
     pw.close();
+  }
+
+  public void addRunoff( final RunOffEventBean runOff )
+  {
+    m_runoffs.add( runOff );
+  }
+
+  public void addWspFix( final RunOffEventBean wspFix )
+  {
+    m_wspFixes.add( wspFix );
+  }
+
+  public void addLoss( final LocalEnergyLossBean loss )
+  {
+    m_losses.add( loss );
+  }
+
+  public void addCalculation( final CalculationBean calculation )
+  {
+    m_calculations.add( calculation );
+  }
+
+  public RunOffEventBean[] getRunOffEvents( )
+  {
+    return m_runoffs.toArray( new RunOffEventBean[m_runoffs.size()] );
+  }
+
+  public RunOffEventBean[] getWspFixations( )
+  {
+    return m_wspFixes.toArray( new RunOffEventBean[m_wspFixes.size()] );
+  }
+
+  public LocalEnergyLossBean[] getLosses( )
+  {
+    return m_losses.toArray( new LocalEnergyLossBean[m_losses.size()] );
+  }
+
+  public CalculationBean[] getCalculations( )
+  {
+    return m_calculations.toArray( new CalculationBean[m_calculations.size()] );
   }
 }
