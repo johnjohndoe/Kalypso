@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -51,12 +48,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportData;
-import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
+import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportOperation;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
@@ -70,7 +66,6 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
   private WspWinExportProjectSelectionPage m_projectselectionPage;
 
   private WspWinExportDestinationPage m_destinationPage;
-
 
   /**
    * Creates a wizard for exporting workspace resources into a wspwin project.
@@ -122,27 +117,7 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
 
     final Shell shell = getContainer().getShell();
 
-    // set visitor loose
-    final WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
-    {
-      @Override
-      protected void execute( final IProgressMonitor monitor ) throws CoreException
-      {
-        monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.1" ), 100 ); //$NON-NLS-1$
-
-        try
-        {
-          monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.2" ) ); //$NON-NLS-1$
-          final IStatus status = WspWinExporter.exportWspmProject( data, new SubProgressMonitor( monitor, 90 ) );
-          if( !status.isOK() )
-            throw new CoreException( status );
-        }
-        finally
-        {
-          monitor.done();
-        }
-      }
-    };
+    final WspWinExportOperation operation = new WspWinExportOperation( m_data );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, operation );
     if( !status.isOK() )

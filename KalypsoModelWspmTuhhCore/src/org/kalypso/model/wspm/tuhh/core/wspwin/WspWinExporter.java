@@ -53,35 +53,22 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.util.FormatterUtils;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.WspWinHelper;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -91,79 +78,6 @@ public final class WspWinExporter
 {
   private WspWinExporter( )
   {
-  }
-
-  public static IStatus exportWspmProject( final WspWinExportData data, final IProgressMonitor monitor )
-  {
-    monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.0" ), 1000 ); //$NON-NLS-1$
-
-    monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.1" ) ); //$NON-NLS-1$
-
-    final File wspwinDir = data.getOutputDir();
-
-    final IProject[] projects = data.getSelectedProjects();
-    for( final IProject project : projects )
-    {
-      try
-      {
-
-        final IFile modelGmlFile = project.getFile( IWspmTuhhConstants.FILE_MODELL_GML );
-
-        // read gml workspace
-        final GMLWorkspace gmlWrkSpce = GmlSerializer.createGMLWorkspace( modelGmlFile );
-        final Feature rootFeat = gmlWrkSpce.getRootFeature();
-
-        // featType holen
-        final IFeatureType featureType = rootFeat.getFeatureType();
-        final QName featureName = featureType.getQName();
-
-        // process only WspmProject features
-        if( QNameUtilities.equals( featureName, IWspmConstants.NS_WSPMPROJ, "WspmProject" ) ) //$NON-NLS-1$
-        {
-          // load (initialize) WspmProject
-          monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.3", project.getName() ) ); //$NON-NLS-1$
-          final TuhhWspmProject wspmProject = (TuhhWspmProject) gmlWrkSpce.getRootFeature();
-
-          // create unique wspwinProjectDir
-          File wspwinProjDir = new File( wspwinDir, wspmProject.getName() );
-          int ii = 0;
-
-          while( wspwinProjDir.exists() )
-          {
-            ii++;
-            wspwinProjDir = new File( wspwinDir, wspmProject.getName() + "_" + ii ); //$NON-NLS-1$
-          }
-          wspwinProjDir.mkdirs();
-
-          // write data into wspwinDir projectDir
-          monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.6" ) ); //$NON-NLS-1$
-
-          // CalculationTuhh
-          final TuhhCalculation[] tuhhCalcs = wspmProject.getCalculations();
-          for( final TuhhCalculation calculation : tuhhCalcs )
-          {
-            final File dir = new File( wspwinProjDir, calculation.getId() );
-            writeForTuhhKernel( calculation, dir );
-          }
-        }
-        else
-        {
-          // we don't process folders
-          continue;
-        }
-      }
-      catch( final Throwable t )
-      {
-        final String message = String.format( Messages.getString( "WspWinExporter.0" ), t.getLocalizedMessage() ); //$NON-NLS-1$
-        return new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, message, t );
-      }
-      finally
-      {
-        // clean up
-        monitor.done();
-      }
-    }
-    return Status.OK_STATUS;
   }
 
   /**

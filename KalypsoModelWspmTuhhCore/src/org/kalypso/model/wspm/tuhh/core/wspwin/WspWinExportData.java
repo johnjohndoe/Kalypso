@@ -42,9 +42,11 @@ package org.kalypso.model.wspm.tuhh.core.wspwin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -141,7 +143,7 @@ public class WspWinExportData extends AbstractModelObject
     return m_overwriteExisting;
   }
 
-  public void setOverwriteExsiting( final boolean overwriteExisting )
+  public void setOverwriteExisting( final boolean overwriteExisting )
   {
     final Object oldValue = m_overwriteExisting;
 
@@ -162,13 +164,16 @@ public class WspWinExportData extends AbstractModelObject
     if( settings == null )
       return;
 
-    // update source names history
-    String[] history = getOutputDirHistory();
     final File outputDir = getOutputDir();
-    if( outputDir != null )
-      history = (String[]) ArrayUtils.add( history, outputDir.getAbsolutePath() );
 
-    settings.put( PROPERTY_OUTPUT_DIR_HISTORY, history );
+    // update source names history
+    final String[] history = getOutputDirHistory();
+    final Set<String> historySet = new LinkedHashSet<String>();
+    // New entry on, top; avoid duplicate entries
+    historySet.add( outputDir.getAbsolutePath() );
+    historySet.addAll( Arrays.asList( history ) );
+
+    settings.put( PROPERTY_OUTPUT_DIR_HISTORY, historySet.toArray( new String[historySet.size()] ) );
     settings.put( PROPERTY_OVERWRITE_EXISTING, getOverwriteExisting() );
   }
 }
