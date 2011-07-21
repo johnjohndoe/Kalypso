@@ -134,9 +134,18 @@ public class PrfWriter implements IPrfConstants
     m_defaultPrfMetadata.put( PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT, new String[] { "Zeichnungsüberschrift", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public void setPrfMetadata( final int line, final String... value )
+  public void setPrfMetadata( final int line, final String... values )
   {
-    m_defaultPrfMetadata.put( line, value );
+    final String[] cleanValues = new String[values.length];
+    for( int i = 0; i < cleanValues.length; i++ )
+      cleanValues[i] = cleanCarriageReturn( values[i] );
+
+    m_defaultPrfMetadata.put( line, cleanValues );
+  }
+
+  private static String cleanCarriageReturn( final String riverDescription )
+  {
+    return riverDescription.replace( '\n', '-' ).replace( '\r', '-' );
   }
 
   public DataBlockWriter export( )
@@ -565,9 +574,9 @@ public class PrfWriter implements IPrfConstants
       try
       {
         final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
+        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
+        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
+        + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
         dbu.setSecondLine( secLine );
       }
       catch( final Exception e )

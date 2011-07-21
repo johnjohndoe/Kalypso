@@ -133,10 +133,9 @@ public class PrfExporter
     final String profileDescription = profil.getDescription();
     final String riverId = water.getRefNr();
     final String riverDescription = water.getDescription();
-    final String riverDescriptionCleaned = riverDescription.replace( '\n', '-' ).replace( '\r', '-' );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_4_PROJEKTBEZEICHNUNG_1, riverId );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_5_PROJEKTBEZEICHNUNG_2, profileDescription );
-    prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_6_PROJEKTBEZEICHNUNG_3, riverDescriptionCleaned );
+    prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_6_PROJEKTBEZEICHNUNG_3, riverDescription );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT, profileName );
   }
 }
