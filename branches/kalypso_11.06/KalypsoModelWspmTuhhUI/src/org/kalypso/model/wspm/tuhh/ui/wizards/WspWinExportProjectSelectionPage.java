@@ -64,7 +64,7 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.commons.databinding.DataSetBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportData;
+import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportProjectData;
 
 /**
  * @author thuel2
@@ -76,7 +76,7 @@ public class WspWinExportProjectSelectionPage extends WizardPage
 
   private Button m_deselectAllButton;
 
-  private final WspWinExportData m_data;
+  private final WspWinExportProjectData m_data;
 
   private DatabindingWizardPage m_binding;
 
@@ -86,7 +86,7 @@ public class WspWinExportProjectSelectionPage extends WizardPage
    * @param aWorkbench
    *          IWorkbench
    */
-  protected WspWinExportProjectSelectionPage( final String pageName, final WspWinExportData data )
+  protected WspWinExportProjectSelectionPage( final String pageName, final WspWinExportProjectData data )
   {
     super( pageName );
 

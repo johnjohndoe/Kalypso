@@ -45,6 +45,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -65,7 +66,10 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.DirectoryValueSelectionListener;
 import org.kalypso.commons.databinding.validation.FileIsDirectoryValidator;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportData;
+import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportProjectData;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.wspwin.core.WspCfg.TYPE;
+
 
 /**
  * @author Monika Thül
@@ -129,10 +133,11 @@ public class WspWinExportDestinationPage extends WizardPage
   protected void createDestinationGroup( final Composite parent )
   {
     // destination specification group
-    final Composite destinationSelectionGroup = new Composite( parent, SWT.NONE );
+    final Group destinationSelectionGroup = new Group( parent, SWT.NONE );
     destinationSelectionGroup.setLayout( new GridLayout( 3, false ) );
     destinationSelectionGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL ) );
     destinationSelectionGroup.setFont( parent.getFont() );
+    destinationSelectionGroup.setText( "Output Directory" );
 
     final Label destinationLabel = new Label( destinationSelectionGroup, SWT.NONE );
     destinationLabel.setText( DESTINATION_LABEL );
@@ -146,7 +151,7 @@ public class WspWinExportDestinationPage extends WizardPage
     viewer.setLabelProvider( new LabelProvider() );
 
     final IObservableValue targetInput = ViewersObservables.observeInput( viewer );
-    final IObservableValue modelInput = BeansObservables.observeValue( m_data, WspWinExportData.PROPERTY_OUTPUT_DIR_HISTORY );
+    final IObservableValue modelInput = BeansObservables.observeValue( m_data, WspWinExportProjectData.PROPERTY_OUTPUT_DIR_HISTORY );
     m_binding.bindValue( targetInput, modelInput );
 
     // destination browse button
@@ -156,7 +161,7 @@ public class WspWinExportDestinationPage extends WizardPage
     setButtonLayoutData( browseButton );
 
     final ISWTObservableValue targetText = SWTObservables.observeText( viewer.getCombo() );
-    final IObservableValue modelText = BeansObservables.observeValue( m_data, WspWinExportData.PROPERTY_OUTPUT_DIR );
+    final IObservableValue modelText = BeansObservables.observeValue( m_data, WspWinExportProjectData.PROPERTY_OUTPUT_DIR );
     final DataBinder binder = new DataBinder( targetText, modelText );
     binder.setModelToTargetConverter( new FileToStringConverter() );
     binder.setTargetToModelConverter( new StringToFileConverter() );
@@ -170,9 +175,12 @@ public class WspWinExportDestinationPage extends WizardPage
   {
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    GridLayoutFactory.swtDefaults().applyTo( group );
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( group );
+    group.setText( "Output Options" );
 
     createOverwriteExisting( group );
+
+    createProjectType( group );
   }
 
   /**
@@ -181,11 +189,27 @@ public class WspWinExportDestinationPage extends WizardPage
   protected void createOverwriteExisting( final Group optionsGroup )
   {
     final Button overwriteExistingFilesCheckbox = new Button( optionsGroup, SWT.CHECK | SWT.LEFT );
+    overwriteExistingFilesCheckbox.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     overwriteExistingFilesCheckbox.setText( OVERWRITE_EXISTING_CHECK_LABEL );
     overwriteExistingFilesCheckbox.setFont( optionsGroup.getFont() );
 
     final ISWTObservableValue target = SWTObservables.observeSelection( overwriteExistingFilesCheckbox );
-    final IObservableValue model = BeansObservables.observeValue( m_data, WspWinExportData.PROPERTY_OVERWRITE_EXISTING );
+    final IObservableValue model = BeansObservables.observeValue( m_data, WspWinExportProjectData.PROPERTY_OVERWRITE_EXISTING );
+    m_binding.bindValue( target, model );
+  }
+
+  private void createProjectType( final Composite parent )
+  {
+    new Label( parent, SWT.NONE ).setText( "Project Type" );
+
+    final ComboViewer viewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
+    viewer.getControl().setLayoutData( new GridData(SWT.FILL, SWT.CENTER, true, false) );
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setLabelProvider( new LabelProvider() );
+    viewer.setInput( TYPE.values() );
+
+    final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
+    final IObservableValue model = BeansObservables.observeValue( m_data, WspWinExportData.PROPERTY_PROJECT_TYPE );
     m_binding.bindValue( target, model );
   }
 }
