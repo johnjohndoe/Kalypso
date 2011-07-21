@@ -52,16 +52,17 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportData;
-import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportOperation;
+import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportProjectOperation;
+import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportProjectData;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author thuel2
  */
-public class WspWinExportWizard extends Wizard implements IExportWizard
+public class WspWinExportProjectWizard extends Wizard implements IExportWizard
 {
-  private final WspWinExportData m_data = new WspWinExportData();
+  private final WspWinExportProjectData m_data = new WspWinExportProjectData();
 
   private WspWinExportProjectSelectionPage m_projectselectionPage;
 
@@ -70,12 +71,12 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
   /**
    * Creates a wizard for exporting workspace resources into a wspwin project.
    */
-  public WspWinExportWizard( )
+  public WspWinExportProjectWizard( )
   {
-    final IDialogSettings section = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), "WspWinExportWizard" );//$NON-NLS-1$
+    final IDialogSettings section = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), WspWinExportData.SETTINGS_SECTION_NAME );
     setDialogSettings( section );
 
-    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportProjectWizard.0" ) ); //$NON-NLS-1$
 
     setForcePreviousAndNextButtons( false );
     setNeedsProgressMonitor( true );
@@ -116,12 +117,12 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
 
     final Shell shell = getContainer().getShell();
 
-    final WspWinExportOperation operation = new WspWinExportOperation( m_data );
+    final WspWinExportProjectOperation operation = new WspWinExportProjectOperation( m_data );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
       StatusUtilities.printStackTraces( status );
-    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.3" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.4" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportProjectWizard.3" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportProjectWizard.4" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return status.isOK();
   }

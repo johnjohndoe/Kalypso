@@ -98,10 +98,11 @@ import org.kalypso.wspwin.core.CalculationContentBean.FLIESSGESETZ;
 import org.kalypso.wspwin.core.LocalEnergyLossBean;
 import org.kalypso.wspwin.core.ProfileBean;
 import org.kalypso.wspwin.core.RunOffEventBean;
-import org.kalypso.wspwin.core.WspCfgBean;
+import org.kalypso.wspwin.core.WspCfg;
+import org.kalypso.wspwin.core.WspCfg.TYPE;
 import org.kalypso.wspwin.core.WspWinHelper;
+import org.kalypso.wspwin.core.WspWinZustand;
 import org.kalypso.wspwin.core.ZustandBean;
-import org.kalypso.wspwin.core.ZustandContentBean;
 import org.kalypso.wspwin.core.ZustandSegmentBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -185,14 +186,12 @@ public final class WspWinImporter
       // /////////////////// //
       // Load WspWin Project //
       // /////////////////// //
-      final WspCfgBean wspCfgBean = WspCfgBean.read( wspwinDirectory );
+      final WspCfg wspCfgBean = new WspCfg(  );
+      wspCfgBean.read( wspwinDirectory );
 
-      final boolean isNotTuhhProject = wspCfgBean.getType() != 'b';
+      final boolean isNotTuhhProject = wspCfgBean.getType() != TYPE.PASCHE;
       if( isNotTuhhProject )
-      {
         PluginUtilities.logToPlugin( KalypsoModelWspmTuhhCorePlugin.getDefault(), IStatus.WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.14" ), null ); //$NON-NLS-1$
-        wspCfgBean.setType( 'b' );
-      }
 
       // from now on, we have tuhh projects: if we later support other kinds of projects, tweak here
       final TuhhWspmProject tuhhProject = (TuhhWspmProject) modelRootFeature;
@@ -204,33 +203,23 @@ public final class WspWinImporter
       // import profiles //
       // /////////////// //
       final Map<String, IProfileFeature> importedProfiles = new HashMap<String, IProfileFeature>();
-      try
-      {
-        final ProfileBean[] commonProfiles = wspCfgBean.readProfproj( wspwinDirectory );
-        logStatus.add( importProfiles( WspWinHelper.getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams, isNotTuhhProject ) );
-      }
-      catch( final ParseException pe )
-      {
-        /*
-         * If an error in the profproj parsing happens, just give a warning to the user. What we really need are the
-         * profile within the existing strand-elements.
-         */
-        logStatus.add( IStatus.WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.15" ), pe ); //$NON-NLS-1$
-      }
+      final ProfileBean[] commonProfiles = wspCfgBean.getProfiles();
+      logStatus.add( importProfiles( WspWinHelper.getProfDir( wspwinDirectory ), tuhhProject, commonProfiles, importedProfiles, isDirectionUpstreams, isNotTuhhProject ) );
 
       // ////////////// //
       // import reaches //
       // ////////////// //
-      final ZustandBean[] zustaende = wspCfgBean.getZustaende();
-      for( final ZustandBean zustandBean : zustaende )
+      final WspWinZustand[] zustaende = wspCfgBean.getZustaende();
+      for( final WspWinZustand zustand : zustaende )
       {
         try
         {
-          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustandBean, importedProfiles, isDirectionUpstreams, isNotTuhhProject ) );
+          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustand, importedProfiles, isDirectionUpstreams, isNotTuhhProject ) );
         }
         catch( final Exception e )
         {
-          logStatus.add( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.16", zustandBean.getFileName() ), e ); //$NON-NLS-1$
+          final String fileName = zustand.getBean().getFileName();
+          logStatus.add( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.16", fileName ), e ); //$NON-NLS-1$
         }
       }
 
@@ -350,8 +339,10 @@ public final class WspWinImporter
    * importedPRofilesMap.
    * </p>
    */
-  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws IOException, ParseException
+  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfg wspCfg, final WspWinZustand zustand, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws IOException, ParseException
   {
+    final ZustandBean zustandBean = zustand.getBean();
+
     final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.21", zustandBean.getFileName() ); //$NON-NLS-1$
     final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID );
 
@@ -377,17 +368,16 @@ public final class WspWinImporter
     reach.setDescription( descBuffer.toString() );
 
     // add reachSegments + profiles (.str)
-    final ZustandContentBean zustandContent = wspCfg.readZustand( zustandBean );
     // we ignore the profileBeans and just add the segments, so we can even import projects
     // which are slightly inconsistent, maybe add warning messages later
-    final ZustandSegmentBean[] segmentBeans = zustandContent.getSegmentBeans();
+    final ZustandSegmentBean[] segmentBeans = zustand.getSegmentBeans();
     final File profDir = WspWinHelper.getProfDir( wspCfg.getProjectDir() );
     // create reachSegments and associated profiles
     for( final ZustandSegmentBean bean : segmentBeans )
     {
       try
       {
-        final ProfileBean fromBean = new ProfileBean( waterName, name, bean.getStationFrom(), bean.getFileNameFrom(), new HashMap<String, String>() );
+        final ProfileBean fromBean = new ProfileBean( waterName, name, bean.getStationFrom(), bean.getFileNameFrom() );
         final IProfileFeature fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams, isNotTuhhProject );
 
         reach.createProfileSegment( fromProf, bean.getStationFrom() );
@@ -395,7 +385,7 @@ public final class WspWinImporter
         if( bean == segmentBeans[segmentBeans.length - 1] )
         {
           // also add last profile
-          final ProfileBean toBean = new ProfileBean( waterName, name, bean.getStationTo(), bean.getFileNameTo(), new HashMap<String, String>() );
+          final ProfileBean toBean = new ProfileBean( waterName, name, bean.getStationTo(), bean.getFileNameTo() );
           final IProfileFeature toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams, isNotTuhhProject );
 
           reach.createProfileSegment( toProf, bean.getStationTo() );

@@ -43,7 +43,9 @@ package org.kalypso.wspwin.core;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.kalypso.commons.java.io.FileUtilities;
 
@@ -59,9 +61,9 @@ public class ZustandBean
 
   private final String m_fileName;
 
-  private final double m_startStation;
+  private double m_startStation;
 
-  private final double m_endStation;
+  private double m_endStation;
 
   private final Date m_date;
 
@@ -105,17 +107,18 @@ public class ZustandBean
     return m_waterName;
   }
 
-  public ZustandContentBean readZustand( final File profDir ) throws IOException, ParseException
+  public WspWinZustand readZustand( final File profDir, final WspWinProfProj profProj ) throws IOException, ParseException
   {
-    return ZustandContentBean.read( new File( profDir, getFileName() ) );
+    final WspWinZustand zustand = new WspWinZustand( this, profProj );
+    zustand.read( new File( profDir, getFileName() ) );
+    return zustand;
   }
 
   private File getZustandFile( final File profDir, final String suffix )
   {
     final String strFileName = getFileName();
     final String strBaseName = FileUtilities.nameWithoutExtension( strFileName );
-    final File qwtFile = new File( profDir, strBaseName + "." + suffix ); //$NON-NLS-1$
-    return qwtFile;
+    return new File( profDir, strBaseName + "." + suffix );
   }
 
   public RunOffEventBean[] readRunOffs( final File profDir ) throws ParseException, IOException
@@ -136,9 +139,27 @@ public class ZustandBean
     return LocalEnergyLossBean.read( lelFile );
   }
 
-  public CalculationBean[] readCalculations( File profDir ) throws ParseException, IOException
+  public CalculationBean[] readCalculations( final File profDir ) throws ParseException, IOException
   {
     final File berFile = getZustandFile( profDir, "ber" ); //$NON-NLS-1$
     return CalculationBean.readBerFile( berFile );
+  }
+
+  public String formatLine( )
+  {
+    final String waterName = ProfileBean.shortenName( m_waterName );
+    final String stateName = ProfileBean.shortenName( m_name );
+    final String dateText = new SimpleDateFormat( "dd.MM.yyyy" ).format( m_date );
+    return String.format( Locale.US, "%-14s %-14s %s  %13.6f  %13.6f  %13s", waterName, stateName, dateText, m_startStation, m_endStation, m_fileName );
+  }
+
+  public void setStartStation( final double startStation )
+  {
+    m_startStation = startStation;
+  }
+
+  public void setEndStation( final double endStation )
+  {
+    m_endStation = endStation;
   }
 }

@@ -47,32 +47,29 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.core.databinding.observable.set.ISetChangeListener;
-import org.eclipse.core.databinding.observable.set.SetChangeEvent;
-import org.eclipse.core.databinding.observable.set.WritableSet;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.tuhh.core.util.WspmTuhhUtils;
+import org.kalypso.wspwin.core.WspCfg.TYPE;
 
 /**
  * @author Gernot Belger
  */
 public class WspWinExportData extends AbstractModelObject
 {
+  public static final String SETTINGS_SECTION_NAME = "WspWinExportData"; //$NON-NLS-1$
+
   public static final String PROPERTY_OUTPUT_DIR_HISTORY = "outputDirHistory"; //$NON-NLS-1$
 
   public static final String PROPERTY_OUTPUT_DIR = "outputDir"; //$NON-NLS-1$
 
   public static final String PROPERTY_OVERWRITE_EXISTING = "overwriteExisting"; //$NON-NLS-1$
 
-  private final WritableSet m_selectedProjectsSet = new WritableSet();
-
-  private IProject[] m_selectedProjects = new IProject[0];
+  public static final String PROPERTY_PROJECT_TYPE = "projectType"; //$NON-NLS-1$
 
   private File m_outputDir;
 
@@ -80,41 +77,7 @@ public class WspWinExportData extends AbstractModelObject
 
   private boolean m_overwriteExisting = false;
 
-  public WspWinExportData( )
-  {
-    m_selectedProjectsSet.addSetChangeListener( new ISetChangeListener()
-    {
-      @Override
-      public void handleSetChange( final SetChangeEvent event )
-      {
-        projectsChanged();
-      }
-    } );
-  }
-
-  protected void projectsChanged( )
-  {
-    m_selectedProjects = (IProject[]) m_selectedProjectsSet.toArray( new IProject[m_selectedProjectsSet.size()] );
-  }
-
-  public void setSelection( final IStructuredSelection selection )
-  {
-    for( final Object element : selection.toArray() )
-    {
-      if( element instanceof IResource )
-        m_selectedProjectsSet.add( ((IResource) element).getProject() );
-    }
-  }
-
-  public WritableSet getSelectedProjectList( )
-  {
-    return m_selectedProjectsSet;
-  }
-
-  public IProject[] getSelectedProjects( )
-  {
-    return m_selectedProjects;
-  }
+  private TYPE m_projectType = TYPE.PASCHE;
 
   public File getOutputDir( )
   {
@@ -183,6 +146,12 @@ public class WspWinExportData extends AbstractModelObject
       if( destinationNames.length > 0 )
         setOutputDir( new File( destinationNames[0] ) );
     }
+
+    m_overwriteExisting = settings.getBoolean( PROPERTY_OVERWRITE_EXISTING );
+
+    final String projectType = settings.get( PROPERTY_PROJECT_TYPE );
+    if( !StringUtils.isBlank( projectType ) )
+      m_projectType = TYPE.valueOf( projectType );
   }
 
   public void storeSettings( final IDialogSettings settings )
@@ -196,10 +165,26 @@ public class WspWinExportData extends AbstractModelObject
     final String[] history = getOutputDirHistory();
     final Set<String> historySet = new LinkedHashSet<String>();
     // New entry on, top; avoid duplicate entries
-    historySet.add( outputDir.getAbsolutePath() );
+    if( outputDir != null )
+      historySet.add( outputDir.getAbsolutePath() );
     historySet.addAll( Arrays.asList( history ) );
 
     settings.put( PROPERTY_OUTPUT_DIR_HISTORY, historySet.toArray( new String[historySet.size()] ) );
     settings.put( PROPERTY_OVERWRITE_EXISTING, getOverwriteExisting() );
+    settings.put( PROPERTY_PROJECT_TYPE, m_projectType.name() );
+  }
+
+  public TYPE getProjectType( )
+  {
+    return m_projectType;
+  }
+
+  public void setProjectType( final TYPE projectType )
+  {
+    final Object oldValue = m_projectType;
+
+    m_projectType = projectType;
+
+    firePropertyChange( PROPERTY_PROJECT_TYPE, oldValue, projectType );
   }
 }

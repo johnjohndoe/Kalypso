@@ -59,15 +59,19 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.core.wspwin.calc.TuhhCalcZustandWriter;
 import org.kalypso.wspwin.core.WspWinHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -94,6 +98,7 @@ public final class WspWinExporter
     final File batFile = new File( dir, "kalypso-1D.ini" ); //$NON-NLS-1$
     final File zustFile = new File( profDir, "zustand.001" ); //$NON-NLS-1$
     final File qwtFile = new File( profDir, "qwert.001" ); //$NON-NLS-1$
+    profDir.mkdirs();
     // TODO: what is the purpose of the psi file? energy loss? -> implement it
     // final File psiFile = new File( profDir, "zustand.psi" ); //$NON-NLS-1$
 
@@ -303,7 +308,23 @@ public final class WspWinExporter
 
   private static void write1DTuhhZustand( final TuhhCalculation calculation, final TuhhStationRange stationRange, final File zustFile ) throws IOException
   {
-    final TuhhZustandWriter zustandWriter = new TuhhZustandWriter( calculation, stationRange );
+    final ITuhhCalculation.FLIESSGESETZ fliessgesetz = calculation.getFliessgesetz();
+    final String roughnessType = getRoughnessForFG( fliessgesetz );
+    final TuhhReach reach = calculation.getReach();
+
+    final TuhhCalcZustandWriter zustandWriter = new TuhhCalcZustandWriter( reach, stationRange, roughnessType );
     zustandWriter.write( zustFile );
+  }
+
+  private static String getRoughnessForFG( final FLIESSGESETZ fg )
+  {
+    if( FLIESSGESETZ.DARCY_WEISBACH_MIT_FORMEINFLUSS.equals( fg ) )
+      return IWspmConstants.POINT_PROPERTY_RAUHEIT_KS;
+    else if( FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS.equals( fg ) )
+      return IWspmConstants.POINT_PROPERTY_RAUHEIT_KS;
+    else if( FLIESSGESETZ.MANNING_STRICKLER.equals( fg ) )
+      return IWspmConstants.POINT_PROPERTY_RAUHEIT_KST;
+    else
+      return ""; //$NON-NLS-1$
   }
 }

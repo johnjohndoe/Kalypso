@@ -16,7 +16,7 @@
    <extension
          point="org.eclipse.ui.exportWizards">
       <wizard
-            class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard"
+            class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportProjectWizard"
             icon="icons/obj16/wspwin.gif"
             id="org.kalypso.model.wspm.exportwizard.wspwin"
             name="%org.kalypso.model.wspm.exportwizard.wspwin">
@@ -599,6 +599,13 @@
               name="%command.name.1">
            <description>%command.description.0</description>
         </wizard>
+        <wizard
+              category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard"
+              icon="icons/elcl16/export_prf.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard"
+              name="WspWin Project">
+        </wizard>
      </extension>
      <extension
            point="org.kalypso.ui.importWizards">
@@ -702,6 +709,40 @@
                  <reference
                        definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
                  </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement
+              wizardID="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard">
+           <enablement>
+              <with
+                    variable="selection">
+                 <iterate
+                       ifEmpty="false"
+                       operator="or">
+                    <or>
+                       <test
+                             property="org.kalypso.gml.qname"
+                             value="{org.kalypso.model.wspm}WaterBody">
+                       </test>
+                       <test
+                             property="org.kalypso.gml.targetQName"
+                             value="{org.kalypso.model.wspm}WaterBody">
+                       </test>
+                       <test
+                             property="org.kalypso.gml.targetQName"
+                             value="{org.kalypso.model.wspm}AbstractReach">
+                       </test>
+                       <test
+                             property="org.kalypso.gml.qname"
+                             value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       </test>
+                       <test
+                             property="org.kalypso.gml.targetQName"
+                             value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       </test>
+                    </or>
+                 </iterate>
+              </with>
            </enablement>
         </wizardEnablement>
      </extension>

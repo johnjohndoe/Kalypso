@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wspwin.core;
 
+import java.util.Locale;
+
 /**
  * Represents a line from the lower part of a .str file.
  * 
@@ -64,7 +66,6 @@ public class ZustandSegmentBean
     m_distanceVL = distanceVL;
     m_distanceHF = distanceHF;
     m_distanceVR = distanceVR;
-    
   }
 
   public double getDistanceHF( )
@@ -102,4 +103,8 @@ public class ZustandSegmentBean
     return m_stationTo;
   }
 
+  public String formatLine( )
+  {
+    return String.format( Locale.US, "%.4f %.4f %.4f %.4f %.4f %s %s", m_stationFrom, m_stationTo, m_distanceVL, m_distanceHF, m_distanceVR, m_fileNameFrom, m_fileNameTo );
+  }
 }
