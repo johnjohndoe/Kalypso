@@ -40,6 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.light;
 
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.menus.IMenuService;
 import org.kalypso.ui.editor.gmleditor.part.GmvViewPart;
 
 /**
@@ -51,9 +57,51 @@ public class WspmGmvViewPart extends GmvViewPart
 {
   public static final String ID = "org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart"; //$NON-NLS-1$
 
+  private MenuManager m_menuManager;
+
+  /**
+   * Made public in order to be called by PDB.
+   * 
+   * @see org.eclipse.ui.part.WorkbenchPart#setPartName(java.lang.String)
+   */
   @Override
   public void setPartName( final String partName )
   {
     super.setPartName( partName );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    final IWorkbenchPartSite site = getSite();
+    final IMenuService service = (IMenuService) site.getService( IMenuService.class );
+    service.releaseContributions( m_menuManager );
+
+    super.dispose();
+  }
+
+  @Override
+  protected void registerContextMenu( final MenuManager menuManager )
+  {
+    m_menuManager = menuManager;
+
+    final IWorkbenchPartSite site = getSite();
+    final IMenuService service = (IMenuService) site.getService( IMenuService.class );
+
+    /* Hide any popup stuff */
+    menuManager.setRemoveAllWhenShown( false );
+
+    // add additions seperator: if not, eclipse whines
+    menuManager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+
+    final String uri = String.format( "popup:%s", ID );
+    service.populateContributionManager( menuManager, uri );
+  }
+
+  @Override
+  protected void handleMenuAboutToShow( final IMenuManager manager )
+  {
+    // No 'New' menu
+    // super.handleMenuAboutToShow( manager );
   }
 }
