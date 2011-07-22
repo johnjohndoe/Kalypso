@@ -355,6 +355,23 @@
          </with>
       </enabledWhen>
    </handler>
+   <handler class="org.kalypso.model.wspm.tuhh.ui.light.documents.ShowDocumentsHandler" commandId="org.kalypso.model.wspm.light.showDocuments">
+      <enabledWhen>
+         <and>
+             <with variable="activeWorkbenchWindow.activePerspective">
+                <equals value="WspmLightPerspective"/>
+             </with>
+             <with variable="selection">
+                <and>
+                    <count value="1"/>
+                    <iterate ifEmpty="false" operator="and">
+                        <instanceof value="org.kalypsodeegree.model.feature.Feature"/>
+                    </iterate>
+                </and>
+             </with>
+         </and>
+      </enabledWhen>
+   </handler>
   </extension>
 
   <extension point="org.eclipse.ui.commands">
@@ -374,6 +391,11 @@
           id="org.kalypso.model.wspm.command.calcTuhh"
           name="%org.kalypso.model.wspm.calcTuhhAction.name">
     </command>
+    <command
+          description="Shows attached documents of the selected elements."
+          id="org.kalypso.model.wspm.light.showDocuments"
+          name="Show Attachments">
+    </command>
   </extension>
   <extension
         point="de.openali.odysseus.chart.factory.LayerProvider">
@@ -386,11 +408,13 @@
            id="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
      </provider>
   </extension>
-  <extension
-        point="org.eclipse.ui.commandImages">
+  
+  <extension point="org.eclipse.ui.commandImages">
      <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
      <image commandId="org.kalypso.model.wspm.command.calcTuhh" icon="icons/obj16/startCalulation.gif"/>
+     <image commandId="org.kalypso.model.wspm.light.showDocuments" icon="icons/obj16/wspmLightFeatureView.gif"/>
   </extension>
+  
   <extension
         point="org.eclipse.core.runtime.preferences">
      <initializer
@@ -445,6 +469,15 @@
             icon="icons/obj16/kalypso_gmt.gif"
             id="org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart"
             name="%view.name.0"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="org.kalypso.model.wspm.tuhh.ui.light.viewCategory"
+            class="org.kalypso.model.wspm.tuhh.ui.light.documents.WspmLightFeatureView"
+            icon="icons/obj16/wspmLightFeatureView.gif"
+            id="org.kalypso.model.wspm.tuhh.ui.light.WspmFeatureView"
+            name="Documents"
             restorable="true">
       </view>
   </extension>
@@ -706,9 +739,7 @@
         </wizardEnablement>
         <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.actions.simplify.SimplifyProfileWizard">
            <enablement>
-                 <reference
-                       definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-                 </reference>
+                 <reference definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles"/>
            </enablement>
         </wizardEnablement>
         <wizardEnablement
@@ -755,6 +786,23 @@
                <visibleWhen checkEnabled="true"/>
             </command>
          </menuContribution>
+
+        <menuContribution locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart">
+           <command commandId="org.kalypso.model.wspm.light.showDocuments" style="push">
+              <visibleWhen checkEnabled="true"/>
+           </command>
+           <separator name="wizards" visible="true"/>
+           <command commandId="org.kalypso.gml.ui.toolWizards" style="push">
+              <visibleWhen checkEnabled="true"/>
+           </command>
+           <command commandId="org.kalypso.ui.command.import" style="push">
+              <visibleWhen checkEnabled="true"/>
+           </command>
+           <command commandId="org.kalypso.ui.command.export" style="push">
+              <visibleWhen checkEnabled="true"/>
+           </command>
+         </menuContribution>
+         
          <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.featureview.views.FeatureView">
             <command commandId="org.kalypso.model.wspm.command.calcTuhh" style="push">
                   <visibleWhen checkEnabled="true"/>
