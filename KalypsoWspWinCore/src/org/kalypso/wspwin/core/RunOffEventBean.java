@@ -56,6 +56,7 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
@@ -146,28 +147,36 @@ public class RunOffEventBean
 
   public static void write( final File outputFile, final RunOffEventBean[] fixation ) throws FileNotFoundException
   {
-    final PrintWriter pw = new PrintWriter( outputFile );
-
-    for( final RunOffEventBean runOff : fixation )
+    PrintWriter pw = null;
+    try
     {
-      // FIXME: shorten name
-      final String name = runOff.getName();
-      final String cleanName = StringUtils.remove( name, ' ' );
+      pw = new PrintWriter( outputFile );
 
-      final Map<BigDecimal, BigDecimal> entries = runOff.getEntries();
-
-      pw.format( "%s %d%n", cleanName, entries.size() );
-      for( final Entry<BigDecimal, BigDecimal> entry : entries.entrySet() )
+      for( final RunOffEventBean runOff : fixation )
       {
-        final BigDecimal station = entry.getKey();
-        final BigDecimal value = entry.getValue();
-        pw.format( Locale.US, "%10.4f %10.3f%n", station, value );
+        final String name = runOff.getName();
+        final String cleanName = StringUtils.remove( name, ' ' );
+        final String shortName = StringUtils.abbreviateMiddle( cleanName, ".", 20 );
+
+        final Map<BigDecimal, BigDecimal> entries = runOff.getEntries();
+
+        pw.format( "%s %d%n", shortName, entries.size() );
+        for( final Entry<BigDecimal, BigDecimal> entry : entries.entrySet() )
+        {
+          final BigDecimal station = entry.getKey();
+          final BigDecimal value = entry.getValue();
+          pw.format( Locale.US, "%.4f %.3f%n", station, value );
+        }
       }
+
+      pw.checkError();
+
+      pw.flush();
+      pw.close();
     }
-
-    pw.checkError();
-
-    pw.flush();
-    pw.close();
+    finally
+    {
+      IOUtils.closeQuietly( pw );
+    }
   }
 }
