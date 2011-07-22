@@ -177,7 +177,7 @@ public class WspWinProjectWriter
     final String[] zustandNames = getZustandNames();
     for( int count = 1; count < 10E6; count++ )
     {
-      final String name = String.format( "%s%06d.str", baseName, count );
+      final String name = String.format( "%s%06d.str", baseName, count ); //$NON-NLS-1$
       if( !ArrayUtils.contains( zustandNames, name ) )
         return name;
     }

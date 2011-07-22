@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -98,7 +99,7 @@ public class WspWinOutputDirGenerator
 
     if( dir.isFile() )
     {
-      final String msg = String.format( "Cannot create directory '%s'. A file with the same name already exists.", dir.getName() );
+      final String msg = String.format( Messages.getString("WspWinOutputDirGenerator_0"), dir.getName() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.PLUGIN_ID, msg );
       throw new CoreException( status );
     }
@@ -118,11 +119,11 @@ public class WspWinOutputDirGenerator
 
   private File askForExistence( final File dir )
   {
-    final String message = String.format( "Output directory '%s' already exists. Overwrite?", dir.getName() );
-    final String[] labels = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, "&Always", "&Never", IDialogConstants.CANCEL_LABEL };
+    final String message = String.format( Messages.getString("WspWinOutputDirGenerator_1"), dir.getName() ); //$NON-NLS-1$
+    final String[] labels = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, Messages.getString("WspWinOutputDirGenerator_2"), Messages.getString("WspWinOutputDirGenerator_3"), IDialogConstants.CANCEL_LABEL }; //$NON-NLS-1$ //$NON-NLS-2$
 
     final Shell shell = SWT_AWT_Utilities.findActiveShell();
-    final MessageDialog dialog = new MessageDialog( shell, "WspWin Export", null, message, MessageDialog.QUESTION, labels, 0 );
+    final MessageDialog dialog = new MessageDialog( shell, Messages.getString("WspWinOutputDirGenerator_4"), null, message, MessageDialog.QUESTION, labels, 0 ); //$NON-NLS-1$
     switch( SWT_AWT_Utilities.openSwtMessageDialog( dialog ) )
     {
       case 0:

@@ -109,7 +109,7 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
       {
         if( !Plotter.checkPlotterExe( getShell() ) )
         {
-          MessageDialog.openWarning( getShell(), getWindowTitle(), "Unable to find plotter.exe, export cancelled." );
+          MessageDialog.openWarning( getShell(), getWindowTitle(), Messages.getString("PlotterExportProfilesWizard.0") ); //$NON-NLS-1$
           getShell().close();
         }
 

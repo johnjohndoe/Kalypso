@@ -604,7 +604,7 @@
               class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard"
               icon="icons/elcl16/export_prf.gif"
               id="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard"
-              name="WspWin Project">
+              name="%org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard.name">
         </wizard>
      </extension>
      <extension

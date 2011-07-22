@@ -197,7 +197,7 @@ public class ResultLSChartFile extends AbstractResultLSFile
     for( final AxisType axis : axes )
     {
 
-      if( "Station_Axis".equals( axis.getId() ) )
+      if( "Station_Axis".equals( axis.getId() ) ) //$NON-NLS-1$
       {
         if( m_isDirectionUpstreams )
           axis.setDirection( Direction.NEGATIVE );

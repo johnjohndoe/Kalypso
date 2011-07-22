@@ -108,7 +108,7 @@ public class WspWinImportSourcePage extends WizardPage
     final Text text = new Text( group, SWT.BORDER );
     m_text = text;
     m_text.setLayoutData( new GridData( SWT.FILL, SWT.NONE, true, false ) );
-    m_text.setText( "" ); //$NON-NLS-1$
+    m_text.setText( StringUtils.EMPTY );
     m_text.setToolTipText( STR_TOOLTIP_PATH );
 
     /* The button for opening the FileDialog. */
@@ -172,9 +172,11 @@ public class WspWinImportSourcePage extends WizardPage
     } );
 
     final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings != null && dialogSettings.get( SETTINGS_FILE_PATH ) != null && !dialogSettings.get( SETTINGS_FILE_PATH ).equals( "" ) )
+    if( dialogSettings != null )
     {
-      m_text.setText( dialogSettings.get( SETTINGS_FILE_PATH ) );
+      final String filePath = dialogSettings.get( SETTINGS_FILE_PATH );
+      if( !StringUtils.isBlank( filePath ) )
+        m_text.setText( filePath );
     }
 
     button.addSelectionListener( new SelectionListener()
