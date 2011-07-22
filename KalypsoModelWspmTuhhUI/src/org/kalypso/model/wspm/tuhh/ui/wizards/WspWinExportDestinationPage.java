@@ -137,7 +137,7 @@ public class WspWinExportDestinationPage extends WizardPage
     destinationSelectionGroup.setLayout( new GridLayout( 3, false ) );
     destinationSelectionGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL ) );
     destinationSelectionGroup.setFont( parent.getFont() );
-    destinationSelectionGroup.setText( "Output Directory" );
+    destinationSelectionGroup.setText( Messages.getString("WspWinExportDestinationPage.0") ); //$NON-NLS-1$
 
     final Label destinationLabel = new Label( destinationSelectionGroup, SWT.NONE );
     destinationLabel.setText( DESTINATION_LABEL );
@@ -176,7 +176,7 @@ public class WspWinExportDestinationPage extends WizardPage
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( group );
-    group.setText( "Output Options" );
+    group.setText( Messages.getString("WspWinExportDestinationPage.1") ); //$NON-NLS-1$
 
     createOverwriteExisting( group );
 
@@ -200,7 +200,7 @@ public class WspWinExportDestinationPage extends WizardPage
 
   private void createProjectType( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Project Type" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("WspWinExportDestinationPage.2") ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     viewer.getControl().setLayoutData( new GridData(SWT.FILL, SWT.CENTER, true, false) );

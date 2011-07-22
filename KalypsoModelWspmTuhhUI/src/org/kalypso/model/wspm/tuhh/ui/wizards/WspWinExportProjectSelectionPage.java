@@ -65,6 +65,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.commons.databinding.DataSetBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportProjectData;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author thuel2
@@ -92,8 +93,8 @@ public class WspWinExportProjectSelectionPage extends WizardPage
 
     m_data = data;
 
-    setTitle( "Project Selection" );
-    setDescription( "Select the projects that should be exported to WspWin" );
+    setTitle( Messages.getString( "WspWinExportProjectSelectionPage_0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "WspWinExportProjectSelectionPage_1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -154,7 +155,7 @@ public class WspWinExportProjectSelectionPage extends WizardPage
     buttonComposite.setLayout( new GridLayout( 3, true ) );
     buttonComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    m_selectAllButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, WorkbenchMessages.SelectionDialog_selectLabel, false );
+    m_selectAllButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, WorkbenchMessages.SelectionDialog_selectLabel, false ); //$NON-NLS-1$
 
     final WritableSet selectedProjectList = m_data.getSelectedProjectList();
     final IProject[] wspmProjects = m_data.getWspmProjects();
@@ -169,7 +170,7 @@ public class WspWinExportProjectSelectionPage extends WizardPage
     } );
     setButtonLayoutData( m_selectAllButton );
 
-    m_deselectAllButton = createButton( buttonComposite, IDialogConstants.DESELECT_ALL_ID, WorkbenchMessages.SelectionDialog_deselectLabel, false );
+    m_deselectAllButton = createButton( buttonComposite, IDialogConstants.DESELECT_ALL_ID, WorkbenchMessages.SelectionDialog_deselectLabel, false ); //$NON-NLS-1$
 
     m_deselectAllButton.addSelectionListener( new SelectionAdapter()
     {

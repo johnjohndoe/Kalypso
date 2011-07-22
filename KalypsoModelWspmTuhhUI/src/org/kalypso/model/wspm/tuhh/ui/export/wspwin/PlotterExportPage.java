@@ -110,16 +110,16 @@ public class PlotterExportPage extends ExportPrfFileChooserPage
     m_binding.bindValue( targetPrint, modelPrint );
 
     /* Sleep */
-    new Label( parent, SWT.NONE ).setText( "Sleep Time [ms]" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("PlotterExportPage.0") ); //$NON-NLS-1$
 
     final Text field = new Text( parent, SWT.BORDER | SWT.SINGLE );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setToolTipText( "Sleep time [milliseconds] between two consecutive print jobs. Enter longer time if too many prints at once cause trouble." );
+    field.setToolTipText( Messages.getString("PlotterExportPage.1") ); //$NON-NLS-1$
 
     final ISWTObservableValue targetSleep = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue modelSleep = BeansObservables.observeValue( m_data, PlotterExportData.PROPERTY_SLEEP_TIME );
     final DataBinder binder = new DataBinder( targetSleep, modelSleep );
-    binder.addTargetAfterConvertValidator( new NotNullValidator<Long>( Long.class, IStatus.ERROR, "Sleep Time may not be empty" ) );
+    binder.addTargetAfterConvertValidator( new NotNullValidator<Long>( Long.class, IStatus.ERROR, Messages.getString("PlotterExportPage.2") ) ); //$NON-NLS-1$
     binder.addTargetAfterConvertValidator( new NumberNotNegativeValidator( IStatus.ERROR ) );
     m_binding.bindValue( binder );
 

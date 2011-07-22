@@ -118,7 +118,7 @@ public class WspWinExportGmlWizard extends Wizard implements IWorkbenchWizard
     final File outputDir = m_data.getOutputDir();
     if( !overwriteExisting && outputDir.isDirectory() )
     {
-      final String msg = "Output directory alreaedy exists. Overwrite existing data?";
+      final String msg = Messages.getString("WspWinExportGmlWizard.0"); //$NON-NLS-1$
       if( !MessageDialog.openConfirm( shell, getWindowTitle(), msg ) )
         return false;
     }

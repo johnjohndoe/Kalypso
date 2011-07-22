@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.wspwin.core.WspCfg.TYPE;
 
 /**
@@ -71,7 +72,7 @@ public class WspWinExportGmlOperation implements ICoreRunnableWithProgress
     try
     {
       final WspmWaterBody[] waters = m_data.getWaterBodies();
-      monitor.beginTask( "Exporting WSPM Data", waters.length );
+      monitor.beginTask( Messages.getString("WspWinExportGmlOperation_0"), waters.length ); //$NON-NLS-1$
 
       final File outputDir = m_data.getOutputDir();
 
