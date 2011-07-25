@@ -78,7 +78,7 @@ Section -post SEC0001
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${VERSION}\$(^StartLink).lnk" $INSTDIR\${VERSION}\kalypso.exe
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${VERSION}\$(^UninstallLink).lnk" $INSTDIR\${VERSION}\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_END
-    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" DisplayName "$(^Name)"
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" DisplayName "$(^Name) ${VERSION}"
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" DisplayVersion "${VERSION}"
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" Publisher "${COMPANY}"
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" URLInfoAbout "${URL}"
@@ -118,8 +118,8 @@ Section -un.post UNSEC0001
     DeleteRegKey /IfEmpty HKLM "${REGKEY}\${VERSION}\Components"
     DeleteRegKey /IfEmpty HKLM "${REGKEY}\${VERSION}"
     DeleteRegKey /IfEmpty HKLM "${REGKEY}"
-    RmDir /REBOOTOK $SMPROGRAMS\$StartMenuGroup\${VERSION}
-    RmDir $SMPROGRAMS\$StartMenuGroup
+    RmDir /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\${VERSION}"
+    RmDir "$SMPROGRAMS\$StartMenuGroup"
     RmDir /REBOOTOK $INSTDIR\${VERSION}
     RmDir $INSTDIR
     Push $R0
