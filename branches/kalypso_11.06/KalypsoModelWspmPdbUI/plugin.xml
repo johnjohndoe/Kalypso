@@ -196,14 +196,24 @@
             class="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard"
             icon="icons/state.gif"
             id="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard"
-            name="Import GAF">
+            name="Gewässerkundliches Austauschformat (GAF)">
         <description>Imports a new state from a GAF file</description>
       </wizard>
-      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="Import Water Bodies" icon="icons/waterBody.gif">
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="Water Bodies (Shape)" icon="icons/waterBody.gif">
         <description>Imports or updates water bodies from a shape file</description>
       </wizard>
-      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" name="Import Water Levels" icon="icons/event.gif">
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" name="Water Levels (Shape)" icon="icons/event.gif">
         <description>Imports or updates water bodies from a shape file</description>
+      </wizard>
+      <wizard
+            category="pdbWizardsCategory"
+            class="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsWizard"
+            icon="icons/attachment.png"
+            id="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsWizard"
+            name="Attachments">
+         <description>
+            Attaches external documents (images, drawings, ...) to cross sections.
+         </description>
       </wizard>
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
@@ -221,6 +231,23 @@
        <enablement>
               <reference definitionId="isPdbViewVisible"/>
        </enablement>
+    </wizardEnablement>
+    <wizardEnablement
+          wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsWizard">
+       <enablement>
+          <and>
+             <reference
+                   definitionId="isPdbViewVisible">
+             </reference>
+             <with variable="selection">
+                <and>
+                   <count value="1"/>
+                   <iterate>
+                      <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.State"/>
+                   </iterate>
+                </and>
+             </with>
+          </and></enablement>
     </wizardEnablement>
   </extension>
   

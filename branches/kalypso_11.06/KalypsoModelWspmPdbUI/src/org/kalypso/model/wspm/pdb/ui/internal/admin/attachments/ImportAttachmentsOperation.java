@@ -38,52 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
+package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.hibernate.Session;
+import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
  */
-public class EditStatePage extends WizardPage
+public class ImportAttachmentsOperation implements IPdbOperation
 {
-  public static final String STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE = "Enter the properties of the freshly created state";
-
-  public static final String STR_ENTER_STATE_PROPERTIES = "Enter State Properties";
-
-  public enum Mode
+  public ImportAttachmentsOperation( final ImportAttachmentsData data )
   {
-    NEW,
-    EDIT,
-    VIEW;
-  }
-
-  private final State m_state;
-
-  private DatabindingWizardPage m_binding;
-
-  private final Mode m_mode;
-
-  private final IStatesProvider m_statesProvider;
-
-  public EditStatePage( final String pageName, final State state, final IStatesProvider statesProvider, final Mode mode )
-  {
-    super( pageName );
-
-    m_state = state;
-    m_statesProvider = statesProvider;
-    m_mode = mode;
+    // TODO Auto-generated constructor stub
   }
 
   @Override
-  public void createControl( final Composite parent )
+  public String getLabel( )
   {
-    m_binding = new DatabindingWizardPage( this, null );
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-    final StateViewer panel = new StateViewer( parent, m_binding, m_state, m_mode, m_statesProvider );
-    setControl( panel );
+  @Override
+  public void execute( final Session session ) throws PdbConnectException
+  {
+    // TODO Auto-generated method stub
+
   }
 }
