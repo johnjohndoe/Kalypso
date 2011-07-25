@@ -355,7 +355,7 @@ public class PdbWspmProject implements IPdbWspmProject
       };
       return busyCursorWhile( operation, title, "Failed to reload local data" );
     }
-    else if( result == 2 )
+    else if( result == 2 || result == -1 )
       return false;
 
     throw new IllegalStateException();
