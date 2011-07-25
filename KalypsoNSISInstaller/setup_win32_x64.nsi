@@ -8,13 +8,15 @@ Name Kalypso
 !define MUI_ICON images\kalypso_ico_32.ico
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_STARTMENUPAGE_REGISTRY_ROOT HKLM
-!define MUI_STARTMENUPAGE_REGISTRY_KEY ${REGKEY}
+!define MUI_STARTMENUPAGE_REGISTRY_KEY ${REGKEY}\${VERSION}
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME StartMenuGroup
 !define MUI_STARTMENUPAGE_DEFAULTFOLDER Kalypso
+!define MUI_FINISHPAGE_RUN $INSTDIR\${VERSION}\kalypso.exe
+!define MUI_FINISHPAGE_SHOWREADME $INSTDIR\${VERSION}\notes.txt
 !define MUI_UNICON images\kalypso_ico_32.ico
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
 !define MUI_LANGDLL_REGISTRY_ROOT HKLM
-!define MUI_LANGDLL_REGISTRY_KEY ${REGKEY}
+!define MUI_LANGDLL_REGISTRY_KEY ${REGKEY}\${VERSION}
 !define MUI_LANGDLL_REGISTRY_VALUENAME InstallerLanguage
 
 # Included files
@@ -56,7 +58,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} CompanyWebsite "${URL}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} FileVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} FileDescription ""
 VIAddVersionKey /LANG=${LANG_ENGLISH} LegalCopyright ""
-InstallDirRegKey HKLM "${REGKEY}" Path
+InstallDirRegKey HKLM "${REGKEY}\${VERSION}" Path
 ShowUninstDetails show
 
 # Installer sections
@@ -64,11 +66,11 @@ Section -Main SEC0000
     SetOutPath $INSTDIR\${VERSION}
     SetOverwrite on
     File /r data\x64\*
-    WriteRegStr HKLM "${REGKEY}\Components" Main 1
+    WriteRegStr HKLM "${REGKEY}\${VERSION}\Components" Main 1
 SectionEnd
 
 Section -post SEC0001
-    WriteRegStr HKLM "${REGKEY}" Path $INSTDIR
+    WriteRegStr HKLM "${REGKEY}\${VERSION}" Path $INSTDIR
     SetOutPath $INSTDIR\${VERSION}
     WriteUninstaller $INSTDIR\${VERSION}\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
@@ -76,20 +78,20 @@ Section -post SEC0001
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${VERSION}\$(^StartLink).lnk" $INSTDIR\${VERSION}\kalypso.exe
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${VERSION}\$(^UninstallLink).lnk" $INSTDIR\${VERSION}\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_END
-    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayName "$(^Name)"
-    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayVersion "${VERSION}"
-    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" Publisher "${COMPANY}"
-    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" URLInfoAbout "${URL}"
-    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayIcon $INSTDIR\${VERSION}\uninstall.exe
-    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" UninstallString $INSTDIR\${VERSION}\uninstall.exe
-    WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoModify 1
-    WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoRepair 1
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" DisplayName "$(^Name)"
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" DisplayVersion "${VERSION}"
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" Publisher "${COMPANY}"
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" URLInfoAbout "${URL}"
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" DisplayIcon $INSTDIR\${VERSION}\uninstall.exe
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" UninstallString $INSTDIR\${VERSION}\uninstall.exe
+    WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" NoModify 1
+    WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}" NoRepair 1
 SectionEnd
 
 # Macro for selecting uninstaller sections
 !macro SELECT_UNSECTION SECTION_NAME UNSECTION_ID
     Push $R0
-    ReadRegStr $R0 HKLM "${REGKEY}\Components" "${SECTION_NAME}"
+    ReadRegStr $R0 HKLM "${REGKEY}\${VERSION}\Components" "${SECTION_NAME}"
     StrCmp $R0 1 0 next${UNSECTION_ID}
     !insertmacro SelectSection "${UNSECTION_ID}"
     GoTo done${UNSECTION_ID}
@@ -103,20 +105,21 @@ done${UNSECTION_ID}:
 Section /o -un.Main UNSEC0000
     RmDir /r /REBOOTOK $INSTDIR\${VERSION}
     RmDir $INSTDIR
-    DeleteRegValue HKLM "${REGKEY}\Components" Main
+    DeleteRegValue HKLM "${REGKEY}\${VERSION}\Components" Main
 SectionEnd
 
 Section -un.post UNSEC0001
-    DeleteRegKey HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)"
+    DeleteRegKey HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)_${VERSION}"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\${VERSION}\$(^StartLink).lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\${VERSION}\$(^UninstallLink).lnk"
     Delete /REBOOTOK $INSTDIR\${VERSION}\uninstall.exe
-    DeleteRegValue HKLM "${REGKEY}" StartMenuGroup
-    DeleteRegValue HKLM "${REGKEY}" Path
-    DeleteRegKey /IfEmpty HKLM "${REGKEY}\Components"
+    DeleteRegValue HKLM "${REGKEY}\${VERSION}" StartMenuGroup
+    DeleteRegValue HKLM "${REGKEY}\${VERSION}" Path
+    DeleteRegKey /IfEmpty HKLM "${REGKEY}\${VERSION}\Components"
+    DeleteRegKey /IfEmpty HKLM "${REGKEY}\${VERSION}"
     DeleteRegKey /IfEmpty HKLM "${REGKEY}"
     RmDir /REBOOTOK $SMPROGRAMS\$StartMenuGroup\${VERSION}
-    RmDir /REBOOTOK $SMPROGRAMS\$StartMenuGroup
+    RmDir $SMPROGRAMS\$StartMenuGroup
     RmDir /REBOOTOK $INSTDIR\${VERSION}
     RmDir $INSTDIR
     Push $R0
@@ -139,7 +142,7 @@ FunctionEnd
 
 # Uninstaller functions
 Function un.onInit
-    ReadRegStr $INSTDIR HKLM "${REGKEY}" Path
+    ReadRegStr $INSTDIR HKLM "${REGKEY}\${VERSION}" Path
     !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuGroup
     !insertmacro MUI_UNGETLANGUAGE
     !insertmacro SELECT_UNSECTION Main ${UNSEC0000}
