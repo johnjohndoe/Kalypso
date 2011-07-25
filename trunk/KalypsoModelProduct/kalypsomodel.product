@@ -229,6 +229,7 @@ Library.
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="3" />
+      <property name="osgi.instance.area.default" value="@user.home/Kalypso" />
    </configurations>
 
 </product>
