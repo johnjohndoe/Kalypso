@@ -40,7 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.light.documents;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.PartInitException;
 import org.kalypso.featureview.views.FeatureView;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.WspmFixation;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.ui.catalogs.FeatureTypeFeatureviewCatalog;
 
 /**
  * @author Gernot Belger
@@ -49,4 +65,37 @@ public class WspmLightFeatureView extends FeatureView
 {
   public static final String WSPMLIGHTFEATUREVIEW_ID = "org.kalypso.model.wspm.tuhh.ui.light.WspmFeatureView"; //$NON-NLS-1$
 
+  private static final String ATTACHMENT_STYLE = "documents"; //$NON-NLS-1$
+
+  @Override
+  public void init( final IViewSite site ) throws PartInitException
+  {
+    super.init( site );
+
+    /* Replace 'default' gft's with 'attachment' gft's */
+    addView( WspmWaterBody.QNAME );
+    addView( WspmFixation.QNAME_FEATURE_WSPM_FIXATION );
+    addView( TuhhReach.QNAME_TUHH_REACH );
+    addView( TuhhReachProfileSegment.QNAME_PROFILEREACHSEGMENT );
+    addView( IProfileFeature.QN_PROFILE );
+  }
+
+  private void addView( final QName qname )
+  {
+    try
+    {
+      final FeatureviewType featureview = FeatureTypeFeatureviewCatalog.getFeatureview( null, qname, ATTACHMENT_STYLE );
+      if( featureview == null )
+        return;
+
+      final CachedFeatureviewFactory factory = getCachedFeatureViewFactory();
+      factory.addView( featureview );
+    }
+    catch( final JAXBException e )
+    {
+      final String msg = String.format( "Failed to configure documents feature view for: '%s'", qname );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), msg, e );
+      KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( status );
+    }
+  }
 }
