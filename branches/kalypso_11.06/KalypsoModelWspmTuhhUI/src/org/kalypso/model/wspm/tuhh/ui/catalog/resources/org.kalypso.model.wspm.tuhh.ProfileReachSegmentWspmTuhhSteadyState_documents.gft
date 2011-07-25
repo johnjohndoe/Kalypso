@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<gft:featureview typename="tuhh:ProfileReachSegmentWspmTuhhSteadyState" style="SWT.NONE" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:om="http://www.opengis.net/om" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
+  <gft:gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+  <gft:gridLayout numColumns="1" marginHeight="0" marginWidth="0" horizontalSpacing="0" verticalSpacing="0" />
+
+  <gft:subcomposite style="SWT.NONE" property="tuhh:profileMember">
+    <gft:gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+  </gft:subcomposite>
+</gft:featureview>

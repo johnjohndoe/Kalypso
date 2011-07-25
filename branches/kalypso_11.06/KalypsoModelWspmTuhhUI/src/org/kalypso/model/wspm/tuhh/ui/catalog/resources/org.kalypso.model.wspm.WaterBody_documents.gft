@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview style="SWT.NONE" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:wspm="org.kalypso.model.wspm" typename="wspm:WaterBody">
+	<gft:gridData grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" />
+	<gft:gridLayout numColumns="1" />
+
+	<gft:label xmlns:gml="http://www.opengis.net/gml" property="gml:name" visible="true" style="SWT.NONE" text="Attachments not supported for water bodies">
+		<gft:gridData grabExcessHorizontalSpace="true" horizontalAlignment="SWT.CENTER" verticalAlignment="SWT.CENTER" />
+	</gft:label>
+</gft:featureview>
