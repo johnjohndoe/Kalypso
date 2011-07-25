@@ -477,7 +477,7 @@
             class="org.kalypso.model.wspm.tuhh.ui.light.documents.WspmLightFeatureView"
             icon="icons/obj16/wspmLightFeatureView.gif"
             id="org.kalypso.model.wspm.tuhh.ui.light.WspmFeatureView"
-            name="Documents"
+            name="Attachments"
             restorable="true">
       </view>
   </extension>
