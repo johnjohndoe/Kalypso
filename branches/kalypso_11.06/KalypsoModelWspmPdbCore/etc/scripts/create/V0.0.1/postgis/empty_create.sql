@@ -1,3 +1,5 @@
+-- Version setzen auf "creating" oder "updateing"
+
 -- 03_create_tables
 -- 04_create_sequence
 -- 05_register_geometries
@@ -7,4 +9,7 @@
 -- 09_prefill_table__vegetation
 -- 99_create_spatial_indexes
 
+-- Version endgültig setzen
+
 commit;
+
