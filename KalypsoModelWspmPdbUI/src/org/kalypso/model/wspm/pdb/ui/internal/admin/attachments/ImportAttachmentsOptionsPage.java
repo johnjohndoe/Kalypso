@@ -57,7 +57,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.DirectoryBinding;
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import org.kalypso.commons.databinding.swt.FileBinding;
+import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StateViewer;
@@ -94,6 +95,8 @@ public class ImportAttachmentsOptionsPage extends WizardPage
     createStateControl( panel );
     createImportControls( panel );
     createExportZipControl( panel );
+
+    setErrorMessage( null );
   }
 
   private void createStateControl( final Composite panel )
@@ -134,6 +137,7 @@ public class ImportAttachmentsOptionsPage extends WizardPage
 
     final Control historyControl = directoryBinding.createDirectoryFieldWithHistory( parent, modelHistory );
     historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    historyControl.setToolTipText( "Attachments will be searched in this directory" );
 
     final String windowTitle = getWizard().getWindowTitle();
     final Button searchButton = directoryBinding.createDirectorySearchButton( parent, historyControl, windowTitle, "Select import directory:" );
@@ -142,13 +146,14 @@ public class ImportAttachmentsOptionsPage extends WizardPage
 
   private void createImportPatternControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Source Directory" );
+    new Label( parent, SWT.NONE ).setText( "Source Pattern" );
 
     final Text patternField = new Text( parent, SWT.SINGLE | SWT.BORDER );
     patternField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     patternField.setMessage( "<File Pattern>" );
+    patternField.setToolTipText( "Files will be attached to database elements according to this pattern." );
 
-    final PatternInputReplacer<String> replacer = new PatternInputReplacer<String>();
+    final AttachmentPatternReplacer replacer = new AttachmentPatternReplacer();
     replacer.createPatternButton( parent, patternField );
 
     /* binding */
@@ -158,13 +163,25 @@ public class ImportAttachmentsOptionsPage extends WizardPage
     m_binding.bindValue( targetField, modelField );
   }
 
-  private void createExportZipControl( final Composite panel )
+  private void createExportZipControl( final Composite parent )
   {
-    final Group group = new Group( panel, SWT.NONE );
+    final Group group = new Group( parent, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     group.setText( "Export ZIP" );
-    GridLayoutFactory.swtDefaults().applyTo( group );
-    // TODO Auto-generated method stub
+    GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( group );
 
+    new Label( group, SWT.NONE ).setText( "ZIP File" );
+
+    final IObservableValue modelFile = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_ZIP_FILE );
+    final IObservableValue modelHistory = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_ZIP_HISTORY );
+
+    final FileChooserDelegateSave delegate = new FileChooserDelegateSave();
+    delegate.addFilter( "ZIP Files", "*.zip" );
+
+    final FileBinding fileBinding = new FileBinding( m_binding, modelFile, delegate );
+    final Control historyControl = fileBinding.createFileFieldWithHistory( group, modelHistory );
+    historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    fileBinding.createFileSearchButton( group, historyControl );
   }
 }
