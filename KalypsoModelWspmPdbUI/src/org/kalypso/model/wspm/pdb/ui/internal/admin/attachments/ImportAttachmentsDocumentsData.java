@@ -40,30 +40,45 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**
  * @author Gernot Belger
  */
-public class AttachmentStationPattern extends AbstractPatternInput<AttachmentPatternContext>
+public class ImportAttachmentsDocumentsData
 {
-  static final String TOKEN = "station"; //$NON-NLS-1$
+  private final Map<Document, IStatus> m_statusHash = new HashMap<Document, IStatus>();
 
-  public AttachmentStationPattern( )
+  private final Map<Document, BigDecimal> m_stationHash = new HashMap<Document, BigDecimal>();
+
+  // FIXME: station, status und anderes hashen
+
+  public Document[] getDocuments( )
   {
-    super( TOKEN, "Station" );
+    // TODO Auto-generated method stub
+    return null;
   }
 
-  @Override
-  public String getReplacement( final AttachmentPatternContext context, final String param )
+  public void clear( )
   {
+    m_statusHash.clear();
+    m_stationHash.clear();
+    // TODO Auto-generated method stub
 
-    // return context.getStationPattern();
+  }
 
+  public IStatus getStatus( final Document element )
+  {
+    return m_statusHash.get( element );
+  }
 
-    // TODO: create station pattern form context
-
-
-    return null;
+  public BigDecimal getStation( final Document element )
+  {
+    return m_stationHash.get( element );
   }
 }

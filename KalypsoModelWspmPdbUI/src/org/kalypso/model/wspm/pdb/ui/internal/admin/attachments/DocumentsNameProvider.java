@@ -40,30 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**
  * @author Gernot Belger
  */
-public class AttachmentStationPattern extends AbstractPatternInput<AttachmentPatternContext>
+public class DocumentsNameProvider extends ColumnLabelProvider
 {
-  static final String TOKEN = "station"; //$NON-NLS-1$
-
-  public AttachmentStationPattern( )
-  {
-    super( TOKEN, "Station" );
-  }
-
   @Override
-  public String getReplacement( final AttachmentPatternContext context, final String param )
+  public String getText( final Object element )
   {
+    if( element instanceof Document )
+      return ((Document) element).getName();
 
-    // return context.getStationPattern();
-
-
-    // TODO: create station pattern form context
-
-
-    return null;
+    return super.getText( element );
   }
 }

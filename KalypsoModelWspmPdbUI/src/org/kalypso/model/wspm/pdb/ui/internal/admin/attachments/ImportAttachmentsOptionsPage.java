@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -55,9 +56,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.DirectoryBinding;
 import org.kalypso.commons.databinding.swt.FileBinding;
+import org.kalypso.commons.databinding.validation.StringBlankValidator;
+import org.kalypso.commons.databinding.validation.StringMustContainValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
@@ -65,7 +69,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StateViewer;
 
 /**
  * @author Gernot Belger
- *
  */
 public class ImportAttachmentsOptionsPage extends WizardPage
 {
@@ -99,10 +102,13 @@ public class ImportAttachmentsOptionsPage extends WizardPage
     setErrorMessage( null );
   }
 
-  private void createStateControl( final Composite panel )
+  private void createStateControl( final Composite parent )
   {
-    final Group group = new Group( panel, SWT.NONE );
+    final Group group = new Group( parent, SWT.NONE );
+    // final Section group = new Section( parent, Section.TREE_NODE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+// final String groupMsg = String.format( "Selected State: %s", m_data.getState().getName() );
+// group.setText( groupMsg );
     group.setText( "Selected State" );
     group.setLayout( new FillLayout() );
 
@@ -111,7 +117,9 @@ public class ImportAttachmentsOptionsPage extends WizardPage
 // infoLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
     final State state = m_data.getState();
+    // final StateViewer viewer =
     new StateViewer( group, m_binding, state, Mode.VIEW, null );
+// group.setClient( viewer );
   }
 
   private void createImportControls( final Composite panel )
@@ -159,8 +167,14 @@ public class ImportAttachmentsOptionsPage extends WizardPage
     /* binding */
     final ISWTObservableValue targetField = SWTObservables.observeText( patternField, SWT.Modify );
     final IObservableValue modelField = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_PATTERN );
-    // TODO: validate pattern?
-    m_binding.bindValue( targetField, modelField );
+
+    final DataBinder binder = new DataBinder( targetField, modelField );
+    binder.addTargetAfterConvertValidator( new StringBlankValidator( IStatus.ERROR, "'Pattern' field is empty" ) );
+    final String stationToken = String.format( "<%s>", AttachmentStationPattern.TOKEN ); //$NON-NLS-1$
+    final String containsMessage = String.format( "'Pattern' must contains the %s token.", stationToken );
+    binder.addTargetAfterConvertValidator( new StringMustContainValidator( IStatus.ERROR, containsMessage, stationToken ) );
+
+    m_binding.bindValue( binder );
   }
 
   private void createExportZipControl( final Composite parent )
@@ -170,13 +184,17 @@ public class ImportAttachmentsOptionsPage extends WizardPage
     group.setText( "Export ZIP" );
     GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( group );
 
+    final Label infoLabel = new Label( group, SWT.NONE );
+    infoLabel.setText( "All found attachments will be zip'ed into this file for easy transfer to the web server." );
+    infoLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
+
     new Label( group, SWT.NONE ).setText( "ZIP File" );
 
     final IObservableValue modelFile = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_ZIP_FILE );
     final IObservableValue modelHistory = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_ZIP_HISTORY );
 
     final FileChooserDelegateSave delegate = new FileChooserDelegateSave();
-    delegate.addFilter( "ZIP Files", "*.zip" );
+    delegate.addFilter( "ZIP Files", "*.zip" ); //$NON-NLS-2$
 
     final FileBinding fileBinding = new FileBinding( m_binding, modelFile, delegate );
     final Control historyControl = fileBinding.createFileFieldWithHistory( group, modelHistory );
