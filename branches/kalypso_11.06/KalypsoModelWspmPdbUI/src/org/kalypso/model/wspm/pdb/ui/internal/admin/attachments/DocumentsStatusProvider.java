@@ -40,29 +40,48 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.kalypso.core.status.StatusComposite;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**
  * @author Gernot Belger
  */
-public class AttachmentStationPattern extends AbstractPatternInput<AttachmentPatternContext>
+public class DocumentsStatusProvider extends ColumnLabelProvider
 {
-  static final String TOKEN = "station"; //$NON-NLS-1$
+  private final ImportAttachmentsDocumentsData m_documentData;
 
-  public AttachmentStationPattern( )
+  public DocumentsStatusProvider( final ImportAttachmentsDocumentsData documentData )
   {
-    super( TOKEN, "Station" );
+    m_documentData = documentData;
   }
 
   @Override
-  public String getReplacement( final AttachmentPatternContext context, final String param )
+  public String getText( final Object element )
   {
+    final IStatus status = getStatus( element );
+    if( status == null )
+      return null;
 
-    // return context.getStationPattern();
+    return status.getMessage();
+  }
 
+  @Override
+  public Image getImage( final Object element )
+  {
+    final IStatus status = getStatus( element );
+    if( status == null )
+      return null;
 
-    // TODO: create station pattern form context
+    return StatusComposite.getStatusImage( status );
+  }
 
+  private IStatus getStatus( final Object element )
+  {
+    if( element instanceof Document )
+      return m_documentData.getStatus( (Document) element );
 
     return null;
   }

@@ -40,30 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * @author Gernot Belger
  */
-public class AttachmentStationPattern extends AbstractPatternInput<AttachmentPatternContext>
+public class SearchDocumentsOperation implements ICoreRunnableWithProgress
 {
-  static final String TOKEN = "station"; //$NON-NLS-1$
+  private final ImportAttachmentsData m_data;
 
-  public AttachmentStationPattern( )
+  private final ImportAttachmentsDocumentsData m_documentData;
+
+  public SearchDocumentsOperation( final ImportAttachmentsData data, final ImportAttachmentsDocumentsData documentData )
   {
-    super( TOKEN, "Station" );
+    m_data = data;
+    m_documentData = documentData;
   }
 
   @Override
-  public String getReplacement( final AttachmentPatternContext context, final String param )
+  public IStatus execute( final IProgressMonitor monitor )
   {
+    m_documentData.clear();
 
-    // return context.getStationPattern();
-
-
-    // TODO: create station pattern form context
-
-
+    // TODO Auto-generated method stub
     return null;
   }
 }

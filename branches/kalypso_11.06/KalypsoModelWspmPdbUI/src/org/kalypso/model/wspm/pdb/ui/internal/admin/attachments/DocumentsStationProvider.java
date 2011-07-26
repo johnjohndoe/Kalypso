@@ -40,29 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
+import java.math.BigDecimal;
+
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**
  * @author Gernot Belger
+ *
  */
-public class AttachmentStationPattern extends AbstractPatternInput<AttachmentPatternContext>
+public class DocumentsStationProvider extends ColumnLabelProvider
 {
-  static final String TOKEN = "station"; //$NON-NLS-1$
+  private final ImportAttachmentsDocumentsData m_documentData;
 
-  public AttachmentStationPattern( )
+  public DocumentsStationProvider( final ImportAttachmentsDocumentsData documentData )
   {
-    super( TOKEN, "Station" );
+    m_documentData = documentData;
   }
 
   @Override
-  public String getReplacement( final AttachmentPatternContext context, final String param )
+  public String getText( final Object element )
   {
+    final BigDecimal status = getStation( element );
+    if( status == null )
+      return null;
 
-    // return context.getStationPattern();
+    return status.toString();
+  }
 
-
-    // TODO: create station pattern form context
-
+  private BigDecimal getStation( final Object element )
+  {
+    if( element instanceof Document )
+      return m_documentData.getStation( (Document) element );
 
     return null;
   }

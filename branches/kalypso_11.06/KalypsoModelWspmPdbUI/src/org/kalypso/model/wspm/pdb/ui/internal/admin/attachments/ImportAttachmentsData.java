@@ -74,7 +74,7 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   private State m_state;
 
-  private String m_importPattern;
+  private String m_importPattern = String.format( "*<%s>*", AttachmentStationPattern.TOKEN ); //$NON-NLS-1$
 
   private File m_importDir;
 
@@ -126,6 +126,7 @@ public class ImportAttachmentsData extends AbstractModelObject
     if( settings == null )
       return;
 
+    /* Import history */
     final String[] importHistory = settings.getArray( PROPERTY_IMPORT_DIR_HISTORY );
     if( importHistory != null )
     {
@@ -139,6 +140,7 @@ public class ImportAttachmentsData extends AbstractModelObject
       }
     }
 
+    /* zip history */
     final String[] zipHistory = settings.getArray( PROPERTY_ZIP_HISTORY );
     if( zipHistory != null )
     {
@@ -151,6 +153,11 @@ public class ImportAttachmentsData extends AbstractModelObject
           setZipFile( new File( zipPath ) );
       }
     }
+
+    /* Pattern */
+    final String pattern = settings.get( PROPERTY_IMPORT_PATTERN );
+    if( !StringUtils.isBlank( pattern ) )
+      m_importPattern = pattern;
   }
 
   public void store( final IDialogSettings settings )
@@ -169,6 +176,9 @@ public class ImportAttachmentsData extends AbstractModelObject
     final File zipFile = getZipFile();
     final String[] newZipHistory = updateHistory( zipHistory, zipFile );
     settings.put( PROPERTY_ZIP_HISTORY, newZipHistory );
+
+    /* Import pattern */
+    settings.put( PROPERTY_IMPORT_PATTERN, m_importPattern );
   }
 
   private String[] updateHistory( final String[] history, final File file )
