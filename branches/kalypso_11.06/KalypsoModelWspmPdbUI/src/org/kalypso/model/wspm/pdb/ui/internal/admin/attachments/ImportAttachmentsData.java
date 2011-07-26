@@ -45,6 +45,9 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -63,6 +66,10 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   public static final String PROPERTY_IMPORT_PATTERN = "importPattern"; //$NON-NLS-1$
 
+  public static final String PROPERTY_ZIP_FILE = "zipFile"; //$NON-NLS-1$
+
+  public static final String PROPERTY_ZIP_HISTORY = "zipHistory"; //$NON-NLS-1$
+
   private final IPdbConnection m_connection;
 
   private State m_state;
@@ -72,6 +79,10 @@ public class ImportAttachmentsData extends AbstractModelObject
   private File m_importDir;
 
   private String[] m_importHistory = new String[0];
+
+  private File m_zipFile;
+
+  private String[] m_zipHistory = new String[0];
 
   public ImportAttachmentsData( final IPdbConnection connection )
   {
@@ -88,6 +99,13 @@ public class ImportAttachmentsData extends AbstractModelObject
     load( settings );
 
     m_state = findState( selection );
+
+    /* Propose a zip file name, based on state name */
+    final File zipDir = m_zipFile != null ? m_zipFile.getParentFile() : FileUtils.getUserDirectory();
+    final String zipName = m_state.getName() + ".zip"; //$NON-NLS-1$
+    final File zipFile = new File( zipDir, zipName );
+    setZipFile( zipFile );
+
     Assert.isNotNull( m_state );
   }
 
@@ -108,13 +126,30 @@ public class ImportAttachmentsData extends AbstractModelObject
     if( settings == null )
       return;
 
-    final String[] history = settings.getArray( PROPERTY_IMPORT_DIR_HISTORY );
-    if( history != null )
+    final String[] importHistory = settings.getArray( PROPERTY_IMPORT_DIR_HISTORY );
+    if( importHistory != null )
     {
-      setImportHistory( history );
+      setImportHistory( importHistory );
 
-      if( history.length > 0 )
-        setImportDir( new File( history[0] ) );
+      if( importHistory.length > 0 )
+      {
+        final String importPath = importHistory[0];
+        if( importPath != null )
+          setImportDir( new File( importPath ) );
+      }
+    }
+
+    final String[] zipHistory = settings.getArray( PROPERTY_ZIP_HISTORY );
+    if( zipHistory != null )
+    {
+      setZipHistory( zipHistory );
+
+      if( zipHistory.length > 0 )
+      {
+        final String zipPath = zipHistory[0];
+        if( zipPath != null )
+          setZipFile( new File( zipPath ) );
+      }
     }
   }
 
@@ -123,16 +158,34 @@ public class ImportAttachmentsData extends AbstractModelObject
     if( settings == null )
       return;
 
-    // update source names history
-    final String[] history = getImportHistory();
+    /* Update import history */
+    final String[] importHistory = getImportHistory();
+    final File importDir = getImportDir();
+    final String[] newImportHistory = updateHistory( importHistory, importDir );
+    settings.put( PROPERTY_IMPORT_DIR_HISTORY, newImportHistory );
+
+    /* Update zip history */
+    final String[] zipHistory = getZipHistory();
+    final File zipFile = getZipFile();
+    final String[] newZipHistory = updateHistory( zipHistory, zipFile );
+    settings.put( PROPERTY_ZIP_HISTORY, newZipHistory );
+  }
+
+  private String[] updateHistory( final String[] history, final File file )
+  {
     final Set<String> historySet = new LinkedHashSet<String>();
     // New entry on, top; avoid duplicate entries
-    final File importDir = getImportDir();
-    if( importDir != null )
-      historySet.add( importDir.getAbsolutePath() );
+    if( file != null )
+    {
+      final String absolutePath = file.getAbsolutePath();
+      if( !StringUtils.isBlank( absolutePath ) )
+        historySet.add( absolutePath );
+    }
+
     historySet.addAll( Arrays.asList( history ) );
 
-    settings.put( PROPERTY_IMPORT_DIR_HISTORY, historySet.toArray( new String[historySet.size()] ) );
+    final String[] newHistory = historySet.toArray( new String[historySet.size()] );
+    return (String[]) ArrayUtils.subarray( newHistory, 0, 20 );
   }
 
   public State getState( )
@@ -180,5 +233,33 @@ public class ImportAttachmentsData extends AbstractModelObject
     m_importPattern = importPattern;
 
     firePropertyChange( PROPERTY_IMPORT_PATTERN, oldValue, importPattern );
+  }
+
+  public File getZipFile( )
+  {
+    return m_zipFile;
+  }
+
+  public void setZipFile( final File zipFile )
+  {
+    final Object oldValue = m_zipFile;
+
+    m_zipFile = zipFile;
+
+    firePropertyChange( PROPERTY_ZIP_FILE, oldValue, zipFile );
+  }
+
+  public String[] getZipHistory( )
+  {
+    return m_zipHistory;
+  }
+
+  public void setZipHistory( final String[] zipHistory )
+  {
+    final Object oldValue = m_zipHistory;
+
+    m_zipHistory = zipHistory;
+
+    firePropertyChange( PROPERTY_ZIP_HISTORY, oldValue, zipHistory );
   }
 }
