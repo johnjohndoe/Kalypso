@@ -276,7 +276,7 @@ public class PreRMAKalypso implements ISimulation
       progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.9" ) ); //$NON-NLS-1$
       final FileObject r10file = workingDir.resolveFile( OUTPUT_CONTROL );
       final BuildingIDProvider buildingProvider = converter2D.getBuildingProvider();
-      final Control1D2DConverter controlConverter = new Control1D2DConverter( controlModel, calculationUnit, flowRelationshipModel, roughnessModel, converter2D, buildingProvider, m_log );
+      final Control1D2DConverter controlConverter = new Control1D2DConverter( controlModel, calculationUnit, flowRelationshipModel, roughnessModel, converter2D, buildingProvider, m_log, windRelationshipModel.getWindDataModelSystems() );
       controlConverter.writeR10File( r10file.getContent().getOutputStream() );
       r10file.close();
       ProgressUtilities.worked( progress, 10 );

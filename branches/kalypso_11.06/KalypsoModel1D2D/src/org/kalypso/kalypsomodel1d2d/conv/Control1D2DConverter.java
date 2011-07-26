@@ -86,6 +86,7 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -135,7 +136,11 @@ public class Control1D2DConverter
 
   private final ICalculationUnit m_calculationUnit;
 
-  public Control1D2DConverter( final IControlModel1D2D controlModel, final ICalculationUnit calculationUnit, final IFlowRelationshipModel flowModel, final IRoughnessClsCollection roughnessMmodel, final INativeIDProvider idProvider, final BuildingIDProvider buildingProvider, final IGeoLog log )
+  private boolean m_boolPrintWindLineDone;
+
+  private IFeatureWrapperCollection<IWindDataModelSystem> m_windSystemsToWrite;
+
+  public Control1D2DConverter( final IControlModel1D2D controlModel, final ICalculationUnit calculationUnit, final IFlowRelationshipModel flowModel, final IRoughnessClsCollection roughnessMmodel, final INativeIDProvider idProvider, final BuildingIDProvider buildingProvider, final IGeoLog log, final IFeatureWrapperCollection<IWindDataModelSystem> pWindSystemCollection )
   {
     m_controlModel = controlModel;
     m_calculationUnit = calculationUnit;
@@ -143,6 +148,8 @@ public class Control1D2DConverter
     m_nativeIDProvider = idProvider;
     m_buildingProvider = buildingProvider;
     m_log = log;
+    m_boolPrintWindLineDone = false;
+    m_windSystemsToWrite = pWindSystemCollection;
 
     // only instantiate this provider once, we require global ids over several runs
     if( m_staticInnerLinesIDProvider == null )
@@ -216,7 +223,7 @@ public class Control1D2DConverter
     formatter.format( "INCSTR  %s%n", ISimulation1D2DConstants.BUILDING_File ); //$NON-NLS-1$
 
     /* We always write a wind file, even if it is empty. */
-    formatter.format( "AWINDIN2%s%n", ISimulation1D2DConstants.WIND_RMA10_File ); //$NON-NLS-1$
+    formatter.format( "AWINDIN3%s%n", ISimulation1D2DConstants.WIND_RMA10_File ); //$NON-NLS-1$
     formatter.format( "INSRCORD%s%n", ISimulation1D2DConstants.WIND_RMA10_COORDS_File ); //$NON-NLS-1$
 
     /* We always write a building file, even if it is empty. */
@@ -634,6 +641,10 @@ public class Control1D2DConverter
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D );
 
     // add other conti lines types as well (buildings)?
+    if( m_windSystemsToWrite != null && !m_windSystemsToWrite.isEmpty() && !m_boolPrintWindLineDone ){
+      formatter.format( "WVA          1.0     1.0       1%n" );
+      m_boolPrintWindLineDone = true;
+    }
     formatter.format( "ENDSTEP %s%n", message ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( formatter );
