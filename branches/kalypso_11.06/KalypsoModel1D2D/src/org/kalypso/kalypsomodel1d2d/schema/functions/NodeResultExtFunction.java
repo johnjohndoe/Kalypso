@@ -134,14 +134,14 @@ public class NodeResultExtFunction extends FeaturePropertyFunction
     {
       if( resultValue == null )
       {
-        Object lLastValidResValue = m_mapSldSettingsIntern.get( LAST_VALID_VALUE );
-        if( lLastValidResValue != null ){
-          return lLastValidResValue;
-        }
         if( m_resultTypeProperty.getLocalPart().toLowerCase().contains( WAVEDIR_TYPE ) )
         {
           m_mapSldSettingsIntern.put( LAST_VALID_VALUE, null );
           return null;
+        }
+        Object lLastValidResValue = m_mapSldSettingsIntern.get( LAST_VALID_VALUE );
+        if( lLastValidResValue != null ){
+          return lLastValidResValue;
         }
         return Double.NaN;
       }
