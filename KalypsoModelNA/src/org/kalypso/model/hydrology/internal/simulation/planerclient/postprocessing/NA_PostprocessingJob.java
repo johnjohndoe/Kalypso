@@ -356,7 +356,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
       // FIXME: check if this workspace is empty and give a better error message
       final File shapeFile = new File( tmpdir, "difference" ); //$NON-NLS-1$
-      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), (String) null );
+      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), targetCRS );
     }
     catch( final Exception e )
     {
