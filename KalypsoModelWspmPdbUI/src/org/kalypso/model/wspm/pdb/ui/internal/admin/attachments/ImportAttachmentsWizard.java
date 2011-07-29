@@ -1,9 +1,12 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
@@ -105,6 +108,9 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
   {
     storeData();
 
+    if( !checkForZip() )
+      return false;
+
     final IPdbConnection connection = m_data.getConnection();
     final IPdbOperation operation = new ImportAttachmentsOperation( m_data );
 
@@ -115,6 +121,16 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
       new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
     return !status.matches( IStatus.ERROR );
+  }
+
+  private boolean checkForZip( )
+  {
+    final File zipFile = m_data.getZipFile();
+    if( zipFile == null || !zipFile.exists() )
+      return true;
+
+    final String message = String.format( "Overwrite existing file %s ?", zipFile.getName() );
+    return MessageDialog.openConfirm( getShell(), getWindowTitle(), message );
   }
 
   private void storeData( )

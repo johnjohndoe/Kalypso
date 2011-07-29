@@ -48,7 +48,6 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -62,9 +61,6 @@ import org.kalypso.commons.databinding.swt.DirectoryBinding;
 import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StateViewer;
 
 /**
  * @author Gernot Belger
@@ -94,32 +90,23 @@ public class ImportAttachmentsOptionsPage extends WizardPage
     GridLayoutFactory.fillDefaults().applyTo( panel );
     setControl( panel );
 
-    createStateControl( panel );
+    // createStateControl( panel );
     createImportControls( panel );
     createExportZipControl( panel );
 
     setErrorMessage( null );
   }
 
-  private void createStateControl( final Composite parent )
-  {
-    final Group group = new Group( parent, SWT.NONE );
-    // final Section group = new Section( parent, Section.TREE_NODE );
-    group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-// final String groupMsg = String.format( "Selected State: %s", m_data.getState().getName() );
-// group.setText( groupMsg );
-    group.setText( "Selected State" );
-    group.setLayout( new FillLayout() );
-
-    // final Label infoLabel = new Label( group, SWT.NONE );
-// infoLabel.setText( "Files from the import directory will be attached to this selected state" );
-// infoLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-
-    final State state = m_data.getState();
-    // final StateViewer viewer =
-    new StateViewer( group, m_binding, state, Mode.VIEW, null );
-// group.setClient( viewer );
-  }
+// private void createStateControl( final Composite parent )
+// {
+// final Group group = new Group( parent, SWT.NONE );
+// group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+// group.setText( "Selected State" );
+// group.setLayout( new FillLayout() );
+//
+// final State state = m_data.getState();
+// new StateViewer( group, m_binding, state, Mode.VIEW, null );
+// }
 
   private void createImportControls( final Composite panel )
   {
