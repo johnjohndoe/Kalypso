@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -64,7 +65,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.internal.WorkbenchMessages;
+import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.commons.databinding.validation.NumberNotExactValidator;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
@@ -123,7 +126,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
 
     m_viewer = new CheckboxTableViewer( table );
     m_viewer.setContentProvider( new ArrayContentProvider() );
-    m_checkStateHandler = new DocumentsCheckstateHandler( m_viewer, m_documentData );
+    m_checkStateHandler = new DocumentsCheckstateHandler( m_viewer, m_data );
     m_viewer.setCheckStateProvider( m_checkStateHandler );
 
     // status
@@ -173,6 +176,13 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     } );
 
     m_viewer.addCheckStateListener( m_checkStateHandler );
+
+    final IObservableValue target = new WritableValue();
+    final IObservableValue model = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_SELECTION_COUNT );
+
+    final DataBinder countBinder = new DataBinder( target, model );
+    countBinder.addModelAfterGetValidator( new NumberNotExactValidator( Integer.valueOf( 0 ), IStatus.ERROR, "No document is selected for import" ) );
+    m_binding.bindValue( countBinder );
   }
 
   protected void handleShowDocumentStatus( final IStructuredSelection selection )
@@ -246,7 +256,9 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
   {
     readDocuments();
 
+    m_data.clearSelection();
     m_viewer.setInput( m_documentData.getDocuments() );
+    m_checkStateHandler.selectAll();
 
     ColumnsResizeControlListener.refreshColumnsWidth( m_viewer.getTable() );
   }

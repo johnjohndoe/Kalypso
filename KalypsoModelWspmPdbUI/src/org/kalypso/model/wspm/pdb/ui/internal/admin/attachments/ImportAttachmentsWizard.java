@@ -23,6 +23,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 
 public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
@@ -38,6 +39,8 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
 
   private ImportAttachmentsData m_data;
 
+  private IConnectionViewer m_viewer;
+
   public ImportAttachmentsWizard( )
   {
     setNeedsProgressMonitor( true );
@@ -49,9 +52,9 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     final IWorkbenchPart activePart = workbench.getActiveWorkbenchWindow().getActivePage().getActivePart();
-    final IConnectionViewer viewer = (IConnectionViewer) activePart;
+    m_viewer = (IConnectionViewer) activePart;
 
-    final IPdbConnection connection = viewer.getConnection();
+    final IPdbConnection connection = m_viewer.getConnection();
 
     m_data = new ImportAttachmentsData( connection );
     m_data.init( selection, getDialogSettings() );
@@ -119,6 +122,10 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
     if( !status.isOK() )
       new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+
+    final ElementSelector selector = new ElementSelector();
+    selector.addStateName( m_data.getState().getName() );
+    m_viewer.reload( selector );
 
     return !status.matches( IStatus.ERROR );
   }

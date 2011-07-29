@@ -41,9 +41,12 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -77,6 +80,8 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   public static final String PROPERTY_ZIP_HISTORY = "zipHistory"; //$NON-NLS-1$
 
+  public static final String PROPERTY_SELECTION_COUNT = "selectionCount"; //$NON-NLS-1$
+
   private ImportAttachmentsDocumentsData m_documentData = null;
 
   private final IPdbConnection m_connection;
@@ -96,6 +101,10 @@ public class ImportAttachmentsData extends AbstractModelObject
   private File m_zipFile;
 
   private String[] m_zipHistory = new String[0];
+
+  private final Collection<Document> m_selectedDocuments = new HashSet<Document>();
+
+  private int m_selectionCount = 0;
 
   public ImportAttachmentsData( final IPdbConnection connection )
   {
@@ -321,6 +330,8 @@ public class ImportAttachmentsData extends AbstractModelObject
     m_importMode = importMode;
 
     firePropertyChange( PROPERTY_IMPORT_MODE, oldValue, importMode );
+
+    updateSelectionCount();
   }
 
   public synchronized ImportAttachmentsDocumentsData getDocumentData( )
@@ -337,11 +348,62 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   public Document[] getImportDocuments( )
   {
-    return getDocumentData().getSelectedDocuments( m_importMode );
+    final Collection<Document> selected = new ArrayList<Document>();
+
+    for( final Document document : m_selectedDocuments )
+    {
+      final boolean exists = m_documentData.isExisting( document );
+      if( m_importMode == ImportMode.overwrite || !exists )
+        selected.add( document );
+    }
+
+    return selected.toArray( new Document[selected.size()] );
   }
 
   public String getUsername( )
   {
     return m_connection.getSettings().getUsername();
+  }
+
+  public boolean isSelected( final Document doc )
+  {
+    return m_selectedDocuments.contains( doc );
+  }
+
+  public void selectDocument( final Document doc )
+  {
+    m_selectedDocuments.add( doc );
+    updateSelectionCount();
+  }
+
+  public void unselectDocument( final Document doc )
+  {
+    m_selectedDocuments.remove( doc );
+    updateSelectionCount();
+  }
+
+  public void clearSelection( )
+  {
+    m_selectedDocuments.clear();
+    updateSelectionCount();
+  }
+
+  private void updateSelectionCount( )
+  {
+    setSelectionCount( getImportDocuments().length );
+  }
+
+  public int getSelectionCount( )
+  {
+    return m_selectionCount;
+  }
+
+  public void setSelectionCount( final int selectionCount )
+  {
+    final Object oldValue = m_selectionCount;
+
+    m_selectionCount = selectionCount;
+
+    firePropertyChange( PROPERTY_SELECTION_COUNT, oldValue, m_selectionCount );
   }
 }
