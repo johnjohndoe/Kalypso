@@ -599,6 +599,38 @@
 					<gft:validatorlabel property="c1d2d:OMEGA" visible="true" style="SWT.NONE">
 						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
 					</gft:validatorlabel>
+
+                    <gft:checkbox enabled="true" property="c1d2d:HASWINDDRAG" style="SWT.NONE">
+                        <gft:gridData horizontalSpan="3" horizontalAlignment="SWT.BEGINNING" />
+                    </gft:checkbox>
+                    <gft:label property="c1d2d:CHI" visible="true" style="SWT.NONE">
+                        <gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+                        <gft:enabledOperation>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:HASWINDDRAG</ogc:PropertyName>
+                                <ogc:Literal>true</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                        </gft:enabledOperation>
+                    </gft:label>
+                    <gft:text editable="true" property="c1d2d:CHI" style="SWT.BORDER">
+                        <gft:enabledOperation>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:HASWINDDRAG</ogc:PropertyName>
+                                <ogc:Literal>true</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                        </gft:enabledOperation>
+                        <gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+                    </gft:text>
+                    <gft:validatorlabel property="c1d2d:CHI" visible="true" style="SWT.NONE">
+                        <gft:enabledOperation>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:HASWINDDRAG</ogc:PropertyName>
+                                <ogc:Literal>true</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                        </gft:enabledOperation>
+                        <gft:gridData horizontalAlignment="SWT.BEGINNING" />
+                    </gft:validatorlabel>
+
 				</gft:group>
 
 				<gft:group text="Turbulence Model Parameters" style="SWT.NONE">
@@ -817,33 +849,63 @@
 					<gft:validatorlabel property="c1d2d:IDNOPT" visible="true" style="SWT.NONE">
 						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
 					</gft:validatorlabel>
+
+                    <gft:checkbox enabled="true" property="c1d2d:FIXEDMARSHBOTTOM" style="SWT.NONE">
+                        <gft:enabledOperation>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>-2</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                        </gft:enabledOperation>
+                        <gft:gridData horizontalSpan="3" horizontalAlignment="SWT.BEGINNING" />
+                    </gft:checkbox>
+
 					<gft:label property="c1d2d:AC1" visible="true" style="SWT.NONE">
-						<gft:enabledOperation>
-							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
-								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
-								<ogc:Literal>-2</ogc:Literal>
-							</ogc:PropertyIsLike>
-						</gft:enabledOperation>
+                           <ogc:And>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>-2</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:FIXEDMARSHBOTTOM</ogc:PropertyName>
+                                <ogc:Literal>false</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                            </ogc:And>
 						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
 					</gft:label>
+
 					<gft:text editable="true" property="c1d2d:AC1" style="SWT.BORDER">
 						<gft:enabledOperation>
+						   <ogc:And>
 							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
 								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
 								<ogc:Literal>-2</ogc:Literal>
 							</ogc:PropertyIsLike>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:FIXEDMARSHBOTTOM</ogc:PropertyName>
+                                <ogc:Literal>false</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                            </ogc:And>
 						</gft:enabledOperation>
 						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
 					</gft:text>
+
 					<gft:validatorlabel property="c1d2d:AC1" visible="true" style="SWT.NONE">
 						<gft:enabledOperation>
-							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
-								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
-								<ogc:Literal>-2</ogc:Literal>
-							</ogc:PropertyIsLike>
+                           <ogc:And>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>-2</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:FIXEDMARSHBOTTOM</ogc:PropertyName>
+                                <ogc:Literal>false</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                            </ogc:And>
 						</gft:enabledOperation>
 						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
 					</gft:validatorlabel>
+
 					<gft:label property="c1d2d:AC2" visible="true" style="SWT.NONE">
 						<gft:enabledOperation>
 							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
@@ -898,6 +960,110 @@
 						</gft:enabledOperation>
 						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
 					</gft:validatorlabel>
+
+                    <gft:label property="c1d2d:AC4" visible="true" style="SWT.NONE">
+                        <gft:enabledOperation>
+                           <ogc:And>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>-2</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:FIXEDMARSHBOTTOM</ogc:PropertyName>
+                                <ogc:Literal>true</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                            </ogc:And>
+                        </gft:enabledOperation>
+                        <gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+                    </gft:label>
+                    <gft:text editable="true" property="c1d2d:AC4" style="SWT.BORDER">
+                        <gft:enabledOperation>
+                           <ogc:And>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>-2</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:FIXEDMARSHBOTTOM</ogc:PropertyName>
+                                <ogc:Literal>true</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                            </ogc:And>
+                        </gft:enabledOperation>
+                        <gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+                    </gft:text>
+                    <gft:validatorlabel property="c1d2d:AC4" visible="true" style="SWT.NONE">
+                        <gft:enabledOperation>
+                           <ogc:And>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>-2</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                            <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:FIXEDMARSHBOTTOM</ogc:PropertyName>
+                                <ogc:Literal>true</ogc:Literal>
+                            </ogc:PropertyIsLike>
+                            </ogc:And>
+                        </gft:enabledOperation>
+                        <gft:gridData horizontalAlignment="SWT.BEGINNING" />
+                    </gft:validatorlabel>
+                    
+                    <gft:label property="c1d2d:MARSHFRICTIONFACTOR" visible="true" style="SWT.NONE">
+                        <gft:enabledOperation>
+                            <ogc:PropertyIsLessThan wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>0</ogc:Literal>
+                            </ogc:PropertyIsLessThan>
+                        </gft:enabledOperation>
+                        <gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+                    </gft:label>
+                    <gft:text editable="true" property="c1d2d:MARSHFRICTIONFACTOR" style="SWT.BORDER">
+                        <gft:enabledOperation>
+                            <ogc:PropertyIsLessThan wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>0</ogc:Literal>
+                            </ogc:PropertyIsLessThan>
+                        </gft:enabledOperation>
+                        <gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+                    </gft:text>
+                    <gft:validatorlabel property="c1d2d:MARSHFRICTIONFACTOR" visible="true" style="SWT.NONE">
+                        <gft:enabledOperation>
+                            <ogc:PropertyIsLessThan wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>0</ogc:Literal>
+                            </ogc:PropertyIsLessThan>
+                        </gft:enabledOperation>
+                        <gft:gridData horizontalAlignment="SWT.BEGINNING" />
+                    </gft:validatorlabel>
+
+
+                    <gft:label property="c1d2d:MARSHFRICTIONDISTR" visible="true" style="SWT.NONE">
+                        <gft:enabledOperation>
+                            <ogc:PropertyIsLessThan wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>0</ogc:Literal>
+                            </ogc:PropertyIsLessThan>
+                        </gft:enabledOperation>
+                        <gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+                    </gft:label>
+                    <gft:combo property="c1d2d:MARSHFRICTIONDISTR" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+                        <gft:enabledOperation>
+                            <ogc:PropertyIsLessThan wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>0</ogc:Literal>
+                            </ogc:PropertyIsLessThan>
+                        </gft:enabledOperation>
+                    </gft:combo>
+                    <gft:validatorlabel property="c1d2d:MARSHFRICTIONDISTR" visible="true" style="SWT.NONE">
+                        <gft:enabledOperation>
+                            <ogc:PropertyIsLessThan wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                                <ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+                                <ogc:Literal>0</ogc:Literal>
+                            </ogc:PropertyIsLessThan>
+                        </gft:enabledOperation>
+                        <gft:gridData horizontalAlignment="SWT.BEGINNING" />
+                    </gft:validatorlabel>
+                    
+
 					<gft:label property="c1d2d:DSET" visible="true" style="SWT.NONE">
 						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
 					</gft:label>
