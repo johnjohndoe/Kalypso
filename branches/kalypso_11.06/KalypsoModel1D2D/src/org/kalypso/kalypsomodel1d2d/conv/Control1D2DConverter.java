@@ -222,9 +222,12 @@ public class Control1D2DConverter
     /* We always write a building file, even if it is empty. */
     formatter.format( "INCSTR  %s%n", ISimulation1D2DConstants.BUILDING_File ); //$NON-NLS-1$
 
-    /* We always write a wind file, even if it is empty. */
-    formatter.format( "AWINDIN3%s%n", ISimulation1D2DConstants.WIND_RMA10_File ); //$NON-NLS-1$
-    formatter.format( "INSRCORD%s%n", ISimulation1D2DConstants.WIND_RMA10_COORDS_File ); //$NON-NLS-1$
+    /* We only write a wind field, if we want to consider wind */
+    if (m_controlModel.getHasWindDrag())
+    {
+      formatter.format( "AWINDIN3%s%n", ISimulation1D2DConstants.WIND_RMA10_File ); //$NON-NLS-1$
+      formatter.format( "INSRCORD%s%n", ISimulation1D2DConstants.WIND_RMA10_COORDS_File ); //$NON-NLS-1$
+    }
 
     /* We always write a building file, even if it is empty. */
 //    formatter.format( "INSSTR  %s%n", ISimulation1D2DConstants.SURFACE_TRACTTION_File ); //$NON-NLS-1$
@@ -266,7 +269,7 @@ public class Control1D2DConverter
 
     // C2
     // TODO: P_BOTTOM still not implemented, ask Nico
-    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%8.3f%n", m_controlModel.getOMEGA(), m_controlModel.getELEV(), 1.0, 1.0, 1.0, 1, m_controlModel.get_P_BOTTOM() ); //$NON-NLS-1$
+    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%8.2f%n", m_controlModel.getOMEGA(), m_controlModel.getELEV(), 1.0, 1.0, 1.0, 1, m_controlModel.get_P_BOTTOM() ); //$NON-NLS-1$
     // formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0,
     // 1.0, 1 );
 
@@ -282,7 +285,7 @@ public class Control1D2DConverter
 
     // C6
     if( m_controlModel.getIcpu() != 0 )
-      formatter.format( "C6%14d%8d%8d%8d%n", 0, 0, 0, m_controlModel.getIcpu() ); //$NON-NLS-1$
+      formatter.format( "C6%14d%8d%8d%8d%8.5f%8d%n", 0, 0, 0, m_controlModel.getIcpu(), m_controlModel.getHasWindDrag()? m_controlModel.getChi():0.0, m_controlModel.getMarshFrictionDistr()); //$NON-NLS-1$
     // C7
     formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 ); //$NON-NLS-1$
 
@@ -359,7 +362,7 @@ public class Control1D2DConverter
     if( eddy.length < 4 )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.17" ) ); //$NON-NLS-1$
     formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, eddy[0], eddy[1], eddy[2], eddy[3], -1.0, 1.0, 1.0 ); //$NON-NLS-1$
-    formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
+    formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, m_controlModel.getMarshFrictionFactor() ); //$NON-NLS-1$
     formatter.format( "ED4%21.5f%8.3f%8.3f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( formatter );
@@ -368,7 +371,7 @@ public class Control1D2DConverter
   private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final double val, final Double ks, final Double axayCorrected, final Double dpCorrected ) throws IOException
   {
     formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, val, val, val, val, -1.0, 1.0, 1.0 ); //$NON-NLS-1$
-    formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
+    formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, m_controlModel.getMarshFrictionFactor() ); //$NON-NLS-1$
     formatter.format( "ED4%21.5f%8.3f%8.3f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( formatter );
@@ -438,7 +441,7 @@ public class Control1D2DConverter
     formatter.format( "ECL%n" ); //$NON-NLS-1$
 
     if( m_controlModel.getIDNOPT() != 0 && m_controlModel.getIDNOPT() != -1 )
-      formatter.format( "MP%21.3f%8.3f%8.5f%n", m_controlModel.getAC1(), m_controlModel.getAC2(), m_controlModel.getAC3() ); //$NON-NLS-1$
+      formatter.format( "MP %21.3f%8.3f%8.5f%8.2f%n", m_controlModel.getFixedMarshBottom()? 0.0:m_controlModel.getAC1(), m_controlModel.getAC2(), m_controlModel.getAC3(),m_controlModel.getFixedMarshBottom()?m_controlModel.getAC4():0.0); //$NON-NLS-1$
 
     formatter.format( "ENDGEO%n" ); //$NON-NLS-1$
 
@@ -641,7 +644,8 @@ public class Control1D2DConverter
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D );
 
     // add other conti lines types as well (buildings)?
-    if( m_windSystemsToWrite != null && !m_windSystemsToWrite.isEmpty() && !m_boolPrintWindLineDone ){
+    // if( m_windSystemsToWrite != null && !m_windSystemsToWrite.isEmpty() && !m_boolPrintWindLineDone ){
+    if( m_controlModel.getHasWindDrag() && !m_boolPrintWindLineDone ){
       formatter.format( "WVA          1.0     1.0       1%n" );
       m_boolPrintWindLineDone = true;
     }
