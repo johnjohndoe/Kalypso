@@ -92,6 +92,7 @@ public class ExecutorRunnable implements ICoreRunnableWithProgress
       final Executor m_executor = new Executor( session, m_operation );
       m_executor.execute();
 
+      session.flush();
       session.close();
 
       return m_okStatus;
