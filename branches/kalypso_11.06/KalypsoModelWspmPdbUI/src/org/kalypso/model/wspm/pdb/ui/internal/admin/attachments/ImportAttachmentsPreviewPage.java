@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
-import java.util.Map;
-
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
@@ -75,7 +73,6 @@ import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsDocumentsData.ImportMode;
 
 /**
@@ -84,8 +81,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachment
 @SuppressWarnings("restriction")
 public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdateable
 {
-  private final ImportAttachmentsDocumentsData m_documentData;
-
   private final ImportAttachmentsData m_data;
 
   private CheckboxTableViewer m_viewer;
@@ -94,15 +89,14 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
 
   private DatabindingWizardPage m_binding;
 
+  private final ImportAttachmentsDocumentsData m_documentData;
+
   public ImportAttachmentsPreviewPage( final String pageName, final ImportAttachmentsData data )
   {
     super( pageName );
 
     m_data = data;
-
-    final State state = m_data.getState();
-    final Map<String, Document> documentsByName = m_data.getExistingDocuments();
-    m_documentData = new ImportAttachmentsDocumentsData( state, documentsByName );
+    m_documentData = m_data.getDocumentData();
 
     setTitle( "Preview" );
     setDescription( "Preview and select the found documents on this page." );

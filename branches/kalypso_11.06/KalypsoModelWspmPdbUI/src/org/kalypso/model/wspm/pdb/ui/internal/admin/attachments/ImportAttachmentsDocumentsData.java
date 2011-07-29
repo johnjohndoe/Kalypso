@@ -105,6 +105,8 @@ public class ImportAttachmentsDocumentsData
 
   private final Map<Document, Boolean> m_importableHash = new HashMap<Document, Boolean>();
 
+  private final Map<Document, File> m_fileHash = new HashMap<Document, File>();
+
   private final Collection<Document> m_selectedDocuments = new HashSet<Document>();
 
   private Map<BigDecimal, CrossSection> m_csHash = null;
@@ -114,6 +116,7 @@ public class ImportAttachmentsDocumentsData
   private final MimeTypeFinder m_mimeFinder = new MimeTypeFinder();
 
   private final Map<String, Document> m_existingDocumentsByName;
+
 
   public ImportAttachmentsDocumentsData( final State state, final Map<String, Document> existingDocumentsByName )
   {
@@ -130,6 +133,7 @@ public class ImportAttachmentsDocumentsData
   {
     m_statusHash.clear();
     m_stationHash.clear();
+    m_fileHash.clear();
     m_selectedDocuments.clear();
     m_importableHash.clear();
   }
@@ -142,6 +146,11 @@ public class ImportAttachmentsDocumentsData
   public BigDecimal getStation( final Document element )
   {
     return m_stationHash.get( element );
+  }
+
+  public File getFile( final Document document )
+  {
+    return m_fileHash.get( document );
   }
 
   public Document addDocument( final BigDecimal station, final File file )
@@ -178,6 +187,7 @@ public class ImportAttachmentsDocumentsData
       m_selectedDocuments.add( document );
 
     m_stationHash.put( document, station );
+    m_fileHash.put( document, file );
 
     return document;
   }

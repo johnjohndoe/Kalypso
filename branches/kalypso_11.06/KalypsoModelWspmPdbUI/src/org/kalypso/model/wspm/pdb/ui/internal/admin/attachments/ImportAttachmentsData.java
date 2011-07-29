@@ -77,6 +77,8 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   public static final String PROPERTY_ZIP_HISTORY = "zipHistory"; //$NON-NLS-1$
 
+  private ImportAttachmentsDocumentsData m_documentData = null;
+
   private final IPdbConnection m_connection;
 
   private State m_state;
@@ -319,5 +321,27 @@ public class ImportAttachmentsData extends AbstractModelObject
     m_importMode = importMode;
 
     firePropertyChange( PROPERTY_IMPORT_MODE, oldValue, importMode );
+  }
+
+  public synchronized ImportAttachmentsDocumentsData getDocumentData( )
+  {
+    if( m_documentData == null )
+    {
+      final State state = getState();
+      final Map<String, Document> documentsByName = getExistingDocuments();
+      m_documentData = new ImportAttachmentsDocumentsData( state, documentsByName );
+    }
+
+    return m_documentData;
+  }
+
+  public Document[] getImportDocuments( )
+  {
+    return getDocumentData().getSelectedDocuments( m_importMode );
+  }
+
+  public String getUsername( )
+  {
+    return m_connection.getSettings().getUsername();
   }
 }

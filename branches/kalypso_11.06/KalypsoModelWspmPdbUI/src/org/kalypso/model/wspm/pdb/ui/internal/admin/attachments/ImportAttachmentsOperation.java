@@ -40,31 +40,129 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Date;
+import java.util.zip.ZipOutputStream;
+
+import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**
  * @author Gernot Belger
  */
 public class ImportAttachmentsOperation implements IPdbOperation
 {
+  private final ImportAttachmentsData m_data;
+
+  private ZipOutputStream m_zipStream;
+
+  private final Date m_creationDate;
+
+  private final String m_username;
+
   public ImportAttachmentsOperation( final ImportAttachmentsData data )
   {
-    // TODO Auto-generated constructor stub
+    m_data = data;
+    m_creationDate = new Date();
+    m_username = m_data.getUsername();
   }
 
   @Override
   public String getLabel( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return "Importing documents into database";
   }
 
   @Override
   public void execute( final Session session ) throws PdbConnectException
   {
-    // TODO Auto-generated method stub
+    try
+    {
+      final Document[] documents = m_data.getImportDocuments();
 
+      createZip();
+
+      for( final Document document : documents )
+        addDcoument( session, document );
+
+      closeZip();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( m_zipStream );
+    }
+  }
+
+  private void addDcoument( final Session session, final Document document ) throws PdbConnectException
+  {
+    addToZip( document );
+
+    document.setCreationDate( m_creationDate );
+    document.setEditingDate( m_creationDate );
+    document.setEditingUser( m_username );
+
+    // TODO check
+    // FIXME
+    session.saveOrUpdate( document );
+  }
+
+  private void createZip( ) throws PdbConnectException
+  {
+    final File zipFile = m_data.getZipFile();
+    if( zipFile == null )
+      return;
+
+    try
+    {
+      m_zipStream = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( zipFile ) ) );
+    }
+    catch( final FileNotFoundException e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed to open output zip file", e );
+    }
+  }
+
+  private void addToZip( final Document document ) throws PdbConnectException
+  {
+    if( m_zipStream == null )
+      return;
+
+    final File file = m_data.getDocumentData().getFile( document );
+    try
+    {
+      final String path = document.getFilename();
+      ZipUtilities.writeZipEntry( m_zipStream, file, path );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      final String msg = String.format( "Failed to add file to output zip: %s", file.getName() );
+      throw new PdbConnectException( msg, e );
+    }
+  }
+
+  private void closeZip( ) throws PdbConnectException
+  {
+    if( m_zipStream == null )
+      return;
+
+    try
+    {
+      m_zipStream.close();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed to close output zip", e );
+    }
   }
 }
