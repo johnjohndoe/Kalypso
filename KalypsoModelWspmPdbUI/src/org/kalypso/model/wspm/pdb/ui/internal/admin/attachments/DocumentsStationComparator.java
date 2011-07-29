@@ -42,43 +42,34 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
 import java.math.BigDecimal;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**
  * @author Gernot Belger
- *
  */
-public class DocumentsStationProvider extends ColumnLabelProvider
+public class DocumentsStationComparator extends ViewerComparator
 {
   private final ImportAttachmentsDocumentsData m_documentData;
 
-  public DocumentsStationProvider( final ImportAttachmentsDocumentsData documentData )
+  public DocumentsStationComparator( final ImportAttachmentsDocumentsData documentData )
   {
     m_documentData = documentData;
   }
 
   @Override
-  public String getText( final Object element )
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    final BigDecimal status = getStation( element );
-    if( status == null )
-      return null;
+    final BigDecimal s1 = m_documentData.getStation( (Document) e1 );
+    final BigDecimal s2 = m_documentData.getStation( (Document) e2 );
 
-    return status.toString();
-  }
+    if( s1 == null )
+      return -1;
 
-  private BigDecimal getStation( final Object element )
-  {
-    if( element instanceof Document )
-    {
-      final BigDecimal station = m_documentData.getStation( (Document) element );
-      if( station == null )
-        return station;
+    if( s2 == null )
+      return +1;
 
-      return station.movePointLeft( 3 );
-    }
-
-    return null;
+    return s1.compareTo( s2 );
   }
 }

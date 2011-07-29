@@ -40,45 +40,41 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
-import java.math.BigDecimal;
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.wspm.pdb.db.mapping.Document;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Gernot Belger
- *
  */
-public class DocumentsStationProvider extends ColumnLabelProvider
+public class MimeTypeUtils
 {
-  private final ImportAttachmentsDocumentsData m_documentData;
-
-  public DocumentsStationProvider( final ImportAttachmentsDocumentsData documentData )
+  private MimeTypeUtils( )
   {
-    m_documentData = documentData;
+    throw new UnsupportedOperationException();
   }
 
-  @Override
-  public String getText( final Object element )
+  /**
+   * Tries to parse a mime type via {@link MimeType#MimeType(String)}, but silently ignores any error.
+   * 
+   * @return <code>null</code>, if a {@link MimeTypeParseException} is thrown.
+   */
+  public static MimeType createQuit( final String mimetype )
   {
-    final BigDecimal status = getStation( element );
-    if( status == null )
-      return null;
-
-    return status.toString();
-  }
-
-  private BigDecimal getStation( final Object element )
-  {
-    if( element instanceof Document )
+    try
     {
-      final BigDecimal station = m_documentData.getStation( (Document) element );
-      if( station == null )
-        return station;
+      if( StringUtils.isBlank( mimetype ) )
+        return null;
 
-      return station.movePointLeft( 3 );
+      return new MimeType( mimetype );
+    }
+    catch( final MimeTypeParseException e )
+    {
+      // ignored
     }
 
     return null;
   }
+
 }

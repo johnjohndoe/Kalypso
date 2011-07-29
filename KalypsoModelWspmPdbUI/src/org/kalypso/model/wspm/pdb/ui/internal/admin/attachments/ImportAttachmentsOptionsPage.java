@@ -61,7 +61,6 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.DirectoryBinding;
 import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
-import org.kalypso.commons.databinding.validation.StringMustContainValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
@@ -170,9 +169,7 @@ public class ImportAttachmentsOptionsPage extends WizardPage
 
     final DataBinder binder = new DataBinder( targetField, modelField );
     binder.addTargetAfterConvertValidator( new StringBlankValidator( IStatus.ERROR, "'Pattern' field is empty" ) );
-    final String stationToken = String.format( "<%s>", AttachmentStationPattern.TOKEN ); //$NON-NLS-1$
-    final String containsMessage = String.format( "'Pattern' must contains the %s token.", stationToken );
-    binder.addTargetAfterConvertValidator( new StringMustContainValidator( IStatus.ERROR, containsMessage, stationToken ) );
+    binder.addTargetAfterConvertValidator( new AttachmentPatternValidator() );
 
     m_binding.bindValue( binder );
   }
