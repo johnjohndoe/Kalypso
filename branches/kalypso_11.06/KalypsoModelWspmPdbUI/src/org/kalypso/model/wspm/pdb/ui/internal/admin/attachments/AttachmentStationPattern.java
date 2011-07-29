@@ -45,7 +45,7 @@ import org.kalypso.commons.patternreplace.AbstractPatternInput;
 /**
  * @author Gernot Belger
  */
-public class AttachmentStationPattern extends AbstractPatternInput<AttachmentPatternContext>
+public class AttachmentStationPattern extends AbstractPatternInput<AttachmentStationContext>
 {
   static final String TOKEN = "station"; //$NON-NLS-1$
 
@@ -55,15 +55,8 @@ public class AttachmentStationPattern extends AbstractPatternInput<AttachmentPat
   }
 
   @Override
-  public String getReplacement( final AttachmentPatternContext context, final String param )
+  public String getReplacement( final AttachmentStationContext context, final String param )
   {
-
-    // return context.getStationPattern();
-
-
-    // TODO: create station pattern form context
-
-
-    return null;
+    return context.getStationPattern();
   }
 }

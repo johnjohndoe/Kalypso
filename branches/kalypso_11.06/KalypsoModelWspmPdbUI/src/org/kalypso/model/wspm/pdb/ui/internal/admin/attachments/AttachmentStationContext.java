@@ -42,43 +42,70 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
 import java.math.BigDecimal;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.kalypso.model.wspm.pdb.db.mapping.Document;
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * @author Gernot Belger
  *
  */
-public class DocumentsStationProvider extends ColumnLabelProvider
+public class AttachmentStationContext
 {
-  private final ImportAttachmentsDocumentsData m_documentData;
+  private static final String DIGITS = "\\d"; //$NON-NLS-1$
 
-  public DocumentsStationProvider( final ImportAttachmentsDocumentsData documentData )
+  private final Character m_thousandSeparator;
+
+  private final Character m_decimalSeparator;
+
+  private final String m_pattern;
+
+  public AttachmentStationContext( final Character thousandSeparator, final Character decimalSeparator )
   {
-    m_documentData = documentData;
+    m_thousandSeparator = thousandSeparator;
+    m_decimalSeparator = decimalSeparator;
+    m_pattern = buildPattern();
   }
 
-  @Override
-  public String getText( final Object element )
+  public String getStationPattern( )
   {
-    final BigDecimal status = getStation( element );
-    if( status == null )
-      return null;
-
-    return status.toString();
+    return m_pattern;
   }
 
-  private BigDecimal getStation( final Object element )
+  public String buildPattern( )
   {
-    if( element instanceof Document )
+    final StringBuilder builder = new StringBuilder();
+    builder.append( '(' );
+
+    if( m_thousandSeparator != null )
     {
-      final BigDecimal station = m_documentData.getStation( (Document) element );
-      if( station == null )
-        return station;
-
-      return station.movePointLeft( 3 );
+      builder.append( DIGITS ).append( "+" ); //$NON-NLS-1$
+      builder.append( "\\" ).append( m_thousandSeparator );
     }
 
-    return null;
+    builder.append( DIGITS );
+
+    if( m_decimalSeparator == null )
+      builder.append( "+" ); //$NON-NLS-1$
+    else
+    {
+      builder.append( "*" );
+      builder.append( DIGITS ).append( "+" ); //$NON-NLS-1$
+    }
+
+    builder.append( ')' );
+
+    return builder.toString();
+  }
+
+  public BigDecimal parseStation( final String input )
+  {
+    String normalized = input;
+
+    if( m_thousandSeparator != null )
+      normalized = StringUtils.remove( input, m_thousandSeparator );
+    if( m_decimalSeparator != null )
+      normalized = StringUtils.replaceChars( normalized, m_decimalSeparator, '.' ); //$NON-NLS-1$
+
+    return NumberUtils.parseQuietDecimal( normalized );
   }
 }

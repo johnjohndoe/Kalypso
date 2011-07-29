@@ -40,45 +40,55 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
-import java.math.BigDecimal;
-
-import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**
  * @author Gernot Belger
- *
  */
-public class DocumentsStationProvider extends ColumnLabelProvider
+public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckStateListener
 {
-  private final ImportAttachmentsDocumentsData m_documentData;
+  private final ImportAttachmentsDocumentsData m_data;
 
-  public DocumentsStationProvider( final ImportAttachmentsDocumentsData documentData )
+  private final CheckboxTableViewer m_viewer;
+
+  public DocumentsCheckstateHandler( final CheckboxTableViewer viewer, final ImportAttachmentsDocumentsData data )
   {
-    m_documentData = documentData;
+    m_viewer = viewer;
+    m_data = data;
   }
 
   @Override
-  public String getText( final Object element )
+  public boolean isChecked( final Object element )
   {
-    final BigDecimal status = getStation( element );
-    if( status == null )
-      return null;
-
-    return status.toString();
+    final Document doc = (Document) element;
+    return !m_data.isImportable( doc ) || m_data.isSelected( doc );
   }
 
-  private BigDecimal getStation( final Object element )
+  @Override
+  public boolean isGrayed( final Object element )
   {
-    if( element instanceof Document )
-    {
-      final BigDecimal station = m_documentData.getStation( (Document) element );
-      if( station == null )
-        return station;
+    final Document doc = (Document) element;
+    return !m_data.isImportable( doc );
+  }
 
-      return station.movePointLeft( 3 );
+  @Override
+  public void checkStateChanged( final CheckStateChangedEvent event )
+  {
+    final Document doc = (Document) event.getElement();
+    if( !m_data.isImportable( doc ) )
+    {
+      // TODO: later
+      m_viewer.update( event, null );
+      return;
     }
 
-    return null;
+    if( event.getChecked() )
+      m_data.selectDocument( doc );
+    else
+      m_data.unselectDocument( doc );
   }
 }

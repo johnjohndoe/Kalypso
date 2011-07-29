@@ -40,10 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.databinding.validation.TypedValidator;
+
 /**
  * @author Gernot Belger
  */
-public class AttachmentPatternContext
+public class AttachmentPatternValidator extends TypedValidator<String>
 {
+  private final String m_token;
 
+  public AttachmentPatternValidator( )
+  {
+    super( String.class, IStatus.ERROR, StringUtils.EMPTY );
+
+    m_token = String.format( "<%s>", AttachmentStationPattern.TOKEN );
+  }
+
+  @Override
+  protected IStatus doValidate( final String pattern ) throws CoreException
+  {
+    final int countMatches = StringUtils.countMatches( pattern, m_token );
+    if( countMatches != 1 )
+    {
+      final String containsMessage = String.format( "'Pattern' must contains the %s token exactly once.", m_token );
+      fail( containsMessage );
+    }
+
+    return ValidationStatus.ok();
+  }
 }

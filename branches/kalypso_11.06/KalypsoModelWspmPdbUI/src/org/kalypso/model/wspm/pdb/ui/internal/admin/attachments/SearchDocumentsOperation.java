@@ -40,15 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
  */
 public class SearchDocumentsOperation implements ICoreRunnableWithProgress
 {
+  final AttachmentStationContext[] m_searchContexts = new AttachmentStationContext[] {
+      //
+      // new AttachmentStationContext( '+', '-' ), //
+      new AttachmentStationContext( '+', null ), //
+      // new AttachmentStationContext( '.', ',' ), //
+      new AttachmentStationContext( null, '.' ), //
+      new AttachmentStationContext( null, ',' ) //
+  };
+
   private final ImportAttachmentsData m_data;
 
   private final ImportAttachmentsDocumentsData m_documentData;
@@ -60,11 +78,141 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     m_documentData.clear();
 
-    // TODO Auto-generated method stub
+    final File importDir = m_data.getImportDir();
+    if( !importDir.isDirectory() )
+    {
+      final String msg = String.format( "Import directory does not exist: %s", importDir );
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
+    }
+
+    final File[] allFiles = importDir.listFiles();
+    if( allFiles == null )
+    {
+      final String msg = String.format( "Failed to access directory: %s", importDir );
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
+    }
+
+    final String searchRegex = getSearchRegex();
+    final Pattern[] stationPatterns = preparePatterns( searchRegex );
+    final Pattern searchPattern = asSearchPattern( searchRegex );
+
+    for( final File file : allFiles )
+      readFile( file, searchPattern, stationPatterns );
+
+    return Status.OK_STATUS;
+  }
+
+  /*
+   * Replace the <station> token with a general search pattern, so we only consider any file that matches the basic
+   * pattern.
+   */
+  private Pattern asSearchPattern( final String searchPattern )
+  {
+    final String generalPattern = searchPattern.replaceAll( "\\Q<station>\\E", ".*" ); //$NON-NLS-1$
+    return Pattern.compile( generalPattern );
+  }
+
+  private Pattern[] preparePatterns( final String searchPattern )
+  {
+    final Pattern[] stationPatterns = new Pattern[m_searchContexts.length];
+
+    final AttachmentPatternReplacer patternReplacer = new AttachmentPatternReplacer();
+    for( int i = 0; i < m_searchContexts.length; i++ )
+    {
+      final String current = patternReplacer.replaceTokens( searchPattern, m_searchContexts[i] );
+      stationPatterns[i] = Pattern.compile( current );
+    }
+
+    return stationPatterns;
+  }
+
+  private String getSearchRegex( ) throws CoreException
+  {
+    final String importPattern = m_data.getImportPattern();
+    final String token = String.format( "<%s>", AttachmentStationPattern.TOKEN );
+
+    final int countMatches = StringUtils.countMatches( importPattern, token );
+    if( countMatches != 1 )
+    {
+      final String msg = String.format( "Invalid pattern: %s", importPattern );
+      throw new CoreException( new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg ) );
+    }
+
+    if( importPattern.startsWith( token ) )
+      return token + asRegex( importPattern.substring( token.length() ) );
+    if( importPattern.endsWith( token ) )
+      return asRegex( importPattern.substring( 0, importPattern.length() - token.length() ) ) + token;
+
+    final String[] split = StringUtils.split( importPattern, token );
+    return asRegex( split[0] ) + token + asRegex( split[1] );
+  }
+
+  private String asRegex( final String pattern )
+  {
+    final StringBuilder builder = new StringBuilder();
+
+    for( int i = 0; i < pattern.length(); i++ )
+    {
+      final int index = pattern.indexOf( '*', i );
+      if( index == -1 )
+      {
+        appendEscaped( builder, pattern.substring( i ) );
+        i = pattern.length();
+        builder.append( false );
+      }
+      else
+      {
+        appendEscaped( builder, pattern.substring( i, index ) );
+        builder.append( ".*?" );
+        i = index + 1;
+      }
+    }
+
+    return builder.toString();
+  }
+
+  private void appendEscaped( final StringBuilder builder, final String text )
+  {
+    if( text.isEmpty() )
+      return;
+
+    builder.append( "\\Q" ).append( text ).append( "\\E" );
+  }
+
+  private void readFile( final File file, final Pattern searchPattern, final Pattern[] stationPatterns )
+  {
+    /* Skip all files that do not match the general search pattern */
+    final Matcher matcher = searchPattern.matcher( file.getName() );
+    if( !matcher.matches() )
+      return;
+
+    /* Read station */
+    final BigDecimal station = findStation( file, stationPatterns );
+
+    m_documentData.addDocument( station, file );
+  }
+
+  private BigDecimal findStation( final File file, final Pattern[] searchPatterns )
+  {
+    final String filename = file.getName();
+
+    for( int i = 0; i < searchPatterns.length; i++ )
+    {
+      final Matcher matcher = searchPatterns[i].matcher( filename );
+      if( matcher.matches() )
+      {
+        final String stationString = matcher.group( 1 );
+
+        final BigDecimal station = m_searchContexts[i].parseStation( stationString );
+        if( station != null )
+          return station;
+      }
+    }
+
     return null;
   }
 }

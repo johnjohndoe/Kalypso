@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
-import org.apache.commons.lang.StringUtils;
+import javax.activation.MimeType;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
@@ -55,13 +56,11 @@ public class DocumentsTypeProvider extends ColumnLabelProvider
     if( element instanceof Document )
     {
       final String mimetype = ((Document) element).getMimetype();
-      if( StringUtils.isBlank( mimetype ))
+      final MimeType type = MimeTypeUtils.createQuit( mimetype );
+      if( type == null )
         return null;
 
-      if( mimetype.contains( "/" ) ) //$NON-NLS-1$
-        return mimetype.split( "/", 2 )[1];
-
-      return mimetype;
+      return type.toString();
     }
 
     return null;

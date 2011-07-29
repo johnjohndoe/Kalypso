@@ -45,7 +45,7 @@ import org.kalypso.commons.patternreplace.PatternInputReplacer;
 /**
  * @author Gernot Belger
  */
-public class AttachmentPatternReplacer extends PatternInputReplacer<AttachmentPatternContext>
+public class AttachmentPatternReplacer extends PatternInputReplacer<AttachmentStationContext>
 {
   public AttachmentPatternReplacer( )
   {

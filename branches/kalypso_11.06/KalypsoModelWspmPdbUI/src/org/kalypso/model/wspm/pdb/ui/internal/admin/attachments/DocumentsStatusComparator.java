@@ -40,45 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
-import java.math.BigDecimal;
-
-import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**
  * @author Gernot Belger
  *
  */
-public class DocumentsStationProvider extends ColumnLabelProvider
+public class DocumentsStatusComparator extends ViewerComparator
 {
   private final ImportAttachmentsDocumentsData m_documentData;
 
-  public DocumentsStationProvider( final ImportAttachmentsDocumentsData documentData )
+  public DocumentsStatusComparator( final ImportAttachmentsDocumentsData documentData )
   {
     m_documentData = documentData;
   }
 
   @Override
-  public String getText( final Object element )
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    final BigDecimal status = getStation( element );
-    if( status == null )
-      return null;
+    final IStatus s1 = m_documentData.getStatus( (Document) e1 );
+    final IStatus s2 = m_documentData.getStatus( (Document) e2 );
 
-    return status.toString();
-  }
+    final int sev1 = s1.getSeverity();
+    final int sev2 = s2.getSeverity();
 
-  private BigDecimal getStation( final Object element )
-  {
-    if( element instanceof Document )
-    {
-      final BigDecimal station = m_documentData.getStation( (Document) element );
-      if( station == null )
-        return station;
+    if( sev1 != sev2 )
+      return sev1 - sev2;
 
-      return station.movePointLeft( 3 );
-    }
-
-    return null;
+    return s1.getMessage().compareTo( s2.getMessage() );
   }
 }
