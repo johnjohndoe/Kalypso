@@ -68,6 +68,6 @@ public class DisconnectPdbAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    m_view.setConnection( null, Status.OK_STATUS, null );
+    m_view.setConnection( null, Status.OK_STATUS );
   }
 }

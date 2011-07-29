@@ -40,8 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -132,20 +138,20 @@ public class PdbInfo
     return m_properties.getProperty( PROPERTY_DOCUMENT_SERVER );
   }
 
-// public void validate( ) throws PdbConnectException
-// {
-// final String version = getVersion();
-// if( !CURRENT_VERSION.equals( version ) )
-// {
-// final String message = String.format( "Unknown Version of PDB: %s (should be %s)", version, CURRENT_VERSION );
-// throw new PdbConnectException( message );
-// }
-//
-// final int srid = getSRID();
-// if( UNKNOWN_SRID == srid )
-// {
-// final String message = String.format( "Failed to determine SRID: %s", m_properties.get( PROPERTY_SRID ) );
-// throw new PdbConnectException( message );
-// }
-// }
+  @SuppressWarnings("unchecked")
+  public Entry<String, String>[] getEntries( )
+  {
+    final Collection<Entry<String, String>> entries = new ArrayList<Entry<String, String>>();
+
+    final Set<String> names = m_properties.stringPropertyNames();
+    for( final String name : names )
+    {
+      final String value = m_properties.getProperty( name );
+
+      final Entry<String, String> entry = Collections.singletonMap( name, value ).entrySet().iterator().next();
+      entries.add( entry );
+    }
+
+    return entries.toArray( (Entry<String, String>[]) Array.newInstance( Entry.class, entries.size() ) );
+  }
 }

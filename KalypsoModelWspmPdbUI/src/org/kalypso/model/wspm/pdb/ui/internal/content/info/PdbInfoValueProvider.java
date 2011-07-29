@@ -38,32 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect;
+package org.kalypso.model.wspm.pdb.ui.internal.content.info;
 
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.db.PdbInfo;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 /**
  * @author Gernot Belger
  */
-public interface IPdbConnection
+public class PdbInfoValueProvider extends ColumnLabelProvider
 {
-  IPdbSettings getSettings( );
-
-  void connect( ) throws PdbConnectException;
-
-  boolean isConnected( );
-
-  void close( ) throws PdbConnectException;
-
-  Session openSession( ) throws PdbConnectException;
-
-  String getLabel( );
-
-  PdbInfo getInfo( );
-
-  /**
-   * Reload the info from the database.
-   */
-  void updateInfo( );
+  @Override
+  public String getText( final Object element )
+  {
+    final Entry< ? , ? > entry = (Entry< ? , ? >) element;
+    return ObjectUtils.toString( entry.getValue() );
+  }
 }

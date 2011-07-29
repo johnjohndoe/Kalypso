@@ -66,8 +66,6 @@ public class OpenConnectionThreadedOperation implements ICoreRunnableWithProgres
 
   private IPdbConnection m_connection;
 
-  private PdbInfo m_info;
-
   public OpenConnectionThreadedOperation( final IPdbSettings settings, final boolean closeConnection )
   {
     m_settings = settings;
@@ -77,11 +75,6 @@ public class OpenConnectionThreadedOperation implements ICoreRunnableWithProgres
   public IPdbConnection getConnection( )
   {
     return m_connection;
-  }
-
-  public PdbInfo getInfo( )
-  {
-    return m_info;
   }
 
   @Override
@@ -97,7 +90,7 @@ public class OpenConnectionThreadedOperation implements ICoreRunnableWithProgres
       @Override
       public void done( final IJobChangeEvent event )
       {
-        handleDone( job.getConnectionStatus(), job.getConnection(), job.getInfo() );
+        handleDone( job.getConnectionStatus(), job.getConnection() );
       }
     };
     job.addJobChangeListener( listener );
@@ -121,10 +114,9 @@ public class OpenConnectionThreadedOperation implements ICoreRunnableWithProgres
     return m_result;
   }
 
-  protected void handleDone( final IStatus result, final IPdbConnection connection, final PdbInfo pdbInfo )
+  protected void handleDone( final IStatus result, final IPdbConnection connection )
   {
     m_result = result;
     m_connection = connection;
-    m_info = pdbInfo;
   }
 }

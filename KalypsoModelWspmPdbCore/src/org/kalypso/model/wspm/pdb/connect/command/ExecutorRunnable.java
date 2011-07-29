@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal;
+package org.kalypso.model.wspm.pdb.connect.command;
 
 import java.lang.reflect.InvocationTargetException;
 

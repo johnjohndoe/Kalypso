@@ -69,21 +69,19 @@ public class PdbUpdater
 {
   private final IPdbConnection m_connection;
 
-  private final PdbInfo m_info;
-
   private final Shell m_shell;
 
-  public PdbUpdater( final IPdbConnection connection, final PdbInfo info, final Shell shell )
+  public PdbUpdater( final IPdbConnection connection, final Shell shell )
   {
     m_connection = connection;
-    m_info = info;
     m_shell = shell;
   }
 
   public IStatus execute( )
   {
     /* Check version */
-    final Version version = m_info.getVersion();
+    final PdbInfo info = m_connection.getInfo();
+    final Version version = info.getVersion();
     if( version == null )
       return handleCreate();
 
@@ -152,6 +150,8 @@ public class PdbUpdater
     final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
     if( !status.isOK() )
       new StatusDialog2( m_shell, status, windowTitle ).open();
+
+    m_connection.updateInfo();
 
     return status;
   }

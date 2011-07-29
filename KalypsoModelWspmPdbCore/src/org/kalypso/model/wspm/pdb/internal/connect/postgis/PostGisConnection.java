@@ -79,39 +79,13 @@ public class PostGisConnection extends HibernateConnection<PostgisSettings>
     // configuration.setProperty( Environment.CONNECTION_PREFIX + ".ssl", Boolean.TRUE.toString() );
   }
 
-  // ///////////////////
-  // TODO: create DB //
-  // /////////////////
 // configuration.generateDropSchemaScript( new org.hibernate.dialect.PostgreSQLDialect() );
 // configuration.generateSchemaUpdateScript( new org.hibernate.dialect.PostgreSQLDialect(), null );
-  // FIXME: should not be necessary, but it is...
+
 // final String[] creationScripts = configuration.generateSchemaCreationScript( dialect );
 // for( final String creationScript : creationScripts )
 // {
 // final SQLQuery sqlQuery = session.createSQLQuery( creationScript );
 // sqlQuery.executeUpdate();
-// }
-  // FIXME: this does not work: but it DOES work if already one point is there and the tables are present
-  // maybe we cannot execute that in one single transaction?
-// final String pdbPointGeomSql = createInsertGeomColumn( "pdbpoint", "point", "POINT", 2, 31467 );
-// final SQLQuery pdPointGeomQuery = session.createSQLQuery( pdbPointGeomSql );
-// pdPointGeomQuery.executeUpdate();
-
-// FIXME: postgis specific
-// private String createInsertGeomColumn( final String table, final String column, final String geometryType, final int
-// coordDim, final int srsId )
-// {
-// final StringWriter sw = new StringWriter();
-// final PrintWriter pw = new PrintWriter( sw );
-//
-// pw.println(
-// "INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, type) "
-// );
-// pw.format( "SELECT '', 'public', '%s', '%s', %d, %d, '%s'%n", table, column, coordDim, srsId, geometryType );
-// pw.format( "FROM public.pdbpoint LIMIT 1;" );
-//
-// pw.flush();
-// sw.flush();
-// return sw.toString();
 // }
 }

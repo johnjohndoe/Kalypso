@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
@@ -94,6 +95,8 @@ public class PdbView extends ViewPart implements IConnectionViewer
   private static final String MEMENTO_AUTOCONNECT = "autoconnect.name"; //$NON-NLS-1$
 
   private final Action m_disconnectAction = new DisconnectPdbAction( this );
+
+  private final IAction m_infoAction = new InfoPdbAction( this );
 
   private final UIJob m_updateControlJob = new UIJob( "Update pdb view" )
   {
@@ -175,6 +178,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     m_form.addMessageHyperlinkListener( m_statusListener );
 
     final IToolBarManager formToolbar = m_form.getToolBarManager();
+    formToolbar.add( m_infoAction );
     formToolbar.add( m_disconnectAction );
     formToolbar.update( true );
 
@@ -230,8 +234,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
       final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
       final IStatus result = ProgressUtilities.busyCursorWhile( operation );
       final IPdbConnection connection = operation.getConnection();
-      final PdbInfo info = operation.getInfo();
-      setConnection( connection, result, info );
+      setConnection( connection, result );
 
       return result;
     }
@@ -249,7 +252,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
       m_form.setFocus();
   }
 
-  synchronized void setConnection( final IPdbConnection connection, final IStatus status, final PdbInfo info )
+  synchronized void setConnection( final IPdbConnection connection, final IStatus status )
   {
     Assert.isTrue( connection == null || connection.isConnected() );
 
@@ -271,20 +274,19 @@ public class PdbView extends ViewPart implements IConnectionViewer
       e.printStackTrace();
     }
 
-    m_pdbConnection = validateConnection( connection, status, info );
+    m_pdbConnection = validateConnection( connection );
     final String settingsName = m_pdbConnection == null ? null : m_pdbConnection.getSettings().getName();
     m_autoConnectData.setAutoConnectName( settingsName );
 
     m_updateControlJob.schedule();
   }
 
-  private IPdbConnection validateConnection( final IPdbConnection connection, final IStatus status, final PdbInfo info )
+  private IPdbConnection validateConnection( final IPdbConnection connection )
   {
     if( connection == null )
       return null;
 
-    // TODO: use info to show some information to the user
-    final PdbUpdater checker = new PdbUpdater( connection, info, getSite().getShell() );
+    final PdbUpdater checker = new PdbUpdater( connection, getSite().getShell() );
     final IStatus checkResult = checker.execute();
     if( checkResult.isOK() )
       return connection;
@@ -315,6 +317,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     final boolean isConnected = m_pdbConnection != null;
 
     m_disconnectAction.setEnabled( isConnected );
+    m_infoAction.setEnabled( isConnected );
 
     final IWorkbenchPartSite site = getSite();
 
@@ -410,5 +413,13 @@ public class PdbView extends ViewPart implements IConnectionViewer
       return;
 
     new StatusDialog2( getSite().getShell(), m_connectionStatus, "Connection Status" ).open();
+  }
+
+  public PdbInfo getInfo( )
+  {
+    if( m_pdbConnection == null )
+      return null;
+
+    return m_pdbConnection.getInfo();
   }
 }
