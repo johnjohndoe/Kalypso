@@ -18,7 +18,7 @@ Changes
 Please find here a list of new and noteworthy changes:
 http://sourceforge.net/apps/mediawiki/kalypso/index.php?title=Change_Log_Kalypso_11.6.0
 
-Please visit http://sourceforge.net/apps/trac/kalypso/report/27 for a detailed list of changes since Kalypso 10.10.3.
+Please visit http://sourceforge.net/apps/trac/kalypso/report/29 for a detailed list of changes since Kalypso 10.10.3.
 
 Known-Issues
 ------------
