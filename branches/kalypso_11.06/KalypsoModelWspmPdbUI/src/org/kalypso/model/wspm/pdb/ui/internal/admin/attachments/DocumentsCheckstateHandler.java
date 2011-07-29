@@ -81,8 +81,8 @@ public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckSt
     final Document doc = (Document) event.getElement();
     if( !m_data.isImportable( doc ) )
     {
-      // TODO: later
-      m_viewer.update( event, null );
+      // Update in order to undo check state change
+      m_viewer.update( doc, null );
       return;
     }
 
@@ -90,5 +90,25 @@ public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckSt
       m_data.selectDocument( doc );
     else
       m_data.unselectDocument( doc );
+  }
+
+  public void selectAll( )
+  {
+    final Document[] documents = m_data.getDocuments();
+    for( final Document document : documents )
+    {
+      if( m_data.isImportable( document ) )
+        m_data.selectDocument( document );
+    }
+
+    m_viewer.update( documents, null );
+  }
+
+  public void unselectAll( )
+  {
+    m_data.clearSelection();
+
+    final Document[] documents = m_data.getDocuments();
+    m_viewer.update( documents, null );
   }
 }
