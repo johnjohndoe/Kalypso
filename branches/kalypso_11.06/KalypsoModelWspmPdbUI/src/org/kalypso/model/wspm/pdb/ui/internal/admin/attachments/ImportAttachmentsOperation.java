@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.zip.ZipOutputStream;
 
@@ -109,9 +110,10 @@ public class ImportAttachmentsOperation implements IPdbOperation
     document.setEditingDate( m_creationDate );
     document.setEditingUser( m_username );
 
-    // TODO check
-    // FIXME
-    session.saveOrUpdate( document );
+    final ImportAttachmentsDocumentsData documentData = m_data.getDocumentData();
+    final BigDecimal id = documentData.getExistingID( document );
+    document.setId( id );
+    session.merge( document );
   }
 
   private void createZip( ) throws PdbConnectException

@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -107,8 +106,6 @@ public class ImportAttachmentsDocumentsData
 
   private final Map<Document, File> m_fileHash = new HashMap<Document, File>();
 
-  private final Collection<Document> m_selectedDocuments = new HashSet<Document>();
-
   private Map<BigDecimal, CrossSection> m_csHash = null;
 
   private final State m_state;
@@ -116,7 +113,6 @@ public class ImportAttachmentsDocumentsData
   private final MimeTypeFinder m_mimeFinder = new MimeTypeFinder();
 
   private final Map<String, Document> m_existingDocumentsByName;
-
 
   public ImportAttachmentsDocumentsData( final State state, final Map<String, Document> existingDocumentsByName )
   {
@@ -134,7 +130,6 @@ public class ImportAttachmentsDocumentsData
     m_statusHash.clear();
     m_stationHash.clear();
     m_fileHash.clear();
-    m_selectedDocuments.clear();
     m_importableHash.clear();
   }
 
@@ -183,8 +178,6 @@ public class ImportAttachmentsDocumentsData
       applyImageMetadata( document, exif );
 
     validate( document, station );
-    if( isImportable( document ) )
-      m_selectedDocuments.add( document );
 
     m_stationHash.put( document, station );
     m_fileHash.put( document, file );
@@ -314,37 +307,30 @@ public class ImportAttachmentsDocumentsData
     return m_importableHash.get( doc );
   }
 
-  public boolean isSelected( final Document doc )
+  public Document[] getImportableDocuments( )
   {
-    return m_selectedDocuments.contains( doc );
-  }
+    final Collection<Document> importable = new ArrayList<Document>();
 
-  public void selectDocument( final Document doc )
-  {
-    m_selectedDocuments.add( doc );
-  }
-
-  public void unselectDocument( final Document doc )
-  {
-    m_selectedDocuments.remove( doc );
-  }
-
-  public void clearSelection( )
-  {
-    m_selectedDocuments.clear();
-  }
-
-  public Document[] getSelectedDocuments( final ImportMode mode )
-  {
-    final Collection<Document> selected = new ArrayList<Document>();
-
-    for( final Document document : m_selectedDocuments )
+    final Document[] documents = getDocuments();
+    for( final Document document : documents )
     {
-      final boolean exists = m_existingDocumentsByName.containsKey( document.getName() );
-      if( mode == ImportMode.overwrite || !exists )
-        selected.add( document );
+      if( isImportable( document ) )
+        importable.add( document );
     }
+    return importable.toArray( new Document[importable.size()] );
+  }
 
-    return selected.toArray( new Document[selected.size()] );
+  public boolean isExisting( final Document document )
+  {
+    return m_existingDocumentsByName.containsKey( document.getName() );
+  }
+
+  public BigDecimal getExistingID( final Document document )
+  {
+    final Document existing = m_existingDocumentsByName.get( document.getName() );
+    if( existing == null )
+      return null;
+
+    return existing.getId();
   }
 }

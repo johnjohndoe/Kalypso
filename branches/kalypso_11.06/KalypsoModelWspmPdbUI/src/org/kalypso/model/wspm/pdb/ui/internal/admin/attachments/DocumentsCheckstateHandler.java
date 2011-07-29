@@ -51,11 +51,11 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
  */
 public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckStateListener
 {
-  private final ImportAttachmentsDocumentsData m_data;
-
   private final CheckboxTableViewer m_viewer;
 
-  public DocumentsCheckstateHandler( final CheckboxTableViewer viewer, final ImportAttachmentsDocumentsData data )
+  private final ImportAttachmentsData m_data;
+
+  public DocumentsCheckstateHandler( final CheckboxTableViewer viewer, final ImportAttachmentsData data )
   {
     m_viewer = viewer;
     m_data = data;
@@ -65,21 +65,24 @@ public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckSt
   public boolean isChecked( final Object element )
   {
     final Document doc = (Document) element;
-    return !m_data.isImportable( doc ) || m_data.isSelected( doc );
+    if( cannotImport( doc ) )
+      return true;
+
+    return m_data.isSelected( doc );
   }
 
   @Override
   public boolean isGrayed( final Object element )
   {
     final Document doc = (Document) element;
-    return !m_data.isImportable( doc );
+    return cannotImport( doc );
   }
 
   @Override
   public void checkStateChanged( final CheckStateChangedEvent event )
   {
     final Document doc = (Document) event.getElement();
-    if( !m_data.isImportable( doc ) )
+    if( cannotImport( doc ) )
     {
       // Update in order to undo check state change
       m_viewer.update( doc, null );
@@ -92,12 +95,17 @@ public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckSt
       m_data.unselectDocument( doc );
   }
 
+  protected boolean cannotImport( final Document doc )
+  {
+    return !m_data.getDocumentData().isImportable( doc );
+  }
+
   public void selectAll( )
   {
-    final Document[] documents = m_data.getDocuments();
+    final Document[] documents = m_data.getDocumentData().getImportableDocuments();
     for( final Document document : documents )
     {
-      if( m_data.isImportable( document ) )
+      if( !cannotImport( document ) )
         m_data.selectDocument( document );
     }
 
@@ -108,7 +116,7 @@ public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckSt
   {
     m_data.clearSelection();
 
-    final Document[] documents = m_data.getDocuments();
+    final Document[] documents = m_data.getDocumentData().getDocuments();
     m_viewer.update( documents, null );
   }
 }
