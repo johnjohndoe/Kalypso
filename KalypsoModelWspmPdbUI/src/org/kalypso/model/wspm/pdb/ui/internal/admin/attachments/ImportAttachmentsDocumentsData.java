@@ -43,7 +43,9 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -57,6 +59,7 @@ import org.apache.sanselan.Sanselan;
 import org.apache.sanselan.common.IImageMetadata;
 import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.tiff.TiffImageMetadata;
+import org.apache.sanselan.formats.tiff.constants.TiffConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.image.ExifUtils;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -75,6 +78,25 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  */
 public class ImportAttachmentsDocumentsData
 {
+  enum ImportMode
+  {
+    overwrite("Overwrite"),
+    skip("Skip");
+
+    private final String m_label;
+
+    private ImportMode( final String label )
+    {
+      m_label = label;
+    }
+
+    @Override
+    public String toString( )
+    {
+      return m_label;
+    }
+  }
+
   private final GeometryFactory m_locationFactory = new GeometryFactory( new PrecisionModel(), 4326 ); // WGS84
 
   private final Map<Document, IStatus> m_statusHash = new HashMap<Document, IStatus>();
@@ -91,11 +113,12 @@ public class ImportAttachmentsDocumentsData
 
   private final MimeTypeFinder m_mimeFinder = new MimeTypeFinder();
 
+  private final Map<String, Document> m_existingDocumentsByName;
 
-
-  public ImportAttachmentsDocumentsData( final State state )
+  public ImportAttachmentsDocumentsData( final State state, final Map<String, Document> existingDocumentsByName )
   {
     m_state = state;
+    m_existingDocumentsByName = existingDocumentsByName;
   }
 
   public Document[] getDocuments( )
@@ -107,8 +130,8 @@ public class ImportAttachmentsDocumentsData
   {
     m_statusHash.clear();
     m_stationHash.clear();
-    // TODO Auto-generated method stub
-
+    m_selectedDocuments.clear();
+    m_importableHash.clear();
   }
 
   public IStatus getStatus( final Document element )
@@ -131,7 +154,6 @@ public class ImportAttachmentsDocumentsData
 
     final Document document = new Document();
 
-    // TODO: check
     document.setState( m_state );
     document.setCrossSection( cs );
     if( cs != null )
@@ -143,8 +165,9 @@ public class ImportAttachmentsDocumentsData
     if( mimeType != null )
       document.setMimetype( mimeType.toString() );
 
-    // TODO: where to get from
-    // document.setMeasurementDate( null )
+    // REMARK: create date is platform dependent, is there a helper?
+    final Date lastModified = new Date( file.lastModified() );
+    document.setMeasurementDate( lastModified );
 
     final TiffImageMetadata exif = readImageMetadata( document, file );
     if( exif != null )
@@ -162,7 +185,6 @@ public class ImportAttachmentsDocumentsData
   private String getFilePath( final String fileName )
   {
     final String stateName = m_state.getName();
-    // TODO: check
     return String.format( "%s/%s", stateName, fileName );
   }
 
@@ -191,12 +213,12 @@ public class ImportAttachmentsDocumentsData
 
     if( station == null )
     {
-      stati.add( IStatus.WARNING, "Unable to determine station" );
+      stati.add( IStatus.ERROR, "Unable to determine station" );
       m_importableHash.put( document, Boolean.FALSE );
     }
     else if( document.getCrossSection() == null )
     {
-      stati.add( IStatus.WARNING, "Cross section not found" );
+      stati.add( IStatus.ERROR, "Cross section not found" );
       m_importableHash.put( document, Boolean.FALSE );
     }
 
@@ -204,10 +226,10 @@ public class ImportAttachmentsDocumentsData
     if( mimetype == null )
       stati.add( IStatus.WARNING, "Unknown mime type" );
 
-    // FIXME:
     /* Already in database ? */
-
-    // TODO Auto-generated method stub
+    final String name = document.getName();
+    if( m_existingDocumentsByName.containsKey( name ) )
+      stati.add( IStatus.WARNING, "File already exists in the database" );
 
     final IStatus status;
     if( stati.size() == 1 )
@@ -265,7 +287,13 @@ public class ImportAttachmentsDocumentsData
     if( angle != null )
       document.setViewangle( BigDecimal.valueOf( angle ) );
 
-    // TiffConstants.EXIF_TAG_CREATE_DATE;
+    final Date creationDate = ExifUtils.getQuietDate( exif, TiffConstants.EXIF_TAG_DATE_TIME_ORIGINAL );
+    if( creationDate != null )
+    {
+      // REMARK: setting measurement date, as Document#creationDate means the database's creation date
+      // REMAR: test for null, else we fall back to lastModified which was set before.
+      document.setMeasurementDate( creationDate );
+    }
   }
 
   public boolean isImportable( final Document doc )
@@ -286,5 +314,24 @@ public class ImportAttachmentsDocumentsData
   public void unselectDocument( final Document doc )
   {
     m_selectedDocuments.remove( doc );
+  }
+
+  public void clearSelection( )
+  {
+    m_selectedDocuments.clear();
+  }
+
+  public Document[] getSelectedDocuments( final ImportMode mode )
+  {
+    final Collection<Document> selected = new ArrayList<Document>();
+
+    for( final Document document : m_selectedDocuments )
+    {
+      final boolean exists = m_existingDocumentsByName.containsKey( document.getName() );
+      if( mode == ImportMode.overwrite || !exists )
+        selected.add( document );
+    }
+
+    return selected.toArray( new Document[selected.size()] );
   }
 }

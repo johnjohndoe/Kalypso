@@ -40,19 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
+import java.util.Map;
+
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.internal.WorkbenchMessages;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
@@ -61,10 +75,13 @@ import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsDocumentsData.ImportMode;
 
 /**
  * @author Gernot Belger
  */
+@SuppressWarnings("restriction")
 public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdateable
 {
   private final ImportAttachmentsDocumentsData m_documentData;
@@ -73,12 +90,19 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
 
   private CheckboxTableViewer m_viewer;
 
+  private DocumentsCheckstateHandler m_checkStateHandler;
+
+  private DatabindingWizardPage m_binding;
+
   public ImportAttachmentsPreviewPage( final String pageName, final ImportAttachmentsData data )
   {
     super( pageName );
 
     m_data = data;
-    m_documentData = new ImportAttachmentsDocumentsData( m_data.getState() );
+
+    final State state = m_data.getState();
+    final Map<String, Document> documentsByName = m_data.getExistingDocuments();
+    m_documentData = new ImportAttachmentsDocumentsData( state, documentsByName );
 
     setTitle( "Preview" );
     setDescription( "Preview and select the found documents on this page." );
@@ -87,11 +111,14 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
   @Override
   public void createControl( final Composite parent )
   {
+    m_binding = new DatabindingWizardPage( this, null );
+
     final Composite panel = new Composite( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().applyTo( panel );
     setControl( panel );
 
     createDocumentsTable( panel );
+    createLowerPanel( panel );
   }
 
   private void createDocumentsTable( final Composite parent )
@@ -102,8 +129,8 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
 
     m_viewer = new CheckboxTableViewer( table );
     m_viewer.setContentProvider( new ArrayContentProvider() );
-    final DocumentsCheckstateHandler checkStateHandler = new DocumentsCheckstateHandler( m_viewer, m_documentData );
-    m_viewer.setCheckStateProvider( checkStateHandler );
+    m_checkStateHandler = new DocumentsCheckstateHandler( m_viewer, m_documentData );
+    m_viewer.setCheckStateProvider( m_checkStateHandler );
 
     // status
     final TableViewerColumn statusColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
@@ -151,7 +178,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
       }
     } );
 
-    m_viewer.addCheckStateListener( checkStateHandler );
+    m_viewer.addCheckStateListener( m_checkStateHandler );
   }
 
   protected void handleShowDocumentStatus( final IStructuredSelection selection )
@@ -165,6 +192,59 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
       final IStatus status = m_documentData.getStatus( (Document) firstElement );
       new StatusDialog( getShell(), status, getWizard().getWindowTitle() ).open();
     }
+  }
+
+  private void createLowerPanel( final Composite parent )
+  {
+    final Composite panel = new Composite( parent, SWT.NONE );
+    GridLayoutFactory.fillDefaults().numColumns( 5 ).applyTo( panel );
+    panel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    createImportModelControl( panel );
+    new Label( panel, SWT.NONE ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    createSelectionButtons( panel );
+  }
+
+  private void createImportModelControl( final Composite parent )
+  {
+    final Label label = new Label( parent, SWT.NONE );
+    label.setText( "Existing Documents: " );
+
+    final ComboViewer viewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setLabelProvider( new LabelProvider() );
+    viewer.setInput( ImportMode.values() );
+
+    final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
+    final IObservableValue model = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_MODE );
+    m_binding.bindValue( target, model );
+  }
+
+  private void createSelectionButtons( final Composite parent )
+  {
+    final DocumentsCheckstateHandler checkStateHandler = m_checkStateHandler;
+
+    final Button selectAllButton = new Button( parent, SWT.PUSH );
+    selectAllButton.setText( WorkbenchMessages.SelectionDialog_selectLabel );
+    selectAllButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        checkStateHandler.selectAll();
+      }
+    } );
+
+    final Button deselectAllButton = new Button( parent, SWT.PUSH );
+    deselectAllButton.setText( WorkbenchMessages.SelectionDialog_deselectLabel );
+    deselectAllButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        checkStateHandler.unselectAll();
+      }
+    } );
   }
 
   @Override

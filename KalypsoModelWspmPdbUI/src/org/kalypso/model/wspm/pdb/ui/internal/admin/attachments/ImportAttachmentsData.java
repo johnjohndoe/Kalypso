@@ -42,7 +42,10 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -53,7 +56,9 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsDocumentsData.ImportMode;
 
 /**
  * @author Gernot Belger
@@ -66,6 +71,8 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   public static final String PROPERTY_IMPORT_PATTERN = "importPattern"; //$NON-NLS-1$
 
+  public static final String PROPERTY_IMPORT_MODE = "importMode"; //$NON-NLS-1$
+
   public static final String PROPERTY_ZIP_FILE = "zipFile"; //$NON-NLS-1$
 
   public static final String PROPERTY_ZIP_HISTORY = "zipHistory"; //$NON-NLS-1$
@@ -74,11 +81,15 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   private State m_state;
 
+  private final Map<String, Document> m_documentsByName = new HashMap<String, Document>();
+
   private String m_importPattern = String.format( "*<%s>*", AttachmentStationPattern.TOKEN ); //$NON-NLS-1$
 
   private File m_importDir;
 
   private String[] m_importHistory = new String[0];
+
+  private ImportMode m_importMode = ImportMode.skip;
 
   private File m_zipFile;
 
@@ -99,6 +110,7 @@ public class ImportAttachmentsData extends AbstractModelObject
     load( settings );
 
     m_state = findState( selection );
+    buildDocumentHash(  );
 
     /* Propose a zip file name, based on state name */
     final File zipDir = m_zipFile != null ? m_zipFile.getParentFile() : FileUtils.getUserDirectory();
@@ -107,6 +119,16 @@ public class ImportAttachmentsData extends AbstractModelObject
     setZipFile( zipFile );
 
     Assert.isNotNull( m_state );
+  }
+
+  private void buildDocumentHash( )
+  {
+    if( m_state == null )
+      return;
+
+    final Set<Document> documents = m_state.getDocuments();
+    for( final Document document : documents )
+      m_documentsByName.put( document.getName(), document );
   }
 
   private State findState( final IStructuredSelection selection )
@@ -125,6 +147,11 @@ public class ImportAttachmentsData extends AbstractModelObject
   {
     if( settings == null )
       return;
+
+    /* Import mode */
+    final String importMode = settings.get( PROPERTY_IMPORT_MODE );
+    if( !StringUtils.isBlank( importMode ) )
+      m_importMode = ImportMode.valueOf( importMode );
 
     /* Import history */
     final String[] importHistory = settings.getArray( PROPERTY_IMPORT_DIR_HISTORY );
@@ -164,6 +191,8 @@ public class ImportAttachmentsData extends AbstractModelObject
   {
     if( settings == null )
       return;
+
+    settings.put( PROPERTY_IMPORT_MODE, m_importMode.name() );
 
     /* Update import history */
     final String[] importHistory = getImportHistory();
@@ -271,5 +300,24 @@ public class ImportAttachmentsData extends AbstractModelObject
     m_zipHistory = zipHistory;
 
     firePropertyChange( PROPERTY_ZIP_HISTORY, oldValue, zipHistory );
+  }
+
+  public Map<String, Document> getExistingDocuments( )
+  {
+    return Collections.unmodifiableMap( m_documentsByName );
+  }
+
+  public ImportMode getImportMode( )
+  {
+    return m_importMode;
+  }
+
+  public void setImportMode( final ImportMode importMode )
+  {
+    final Object oldValue = m_importMode;
+
+    m_importMode = importMode;
+
+    firePropertyChange( PROPERTY_IMPORT_MODE, oldValue, importMode );
   }
 }
