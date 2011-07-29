@@ -211,7 +211,10 @@ public class ImportAttachmentsDocumentsData
     m_csHash = new HashMap<BigDecimal, CrossSection>();
     final Set<CrossSection> crossSections = m_state.getCrossSections();
     for( final CrossSection crossSection : crossSections )
-      m_csHash.put( crossSection.getStation(), crossSection );
+    {
+      final BigDecimal station = crossSection.getStation().setScale( 1, BigDecimal.ROUND_HALF_UP );
+      m_csHash.put( station, crossSection );
+    }
   }
 
   private void validate( final Document document, final BigDecimal station )
