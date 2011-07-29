@@ -49,8 +49,10 @@ import org.hibernatespatial.GeometryUserType2;
 import org.hibernatespatial.HBSpatialExtension;
 import org.hibernatespatial.SpatialDialect;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
@@ -72,6 +74,8 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 public abstract class HibernateConnection<SETTINGS extends HibernateSettings> implements IPdbConnection
 {
   protected static final String SPATIAL_DIALECT = "hibernate.spatial.dialect"; //$NON-NLS-1$
+
+  private PdbInfo m_info = null;
 
   private final SETTINGS m_settings;
 
@@ -270,6 +274,40 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     {
       e.printStackTrace();
       throw new PdbConnectException( "Failed to open db session", e );
+    }
+  }
+
+  @Override
+  public PdbInfo getInfo( )
+  {
+    if( m_info == null )
+      m_info = loadInfo();
+
+    return m_info;
+  }
+
+  @Override
+  public void updateInfo( )
+  {
+    m_info = loadInfo();
+  }
+
+  private PdbInfo loadInfo( )
+  {
+    Session session = null;
+    try
+    {
+      session = openSession();
+      return new PdbInfo( session );
+    }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+    finally
+    {
+      PdbUtils.closeSessionQuietly( session );
     }
   }
 }

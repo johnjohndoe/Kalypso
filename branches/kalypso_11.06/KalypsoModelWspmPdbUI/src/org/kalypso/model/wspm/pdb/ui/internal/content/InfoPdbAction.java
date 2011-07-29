@@ -38,32 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.db.PdbInfo;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.ui.internal.content.info.PdbInfoDialog;
 
 /**
  * @author Gernot Belger
  */
-public interface IPdbConnection
+public class InfoPdbAction extends Action
 {
-  IPdbSettings getSettings( );
+  private final PdbView m_pdbView;
 
-  void connect( ) throws PdbConnectException;
+  public InfoPdbAction( final PdbView pdbView )
+  {
+    super( "Database Info" );
 
-  boolean isConnected( );
+    m_pdbView = pdbView;
 
-  void close( ) throws PdbConnectException;
+    setToolTipText( "Show database information" );
 
-  Session openSession( ) throws PdbConnectException;
+    final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.SHOW_INFO );
+    setImageDescriptor( image );
+  }
 
-  String getLabel( );
+  @Override
+  public void runWithEvent( final Event event )
+  {
+    final IPdbConnection connection = m_pdbView.getConnection();
 
-  PdbInfo getInfo( );
-
-  /**
-   * Reload the info from the database.
-   */
-  void updateInfo( );
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+    new PdbInfoDialog( shell, connection ).open();
+  }
 }

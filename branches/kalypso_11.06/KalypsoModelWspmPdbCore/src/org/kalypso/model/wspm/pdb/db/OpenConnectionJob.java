@@ -62,8 +62,6 @@ public class OpenConnectionJob extends Job
 
   private IPdbConnection m_connection;
 
-  private PdbInfo m_info;
-
   public OpenConnectionJob( final IPdbSettings settings, final boolean closeConnection )
   {
     super( "Connect to PDB" );
@@ -92,7 +90,6 @@ public class OpenConnectionJob extends Job
       }
 
       connection = operation.getConnection();
-      m_info = operation.getInfo();
 
       if( m_closeConnection )
         connection.close();
@@ -117,10 +114,5 @@ public class OpenConnectionJob extends Job
   public IPdbConnection getConnection( )
   {
     return m_connection;
-  }
-
-  public PdbInfo getInfo( )
-  {
-    return m_info;
   }
 }

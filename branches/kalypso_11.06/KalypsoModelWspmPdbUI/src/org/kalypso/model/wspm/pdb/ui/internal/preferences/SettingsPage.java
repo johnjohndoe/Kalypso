@@ -64,6 +64,7 @@ import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusComposite;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.connect.SettingsNameValue;
@@ -212,7 +213,8 @@ class SettingsPage extends WizardPage
   {
     final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( m_settings, true );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    final PdbInfo info = operation.getInfo();
+    final IPdbConnection connection = operation.getConnection();
+    final PdbInfo info = connection == null ? null : connection.getInfo();
 
     if( result.isOK() )
       m_validationComposite.setStatus( info.getStatus() );
