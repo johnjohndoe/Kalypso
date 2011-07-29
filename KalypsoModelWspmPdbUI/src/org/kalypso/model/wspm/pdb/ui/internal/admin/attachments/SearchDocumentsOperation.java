@@ -208,8 +208,12 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
         final String stationString = matcher.group( 1 );
 
         final BigDecimal station = m_searchContexts[i].parseStation( stationString );
-        if( station != null )
-          return station;
+        if( station == null )
+          return null;
+
+        // Set scale to 1, as it is in the database, else we get problems to compare
+        // with existing cross sections
+        return station.setScale( 1, BigDecimal.ROUND_HALF_UP );
       }
     }
 
