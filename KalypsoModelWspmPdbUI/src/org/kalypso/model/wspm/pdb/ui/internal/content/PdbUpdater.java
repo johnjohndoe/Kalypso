@@ -67,6 +67,22 @@ import org.osgi.framework.Version;
  */
 public class PdbUpdater
 {
+  enum DbState
+  {
+    uptodate,
+    empty,
+    dbOutdated,
+    kalypsoOutdated
+  }
+
+  private final static String WINDOW_TITLE = "Open Connection";
+
+  private static final String STR_CONNECTION_IMPOSSIBLE = "Connection failed: ";
+
+  private static final String STR_CREATE = STR_CONNECTION_IMPOSSIBLE + "database seems to be empty.";
+
+  private static final String STR_UPDATE = STR_CONNECTION_IMPOSSIBLE + "database version (%s) is older than the current version (%s).";
+
   private final IPdbConnection m_connection;
 
   private final Shell m_shell;
@@ -81,33 +97,65 @@ public class PdbUpdater
   {
     /* Check version */
     final PdbInfo info = m_connection.getInfo();
+    final boolean isSuperuser = checkSuperuser();
     final Version version = info.getVersion();
-    if( version == null )
-      return handleCreate();
+    final DbState state = checkDbState( version );
 
-    if( PdbInfo.CURRENT_VERSION.equals( version ) )
-      return Status.OK_STATUS;
-
-    if( version.compareTo( PdbInfo.CURRENT_VERSION ) > 0 )
+    switch( state )
     {
-      final String msg = String.format( "The Version of the cross section database (%s) is newer than your version of Kalypso. Connection impossible. Please update your Kalypso.", version );
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
-    }
+      case uptodate:
+        return Status.OK_STATUS;
 
-    if( version.compareTo( PdbInfo.CURRENT_VERSION ) < 0 )
-      return handleUpdate( version );
+      case empty:
+        if( isSuperuser )
+          return handleCreate();
+        else
+          return handleShouldCreate();
+
+      case kalypsoOutdated:
+        final String msg = String.format( STR_CONNECTION_IMPOSSIBLE + "database version (%s) is newer than the version of Kalypso.\nPlease update Kalypso.", version );
+        return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
+
+      case dbOutdated:
+        if( isSuperuser )
+          return handleUpdate( version );
+        else
+          return handleShouldUpdate( version );
+    }
 
     throw new IllegalStateException();
   }
 
-  private IStatus handleCreate( )
+  private DbState checkDbState( final Version version )
   {
     // TODO: check, if database is empty
     // TODO: check, if it is a spatial database
+    if( version == null )
+      return DbState.empty;
 
+    if( PdbInfo.CURRENT_VERSION.equals( version ) )
+      return DbState.uptodate;
+
+    if( version.compareTo( PdbInfo.CURRENT_VERSION ) > 0 )
+      return DbState.kalypsoOutdated;
+
+    if( version.compareTo( PdbInfo.CURRENT_VERSION ) < 0 )
+      return DbState.dbOutdated;
+
+    throw new IllegalStateException();
+  }
+
+  private boolean checkSuperuser( )
+  {
+    final String username = m_connection.getSettings().getUsername();
+    return IPdbConnection.SUPERUSER.equals( username );
+  }
+
+  private IStatus handleCreate( )
+  {
     /* ask user what to do */
-    final String msg = String.format( "You are connection with an empty database.\nDo you wish to create the database with the current user as owner?\n" );
-    final MessageDialog dialog = new MessageDialog( m_shell, "Create Database", null, msg, MessageDialog.CONFIRM, new String[] { "Create Now!", IDialogConstants.CANCEL_LABEL }, 1 );
+    final String msg = String.format( "%s\nDo you wish to create the database?", STR_CREATE );
+    final MessageDialog dialog = new MessageDialog( m_shell, WINDOW_TITLE, null, msg, MessageDialog.CONFIRM, new String[] { "Create Now!", IDialogConstants.CANCEL_LABEL }, 1 );
     if( dialog.open() != Window.OK )
       return Status.CANCEL_STATUS;
 
@@ -120,13 +168,21 @@ public class PdbUpdater
     return executeScripts( scripts, "Create Database" );
   }
 
+  private IStatus handleShouldCreate( )
+  {
+    final String msg = String.format( "%s\nLog-in with user '%s' to create the database.", STR_CREATE, IPdbConnection.SUPERUSER );
+    MessageDialog.openWarning( m_shell, WINDOW_TITLE, msg );
+    return Status.CANCEL_STATUS;
+  }
+
   private IStatus handleUpdate( final Version version )
   {
     // 0) ggf. check preconditions
 
     /* ask user what to do */
-    final String msg = String.format( "The Version of the cross section database (%s) is older than the current version (%s).\nPlease backup the database before updating.\nUpdate database now?", version, PdbInfo.CURRENT_VERSION );
-    final MessageDialog dialog = new MessageDialog( m_shell, "Update Database", null, msg, MessageDialog.CONFIRM, new String[] { "Update Now!", IDialogConstants.CANCEL_LABEL }, 1 );
+    final String baseMsg = String.format( STR_UPDATE, version, PdbInfo.CURRENT_VERSION );
+    final String msg = baseMsg + "\nPlease backup the database before updating.\nUpdate database now?";
+    final MessageDialog dialog = new MessageDialog( m_shell, WINDOW_TITLE, null, msg, MessageDialog.CONFIRM, new String[] { "Update Now!", IDialogConstants.CANCEL_LABEL }, 1 );
     if( dialog.open() != Window.OK )
       return Status.CANCEL_STATUS;
 
@@ -136,6 +192,14 @@ public class PdbUpdater
     if( scripts == null )
       throw new IllegalStateException( "Missing create script" ); //$NON-NLS-1$
     return executeScripts( scripts, "Update Database" );
+  }
+
+  private IStatus handleShouldUpdate( final Version version )
+  {
+    final String baseMsg = String.format( STR_UPDATE, version, PdbInfo.CURRENT_VERSION );
+    final String msg = String.format( "%s\nLog-in with user '%s' to update.", baseMsg, IPdbConnection.SUPERUSER );
+    MessageDialog.openWarning( m_shell, WINDOW_TITLE, msg );
+    return Status.CANCEL_STATUS;
   }
 
   private IStatus executeScripts( final UpdateScript[] scripts, final String windowTitle )
