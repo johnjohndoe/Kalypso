@@ -56,7 +56,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -172,12 +171,12 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
 
     final Menu menu = menuManager.createContextMenu( viewer.getControl() );
 
-    site.registerContextMenu( "pdbContentTreePopupMenu", menuManager, viewer ); //$NON-NLS-N$
+    site.registerContextMenu( menuManager, viewer ); //$NON-NLS-N$
 
     viewer.getControl().setMenu( menu );
 
     final IEvaluationService service = (IEvaluationService) site.getService( IEvaluationService.class );
-    service.requestEvaluation( ISources.ACTIVE_CURRENT_SELECTION_NAME );
+    service.requestEvaluation( IEvaluationService.PROP_NOTIFYING /* ISources.ACTIVE_CURRENT_SELECTION_NAME */);
 
     viewer.getControl().addDisposeListener( new DisposeListener()
     {

@@ -84,6 +84,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.preferences.OpenConnectionData;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.FindViewRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
+import org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart;
 
 /**
  * @author Gernot Belger
@@ -336,6 +337,25 @@ public class PdbView extends ViewPart implements IConnectionViewer
       startAutoConnect();
 
     m_form.layout();
+
+    /* activate map view */
+    // REMARK: this actually fixes two bugs:
+    // 1) the outline will show the map legend
+    // 2) the context men uon the pdb works correctly (evaluation context was not correctly set)
+    activateMapView();
+  }
+
+  private void activateMapView( )
+  {
+    try
+    {
+      final IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
+      page.showView( WspmMapViewPart.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
+    }
+    catch( final PartInitException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   private void createNoWspmProjectControl( final FormToolkit toolkit, final Composite parent )
