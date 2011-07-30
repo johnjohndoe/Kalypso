@@ -46,9 +46,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.net.UrlUtilities;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 
@@ -65,6 +69,10 @@ public class UpdateScript implements Comparable<UpdateScript>
 
   private static final String PROPERTY_TYPE = "type"; //$NON-NLS-1$
 
+  private static final String ELEMENT_PAGE = "page"; //$NON-NLS-1$
+
+  private static final String PROPERTY_CLASS = "class"; //$NON-NLS-1$
+
   private final Version m_targetVersion;
 
   private final String m_location;
@@ -73,6 +81,8 @@ public class UpdateScript implements Comparable<UpdateScript>
 
   private final String m_bundleID;
 
+  private final IConfigurationElement[] m_pageElements;
+
   public UpdateScript( final IConfigurationElement element )
   {
     m_targetVersion = new Version( element.getAttribute( PROPERTY_TARGET_VERSION ) );
@@ -80,6 +90,8 @@ public class UpdateScript implements Comparable<UpdateScript>
     m_location = element.getAttribute( PROPERTY_LOCATION );
     m_type = element.getAttribute( PROPERTY_TYPE );
     m_bundleID = element.getNamespaceIdentifier();
+
+    m_pageElements = element.getChildren( ELEMENT_PAGE );
   }
 
   public Version getTargetVersion( )
@@ -120,5 +132,32 @@ public class UpdateScript implements Comparable<UpdateScript>
   public int compareTo( final UpdateScript o )
   {
     return m_targetVersion.compareTo( o.getTargetVersion() );
+  }
+
+  public IUpdateScriptPage[] createVariablePages( final UpdateScriptPageData data ) throws CoreException
+  {
+    final Collection<IUpdateScriptPage> pages = new ArrayList<IUpdateScriptPage>();
+
+    for( final IConfigurationElement element : m_pageElements )
+    {
+      try
+      {
+        final IUpdateScriptPage page = (IUpdateScriptPage) element.createExecutableExtension( PROPERTY_CLASS );
+        page.init( data );
+        pages.add( page );
+      }
+      catch( final CoreException e )
+      {
+        throw e;
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Failed to create update wizard page", e );
+        throw new CoreException( status );
+      }
+    }
+
+    return pages.toArray( new IUpdateScriptPage[pages.size()] );
   }
 }

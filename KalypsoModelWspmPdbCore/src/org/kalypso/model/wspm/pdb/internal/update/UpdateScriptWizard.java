@@ -38,61 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal;
+package org.kalypso.model.wspm.pdb.internal.update;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.hibernate.Session;
-import org.hibernate.jdbc.Work;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.pdb.PdbUtils;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.wizard.Wizard;
 
 /**
  * @author Gernot Belger
  */
-public class WorkRunnable implements ICoreRunnableWithProgress
+public class UpdateScriptWizard extends Wizard
 {
-  private final IStatus m_okStatus = Status.OK_STATUS;
-
-  private final IPdbConnection m_connection;
-
-  private final Work m_work;
-
-  public WorkRunnable( final IPdbConnection connection, final Work work )
+  public UpdateScriptWizard( final IWizardPage[] pages )
   {
-    m_connection = connection;
-    m_work = work;
+    for( final IWizardPage page : pages )
+      addPage( page );
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
+  public boolean performFinish( )
   {
-    Session session = null;
-
-    try
-    {
-      monitor.beginTask( m_work.toString(), IProgressMonitor.UNKNOWN );
-
-      session = m_connection.openSession();
-
-      session.doWork( m_work );
-
-      session.close();
-
-      return m_okStatus;
-    }
-    catch( final PdbConnectException e )
-    {
-      throw new InvocationTargetException( e );
-    }
-    finally
-    {
-      PdbUtils.closeSessionQuietly( session );
-    }
+    // Nothing to do...
+    return true;
   }
 }

@@ -49,6 +49,9 @@
 
    <element name="script">
       <complexType>
+         <sequence>
+            <element ref="page" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
          <attribute name="targetVersion" type="string" use="required">
             <annotation>
                <documentation>
@@ -81,6 +84,26 @@
                <documentation>
                   Database type, like &apos;oracle&apos; or &apos;postgis&apos;.
                </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="page">
+      <annotation>
+         <documentation>
+            Wizard page, if present this page will be shown to the superuser before update i norder to allow him to enter variables needed by the update scripts.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.model.wspm.pdb.db.version.IUpdateScriptPage"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
