@@ -48,6 +48,8 @@ import org.kalypso.model.wspm.pdb.db.PdbInfo;
  */
 public interface IPdbConnection
 {
+  String SUPERUSER = "pdb_admin"; //$NON-NLS-1$
+
   IPdbSettings getSettings( );
 
   void connect( ) throws PdbConnectException;
