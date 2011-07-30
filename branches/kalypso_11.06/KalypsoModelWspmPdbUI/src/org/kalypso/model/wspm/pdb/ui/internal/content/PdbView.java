@@ -77,6 +77,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
+import org.kalypso.model.wspm.pdb.db.PdbUpdater;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
@@ -350,6 +351,9 @@ public class PdbView extends ViewPart implements IConnectionViewer
     try
     {
       final IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
+      if( page == null )
+        return;
+
       page.showView( WspmMapViewPart.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
     }
     catch( final PartInitException e )

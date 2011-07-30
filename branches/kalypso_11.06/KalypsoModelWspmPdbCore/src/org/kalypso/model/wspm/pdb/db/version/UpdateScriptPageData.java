@@ -38,67 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.db.version;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Properties;
 
-import org.hibernate.jdbc.Work;
+import org.kalypso.commons.java.util.AbstractModelObject;
 
 /**
  * @author Gernot Belger
+ *
  */
-public class SqlWork implements Work
+public class UpdateScriptPageData extends AbstractModelObject
 {
-  private final String[] m_sqls;
+  private final Properties m_variables;
 
-  public SqlWork( final String[] sqls )
+  public UpdateScriptPageData( final Properties variables )
   {
-    m_sqls = sqls;
+    m_variables = variables;
   }
 
-  @Override
-  public String toString( )
+  public Properties getVariables( )
   {
-    return "Creating database (this may take several minutes)....";
-  }
-
-  @Override
-  public void execute( final Connection connection ) throws SQLException
-  {
-    final boolean oldAutoCommit = connection.getAutoCommit();
-
-    try
-    {
-      connection.setAutoCommit( false );
-      connection.commit();
-      executeScripts( connection );
-      connection.commit();
-    }
-    catch( final SQLException e )
-    {
-      // Rollback etc. does not work, why?
-      connection.rollback();
-      throw e;
-    }
-    catch( final Throwable e )
-    {
-      connection.rollback();
-      throw new SQLException( e );
-    }
-    finally
-    {
-      connection.setAutoCommit( oldAutoCommit );
-    }
-  }
-
-  private void executeScripts( final Connection connection ) throws SQLException
-  {
-    for( final String sql : m_sqls )
-    {
-      final Statement statement = connection.createStatement();
-      statement.execute( sql );
-    }
+    return m_variables;
   }
 }

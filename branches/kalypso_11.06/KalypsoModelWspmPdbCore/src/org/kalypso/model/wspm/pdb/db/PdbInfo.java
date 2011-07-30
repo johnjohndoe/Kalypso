@@ -70,11 +70,11 @@ public class PdbInfo
 
   public static final Version CURRENT_VERSION = new Version( "0.0.2" ); //$NON-NLS-1$
 
-  private final String PROPERTY_VERSION = "Version"; //$NON-NLS-1$
+  public final static String PROPERTY_VERSION = "Version"; //$NON-NLS-1$
 
-  private final String PROPERTY_SRID = "SRID"; //$NON-NLS-1$
+  public final static String PROPERTY_SRID = "SRID"; //$NON-NLS-1$
 
-  private final String PROPERTY_DOCUMENT_SERVER = "DocumentServer"; //$NON-NLS-1$
+  public final static String PROPERTY_DOCUMENT_SERVER = "DocumentServer"; //$NON-NLS-1$
 
   private final Properties m_properties = new Properties();
 

@@ -21,12 +21,18 @@
             location="etc/scripts/create/current/oracle.sql"
             targetVersion="0.0.0"
             type="oracle">
+         <page
+               class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo">
+         </page>
       </script>
       <script
             comment="Postgis - Create DB"
             location="etc/scripts/create/current/postgis.sql"
             targetVersion="0.0.0"
             type="postgis">
+         <page
+               class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo">
+         </page>
       </script>
    </extension>
 
