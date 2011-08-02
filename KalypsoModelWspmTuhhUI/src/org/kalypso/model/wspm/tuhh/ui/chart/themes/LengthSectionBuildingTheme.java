@@ -52,6 +52,8 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 
 /**
+ * FIXME: this layer makes no sense! -> general cascading layer
+ * 
  * @author kimwerner
  */
 public class LengthSectionBuildingTheme extends AbstractChartLayer implements ITooltipChartLayer
@@ -77,9 +79,6 @@ public class LengthSectionBuildingTheme extends AbstractChartLayer implements IT
     }
   };
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
-   */
   @Override
   public String getTitle( )
   {
