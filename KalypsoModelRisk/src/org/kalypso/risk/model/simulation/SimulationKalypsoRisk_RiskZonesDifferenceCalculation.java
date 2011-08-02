@@ -140,7 +140,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
     }
     catch( final Exception e )
     {
-      throw new SimulationException( e.getLocalizedMessage() );
+      throw new SimulationException( "Fehler bei der Berechnung der Risikodifferenzen.", e );
     }
   }
 
@@ -209,8 +209,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
-      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcRiskZonesRunnable.6" ) + org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.4" ) + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcRiskZonesRunnable.6" ) + org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.4" ), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
   }

@@ -161,8 +161,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
-      throw new SimulationException( e.getLocalizedMessage() );
+      throw new SimulationException( "Fehler bei der Berechnung des spezifischen Schadens", e );
     }
   }
 
