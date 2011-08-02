@@ -951,7 +951,7 @@ public class CreateMainChannelComposite extends Composite
       final Control profilControl = profilChartView.createControl( sectionClient );
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-      final IChartComposite chart = profilChartView.getChart();
+      final IChartComposite chart = profilChartView.getChartComposite();
       final IChartModel chartModel = chart.getChartModel();
       final ILayerManager mngr = chartModel.getLayerManager();
       final IChartLayer overlayLayer = mngr.findLayer( IWspmOverlayConstants.LAYER_OVERLAY );

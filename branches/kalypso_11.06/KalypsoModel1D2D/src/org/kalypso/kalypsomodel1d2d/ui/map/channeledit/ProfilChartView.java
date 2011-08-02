@@ -62,7 +62,6 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -72,7 +71,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IPlotHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
@@ -84,7 +82,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 @Deprecated
 public class ProfilChartView implements IChartPart, IProfilListener, IProfilChart
 {
-
   private IChartComposite m_chartComposite = null;
 
   private IProfilLayerProvider m_layerProvider;
@@ -248,19 +245,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     return m_chartComposite.getChartModel().getMapperRegistry().getAxis( id );
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
-   */
-
-  @Override
-  public IChartComposite getChart( )
-  {
-    return m_chartComposite;
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
-   */
   @Override
   public IChartComposite getChartComposite( )
   {
@@ -278,16 +262,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   public IProfilLayerProvider getLayerProvider( )
   {
     return m_layerProvider;
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
-   */
-
-  @Override
-  public IPlotHandler getPlotDragHandler( )
-  {
-    return m_chartComposite.getPlotHandler();
   }
 
   @Override
@@ -468,26 +442,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       //
       // m_chartComposite.getPlot().invalidate( lm.getLayers() );
     }
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
-   */
-  @Override
-  public void addListener( final IChartModelEventListener listener )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
-   */
-  @Override
-  public void removeListener( final IChartModelEventListener listener )
-  {
-    // TODO Auto-generated method stub
 
   }
 }
