@@ -115,7 +115,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   public static final QName WB1D2DCONTROL_PROP_PERCENT_CHECK = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "PERCENT_CHECK" ); //$NON-NLS-1$
 
   public final static QName WB1D2DCONTROL_PROP_VEGETA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "VEGETA" ); //$NON-NLS-1$
-  
+
   public final static QName WB1D2DCONTROL_PROP_CHI = new QName (UrlCatalog1D2D.MODEL_1D2DControl_NS, "CHI"); //$NON-NLS-1$
 
   public final static QName WB1D2DCONTROL_PROP_HASWINDDRAG = new QName (UrlCatalog1D2D.MODEL_1D2DControl_NS, "HASWINDDRAG"); //$NON-NLS-1$
@@ -465,13 +465,21 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   @Override
   public boolean getVegeta( )
   {
-    return (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VEGETA );
+    final Boolean vegeta = (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VEGETA );
+    if( vegeta == null )
+      return false;
+
+    return vegeta;
   }
 
   @Override
   public boolean getHasWindDrag( )
   {
-    return (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HASWINDDRAG );
+    final Boolean hasWindDrag = (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HASWINDDRAG );
+    if( hasWindDrag == null )
+      return false;
+
+    return hasWindDrag;
   }
 
   @Override
@@ -490,6 +498,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return property != null ? (Boolean) property : false;
   }
 
+  @Override
   public boolean getFixedMarshBottom( )
   {
     final Object property = getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_FIXEDMARSHBOTTOM );
@@ -661,10 +670,10 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   @Override
   public boolean calculateSWAN( )
   {
-      final Object swan = getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN );
-      if( swan == null )
-        return false;
-      return ((Boolean) swan).booleanValue();
+    final Object swan = getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN );
+    if( swan == null )
+      return false;
+    return ((Boolean) swan).booleanValue();
   }
 
   /**
@@ -676,9 +685,6 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION_SWAN );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#isRestartAfterSWAN()
-   */
   @Override
   public boolean isRestartAfterSWAN( )
   {
