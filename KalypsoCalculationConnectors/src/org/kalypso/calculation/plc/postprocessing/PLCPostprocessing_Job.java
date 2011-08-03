@@ -185,8 +185,9 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
       FileUtils.moveDirectoryToDirectory( riskCalculatedRasterFolderInput, riskFolderCalculated, false );
       FileUtils.moveDirectoryToDirectory( riskCalculatedRasterFolderOutput, riskFolderCalculated, false );
       FileUtils.moveDirectoryToDirectory( riskDifferenceRasterFolderOutput, riskFolderDifference, false );
-      FileUtils.moveDirectoryToDirectory( naResultsFolder, naFolder, false );
 
+      if( naResultsFolder.exists() )
+        FileUtils.moveDirectoryToDirectory( naResultsFolder, naFolder, false );
     }
     catch( final Exception e )
     {
