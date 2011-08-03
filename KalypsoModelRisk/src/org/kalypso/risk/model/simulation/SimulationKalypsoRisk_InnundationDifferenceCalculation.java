@@ -202,7 +202,7 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
         {
           final IGeoGrid inputGrid1 = GeoGridUtilities.toGrid( inputCoverage1 );
           final IGeoGrid inputGrid2 = GeoGridUtilities.toGrid( inputCoverage2 );
-          final SubstractionGrid outputGrid = new SubstractionGrid( inputGrid1, inputGrid2 );
+          final SubstractionGrid outputGrid = new SubstractionGrid( inputGrid2, inputGrid1 );
           outputGrid.usePositiveValuesOnly( true );
 
           final String outputCoverageFileName = String.format( "%s_%02d.bin", resultCoverageCollection.getId(), i ); //$NON-NLS-1$
