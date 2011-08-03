@@ -20,7 +20,7 @@
 				<ColorMapEntry label="0,05" color="#ffcccc" opacity="0.85" quantity="0.05"/>
 				<ColorMapEntry label="&lt; 0,05" color="#ffe5e5" opacity="0.85" quantity="1.0E-300"/>
 				<ColorMapEntry label="0,00" color="#ffffff" opacity="0.0" quantity="0.00"/>
-				<ColorMapEntry label="%gt; -0,05" color="#e5ffe5" opacity="0.85" quantity="-1.0E-300"/>
+				<ColorMapEntry label="&gt; -0,05" color="#e5ffe5" opacity="0.85" quantity="-1.0E-300"/>
 				<ColorMapEntry label="-0,05" color="#ccffcc" opacity="0.85" quantity="-0.05"/>
 				<ColorMapEntry label="-0,10" color="#b2ffb2" opacity="0.85" quantity="-0.10"/>
 				<ColorMapEntry label="-0,15" color="#99ff99" opacity="0.85" quantity="-0.15"/>
