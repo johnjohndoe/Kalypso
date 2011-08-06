@@ -48,6 +48,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -74,6 +75,7 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IObservationFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.LengthSectionCreator;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -120,6 +122,7 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
   private IProfil[] extractProfiles( final Object[] profilFeatures )
   {
     final SortedMap<Double, IProfil> profiles = new TreeMap<Double, IProfil>();
+
     for( final Object objProfileFeature : profilFeatures )
     {
       if( !(objProfileFeature instanceof IProfileFeature) )
@@ -133,7 +136,15 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
       profiles.put( station, profil );
     }
 
-    return profiles.values().toArray( new IProfil[profiles.size()] );
+    final IProfil[] sortedProfiles = profiles.values().toArray( new IProfil[profiles.size()] );
+
+    // Sort according to flow direction (i.e. we always start upstreams)
+    final WspmWaterBody waterBody = ((IProfileFeature) profilFeatures[0]).getWater();
+    final boolean direction = waterBody == null ? true : waterBody.isDirectionUpstreams();
+    if( direction )
+      ArrayUtils.reverse( sortedProfiles );
+
+    return sortedProfiles;
   }
 
   /**
