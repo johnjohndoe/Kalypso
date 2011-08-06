@@ -2,13 +2,11 @@
 <?eclipse version="3.0"?>
 <plugin>
 	<extension point="org.eclipse.ui.handlers">
-          <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportHandler"
-                commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport">
+          <handler class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportHandler" commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport">
              <enabledWhen>
-                <reference
-                      definitionId="org.kalypso.chart.ui.chartEditorActive">
-                </reference>
+                <with variable="activeChart">
+                    <test property="wspmTuhhChart.isLengthSection"/>
+                </with>
              </enabledWhen>
           </handler>
 	</extension>
@@ -277,14 +275,15 @@
 		</visibleWhen>
      </command>
     </menuContribution>
-    <menuContribution
-          locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
-       <command
-             commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-             style="push">
-          <visibleWhen
-                checkEnabled="true">
-          </visibleWhen>
+    <menuContribution locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
+       <command commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" style="push">
+          <visibleWhen checkEnabled="true"/>
+       </command>
+    </menuContribution>
+
+    <menuContribution locationURI="toolbar:org.kalypso.chart.ui.view.ChartView?after=additions">
+       <command commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" style="push">
+          <visibleWhen checkEnabled="true"/>
        </command>
     </menuContribution>
   </extension>
@@ -413,6 +412,7 @@
      <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
      <image commandId="org.kalypso.model.wspm.command.calcTuhh" icon="icons/obj16/startCalulation.gif"/>
      <image commandId="org.kalypso.model.wspm.light.showDocuments" icon="icons/obj16/wspmLightFeatureView.gif"/>
+     <image commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" icon="icons/obj16/WspWinPlotter.gif"/>
   </extension>
   
   <extension
@@ -821,4 +821,14 @@
             </command>
         </menuContribution>
      </extension>
+     
+     <extension point="org.eclipse.core.expressions.propertyTesters">
+        <propertyTester class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportTester"
+              id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportTester"
+              namespace="wspmTuhhChart"
+              properties="isLengthSection"
+              type="de.openali.odysseus.chart.framework.view.IChartComposite">
+        </propertyTester>
+     </extension>
+     
 </plugin>
