@@ -264,8 +264,7 @@
 		</TaskGroup>
 
 		<TaskGroup
-			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultLengthSectionViewGroup"
-			context="LengthSectionView">
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultLengthSectionViewGroup">
 			<Help>%Kalypso1D2D_Postprocessing_ResultLengthSectionViewGroup_help</Help>
 			<Name>%Kalypso1D2D_Postprocessing_ResultLengthSectionViewGroup</Name>
 			<Task context="ResultMap"
@@ -317,11 +316,6 @@
 					<con:Parameter name="viewTitle"
 						value="Berechnungseinstellungen" />
 				</con:ExtensionContext>
-			</con:ViewContext>
-
-			<con:ViewContext id="LengthSectionView"
-				partId="org.kalypso.chart.ui.view.ChartView"
-				parent = "Context1d2dModelling">
 			</con:ViewContext>
 
 			<con:WorkbenchSiteContext id="MapAndProfileViewContext"
