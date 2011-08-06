@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.light;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.kalypso.chart.ui.view.ChartView;
 import org.kalypso.model.wspm.tuhh.ui.light.documents.WspmLightFeatureView;
 import org.kalypso.model.wspm.ui.view.LayerViewPart;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartViewPart;
@@ -116,6 +117,7 @@ public class WspmLightPerspective implements IPerspectiveFactory
     mainFolder.addView( WspmMapViewPart.ID );
     mainFolder.addView( TableView.ID );
     mainFolder.addPlaceholder( WspmLightFeatureView.WSPMLIGHTFEATUREVIEW_ID );
+    mainFolder.addPlaceholder( ChartView.ID );
 
     /** bottom main folder */
     final IFolderLayout bottomMainFolder = layout.createFolder( BOTTOM_MAIN_FOLDER, IPageLayout.BOTTOM, 0.7f, MAIN_FOLDER );
