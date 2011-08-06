@@ -134,7 +134,13 @@ public class LengthSectionExporter
 
       if( oStation instanceof Number && oVal instanceof Number )
       {
-        stations.add( ((Number) oStation).doubleValue() );
+        final double stationKM = ((Number) oStation).doubleValue();
+
+        // BUGFIX/HACK: the .lng format (i.e. WspWin Plotter) expects length section
+        // stations to be in [m], rather than in [km].
+        final double station = stationKM * 1000.0;
+
+        stations.add( station );
         doubles.add( ((Number) oVal).doubleValue() );
       }
     }
