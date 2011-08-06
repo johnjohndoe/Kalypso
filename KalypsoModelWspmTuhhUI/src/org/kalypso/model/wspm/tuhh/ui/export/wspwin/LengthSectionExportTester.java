@@ -40,46 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
-import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
-import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
- * @author Dirk Kuch
+ * Tests if a chart can be exported as WspWin Length Section.
+ * 
+ * @author Gernot Belger
  */
-public class LengthSectionExportVisitor extends AbstractChartLayerVisitor
+public class LengthSectionExportTester extends PropertyTester
 {
-  private IObservation<TupleResult> m_observation;
+  public static final String PROPERTY_IS_LENGTH_SECTION = "isLengthSection"; //$NON-NLS-1$
 
   @Override
-  public void visit( final IChartLayer layer ) throws CancelVisitorException
+  public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
-    if( layer instanceof TupleResultLineLayer )
-    {
-      final IObservation<TupleResult> obs = ((TupleResultLineLayer) layer).getObservation();
-      if( obs != null )
-      {
-        for( final IComponent comp : obs.getResult().getComponents() )
-        {
-          if( comp.getId().equals( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) )
-          {
-            m_observation = obs;
+    if( !(receiver instanceof IChartComposite) )
+      return false;
 
-            throw new CancelVisitorException();
-          }
-        }
-      }
-    }
+    final IChartComposite chart = (IChartComposite) receiver;
+
+    if( PROPERTY_IS_LENGTH_SECTION.equals( property ) )
+      return testIsLengthSection( chart );
+
+    return false;
   }
 
-  public IObservation<TupleResult> getObservation( )
+  private boolean testIsLengthSection( final IChartComposite chart )
   {
-    return m_observation;
+    final IObservation<TupleResult> observation = LengthSectionExportHandler.getLSObservation( chart );
+    return observation != null;
   }
 }
