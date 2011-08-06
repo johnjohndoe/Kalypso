@@ -76,6 +76,13 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
   }
 
   @Override
+  protected int getMinimumSelectionCount( )
+  {
+    // Two profiles needed for length section.
+    return 2;
+  }
+
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     super.init( workbench, selection );
