@@ -63,7 +63,6 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.wspwin.core.Plotter;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
@@ -71,9 +70,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class LengthSectionExportHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -132,5 +128,4 @@ public class LengthSectionExportHandler extends AbstractHandler
 
     return visitor.getObservation();
   }
-
 }

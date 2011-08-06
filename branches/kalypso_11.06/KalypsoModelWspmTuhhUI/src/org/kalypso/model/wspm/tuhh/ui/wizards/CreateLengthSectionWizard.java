@@ -47,8 +47,6 @@ import java.net.URL;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -61,20 +59,20 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.part.FileEditorInput;
+import org.kalypso.chart.ui.view.ChartView;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.wspm.core.gml.IObservationFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.LengthSectionCreator;
@@ -100,7 +98,7 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
 {
   private ProfilesChooserPage m_profileChooserPage;
 
-  private GMLWorkspace m_workspace;
+  private ProfileSelection m_profileSelection;
 
   public CreateLengthSectionWizard( )
   {
@@ -111,12 +109,11 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
-
-    m_workspace = profileSelection.getWorkspace();
+    m_profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
 
     final String description = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizardsCreateLengthSectionWizard.2" ); //$NON-NLS-1$
-    m_profileChooserPage = new ProfilesChooserPage( description, profileSelection, false );
+    m_profileChooserPage = new ProfilesChooserPage( description, m_profileSelection, false, 2 );
+
     addPage( m_profileChooserPage );
   }
 
@@ -146,12 +143,14 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
   public boolean performFinish( )
   {
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
-    final URL context = m_workspace.getContext();
+
+    final URL context = m_profileSelection.getWorkspace().getContext();
     final IProject wspmProjekt = ResourceUtilities.findProjectFromURL( context );
     final IFolder parentFolder = wspmProjekt.getFolder( "Längsschnitte" ); //$NON-NLS-1$
     try
     {
-      doExport( profilFeatures, context, parentFolder );
+      final IFile kodFile = doExport( profilFeatures, context, parentFolder );
+      openKod( kodFile );
     }
     catch( final Throwable t )
     {
@@ -163,31 +162,27 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
     return true;
   }
 
-  private void doExport( final Object[] profilFeatures, final URL context, final IFolder parentFolder ) throws CoreException, GMLSchemaException, IOException, GmlSerializeException, PartInitException
+  private IFile doExport( final Object[] profilFeatures, final URL context, final IFolder parentFolder ) throws CoreException, GMLSchemaException, IOException, GmlSerializeException
   {
     if( !parentFolder.exists() )
-    {
       parentFolder.create( false, true, new NullProgressMonitor() );
-    }
 
-    final String fName = String.format( "station(%.4f)%d", ((IProfileFeature) profilFeatures[0]).getStation(), profilFeatures.length ); //$NON-NLS-1$
+    final IProfil[] profiles = extractProfiles( profilFeatures );
+
+    final String containerName = getContainerName();
+
+    final String fName = String.format( "%s_%.4f-%.4f", containerName, profiles[0].getStation(), profiles[profiles.length - 1].getStation() ); //$NON-NLS-1$
+    final String title = String.format( "%s - km %.4f - km %.4f", containerName, profiles[0].getStation(), profiles[profiles.length - 1].getStation() );
     final IFolder targetFolder = parentFolder.getFolder( fName );
     if( !targetFolder.exists() )
-    {
       targetFolder.create( false, true, new NullProgressMonitor() );
-    }
 
     final IFile targetFile = targetFolder.getFile( new Path( fName + ".gml" ) ); //$NON-NLS-1$
     final File targetJavaFile = targetFile.getLocation().toFile();
 
-    final String gmlVersion = null;
-    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final IGMLSchema schema = schemaCatalog.getSchema( new QName( "http://www.opengis.net/om", "Observation" ).getNamespaceURI(), gmlVersion ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IFeatureType rootFeatureType = schema.getFeatureType( new QName( "http://www.opengis.net/om", "Observation" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final Feature rootFeature = FeatureFactory.createFeature( null, null, "LengthSectionResult", rootFeatureType, true ); //$NON-NLS-1$
-    final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, context, null, new GmlSerializerFeatureProviderFactory(), null );
+    final GMLWorkspace lsWorkspace = FeatureFactory.createGMLWorkspace( IObservationFeature.FEATURE_OBSERVATION, context, new GmlSerializerFeatureProviderFactory() );
+    final Feature rootFeature = lsWorkspace.getRootFeature();
 
-    final IProfil[] profiles = extractProfiles( profilFeatures );
     final LengthSectionCreator lsCreator = new LengthSectionCreator( profiles );
     final IObservation<TupleResult> lengthSection = lsCreator.toLengthSection();
 
@@ -196,14 +191,22 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
 
     final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) ); //$NON-NLS-1$
     final IFile tableFile = targetFolder.getFile( new Path( fName + ".gft" ) ); //$NON-NLS-1$
-    copyResourceFile( "resources/LS_no_result.kod", kodFile, fName ); //$NON-NLS-1$
-    copyResourceFile( "resources/table.gft", tableFile, fName ); //$NON-NLS-1$
+    copyResourceFile( "resources/LS_no_result.kod", kodFile, fName, title ); //$NON-NLS-1$
+    copyResourceFile( "resources/table.gft", tableFile, fName, title ); //$NON-NLS-1$
 
-    final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    IDE.openEditor( page, kodFile, true );
+    return kodFile;
   }
 
-  private void copyResourceFile( final String resource, final IFile targetFile, final String fName ) throws IOException, CoreException
+  private String getContainerName( )
+  {
+    final Feature parent = m_profileSelection.getContainer();
+    if( parent == null )
+      return null;
+
+    return parent.getName();
+  }
+
+  private void copyResourceFile( final String resource, final IFile targetFile, final String fName, final String title ) throws IOException, CoreException
   {
     if( targetFile.exists() )
       return;
@@ -211,11 +214,26 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
     final URL resourceLocation = getClass().getResource( resource );
     String kod = FileUtilities.toString( resourceLocation, "UTF-8" ); //$NON-NLS-1$
     kod = kod.replaceAll( "%GMLFILENAME%", fName + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$
-    kod = kod.replaceAll( "%TITLE%", fName ); //$NON-NLS-1$
+    kod = kod.replaceAll( "%TITLE%", title ); //$NON-NLS-1$
     kod = kod.replaceAll( "%DESCRIPTION%", fName ); //$NON-NLS-1$
     final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" ); //$NON-NLS-1$
     targetFile.create( inputStream, true, new NullProgressMonitor() );
 
     targetFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+  }
+
+  private void openKod( final IFile kodFile ) throws PartInitException
+  {
+    final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+
+    if( page.isEditorAreaVisible() )
+      IDE.openEditor( page, kodFile, true );
+    else
+    {
+      // Open in chart view if we have no editor area. Else we break the perspective layout.
+      final IViewPart chartView = page.showView( ChartView.ID );
+      if( chartView instanceof ChartView )
+        ((ChartView) chartView).setInput( new FileEditorInput( kodFile ) );
+    }
   }
 }
