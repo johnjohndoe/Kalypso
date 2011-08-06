@@ -277,7 +277,16 @@
     </menuContribution>
     <menuContribution locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
        <command commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" style="push">
-          <visibleWhen checkEnabled="true"/>
+          <visibleWhen checkEnabled="false">
+            <and>
+                <reference
+                      definitionId="org.kalypso.chart.ui.chartEditorActive">
+                </reference>
+                <with variable="activeChart">
+                    <test property="wspmTuhhChart.isLengthSection"/>
+                </with>
+            </and>
+          </visibleWhen>
        </command>
     </menuContribution>
 
