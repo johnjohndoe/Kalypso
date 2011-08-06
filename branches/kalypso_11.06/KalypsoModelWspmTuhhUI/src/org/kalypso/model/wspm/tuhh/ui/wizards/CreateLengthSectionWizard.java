@@ -208,16 +208,17 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
 
   private void copyResourceFile( final String resource, final IFile targetFile, final String fName, final String title ) throws IOException, CoreException
   {
-    if( targetFile.exists() )
-      return;
-
     final URL resourceLocation = getClass().getResource( resource );
     String kod = FileUtilities.toString( resourceLocation, "UTF-8" ); //$NON-NLS-1$
     kod = kod.replaceAll( "%GMLFILENAME%", fName + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$
     kod = kod.replaceAll( "%TITLE%", title ); //$NON-NLS-1$
     kod = kod.replaceAll( "%DESCRIPTION%", fName ); //$NON-NLS-1$
     final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" ); //$NON-NLS-1$
-    targetFile.create( inputStream, true, new NullProgressMonitor() );
+
+    if( targetFile.exists() )
+      targetFile.setContents( inputStream, false, true, new NullProgressMonitor() );
+    else
+      targetFile.create( inputStream, true, new NullProgressMonitor() );
 
     targetFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
   }
