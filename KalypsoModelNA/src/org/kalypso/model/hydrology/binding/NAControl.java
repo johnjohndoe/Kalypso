@@ -106,6 +106,8 @@ public class NAControl extends Feature_Impl
   public Date getSimulationEnd( )
   {
     final Date startForecast = getStartForecast();
+    if( startForecast == null )
+      return null;
 
     final Integer hoursOfForecast = getProperty( PROP_HOURS_FORECAST, Integer.class );
     if( hoursOfForecast == null )
