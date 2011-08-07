@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -232,7 +233,9 @@ public class NAStatistics implements INaStatistics
     try
     {
       streamCSV = new FileOutputStream( reportFileCSV );
-      writerCSV = new OutputStreamWriter( streamCSV, "UTF-8" ); //$NON-NLS-1$
+      // REMARK/BUGFIX: using the default charset here, because this file is usually intended to be opened with excel
+      // Excel automatically assumes the default charset of the platform
+      writerCSV = new OutputStreamWriter( streamCSV, Charset.defaultCharset().name() );
       for( int i = 0; i < values.size(); i++ )
       {
         for( int j = 0; j < 6; j++ )
