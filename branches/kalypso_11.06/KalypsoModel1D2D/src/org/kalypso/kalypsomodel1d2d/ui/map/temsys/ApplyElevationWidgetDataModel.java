@@ -75,7 +75,6 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * @author Madanagopal
  * @author Patrice Congo
- * 
  */
 public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements IFeatureSelectionListener
 {
@@ -92,7 +91,6 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   private final ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
 
-  @SuppressWarnings("unchecked")
   private List<IFE1D2DNode> m_selectedNodeList;
 
   @SuppressWarnings("unchecked")
@@ -180,7 +178,6 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   }
 
-  @SuppressWarnings("unchecked")
   public void setSelectedNode( final List<IFE1D2DNode> selectedNode )
   {
     setData( SELECTED_NODE_KEY, selectedNode, false );
@@ -254,27 +251,18 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
       return elevationModelSystem.getTerrainElevationModels();
   }
 
-  @SuppressWarnings("unchecked")
   public void setSelectedNodeList( final List<IFE1D2DNode> selectionNodeList )
   {
     m_selectedNodeList = selectionNodeList;
   }
 
-  @SuppressWarnings("unchecked")
   public List<IFE1D2DNode> getSelectedNodeList( )
   {
     return m_selectedNodeList;
   }
 
-  public void saveModels() throws CoreException{
-    //    try
-    //    {
+  public void saveModels( ) throws CoreException
+  {
     m_dataProvider.saveModel( new NullProgressMonitor() );
-    //    }
-    //    catch( CoreException e )
-    //    {
-    //      e.printStackTrace();
-    //    }
   }
-
 }
