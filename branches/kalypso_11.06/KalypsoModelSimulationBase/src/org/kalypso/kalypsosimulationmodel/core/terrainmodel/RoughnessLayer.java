@@ -47,16 +47,15 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author Dejan Antanaskovic
- * 
  */
 public class RoughnessLayer extends AbstractFeatureBinder implements IRoughnessLayer
 {
-  public RoughnessLayer( Feature featureToBind )
+  public RoughnessLayer( final Feature featureToBind )
   {
     super( featureToBind, IRoughnessLayer.QNAME );
   }
 
-  public RoughnessLayer( Feature featureToBind, QName qnameToBind )
+  public RoughnessLayer( final Feature featureToBind, final QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
   }
@@ -77,7 +76,7 @@ public class RoughnessLayer extends AbstractFeatureBinder implements IRoughnessL
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer#setEditable(boolean)
    */
   @Override
-  public void setEditable( boolean status )
+  public void setEditable( final boolean status )
   {
     getFeature().setProperty( IRoughnessLayer.PROP_EDITABLE, status );
   }
@@ -102,5 +101,4 @@ public class RoughnessLayer extends AbstractFeatureBinder implements IRoughnessL
   {
     return !isBasicLayer();
   }
-
 }

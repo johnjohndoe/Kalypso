@@ -26,6 +26,7 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
@@ -101,7 +102,7 @@ public class ImportWizard extends Wizard implements INewWizard
     m_data.loadUserSelection( "/.metadata/roughnessUserSelection.dat" ); //$NON-NLS-1$
     try
     {
-      m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml", szenarioDataProvider.getModel( IRoughnessClsCollection.class ) ); //$NON-NLS-1$
+      m_data.setRoughnessDatabaseLocation( RoughnessPolygon.DATA_LOCATION, szenarioDataProvider.getModel( IRoughnessClsCollection.class ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
