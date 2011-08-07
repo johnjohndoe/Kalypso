@@ -160,10 +160,8 @@ public class Transformer implements ICoreRunnableWithProgress
       final Feature linkedFeature = shpWorkspace.getFeature( m_data.getRoughnessShapeStaticRelationMap().get( key ) );
       if( linkedFeature != null )
       {
-        final StringBuffer xlinkBuffer = new StringBuffer( 50 );
-        xlinkBuffer.append( "project:" ).append( m_data.getRoughnessDatabaseLocation() ).append( "#" ).append( linkedFeature.getId() ).trimToSize(); //$NON-NLS-1$ //$NON-NLS-2$
-        final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), xlinkBuffer.toString(), "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-        feature.setProperty( RoughnessPolygon.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
+        final XLinkedFeature_Impl xlink = RoughnessPolygon.createClassLink( feature, linkedFeature );
+        feature.setProperty( RoughnessPolygon.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, xlink );
       }
     }
     // use (dummy) command to make workspace dirty
