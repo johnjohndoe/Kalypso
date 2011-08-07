@@ -44,8 +44,10 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
@@ -59,13 +61,27 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 /**
  * @author Gernot Belger
  */
-public class PreviewModelDtm
+class PreviewModelDtm extends Action
 {
-  public static void showModelDtm( final Shell shell, final IMapPanel mapPanel )
+  private final ApplyElevationWidgetDataModel m_dataModel;
+
+  PreviewModelDtm( final ApplyElevationWidgetDataModel dataModel )
   {
+    m_dataModel = dataModel;
+
+    setText( "Show/Refresh Model-Isolines" );
+  }
+
+  @Override
+  public void runWithEvent( final Event event )
+  {
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+
+    final IMapPanel mapPanel = m_dataModel.getMapPanel();
+
     final AbstractMapPart mapView = (AbstractMapPart) UtilMap.getMapView();
     final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
-    
+
     final IFile dtmFile = findFile( shell, "models/model_tin.gz" ); //$NON-NLS-1$
     if( dtmFile == null )
       return;
@@ -79,7 +95,7 @@ public class PreviewModelDtm
     dialog.open();
   }
 
-  private static IFile findFile( final Shell shell, final String path )
+  private IFile findFile( final Shell shell, final String path )
   {
     try
     {
@@ -92,9 +108,7 @@ public class PreviewModelDtm
       e.printStackTrace();
       ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.PreviewModelDtm.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.PreviewModelDtm.3"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    
+
     return null;
   }
-
-
 }
