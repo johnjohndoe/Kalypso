@@ -124,7 +124,7 @@ public class WspWinOutputDirGenerator
 
     final Shell shell = SWT_AWT_Utilities.findActiveShell();
     final MessageDialog dialog = new MessageDialog( shell, Messages.getString("WspWinOutputDirGenerator_4"), null, message, MessageDialog.QUESTION, labels, 0 ); //$NON-NLS-1$
-    switch( SWT_AWT_Utilities.openSwtMessageDialog( dialog ) )
+    switch( SWT_AWT_Utilities.openSwtWindow( dialog ) )
     {
       case 0:
         return dir;
