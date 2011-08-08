@@ -47,7 +47,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -154,19 +153,19 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private List<Double> m_listPolyRanges;
 
-  private IFlowRelationshipModel m_flowModel;
+  private final IFlowRelationshipModel m_flowModel;
 
-  private GMLWorkspace m_flowWorkspace;
+  private final GMLWorkspace m_flowWorkspace;
 
-  private Set<Class< ? extends IModel>> m_setModelClassesToSetDirty;
+  private final Set<Class< ? extends IModel>> m_setModelClassesToSetDirty;
 
-  private List<Feature> m_listNewFlowElements = new ArrayList<Feature>();
+  private final List<Feature> m_listNewFlowElements = new ArrayList<Feature>();
 
-  private List<Feature> m_listNewPolysWithWeir = new ArrayList<Feature>();
+  private final List<Feature> m_listNewPolysWithWeir = new ArrayList<Feature>();
 
-  private CommandableWorkspace m_cmdWorkspace2d;
+  private final CommandableWorkspace m_cmdWorkspace2d;
 
-  private Set<Integer> m_setMiddleNodeIDs = new HashSet<Integer>();
+  private final Set<Integer> m_setMiddleNodeIDs = new HashSet<Integer>();
 
   public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IFlowRelationshipModel pFlowRelationshipModel, final IPositionProvider positionProvider, final Set<Class< ? extends IModel>> pSetClassesSetDirty, final CommandableWorkspace pCommandableWorkspace2d )
   {
@@ -203,7 +202,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   @Override
   public void end( )
   {
-    int lIntCountCreated = createFlowRels1d();
+    final int lIntCountCreated = createFlowRels1d();
 
     final Feature[] lAllElementsFlow = m_flowModel.getWrappedList().toFeatures();
     if( lIntCountCreated > 0 && lAllElementsFlow.length > 0 )
@@ -262,10 +261,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   private Set<Feature> getMidleNodeFeaturesToRemove( )
   {
     final Set<Feature> lSetToRemove = new HashSet<Feature>();
-    for( Iterator<Integer> iterator = m_setMiddleNodeIDs.iterator(); iterator.hasNext(); )
+    for( final Integer lIntMidleNodeRMAId : m_setMiddleNodeIDs )
     {
-      Integer lIntMidleNodeRMAId = iterator.next();
-      IFE1D2DNode lNode = getNode( lIntMidleNodeRMAId );
+      final IFE1D2DNode lNode = getNode( lIntMidleNodeRMAId );
       if( lNode == null )
         continue;
       lSetToRemove.add( lNode.getFeature() );
@@ -280,15 +278,13 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   private void createFlowRels2d( )
   {
-    Set<Integer> lSetKeys = m_mapIdBuildingType.keySet();
-    for( Iterator<Integer> iterator = lSetKeys.iterator(); iterator.hasNext(); )
+    final Set<Integer> lSetKeys = m_mapIdBuildingType.keySet();
+    for( final Integer id : lSetKeys )
     {
-      Integer id = iterator.next();
-
       final SortedMap<Integer, Integer> lMapElements = m_mapIdBuildingType.get( id );
       final List<Integer> lListElements = new ArrayList<Integer>();
       lListElements.addAll( lMapElements.values() );
-      IPolyElement lNewWeirPoly = mergeElementsToWeir( lListElements, m_mapIdBuildingDirection.get( id ) );
+      final IPolyElement lNewWeirPoly = mergeElementsToWeir( lListElements, m_mapIdBuildingDirection.get( id ) );
 
     }
   }
@@ -309,9 +305,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   private IPolyElement mergeElementsToWeir( final List<Integer> pListElementsIdsRma, final int pIntDegrees )
   {
-    List<GM_Point> lListRes = new ArrayList<GM_Point>();
-    List<GM_Point> lListResBck = new ArrayList<GM_Point>();
-    List<Feature> lListElementsToRemove = new ArrayList<Feature>();
+    final List<GM_Point> lListRes = new ArrayList<GM_Point>();
+    final List<GM_Point> lListResBck = new ArrayList<GM_Point>();
+    final List<Feature> lListElementsToRemove = new ArrayList<Feature>();
     PolyElement lPoly = null;
     PolyElement lPolyPrev = null;
     IFE1D2DNode lNodePrev = null;
@@ -321,9 +317,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     IFE1D2DEdge lCommonEdge = null;
     try
     {
-      for( Iterator iterator = pListElementsIdsRma.iterator(); iterator.hasNext(); )
+      for( final Object element : pListElementsIdsRma )
       {
-        Integer lIntRMAId = (Integer) iterator.next();
+        final Integer lIntRMAId = (Integer) element;
 
         final Feature polyFeature = m_workspace.getFeature( m_elementsNameConversionMap.get( lIntRMAId ) );
         lPoly = (PolyElement) polyFeature.getAdapter( IPolyElement.class );
@@ -383,7 +379,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       Collections.reverse( lListResBck );
       lListRes.addAll( lListResBck );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -398,14 +394,14 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       {
         command.process();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
     }
     if( lNewPoly != null )
     {
-      Feature lNewFlowFeature = createNewFlowrelation( lNewPoly, pIntDegrees );
+      final Feature lNewFlowFeature = createNewFlowrelation( lNewPoly, pIntDegrees );
       m_listNewFlowElements.add( lNewFlowFeature );
       // cleanup and update
       if( pListElementsIdsRma.size() > 1 )
@@ -458,7 +454,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private Feature createNewFlowrelation( final IPolyElement pPoly, final int pIntDegrees )
   {
-    GM_Position flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( pPoly );
+    final GM_Position flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( pPoly );
     final Feature parentFeature = m_flowModel.getFeature();
     final IRelationType parentRelation = m_flowModel.getWrappedList().getParentFeatureTypeProperty();
     final IFlowRelationship flowRel = createNew2dWeirFeature( m_flowWorkspace, parentFeature, parentRelation, pIntDegrees );
@@ -483,19 +479,19 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       return 0;
     int lIntCountNew = 0;
     final SortedMap<BigDecimal, IProfileFeature> profilesByStation = new TreeMap<BigDecimal, IProfileFeature>();
-    for( Object element : m_set1dFlowNodes )
+    for( final Object element : m_set1dFlowNodes )
     {
-      Integer lId = (Integer) element;
-      IFE1D2DNode< ? > lActNode = getNode( lId );
-      QIntervallResult lQResult = m_mapQResults.get( lId );
+      final Integer lId = (Integer) element;
+      final IFE1D2DNode< ? > lActNode = getNode( lId );
+      final QIntervallResult lQResult = m_mapQResults.get( lId );
       try
       {
-        IFlowRelation1D flowRel = FlowRelationUtilitites.addTeschke( m_flowModel, lActNode, lQResult, profilesByStation );
+        final IFlowRelation1D flowRel = FlowRelationUtilitites.addTeschke( m_flowModel, lActNode, lQResult, profilesByStation );
         flowRel.setName( lQResult.getName() );
         flowRel.setDescription( lQResult.getDescription() );
         lIntCountNew++;
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -721,7 +717,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
         // to save the order of elements with weir according to its original output order
         lMapElements.put( previousRoughnessClassID, id );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -870,7 +866,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      java.lang.String, int, int, java.util.List)
    */
   @Override
-  public void handle1dPolynomialRangesInformation( String line, String pStrPolyKind, int pIntNodeId, int pIntAmountRanges, List<Double> pListPolyAreaMaxRanges )
+  public void handle1dPolynomialRangesInformation( final String line, final String pStrPolyKind, final int pIntNodeId, final int pIntAmountRanges, final List<Double> pListPolyAreaMaxRanges )
   {
     if( m_mapQResults == null )
     {
@@ -880,17 +876,17 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     m_listPolyRanges = pListPolyAreaMaxRanges;
   }
 
-  private char getDomainChar( String pStrPolyKind )
+  private char getDomainChar( final String pStrPolyKind )
   {
-    if( pStrPolyKind.equalsIgnoreCase( "PRA" ) )
+    if( pStrPolyKind.equalsIgnoreCase( "PRA" ) ) //$NON-NLS-1$
     {
       return 'A';
     }
-    else if( pStrPolyKind.equalsIgnoreCase( "PRQ" ) )
+    else if( pStrPolyKind.equalsIgnoreCase( "PRQ" ) ) //$NON-NLS-1$
     {
       return 'Q';
     }
-    else if( pStrPolyKind.equalsIgnoreCase( "PRB" ) )
+    else if( pStrPolyKind.equalsIgnoreCase( "PRB" ) ) //$NON-NLS-1$
     {
       return 'a';
     }
@@ -902,7 +898,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      double, double)
    */
   @Override
-  public void handle1dPolynomeMinMax( String line, int id, double min, double max )
+  public void handle1dPolynomeMinMax( final String line, final int id, final double min, final double max )
   {
     if( m_mapQResults == null )
     {
@@ -926,7 +922,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
       return qresult;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -949,14 +945,14 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       return polynom;
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
     return null;
   }
 
-  private String getDomainId( char kind )
+  private String getDomainId( final char kind )
   {
     String domainId = ""; //$NON-NLS-1$
     switch( kind )
@@ -987,7 +983,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       m_map1dPolynomial = new HashMap<String, IPolynomial1D>();
       m_set1dFlowNodes = new HashSet<Integer>();
     }
-    catch( GMLSchemaException e )
+    catch( final GMLSchemaException e )
     {
       e.printStackTrace();
     }
@@ -998,7 +994,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      java.lang.String, int, int, java.util.List, java.lang.Double)
    */
   @Override
-  public void handle1dSplittedPolynomialsInformation( String line, String pStrPolyKind, int pIntNodeId, int pIntActRangeNr, final List<Double> pListPolyCoeffs, final Double pDoubleSlope )
+  public void handle1dSplittedPolynomialsInformation( final String line, final String pStrPolyKind, final int pIntNodeId, final int pIntActRangeNr, final List<Double> pListPolyCoeffs, final Double pDoubleSlope )
   {
     if( m_mapQResults == null )
     {
@@ -1006,7 +1002,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     }
     final IPolynomial1D poly1d = getPolynomial( pIntNodeId, pIntActRangeNr, m_charDomain );
 
-    String description = pStrPolyKind + pIntActRangeNr;
+    final String description = pStrPolyKind + pIntActRangeNr;
     poly1d.setName( description );
     poly1d.setDescription( description );
     poly1d.setCoefficients( ArrayUtils.toPrimitive( pListPolyCoeffs.toArray( new Double[pListPolyCoeffs.size()] ) ) );
@@ -1024,12 +1020,12 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      double, double)
    */
   @Override
-  public void handleNode( String line, int id, double easting, double northing, double elevation, double stationName )
+  public void handleNode( final String line, final int id, final double easting, final double northing, final double elevation, final double stationName )
   {
     handleNode( line, id, easting, northing, elevation );
     final QIntervallResult result = getQResult( id );
     result.setName( "" + stationName ); //$NON-NLS-1$
-    result.setDescription( "2dMesh Import, polynom on station: " + stationName );
+    result.setDescription( String.format( Messages.getString("DiscretisationModel1d2dHandler.3"), stationName ) ); //$NON-NLS-1$
     result.setStation( new BigDecimal( stationName ) );
   }
 

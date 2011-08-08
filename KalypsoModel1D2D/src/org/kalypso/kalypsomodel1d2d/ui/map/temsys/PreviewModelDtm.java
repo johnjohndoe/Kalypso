@@ -69,7 +69,7 @@ class PreviewModelDtm extends Action
   {
     m_dataModel = dataModel;
 
-    setText( "Show/Refresh Model-Isolines" );
+    setText( Messages.getString("PreviewModelDtm.0") ); //$NON-NLS-1$
   }
 
   @Override

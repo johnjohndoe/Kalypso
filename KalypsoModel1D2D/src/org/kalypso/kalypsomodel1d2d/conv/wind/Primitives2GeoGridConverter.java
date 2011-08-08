@@ -91,7 +91,7 @@ public class Primitives2GeoGridConverter
     }
     final File lNewFile = new File( lOutputDir, m_strFileName );
     if( lNewFile.exists() ){
-      logger.warning( "File with this name was found on disk: " + lNewFile.getAbsolutePath() + "; this file will be overwritten." );
+      logger.warning( "File with this name was found on disk: " + lNewFile.getAbsolutePath() + "; this file will be overwritten." ); //$NON-NLS-1$ //$NON-NLS-2$
 //      return null;
     }
     lNewFile.createNewFile();

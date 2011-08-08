@@ -64,7 +64,7 @@ public class ColorModelApplyAction extends Action
     m_windowCanvas = windowCanvas;
     m_dataModel = dataModel;
 
-    setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.37" ) );
+    setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.37" ) ); //$NON-NLS-1$
     setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.37" ) ); //$NON-NLS-1$
     setImageDescriptor( AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoModel1D2DPlugin.PLUGIN_ID, "icons/elcl16/ok.gif" ) ); //$NON-NLS-1$
   }

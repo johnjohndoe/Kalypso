@@ -208,12 +208,12 @@ public class CreatePolygonWidgetWrapper extends AbstractWidget
       {
         final int pointCount = m_builder.getPointCount();
         if( pointCount < 3 )
-          return "At least 3 points required";
+          return Messages.getString("CreatePolygonWidgetWrapper.0"); //$NON-NLS-1$
 
         final GM_Object geom = m_builder.finish();
         final Polygon export = (Polygon) JTSAdapter.export( geom );
         if( !export.isValid() )
-          return "Polygon is self-intersecting";
+          return Messages.getString("CreatePolygonWidgetWrapper.1"); //$NON-NLS-1$
 
         return null;
       }
@@ -307,7 +307,7 @@ public class CreatePolygonWidgetWrapper extends AbstractWidget
       final Shell shell = SWT_AWT_Utilities.findActiveShell();
       final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell, new GMLLabelProvider() );
       dialog.setElements( classes );
-      dialog.setMessage( "Please select the flow resistance class for the new zone:" );
+      dialog.setMessage( Messages.getString("CreatePolygonWidgetWrapper.2") ); //$NON-NLS-1$
       dialog.setMultipleSelection( false );
       if( SWT_AWT_Utilities.openSwtWindow( dialog ) != Window.OK )
         return;

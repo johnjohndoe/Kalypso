@@ -2,6 +2,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 public class FENodeHeightProvider extends ColumnLabelProvider
@@ -21,8 +22,8 @@ public class FENodeHeightProvider extends ColumnLabelProvider
 
     final double z = point.getZ();
     if( Double.isNaN( z ) )
-      return "<Not Set>";
+      return Messages.getString("FENodeHeightProvider_0"); //$NON-NLS-1$
 
-    return String.format( "%.2f", z );
+    return String.format( "%.2f", z ); //$NON-NLS-1$
   }
 }

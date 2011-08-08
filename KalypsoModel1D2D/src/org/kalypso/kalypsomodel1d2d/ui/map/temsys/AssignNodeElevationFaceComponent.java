@@ -85,7 +85,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
  */
 public class AssignNodeElevationFaceComponent extends Composite
 {
-  private static final String STR_NONE_SELECTED = "<none selected>";
+  private static final String STR_NONE_SELECTED = Messages.getString("AssignNodeElevationFaceComponent.0"); //$NON-NLS-1$
 
   private final ApplyElevationWidgetDataModel m_dataModel;
 
@@ -164,7 +164,7 @@ public class AssignNodeElevationFaceComponent extends Composite
     toolkit.createLabel( panel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.14" ) ); //$NON-NLS-1$
 
     m_inputText = toolkit.createText( panel, StringUtils.EMPTY );
-    m_inputText.setMessage( "<none selected>" );
+    m_inputText.setMessage( Messages.getString("AssignNodeElevationFaceComponent.1") ); //$NON-NLS-1$
     m_inputText.setEditable( false );
     m_inputText.setTextLimit( 100 );
     m_inputText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -177,9 +177,9 @@ public class AssignNodeElevationFaceComponent extends Composite
     final Composite panel = toolkit.createComposite( parent );
     GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
 
-    toolkit.createLabel( panel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.17" ) );
+    toolkit.createLabel( panel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.17" ) ); //$NON-NLS-1$
 
-    final Button selectNoElevationButton = toolkit.createButton( panel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.18" ), SWT.PUSH );
+    final Button selectNoElevationButton = toolkit.createButton( panel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.18" ), SWT.PUSH ); //$NON-NLS-1$
 
     selectNoElevationButton.addSelectionListener( new SelectionAdapter()
     {

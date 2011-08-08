@@ -180,7 +180,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
       double parseQuietDouble = NumberUtils.parseQuietDouble( (String) property );
       if( !Double.isNaN( parseQuietDouble ) )
       {
-        return "" + parseQuietDouble;
+        return "" + parseQuietDouble; //$NON-NLS-1$
       } //$NON-NLS-1$
       else{
         return (String) property;

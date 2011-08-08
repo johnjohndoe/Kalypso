@@ -646,7 +646,7 @@ public class Control1D2DConverter
     // add other conti lines types as well (buildings)?
     // if( m_windSystemsToWrite != null && !m_windSystemsToWrite.isEmpty() && !m_boolPrintWindLineDone ){
     if( m_controlModel.getHasWindDrag() && !m_boolPrintWindLineDone ){
-      formatter.format( "WVA          1.0     1.0       1%n" );
+      formatter.format( "WVA          1.0     1.0       1%n" ); //$NON-NLS-1$
       m_boolPrintWindLineDone = true;
     }
     formatter.format( "ENDSTEP %s%n", message ); //$NON-NLS-1$
@@ -797,7 +797,7 @@ public class Control1D2DConverter
                 infVel = boundaryCondition.getInflowVelocity();
               }
               catch (Exception e) {
-                final IGeoStatus status = m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, "Needed absolute value was not defined", boundaryCondition.getLocation(), e );
+                final IGeoStatus status = m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, Messages.getString("Control1D2DConverter.1"), boundaryCondition.getLocation(), e ); //$NON-NLS-1$
               }
               formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0, infVel, Math.toRadians( boundaryCondition.getDirection().doubleValue() ) ); //$NON-NLS-1$
             }

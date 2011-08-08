@@ -92,10 +92,10 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
     File tinFile = null;
     try
     {
-      tinFile = File.createTempFile( "tinTest", ".gml" );
+      tinFile = File.createTempFile( "tinTest", ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
       tinFile.deleteOnExit();
       
-      URL gmlLocation = getClass().getResource( "tinyTin.gml" );
+      URL gmlLocation = getClass().getResource( "tinyTin.gml" ); //$NON-NLS-1$
       assertNotNull( gmlLocation );
       
       loadAndMarshall(tinFile, gmlLocation);
@@ -111,10 +111,10 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
   @Test
   public void testWriteTinyTin2() throws Exception
   { 
-    File tinFile = new File( System.getProperty("user.dir")+ "/src/org/kalypso/kalypsomodel1d2d/conv/test/tinTest.gml" );
+    File tinFile = new File( System.getProperty("user.dir")+ "/src/org/kalypso/kalypsomodel1d2d/conv/test/tinTest.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
     tinFile.deleteOnExit(); 
 
-    URL gmlLocation = getClass().getResource( "tinyTin2.gml" );
+    URL gmlLocation = getClass().getResource( "tinyTin2.gml" ); //$NON-NLS-1$
     assertNotNull( gmlLocation );
 
     loadAndMarshall(tinFile, gmlLocation); 
@@ -134,7 +134,7 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
       
       final Feature rootFeature = getRootFeature( gmlLocation );
       
-      final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "org.kalypso.deegree.gmlparsertest", "triangularSurfaceMember" ) );
+      final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "org.kalypso.deegree.gmlparsertest", "triangularSurfaceMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         
       final XMLReader reader = initTinyTinMarshalling(os);      
   
@@ -165,13 +165,13 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
     try{
       final Feature rootFeature = getRootFeature(file.toURI().toURL());
       
-      final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "org.kalypso.deegree.gmlparsertest", "triangularSurfaceMember" ) );
+      final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "org.kalypso.deegree.gmlparsertest", "triangularSurfaceMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       
       final GM_Triangle triangle = tin.get( 0 );
       
       final String srs = triangle.getCoordinateSystem();
   
-      assertEquals( "EPSG:31467", srs );    
+      assertEquals( "EPSG:31467", srs );     //$NON-NLS-1$
       
       final GM_Position[] exteriorRing = triangle.getExteriorRing();
       assertTrue( exteriorRing[0].getDistance( CHECK_POS_1 ) < DELTA );
@@ -190,14 +190,14 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
     XMLReader reader = initMarshalling( os );
     
     m_xmlStream.startPrefixMapping( "xlink", NS.XLINK); // the attribute does not trigger the prefix mapping //$NON-NLS-1$
-    m_xmlStream.startPrefixMapping( "gml", NS.GML3 );
-    m_xmlStream.startPrefixMapping( "xs", NS.XSD );
-    m_xmlStream.startPrefixMapping( "ns1", "org.kalypso.deegree.gmlparsertest" ); 
+    m_xmlStream.startPrefixMapping( "gml", NS.GML3 ); //$NON-NLS-1$
+    m_xmlStream.startPrefixMapping( "xs", NS.XSD ); //$NON-NLS-1$
+    m_xmlStream.startPrefixMapping( "ns1", "org.kalypso.deegree.gmlparsertest" );  //$NON-NLS-1$ //$NON-NLS-2$
     
-    m_xmlStream.startElement( "", "TinFeature", "ns1:TinFeature" ); //$NON-NLS-1$ //$NON-NLS-2$    
+    m_xmlStream.startElement( "", "TinFeature", "ns1:TinFeature" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$    
     m_xmlStream.addAttribute( NS.XSD, "schemaLocation", "xs:schemaLocation", "string", "org.kalypso.deegree.gmlparsertest test.xsd" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    m_xmlStream.addAttribute( NS.GML3, "id", "gml:id", "string", "idvalue0" );
-    m_xmlStream.startElement( "", "triangularSurfaceMember", "ns1:triangularSurfaceMember" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_xmlStream.addAttribute( NS.GML3, "id", "gml:id", "string", "idvalue0" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    m_xmlStream.startElement( "", "triangularSurfaceMember", "ns1:triangularSurfaceMember" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     
     return reader;
   }
@@ -222,7 +222,7 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
     m_xmlStream.setLineSepUse( true );
     m_xmlStream.setIndent( true );
     m_xmlStream.setIndentAmount( 1 );
-    m_xmlStream.setEncoding( "UTF-8" );
+    m_xmlStream.setEncoding( "UTF-8" ); //$NON-NLS-1$
 
     final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
     xmlReader.setContentHandler( m_xmlStream );
@@ -234,8 +234,8 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
   
   private void assertContentEquals( final URL location, final File file ) throws IOException
   {
-    String fileContent = FileUtils.readFileToString( new File(file.getAbsolutePath()), System.getProperty( "file.encoding" ) );
-    String urlContent = UrlUtilities.toString( location, System.getProperty( "file.encoding" ) );
+    String fileContent = FileUtils.readFileToString( new File(file.getAbsolutePath()), System.getProperty( "file.encoding" ) ); //$NON-NLS-1$
+    String urlContent = UrlUtilities.toString( location, System.getProperty( "file.encoding" ) ); //$NON-NLS-1$
     assertEquals( fileContent, urlContent );
   }  
 }

@@ -399,6 +399,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   @Override
   public String getPartName( )
   {
-    return "Assign Elevations";
+    return Messages.getString("ApplyElevationWidget.0"); //$NON-NLS-1$
   }
 }

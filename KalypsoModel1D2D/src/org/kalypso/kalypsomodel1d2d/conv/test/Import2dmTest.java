@@ -30,74 +30,74 @@ public class Import2dmTest extends TestCase
 
     final List<String> inputFiles = new ArrayList<String>();
 
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil1.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil2.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Kraubath.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Leising.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_seizer.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil1.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil2.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil3-mit_bw.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil4.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath_Mur.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising_Mur.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\mitterbach_2406.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer-ALT.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer_2406.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil1.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil2.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil3-mit_bw.2dm" );
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil4.2dm" );
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil1.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil2.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Kraubath.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Leising.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_seizer.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil1.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil2.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil3-mit_bw.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil4.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath_Mur.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising_Mur.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\mitterbach_2406.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer-ALT.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer_2406.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil1.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil2.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil3-mit_bw.2dm" ); //$NON-NLS-1$
+    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil4.2dm" ); //$NON-NLS-1$
     final String[] input = inputFiles.toArray( new String[inputFiles.size()] );
 
     final List<String> outputGmlFiles = new ArrayList<String>();
 
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil1.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil2.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Kraubath.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Leising.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_seizer.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil1.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil2.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil3-mit_bw.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil4.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath_Mur.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising_Mur.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\mitterbach_2406.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer-ALT.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer_2406.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil1.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil2.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil3-mit_bw.gml" );
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil4.gml" );
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil1.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil2.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Kraubath.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Leising.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_seizer.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil1.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil2.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil3-mit_bw.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil4.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath_Mur.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising_Mur.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\mitterbach_2406.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer-ALT.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer_2406.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil1.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil2.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil3-mit_bw.gml" ); //$NON-NLS-1$
+    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil4.gml" ); //$NON-NLS-1$
 
     final String[] outgml = outputGmlFiles.toArray( new String[outputGmlFiles.size()] );
     final List<String> outputShpFiles = new ArrayList<String>();
 
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil1" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil2" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Kraubath" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Leising" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_seizer" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil1" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil2" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil3-mit_bw" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil4" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath_Mur" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising_Mur" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\mitterbach_2406" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer-ALT" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer_2406" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil1" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil2" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil3-mit_bw" );
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil4" );
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil1" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil2" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Kraubath" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Leising" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_seizer" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil1" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil2" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil3-mit_bw" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil4" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath_Mur" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising_Mur" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\mitterbach_2406" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer-ALT" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer_2406" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil1" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil2" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil3-mit_bw" ); //$NON-NLS-1$
+    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil4" ); //$NON-NLS-1$
 
     final String[] outshp = outputShpFiles.toArray( new String[outputShpFiles.size()] );
     for( int j = 0; j < input.length; j++ )
@@ -118,7 +118,7 @@ public class Import2dmTest extends TestCase
 
       converter.setModelElementHandler( handler2dm );
 
-      converter.parse( new URL( "file:" + inputFile ).openStream() );
+      converter.parse( new URL( "file:" + inputFile ).openStream() ); //$NON-NLS-1$
     }
   }
 

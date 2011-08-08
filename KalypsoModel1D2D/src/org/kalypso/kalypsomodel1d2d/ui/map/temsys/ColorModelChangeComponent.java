@@ -313,7 +313,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
     GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( minMaxGroup );
 
     /* max label */
-    final Label maxLabel = toolkit.createLabel( minMaxGroup, "Max", SWT.NONE );
+    final Label maxLabel = toolkit.createLabel( minMaxGroup, Messages.getString("ColorModelChangeComponent.0"), SWT.NONE ); //$NON-NLS-1$
     final GridData gridDataMaxLabel = new GridData( SWT.CENTER, SWT.UP, false, false );
     maxLabel.setLayoutData( gridDataMaxLabel );
 
@@ -337,7 +337,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
     m_maxTextLabel.setLayoutData( new GridData( SWT.CENTER, SWT.UP, false, false ) );
 
     /* min label */
-    final Label minLabel = toolkit.createLabel( minMaxGroup, "Min" );
+    final Label minLabel = toolkit.createLabel( minMaxGroup, Messages.getString("ColorModelChangeComponent.1") ); //$NON-NLS-1$
     minLabel.setLayoutData( new GridData( SWT.CENTER, SWT.DOWN, false, false ) );
 
     /* label for the min displayed elevation value */
@@ -475,7 +475,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
     toolkit.createLabel( optionsColorGroup, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.14" ), SWT.FILL ); //$NON-NLS-1$
 
     final double maxElevation = ElevationColorControl.getMaxElevation();
-    final String stringMax = String.format( "%.2f", maxElevation );
+    final String stringMax = String.format( "%.2f", maxElevation ); //$NON-NLS-1$
 
     // FIXME: use data binding instead...!
     final Text maxText = toolkit.createText( optionsColorGroup, stringMax, SWT.BORDER );
@@ -512,7 +512,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
     toolkit.createLabel( optionsColorGroup, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.16" ), SWT.FILL ); //$NON-NLS-1$
 
     final double minElevation = ElevationColorControl.getMinElevation();
-    final String stringMin = String.format( "%.2f", minElevation );
+    final String stringMin = String.format( "%.2f", minElevation ); //$NON-NLS-1$
 
     final Text minText = toolkit.createText( optionsColorGroup, stringMin, SWT.BORDER );
     minText.setLayoutData( createColorTextData() );
@@ -557,7 +557,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
     final Button buttonMin = minColorSelector.getColorSelector().getButton();
     buttonMin.setLayoutData( new GridData( GridData.END, GridData.CENTER, true, false ) );
 
-    final ColorFieldEditor noColorSelector = new ColorFieldEditor( LINE_NO_COLOR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.30" ), optionsColorGroup );
+    final ColorFieldEditor noColorSelector = new ColorFieldEditor( LINE_NO_COLOR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.30" ), optionsColorGroup ); //$NON-NLS-1$
     noColorSelector.setPreferenceStore( m_preferenceStore );
     noColorSelector.setPropertyChangeListener( m_storePropertyChangeListener );
     noColorSelector.getColorSelector().addListener( m_storePropertyChangeListener );

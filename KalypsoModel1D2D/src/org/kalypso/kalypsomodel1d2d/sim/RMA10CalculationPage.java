@@ -208,9 +208,9 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 
     m_coupledSimulationCheck = new Button( tweakGroup, SWT.CHECK );
     m_coupledSimulationCheck.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
-    m_coupledSimulationCheck.setText( "Coupled simulation" );
+    m_coupledSimulationCheck.setText( Messages.getString("RMA10CalculationPage.0") ); //$NON-NLS-1$
     m_coupledSimulationCheck.setEnabled( false );
-    m_coupledSimulationCheck.setToolTipText( "Run a coupled simulation with separate processes for each subunit." );
+    m_coupledSimulationCheck.setToolTipText( Messages.getString("RMA10CalculationPage.1") ); //$NON-NLS-1$
     if( calculationUnit.getType() != TYPE.TYPE1D2D )
     {
       m_isCoupledSimulation = false;

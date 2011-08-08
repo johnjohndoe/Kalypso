@@ -252,7 +252,7 @@ public class ExportHydrographWizard extends Wizard
       String lStrFileName = /* "hydrograph_" + */selectedHydrograph.getName().replace( " ", "_" ) + "_Nr_" + lCountHydrographs + "_exptt_" + m_dateTimeFormatFileName.format( lDateNow ) + ".txt"; //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
       if( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() )
       {
-        lStrFileName = SINGLE_FILE_NAME_PREFIX + m_dateTimeFormatFileName.format( lDateNow ) + ".txt";
+        lStrFileName = SINGLE_FILE_NAME_PREFIX + m_dateTimeFormatFileName.format( lDateNow ) + ".txt"; //$NON-NLS-1$
       }
       final File stdOutFile = new File( lStringExportDir, lStrFileName );
 
