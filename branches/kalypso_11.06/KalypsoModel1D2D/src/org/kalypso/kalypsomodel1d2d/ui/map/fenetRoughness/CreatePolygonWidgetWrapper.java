@@ -309,7 +309,7 @@ public class CreatePolygonWidgetWrapper extends AbstractWidget
       dialog.setElements( classes );
       dialog.setMessage( "Please select the flow resistance class for the new zone:" );
       dialog.setMultipleSelection( false );
-      if( SWT_AWT_Utilities.openSwtMessageDialog( dialog ) != Window.OK )
+      if( SWT_AWT_Utilities.openSwtWindow( dialog ) != Window.OK )
         return;
 
       final IRoughnessCls selectedClass = (IRoughnessCls) dialog.getFirstResult();
