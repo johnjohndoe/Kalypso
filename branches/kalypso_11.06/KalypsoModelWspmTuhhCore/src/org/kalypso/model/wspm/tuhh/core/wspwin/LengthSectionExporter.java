@@ -122,6 +122,12 @@ public class LengthSectionExporter
   // FIXME: move to helper
   protected Double[][] componentToCoords( final TupleResult result, final int stationIndex, final int componentIndex )
   {
+    // BUGFIX/TRICKY: WspWin Plotter 'always' orders the coordinates by their natural order,
+    // even if we write th coordinates in inverse order (according to the river's flow direction).
+    // We invert the coordinates, if the length section is oriented upstreams (this is according
+    // to the behaviour of wspwin.
+    final double stationDirectionFactor = guessStationDirectionFactor( result, stationIndex );
+
     final Double[][] coords = new Double[2][];
 
     final List<Double> stations = new ArrayList<Double>();
@@ -138,7 +144,7 @@ public class LengthSectionExporter
 
         // BUGFIX/HACK: the .lng format (i.e. WspWin Plotter) expects length section
         // stations to be in [m], rather than in [km].
-        final double station = stationKM * 1000.0;
+        final double station = stationKM * 1000.0 * stationDirectionFactor;
 
         stations.add( station );
         doubles.add( ((Number) oVal).doubleValue() );
@@ -170,5 +176,23 @@ public class LengthSectionExporter
     final DataBlockWriter dbw = extractDataBlocks( obs );
     dbw.store( new PrintWriter( writer ) );
     return true;
+  }
+
+  private double guessStationDirectionFactor( final TupleResult result, final int stationIndex )
+  {
+    /* Ignore if too short */
+    final int recordCount = result.size();
+    if( recordCount < 2 )
+      return 1;
+
+    final Number firstStation = (Number) result.get( 0 ).getValue( stationIndex );
+    final Number lastStation = (Number) result.get( recordCount - 1 ).getValue( stationIndex );
+
+    final int signum = (int) Math.signum( firstStation.doubleValue() - lastStation.doubleValue() );
+    // 0 is forbidden, else the ls will be broken.
+    if( signum == 0 )
+      return 1;
+
+    return signum;
   }
 }
