@@ -3,6 +3,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 
 public class FENodeNameProvider extends ColumnLabelProvider
 {
@@ -19,7 +20,7 @@ public class FENodeNameProvider extends ColumnLabelProvider
   {
     final String name = node.getName();
     if( StringUtils.isBlank( name ) )
-      return "<Not Set>";
+      return Messages.getString("FENodeNameProvider_0"); //$NON-NLS-1$
 
     return name;
   }

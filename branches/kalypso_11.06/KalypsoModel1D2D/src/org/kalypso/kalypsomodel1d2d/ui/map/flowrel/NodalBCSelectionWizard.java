@@ -166,7 +166,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
           }
           catch( final Exception e )
           {
-            throw new IllegalArgumentException( "Illegal value set for stationary condition!" );
+            throw new IllegalArgumentException( "Illegal value set for stationary condition!" ); //$NON-NLS-1$
           }
         }
         else

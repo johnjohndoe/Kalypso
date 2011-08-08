@@ -155,7 +155,7 @@ class ApplyElevationWidgetFace
   private Control createToolsRegion( final FormToolkit toolkit, final Composite parent )
   {
     final Section region = toolkit.createSection( parent, Section.TITLE_BAR );
-    region.setText( "Tools" );
+    region.setText( Messages.getString("ApplyElevationWidgetFace.0") ); //$NON-NLS-1$
 
     final Composite panel = toolkit.createComposite( region );
     region.setClient( panel );

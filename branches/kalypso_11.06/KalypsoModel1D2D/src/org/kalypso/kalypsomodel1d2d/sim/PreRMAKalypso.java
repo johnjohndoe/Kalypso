@@ -64,7 +64,7 @@ public class PreRMAKalypso implements ISimulation
 
   public static final String INPUT_FLOW_RELATIONSHIPS = "flowRelationships"; //$NON-NLS-1$
 
-  public static final String INPUT_WIND_RELATIONSHIPS = "wind";
+  public static final String INPUT_WIND_RELATIONSHIPS = "wind"; //$NON-NLS-1$
 
   public static final String INPUT_CALCULATION_UNIT_ID = "calculationUnitID"; //$NON-NLS-1$
 
@@ -233,7 +233,7 @@ public class PreRMAKalypso implements ISimulation
     }
     catch( final Exception e )
     {
-      throw new SimulationException( "Problem running PreRMAKalypso", e );
+      throw new SimulationException( Messages.getString("PreRMAKalypso.1"), e ); //$NON-NLS-1$
     }
     finally
     {

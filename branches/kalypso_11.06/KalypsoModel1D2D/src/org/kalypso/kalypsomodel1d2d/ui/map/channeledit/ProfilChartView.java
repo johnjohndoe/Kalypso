@@ -51,6 +51,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
@@ -372,7 +373,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       {
         m_profile.addProfilListener( this );
 
-        m_chartComposite.getChartModel().getSettings().setTitle( String.format( "Station km %10.4f", m_profile.getStation() ), ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) );
+        m_chartComposite.getChartModel().getSettings().setTitle( String.format( Messages.getString("ProfilChartView_0"), m_profile.getStation() ), ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
         ((GridData) m_chartComposite.getPlot().getLayoutData()).exclude = false;
         updateLayer();
       }

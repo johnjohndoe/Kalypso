@@ -315,7 +315,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
         final BigDecimal flowStation = flowRel.getStation();
         if( flowStation == null )
         {
-          final String message = String.format( "Station not defined for parameter '%s'", flowRel.getName() );
+          final String message = String.format( Messages.getString("FlowRelationshipCalcOperation.0"), flowRel.getName() ); //$NON-NLS-1$
           throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message, null ) ); //$NON-NLS-1$
         }
 

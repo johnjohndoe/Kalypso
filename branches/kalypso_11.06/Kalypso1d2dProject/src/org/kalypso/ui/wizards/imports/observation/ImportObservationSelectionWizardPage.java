@@ -476,7 +476,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     // setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.15" ) ); //$NON-NLS-1$
 
     if( m_timezone == null )
-      return new MessageProvider( "Please select a valid time zone", ERROR );
+      return new MessageProvider( Messages.getString("ImportObservationSelectionWizardPage.0"), ERROR ); //$NON-NLS-1$
 
     return null;
   }
