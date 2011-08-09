@@ -304,6 +304,15 @@ public class PdbUpdater
         throw new CoreException( Status.CANCEL_STATUS );
     }
 
+    /* Add dependend variables */
+    // TODO: moni
+    final String srid = properties.getProperty( PdbInfo.PROPERTY_SRID );
+    final String srs = "EPSG:" + srid;
+
+    //
+
+    properties.setProperty( "srsMinX", "xxx" );
+
     return new Properties();
   }
 
