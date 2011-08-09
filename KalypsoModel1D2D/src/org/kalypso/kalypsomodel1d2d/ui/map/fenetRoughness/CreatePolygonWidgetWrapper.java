@@ -174,14 +174,13 @@ public class CreatePolygonWidgetWrapper extends AbstractWidget
     if( projection == null )
       return;
 
-//    if( m_currentPoint == null )
-//      return;
+    if( m_currentPoint == null )
+      return;
 
-//    if( m_builder.getPointCount() == 0 )
-//    {
-//      PolygonGeometryBuilder.drawHandle( g, m_currentPoint.x, m_currentPoint.y );
-//      return;
-//    }
+    if( m_builder.getPointCount() == 0 )
+    {
+      PolygonGeometryBuilder.drawHandle( g, m_currentPoint.x, m_currentPoint.y );
+    }
 
     final Rectangle screenBounds = mapPanel.getScreenBounds();
     m_toolTipRenderer.setTooltip( Messages.getString( "CreatePolygonWidgetWrapper.3" ) ); //$NON-NLS-1$ 
