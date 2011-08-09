@@ -47,15 +47,11 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ICellEditorValidator;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -85,8 +81,6 @@ import org.kalypso.ogc.gml.map.IMapPanel;
  */
 public class AssignNodeElevationFaceComponent extends Composite
 {
-  private static final String STR_NONE_SELECTED = Messages.getString("AssignNodeElevationFaceComponent.0"); //$NON-NLS-1$
-
   private final ApplyElevationWidgetDataModel m_dataModel;
 
   private Text m_inputText;
@@ -113,23 +107,6 @@ public class AssignNodeElevationFaceComponent extends Composite
     public void dataChanged( final String key, final Object newValue )
     {
       handleDataChanged(key, newValue);
-    }
-  };
-
-  private final ICellEditorValidator m_doubleValidator = new ICellEditorValidator()
-  {
-    @Override
-    public String isValid( final Object value )
-    {
-      try
-      {
-        Double.parseDouble( (String) value );
-        return null;
-      }
-      catch( final Throwable th )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.11" ); //$NON-NLS-1$
-      }
     }
   };
 
@@ -186,7 +163,7 @@ public class AssignNodeElevationFaceComponent extends Composite
       @Override
       public void widgetSelected( final SelectionEvent event )
       {
-        final IFE1D2DNode[] allNonElevationNodes = ApplyElevationHelper.getAllNonElevationNodes( m_dataModel );
+        final IFE1D2DNode< ? >[] allNonElevationNodes = ApplyElevationHelper.getAllNonElevationNodes( m_dataModel );
         m_nodeElevationViewer.setInput( allNonElevationNodes );
         m_nodeElevationViewer.refresh();
       }
@@ -217,8 +194,9 @@ public class AssignNodeElevationFaceComponent extends Composite
     m_nodeElevationViewer.setColumnProperties( new String[] { "Node", "Elevation" } ); //$NON-NLS-1$ //$NON-NLS-2$
     m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
 
-    createNameColumn( m_nodeElevationViewer );
+    ColumnViewerUtil.createEmptyColumn( m_nodeElevationViewer );
     createElevationColumn( m_nodeElevationViewer );
+    createNameColumn( m_nodeElevationViewer );
 
     final List<IFE1D2DNode> selectedNode = m_dataModel.getSelectedNode();
     if( selectedNode == null )
@@ -265,17 +243,6 @@ public class AssignNodeElevationFaceComponent extends Composite
       }
     } );
 
-    final TextCellEditor textCellEditor = new TextCellEditor( table );
-    final TextCellEditor eleCellEditor = new TextCellEditor( table );
-    ((Text) eleCellEditor.getControl()).setTextLimit( 15 );
-    eleCellEditor.setValidator( this.m_doubleValidator );
-
-    final CellEditor[] editors = new CellEditor[] { textCellEditor, eleCellEditor };
-    m_nodeElevationViewer.setCellEditors( editors );
-
-    final ICellModifier cellModifier = new AssignNodeCellModifier( m_nodeElevationViewer, m_dataModel );
-    m_nodeElevationViewer.setCellModifier( cellModifier );
-
     return panel;
   }
 
@@ -289,6 +256,10 @@ public class AssignNodeElevationFaceComponent extends Composite
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
     nameColumn.setLabelProvider( new FENodeNameProvider() );
     ColumnViewerSorter.registerSorter( nameColumn, new FENodeNameComparator() );
+
+    nameColumn.setEditingSupport( new FENodeNameEditingSupport( viewer ) );
+
+    column.setWidth( 100 );
   }
 
   private void createElevationColumn( final TableViewer viewer )
@@ -301,6 +272,10 @@ public class AssignNodeElevationFaceComponent extends Composite
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
     heightColumn.setLabelProvider( new FENodeHeightProvider() );
     ColumnViewerSorter.registerSorter( heightColumn, new FENodeHeightComparator() );
+
+    heightColumn.setEditingSupport( new FENodeHeightEditingSupport( viewer, m_dataModel ) );
+
+    column.setWidth( 100 );
   }
 
   protected final void applyElevation( )

@@ -40,23 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 
-class ElevationListLabelProvider extends ColumnLabelProvider
+class ElevationListDescriptionProvider extends ColumnLabelProvider
 {
   @Override
   public String getText( final Object element )
   {
     if( element instanceof ITerrainElevationModel )
     {
-      final String name = ((ITerrainElevationModel) element).getName();
-      if( name != null )
-        return name;
+      final String description = ((ITerrainElevationModel) element).getDescription();
+      if( StringUtils.isEmpty( description ) )
+        return StringUtils.EMPTY;
 
-      // TODO: check: this never makes sense to the user
-      return ((ITerrainElevationModel) element).getGmlID();
+      // REMARK: column should not get too big...
+      return StringUtils.abbreviate( description, 50 );
     }
 
     throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.0" ) + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.1" ) + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

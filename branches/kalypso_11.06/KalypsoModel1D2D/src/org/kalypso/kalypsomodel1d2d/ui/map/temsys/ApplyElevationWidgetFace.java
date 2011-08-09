@@ -136,7 +136,6 @@ class ApplyElevationWidgetFace
     final FormToolkit toolkit = ToolkitUtils.createToolkit( rootPanel );
 
     final ScrolledForm scrolledForm = toolkit.createScrolledForm( rootPanel );
-    scrolledForm.setDelayedReflow( true );
 
     final Composite body = scrolledForm.getBody();
     GridLayoutFactory.fillDefaults().applyTo( body );

@@ -91,7 +91,7 @@ public class ApplyElevationHelper
     if( workspace == null )
       return;
 
-    List<IFE1D2DNode> lListNodesToAssign = new ArrayList<IFE1D2DNode>();
+    final List<IFE1D2DNode> lListNodesToAssign = new ArrayList<IFE1D2DNode>();
     lListNodesToAssign.addAll( nodeList );
     // to provide real assign of elevations according to selected order in elevations model view
     for( int i = 0; i < elevationModels.size() && lListNodesToAssign.size() > 0; ++i )
@@ -105,7 +105,7 @@ public class ApplyElevationHelper
       for( int j = lListNodesToAssign.size() - 1; j >= 0; --j )
       // for( final IFE1D2DNode node : nodeList )
       {
-        IFE1D2DNode node = lListNodesToAssign.get( j );
+        final IFE1D2DNode node = lListNodesToAssign.get( j );
         if( node != null )
         {
           try
@@ -119,7 +119,7 @@ public class ApplyElevationHelper
               lListNodesToAssign.remove( node );
             }
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
           }
         }
@@ -135,7 +135,6 @@ public class ApplyElevationHelper
     }
   }
 
-  @SuppressWarnings("unchecked")
   public static IFE1D2DNode[] getAllNonElevationNodes( final ApplyElevationWidgetDataModel dataModel )
   {
     final List<IFE1D2DNode> allNodes = dataModel.getDiscretisationModel().getNodes();
@@ -143,7 +142,6 @@ public class ApplyElevationHelper
 
     for( int i = 0; i < allNodes.size(); i++ )
     {
-
       try
       {
         if( !NodeOps.hasElevation( allNodes.get( i ) ) )
@@ -159,7 +157,5 @@ public class ApplyElevationHelper
     }
 
     return noElevationNodes.toArray( new IFE1D2DNode[] {} );
-
   }
-
 }
