@@ -198,7 +198,7 @@ public class AssignNodeElevationFaceComponent extends Composite
   private Control createNodeTable( final FormToolkit toolkit, final Composite parent )
   {
     final Composite panel = toolkit.createComposite( parent );
-    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
+    GridLayoutFactory.fillDefaults().numColumns( 1 ).applyTo( panel );
 
     final Table table = toolkit.createTable( panel, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
     final GridData tableData = new GridData( SWT.FILL, SWT.FILL, true, true );
@@ -229,8 +229,8 @@ public class AssignNodeElevationFaceComponent extends Composite
     m_nodeElevationViewer.addSelectionChangedListener( nodeSelectionListener );
 
     final Composite buttonPanel = toolkit.createComposite( panel );
-    buttonPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, false ) );
-    GridLayoutFactory.fillDefaults().numColumns( 1 ).equalWidth( true ).applyTo( buttonPanel );
+    buttonPanel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+    GridLayoutFactory.fillDefaults().numColumns( 3 ).equalWidth( true ).applyTo( buttonPanel );
 
     final Button selectAll = toolkit.createButton( buttonPanel, WorkbenchMessages.SelectionDialog_selectLabel, SWT.PUSH );
     selectAll.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
