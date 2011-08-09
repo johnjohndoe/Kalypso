@@ -96,6 +96,7 @@ import com.vividsolutions.jts.geom.Polygon;
 public class CreatePolygonWidgetWrapper extends AbstractWidget
 {
   private final ToolTipRenderer m_warningRenderer = ToolTipRenderer.createWarningTooltip();
+  private final ToolTipRenderer m_toolTipRenderer = ToolTipRenderer.createWarningTooltip();
 
   private PolygonGeometryBuilder m_builder = null;
 
@@ -114,6 +115,8 @@ public class CreatePolygonWidgetWrapper extends AbstractWidget
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
+    m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
     reset();
   }
@@ -171,23 +174,27 @@ public class CreatePolygonWidgetWrapper extends AbstractWidget
     if( projection == null )
       return;
 
-    if( m_currentPoint == null )
-      return;
+//    if( m_currentPoint == null )
+//      return;
 
-    if( m_builder.getPointCount() == 0 )
-    {
-      PolygonGeometryBuilder.drawHandle( g, m_currentPoint.x, m_currentPoint.y );
-      return;
-    }
+//    if( m_builder.getPointCount() == 0 )
+//    {
+//      PolygonGeometryBuilder.drawHandle( g, m_currentPoint.x, m_currentPoint.y );
+//      return;
+//    }
+
+    final Rectangle screenBounds = mapPanel.getScreenBounds();
+    m_toolTipRenderer.setTooltip( Messages.getString( "CreatePolygonWidgetWrapper.3" ) ); //$NON-NLS-1$ 
+    m_toolTipRenderer.paintToolTip( new Point( 5, screenBounds.height - 5 ), g, screenBounds );
 
     final GM_Point pos = MapUtilities.transform( getMapPanel(), m_currentPoint );
     final String warning = validateGeometry( pos );
+    
     if( warning == null )
       g.setColor( Color.GREEN );
     else
     {
-      final Rectangle screenBounds = mapPanel.getScreenBounds();
-      final Point bottomLeft = new Point( 0, screenBounds.height - 0 );
+      final Point bottomLeft = new Point( 5, screenBounds.height - 92 );
       m_warningRenderer.setTooltip( warning );
       m_warningRenderer.paintToolTip( bottomLeft, g, screenBounds );
 
@@ -207,7 +214,7 @@ public class CreatePolygonWidgetWrapper extends AbstractWidget
       try
       {
         final int pointCount = m_builder.getPointCount();
-        if( pointCount < 3 )
+        if( pointCount < 3 && pointCount > 1)
           return Messages.getString("CreatePolygonWidgetWrapper.0"); //$NON-NLS-1$
 
         final GM_Object geom = m_builder.finish();
