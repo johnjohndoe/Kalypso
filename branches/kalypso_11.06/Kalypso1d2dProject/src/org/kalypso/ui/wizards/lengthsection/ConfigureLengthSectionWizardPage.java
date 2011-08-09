@@ -94,11 +94,11 @@ import org.kalypsodeegree.model.feature.FeatureList;
  */
 public class ConfigureLengthSectionWizardPage extends WizardPage implements IWizardPage
 {
-  private static final String RIVER_NAME_FIELD = Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.0"); //$NON-NLS-1$
+  private static final String RIVER_NAME_FIELD = "NAME";  //$NON-NLS-1$
 
-  private static final String FROM_STATION_FIELD = Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.1"); //$NON-NLS-1$
+  private static final String FROM_STATION_FIELD = "RIVER_A";  //$NON-NLS-1$
 
-  private static final String TO_STATION_FIELD = Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.2"); //$NON-NLS-1$
+  private static final String TO_STATION_FIELD = "RIVER_B";  //$NON-NLS-1$
 
   private IKalypsoFeatureTheme m_riverLineTheme;
 
@@ -386,7 +386,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     }
     else
     {
-      final Object elementAt = m_comboRiverLineName.getElementAt( 1 );
+      final Object elementAt = m_comboRiverLineNameField.getElementAt( 1 );
       if( elementAt != null )
       {
         m_comboRiverLineNameField.setSelection( new StructuredSelection( elementAt ) );
