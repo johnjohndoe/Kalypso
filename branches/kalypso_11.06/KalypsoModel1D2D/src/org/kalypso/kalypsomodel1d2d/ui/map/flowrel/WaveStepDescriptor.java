@@ -226,10 +226,10 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     
     final Label constBCLabel = new Label( container, SWT.NONE );
     constBCLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    constBCLabel.setText( "Constant boundary condition only" ); 
+    constBCLabel.setText( Messages.getString("WaveStepDescriptor.4") );  //$NON-NLS-1$
 
     Button m_checkbox = new Button( container, SWT.CHECK );
-    m_checkbox.setToolTipText( "" );
+    m_checkbox.setToolTipText( "" ); //$NON-NLS-1$
     m_checkbox.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( final SelectionEvent e )
@@ -380,7 +380,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
    */
   public void activate( )
   {
-    m_page.setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.15" ) );
+    m_page.setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.15" ) ); //$NON-NLS-1$
     m_page.setDescription( MSG_PAGE );
 
     updatePageState( Status.OK_STATUS );

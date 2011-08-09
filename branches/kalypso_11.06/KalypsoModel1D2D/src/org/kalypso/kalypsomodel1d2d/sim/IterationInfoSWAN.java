@@ -214,7 +214,7 @@ public class IterationInfoSWAN implements IIterationInfo
 
     if( line != null && line.trim().startsWith( "Time of computation" ) ) //$NON-NLS-1$
     {
-      String lStrDate = line.substring( line.indexOf( "->" ) + 3 );
+      String lStrDate = line.substring( line.indexOf( "->" ) + 3 ); //$NON-NLS-1$
 
       if( !lStrDate.equals( m_strActDate ) )
       {
@@ -271,7 +271,7 @@ public class IterationInfoSWAN implements IIterationInfo
       // REMARK: convert to calendar with correct time zone, so formatting works correct
       final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
       calendar.setTime( stepDate );
-      m_obs.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", m_calendarFirst ) + "-" + Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", calendar ) ); //$NON-NLS-1$
+      m_obs.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", m_calendarFirst ) + "-" + Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", calendar ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     final TupleResult result = m_obs.getResult();
