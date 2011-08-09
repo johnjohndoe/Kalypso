@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -56,8 +55,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -84,8 +81,6 @@ public class ElevationModelSystemEditorComponent extends Composite
 
   private final ApplyElevationWidgetDataModel m_dataModel;
 
-  private Label m_descriptionText;
-
   private ToolBarManager m_toolbar;
 
   public ElevationModelSystemEditorComponent( final FormToolkit toolkit, final Composite parent, final ApplyElevationWidgetDataModel dataModel )
@@ -98,19 +93,15 @@ public class ElevationModelSystemEditorComponent extends Composite
 
     ControlUtils.addDisposeListener( this );
 
-    GridLayoutFactory.swtDefaults().numColumns( 3 ).spacing( 0, 0 ).applyTo( this );
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).spacing( 0, 0 ).applyTo( this );
 
     final Control elevationControl = createElevationViewer( toolkit, this );
     /* Exactly as hight as the toolbar */
     final GridData tableData = new GridData( SWT.FILL, SWT.FILL, true, false );
+    tableData.minimumWidth = tableData.widthHint = 50;
     elevationControl.setLayoutData( tableData );
 
     createToolbar( toolkit, this ).setLayoutData( new GridData( SWT.CENTER, SWT.FILL, false, true ) );
-
-    final Control descriptionControl = createDescriptionPanel( toolkit, this );
-    /* Exactly as hight as the toolbar */
-    final GridData descriptionData = new GridData( SWT.FILL, SWT.FILL, true, false );
-    descriptionControl.setLayoutData( descriptionData );
   }
 
   @Override
@@ -126,19 +117,15 @@ public class ElevationModelSystemEditorComponent extends Composite
     final Table elevationTable = toolkit.createTable( parent, SWT.FILL | SWT.BORDER );
     elevationTable.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     elevationTable.setLinesVisible( true );
+    elevationTable.setHeaderVisible( true );
     elevationTable.addControlListener( new ColumnsResizeControlListener() );
 
     m_elevationViewer = new TableViewer( elevationTable );
 
     m_elevationViewer.setContentProvider( new ArrayContentProvider() );
 
-    final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( m_elevationViewer, SWT.LEFT );
-    final ViewerColumnItem column = new ViewerColumnItem( nameColumn );
-
-    column.setResizable( false );
-    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
-    nameColumn.setLabelProvider( new ElevationListLabelProvider() );
-    ColumnViewerSorter.registerSorter( nameColumn, new ViewerComparator() );
+    createNameColumn( m_elevationViewer );
+    createDescriptionColumn( m_elevationViewer );
 
     m_elevationViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -156,20 +143,40 @@ public class ElevationModelSystemEditorComponent extends Composite
     return elevationTable;
   }
 
+  private void createNameColumn( final TableViewer elevationViewer )
+  {
+    final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( elevationViewer, SWT.LEFT );
+    final ViewerColumnItem column = new ViewerColumnItem( nameColumn );
+
+    column.setResizable( false );
+    column.setText( Messages.getString("ElevationModelSystemEditorComponent_0") ); //$NON-NLS-1$
+    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
+    nameColumn.setLabelProvider( new ElevationListNameProvider() );
+    ColumnViewerSorter.registerSorter( nameColumn, new ViewerComparator() );
+  }
+
+  private void createDescriptionColumn( final TableViewer elevationViewer )
+  {
+    final ViewerColumn descriptionColumn = ColumnViewerUtil.createViewerColumn( elevationViewer, SWT.LEFT );
+    final ViewerColumnItem column = new ViewerColumnItem( descriptionColumn );
+
+    column.setResizable( false );
+    column.setText( Messages.getString("ElevationModelSystemEditorComponent_1") ); //$NON-NLS-1$
+    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
+    descriptionColumn.setLabelProvider( new ElevationListDescriptionProvider() );
+    ColumnViewerSorter.registerSorter( descriptionColumn, new ViewerComparator() );
+  }
+
   protected void handleSelectionChanged( final IStructuredSelection selection )
   {
     if( selection.isEmpty() )
-    {
       m_dataModel.setElevationModel( null );
-      m_descriptionText.setText( StringUtils.EMPTY );
-    }
     else
     {
       if( selection.getFirstElement() instanceof ITerrainElevationModel )
       {
         final ITerrainElevationModel firstElement = (ITerrainElevationModel) selection.getFirstElement();
         m_dataModel.setElevationModel( firstElement );
-        m_descriptionText.setText( firstElement.getDescription() );
       }
     }
   }
@@ -206,19 +213,5 @@ public class ElevationModelSystemEditorComponent extends Composite
 
     final Action deleteAction = new ElevationModelDeleteTerrainAction( m_elevationViewer, m_dataModel );
     m_toolbar.add( deleteAction );
-  }
-
-  private Control createDescriptionPanel( final FormToolkit toolkit, final Composite parent )
-  {
-    final Group descriptionGroup = new Group( parent, SWT.NONE );
-    toolkit.adapt( descriptionGroup );
-    descriptionGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.14" ) ); //$NON-NLS-1$
-    GridLayoutFactory.swtDefaults().applyTo( descriptionGroup );
-
-    final String initialMessage = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.15" ); //$NON-NLS-1$
-    m_descriptionText = toolkit.createLabel( descriptionGroup, initialMessage, SWT.WRAP );
-    m_descriptionText.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    return descriptionGroup;
   }
 }

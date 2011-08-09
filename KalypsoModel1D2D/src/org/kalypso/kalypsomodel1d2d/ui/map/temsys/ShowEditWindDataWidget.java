@@ -116,7 +116,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
 
   public ShowEditWindDataWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$  
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$  
     m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.2" ) );//$NON-NLS-1$  
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
