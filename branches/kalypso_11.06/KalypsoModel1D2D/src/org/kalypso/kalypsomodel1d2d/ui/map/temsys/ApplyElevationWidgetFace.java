@@ -50,8 +50,6 @@ import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -59,13 +57,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.contribs.eclipse.swt.widgets.ReflowExpansionListener;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -146,8 +143,11 @@ class ApplyElevationWidgetFace
 
     createSelectElevationModel( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     createSelectRegion( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    createSelectColor( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     createToolsRegion( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    final Section selectControl = createSelectColor( toolkit, body );
+    selectControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    selectControl.addExpansionListener( new ReflowExpansionListener( scrolledForm ) );
 
     return rootPanel;
   }
@@ -170,9 +170,9 @@ class ApplyElevationWidgetFace
   }
 
   // Creates Section to Configure the Color for Different Elevations
-  private Control createSelectColor( final FormToolkit toolkit, final Composite parent )
+  private Section createSelectColor( final FormToolkit toolkit, final Composite parent )
   {
-    final Section elevationColorConfig = toolkit.createSection( parent, Section.TITLE_BAR );
+    final Section elevationColorConfig = toolkit.createSection( parent, Section.TITLE_BAR | Section.TWISTIE );
     elevationColorConfig.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.4" ) );//$NON-NLS-1$
 
     final ColorModelChangeComponent colorModelControl = new ColorModelChangeComponent( toolkit, elevationColorConfig, m_dataModel );
@@ -221,62 +221,31 @@ class ApplyElevationWidgetFace
 
   protected void handleSelectionChanged( final IFeatureSelection selection )
   {
-    if( m_nodeElevationViewer == null )
-      return;
+    // FIXME: should go via the data model instead
+    final IFE1D2DNode< ? >[] nodeList = findSelectedNodes( selection );
+    ViewerUtilities.setInput( m_nodeElevationViewer, nodeList, false );
+  }
 
-    if( m_nodeElevationViewer.getControl().isDisposed() )
-      return;
+  protected IFE1D2DNode< ? >[] findSelectedNodes( final IFeatureSelection selection )
+  {
+    final List<IFE1D2DNode< ? >> nodeList = new ArrayList<IFE1D2DNode< ? >>();
 
-    final List<IFE1D2DNode> nodeList = new ArrayList<IFE1D2DNode>();
-    Feature selecFeature = null;
-    IFE1D2DNode selecNode = null;
     for( final Object selected : selection.toList() )
     {
+      Feature selecFeature = null;
       if( selected instanceof Feature )
         selecFeature = (Feature) selected;
-
       else if( selected instanceof EasyFeatureWrapper )
         selecFeature = ((EasyFeatureWrapper) selected).getFeature();
 
       if( selecFeature != null )
       {
-        selecNode = (IFE1D2DNode) selecFeature.getAdapter( IFE1D2DNode.class );
+        final IFE1D2DNode< ? > selecNode = (IFE1D2DNode< ? >) selecFeature.getAdapter( IFE1D2DNode.class );
         if( selecNode != null )
           nodeList.add( selecNode );
       }
-
     }
 
-    try
-    {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-
-      m_nodeElevationViewer.getControl().getDisplay().syncExec( new Runnable()
-      {
-        @Override
-        public void run( )
-        {
-          final IContentProvider cp = m_nodeElevationViewer.getContentProvider();
-          if( cp instanceof ArrayContentProvider )
-            m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
-          else
-            m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
-
-          m_nodeElevationViewer.setInput( nodeList.toArray( new IFE1D2DNode[] {} ) );
-        }
-      } );
-
-      final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-      if( activeWorkbenchWindow == null )
-      {
-        System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.1" ) ); //$NON-NLS-1$
-        return;
-      }
-
-    }
-    catch( final Throwable th )
-    {
-      th.printStackTrace();
-    }
+    return nodeList.toArray( new IFE1D2DNode< ? >[nodeList.size()] );
   }
 }
