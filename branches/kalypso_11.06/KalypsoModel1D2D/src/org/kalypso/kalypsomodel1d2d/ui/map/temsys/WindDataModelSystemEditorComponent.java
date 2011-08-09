@@ -551,7 +551,7 @@ public class WindDataModelSystemEditorComponent
       }
       catch( Exception e )
       {
-        deleteFiles.add( new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindDataSystemCommand.4" ), null ) ); //$NON-NLS-1$
+        deleteFiles.add( new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.4" ), null ) ); //$NON-NLS-1$
       }
     }
     ErrorDialog.openError( shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.7" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.9" ), deleteFiles ); //$NON-NLS-1$ //$NON-NLS-2$
