@@ -384,7 +384,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       e.printStackTrace();
     }
 
-    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
+    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.4" ) ); //$NON-NLS-1$
 
     IPolyElement lNewPoly = lPoly;
     if( pListElementsIdsRma.size() > 1 )
