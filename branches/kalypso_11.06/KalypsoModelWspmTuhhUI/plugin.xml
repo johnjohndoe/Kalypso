@@ -658,6 +658,16 @@
               name="%command.name.4">
               <description>%command.description.3</description>
         </wizard>
+        
+       <wizard
+             category="importWizards"
+             class="org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard"
+             id="org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard"
+             icon="icons/elcl16/export_sobek.gif"
+             name="SOBEK">
+          <description>Imports profiles from a SOBEK project</description>
+       </wizard>
+               
      </extension>
      <extension point="org.kalypso.gml.ui.toolWizards">
         <wizard
@@ -754,37 +764,29 @@
         <wizardEnablement
               wizardID="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard">
            <enablement>
-              <with
-                    variable="selection">
-                 <iterate
-                       ifEmpty="false"
-                       operator="or">
+              <with variable="selection">
+                 <iterate ifEmpty="false" operator="or">
                     <or>
-                       <test
-                             property="org.kalypso.gml.qname"
-                             value="{org.kalypso.model.wspm}WaterBody">
+                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm}WaterBody">
                        </test>
-                       <test
-                             property="org.kalypso.gml.targetQName"
-                             value="{org.kalypso.model.wspm}WaterBody">
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody">
                        </test>
-                       <test
-                             property="org.kalypso.gml.targetQName"
-                             value="{org.kalypso.model.wspm}AbstractReach">
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}AbstractReach">
                        </test>
-                       <test
-                             property="org.kalypso.gml.qname"
-                             value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
                        </test>
-                       <test
-                             property="org.kalypso.gml.targetQName"
-                             value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
                        </test>
                     </or>
                  </iterate>
               </with>
            </enablement>
         </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard">
+          <enablement>
+            <reference definitionId="isProfileContainerSelection"/>
+          </enablement>
+       </wizardEnablement>
      </extension>
      <extension point="org.eclipse.ui.menus">
          <menuContribution allPopups="false" locationURI="popup:org.eclipse.ui.popup.any?before=gmlToolsEnd">
