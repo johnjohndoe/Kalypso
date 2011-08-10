@@ -38,9 +38,10 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.internal.wspm;
+package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,12 +53,17 @@ import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
+import org.kalypso.model.wspm.pdb.internal.wspm.ICheckoutElements;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutDataSearcher
+public class CheckoutDataSearcher implements ICheckoutElements
 {
+  private final Set<WaterBody> m_waterBodies = new HashSet<WaterBody>();
+
+  private final Set<State> m_states = new HashSet<State>();
+
   private final Set<CrossSection> m_crossSections = new TreeSet<CrossSection>( new ByStationComparator() );
 
   private final Set<Event> m_events = new HashSet<Event>();
@@ -66,6 +72,10 @@ public class CheckoutDataSearcher
   {
     final List< ? > list = selection.toList();
     addElements( list );
+
+    /* Just in case, remove null */
+    m_waterBodies.remove( null );
+    m_states.remove( null );
   }
 
   private void addElements( final Collection< ? > elements )
@@ -80,34 +90,71 @@ public class CheckoutDataSearcher
   private void addElementAsCrossSection( final Object element )
   {
     if( element instanceof CrossSection )
-      m_crossSections.add( (CrossSection) element );
+    {
+      final CrossSection cs = (CrossSection) element;
+      m_crossSections.add( cs );
+      m_waterBodies.add( cs.getWaterBody() );
+      m_states.add( cs.getState() );
+    }
     else if( element instanceof State )
     {
       final State state = (State) element;
       addElements( state.getCrossSections() );
+      m_states.add( state );
     }
     else if( element instanceof WaterBody )
     {
       final WaterBody waterBody = (WaterBody) element;
       addElements( waterBody.getCrossSections() );
+      m_waterBodies.add( waterBody );
     }
   }
 
   private void addElementAsWaterLevel( final Object element )
   {
     if( element instanceof Event )
-      m_events.add( (Event) element );
+    {
+      final Event event = (Event) element;
+      m_events.add( event );
+      m_waterBodies.add( event.getWaterBody() );
+    }
     else if( element instanceof WaterBody )
-      addElements( ((WaterBody) element).getEvents() );
+    {
+      final WaterBody waterBody = (WaterBody) element;
+      addElements( waterBody.getEvents() );
+      m_waterBodies.add( waterBody );
+    }
   }
 
+  @Override
   public CrossSection[] getCrossSections( )
   {
     return m_crossSections.toArray( new CrossSection[m_crossSections.size()] );
   }
 
+  @Override
   public Event[] getEvents( )
   {
     return m_events.toArray( new Event[m_events.size()] );
+  }
+
+  @Override
+  public WaterBody[] getPreviewRootElements( )
+  {
+    return m_waterBodies.toArray( new WaterBody[m_waterBodies.size()] );
+  }
+
+  @Override
+  public Set<Object> getAllPreviewElements( )
+  {
+    // Find all involved elements
+    final Set<Object> all = new HashSet<Object>();
+
+    all.addAll( m_crossSections );
+    all.addAll( m_events );
+    all.addAll( m_waterBodies );
+    all.addAll( m_states );
+
+    return Collections.unmodifiableSet( all );
   }
 }

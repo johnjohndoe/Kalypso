@@ -67,13 +67,13 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class CheckoutWaterlevelWorker
 {
-  private final CheckoutOperation m_checkoutOperation;
+  private final CheckoutPdbOperation m_checkoutOperation;
 
   private final TuhhWspmProject m_project;
 
   private final Event[] m_events;
 
-  public CheckoutWaterlevelWorker( final CheckoutOperation checkoutOperation, final TuhhWspmProject project, final Event[] events )
+  public CheckoutWaterlevelWorker( final CheckoutPdbOperation checkoutOperation, final TuhhWspmProject project, final Event[] events )
   {
     m_checkoutOperation = checkoutOperation;
     m_project = project;
