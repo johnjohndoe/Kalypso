@@ -86,11 +86,11 @@ public class CheckoutPdbHandler extends AbstractHandler
     if( !project.saveProject( true ) )
       return null;
 
-    final CheckoutPdbData data = new CheckoutPdbData( project.getWorkspace(), project.getWspmProject() );
+    final CheckoutPdbData data = new CheckoutPdbData();
 
     final CheckoutPdbWizard wizard = new CheckoutPdbWizard( data );
     wizard.setWindowTitle( commandName );
-    wizard.init( selection );
+    wizard.init( selection, project.getWorkspace(), project.getWspmProject() );
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     dialog.open();
 

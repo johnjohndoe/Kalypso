@@ -82,6 +82,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.mapmodel.visitor.ThemeUsedForMaxExtentPredicate;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -240,7 +241,7 @@ public class PdbWspmProject implements IPdbWspmProject
     /* Add necessary themes */
     for( final WspmWaterBody waterBody : waterBodies )
     {
-      final WspmReach[] reaches = waterBody.getReaches();
+      final IFeatureBindingCollection<WspmReach> reaches = waterBody.getReaches();
       for( final WspmReach reach : reaches )
       {
         final String reachGmlID = reach.getId();

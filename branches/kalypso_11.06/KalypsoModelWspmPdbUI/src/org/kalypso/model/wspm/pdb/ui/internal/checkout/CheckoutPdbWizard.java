@@ -46,8 +46,15 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutPdbOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Gernot Belger
@@ -64,13 +71,20 @@ public class CheckoutPdbWizard extends Wizard
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
   }
 
-  public void init( final IStructuredSelection selection )
+  public void init( final IStructuredSelection selection, final CommandableWorkspace workspace, final TuhhWspmProject project )
   {
     m_data.init( getDialogSettings() );
 
     final CheckoutDataSearcher searcher = new CheckoutDataSearcher();
     searcher.search( selection );
-    m_data.setElements( searcher );
+
+    final WaterBody[] waterBodies = searcher.getWaterBodies();
+    final State[] states = searcher.getStates();
+    final CrossSection[] crossSections = searcher.getCrossSections();
+    final Event[] events = searcher.getEvents();
+
+    final CheckoutDataMapping mapping = new CheckoutDataMapping( waterBodies, states, crossSections, events, workspace, project );
+    m_data.setMapping( mapping );
   }
 
   @Override
@@ -84,7 +98,7 @@ public class CheckoutPdbWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data );
+    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data.getMapping() );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
       new StatusDialog2( getShell(), status, getWindowTitle() ).open();

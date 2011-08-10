@@ -45,46 +45,44 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
-import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants.STATIONING_DIRECTION;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutCrossSectionsWorker
+public class CheckoutWaterBodyWorker
 {
   private final CheckoutDataMapping m_mapping;
 
-  public CheckoutCrossSectionsWorker( final CheckoutDataMapping mapping )
+  public CheckoutWaterBodyWorker( final CheckoutDataMapping mapping )
   {
     m_mapping = mapping;
   }
 
   public void execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final CrossSection[] crossSections = m_mapping.getCrossSections();
-
-    monitor.beginTask( "Reading cross sections from database", crossSections.length );
-
     try
     {
-      /* Convert the cross sections */
-      for( final CrossSection crossSection : crossSections )
+      final WaterBody[] waterBodies = m_mapping.getWaterBodies();
+
+      monitor.beginTask( "Reading water bodies from database", waterBodies.length );
+
+      for( final WaterBody waterBody : waterBodies )
       {
-        monitor.subTask( String.format( "Converting %s", crossSection.getStation() ) );
-        insert( crossSection );
-        ProgressUtilities.worked( monitor, 1 );
+        final WspmWaterBody wspmWater = m_mapping.getWspmWaterBody( waterBody );
+        final WspmWaterBody newWspmWater = updateOrCreateWspmWaterBody( waterBody, wspmWater );
+        m_mapping.set( waterBody, newWspmWater );
+        m_mapping.addChangedFeatures( new Feature[] { newWspmWater } );
+
+        monitor.worked( 1 );
       }
     }
     catch( final Exception e )
@@ -99,39 +97,42 @@ public class CheckoutCrossSectionsWorker
     }
   }
 
-  public void insert( final CrossSection section ) throws Exception
+  private WspmWaterBody updateOrCreateWspmWaterBody( final WaterBody waterBody, final WspmWaterBody wspmWater ) throws Exception
   {
-    final WaterBody waterBody = section.getWaterBody();
-    final WspmWaterBody wspmWaterBody = m_mapping.getWspmWaterBody( waterBody );
+    if( wspmWater == null )
+      return createWspmWaterBody( waterBody );
 
-    final State state = section.getState();
-    final TuhhReach reach = m_mapping.getReach( state );
-
-    final IProfileFeature profile = insertProfile( section, wspmWaterBody );
-
-    insertCrossSection( profile, reach );
+    updateWaterBody( waterBody, wspmWater );
+    return wspmWater;
   }
 
-  private IProfileFeature insertProfile( final CrossSection section, final WspmWaterBody waterBody )
+  private WspmWaterBody createWspmWaterBody( final WaterBody waterBody ) throws Exception
   {
-    final IProfileFeature newProfile = waterBody.createNewProfile();
-    newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    final String name = waterBody.getLabel();
 
-    final Geometry line = section.getLine();
-    final String srs = line == null ? null : JTSAdapter.toSrs( line.getSRID() );
-    newProfile.setSrsName( srs );
+    final TuhhWspmProject project = m_mapping.getProject();
 
-    final IProfil profile = newProfile.getProfil();
-    final CrossSectionConverter converter = new CrossSectionConverter( section, profile );
-    converter.execute();
-    ProfileFeatureFactory.toFeature( profile, newProfile );
+    final WspmWaterBody newWspmWaterBody = project.createWaterBody( name, true );
 
-    return newProfile;
+    updateWaterBody( waterBody, newWspmWaterBody );
+
+    return newWspmWaterBody;
   }
 
-  private void insertCrossSection( final IProfileFeature profile, final TuhhReach reach )
+  private void updateWaterBody( final WaterBody waterBody, final WspmWaterBody wspmWater ) throws Exception
   {
-    /* Just add, nothing else to do */
-    reach.createProfileSegment( profile, profile.getStation() );
+    wspmWater.setName( waterBody.getLabel() );
+    wspmWater.setRefNr( waterBody.getName() );
+    wspmWater.setDescription( waterBody.getDescription() );
+
+    final STATIONING_DIRECTION directionOfStationing = waterBody.getDirectionOfStationing();
+    final boolean isDirectionUpstreams = directionOfStationing == WaterBody.STATIONING_DIRECTION.upstream;
+    wspmWater.setDirectionUpstreams( isDirectionUpstreams );
+
+    final GM_Curve centerLine = (GM_Curve) JTSAdapter.wrapWithSrid( waterBody.getRiverlineAsLine() );
+
+    final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final GM_Curve transformedCenterline = (GM_Curve) centerLine.transform( kalypsoSRS );
+    wspmWater.setCenterLine( transformedCenterline );
   }
 }

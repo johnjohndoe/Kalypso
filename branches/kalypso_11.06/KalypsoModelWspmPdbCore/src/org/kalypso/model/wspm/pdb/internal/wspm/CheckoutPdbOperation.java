@@ -40,41 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
-import org.kalypso.model.wspm.pdb.db.mapping.Event;
-import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Gernot Belger
  */
 public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 {
-  private final List<Feature> m_changedFeatures = new ArrayList<Feature>();
+  private final CheckoutDataMapping m_mapping;
 
-  private final List<Feature> m_changedParents = new ArrayList<Feature>();
-
-  private final ICheckoutPdbData m_data;
-
-  public CheckoutPdbOperation( final ICheckoutPdbData data )
+  public CheckoutPdbOperation( final CheckoutDataMapping mapping )
   {
-    m_data = data;
+    m_mapping = mapping;
   }
 
   @Override
@@ -88,68 +71,24 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
     // third: delete all existing water levels
     // last: download data as before
 
-    final ICheckoutElements elements = m_data.getElements();
-    final CrossSection[] crossSections = elements.getCrossSections();
-    final Event[] events = elements.getEvents();
+    final CheckoutWaterBodyWorker waterBodyWorker = new CheckoutWaterBodyWorker( m_mapping );
+    waterBodyWorker.execute( new SubProgressMonitor( monitor, 10 ) );
 
-    final boolean hasCrossSection = !ArrayUtils.isEmpty( crossSections );
-    final boolean hasWaterlevels = !ArrayUtils.isEmpty( events );
-    if( !hasCrossSection && !hasWaterlevels )
-      return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "No downloadable data found in selection." );
+    final CheckoutStateWorker stateWorker = new CheckoutStateWorker( m_mapping );
+    stateWorker.execute( new SubProgressMonitor( monitor, 10 ) );
 
-    final TuhhWspmProject project = m_data.getWspmProject();
-    final CheckoutCrossSectionsWorker crossSectionsWorker = new CheckoutCrossSectionsWorker( this, project, crossSections );
+    final CheckoutCrossSectionsWorker crossSectionsWorker = new CheckoutCrossSectionsWorker( m_mapping );
     crossSectionsWorker.execute( new SubProgressMonitor( monitor, 45 ) );
 
-    final CheckoutWaterlevelWorker waterlevelWorker = new CheckoutWaterlevelWorker( this, project, events );
+    final CheckoutWaterlevelWorker waterlevelWorker = new CheckoutWaterlevelWorker( m_mapping );
     waterlevelWorker.execute( new SubProgressMonitor( monitor, 45 ) );
 
-    final Feature[] newElements = fireEvents( new SubProgressMonitor( monitor, 5 ) );
-    m_data.setNewWspmElements( newElements );
+    m_mapping.fireEvents( new SubProgressMonitor( monitor, 5 ) );
 
     ProgressUtilities.done( monitor );
 
     return Status.OK_STATUS;
   }
 
-  private Feature[] fireEvents( final IProgressMonitor monitor ) throws CoreException
-  {
-    try
-    {
-      final Feature[] changedFeatures = m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
-      final Feature[] changedParents = m_changedParents.toArray( new Feature[m_changedParents.size()] );
 
-      final CommandableWorkspace workspace = m_data.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, changedParents, changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-      workspace.postCommand( new EmptyCommand( null, false ) );
-
-      return changedFeatures;
-    }
-    catch( final CoreException e )
-    {
-      throw e;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
-      throw new CoreException( status );
-    }
-    finally
-    {
-      ProgressUtilities.done( monitor );
-    }
-  }
-
-  void addChangedFeatures( final Feature[] changedFeatures )
-  {
-    m_changedFeatures.addAll( Arrays.asList( changedFeatures ) );
-
-    for( final Feature feature : changedFeatures )
-    {
-      final Feature parent = feature.getParent();
-      if( parent != null )
-        m_changedParents.add( parent );
-    }
-  }
 }

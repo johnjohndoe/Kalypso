@@ -40,20 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.Feature;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.collections.Closure;
 
 /**
  * @author Gernot Belger
  */
-public interface ICheckoutPdbData
+public class AddKeysWithMappingClosure implements Closure
 {
-  ICheckoutElements getElements( );
+  private final Map< ? , ? > m_mapping;
 
-  TuhhWspmProject getWspmProject( );
+  private final Set<Object> m_collector;
 
-  CommandableWorkspace getWorkspace( );
+  public AddKeysWithMappingClosure( final Map< ? , ? > mapping, final Set<Object> collector )
+  {
+    m_mapping = mapping;
+    m_collector = collector;
+  }
 
-  void setNewWspmElements( Feature[] newElements );
+  @Override
+  public void execute( final Object input )
+  {
+    final Object mappedElement = m_mapping.get( input );
+    if( mappedElement != null )
+      m_collector.add( input );
+  }
 }

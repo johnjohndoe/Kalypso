@@ -45,6 +45,7 @@ import java.util.Set;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 
 /**
  * @author Gernot Belger
@@ -58,4 +59,6 @@ public interface ICheckoutElements
   WaterBody[] getPreviewRootElements( );
 
   Set<Object> getAllPreviewElements( );
+
+  Set<Object> getOverwriteElements( TuhhWspmProject project );
 }

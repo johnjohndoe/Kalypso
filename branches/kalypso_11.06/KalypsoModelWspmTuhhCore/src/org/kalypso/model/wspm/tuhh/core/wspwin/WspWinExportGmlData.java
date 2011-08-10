@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -54,6 +53,7 @@ import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeatureProperty;
 
 /**
@@ -85,8 +85,8 @@ public class WspWinExportGmlData extends WspWinExportData
       final WspmWaterBody waterBody = (WspmWaterBody) element;
       m_waterBodies.add( waterBody );
       /* If water body is selected, all it's reaches get exported */
-      final WspmReach[] reaches = waterBody.getReaches();
-      addElements( Arrays.asList( reaches ) );
+      final IFeatureBindingCollection<WspmReach> reaches = waterBody.getReaches();
+      addElements( reaches );
     }
     else if( element instanceof TuhhReach )
     {

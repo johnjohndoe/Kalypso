@@ -66,6 +66,7 @@ import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinStatePdbOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -164,7 +165,7 @@ public class CheckinStateWorker implements ICoreRunnableWithProgress
     else if( object instanceof WspmWaterBody )
     {
       final WspmWaterBody waterBody = (WspmWaterBody) object;
-      final WspmReach[] reaches = waterBody.getReaches();
+      final IFeatureBindingCollection<WspmReach> reaches = waterBody.getReaches();
       for( final WspmReach wspmReach : reaches )
         addAsReach( wspmReach );
     }

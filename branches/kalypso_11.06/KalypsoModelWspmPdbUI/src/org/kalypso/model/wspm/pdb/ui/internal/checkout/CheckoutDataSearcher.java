@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,12 +52,11 @@ import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.utils.ByStationComparator;
-import org.kalypso.model.wspm.pdb.internal.wspm.ICheckoutElements;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutDataSearcher implements ICheckoutElements
+public class CheckoutDataSearcher
 {
   private final Set<WaterBody> m_waterBodies = new HashSet<WaterBody>();
 
@@ -126,35 +124,23 @@ public class CheckoutDataSearcher implements ICheckoutElements
     }
   }
 
-  @Override
+  public State[] getStates( )
+  {
+    return m_states.toArray( new State[m_states.size()] );
+  }
+
   public CrossSection[] getCrossSections( )
   {
     return m_crossSections.toArray( new CrossSection[m_crossSections.size()] );
   }
 
-  @Override
   public Event[] getEvents( )
   {
     return m_events.toArray( new Event[m_events.size()] );
   }
 
-  @Override
-  public WaterBody[] getPreviewRootElements( )
+  public WaterBody[] getWaterBodies( )
   {
     return m_waterBodies.toArray( new WaterBody[m_waterBodies.size()] );
-  }
-
-  @Override
-  public Set<Object> getAllPreviewElements( )
-  {
-    // Find all involved elements
-    final Set<Object> all = new HashSet<Object>();
-
-    all.addAll( m_crossSections );
-    all.addAll( m_events );
-    all.addAll( m_waterBodies );
-    all.addAll( m_states );
-
-    return Collections.unmodifiableSet( all );
   }
 }
