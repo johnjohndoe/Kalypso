@@ -59,9 +59,9 @@ public class CheckoutCrossSectionsWorker
 
   private final TuhhWspmProject m_project;
 
-  private final CheckoutOperation m_checkoutOperation;
+  private final CheckoutPdbOperation m_checkoutOperation;
 
-  public CheckoutCrossSectionsWorker( final CheckoutOperation checkoutOperation, final TuhhWspmProject project, final CrossSection[] crossSections )
+  public CheckoutCrossSectionsWorker( final CheckoutPdbOperation checkoutOperation, final TuhhWspmProject project, final CrossSection[] crossSections )
   {
     m_checkoutOperation = checkoutOperation;
     m_project = project;

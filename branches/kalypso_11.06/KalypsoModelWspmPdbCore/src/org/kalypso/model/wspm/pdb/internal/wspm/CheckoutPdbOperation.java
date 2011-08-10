@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -65,24 +64,17 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 /**
  * @author Gernot Belger
  */
-public class CheckoutOperation implements ICoreRunnableWithProgress
+public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 {
   private final List<Feature> m_changedFeatures = new ArrayList<Feature>();
 
   private final List<Feature> m_changedParents = new ArrayList<Feature>();
 
-  private final CheckoutDataSearcher m_searcher = new CheckoutDataSearcher();
+  private final ICheckoutPdbData m_data;
 
-  private final IStructuredSelection m_selection;
-
-  private final IPdbWspmProject m_project;
-
-  private boolean m_shouldShowWspmData = true;
-
-  public CheckoutOperation( final IPdbWspmProject project, final IStructuredSelection selection )
+  public CheckoutPdbOperation( final ICheckoutPdbData data )
   {
-    m_project = project;
-    m_selection = selection;
+    m_data = data;
   }
 
   @Override
@@ -90,50 +82,48 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
   {
     monitor.beginTask( "Loading data from cross section database", 100 );
 
-    // TODO: save dirty project data; ask user to do so..
+    // FIXME: overwrite existing data ->
+    // First: create/update all water bodies
+    // Second: delete all existing states
+    // third: delete all existing water levels
+    // last: download data as before
 
-    monitor.subTask( "Searching for data to checkout..." );
-    m_searcher.search( m_selection );
-    ProgressUtilities.worked( monitor, 5 );
-
-    final CrossSection[] crossSections = m_searcher.getCrossSections();
-    final Event[] events = m_searcher.getEvents();
+    final ICheckoutElements elements = m_data.getElements();
+    final CrossSection[] crossSections = elements.getCrossSections();
+    final Event[] events = elements.getEvents();
 
     final boolean hasCrossSection = !ArrayUtils.isEmpty( crossSections );
     final boolean hasWaterlevels = !ArrayUtils.isEmpty( events );
     if( !hasCrossSection && !hasWaterlevels )
-    {
-      m_shouldShowWspmData = false;
       return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "No downloadable data found in selection." );
-    }
 
-    // TODO Preview
-
-    final TuhhWspmProject project = m_project.getWspmProject();
+    final TuhhWspmProject project = m_data.getWspmProject();
     final CheckoutCrossSectionsWorker crossSectionsWorker = new CheckoutCrossSectionsWorker( this, project, crossSections );
     crossSectionsWorker.execute( new SubProgressMonitor( monitor, 45 ) );
 
     final CheckoutWaterlevelWorker waterlevelWorker = new CheckoutWaterlevelWorker( this, project, events );
     waterlevelWorker.execute( new SubProgressMonitor( monitor, 45 ) );
 
-    fireEventsAndSaveData( new SubProgressMonitor( monitor, 5 ) );
+    final Feature[] newElements = fireEvents( new SubProgressMonitor( monitor, 5 ) );
+    m_data.setNewWspmElements( newElements );
 
     ProgressUtilities.done( monitor );
 
     return Status.OK_STATUS;
   }
 
-  private void fireEventsAndSaveData( final IProgressMonitor monitor ) throws CoreException
+  private Feature[] fireEvents( final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
-      final Feature[] changedFeatures = getNewElements();
+      final Feature[] changedFeatures = m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
       final Feature[] changedParents = m_changedParents.toArray( new Feature[m_changedParents.size()] );
 
-      final CommandableWorkspace workspace = m_project.getWorkspace();
+      final CommandableWorkspace workspace = m_data.getWorkspace();
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, changedParents, changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       workspace.postCommand( new EmptyCommand( null, false ) );
-      m_project.doSave( monitor );
+
+      return changedFeatures;
     }
     catch( final CoreException e )
     {
@@ -151,12 +141,7 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
     }
   }
 
-  public Feature[] getNewElements( )
-  {
-    return m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
-  }
-
-  public void addChangedFeatures( final Feature[] changedFeatures )
+  void addChangedFeatures( final Feature[] changedFeatures )
   {
     m_changedFeatures.addAll( Arrays.asList( changedFeatures ) );
 
@@ -166,10 +151,5 @@ public class CheckoutOperation implements ICoreRunnableWithProgress
       if( parent != null )
         m_changedParents.add( parent );
     }
-  }
-
-  public boolean shouldShowWspmData( )
-  {
-    return m_shouldShowWspmData;
   }
 }

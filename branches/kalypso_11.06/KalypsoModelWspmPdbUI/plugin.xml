@@ -301,7 +301,7 @@
            </reference>
         </enabledWhen>
      </handler>
-     <handler class="org.kalypso.model.wspm.pdb.ui.internal.content.CheckoutPdbHandler"
+     <handler class="org.kalypso.model.wspm.pdb.ui.internal.checkout.CheckoutPdbHandler"
            commandId="org.kalypso.model.wspm.pdb.ui.command.download">
         <enabledWhen>
            <reference definitionId="isPdbViewVisible"/>
