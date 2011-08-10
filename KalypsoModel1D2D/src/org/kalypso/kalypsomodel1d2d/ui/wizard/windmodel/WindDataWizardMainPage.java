@@ -312,7 +312,7 @@ public class WindDataWizardMainPage extends WizardPage
   {
     // new String[] { "*.dat; *.asc; *.dat.gz" }
     // String[] lArrExts = new String[ 1 ];
-    String lStrExtensions = "";
+    String lStrExtensions = "";  //$NON-NLS-1$
     // int lIntCount = 0;
     for( final String lStrFileExt : m_fileExtensions )
     {
