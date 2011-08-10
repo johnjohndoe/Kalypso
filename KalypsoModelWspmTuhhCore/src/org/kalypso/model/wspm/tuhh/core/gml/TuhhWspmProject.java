@@ -157,4 +157,16 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
     final Feature rootFeature = projectWorkspace.getRootFeature();
     return (TuhhWspmProject) rootFeature;
   }
+
+  public Object findCalculationByName( final String name )
+  {
+    final TuhhCalculation[] calculations = getCalculations();
+    for( final TuhhCalculation calculation : calculations )
+    {
+      if( name.equals( calculation.getName() ) )
+        return calculation;
+    }
+
+    return null;
+  }
 }

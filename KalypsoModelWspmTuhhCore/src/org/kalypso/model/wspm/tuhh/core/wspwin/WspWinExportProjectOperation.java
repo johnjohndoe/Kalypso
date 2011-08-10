@@ -65,6 +65,7 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.WspCfg.TYPE;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -159,7 +160,7 @@ public class WspWinExportProjectOperation implements ICoreRunnableWithProgress
   {
     final Collection<TuhhReach> result = new ArrayList<TuhhReach>();
 
-    final WspmReach[] reaches = waterBody.getReaches();
+    final IFeatureBindingCollection<WspmReach> reaches = waterBody.getReaches();
     for( final WspmReach reach : reaches )
     {
       if( reach instanceof TuhhReach )

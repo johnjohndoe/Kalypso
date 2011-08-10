@@ -42,30 +42,15 @@ package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.pdb.internal.wspm.ICheckoutElements;
-import org.kalypso.model.wspm.pdb.internal.wspm.ICheckoutPdbData;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutDataMapping;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutPdbData extends AbstractModelObject implements ICheckoutPdbData
+public class CheckoutPdbData extends AbstractModelObject
 {
-  private final TuhhWspmProject m_wspmProject;
-
-  private final CommandableWorkspace m_workspace;
-
-  private ICheckoutElements m_elements;
-
-  private Feature[] m_newWspmElements;
-
-  public CheckoutPdbData( final CommandableWorkspace workspace, final TuhhWspmProject wspmProject )
-  {
-    m_workspace = workspace;
-    m_wspmProject = wspmProject;
-  }
+  private CheckoutDataMapping m_mapping;
 
   public void init( final IDialogSettings settings )
   {
@@ -82,38 +67,18 @@ public class CheckoutPdbData extends AbstractModelObject implements ICheckoutPdb
 
   }
 
-  public void setElements( final ICheckoutElements elements )
+  public void setMapping( final CheckoutDataMapping mapping )
   {
-    m_elements = elements;
+    m_mapping = mapping;
   }
 
-  @Override
-  public ICheckoutElements getElements( )
+  public CheckoutDataMapping getMapping( )
   {
-    return m_elements;
-  }
-
-
-  @Override
-  public TuhhWspmProject getWspmProject( )
-  {
-    return m_wspmProject;
-  }
-
-  @Override
-  public CommandableWorkspace getWorkspace( )
-  {
-    return m_workspace;
+    return m_mapping;
   }
 
   public Feature[] getNewWspmElements( )
   {
-    return m_newWspmElements;
-  }
-
-  @Override
-  public void setNewWspmElements( final Feature[] newElements )
-  {
-    m_newWspmElements = newElements;
+    return m_mapping.getNewElements();
   }
 }

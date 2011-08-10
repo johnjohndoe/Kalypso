@@ -45,49 +45,50 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Geometry;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutCrossSectionsWorker
+public class CheckoutStateWorker
 {
   private final CheckoutDataMapping m_mapping;
 
-  public CheckoutCrossSectionsWorker( final CheckoutDataMapping mapping )
+  public CheckoutStateWorker( final CheckoutDataMapping mapping )
   {
     m_mapping = mapping;
   }
 
   public void execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final CrossSection[] crossSections = m_mapping.getCrossSections();
+    final State[] states = m_mapping.getStates();
 
-    monitor.beginTask( "Reading cross sections from database", crossSections.length );
+    monitor.beginTask( "Reading states from database", states.length );
 
     try
     {
-      /* Convert the cross sections */
-      for( final CrossSection crossSection : crossSections )
+      for( final State state : states )
       {
-        monitor.subTask( String.format( "Converting %s", crossSection.getStation() ) );
-        insert( crossSection );
-        ProgressUtilities.worked( monitor, 1 );
+        final TuhhReach reach = m_mapping.getReach( state );
+        final TuhhReach newReach = createOrReplaceReach( state, reach );
+
+        m_mapping.set( state, newReach );
+
+        m_mapping.addChangedFeatures( new Feature[] { newReach } );
+
+        monitor.worked( 1 );
       }
     }
-    catch( final Exception e )
+    catch( final GMLSchemaException e )
     {
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Should never happen", e ); //$NON-NLS-1$
@@ -99,39 +100,35 @@ public class CheckoutCrossSectionsWorker
     }
   }
 
-  public void insert( final CrossSection section ) throws Exception
+  private TuhhReach createOrReplaceReach( final State state, final TuhhReach reach ) throws GMLSchemaException
   {
-    final WaterBody waterBody = section.getWaterBody();
-    final WspmWaterBody wspmWaterBody = m_mapping.getWspmWaterBody( waterBody );
+    final WaterBody waterBody = m_mapping.findWaterBody( state );
+    final WspmWaterBody wspmWater = m_mapping.getWspmWaterBody( waterBody );
 
-    final State state = section.getState();
-    final TuhhReach reach = m_mapping.getReach( state );
+    removeReach( reach, wspmWater );
 
-    final IProfileFeature profile = insertProfile( section, wspmWaterBody );
-
-    insertCrossSection( profile, reach );
+    return insertReach( state, wspmWater );
   }
 
-  private IProfileFeature insertProfile( final CrossSection section, final WspmWaterBody waterBody )
+  private void removeReach( final TuhhReach reach, final WspmWaterBody wspmWater )
   {
-    final IProfileFeature newProfile = waterBody.createNewProfile();
-    newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    if( reach == null )
+      return;
 
-    final Geometry line = section.getLine();
-    final String srs = line == null ? null : JTSAdapter.toSrs( line.getSRID() );
-    newProfile.setSrsName( srs );
+    final IFeatureBindingCollection<WspmReach> reaches = wspmWater.getReaches();
+    reaches.remove( reach );
 
-    final IProfil profile = newProfile.getProfil();
-    final CrossSectionConverter converter = new CrossSectionConverter( section, profile );
-    converter.execute();
-    ProfileFeatureFactory.toFeature( profile, newProfile );
-
-    return newProfile;
+    m_mapping.addRemovedFeatures( new Feature[] { reach } );
   }
 
-  private void insertCrossSection( final IProfileFeature profile, final TuhhReach reach )
+  private TuhhReach insertReach( final State state, final WspmWaterBody waterBody ) throws GMLSchemaException
   {
-    /* Just add, nothing else to do */
-    reach.createProfileSegment( profile, profile.getStation() );
+    final String name = state.getName();
+
+    final TuhhReach newReach = TuhhWspmProject.createNewReachForWaterBody( waterBody );
+    newReach.setName( name );
+    newReach.setDescription( state.getDescription() );
+
+    return newReach;
   }
 }

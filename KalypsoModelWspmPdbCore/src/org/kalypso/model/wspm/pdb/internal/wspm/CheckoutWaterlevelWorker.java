@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Set;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -53,9 +54,10 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -67,32 +69,28 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class CheckoutWaterlevelWorker
 {
-  private final CheckoutPdbOperation m_checkoutOperation;
+  private final CheckoutDataMapping m_mapping;
 
-  private final TuhhWspmProject m_project;
-
-  private final Event[] m_events;
-
-  public CheckoutWaterlevelWorker( final CheckoutPdbOperation checkoutOperation, final TuhhWspmProject project, final Event[] events )
+  public CheckoutWaterlevelWorker( final CheckoutDataMapping mapping )
   {
-    m_checkoutOperation = checkoutOperation;
-    m_project = project;
-    m_events = events;
+    m_mapping = mapping;
   }
 
   public void execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Reading water levels from database", m_events.length );
+    final Event[] events = m_mapping.getEvents();
+
+    monitor.beginTask( "Reading water levels from database", events.length );
 
     try
     {
-      for( final Event event : m_events )
+      for( final Event event : events )
       {
         monitor.subTask( String.format( "Converting %s", event.getName() ) );
 
-        // inserter.insert( crossSection );
-        final WspmFixation fixation = insertEvent( event );
-        m_checkoutOperation.addChangedFeatures( new Feature[] { fixation } );
+        final Object wspmObject = m_mapping.getWaterlevel( event );
+        final Feature newWspmObject = createOrReplaceEvent( event, wspmObject );
+        m_mapping.addChangedFeatures( new Feature[] { newWspmObject } );
 
         ProgressUtilities.worked( monitor, 1 );
       }
@@ -109,15 +107,56 @@ public class CheckoutWaterlevelWorker
     }
   }
 
-  private WspmFixation insertEvent( final Event event ) throws Exception
+  private Feature createOrReplaceEvent( final Event event, final Object wspmObject ) throws Exception
   {
-    final WspmWaterBody waterBody = CrossSectionInserter.insertWaterBody( m_project, event.getWaterBody() );
+    final WaterBody waterBody = event.getWaterBody();
+    final WspmWaterBody wspmWater = m_mapping.getWspmWaterBody( waterBody );
 
-    // TODO: check, if this fixation is already present...
+    final Feature removed = removeEvent( wspmObject, wspmWater );
+    if( removed != null )
+      m_mapping.addRemovedFeatures( new Feature[] { removed } );
 
+    return insertEvent( event, wspmWater );
+  }
+
+  private Feature removeEvent( final Object wspmObject, final WspmWaterBody wspmWater )
+  {
+    if( wspmObject instanceof WspmFixation )
+      return removeFixation( (WspmFixation) wspmObject, wspmWater );
+
+    if( wspmObject instanceof TuhhCalculation )
+      // FIXME
+      throw new NotImplementedException();
+
+    return null;
+  }
+
+  private Feature removeFixation( final WspmFixation fixation, final WspmWaterBody wspmWater )
+  {
+    final IFeatureBindingCollection<WspmFixation> fixations = wspmWater.getWspFixations();
+    fixations.remove( fixation );
+    return fixation;
+  }
+
+  private Feature insertEvent( final Event event, final WspmWaterBody wspmWater ) throws Exception
+  {
+    switch( event.getType() )
+    {
+      case Measurement:
+        return insertFixation( event, wspmWater );
+
+      case Simulation:
+        return insertCalculation( event, wspmWater );
+    }
+
+    throw new IllegalStateException();
+  }
+
+  private Feature insertFixation( final Event event, final WspmWaterBody wspmWater )
+  {
     // TODO: create waterlevels and create runoffs
 
-    final IFeatureBindingCollection<WspmFixation> wspFixations = waterBody.getWspFixations();
+    final IFeatureBindingCollection<WspmFixation> wspFixations = wspmWater.getWspFixations();
 
     final WspmFixation wspFixation = wspFixations.addNew( WspmFixation.QNAME_FEATURE_WSPM_FIXATION );
 
@@ -132,7 +171,7 @@ public class CheckoutWaterlevelWorker
 
     final Set<WaterlevelFixation> waterlevelFixations = event.getWaterlevelFixations();
     final WaterlevelFixation[] sortedFixations = waterlevelFixations.toArray( new WaterlevelFixation[waterlevelFixations.size()] );
-    Arrays.sort( sortedFixations, new FixationStationComparator( waterBody.isDirectionUpstreams() ) );
+    Arrays.sort( sortedFixations, new FixationStationComparator( wspmWater.isDirectionUpstreams() ) );
 
     for( final WaterlevelFixation fixation : sortedFixations )
     {
@@ -152,4 +191,9 @@ public class CheckoutWaterlevelWorker
     return wspFixation;
   }
 
+  private Feature insertCalculation( final Event event, final WspmWaterBody wspmWater )
+  {
+    // FIXME
+    throw new NotImplementedException();
+  }
 }

@@ -70,11 +70,9 @@ public class WspmResultWaterNode extends AbstractWspmResultNode
   {
     final Collection<IWspmResultNode> results = new ArrayList<IWspmResultNode>();
 
-    final WspmReach[] reaches = m_water.getReaches();
+    final IFeatureBindingCollection<WspmReach> reaches = m_water.getReaches();
     for( final WspmReach reach : reaches )
-    {
       results.add( new WspmResultReachNode( this, (TuhhReach) reach ) );
-    }
 
     final IFeatureBindingCollection<WspmFixation> fixations = m_water.getWspFixations();
     for( final WspmFixation fixation : fixations )
