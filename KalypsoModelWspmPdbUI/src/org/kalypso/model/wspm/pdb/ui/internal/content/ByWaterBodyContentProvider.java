@@ -64,6 +64,8 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
       final Object[] allChildren = m_input.getChildren( rootNode );
       if( !ArrayUtils.isEmpty( allChildren ) )
         return allChildren;
+      else
+        return new String[] { "<Empty Database>" };
     }
 
     if( inputElement instanceof Object[] )
