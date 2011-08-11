@@ -137,6 +137,20 @@ public class CheckoutPdbPreviewPage extends WizardPage
     if( status.isOK() )
       return;
 
+    if( confirmProperty == null )
+      new Label( panel, SWT.NONE );
+    else
+    {
+      final Button confirmCheck = new Button( panel, SWT.CHECK );
+      confirmCheck.setToolTipText( "Confirm warning" );
+      confirmCheck.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+      final ISWTObservableValue target = SWTObservables.observeSelection( confirmCheck );
+      final IObservableValue model = BeansObservables.observeValue( m_data, confirmProperty );
+      final DataBinder binder = new DataBinder( target, model );
+      binder.addTargetAfterGetValidator( new CheckoutPdbConfirmValidator() );
+      m_binding.bindValue( binder );
+    }
+
     final StatusComposite statusComposite = new StatusComposite( panel, StatusComposite.HIDE_TEXT );
     statusComposite.setStatus( status );
     statusComposite.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
@@ -147,17 +161,6 @@ public class CheckoutPdbPreviewPage extends WizardPage
     text.setText( message );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    if( confirmProperty == null )
-      new Label( panel, SWT.NONE );
-    else
-    {
-      final Button confirmCheck = new Button( panel, SWT.CHECK );
-      final ISWTObservableValue target = SWTObservables.observeSelection( confirmCheck );
-      final IObservableValue model = BeansObservables.observeValue( m_data, confirmProperty );
-      final DataBinder binder = new DataBinder( target, model );
-      binder.addTargetAfterGetValidator( new CheckoutPdbConfirmValidator() );
-      m_binding.bindValue( binder );
-    }
   }
 
   private IStatus validateSelection( )
@@ -167,7 +170,7 @@ public class CheckoutPdbPreviewPage extends WizardPage
     final Event[] events = mapping.getEvents();
     if( ArrayUtils.isEmpty( crossSections ) && ArrayUtils.isEmpty( events ) )
     {
-      final String msg = "Selection does not contain any cross sections or water waterlevels.\nDownload will create an empty water body resp. state.";
+      final String msg = "Selection does not contain any cross sections or water levels.\nDownload will create an empty water body resp. state.";
       return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, msg );
     }
 
@@ -181,7 +184,7 @@ public class CheckoutPdbPreviewPage extends WizardPage
     if( existingElements.isEmpty() )
       return Status.OK_STATUS;
 
-    final String msg = "The marked elements already exists in the local workspace.\nExisting elements will be overwritten and local changes are lost.";
+    final String msg = "The marked elements already exist in the local workspace.\nExisting elements will be overwritten and local changes are lost.";
     return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, msg );
   }
 }
