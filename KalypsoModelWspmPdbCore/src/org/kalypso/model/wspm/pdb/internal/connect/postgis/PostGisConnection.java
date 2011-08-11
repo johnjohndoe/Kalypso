@@ -46,6 +46,8 @@ import org.hibernatespatial.SpatialDialect;
 import org.hibernatespatial.postgis.PostgisDialect;
 import org.kalypso.model.wspm.pdb.internal.connect.HibernateConnection;
 
+import com.vividsolutions.jts.geom.Envelope;
+
 /**
  * @author Gernot Belger
  */
@@ -77,6 +79,16 @@ public class PostGisConnection extends HibernateConnection<PostgisSettings>
 
     // In order to use ssl, we need a way to accept the certificate
     // configuration.setProperty( Environment.CONNECTION_PREFIX + ".ssl", Boolean.TRUE.toString() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.pdb.connect.IPdbConnection#getCrsEnvelope(java.lang.Integer)
+   */
+  @Override
+  public Envelope getCrsEnvelope( final Integer srid )
+  {
+    // FIXME: implement SQL query
+    return null;
   }
 
 // configuration.generateDropSchemaScript( new org.hibernate.dialect.PostgreSQLDialect() );

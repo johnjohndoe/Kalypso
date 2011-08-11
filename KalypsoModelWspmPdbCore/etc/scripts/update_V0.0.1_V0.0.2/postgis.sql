@@ -224,10 +224,10 @@ ALTER TABLE Document
 
 -- 05_register_geometries
 INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, "type")
-VALUES ( '', 'pdb_admin', 'document', 'location', 3, 31468, 'POINT' );
+VALUES ( '', 'pdb', 'document', 'location', 3, ${SRID}, 'POINT' );
 
 -- 06_prefill_table_info
-INSERT INTO info("key", "value") VALUES ('DocumentServer', '');
+INSERT INTO info("key", "value") VALUES ('DocumentServer', '${DocumentServer}');
 
 -- 99_create_spatial_indexes
 CREATE INDEX IX_DOCUMENT__LOCATION ON DOCUMENT USING GIST ( LOCATION );

@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -72,6 +73,8 @@ import org.kalypso.model.wspm.pdb.internal.update.SqlWork;
 import org.kalypso.model.wspm.pdb.internal.update.UpdateScriptWizard;
 import org.kalypso.model.wspm.pdb.internal.update.WorkRunnable;
 import org.osgi.framework.Version;
+
+import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * @author Gernot Belger
@@ -304,16 +307,19 @@ public class PdbUpdater
         throw new CoreException( Status.CANCEL_STATUS );
     }
 
-    /* Add dependend variables */
-    // TODO: moni
+    /* Add depending variables */
     final String srid = properties.getProperty( PdbInfo.PROPERTY_SRID );
-    final String srs = "EPSG:" + srid;
+    final Envelope domainOfValidity = m_connection.getCrsEnvelope( Integer.valueOf( srid ) );
 
-    //
+    if( domainOfValidity != null )
+    {
+      properties.setProperty( "srsMinX", String.format( Locale.US, "%f", domainOfValidity.getMinX() ) );
+      properties.setProperty( "srsMinY", String.format( Locale.US, "%f", domainOfValidity.getMinY() ) );
+      properties.setProperty( "srsMaxX", String.format( Locale.US, "%f", domainOfValidity.getMaxX() ) );
+      properties.setProperty( "srsMaxY", String.format( Locale.US, "%f", domainOfValidity.getMaxY() ) );
+    }
 
-    properties.setProperty( "srsMinX", "xxx" );
-
-    return new Properties();
+    return properties;
   }
 
   private IWizardPage[] findUpdatePages( final UpdateScript[] scripts, final Properties properties ) throws CoreException

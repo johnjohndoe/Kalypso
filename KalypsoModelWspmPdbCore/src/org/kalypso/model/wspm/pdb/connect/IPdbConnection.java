@@ -43,12 +43,14 @@ package org.kalypso.model.wspm.pdb.connect;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 
+import com.vividsolutions.jts.geom.Envelope;
+
 /**
  * @author Gernot Belger
  */
 public interface IPdbConnection
 {
-  String SUPERUSER = "pdb_admin"; //$NON-NLS-1$
+  String SUPERUSER = "pdb"; //$NON-NLS-1$
 
   IPdbSettings getSettings( );
 
@@ -68,4 +70,9 @@ public interface IPdbConnection
    * Reload the info from the database.
    */
   void updateInfo( );
+
+  /**
+   * Find domain of validity for given srid
+   */
+  Envelope getCrsEnvelope( final Integer srid );
 }

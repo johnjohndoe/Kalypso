@@ -572,25 +572,25 @@ ALTER TABLE Event
 CREATE SEQUENCE seq_pdb
    INCREMENT 1
    START 1;
-ALTER TABLE seq_pdb OWNER TO pdb_admin;
+ALTER TABLE seq_pdb OWNER TO pdb;
 -- 05_register_geometries
 INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, "type")
-VALUES ( '', 'pdb_admin', 'cross_section', 'line', 3, 31468, 'LINESTRING' );
+VALUES ( '', 'pdb', 'cross_section', 'line', 3, ${SRID}, 'LINESTRING' );
 
 INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, "type")
-VALUES ( '', 'pdb_admin', 'cross_section_part', 'line', 3, 31468, 'LINESTRING' );
+VALUES ( '', 'pdb', 'cross_section_part', 'line', 3, ${SRID}, 'LINESTRING' );
 
 INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, "type")
-VALUES ( '', 'pdb_admin', 'point', 'location', 3, 31468, 'POINT' );
+VALUES ( '', 'pdb', 'point', 'location', 3, ${SRID}, 'POINT' );
 
 INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, "type")
-VALUES ( '', 'pdb_admin', 'water_body', 'riverline', 3, 31468, 'LINESTRING' );
+VALUES ( '', 'pdb', 'water_body', 'riverline', 3, ${SRID}, 'LINESTRING' );
 
 INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, "type")
-VALUES ( '', 'pdb_admin', 'waterlevel_fixation', 'location', 3, 31468, 'POINT' );
+VALUES ( '', 'pdb', 'waterlevel_fixation', 'location', 3, ${SRID}, 'POINT' );
 
 -- 06_prefill_table_info
-INSERT INTO info("key", "value") VALUES ('SRID', '31468');
+INSERT INTO info("key", "value") VALUES ('SRID', '${SRID}');
 -- 07_prefill_table__point_kind
 INSERT INTO point_kind (name, label, description) VALUES ('GAF', 'GAF', 'GAF');
 

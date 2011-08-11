@@ -46,6 +46,8 @@ import org.hibernatespatial.SpatialDialect;
 import org.hibernatespatial.oracle.OracleSpatial10gDialect;
 import org.kalypso.model.wspm.pdb.internal.connect.HibernateConnection;
 
+import com.vividsolutions.jts.geom.Envelope;
+
 /**
  * @author Gernot Belger
  */
@@ -90,6 +92,18 @@ public class OracleConnection extends HibernateConnection<OracleSettings>
 //
 // configuration.setProperty( "hibernate.dialect", dialect.getClass().getName() );
 // configuration.setProperty( "hibernate.spatial.dialect", dialect.getClass().getName() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.pdb.connect.IPdbConnection#getCrsEnvelope(java.lang.Integer)
+   */
+  @Override
+  public Envelope getCrsEnvelope( final Integer srid )
+  {
+    // FIXME: implement SQL query
+    final Envelope env = new Envelope( 4300000, 4600000, 5600000, 5800000 );
+
+    return env;
   }
 
   // ///////////////////
