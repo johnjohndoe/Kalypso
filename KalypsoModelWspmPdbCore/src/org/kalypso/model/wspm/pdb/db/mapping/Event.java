@@ -87,7 +87,7 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   @Id
   @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_id_seq")
-  @SequenceGenerator(name = "event_id_seq", sequenceName = "seq_pdb")
+  @SequenceGenerator(name = "event_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
     return this.id;

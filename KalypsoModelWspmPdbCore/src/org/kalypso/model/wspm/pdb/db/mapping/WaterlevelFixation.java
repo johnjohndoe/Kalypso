@@ -89,7 +89,7 @@ public class WaterlevelFixation implements java.io.Serializable
   @Id
   @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "waterlevel_fixation_id_seq")
-  @SequenceGenerator(name = "waterlevel_fixation_id_seq", sequenceName = "seq_pdb")
+  @SequenceGenerator(name = "waterlevel_fixation_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
     return this.id;
