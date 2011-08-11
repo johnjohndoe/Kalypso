@@ -169,7 +169,7 @@ public class DataCenterTuppleModel implements ITupleModel
    * @see org.kalypso.ogc.sensor.ITupleModel#accept(org.kalypso.ogc.sensor.visitor.ITupleModelVisitor)
    */
   @Override
-  public void accept( final ITupleModelVisitor visitor )
+  public void accept( final ITupleModelVisitor visitor ) throws SensorException
   {
 
     for( int i = 0; i < m_tupples.length; i++ )
