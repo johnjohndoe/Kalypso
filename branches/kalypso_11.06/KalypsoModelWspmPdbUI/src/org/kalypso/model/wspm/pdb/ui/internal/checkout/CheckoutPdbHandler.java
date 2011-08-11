@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -57,6 +60,8 @@ import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.tree.StatusDialog;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
@@ -86,7 +91,8 @@ public class CheckoutPdbHandler extends AbstractHandler
     if( !project.saveProject( true ) )
       return null;
 
-    final CheckoutPdbData data = new CheckoutPdbData();
+    final URL documentBase = findDocumentBase( viewer.getConnection() );
+    final CheckoutPdbData data = new CheckoutPdbData( documentBase );
 
     final CheckoutPdbWizard wizard = new CheckoutPdbWizard( data );
     wizard.setWindowTitle( commandName );
@@ -102,6 +108,22 @@ public class CheckoutPdbHandler extends AbstractHandler
       project.updateViews( toSelect );
 
     return null;
+  }
+
+  private URL findDocumentBase( final IPdbConnection connection )
+  {
+    try
+    {
+      final PdbInfo info = connection.getInfo();
+      final String documentServer = info.getDocumentServer();
+      return new URL( documentServer );
+    }
+    catch( final MalformedURLException e )
+    {
+      // TODO: error handling?
+      e.printStackTrace();
+      return null;
+    }
   }
 
   private void doSaveProject( final Shell shell, final PdbWspmProject project, final String windowTitle )

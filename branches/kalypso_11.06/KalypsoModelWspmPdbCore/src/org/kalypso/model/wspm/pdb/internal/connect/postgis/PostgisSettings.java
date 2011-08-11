@@ -69,7 +69,7 @@ public class PostgisSettings extends HibernateSettings
 
   public PostgisSettings( )
   {
-    super( "PostGIS" );
+    super( "PostGIS" ); //$NON-NLS-1$
   }
 
   public PostgisSettings( final String name, final PostgisSettings settings )

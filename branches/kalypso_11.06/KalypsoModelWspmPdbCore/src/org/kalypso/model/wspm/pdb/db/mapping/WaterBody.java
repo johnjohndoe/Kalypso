@@ -83,7 +83,7 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   @Id
   @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "waterbody_id_seq")
-  @SequenceGenerator(name = "waterbody_id_seq", sequenceName = "seq_pdb")
+  @SequenceGenerator(name = "waterbody_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
     return this.id;

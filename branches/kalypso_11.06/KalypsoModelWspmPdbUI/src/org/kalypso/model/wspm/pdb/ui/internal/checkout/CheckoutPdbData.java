@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
+import java.net.URL;
+
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutDataMapping;
@@ -55,6 +57,13 @@ public class CheckoutPdbData extends AbstractModelObject
   private CheckoutDataMapping m_mapping;
 
   private boolean m_confirmExisting = false;
+
+  private final URL m_documentBase;
+
+  public CheckoutPdbData( final URL documentBase )
+  {
+    m_documentBase = documentBase;
+  }
 
   public void init( final IDialogSettings settings )
   {
@@ -98,5 +107,10 @@ public class CheckoutPdbData extends AbstractModelObject
     m_confirmExisting = confirmExisting;
 
     firePropertyChange( PROPERTY_CONFIRM_EXISTING, oldValue, confirmExisting );
+  }
+
+  public URL getDocumentBase( )
+  {
+    return m_documentBase;
   }
 }

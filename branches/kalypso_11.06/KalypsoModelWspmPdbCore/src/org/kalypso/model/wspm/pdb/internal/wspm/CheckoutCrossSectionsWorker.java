@@ -40,6 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Set;
+
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -50,14 +57,19 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.binding.commons.Image;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Gernot Belger
@@ -66,9 +78,12 @@ public class CheckoutCrossSectionsWorker
 {
   private final CheckoutDataMapping m_mapping;
 
-  public CheckoutCrossSectionsWorker( final CheckoutDataMapping mapping )
+  private final URL m_documentBase;
+
+  public CheckoutCrossSectionsWorker( final CheckoutDataMapping mapping, final URL documentBase )
   {
     m_mapping = mapping;
+    m_documentBase = documentBase;
   }
 
   public void execute( final IProgressMonitor monitor ) throws CoreException
@@ -108,8 +123,7 @@ public class CheckoutCrossSectionsWorker
     final TuhhReach reach = m_mapping.getReach( state );
 
     final IProfileFeature profile = insertProfile( section, wspmWaterBody );
-
-    insertCrossSection( profile, reach );
+    reach.createProfileSegment( profile, profile.getStation() );
   }
 
   private IProfileFeature insertProfile( final CrossSection section, final WspmWaterBody waterBody )
@@ -122,16 +136,81 @@ public class CheckoutCrossSectionsWorker
     newProfile.setSrsName( srs );
 
     final IProfil profile = newProfile.getProfil();
+
     final CrossSectionConverter converter = new CrossSectionConverter( section, profile );
     converter.execute();
     ProfileFeatureFactory.toFeature( profile, newProfile );
 
+    convertDocuments( section, newProfile );
+
     return newProfile;
   }
 
-  private void insertCrossSection( final IProfileFeature profile, final TuhhReach reach )
+  private void convertDocuments( final CrossSection section, final IProfileFeature profile )
   {
-    /* Just add, nothing else to do */
-    reach.createProfileSegment( profile, profile.getStation() );
+    final Set<Document> documents = section.getDocuments();
+    for( final Document document : documents )
+    {
+      try
+      {
+        final String documentPath = document.getFilename();
+
+        final URL documentURL = new URL( m_documentBase, documentPath );
+        final Image newImage = profile.addImage( documentURL );
+
+        // TODO: convert other data as well
+        // document.getCreationDate();
+        // document.getCrossSection();
+        // document.getMeasurementDate();
+        // document.getEditingDate();
+        // document.getEditingUser();
+
+        final GM_Object location = convertGeometry( document.getLocation() );
+        final String description = document.getDescription();
+        final MimeType mimeType = convertMimeType( document.getMimetype() );
+        final String name = document.getName();
+        // document.getShotdirection();
+        // document.getState();
+        // document.getViewangle();
+        // document.getWaterBody();
+
+        newImage.setLocation( location );
+        newImage.setName( name );
+        newImage.setDescription( description );
+        newImage.setMimeType( mimeType );
+      }
+      catch( final MalformedURLException e )
+      {
+        // TODO: error handling?!
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private MimeType convertMimeType( final String mimeType )
+  {
+    try
+    {
+      return new MimeType( mimeType );
+    }
+    catch( final MimeTypeParseException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private GM_Object convertGeometry( final Point location )
+  {
+    try
+    {
+      final String srs = JTSAdapter.toSrs( location.getSRID() );
+      return JTSAdapter.wrap( location, srs );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }
