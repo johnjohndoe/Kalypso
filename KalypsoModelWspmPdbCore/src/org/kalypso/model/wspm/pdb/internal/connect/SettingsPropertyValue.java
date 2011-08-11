@@ -38,18 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.internal.connect.oracle;
+package org.kalypso.model.wspm.pdb.internal.connect;
 
 import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
 
 /**
  * @author Gernot Belger
  */
-class OracleSettingsPropertyValue extends TypedObservableValue<OracleSettings, String>
+public class SettingsPropertyValue extends TypedObservableValue<AbstractSettings, String>
 {
   private final String m_property;
 
-  public OracleSettingsPropertyValue( final OracleSettings source, final String property )
+  public SettingsPropertyValue( final AbstractSettings source, final String property )
   {
     super( source, String.class );
 
@@ -57,13 +57,13 @@ class OracleSettingsPropertyValue extends TypedObservableValue<OracleSettings, S
   }
 
   @Override
-  public void doSetValueTyped( final OracleSettings source, final String value )
+  public void doSetValueTyped( final AbstractSettings source, final String value )
   {
     source.setProperty( m_property, value );
   }
 
   @Override
-  public String doGetValueTyped( final OracleSettings source )
+  public String doGetValueTyped( final AbstractSettings source )
   {
     return source.getProperty( m_property );
   }

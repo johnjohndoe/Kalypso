@@ -60,6 +60,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
+import org.kalypso.model.wspm.pdb.internal.connect.SettingsPropertyValue;
 import org.kalypso.model.wspm.pdb.internal.utils.PortValidator;
 
 /**
@@ -111,7 +112,7 @@ class OracleSettingsControl extends Composite implements IPdbSettingsControl
       targetToModel.setAfterConvertValidator( validator );
 
     final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
-    final IObservableValue model = new OracleSettingsPropertyValue( m_settings, property );
+    final IObservableValue model = new SettingsPropertyValue( m_settings, property );
     m_binding.bindValue( target, model, targetToModel, null );
 
     m_fields.add( field );

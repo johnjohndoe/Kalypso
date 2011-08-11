@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Gernot Belger
  */
-public interface IPdbSettings
+public interface IPdbSettings extends Comparable<IPdbSettings>
 {
   String getType( );
 
