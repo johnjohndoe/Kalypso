@@ -169,10 +169,19 @@
           <with variable="activeWorkbenchWindow">
              <test property="org.kalypso.ui.window.isViewVisible" value="PdbView"/>
           </with>
- </definition>
+     </definition>
+     <definition id="isPdbViewVisibleAndAdmin">
+          <and>
+            <reference definitionId="isPdbViewVisible"/>
+            <or>
+                <test property="pdbTester.hasRole" value="superuser"/>
+                <test property="pdbTester.hasRole" value="fadmin"/>
+            </or>
+          </and>
+     </definition>
      <definition id="onePdbElementSelected">
            <and>
-              <reference definitionId="isPdbViewVisible"/>
+              <reference definitionId="isPdbViewVisibleAndAdmin"/>
               <with variable="selection">
                  <and> 
                     <count value="1"/>
@@ -219,17 +228,17 @@
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard">
        <enablement>
-              <reference definitionId="isPdbViewVisible"/>
+              <reference definitionId="isPdbViewVisibleAndAdmin"/>
        </enablement>
     </wizardEnablement>
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard">
        <enablement>
-              <reference definitionId="isPdbViewVisible"/>
+              <reference definitionId="isPdbViewVisibleAndAdmin"/>
        </enablement>
     </wizardEnablement>
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard">
        <enablement>
-              <reference definitionId="isPdbViewVisible"/>
+              <reference definitionId="isPdbViewVisibleAndAdmin"/>
        </enablement>
     </wizardEnablement>
     <wizardEnablement
@@ -237,7 +246,7 @@
        <enablement>
           <and>
              <reference
-                   definitionId="isPdbViewVisible">
+                   definitionId="isPdbViewVisibleAndAdmin">
              </reference>
              <with variable="selection">
                 <and>
@@ -297,7 +306,7 @@
            commandId="org.kalypso.model.wspm.pdb.ui.command.addWaterBody">
         <enabledWhen>
            <reference
-                 definitionId="isPdbViewVisible">
+                 definitionId="isPdbViewVisibleAndAdmin">
            </reference>
         </enabledWhen>
      </handler>
@@ -343,5 +352,15 @@
            <visibleWhen checkEnabled="true"/>
         </command>
      </menuContribution>
+  </extension>
+  <extension
+        point="org.eclipse.core.expressions.propertyTesters">
+     <propertyTester
+           class="org.kalypso.model.wspm.pdb.ui.internal.admin.PdbPropertyTester"
+           id="org.kalypso.model.wspm.pdb.ui.internal.admin.PdbPropertyTester"
+           namespace="pdbTester"
+           properties="hasRole"
+           type="java.lang.Object">
+     </propertyTester>
   </extension>   
 </plugin>
