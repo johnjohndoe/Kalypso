@@ -40,41 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect;
 
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.db.PdbInfo;
-
-import com.vividsolutions.jts.geom.Envelope;
-
 /**
  * @author Gernot Belger
  */
-public interface IPdbConnection
+public enum PDBRole
 {
-  String SUPERUSER = "pdb"; //$NON-NLS-1$
+  superuser("Super User", null),
+  fadmin("Fachadministrator", "PDB_ADMIN"),
+  user("User", "PDB_USER");
 
-  IPdbSettings getSettings( );
+  private final String m_label;
 
-  void connect( ) throws PdbConnectException;
+  private final String m_roleName;
 
-  boolean isConnected( );
+  private PDBRole( final String label, final String roleName )
+  {
+    m_label = label;
+    m_roleName = roleName;
+  }
 
-  void close( ) throws PdbConnectException;
+  public String getName( )
+  {
+    return m_roleName;
+  }
 
-  Session openSession( ) throws PdbConnectException;
-
-  String getLabel( );
-
-  PDBRole getRole( );
-
-  PdbInfo getInfo( );
-
-  /**
-   * Reload the info from the database.
-   */
-  void updateInfo( );
-
-  /**
-   * Find domain of validity for given srid
-   */
-  Envelope getCrsEnvelope( final Integer srid );
+  @Override
+  public String toString( )
+  {
+    return m_label;
+  }
 }

@@ -65,6 +65,7 @@ import org.kalypso.commons.patternreplace.PatternInputReplacer;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PDBRole;
 import org.kalypso.model.wspm.pdb.db.version.UpdateScript;
 import org.kalypso.model.wspm.pdb.db.version.UpdateScriptExtenions;
 import org.kalypso.model.wspm.pdb.db.version.UpdateScriptPageData;
@@ -161,8 +162,7 @@ public class PdbUpdater
 
   private boolean checkSuperuser( )
   {
-    final String username = m_connection.getSettings().getUsername();
-    return IPdbConnection.SUPERUSER.equals( username );
+    return m_connection.getRole() == PDBRole.superuser;
   }
 
   private IStatus handleCreate( )

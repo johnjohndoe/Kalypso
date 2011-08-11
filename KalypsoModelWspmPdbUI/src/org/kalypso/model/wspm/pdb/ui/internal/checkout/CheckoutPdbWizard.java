@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
+import java.net.URL;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -98,7 +100,8 @@ public class CheckoutPdbWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data.getMapping() );
+    final URL documentBase = m_data.getDocumentBase();
+    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data.getMapping(), documentBase );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
       new StatusDialog2( getShell(), status, getWindowTitle() ).open();

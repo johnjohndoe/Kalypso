@@ -51,6 +51,7 @@ import org.hibernatespatial.SpatialDialect;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PDBRole;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
@@ -82,6 +83,8 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
   private Configuration m_config;
 
   private SessionFactory m_sessionFactory;
+
+  private PDBRole m_role;
 
   public HibernateConnection( final SETTINGS connectInfo )
   {
@@ -281,33 +284,44 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
   public PdbInfo getInfo( )
   {
     if( m_info == null )
-      m_info = loadInfo();
+      loadInfo();
 
     return m_info;
   }
 
   @Override
-  public void updateInfo( )
+  public PDBRole getRole( )
   {
-    m_info = loadInfo();
+    if( m_role == null )
+      loadInfo();
+
+    return m_role;
   }
 
-  private PdbInfo loadInfo( )
+  @Override
+  public void updateInfo( )
+  {
+    loadInfo();
+  }
+
+  private void loadInfo( )
   {
     Session session = null;
     try
     {
       session = openSession();
-      return new PdbInfo( session );
+      m_info = new PdbInfo( session );
+      m_role = readRole( session );
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return null;
     }
     finally
     {
       PdbUtils.closeSessionQuietly( session );
     }
   }
+
+  protected abstract PDBRole readRole( final Session session );
 }

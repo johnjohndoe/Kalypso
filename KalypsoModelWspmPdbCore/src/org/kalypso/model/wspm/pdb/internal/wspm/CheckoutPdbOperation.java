@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
+import java.net.URL;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -55,9 +57,12 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 {
   private final CheckoutDataMapping m_mapping;
 
-  public CheckoutPdbOperation( final CheckoutDataMapping mapping )
+  private final URL m_documentBase;
+
+  public CheckoutPdbOperation( final CheckoutDataMapping mapping, final URL documentBase )
   {
     m_mapping = mapping;
+    m_documentBase = documentBase;
   }
 
   @Override
@@ -65,19 +70,13 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
   {
     monitor.beginTask( "Loading data from cross section database", 100 );
 
-    // FIXME: overwrite existing data ->
-    // First: create/update all water bodies
-    // Second: delete all existing states
-    // third: delete all existing water levels
-    // last: download data as before
-
     final CheckoutWaterBodyWorker waterBodyWorker = new CheckoutWaterBodyWorker( m_mapping );
     waterBodyWorker.execute( new SubProgressMonitor( monitor, 10 ) );
 
     final CheckoutStateWorker stateWorker = new CheckoutStateWorker( m_mapping );
     stateWorker.execute( new SubProgressMonitor( monitor, 10 ) );
 
-    final CheckoutCrossSectionsWorker crossSectionsWorker = new CheckoutCrossSectionsWorker( m_mapping );
+    final CheckoutCrossSectionsWorker crossSectionsWorker = new CheckoutCrossSectionsWorker( m_mapping, m_documentBase );
     crossSectionsWorker.execute( new SubProgressMonitor( monitor, 45 ) );
 
     final CheckoutWaterlevelWorker waterlevelWorker = new CheckoutWaterlevelWorker( m_mapping );

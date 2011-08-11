@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect.postgis;
 
+import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernatespatial.SpatialDialect;
 import org.hibernatespatial.postgis.PostgisDialect;
+import org.kalypso.model.wspm.pdb.connect.PDBRole;
 import org.kalypso.model.wspm.pdb.internal.connect.HibernateConnection;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -81,9 +83,6 @@ public class PostGisConnection extends HibernateConnection<PostgisSettings>
     // configuration.setProperty( Environment.CONNECTION_PREFIX + ".ssl", Boolean.TRUE.toString() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.pdb.connect.IPdbConnection#getCrsEnvelope(java.lang.Integer)
-   */
   @Override
   public Envelope getCrsEnvelope( final Integer srid )
   {
@@ -91,13 +90,10 @@ public class PostGisConnection extends HibernateConnection<PostgisSettings>
     return null;
   }
 
-// configuration.generateDropSchemaScript( new org.hibernate.dialect.PostgreSQLDialect() );
-// configuration.generateSchemaUpdateScript( new org.hibernate.dialect.PostgreSQLDialect(), null );
+  @Override
+  protected PDBRole readRole( final Session session )
+  {
+    return PDBRole.user;
+  }
 
-// final String[] creationScripts = configuration.generateSchemaCreationScript( dialect );
-// for( final String creationScript : creationScripts )
-// {
-// final SQLQuery sqlQuery = session.createSQLQuery( creationScript );
-// sqlQuery.executeUpdate();
-// }
 }
