@@ -11,9 +11,21 @@
             type="postgis">
       </script>
       <script
+            comment="Postgis 0.0.2 -&gt; 0.0.3"
+            location="etc/scripts/update_V0.0.2_V0.0.3/postgis.sql"
+            targetVersion="0.0.3"
+            type="postgis">
+      </script>
+      <script
             comment="Oracle 0.0.1 -&gt; 0.0.2"
             location="etc/scripts/update_V0.0.1_V0.0.2/oracle.sql"
             targetVersion="0.0.2"
+            type="oracle">
+      </script>
+      <script
+            comment="Oracle 0.0.2 -&gt; 0.0.3"
+            location="etc/scripts/update_V0.0.2_V0.0.3/oracle.sql"
+            targetVersion="0.0.3"
             type="oracle">
       </script>
       <script

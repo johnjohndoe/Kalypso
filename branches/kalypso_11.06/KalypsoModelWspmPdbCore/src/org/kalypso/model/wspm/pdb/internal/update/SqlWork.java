@@ -97,8 +97,18 @@ public class SqlWork implements Work
   {
     for( final String sql : m_sqls )
     {
-      final Statement statement = connection.createStatement();
-      statement.execute( sql );
+      try
+      {
+        final Statement statement = connection.createStatement();
+        statement.execute( sql );
+      }
+      catch( final SQLException e )
+      {
+        System.err.println( "Failed to execute sql: " );
+        System.err.println( sql );
+        System.err.println();
+        throw e;
+      }
     }
   }
 }
