@@ -93,7 +93,7 @@ public class CrossSection implements java.io.Serializable
   @Id
   @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "crosssection_id_seq")
-  @SequenceGenerator(name = "crosssection_id_seq", sequenceName = "seq_pdb")
+  @SequenceGenerator(name = "crosssection_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
     return this.id;

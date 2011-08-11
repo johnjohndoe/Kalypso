@@ -95,7 +95,7 @@ public class Document extends AbstractModelObject implements Serializable, Docum
   @Id
   @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_id_seq")
-  @SequenceGenerator(name = "document_id_seq", sequenceName = "seq_pdb")
+  @SequenceGenerator(name = "document_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
     return this.id;

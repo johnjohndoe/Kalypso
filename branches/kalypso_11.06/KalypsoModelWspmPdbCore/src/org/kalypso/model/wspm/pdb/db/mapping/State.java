@@ -83,7 +83,7 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   @Id
   @Column(name = "id", unique = true, nullable = false, precision = 20, scale = 0)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "state_id_seq")
-  @SequenceGenerator(name = "state_id_seq", sequenceName = "seq_pdb")
+  @SequenceGenerator(name = "state_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
     return this.id;
