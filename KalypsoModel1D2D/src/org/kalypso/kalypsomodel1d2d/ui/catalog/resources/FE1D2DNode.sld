@@ -49,6 +49,42 @@
 				<Rotation>0.0</Rotation>
 			</Graphic>
 		</PointSymbolizer>
+		<TextSymbolizer>
+            <!-- <Geometry>
+                <ogc:PropertyName>simBase:position</ogc:PropertyName>
+            </Geometry> -->
+            <Label>
+              <ogc:PropertyName>gml:name</ogc:PropertyName>
+            </Label>
+            <Font>
+                <CssParameter name="font-family">Dialog</CssParameter>
+                <CssParameter name="font-color">#000000</CssParameter>
+                <CssParameter name="font-size">12.0</CssParameter>
+                <CssParameter name="font-style">italic</CssParameter>
+                <CssParameter name="font-weight">normal</CssParameter>
+            </Font>
+            <LabelPlacement>
+              <PointPlacement auto="true">
+                <Displacement>
+                  <DisplacementX>11.0</DisplacementX>
+                  <DisplacementY>11.0</DisplacementY>
+                </Displacement>
+              </PointPlacement>
+            </LabelPlacement>
+            <Halo>
+              <Fill>
+                <CssParameter name="fill-opacity">0.9</CssParameter>
+                <CssParameter name="fill">#ffffff</CssParameter>
+              </Fill>
+              <Stroke>
+                <CssParameter name="stroke">#ff0000</CssParameter>
+                <CssParameter name="stroke-width">0.5</CssParameter>
+                <CssParameter name="stroke-linejoin">round</CssParameter>
+                <CssParameter name="stroke-opacity">1.0</CssParameter>
+                <CssParameter name="stroke-linecap">square</CssParameter>
+              </Stroke>
+            </Halo>            
+        </TextSymbolizer>
 	</Rule>
 	
 	<Rule>
@@ -93,6 +129,42 @@
 				<Rotation>0.0</Rotation>
 			</Graphic>
 		</PointSymbolizer>
+		<TextSymbolizer>
+            <!-- <Geometry>
+                <ogc:PropertyName>simBase:position</ogc:PropertyName>
+            </Geometry> -->
+            <Label>
+              <ogc:PropertyName>gml:name</ogc:PropertyName>
+            </Label>
+            <Font>
+                <CssParameter name="font-family">Dialog</CssParameter>
+                <CssParameter name="font-color">#000000</CssParameter>
+                <CssParameter name="font-size">12.0</CssParameter>
+                <CssParameter name="font-style">italic</CssParameter>
+                <CssParameter name="font-weight">normal</CssParameter>
+            </Font>
+            <LabelPlacement>
+              <PointPlacement auto="true">
+                <Displacement>
+                  <DisplacementX>11.0</DisplacementX>
+                  <DisplacementY>11.0</DisplacementY>
+                </Displacement>
+              </PointPlacement>
+            </LabelPlacement>
+            <Halo>
+              <Fill>
+                <CssParameter name="fill-opacity">0.9</CssParameter>
+                <CssParameter name="fill">#ffffff</CssParameter>
+              </Fill>
+              <Stroke>
+                <CssParameter name="stroke">#ff0000</CssParameter>
+                <CssParameter name="stroke-width">0.5</CssParameter>
+                <CssParameter name="stroke-linejoin">round</CssParameter>
+                <CssParameter name="stroke-opacity">1.0</CssParameter>
+                <CssParameter name="stroke-linecap">square</CssParameter>
+              </Stroke>
+            </Halo>            
+        </TextSymbolizer>
 	</Rule>
 	
 	
