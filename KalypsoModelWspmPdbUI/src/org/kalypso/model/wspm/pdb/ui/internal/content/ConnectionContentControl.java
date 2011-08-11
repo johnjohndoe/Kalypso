@@ -75,6 +75,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
@@ -177,6 +178,7 @@ public class ConnectionContentControl extends Composite
     viewer.setContentProvider( new ByWaterBodyContentProvider() );
 
     final ViewerColumn nameColumn = StatesViewer.createNameColumn( viewer, nameDecorator );
+    WaterBodyViewer.createNameColumn( viewer );
     StatesViewer.createMeasurementDateColumn( viewer );
 
     ColumnViewerSorter.setSortState( nameColumn, false );
