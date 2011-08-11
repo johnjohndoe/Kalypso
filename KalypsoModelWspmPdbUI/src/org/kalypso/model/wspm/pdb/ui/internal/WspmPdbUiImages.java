@@ -71,7 +71,9 @@ public class WspmPdbUiImages
     PENDING("icons/pending.gif"), //$NON-NLS-1$ 
 
     IMPORT("icons/import.gif"), //$NON-NLS-1$
-    EXPORT("icons/export.gif"); //$NON-NLS-1$
+    EXPORT("icons/export.gif"), //$NON-NLS-1$
+
+    WARNING_DECORATION("icons/warning_small.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

@@ -44,16 +44,23 @@ import java.util.Arrays;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.ColumnLayout;
+import org.eclipse.swt.widgets.Label;
+import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
@@ -80,7 +87,7 @@ public class CheckoutPdbPreviewPage extends WizardPage
     m_data = data;
 
     setTitle( "Preview" );
-    setDescription( "These are the elements that will be downloaded into your local workspace." );
+    setDescription( "All shown elements will be downloaded into your local workspace." );
   }
 
   @Override
@@ -90,7 +97,7 @@ public class CheckoutPdbPreviewPage extends WizardPage
     setControl( panel );
     GridLayoutFactory.swtDefaults().applyTo( panel );
 
-    m_binding = new DatabindingWizardPage( this, null );
+    m_binding = new DatabindingWizardPage( this, null, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL );
 
     createTreePreview( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createWarningElements( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -98,11 +105,13 @@ public class CheckoutPdbPreviewPage extends WizardPage
 
   private Control createTreePreview( final Composite parent )
   {
-    final TreeViewer viewer = ConnectionContentControl.createContentTree( null, parent );
-
     final CheckoutDataMapping mapping = m_data.getMapping();
     final WaterBody[] rootItems = mapping.getWaterBodies();
     final Set<Object> allItems = mapping.getAllPdbElements();
+    final Set<Object> allPdbElementsWithWspm = mapping.getAllPdbElementsWithWspm();
+
+    final ILabelDecorator nameDecorator = new CheckoutPdbLabelDecorator( allPdbElementsWithWspm );
+    final TreeViewer viewer = ConnectionContentControl.createContentTree( null, parent, nameDecorator );
 
     viewer.setInput( new WaterBodyStructure( Arrays.asList( rootItems ) ) );
     viewer.addFilter( new CheckoutPdbFilter( allItems ) );
@@ -115,22 +124,40 @@ public class CheckoutPdbPreviewPage extends WizardPage
   private Control createWarningElements( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
-    final ColumnLayout layout = new ColumnLayout();
-    layout.maxNumColumns = 1;
-    panel.setLayout( layout );
+    GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( panel );
 
-    addWarning( panel, validateSelection() );
-    addWarning( panel, validateExistingElements() );
+    addWarning( panel, validateSelection(), null );
+    addWarning( panel, validateExistingElements(), CheckoutPdbData.PROPERTY_CONFIRM_EXISTING );
 
     return panel;
   }
 
-  private void addWarning( final Composite panel, final IStatus status )
+  private void addWarning( final Composite panel, final IStatus status, final String confirmProperty )
   {
     if( status.isOK() )
       return;
 
-    new StatusComposite( panel, SWT.NONE ).setStatus( status );
+    final StatusComposite statusComposite = new StatusComposite( panel, StatusComposite.HIDE_TEXT );
+    statusComposite.setStatus( status );
+    statusComposite.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+
+    final String message = status.getMessage();
+
+    final Label text = new Label( panel, SWT.WRAP );
+    text.setText( message );
+    text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    if( confirmProperty == null )
+      new Label( panel, SWT.NONE );
+    else
+    {
+      final Button confirmCheck = new Button( panel, SWT.CHECK );
+      final ISWTObservableValue target = SWTObservables.observeSelection( confirmCheck );
+      final IObservableValue model = BeansObservables.observeValue( m_data, confirmProperty );
+      final DataBinder binder = new DataBinder( target, model );
+      binder.addTargetAfterGetValidator( new CheckoutPdbConfirmValidator() );
+      m_binding.bindValue( binder );
+    }
   }
 
   private IStatus validateSelection( )

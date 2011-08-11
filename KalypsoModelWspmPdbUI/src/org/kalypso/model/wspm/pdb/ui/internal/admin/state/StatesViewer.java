@@ -43,7 +43,9 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
@@ -87,7 +89,7 @@ public class StatesViewer
 
     m_viewer.setContentProvider( new ArrayContentProvider() );
 
-    final ViewerColumn nameColumn = createNameColumn( m_viewer );
+    final ViewerColumn nameColumn = createNameColumn( m_viewer, null );
     createMeasurementDateColumn( m_viewer );
 
     ColumnViewerSorter.setSortState( nameColumn, Boolean.FALSE );
@@ -153,7 +155,7 @@ public class StatesViewer
     return (State[]) m_viewer.getInput();
   }
 
-  public static ViewerColumn createNameColumn( final ColumnViewer viewer )
+  public static ViewerColumn createNameColumn( final ColumnViewer viewer, final ILabelDecorator nameDecorator )
   {
     final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem column = new ViewerColumnItem( nameColumn );
@@ -162,7 +164,8 @@ public class StatesViewer
     column.setMoveable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
 
-    nameColumn.setLabelProvider( new PdbLabelProvider() );
+    final ColumnLabelProvider labelProvider = new DecoratingColumnLabelProvider( new PdbLabelProvider(), nameDecorator );
+    nameColumn.setLabelProvider( labelProvider );
 
     ColumnViewerSorter.registerSorter( nameColumn, new PdbNameComparator() );
     return nameColumn;
