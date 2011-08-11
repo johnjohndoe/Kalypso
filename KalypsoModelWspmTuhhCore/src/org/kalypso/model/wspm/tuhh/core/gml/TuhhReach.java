@@ -289,4 +289,13 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   {
     return getWaterBody().isDirectionUpstreams();
   }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "%s\n%s", super.toString(), getName() );
+  }
 }
