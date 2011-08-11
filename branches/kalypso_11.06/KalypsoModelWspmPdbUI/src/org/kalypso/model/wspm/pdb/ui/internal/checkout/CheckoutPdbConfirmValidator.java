@@ -40,63 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutDataMapping;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.databinding.validation.TypedValidator;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutPdbData extends AbstractModelObject
+public class CheckoutPdbConfirmValidator extends TypedValidator<Boolean>
 {
-  public static final String PROPERTY_CONFIRM_EXISTING = "confirmExisting"; //$NON-NLS-1$
-
-  private CheckoutDataMapping m_mapping;
-
-  private boolean m_confirmExisting = false;
-
-  public void init( final IDialogSettings settings )
+  public CheckoutPdbConfirmValidator( )
   {
-    if( settings == null )
-      return;
-    // TODO Auto-generated method stub
+    super( Boolean.class, IStatus.WARNING, "You need to confirm all warnings." );
   }
 
-  public void store( final IDialogSettings settings )
+  @Override
+  protected IStatus doValidate( final Boolean value ) throws CoreException
   {
-    if( settings == null )
-      return;
-    // TODO Auto-generated method stub
+    if( value == null || !value )
+      fail();
 
-  }
-
-  public void setMapping( final CheckoutDataMapping mapping )
-  {
-    m_mapping = mapping;
-  }
-
-  public CheckoutDataMapping getMapping( )
-  {
-    return m_mapping;
-  }
-
-  public Feature[] getNewWspmElements( )
-  {
-    return m_mapping.getNewElements();
-  }
-
-  public boolean getConfirmExisting( )
-  {
-    return m_confirmExisting;
-  }
-
-  public void setConfirmExisting( final boolean confirmExisting )
-  {
-    final Object oldValue = m_confirmExisting;
-
-    m_confirmExisting = confirmExisting;
-
-    firePropertyChange( PROPERTY_CONFIRM_EXISTING, oldValue, confirmExisting );
+    return ValidationStatus.ok();
   }
 }

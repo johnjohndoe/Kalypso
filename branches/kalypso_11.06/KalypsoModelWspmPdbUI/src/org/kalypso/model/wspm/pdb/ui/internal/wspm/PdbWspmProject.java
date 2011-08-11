@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -181,7 +182,11 @@ public class PdbWspmProject implements IPdbWspmProject
         final IWorkbenchPage page = m_window.getActivePage();
         page.showView( WspmGmvViewPart.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
         if( toSelect != null )
-          gmvView.getSite().getSelectionProvider().setSelection( new StructuredSelection( toSelect ) );
+        {
+          final TreeViewer treeViewer = gmvView.getTreeView().getTreeViewer();
+          treeViewer.setSelection( new StructuredSelection( toSelect ) );
+          treeViewer.setExpandedElements( toSelect );
+        }
       }
       catch( final PartInitException e )
       {
@@ -253,6 +258,9 @@ public class PdbWspmProject implements IPdbWspmProject
         }
       }
     }
+
+    if( compositeCommand.getCommands().length == 0 )
+      return;
 
     mapView.postCommand( compositeCommand, null );
 

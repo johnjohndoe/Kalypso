@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
@@ -122,7 +123,10 @@ public class WaterBodyViewer
     column.setToolTipText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
     column.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
+
+    new DecoratingLabelProvider( new WaterBodyCodeLabelProvider(), null );
     gknColumn.setLabelProvider( new WaterBodyCodeLabelProvider() );
+
     ColumnViewerSorter.registerSorter( gknColumn, new PdbGknComparator() );
     return gknColumn;
   }

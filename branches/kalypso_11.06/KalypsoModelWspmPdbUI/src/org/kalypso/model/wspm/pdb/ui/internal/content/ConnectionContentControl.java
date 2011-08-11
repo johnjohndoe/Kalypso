@@ -48,6 +48,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -74,7 +75,6 @@ import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
@@ -150,7 +150,7 @@ public class ConnectionContentControl extends Composite
 
   private Control createTreeViewer( final FormToolkit toolkit, final Composite parent )
   {
-    m_viewer = createContentTree( toolkit, parent );
+    m_viewer = createContentTree( toolkit, parent, null );
     m_viewer.setInput( PdbLabelProvider.PENDING );
 
     m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -164,7 +164,7 @@ public class ConnectionContentControl extends Composite
     return m_viewer.getControl();
   }
 
-  public static TreeViewer createContentTree( final FormToolkit toolkit, final Composite parent )
+  public static TreeViewer createContentTree( final FormToolkit toolkit, final Composite parent, final ILabelDecorator nameDecorator )
   {
     final Tree tree;
     tree = new Tree( parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.BORDER );
@@ -176,8 +176,7 @@ public class ConnectionContentControl extends Composite
     viewer.setUseHashlookup( true );
     viewer.setContentProvider( new ByWaterBodyContentProvider() );
 
-    final ViewerColumn nameColumn = StatesViewer.createNameColumn( viewer );
-    WaterBodyViewer.createNameColumn( viewer );
+    final ViewerColumn nameColumn = StatesViewer.createNameColumn( viewer, nameDecorator );
     StatesViewer.createMeasurementDateColumn( viewer );
 
     ColumnViewerSorter.setSortState( nameColumn, false );

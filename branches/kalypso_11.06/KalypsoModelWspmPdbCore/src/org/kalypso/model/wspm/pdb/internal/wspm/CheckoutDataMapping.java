@@ -311,7 +311,8 @@ public class CheckoutDataMapping
     final Set<Object> all = new HashSet<Object>();
 
     CollectionUtils.forAllDo( m_eventMapping.keySet(), new AddKeysWithMappingClosure( m_eventMapping, all ) );
-    CollectionUtils.forAllDo( m_waterMapping.keySet(), new AddKeysWithMappingClosure( m_waterMapping, all ) );
+    // REMAR: for the moment, we ignore rivers, as overwriting causes them now problem (because they are not editable).
+    // CollectionUtils.forAllDo( m_waterMapping.keySet(), new AddKeysWithMappingClosure( m_waterMapping, all ) );
     CollectionUtils.forAllDo( m_stateMapping.keySet(), new AddKeysWithMappingClosure( m_stateMapping, all ) );
 
     return Collections.unmodifiableSet( all );
