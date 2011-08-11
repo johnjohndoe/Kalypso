@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect;
 
+import java.io.IOException;
+
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.StorageException;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
@@ -63,13 +65,13 @@ public class PdbSettingsWriter
     {
       serializeConnections( preferences );
     }
-    catch( final StorageException e )
+    catch( final Exception e )
     {
       throw new PdbConnectException( "Failed to write connections into secure storage", e );
     }
   }
 
-  protected void serializeConnections( final ISecurePreferences preferences ) throws StorageException
+  protected void serializeConnections( final ISecurePreferences preferences ) throws StorageException, IOException
   {
     preferences.clear();
     final String[] childrenNames = preferences.childrenNames();
@@ -85,5 +87,7 @@ public class PdbSettingsWriter
 
       settings.saveState( childNode );
     }
+
+    preferences.flush();
   }
 }

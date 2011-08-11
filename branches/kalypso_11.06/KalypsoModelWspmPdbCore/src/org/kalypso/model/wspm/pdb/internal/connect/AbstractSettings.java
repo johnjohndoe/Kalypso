@@ -40,6 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect;
 
+import java.util.Properties;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 
 /**
@@ -47,21 +53,85 @@ import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
  */
 public abstract class AbstractSettings implements IPdbSettings
 {
-  private String m_name;
+  protected static final String PROPERTY_NAME = "name";//$NON-NLS-1$
+
+  public static final String PROPERTY_PASSWORD = "password";//$NON-NLS-1$
+
+  private final Properties m_properties = new Properties();
 
   public AbstractSettings( final String name )
   {
-    m_name = name;
+    setName( name );
+  }
+
+  public AbstractSettings( final String name, final AbstractSettings settings )
+  {
+    setName( name );
+    m_properties.putAll( settings.m_properties );
   }
 
   public final void setName( final String name )
   {
-    m_name = name;
+    m_properties.put( PROPERTY_NAME, name );
   }
 
   @Override
   public final String getName( )
   {
-    return m_name;
+    return getProperty( PROPERTY_NAME );
   }
+
+  @Override
+  public int compareTo( final IPdbSettings o )
+  {
+    final String n1 = getName();
+    final String n2 = o.getName();
+
+    return n1.compareToIgnoreCase( n2 );
+  }
+
+  protected String getProperty( final String name, final String defaultValue )
+  {
+    final String property = m_properties.getProperty( name, defaultValue );
+    if( StringUtils.isBlank( property ) )
+      return defaultValue;
+
+    return property;
+  }
+
+  protected String getProperty( final String name )
+  {
+    return getProperty( name, getDefaultValue( name ) );
+  }
+
+  protected void setProperty( final String name, final String value )
+  {
+    m_properties.setProperty( name, value );
+  }
+
+  protected abstract String getDefaultValue( final String property );
+
+  @Override
+  public void saveState( final ISecurePreferences preferences ) throws StorageException
+  {
+    final Set<String> names = m_properties.stringPropertyNames();
+    for( final String name : names )
+    {
+      final boolean encrypt = PROPERTY_PASSWORD.equals( name );
+      final String value = m_properties.getProperty( name );
+      preferences.put( name, value, encrypt );
+    }
+  }
+
+  @Override
+  public void readState( final ISecurePreferences preferences ) throws StorageException
+  {
+    final String[] keys = preferences.keys();
+    for( final String key : keys )
+    {
+      final String value = preferences.get( key, null );
+      m_properties.setProperty( key, value );
+    }
+  }
+
 }

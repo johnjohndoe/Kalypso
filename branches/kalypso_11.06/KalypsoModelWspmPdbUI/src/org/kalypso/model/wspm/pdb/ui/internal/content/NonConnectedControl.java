@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
+import java.util.Arrays;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -165,6 +167,8 @@ public class NonConnectedControl extends Composite
     try
     {
       final IPdbSettings[] settings = PdbSettings.getSettings();
+      Arrays.sort( settings );
+
       for( final IPdbSettings setting : settings )
       {
         final ConnectPdbAction action = new ConnectPdbAction( m_view, setting );

@@ -40,13 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect.postgis;
 
-import java.util.Properties;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
@@ -72,12 +67,6 @@ public class PostgisSettings extends HibernateSettings
 
   static final String PROPERTY_PORT = "port";//$NON-NLS-1$
 
-  static final String PROPERTY_USERNAME = "username";//$NON-NLS-1$
-
-  static final String PROPERTY_PASSWORD = "password";//$NON-NLS-1$
-
-  private final Properties m_properties = new Properties();
-
   public PostgisSettings( )
   {
     super( "PostGIS" );
@@ -85,9 +74,7 @@ public class PostgisSettings extends HibernateSettings
 
   public PostgisSettings( final String name, final PostgisSettings settings )
   {
-    super( name );
-
-    m_properties.putAll( settings.m_properties );
+    super( name, settings );
   }
 
   @Override
@@ -108,21 +95,8 @@ public class PostgisSettings extends HibernateSettings
     return new PostGisConnection( this );
   }
 
-  String getProperty( final String name, final String defaultValue )
-  {
-    final String property = m_properties.getProperty( name, defaultValue );
-    if( StringUtils.isBlank( property ) )
-      return defaultValue;
-
-    return property;
-  }
-
-  String getProperty( final String name )
-  {
-    return getProperty( name, getDefaultValue( name ) );
-  }
-
-  private String getDefaultValue( final String property )
+  @Override
+  protected String getDefaultValue( final String property )
   {
     if( PROPERTY_HOST.equals( property ) )
       return DEFAULT_HOST;
@@ -139,12 +113,10 @@ public class PostgisSettings extends HibernateSettings
     if( PROPERTY_PASSWORD.equals( property ) )
       return StringUtils.EMPTY;
 
-    throw new IllegalArgumentException( String.format( "Unknwon property: %s", property ) );
-  }
+    if( PROPERTY_NAME.equals( property ) )
+      return "PostGIS"; //$NON-NLS-1$
 
-  void setProperty( final String name, final String value )
-  {
-    m_properties.setProperty( name, value );
+    throw new IllegalArgumentException( String.format( "Unknwon property: %s", property ) );
   }
 
   public void setHost( final String host )
@@ -208,29 +180,6 @@ public class PostgisSettings extends HibernateSettings
   String getPassword( )
   {
     return getProperty( PROPERTY_PASSWORD );
-  }
-
-  @Override
-  public void saveState( final ISecurePreferences preferences ) throws StorageException
-  {
-    final Set<String> names = m_properties.stringPropertyNames();
-    for( final String name : names )
-    {
-      final boolean encrypt = PROPERTY_PASSWORD.equals( name );
-      final String value = m_properties.getProperty( name );
-      preferences.put( name, value, encrypt );
-    }
-  }
-
-  @Override
-  public void readState( final ISecurePreferences preferences ) throws StorageException
-  {
-    final String[] keys = preferences.keys();
-    for( final String key : keys )
-    {
-      final String value = preferences.get( key, null );
-      m_properties.setProperty( key, value );
-    }
   }
 
   @Override
