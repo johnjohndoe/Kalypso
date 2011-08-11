@@ -162,13 +162,13 @@
 				<Description>Signifikante Wellenhöhe</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="timeAxis" />
-					<TargetAxisRef ref="nnAxis" />
+					<TargetAxisRef ref="hsigAxis" />
 				</MapperRefs>
 				<Styles>
 					<LineStyle role="line">
 						<Title>hsig line title</Title>
 						<Width>2</Width>
-						<LineColor>0000aa</LineColor>
+						<LineColor>8C007B</LineColor>
 					</LineStyle>
 					<PointStyle role="point">
 						<Title>hsig point title</Title>
@@ -176,7 +176,7 @@
 						<Height>5</Height>
 						<Stroke>
 							<Width>1</Width>
-							<LineColor>0000aa</LineColor>
+							<LineColor>8C007B</LineColor>
 						</Stroke>
 						<FillColor>
 							3333aa
@@ -200,13 +200,13 @@
 				<Description>Wellenrichtung</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="timeAxis" />
-					<TargetAxisRef ref="nnAxis" />
+					<TargetAxisRef ref="dirAxis" />
 				</MapperRefs>
 				<Styles>
 					<LineStyle role="line">
 						<Title>direction line title</Title>
 						<Width>2</Width>
-						<LineColor>0000aa</LineColor>
+						<LineColor>616161</LineColor>
 					</LineStyle>
 					<PointStyle role="point">
 						<Title>direction point title</Title>
@@ -214,7 +214,7 @@
 						<Height>5</Height>
 						<Stroke>
 							<Width>1</Width>
-							<LineColor>0000aa</LineColor>
+							<LineColor>616161</LineColor>
 						</Stroke>
 						<FillColor>
 							3333aa
@@ -238,13 +238,13 @@
 				<Description>Wellenperiode(peak)</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="timeAxis" />
-					<TargetAxisRef ref="nnAxis" />
+					<TargetAxisRef ref="periodAxis" />
 				</MapperRefs>
 				<Styles>
 					<LineStyle role="line">
 						<Title>peak period line title</Title>
 						<Width>2</Width>
-						<LineColor>0000aa</LineColor>
+						<LineColor>ff0000</LineColor>
 					</LineStyle>
 					<PointStyle role="point">
 						<Title>peak period point title</Title>
@@ -252,7 +252,7 @@
 						<Height>5</Height>
 						<Stroke>
 							<Width>1</Width>
-							<LineColor>0000aa</LineColor>
+							<LineColor>ff0000</LineColor>
 						</Stroke>
 						<FillColor>
 							3333aa
@@ -266,15 +266,14 @@
 			<Axis id="nnAxis">
 				<Provider
 					epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Wasserspiegel [NN+m]</Label>
+				<Label>Wasserspiegel [m+NN]</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>LEFT</Position>
 				<NumberRange>
 					<MinValue>5.0</MinValue>
 					<MaxValue>10.0</MaxValue>
 				</NumberRange>
-				<PreferredAdjustment before="1" range="20"
-					after="1" />
+				<PreferredAdjustment before="1" range="20" after="1" />
 				<RendererRef ref="NumberWspAxisRenderer" />
 			</Axis>
 			<Axis id="m3sAxis">
@@ -297,6 +296,30 @@
 					after="1" />
 				<RendererRef ref="NumberVelAxisRenderer" />
 			</Axis>
+            <Axis id="hsigAxis">
+                <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+                <Label>signifikante Wellenhöhe [m]</Label>
+                <Direction>POSITIVE</Direction>
+                <Position>LEFT</Position>
+                <PreferredAdjustment before="5" range="100" after="5" />
+                <RendererRef ref="NumberHeightAxisRenderer" />
+            </Axis>
+            <Axis id="periodAxis">
+                <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+                <Label>Wellenperiode [s]</Label>
+                <Direction>POSITIVE</Direction>
+                <Position>RIGHT</Position>
+                <PreferredAdjustment before="5" range="100" after="5" />
+                <RendererRef ref="NumberPeriodAxisRenderer" />
+            </Axis>
+            <Axis id="dirAxis">
+                <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+                <Label>Richtung [°]</Label>
+                <Direction>POSITIVE</Direction>
+                <Position>LEFT</Position>
+                <PreferredAdjustment before="5" range="100" after="5" />
+                <RendererRef ref="NumberDirAxisRenderer" />
+            </Axis>
 			<Axis id="timeAxis">
 				<Provider
 					epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
@@ -398,6 +421,90 @@
                     </TextStyle>
                 </Styles>
 			</AxisRenderer>
+            <AxisRenderer id="NumberHeightAxisRenderer">
+                <Provider
+                    epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+                    <Parameters>
+                        <Parameter name="inset_tick" value="1" />
+                        <Parameter name="hide_cut" value="true" />
+                        <Parameter name="gap" value="3" />
+                    </Parameters>
+                </Provider>
+                <Styles>
+                    <LineStyle role="axisLine">
+                        <Title></Title>
+                        <LineColor>8C007B</LineColor>
+                    </LineStyle>
+                    <TextStyle role="axisLabel">
+                        <Title></Title>
+                        <TextColor>8C007B</TextColor>
+                    </TextStyle>
+                    <LineStyle role="tickLine">
+                        <Title></Title>
+                        <LineColor>8C007B</LineColor>
+                    </LineStyle>
+                    <TextStyle role="tickLabel">
+                        <Title></Title>
+                        <TextColor>8C007B</TextColor>
+                    </TextStyle>
+                </Styles>
+            </AxisRenderer>
+            <AxisRenderer id="NumberPeriodAxisRenderer">
+                <Provider
+                    epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+                    <Parameters>
+                        <Parameter name="inset_tick" value="1" />
+                        <Parameter name="hide_cut" value="true" />
+                        <Parameter name="gap" value="3" />
+                    </Parameters>
+                </Provider>
+                <Styles>
+                    <LineStyle role="axisLine">
+                        <Title></Title>
+                        <LineColor>ff0000</LineColor>
+                    </LineStyle>
+                    <TextStyle role="axisLabel">
+                        <Title></Title>
+                        <TextColor>ff0000</TextColor>
+                    </TextStyle>
+                    <LineStyle role="tickLine">
+                        <Title></Title>
+                        <LineColor>ff0000</LineColor>
+                    </LineStyle>
+                    <TextStyle role="tickLabel">
+                        <Title></Title>
+                        <TextColor>ff0000</TextColor>
+                    </TextStyle>
+                </Styles>
+            </AxisRenderer>
+            <AxisRenderer id="NumberDirAxisRenderer">
+                <Provider
+                    epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+                    <Parameters>
+                        <Parameter name="inset_tick" value="1" />
+                        <Parameter name="hide_cut" value="true" />
+                        <Parameter name="gap" value="3" />
+                    </Parameters>
+                </Provider>
+                <Styles>
+                    <LineStyle role="axisLine">
+                        <Title></Title>
+                        <LineColor>616161</LineColor>
+                    </LineStyle>
+                    <TextStyle role="axisLabel">
+                        <Title></Title>
+                        <TextColor>616161</TextColor>
+                    </TextStyle>
+                    <LineStyle role="tickLine">
+                        <Title></Title>
+                        <LineColor>616161</LineColor>
+                    </LineStyle>
+                    <TextStyle role="tickLabel">
+                        <Title></Title>
+                        <TextColor>616161</TextColor>
+                    </TextStyle>
+                </Styles>
+            </AxisRenderer>
 			<AxisRenderer id="CalendarAxisRenderer">
 				<Provider
 					epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider">
