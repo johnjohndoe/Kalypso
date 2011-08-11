@@ -42,17 +42,13 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
 import java.util.List;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Table;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
@@ -78,52 +74,6 @@ public class StatesViewer
   public StatesViewer( final Session session )
   {
     m_session = session;
-  }
-
-  public TableViewer createTableViewer( final Composite parent )
-  {
-    m_viewer = new TableViewer( parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.H_SCROLL );
-    final Table table = m_viewer.getTable();
-    table.setHeaderVisible( true );
-    table.addControlListener( new ColumnsResizeControlListener() );
-
-    m_viewer.setContentProvider( new ArrayContentProvider() );
-
-    final ViewerColumn nameColumn = createNameColumn( m_viewer, null );
-    createMeasurementDateColumn( m_viewer );
-
-    ColumnViewerSorter.setSortState( nameColumn, Boolean.FALSE );
-
-    refreshState( null );
-
-    return m_viewer;
-  }
-
-  public void refreshState( final String id )
-  {
-    final State[] states = loadState();
-    m_viewer.setInput( states );
-
-    final State toSelect = findState( states, id );
-
-    if( toSelect == null )
-      m_viewer.setSelection( StructuredSelection.EMPTY );
-    else
-      m_viewer.setSelection( new StructuredSelection( toSelect ) );
-  }
-
-  private static State findState( final State[] states, final String name )
-  {
-    if( name == null )
-      return null;
-
-    for( final State state : states )
-    {
-      if( state.getName().equals( name ) )
-        return state;
-    }
-
-    return null;
   }
 
   public Control getControl( )
